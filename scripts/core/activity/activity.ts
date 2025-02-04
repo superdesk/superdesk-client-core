@@ -60,7 +60,7 @@ function SuperdeskProvider($routeProvider, _) {
      * @returns {Object} self
      * @description Register widget.
      */
-    this.widget = function(id, data) {
+    this.widget = function (id, data) {
         widgets[id] = angular.extend({_id: id, wcode: id}, data);
         return this;
     };
@@ -71,28 +71,31 @@ function SuperdeskProvider($routeProvider, _) {
      * @public
      * @description Register a pane.
      */
-    this.pane = function(key, data) {
+    this.pane = function (key, data) {
         panes[key] = angular.extend({_id: key}, data);
         return this;
     };
 
     // Register a new activity.
-    this.activity = function(id, activityData: IActivity) {
-        var activity = angular.extend({
-            _id: id,
-            priority: 0,
-            when: id, // use id as default
-            href: id, // use id as default
-            filters: [],
-            beta: false,
-            reloadOnSearch: false,
-            auth: true,
-            features: {},
-            privileges: {},
-            condition: function(item) {
-                return true;
+    this.activity = function (id, activityData: IActivity) {
+        var activity = angular.extend(
+            {
+                _id: id,
+                priority: 0,
+                when: id, // use id as default
+                href: id, // use id as default
+                filters: [],
+                beta: false,
+                reloadOnSearch: false,
+                auth: true,
+                features: {},
+                privileges: {},
+                condition: function (item) {
+                    return true;
+                },
             },
-        }, activityData);
+            activityData,
+        );
 
         var actionless = _.find(activity.filters, (filter) => !filter.action);
 
@@ -119,7 +122,7 @@ function SuperdeskProvider($routeProvider, _) {
      *
      * @description Register permission.
      */
-    this.permission = function(id, data) {
+    this.permission = function (id, data) {
         permissions[id] = angular.extend({_id: id}, data);
         return this;
     };
@@ -141,16 +144,31 @@ function SuperdeskProvider($routeProvider, _) {
      * @requires config
      * @description This service allows interacting with registered activities.
      */
-    this.$get = ['$q', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector',
-        function superdeskFactory($q, $rootScope, activityService, activityChooser, betaService,
-            features, privileges, $injector) {
+    this.$get = [
+        '$q',
+        '$rootScope',
+        'activityService',
+        'activityChooser',
+        'betaService',
+        'features',
+        'privileges',
+        '$injector',
+        function superdeskFactory(
+            $q,
+            $rootScope,
+            activityService,
+            activityChooser,
+            betaService,
+            features,
+            privileges,
+            $injector,
+        ) {
             /**
              * Render main menu depending on registered acitivites
              */
             betaService.isBeta().then((beta) => {
                 forEach(activities, (activity, id) => {
-                    if (activity.beta === true && !beta || !isAllowed(activity)) {
+                    if ((activity.beta === true && !beta) || !isAllowed(activity)) {
                         $routeProvider.when(activity.when, {redirectTo: dashboardRoute});
                     }
                 });
@@ -202,170 +220,185 @@ function SuperdeskProvider($routeProvider, _) {
                 return checkActivityEnabled(activity) && checkFeatures(activity) && checkPrivileges(activity);
             }
 
-            return angular.extend({
-                widgets: widgets,
-                activities: activities,
-                permissions: permissions,
-                panes: panes,
+            return angular.extend(
+                {
+                    widgets: widgets,
+                    activities: activities,
+                    permissions: permissions,
+                    panes: panes,
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#activity
-                 * @public
-                 * @description Return activity by given id
-                 */
-                activity: function(id) {
-                    return activities[id] || null;
-                },
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#activity
+                     * @public
+                     * @description Return activity by given id
+                     */
+                    activity: function (id) {
+                        return activities[id] || null;
+                    },
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#resolve
-                 * @public
-                 * @description Resolve an intent to a single activity
-                 */
-                resolve: function(intent) {
-                    var _activities = this.findActivities(intent);
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#resolve
+                     * @public
+                     * @description Resolve an intent to a single activity
+                     */
+                    resolve: function (intent) {
+                        var _activities = this.findActivities(intent);
 
-                    switch (_activities.length) {
-                    case 0:
-                        return $q.reject();
+                        switch (_activities.length) {
+                            case 0:
+                                return $q.reject();
 
-                    case 1:
-                        return $q.when(_activities[0]);
+                            case 1:
+                                return $q.when(_activities[0]);
 
-                    default:
-                        return chooseActivity(_activities);
-                    }
-                },
-
-                /**
-                 * @ngdoc method
-                 * @name superdesk#findActivities
-                 * @public
-                 * @description
-                 * Find all available activities for given intent
-                 */
-                findActivities: function(intent, item) {
-                    var criteria: any = {};
-
-                    if (intent.action) {
-                        criteria.action = intent.action;
-                    }
-                    if (intent.type) {
-                        criteria.type = intent.type;
-                    }
-                    if (intent.id) {
-                        criteria.id = intent.id;
-                    }
-
-                    return _.sortBy(_.filter(this.activities, (activity) => {
-                        return _.find(activity.filters, criteria) && isAllowed(activity) &&
-                            activity.condition(item) && testAdditionalCondition();
-
-                        function testAdditionalCondition() {
-                            if (activity.additionalCondition) {
-                                return $injector.invoke(
-                                    activity.additionalCondition,
-                                    {},
-                                    {item: item ? item : intent.data},
-                                );
-                            }
-
-                            return true;
+                            default:
+                                return chooseActivity(_activities);
                         }
-                    }), 'priority').reverse();
-                },
+                    },
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#intent
-                 * @param {string} action
-                 * @param {string} type
-                 * @param {Object} data
-                 * @returns {Object} promise
-                 * @public
-                 * @description
-                 * Starts an activity for given action and data
-                 */
-                intent: function(action, type, data, id) {
-                    var intent = {
-                        action: action,
-                        type: type,
-                        data: data,
-                        id: id,
-                    };
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#findActivities
+                     * @public
+                     * @description
+                     * Find all available activities for given intent
+                     */
+                    findActivities: function (intent, item) {
+                        var criteria: any = {};
 
-                    var self = this;
+                        if (intent.action) {
+                            criteria.action = intent.action;
+                        }
+                        if (intent.type) {
+                            criteria.type = intent.type;
+                        }
+                        if (intent.id) {
+                            criteria.id = intent.id;
+                        }
 
-                    return this.resolve(intent).then((activity) => self.start(activity, intent), () => {
-                        $rootScope.$broadcast([
-                            'intent',
-                            intent.action || '*',
-                            intent.type || '*',
-                        ].join(':'), intent);
-                        return $q.reject();
-                    });
-                },
+                        return _.sortBy(
+                            _.filter(this.activities, (activity) => {
+                                return (
+                                    _.find(activity.filters, criteria) &&
+                                    isAllowed(activity) &&
+                                    activity.condition(item) &&
+                                    testAdditionalCondition()
+                                );
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#link
-                 *
-                 * @param {string} activity
-                 * @param {Object} data
-                 * @returns {string}
-                 *
-                 * @description
-                 * Get a link for given activity
-                 */
-                link: function getSuperdeskLink(activity, data) {
-                    return activityService.getLink(this.activity(activity), data);
-                },
+                                function testAdditionalCondition() {
+                                    if (activity.additionalCondition) {
+                                        return $injector.invoke(
+                                            activity.additionalCondition,
+                                            {},
+                                            {item: item ? item : intent.data},
+                                        );
+                                    }
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#start
-                 *
-                 * @param {Object} activity
-                 * @param {Object} locals
-                 * @return {Promise}
-                 *
-                 * @description Start activity
-                 *
-                 */
-                start: function(activity, locals) {
-                    return activityService.start(activity, locals);
-                },
+                                    return true;
+                                }
+                            }),
+                            'priority',
+                        ).reverse();
+                    },
 
-                /**
-                 * @ngdoc method
-                 * @name superdesk#getMenu
-                 *
-                 * @param {string} category
-                 *
-                 * @description
-                 * Get activities based on menu category
-                 */
-                getMenu: function getMenu(category) {
-                    return privileges.loaded.then(() => {
-                        var menu = [];
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#intent
+                     * @param {string} action
+                     * @param {string} type
+                     * @param {Object} data
+                     * @returns {Object} promise
+                     * @public
+                     * @description
+                     * Starts an activity for given action and data
+                     */
+                    intent: function (action, type, data, id) {
+                        var intent = {
+                            action: action,
+                            type: type,
+                            data: data,
+                            id: id,
+                        };
 
-                        angular.forEach(activities, (activity) => {
-                            if (activity.category === category &&
-                                isAllowed(activity) &&
-                                (activity.beta === false || $rootScope.beta) &&
-                                (activity.additionalCondition == null || $injector.invoke(activity.additionalCondition))
-                            ) {
-                                menu.push(activity);
-                            }
+                        var self = this;
+
+                        return this.resolve(intent).then(
+                            (activity) => self.start(activity, intent),
+                            () => {
+                                $rootScope.$broadcast(
+                                    ['intent', intent.action || '*', intent.type || '*'].join(':'),
+                                    intent,
+                                );
+                                return $q.reject();
+                            },
+                        );
+                    },
+
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#link
+                     *
+                     * @param {string} activity
+                     * @param {Object} data
+                     * @returns {string}
+                     *
+                     * @description
+                     * Get a link for given activity
+                     */
+                    link: function getSuperdeskLink(activity, data) {
+                        return activityService.getLink(this.activity(activity), data);
+                    },
+
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#start
+                     *
+                     * @param {Object} activity
+                     * @param {Object} locals
+                     * @return {Promise}
+                     *
+                     * @description Start activity
+                     *
+                     */
+                    start: function (activity, locals) {
+                        return activityService.start(activity, locals);
+                    },
+
+                    /**
+                     * @ngdoc method
+                     * @name superdesk#getMenu
+                     *
+                     * @param {string} category
+                     *
+                     * @description
+                     * Get activities based on menu category
+                     */
+                    getMenu: function getMenu(category) {
+                        return privileges.loaded.then(() => {
+                            var menu = [];
+
+                            angular.forEach(activities, (activity) => {
+                                if (
+                                    activity.category === category &&
+                                    isAllowed(activity) &&
+                                    (activity.beta === false || $rootScope.beta) &&
+                                    (activity.additionalCondition == null ||
+                                        $injector.invoke(activity.additionalCondition))
+                                ) {
+                                    menu.push(activity);
+                                }
+                            });
+
+                            return menu;
                         });
-
-                        return menu;
-                    });
+                    },
                 },
-            }, constants);
-        }];
+                constants,
+            );
+        },
+    ];
 }
 
 /**
@@ -376,50 +409,57 @@ function SuperdeskProvider($routeProvider, _) {
  * @description Superdesk core activities module. Used to register new activities,
  * apps and functionalities.
  */
-angular.module('superdesk.core.activity', [
-    'ngRoute',
-    'superdesk.core.notify',
-    'superdesk.core.features',
-    'superdesk.core.translate',
-    'superdesk.core.services.beta',
-    'superdesk.core.services.modal',
-    'superdesk.core.privileges',
-    'superdesk.core.keyboard',
+angular
+    .module('superdesk.core.activity', [
+        'ngRoute',
+        'superdesk.core.notify',
+        'superdesk.core.features',
+        'superdesk.core.translate',
+        'superdesk.core.services.beta',
+        'superdesk.core.services.modal',
+        'superdesk.core.privileges',
+        'superdesk.core.keyboard',
 
-    'superdesk.core.activity.chooser',
-    'superdesk.core.activity.list',
-    'superdesk.core.activity.modal',
-])
+        'superdesk.core.activity.chooser',
+        'superdesk.core.activity.list',
+        'superdesk.core.activity.modal',
+    ])
     .constant('lodash', window._)
     .constant('langmap', langmap)
     .provider('superdesk', SuperdeskProvider)
 
-/**
- * @ngdoc service
- * @module superdesk.core.activity
- * @name activityService
- * @requires $location
- * @requires $injector
- * @requires $q
- * @requires modal
- * @requires lodash
- * @description The service allows choosing activities to perform.
- */
-    .service('activityService', ['$location', '$injector', '$q', 'modal', 'lodash',
+    /**
+     * @ngdoc service
+     * @module superdesk.core.activity
+     * @name activityService
+     * @requires $location
+     * @requires $injector
+     * @requires $q
+     * @requires modal
+     * @requires lodash
+     * @description The service allows choosing activities to perform.
+     */
+    .service('activityService', [
+        '$location',
+        '$injector',
+        '$q',
+        'modal',
+        'lodash',
         function ActivityService($location, $injector, $q, modal, _) {
             var activityStack = [];
 
             this.activityStack = activityStack;
 
             /**
-     * Expand path using given locals, eg. with /users/:Id and locals {Id: 2} returns /users/2
-     *
-     * @param {Object} activity
-     * @param {Object} locals
-     * @returns {string}
-     */
+             * Expand path using given locals, eg. with /users/:Id and locals {Id: 2} returns /users/2
+             *
+             * @param {Object} activity
+             * @param {Object} locals
+             * @returns {string}
+             */
             function getPath(activity, locals) {
-                if (activity.href[0] === '/') { // trigger route
+                if (activity.href[0] === '/') {
+                    // trigger route
                     var matchAll = true,
                         path = activity.href.replace(/:([_a-zA-Z0-9]+)/, (match, key) => {
                             matchAll = matchAll && locals[key];
@@ -437,36 +477,37 @@ angular.module('superdesk.core.activity', [
             }
 
             /**
-     * @ngdoc method
-     * @name activityService#getLink
-     * @public
-     *
-     * @param {Object} activity
-     * @param {Object} locals
-     * @returns {string}
-     *
-     * @description
-     * Get URL for given activity
-     */
+             * @ngdoc method
+             * @name activityService#getLink
+             * @public
+             *
+             * @param {Object} activity
+             * @param {Object} locals
+             * @returns {string}
+             *
+             * @description
+             * Get URL for given activity
+             */
             this.getLink = getPath;
 
             /**
-     * @ngdoc method
-     * @name activityService#start
-     * @public
-     *
-     * @param {object} activity
-     * @param {object} locals
-     * @returns {object} promise
-     *
-     * @description
-     * Start given activity
-     */
+             * @ngdoc method
+             * @name activityService#start
+             * @public
+             *
+             * @param {object} activity
+             * @param {object} locals
+             * @returns {object} promise
+             *
+             * @description
+             * Start given activity
+             */
             this.start = function startActivity(activity, locals) {
                 function execute(_activity, _locals) {
                     var path = getPath(_activity, _locals && _locals.data);
 
-                    if (path) { // trigger route
+                    if (path) {
+                        // trigger route
                         $location.path(path);
                         return $q.when(_locals);
                     }
@@ -487,160 +528,183 @@ angular.module('superdesk.core.activity', [
                 }
 
                 if (activity.confirm) {
-                    return modal.confirm(gettext(activity.confirm)).then(function runConfirmed() {
-                        return execute(activity, locals);
-                    }, () => $q.reject({confirm: 1}));
+                    return modal.confirm(gettext(activity.confirm)).then(
+                        function runConfirmed() {
+                            return execute(activity, locals);
+                        },
+                        () => $q.reject({confirm: 1}),
+                    );
                 }
 
                 return execute(activity, locals);
             };
-        }])
+        },
+    ])
 
-    .run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
-        $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
+    .run([
+        '$rootScope',
+        'superdesk',
+        function ($rootScope, superdesk) {
+            $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
-        $rootScope.intent = function(...args) {
-            return superdesk.intent(...args);
-        };
+            $rootScope.intent = function (...args) {
+                return superdesk.intent(...args);
+            };
 
-        $rootScope.link = function(...args) {
-            var path = superdesk.link(...args);
+            $rootScope.link = function (...args) {
+                var path = superdesk.link(...args);
 
-            return path ? '#' + path : null;
-        };
-    }])
+                return path ? '#' + path : null;
+            };
+        },
+    ])
 
-/**
- * @ngdoc service
- * @module superdesk.core.activity
- * @name activityChooser
- * @description
- * Activity chooser service - bridge between superdesk and activity chooser directive
- */
-    .service('activityChooser', ['$q', function($q) {
-        var defer;
-
-        this.choose = function(activities) {
-            defer = $q.defer();
-            this.activities = activities;
-            return defer.promise;
-        };
-
-        this.resolve = function(activity) {
-            this.activities = null;
-            defer.resolve(activity);
-        };
-
-        this.reject = function() {
-            this.activities = null;
-            defer.reject();
-        };
-    }])
-
-/**
- * @ngdoc service
- * @module superdesk.core.activity
- * @name referrer
- * @description
- * Referrer service to set/get the referrer Url
- */
-    .service('referrer', ['lodash', function(_) {
     /**
-     * @ngdoc method
-     * @name referrer#setReferrer
-     * @public
-     *
-     * @param {Object} currentRoute
-     * @param {Object} previousRoute
-     * @returns {string}
-     *
+     * @ngdoc service
+     * @module superdesk.core.activity
+     * @name activityChooser
      * @description
-     * Serving for the purpose of setting referrer url via referrer service, also
-     * setting url in localStorage. which is utilized to get last working screen
-     * on authoring page if referrer url is unidentified direct link
-     * (i.e from notification pane)
+     * Activity chooser service - bridge between superdesk and activity chooser directive
      */
-        this.setReferrer = function(currentRoute, previousRoute) {
-            if (currentRoute && previousRoute) {
-                if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
-                    if (currentRoute.$$route.originalPath === '/') {
-                        this.setReferrerUrl(dashboardRoute);
-                        localStorage.setItem('referrerUrl', dashboardRoute);
-                        sessionStorage.removeItem('previewUrl');
-                    } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
-                        previousRoute.$$route._id === 'packaging')) {
-                        this.setReferrerUrl(prepareUrl(previousRoute));
-                        localStorage.setItem('referrerUrl', this.getReferrerUrl());
-                        sessionStorage.removeItem('previewUrl');
+    .service('activityChooser', [
+        '$q',
+        function ($q) {
+            var defer;
+
+            this.choose = function (activities) {
+                defer = $q.defer();
+                this.activities = activities;
+                return defer.promise;
+            };
+
+            this.resolve = function (activity) {
+                this.activities = null;
+                defer.resolve(activity);
+            };
+
+            this.reject = function () {
+                this.activities = null;
+                defer.reject();
+            };
+        },
+    ])
+
+    /**
+     * @ngdoc service
+     * @module superdesk.core.activity
+     * @name referrer
+     * @description
+     * Referrer service to set/get the referrer Url
+     */
+    .service('referrer', [
+        'lodash',
+        function (_) {
+            /**
+             * @ngdoc method
+             * @name referrer#setReferrer
+             * @public
+             *
+             * @param {Object} currentRoute
+             * @param {Object} previousRoute
+             * @returns {string}
+             *
+             * @description
+             * Serving for the purpose of setting referrer url via referrer service, also
+             * setting url in localStorage. which is utilized to get last working screen
+             * on authoring page if referrer url is unidentified direct link
+             * (i.e from notification pane)
+             */
+            this.setReferrer = function (currentRoute, previousRoute) {
+                if (currentRoute && previousRoute) {
+                    if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
+                        if (currentRoute.$$route.originalPath === '/') {
+                            this.setReferrerUrl(dashboardRoute);
+                            localStorage.setItem('referrerUrl', dashboardRoute);
+                            sessionStorage.removeItem('previewUrl');
+                        } else if (
+                            currentRoute.$$route.authoring &&
+                            (!previousRoute.$$route.authoring || previousRoute.$$route._id === 'packaging')
+                        ) {
+                            this.setReferrerUrl(prepareUrl(previousRoute));
+                            localStorage.setItem('referrerUrl', this.getReferrerUrl());
+                            sessionStorage.removeItem('previewUrl');
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        var referrerURL;
+            var referrerURL;
 
-        this.setReferrerUrl = function(refURL) {
-            referrerURL = refURL;
-        };
+            this.setReferrerUrl = function (refURL) {
+                referrerURL = refURL;
+            };
 
-        this.getReferrerUrl = function() {
-            if (typeof referrerURL === 'undefined' || referrerURL === null) {
-                if (typeof localStorage.getItem('referrerUrl') === 'undefined'
-                || localStorage.getItem('referrerUrl') === null) {
-                    this.setReferrerUrl(dashboardRoute);
-                } else {
-                    referrerURL = localStorage.getItem('referrerUrl');
-                }
-            }
-
-            return referrerURL;
-        };
-
-        /**
-     * @ngdoc method
-     * @name referrer#prepareUrl
-     * @private
-     *
-     * @param {Object} refRoute
-     * @returns {string}
-     *
-     * @description
-     * Prepares complete Referrer Url from previous route href and querystring params(if exist),
-     * e.g /workspace/content?q=test$repo=archive
-     */
-        function prepareUrl(refRoute) {
-            var completeUrl;
-
-            if (refRoute) {
-                completeUrl = refRoute.$$route.href.replace('/:_id', '');
-                if (!_.isEqual({}, refRoute.pathParams)) {
-                    completeUrl = completeUrl + '/' + refRoute.pathParams._id;
+            this.getReferrerUrl = function () {
+                if (typeof referrerURL === 'undefined' || referrerURL === null) {
+                    if (
+                        typeof localStorage.getItem('referrerUrl') === 'undefined' ||
+                        localStorage.getItem('referrerUrl') === null
+                    ) {
+                        this.setReferrerUrl(dashboardRoute);
+                    } else {
+                        referrerURL = localStorage.getItem('referrerUrl');
+                    }
                 }
 
-                if (!_.isEqual({}, refRoute.params)) {
-                    completeUrl = completeUrl + '?';
-                    completeUrl = completeUrl + decodeURIComponent($.param(refRoute.params));
+                return referrerURL;
+            };
+
+            /**
+             * @ngdoc method
+             * @name referrer#prepareUrl
+             * @private
+             *
+             * @param {Object} refRoute
+             * @returns {string}
+             *
+             * @description
+             * Prepares complete Referrer Url from previous route href and querystring params(if exist),
+             * e.g /workspace/content?q=test$repo=archive
+             */
+            function prepareUrl(refRoute) {
+                var completeUrl;
+
+                if (refRoute) {
+                    completeUrl = refRoute.$$route.href.replace('/:_id', '');
+                    if (!_.isEqual({}, refRoute.pathParams)) {
+                        completeUrl = completeUrl + '/' + refRoute.pathParams._id;
+                    }
+
+                    if (!_.isEqual({}, refRoute.params)) {
+                        completeUrl = completeUrl + '?';
+                        completeUrl = completeUrl + decodeURIComponent($.param(refRoute.params));
+                    }
                 }
+                return completeUrl;
             }
-            return completeUrl;
-        }
-    }])
+        },
+    ])
 
-// reject modal on route change
-// todo(petr): what about blocking route change as long as it is opened?
-    .run(['$rootScope', 'activityService', 'referrer', function($rootScope, activityService, referrer) {
-        $rootScope.$on('$routeChangeStart', () => {
-            if (activityService.activityStack.length) {
-                var item = activityService.activityStack.pop();
+    // reject modal on route change
+    // todo(petr): what about blocking route change as long as it is opened?
+    .run([
+        '$rootScope',
+        'activityService',
+        'referrer',
+        function ($rootScope, activityService, referrer) {
+            $rootScope.$on('$routeChangeStart', () => {
+                if (activityService.activityStack.length) {
+                    var item = activityService.activityStack.pop();
 
-                item.defer.reject();
-            }
-        });
+                    item.defer.reject();
+                }
+            });
 
-        $rootScope.$on('$routeChangeSuccess', (ev, currentRoute, previousRoute) => {
-            referrer.setReferrer(currentRoute, previousRoute);
-        });
-    }])
+            $rootScope.$on('$routeChangeSuccess', (ev, currentRoute, previousRoute) => {
+                referrer.setReferrer(currentRoute, previousRoute);
+            });
+        },
+    ])
     .directive('sdActivityItem', ActivityItemDirective)
     .directive('sdActivityDropdownItem', ActivityItemDropdownDirective);
 
@@ -655,14 +719,14 @@ ActivityItemDropdownDirective.$inject = ['asset'];
 function ActivityItemDropdownDirective(asset) {
     return {
         templateUrl: asset.templateUrl('core/activity/views/activity-dropdown-item.html'),
-        link: function(scope, elem, attr) {
+        link: function (scope, elem, attr) {
             scope.group = attr.group;
         },
     };
 }
 
 export interface IActivityService {
-    activityStack: Array<{activity: IActivity, defer: any, locals: any}>;
+    activityStack: Array<{activity: IActivity; defer: any; locals: any}>;
     getLink(activity: IActivity, locals: any): string;
     start(activity: IActivity, locals: any): Promise<any>;
 }

@@ -6,12 +6,15 @@ describe('editor3.reducers.suggestion.TOGGLE_SUGGESTING_MODE', () => {
         const editorState = EditorState.createEmpty();
         const suggestingMode = false;
 
-        const result = reducer({
-            editorState: editorState,
-            suggestingMode: suggestingMode,
-        }, {
-            type: 'TOGGLE_SUGGESTING_MODE',
-        });
+        const result = reducer(
+            {
+                editorState: editorState,
+                suggestingMode: suggestingMode,
+            },
+            {
+                type: 'TOGGLE_SUGGESTING_MODE',
+            },
+        );
 
         expect(result).toEqual({
             editorState: editorState,
@@ -23,12 +26,15 @@ describe('editor3.reducers.suggestion.TOGGLE_SUGGESTING_MODE', () => {
         const editorState = EditorState.createEmpty();
         const suggestingMode = true;
 
-        const result = reducer({
-            editorState: editorState,
-            suggestingMode: suggestingMode,
-        }, {
-            type: 'TOGGLE_SUGGESTING_MODE',
-        });
+        const result = reducer(
+            {
+                editorState: editorState,
+                suggestingMode: suggestingMode,
+            },
+            {
+                type: 'TOGGLE_SUGGESTING_MODE',
+            },
+        );
 
         expect(result).toEqual({
             editorState: editorState,

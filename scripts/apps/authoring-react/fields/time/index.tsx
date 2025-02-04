@@ -12,8 +12,12 @@ import {Difference} from './difference';
 
 export const TIME_FIELD_ID = 'time';
 
-export function getTimeField()
-: ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> {
+export function getTimeField(): ICustomFieldType<
+    ITimeValueOperational,
+    ITimeValueStorage,
+    ITimeFieldConfig,
+    ITimeUserPreferences
+> {
     const field: ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> = {
         id: TIME_FIELD_ID,
         generic: true,

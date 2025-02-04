@@ -35,60 +35,36 @@ export class SidePanel extends React.Component<IPropsSidePanel> {
 
 export class SidePanelHeader extends React.Component {
     render() {
-        return (
-            <div className="side-panel__header side-panel__header--border-b">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__header side-panel__header--border-b">{this.props.children}</div>;
     }
 }
 
 export class SidePanelContent extends React.Component {
     render() {
-        return (
-            <div className="side-panel__content">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__content">{this.props.children}</div>;
     }
 }
 
 export class SidePanelContentBlock extends React.Component {
     render() {
-        return (
-            <div className="side-panel__content-block">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__content-block">{this.props.children}</div>;
     }
 }
 
 export class SidePanelHeading extends React.Component {
     render() {
-        return (
-            <div className="side-panel__heading">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__heading">{this.props.children}</div>;
     }
 }
 
 export class SidePanelTools extends React.Component {
     render() {
-        return (
-            <div className="side-panel__tools">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__tools">{this.props.children}</div>;
     }
 }
 
 export class SidePanelFooter extends React.Component {
     render() {
-        return (
-            <div className="side-panel__footer side-panel__footer--button-box">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__footer side-panel__footer--button-box">{this.props.children}</div>;
     }
 }

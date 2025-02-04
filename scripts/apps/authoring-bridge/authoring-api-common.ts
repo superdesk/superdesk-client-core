@@ -43,7 +43,7 @@ export const authoringApiCommon: IAuthoringApiCommon = {
             return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
         }
 
-        return item.task && item.task.desk && item.state !== 'draft' || dirty;
+        return (item.task && item.task.desk && item.state !== 'draft') || dirty;
     },
     saveBefore: (current, original) => {
         return runBeforeUpdateMiddlware(current, original);
@@ -52,41 +52,40 @@ export const authoringApiCommon: IAuthoringApiCommon = {
         runAfterUpdateEvent(original, current);
     },
     closeAuthoringStep2: (scope: any, rootScope: any): Promise<any> => {
-        return ng.get('authoring').close(
-            scope.item,
-            scope.origItem,
-            scope.save_enabled(),
-            () => {
-                ng.get('authoringWorkspace').close(true);
-                const itemId = scope.origItem._id;
-                const storedItemId = localStorage.getItem(`open-item-after-related-closed--${itemId}`);
+        return ng.get('authoring').close(scope.item, scope.origItem, scope.save_enabled(), () => {
+            ng.get('authoringWorkspace').close(true);
+            const itemId = scope.origItem._id;
+            const storedItemId = localStorage.getItem(`open-item-after-related-closed--${itemId}`);
 
-                rootScope.$broadcast('item:close', itemId);
+            rootScope.$broadcast('item:close', itemId);
 
-                /**
-                 * If related item was just created and saved, open the original item
-                 * that triggered the creation of this related item.
-                 */
-                if (storedItemId != null) {
-                    return ng.get('autosave').get({_id: storedItemId}).then((resulted) => {
+            /**
+             * If related item was just created and saved, open the original item
+             * that triggered the creation of this related item.
+             */
+            if (storedItemId != null) {
+                return ng
+                    .get('autosave')
+                    .get({_id: storedItemId})
+                    .then((resulted) => {
                         ng.get('authoringWorkspace').open(resulted);
                         localStorage.removeItem(`open-item-after-related-closed--${itemId}`);
                     });
-                }
-            },
-        );
+            }
+        });
     },
     closeAuthoring: (original: IArticle, hasUnsavedChanges, save, unlock, cancelAutoSave, doClose) => {
         if (!isArticleLockedInCurrentSession(original)) {
             return Promise.resolve().then(() => doClose());
         }
 
-        if (hasUnsavedChanges && (original.state !== ITEM_STATE.PUBLISHED && original.state !== ITEM_STATE.CORRECTED)) {
+        if (hasUnsavedChanges && original.state !== ITEM_STATE.PUBLISHED && original.state !== ITEM_STATE.CORRECTED) {
             return showUnsavedChangesPrompt(hasUnsavedChanges).then(({action, closePromptFn}) => {
-                const unlockAndClose = () => unlock().then(() => {
-                    closePromptFn();
-                    doClose();
-                });
+                const unlockAndClose = () =>
+                    unlock().then(() => {
+                        closePromptFn();
+                        doClose();
+                    });
 
                 if (action === IUnsavedChangesActionWithSaving.cancelAction) {
                     return closePromptFn();

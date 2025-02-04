@@ -1,14 +1,7 @@
 import {List, OrderedSet, fromJS} from 'immutable';
 import docsSoap from 'docs-soap';
 
-import {
-    ContentBlock,
-    CharacterMetadata,
-    Entity,
-    ContentState,
-    convertFromHTML,
-    convertToRaw,
-} from 'draft-js';
+import {ContentBlock, CharacterMetadata, Entity, ContentState, convertFromHTML, convertToRaw} from 'draft-js';
 import {CustomEditor3Entity} from 'core/editor3/constants';
 
 /**
@@ -90,10 +83,7 @@ class HTMLParser {
 
                 const nextIndex = Object.keys(this.media).length;
 
-                html = html.replace(
-                    matchedEmbedText,
-                    `<figure>BLOCK_MEDIA_${nextIndex}</figure>`,
-                );
+                html = html.replace(matchedEmbedText, `<figure>BLOCK_MEDIA_${nextIndex}</figure>`);
 
                 this.media[nextIndex] = {
                     media: this.associations[associationId],
@@ -101,10 +91,7 @@ class HTMLParser {
             } else {
                 const nextIndex = Object.keys(this.figures).length;
 
-                html = html.replace(
-                    matchedEmbedText,
-                    `<figure>BLOCK_FIGURE_${nextIndex}</figure>`,
-                );
+                html = html.replace(matchedEmbedText, `<figure>BLOCK_FIGURE_${nextIndex}</figure>`);
 
                 const wrapper = document.createElement('div');
 
@@ -112,9 +99,10 @@ class HTMLParser {
 
                 const el = wrapper.firstElementChild;
 
-                this.figures[nextIndex] = el.tagName === 'FIGURE' && wrapper.childElementCount === 1
-                    ? el.innerHTML // drop <figure> wrapper
-                    : wrapper.innerHTML;
+                this.figures[nextIndex] =
+                    el.tagName === 'FIGURE' && wrapper.childElementCount === 1
+                        ? el.innerHTML // drop <figure> wrapper
+                        : wrapper.innerHTML;
             }
         }
 
@@ -207,21 +195,24 @@ class HTMLParser {
         let contentState = initialState;
 
         contentState.getBlocksAsArray().forEach((block) => {
-            block.findEntityRanges((characterMetadata) => characterMetadata.getEntity() != null, (start, _end) => {
-                const key = block.getEntityAt(start);
+            block.findEntityRanges(
+                (characterMetadata) => characterMetadata.getEntity() != null,
+                (start, _end) => {
+                    const key = block.getEntityAt(start);
 
-                if (key != null) {
-                    const entity = contentState.getEntity(key);
+                    if (key != null) {
+                        const entity = contentState.getEntity(key);
 
-                    if (entity['type'] === 'LINK') {
-                        const _data = entity.getData();
+                        if (entity['type'] === 'LINK') {
+                            const _data = entity.getData();
 
-                        contentState = contentState.replaceEntityData(key, {
-                            link: {href: _data.href || _data.url, target: _data.target},
-                        });
+                            contentState = contentState.replaceEntityData(key, {
+                                link: {href: _data.href || _data.url, target: _data.target},
+                            });
+                        }
                     }
-                }
-            });
+                },
+            );
         });
 
         return contentState;
@@ -343,10 +334,7 @@ class HTMLParser {
      * Get block id from block text
      */
     getBlockId(block: ContentBlock): number {
-        return parseInt(block.getText()
-            .split('_')
-            .pop(),
-        10);
+        return parseInt(block.getText().split('_').pop(), 10);
     }
 
     /**

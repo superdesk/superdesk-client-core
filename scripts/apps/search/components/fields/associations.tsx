@@ -6,13 +6,7 @@ class AssociationsComponent extends React.Component<IPropsItemListInfo> {
     render() {
         const props = this.props;
 
-        return (
-            <Associations
-                item={props.item}
-                openAuthoringView={props.openAuthoringView}
-                key="associations"
-            />
-        );
+        return <Associations item={props.item} openAuthoringView={props.openAuthoringView} key="associations" />;
     }
 }
 

@@ -65,11 +65,13 @@ export const isUserSubscribedToSavedSearch = (
         return true;
     }
 
-    if (subscribers.desk_subscriptions.some((subscription) => {
-        const desk: IDesk = getDesk(subscription.desk);
+    if (
+        subscribers.desk_subscriptions.some((subscription) => {
+            const desk: IDesk = getDesk(subscription.desk);
 
-        return desk.members.some((member) => member.user === userId);
-    })) {
+            return desk.members.some((member) => member.user === userId);
+        })
+    ) {
         return true;
     } else {
         return false;
@@ -89,11 +91,7 @@ export const updateSubscribers = (
     return saveOrUpdateSavedSearch(api, savedSearch, savedSearchNext);
 };
 
-export const unsubscribeUser = (
-    savedSearch: ISavedSearch,
-    userId: IUser['_id'],
-    api: any,
-): Promise<ISavedSearch> => {
+export const unsubscribeUser = (savedSearch: ISavedSearch, userId: IUser['_id'], api: any): Promise<ISavedSearch> => {
     const nextSubscribers: ISavedSearch['subscribers'] = {
         ...savedSearch.subscribers,
         user_subscriptions: savedSearch.subscribers.user_subscriptions.filter(
@@ -104,11 +102,7 @@ export const unsubscribeUser = (
     return updateSubscribers(savedSearch, nextSubscribers, api);
 };
 
-export const unsubscribeDesk = (
-    savedSearch: ISavedSearch,
-    deskId: IDesk['_id'],
-    api: any,
-): Promise<ISavedSearch> => {
+export const unsubscribeDesk = (savedSearch: ISavedSearch, deskId: IDesk['_id'], api: any): Promise<ISavedSearch> => {
     const nextSubscribers: ISavedSearch['subscribers'] = {
         ...savedSearch.subscribers,
         desk_subscriptions: savedSearch.subscribers.desk_subscriptions.filter(
@@ -154,16 +148,17 @@ export function saveOrUpdateSavedSearch(api, savedSearchOriginal: ISavedSearch, 
 
     if (savedSearchChanged.subscribers != null) {
         if (savedSearchChanged.subscribers.user_subscriptions != null) {
-            savedSearchChanged.subscribers.user_subscriptions = savedSearchChanged.subscribers.user_subscriptions
-                .map(removeReadOnlyUserSubscriberFields);
+            savedSearchChanged.subscribers.user_subscriptions = savedSearchChanged.subscribers.user_subscriptions.map(
+                removeReadOnlyUserSubscriberFields,
+            );
         }
 
         if (savedSearchChanged.subscribers.desk_subscriptions != null) {
-            savedSearchChanged.subscribers.desk_subscriptions = savedSearchChanged.subscribers.desk_subscriptions
-                .map(removeReadOnlyDeskSubscriberFields);
+            savedSearchChanged.subscribers.desk_subscriptions = savedSearchChanged.subscribers.desk_subscriptions.map(
+                removeReadOnlyDeskSubscriberFields,
+            );
         }
     }
 
-    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged)
-        .then(mapFiltersServerToClient);
+    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged).then(mapFiltersServerToClient);
 }

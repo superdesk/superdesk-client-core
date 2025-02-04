@@ -1,4 +1,3 @@
-
 import {ICreate, IEdit, IPreview} from '../rundown-templates/template-edit';
 import {superdesk} from '../superdesk';
 

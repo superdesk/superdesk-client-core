@@ -85,77 +85,62 @@ export default class SearchBar extends React.Component<IProps, IState> {
         const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
         const removeButton: React.ReactNode = (
-            <button
-                type="button"
-                className="search-close visible"
-                onClick={this.resetSearch}
-            >
+            <button type="button" className="search-close visible" onClick={this.resetSearch}>
                 <i className="icon-remove-sign" />
             </button>
         );
         const showButtons = searchBarExtended && this.state.searchInputValue.trim().length > 0;
-        const actionButtons: React.ReactNode = (
-            debounced != null && showButtons
-                ? removeButton
-                : (
-                    showButtons
-                        ? (
-                            <>
-                                {removeButton}
+        const actionButtons: React.ReactNode =
+            debounced != null && showButtons ? (
+                removeButton
+            ) : showButtons ? (
+                <>
+                    {removeButton}
 
-                                <button
-                                    className="search-start visible"
-                                    onClick={() => this.props.onSearch(this.state.searchInputValue)}
-                                    aria-label="Start search"
-                                >
-                                    <i className="icon-chevron-right-thin" />
-                                </button>
-                            </>
-                        )
-                        : null
-                )
-        );
+                    <button
+                        className="search-start visible"
+                        onClick={() => this.props.onSearch(this.state.searchInputValue)}
+                        aria-label="Start search"
+                    >
+                        <i className="icon-chevron-right-thin" />
+                    </button>
+                </>
+            ) : null;
 
         return (
             <div className="SearchBar flat-searchbar extended">
                 <div className="search-handler">
-                    <label
-                        htmlFor={_uniqueId}
-                        className="trigger-icon"
-                        ref={(node) => this.dom.searchIcon = node}
-                    >
+                    <label htmlFor={_uniqueId} className="trigger-icon" ref={(node) => (this.dom.searchIcon = node)}>
                         <i className="icon-search" />
                     </label>
-                    {
-                        debounced != null
-                            ? (
-                                <>
-                                    <DebounceInput
-                                        minLength={minLength}
-                                        debounceTimeout={debounced?.timeout}
-                                        value={this.state.searchInputValue}
-                                        onChange={this.onSearchChange}
-                                        id={_uniqueId}
-                                        placeholder={gettext('Search')}
-                                        type="text"
-                                    />
+                    {debounced != null ? (
+                        <>
+                            <DebounceInput
+                                minLength={minLength}
+                                debounceTimeout={debounced?.timeout}
+                                value={this.state.searchInputValue}
+                                onChange={this.onSearchChange}
+                                id={_uniqueId}
+                                placeholder={gettext('Search')}
+                                type="text"
+                            />
 
-                                    {actionButtons}
-                                </>
-                            )
-                            : (
-                                <ManualSearch
-                                    value={this.state.searchInputValue}
-                                    actionButtons={actionButtons}
-                                    onInputChange={(value) => this.setState({
-                                        searchInputValue: value,
-                                    })}
-                                    onSearch={() => {
-                                        this.props.onSearch(this.state.searchInputValue);
-                                    }}
-                                />
-                            )
-                    }
+                            {actionButtons}
+                        </>
+                    ) : (
+                        <ManualSearch
+                            value={this.state.searchInputValue}
+                            actionButtons={actionButtons}
+                            onInputChange={(value) =>
+                                this.setState({
+                                    searchInputValue: value,
+                                })
+                            }
+                            onSearch={() => {
+                                this.props.onSearch(this.state.searchInputValue);
+                            }}
+                        />
+                    )}
                 </div>
             </div>
         );

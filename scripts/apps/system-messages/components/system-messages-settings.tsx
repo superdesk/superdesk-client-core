@@ -14,20 +14,20 @@ import {Page} from 'core/ui/components/Page';
 
 const getTypeLabel = (type: ISystemMessage['type']) => {
     switch (type) {
-    case 'alert':
-        return gettext('Alert');
+        case 'alert':
+            return gettext('Alert');
 
-    case 'primary':
-        return gettext('Info');
+        case 'primary':
+            return gettext('Info');
 
-    case 'warning':
-        return gettext('Warning');
+        case 'warning':
+            return gettext('Warning');
 
-    case 'success':
-        return gettext('Success');
+        case 'success':
+            return gettext('Success');
 
-    default:
-        assertNever(type);
+        default:
+            assertNever(type);
     }
 };
 
@@ -90,13 +90,9 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
                         </ListItemColumn>
 
                         <ListItemColumn>
-                            {
-                                getFormFieldPreviewComponent(
-                                    item,
-                                    formConfig.form[3] as IFormField,
-                                    {showAsPlainText: true},
-                                )
-                            }
+                            {getFormFieldPreviewComponent(item, formConfig.form[3] as IFormField, {
+                                showAsPlainText: true,
+                            })}
                         </ListItemColumn>
                     </ListItemRow>
 
@@ -140,11 +136,10 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
 export class SystemMessagesSettingsComponent extends React.PureComponent {
     render() {
         const formConfig = getFormConfig();
-        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage, never>(
-            RESOURCE,
-            formConfig,
-            {field: 'message_title', direction: 'ascending'},
-        );
+        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage, never>(RESOURCE, formConfig, {
+            field: 'message_title',
+            direction: 'ascending',
+        });
 
         return (
             <Page title={gettext('System Message')}>

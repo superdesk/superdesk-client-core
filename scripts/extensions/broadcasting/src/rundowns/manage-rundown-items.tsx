@@ -49,40 +49,35 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
 
         return (
             <div>
-                {
-                    (() => {
-                        if (rundown == null) {
-                            return null;
-                        }
+                {(() => {
+                    if (rundown == null) {
+                        return null;
+                    }
 
-                        const airTimeEnd = addSeconds(
-                            rundown.airtime_time,
-                            rundown.duration ?? rundown.planned_duration,
-                        );
+                    const airTimeEnd = addSeconds(rundown.airtime_time, rundown.duration ?? rundown.planned_duration);
 
-                        return (
-                            <div>
-                                <Spacer h gap="4" justifyContent="start" noGrow>
-                                    <IconLabel
-                                        type="primary"
-                                        text={`${rundown.airtime_time} - ${airTimeEnd}`}
-                                        innerLabel={gettext('Airtime')}
-                                        style="translucent"
-                                    />
+                    return (
+                        <div>
+                            <Spacer h gap="4" justifyContent="start" noGrow>
+                                <IconLabel
+                                    type="primary"
+                                    text={`${rundown.airtime_time} - ${airTimeEnd}`}
+                                    innerLabel={gettext('Airtime')}
+                                    style="translucent"
+                                />
 
-                                    <DurationLabel
-                                        duration={rundown.duration}
-                                        planned_duration={rundown.planned_duration}
-                                    />
+                                <DurationLabel
+                                    duration={rundown.duration}
+                                    planned_duration={rundown.planned_duration}
+                                />
 
-                                    <PlannedDurationLabel planned_duration={rundown.planned_duration} />
-                                </Spacer>
+                                <PlannedDurationLabel planned_duration={rundown.planned_duration} />
+                            </Spacer>
 
-                                <SpacerBlock v gap="16" />
-                            </div>
-                        );
-                    })()
-                }
+                            <SpacerBlock v gap="16" />
+                        </div>
+                    );
+                })()}
 
                 <RundownItems
                     rundownReadOnly={readOnly}
@@ -91,7 +86,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                     items={this.props.items}
                     onChange={this.props.onChange}
                     onDelete={this.props.onDelete}
-                    getActions={((item) => {
+                    getActions={(item) => {
                         const actions: Array<IMenuItem> = [];
 
                         const edit: IMenuItem = {
@@ -115,7 +110,8 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         const deleteAction: IMenuItem = {
                             label: gettext('Delete'),
                             onSelect: () => {
-                                superdesk.ui.confirm(gettext('Are you sure you want to delete it?'))
+                                superdesk.ui
+                                    .confirm(gettext('Are you sure you want to delete it?'))
                                     .then((confirmed) => {
                                         if (confirmed) {
                                             this.props.onDelete(item);
@@ -144,29 +140,25 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                 />
                             </Dropdown>
                         );
-                    })}
+                    }}
                     preview={(item) => {
                         this.props.initiatePreview(item);
                     }}
                     edit={(item) => {
                         this.props.initiateEditing(item);
                     }}
-                    itemsDropdown={((insertAfterIndex?: number) => {
+                    itemsDropdown={(insertAfterIndex?: number) => {
                         const insertAtIndex: number | undefined =
                             insertAfterIndex == null ? undefined : insertAfterIndex + 1;
 
                         type IDropdownItems = Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
 
-                        const result: IDropdownItems = rundownItemTypes.toArray()
-                            .map((rundownType) => ({
-                                label: rundownType.name,
-                                onSelect: () => {
-                                    this.props.initiateCreation(
-                                        {item_type: rundownType.qcode},
-                                        insertAtIndex,
-                                    );
-                                },
-                            }));
+                        const result: IDropdownItems = rundownItemTypes.toArray().map((rundownType) => ({
+                            label: rundownType.name,
+                            onSelect: () => {
+                                this.props.initiateCreation({item_type: rundownType.qcode}, insertAtIndex);
+                            },
+                        }));
 
                         if (rundownItemTypes.size > 0) {
                             result.push('divider');
@@ -180,12 +172,10 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         });
 
                         return result;
-                    })}
+                    }}
                     onDrag={(oldIndex, newIndex) => {
                         if (this.props.readOnly !== true) {
-                            this.props.onChange(
-                                arrayMove(this.props.items, oldIndex, newIndex),
-                            );
+                            this.props.onChange(arrayMove(this.props.items, oldIndex, newIndex));
                         }
                     }}
                     selectedItem={this.props.selectedItem}

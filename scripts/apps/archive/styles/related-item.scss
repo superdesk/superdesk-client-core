@@ -2,18 +2,18 @@
 @import '~variables.scss';
 
 .related-item-list {
-  .relate-item-label {
-    border-radius: 6px;
-    width: 15px;
-    height: 15px;
-    color: $white;
-    text-align: center;
-    padding: 2px 3px 2px;
-    &.update-item {
-      background-color: $green;
+    .relate-item-label {
+        border-radius: 6px;
+        width: 15px;
+        height: 15px;
+        color: $white;
+        text-align: center;
+        padding: 2px 3px 2px;
+        &.update-item {
+            background-color: $green;
+        }
+        &.take-item {
+            background-color: $blueDark;
+        }
     }
-    &.take-item {
-      background-color: $blueDark;
-    }
-  }
 }

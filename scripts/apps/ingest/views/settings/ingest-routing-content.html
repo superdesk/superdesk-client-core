@@ -7,7 +7,7 @@
         </button>
     </div>
     <div class="sd-page__content">
-        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px">
             <li ng-repeat="scheme in schemes | filter:query" class="sd-list-item sd-shadow--z1">
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
@@ -16,8 +16,12 @@
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                    <button class="icn-btn" ng-click="edit(scheme)" title="{{:: 'Edit scheme' | translate }}"><i class="icon-pencil"></i></button>
-                    <button class="icn-btn" ng-click="remove(scheme)" title="{{:: 'Remove scheme' | translate }}"><i class="icon-trash"></i></button>
+                    <button class="icn-btn" ng-click="edit(scheme)" title="{{:: 'Edit scheme' | translate }}">
+                        <i class="icon-pencil"></i>
+                    </button>
+                    <button class="icn-btn" ng-click="remove(scheme)" title="{{:: 'Remove scheme' | translate }}">
+                        <i class="icon-trash"></i>
+                    </button>
                 </div>
             </li>
         </ul>
@@ -34,11 +38,20 @@
 
     <div class="modal__body">
         <form name="schemeForm">
-
             <div class="modal__body-content">
-                <div style="padding: 0.8rem 2rem; border-bottom: 1px solid rgba(123, 123, 123, 0.2); flex-shrink: 0;">
-                    <div class="sd-line-input sd-line-input--required sd-line-input--boxed sd-line-input--no-margin sd-line-input--no-label">
-                        <input class="sd-line-input__input" type="text" class="line-input input" placeholder="{{ 'Scheme name'|translate }}" ng-model="editScheme.name" required autofocus>
+                <div style="padding: 0.8rem 2rem; border-bottom: 1px solid rgba(123, 123, 123, 0.2); flex-shrink: 0">
+                    <div
+                        class="sd-line-input sd-line-input--required sd-line-input--boxed sd-line-input--no-margin sd-line-input--no-label"
+                    >
+                        <input
+                            class="sd-line-input__input"
+                            type="text"
+                            class="line-input input"
+                            placeholder="{{ 'Scheme name'|translate }}"
+                            ng-model="editScheme.name"
+                            required
+                            autofocus
+                        />
                     </div>
                 </div>
 
@@ -50,7 +63,14 @@
                                 <div class="column">
                                     <div class="selected-field editable addnew" ng-if="rule">
                                         <div class="sd-line-input">
-                                            <input class="sd-line-input__input" type="text" ng-model="rule.name" placeholder="{{ 'Rule name' | translate }}" required autofocus>
+                                            <input
+                                                class="sd-line-input__input"
+                                                type="text"
+                                                ng-model="rule.name"
+                                                placeholder="{{ 'Rule name' | translate }}"
+                                                required
+                                                autofocus
+                                            />
                                         </div>
                                     </div>
 
@@ -59,36 +79,62 @@
                                     </ul>
 
                                     <ul sd-sortrules class="pills-list pills-list--draggable" ng-if="!rule">
-                                        <li ng-repeat="schemeRule in editScheme.rules" ng-class="{active: selectedRule === schemeRule}" ng-click="selectRule(schemeRule)">
-                                            {{schemeRule.name}}
-                                            ({{getRuleHandlerLabel(schemeRule)}})
+                                        <li
+                                            ng-repeat="schemeRule in editScheme.rules"
+                                            ng-class="{active: selectedRule === schemeRule}"
+                                            ng-click="selectRule(schemeRule)"
+                                        >
+                                            {{schemeRule.name}} ({{getRuleHandlerLabel(schemeRule)}})
 
                                             <div class="actions">
-                                                <button ng-click="editRule(schemeRule)" sd-tooltip="{{ :: 'Edit Rule' | translate }}">
+                                                <button
+                                                    ng-click="editRule(schemeRule)"
+                                                    sd-tooltip="{{ :: 'Edit Rule' | translate }}"
+                                                >
                                                     <i class="icon-pencil"></i>
                                                 </button>
-                                                <button ng-click="removeRule(schemeRule)" sd-tooltip="{{ :: 'Delete Rule' | translate }}">
+                                                <button
+                                                    ng-click="removeRule(schemeRule)"
+                                                    sd-tooltip="{{ :: 'Delete Rule' | translate }}"
+                                                >
                                                     <i class="icon-trash"></i>
                                                 </button>
                                             </div>
                                         </li>
                                     </ul>
 
-                                    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 1rem; margin-bottom: 6rem">
+                                    <div
+                                        style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                            margin-top: 1rem;
+                                            margin-bottom: 6rem;
+                                        "
+                                    >
                                         <div
-                                                class="dropdown dropdown--add-more dropdown--add-more__bottom dropdown-terms"
-                                                dropdown
-                                                ng-if="!rule"
-                                                ng-disabled="!editScheme.name"
+                                            class="dropdown dropdown--add-more dropdown--add-more__bottom dropdown-terms"
+                                            dropdown
+                                            ng-if="!rule"
+                                            ng-disabled="!editScheme.name"
                                         >
-                                            <button class="btn btn--primary btn--icon-only btn--icon-only-circle" sd-tooltip="{{ :: 'Add Rule' | translate }}" flow="right" dropdown__toggle data-test-id="add-routing-rule-button">
+                                            <button
+                                                class="btn btn--primary btn--icon-only btn--icon-only-circle"
+                                                sd-tooltip="{{ :: 'Add Rule' | translate }}"
+                                                flow="right"
+                                                dropdown__toggle
+                                                data-test-id="add-routing-rule-button"
+                                            >
                                                 <i class="icon-plus-large"></i>
                                             </button>
                                             <ul class="dropdown__menu nested-menu">
                                                 <li class="main-list">
                                                     <ul>
                                                         <li ng-repeat="handler in ruleHandlers">
-                                                            <button ng-click="addRule(handler)" data-test-id="{{'rule-handler--' + handler._id}}">
+                                                            <button
+                                                                ng-click="addRule(handler)"
+                                                                data-test-id="{{'rule-handler--' + handler._id}}"
+                                                            >
                                                                 {{handler.name}}
                                                             </button>
                                                         </li>
@@ -103,16 +149,33 @@
                                 <div class="col-heading" ng-if="editScheme.rules.length" translate>Scheme details</div>
 
                                 <div class="column" ng-if="!selectedRule && !rule && editScheme.rules.length">
-                                    <i class="icon-info-sign icon--blue"></i><span class="helper-text helper-text--after-icon">{{ :: 'Click on a Scheme rules on the left to view details.' | translate }}</span>
+                                    <i class="icon-info-sign icon--blue"></i
+                                    ><span class="helper-text helper-text--after-icon"
+                                        >{{ :: 'Click on a Scheme rules on the left to view details.' | translate
+                                        }}</span
+                                    >
                                 </div>
 
                                 <div class="column" ng-if="selectedRule && !rule">
-                                    <div sd-ingest-routing-general data-rule="selectedRule" data-rule-handler="ruleHandler"></div>
+                                    <div
+                                        sd-ingest-routing-general
+                                        data-rule="selectedRule"
+                                        data-rule-handler="ruleHandler"
+                                    ></div>
                                 </div>
 
                                 <div class="column" ng-if="rule">
-                                    <div sd-ingest-routing-filter data-rule="rule" data-content-filters="contentFilters"></div>
-                                    <div sd-ingest-routing-action data-rule="rule" data-rule-handler="ruleHandler" data-update-rule="updateRule"></div>
+                                    <div
+                                        sd-ingest-routing-filter
+                                        data-rule="rule"
+                                        data-content-filters="contentFilters"
+                                    ></div>
+                                    <div
+                                        sd-ingest-routing-action
+                                        data-rule="rule"
+                                        data-rule-handler="ruleHandler"
+                                        data-update-rule="updateRule"
+                                    ></div>
                                     <div sd-ingest-routing-schedule data-rule="rule"></div>
                                 </div>
                             </div>
@@ -124,9 +187,19 @@
                 <div class="button-group button-group--end button-group--comfort" role="group">
                     <div class="sd-display--contents" ng-if="rule">
                         <button class="btn" tabindex="0" ng-click="cancelRule(rule)" translate>Cancel</button>
-                        <button class="btn btn--primary" tabindex="0" ng-click="save()" ng-disabled="!rule.name" translate>Save</button>
+                        <button
+                            class="btn btn--primary"
+                            tabindex="0"
+                            ng-click="save()"
+                            ng-disabled="!rule.name"
+                            translate
+                        >
+                            Save
+                        </button>
                     </div>
-                    <button class="btn btn--primary" tabindex="0" ng-click="done()" ng-disabled="rule" translate>Done</button>
+                    <button class="btn btn--primary" tabindex="0" ng-click="done()" ng-disabled="rule" translate>
+                        Done
+                    </button>
                 </div>
             </div>
         </form>

@@ -1,4 +1,3 @@
-
 @import '~mixins.scss';
 @import '~variables.scss';
 
@@ -13,7 +12,8 @@
         border-spacing: 0;
     }
 
-    table th, table td {
+    table th,
+    table td {
         vertical-align: top;
     }
     tbody tr {
@@ -54,7 +54,7 @@
     input {
         width: 140px;
         margin: 3px;
-        &[type="color"] {
+        &[type='color'] {
             width: 130px;
         }
         &.long-name {
@@ -91,7 +91,7 @@
     padding: 0px 20px;
     border-block-end: 1px solid #e4e4e4;
     .long-name {
-            width: 310px;
+        width: 310px;
     }
 }
 .vocabulary-items__wrapper {
@@ -117,7 +117,6 @@
         }
     }
 }
-
 
 .date_shortcuts {
     margin-block-start: 2em;

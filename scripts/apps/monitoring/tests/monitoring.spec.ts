@@ -12,62 +12,63 @@ describe('monitoring', () => {
 
     beforeEach(inject(($templateCache) => {
         // change template not to require aggregate config but rather render single group
-        $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
-            '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
+        $templateCache.put(
+            'scripts/apps/monitoring/views/monitoring-view.html',
+            '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>',
+        );
     }));
 
     beforeEach(inject(($httpBackend) => {
         $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
-    it('can switch between list and swimlane view',
-        inject(($controller, $rootScope, $q, preferencesService) => {
-            const testConfig: Partial<ISuperdeskGlobalConfig> = {
-                features: {
-                    ...appConfig.features,
-                    swimlane: {
-                        defaultNumberOfColumns: 4,
-                    },
+    it('can switch between list and swimlane view', inject(($controller, $rootScope, $q, preferencesService) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            features: {
+                ...appConfig.features,
+                swimlane: {
+                    defaultNumberOfColumns: 4,
                 },
-            };
+            },
+        };
 
-            Object.assign(appConfig, testConfig);
+        Object.assign(appConfig, testConfig);
 
-            spyOn(preferencesService, 'update');
-            spyOn(preferencesService, 'get').and.callFake((name) => {
-                if (name === 'monitoring:view') {
-                    return $q.when({view: 'list'});
-                }
+        spyOn(preferencesService, 'update');
+        spyOn(preferencesService, 'get').and.callFake((name) => {
+            if (name === 'monitoring:view') {
+                return $q.when({view: 'list'});
+            }
 
-                return $q.when(null);
-            });
+            return $q.when(null);
+        });
 
-            var scope = $rootScope.$new(),
-                ctrl = $controller('Monitoring', {$scope: scope});
+        var scope = $rootScope.$new(),
+            ctrl = $controller('Monitoring', {$scope: scope});
 
-            expect(ctrl.hasSwimlaneView).toBe(1);
-            $rootScope.$digest();
+        expect(ctrl.hasSwimlaneView).toBe(1);
+        $rootScope.$digest();
 
-            expect(ctrl.viewColumn).toBe(false); // no swimlane
-            // display all groups for list view, i.e. limitTo: null when no swimlane
-            expect(ctrl.columnsLimit).toBe(null);
+        expect(ctrl.viewColumn).toBe(false); // no swimlane
+        // display all groups for list view, i.e. limitTo: null when no swimlane
+        expect(ctrl.columnsLimit).toBe(null);
 
-            // Switch to swimlane view, via switch view button or returning back to monitoring
-            // view while swimlane view was already ON
-            ctrl.switchViewColumn(true, true);
+        // Switch to swimlane view, via switch view button or returning back to monitoring
+        // view while swimlane view was already ON
+        ctrl.switchViewColumn(true, true);
 
-            expect(ctrl.viewColumn).toBe(true); // swimlane
-            expect(ctrl.columnsLimit).toBe(4);
-            expect(preferencesService.update).toHaveBeenCalledWith(
-                {'monitoring:view:session': true},
-                'monitoring:view:session',
-            );
+        expect(ctrl.viewColumn).toBe(true); // swimlane
+        expect(ctrl.columnsLimit).toBe(4);
+        expect(preferencesService.update).toHaveBeenCalledWith(
+            {'monitoring:view:session': true},
+            'monitoring:view:session',
+        );
 
-            // Switch back to list view
-            ctrl.switchViewColumn(false);
-            expect(ctrl.viewColumn).toBe(false);
-            expect(ctrl.columnsLimit).toBe(null);
-        }));
+        // Switch back to list view
+        ctrl.switchViewColumn(false);
+        expect(ctrl.viewColumn).toBe(false);
+        expect(ctrl.columnsLimit).toBe(null);
+    }));
 
     it('can preview an item', inject(($controller, $rootScope) => {
         var scope = $rootScope.$new(),
@@ -151,10 +152,12 @@ describe('monitoring', () => {
                     must_not: {exists: {field: 'task.desk'}},
                     should: [
                         {term: {'task.user': session.identity._id}},
-                        {bool: {
-                            must: {term: {original_creator: session.identity._id}},
-                            must_not: {exists: {field: 'task.user'}},
-                        }},
+                        {
+                            bool: {
+                                must: {term: {original_creator: session.identity._id}},
+                                must_not: {exists: {field: 'task.user'}},
+                            },
+                        },
                     ],
                     minimum_should_match: 1,
                 },
@@ -239,7 +242,10 @@ describe('monitoring', () => {
 
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
-            var card = {_id: '123', type: 'search', query: 'test',
+            var card = {
+                _id: '123',
+                type: 'search',
+                query: 'test',
                 search: {filter: {query: {q: 'foo', type: '["picture"]'}}},
             };
             var criteria = cards.criteria(card);
@@ -270,8 +276,8 @@ describe('monitoring', () => {
     });
 
     describe('monitoring group directive', () => {
-        it('can update items on item:move event',
-            (done) => inject(($rootScope, $compile, $q, api, $timeout, session) => {
+        it('can update items on item:move event', (done) =>
+            inject(($rootScope, $compile, $q, api, $timeout, session) => {
                 session.identity = {_id: 'foo'};
                 var scope = $rootScope.$new();
 
@@ -294,11 +300,13 @@ describe('monitoring', () => {
                 }, 2000);
             }));
 
-        it('updates custom search on item preview',
-            (done) => inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
-                $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
+        it('updates custom search on item preview', (done) =>
+            inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
+                $templateCache.put(
+                    'scripts/apps/monitoring/views/monitoring-view.html',
                     '<div id="group" sd-monitoring-group ' +
-                    'data-group="{type: \'search\', search: {filter: {query: \'\'}}}"></div>');
+                        "data-group=\"{type: 'search', search: {filter: {query: ''}}}\"></div>",
+                );
 
                 var scope = $rootScope.$new();
 
@@ -320,8 +328,7 @@ describe('monitoring', () => {
 
                     done();
                 }, 2000);
-            }),
-        );
+            }));
 
         it('can edit non spiked item', inject((
             $rootScope,
@@ -356,26 +363,28 @@ describe('monitoring', () => {
             spyOn(api, 'activity').and.returnValue($q.when({_items: []}));
         }));
 
-        it('can initiate the desk notifications',
-            inject(($rootScope, $compile, deskNotifications) => {
-                var scope = $rootScope.$new();
+        it('can initiate the desk notifications', inject(($rootScope, $compile, deskNotifications) => {
+            var scope = $rootScope.$new();
 
-                var notifications = [{
+            var notifications = [
+                {
                     name: 'desk:mention',
                     recipients: [{desk_id: 'desk1', read: false}],
-                    data: {comment: 'abc', comment_id: 1}}];
+                    data: {comment: 'abc', comment_id: 1},
+                },
+            ];
 
-                spyOn(deskNotifications, 'getNotifications').and.returnValue(notifications);
-                spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
+            spyOn(deskNotifications, 'getNotifications').and.returnValue(notifications);
+            spyOn(deskNotifications, 'getUnreadCount').and.returnValue(1);
 
-                var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
+            var elem = $compile('<div sd-desk-notifications data-stage="1"></div>')(scope);
 
-                scope.$digest();
-                expect(deskNotifications.getNotifications).toHaveBeenCalled();
+            scope.$digest();
+            expect(deskNotifications.getNotifications).toHaveBeenCalled();
 
-                var iScope = elem.isolateScope();
+            var iScope = elem.isolateScope();
 
-                expect(iScope.notificationCount).toBe(1);
-            }));
+            expect(iScope.notificationCount).toBe(1);
+        }));
     });
 });

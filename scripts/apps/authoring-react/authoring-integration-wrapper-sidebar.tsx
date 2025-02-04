@@ -35,18 +35,17 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
                 }
             }),
         ).then((result) => {
-            const sidebarTabs: Array<ISideBarTab> = result
-                .map(({widget, badge}) => {
-                    const tab: ISideBarTab = {
-                        icon: widget.icon,
-                        size: 'big',
-                        tooltip: widget.label,
-                        id: widget._id,
-                        badgeValue: badge,
-                    };
+            const sidebarTabs: Array<ISideBarTab> = result.map(({widget, badge}) => {
+                const tab: ISideBarTab = {
+                    icon: widget.icon,
+                    size: 'big',
+                    tooltip: widget.label,
+                    id: widget._id,
+                    badgeValue: badge,
+                };
 
-                    return tab;
-                });
+                return tab;
+            });
 
             this.setState({sidebarTabs: sidebarTabs});
         });

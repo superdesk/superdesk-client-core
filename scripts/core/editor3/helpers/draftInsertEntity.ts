@@ -18,9 +18,8 @@ export function insertEntity(
     data,
     targetBlockKeyInitial = null,
 ): EditorState {
-    const targetBlockKey = targetBlockKeyInitial != null
-        ? targetBlockKeyInitial
-        : editorState.getSelection().getEndKey();
+    const targetBlockKey =
+        targetBlockKeyInitial != null ? targetBlockKeyInitial : editorState.getSelection().getEndKey();
     const contentState = editorState.getCurrentContent().createEntity(draftEntityType, mutability, data);
     const entityKey = contentState.getLastCreatedEntityKey();
     let blocksToInsert: Array<ContentBlock> = [];
@@ -49,8 +48,7 @@ export function insertEntity(
         // ensure there's always an empty text block between 2 atomic blocks
         blocksToInsert = blockShouldBeInsertedBeforeSelection
             ? [ContentState.createFromText(' ').getFirstBlock(), ...blocksToInsert] // atomic block won't be first
-            : [...blocksToInsert, ContentState.createFromText(' ').getFirstBlock()] // atomic block won't be last
-        ;
+            : [...blocksToInsert, ContentState.createFromText(' ').getFirstBlock()]; // atomic block won't be last
     }
 
     const contentStateWithBlockInserted = blockShouldBeInsertedBeforeSelection
@@ -60,28 +58,17 @@ export function insertEntity(
     return EditorState.push(editorState, contentStateWithBlockInserted, 'insert-fragment');
 }
 
-export function appendText(
-    value: string,
-    editorState: EditorState,
-): EditorState {
-    const currentBlocksArr = editorState
-        .getCurrentContent().getBlocksAsArray();
-    const blockToAppend = ContentState
-        .createFromText(value as string).getBlocksAsArray();
+export function appendText(value: string, editorState: EditorState): EditorState {
+    const currentBlocksArr = editorState.getCurrentContent().getBlocksAsArray();
+    const blockToAppend = ContentState.createFromText(value as string).getBlocksAsArray();
     const newBlocksArr = currentBlocksArr.concat(blockToAppend);
-    const newContentState = ContentState
-        .createFromBlockArray(currentBlocksArr.concat(newBlocksArr));
+    const newContentState = ContentState.createFromBlockArray(currentBlocksArr.concat(newBlocksArr));
     const newEditorState = EditorState.createWithContent(newContentState);
 
     return newEditorState;
 }
 
-function insertBlocks(
-    contentState: ContentState,
-    blocksToInsert,
-    nextToKey: string,
-    position: 'before' | 'after',
-) {
+function insertBlocks(contentState: ContentState, blocksToInsert, nextToKey: string, position: 'before' | 'after') {
     const blocksArray: Array<ContentBlock> = [];
 
     contentState.getBlocksAsArray().forEach((block) => {

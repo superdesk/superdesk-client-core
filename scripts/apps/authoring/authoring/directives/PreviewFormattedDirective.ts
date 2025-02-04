@@ -4,23 +4,26 @@ PreviewFormattedDirective.$inject = ['api', 'notify', 'storage'];
 export function PreviewFormattedDirective(api, notify, storage) {
     return {
         templateUrl: 'scripts/apps/authoring/views/preview-formatted.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.loading = false;
             scope.selectedFormatter = storage.getItem('selectedFormatter');
 
-            scope.format = function(formatterString) {
+            scope.format = function (formatterString) {
                 scope.loading = true;
                 storage.setItem('selectedFormatter', formatterString);
                 var formatter = JSON.parse(formatterString);
 
                 api.save('formatters', {}, {article_id: scope.item._id, formatter_name: formatter.name})
-                    .then((item) => {
-                        scope.formattedItem = item._id.formatted_doc;
-                    }, (error) => {
-                        if (angular.isDefined(error.data._message)) {
-                            notify.error(gettext(error.data._message));
-                        }
-                    })
+                    .then(
+                        (item) => {
+                            scope.formattedItem = item._id.formatted_doc;
+                        },
+                        (error) => {
+                            if (angular.isDefined(error.data._message)) {
+                                notify.error(gettext(error.data._message));
+                            }
+                        },
+                    )
                     .finally(() => {
                         scope.loading = false;
                     });

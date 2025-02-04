@@ -30,7 +30,7 @@ function hasChildren(children) {
  * Doesn't render the parent when all children are null.
  * It only works with static values.
  * React components inside children array are treated as non-null, unless it's an instance of OnlyWithChildren.
-*/
+ */
 export class OnlyWithChildren extends React.PureComponent<IProps> {
     render() {
         if (hasChildren(this.props.children) !== true) {
@@ -40,9 +40,7 @@ export class OnlyWithChildren extends React.PureComponent<IProps> {
         if (isWrapper(this.props)) {
             const Wrapper = this.props.wrapper;
 
-            return (
-                <Wrapper>{this.props.children}</Wrapper>
-            );
+            return <Wrapper>{this.props.children}</Wrapper>;
         } else {
             return React.createElement(
                 this.props.tagName ?? 'div',

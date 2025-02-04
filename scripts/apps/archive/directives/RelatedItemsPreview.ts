@@ -34,18 +34,17 @@ export function RelatedItemsPreview(relationsService) {
             preview: '=?',
         },
         template: require('../views/related-items-preview.html'),
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             scope.loading = true;
             scope.gettext = gettext;
             scope.getThumbnailForItem = getThumbnailForItem;
 
             // Define the throttled function
             const getRelatedItems = throttle((item) => {
-                relationsService.getRelatedItemsForField(item, scope.field._id)
-                    .then((items) => {
-                        scope.relatedItems = items;
-                        scope.loading = false;
-                    });
+                relationsService.getRelatedItemsForField(item, scope.field._id).then((items) => {
+                    scope.relatedItems = items;
+                    scope.loading = false;
+                });
             }, 1000);
 
             scope.$watch('item', (item) => {

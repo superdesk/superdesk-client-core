@@ -9,8 +9,6 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        return (
-            <div>{this.props.value}</div>
-        );
+        return <div>{this.props.value}</div>;
     }
 }

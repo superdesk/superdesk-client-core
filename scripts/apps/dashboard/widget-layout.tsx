@@ -6,8 +6,6 @@ export class AuthoringWidgetLayout extends React.PureComponent<IAuthoringWidgetL
     render() {
         const {WidgetLayoutComponent} = widgetReactIntegration;
 
-        return (
-            <WidgetLayoutComponent {...this.props} />
-        );
+        return <WidgetLayoutComponent {...this.props} />;
     }
 }

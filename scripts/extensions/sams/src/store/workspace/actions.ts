@@ -59,18 +59,16 @@ export function toggleFilterPanelState(): IThunkAction<void> {
 
 export function loadDesksSamsSettings(): IThunkAction<void> {
     return (dispatch) => {
-        return samsApi.workspace.getDesksSamsSettings()
-            .then((settings) => {
-                dispatch(setDeskSamsSetings(settings));
-            });
+        return samsApi.workspace.getDesksSamsSettings().then((settings) => {
+            dispatch(setDeskSamsSetings(settings));
+        });
     };
 }
 
 export function loadSingleDeskSamsSettings(deskId: IDesk['_id']): IThunkAction<void> {
     return (dispatch) => {
-        return samsApi.workspace.getSingleDeskSamsSettings(deskId)
-            .then((settings) => {
-                dispatch(setSingleDeskSamsSettings(deskId, settings));
-            });
+        return samsApi.workspace.getSingleDeskSamsSettings(deskId).then((settings) => {
+            dispatch(setSingleDeskSamsSettings(deskId, settings));
+        });
     };
 }

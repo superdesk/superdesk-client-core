@@ -10,7 +10,8 @@ function RoutingWidgetController(desks, privileges, api, notify, $scope) {
 
     desks.initialize().then(() => {
         this.desk = desks.getCurrentDesk();
-        if (!this.desk) { // only works in desk context
+        if (!this.desk) {
+            // only works in desk context
             return;
         }
 
@@ -30,14 +31,13 @@ function RoutingWidgetController(desks, privileges, api, notify, $scope) {
     };
 
     const updateDesk = (updates) => {
-        api.update('closed_desks', this.desk, updates)
-            .then((updated) => {
-                angular.extend(this.desk, {
-                    _etag: updated._etag,
-                    is_closed: updated.is_closed,
-                    closed_destination: updated.closed_destination,
-                });
-            }, errorHandler);
+        api.update('closed_desks', this.desk, updates).then((updated) => {
+            angular.extend(this.desk, {
+                _etag: updated._etag,
+                is_closed: updated.is_closed,
+                closed_destination: updated.closed_destination,
+            });
+        }, errorHandler);
     };
 
     this.toggle = () => {
@@ -86,7 +86,8 @@ function TopMenuInfoDirective(desks, $timeout, config) {
                     return;
                 }
 
-                scope.$applyAsync(() => { // using debounce, so it must trigger angular rendering
+                scope.$applyAsync(() => {
+                    // using debounce, so it must trigger angular rendering
                     if (desk.is_closed) {
                         scope.routingTo = get(desks.deskLookup[desk.closed_destination], 'name', '');
                         if (selected) {
@@ -112,7 +113,8 @@ function TopMenuInfoDirective(desks, $timeout, config) {
                 desks.desks._items.forEach((d) => {
                     const btn = document.getElementById('desk-item-' + d._id);
 
-                    if (!btn) { // user is not a member
+                    if (!btn) {
+                        // user is not a member
                         return;
                     }
 
@@ -131,8 +133,9 @@ function TopMenuInfoDirective(desks, $timeout, config) {
 
                 scope.$on('desks:closed', (event, extra) => {
                     desks.fetchDeskById(extra._id).then((desk) => {
-                        desks.desks._items = desks.desks._items
-                            .map((d) => d._id === desk._id ? angular.extend(d, desk) : d);
+                        desks.desks._items = desks.desks._items.map((d) =>
+                            d._id === desk._id ? angular.extend(d, desk) : d,
+                        );
                         desks.deskLookup[desk._id] = desk;
                         scope.$applyAsync(setup);
                     });
@@ -144,20 +147,23 @@ function TopMenuInfoDirective(desks, $timeout, config) {
     };
 }
 
-export default angular.module('superdesk.apps.dashboard.closed-desk', [])
+export default angular
+    .module('superdesk.apps.dashboard.closed-desk', [])
     .controller('RoutingWidgetController', RoutingWidgetController)
     .directive('sdTopMenuInfoPlaceholder', TopMenuInfoDirective)
-    .config(['dashboardWidgetsProvider', (dashboardWidgets) => {
-        dashboardWidgets.addWidget('close-desk', {
-            label: gettext('Desk Router'),
-            icon: 'switches',
-            max_sizex: 1,
-            max_sizey: 2,
-            sizex: 1,
-            sizey: 1,
-            template: 'scripts/apps/dashboard/closed-desk/views/close-desk-widget.html',
-            description: gettext('Close desk widget'),
-            thumbnail: require('./thumbnail.svg'),
-        });
-    }])
-;
+    .config([
+        'dashboardWidgetsProvider',
+        (dashboardWidgets) => {
+            dashboardWidgets.addWidget('close-desk', {
+                label: gettext('Desk Router'),
+                icon: 'switches',
+                max_sizex: 1,
+                max_sizey: 2,
+                sizex: 1,
+                sizey: 1,
+                template: 'scripts/apps/dashboard/closed-desk/views/close-desk-widget.html',
+                description: gettext('Close desk widget'),
+                thumbnail: require('./thumbnail.svg'),
+            });
+        },
+    ]);

@@ -13,19 +13,21 @@
                 <div class="form__item">
                     <div class="sd-input sd-input--required" ng-class="{'sd-input--invalid': errors.name}">
                         <label class="sd-input__label" for="workspace-name" translate>Workspace name</label>
-                        <input id="workspace-name"
-                                type="text"
-                                class="sd-input__input"
-                                ng-model="workspace.name"
-                                required
-                        >
+                        <input
+                            id="workspace-name"
+                            type="text"
+                            class="sd-input__input"
+                            ng-model="workspace.name"
+                            required
+                        />
                         <div class="sd-input__message-box">
-                            <span ng-show="errors.name" class="sd-input__message" translate>Sorry, given workspace name is in use</span>
+                            <span ng-show="errors.name" class="sd-input__message" translate
+                                >Sorry, given workspace name is in use</span
+                            >
                         </div>
                     </div>
-
                 </div>
-                
+
                 <!-- <label translate>Workspace name</label>
                 <input type="text" class="fullwidth-input" ng-class="{error: errors.name}"
                     ng-model="workspace.name" required>
@@ -36,8 +38,6 @@
 
     <div class="modal__footer">
         <button class="btn" ng-click="cancel()" translate>Cancel</button>
-        <button class="btn btn--primary"
-            ng-disabled="!workspace.name"
-            ng-click="save()" translate>Save</button>
+        <button class="btn btn--primary" ng-disabled="!workspace.name" ng-click="save()" translate>Save</button>
     </div>
 </div>

@@ -12,9 +12,10 @@ interface IState<T extends IBaseRestApiResponse> {
     data?: IRestApiResponse<T>; // undefined until initialized
 }
 
-class WithLiveQueryComponent
-    <T extends IBaseRestApiResponse>
-    extends SuperdeskReactComponent<ILiveQueryProps<T> & {onInitialized(): void}, IState<T>> {
+class WithLiveQueryComponent<T extends IBaseRestApiResponse> extends SuperdeskReactComponent<
+    ILiveQueryProps<T> & {onInitialized(): void},
+    IState<T>
+> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
     private updatingRequestInProgress: boolean;
@@ -31,63 +32,53 @@ class WithLiveQueryComponent
         this.fetchItems = this.fetchItems.bind(this);
         this.handleContentChanges = this.handleContentChanges.bind(this);
 
-        this.handleContentChangesThrottled = throttleAndCombineArray(
-            (changes: Array<IResourceChange>) => {
-                this.handleContentChanges(changes);
-            },
-            1000,
+        this.handleContentChangesThrottled = throttleAndCombineArray((changes: Array<IResourceChange>) => {
+            this.handleContentChanges(changes);
+        }, 1000);
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:created', (event) => {
+                const {resource, _id} = event.extra;
+
+                if (resource === this.props.resource) {
+                    this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                }
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:updated', (event) => {
+                const {resource, _id, fields} = event.extra;
 
-                    if (resource === this.props.resource) {
-                        this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
-                    }
-                },
-            ),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event) => {
-                    const {resource, _id, fields} = event.extra;
-
-                    if (resource === this.props.resource) {
-                        this.handleContentChangesThrottled([{
+                if (resource === this.props.resource) {
+                    this.handleContentChangesThrottled([
+                        {
                             changeType: 'updated',
                             resource: resource,
                             itemId: _id,
                             fields: fields,
-                        }]);
-                    }
-                },
-            ),
+                        },
+                    ]);
+                }
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event) => {
+                const {resource, _id} = event.extra;
 
-                    if (resource === this.props.resource) {
-                        this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
-                    }
-                },
-            ),
+                if (resource === this.props.resource) {
+                    this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                }
+            }),
         );
     }
 
     fetchItems(): Promise<void> {
         const {resource, query} = this.props;
 
-        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>(
-            {
+        return this.asyncHelpers
+            .httpRequestJsonLocal<IRestApiResponse<T>>({
                 method: 'GET',
                 path: '/' + resource,
                 urlParams: {
@@ -95,10 +86,10 @@ class WithLiveQueryComponent
                     es_highlight: 1,
                     ...toElasticQuery(query),
                 },
-            },
-        ).then((data) => {
-            this.setState({data: data});
-        });
+            })
+            .then((data) => {
+                this.setState({data: data});
+            });
     }
 
     handleContentChanges(changes: Array<IResourceChange>) {
@@ -118,26 +109,28 @@ class WithLiveQueryComponent
             this.state.data._items,
             getQueryFieldsRecursive(this.props.query.filter),
             this.abortController.signal,
-        ).then((res) => {
-            if (res === 'requires-refetching-all') {
-                this.fetchItems();
-            } else {
-                const diff: number = data._items.length - res.length;
+        )
+            .then((res) => {
+                if (res === 'requires-refetching-all') {
+                    this.fetchItems();
+                } else {
+                    const diff: number = data._items.length - res.length;
 
-                this.setState({
-                    data: {
-                        ...data,
-                        _items: res,
-                        _meta: {
-                            ...data._meta,
-                            total: data._meta.total - diff,
+                    this.setState({
+                        data: {
+                            ...data,
+                            _items: res,
+                            _meta: {
+                                ...data._meta,
+                                total: data._meta.total - diff,
+                            },
                         },
-                    },
-                });
-            }
-        }).finally(() => {
-            this.updatingRequestInProgress = false;
-        });
+                    });
+                }
+            })
+            .finally(() => {
+                this.updatingRequestInProgress = false;
+            });
     }
 
     componentDidMount() {
@@ -163,8 +156,10 @@ class WithLiveQueryComponent
     }
 }
 
-export class WithLiveQuery<T extends IBaseRestApiResponse>
-    extends React.Component<ILiveQueryProps<T>, {loading: boolean}> {
+export class WithLiveQuery<T extends IBaseRestApiResponse> extends React.Component<
+    ILiveQueryProps<T>,
+    {loading: boolean}
+> {
     private smoothLoaderRef: SmoothLoaderForKey;
 
     constructor(props: ILiveQueryProps<T>) {
@@ -188,10 +183,7 @@ export class WithLiveQuery<T extends IBaseRestApiResponse>
                         this.smoothLoaderRef = ref;
                     }}
                 >
-                    <WithLiveQueryComponent
-                        {...this.props}
-                        onInitialized={this.setLoaded}
-                    />
+                    <WithLiveQueryComponent {...this.props} onInitialized={this.setLoaded} />
                 </SmoothLoaderForKey>
             </div>
         );

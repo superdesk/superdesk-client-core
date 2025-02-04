@@ -7,18 +7,18 @@ import {ISpellcheckWarningsByBlock} from '../components/spellchecker/Spellchecke
 
 const spellchecker = (state: IEditorStore, action) => {
     switch (action.type) {
-    case 'SPELLCHECKER_REPLACE_WORD':
-        return replaceWord(state, action.payload);
-    case 'SET_SPELLCHEKCER_PROGRESS':
-        return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
-    case 'DISABLE_SPELLCHECKER':
-        return applySpellcheck(state.spellchecking.language, false, state);
-    case 'SET_SPELLCHEKCER_LANGUAGE':
-        return {...state, spellchecking: {...state.spellchecking, language: action.payload}};
-    case 'APPLY_SPELLCHECK':
-        return applySpellcheck(state.spellchecking.language, true, state, action.payload);
-    default:
-        return state;
+        case 'SPELLCHECKER_REPLACE_WORD':
+            return replaceWord(state, action.payload);
+        case 'SET_SPELLCHEKCER_PROGRESS':
+            return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
+        case 'DISABLE_SPELLCHECKER':
+            return applySpellcheck(state.spellchecking.language, false, state);
+        case 'SET_SPELLCHEKCER_LANGUAGE':
+            return {...state, spellchecking: {...state.spellchecking, language: action.payload}};
+        case 'APPLY_SPELLCHECK':
+            return applySpellcheck(state.spellchecking.language, true, state, action.payload);
+        default:
+            return state;
     }
 };
 
@@ -125,22 +125,17 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
 
-    const nextEditorState = EditorState.set(
-        editorState,
-        {
-            decorator: getDecorators(
-                {
-                    spellchecker: {
-                        acceptSuggestion: 'store-based',
-                        enabled: enabled,
-                        language: language,
-                        warnings: enabled ? spellcheckWarningsByBlock : null,
-                    },
-                    limitConfig: state.limitConfig,
-                },
-            ).decorator,
-        },
-    );
+    const nextEditorState = EditorState.set(editorState, {
+        decorator: getDecorators({
+            spellchecker: {
+                acceptSuggestion: 'store-based',
+                enabled: enabled,
+                language: language,
+                warnings: enabled ? spellcheckWarningsByBlock : null,
+            },
+            limitConfig: state.limitConfig,
+        }).decorator,
+    });
 
     return {
         ...state,

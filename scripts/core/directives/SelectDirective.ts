@@ -1,53 +1,62 @@
-export default angular.module('superdesk.core.directives.select', ['superdesk.core.services.asset'])
-    .factory('optionParser', ['$parse', function($parse) {
-        // eslint-disable-next-line no-useless-escape
-        var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
+export default angular
+    .module('superdesk.core.directives.select', ['superdesk.core.services.asset'])
+    .factory('optionParser', [
+        '$parse',
+        function ($parse) {
+            // eslint-disable-next-line no-useless-escape
+            var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
 
-        return {
-            parse: function(input) {
-                var match = input.match(TYPEAHEAD_REGEXP);
+            return {
+                parse: function (input) {
+                    var match = input.match(TYPEAHEAD_REGEXP);
 
-                if (!match) {
-                    throw new Error(
-                        'Expected typeahead specification in form of _modelValue_ ' +
-                        '(as _label_)? for _item_ in _collection_' +
-                      ' but got ' + input + '.',
-                    );
-                }
+                    if (!match) {
+                        throw new Error(
+                            'Expected typeahead specification in form of _modelValue_ ' +
+                                '(as _label_)? for _item_ in _collection_' +
+                                ' but got ' +
+                                input +
+                                '.',
+                        );
+                    }
 
-                return {
-                    itemName: match[3],
-                    source: $parse(match[4]),
-                    viewMapper: $parse(match[2] || match[1]),
-                    modelMapper: $parse(match[1]),
-                };
-            },
-        };
-    }])
+                    return {
+                        itemName: match[3],
+                        source: $parse(match[4]),
+                        viewMapper: $parse(match[2] || match[1]),
+                        modelMapper: $parse(match[1]),
+                    };
+                },
+            };
+        },
+    ])
 
-/**
- * @ngdoc directive
- * @module superdesk.core.directives
- * @name sdSelect
- *
- * @requires https://docs.angularjs.org/api/ng/service/$parse $parse
- * @requires https://docs.angularjs.org/api/ng/service/$compile $compile
- * @requires optionParser
- *
- * @description Renders custom input type select with ability to select multiple items.
- *
- * Example:
- * ```html
- * <sd-select multiple="true" ng-model="model" options="c.name for c in collection" change="action()"></sd-multiselect>
- * ```
- */
-    .directive('sdSelect', ['$parse', '$compile', 'optionParser',
+    /**
+     * @ngdoc directive
+     * @module superdesk.core.directives
+     * @name sdSelect
+     *
+     * @requires https://docs.angularjs.org/api/ng/service/$parse $parse
+     * @requires https://docs.angularjs.org/api/ng/service/$compile $compile
+     * @requires optionParser
+     *
+     * @description Renders custom input type select with ability to select multiple items.
+     *
+     * Example:
+     * ```html
+     * <sd-select multiple="true" ng-model="model" options="c.name for c in collection" change="action()"></sd-multiselect>
+     * ```
+     */
+    .directive('sdSelect', [
+        '$parse',
+        '$compile',
+        'optionParser',
 
-        function($parse, $compile, optionParser) {
+        function ($parse, $compile, optionParser) {
             return {
                 restrict: 'A',
                 require: 'ngModel',
-                link: function(originalScope, element, attrs, modelCtrl) {
+                link: function (originalScope, element, attrs, modelCtrl) {
                     var exp = attrs.options,
                         parsedResult = optionParser.parse(exp),
                         isMultiple = !!attrs.multiple,
@@ -76,36 +85,50 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     });
 
                     // watch disabled state
-                    scope.$watch(() => $parse(attrs.disabled)(originalScope), (newVal) => {
-                        scope.disabled = newVal;
-                    });
+                    scope.$watch(
+                        () => $parse(attrs.disabled)(originalScope),
+                        (newVal) => {
+                            scope.disabled = newVal;
+                        },
+                    );
 
                     // watch single/multiple state for dynamically change single to multiple
-                    scope.$watch(() => $parse(attrs.multiple)(originalScope), (newVal) => {
-                        isMultiple = newVal || false;
-                    });
+                    scope.$watch(
+                        () => $parse(attrs.multiple)(originalScope),
+                        (newVal) => {
+                            isMultiple = newVal || false;
+                        },
+                    );
 
                     // watch option changes for options that are populated dynamically
-                    scope.$watch(() => parsedResult.source(originalScope), (newVal) => {
-                        if (angular.isDefined(newVal)) {
-                            parseModel();
-                        }
-                    }, true);
+                    scope.$watch(
+                        () => parsedResult.source(originalScope),
+                        (newVal) => {
+                            if (angular.isDefined(newVal)) {
+                                parseModel();
+                            }
+                        },
+                        true,
+                    );
 
                     // watch model change
-                    scope.$watch(() => modelCtrl.$modelValue, (newVal, oldVal) => {
-                    // when directive initialize, newVal usually undefined. Also, if model
-                    // value already set in the controller for preselected list then we need
-                    // to mark checked in our scope item. But we don't want to do this every
-                    // time model changes. We need to do this only if it is done outside
-                    // directive scope, from controller, for example.
-                        if (angular.isDefined(newVal)) {
-                            markChecked(newVal);
-                            scope.$eval(changeHandler);
-                        }
-                        getHeaderText();
-                        modelCtrl.$setValidity('required', scope.valid());
-                    }, true);
+                    scope.$watch(
+                        () => modelCtrl.$modelValue,
+                        (newVal, oldVal) => {
+                            // when directive initialize, newVal usually undefined. Also, if model
+                            // value already set in the controller for preselected list then we need
+                            // to mark checked in our scope item. But we don't want to do this every
+                            // time model changes. We need to do this only if it is done outside
+                            // directive scope, from controller, for example.
+                            if (angular.isDefined(newVal)) {
+                                markChecked(newVal);
+                                scope.$eval(changeHandler);
+                            }
+                            getHeaderText();
+                            modelCtrl.$setValidity('required', scope.valid());
+                        },
+                        true,
+                    );
 
                     function parseModel() {
                         scope.items.length = 0;
@@ -167,7 +190,9 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         }
                         var value = modelCtrl.$modelValue;
 
-                        return angular.isArray(value) && value.length > 0 || !angular.isArray(value) && value !== null;
+                        return (
+                            (angular.isArray(value) && value.length > 0) || (!angular.isArray(value) && value !== null)
+                        );
                     };
 
                     function selectSingle(item) {
@@ -225,7 +250,7 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         }
                     }
 
-                    scope.checkAll = function() {
+                    scope.checkAll = function () {
                         if (!isMultiple) {
                             return;
                         }
@@ -235,14 +260,14 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                         setModelValue(true);
                     };
 
-                    scope.uncheckAll = function() {
+                    scope.uncheckAll = function () {
                         angular.forEach(scope.items, (item) => {
                             item.checked = false;
                         });
                         setModelValue(true);
                     };
 
-                    scope.select = function(item) {
+                    scope.select = function (item) {
                         if (isMultiple === false) {
                             selectSingle(item);
                             scope.toggleSelect();
@@ -252,4 +277,5 @@ export default angular.module('superdesk.core.directives.select', ['superdesk.co
                     };
                 },
             };
-        }]);
+        },
+    ]);

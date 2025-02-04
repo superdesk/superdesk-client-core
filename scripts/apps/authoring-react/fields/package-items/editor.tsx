@@ -29,13 +29,11 @@ function getItemTemplate(that: Editor) {
 
             return (
                 <Spacer h gap="8" noWrap alignItems="center">
-                    {
-                        !readOnly && (
-                            <div>
-                                <DragHandle />
-                            </div>
-                        )
-                    }
+                    {!readOnly && (
+                        <div>
+                            <DragHandle />
+                        </div>
+                    )}
 
                     <div style={{flexGrow: 1}}>
                         <ArticleItemConcise
@@ -57,19 +55,17 @@ function getItemTemplate(that: Editor) {
                         />
                     </div>
 
-                    {
-                        !readOnly && (
-                            <div>
-                                <IconButton
-                                    icon="remove-sign"
-                                    ariaValue={gettext('Remove')}
-                                    onClick={() => {
-                                        removeItem(item._id);
-                                    }}
-                                />
-                            </div>
-                        )
-                    }
+                    {!readOnly && (
+                        <div>
+                            <IconButton
+                                icon="remove-sign"
+                                ariaValue={gettext('Remove')}
+                                onClick={() => {
+                                    removeItem(item._id);
+                                }}
+                            />
+                        </div>
+                    )}
                 </Spacer>
             );
         }
@@ -89,14 +85,12 @@ export class Editor extends React.PureComponent<IProps> {
     removeItem(idToRemove: IArticle['_id']) {
         const linkedItems = this.props.value ?? [];
 
-        this.props.onChange(
-            linkedItems.filter(({guid}) => guid !== idToRemove),
-        );
+        this.props.onChange(linkedItems.filter(({guid}) => guid !== idToRemove));
     }
 
     render() {
         const Container = this.props.container;
-        const packageItems = (this.props.value ?? []);
+        const packageItems = this.props.value ?? [];
         const packageItemIds = packageItems.map(({guid}) => guid);
         const {readOnly} = this.props;
 
@@ -108,8 +102,8 @@ export class Editor extends React.PureComponent<IProps> {
                         const item = getDroppedItem(event);
 
                         if (item != null) {
-                            this.props.onChange(packageItems.concat(
-                                {
+                            this.props.onChange(
+                                packageItems.concat({
                                     guid: item.guid,
                                     type: item.type,
                                     headline: item.headline,
@@ -118,34 +112,30 @@ export class Editor extends React.PureComponent<IProps> {
                                     slugline: item.slugline,
                                     renditions: {},
                                     itemClass: item.type ? 'icls:' + item.type : '',
-                                },
-                            ));
+                                }),
+                            );
                         }
                     }}
                 >
-                    {
-                        packageItemIds.length > 0 && (
-                            <WithArticles ids={packageItemIds}>
-                                {
-                                    (items) => (
-                                        <WithSortable
-                                            items={items}
-                                            itemTemplate={this.itemTemplate}
-                                            getId={(item) => item._id}
-                                            options={{
-                                                shouldCancelStart: () => readOnly,
-                                                onSortEnd: ({oldIndex, newIndex}) => {
-                                                    this.props.onChange(arrayMove(packageItems, oldIndex, newIndex));
-                                                },
-                                                distance: 10,
-                                                helperClass: 'dragging-in-progress',
-                                            }}
-                                        />
-                                    )
-                                }
-                            </WithArticles>
-                        )
-                    }
+                    {packageItemIds.length > 0 && (
+                        <WithArticles ids={packageItemIds}>
+                            {(items) => (
+                                <WithSortable
+                                    items={items}
+                                    itemTemplate={this.itemTemplate}
+                                    getId={(item) => item._id}
+                                    options={{
+                                        shouldCancelStart: () => readOnly,
+                                        onSortEnd: ({oldIndex, newIndex}) => {
+                                            this.props.onChange(arrayMove(packageItems, oldIndex, newIndex));
+                                        },
+                                        distance: 10,
+                                        helperClass: 'dragging-in-progress',
+                                    }}
+                                />
+                            )}
+                        </WithArticles>
+                    )}
                 </DropZone3>
             </Container>
         );

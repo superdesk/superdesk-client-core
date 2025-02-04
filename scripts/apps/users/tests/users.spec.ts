@@ -1,4 +1,3 @@
-
 describe('users api', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
@@ -38,29 +37,35 @@ describe('userlist service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.service('api', ($q) => function(resource) {
-            return {
-                query: function() {
-                    return $q.when({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
-                },
-                getById: function() {
-                    return $q.when({_id: 1});
-                },
-            };
-        });
-    }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service(
+                'api',
+                ($q) =>
+                    function (resource) {
+                        return {
+                            query: function () {
+                                return $q.when({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
+                            },
+                            getById: function () {
+                                return $q.when({_id: 1});
+                            },
+                        };
+                    },
+            );
+        }),
+    );
 
-    it('can fetch users', (done) => inject((userList, $rootScope) => {
-        userList.get()
-            .then((res) => {
+    it('can fetch users', (done) =>
+        inject((userList, $rootScope) => {
+            userList.get().then((res) => {
                 expect(res).toEqual({_items: [{_id: 1}, {_id: 2}, {_id: 3}]});
 
                 done();
             });
 
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 
     it('can return users from cache', inject((userList, $rootScope, api) => {
         userList.get();
@@ -74,16 +79,16 @@ describe('userlist service', () => {
         expect(spy).not.toHaveBeenCalled();
     }));
 
-    it('can fetch single user', (done) => inject((userList, $rootScope) => {
-        userList.getUser(1)
-            .then((res) => {
+    it('can fetch single user', (done) =>
+        inject((userList, $rootScope) => {
+            userList.getUser(1).then((res) => {
                 expect(res).toEqual({_id: 1});
 
                 done();
             });
 
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 
     it('can return single user from default cacher', inject((userList, $rootScope, api) => {
         userList.get();
@@ -117,25 +122,36 @@ describe('mentio directive', () => {
         _items: [{_id: 'desk1'}],
     };
 
-    beforeEach(window.module(($provide) => {
-        $provide.service('api', ($q) => function(resource) {
-            return {
-                query: function() {
-                    return $q.when({_items: [{_id: 1, username: 'moo'},
-                        {_id: 2, username: 'foo'}, {_id: 3, username: 'fast'}]});
-                },
-            };
-        });
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service(
+                'api',
+                ($q) =>
+                    function (resource) {
+                        return {
+                            query: function () {
+                                return $q.when({
+                                    _items: [
+                                        {_id: 1, username: 'moo'},
+                                        {_id: 2, username: 'foo'},
+                                        {_id: 3, username: 'fast'},
+                                    ],
+                                });
+                            },
+                        };
+                    },
+            );
 
-        $provide.service('desks', ($q) => ({
-            deskLookup: deskList,
-            userDesks: userDesks,
-            desks: deskItems,
-            initialize: function() {
-                return $q.when([]);
-            },
-        }));
-    }));
+            $provide.service('desks', ($q) => ({
+                deskLookup: deskList,
+                userDesks: userDesks,
+                desks: deskItems,
+                initialize: function () {
+                    return $q.when([]);
+                },
+            }));
+        }),
+    );
 
     it('can return sorted users', inject(($rootScope, $compile) => {
         var scope = $rootScope.$new(true);
@@ -147,12 +163,13 @@ describe('mentio directive', () => {
 
         iscope.searchUsersAndDesks();
         $rootScope.$digest();
-        expect(iscope.users).toEqual(
-            [{type: 'desk', item: {name: 'desk1'}},
-                {type: 'desk', item: {name: 'desk3'}},
-                {type: 'user', item: {_id: 3, username: 'fast'}},
-                {type: 'user', item: {_id: 2, username: 'foo'}},
-                {type: 'user', item: {_id: 1, username: 'moo'}}]);
+        expect(iscope.users).toEqual([
+            {type: 'desk', item: {name: 'desk1'}},
+            {type: 'desk', item: {name: 'desk3'}},
+            {type: 'user', item: {_id: 3, username: 'fast'}},
+            {type: 'user', item: {_id: 2, username: 'foo'}},
+            {type: 'user', item: {_id: 1, username: 'moo'}},
+        ]);
     }));
 });
 
@@ -164,56 +181,54 @@ describe('user edit form', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.service('session', ($q) => ({
-            identity: {_id: 1},
-            getIdentity: function() {
-                return $q.when(
-                    {who: 'cares', this: 'is', totaly: 'fake'},
-                );
-            },
-        }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service('session', ($q) => ({
+                identity: {_id: 1},
+                getIdentity: function () {
+                    return $q.when({who: 'cares', this: 'is', totaly: 'fake'});
+                },
+            }));
+        }),
+    );
+
+    it('check if first_name, last_name, phone and email are readonly', inject(($rootScope, $compile, $q, userList) => {
+        var scope = $rootScope.$new(true);
+        var user = {
+            _id: 1,
+            _readonly: {first_name: true, last_name: true, email: true},
+            is_active: true,
+            need_activation: false,
+            user: {},
+        };
+
+        scope.user = user;
+
+        spyOn(userList, 'getUser').and.returnValue($q.when(user));
+        var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
+
+        scope.$digest();
+
+        expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).toBeDefined();
+        expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).toBeDefined();
+        expect($(elm.find('input[name=email]')[0]).attr('readonly')).toBeDefined();
     }));
 
-    it('check if first_name, last_name, phone and email are readonly',
-        inject(($rootScope, $compile, $q, userList) => {
-            var scope = $rootScope.$new(true);
-            var user = {
-                _id: 1,
-                _readonly: {first_name: true, last_name: true, email: true},
-                is_active: true,
-                need_activation: false,
-                user: {},
-            };
+    it('check if first_name, last_name, phone and email are not readonly', inject(($rootScope, $compile) => {
+        var scope = $rootScope.$new(true);
 
-            scope.user = user;
+        scope.user = {
+            _id: 1,
+            is_active: true,
+            need_activation: false,
+        };
 
-            spyOn(userList, 'getUser').and.returnValue($q.when(user));
-            var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
+        var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
 
-            scope.$digest();
-
-            expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).toBeDefined();
-            expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).toBeDefined();
-            expect($(elm.find('input[name=email]')[0]).attr('readonly')).toBeDefined();
-        }));
-
-    it('check if first_name, last_name, phone and email are not readonly',
-        inject(($rootScope, $compile) => {
-            var scope = $rootScope.$new(true);
-
-            scope.user = {
-                _id: 1,
-                is_active: true,
-                need_activation: false,
-            };
-
-            var elm = $compile('<div sd-user-edit data-user="user"></div>')(scope);
-
-            scope.$digest();
-            expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).not.toBeDefined();
-            expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).not.toBeDefined();
-            expect($(elm.find('input[name=phone]')[0]).attr('readonly')).not.toBeDefined();
-            expect($(elm.find('input[name=email]')[0]).attr('readonly')).not.toBeDefined();
-        }));
+        scope.$digest();
+        expect($(elm.find('input[name=first_name]')[0]).attr('readonly')).not.toBeDefined();
+        expect($(elm.find('input[name=last_name]')[0]).attr('readonly')).not.toBeDefined();
+        expect($(elm.find('input[name=phone]')[0]).attr('readonly')).not.toBeDefined();
+        expect($(elm.find('input[name=email]')[0]).attr('readonly')).not.toBeDefined();
+    }));
 });

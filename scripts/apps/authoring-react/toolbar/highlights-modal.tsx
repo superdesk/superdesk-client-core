@@ -47,16 +47,15 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount(): void {
-        Promise.all([
-            sdApi.highlights.fetchHighlights(),
-            sdApi.article.get(this.props.article._id),
-        ]).then(([highlightResponse, article]: [IHighlightResponse, IArticle]) => {
-            this.setState({
-                initialized: true,
-                availableHighlights: highlightResponse._items,
-                markedHighlights: article.highlights,
-            });
-        });
+        Promise.all([sdApi.highlights.fetchHighlights(), sdApi.article.get(this.props.article._id)]).then(
+            ([highlightResponse, article]: [IHighlightResponse, IArticle]) => {
+                this.setState({
+                    initialized: true,
+                    availableHighlights: highlightResponse._items,
+                    markedHighlights: article.highlights,
+                });
+            },
+        );
     }
 
     render() {
@@ -67,12 +66,7 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
         const state = this.state;
 
         return (
-            <Modal
-                onHide={this.props.closeModal}
-                size="small"
-                visible
-                headerTemplate={gettext('Highlights')}
-            >
+            <Modal onHide={this.props.closeModal} size="small" visible headerTemplate={gettext('Highlights')}>
                 <Spacer v gap="16">
                     <TreeSelect
                         kind="synchronous"
@@ -91,10 +85,7 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
                         getOptions={() => state.availableHighlights.map((item) => ({value: item}))}
                     />
                     <Spacer h gap="16" justifyContent="end" noWrap>
-                        <Button
-                            onClick={this.props.closeModal}
-                            text={gettext('Cancel')}
-                        />
+                        <Button onClick={this.props.closeModal} text={gettext('Cancel')} />
                         <Button
                             disabled={isEqual(this.props.article.highlights, state.markedHighlights)}
                             onClick={this.markHighlights}

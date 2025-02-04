@@ -10,7 +10,7 @@ export function ItemUrgency(metadata) {
             '<span ng-if="urgency" class="urgency-label urgency-label--{{ urgency }}" ',
             'ng-style="{backgroundColor: color}" title="{{ \'Urgency\' | translate }}: {{ title }}">{{ short }}</span>',
         ].join(''),
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             scope.$watch('urgency', (urgency) => {
                 if (urgency) {
                     var spec = metadata.urgencyByValue(urgency);

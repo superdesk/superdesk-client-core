@@ -90,7 +90,7 @@ export function AuthoringDirective(
     storage,
 ) {
     return {
-        link: function($scope, elem, attrs) {
+        link: function ($scope, elem, attrs) {
             $scope.loading = false;
             $scope.tabsPinned = false;
 
@@ -131,21 +131,29 @@ export function AuthoringDirective(
             $scope.isPreview = false;
             $scope.isCorrectionInProgress = false;
 
-            $scope.$watch('origItem', (newValue, oldValue) => {
-                $scope.itemActions = null;
-                if (newValue) {
-                    $scope.itemActions = authoring.itemActions(newValue, userDesks);
-                }
-            }, true);
+            $scope.$watch(
+                'origItem',
+                (newValue, oldValue) => {
+                    $scope.itemActions = null;
+                    if (newValue) {
+                        $scope.itemActions = authoring.itemActions(newValue, userDesks);
+                    }
+                },
+                true,
+            );
 
-            $scope.$watch('item.flags', (newValue, oldValue) => {
-                if (newValue !== oldValue) {
-                    $scope.item.flags = _.clone($scope.origItem.flags);
-                    $scope.item.flags = newValue;
-                    $scope.origItem.flags = oldValue;
-                    $scope.dirty = true;
-                }
-            }, true);
+            $scope.$watch(
+                'item.flags',
+                (newValue, oldValue) => {
+                    if (newValue !== oldValue) {
+                        $scope.item.flags = _.clone($scope.origItem.flags);
+                        $scope.item.flags = newValue;
+                        $scope.origItem.flags = oldValue;
+                        $scope.dirty = true;
+                    }
+                },
+                true,
+            );
 
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
@@ -180,7 +188,7 @@ export function AuthoringDirective(
 
             /**
              * Get the Current Template for the item.
-            */
+             */
             function getCurrentTemplate() {
                 const item: IArticle | null = $scope.item;
 
@@ -193,7 +201,8 @@ export function AuthoringDirective(
                         return;
                     }
 
-                    api('content_templates').getById(item.template)
+                    api('content_templates')
+                        .getById(item.template)
                         .then((result) => {
                             $scope.currentTemplate = result;
                         });
@@ -201,8 +210,8 @@ export function AuthoringDirective(
             }
 
             /**
-            * Get the desk name and desk type.
-            */
+             * Get the desk name and desk type.
+             */
             function setDesk() {
                 if (!$scope.item.task.desk) {
                     return false;
@@ -218,23 +227,32 @@ export function AuthoringDirective(
             desks.initialize().then(() => {
                 getDeskStage();
                 getCurrentTemplate();
-                $scope.$watch('item', () => {
-                    $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
-                        && !sdApi.navigation.isPersonalSpace()
-                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
+                $scope.$watch(
+                    'item',
+                    () => {
+                        $scope.toDeskEnabled =
+                            appConfig.features?.customAuthoringTopbar?.toDesk &&
+                            !sdApi.navigation.isPersonalSpace() &&
+                            authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
+                        $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
-                    $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
-                        && sdApi.article.canPublishOnDesk($scope.deskType)
-                        && authoringApiCommon.checkShortcutButtonAvailability(
+                        $scope.publishEnabled =
+                            appConfig.features?.customAuthoringTopbar?.publish &&
+                            sdApi.article.canPublishOnDesk($scope.deskType) &&
+                            authoringApiCommon.checkShortcutButtonAvailability(
+                                $scope.item,
+                                false,
+                                sdApi.navigation.isPersonalSpace(),
+                            );
+
+                        $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue(
                             $scope.item,
-                            false,
-                            sdApi.navigation.isPersonalSpace(),
+                            $scope.dirty,
                         );
-
-                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
-                }, true);
+                    },
+                    true,
+                );
             });
 
             /**
@@ -249,14 +267,13 @@ export function AuthoringDirective(
 
             $scope.edit = function edit() {
                 if ($scope.origItem.state === 'unpublished') {
-                    api.update('archive', $scope.origItem, {state: 'in_progress'})
-                        .then((updated) => {
-                            // for updating and refreshing the item everywhere,
-                            // close it first and then open it.
-                            $scope.close().then(() => {
-                                authoringWorkspace.edit(updated);
-                            });
+                    api.update('archive', $scope.origItem, {state: 'in_progress'}).then((updated) => {
+                        // for updating and refreshing the item everywhere,
+                        // close it first and then open it.
+                        $scope.close().then(() => {
+                            authoringWorkspace.edit(updated);
                         });
+                    });
                 } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
@@ -267,47 +284,57 @@ export function AuthoringDirective(
             /**
              * Create a new version
              */
-            $scope.save = function({generateHtml = true} = {}) {
-                return authoring.save(
-                    $scope.origItem,
-                    $scope.item,
-                    generateHtml ? $scope.requestEditor3DirectivesToGenerateHtml : [],
-                ).then((res) => {
-                    $scope.dirty = false;
-                    _.merge($scope.item, res);
+            $scope.save = function ({generateHtml = true} = {}) {
+                return authoring
+                    .save(
+                        $scope.origItem,
+                        $scope.item,
+                        generateHtml ? $scope.requestEditor3DirectivesToGenerateHtml : [],
+                    )
+                    .then(
+                        (res) => {
+                            $scope.dirty = false;
+                            _.merge($scope.item, res);
 
-                    if (res.highlight) {
-                        _previewHighlight(res._id);
-                    }
+                            if (res.highlight) {
+                                _previewHighlight(res._id);
+                            }
 
-                    notify.success(gettext('Item updated.'));
+                            notify.success(gettext('Item updated.'));
 
-                    InitializeMedia.initMedia($scope);
+                            InitializeMedia.initMedia($scope);
 
-                    return $scope.origItem;
-                }, (response) => {
-                    if (response.status === 412) {
-                        notifyPreconditionFailed();
-                        return;
-                    }
+                            return $scope.origItem;
+                        },
+                        (response) => {
+                            if (response.status === 412) {
+                                notifyPreconditionFailed();
+                                return;
+                            }
 
-                    if (angular.isDefined(response.data._issues)) {
-                        if (angular.isDefined(response.data._issues.unique_name) &&
-                            response.data._issues.unique_name.unique === 1) {
-                            notify.error(UNIQUE_NAME_ERROR);
-                            return;
-                        } else if (angular.isDefined(response.data._issues['validator exception'])) {
-                            notify.error(gettext('Error: {{message}}',
-                                {message: response.data._issues['validator exception']}));
-                            return;
-                        }
-                    }
+                            if (angular.isDefined(response.data._issues)) {
+                                if (
+                                    angular.isDefined(response.data._issues.unique_name) &&
+                                    response.data._issues.unique_name.unique === 1
+                                ) {
+                                    notify.error(UNIQUE_NAME_ERROR);
+                                    return;
+                                } else if (angular.isDefined(response.data._issues['validator exception'])) {
+                                    notify.error(
+                                        gettext('Error: {{message}}', {
+                                            message: response.data._issues['validator exception'],
+                                        }),
+                                    );
+                                    return;
+                                }
+                            }
 
-                    notify.error(gettext('Error. Item not updated.'));
-                });
+                            notify.error(gettext('Error. Item not updated.'));
+                        },
+                    );
             };
 
-            $scope.openFullPreview = function($event) {
+            $scope.openFullPreview = function ($event) {
                 if ($event.button === 0 && !$event.ctrlKey) {
                     $event.preventDefault();
                     previewItems([$scope.item]);
@@ -317,16 +344,19 @@ export function AuthoringDirective(
             /**
              * Export the list of highlights as a text item.
              */
-            $scope.exportHighlight = function(item) {
+            $scope.exportHighlight = function (item) {
                 sdApi.highlights.exportHighlight(item._id, $scope.save_enabled());
             };
 
             function _previewHighlight(_id) {
-                sdApi.highlights.prepareHighlightForPreview(_id).then((res) => {
-                    $scope.highlight_preview = res;
-                }).catch((err) => {
-                    $scope.highlight_preview = err;
-                });
+                sdApi.highlights
+                    .prepareHighlightForPreview(_id)
+                    .then((res) => {
+                        $scope.highlight_preview = res;
+                    })
+                    .catch((err) => {
+                        $scope.highlight_preview = err;
+                    });
             }
 
             if ($scope.origItem.highlight) {
@@ -340,13 +370,7 @@ export function AuthoringDirective(
              *         Otherwise empty string.
              */
             function validateTimestamp(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName) {
-                var errors = authoring.validateSchedule(
-                    datePartOfTS,
-                    timePartOfTS,
-                    timestamp,
-                    timezone,
-                    fieldName,
-                );
+                var errors = authoring.validateSchedule(datePartOfTS, timePartOfTS, timestamp, timezone, fieldName);
 
                 if (!errors) {
                     return;
@@ -364,7 +388,7 @@ export function AuthoringDirective(
                     return gettext('{{field}} is not a valid date!', {field: fieldName});
                 }
 
-                if (errors.future && fieldName !== 'Embargo' || $scope._isInProductionStates) {
+                if ((errors.future && fieldName !== 'Embargo') || $scope._isInProductionStates) {
                     return gettext('{{field}} cannot be earlier than now!', {field: fieldName});
                 }
             }
@@ -376,7 +400,7 @@ export function AuthoringDirective(
              */
             function validatePublishScheduleAndEmbargo(item) {
                 if (item.embargo && item.publish_schedule) {
-                    notify.error(gettext('An Item can\'t have both Embargo and Publish Schedule.'));
+                    notify.error(gettext("An Item can't have both Embargo and Publish Schedule."));
                     return false;
                 }
 
@@ -384,9 +408,12 @@ export function AuthoringDirective(
 
                 if (item.embargo_date || item.embargo_time) {
                     errorMessage = validateTimestamp(
-                        item.embargo_date, item.embargo_time, item.embargo,
+                        item.embargo_date,
+                        item.embargo_time,
+                        item.embargo,
                         item.schedule_settings ? item.schedule_settings.time_zone : null,
-                        gettext('Embargo'));
+                        gettext('Embargo'),
+                    );
                 }
 
                 if (item.publish_schedule_date || item.publish_schedule_time) {
@@ -395,9 +422,12 @@ export function AuthoringDirective(
                     }
 
                     errorMessage = validateTimestamp(
-                        item.publish_schedule_date, item.publish_schedule_time,
-                        item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null,
-                        gettext('Publish Schedule'));
+                        item.publish_schedule_date,
+                        item.publish_schedule_time,
+                        item.publish_schedule,
+                        item.schedule_settings ? item.schedule_settings.time_zone : null,
+                        gettext('Publish Schedule'),
+                    );
                 }
 
                 if (errorMessage) {
@@ -416,17 +446,20 @@ export function AuthoringDirective(
 
             function publishItem(orig, item): Promise<boolean> {
                 autosave.stop(item);
-                const action: IAuthoringActionType = $scope.action != null
-                    ? ($scope.action === 'edit' ? 'publish' : $scope.action)
-                    : 'publish';
+                const action: IAuthoringActionType =
+                    $scope.action != null ? ($scope.action === 'edit' ? 'publish' : $scope.action) : 'publish';
 
                 return sdApi.article.publishItem_legacy(orig, item, $scope, action);
             }
 
             function notifyPreconditionFailed() {
-                notify.error(gettext('Item has changed since it was opened. ' +
-                    'Please close and reopen the item to continue. ' +
-                    'Regrettably, your changes cannot be saved.'));
+                notify.error(
+                    gettext(
+                        'Item has changed since it was opened. ' +
+                            'Please close and reopen the item to continue. ' +
+                            'Regrettably, your changes cannot be saved.',
+                    ),
+                );
                 $scope._editable = false;
                 $scope.dirty = false;
             }
@@ -453,32 +486,33 @@ export function AuthoringDirective(
                 return true;
             }
 
-            $scope.hideLiveSuggestions = function() {
+            $scope.hideLiveSuggestions = function () {
                 return $rootScope.config.features && $rootScope.config.features.hideLiveSuggestions;
             };
 
-            $scope.openExport = function() {
+            $scope.openExport = function () {
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), true).then(() => {
                     $scope.export = true;
                 });
             };
 
-            $scope.canExport = function() {
-                return $scope.privileges.content_export ? $scope.item.lock_user === session.identity._id &&
-                    $scope.itemActions.export : false;
+            $scope.canExport = function () {
+                return $scope.privileges.content_export
+                    ? $scope.item.lock_user === session.identity._id && $scope.itemActions.export
+                    : false;
             };
 
-            $scope.closeExport = function() {
+            $scope.closeExport = function () {
                 $scope.export = false;
             };
 
-            $scope.useTansaProofing = function() {
+            $scope.useTansaProofing = function () {
                 return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
             };
 
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
-            $scope.runTansa = function() {
+            $scope.runTansa = function () {
                 if (window.RunTansaProofing && appConfig.tansa != null) {
                     const _editor = editorResolver.get();
 
@@ -529,7 +563,7 @@ export function AuthoringDirective(
                 }
             };
 
-            $scope.isRemovedField = function(fieldName) {
+            $scope.isRemovedField = function (fieldName) {
                 return appConfig.infoRemovedFields != null && appConfig.infoRemovedFields.hasOwnProperty(fieldName);
             };
 
@@ -545,7 +579,7 @@ export function AuthoringDirective(
              * Depending on the item state one of the publish, correct, kill actions will be executed on the item
              * in $scope.
              */
-            $scope.publish = function() {
+            $scope.publish = function () {
                 $scope.$applyAsync(() => {
                     $scope.loading = true;
                 });
@@ -558,37 +592,41 @@ export function AuthoringDirective(
 
                         resolve();
                     });
-                }).then(() => {
-                    if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
-                        modal.alert({
-                            headerText: gettext('Resolving suggestions'),
-                            bodyText: gettext(
-                                'Article cannot be published. Please accept or reject all suggestions first.',
-                            ),
-                        });
+                })
+                    .then(() => {
+                        if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
+                            modal.alert({
+                                headerText: gettext('Resolving suggestions'),
+                                bodyText: gettext(
+                                    'Article cannot be published. Please accept or reject all suggestions first.',
+                                ),
+                            });
 
-                        return $q.reject();
-                    }
+                            return $q.reject();
+                        }
 
-                    if (helpers.itemHasUnresolvedComments($scope.item)) {
-                        modal.confirm({
-                            bodyText: gettext(
-                                'This article contains unresolved comments.'
-                                + 'Click on Cancel to go back to editing to'
-                                + 'resolve those comments or OK to ignore and proceed with publishing',
-                            ),
-                            headerText: gettext('Resolving comments'),
-                            okText: gettext('Ok'),
-                            cancelText: gettext('Cancel'),
-                        }).then((ok) => ok ? performPublish() : false);
+                        if (helpers.itemHasUnresolvedComments($scope.item)) {
+                            modal
+                                .confirm({
+                                    bodyText: gettext(
+                                        'This article contains unresolved comments.' +
+                                            'Click on Cancel to go back to editing to' +
+                                            'resolve those comments or OK to ignore and proceed with publishing',
+                                    ),
+                                    headerText: gettext('Resolving comments'),
+                                    okText: gettext('Ok'),
+                                    cancelText: gettext('Cancel'),
+                                })
+                                .then((ok) => (ok ? performPublish() : false));
 
-                        return $q.reject();
-                    }
+                            return $q.reject();
+                        }
 
-                    return performPublish();
-                }).finally(() => {
-                    $scope.loading = false;
-                });
+                        return performPublish();
+                    })
+                    .finally(() => {
+                        $scope.loading = false;
+                    });
             };
 
             function performPublish(): Promise<any> {
@@ -603,15 +641,17 @@ export function AuthoringDirective(
 
                     if ($scope.dirty && message === 'publish') {
                         // confirmation only required for publish
-                        return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message)
-                            .then((res) => {
+                        return authoring.publishConfirmation($scope.origItem, $scope.item, $scope.dirty, message).then(
+                            (res) => {
                                 if (res) {
                                     return publishItem($scope.origItem, $scope.item);
                                 }
-                            }, (response) => {
+                            },
+                            (response) => {
                                 notify.error(gettext('Error. Item not published.'));
                                 return $q.reject(false);
-                            });
+                            },
+                        );
                     }
 
                     return publishItem($scope.origItem, $scope.item);
@@ -621,45 +661,50 @@ export function AuthoringDirective(
             }
 
             $scope.showCustomButtons = () => {
-                return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
-                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
+                return (
+                    $scope.toDeskEnabled ||
+                    $scope.closeAndContinueEnabled ||
+                    $scope.publishAndContinueEnabled ||
+                    $scope.publishEnabled
+                );
             };
 
-            $scope.saveAndContinue = function(customButtonAction, showConfirm) {
+            $scope.saveAndContinue = function (customButtonAction, showConfirm) {
                 if ($scope.dirty) {
-                    showConfirm ?
-                        $scope.saveTopbar()
-                            .then(() => confirmPublish([$scope.item]))
-                            .then(customButtonAction) :
-                        $scope.saveTopbar()
-                            .then(customButtonAction);
+                    showConfirm
+                        ? $scope
+                              .saveTopbar()
+                              .then(() => confirmPublish([$scope.item]))
+                              .then(customButtonAction)
+                        : $scope.saveTopbar().then(customButtonAction);
                 } else {
-                    showConfirm ?
-                        confirmPublish([$scope.item]).then(customButtonAction) :
-                        customButtonAction();
+                    showConfirm ? confirmPublish([$scope.item]).then(customButtonAction) : customButtonAction();
                 }
                 InitializeMedia.initMedia($scope);
             };
 
-            $scope.publishAndContinue = function() {
-                $scope.publish(true).then((published: boolean) => {
-                    if (published) {
-                        authoring.rewrite($scope.item);
-                    }
-                }, (err) => {
-                    notify.error(gettext('Failed to publish and continue.'));
-                });
+            $scope.publishAndContinue = function () {
+                $scope.publish(true).then(
+                    (published: boolean) => {
+                        if (published) {
+                            authoring.rewrite($scope.item);
+                        }
+                    },
+                    (err) => {
+                        notify.error(gettext('Failed to publish and continue.'));
+                    },
+                );
                 InitializeMedia.initMedia($scope);
             };
 
             // Close the current article, create an update of the article and open it in the edit mode.
-            $scope.closeAndContinue = function() {
+            $scope.closeAndContinue = function () {
                 $scope.close().then(() => {
                     sdApi.article.rewrite($scope.item);
                 });
             };
 
-            $scope.deschedule = function() {
+            $scope.deschedule = function () {
                 $scope.item.publish_schedule = null;
                 return $scope.save();
             };
@@ -667,7 +712,7 @@ export function AuthoringDirective(
             /**
              * Close an item - unlock
              */
-            $scope.close = function() {
+            $scope.close = function () {
                 _closing = true;
 
                 // Request to generate html before we pass scope variables
@@ -682,14 +727,14 @@ export function AuthoringDirective(
              * This is used in the 'EDIT AND CORRECT' and 'EDIT AND KILL' actions.
              * When the user clicks on the 'CANCEL' button it takes them back to the view action on the item
              */
-            $scope.cancel = function() {
+            $scope.cancel = function () {
                 authoringWorkspace.view($scope.origItem);
             };
 
             /*
              * Minimize an item
              */
-            $scope.minimize = function() {
+            $scope.minimize = function () {
                 authoringWorkspace.close(true);
             };
 
@@ -700,16 +745,18 @@ export function AuthoringDirective(
              * @param {String} action - action to display in confirmation dialog
              * @return {Object} promise
              */
-            $scope.beforeSend = function(action) {
+            $scope.beforeSend = function (action) {
                 $scope.sending = true;
                 if ($scope.dirty) {
-                    return confirm.confirmSendTo(action)
-                        .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () => // cancel
-                            $q.reject());
+                    return confirm.confirmSendTo(action).then(
+                        () => $scope.save().then(() => lock.unlock($scope.origItem)),
+                        () =>
+                            // cancel
+                            $q.reject(),
+                    );
                 }
 
-                return lock.unlock($scope.origItem)
-                    .catch(() => $scope.origItem); // ignore failed unlock
+                return lock.unlock($scope.origItem).catch(() => $scope.origItem); // ignore failed unlock
             };
 
             $scope.handleUnsavedChangesReact = (items: Array<IArticle>) => {
@@ -721,7 +768,7 @@ export function AuthoringDirective(
             /**
              * Preview different version of an item
              */
-            $scope.preview = function(version) {
+            $scope.preview = function (version) {
                 helpers.forcedExtend($scope.item, version);
                 $scope.refreshTrigger++;
                 $scope.isPreview = true;
@@ -731,7 +778,7 @@ export function AuthoringDirective(
             /**
              * Revert item to given version
              */
-            $scope.revert = function(version) {
+            $scope.revert = function (version) {
                 $scope.isPreview = false;
                 helpers.forcedExtend($scope.item, version);
 
@@ -752,7 +799,7 @@ export function AuthoringDirective(
             /**
              * Close preview and start working again
              */
-            $scope.closePreview = function() {
+            $scope.closePreview = function () {
                 $scope.item = copyJson($scope.origItem);
                 $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
 
@@ -774,35 +821,39 @@ export function AuthoringDirective(
             /**
              * Checks if the item can be unlocked or not.
              */
-            $scope.can_unlock = function() {
+            $scope.can_unlock = function () {
                 return !$scope.item.sendTo && lock.can_unlock($scope.item);
             };
 
-            $scope.save_enabled = function() {
+            $scope.save_enabled = function () {
                 confirm.dirty = $scope.dirty;
 
-                return ($scope.dirty || $scope.item._autosave != null) &&
-                    _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true);
+                return (
+                    ($scope.dirty || $scope.item._autosave != null) &&
+                    _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true)
+                );
             };
 
-            $scope.previewFormattedEnabled = function() {
+            $scope.previewFormattedEnabled = function () {
                 return !!_.get($rootScope.config, 'features.previewFormats');
             };
 
             // call the function to unlock and lock the story for editing.
-            $scope.unlock = function() {
+            $scope.unlock = function () {
                 $scope.unlockClicked = true;
                 lock.unlock($scope.item).then((unlockedItem) => {
                     $scope.edit(unlockedItem);
                 });
             };
 
-            $scope.openAction = function(action) {
+            $scope.openAction = function (action) {
                 if (action === 'correct') {
-                    if (appConfig?.corrections_workflow &&
-                    [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
+                    if (
+                        appConfig?.corrections_workflow &&
+                        [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)
+                    ) {
                         $scope.isCorrectionInProgress = true;
-                        authoring.correction($scope.item, () => $scope.isCorrectionInProgress = false);
+                        authoring.correction($scope.item, () => ($scope.isCorrectionInProgress = false));
                     } else {
                         authoringWorkspace.correct($scope.item);
                     }
@@ -817,11 +868,11 @@ export function AuthoringDirective(
                 }
             };
 
-            $scope.isLocked = function() {
+            $scope.isLocked = function () {
                 return lock.isLocked($scope.item);
             };
 
-            $scope.isLockedByMe = function() {
+            $scope.isLockedByMe = function () {
                 return lock.isLockedByMe($scope.item);
             };
 
@@ -832,7 +883,7 @@ export function AuthoringDirective(
              * @function changeProfile
              * @param {Object} item - item being edited currently
              */
-            $scope.changeProfile = function(item) {
+            $scope.changeProfile = function (item) {
                 angular.forEach($scope.content_types, (profile) => {
                     if (item.profile === profile._id && profile.schema) {
                         angular.forEach(profile.schema, (schema, key) => {
@@ -854,20 +905,13 @@ export function AuthoringDirective(
             const _autosave = debounce((timeout) => {
                 $scope.generateHtml();
 
-                return authoring.autosave(
-                    $scope.item,
-                    $scope.origItem,
-                    timeout,
-                    $scope.$applyAsync,
-                ).then(
-                    () => {
-                        $scope.$applyAsync(() => {
-                            authoringWorkspace.addAutosave();
-                            InitializeMedia.initMedia($scope);
-                            updateSchema();
-                        });
-                    },
-                );
+                return authoring.autosave($scope.item, $scope.origItem, timeout, $scope.$applyAsync).then(() => {
+                    $scope.$applyAsync(() => {
+                        authoringWorkspace.addAutosave();
+                        InitializeMedia.initMedia($scope);
+                        updateSchema();
+                    });
+                });
             }, 1000);
 
             $scope.autosave = (item, timeout) => {
@@ -880,7 +924,7 @@ export function AuthoringDirective(
                 $scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
             };
 
-            $scope.sendToNextStage = function() {
+            $scope.sendToNextStage = function () {
                 sdApi.article.sendItemToNextStage($scope.item).then(() => {
                     $scope.$applyAsync();
                     $scope.close();
@@ -888,8 +932,7 @@ export function AuthoringDirective(
             };
 
             // Returns true if the given text is an URL
-            $scope.isURL = (text) =>
-                _.startsWith(_.lowerCase(_.trim(text)), 'http');
+            $scope.isURL = (text) => _.startsWith(_.lowerCase(_.trim(text)), 'http');
 
             // Shows the preview for the given embed field.
             $scope.previewEmbed = (fieldId) => {
@@ -906,8 +949,7 @@ export function AuthoringDirective(
             };
 
             // Returns true if the preview for the given embed field was on.
-            $scope.isPreviewOn = (fieldId) =>
-                !!$scope.embedPreviews && !!$scope.embedPreviews[fieldId];
+            $scope.isPreviewOn = (fieldId) => !!$scope.embedPreviews && !!$scope.embedPreviews[fieldId];
 
             // Validates the given embed field
             function validateEmbed(fieldId) {
@@ -946,20 +988,20 @@ export function AuthoringDirective(
             };
 
             function refreshItem() {
-                authoring.open($scope.item._id, true)
-                    .then((item) => {
-                        $scope.origItem = item;
-                        $scope.dirty = false;
-                        $scope.closePreview();
-                        $scope.item._editable = $scope._editable;
-                        InitializeMedia.initMedia($scope);
-                    });
+                authoring.open($scope.item._id, true).then((item) => {
+                    $scope.origItem = item;
+                    $scope.dirty = false;
+                    $scope.closePreview();
+                    $scope.item._editable = $scope._editable;
+                    InitializeMedia.initMedia($scope);
+                });
             }
 
             $scope.$on('savework', (e, msg) => {
                 var changeMsg = msg;
 
-                authoring.saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
+                authoring
+                    .saveWorkConfirmation($scope.origItem, $scope.item, $scope.dirty, changeMsg)
                     .then((res) => {
                         // after saving work make sure this item won't be open again
                         desks.setCurrentDeskId(null);
@@ -970,15 +1012,8 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:lock', (_e, data) => {
-                if ($scope.item._id === data.item
-                    && !_closing
-                    && session.sessionId !== data.lock_session
-                ) {
-                    const {
-                        user,
-                        lock_time,
-                        lock_session,
-                    } = data;
+                if ($scope.item._id === data.item && !_closing && session.sessionId !== data.lock_session) {
+                    const {user, lock_time, lock_session} = data;
 
                     authoring.lock($scope.item, {user, lock_time, lock_session});
                 }
@@ -986,9 +1021,9 @@ export function AuthoringDirective(
 
             $scope.$on('item:unlock', (_e, data) => {
                 if (
-                    $scope.item._id === data.item
-                    && !_closing
-                    && (session.sessionId !== data.lock_session || lock.previewUnlock)
+                    $scope.item._id === data.item &&
+                    !_closing &&
+                    (session.sessionId !== data.lock_session || lock.previewUnlock)
                 ) {
                     if (lock.previewUnlock) {
                         $scope.edit($scope.item);
@@ -1025,45 +1060,41 @@ export function AuthoringDirective(
 
             $scope.$on('item:publish:wrong:format', (_e, data) => {
                 if (data.item === $scope.item._id) {
-                    notify.error(gettext(
-                        'No formatters found for {{formats}} while publishing item having unique name.',
-                        {formats: data.formats.join(','), name: data.unique_name},
-                    ));
+                    notify.error(
+                        gettext('No formatters found for {{formats}} while publishing item having unique name.', {
+                            formats: data.formats.join(','),
+                            name: data.unique_name,
+                        }),
+                    );
                 }
             });
 
             $scope.eventListenersToRemoveOnUnmount.push(
-                addInternalEventListener(
-                    'dangerouslyOverwriteAuthoringData',
-                    (event) => {
-                        if (event.detail.item._id === $scope.item._id) {
-                            angular.extend($scope.item, event.detail.item);
-                            angular.extend($scope.origItem, event.detail.item);
+                addInternalEventListener('dangerouslyOverwriteAuthoringData', (event) => {
+                    if (event.detail.item._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail.item);
+                        angular.extend($scope.origItem, event.detail.item);
 
-                            $scope.$applyAsync();
-                            $scope.refresh();
-                        }
-                    },
-                ),
+                        $scope.$applyAsync();
+                        $scope.refresh();
+                    }
+                }),
             );
 
             $scope.eventListenersToRemoveOnUnmount.push(
-                addInternalEventListener(
-                    'dangerouslyOverwriteAuthoringField',
-                    (event) => {
-                        if (event.detail.itemId === $scope.item._id) {
-                            angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
+                addInternalEventListener('dangerouslyOverwriteAuthoringField', (event) => {
+                    if (event.detail.itemId === $scope.item._id) {
+                        angular.extend($scope.item, {[event.detail.field.key]: event.detail.field.value});
 
-                            if ($scope.item.fields_meta != null) {
-                                delete $scope.item.fields_meta[event.detail.field.key];
-                            }
-
-                            $scope.dirty = true;
-                            $scope.$applyAsync();
-                            $scope.refresh();
+                        if ($scope.item.fields_meta != null) {
+                            delete $scope.item.fields_meta[event.detail.field.key];
                         }
-                    },
-                ),
+
+                        $scope.dirty = true;
+                        $scope.$applyAsync();
+                        $scope.refresh();
+                    }
+                }),
             );
 
             $scope.$on('$destroy', () => {
@@ -1111,16 +1142,22 @@ export function AuthoringDirective(
 
             const reducer = combineReducers({editor});
 
-            $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
-                $scope: $scope,
-                $window: $injector.get('$window'),
-                urls: $injector.get('urls'),
-                notify: notify,
-                superdesk: superdesk,
-            })));
+            $scope.store = createStore(
+                reducer,
+                applyMiddleware(
+                    thunk.withExtraArgument({
+                        $scope: $scope,
+                        $window: $injector.get('$window'),
+                        urls: $injector.get('urls'),
+                        notify: notify,
+                        superdesk: superdesk,
+                    }),
+                ),
+            );
 
             $scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, $scope, $scope.item)
+                content
+                    .setupAuthoring(profile, $scope, $scope.item)
                     .then((contentType) => {
                         $scope.contentType = contentType;
                         authoring.schema = $scope.schema;
@@ -1133,10 +1170,11 @@ export function AuthoringDirective(
             const updateSchema = () => {
                 const schema = merge({}, authoring.schema); // always start from initial schema
 
-                coreApplyMiddleware(getArticleSchemaMiddleware, {item: $scope.item, schema: schema}, 'schema')
-                    .then((_schema) => {
+                coreApplyMiddleware(getArticleSchemaMiddleware, {item: $scope.item, schema: schema}, 'schema').then(
+                    (_schema) => {
                         $scope.schema = _schema;
-                    });
+                    },
+                );
             };
 
             $scope.refresh = () => $scope.refreshTrigger++;

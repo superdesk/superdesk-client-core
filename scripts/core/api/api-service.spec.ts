@@ -18,17 +18,17 @@ function testEtagHeader(headers) {
 
 var HTTP_API = {
     type: 'http',
-    service: function() {
+    service: function () {
         this.queryLog = [];
 
         var query = this.query;
 
-        this.query = function(criteria) {
+        this.query = function (criteria) {
             this.queryLog.push(criteria);
             return query.call(this, criteria);
         };
 
-        this.ping = function() {
+        this.ping = function () {
             return 'pong';
         };
     },
@@ -49,10 +49,12 @@ describe('API Provider', () => {
     beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(() => {
-        angular.module('superdesk.core.api')
-            .config(['apiProvider', (apiProvider) => {
+        angular.module('superdesk.core.api').config([
+            'apiProvider',
+            (apiProvider) => {
                 apiProvider.api('http', HTTP_API);
-            }]);
+            },
+        ]);
     });
 
     it('exists', inject((api) => {
@@ -79,73 +81,77 @@ describe('API Provider', () => {
             $httpBackend.verifyNoOutstandingRequest();
         }));
 
-        it('can query', (done) => inject((api, urls, $q, $httpBackend, $http) => {
-            var headers = $http.defaults.headers.common;
+        it('can query', (done) =>
+            inject((api, urls, $q, $httpBackend, $http) => {
+                var headers = $http.defaults.headers.common;
 
-            headers['X-Filter'] = 'User.*';
+                headers['X-Filter'] = 'User.*';
 
-            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
+                spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            $httpBackend.expectGET(USERS_URL, headers).respond(collection([{}]));
+                $httpBackend.expectGET(USERS_URL, headers).respond(collection([{}]));
 
-            api.http.query().then((users) => {
-                expect(users._items.length).toBe(1);
-                expect(urls.resource).toHaveBeenCalledWith('users');
+                api.http.query().then((users) => {
+                    expect(users._items.length).toBe(1);
+                    expect(urls.resource).toHaveBeenCalledWith('users');
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('rejects on query error', (done) => inject((api, urls, $q, $httpBackend) => {
-            $httpBackend.expectGET(USERS_URL).respond(400);
+        it('rejects on query error', (done) =>
+            inject((api, urls, $q, $httpBackend) => {
+                $httpBackend.expectGET(USERS_URL).respond(400);
 
-            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
+                spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            api.http.query().then(null, () => {
-                done();
-            });
+                api.http.query().then(null, () => {
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('can create new resource', (done) => inject((api, urls, $q, $httpBackend) => {
-            var userData = {username: 'test'};
+        it('can create new resource', (done) =>
+            inject((api, urls, $q, $httpBackend) => {
+                var userData = {username: 'test'};
 
-            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
+                spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            $httpBackend.expectPOST(USERS_URL, userData).respond(201, {_links: {self: {href: 'user_href'}}});
+                $httpBackend.expectPOST(USERS_URL, userData).respond(201, {_links: {self: {href: 'user_href'}}});
 
-            api.http.save({username: 'test'}).then((user) => {
-                expect(user._links.self.href).toBe('user_href');
-                expect(urls.resource).toHaveBeenCalledWith('users');
+                api.http.save({username: 'test'}).then((user) => {
+                    expect(user._links.self.href).toBe('user_href');
+                    expect(urls.resource).toHaveBeenCalledWith('users');
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('can fail creating new resource', (done) => inject((api, urls, $q, $httpBackend) => {
-            var userData = {username: 'test'};
+        it('can fail creating new resource', (done) =>
+            inject((api, urls, $q, $httpBackend) => {
+                var userData = {username: 'test'};
 
-            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
+                spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            $httpBackend.expectPOST(USERS_URL, userData).respond(200, {
-                _status: 'ERR',
-                _issues: {first_name: {required: 1}},
-            });
+                $httpBackend.expectPOST(USERS_URL, userData).respond(200, {
+                    _status: 'ERR',
+                    _issues: {first_name: {required: 1}},
+                });
 
-            const onSuccess = jasmine.createSpy('onSuccess');
+                const onSuccess = jasmine.createSpy('onSuccess');
 
-            api.http.save({username: 'test'}).then(onSuccess, (response) => {
-                expect(onSuccess).not.toHaveBeenCalled();
-                done();
-            });
+                api.http.save({username: 'test'}).then(onSuccess, (response) => {
+                    expect(onSuccess).not.toHaveBeenCalled();
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
         it('can create new with diff', inject((api, urls, $q, $httpBackend) => {
             var user: any = {},
@@ -163,25 +169,26 @@ describe('API Provider', () => {
             expect(urls.resource).toHaveBeenCalledWith('users');
         }));
 
-        it('can update endpoint', (done) => inject((api, $httpBackend) => {
-            var userData = {
-                _links: {self: {href: USER_PATH}},
-                _id: 2,
-                username: 'test',
-                Avatar: {href: 'test'},
-            };
+        it('can update endpoint', (done) =>
+            inject((api, $httpBackend) => {
+                var userData = {
+                    _links: {self: {href: USER_PATH}},
+                    _id: 2,
+                    username: 'test',
+                    Avatar: {href: 'test'},
+                };
 
-            $httpBackend.expectPATCH(USER_URL, {username: 'test', Avatar: {href: 'test'}}).respond(200);
+                $httpBackend.expectPATCH(USER_URL, {username: 'test', Avatar: {href: 'test'}}).respond(200);
 
-            api.http.save(userData).then((user) => {
-                expect(user.username).toBe('test');
-                expect(user._links.self.href).toBe(USER_PATH);
+                api.http.save(userData).then((user) => {
+                    expect(user.username).toBe('test');
+                    expect(user._links.self.href).toBe(USER_PATH);
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
         it('can update with diff', inject((api, $httpBackend) => {
             var userData = {_links: {self: {href: USER_PATH}}, _id: 2, username: 'test'},
@@ -194,71 +201,76 @@ describe('API Provider', () => {
             $httpBackend.flush();
         }));
 
-        it('can delete', (done) => inject((api, $httpBackend) => {
-            var user = {_links: {self: {href: USER_PATH}}};
+        it('can delete', (done) =>
+            inject((api, $httpBackend) => {
+                var user = {_links: {self: {href: USER_PATH}}};
 
-            $httpBackend.expectDELETE(USER_URL).respond(204);
+                $httpBackend.expectDELETE(USER_URL).respond(204);
 
-            api.http.remove(user).then(() => {
-                done();
-            });
+                api.http.remove(user).then(() => {
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('handles delete on deleted resource as success', (done) => inject((api, $httpBackend) => {
-            var user = {_links: {self: {href: USER_PATH}}};
+        it('handles delete on deleted resource as success', (done) =>
+            inject((api, $httpBackend) => {
+                var user = {_links: {self: {href: USER_PATH}}};
 
-            $httpBackend.expectDELETE(USER_URL).respond(404);
+                $httpBackend.expectDELETE(USER_URL).respond(404);
 
-            api.http.remove(user).then(() => {
-                done();
-            });
+                api.http.remove(user).then(() => {
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('rejects other delete errors as errors', (done) => inject((api, $httpBackend) => {
-            var user = {_links: {self: {href: USER_PATH}}},
-                success = jasmine.createSpy('success');
+        it('rejects other delete errors as errors', (done) =>
+            inject((api, $httpBackend) => {
+                var user = {_links: {self: {href: USER_PATH}}},
+                    success = jasmine.createSpy('success');
 
-            $httpBackend.expectDELETE(USER_URL).respond(405);
+                $httpBackend.expectDELETE(USER_URL).respond(405);
 
-            api.http.remove(user).then(success, () => {
-                expect(success).not.toHaveBeenCalled();
+                api.http.remove(user).then(success, () => {
+                    expect(success).not.toHaveBeenCalled();
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('can get item by url', (done) => inject((api, $httpBackend) => {
-            $httpBackend.expectGET(USER_URL).respond({username: 'foo'});
+        it('can get item by url', (done) =>
+            inject((api, $httpBackend) => {
+                $httpBackend.expectGET(USER_URL).respond({username: 'foo'});
 
-            api.http.getByUrl(USER_PATH).then((user) => {
-                expect(user.username).toBe('foo');
+                api.http.getByUrl(USER_PATH).then((user) => {
+                    expect(user.username).toBe('foo');
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('can get item by id', (done) => inject((api, urls, $q, $httpBackend) => {
-            spyOn(urls, 'resource').and.returnValue($q.when(SERVER_URL + '/users'));
+        it('can get item by id', (done) =>
+            inject((api, urls, $q, $httpBackend) => {
+                spyOn(urls, 'resource').and.returnValue($q.when(SERVER_URL + '/users'));
 
-            $httpBackend.expectGET(SERVER_URL + '/users/1').respond({username: 'foo'});
+                $httpBackend.expectGET(SERVER_URL + '/users/1').respond({username: 'foo'});
 
-            api.http.getById(1).then((user) => {
-                expect(user.username).toBe('foo');
-                expect(urls.resource).toHaveBeenCalledWith('users');
+                api.http.getById(1).then((user) => {
+                    expect(user.username).toBe('foo');
+                    expect(urls.resource).toHaveBeenCalledWith('users');
 
-                done();
-            });
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
         it('can replace resource on given dest', inject((api, $httpBackend) => {
             var data = {username: 'foo'};
@@ -270,31 +282,33 @@ describe('API Provider', () => {
             $httpBackend.flush();
         }));
 
-        it('rejects non success responses', (done) => inject((api, $httpBackend) => {
-            $httpBackend.expectGET(USER_URL).respond(400);
+        it('rejects non success responses', (done) =>
+            inject((api, $httpBackend) => {
+                $httpBackend.expectGET(USER_URL).respond(400);
 
-            var success = jasmine.createSpy('success');
+                var success = jasmine.createSpy('success');
 
-            api.http.getByUrl(USER_PATH).then(success, () => {
-                expect(success).not.toHaveBeenCalled();
-                done();
-            });
+                api.http.getByUrl(USER_PATH).then(success, () => {
+                    expect(success).not.toHaveBeenCalled();
+                    done();
+                });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('can get resource url', (done) => inject((api, urls, $q, $rootScope) => {
-            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
+        it('can get resource url', (done) =>
+            inject((api, urls, $q, $rootScope) => {
+                spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            api.http.getUrl().then((url) => {
-                expect(url).toBe(USERS_URL);
-                expect(urls.resource).toHaveBeenCalledWith('users');
+                api.http.getUrl().then((url) => {
+                    expect(url).toBe(USERS_URL);
+                    expect(urls.resource).toHaveBeenCalledWith('users');
 
-                done();
-            });
+                    done();
+                });
 
-            $rootScope.$digest();
-        }));
+                $rootScope.$digest();
+            }));
 
         it('can get resource headers', inject((api) => {
             expect(api.http.getHeaders()['X-Filter']).toBe('User.*');
@@ -309,10 +323,12 @@ describe('API Provider', () => {
 
         beforeEach(inject(($httpBackend) => {
             $httpBackend.whenGET(SERVER_URL).respond(200, {
-                _links: {child: [
-                    {title: 'users', href: '/users'},
-                    {title: 'workspace', href: '/users/<regex():user_id>/workspace'},
-                ]},
+                _links: {
+                    child: [
+                        {title: 'users', href: '/users'},
+                        {title: 'workspace', href: '/users/<regex():user_id>/workspace'},
+                    ],
+                },
             });
         }));
 
@@ -347,18 +363,20 @@ describe('API Provider', () => {
             $httpBackend.verifyNoOutstandingExpectation();
         }));
 
-        it('can query resource', (done) => inject((api, $httpBackend) => {
-            $httpBackend.expectGET(USERS_URL + '?limit=1').respond(200, {_items: []});
+        it('can query resource', (done) =>
+            inject((api, $httpBackend) => {
+                $httpBackend.expectGET(USERS_URL + '?limit=1').respond(200, {_items: []});
 
-            api('users').query({limit: 1})
-                .then((users) => {
-                    expect(users._items.length).toBe(0);
+                api('users')
+                    .query({limit: 1})
+                    .then((users) => {
+                        expect(users._items.length).toBe(0);
 
-                    done();
-                });
+                        done();
+                    });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
         it('can query subresource', inject((api, $httpBackend) => {
             var user = {_id: 1};
@@ -370,36 +388,39 @@ describe('API Provider', () => {
             $httpBackend.flush();
         }));
 
-        it('rejects on status error', (done) => inject((api, $httpBackend) => {
-            $httpBackend.expectGET(USERS_URL).respond(400);
+        it('rejects on status error', (done) =>
+            inject((api, $httpBackend) => {
+                $httpBackend.expectGET(USERS_URL).respond(400);
 
-            var success = jasmine.createSpy('success');
+                var success = jasmine.createSpy('success');
 
-            api('users').query()
-                .then(success, () => {
-                    expect(success).not.toHaveBeenCalled();
+                api('users')
+                    .query()
+                    .then(success, () => {
+                        expect(success).not.toHaveBeenCalled();
 
-                    done();
-                });
+                        done();
+                    });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
-        it('rejects on data error', (done) => inject((api, $httpBackend) => {
-            $httpBackend.expectPOST(USERS_URL).respond(200, {_status: 'ERR'});
+        it('rejects on data error', (done) =>
+            inject((api, $httpBackend) => {
+                $httpBackend.expectPOST(USERS_URL).respond(200, {_status: 'ERR'});
 
-            var success = jasmine.createSpy('success');
+                var success = jasmine.createSpy('success');
 
-            api('users')
-                .save({})
-                .then(success, () => {
-                    expect(success).not.toHaveBeenCalled();
+                api('users')
+                    .save({})
+                    .then(success, () => {
+                        expect(success).not.toHaveBeenCalled();
 
-                    done();
-                });
+                        done();
+                    });
 
-            $httpBackend.flush();
-        }));
+                $httpBackend.flush();
+            }));
 
         it('cleans data before saving it', inject((api, $httpBackend) => {
             $httpBackend.expectPOST(USERS_URL, {name: 'foo', _id: 1}).respond(200, {});
@@ -407,18 +428,20 @@ describe('API Provider', () => {
             $httpBackend.flush();
         }));
 
-        it('can fetch an item by id', (done) => inject((api, $httpBackend) => {
-            var data = {_id: 1};
+        it('can fetch an item by id', (done) =>
+            inject((api, $httpBackend) => {
+                var data = {_id: 1};
 
-            $httpBackend.expectGET(USER_URL).respond(200, data);
-            api('users').getById(1)
-                .then((user) => {
-                    expect(user._id).toBe(1);
+                $httpBackend.expectGET(USER_URL).respond(200, data);
+                api('users')
+                    .getById(1)
+                    .then((user) => {
+                        expect(user._id).toBe(1);
 
-                    done();
-                });
-            $httpBackend.flush();
-        }));
+                        done();
+                    });
+                $httpBackend.flush();
+            }));
 
         it('can remove an item', inject((api, $httpBackend) => {
             var user = {_links: {self: {href: USER_PATH}}, _etag: ETAG};

@@ -15,23 +15,11 @@ export class MultiSelectCheckbox extends React.PureComponent<IProps> {
         const {multiSelect, item, itemSelected} = this.props;
 
         if (multiSelect.kind === 'legacy') {
-            return (
-                <ListTypeIcon
-                    item={item}
-                    itemSelected={itemSelected}
-                    onMultiSelect={multiSelect.multiSelect}
-                />
-            );
+            return <ListTypeIcon item={item} itemSelected={itemSelected} onMultiSelect={multiSelect.multiSelect} />;
         } else if (multiSelect.kind === 'new') {
             const {MultiSelectComponent} = multiSelect;
 
-            return (
-                <MultiSelectComponent
-                    item={item}
-                    allItems={multiSelect.items}
-                    options={multiSelect.options}
-                />
-            );
+            return <MultiSelectComponent item={item} allItems={multiSelect.items} options={multiSelect.options} />;
         } else {
             assertNever(multiSelect);
         }

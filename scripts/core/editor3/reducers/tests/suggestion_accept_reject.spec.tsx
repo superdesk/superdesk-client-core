@@ -3,9 +3,7 @@ import * as Setup from './suggestion_setup';
 describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
     it('should keep the added text when the insert suggestion is accepted', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         let editorState = Setup.getInitialEditorState(rawContent);
@@ -33,9 +31,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
 
     it('should delete the suggest text when an insert suggestion is rejected', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         let editorState = Setup.getInitialEditorState(rawContent);
@@ -206,9 +202,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
 
     it('should keep the new line when a split paragraphs suggestion is accepted', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1paragraph2'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1paragraph2'}],
             entityMap: {},
         };
         const date = new Date();
@@ -242,9 +236,7 @@ describe('editor3.reducers.suggestion.ACCEPT_REJECT_SUGGESTION', () => {
 
     it('should delete the new line when a split paragraphs suggestion is rejected', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1paragraph2'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1paragraph2'}],
             entityMap: {},
         };
         const date = new Date();

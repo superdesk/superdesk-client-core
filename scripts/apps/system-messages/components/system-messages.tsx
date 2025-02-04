@@ -7,7 +7,7 @@ import {addWebsocketEventListener} from 'core/notification/notification';
 import {IWebsocketMessage, IResourceUpdateEvent, IResourceCreatedEvent, IResourceDeletedEvent} from 'superdesk-api';
 import {Position} from 'superdesk-ui-framework/react/components/ToastMessage';
 
-export class SystemMessagesComponent extends React.PureComponent <{}> {
+export class SystemMessagesComponent extends React.PureComponent<{}> {
     messages: Array<{id: string; position: Position}>;
     eventListenersToRemove: Array<() => void>;
 
@@ -22,42 +22,33 @@ export class SystemMessagesComponent extends React.PureComponent <{}> {
         this.fetchAndShowActiveMessages();
 
         this.eventListenersToRemove.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                    const {resource} = event.extra;
+            addWebsocketEventListener('resource:updated', (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                const {resource} = event.extra;
 
-                    if (resource === RESOURCE) {
-                        this.reset();
-                    }
-                },
-            ),
+                if (resource === RESOURCE) {
+                    this.reset();
+                }
+            }),
         );
 
         this.eventListenersToRemove.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                    const {resource} = event.extra;
+            addWebsocketEventListener('resource:created', (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                const {resource} = event.extra;
 
-                    if (resource === RESOURCE) {
-                        this.reset();
-                    }
-                },
-            ),
+                if (resource === RESOURCE) {
+                    this.reset();
+                }
+            }),
         );
 
         this.eventListenersToRemove.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                    const {resource} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                const {resource} = event.extra;
 
-                    if (resource === RESOURCE) {
-                        this.reset();
-                    }
-                },
-            ),
+                if (resource === RESOURCE) {
+                    this.reset();
+                }
+            }),
         );
     }
 
@@ -71,7 +62,8 @@ export class SystemMessagesComponent extends React.PureComponent <{}> {
     }
 
     fetchAndShowActiveMessages() {
-        dataApi.query<ISystemMessage>(RESOURCE, 1, {field: '_updated', direction: 'ascending'}, {is_active: true})
+        dataApi
+            .query<ISystemMessage>(RESOURCE, 1, {field: '_updated', direction: 'ascending'}, {is_active: true})
             .then((response) => {
                 response._items.forEach((message) => this.renderToast(message));
             });

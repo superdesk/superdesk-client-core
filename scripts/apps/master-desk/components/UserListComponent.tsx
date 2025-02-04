@@ -61,20 +61,18 @@ export class UserListComponent extends React.Component<IProps> {
                                     <span className="sd-overflow-ellipsis sd-list-item--element-grow">
                                         {user.user.display_name}
                                     </span>
-                                    {
-                                        (user.data.locked ?? 0) > 0 && (
-                                            <span className="sd-text-icon sd-text-icon--aligned-r user-items--locked">
-                                                <i className="icon-lock" />{user.data.locked}
-                                            </span>
-                                        )
-                                    }
-                                    {
-                                        (user.data.assigned ?? 0) > 0 && (
-                                            <span className="sd-text-icon sd-text-icon--aligned-r user-items--assigned">
-                                                <i className="icon-pick" />{user.data.assigned}
-                                            </span>
-                                        )
-                                    }
+                                    {(user.data.locked ?? 0) > 0 && (
+                                        <span className="sd-text-icon sd-text-icon--aligned-r user-items--locked">
+                                            <i className="icon-lock" />
+                                            {user.data.locked}
+                                        </span>
+                                    )}
+                                    {(user.data.assigned ?? 0) > 0 && (
+                                        <span className="sd-text-icon sd-text-icon--aligned-r user-items--assigned">
+                                            <i className="icon-pick" />
+                                            {user.data.assigned}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </li>

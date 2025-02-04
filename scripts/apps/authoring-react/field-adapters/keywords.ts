@@ -1,9 +1,4 @@
-import {
-    IArticle,
-    IAuthoringFieldV2,
-    IFieldAdapter,
-    IDropdownConfigVocabulary,
-} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IDropdownConfigVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {TAG_INPUT_FIELD_ID} from '../fields/tag-input';

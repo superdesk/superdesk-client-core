@@ -23,7 +23,8 @@ import {gettext} from 'core/utils';
  * @packageName superdesk.apps
  * @description Superdesk publishing support.
  */
-export default angular.module('superdesk.apps.publish', ['superdesk.apps.users', 'superdesk.apps.content_filters'])
+export default angular
+    .module('superdesk.apps.publish', ['superdesk.apps.users', 'superdesk.apps.content_filters'])
 
     .service('adminPublishSettingsService', svc.AdminPublishSettingsService)
     .service('subscribersService', svc.SubscribersService)
@@ -35,47 +36,53 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
     .controller('publishQueueCtrl', ctrl.PublishQueueController)
     .controller('SubscriberTokenCtrl', ctrl.SubscriberTokenController)
 
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk
-            .activity('/settings/publish', {
-                label: gettext('Subscribers'),
-                templateUrl: 'scripts/apps/publish/views/settings.html',
-                controller: ctrl.AdminPublishSettingsController,
-                category: superdesk.MENU_SETTINGS,
-                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
-                privileges: {subscribers: 1},
-                priority: 2000,
-            })
+    .config([
+        'superdeskProvider',
+        function (superdesk) {
+            superdesk
+                .activity('/settings/publish', {
+                    label: gettext('Subscribers'),
+                    templateUrl: 'scripts/apps/publish/views/settings.html',
+                    controller: ctrl.AdminPublishSettingsController,
+                    category: superdesk.MENU_SETTINGS,
+                    settings_menu_group: coreMenuGroups.CONTENT_FLOW,
+                    privileges: {subscribers: 1},
+                    priority: 2000,
+                })
 
-            .activity('/publish_queue', {
-                label: gettext('Publish Queue'),
-                templateUrl: 'scripts/apps/publish/views/publish-queue.html',
-                controller: ctrl.PublishQueueController,
-                category: superdesk.MENU_MAIN,
-                adminTools: false,
-                privileges: {publish_queue: 1},
+                .activity('/publish_queue', {
+                    label: gettext('Publish Queue'),
+                    templateUrl: 'scripts/apps/publish/views/publish-queue.html',
+                    controller: ctrl.PublishQueueController,
+                    category: superdesk.MENU_MAIN,
+                    adminTools: false,
+                    privileges: {publish_queue: 1},
+                });
+        },
+    ])
+
+    .config([
+        'apiProvider',
+        function (apiProvider) {
+            apiProvider.api('subscribers', {
+                type: 'http',
+                backend: {rel: 'subscribers'},
             });
-    }])
-
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('subscribers', {
-            type: 'http',
-            backend: {rel: 'subscribers'},
-        });
-        apiProvider.api('publish_queue', {
-            type: 'http',
-            backend: {rel: 'publish_queue'},
-        });
-        apiProvider.api('consistency', {
-            type: 'http',
-            backend: {rel: 'consistency'},
-        });
-        apiProvider.api('legal_publish_queue', {
-            type: 'http',
-            backend: {rel: 'legal_publish_queue'},
-        });
-        apiProvider.api('io_errors', {
-            type: 'http',
-            backend: {rel: 'io_errors'},
-        });
-    }]);
+            apiProvider.api('publish_queue', {
+                type: 'http',
+                backend: {rel: 'publish_queue'},
+            });
+            apiProvider.api('consistency', {
+                type: 'http',
+                backend: {rel: 'consistency'},
+            });
+            apiProvider.api('legal_publish_queue', {
+                type: 'http',
+                backend: {rel: 'legal_publish_queue'},
+            });
+            apiProvider.api('io_errors', {
+                type: 'http',
+                backend: {rel: 'io_errors'},
+            });
+        },
+    ]);

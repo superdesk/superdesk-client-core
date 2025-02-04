@@ -56,10 +56,10 @@ export class DateInput extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name DateInput#toggleOpenDatePicker
-    * @description toggleOpenDatePicker toggles open state of date-picker pop-up
-    */
+     * @ngdoc method
+     * @name DateInput#toggleOpenDatePicker
+     * @description toggleOpenDatePicker toggles open state of date-picker pop-up
+     */
     toggleOpenDatePicker() {
         this.setState({openDatePicker: !this.state.openDatePicker});
 
@@ -70,10 +70,10 @@ export class DateInput extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name DateInput#validateDateText
-    * @description validateDateText sets validate-state after text-input of dates
-    */
+     * @ngdoc method
+     * @name DateInput#validateDateText
+     * @description validateDateText sets validate-state after text-input of dates
+     */
     validateDateText(field, val) {
         const regex = new RegExp('[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]', 'i');
         const valMoment = moment(val, this.props.dateFormat);
@@ -94,11 +94,11 @@ export class DateInput extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name DateInput#handleInputBlur
-    * @description handleInputBlur resets view-value incase of invalid date input
-    * @returns {string} Icon class-name
-    */
+     * @ngdoc method
+     * @name DateInput#handleInputBlur
+     * @description handleInputBlur resets view-value incase of invalid date input
+     * @returns {string} Icon class-name
+     */
     handleInputBlur() {
         if (this.state.invalid) {
             this.setState({
@@ -116,25 +116,13 @@ export class DateInput extends React.Component<any, any> {
             newMoment = moment(newValue);
         }
 
-        if (newMoment.isValid() && (!newMoment.isSame(value)) || !value) {
-            onChange(
-                field,
-                newMoment,
-            );
+        if ((newMoment.isValid() && !newMoment.isSame(value)) || !value) {
+            onChange(field, newMoment);
         }
     }
 
     render() {
-        const {
-            field,
-            label,
-            placeholder,
-            value,
-            readOnly,
-            popupContainer,
-            onFocus,
-            ...props
-        } = this.props;
+        const {field, label, placeholder, value, readOnly, popupContainer, onFocus, ...props} = this.props;
 
         return (
             <LineInput {...props} readOnly={readOnly}>
@@ -159,9 +147,8 @@ export class DateInput extends React.Component<any, any> {
                             onEventCapture(event);
                             this.setState({openDatePicker: true});
                         }
-                    }
-                    }
-                    refNode={(ref) => this.dom.inputField = ref}
+                    }}
+                    refNode={(ref) => (this.dom.inputField = ref)}
                 />
                 {this.state.openDatePicker && (
                     <DateInputPopup
@@ -180,10 +167,7 @@ export class DateInput extends React.Component<any, any> {
 DateInput.propTypes = {
     field: PropTypes.string.isRequired,
     label: PropTypes.string,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(moment),
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(moment)]),
     onChange: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     className: PropTypes.string,

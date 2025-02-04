@@ -4,7 +4,6 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 /* 	============================
 		PRODUCT CONFIG
 	============================ */
@@ -12,38 +11,36 @@
 /* Product create/edit popup */
 
 .add-product-popup {
+    .modal-body {
+        bottom: 0;
+        height: 500px !important;
+        max-height: 500px !important;
+        @include border-radius(0px 0px 4px 4px);
 
-	.modal-body {
-		bottom: 0;
-		height: 500px !important;
-		max-height:500px !important;
-		@include border-radius(0px 0px 4px 4px);
-
-		.modal-screen {
-			top: 48px;
-		}
-	}
-	
+        .modal-screen {
+            top: 48px;
+        }
+    }
 }
 
 .product-search {
- 	float: inline-start;
-   	max-width: 650px;
-   	margin-inline-start: 10px;
-   	input {
-   		width: 505px;
-   		float: inline-start;
-   	}
-   	select {
-   		width: 100px;
-   	}
+    float: inline-start;
+    max-width: 650px;
+    margin-inline-start: 10px;
+    input {
+        width: 505px;
+        float: inline-start;
+    }
+    select {
+        width: 100px;
+    }
 }
 
 .pills-list {
-	.match {
-		background-color: #c9e8ca;
-	}
-	.no-match {
-		background-color: #fde9e9;
-	}
+    .match {
+        background-color: #c9e8ca;
+    }
+    .no-match {
+        background-color: #fde9e9;
+    }
 }

@@ -32,7 +32,7 @@ export function LegalArchiveService(api, $location, moment, sortService) {
     sortService.setSort('versioncreated', sortOptions);
     this.sortOptions = sortOptions;
 
-    this.getCriteria = function() {
+    this.getCriteria = function () {
         var params = $location.search(),
             criteria: any = {
                 max_results: Number(params.max_results) || DEFAULT_PER_PAGE,
@@ -65,11 +65,12 @@ export function LegalArchiveService(api, $location, moment, sortService) {
         var where = [];
 
         function prepareDate(val, timeSuffix) {
-            var local = moment(val, appConfig.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
-            moment.tz(appConfig.default_timezone).format('ZZ');
+            var local =
+                moment(val, appConfig.view.dateformat).format('YYYY-MM-DD') +
+                timeSuffix +
+                moment.tz(appConfig.default_timezone).format('ZZ');
 
-            return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc()
-                .format('YYYY-MM-DDTHH:mm:ssZZ');
+            return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc().format('YYYY-MM-DDTHH:mm:ssZZ');
         }
 
         var hasId = false;

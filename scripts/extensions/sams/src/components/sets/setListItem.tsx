@@ -54,9 +54,8 @@ export class SetListItem extends React.PureComponent<IProps> {
         const {gettext, longFormatDateTime, getRelativeOrAbsoluteDateTime} = superdeskApi.localization;
         const {config} = superdeskApi.instance;
         const {set, count, storageDestination} = this.props;
-        const storageDestinationText = storageDestination == null ?
-            '' :
-            `${storageDestination._id} / ${storageDestination.provider}`;
+        const storageDestinationText =
+            storageDestination == null ? '' : `${storageDestination._id} / ${storageDestination.provider}`;
         const updatedDateShort = getRelativeOrAbsoluteDateTime(set.versioncreated, config.view.dateformat);
         const updatedDateLong = longFormatDateTime(set.versioncreated);
 
@@ -71,9 +70,7 @@ export class SetListItem extends React.PureComponent<IProps> {
                 <ListItemColumn grow={true} noBorder={true}>
                     <ListItemRow>
                         <span className="sd-overflow-ellipsis sd-list-item--element-grow">
-                            <span className="sd-list-item__slugline">
-                                {set.name}
-                            </span>
+                            <span className="sd-list-item__slugline">{set.name}</span>
                             {set.description}
                         </span>
                         <time title={updatedDateLong}>
@@ -81,12 +78,8 @@ export class SetListItem extends React.PureComponent<IProps> {
                         </time>
                     </ListItemRow>
                     <ListItemRow>
-                        <span className="sd-list-item__text-label">
-                            {gettext('Storage:')}
-                        </span>
-                        <span className="sd-list-item__inline-text">
-                            {storageDestinationText}
-                        </span>
+                        <span className="sd-list-item__text-label">{gettext('Storage:')}</span>
+                        <span className="sd-list-item__inline-text">{storageDestinationText}</span>
                     </ListItemRow>
                 </ListItemColumn>
                 <ListItemActionMenu row={true}>

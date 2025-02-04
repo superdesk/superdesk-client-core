@@ -104,7 +104,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
 
     removeTag(value: IAssetTag) {
         this.setState((preState: IState) => {
-            const tags: Array<{name: string, code: string}> = preState.tags!;
+            const tags: Array<{name: string; code: string}> = preState.tags!;
             const newTag: any = value!;
             // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             const index = this.state.tags?.indexOf(newTag)!;
@@ -121,23 +121,20 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
         const searchPrefix = searchString.startsWith('*') ? '' : '*';
         const searchSuffix = searchString.endsWith('*') ? '' : '*';
 
-        samsApi.assets.searchTags(`${searchPrefix}${searchString}${searchSuffix}`)
+        samsApi.assets
+            .searchTags(`${searchPrefix}${searchString}${searchSuffix}`)
             .then((res: IAutoTaggingSearchResult) => {
                 if (cancelled !== true) {
                     const {gettext} = superdeskApi.localization;
                     const result = convertTagSearchResultToAssetTags(res).toArray();
-                    const currentTagCodes = this.state.tags.map(
-                        (tag) => tag.code,
-                    );
+                    const currentTagCodes = this.state.tags.map((tag) => tag.code);
 
                     result.unshift({
                         code: `${NEW_CODE_PREFIX}${searchString}`,
                         name: gettext('Create new tag: "{{ tag }}"', {tag: searchString}),
                     });
 
-                    callback(result.filter(
-                        (tag) => !currentTagCodes.includes(tag.code),
-                    ));
+                    callback(result.filter((tag) => !currentTagCodes.includes(tag.code)));
                 }
             });
 
@@ -149,18 +146,12 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
     }
 
     fieldEnabled(field: keyof IAssetItem) {
-        return (this.props.fields == null || this.props.fields.includes(field)) ?
-            true :
-            null;
+        return this.props.fields == null || this.props.fields.includes(field) ? true : null;
     }
 
     render() {
         const {gettext} = superdeskApi.localization;
-        const allowedStates = this.props.allowedStates ?? [
-            ASSET_STATE.DRAFT,
-            ASSET_STATE.INTERNAL,
-            ASSET_STATE.PUBLIC,
-        ];
+        const allowedStates = this.props.allowedStates ?? [ASSET_STATE.DRAFT, ASSET_STATE.INTERNAL, ASSET_STATE.PUBLIC];
 
         return (
             <React.Fragment>
@@ -177,9 +168,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     </FormRow>
                     <FormRow>
                         <FormLabel text={gettext('Size:')} />
-                        <span>
-                            {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
-                        </span>
+                        <span>{this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}</span>
                     </FormRow>
                 </FormGroup>
 
@@ -221,19 +210,13 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                                 disabled={this.props.disabled === true}
                             >
                                 {!allowedStates.includes(ASSET_STATE.DRAFT) ? null : (
-                                    <Option value={ASSET_STATE.DRAFT}>
-                                        {gettext('Draft')}
-                                    </Option>
+                                    <Option value={ASSET_STATE.DRAFT}>{gettext('Draft')}</Option>
                                 )}
                                 {!allowedStates.includes(ASSET_STATE.INTERNAL) ? null : (
-                                    <Option value={ASSET_STATE.INTERNAL}>
-                                        {gettext('Internal')}
-                                    </Option>
+                                    <Option value={ASSET_STATE.INTERNAL}>{gettext('Internal')}</Option>
                                 )}
                                 {!allowedStates.includes(ASSET_STATE.PUBLIC) ? null : (
-                                    <Option value={ASSET_STATE.PUBLIC}>
-                                        {gettext('Public')}
-                                    </Option>
+                                    <Option value={ASSET_STATE.PUBLIC}>{gettext('Public')}</Option>
                                 )}
                             </Select>
                         </FormRow>
@@ -278,7 +261,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                 {this.state.tags.length !== 0 && (
                     <FormGroup>
                         <FormRow>
-                            {this.state.tags?.map((tag) => (
+                            {this.state.tags?.map((tag) =>
                                 this.props.disabled ? (
                                     <Label
                                         key={this.state.tags.indexOf(tag)}
@@ -294,8 +277,8 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                                             this.changeTag('tags', tag, 'remove');
                                         }}
                                     />
-                                )
-                            ))}
+                                ),
+                            )}
                         </FormRow>
                     </FormGroup>
                 )}

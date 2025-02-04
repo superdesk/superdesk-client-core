@@ -84,26 +84,19 @@ export class ControlledVocabulariesSelect extends React.PureComponent<IProps, IS
                         type="primary"
                     />
                 </Spacer>
-                {
-                    this.props.value.length > 0 && (
-                        <div style={{paddingBlockStart: 5}}>
-                            {
-                                this.props.value
-                                    .map((region) => (
-                                        <Tag
-                                            key={region.qcode}
-                                            text={`${region.allow ? '' : gettext('not')} ${region.name}`}
-                                            onClick={() => {
-                                                this.props.onChange(this.props.value.filter(
-                                                    ({qcode}) => region.qcode !== qcode,
-                                                ));
-                                            }}
-                                        />
-                                    ))
-                            }
-                        </div>
-                    )
-                }
+                {this.props.value.length > 0 && (
+                    <div style={{paddingBlockStart: 5}}>
+                        {this.props.value.map((region) => (
+                            <Tag
+                                key={region.qcode}
+                                text={`${region.allow ? '' : gettext('not')} ${region.name}`}
+                                onClick={() => {
+                                    this.props.onChange(this.props.value.filter(({qcode}) => region.qcode !== qcode));
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         );
     }

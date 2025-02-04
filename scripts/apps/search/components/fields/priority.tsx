@@ -8,11 +8,14 @@ class PriorityComponent extends React.Component<IPropsItemListInfo> {
 
         return props.item.priority
             ? React.createElement(
-                ItemPriority,
-                angular.extend({
-                    key: 'priority',
-                }, props.item),
-            )
+                  ItemPriority,
+                  angular.extend(
+                      {
+                          key: 'priority',
+                      },
+                      props.item,
+                  ),
+              )
             : null;
     }
 }

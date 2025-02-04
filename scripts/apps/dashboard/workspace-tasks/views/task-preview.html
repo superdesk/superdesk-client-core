@@ -1,12 +1,14 @@
 <header>
-    <p class="pull-left">{{ :: 'Created on' | translate}} <span sd-reldate-complex datetime="task._created"></span> {{ :: 'by' | translate}} {{ users[task.original_creator].display_name }}</p>
+    <p class="pull-left">
+        {{ :: 'Created on' | translate}} <span sd-reldate-complex datetime="task._created"></span> {{ :: 'by' |
+        translate}} {{ users[task.original_creator].display_name }}
+    </p>
     <button ng-click="close()" class="icn-btn close-preview">
         <i class="icon-close-small"></i>
     </button>
 </header>
 <div class="content">
     <form name="taskForm">
-
         <div class="action-bar clearfix" ng-class="{show: editmode}">
             <button class="btn btn--primary pull-right" ng-click="save()" translate>Save</button>
             <button class="btn pull-right" ng-click="reset()" translate>Cancel</button>
@@ -17,12 +19,13 @@
             </button>
             <div class="dropdown dropdown--big pull-right" dropdown>
                 <button class="dropdown__toggle condensed" dropdown__toggle><i class="icon-dots-vertical"></i></button>
-                <div class="dropdown__menu pull-right"
+                <div
+                    class="dropdown__menu pull-right"
                     sd-activity-list
                     data-item="item"
                     data-type="task"
-                    data-action="edit">
-                </div>
+                    data-action="edit"
+                ></div>
             </div>
         </div>
 
@@ -41,7 +44,7 @@
         </div>
 
         <div class="assignee-container" ng-if="!editmode">
-            <div style="float: inline-start; margin-right: 10px;">
+            <div style="float: inline-start; margin-right: 10px">
                 <sd-user-avatar data-user="users[task_details.user]"></sd-user-avatar>
             </div>
             <div class="assignee-name">
@@ -53,10 +56,22 @@
         <div ng-if="editmode" sd-assignee-box data-desk-id="task_details.desk" data-user-id="task_details.user"></div>
 
         <div ng-if="!editmode" class="title">{{ task.slugline }}</div>
-        <textarea ng-if="editmode" class="title" sd-auto-height ng-model="task.slugline" placeholder="{{ :: 'Add title' | translate }}" required></textarea>
+        <textarea
+            ng-if="editmode"
+            class="title"
+            sd-auto-height
+            ng-model="task.slugline"
+            placeholder="{{ :: 'Add title' | translate }}"
+            required
+        ></textarea>
 
-        <textarea ng-if="editmode" class="description" sd-auto-height ng-model="task.description_text" placeholder="{{ :: 'Add description' | translate }}"></textarea>
+        <textarea
+            ng-if="editmode"
+            class="description"
+            sd-auto-height
+            ng-model="task.description_text"
+            placeholder="{{ :: 'Add description' | translate }}"
+        ></textarea>
         <div ng-if="!editmode" class="description">{{ task.description_text }}</div>
     </form>
-
 </div>

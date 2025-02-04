@@ -9,7 +9,8 @@ import {customBlockReducer} from './custom-block';
 
 // Returns a new reducer which chains the state and action throught the given
 // list of reducers.
-const chainReduce = (...reducers) =>
+const chainReduce =
+    (...reducers) =>
     (startState = {}, action) =>
         reducers.reduce((newState, r) => r(newState, action), startState);
 

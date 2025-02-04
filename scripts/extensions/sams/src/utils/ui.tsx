@@ -24,13 +24,11 @@ export function showModalConnectedToStore<T = any>(
         return Promise.reject('SAMS store has not been initialised');
     }
 
-    return showModal(
-        ({closeModal}) => (
-            <Provider store={store}>
-                <Component closeModal={closeModal} {...props ?? {}} />
-            </Provider>
-        ),
-    );
+    return showModal(({closeModal}) => (
+        <Provider store={store}>
+            <Component closeModal={closeModal} {...(props ?? {})} />
+        </Provider>
+    ));
 }
 
 export function getIconTypeFromMimetype(mimetype: string) {
@@ -47,14 +45,14 @@ export function getIconTypeFromMimetype(mimetype: string) {
 
 export function getFileSizeFromHumanReadable(fileSize: number, dataUnit: DATA_UNIT) {
     switch (dataUnit) {
-    case DATA_UNIT.BYTES:
-        return fileSize;
-    case DATA_UNIT.KB:
-        return fileSize * 1024;
-    case DATA_UNIT.MB:
-        return fileSize * 1024 * 1024;
-    case DATA_UNIT.GB:
-        return fileSize * 1024 * 1024 * 1024;
+        case DATA_UNIT.BYTES:
+            return fileSize;
+        case DATA_UNIT.KB:
+            return fileSize * 1024;
+        case DATA_UNIT.MB:
+            return fileSize * 1024 * 1024;
+        case DATA_UNIT.GB:
+            return fileSize * 1024 * 1024 * 1024;
     }
 }
 
@@ -62,30 +60,12 @@ export function getAssetStateLabel(assetState: ASSET_STATE) {
     const {gettext} = superdeskApi.localization;
 
     switch (assetState) {
-    case ASSET_STATE.INTERNAL:
-        return (
-            <Label
-                text={gettext('Internal')}
-                style="hollow"
-                color="red--800"
-            />
-        );
-    case ASSET_STATE.DRAFT:
-        return (
-            <Label
-                text={gettext('Draft')}
-                style="hollow"
-                type="warning"
-            />
-        );
-    case ASSET_STATE.PUBLIC:
-        return (
-            <Label
-                text={gettext('Public')}
-                style="hollow"
-                type="success"
-            />
-        );
+        case ASSET_STATE.INTERNAL:
+            return <Label text={gettext('Internal')} style="hollow" color="red--800" />;
+        case ASSET_STATE.DRAFT:
+            return <Label text={gettext('Draft')} style="hollow" type="warning" />;
+        case ASSET_STATE.PUBLIC:
+            return <Label text={gettext('Public')} style="hollow" type="success" />;
     }
 
     superdeskApi.helpers.assertNever(assetState);
@@ -95,16 +75,16 @@ export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
     const {gettext} = superdeskApi.localization;
 
     switch (field) {
-    case ASSET_SORT_FIELD.NAME:
-        return gettext('Name');
-    case ASSET_SORT_FIELD.FILENAME:
-        return gettext('Filename');
-    case ASSET_SORT_FIELD.SIZE:
-        return gettext('Size');
-    case ASSET_SORT_FIELD.CREATED:
-        return gettext('Created');
-    case ASSET_SORT_FIELD.UPDATED:
-        return gettext('Updated');
+        case ASSET_SORT_FIELD.NAME:
+            return gettext('Name');
+        case ASSET_SORT_FIELD.FILENAME:
+            return gettext('Filename');
+        case ASSET_SORT_FIELD.SIZE:
+            return gettext('Size');
+        case ASSET_SORT_FIELD.CREATED:
+            return gettext('Created');
+        case ASSET_SORT_FIELD.UPDATED:
+            return gettext('Updated');
     }
 
     superdeskApi.helpers.assertNever(field);

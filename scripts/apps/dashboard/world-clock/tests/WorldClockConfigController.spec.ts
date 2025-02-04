@@ -1,13 +1,10 @@
-
 /**
-* Module with tests for the WorldClockConfigController
-*
-* @module WorldClockConfigController tests
-*/
+ * Module with tests for the WorldClockConfigController
+ *
+ * @module WorldClockConfigController tests
+ */
 describe('WorldClockConfigController', () => {
-    var getTzdataDeferred,
-        fakeTzdata,
-        scope;
+    var getTzdataDeferred, fakeTzdata, scope;
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
@@ -31,8 +28,7 @@ describe('WorldClockConfigController', () => {
     }));
 
     it('initializes the list of available time zone in scope', () => {
-        var expectedList,
-            serverTzdata;
+        var expectedList, serverTzdata;
 
         scope.availableZones = []; // make sure it is initially empty
 
@@ -48,7 +44,7 @@ describe('WorldClockConfigController', () => {
 
         fakeTzdata.zones = serverTzdata.zones;
         fakeTzdata.links = serverTzdata.links;
-        fakeTzdata.getTzNames = function() {
+        fakeTzdata.getTzNames = function () {
             return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
         };
 

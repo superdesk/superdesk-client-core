@@ -8,7 +8,7 @@ export function DestinationDirective(adminPublishSettingsService, $rootScope) {
             destination: '=',
             actions: '=',
         },
-        link: function($scope) {
+        link: function ($scope) {
             $scope.types = adminPublishSettingsService.getTransmissionServices();
 
             $scope.$watch('destination.delivery_type', (type) => {
@@ -16,11 +16,15 @@ export function DestinationDirective(adminPublishSettingsService, $rootScope) {
                     $scope.destination.config = angular.extend({}, $scope.types[type].config);
                 }
             });
-            $scope.$watch('destination', (newVal, oldVal) => {
-                if (newVal && oldVal && !isEqual(newVal, oldVal)) {
-                    $rootScope.$broadcast('subcriber: saveEnabled');
-                }
-            }, true);
+            $scope.$watch(
+                'destination',
+                (newVal, oldVal) => {
+                    if (newVal && oldVal && !isEqual(newVal, oldVal)) {
+                        $rootScope.$broadcast('subcriber: saveEnabled');
+                    }
+                },
+                true,
+            );
         },
     };
 }

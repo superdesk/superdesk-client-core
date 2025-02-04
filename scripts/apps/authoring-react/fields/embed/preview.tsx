@@ -15,15 +15,13 @@ export class Preview extends React.PureComponent<IProps> {
 
         return (
             <div>
-                {
-                    description?.length > 0 && (
-                        <div>
-                            <span>{description}</span>
+                {description?.length > 0 && (
+                    <div>
+                        <span>{description}</span>
 
-                            <SpacerBlock v gap="16" />
-                        </div>
-                    )
-                }
+                        <SpacerBlock v gap="16" />
+                    </div>
+                )}
 
                 <EmbedPreview embedHtml={embed} />
             </div>

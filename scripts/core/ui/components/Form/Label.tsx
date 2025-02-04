@@ -9,7 +9,7 @@ import './style.scss';
  * @name Label
  * @description Form label component
  */
-export const Label: React.StatelessComponent<any> = ({text, row, light, invalid}) => (
+export const Label: React.StatelessComponent<any> = ({text, row, light, invalid}) =>
     !text ? null : (
         <label
             className={classNames({
@@ -21,8 +21,7 @@ export const Label: React.StatelessComponent<any> = ({text, row, light, invalid}
         >
             {text}
         </label>
-    )
-);
+    );
 
 Label.propTypes = {
     text: PropTypes.string,

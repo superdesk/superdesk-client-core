@@ -27,18 +27,15 @@ export class TagLabel extends React.Component<IProps> {
         return (
             <div className={classNames.join(' ')} data-test-id="tag-label">
                 {this.props.children}
-                {
-                    typeof this.props.onRemove === 'function'
-                        ? (
-                            <button
-                                onClick={this.props.onRemove}
-                                className="tag-label__remove"
-                                data-test-id="tag-label--remove"
-                            >
-                                <i className="icon-close-small" />
-                            </button>
-                        ) : null
-                }
+                {typeof this.props.onRemove === 'function' ? (
+                    <button
+                        onClick={this.props.onRemove}
+                        className="tag-label__remove"
+                        data-test-id="tag-label--remove"
+                    >
+                        <i className="icon-close-small" />
+                    </button>
+                ) : null}
             </div>
         );
     }

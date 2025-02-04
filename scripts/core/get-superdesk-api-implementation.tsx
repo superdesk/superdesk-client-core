@@ -55,10 +55,7 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {MoreActionsButton} from './ui/components/MoreActionsButton';
-import {
-    getWebsocketMessageEventName,
-    isWebsocketEventPublic,
-} from './notification/notification';
+import {getWebsocketMessageEventName, isWebsocketEventPublic} from './notification/notification';
 import {Grid} from './ui/components/grid';
 import {Alert} from './ui/components/alert';
 import {Figure} from './ui/components/figure';
@@ -137,10 +134,7 @@ export function openArticle(
     } else {
         const {currentPathStartsWith} = sdApi.navigation;
 
-        if (
-            currentPathStartsWith(['workspace']) !== true
-            && currentPathStartsWith(['search']) !== true
-        ) {
+        if (currentPathStartsWith(['workspace']) !== true && currentPathStartsWith(['search']) !== true) {
             setUrlPage('/workspace/monitoring');
         }
 
@@ -174,9 +168,7 @@ export const removeEventListener = <T extends keyof IEvents>(eventName: T, callb
 };
 
 export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
-    window.dispatchEvent(
-        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
-    );
+    window.dispatchEvent(new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}));
 };
 
 export function prepareExternalImageForDroppingToEditor(
@@ -192,10 +184,7 @@ export function prepareExternalImageForDroppingToEditor(
         renditions: renditions,
     };
 
-    event.dataTransfer.setData(
-        'application/superdesk.item.picture',
-        JSON.stringify(item),
-    );
+    event.dataTransfer.setData('application/superdesk.item.picture', JSON.stringify(item));
 }
 
 export let applicationState: Writeable<ISuperdesk['state']> = {
@@ -216,22 +205,18 @@ export function isArticleLockedInCurrentSession(article: IArticle): boolean {
 
 export const formatDate = (
     date: Date | string | moment.Moment,
-    options?: {timezoneId?: string; longFormat?:boolean},
+    options?: {timezoneId?: string; longFormat?: boolean},
 ): string => {
-    const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
+    const momentDate = moment.isMoment(date) === true ? (date as moment.Moment) : moment(date);
     const dateFormat = options?.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
 
     if (options?.timezoneId != null) {
-        return momentDate
-            .tz(options.timezoneId)
-            .format(dateFormat);
+        return momentDate.tz(options.timezoneId).format(dateFormat);
     } else {
         const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
         const keepLocalTime = timezone === 'browser';
 
-        return momentDate
-            .tz(appConfig.default_timezone, keepLocalTime)
-            .format(dateFormat);
+        return momentDate.tz(appConfig.default_timezone, keepLocalTime).format(dateFormat);
     }
 };
 
@@ -266,18 +251,14 @@ export function getRelativeOrAbsoluteDateTime(
         return datetime.fromNow();
     }
 
-    return datetime
-        .tz(appConfig.default_timezone)
-        .format(format);
+    return datetime.tz(appConfig.default_timezone).format(format);
 }
 
 export function fixPatchRequest<T extends {}>(entity: T): T {
     return stripLockingFields(stripBaseRestApiFields(entity)) as unknown as T;
 }
 
-export function fixPatchResponse<T extends IBaseRestApiResponse>(
-    entity: T & IPatchResponseExtraFields,
-): T {
+export function fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & IPatchResponseExtraFields): T {
     return omit(entity, ['_status']) as unknown as T;
 }
 
@@ -343,7 +324,8 @@ export function getSuperdeskApiImplementation(
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
-                    dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
+                    dataApi
+                        .query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
                         .then((response) => response._items),
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
@@ -362,16 +344,16 @@ export function getSuperdeskApiImplementation(
             },
             attachment: attachmentsApi,
             users: {
-                getUsersByIds: (ids) => (
-                    dataApi.query<IUser>(
-                        'users',
-                        1,
-                        {field: 'display_name', direction: 'ascending'},
-                        {_id: {$in: ids}},
-                        200,
-                    )
-                        .then((response) => response._items)
-                ),
+                getUsersByIds: (ids) =>
+                    dataApi
+                        .query<IUser>(
+                            'users',
+                            1,
+                            {field: 'display_name', direction: 'ascending'},
+                            {_id: {$in: ids}},
+                            200,
+                        )
+                        .then((response) => response._items),
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,
@@ -387,10 +369,7 @@ export function getSuperdeskApiImplementation(
                 view: (id: IArticle['_id']) => {
                     openArticle(id, 'view');
                 },
-                edit: (
-                    id: IArticle['_id'],
-                    openSideWidget?: IOpenSideWidget,
-                ) => {
+                edit: (id: IArticle['_id'], openSideWidget?: IOpenSideWidget) => {
                     openArticle(id, 'edit', openSideWidget);
                 },
                 addImage: (field: string, image: IArticle) => {
@@ -398,7 +377,7 @@ export function getSuperdeskApiImplementation(
                 },
                 applyFieldChangesToEditor: (
                     itemId: IArticle['_id'],
-                    field: {key: string, value: valueof<IArticle>},
+                    field: {key: string; value: valueof<IArticle>},
                 ) => {
                     dispatchInternalEvent('dangerouslyOverwriteAuthoringField', {
                         field,
@@ -414,10 +393,11 @@ export function getSuperdeskApiImplementation(
                 return showModal(Component, containerClass);
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string, title?: string) => showConfirmationPrompt({
-                title: title ?? gettext('Confirm'),
-                message,
-            }),
+            confirm: (message: string, title?: string) =>
+                showConfirmationPrompt({
+                    title: title ?? gettext('Confirm'),
+                    message,
+                }),
             prompt: ui.prompt,
             showIgnoreCancelSaveDialog,
             notify: notify,
@@ -490,11 +470,8 @@ export function getSuperdeskApiImplementation(
         authoringGeneric: {
             sideWidgets: {
                 inlineComments: getInlineCommentsWidgetGeneric(),
-                comments: (
-                    getComments,
-                    addComment,
-                    isAllowed,
-                ) => getCommentsWidgetGeneric(getComments, addComment, isAllowed),
+                comments: (getComments, addComment, isAllowed) =>
+                    getCommentsWidgetGeneric(getComments, addComment, isAllowed),
             },
         },
         localization: {

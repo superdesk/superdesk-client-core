@@ -2,7 +2,7 @@ PackageItemLabelsDropdown.$inject = ['vocabularies', 'packages'];
 export function PackageItemLabelsDropdown(vocabularies, packages) {
     return {
         templateUrl: 'scripts/apps/archive/views/package_item_labels_dropdown_directive.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.labels = [];
 
             vocabularies.getVocabulary('package-story-labels').then((vocabulary) => {

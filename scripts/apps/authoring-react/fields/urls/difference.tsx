@@ -9,15 +9,13 @@ export class Difference extends React.PureComponent<IProps> {
         const value1Sorted = (this.props.value1 ?? []).sort((a, b) => a.url.localeCompare(b.url));
         const value2Sorted = (this.props.value2 ?? []).sort((a, b) => a.url.localeCompare(b.url));
 
-        const value1HtmlString =
-            value1Sorted
-                .map(({url, description}) => `${url}<br />${description}`)
-                .join('<br /><br />');
+        const value1HtmlString = value1Sorted
+            .map(({url, description}) => `${url}<br />${description}`)
+            .join('<br /><br />');
 
-        const value2HtmlString =
-            value2Sorted
-                .map(({url, description}) => `${url}<br />${description}`)
-                .join('<br /><br />');
+        const value2HtmlString = value2Sorted
+            .map(({url, description}) => `${url}<br />${description}`)
+            .join('<br /><br />');
 
         return (
             <div>

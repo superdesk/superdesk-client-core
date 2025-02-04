@@ -11,30 +11,29 @@ function VersioningController($scope, authoring, desks, archiveService) {
     $scope.stages = null;
 
     function fetchVersions() {
-        desks.initialize()
-            .then(() => {
-                $scope.desks = desks.desks;
-                $scope.stages = desks.deskStages;
-                $scope.users = desks.users;
+        desks.initialize().then(() => {
+            $scope.desks = desks.desks;
+            $scope.stages = desks.deskStages;
+            $scope.users = desks.users;
 
-                archiveService.getVersions($scope.item, desks, 'versions').then((versions) => {
-                    $scope.versions = versions;
-                    $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
+            archiveService.getVersions($scope.item, desks, 'versions').then((versions) => {
+                $scope.versions = versions;
+                $scope.last = archiveService.lastVersion($scope.item, $scope.versions);
 
-                    if (archiveService.isLegal($scope.item)) {
-                        $scope.canRevert = false;
-                        $scope.openVersion($scope.last);
+                if (archiveService.isLegal($scope.item)) {
+                    $scope.canRevert = false;
+                    $scope.openVersion($scope.last);
+                } else {
+                    $scope.canRevert = authoring.isEditable($scope.item) && !isPublished($scope.item);
+
+                    if ($scope.item._autosave) {
+                        $scope.selected = $scope.item._autosave;
                     } else {
-                        $scope.canRevert = authoring.isEditable($scope.item) && !isPublished($scope.item);
-
-                        if ($scope.item._autosave) {
-                            $scope.selected = $scope.item._autosave;
-                        } else {
-                            $scope.openVersion($scope.last);
-                        }
+                        $scope.openVersion($scope.last);
                     }
-                });
+                }
             });
+        });
     }
 
     /**
@@ -42,7 +41,7 @@ function VersioningController($scope, authoring, desks, archiveService) {
      * Or if editable but not dirty.
      * Then the last version can be edited only when editable and not dirty.
      */
-    $scope.openVersion = function(version) {
+    $scope.openVersion = function (version) {
         if (!$scope.item._editable) {
             $scope.preview(version);
         } else if ($scope.item._editable && !$scope.dirty) {
@@ -62,7 +61,7 @@ function VersioningController($scope, authoring, desks, archiveService) {
      *
      * If the version is the last one and there is an autosave - drop autosave
      */
-    $scope.revert = function(version, event) {
+    $scope.revert = function (version, event) {
         /**
          * The button is nested in element that calls `openVersion` on click.
          */
@@ -81,6 +80,7 @@ function versioningVersionDirective() {
     };
 }
 
-angular.module('superdesk.apps.authoring.versioning.versions', [])
+angular
+    .module('superdesk.apps.authoring.versioning.versions', [])
     .directive('sdVersioningVersion', versioningVersionDirective)
     .controller('VersioningWidgetCtrl', VersioningController);

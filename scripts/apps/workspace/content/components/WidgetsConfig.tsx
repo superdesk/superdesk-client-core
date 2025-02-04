@@ -39,14 +39,18 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
     handleChange(id: string, nextValue: boolean) {
         const configForWidgetExists = this.state.widgetsConfig.find((widget) => widget.widget_id === id) != null;
 
-        this.setState({
-            widgetsConfig: configForWidgetExists
-                ? this.state.widgetsConfig.map((config) =>
-                    config.widget_id === id ? {...config, is_displayed: nextValue} : config)
-                : this.state.widgetsConfig.concat({widget_id: id, is_displayed: nextValue}),
-        }, () => {
-            this.props.onUpdate(this.state.widgetsConfig);
-        });
+        this.setState(
+            {
+                widgetsConfig: configForWidgetExists
+                    ? this.state.widgetsConfig.map((config) =>
+                          config.widget_id === id ? {...config, is_displayed: nextValue} : config,
+                      )
+                    : this.state.widgetsConfig.concat({widget_id: id, is_displayed: nextValue}),
+            },
+            () => {
+                this.props.onUpdate(this.state.widgetsConfig);
+            },
+        );
     }
     render() {
         const authoringWidgets: Array<IWidget> = ng.get('authoringWidgets');
@@ -57,22 +61,18 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
                     {gettext('Show or hide the widgets in the right toolbar in the editor workspace.')}
                 </div>
                 <ul className="sd-list-item-group sd-shadow--z2">
-                    {
-                        authoringWidgets.map((widget, i) => (
-                            <li className="sd-list-item" key={i}>
-                                <span className="sd-list-item__column">
-                                    <input
-                                        type="checkbox"
-                                        checked={isWidgetVisibleForContentProfile(this.state.widgetsConfig, widget._id)}
-                                        onChange={(e) => this.handleChange(widget._id, e.target.checked)}
-                                    />
-                                </span>
-                                <span className="sd-list-item__column">
-                                    {widget.label}
-                                </span>
-                            </li>
-                        ))
-                    }
+                    {authoringWidgets.map((widget, i) => (
+                        <li className="sd-list-item" key={i}>
+                            <span className="sd-list-item__column">
+                                <input
+                                    type="checkbox"
+                                    checked={isWidgetVisibleForContentProfile(this.state.widgetsConfig, widget._id)}
+                                    onChange={(e) => this.handleChange(widget._id, e.target.checked)}
+                                />
+                            </span>
+                            <span className="sd-list-item__column">{widget.label}</span>
+                        </li>
+                    ))}
                 </ul>
             </div>
         );

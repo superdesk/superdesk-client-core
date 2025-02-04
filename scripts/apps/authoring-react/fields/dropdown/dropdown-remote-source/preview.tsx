@@ -8,18 +8,15 @@ type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfigRemoteSource
 export class PreviewRemoteSource extends React.PureComponent<IProps> {
     render() {
         const {config, value} = this.props;
-        const optionsToPreview =
-            (Array.isArray(value) ? value : [value]);
+        const optionsToPreview = Array.isArray(value) ? value : [value];
 
         const Template = getValueTemplate(config);
 
         return (
             <SpacerInlineFlex h gap="8" gapSecondary="8">
-                {
-                    optionsToPreview.map((option, i) => (
-                        <Template key={i} item={option} />
-                    ))
-                }
+                {optionsToPreview.map((option, i) => (
+                    <Template key={i} item={option} />
+                ))}
             </SpacerInlineFlex>
         );
     }

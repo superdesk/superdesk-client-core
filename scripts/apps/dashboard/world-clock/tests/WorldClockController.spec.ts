@@ -1,14 +1,10 @@
-
 /**
-* Module with tests for the WorldClockController
-*
-* @module WorldClockController tests
-*/
+ * Module with tests for the WorldClockController
+ *
+ * @module WorldClockController tests
+ */
 describe('WorldClockController', () => {
-    var ctrl,
-        getTzdataDeferred,
-        fakeTzdata,
-        scope;
+    var ctrl, getTzdataDeferred, fakeTzdata, scope;
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
     beforeEach(window.module('superdesk.apps.searchProviders'));

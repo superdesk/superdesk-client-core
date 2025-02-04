@@ -34,14 +34,16 @@ export function renderArea(area, itemProps, props) {
 
     var specs = listConfig[area] || [];
 
-    var contents = specs.map((field, index) => {
-        if (fields[field]) {
-            return fields[field](itemProps);
-        }
+    var contents = specs
+        .map((field, index) => {
+            if (fields[field]) {
+                return fields[field](itemProps);
+            }
 
-        console.warn('missing field in list: ' + field);
-        return null;
-    }).filter(angular.identity);
+            console.warn('missing field in list: ' + field);
+            return null;
+        })
+        .filter(angular.identity);
     var elemProps = angular.extend({key: area}, props);
 
     return contents.length ? React.createElement('div', elemProps, contents) : null;
@@ -59,19 +61,21 @@ export function getContactType(contact: IContact): string {
 }
 
 export function validateRequiredFormFields(contact: IContact, contactTypes: Array<IContactType>): boolean {
-    return validateRequiredField(contact) &&
+    return (
+        validateRequiredField(contact) &&
         validateMinRequiredField(contact) &&
-        validateAssignableType(contact, contactTypes);
+        validateAssignableType(contact, contactTypes)
+    );
 }
 
 export function validateRequiredField(contact: IContact): boolean {
-    const REQUIRED_CONTACT_FIELDS = getContactType(contact) === 'person' ?
-        ['first_name', 'last_name'] : ['organisation'];
+    const REQUIRED_CONTACT_FIELDS =
+        getContactType(contact) === 'person' ? ['first_name', 'last_name'] : ['organisation'];
 
     let invalid = _.some(REQUIRED_CONTACT_FIELDS, (field) => {
         switch (field) {
-        default:
-            return _.isEmpty(contact[field]);
+            default:
+                return _.isEmpty(contact[field]);
         }
     });
 
@@ -79,31 +83,39 @@ export function validateRequiredField(contact: IContact): boolean {
 }
 
 function contactHasEmailAddress(contact: IContact): boolean {
-    return contact && contact.contact_email && contact.contact_email.length > 0 &&
-        !contact.contact_email.some((email) => !email || email.length === 0);
+    return (
+        contact &&
+        contact.contact_email &&
+        contact.contact_email.length > 0 &&
+        !contact.contact_email.some((email) => !email || email.length === 0)
+    );
 }
 
 export function validateMinRequiredField(contact: IContact): boolean {
     return _.some(getLookupFields(), (field) => {
         switch (field.name) {
-        case 'contact_email':
-            return contactHasEmailAddress(contact);
-        case 'contact_phone':
-        case 'mobile':
-            return _.get(contact, field.name, []).length > 0 &&
-                !_.some(_.map(contact[field.name], 'number'), (v) => _.isEmpty(v));
-        default:
-            return !_.isEmpty(contact[field.name]);
+            case 'contact_email':
+                return contactHasEmailAddress(contact);
+            case 'contact_phone':
+            case 'mobile':
+                return (
+                    _.get(contact, field.name, []).length > 0 &&
+                    !_.some(_.map(contact[field.name], 'number'), (v) => _.isEmpty(v))
+                );
+            default:
+                return !_.isEmpty(contact[field.name]);
         }
     });
 }
 
 export function getMinRequiredFieldLabels() {
-    return getLookupFields().map((f) => f.label).join(', ');
+    return getLookupFields()
+        .map((f) => f.label)
+        .join(', ');
 }
 
 export function getMinRequiredFieldLabel(field) {
-    const thisField = getLookupFields().find((f) => (f.name === field));
+    const thisField = getLookupFields().find((f) => f.name === field);
 
     return _.get(thisField, 'label', '');
 }
@@ -123,9 +135,7 @@ export function getContactTypeObject(contactTypes: Array<IContactType>, qcode: s
         return null;
     }
 
-    return contactTypes.find(
-        (contactType: IContactType) => contactType.qcode === qcode,
-    ) || null;
+    return contactTypes.find((contactType: IContactType) => contactType.qcode === qcode) || null;
 }
 
 export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {
@@ -133,17 +143,20 @@ export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {
         let activeElement = listRefElement.children[selectedIndex];
 
         if (activeElement) {
-            let distanceOfSelItemFromVisibleTop = $(activeElement).offset().top -
+            let distanceOfSelItemFromVisibleTop =
+                $(activeElement).offset().top -
                 $(document).scrollTop() -
-            $(listRefElement).offset().top - $(document).scrollTop();
+                $(listRefElement).offset().top -
+                $(document).scrollTop();
 
             // If the selected item goes beyond container view, scroll it to middle.
-            if (distanceOfSelItemFromVisibleTop >=
-                    (listRefElement.clientHeight - activeElement.clientHeight) ||
-                    distanceOfSelItemFromVisibleTop < 0) {
-                $(listRefElement).scrollTop($(listRefElement).scrollTop() +
-                    distanceOfSelItemFromVisibleTop -
-                listRefElement.offsetHeight * 0.5);
+            if (
+                distanceOfSelItemFromVisibleTop >= listRefElement.clientHeight - activeElement.clientHeight ||
+                distanceOfSelItemFromVisibleTop < 0
+            ) {
+                $(listRefElement).scrollTop(
+                    $(listRefElement).scrollTop() + distanceOfSelItemFromVisibleTop - listRefElement.offsetHeight * 0.5,
+                );
             }
         }
     }

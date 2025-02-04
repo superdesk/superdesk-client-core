@@ -1,19 +1,10 @@
-import {
-    ICustomFieldType,
-    IEditor3ValueOperational,
-    IEditor3Config,
-    IEditor3ValueStorage,
-} from 'superdesk-api';
+import {ICustomFieldType, IEditor3ValueOperational, IEditor3Config, IEditor3ValueStorage} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
-import createEditorStore, {
-    prepareEditor3StateForExport,
-} from 'core/editor3/store';
+import createEditorStore, {prepareEditor3StateForExport} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {noop} from 'lodash';
-import {
-    CharacterLimitUiBehavior,
-} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Difference} from './difference';
 import {Preview} from './preview';
 import {Config} from './config';
@@ -24,10 +15,7 @@ interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-export function editor3ToOperationalFormat(
-    value: IEditor3ValueStorage,
-    language: string,
-): IEditor3ValueOperational {
+export function editor3ToOperationalFormat(value: IEditor3ValueStorage, language: string): IEditor3ValueOperational {
     const emptyState: RawDraftContentState = {blocks: [], entityMap: {}};
 
     const store = createEditorStore(
@@ -49,8 +37,12 @@ export function editor3ToOperationalFormat(
 }
 export const EDITOR_3_FIELD_TYPE = 'editor3';
 
-export function getEditor3Field()
-: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
+export function getEditor3Field(): ICustomFieldType<
+    IEditor3ValueOperational,
+    IEditor3ValueStorage,
+    IEditor3Config,
+    IUserPreferences
+> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
         id: EDITOR_3_FIELD_TYPE,
         generic: true,
@@ -71,7 +63,7 @@ export function getEditor3Field()
             const fieldValue: IEditor3ValueOperational | null =
                 config.copyFromFieldOnToggle == null
                     ? null
-                    : fieldsData.get(config.copyFromFieldOnToggle) as IEditor3ValueOperational | null;
+                    : (fieldsData.get(config.copyFromFieldOnToggle) as IEditor3ValueOperational | null);
 
             const plainText = fieldValue?.contentState?.getPlainText() ?? '';
 

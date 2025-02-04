@@ -11,15 +11,13 @@ export class Panel extends React.PureComponent<IProps> {
     render() {
         const classes = classNames('side-panel', {
             [`side-panel--${this.props.side}`]: this.props.side,
-            [`side-panel--${this.props.background}`]: this.props.background !== 'light' &&
-                this.props.background !== undefined,
+            [`side-panel--${this.props.background}`]:
+                this.props.background !== 'light' && this.props.background !== undefined,
         });
 
         return (
             <div className="side-panel__container">
-                <div className={classes}>
-                    {this.props.children}
-                </div>
+                <div className={classes}>{this.props.children}</div>
             </div>
         );
     }

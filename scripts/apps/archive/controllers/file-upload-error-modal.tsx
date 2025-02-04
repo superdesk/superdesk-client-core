@@ -15,9 +15,7 @@ interface IFileError {
     type: string;
 }
 
-export function fileUploadErrorModal(
-    invalidFiles: Array<IFileError>,
-) {
+export function fileUploadErrorModal(invalidFiles: Array<IFileError>) {
     return class FileUploadErrorModal extends React.PureComponent<IProps> {
         render() {
             if (invalidFiles.length > 0) {
@@ -27,62 +25,47 @@ export function fileUploadErrorModal(
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}
-                        headerTemplate={
-                            gettextPlural(
-                                invalidFiles.length,
-                                'The file was not uploaded',
-                                'Some files were not uploaded',
-                            )
-                        }
-                        footerTemplate={
-                            <Button type="primary" onClick={this.props.closeModal} text={gettext('Ok')} />
-                        }
+                        headerTemplate={gettextPlural(
+                            invalidFiles.length,
+                            'The file was not uploaded',
+                            'Some files were not uploaded',
+                        )}
+                        footerTemplate={<Button type="primary" onClick={this.props.closeModal} text={gettext('Ok')} />}
                     >
                         {invalidFiles.some((file) => file.type.startsWith('image')) && (
                             <h4>
-                                {
-                                    gettext(
-                                        'Minimum allowed image size is {{minWidth}}x{{minHeight}}',
-                                        {
-                                            minWidth: appConfig.pictures.minWidth,
-                                            minHeight: appConfig.pictures.minHeight,
-                                        },
-                                    )
-                                }
+                                {gettext('Minimum allowed image size is {{minWidth}}x{{minHeight}}', {
+                                    minWidth: appConfig.pictures.minWidth,
+                                    minHeight: appConfig.pictures.minHeight,
+                                })}
                             </h4>
                         )}
                         <ol>
-                            {
-                                invalidFiles.map((file, index) => {
-                                    if (file.type !== null) {
-                                        if (file.type.startsWith('image')) {
-                                            return (
-                                                <li key={index}>
-                                                    {gettext('The size of {{filename}} is {{width}}x{{height}}',
-                                                        {
-                                                            filename: file.name,
-                                                            width: file.width,
-                                                            height: file.height,
-                                                        },
-                                                    )}
-                                                </li>
-                                            );
-                                        } else {
-                                            return (
-                                                <li key={index}>
-                                                    {gettext('Invalid File : {{name}}',
-                                                        {
-                                                            name: file.name,
-                                                        },
-                                                    )}
-                                                </li>
-                                            );
-                                        }
+                            {invalidFiles.map((file, index) => {
+                                if (file.type !== null) {
+                                    if (file.type.startsWith('image')) {
+                                        return (
+                                            <li key={index}>
+                                                {gettext('The size of {{filename}} is {{width}}x{{height}}', {
+                                                    filename: file.name,
+                                                    width: file.width,
+                                                    height: file.height,
+                                                })}
+                                            </li>
+                                        );
                                     } else {
-                                        return null;
+                                        return (
+                                            <li key={index}>
+                                                {gettext('Invalid File : {{name}}', {
+                                                    name: file.name,
+                                                })}
+                                            </li>
+                                        );
                                     }
-                                })
-                            }
+                                } else {
+                                    return null;
+                                }
+                            })}
                         </ol>
                     </Modal>
                 );

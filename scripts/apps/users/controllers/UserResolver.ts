@@ -5,13 +5,12 @@ import {gettext} from 'core/utils';
  */
 UserResolver.$inject = ['api', '$route', 'notify', '$location'];
 export function UserResolver(api, $route, notify, $location) {
-    return api.users.getById($route.current.params._id)
-        .then(null, (response) => {
-            if (response.status === 404) {
-                $location.path('/users/');
-                notify.error(gettext('User was not found, sorry.'), 5000);
-            }
+    return api.users.getById($route.current.params._id).then(null, (response) => {
+        if (response.status === 404) {
+            $location.path('/users/');
+            notify.error(gettext('User was not found, sorry.'), 5000);
+        }
 
-            return response;
-        });
+        return response;
+    });
 }

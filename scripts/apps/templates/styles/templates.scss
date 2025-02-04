@@ -10,7 +10,6 @@
         min-height: 120px; /* should be big enough to fit in dropdown menu */
     }
 
-
     .card-box__content-list {
         .creation-time {
             display: inline-block;
@@ -39,13 +38,11 @@
     }
 
     .template-content {
-
         overflow-x: hidden;
         @include box-shadow(3px -3px 8px -3px rgba(0, 0, 0, 0.1));
     }
 
     .template-metadata {
-
         .field {
             margin-block-end: 15px;
             &--margin-double {
@@ -61,14 +58,13 @@
             color: $sd-text;
         }
         .multi-select {
-            margin-block-end: 20px;            
+            margin-block-end: 20px;
             ul {
                 li {
                     display: inline-block;
                 }
             }
         }
-
     }
 
     .template-icon {
@@ -77,9 +73,11 @@
         padding: 16px 0px 20px 24px;
 
         i {
-            width: 48px; height: 48px;
-            font-size: 48px; line-height: 48px;
-            opacity: .7;
+            width: 48px;
+            height: 48px;
+            font-size: 48px;
+            line-height: 48px;
+            opacity: 0.7;
         }
     }
 
@@ -132,7 +130,9 @@
     }
 
     .field--double {
-        > select, > input, > .field {
+        > select,
+        > input,
+        > .field {
             display: inline-block;
             vertical-align: top;
             width: 48%;
@@ -141,7 +141,6 @@
             }
         }
     }
-
 }
 
 .target-field {
@@ -161,14 +160,14 @@
             padding: 0 6px;
             @include border-radius(3px);
             margin: 0 5px 5px 0;
-            @include transition(all .5s);
+            @include transition(all 0.5s);
             i:not(.alt) {
                 position: absolute;
                 display: none;
                 inset-inline-end: 5px;
                 inset-block-start: 6px;
                 opacity: 0;
-                transition: all .5s ease;
+                transition: all 0.5s ease;
             }
             &:hover {
                 cursor: pointer;

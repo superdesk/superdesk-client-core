@@ -4,7 +4,9 @@ describe('keyboardManager', () => {
     beforeEach(window.module('superdesk.core.keyboard'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
-    var km, elem, $timeout,
+    var km,
+        elem,
+        $timeout,
         options = {inputDisabled: false};
 
     function keydown(label) {
@@ -39,9 +41,13 @@ describe('keyboardManager', () => {
     it('can bind and unbind', () => {
         var status = false;
 
-        km.bind('up', () => {
-            status = true;
-        }, options);
+        km.bind(
+            'up',
+            () => {
+                status = true;
+            },
+            options,
+        );
 
         expect(status).toBe(false);
 
@@ -57,13 +63,21 @@ describe('keyboardManager', () => {
     it('can push and pop an event', () => {
         var from;
 
-        km.push('up', () => {
-            from = '1';
-        }, options);
+        km.push(
+            'up',
+            () => {
+                from = '1';
+            },
+            options,
+        );
 
-        km.push('up', () => {
-            from = '2';
-        }, options);
+        km.push(
+            'up',
+            () => {
+                from = '2';
+            },
+            options,
+        );
 
         keydown('up');
 

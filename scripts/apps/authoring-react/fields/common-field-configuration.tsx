@@ -11,7 +11,7 @@ interface IProps<T> {
 
 export class CommonFieldConfiguration<T extends ICommonFieldConfig> extends React.PureComponent<IProps<T>> {
     render() {
-        const config: T = this.props.config ?? {} as T;
+        const config: T = this.props.config ?? ({} as T);
 
         return (
             <React.Fragment>

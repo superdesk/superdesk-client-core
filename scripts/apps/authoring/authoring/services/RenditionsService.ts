@@ -18,12 +18,13 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *
      *  @return {promise}
      */
-    this.ingest = function(item) {
+    this.ingest = function (item) {
         var performRenditions = $q.when(item);
         // ingest picture if it comes from an external source (create renditions)
 
         if (item._type && item._type === 'externalsource') {
-            performRenditions = superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
+            performRenditions = superdesk
+                .intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((_item) => api.find('archive', _item._id));
         }
         return performRenditions;
@@ -37,7 +38,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *
      *  @return {promise} picture crops
      */
-    this.get = function() {
+    this.get = function () {
         return metadata.initialize().then(() => {
             self.renditions = metadata.values.crop_sizes;
             return self.renditions;
@@ -56,7 +57,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(
+    this.crop = function (
         item,
         options,
         mode: {
@@ -92,14 +93,15 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 ...options,
             };
 
-            return superdesk.intent('edit', 'crop', {
-                item: clonedItem,
-                renditions: withRatio,
-                poi: clonedItem.poi,
-                showAoISelectionButton: true,
-                showMetadataEditor: true,
-                ...cropOptions,
-            })
+            return superdesk
+                .intent('edit', 'crop', {
+                    item: clonedItem,
+                    renditions: withRatio,
+                    poi: clonedItem.poi,
+                    showAoISelectionButton: true,
+                    showMetadataEditor: true,
+                    ...cropOptions,
+                })
                 .then((metaData) => {
                     // apply the metadata changes
                     if (mode.immutable) {

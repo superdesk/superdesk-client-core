@@ -4,26 +4,12 @@ import {IDesk} from 'superdesk-api';
 import {logger} from 'core/services/logger';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
-import {
-    DESK_OUTPUT,
-    SENT_OUTPUT,
-    SCHEDULED_OUTPUT,
-    HIGHLIGHTS,
-} from '../constants';
+import {DESK_OUTPUT, SENT_OUTPUT, SCHEDULED_OUTPUT, HIGHLIGHTS} from '../constants';
 import {initEntity} from 'core/data';
 
-const OUTPUT_TYPES = [
-    DESK_OUTPUT,
-    SENT_OUTPUT,
-    SCHEDULED_OUTPUT,
-];
+const OUTPUT_TYPES = [DESK_OUTPUT, SENT_OUTPUT, SCHEDULED_OUTPUT];
 
-const PUBLISH_TYPES = [
-    DESK_OUTPUT,
-    SENT_OUTPUT,
-    SCHEDULED_OUTPUT,
-    HIGHLIGHTS,
-];
+const PUBLISH_TYPES = [DESK_OUTPUT, SENT_OUTPUT, SCHEDULED_OUTPUT, HIGHLIGHTS];
 
 /**
  * @ngdoc service
@@ -41,13 +27,21 @@ const PUBLISH_TYPES = [
  *
  * @description Desks Service is responsible for managing desks and stages
  */
-DesksFactory.$inject = ['$q', 'api', 'preferencesService', 'userList', 'notify',
-    'session', '$filter', 'privileges', '$rootScope'];
-export function DesksFactory($q, api, preferencesService, userList, notify,
-    session, $filter, privileges, $rootScope) {
+DesksFactory.$inject = [
+    '$q',
+    'api',
+    'preferencesService',
+    'userList',
+    'notify',
+    'session',
+    '$filter',
+    'privileges',
+    '$rootScope',
+];
+export function DesksFactory($q, api, preferencesService, userList, notify, session, $filter, privileges, $rootScope) {
     let _cache = {};
 
-    var _fetchAll = function(endpoint, parent?, page = 1, items = [], refresh = false) {
+    var _fetchAll = function (endpoint, parent?, page = 1, items = [], refresh = false) {
         let key;
 
         if (page === 1) {
@@ -57,17 +51,16 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             }
         }
 
-        let promise = api.query(endpoint, {max_results: 200, page: page}, parent)
-            .then((result) => {
-                let pg = page;
-                let extended = items.concat(result._items);
+        let promise = api.query(endpoint, {max_results: 200, page: page}, parent).then((result) => {
+            let pg = page;
+            let extended = items.concat(result._items);
 
-                if (result._links && result._links.next) {
-                    pg++;
-                    return _fetchAll(endpoint, parent, pg, extended, refresh);
-                }
-                return extended;
-            });
+            if (result._links && result._links.next) {
+                pg++;
+                return _fetchAll(endpoint, parent, pg, extended, refresh);
+            }
+            return extended;
+        });
 
         if (page === 1) {
             _cache[key] = promise;
@@ -115,63 +108,58 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
          * @description Fetches all desks in the system.
          * @returns {Promise}
          */
-        fetchDesks: function() {
+        fetchDesks: function () {
             var self = this;
 
-            return _fetchAll('desks')
-                .then((items) => {
-                    let byName = $filter('sortByName')(items);
+            return _fetchAll('desks').then((items) => {
+                let byName = $filter('sortByName')(items);
 
-                    self.desks = {_items: byName};
-                    _.each(byName, (item) => {
-                        self.deskLookup[item._id] = item;
-                    });
-                    return self.desks;
+                self.desks = {_items: byName};
+                _.each(byName, (item) => {
+                    self.deskLookup[item._id] = item;
                 });
+                return self.desks;
+            });
         },
 
-        fetchUsers: function() {
+        fetchUsers: function () {
             var self = this;
 
-            return userList.getAll()
-                .then((result) => {
-                    self.users = {};
-                    self.users._items = result;
-                    _.each(result, (user) => {
-                        self.userLookup[user._id] = user;
-                    });
-                    initEntity('users', self.users._items);
+            return userList.getAll().then((result) => {
+                self.users = {};
+                self.users._items = result;
+                _.each(result, (user) => {
+                    self.userLookup[user._id] = user;
                 });
+                initEntity('users', self.users._items);
+            });
         },
-        fetchStages: function(refresh = false) {
+        fetchStages: function (refresh = false) {
             var self = this;
 
-            return _fetchAll('stages', undefined, undefined, undefined, refresh)
-                .then((items) => {
-                    self.stages = {_items: items};
-                    _.each(items, (item) => {
-                        self.stageLookup[item._id] = item;
-                    });
-
-                    return self.stages;
+            return _fetchAll('stages', undefined, undefined, undefined, refresh).then((items) => {
+                self.stages = {_items: items};
+                _.each(items, (item) => {
+                    self.stageLookup[item._id] = item;
                 });
+
+                return self.stages;
+            });
         },
-        fetchDeskStages: function(desk, refresh) {
+        fetchDeskStages: function (desk, refresh) {
             var self = this;
 
             if (self.deskStages[desk] && !refresh) {
                 return $q.when().then(returnDeskStages);
             }
 
-            return self.fetchStages(refresh)
-                .then(angular.bind(self, self.generateDeskStages))
-                .then(returnDeskStages);
+            return self.fetchStages(refresh).then(angular.bind(self, self.generateDeskStages)).then(returnDeskStages);
 
             function returnDeskStages() {
                 return self.deskStages[desk];
             }
         },
-        generateDeskMembers: function() {
+        generateDeskMembers: function () {
             var self = this;
 
             _.each(this.desks._items, (desk) => {
@@ -187,14 +175,14 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
             return $q.when();
         },
-        generateDeskStages: function() {
+        generateDeskStages: function () {
             var self = this;
 
             this.deskStages = _.groupBy(self.stages._items, 'desk');
 
             return $q.when();
         },
-        fetchUserDesks: function(user) {
+        fetchUserDesks: function (user) {
             return _fetchAll('user_desks', {_id: user._id}).then((response) => {
                 if (!response) {
                     return;
@@ -206,7 +194,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
         /**
          * Fetch current user desks and make sure active desk is present in there
          */
-        fetchCurrentUserDesks: function() {
+        fetchCurrentUserDesks: function () {
             var self = this;
 
             if (self.userDesks) {
@@ -216,14 +204,16 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             return this.fetchCurrentDeskId() // make sure there will be current desk
                 .then(angular.bind(session, session.getIdentity))
                 .then(angular.bind(this, this.fetchUserDesks))
-                .then(angular.bind(this, function(desks) {
-                    self.userDesks = desks;
-                    setActive(this);
-                    return desks;
-                }));
+                .then(
+                    angular.bind(this, function (desks) {
+                        self.userDesks = desks;
+                        setActive(this);
+                        return desks;
+                    }),
+                );
         },
 
-        fetchCurrentDeskId: function() {
+        fetchCurrentDeskId: function () {
             var self = this;
 
             if (self.activeDeskId) {
@@ -241,7 +231,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return self.activeDeskId;
             });
         },
-        fetchCurrentStageId: function() {
+        fetchCurrentStageId: function () {
             var self = this;
 
             if (self.activeStageId) {
@@ -254,7 +244,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 }
             });
         },
-        getCurrentDeskId: function(): IDesk['_id'] | null {
+        getCurrentDeskId: function (): IDesk['_id'] | null {
             if (!this.userDesks || this.userDesks.length === 0) {
                 return null;
             }
@@ -262,59 +252,71 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 if (session.identity.desk) {
                     var defaultDesk = _.find(this.userDesks, {_id: session.identity.desk});
 
-                    return defaultDesk && defaultDesk._id || this.userDesks[0]._id;
+                    return (defaultDesk && defaultDesk._id) || this.userDesks[0]._id;
                 }
                 return this.userDesks[0]._id;
             }
             return this.activeDeskId;
         },
-        setCurrentDeskId: function(deskId) {
+        setCurrentDeskId: function (deskId) {
             if (this.activeDeskId !== deskId) {
                 this.activeDeskId = deskId;
                 this.activeStageId = null;
                 setActive(this);
-                preferencesService.update({
-                    'desk:last_worked': this.activeDeskId,
-                    'stage:items': [],
-                }, 'desk:last_worked');
+                preferencesService.update(
+                    {
+                        'desk:last_worked': this.activeDeskId,
+                        'stage:items': [],
+                    },
+                    'desk:last_worked',
+                );
             }
         },
-        getCurrentStageId: function() {
+        getCurrentStageId: function () {
             return this.activeStageId;
         },
-        setCurrentStageId: function(stageId) {
+        setCurrentStageId: function (stageId) {
             if (this.activeStageId !== stageId) {
                 this.activeStageId = stageId;
                 setActive(this);
-                preferencesService.update({
-                    'desk:last_worked': this.activeDeskId,
-                    'stage:items': [this.activeStageId],
-                }, 'desk:last_worked');
+                preferencesService.update(
+                    {
+                        'desk:last_worked': this.activeDeskId,
+                        'stage:items': [this.activeStageId],
+                    },
+                    'desk:last_worked',
+                );
             }
         },
-        fetchDeskById: function(Id) {
-            return api.desks.getById(Id).then((_desk) => {
-                return _desk;
-            }, () => {
-                logger.error(new Error('Something went wrong: desk not found'));
-                return Promise.reject();
-            });
+        fetchDeskById: function (Id) {
+            return api.desks.getById(Id).then(
+                (_desk) => {
+                    return _desk;
+                },
+                () => {
+                    logger.error(new Error('Something went wrong: desk not found'));
+                    return Promise.reject();
+                },
+            );
         },
-        getCurrentDesk: function() {
+        getCurrentDesk: function () {
             return this.deskLookup[this.getCurrentDeskId()] || null;
         },
-        setWorkspace: function(deskId = null, stageId = null) {
+        setWorkspace: function (deskId = null, stageId = null) {
             if (this.activeDeskId !== deskId || this.activeStageId !== stageId) {
                 this.activeDeskId = deskId;
                 this.activeStageId = stageId;
                 setActive(this);
-                preferencesService.update({
-                    'desk:last_worked': this.activeDeskId,
-                    'stage:items': [this.activeStageId],
-                }, 'desk:last_worked');
+                preferencesService.update(
+                    {
+                        'desk:last_worked': this.activeDeskId,
+                        'stage:items': [this.activeStageId],
+                    },
+                    'desk:last_worked',
+                );
             }
         },
-        initialize: function() {
+        initialize: function () {
             if (!this.loading) {
                 this.fetchCurrentDeskId();
                 this.fetchCurrentStageId();
@@ -329,32 +331,30 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
             return this.loading;
         },
-        initActive: function() {
+        initActive: function () {
             setActive(this);
         },
-        save: function(desk, diff) {
-            return api.save('desks', desk, diff)
-                .then((res) => {
-                    if (diff.members) {
-                        // if desk members were changed update them inside deskMembers as well
-                        const _deskMembers = [];
+        save: function (desk, diff) {
+            return api.save('desks', desk, diff).then((res) => {
+                if (diff.members) {
+                    // if desk members were changed update them inside deskMembers as well
+                    const _deskMembers = [];
 
-                        _.values(res.members).forEach((value) => {
-                            _deskMembers.push(this.users._items.find((user) => user._id === value.user));
-                        });
-                        this.deskMembers[res._id] = _deskMembers;
-                    }
-                    return reset(res);
-                }, handleSaveError);
+                    _.values(res.members).forEach((value) => {
+                        _deskMembers.push(this.users._items.find((user) => user._id === value.user));
+                    });
+                    this.deskMembers[res._id] = _deskMembers;
+                }
+                return reset(res);
+            }, handleSaveError);
         },
-        remove: function(desk) {
-            return api.remove(desk)
-                .then(reset);
+        remove: function (desk) {
+            return api.remove(desk).then(reset);
         },
-        refreshStages: function() {
+        refreshStages: function () {
             return this.fetchStages().then(angular.bind(this, this.generateDeskStages));
         },
-        refreshUsers: function() {
+        refreshUsers: function () {
             return this.fetchUsers().then(angular.bind(this, this.generateDeskMembers));
         },
         /**
@@ -362,7 +362,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
          *
          * @param {Object} item
          */
-        getItemDesk: function(item) {
+        getItemDesk: function (item) {
             if (item.task && item.task.desk) {
                 return this.deskLookup[item.task.desk] || null;
             }
@@ -371,7 +371,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
         isOutputType: (type) => OUTPUT_TYPES.includes(type),
         isPublishType: (type) => PUBLISH_TYPES.includes(type),
 
-        isReadOnlyStage: function(stageId) {
+        isReadOnlyStage: function (stageId) {
             return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
         },
 
@@ -384,7 +384,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
          * @param {Object} markedItem
          * @returns {Object}
          */
-        markItem: function(deskId, markedItem) {
+        markItem: function (deskId, markedItem) {
             return api.save('marked_for_desks', {marked_desk: deskId, marked_item: markedItem._id});
         },
         /**
@@ -395,7 +395,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
          * for marking stories for desks
          * @returns {boolean}
          */
-        hasMarkItemPrivilege: function() {
+        hasMarkItemPrivilege: function () {
             return !!privileges.privileges.mark_for_desks;
         },
     };

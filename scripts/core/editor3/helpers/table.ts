@@ -20,13 +20,9 @@ export function getCell(data: IEditor3TableData, row, col, currentStyle, selecti
     let cellEditorState;
 
     if (!cells[row] || !cells[row][col]) {
-        cellEditorState = EditorState.createWithContent(
-            ContentState.createFromText(''),
-        );
+        cellEditorState = EditorState.createWithContent(ContentState.createFromText(''));
     } else {
-        cellEditorState = EditorState.createWithContent(
-            convertFromRaw(cells[row][col]),
-        );
+        cellEditorState = EditorState.createWithContent(convertFromRaw(cells[row][col]));
     }
 
     if (selection != null) {
@@ -36,22 +32,14 @@ export function getCell(data: IEditor3TableData, row, col, currentStyle, selecti
         const focusBlock = cellContentState.getBlockForKey(focusKey);
 
         if (anchorBlock != null && focusBlock != null) {
-            const newSelection = cellEditorState
-                .getSelection()
-                .merge({...selection});
+            const newSelection = cellEditorState.getSelection().merge({...selection});
 
-            cellEditorState = EditorState.forceSelection(
-                cellEditorState,
-                newSelection,
-            );
+            cellEditorState = EditorState.forceSelection(cellEditorState, newSelection);
         }
     }
 
     if (currentStyle != null) {
-        cellEditorState = EditorState.setInlineStyleOverride(
-            cellEditorState,
-            OrderedSet(currentStyle),
-        );
+        cellEditorState = EditorState.setInlineStyleOverride(cellEditorState, OrderedSet(currentStyle));
     }
 
     return cellEditorState;
@@ -71,7 +59,7 @@ export function setCell(
     row,
     col,
     cellEditorState: EditorState,
-): {data: IEditor3TableData | IEditor3CustomBlockData, needUpdate: boolean; forceUpdate: boolean} {
+): {data: IEditor3TableData | IEditor3CustomBlockData; needUpdate: boolean; forceUpdate: boolean} {
     const cellContentState = cellEditorState.getCurrentContent();
     let needUpdate = true;
     let forceUpdate = true;
@@ -81,12 +69,8 @@ export function setCell(
     }
 
     if (data.cells[row][col]) {
-        needUpdate =
-            JSON.stringify(data.cells[row][col]) !==
-            JSON.stringify(convertToRaw(cellContentState));
-        forceUpdate =
-            convertFromRaw(data.cells[row][col]).getPlainText() !==
-            cellContentState.getPlainText();
+        needUpdate = JSON.stringify(data.cells[row][col]) !== JSON.stringify(convertToRaw(cellContentState));
+        forceUpdate = convertFromRaw(data.cells[row][col]).getPlainText() !== cellContentState.getPlainText();
     }
 
     data.cells[row][col] = convertToRaw(cellContentState);
@@ -145,11 +129,7 @@ export function setData(
     const contentState = editorState.getCurrentContent();
     const selection = createBlockSelection(editorState, block);
     const newContentState = setDataForContent(contentState, selection, block, data);
-    const newEditorState = EditorState.push(
-        editorState,
-        newContentState,
-        lastChangeType,
-    );
+    const newEditorState = EditorState.push(editorState, newContentState, lastChangeType);
 
     return newEditorState;
 }
@@ -169,11 +149,7 @@ export function setDataForContent(
     data: IEditor3TableData,
 ): ContentState {
     const entityKey = block.getEntityAt(0);
-    const newContentState = Modifier.setBlockData(
-        contentState,
-        selection,
-        Map().set('data', JSON.stringify(data)),
-    );
+    const newContentState = Modifier.setBlockData(contentState, selection, Map().set('data', JSON.stringify(data)));
 
     newContentState.replaceEntityData(entityKey, {data});
 
@@ -193,9 +169,11 @@ export function getTableWithSingleCell(
         } else if (initialContent === 'editor-selection') {
             if (!selectionState.isCollapsed()) {
                 // Get user selected content
-                const selectedBlocks =
-                    getBlockKeys(contentState, selectionState.getStartKey(), selectionState.getEndKey())
-                        .map((key) => contentState.getBlockForKey(key));
+                const selectedBlocks = getBlockKeys(
+                    contentState,
+                    selectionState.getStartKey(),
+                    selectionState.getEndKey(),
+                ).map((key) => contentState.getBlockForKey(key));
 
                 return convertToRaw(ContentState.createFromBlockArray(selectedBlocks));
             } else {

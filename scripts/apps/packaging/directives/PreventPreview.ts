@@ -1,6 +1,6 @@
 export function PreventPreview() {
     return {
-        link: function(scope, el) {
+        link: function (scope, el) {
             el.bind('click', previewOnClick);
 
             scope.$on('$destroy', () => {

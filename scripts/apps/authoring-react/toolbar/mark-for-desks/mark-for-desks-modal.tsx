@@ -30,12 +30,7 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
         const selectedDesks = (this.state.selectedDesks ?? []).map((id) => allDesks.get(id));
 
         return (
-            <Modal
-                visible
-                onHide={this.props.closeModal}
-                size="medium"
-                headerTemplate={gettext('Marked for desks')}
-            >
+            <Modal visible onHide={this.props.closeModal} size="medium" headerTemplate={gettext('Marked for desks')}>
                 <Spacer v gap="8">
                     <TreeSelect
                         kind="synchronous"
@@ -56,18 +51,15 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button
                             onClick={() => {
-                                setMarkedDesks(this.state.selectedDesks, this.props.article._id)
-                                    .then(() => this.props.closeModal());
+                                setMarkedDesks(this.state.selectedDesks, this.props.article._id).then(() =>
+                                    this.props.closeModal(),
+                                );
                             }}
                             text={gettext('Save')}
                             type="primary"
                             style="filled"
                         />
-                        <Button
-                            onClick={this.props.closeModal}
-                            text={gettext('Cancel')}
-                            style="hollow"
-                        />
+                        <Button onClick={this.props.closeModal} text={gettext('Cancel')} style="hollow" />
                     </Spacer>
                 </Spacer>
             </Modal>

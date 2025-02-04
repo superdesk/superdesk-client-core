@@ -1,6 +1,4 @@
-<li class="item-field"
-    ng-repeat="activity in activities | limitTo:limit"
-    sd-activity-item></li>
+<li class="item-field" ng-repeat="activity in activities | limitTo:limit" sd-activity-item></li>
 
 <li ng-if="activities.length > 6 && !preview" class="item-field">
     <div class="dropdown dropdown--more-activity" sd-dropdown-position dropdown>
@@ -8,9 +6,11 @@
             <i class="icon-dots-vertical"></i>
         </a>
         <ul class="dropdown__menu">
-            <li class="item-field"
+            <li
+                class="item-field"
                 ng-repeat="activity in activities | limitTo:-(activities.length-5)"
-                sd-activity-item></li>
+                sd-activity-item
+            ></li>
         </ul>
     </div>
 </li>

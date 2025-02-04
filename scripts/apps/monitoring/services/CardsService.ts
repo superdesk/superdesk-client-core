@@ -2,20 +2,15 @@ import {flatMap, flattenDeep, includes, isNil} from 'lodash';
 import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
-import {
-    DESK_OUTPUT,
-    SENT_OUTPUT,
-    SCHEDULED_OUTPUT,
-} from 'apps/desks/constants';
+import {DESK_OUTPUT, SENT_OUTPUT, SCHEDULED_OUTPUT} from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
 
 export function getExtensionSections() {
     return flatMap(
-        Object.values(extensions)
-            .map(
-                (extension) =>
-                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? []),
+        Object.values(extensions).map(
+            (extension) => extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? [],
+        ),
     );
 }
 
@@ -27,7 +22,8 @@ export interface ICard {
     customFilters: string;
     header: string; // example: "Politic Desk"
     subheader: string; // example: "Working Stage"
-    type: 'search'
+    type:
+        | 'search'
         | 'spike-personal'
         | 'personal'
         | 'stage'
@@ -95,70 +91,71 @@ export function CardsService(search, session, desks, $location) {
         }
 
         switch (card.type) {
-        case 'search':
-            break;
+            case 'search':
+                break;
 
-        case 'spike-personal':
-        case 'personal':
-            query.filter({bool: {
-                must_not: {exists: {field: 'task.desk'}},
-                should: [
-                    {term: {'task.user': session.identity._id}}, // sent to personal
-                    {bool: { // just created in personal
-                        must: {term: {original_creator: session.identity._id}},
-                        must_not: {exists: {field: 'task.user'}},
-                    }},
-                ],
-                minimum_should_match: 1,
-            }});
-            break;
+            case 'spike-personal':
+            case 'personal':
+                query.filter({
+                    bool: {
+                        must_not: {exists: {field: 'task.desk'}},
+                        should: [
+                            {term: {'task.user': session.identity._id}}, // sent to personal
+                            {
+                                bool: {
+                                    // just created in personal
+                                    must: {term: {original_creator: session.identity._id}},
+                                    must_not: {exists: {field: 'task.user'}},
+                                },
+                            },
+                        ],
+                        minimum_should_match: 1,
+                    },
+                });
+                break;
 
-        case 'sent':
-            query.filter({bool: {
-                must: [
-                    {term: {original_creator: session.identity._id}},
-                    {exists: {field: 'task.desk'}},
-                ],
-            }});
-            break;
+            case 'sent':
+                query.filter({
+                    bool: {
+                        must: [{term: {original_creator: session.identity._id}}, {exists: {field: 'task.desk'}}],
+                    },
+                });
+                break;
 
-        case 'spike':
-            query.filter({term: {'task.desk': card._id}});
-            break;
+            case 'spike':
+                query.filter({term: {'task.desk': card._id}});
+                break;
 
-        case 'highlights':
-            query.filter({and: [
-                {term: {highlights: queryParam.highlight}},
-            ]});
-            break;
+            case 'highlights':
+                query.filter({and: [{term: {highlights: queryParam.highlight}}]});
+                break;
 
-        case DESK_OUTPUT:
-            filterQueryByDeskType(query, card);
-            break;
+            case DESK_OUTPUT:
+                filterQueryByDeskType(query, card);
+                break;
 
-        case SENT_OUTPUT:
-            deskId = card._id.substring(0, card._id.indexOf(':'));
-            query.filter({bool: {
-                filter: {term: {'task.desk_history': deskId}},
-                must_not: {term: {'task.desk': deskId}},
-            }});
-            break;
+            case SENT_OUTPUT:
+                deskId = card._id.substring(0, card._id.indexOf(':'));
+                query.filter({
+                    bool: {
+                        filter: {term: {'task.desk_history': deskId}},
+                        must_not: {term: {'task.desk': deskId}},
+                    },
+                });
+                break;
 
-        case SCHEDULED_OUTPUT:
-            deskId = card._id.substring(0, card._id.indexOf(':'));
-            query.filter({and: [
-                {term: {'task.desk': deskId}},
-                {term: {state: 'scheduled'}},
-            ]});
-            break;
+            case SCHEDULED_OUTPUT:
+                deskId = card._id.substring(0, card._id.indexOf(':'));
+                query.filter({and: [{term: {'task.desk': deskId}}, {term: {state: 'scheduled'}}]});
+                break;
 
-        default:
-            if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
-                query.filter({term: {'task.desk': card.deskId}});
-            } else if (card._id) {
-                query.filter({term: {'task.stage': card._id}});
-            }
-            break;
+            default:
+                if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
+                    query.filter({term: {'task.desk': card.deskId}});
+                } else if (card._id) {
+                    query.filter({term: {'task.stage': card._id}});
+                }
+                break;
         }
     }
 
@@ -172,16 +169,10 @@ export function CardsService(search, session, desks, $location) {
         }
 
         if (desk) {
-            const must: Array<{}> = [
-                {term: {'task.desk': deskId}},
-                {terms: {state: states}},
-            ];
+            const must: Array<{}> = [{term: {'task.desk': deskId}}, {terms: {state: states}}];
 
             if (desk.desk_type === 'authoring') {
-                query.filter({bool: {should: [
-                    {term: {'task.last_authoring_desk': deskId}},
-                    {bool: {must}},
-                ]}});
+                query.filter({bool: {should: [{term: {'task.last_authoring_desk': deskId}}, {bool: {must}}]}});
             } else if (desk.desk_type === 'production') {
                 query.filter({bool: {must}});
             }
@@ -190,26 +181,24 @@ export function CardsService(search, session, desks, $location) {
 
     function filterQueryByCardFileType(query, card: ICard) {
         if (card.fileType) {
-            var termsHighlightsPackage = {and: [
-                {bool: {must: {exists: {field: 'highlight'}}}},
-                {term: {type: 'composite'}},
-            ]};
+            var termsHighlightsPackage = {
+                and: [{bool: {must: {exists: {field: 'highlight'}}}}, {term: {type: 'composite'}}],
+            };
 
             var termsFileType: any = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
             if (includes(JSON.parse(card.fileType), 'composite')) {
-                termsFileType = {and: [
-                    {bool: {must_not: {exists: {field: 'highlight'}}}},
-                    {terms: {type: JSON.parse(card.fileType)}},
-                ]};
+                termsFileType = {
+                    and: [
+                        {bool: {must_not: {exists: {field: 'highlight'}}}},
+                        {terms: {type: JSON.parse(card.fileType)}},
+                    ],
+                };
             }
 
             if (includes(JSON.parse(card.fileType), 'highlight-pack')) {
-                query.filter({or: [
-                    termsHighlightsPackage,
-                    termsFileType,
-                ]});
+                query.filter({or: [termsHighlightsPackage, termsFileType]});
             } else {
                 query.filter(termsFileType);
             }
@@ -229,8 +218,7 @@ export function CardsService(search, session, desks, $location) {
 
         var items: {[key: string]: IMonitoringFilter} = JSON.parse(card.customFilters);
 
-        const terms = Object.values(items)
-            .reduce((obj1, obj2) => Object.assign(obj1, obj2.query), {});
+        const terms = Object.values(items).reduce((obj1, obj2) => Object.assign(obj1, obj2.query), {});
 
         Object.keys(terms).forEach((key) => {
             query.filter({terms: {[key]: terms[key]}});
@@ -282,28 +270,24 @@ export function CardsService(search, session, desks, $location) {
 
     function shouldUpdate(card: ICard, data) {
         switch (card.type) {
-        case 'stage':
-            // refresh stage if it matches updated stage
-            return data.stages && !!data.stages[card._id];
-        case 'personal':
-            return data.user === session.identity._id;
-        case DESK_OUTPUT:
-        case SENT_OUTPUT:
-        case SCHEDULED_OUTPUT:
-            var deskId = card._id.substring(0, card._id.indexOf(':'));
+            case 'stage':
+                // refresh stage if it matches updated stage
+                return data.stages && !!data.stages[card._id];
+            case 'personal':
+                return data.user === session.identity._id;
+            case DESK_OUTPUT:
+            case SENT_OUTPUT:
+            case SCHEDULED_OUTPUT:
+                var deskId = card._id.substring(0, card._id.indexOf(':'));
 
-            if (deskId) {
-                return (
-                    data.desks && !!data.desks[deskId]
-                ) || (
-                    data.from_desk && data.from_desk === deskId
-                );
-            }
+                if (deskId) {
+                    return (data.desks && !!data.desks[deskId]) || (data.from_desk && data.from_desk === deskId);
+                }
 
-            return false;
-        default:
-            // no way to determine if item should be visible, refresh
-            return true;
+                return false;
+            default:
+                // no way to determine if item should be visible, refresh
+                return true;
         }
     }
 }

@@ -16,35 +16,38 @@ export function applyMiddleware(_item: IArticle): Promise<IArticle> {
         );
     });
 
-    return ng.get('vocabularies').getVocabularies().then((_vocabularies: Array<IVocabulary>) => {
-        const fakeScope: any = {};
+    return ng
+        .get('vocabularies')
+        .getVocabularies()
+        .then((_vocabularies: Array<IVocabulary>) => {
+            const fakeScope: any = {};
 
-        return ng.get('content').setupAuthoring(_item.profile, fakeScope, _item).then(() => {
-            let itemNext: IArticle = {..._item};
+            return ng
+                .get('content')
+                .setupAuthoring(_item.profile, fakeScope, _item)
+                .then(() => {
+                    let itemNext: IArticle = {..._item};
 
-            for (const fieldId of Object.keys(fakeScope.editor)) {
-                const vocabulary = _vocabularies.find(({_id}) => _id === fieldId);
+                    for (const fieldId of Object.keys(fakeScope.editor)) {
+                        const vocabulary = _vocabularies.find(({_id}) => _id === fieldId);
 
-                if (vocabulary != null && fieldTypes[vocabulary.custom_field_type] != null) {
-                    const config = vocabulary.custom_field_config ?? {};
-                    const customField = fieldTypes[vocabulary.custom_field_type];
+                        if (vocabulary != null && fieldTypes[vocabulary.custom_field_type] != null) {
+                            const config = vocabulary.custom_field_config ?? {};
+                            const customField = fieldTypes[vocabulary.custom_field_type];
 
-                    itemNext = {
-                        ...itemNext,
-                        extra: {
-                            ...itemNext.extra,
-                            [fieldId]: customField.onTemplateCreate(
-                                itemNext?.extra?.[fieldId],
-                                config,
-                            ),
-                        },
-                    };
-                }
-            }
+                            itemNext = {
+                                ...itemNext,
+                                extra: {
+                                    ...itemNext.extra,
+                                    [fieldId]: customField.onTemplateCreate(itemNext?.extra?.[fieldId], config),
+                                },
+                            };
+                        }
+                    }
 
-            return itemNext;
+                    return itemNext;
+                });
         });
-    });
 }
 
 export function prepareData(template: ITemplate) {
@@ -108,13 +111,8 @@ export function canEdit(template: ITemplate, isPublic: boolean): boolean {
     }
 }
 
-export const wasRenamed = (
-    template: ITemplate,
-    templateName: string,
-) => template != null && templateName !== template.template_name;
+export const wasRenamed = (template: ITemplate, templateName: string) =>
+    template != null && templateName !== template.template_name;
 
-export const willCreateNew = (
-    template: ITemplate,
-    templateName: string,
-    isPublic: boolean,
-) => template == null || wasRenamed(template, templateName) || canEdit(template, isPublic) !== true;
+export const willCreateNew = (template: ITemplate, templateName: string, isPublic: boolean) =>
+    template == null || wasRenamed(template, templateName) || canEdit(template, isPublic) !== true;

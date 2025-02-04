@@ -82,11 +82,11 @@ class LinkFunction {
         let querySearch = false;
 
         switch (field) {
-        case 'organisation':
-            fieldElement = this.orgField;
-            fieldLabel = gettext('Organisation');
-            querySearch = true;
-            break;
+            case 'organisation':
+                fieldElement = this.orgField;
+                fieldLabel = gettext('Organisation');
+                querySearch = true;
+                break;
         }
 
         ReactDOM.render(
@@ -96,11 +96,11 @@ class LinkFunction {
                 onChange={this.handleOnChange}
                 value={_.get(this.scope.meta, field, '')}
                 querySearch={querySearch}
-                onQuerySearch={((searchText) => this.scope.searchField(field, searchText))}
+                onQuerySearch={(searchText) => this.scope.searchField(field, searchText)}
                 dataList={this.scope.filteredList[field]}
                 initValue={initValue}
-            />
-            , fieldElement,
+            />,
+            fieldElement,
         );
     }
 
@@ -112,7 +112,7 @@ class LinkFunction {
     setQueryString() {
         let pattern = /[()]/g;
         let params = this.$location.search();
-        const booleanToBinaryString = function(bool) {
+        const booleanToBinaryString = function (bool) {
             return Number(bool).toString();
         };
 
@@ -147,8 +147,8 @@ class LinkFunction {
     }
 
     /*
-    * Get search input from field while typed and query the text input.
-    */
+     * Get search input from field while typed and query the text input.
+     */
     searchField(field, text) {
         if (text) {
             this.contacts.queryField(field, text).then((items) => {

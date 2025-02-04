@@ -6,12 +6,7 @@ class QueueErrorComponent extends React.Component<IPropsItemListInfo> {
     render() {
         const props = this.props;
 
-        return (
-            <QueueError
-                item={props.item}
-                key="queueError"
-            />
-        );
+        return <QueueError item={props.item} key="queueError" />;
     }
 }
 

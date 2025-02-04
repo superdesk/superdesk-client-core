@@ -1,9 +1,8 @@
-
 /**
-* Module with tests for the sdUserPrivileges directive
-*
-* @module sdUserPrivileges directive tests
-*/
+ * Module with tests for the sdUserPrivileges directive
+ *
+ * @module sdUserPrivileges directive tests
+ */
 describe('sdUserPrivileges directive', () => {
     var queryDeferred,
         getByIdDeferred,
@@ -15,23 +14,25 @@ describe('sdUserPrivileges directive', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.users'));
 
-    beforeEach(window.module(($provide) => {
-        fakeEndpoints = {};
+    beforeEach(
+        window.module(($provide) => {
+            fakeEndpoints = {};
 
-        function fakeApi() {
-            function apiMock(endpointName) {
-                return fakeEndpoints[endpointName];
+            function fakeApi() {
+                function apiMock(endpointName) {
+                    return fakeEndpoints[endpointName];
+                }
+
+                // some API methods are attached directly to the API service, thus
+                // a different mocking technique here
+                apiMock['save'] = jasmine.createSpy('api_save');
+
+                return apiMock;
             }
 
-            // some API methods are attached directly to the API service, thus
-            // a different mocking technique here
-            apiMock['save'] = jasmine.createSpy('api_save');
-
-            return apiMock;
-        }
-
-        $provide.service('api', fakeApi);
-    }));
+            $provide.service('api', fakeApi);
+        }),
+    );
 
     beforeEach(inject((_$rootScope_, _$compile_, $q, api, userList) => {
         $rootScope = _$rootScope_;
@@ -41,13 +42,11 @@ describe('sdUserPrivileges directive', () => {
         getByIdDeferred = $q.defer();
 
         fakeEndpoints.privileges = {
-            query: jasmine.createSpy('privileges_query')
-                .and.returnValue(queryDeferred.promise),
+            query: jasmine.createSpy('privileges_query').and.returnValue(queryDeferred.promise),
         };
 
         fakeEndpoints.roles = {
-            getById: jasmine.createSpy('get_roles_by_user_id')
-                .and.returnValue(getByIdDeferred.promise),
+            getById: jasmine.createSpy('get_roles_by_user_id').and.returnValue(getByIdDeferred.promise),
         };
 
         var user = {_id: 1, role: '€d1t0r', privileges: [{name: 'foo'}, {name: 'bar'}]};
@@ -84,9 +83,7 @@ describe('sdUserPrivileges directive', () => {
     }
 
     beforeEach(() => {
-        var $element,
-            scopeValues,
-            userPrivileges;
+        var $element, scopeValues, userPrivileges;
 
         userPrivileges = [{name: 'foo'}, {name: 'bar'}];
 
@@ -104,10 +101,7 @@ describe('sdUserPrivileges directive', () => {
     describe('on initialization', () => {
         it('fetches and stores the list of all privileges', () => {
             var serverResponse = {
-                _items: [
-                    {name: 'role_foo'},
-                    {name: 'role_bar'},
-                ],
+                _items: [{name: 'role_foo'}, {name: 'role_bar'}],
             };
 
             expect(fakeEndpoints.privileges.query).toHaveBeenCalled();
@@ -116,17 +110,13 @@ describe('sdUserPrivileges directive', () => {
             queryDeferred.resolve(serverResponse);
             isoScope.$digest();
 
-            expect(isoScope.privileges).toEqual(
-                [{name: 'role_foo'}, {name: 'role_bar'}],
-            );
+            expect(isoScope.privileges).toEqual([{name: 'role_foo'}, {name: 'role_bar'}]);
         });
 
-        it('fetches and stores the user\'s role object', () => {
+        it("fetches and stores the user's role object", () => {
             var serverResponse = {
                 name: '€d1t0r',
-                privileges: [
-                    {name: 'create_content'}, {name: 'edit_content'},
-                ],
+                privileges: [{name: 'create_content'}, {name: 'edit_content'}],
             };
 
             queryDeferred.resolve(serverResponse);
@@ -137,7 +127,7 @@ describe('sdUserPrivileges directive', () => {
             expect(isoScope.role).toEqual(serverResponse);
         });
 
-        it('logs an error if fetching the user\'s role fails', () => {
+        it("logs an error if fetching the user's role fails", () => {
             spyOn(console, 'error');
 
             queryDeferred.reject('Server error');
@@ -147,9 +137,8 @@ describe('sdUserPrivileges directive', () => {
         });
     });
 
-    describe('scope\'s save() method', () => {
-        var api,
-            saveDeferred;
+    describe("scope's save() method", () => {
+        var api, saveDeferred;
 
         beforeEach(inject(($q, _api_) => {
             api = _api_;
@@ -157,7 +146,7 @@ describe('sdUserPrivileges directive', () => {
             api.save.and.returnValue(saveDeferred.promise);
         }));
 
-        it('saves user\'s privileges', () => {
+        it("saves user's privileges", () => {
             var userJohn = {
                 name: 'John Doe',
                 privileges: [{name: 'can_edit'}],
@@ -167,33 +156,25 @@ describe('sdUserPrivileges directive', () => {
 
             isoScope.save();
 
-            expect(api.save).toHaveBeenCalledWith(
-                'users',
-                userJohn,
-                {
-                    privileges: [{name: 'can_edit'}],
-                },
-            );
+            expect(api.save).toHaveBeenCalledWith('users', userJohn, {
+                privileges: [{name: 'can_edit'}],
+            });
         });
 
-        it('updates the original priviliges list to the newly saved ones',
-            () => {
-                isoScope.user = {
-                    name: 'John Doe',
-                    privileges: [{name: 'manager'}, {name: 'reviewer'}],
-                };
+        it('updates the original priviliges list to the newly saved ones', () => {
+            isoScope.user = {
+                name: 'John Doe',
+                privileges: [{name: 'manager'}, {name: 'reviewer'}],
+            };
 
-                isoScope.origPrivileges = [{name: 'editor'}];
+            isoScope.origPrivileges = [{name: 'editor'}];
 
-                isoScope.save();
-                saveDeferred.resolve();
-                isoScope.$digest();
+            isoScope.save();
+            saveDeferred.resolve();
+            isoScope.$digest();
 
-                expect(isoScope.origPrivileges).toEqual(
-                    [{name: 'manager'}, {name: 'reviewer'}],
-                );
-            },
-        );
+            expect(isoScope.origPrivileges).toEqual([{name: 'manager'}, {name: 'reviewer'}]);
+        });
 
         it('issues system notification on success', inject((notify) => {
             spyOn(notify, 'success');
@@ -232,20 +213,18 @@ describe('sdUserPrivileges directive', () => {
             saveDeferred.reject({data: 'Server Error'});
             isoScope.$digest();
 
-            expect(notify.error).toHaveBeenCalledWith(
-                'Error. Privileges not updated.');
+            expect(notify.error).toHaveBeenCalledWith('Error. Privileges not updated.');
         }));
     });
 
-    describe('scope\'s cancel() method', () => {
-        it('restores user\'s original privilege setttings', () => {
+    describe("scope's cancel() method", () => {
+        it("restores user's original privilege setttings", () => {
             isoScope.user.privileges = [{name: 'aaa'}, {name: 'bbb'}];
             isoScope.origPrivileges = [{name: 'foo'}, {name: 'bar'}];
 
             isoScope.cancel();
 
-            expect(isoScope.user.privileges).toEqual(
-                [{name: 'foo'}, {name: 'bar'}]);
+            expect(isoScope.user.privileges).toEqual([{name: 'foo'}, {name: 'bar'}]);
         });
 
         it('marks the corresponding HTML form as pristine', () => {

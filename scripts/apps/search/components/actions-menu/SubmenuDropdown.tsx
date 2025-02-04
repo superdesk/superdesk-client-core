@@ -57,7 +57,7 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
     render() {
         return (
             <div
-                className={classNames('dropdown dropdown--noarrow', {'open': this.state.open})}
+                className={classNames('dropdown dropdown--noarrow', {open: this.state.open})}
                 onMouseEnter={this.openSubmenu}
                 onMouseLeave={this.closeSubmenu}
                 ref={(el) => {
@@ -68,19 +68,14 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
                     className="dropdown__toggle"
                     title={this.props.label}
                     onClick={this.toggleState} // required for keyboard navigation
-
                     // aria label is needed because playwright treats icon as a character
                     // and can not do an exact match
                     aria-label={this.props.label}
                 >
-                    {this.props.icon &&
-                        <i className={`icon-${this.props.icon}`} />
-                    }
+                    {this.props.icon && <i className={`icon-${this.props.icon}`} />}
                     {this.props.label}
                 </button>
-                {this.state.open && (
-                    <Submenu>{this.props.submenu}</Submenu>
-                )}
+                {this.state.open && <Submenu>{this.props.submenu}</Submenu>}
             </div>
         );
     }

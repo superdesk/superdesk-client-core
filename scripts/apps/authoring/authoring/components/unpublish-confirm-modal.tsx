@@ -40,25 +40,18 @@ export function getUnpublishConfirmModal(
                     onHide={this.props.closeModal}
                     headerTemplate={gettext('Confirm Unpublishing')}
                     footerTemplate={
-                        (
-                            <ButtonGroup align="end">
-                                <Button
-                                    text={gettext('Cancel')}
-                                    type="default"
-                                    onClick={this.props.closeModal}
-                                />
-                                <Button
-                                    text={gettext('Confirm')}
-                                    type="primary"
-                                    onClick={() => {
-                                        unpublish(this.state.related);
-                                        this.props.closeModal();
-                                    }}
-                                />
-                            </ButtonGroup>
-                        )
+                        <ButtonGroup align="end">
+                            <Button text={gettext('Cancel')} type="default" onClick={this.props.closeModal} />
+                            <Button
+                                text={gettext('Confirm')}
+                                type="primary"
+                                onClick={() => {
+                                    unpublish(this.state.related);
+                                    this.props.closeModal();
+                                }}
+                            />
+                        </ButtonGroup>
                     }
-
                 >
                     <div>
                         {gettext('Are you sure you want to unpublish item "{{headline}}"?', {
@@ -76,9 +69,7 @@ export function getUnpublishConfirmModal(
                                                     onChange={() => this.toggle(_item._id)}
                                                 />
                                             </ListItemColumn>
-                                            <ListItemColumn>
-                                                {_item.headline || _item.slugline}
-                                            </ListItemColumn>
+                                            <ListItemColumn>{_item.headline || _item.slugline}</ListItemColumn>
                                         </ListItem>
                                     ))}
                                 </ul>

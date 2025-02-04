@@ -37,8 +37,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
         const articleDisplayWidgets = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
             (activationResult) =>
-                activationResult.contributions != null
-                && activationResult.contributions.articleListItemWidgets != null
+                activationResult.contributions != null && activationResult.contributions.articleListItemWidgets != null
                     ? activationResult.contributions.articleListItemWidgets
                     : [],
         );
@@ -48,40 +47,58 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
-                renderArea('singleLine', angular.extend({
-                    singleLine: this.props.singleLine,
-                }, this.props), {className: 'line article-list-fields'}),
+                renderArea(
+                    'singleLine',
+                    angular.extend(
+                        {
+                            singleLine: this.props.singleLine,
+                        },
+                        this.props,
+                    ),
+                    {className: 'line article-list-fields'},
+                ),
             );
         } else {
             className = classNames('item-info', {'item-info-reduced-rowheight': this.props.singleLine});
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
-                renderArea('firstLine', angular.extend({
-                    singleLine: this.props.singleLine,
-                }, this.props), {className: 'line'}, this.props.customRender),
-                renderArea('secondLine', angular.extend({
-                    singleLine: this.props.singleLine,
-                }, this.props), {className: 'line'}, this.props.customRender),
+                renderArea(
+                    'firstLine',
+                    angular.extend(
+                        {
+                            singleLine: this.props.singleLine,
+                        },
+                        this.props,
+                    ),
+                    {className: 'line'},
+                    this.props.customRender,
+                ),
+                renderArea(
+                    'secondLine',
+                    angular.extend(
+                        {
+                            singleLine: this.props.singleLine,
+                        },
+                        this.props,
+                    ),
+                    {className: 'line'},
+                    this.props.customRender,
+                ),
             );
         }
 
         return (
-            <div
-                className={className}
-                style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
-            >
+            <div className={className} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 {this.props.loading && <Loader overlay />}
                 {listItems}
-                {
-                    articleDisplayWidgets.length < 1 ? null : (
-                        <div style={{marginInlineStart: 10, display: 'flex'}} className="sibling-spacer-10">
-                            {articleDisplayWidgets.map((Component, i) =>
-                                <Component key={i} entity={this.props.item} />,
-                            )}
-                        </div>
-                    )
-                }
+                {articleDisplayWidgets.length < 1 ? null : (
+                    <div style={{marginInlineStart: 10, display: 'flex'}} className="sibling-spacer-10">
+                        {articleDisplayWidgets.map((Component, i) => (
+                            <Component key={i} entity={this.props.item} />
+                        ))}
+                    </div>
+                )}
             </div>
         );
     }

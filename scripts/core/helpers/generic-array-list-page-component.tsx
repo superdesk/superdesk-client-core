@@ -34,7 +34,8 @@ function getItemsWithMeta(_items) {
 
 export class GenericArrayListPageComponent<T, P>
     extends React.Component<IPropsGenericArrayListPage<T, P>, IState>
-    implements ICrudManagerMethods<T> {
+    implements ICrudManagerMethods<T>
+{
     constructor(props: IPropsGenericArrayListPage<T, P>) {
         super(props);
 
@@ -62,11 +63,7 @@ export class GenericArrayListPageComponent<T, P>
     create(item: T): Promise<T> {
         const i = this.props.newItemIndex ?? this.props.value.length;
 
-        const result: Array<T> = [
-            ...this.props.value.slice(0, i),
-            item,
-            ...this.props.value.slice(i),
-        ];
+        const result: Array<T> = [...this.props.value.slice(0, i), item, ...this.props.value.slice(i)];
 
         return new Promise((resolve) => {
             resolve(item);
@@ -77,17 +74,13 @@ export class GenericArrayListPageComponent<T, P>
         });
     }
 
-    read(
-        page: number,
-        sort: ISortOption,
-        filterValues?: ICrudManagerFilters,
-    ): Promise<ICrudManagerData<T>> {
+    read(page: number, sort: ISortOption, filterValues?: ICrudManagerFilters): Promise<ICrudManagerData<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
     update(_item: T, nextItem: T): Promise<T> {
-        this.handleChange(this.props.value.map(
-            (item) => this.props.getId(item) === this.props.getId(nextItem) ? nextItem : item),
+        this.handleChange(
+            this.props.value.map((item) => (this.props.getId(item) === this.props.getId(nextItem) ? nextItem : item)),
         );
 
         return Promise.resolve(nextItem);

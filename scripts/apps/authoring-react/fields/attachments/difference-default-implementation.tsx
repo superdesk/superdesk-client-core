@@ -43,33 +43,23 @@ export class DifferenceDefaultImplementation extends React.PureComponent<IProps>
 
         return (
             <div className="css-table" style={{width: '100%'}}>
-                {
-                    stats.removed.map((id) => {
-                        const attachment = attachmentsById.get(id);
+                {stats.removed.map((id) => {
+                    const attachment = attachmentsById.get(id);
 
-                        return (
-                            <DifferenceRow
-                                key={attachment._id}
-                                attachment={attachment}
-                                differenceType="removed"
-                            />
-                        );
-                    })
-                }
+                    return <DifferenceRow key={attachment._id} attachment={attachment} differenceType="removed" />;
+                })}
 
-                {
-                    ids2.map((id) => {
-                        const attachment = attachmentsById.get(id);
+                {ids2.map((id) => {
+                    const attachment = attachmentsById.get(id);
 
-                        return (
-                            <DifferenceRow
-                                key={attachment._id}
-                                attachment={attachment}
-                                differenceType={getDifferenceType(stats, attachment._id)}
-                            />
-                        );
-                    })
-                }
+                    return (
+                        <DifferenceRow
+                            key={attachment._id}
+                            attachment={attachment}
+                            differenceType={getDifferenceType(stats, attachment._id)}
+                        />
+                    );
+                })}
             </div>
         );
     }

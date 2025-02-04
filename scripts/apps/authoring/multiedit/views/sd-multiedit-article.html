@@ -1,16 +1,30 @@
-<article class="main-article" tabindex="0" ng-class="{locked: isLocked}" data-test-id="multiedit-article" data-test-value="{{item.slugline}}">
+<article
+    class="main-article"
+    tabindex="0"
+    ng-class="{locked: isLocked}"
+    data-test-id="multiedit-article"
+    data-test-value="{{item.slugline}}"
+>
     <div class="main-article__form">
         <div class="main-article__editbar">
-            <button class="btn btn--hollow main-article__editbar-button"
+            <button
+                class="btn btn--hollow main-article__editbar-button"
                 type="button"
                 ng-click="remove(item)"
-                translate>Remove Item</button>
-            <button class="btn btn--primary main-article__editbar-button"
+                translate
+            >
+                Remove Item
+            </button>
+            <button
+                class="btn btn--primary main-article__editbar-button"
                 type="button"
                 ng-hide="isPublished(item)"
                 ng-click="save(item)"
                 ng-disabled="!dirty"
-                translate>Save</button>
+                translate
+            >
+                Save
+            </button>
         </div>
 
         <div class="main-article__content" ng-if="item != null">

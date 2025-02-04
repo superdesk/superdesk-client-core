@@ -18,9 +18,7 @@ export function createTagsPatch(
         let newValuesMap = OrderedMap<string, ISubject>();
 
         const wasRemoved = (tag: ISubject) =>
-            tag.source === SOURCE_IMATRICS
-            && oldValues.has(tag.qcode)
-            && !newValuesMap.has(tag.qcode);
+            tag.source === SOURCE_IMATRICS && oldValues.has(tag.qcode) && !newValuesMap.has(tag.qcode);
 
         newValues?.forEach((tag) => {
             newValuesMap = newValuesMap.set(tag.qcode, tag);
@@ -46,17 +44,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
         if (key === 'subject') {
             if (values.length > 0) {
                 result[key] = values.map((subjectItem) => {
-                    const {
-                        name,
-                        description,
-                        qcode,
-                        source,
-                        altids,
-                        scheme,
-                        aliases,
-                        original_source,
-                        parent,
-                    } = subjectItem;
+                    const {name, description, qcode, source, altids, scheme, aliases, original_source, parent} =
+                        subjectItem;
 
                     if (scheme == null) {
                         throw new Error('Scheme must be defined for all imatrics tags stored in subject field.');
@@ -79,17 +68,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
             }
         } else if (values.length > 0) {
             result[key] = values.map((subjectItem) => {
-                const {
-                    name,
-                    description,
-                    qcode,
-                    source,
-                    altids,
-                    scheme,
-                    aliases,
-                    original_source,
-                    parent,
-                } = subjectItem;
+                const {name, description, qcode, source, altids, scheme, aliases, original_source, parent} =
+                    subjectItem;
 
                 const subjectTag: ITagBase = {
                     name,

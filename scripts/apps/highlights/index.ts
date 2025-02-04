@@ -24,13 +24,14 @@ import {MonitoringHighlightsController} from './controllers/MonitoringHighlights
  * @description Superdesk module that adds highlights functionality to archive
  * items.
  */
-export default angular.module('superdesk.apps.highlights', [
-    'superdesk.apps.desks',
-    'superdesk.apps.packaging',
-    'superdesk.core.activity',
-    'superdesk.core.api',
-    'superdesk.apps.workspace.menu',
-])
+export default angular
+    .module('superdesk.apps.highlights', [
+        'superdesk.apps.desks',
+        'superdesk.apps.packaging',
+        'superdesk.core.activity',
+        'superdesk.core.api',
+        'superdesk.apps.workspace.menu',
+    ])
     .service('highlightsService', HighlightsService)
 
     .directive('sdMarkHighlightsDropdown', directive.MarkHighlightsDropdown)
@@ -40,63 +41,72 @@ export default angular.module('superdesk.apps.highlights', [
     .directive('sdHighlightsConfig', () => ({controller: ctrl.HighlightsConfig}))
     .directive('sdHighlightsConfigModal', directive.HighlightsConfigModal)
 
-    .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
-        superdesk
-            .activity('mark.item', {
-                label: gettext('Mark for highlight'),
-                priority: 30,
-                icon: 'star',
-                dropdown: directive.HighlightsReactDropdown,
-                keyboardShortcut: 'ctrl+shift+^',
-                templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown.html',
-                filters: [
-                    {action: 'list', type: 'archive'},
-                ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).mark_item_for_highlight;
-                }],
-                group: 'highlights',
-            })
-            .activity('/settings/highlights', {
-                label: gettext('Highlights'),
-                controller: ctrl.HighlightsSettings,
-                templateUrl: 'scripts/apps/highlights/views/settings.html',
-                category: superdesk.MENU_SETTINGS,
-                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
-                priority: -800,
-                privileges: {highlights: 1},
-            })
-            .activity('/workspace/highlights', {
-                label: gettext('Highlights View'),
-                controller: MonitoringHighlightsController,
-                priority: 100,
-                templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
-                topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-                privileges: {highlights_read: 1},
-                reloadOnSearch: false,
-            });
+    .config([
+        'superdeskProvider',
+        'workspaceMenuProvider',
+        (superdesk, workspaceMenuProvider) => {
+            superdesk
+                .activity('mark.item', {
+                    label: gettext('Mark for highlight'),
+                    priority: 30,
+                    icon: 'star',
+                    dropdown: directive.HighlightsReactDropdown,
+                    keyboardShortcut: 'ctrl+shift+^',
+                    templateUrl: 'scripts/apps/highlights/views/mark_highlights_dropdown.html',
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        function (authoring, item) {
+                            return authoring.itemActions(item).mark_item_for_highlight;
+                        },
+                    ],
+                    group: 'highlights',
+                })
+                .activity('/settings/highlights', {
+                    label: gettext('Highlights'),
+                    controller: ctrl.HighlightsSettings,
+                    templateUrl: 'scripts/apps/highlights/views/settings.html',
+                    category: superdesk.MENU_SETTINGS,
+                    settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
+                    priority: -800,
+                    privileges: {highlights: 1},
+                })
+                .activity('/workspace/highlights', {
+                    label: gettext('Highlights View'),
+                    controller: MonitoringHighlightsController,
+                    priority: 100,
+                    templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
+                    topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
+                    sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                    privileges: {highlights_read: 1},
+                    reloadOnSearch: false,
+                });
 
-        workspaceMenuProvider.item({
-            if: 'privileges.highlights_read',
-            href: '/workspace/highlights',
-            label: gettext('Highlights'),
-            templateUrl: 'scripts/apps/highlights/views/menu.html',
-            order: 400,
-            shortcut: 'ctrl+alt+h',
-        });
-    }])
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('highlights', {
-            type: 'http',
-            backend: {rel: 'highlights'},
-        });
-        apiProvider.api('markForHighlights', {
-            type: 'http',
-            backend: {rel: 'marked_for_highlights'},
-        });
-        apiProvider.api('generate_highlights', {
-            type: 'http',
-            backend: {rel: 'generate_highlights'},
-        });
-    }]);
+            workspaceMenuProvider.item({
+                if: 'privileges.highlights_read',
+                href: '/workspace/highlights',
+                label: gettext('Highlights'),
+                templateUrl: 'scripts/apps/highlights/views/menu.html',
+                order: 400,
+                shortcut: 'ctrl+alt+h',
+            });
+        },
+    ])
+    .config([
+        'apiProvider',
+        function (apiProvider) {
+            apiProvider.api('highlights', {
+                type: 'http',
+                backend: {rel: 'highlights'},
+            });
+            apiProvider.api('markForHighlights', {
+                type: 'http',
+                backend: {rel: 'marked_for_highlights'},
+            });
+            apiProvider.api('generate_highlights', {
+                type: 'http',
+                backend: {rel: 'generate_highlights'},
+            });
+        },
+    ]);

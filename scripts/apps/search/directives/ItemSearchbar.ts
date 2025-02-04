@@ -9,20 +9,20 @@ export function ItemSearchbar($location, $document, asset) {
     return {
         scope: true,
         templateUrl: asset.templateUrl('apps/search/views/item-searchbar.html'),
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             var ENTER = 13;
 
             scope.focused = false;
             var input = elem.find('#search-input');
 
-            scope.searchOnEnter = function($event) {
+            scope.searchOnEnter = function ($event) {
                 if ($event.keyCode === ENTER) {
                     scope.search();
                     $event.stopPropagation();
                 }
             };
 
-            scope.search = function() {
+            scope.search = function () {
                 if (scope.query) {
                     let newQuery = _.uniq(scope.query.split(/[\s]+/));
 
@@ -32,7 +32,7 @@ export function ItemSearchbar($location, $document, asset) {
                 $location.search('q', scope.query || null);
             };
 
-            scope.cancel = function() {
+            scope.cancel = function () {
                 scope.query = null;
                 scope.search();
                 input.focus();

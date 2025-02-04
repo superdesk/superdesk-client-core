@@ -18,10 +18,6 @@ export class Editor extends React.PureComponent<IProps> {
 
         const Container = this.props.container;
 
-        return (
-            <Container>
-                {checkbox}
-            </Container>
-        );
+        return <Container>{checkbox}</Container>;
     }
 }

@@ -5,13 +5,17 @@ export function SearchContainer() {
     const FILTERS_PANEL_PREFERENCES_KEY = 'search:filters_panel_open';
     var filtersPanelPreferences = {
         [FILTERS_PANEL_PREFERENCES_KEY]: {
-            'type': 'bool',
-            'default': true,
+            type: 'bool',
+            default: true,
         },
     };
 
     return {
-        controller: ['$scope', '$location', 'pageTitle', 'preferencesService',
+        controller: [
+            '$scope',
+            '$location',
+            'pageTitle',
+            'preferencesService',
             function SearchContainerController($scope, $location, pageTitle, preferencesService) {
                 const query = omit($location.search(), '_id', 'repo');
 
@@ -25,12 +29,12 @@ export function SearchContainer() {
                         }
                         if (activeProvider.config?.default_list_view) {
                             switch (activeProvider.config.default_list_view) {
-                            case 'list':
-                                $scope.view = 'compact';
-                                break;
-                            case 'grid':
-                                $scope.view = 'photogrid';
-                                break;
+                                case 'list':
+                                    $scope.view = 'compact';
+                                    break;
+                                case 'grid':
+                                    $scope.view = 'photogrid';
+                                    break;
                             }
                         }
                     }
@@ -48,6 +52,7 @@ export function SearchContainer() {
                     preferencesService.update(filtersPanelPreferences);
                 };
                 $scope.toggleFiltersPane = this.toggleFiltersPane;
-            }],
+            },
+        ],
     };
 }

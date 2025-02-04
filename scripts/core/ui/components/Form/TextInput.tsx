@@ -38,19 +38,18 @@ export const TextInput: React.StatelessComponent<any> = ({
             onFocus={onFocus}
         />
 
-        {maxLength > 0 &&
-            <div className="sd-line-input__char-count">{get(value, 'length', 0)}/{maxLength}</div>
-        }
+        {maxLength > 0 && (
+            <div className="sd-line-input__char-count">
+                {get(value, 'length', 0)}/{maxLength}
+            </div>
+        )}
     </LineInput>
 );
 
 TextInput.propTypes = {
     field: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onChange: PropTypes.func,
     maxLength: PropTypes.number,
     type: PropTypes.string,

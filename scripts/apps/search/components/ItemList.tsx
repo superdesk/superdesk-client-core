@@ -198,13 +198,7 @@ export class ItemList extends React.Component<IProps, IState> {
      * @param {Object} item
      */
     bindActionKeyShortcuts(selectedItem) {
-        const {
-            activityService,
-            archiveService,
-            keyboardManager,
-            superdesk,
-            workflowService,
-        } = this.angularservices;
+        const {activityService, archiveService, keyboardManager, superdesk, workflowService} = this.angularservices;
 
         const doBind = () => {
             const intent = {action: 'list', type: archiveService.getType(selectedItem)};
@@ -279,7 +273,8 @@ export class ItemList extends React.Component<IProps, IState> {
                 return;
             }
             this.setActioning(item, true);
-            superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
+            superdesk
+                .intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
                     this.props.scopeApplyAsync(() => {
@@ -406,33 +401,33 @@ export class ItemList extends React.Component<IProps, IState> {
         };
 
         switch (event.keyCode) {
-        case Keys.right:
-        case Keys.down:
-            diff = 1;
-            closeActionsMenu();
-            break;
+            case Keys.right:
+            case Keys.down:
+                diff = 1;
+                closeActionsMenu();
+                break;
 
-        case Keys.left:
-        case Keys.up:
-            diff = -1;
-            closeActionsMenu();
-            break;
+            case Keys.left:
+            case Keys.up:
+                diff = -1;
+                closeActionsMenu();
+                break;
 
-        case Keys.enter:
-            openItem(event);
-            closeActionsMenu();
-            break;
+            case Keys.enter:
+                openItem(event);
+                closeActionsMenu();
+                break;
 
-        case Keys.pageup:
-        case Keys.pagedown:
-            moveActiveGroup(event);
-            closeActionsMenu();
-            break;
+            case Keys.pageup:
+            case Keys.pagedown:
+                moveActiveGroup(event);
+                closeActionsMenu();
+                break;
 
-        case KEY_CODES.X:
-            performMultiSelect();
-            closeActionsMenu();
-            break;
+            case KEY_CODES.X:
+                performMultiSelect();
+                closeActionsMenu();
+                break;
         }
 
         if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
@@ -470,8 +465,7 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     modifiedUserName(versionCreator) {
-        return this.props.usersById[versionCreator] ?
-            this.props.usersById[versionCreator].display_name : null;
+        return this.props.usersById[versionCreator] ? this.props.usersById[versionCreator].display_name : null;
     }
 
     focus() {
@@ -521,9 +515,9 @@ export class ItemList extends React.Component<IProps, IState> {
         return (
             <ul
                 className={classNames(
-                    this.props.view === 'photogrid' ?
-                        'sd-grid-list sd-grid-list--no-margin' :
-                        (this.props.view || 'compact') + '-view list-view',
+                    this.props.view === 'photogrid'
+                        ? 'sd-grid-list sd-grid-list--no-margin'
+                        : (this.props.view || 'compact') + '-view list-view',
                 )}
                 onClick={closeActionsMenu}
                 onKeyDown={(event) => {
@@ -534,48 +528,46 @@ export class ItemList extends React.Component<IProps, IState> {
                     this.focusableElement = el;
                 }}
             >
-                {
-                    this.props.itemsList.map((itemId) => {
-                        const item = this.props.itemsById[itemId];
-                        const task = item.task || {desk: null};
+                {this.props.itemsList.map((itemId) => {
+                    const item = this.props.itemsById[itemId];
+                    const task = item.task || {desk: null};
 
-                        return (
-                            <ErrorBoundary key={itemId}>
-                                <Item
-                                    isNested={false}
-                                    item={item}
-                                    relatedEntities={this.props.relatedEntities}
-                                    view={this.props.view}
-                                    swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
-                                    flags={{selected: this.props.selected === itemId}}
-                                    onEdit={this.edit}
-                                    onDbClick={this.dbClick}
-                                    onSelect={this.select}
-                                    ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
-                                    desk={this.props.desksById[task.desk] || null}
-                                    highlightsById={this.props.highlightsById}
-                                    markedDesksById={this.props.markedDesksById}
-                                    profilesById={this.props.profilesById}
-                                    versioncreator={this.modifiedUserName(item.version_creator)}
-                                    narrow={this.props.narrow}
-                                    hideActions={
-                                        this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
-                                    }
-                                    multiSelectDisabled={this.props.multiSelect == null}
-                                    actioning={!!this.state.actioning[itemId]}
-                                    singleLine={this.props.singleLine}
-                                    customRender={this.props.customRender}
-                                    scopeApply={this.props.scopeApply}
-                                    multiSelect={this.props.multiSelect ?? {
+                    return (
+                        <ErrorBoundary key={itemId}>
+                            <Item
+                                isNested={false}
+                                item={item}
+                                relatedEntities={this.props.relatedEntities}
+                                view={this.props.view}
+                                swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
+                                flags={{selected: this.props.selected === itemId}}
+                                onEdit={this.edit}
+                                onDbClick={this.dbClick}
+                                onSelect={this.select}
+                                ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
+                                desk={this.props.desksById[task.desk] || null}
+                                highlightsById={this.props.highlightsById}
+                                markedDesksById={this.props.markedDesksById}
+                                profilesById={this.props.profilesById}
+                                versioncreator={this.modifiedUserName(item.version_creator)}
+                                narrow={this.props.narrow}
+                                hideActions={this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions}
+                                multiSelectDisabled={this.props.multiSelect == null}
+                                actioning={!!this.state.actioning[itemId]}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                scopeApply={this.props.scopeApply}
+                                multiSelect={
+                                    this.props.multiSelect ?? {
                                         kind: 'legacy',
                                         multiSelect: noop,
                                         setSelectedItem: noop,
-                                    }}
-                                />
-                            </ErrorBoundary>
-                        );
-                    })
-                }
+                                    }
+                                }
+                            />
+                        </ErrorBoundary>
+                    );
+                })}
             </ul>
         );
     }

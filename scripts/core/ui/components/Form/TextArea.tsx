@@ -61,10 +61,7 @@ export class TextArea extends React.Component<any, any> {
         if (nativeOnChange) {
             onChange(event, field);
         } else {
-            onChange(
-                field,
-                multiLine ? event.target.value : event.target.value.replace('\n', ''),
-            );
+            onChange(field, multiLine ? event.target.value : event.target.value.replace('\n', ''));
         }
 
         if (autoHeight) {
@@ -84,21 +81,21 @@ export class TextArea extends React.Component<any, any> {
             // Remove these variables from the props variable
             // So they are not passed down to the textarea dom node
             // eslint-disable-next-line no-unused-vars
-            onChange, autoHeightTimeout, nativeOnChange, multiLine,
+            onChange,
+            autoHeightTimeout,
+            nativeOnChange,
+            multiLine,
 
             ...props
         } = this.props;
 
         return (
             <textarea
-                ref={(node) => this.dom.input = node}
-                className={classNames(
-                    'sd-line-input__input',
-                    {
-                        'sd-line-input__input--auto-height': autoHeight,
-                        'sd-line-input__input--padding-right-60': paddingInlineEnd60,
-                    },
-                )}
+                ref={(node) => (this.dom.input = node)}
+                className={classNames('sd-line-input__input', {
+                    'sd-line-input__input--auto-height': autoHeight,
+                    'sd-line-input__input--padding-right-60': paddingInlineEnd60,
+                })}
                 value={value}
                 name={field}
                 disabled={readOnly}

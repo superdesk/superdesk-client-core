@@ -14,18 +14,17 @@ interface ILegacyExtensionPoint {
 export function registerLegacyExtensionCompatibilityLayer() {
     const extensionActivationResult: IExtensionActivationResult = {
         contributions: {
-            publishingSections: (ng.get('extensionPoints').get('authoring:publish') as Array<ILegacyExtensionPoint>)
-                .map((api) => {
-                    const Component = api.componentClass;
+            publishingSections: (
+                ng.get('extensionPoints').get('authoring:publish') as Array<ILegacyExtensionPoint>
+            ).map((api) => {
+                const Component = api.componentClass;
 
-                    return {
-                        component: function LegacyExtensionCompatibilityLayerComponentWrapper(props) {
-                            return (
-                                <Component {...api.props} item={props.item} />
-                            );
-                        },
-                    };
-                }),
+                return {
+                    component: function LegacyExtensionCompatibilityLayerComponentWrapper(props) {
+                        return <Component {...api.props} item={props.item} />;
+                    },
+                };
+            }),
         },
     };
 

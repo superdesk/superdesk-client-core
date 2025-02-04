@@ -13,7 +13,7 @@ export function ItemContainer(desks) {
             item: '=',
         },
         template: '<span class="location-desk-label sd-list-item__text-label">{{label}}</span> {{value}}',
-        link: function(scope: IScope, elem) {
+        link: function (scope: IScope, elem) {
             if (scope.item._type !== 'ingest') {
                 if (scope.item.task && scope.item.task.desk) {
                     desks.initialize().then(() => {

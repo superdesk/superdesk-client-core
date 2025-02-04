@@ -13,9 +13,11 @@ function SuperdeskFlagsService() {
         notifications: false,
     };
 
-    Object.keys(appConfig.ui).filter((key) => key !== 'authoring').forEach((key) => {
-        this.flags[key] = appConfig.ui[key];
-    });
+    Object.keys(appConfig.ui)
+        .filter((key) => key !== 'authoring')
+        .forEach((key) => {
+            this.flags[key] = appConfig.ui[key];
+        });
 }
 
 function setupFullWidthPage($scope) {
@@ -56,103 +58,111 @@ function setupFullWidthPage($scope) {
  * @packageName superdesk.core
  * @description The Superdesk menu module enables a configurable left-side menu.
  */
-angular.module('superdesk.core.menu', [
-    'superdesk.core.menu.notifications',
-    'superdesk.core.privileges',
-    'superdesk.core.services.asset',
-    'superdesk.core.api',
-])
+angular
+    .module('superdesk.core.menu', [
+        'superdesk.core.menu.notifications',
+        'superdesk.core.privileges',
+        'superdesk.core.services.asset',
+        'superdesk.core.api',
+    ])
 
     .service('superdeskFlags', SuperdeskFlagsService)
-    .component(
-        'sdGlobalMenuHorizontal',
-        reactToAngular1(
-            GlobalMenuHorizontal,
-            [],
-        ),
-    )
-    .component(
-        'sdAuthoringSwitch',
-        reactToAngular1(AuthoringSwitch),
-    )
+    .component('sdGlobalMenuHorizontal', reactToAngular1(GlobalMenuHorizontal, []))
+    .component('sdAuthoringSwitch', reactToAngular1(AuthoringSwitch))
 
     // set flags for other directives
-    .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
-        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
-            setupFullWidthPage($scope);
+    .directive('sdSuperdeskView', [
+        'asset',
+        function (asset) {
+            SuperdeskViewController.$inject = [
+                'superdeskFlags',
+                'superdesk',
+                '$scope',
+                '$route',
+                'session',
+                '$timeout',
+            ];
+            function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
+                setupFullWidthPage($scope);
 
-            $scope.session = session;
+                $scope.session = session;
 
-            this.flags = superdeskFlags.flags;
+                this.flags = superdeskFlags.flags;
 
-            /**
-             * `$scope.popup` is true when an article is opened in full screen in new window
-             * `hideMonitoring` is true when authoring view is switched to full screen in the same window
-             */
-            function shouldRenderMonitoring() {
-                return $scope.popup !== true && superdeskFlags.flags.hideMonitoring !== true;
+                /**
+                 * `$scope.popup` is true when an article is opened in full screen in new window
+                 * `hideMonitoring` is true when authoring view is switched to full screen in the same window
+                 */
+                function shouldRenderMonitoring() {
+                    return $scope.popup !== true && superdeskFlags.flags.hideMonitoring !== true;
+                }
+
+                $scope.renderMonitoring = shouldRenderMonitoring();
+
+                $scope.$watch(shouldRenderMonitoring, (renderMonitoring) => {
+                    if ($scope.renderMonitoring !== renderMonitoring) {
+                        $scope.renderMonitoring = renderMonitoring;
+                    }
+                });
+
+                $scope.$watch(
+                    function currentRoute() {
+                        return $route.current;
+                    },
+                    (route) => {
+                        if (!route) {
+                            return;
+                        }
+
+                        this.currentRoute = route;
+                        this.flags.workspace = !!route.sideTemplateUrl;
+                        this.flags.workqueue = this.flags.workqueue || true;
+                    },
+                );
+
+                $scope.$watch(
+                    () => {
+                        return superdeskFlags.flags.hideMonitoring;
+                    },
+                    () => {
+                        // Trigger resize event to update elements, 500ms delay is for animation
+                        $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
+                    },
+                );
+
+                $scope.itemsForExport = null;
+
+                /**
+                 * Called from:
+                 * scripts/apps/archive/views/export.html
+                 * scripts/apps/archive/directives/Export.ts
+                 *
+                 * It's a dirty solution to define it in the root scope, it would be better to pass it as a parameter
+                 * to each directive instance, but that directive is already reading scopes of other controllers/directives
+                 * and if `scope: {closeExport: '=?'}` was defined - these other scopes might become inaccessible
+                 */
+                $scope.closeExport = () => {
+                    $scope.itemsForExport = null;
+                };
+
+                const removeOpenExportListener = addInternalEventListener('openExportView', (event) => {
+                    $scope.itemsForExport = event.detail;
+                    $scope.$apply();
+                });
+
+                // remove listeners
+                $scope.$on('$destroy', () => {
+                    removeOpenExportListener();
+                });
             }
 
-            $scope.renderMonitoring = shouldRenderMonitoring();
-
-            $scope.$watch(shouldRenderMonitoring, (renderMonitoring) => {
-                if ($scope.renderMonitoring !== renderMonitoring) {
-                    $scope.renderMonitoring = renderMonitoring;
-                }
-            });
-
-            $scope.$watch(function currentRoute() {
-                return $route.current;
-            }, (route) => {
-                if (!route) {
-                    return;
-                }
-
-                this.currentRoute = route;
-                this.flags.workspace = !!route.sideTemplateUrl;
-                this.flags.workqueue = this.flags.workqueue || true;
-            });
-
-            $scope.$watch(() => {
-                return superdeskFlags.flags.hideMonitoring;
-            }, () => {
-                // Trigger resize event to update elements, 500ms delay is for animation
-                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
-            });
-
-            $scope.itemsForExport = null;
-
-            /**
-             * Called from:
-             * scripts/apps/archive/views/export.html
-             * scripts/apps/archive/directives/Export.ts
-             *
-             * It's a dirty solution to define it in the root scope, it would be better to pass it as a parameter
-             * to each directive instance, but that directive is already reading scopes of other controllers/directives
-             * and if `scope: {closeExport: '=?'}` was defined - these other scopes might become inaccessible
-             */
-            $scope.closeExport = () => {
-                $scope.itemsForExport = null;
+            return {
+                templateUrl: asset.templateUrl('core/menu/views/superdesk-view.html'),
+                controller: SuperdeskViewController,
+                controllerAs: 'superdesk',
             };
-
-            const removeOpenExportListener = addInternalEventListener('openExportView', (event) => {
-                $scope.itemsForExport = event.detail;
-                $scope.$apply();
-            });
-
-            // remove listeners
-            $scope.$on('$destroy', () => {
-                removeOpenExportListener();
-            });
-        }
-
-        return {
-            templateUrl: asset.templateUrl('core/menu/views/superdesk-view.html'),
-            controller: SuperdeskViewController,
-            controllerAs: 'superdesk',
-        };
-    }])
+        },
+    ])
 
     .directive('sdMenuWrapper', [
         '$route',
@@ -165,7 +175,7 @@ angular.module('superdesk.core.menu', [
         'workspaceMenu',
         '$location',
         'preferencesService',
-        function(
+        function (
             $route,
             superdesk,
             betaService,
@@ -180,7 +190,7 @@ angular.module('superdesk.core.menu', [
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
-                link: function(scope, elem, attrs, ctrl) {
+                link: function (scope, elem, attrs, ctrl) {
                     let body = angular.element('body');
 
                     scope.currentRoute = null;
@@ -192,9 +202,10 @@ angular.module('superdesk.core.menu', [
                     scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
 
                     preferencesService.get().then((result) => {
-                        scope.theme = result['application:theme']?.['theme'] != null
-                            ? result['application:theme']['theme']
-                            : 'light-ui';
+                        scope.theme =
+                            result['application:theme']?.['theme'] != null
+                                ? result['application:theme']['theme']
+                                : 'light-ui';
 
                         // set theme
                         body.attr('data-theme', scope.theme);
@@ -237,10 +248,11 @@ angular.module('superdesk.core.menu', [
                         }
 
                         const matchingUrls = scope.items
-                            .filter((item) =>
-                                typeof item.href === 'string'
-                                && item.href.length > 0
-                                && currentPath.startsWith(item.href),
+                            .filter(
+                                (item) =>
+                                    typeof item.href === 'string' &&
+                                    item.href.length > 0 &&
+                                    currentPath.startsWith(item.href),
                             )
                             .map((item) => item.href);
 
@@ -249,15 +261,14 @@ angular.module('superdesk.core.menu', [
                         }
 
                         return matchingUrls.reduce((currentDeepest, current) => {
-                            return currentDeepest.length < current.length
-                                ? current
-                                : currentDeepest;
+                            return currentDeepest.length < current.length ? current : currentDeepest;
                         });
                     }
 
                     scope.feedback_url = appConfig.feedback_url;
 
-                    superdesk.getMenu(superdesk.MENU_MAIN)
+                    superdesk
+                        .getMenu(superdesk.MENU_MAIN)
                         .then(filterSettingsIfEmpty)
                         .then((menu) => {
                             scope.menu = menu;
@@ -274,15 +285,15 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    scope.toggleMenu = function() {
+                    scope.toggleMenu = function () {
                         ctrl.flags.menu = !ctrl.flags.menu;
                     };
 
-                    scope.toggleNotifications = function() {
+                    scope.toggleNotifications = function () {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
                     };
 
-                    scope.toggleBeta = function() {
+                    scope.toggleBeta = function () {
                         betaService.toggleBeta();
                     };
 
@@ -292,8 +303,8 @@ angular.module('superdesk.core.menu', [
                         }
 
                         _.each(scope.menu, (activity) => {
-                            activity.isActive = route && route.href &&
-                                route.href.substr(0, activity.href.length) === activity.href;
+                            activity.isActive =
+                                route && route.href && route.href.substr(0, activity.href.length) === activity.href;
                         });
 
                         if (route && route.href) {
@@ -311,12 +322,15 @@ angular.module('superdesk.core.menu', [
                         ctrl.flags.menu = false;
                     });
 
-                    scope.$watch(function currentRoute() {
-                        return ctrl.currentRoute;
-                    }, () => {
-                        scope.currentRoute = ctrl.currentRoute;
-                        setActiveMenuItem(ctrl.currentRoute);
-                    });
+                    scope.$watch(
+                        function currentRoute() {
+                            return ctrl.currentRoute;
+                        },
+                        () => {
+                            scope.currentRoute = ctrl.currentRoute;
+                            setActiveMenuItem(ctrl.currentRoute);
+                        },
+                    );
 
                     scope.notifications = userNotifications;
 
@@ -326,26 +340,30 @@ angular.module('superdesk.core.menu', [
                         setActiveMenuItem(ctrl.currentRoute);
                     });
 
-                    scope.openAbout = function() {
+                    scope.openAbout = function () {
                         scope.aboutActive = true;
                     };
-                    scope.closeAbout = function() {
+                    scope.closeAbout = function () {
                         scope.aboutActive = false;
                     };
                 },
             };
-        }])
-    .directive('sdAbout', ['asset', 'api', function(asset, api) {
-        return {
-            templateUrl: asset.templateUrl('core/menu/views/about.html'),
-            link: function(scope) {
-                api.query('backend_meta', {}).then(
-                    (metadata) => {
+        },
+    ])
+    .directive('sdAbout', [
+        'asset',
+        'api',
+        function (asset, api) {
+            return {
+                templateUrl: asset.templateUrl('core/menu/views/about.html'),
+                link: function (scope) {
+                    api.query('backend_meta', {}).then((metadata) => {
                         scope.modules = metadata.modules;
                     });
-                scope.version = appConfig.version;
-                scope.year = (new Date()).getUTCFullYear();
-                scope.releaseDate = appConfig.releaseDate;
-            },
-        };
-    }]);
+                    scope.version = appConfig.version;
+                    scope.year = new Date().getUTCFullYear();
+                    scope.releaseDate = appConfig.releaseDate;
+                },
+            };
+        },
+    ]);

@@ -4,9 +4,7 @@ import * as Setup from './suggestion_setup';
 describe('editor3.reducers.suggestion.CREATE_SPLIT_PARAGRAPH_SUGGESTION', () => {
     it('should add new split suggestion on enter key', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1paragraph2'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1paragraph2'}],
             entityMap: {},
         };
         const date = new Date();

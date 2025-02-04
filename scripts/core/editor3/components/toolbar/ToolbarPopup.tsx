@@ -24,20 +24,20 @@ export class ToolbarPopup extends React.Component<any, any> {
         const {type, data} = this.props;
 
         switch (type) {
-        case PopupTypes.Annotation:
-            return (
-                <AnnotationInput
-                    data={data}
-                    editorState={this.props.editorState}
-                    highlightsManager={this.props.highlightsManager}
-                />
-            );
-        case PopupTypes.Comment:
-            return <CommentInput data={data} highlightsManager={this.props.highlightsManager} />;
-        case PopupTypes.Link:
-            return <LinkInput data={data} />;
-        case PopupTypes.Embed:
-            return <EmbedInput />;
+            case PopupTypes.Annotation:
+                return (
+                    <AnnotationInput
+                        data={data}
+                        editorState={this.props.editorState}
+                        highlightsManager={this.props.highlightsManager}
+                    />
+                );
+            case PopupTypes.Comment:
+                return <CommentInput data={data} highlightsManager={this.props.highlightsManager} />;
+            case PopupTypes.Link:
+                return <LinkInput data={data} />;
+            case PopupTypes.Embed:
+                return <EmbedInput />;
         }
 
         return null;

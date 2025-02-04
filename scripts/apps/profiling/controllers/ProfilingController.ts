@@ -10,8 +10,8 @@ export function ProfilingController($scope, api) {
     };
 
     /*
-    * Populates the profiling data.
-    */
+     * Populates the profiling data.
+     */
     function populateProfilingData() {
         api.profiling.getById($scope.current_profile).then((profile) => {
             $scope.profiling_data = profile.profiling_data;
@@ -19,16 +19,16 @@ export function ProfilingController($scope, api) {
         });
     }
 
-    $scope.reload = function() {
+    $scope.reload = function () {
         populateProfilingData();
     };
 
-    $scope.reset = function() {
+    $scope.reset = function () {
         api.profiling.remove({_links: {self: {href: 'profiling'}}});
         $scope.reload();
     };
 
-    $scope.loadProfile = function(profile) {
+    $scope.loadProfile = function (profile) {
         if (profile !== $scope.current_profile) {
             $scope.current_profile = profile;
             $scope.profiling_data = [];

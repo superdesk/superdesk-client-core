@@ -41,35 +41,29 @@ export const MediaInfo: React.StatelessComponent<IProps> = (props) => {
     const info = [];
     const flags = item.flags || {};
 
-    info.push(React.createElement(
-        'h5',
-        {key: 1,
-            dangerouslySetInnerHTML: {__html: item.headline || item.slugline || item.type}},
+    info.push(
+        React.createElement('h5', {
+            key: 1,
+            dangerouslySetInnerHTML: {__html: item.headline || item.slugline || item.type},
+        }),
+    );
 
-    ));
-
-    info.push(React.createElement(
-        'dl',
-        {key: 2},
-        meta,
-    ));
+    info.push(React.createElement('dl', {key: 2}, meta));
 
     if (flags.marked_for_legal) {
-        info.push(React.createElement(
-            'div',
-            {key: 3, className: 'state-label legal'},
-            gettext('Legal'),
-        ));
+        info.push(React.createElement('div', {key: 3, className: 'state-label legal'}, gettext('Legal')));
     }
 
     if (item.archived) {
-        info.push(React.createElement(
-            'div',
-            {className: 'fetched-desk', key: 4},
-            React.createElement(FetchedDesksInfo, {
-                item: item,
-            }),
-        ));
+        info.push(
+            React.createElement(
+                'div',
+                {className: 'fetched-desk', key: 4},
+                React.createElement(FetchedDesksInfo, {
+                    item: item,
+                }),
+            ),
+        );
     }
 
     return React.createElement('div', {className: 'media-info'}, info);

@@ -22,16 +22,14 @@ export const clearHighlights = (c, es = null) => {
     content = forEachBlock(content, (blockIndex, block, _content) => {
         let newContent = _content;
 
-        block.findStyleRanges(filterFn,
-            (start, end) => {
-                const selection = createSelection(block.getKey(), start, end);
+        block.findStyleRanges(filterFn, (start, end) => {
+            const selection = createSelection(block.getKey(), start, end);
 
-                newContent = Modifier.removeInlineStyle(newContent, selection, 'HIGHLIGHT');
-                newContent = Modifier.removeInlineStyle(newContent, selection, 'HIGHLIGHT_STRONG');
+            newContent = Modifier.removeInlineStyle(newContent, selection, 'HIGHLIGHT');
+            newContent = Modifier.removeInlineStyle(newContent, selection, 'HIGHLIGHT_STRONG');
 
-                changedContent = true;
-            },
-        );
+            changedContent = true;
+        });
 
         return newContent;
     });
@@ -130,11 +128,16 @@ export const forEachMatch = (content, pattern, caseSensitive, cb) => {
         const entity = entityKey != null ? content.getEntity(entityKey) : null;
 
         if (entity != null && entity.getType() === 'TABLE') {
-            ({newContent, matchIndex} = forEachMatchInTable(
-                newContent, block, pattern, caseSensitive, matchIndex, cb));
+            ({newContent, matchIndex} = forEachMatchInTable(newContent, block, pattern, caseSensitive, matchIndex, cb));
         } else {
             ({newContent, matchIndex} = forEachMatchInParagraph(
-                newContent, block, pattern, caseSensitive, matchIndex, cb));
+                newContent,
+                block,
+                pattern,
+                caseSensitive,
+                matchIndex,
+                cb,
+            ));
         }
     });
 
@@ -163,7 +166,7 @@ const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchI
     let match;
 
     // eslint-disable-next-line no-cond-assign
-    while (match = re.exec(text)) {
+    while ((match = re.exec(text))) {
         newContent = cb(
             ++matchIndex,
             createSelection(key, match.index, match.index + match[0].length),
@@ -203,7 +206,13 @@ const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex
 
             cellContent.getBlocksAsArray().forEach((_block) => {
                 ({newContent: cellContent, matchIndex} = forEachMatchInParagraph(
-                    cellContent, _block, pattern, caseSensitive, matchIndex, cb));
+                    cellContent,
+                    _block,
+                    pattern,
+                    caseSensitive,
+                    matchIndex,
+                    cb,
+                ));
             });
 
             cellEditorState = EditorState.push(cellEditorState, cellContent, 'insert-characters');
@@ -257,9 +266,9 @@ export function replaceAllForEachBlock(
     for (const block of contentState.getBlocksAsArray()) {
         const blockKey = block.getKey();
 
-        const matches: Array<{index: number; text: string}> =
-            Array.from(block.getText().matchAll(regex))
-                .map((match) => ({index: match.index, text: match[0]}));
+        const matches: Array<{index: number; text: string}> = Array.from(block.getText().matchAll(regex)).map(
+            (match) => ({index: match.index, text: match[0]}),
+        );
 
         let offsetCorrection = 0;
 

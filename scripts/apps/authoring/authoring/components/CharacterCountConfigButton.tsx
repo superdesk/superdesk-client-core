@@ -123,31 +123,25 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
                 position="top"
                 headerTemplate={gettext('Character limit settings')}
                 footerTemplate={
-                    (
-                        <ButtonGroup align="end">
-                            <Button
-                                text={gettext('Cancel')}
-                                type="default"
-                                onClick={this.props.closeModal}
-                            />
-                            <Button
-                                text={gettext('Save')}
-                                type="primary"
-                                onClick={() => {
-                                    this.props.onChange(this.state.radioValue);
-                                    this.props.closeModal();
-                                }}
-                                disabled={false}
-                            />
-                        </ButtonGroup>
-                    )
+                    <ButtonGroup align="end">
+                        <Button text={gettext('Cancel')} type="default" onClick={this.props.closeModal} />
+                        <Button
+                            text={gettext('Save')}
+                            type="primary"
+                            onClick={() => {
+                                this.props.onChange(this.state.radioValue);
+                                this.props.closeModal();
+                            }}
+                            disabled={false}
+                        />
+                    </ButtonGroup>
                 }
             >
                 <div>
                     <p>
                         {gettext(
                             'You can either completely block further writing after the character' +
-                            'limit is reached or highlight exceeding characters in red.',
+                                'limit is reached or highlight exceeding characters in red.',
                         )}
                     </p>
                     <CheckGroup orientation="vertical">

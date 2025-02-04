@@ -7,10 +7,28 @@ import {IArticle} from 'superdesk-api';
  * @ngdoc controller
  * @module superdesk.apps.monitoring
  */
-MonitoringController.$inject = ['$rootScope', '$scope', '$location', 'desks', 'superdeskFlags',
-    'search', '$filter', 'preferencesService', '$q'];
-export function MonitoringController($rootScope, $scope, $location, desks, superdeskFlags,
-    search, $filter, preferencesService, $q) {
+MonitoringController.$inject = [
+    '$rootScope',
+    '$scope',
+    '$location',
+    'desks',
+    'superdeskFlags',
+    'search',
+    '$filter',
+    'preferencesService',
+    '$q',
+];
+export function MonitoringController(
+    $rootScope,
+    $scope,
+    $location,
+    desks,
+    superdeskFlags,
+    search,
+    $filter,
+    preferencesService,
+    $q,
+) {
     this.state = {};
 
     this.preview = preview;
@@ -31,8 +49,8 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
         userPreference: preferencesService.get('monitoring:view'),
         sessionPreference: preferencesService.get('monitoring:view:session'),
     }).then(({userPreference, sessionPreference}) => {
-        this.viewColumn = sessionPreference !== null ?
-            sessionPreference === 'swimlane' : userPreference.view === 'swimlane';
+        this.viewColumn =
+            sessionPreference !== null ? sessionPreference === 'swimlane' : userPreference.view === 'swimlane';
         this.switchViewColumn(this.viewColumn);
     });
 
@@ -53,11 +71,11 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
 
     this.getGroupLabel = getGroupLabel;
 
-    this.isDeskChanged = function() {
+    this.isDeskChanged = function () {
         return desks.changeDesk;
     };
 
-    this.highlightsDeskChanged = function() {
+    this.highlightsDeskChanged = function () {
         if (desks.changeDesk) {
             $location.url('/workspace/monitoring');
         }
@@ -65,23 +83,18 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
 
     var self = this;
 
-    function preview(
-        item: IArticle,
-        calledFromOutsideAngular: boolean = false,
-    ) {
+    function preview(item: IArticle, calledFromOutsideAngular: boolean = false) {
         self.previewItem = item;
         self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
         const sendPreviewEvent =
-            appConfig.list != null
-            && appConfig.list.narrowView
-            && search.singleLine
-            && superdeskFlags.flags.authoring;
+            appConfig.list != null && appConfig.list.narrowView && search.singleLine && superdeskFlags.flags.authoring;
 
         const evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
-            self.showHistoryTab = self.previewItem.state !== 'ingested' &&
-            !_.includes(['archived', 'externalsource'], self.previewItem._type);
+            self.showHistoryTab =
+                self.previewItem.state !== 'ingested' &&
+                !_.includes(['archived', 'externalsource'], self.previewItem._type);
         }
 
         if (!item) {
@@ -131,9 +144,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
         self.viewColumn = viewColumn;
 
         if (self.viewColumn) {
-            self.columnsLimit = numberOfColumns
-                ? numberOfColumns
-                : appConfig.features.swimlane.defaultNumberOfColumns;
+            self.columnsLimit = numberOfColumns ? numberOfColumns : appConfig.features.swimlane.defaultNumberOfColumns;
         } else {
             self.columnsLimit = null;
         }
@@ -154,8 +165,10 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
         let groupLabel;
 
         if (group.subheader) {
-            groupLabel = activeWorkspace === 'workspace' ?
-                group.header + ' ' + group.subheader : group.header + ' / ' + group.subheader;
+            groupLabel =
+                activeWorkspace === 'workspace'
+                    ? group.header + ' ' + group.subheader
+                    : group.header + ' / ' + group.subheader;
         } else if (group.type === 'search') {
             groupLabel = group.header;
         } else {

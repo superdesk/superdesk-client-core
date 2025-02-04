@@ -55,13 +55,11 @@ export function SearchResults(
     superdeskFlags,
     notify,
     $q,
-) { // uff - should it use injector instead?
+) {
+    // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
-            allowed: [
-                'mgrid',
-                'compact',
-            ],
+            allowed: ['mgrid', 'compact'],
             category: 'archive',
             view: 'mgrid',
             default: 'mgrid',
@@ -73,7 +71,7 @@ export function SearchResults(
     return {
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
-        link: function(scope, elem, attr, controller) {
+        link: function (scope, elem, attr, controller) {
             var containerElem = elem.find('.shadow-list-holder');
             var GRID_VIEW = 'mgrid',
                 LIST_VIEW = 'compact';
@@ -85,9 +83,8 @@ export function SearchResults(
             superdeskFlags.flags.previewing = false;
 
             // allow controller overwrite getSearch
-            const getSearch = typeof scope.search.getSearch === 'function'
-                ? scope.search.getSearch
-                : () => $location.search();
+            const getSearch =
+                typeof scope.search.getSearch === 'function' ? scope.search.getSearch : () => $location.search();
 
             const queryOptions: ISearchOptions = {
                 hidePreviousVersions: scope.search.hideNested === true,
@@ -194,16 +191,20 @@ export function SearchResults(
                 }
             });
 
-            scope.$watch(function getSearchParams() {
-                return _.omit(getSearch(), ['_id', 'item', 'action']);
-            }, (newValue, oldValue) => {
-                if (newValue !== oldValue) {
-                    scope.refreshList();
-                }
-            }, true);
+            scope.$watch(
+                function getSearchParams() {
+                    return _.omit(getSearch(), ['_id', 'item', 'action']);
+                },
+                (newValue, oldValue) => {
+                    if (newValue !== oldValue) {
+                        scope.refreshList();
+                    }
+                },
+                true,
+            );
 
             // public api - called by list when needed
-            scope.fetchNext = function() {
+            scope.fetchNext = function () {
                 render(null, true);
             };
 
@@ -257,42 +258,44 @@ export function SearchResults(
                     criteria.params = JSON.parse(getSearch().params);
                 }
 
-                return api.query(getProvider(criteria), criteria).then((items) => {
-                    if (initiatedAt < cancelAllBeforeTime) {
-                        return $q.reject('cancelling in favor of a newer request');
-                    }
+                return api
+                    .query(getProvider(criteria), criteria)
+                    .then(
+                        (items) => {
+                            if (initiatedAt < cancelAllBeforeTime) {
+                                return $q.reject('cancelling in favor of a newer request');
+                            }
 
-                    if (appConfig.features.autorefreshContent && data != null) {
-                        data.force = true;
-                    }
+                            if (appConfig.features.autorefreshContent && data != null) {
+                                data.force = true;
+                            }
 
-                    if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-                        scope.showRefresh =
-                            items._items.length === pageSize
-                                ? showRefresh(
-                                    (scope.items?._items ?? []),
-                                    items._items,
-                                )
-                                : false;
-                    }
+                            if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
+                                scope.showRefresh =
+                                    items._items.length === pageSize
+                                        ? showRefresh(scope.items?._items ?? [], items._items)
+                                        : false;
+                            }
 
-                    if (!scope.showRefresh || data && data.force) {
-                        scope.total = items._meta.total;
-                        scope.$applyAsync(() => {
-                            render(items, null, true);
-                        });
-                    } else {
-                        // update scope items only with the matching fetched items
-                        scope.items = search.updateItems(items, scope.items);
-                    }
+                            if (!scope.showRefresh || (data && data.force)) {
+                                scope.total = items._meta.total;
+                                scope.$applyAsync(() => {
+                                    render(items, null, true);
+                                });
+                            } else {
+                                // update scope items only with the matching fetched items
+                                scope.items = search.updateItems(items, scope.items);
+                            }
 
-                    if (originalQuery) {
-                        criteria.source.query = originalQuery;
-                    }
-                }, (error) => {
-                    notify.error(gettext('Failed to run the query!'));
-                    console.error(error, getProvider(criteria));
-                })
+                            if (originalQuery) {
+                                criteria.source.query = originalQuery;
+                            }
+                        },
+                        (error) => {
+                            notify.error(gettext('Failed to run the query!'));
+                            console.error(error, getProvider(criteria));
+                        },
+                    )
                     .finally(() => {
                         scope.loading = false;
                     });
@@ -341,7 +344,7 @@ export function SearchResults(
                 scope.refreshList();
             });
 
-            scope.refreshList = function() {
+            scope.refreshList = function () {
                 scope.showRefresh = false;
                 scope.manualRefreshInProgress = true;
 
@@ -404,8 +407,7 @@ export function SearchResults(
                     criteria.source.size = 50;
                     criteria.projections = JSON.stringify(projections);
 
-                    api
-                        .query(getProvider(criteria), criteria)
+                    api.query(getProvider(criteria), criteria)
                         .then(setScopeItems)
                         .finally(() => {
                             scope.loading = false;
@@ -425,8 +427,7 @@ export function SearchResults(
                     scope.loading = true;
                     criteria.projections = JSON.stringify(projections);
 
-                    api
-                        .query(getProvider(criteria), criteria)
+                    api.query(getProvider(criteria), criteria)
                         .then(setScopeItems)
                         .finally(() => {
                             scope.loading = false;
@@ -465,17 +466,20 @@ export function SearchResults(
                         var preview_id = item.extra?.previewid;
 
                         if (preview_id) {
-                            criteria.params = {'preview_id': preview_id};
-                            return api.query(getProvider(criteria), criteria).then((item_) => {
-                                if ('_items' in item_ && item_._items[0] !== undefined) {
-                                    processPreview(search.mergeHighlightFields(item_._items[0]));
-                                } else {
+                            criteria.params = {preview_id: preview_id};
+                            return api.query(getProvider(criteria), criteria).then(
+                                (item_) => {
+                                    if ('_items' in item_ && item_._items[0] !== undefined) {
+                                        processPreview(search.mergeHighlightFields(item_._items[0]));
+                                    } else {
+                                        processPreview(item);
+                                    }
+                                },
+                                (error) => {
+                                    notify.error('Detailed informations is not found for the item : ' + item.guid);
                                     processPreview(item);
-                                }
-                            }, (error) => {
-                                notify.error('Detailed informations is not found for the item : ' + item.guid);
-                                processPreview(item);
-                            });
+                                },
+                            );
                         } else {
                             processPreview(item);
                             return;
@@ -485,11 +489,12 @@ export function SearchResults(
                     scope.loading = true;
                     let previewCriteria = search.getSingleItemCriteria(item);
 
-                    api.query(getProvider(previewCriteria), previewCriteria).then((completeItems) => {
-                        let completeItem = search.mergeHighlightFields(completeItems._items[0]);
+                    api.query(getProvider(previewCriteria), previewCriteria)
+                        .then((completeItems) => {
+                            let completeItem = search.mergeHighlightFields(completeItems._items[0]);
 
-                        processPreview(completeItem);
-                    })
+                            processPreview(completeItem);
+                        })
                         .finally(() => {
                             scope.loading = false;
                         });
@@ -509,10 +514,11 @@ export function SearchResults(
              * then, sends rowview event
              */
             function sendRowViewEvents(item?) {
-                let sendEvent = scope.singleLine
-                    && superdeskFlags.flags.authoring
-                    && appConfig.list != null
-                    && appConfig.list.narrowView;
+                let sendEvent =
+                    scope.singleLine &&
+                    superdeskFlags.flags.authoring &&
+                    appConfig.list != null &&
+                    appConfig.list.narrowView;
 
                 let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
@@ -532,8 +538,9 @@ export function SearchResults(
                 scope.selected.preview = item;
 
                 if (!_.isNil(scope.selected.preview)) {
-                    scope.showHistoryTab = scope.selected.preview.state !== 'ingested' &&
-                    !_.includes(['archived', 'externalsource'], scope.selected.preview._type);
+                    scope.showHistoryTab =
+                        scope.selected.preview.state !== 'ingested' &&
+                        !_.includes(['archived', 'externalsource'], scope.selected.preview._type);
 
                     superdeskFlags.flags.previewing = true;
                     sendRowViewEvents(item);
@@ -542,7 +549,7 @@ export function SearchResults(
                 $location.search('_id', item ? item._id : null);
             }
 
-            scope.openSingleItem = function(packageItem) {
+            scope.openSingleItem = function (packageItem) {
                 packages.fetchItem(packageItem).then((item) => {
                     scope.selected.view = item;
                 });
@@ -583,15 +590,14 @@ export function SearchResults(
             /**
              * Generates Identifier to be used by track by expression.
              */
-            scope.uuid = function(item) {
+            scope.uuid = function (item) {
                 return search.generateTrackByIdentifier(item);
             };
 
             // init
             $rootScope.aggregations = 0;
 
-            _queryItems(undefined, Date.now())
-                .catch(noop);
+            _queryItems(undefined, Date.now()).catch(noop);
         },
     };
 }

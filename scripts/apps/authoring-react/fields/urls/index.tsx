@@ -12,8 +12,12 @@ import {Difference} from './difference';
 
 export const URL_FIELD_ID = 'urls';
 
-export function getUrlsField()
-: ICustomFieldType<IUrlsFieldValueOperational, IUrlsFieldValueStorage, IUrlsFieldConfig, IUrlsFieldUserPreferences> {
+export function getUrlsField(): ICustomFieldType<
+    IUrlsFieldValueOperational,
+    IUrlsFieldValueStorage,
+    IUrlsFieldConfig,
+    IUrlsFieldUserPreferences
+> {
     const field: ReturnType<typeof getUrlsField> = {
         id: URL_FIELD_ID,
         generic: true,

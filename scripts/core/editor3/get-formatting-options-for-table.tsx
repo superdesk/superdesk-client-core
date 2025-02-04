@@ -1,7 +1,7 @@
 import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 
 export function getFormattingOptionsForTableLikeBlocks(): Array<RICH_FORMATTING_OPTION> {
-    const options: {[K in RICH_FORMATTING_OPTION] : boolean} = {
+    const options: {[K in RICH_FORMATTING_OPTION]: boolean} = {
         h1: true,
         h2: true,
         h3: true,

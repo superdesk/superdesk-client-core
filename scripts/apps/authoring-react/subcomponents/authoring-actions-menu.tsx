@@ -31,12 +31,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
 
     render() {
         if (this.state.actions == null) {
-            return (
-                <MoreActionsButton
-                    aria-label={gettext('Actions menu')}
-                    onClick={this.getActions}
-                />
-            );
+            return <MoreActionsButton aria-label={gettext('Actions menu')} onClick={this.getActions} />;
         } else {
             const actionsGrouped = groupBy(this.state.actions, (action) => action.groupId);
             const menuItems: Array<IMenuItem> = [];

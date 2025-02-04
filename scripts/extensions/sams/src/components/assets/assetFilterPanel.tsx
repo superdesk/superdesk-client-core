@@ -8,25 +8,9 @@ import {DatePickerLocaleSettings} from 'superdesk-api';
 import {superdeskApi, samsApi} from '../../apis';
 
 // UI
-import {
-    Autocomplete,
-    Button,
-    DatePicker,
-    Input,
-    Option,
-    Select,
-    Tag,
-} from 'superdesk-ui-framework/react';
+import {Autocomplete, Button, DatePicker, Input, Option, Select, Tag} from 'superdesk-ui-framework/react';
 
-import {
-    FormGroup,
-    FormItem,
-    FormRow,
-    PanelContent,
-    PanelContentBlock,
-    PanelFooter,
-    PanelHeader,
-} from '../../ui';
+import {FormGroup, FormItem, FormRow, PanelContent, PanelContentBlock, PanelFooter, PanelHeader} from '../../ui';
 
 // Utils
 import {convertTagSearchResultToAssetTags} from '../../utils/assets';
@@ -34,10 +18,7 @@ import {convertTagSearchResultToAssetTags} from '../../utils/assets';
 interface IProps {
     searchParams: IAssetSearchParams;
     closeFilterPanel(): void;
-    updateAssetSearchParamsAndListItems(
-        params: Partial<IAssetSearchParams>,
-        listAction: LIST_ACTION,
-    ): void;
+    updateAssetSearchParamsAndListItems(params: Partial<IAssetSearchParams>, listAction: LIST_ACTION): void;
 }
 
 interface IState {
@@ -114,7 +95,6 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
             return {
                 localSearchParams: {
                     tags: oldState.localSearchParams.tags,
-
                 },
             };
         });
@@ -162,17 +142,11 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
             localSearchParams: emptyFilters,
             formId: Math.random().toString(36).substr(1),
         });
-        this.props.updateAssetSearchParamsAndListItems(
-            emptyFilters,
-            LIST_ACTION.REPLACE,
-        );
+        this.props.updateAssetSearchParamsAndListItems(emptyFilters, LIST_ACTION.REPLACE);
     }
 
     submitSearch() {
-        this.props.updateAssetSearchParamsAndListItems(
-            this.state.localSearchParams,
-            LIST_ACTION.REPLACE,
-        );
+        this.props.updateAssetSearchParamsAndListItems(this.state.localSearchParams, LIST_ACTION.REPLACE);
     }
 
     onKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
@@ -204,14 +178,13 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
     searchTags(searchString: string, callback: (result: Array<any>) => void) {
         let cancelled = false;
 
-        samsApi.assets.searchTags(searchString + '*')
-            .then((res: IAutoTaggingSearchResult) => {
-                if (cancelled !== true) {
-                    const result = convertTagSearchResultToAssetTags(res).toArray();
+        samsApi.assets.searchTags(searchString + '*').then((res: IAutoTaggingSearchResult) => {
+            if (cancelled !== true) {
+                const result = convertTagSearchResultToAssetTags(res).toArray();
 
-                    callback(result);
-                }
-            });
+                callback(result);
+            }
+        });
 
         return {
             cancel: () => {
@@ -229,11 +202,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
 
         return (
             <React.Fragment>
-                <PanelHeader
-                    title={gettext('Advanced Search')}
-                    onClose={this.props.closeFilterPanel}
-                    borderB={true}
-                />
+                <PanelHeader title={gettext('Advanced Search')} onClose={this.props.closeFilterPanel} borderB={true} />
                 <PanelContent>
                     <PanelContentBlock>
                         <form onKeyDown={this.onKeyDown} key={this.state.formId}>
@@ -270,7 +239,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Autocomplete
-                                        key={(this.state.localSearchParams.tags?.length)}
+                                        key={this.state.localSearchParams.tags?.length}
                                         label={gettext('Tags')}
                                         value={''}
                                         keyValue="name"
@@ -302,15 +271,9 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         onChange={this.onChange.state}
                                     >
                                         <Option />
-                                        <Option value={ASSET_STATE.DRAFT}>
-                                            {gettext('Draft')}
-                                        </Option>
-                                        <Option value={ASSET_STATE.INTERNAL}>
-                                            {gettext('Internal')}
-                                        </Option>
-                                        <Option value={ASSET_STATE.PUBLIC}>
-                                            {gettext('Public')}
-                                        </Option>
+                                        <Option value={ASSET_STATE.DRAFT}>{gettext('Draft')}</Option>
+                                        <Option value={ASSET_STATE.INTERNAL}>{gettext('Internal')}</Option>
+                                        <Option value={ASSET_STATE.PUBLIC}>{gettext('Public')}</Option>
                                     </Select>
                                 </FormRow>
                             </FormGroup>
@@ -370,16 +333,8 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                     </PanelContentBlock>
                 </PanelContent>
                 <PanelFooter>
-                    <Button
-                        text={gettext('Clear')}
-                        style="hollow"
-                        onClick={this.clearSearch}
-                    />
-                    <Button
-                        text={gettext('Submit')}
-                        type="primary"
-                        onClick={this.submitSearch}
-                    />
+                    <Button text={gettext('Clear')} style="hollow" onClick={this.clearSearch} />
+                    <Button text={gettext('Submit')} type="primary" onClick={this.submitSearch} />
                 </PanelFooter>
             </React.Fragment>
         );

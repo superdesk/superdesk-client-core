@@ -25,12 +25,8 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>) => dispatch<any>(
-        updateAssetSearchParamsAndListItems(
-            params,
-            LIST_ACTION.REPLACE,
-        ),
-    ),
+    updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>) =>
+        dispatch<any>(updateAssetSearchParamsAndListItems(params, LIST_ACTION.REPLACE)),
 });
 
 export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps> {
@@ -63,7 +59,4 @@ export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps>
     }
 }
 
-export const AssetTypeFilterButtons = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AssetTypeFilterButtonsComponent);
+export const AssetTypeFilterButtons = connect(mapStateToProps, mapDispatchToProps)(AssetTypeFilterButtonsComponent);

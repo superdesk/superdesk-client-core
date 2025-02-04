@@ -28,7 +28,8 @@ export class MarkForDeskButton extends React.Component<IProps> {
 
         return (
             <button disabled={isMarked} onClick={this.markForDesk} data-test-id="mark-for-desk--desk">
-                <i className="icon-bell" />{desk.name}
+                <i className="icon-bell" />
+                {desk.name}
             </button>
         );
     }

@@ -65,15 +65,12 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
         const {children} = this.props;
 
         if (this.props.disabled) {
-            return (
-                <div>{children}</div>
-            );
+            return <div>{children}</div>;
         }
 
         const childrenEmpty =
-            typeof children === 'undefined'
-            || (Array.isArray(children) ? children : [children])
-                .every((child) => child === false || child === null);
+            typeof children === 'undefined' ||
+            (Array.isArray(children) ? children : [children]).every((child) => child === false || child === null);
 
         const styles: React.CSSProperties = (() => {
             if (this.state.dragging) {
@@ -111,49 +108,37 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
                 className={this.props.className}
                 style={styles}
             >
-                {
-                    childrenEmpty
-                        ? (
-                            <div
-                                style={{padding: 10, cursor: 'pointer'}}
-                                onClick={() => {
-                                    if (this.input.current != null) {
-                                        this.input.current.click();
-                                    }
-                                }}
-                            >
-                                {
-                                    canUpload
-                                        ? gettext('Drop items here or click to upload')
-                                        : gettext('Drop items here')
-                                }
-                            </div>
-                        )
-                        : (
-                            <div>
-                                {this.props.children}
-                            </div>
-                        )
-                }
+                {childrenEmpty ? (
+                    <div
+                        style={{padding: 10, cursor: 'pointer'}}
+                        onClick={() => {
+                            if (this.input.current != null) {
+                                this.input.current.click();
+                            }
+                        }}
+                    >
+                        {canUpload ? gettext('Drop items here or click to upload') : gettext('Drop items here')}
+                    </div>
+                ) : (
+                    <div>{this.props.children}</div>
+                )}
 
-                {
-                    canUpload && (
-                        <input
-                            type="file"
-                            style={{display: 'none'}}
-                            ref={this.input}
-                            multiple={this.props.multiple}
-                            onChange={(event) => {
-                                event.preventDefault();
-                                if (this.input.current.files.length) {
-                                    this.props.onFileSelect(Array.from(this.input.current.files));
-                                }
-                                event.target.value = null; // reset to allow selecting same file again
-                            }}
-                            accept={this.props.fileAccept}
-                        />
-                    )
-                }
+                {canUpload && (
+                    <input
+                        type="file"
+                        style={{display: 'none'}}
+                        ref={this.input}
+                        multiple={this.props.multiple}
+                        onChange={(event) => {
+                            event.preventDefault();
+                            if (this.input.current.files.length) {
+                                this.props.onFileSelect(Array.from(this.input.current.files));
+                            }
+                            event.target.value = null; // reset to allow selecting same file again
+                        }}
+                        accept={this.props.fileAccept}
+                    />
+                )}
             </div>
         );
     }

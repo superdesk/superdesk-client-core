@@ -1,9 +1,11 @@
-angular.module('superdesk.core.activity.modal', [])
-    .directive('sdActivityModal', ['activityService', 'asset', function(activityService, asset) {
+angular.module('superdesk.core.activity.modal', []).directive('sdActivityModal', [
+    'activityService',
+    'asset',
+    function (activityService, asset) {
         return {
             scope: true,
             templateUrl: asset.templateUrl('core/activity/views/activity-modal.html'),
-            link: function(scope, elem) {
+            link: function (scope, elem) {
                 scope.stack = activityService.activityStack;
                 scope.$watch('stack.length', (len) => {
                     scope.activity = null;
@@ -13,11 +15,11 @@ angular.module('superdesk.core.activity.modal', [])
                         scope.activity = config.activity;
                         scope.locals = config.locals;
 
-                        scope.reject = function(reason) {
+                        scope.reject = function (reason) {
                             return config.defer.reject(reason);
                         };
 
-                        scope.resolve = function(result) {
+                        scope.resolve = function (result) {
                             return config.defer.resolve(result);
                         };
 
@@ -28,4 +30,5 @@ angular.module('superdesk.core.activity.modal', [])
                 });
             },
         };
-    }]);
+    },
+]);

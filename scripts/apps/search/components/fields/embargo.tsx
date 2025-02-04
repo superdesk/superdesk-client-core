@@ -10,11 +10,13 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
         const embargoed = item.embargo || item.embargoed;
         const embargoedText = item.embargoed_text;
 
-        if (embargoed == null && embargoedText == null) { // no embargo
+        if (embargoed == null && embargoedText == null) {
+            // no embargo
             return null;
         }
 
-        if (embargoed != null && moment().isAfter(embargoed)) { // expired
+        if (embargoed != null && moment().isAfter(embargoed)) {
+            // expired
             return null;
         }
 
@@ -22,12 +24,14 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
             <span
                 key="embargo"
                 className="state-label state_embargo"
-                title={embargoed != null ? (
-                    gettext('Embargo until {{date}}', {date: formatDate(embargoed, {longFormat: true})})
-                ) : (
-                    gettext('Embargo: {{text}}', {text: embargoedText})
-                )}
-            >{gettext('Embargo')}</span>
+                title={
+                    embargoed != null
+                        ? gettext('Embargo until {{date}}', {date: formatDate(embargoed, {longFormat: true})})
+                        : gettext('Embargo: {{text}}', {text: embargoedText})
+                }
+            >
+                {gettext('Embargo')}
+            </span>
         );
     }
 }

@@ -13,31 +13,31 @@ const extension: IExtension = {
     activate: () => {
         const result: IExtensionActivationResult = privileges.hasPrivilege('rundowns')
             ? {
-                contributions: {
-                    pages: privileges.hasPrivilege('rundowns')
-                        ? [
-                            {
-                                title: gettext('Broadcasting'),
-                                url: BROADCASTING_MODULE_PATH,
-                                component: RundownsPage,
+                  contributions: {
+                      pages: privileges.hasPrivilege('rundowns')
+                          ? [
+                                {
+                                    title: gettext('Broadcasting'),
+                                    url: BROADCASTING_MODULE_PATH,
+                                    component: RundownsPage,
 
-                                showTopMenu: false,
-                                showSideMenu: true,
-                                addToMainMenu: false,
+                                    showTopMenu: false,
+                                    showSideMenu: true,
+                                    addToMainMenu: false,
 
-                                addToSideMenu: {
-                                    icon: 'rundown',
-                                    order: 1000,
+                                    addToSideMenu: {
+                                        icon: 'rundown',
+                                        order: 1000,
+                                    },
                                 },
-                            },
-                        ]
-                        : [],
-                    customFieldTypes: [
-                        getSubItemsField() as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
-                    ],
-                    notifications: notifications,
-                },
-            }
+                            ]
+                          : [],
+                      customFieldTypes: [
+                          getSubItemsField() as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
+                      ],
+                      notifications: notifications,
+                  },
+              }
             : {};
 
         return Promise.resolve(result);

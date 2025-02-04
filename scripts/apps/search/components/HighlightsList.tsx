@@ -77,33 +77,27 @@ export class HighlightsList extends React.Component<IProps> {
                     </button>
                 </li>
 
-                {
-                    highlights
-                        .filter((id) => highlightsById[id] != null)
-                        .map((id) => {
-                            const highlight = highlightsById[id];
+                {highlights
+                    .filter((id) => highlightsById[id] != null)
+                    .map((id) => {
+                        const highlight = highlightsById[id];
 
-                            return (
-                                <li key={id}>
-                                    {highlight.name}
-                                    {
-                                        this.highlightsService.hasMarkItemPrivilege()
-                                            ? (
-                                                <button
-                                                    className="btn btn--small btn--hollow btn--primary btn--ui-dark"
-                                                    onClick={(event) => {
-                                                        this.removeHighlight(highlight, event);
-                                                    }}
-                                                >
-                                                    {gettext('REMOVE')}
-                                                </button>
-                                            )
-                                            : null
-                                    }
-                                </li>
-                            );
-                        })
-                }
+                        return (
+                            <li key={id}>
+                                {highlight.name}
+                                {this.highlightsService.hasMarkItemPrivilege() ? (
+                                    <button
+                                        className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                        onClick={(event) => {
+                                            this.removeHighlight(highlight, event);
+                                        }}
+                                    >
+                                        {gettext('REMOVE')}
+                                    </button>
+                                ) : null}
+                            </li>
+                        );
+                    })}
             </ul>
         );
     }

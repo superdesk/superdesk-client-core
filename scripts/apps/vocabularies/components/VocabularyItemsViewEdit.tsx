@@ -98,79 +98,79 @@ class InputField extends React.PureComponent<IPropsInputField> {
         }
 
         switch (field.type) {
-        case 'bool':
-            return (
-                <input
-                    type="checkbox"
-                    checked={!!value}
-                    disabled={disabled}
-                    onChange={() => this.props.update(item, field.key, !value)}
-                />
-            );
-
-        case 'color':
-            return (
-                <input
-                    type="color"
-                    value={value}
-                    disabled={disabled}
-                    onChange={(event) => this.props.update(item, field.key, event.target.value)}
-                />
-            );
-
-        case 'short':
-            return (
-                <input
-                    type="text"
-                    value={value}
-                    disabled={disabled}
-                    onChange={(event) => {
-                        this.props.update(item, field.key, event.target.value);
-                    }}
-                />
-            );
-
-        case 'object': {
-            return (
-                <ObjectEditor
-                    value={valueObj}
-                    disabled={disabled}
-                    onChange={(_value) => this.props.update(item, field.key, _value)}
-                />
-            );
-        }
-
-        case 'integer':
-            return (
-                <div className={className}>
+            case 'bool':
+                return (
                     <input
-                        type="number"
+                        type="checkbox"
+                        checked={!!value}
+                        disabled={disabled}
+                        onChange={() => this.props.update(item, field.key, !value)}
+                    />
+                );
+
+            case 'color':
+                return (
+                    <input
+                        type="color"
                         value={value}
                         disabled={disabled}
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
-                        onChange={(event) => {
-                            this.props.update(item, field.key, parseInt(event.target.value, 10));
-                        }}
+                        onChange={(event) => this.props.update(item, field.key, event.target.value)}
                     />
-                </div>
-            );
+                );
 
-        default:
-            return (
-                <div className={className}>
+            case 'short':
+                return (
                     <input
                         type="text"
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         value={value}
                         disabled={disabled}
                         onChange={(event) => {
                             this.props.update(item, field.key, event.target.value);
                         }}
-                        data-test-id="vocabulary-item-field"
-                        data-test-value={field.key}
                     />
-                </div>
-            );
+                );
+
+            case 'object': {
+                return (
+                    <ObjectEditor
+                        value={valueObj}
+                        disabled={disabled}
+                        onChange={(_value) => this.props.update(item, field.key, _value)}
+                    />
+                );
+            }
+
+            case 'integer':
+                return (
+                    <div className={className}>
+                        <input
+                            type="number"
+                            value={value}
+                            disabled={disabled}
+                            className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                            onChange={(event) => {
+                                this.props.update(item, field.key, parseInt(event.target.value, 10));
+                            }}
+                        />
+                    </div>
+                );
+
+            default:
+                return (
+                    <div className={className}>
+                        <input
+                            type="text"
+                            className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                            value={value}
+                            disabled={disabled}
+                            onChange={(event) => {
+                                this.props.update(item, field.key, event.target.value);
+                            }}
+                            data-test-id="vocabulary-item-field"
+                            data-test-value={field.key}
+                        />
+                    </div>
+                );
         }
     }
 }
@@ -234,12 +234,9 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         this.setErrorMessage = this.setErrorMessage.bind(this);
 
         this.setDirtyOnce = once(this.props.setDirty);
-        this.setValidItemsDebounced = debounce(
-            () => {
-                this.props.setItemsValid(!containsInvalidItems(this.state.items, this.props.schemaFields));
-            },
-            200,
-        );
+        this.setValidItemsDebounced = debounce(() => {
+            this.props.setItemsValid(!containsInvalidItems(this.state.items, this.props.schemaFields));
+        }, 200);
     }
 
     private updateItem(item: any, key: string, value: any) {
@@ -267,7 +264,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     }
 
     // tslint:disable-next-line: member-access
-    public getItemsForSaving(): Array<IVocabularyItem> { // will be used from a ref
+    public getItemsForSaving(): Array<IVocabularyItem> {
+        // will be used from a ref
         return this.state.items.map((item) => {
             const nextItem = {...item};
 
@@ -285,12 +283,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     componentDidMount() {
         this.setValidItemsDebounced();
 
-        dataApi.query<ILanguage>(
-            'languages',
-            1,
-            {field: 'language', direction: 'ascending'},
-            {},
-        ).then((res) => {
+        dataApi.query<ILanguage>('languages', 1, {field: 'language', direction: 'ascending'}, {}).then((res) => {
             this.setState({languages: res._items});
         });
     }
@@ -320,12 +313,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
-        const filteredItems = this.state.searchTerm.length < 1
-            ? this.state.items
-            : this.state.items.filter((item) => {
-                return item.qcode?.toLocaleLowerCase().includes(this.state.searchTerm)
-                    || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
-            });
+        const filteredItems =
+            this.state.searchTerm.length < 1
+                ? this.state.items
+                : this.state.items.filter((item) => {
+                      return (
+                          item.qcode?.toLocaleLowerCase().includes(this.state.searchTerm) ||
+                          item.name?.toLocaleLowerCase().includes(this.state.searchTerm)
+                      );
+                  });
 
         return (
             <React.Fragment>
@@ -356,9 +352,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
                     <div className="sortbar sd-margin-start--auto">
                         {this.state.sort == null ? null : (
-                            <Dropdown
-                                isOpen={this.state.sortDropdownOpen}
-                            >
+                            <Dropdown isOpen={this.state.sortDropdownOpen}>
                                 <button
                                     className="dropdown__toggle"
                                     onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}
@@ -366,9 +360,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                     {this.state.sort.field}
                                     <span className="dropdown__caret" />
                                 </button>
-                                <Menu
-                                    isOpen={this.state.sortDropdownOpen}
-                                >
+                                <Menu isOpen={this.state.sortDropdownOpen}>
                                     {this.sortFields.map((field) => {
                                         return (
                                             <li key={field}>
@@ -395,9 +387,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                 onClick={() => {
                                     const nextSortOption: ISortOption = {
                                         ...this.state.sort,
-                                        direction: this.state.sort.direction === 'ascending'
-                                            ? 'descending'
-                                            : 'ascending',
+                                        direction:
+                                            this.state.sort.direction === 'ascending' ? 'descending' : 'ascending',
                                     };
 
                                     this.setState({
@@ -405,17 +396,18 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                     });
                                 }}
                             >
-                                {this.state.sort.direction === 'ascending'
-                                    ? <i className="icon-descending" />
-                                    : <i className="icon-ascending" />
-                                }
+                                {this.state.sort.direction === 'ascending' ? (
+                                    <i className="icon-descending" />
+                                ) : (
+                                    <i className="icon-ascending" />
+                                )}
                             </button>
                         )}
 
                         <button
                             className="btn btn--primary"
                             onClick={() => {
-                            // clearing search before adding an item so it doesn't get filtered
+                                // clearing search before adding an item so it doesn't get filtered
                                 this.setState({searchTerm: ''}, () => {
                                     this.addItem();
 
@@ -479,23 +471,17 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                             update={this.updateItem}
                                                         />
 
-                                                        {
-                                                            field.key === 'name' && (
-                                                                <div style={{paddingBlockStart: 20}}>
-                                                                    <ManageVocabularyItemTranslations
-                                                                        item={item}
-                                                                        update={(_field, value) => {
-                                                                            this.updateItem(
-                                                                                item,
-                                                                                _field as string,
-                                                                                value,
-                                                                            );
-                                                                        }}
-                                                                        languages={languages}
-                                                                    />
-                                                                </div>
-                                                            )
-                                                        }
+                                                        {field.key === 'name' && (
+                                                            <div style={{paddingBlockStart: 20}}>
+                                                                <ManageVocabularyItemTranslations
+                                                                    item={item}
+                                                                    update={(_field, value) => {
+                                                                        this.updateItem(item, _field as string, value);
+                                                                    }}
+                                                                    languages={languages}
+                                                                />
+                                                            </div>
+                                                        )}
                                                     </td>
                                                 );
                                             })}
@@ -504,8 +490,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                     <input
                                                         type="checkbox"
                                                         checked={!!item.is_active}
-                                                        onChange={
-                                                            () => this.updateItem(item, 'is_active', !item.is_active)
+                                                        onChange={() =>
+                                                            this.updateItem(item, 'is_active', !item.is_active)
                                                         }
                                                     />
                                                 </span>
@@ -528,13 +514,11 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         </tbody>
                     </table>
 
-                    {
-                        this.state.errorMessage == null ? null : (
-                            <div className="sd-line-input sd-line-input--invalid">
-                                <p className="sd-line-input__message">{this.state.errorMessage}</p>
-                            </div>
-                        )
-                    }
+                    {this.state.errorMessage == null ? null : (
+                        <div className="sd-line-input sd-line-input--invalid">
+                            <p className="sd-line-input__message">{this.state.errorMessage}</p>
+                        </div>
+                    )}
                 </div>
             </React.Fragment>
         );

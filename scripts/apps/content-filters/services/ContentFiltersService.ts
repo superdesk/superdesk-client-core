@@ -9,43 +9,44 @@
  */
 ContentFiltersService.$inject = ['api', '$filter'];
 export function ContentFiltersService(api, $filter) {
-    this.productionTestFilter = function(filter) {
+    this.productionTestFilter = function (filter) {
         return filter;
     };
 
-    this.getFilterConditionParameters = function() {
-        return api.query('filter_conditions/parameters')
-            .then(angular.bind(this, (params) => params._items));
+    this.getFilterConditionParameters = function () {
+        return api.query('filter_conditions/parameters').then(angular.bind(this, (params) => params._items));
     };
 
-    this.saveFilterCondition = function(orig, diff) {
+    this.saveFilterCondition = function (orig, diff) {
         return api.save('filter_conditions', orig, diff);
     };
 
-    this.remove = function(item) {
+    this.remove = function (item) {
         return api.remove(item);
     };
 
     this.getAllFilterConditions = () => api.getAll('filter_conditions');
 
-    this.getFilterSearchResults = function(inputParams) {
+    this.getFilterSearchResults = function (inputParams) {
         // call api to get search results
-        return api.query('subscribers', {filter_condition: inputParams})
+        return api
+            .query('subscribers', {filter_condition: inputParams})
             .then(angular.bind(this, (resultSet) => resultSet._items));
     };
 
     this.getAllContentFilters = () => api.getAll('content_filters');
 
-    this.saveContentFilter = function(orig, diff) {
+    this.saveContentFilter = function (orig, diff) {
         return api.save('content_filters', orig, diff);
     };
 
-    this.testContentFilter = function(diff) {
+    this.testContentFilter = function (diff) {
         return api.save('content_filter_tests', {}, diff);
     };
 
-    this.getGlobalContentFilters = function() {
-        return api.query('content_filters', {is_global: true})
+    this.getGlobalContentFilters = function () {
+        return api
+            .query('content_filters', {is_global: true})
             .then((response) => $filter('sortByName')(response._items));
     };
 }

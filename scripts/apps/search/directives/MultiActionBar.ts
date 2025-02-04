@@ -26,33 +26,16 @@ export function isOpenItemType(type) {
     return openItem && openItem.type === type;
 }
 
-MultiActionBar.$inject = [
-    'asset',
-    'multi',
-    'superdesk',
-    'keyboardManager',
-    'api',
-    'archiveService',
-];
-export function MultiActionBar(
-    asset,
-    multi,
-    superdesk,
-    keyboardManager,
-    api,
-    archiveService,
-) {
+MultiActionBar.$inject = ['asset', 'multi', 'superdesk', 'keyboardManager', 'api', 'archiveService'];
+export function MultiActionBar(asset, multi, superdesk, keyboardManager, api, archiveService) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/multi-action-bar.html'),
         scope: true,
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             const getSelectedItems = () => multi.getItems();
             const unselectAll = () => multi.reset();
 
-            const multiActions = getMultiActions(
-                getSelectedItems,
-                unselectAll,
-            );
+            const multiActions = getMultiActions(getSelectedItems, unselectAll);
 
             scope.multi = multi;
             scope.display = true;
@@ -70,15 +53,10 @@ export function MultiActionBar(
                 scope.display = multi.reset();
             };
 
-            scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> => getBulkActions(
-                articles,
-                multiActions,
-                getSelectedItems,
-                unselectAll,
-                () => {
+            scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> =>
+                getBulkActions(articles, multiActions, getSelectedItems, unselectAll, () => {
                     scope.$apply();
-                },
-            );
+                });
 
             scope.$on('item:lock', (_e, data) => {
                 if (_.includes(multi.getIds(), data.item)) {

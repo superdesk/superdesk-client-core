@@ -20,13 +20,29 @@ import {appConfig} from 'appConfig';
  * @description SubscribersDirective handles subscriber maintenance.
  */
 SubscribersDirective.$inject = [
-    'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
-    'contentFilters', '$q', '$filter', 'products', '$rootScope',
+    'notify',
+    'api',
+    'subscribersService',
+    'adminPublishSettingsService',
+    'modal',
+    'contentFilters',
+    '$q',
+    '$filter',
+    'products',
+    '$rootScope',
 ];
 
 export function SubscribersDirective(
-    notify, api, subscribersService, adminPublishSettingsService,
-    modal, contentFilters, $q, $filter, products, $rootScope,
+    notify,
+    api,
+    subscribersService,
+    adminPublishSettingsService,
+    modal,
+    contentFilters,
+    $q,
+    $filter,
+    products,
+    $rootScope,
 ) {
     return {
         scope: {
@@ -34,7 +50,7 @@ export function SubscribersDirective(
             hideHeader: '=',
         },
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
-        link: function($scope) {
+        link: function ($scope) {
             $scope.subscriber = null;
             $scope.origSubscriber = null;
             $scope.subscribers = $scope.subscribersList || null;
@@ -69,11 +85,9 @@ export function SubscribersDirective(
              * Fetches all subscribers from backend
              */
             const fetchSubscribers = () => {
-                subscribersService.fetchSubscribers().then(
-                    (result) => {
-                        $scope.subscribers = result;
-                    },
-                );
+                subscribersService.fetchSubscribers().then((result) => {
+                    $scope.subscribers = result;
+                });
             };
 
             /**
@@ -89,9 +103,11 @@ export function SubscribersDirective(
                         $scope.productLookup[item._id] = item;
                     });
                     $scope.directProducts = _.filter(items, (item) =>
-                        _.includes(['direct', 'both'], item.product_type || 'both'));
+                        _.includes(['direct', 'both'], item.product_type || 'both'),
+                    );
                     $scope.apiProducts = _.filter(items, (item) =>
-                        _.includes(['api', 'both'], item.product_type || 'both'));
+                        _.includes(['api', 'both'], item.product_type || 'both'),
+                    );
                 });
 
             /**
@@ -136,21 +152,21 @@ export function SubscribersDirective(
             /**
              * Initializes the new destination object.
              */
-            $scope.addNewDestination = function() {
+            $scope.addNewDestination = function () {
                 $scope.newDestination = {};
             };
 
             /**
              * Reverts the changes made to the new destination object
              */
-            $scope.cancelNewDestination = function() {
+            $scope.cancelNewDestination = function () {
                 $scope.newDestination = null;
             };
 
             /**
              * Saves the destination and adds it to the destinations list of the selected subscriber
              */
-            $scope.saveNewDestination = function() {
+            $scope.saveNewDestination = function () {
                 $scope.destinations.push($scope.newDestination);
                 $scope.newDestination = null;
                 $scope.saveEnabled = true;
@@ -159,7 +175,7 @@ export function SubscribersDirective(
             /**
              * Removes the selected destination from the destinations list of the selected subscriber.
              */
-            $scope.deleteDestination = function(destination) {
+            $scope.deleteDestination = function (destination) {
                 _.remove($scope.destinations, destination);
                 $scope.saveEnabled = true;
             };
@@ -167,7 +183,7 @@ export function SubscribersDirective(
             /**
              * Upserts the selected subscriber.
              */
-            $scope.save = function() {
+            $scope.save = function () {
                 $scope.subscriber.destinations = $scope.destinations;
 
                 let diff = {};
@@ -180,7 +196,8 @@ export function SubscribersDirective(
                     diff[key] = value;
                 });
 
-                api.subscribers.save($scope.origSubscriber, diff)
+                api.subscribers
+                    .save($scope.origSubscriber, diff)
                     .then(
                         () => {
                             notify.success(gettext('Subscriber saved.'));
@@ -190,10 +207,17 @@ export function SubscribersDirective(
                             if (angular.isDefined(response.data._issues)) {
                                 if (angular.isDefined(response.data._issues['validator exception'])) {
                                     notify.error(gettext('Error: ' + response.data._issues['validator exception']));
-                                } else if (angular.isDefined(response.data._issues.name) &&
-                                    angular.isDefined(response.data._issues.name.unique)) {
-                                    notify.error(gettext('Error: Subscriber with Name ' + $scope.subscriber.name +
-                                        ' already exists.'));
+                                } else if (
+                                    angular.isDefined(response.data._issues.name) &&
+                                    angular.isDefined(response.data._issues.name.unique)
+                                ) {
+                                    notify.error(
+                                        gettext(
+                                            'Error: Subscriber with Name ' +
+                                                $scope.subscriber.name +
+                                                ' already exists.',
+                                        ),
+                                    );
                                 } else if (angular.isDefined(response.data._issues.destinations)) {
                                     notify.error(gettext('Error: Subscriber must have at least one destination.'));
                                 }
@@ -210,40 +234,45 @@ export function SubscribersDirective(
              * initializes the subscriber object with the selected subscriber allowing
              * user to update the subscriber details.
              */
-            $scope.edit = function(subscriber) {
+            $scope.edit = function (subscriber) {
                 let promises = [];
 
                 promises.push(fetchPublishErrors());
                 promises.push(fetchProducts());
                 promises.push(fetchGlobalContentFilters());
 
-                $q.all(promises).then(() => {
-                    $scope.origSubscriber = subscriber || {};
-                    $scope.subscriber = _.create($scope.origSubscriber);
-                    $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
-                    $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
+                $q.all(promises).then(
+                    () => {
+                        $scope.origSubscriber = subscriber || {};
+                        $scope.subscriber = _.create($scope.origSubscriber);
+                        $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
+                        $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
 
-                    if (!('is_targetable' in $scope.origSubscriber)) {
-                        $scope.subscriber.is_targetable = true;
-                    }
+                        if (!('is_targetable' in $scope.origSubscriber)) {
+                            $scope.subscriber.is_targetable = true;
+                        }
 
-                    initSubscriberProducts('products');
-                    initSubscriberProducts('api_products');
+                        initSubscriberProducts('products');
+                        initSubscriberProducts('api_products');
 
-                    $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
+                        $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
 
-                    $scope.destinations = [];
-                    if (angular.isDefined($scope.subscriber.destinations)
-                        && !_.isNull($scope.subscriber.destinations) &&
-                        $scope.subscriber.destinations.length > 0) {
-                        $scope.destinations = _.clone($scope.subscriber.destinations);
-                    }
+                        $scope.destinations = [];
+                        if (
+                            angular.isDefined($scope.subscriber.destinations) &&
+                            !_.isNull($scope.subscriber.destinations) &&
+                            $scope.subscriber.destinations.length > 0
+                        ) {
+                            $scope.destinations = _.clone($scope.subscriber.destinations);
+                        }
 
-                    $scope.subscriberType = $scope.subscriber.subscriber_type || '';
-                    initGlobalFilters();
-                }, () => {
-                    notify.error(gettext('Subscriber could not be initialized!'));
-                });
+                        $scope.subscriberType = $scope.subscriber.subscriber_type || '';
+                        initGlobalFilters();
+                    },
+                    () => {
+                        notify.error(gettext('Subscriber could not be initialized!'));
+                    },
+                );
             };
 
             /**
@@ -264,21 +293,25 @@ export function SubscribersDirective(
             /**
              * Reverts any changes made to the subscriber
              */
-            $scope.cancel = function() {
+            $scope.cancel = function () {
                 $scope.origSubscriber = null;
                 $scope.subscriber = null;
                 $scope.newDestination = null;
             };
 
-            $scope.$watch('subscriber', (newValue, oldValue) => {
-                if (newValue && oldValue) {
-                    $scope.saveEnabled = true;
-                } else {
-                    $scope.saveEnabled = false;
-                }
-            }, true);
+            $scope.$watch(
+                'subscriber',
+                (newValue, oldValue) => {
+                    if (newValue && oldValue) {
+                        $scope.saveEnabled = true;
+                    } else {
+                        $scope.saveEnabled = false;
+                    }
+                },
+                true,
+            );
 
-            $rootScope.$on('subcriber: saveEnabled', () => $scope.saveEnabled = true);
+            $rootScope.$on('subcriber: saveEnabled', () => ($scope.saveEnabled = true));
 
             // If subscribers list provided don't fetch subscribers
             if (!$scope.subscribersList) {

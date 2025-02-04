@@ -27,9 +27,13 @@ export class DesksDropdown extends React.Component<any, any> {
         if (cancel === true && closeTimeout) {
             this.$timeout.cancel(closeTimeout);
         } else {
-            closeTimeout = this.$timeout(() => {
-                closeActionsMenu();
-            }, 200, false);
+            closeTimeout = this.$timeout(
+                () => {
+                    closeActionsMenu();
+                },
+                200,
+                false,
+            );
         }
     }
 
@@ -43,34 +47,43 @@ export class DesksDropdown extends React.Component<any, any> {
     }
 
     render() {
-        return React.createElement('dd',
+        return React.createElement(
+            'dd',
             {className: 'dropdown dropdown--dropup more-actions'},
-            React.createElement('button', {
-                className: 'dropdown__toggle',
-                onMouseOver: this.toggle,
-                onMouseLeave: this.close,
-            },
-            React.createElement('i',
-                {className: 'icon-dots'}),
-            ));
+            React.createElement(
+                'button',
+                {
+                    className: 'dropdown__toggle',
+                    onMouseOver: this.toggle,
+                    onMouseLeave: this.close,
+                },
+                React.createElement('i', {className: 'icon-dots'}),
+            ),
+        );
     }
 
     renderDropdown() {
-        const desks = this.props.desks.map((desk, index) => React.createElement(
-            'li',
-            {key: 'desk' + index},
+        const desks = this.props.desks.map((desk, index) =>
             React.createElement(
-                'a',
-                {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
-                desk.desk.name + ' (' + desk.count + ')',
+                'li',
+                {key: 'desk' + index},
+                React.createElement(
+                    'a',
+                    {disabled: !desk.isUserDeskMember, onClick: this.props.openDesk(desk)},
+                    desk.desk.name + ' (' + desk.count + ')',
+                ),
             ),
-        ));
+        );
 
-        const elem = React.createElement('div', {
-            className: 'dropdown__menu more-activity-menu',
-            onMouseOver: this.toggle,
-            onMouseLeave: this.close,
-        }, React.createElement('ul', {}, desks));
+        const elem = React.createElement(
+            'div',
+            {
+                className: 'dropdown__menu more-activity-menu',
+                onMouseOver: this.toggle,
+                onMouseLeave: this.close,
+            },
+            React.createElement('ul', {}, desks),
+        );
 
         // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;

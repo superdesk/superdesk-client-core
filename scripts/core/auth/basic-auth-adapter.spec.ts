@@ -34,38 +34,38 @@ describe('basic auth adapter', () => {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it('can login', (done) => inject((authAdapter, urls, $q) => {
-        $httpBackend
-            .expectPOST(LOGIN_URL, {username: username, password: password})
-            .respond({token: session, user: '1'});
+    it('can login', (done) =>
+        inject((authAdapter, urls, $q) => {
+            $httpBackend
+                .expectPOST(LOGIN_URL, {username: username, password: password})
+                .respond({token: session, user: '1'});
 
-        spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
+            spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
 
-        authAdapter.authenticate(username, password).then((identity) => {
-            expect(urls.resource).toHaveBeenCalledWith('auth_db');
-            expect(identity.token).toBe('Basic ' + btoa(session + ':'));
+            authAdapter.authenticate(username, password).then((identity) => {
+                expect(urls.resource).toHaveBeenCalledWith('auth_db');
+                expect(identity.token).toBe('Basic ' + btoa(session + ':'));
 
-            done();
-        });
+                done();
+            });
 
-        $httpBackend.flush();
-    }));
+            $httpBackend.flush();
+        }));
 
-    it('can reject on failed auth', (done) => inject((authAdapter, urls, $q) => {
-        const onSuccess = jasmine.createSpy('onSuccess');
+    it('can reject on failed auth', (done) =>
+        inject((authAdapter, urls, $q) => {
+            const onSuccess = jasmine.createSpy('onSuccess');
 
+            spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
 
-        spyOn(urls, 'resource').and.returnValue($q.when(LOGIN_URL));
+            $httpBackend.expectPOST(LOGIN_URL).respond(400);
 
-        $httpBackend.expectPOST(LOGIN_URL).respond(400);
-
-        authAdapter.authenticate(username, password)
-            .then(onSuccess, () => {
+            authAdapter.authenticate(username, password).then(onSuccess, () => {
                 expect(onSuccess).not.toHaveBeenCalled();
 
                 done();
             });
 
-        $httpBackend.flush();
-    }));
+            $httpBackend.flush();
+        }));
 });

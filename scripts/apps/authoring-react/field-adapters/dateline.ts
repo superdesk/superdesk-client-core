@@ -1,8 +1,4 @@
-import {
-    IArticle,
-    IAuthoringFieldV2,
-    IFieldAdapter,
-} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 export const dateline: IFieldAdapter<IArticle> = {

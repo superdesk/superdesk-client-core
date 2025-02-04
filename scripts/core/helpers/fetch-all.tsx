@@ -11,7 +11,7 @@ function fetchPage<T extends IBaseRestApiResponse>(
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': authenticationToken,
+            Authorization: authenticationToken,
         },
         mode: 'cors',
     })
@@ -30,8 +30,7 @@ function fetchPage<T extends IBaseRestApiResponse>(
 export function fetchAll<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption): Promise<Array<T>> {
     const sortOption = (sort.direction === 'descending' ? '-' : '') + sort.field;
 
-    return ng.getService('session')
-        .then((session) => {
-            return fetchPage<T>([], endpoint + `?sort=${sortOption}&max_results=200`, session.token);
-        });
+    return ng.getService('session').then((session) => {
+        return fetchPage<T>([], endpoint + `?sort=${sortOption}&max_results=200`, session.token);
+    });
 }

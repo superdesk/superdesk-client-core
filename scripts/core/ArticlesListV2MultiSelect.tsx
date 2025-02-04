@@ -34,9 +34,7 @@ export class MultiSelect extends React.Component<IProps> {
                         const from = Math.min(lastSelectedIndex, currentIndex);
                         const to = Math.max(lastSelectedIndex, currentIndex) + 1;
 
-                        options.selectMultiple(
-                            allItems.slice(from, to).toOrderedMap(),
-                        );
+                        options.selectMultiple(allItems.slice(from, to).toOrderedMap());
                     } else {
                         options.toggle(item);
                     }
@@ -48,26 +46,17 @@ export class MultiSelect extends React.Component<IProps> {
         );
 
         return (
-            <div
-                className="list-field type-icon"
-                data-test-id="item-type-and-multi-select"
-            >
-                {
-                    options.selected.has(generateTrackByIdentifier(item))
-                        ? checkbox
-                        : (
-                            <div className="hover-AB">
-                                <div className="hover-AB--A" style={{display: 'flex'}}>
-                                    <TypeIcon
-                                        type={item.type}
-                                        highlight={item.highlight}
-                                        contentProfileId={item.profile}
-                                    />
-                                </div>
-                                {checkbox}
-                            </div>
-                        )
-                }
+            <div className="list-field type-icon" data-test-id="item-type-and-multi-select">
+                {options.selected.has(generateTrackByIdentifier(item)) ? (
+                    checkbox
+                ) : (
+                    <div className="hover-AB">
+                        <div className="hover-AB--A" style={{display: 'flex'}}>
+                            <TypeIcon type={item.type} highlight={item.highlight} contentProfileId={item.profile} />
+                        </div>
+                        {checkbox}
+                    </div>
+                )}
             </div>
         );
     }

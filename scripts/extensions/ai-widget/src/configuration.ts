@@ -17,4 +17,3 @@ export function configure(fn: (superdesk: ISuperdesk) => IConfigurationOptions) 
 
     Object.assign(configuration, _configuration);
 }
-

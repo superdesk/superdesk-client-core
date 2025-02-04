@@ -41,13 +41,10 @@ export class MediaMetadata extends React.PureComponent<IProps> {
         if (item.renditions?.original?.width != null && item.renditions?.original?.height != null) {
             metadataValues.push({
                 label: gettext('Original size'),
-                value: gettext(
-                    '{{width}} x {{height}} px',
-                    {
-                        width: item.renditions.original.width,
-                        height: item.renditions.original.height,
-                    },
-                ),
+                value: gettext('{{width}} x {{height}} px', {
+                    width: item.renditions.original.width,
+                    height: item.renditions.original.height,
+                }),
             });
         }
 
@@ -60,15 +57,13 @@ export class MediaMetadata extends React.PureComponent<IProps> {
 
         return (
             <div className="field--media--metadata">
-                {
-                    metadataValues.map(({label, value}, i) => (
-                        <div key={i}>
-                            <span className="field--media--metadata-label">{label}</span>
-                            <SpacerBlock h gap="8" />
-                            {value}
-                        </div>
-                    ))
-                }
+                {metadataValues.map(({label, value}, i) => (
+                    <div key={i}>
+                        <span className="field--media--metadata-label">{label}</span>
+                        <SpacerBlock h gap="8" />
+                        {value}
+                    </div>
+                ))}
             </div>
         );
     }

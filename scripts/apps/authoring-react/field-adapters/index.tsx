@@ -121,9 +121,9 @@ export function retrieveStoredValueEditor3Generic(
         if (fromFieldsMeta != null) {
             return fromFieldsMeta;
         } else if (
-            fieldsAdapter[fieldId] != null
-            && typeof article[fieldId] === 'string'
-            && article[fieldId].length > 0
+            fieldsAdapter[fieldId] != null &&
+            typeof article[fieldId] === 'string' &&
+            article[fieldId].length > 0
         ) {
             /**
              * This is only for compatibility with angular based authoring.
@@ -149,8 +149,7 @@ export function storeEditor3ValueBase(
     value: any, // IEditor3ValueStorage
     config: IEditor3Config,
     plainTextInMultiLineMode?: boolean,
-)
-: {article: IArticle; stringValue: string; annotations: Array<any>} {
+): {article: IArticle; stringValue: string; annotations: Array<any>} {
     const rawContentState = value.rawContentState;
 
     const {stringValue, annotations} = computeEditor3Output(
@@ -209,17 +208,10 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
 
                     return fieldV2;
                 },
-                retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
-                    fieldId,
-                    item,
-                    authoringStorage,
-                ),
-                storeValue: (value, article, config) => storeEditor3ValueGeneric(
-                    fieldId,
-                    value as IEditor3ValueStorage,
-                    article,
-                    config,
-                ),
+                retrieveStoredValue: (item: IArticle) =>
+                    retrieveStoredValueEditor3Generic(fieldId, item, authoringStorage),
+                storeValue: (value, article, config) =>
+                    storeEditor3ValueGeneric(fieldId, value as IEditor3ValueStorage, article, config),
             };
         } else if (vocabulary.field_type === 'date') {
             adapter[vocabulary._id] = {
@@ -289,11 +281,11 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
                         showTitleEditingInput: false,
                         allowedWorkflows: {
                             inProgress:
-                                vocabulary.field_options?.allowed_workflows?.in_progress
-                                    ?? defaultAllowedWorkflows.in_progress,
+                                vocabulary.field_options?.allowed_workflows?.in_progress ??
+                                defaultAllowedWorkflows.in_progress,
                             published:
-                                vocabulary.field_options?.allowed_workflows?.published
-                                    ?? defaultAllowedWorkflows.published,
+                                vocabulary.field_options?.allowed_workflows?.published ??
+                                defaultAllowedWorkflows.published,
                         },
                     };
 
@@ -331,8 +323,10 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
                 },
 
                 retrieveStoredValue: (item): ILinkedItemsValueOperational => {
-                    return getRelatedArticles(item.associations, vocabulary._id)
-                        .map(({_id, type}) => ({id: _id, type}));
+                    return getRelatedArticles(item.associations, vocabulary._id).map(({_id, type}) => ({
+                        id: _id,
+                        type,
+                    }));
                 },
 
                 storeValue: (val: ILinkedItemsValueOperational, article) => {
@@ -348,11 +342,13 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
         }
     }
 
-    sdApi.vocabularies.getAll()
-        .filter((vocabulary) =>
-            vocabulary._id !== 'footers' &&
-            adapter[vocabulary._id] == null
-            && sdApi.vocabularies.isSelectionVocabulary(vocabulary),
+    sdApi.vocabularies
+        .getAll()
+        .filter(
+            (vocabulary) =>
+                vocabulary._id !== 'footers' &&
+                adapter[vocabulary._id] == null &&
+                sdApi.vocabularies.isSelectionVocabulary(vocabulary),
         )
         .forEach((vocabulary) => {
             const multiple = vocabulary.selection_type === 'multi selection';
@@ -395,24 +391,23 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
                         scheme: string;
                     }
 
-                    const qcodes = new Set((() => {
-                        if (val == null) {
-                            return [];
-                        } else if (Array.isArray(val)) {
-                            return val;
-                        } else {
-                            return [val];
-                        }
-                    })());
-
-                    const vocabularyItems = vocabulary.items.filter(
-                        (_voc) => qcodes.has(_voc.qcode),
+                    const qcodes = new Set(
+                        (() => {
+                            if (val == null) {
+                                return [];
+                            } else if (Array.isArray(val)) {
+                                return val;
+                            } else {
+                                return [val];
+                            }
+                        })(),
                     );
+
+                    const vocabularyItems = vocabulary.items.filter((_voc) => qcodes.has(_voc.qcode));
 
                     return {
                         ...article,
-                        subject:
-                        (article.subject ?? [])
+                        subject: (article.subject ?? [])
                             .filter(({scheme}) => scheme !== vocabulary._id)
                             .concat(
                                 vocabularyItems.map(({qcode, name, parent}) => {

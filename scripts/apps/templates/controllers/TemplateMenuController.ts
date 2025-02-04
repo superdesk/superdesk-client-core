@@ -7,7 +7,7 @@ export function TemplateMenuController($modal) {
             controller: 'CreateTemplateController',
             controllerAs: 'template',
             resolve: {
-                item: function() {
+                item: function () {
                     return item;
                 },
             },

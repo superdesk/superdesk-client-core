@@ -15,15 +15,14 @@ import {gettext, gettextPlural} from 'core/utils';
  *
  * @description Confirm Service is responsible for displaying user prompts for content authoring.
  */
-ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal',
-    '$interpolate', '$modal'];
+ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal', '$interpolate', '$modal'];
 export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpolate, $modal) {
     /**
      * Will ask for user confirmation for user confirmation if there are some changes which are not saved.
      * - Detecting changes via $scope.dirty - it's up to the controller to set it.
      */
     this.setupWindow = function setupWindow($scope) {
-        $window.onbeforeunload = function() {
+        $window.onbeforeunload = function () {
             if ($scope.dirty) {
                 return gettext('There are unsaved changes. If you navigate away, your changes will be lost.');
             }
@@ -53,7 +52,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     /**
      * In case $scope is dirty ask user if he want's to save changes and publish.
      */
-    this.confirmPublish = function() {
+    this.confirmPublish = function () {
         return modal.confirm(
             gettext('There are some unsaved changes, do you want to save and publish it now?'),
             gettext('Save changes?'),
@@ -76,10 +75,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
 
     this.confirmSaveWork = function confirmSavework(message) {
         return modal.confirm(
-            gettext(
-                'Configuration has changed. {{message}} Would you like to save the story to your workspace?',
-                {message},
-            ),
+            gettext('Configuration has changed. {{message}} Would you like to save the story to your workspace?', {
+                message,
+            }),
         );
     };
 
@@ -92,16 +90,12 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     this.unlock = function unlock(userId, headline) {
         api.find('users', userId).then((user) => {
             var username = $filter('username')(user);
-            var msg = headline ?
-                gettext(
-                    'Item {{headline}} was unlocked by {{username}}.',
-                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`},
-                )
-                :
-                gettext(
-                    'This item was unlocked by {{username}}.',
-                    {username: `<b>${username}</b>`},
-                );
+            var msg = headline
+                ? gettext('Item {{headline}} was unlocked by {{username}}.', {
+                      headline: `<b>${headline}</b>`,
+                      username: `<b>${username}</b>`,
+                  })
+                : gettext('This item was unlocked by {{username}}.', {username: `<b>${username}</b>`});
 
             return modal.confirm(msg, gettext('Item Unlocked'), gettext('OK'), false);
         });
@@ -129,29 +123,33 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
      * @description Prompts the user to add the associated media to the Update.
      * @param {Object} item
      */
-    this.confirmFeatureMedia = function(item) {
+    this.confirmFeatureMedia = function (item) {
         const defered = $q.defer();
 
         $modal.open({
             templateUrl: 'scripts/apps/authoring/views/confirm-media-associated.html',
-            controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
-                $scope.item = item;
+            controller: [
+                '$scope',
+                '$modalInstance',
+                function ($scope, $modalInstance) {
+                    $scope.item = item;
 
-                $scope.useMedia = function() {
-                    defered.resolve($scope.item);
-                    $modalInstance.close();
-                };
+                    $scope.useMedia = function () {
+                        defered.resolve($scope.item);
+                        $modalInstance.close();
+                    };
 
-                $scope.cancel = function() {
-                    defered.reject(false);
-                    $modalInstance.dismiss();
-                };
+                    $scope.cancel = function () {
+                        defered.reject(false);
+                        $modalInstance.dismiss();
+                    };
 
-                $scope.publishWithoutMedia = function() {
-                    defered.resolve({});
-                    $modalInstance.dismiss();
-                };
-            }],
+                    $scope.publishWithoutMedia = function () {
+                        defered.resolve({});
+                        $modalInstance.dismiss();
+                    };
+                },
+            ],
         });
 
         return defered.promise;

@@ -6,10 +6,10 @@ import {IArticle} from 'superdesk-api';
 
 export function copyEmbeddedArticlesIntoAssociations(contentState: ContentState, article: IArticle): void {
     /**
-    * Putting embedded article into associations.
-    * It's meant for external use after item is published.
-    * see {@link AtomicBlockParser.parse}
-    */
+     * Putting embedded article into associations.
+     * It's meant for external use after item is published.
+     * see {@link AtomicBlockParser.parse}
+     */
     getEntityMap(contentState).forEach((entity) => {
         if (entity.getType() === CustomEditor3Entity.ARTICLE_EMBED) {
             const data = entity.getData() as IEditorDragDropArticleEmbed['data'];

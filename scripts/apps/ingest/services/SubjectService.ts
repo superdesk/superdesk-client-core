@@ -7,15 +7,14 @@ export function SubjectService(api) {
         qcodeLookup: {},
         subjects: [],
         fetched: null,
-        fetchSubjects: function() {
+        fetchSubjects: function () {
             var self = this;
 
-            return api.get('/subjectcodes')
-                .then((result) => {
-                    self.rawSubjects = result;
-                });
+            return api.get('/subjectcodes').then((result) => {
+                self.rawSubjects = result;
+            });
         },
-        process: function() {
+        process: function () {
             var self = this;
 
             _.each(this.rawSubjects._items, (item) => {
@@ -27,7 +26,7 @@ export function SubjectService(api) {
 
             return this.subjects;
         },
-        getPath: function(item) {
+        getPath: function (item) {
             var path = '';
 
             if (item.parent) {
@@ -35,10 +34,9 @@ export function SubjectService(api) {
             }
             return path;
         },
-        initialize: function() {
+        initialize: function () {
             if (!this.fetched) {
-                this.fetched = this.fetchSubjects()
-                    .then(angular.bind(this, this.process));
+                this.fetched = this.fetchSubjects().then(angular.bind(this, this.process));
             }
             return this.fetched;
         },

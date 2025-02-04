@@ -15,10 +15,7 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
     this.extraItems = [];
     this.registerExtraItem = registerExtraItem;
     this.confirmAndDelete = (workspace) => {
-        modal.confirm(
-            gettext('Are you sure you want to delete current workspace?'),
-        )
-            .then(() => this.delete(workspace));
+        modal.confirm(gettext('Are you sure you want to delete current workspace?')).then(() => this.delete(workspace));
     };
 
     var PREFERENCE_KEY = 'workspace:active',
@@ -39,7 +36,8 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
     }
 
     function _delete(workspace) {
-        return api.remove(workspace)
+        return api
+            .remove(workspace)
             .then(() => {
                 if (!self.active || self.active._id !== workspace._id) {
                     return $q.when();
@@ -109,7 +107,7 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
      * @return {Promise}
      */
     function getActiveWorkspaceId() {
-        return preferences.get(PREFERENCE_KEY).then((prefs) => prefs && prefs.workspace ? prefs.workspace : null);
+        return preferences.get(PREFERENCE_KEY).then((prefs) => (prefs && prefs.workspace ? prefs.workspace : null));
     }
 
     /**
@@ -121,7 +119,8 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
      * @return {Promise}
      */
     function readActiveWorkspaceId() {
-        return desks.initialize()
+        return desks
+            .initialize()
             .then(getActiveWorkspaceId)
             .then((activeId) => {
                 var type = null;
@@ -156,14 +155,13 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
      * @return {Promise}
      */
     function readActiveWorkspace() {
-        return readActiveWorkspaceId()
-            .then((activeWorkspace) => {
-                if (activeWorkspace.type === 'desk') {
-                    return getDeskWorkspace(activeWorkspace.id);
-                } else if (activeWorkspace.type === 'workspace') {
-                    return findWorkspace(activeWorkspace.id);
-                }
-            });
+        return readActiveWorkspaceId().then((activeWorkspace) => {
+            if (activeWorkspace.type === 'desk') {
+                return getDeskWorkspace(activeWorkspace.id);
+            } else if (activeWorkspace.type === 'workspace') {
+                return findWorkspace(activeWorkspace.id);
+            }
+        });
     }
 
     /**
@@ -233,7 +231,9 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
      * @return {Promise}
      */
     function queryUserWorkspaces() {
-        return session.getIdentity().then((identity) => api.query(RESOURCE, {where: {user: identity._id}}))
+        return session
+            .getIdentity()
+            .then((identity) => api.query(RESOURCE, {where: {user: identity._id}}))
             .then((response) => response._items);
     }
 }

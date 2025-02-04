@@ -25,12 +25,14 @@ export class DestinationSelect extends React.PureComponent<IProps> {
     render() {
         const selectedDestination = this.props.value;
         const destinationPersonalSpace: {id: string; label: string} = {
-            id: PERSONAL_SPACE, label: gettext('Personal space'),
+            id: PERSONAL_SPACE,
+            label: gettext('Personal space'),
         };
 
         const allDesks = this.props.availableDesks ?? sdApi.desks.getAllDesks();
-        let destinations: Array<{id: string; label: string}> =
-            allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
+        let destinations: Array<{id: string; label: string}> = allDesks
+            .toArray()
+            .map((desk) => ({id: desk._id, label: desk.name}));
 
         if (this.props.includePersonalSpace) {
             destinations.push(destinationPersonalSpace);
@@ -80,45 +82,43 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                         data-test-id="destination-select"
                     />
                 </div>
-                {
-                    (selectedDestination.type === 'desk' && this.props.hideStages !== true) && (
-                        <div>
-                            <br />
-                            <FormLabel text={gettext('Stage')} />
-                            <RadioButtonGroup
-                                onChange={
-                                    (stageId) => this.props.onChange({
-                                        ...selectedDestination,
-                                        stage: stageId,
-                                    })
-                                }
-                                value={selectedDestination.stage}
-                                group={{
-                                    grid: true,
-                                    padded: false,
-                                    orientation: 'horizontal',
-                                }}
-                                options={
-                                    sdApi.desks.getDeskStages(selectedDestination.desk).toArray()
-                                        .filter((stage) => {
-                                            if (stage.is_visible === true) {
-                                                return true;
-                                            } else {
-                                                return userDesksIds.has(selectedDestination.desk);
-                                            }
-                                        })
-                                        .map((stage) => ({
-                                            label: stage.name,
-                                            value: stage._id,
-                                            icon: 'ok',
-                                            disabled: (this.props.disallowedStages ?? []).includes(stage._id),
-                                        }))
-                                }
-                                data-test-id="stage-select"
-                            />
-                        </div>
-                    )
-                }
+                {selectedDestination.type === 'desk' && this.props.hideStages !== true && (
+                    <div>
+                        <br />
+                        <FormLabel text={gettext('Stage')} />
+                        <RadioButtonGroup
+                            onChange={(stageId) =>
+                                this.props.onChange({
+                                    ...selectedDestination,
+                                    stage: stageId,
+                                })
+                            }
+                            value={selectedDestination.stage}
+                            group={{
+                                grid: true,
+                                padded: false,
+                                orientation: 'horizontal',
+                            }}
+                            options={sdApi.desks
+                                .getDeskStages(selectedDestination.desk)
+                                .toArray()
+                                .filter((stage) => {
+                                    if (stage.is_visible === true) {
+                                        return true;
+                                    } else {
+                                        return userDesksIds.has(selectedDestination.desk);
+                                    }
+                                })
+                                .map((stage) => ({
+                                    label: stage.name,
+                                    value: stage._id,
+                                    icon: 'ok',
+                                    disabled: (this.props.disallowedStages ?? []).includes(stage._id),
+                                }))}
+                            data-test-id="stage-select"
+                        />
+                    </div>
+                )}
             </div>
         );
     }

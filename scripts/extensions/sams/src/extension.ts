@@ -13,19 +13,23 @@ const extension: IExtension = {
 
         const result: IExtensionActivationResult = {
             contributions: {
-                pages: [{
-                    title: gettext('SAMS'),
-                    url: '/workspace/sams',
-                    component: SamsWorkspaceApp,
-                    showTopMenu: true,
-                    showSideMenu: true,
-                    addToMainMenu: false,
-                    addToSideMenu: superdesk.privileges.hasPrivilege('sams') ? {
-                        icon: 'picture',
-                        keyBinding: 'ctrl+alt+s',
-                        order: 1000,
-                    } : undefined,
-                }],
+                pages: [
+                    {
+                        title: gettext('SAMS'),
+                        url: '/workspace/sams',
+                        component: SamsWorkspaceApp,
+                        showTopMenu: true,
+                        showSideMenu: true,
+                        addToMainMenu: false,
+                        addToSideMenu: superdesk.privileges.hasPrivilege('sams')
+                            ? {
+                                  icon: 'picture',
+                                  keyBinding: 'ctrl+alt+s',
+                                  order: 1000,
+                              }
+                            : undefined,
+                    },
+                ],
             },
         };
 

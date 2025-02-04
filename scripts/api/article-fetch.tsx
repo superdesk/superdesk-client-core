@@ -113,20 +113,17 @@ export function fetchItems(
                         footerButtons={actions}
                     >
                         <div>
-                            {
-                                gettextPlural(
-                                    invalidItems.length,
-                                    '{{n}} images can not be fetched because they are too small.',
-                                    'One image can not be fetched because it is too small.',
-                                    {n: invalidItems.length},
-                                ) + ' ' + gettext(
-                                    'Minimum allowed image size is {{minWidth}}x{{minHeight}}',
-                                    {
-                                        minWidth: appConfig.pictures.minWidth,
-                                        minHeight: appConfig.pictures.minHeight,
-                                    },
-                                )
-                            }
+                            {gettextPlural(
+                                invalidItems.length,
+                                '{{n}} images can not be fetched because they are too small.',
+                                'One image can not be fetched because it is too small.',
+                                {n: invalidItems.length},
+                            ) +
+                                ' ' +
+                                gettext('Minimum allowed image size is {{minWidth}}x{{minHeight}}', {
+                                    minWidth: appConfig.pictures.minWidth,
+                                    minHeight: appConfig.pictures.minHeight,
+                                })}
 
                             <h4>{gettext('Items that can not be fetched')}</h4>
 
@@ -138,15 +135,13 @@ export function fetchItems(
                                 </thead>
 
                                 <tbody>
-                                    {
-                                        invalidItems.map(({name, width, height}, i) => (
-                                            <tr key={i}>
-                                                <td>{name}</td>
-                                                <td>{width}</td>
-                                                <td>{height}</td>
-                                            </tr>
-                                        ))
-                                    }
+                                    {invalidItems.map(({name, width, height}, i) => (
+                                        <tr key={i}>
+                                            <td>{name}</td>
+                                            <td>{width}</td>
+                                            <td>{height}</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
@@ -160,14 +155,9 @@ export function fetchItems(
 export function fetchItemsToCurrentDesk(items: Array<IArticle>) {
     const currentDeskId = sdApi.desks.getCurrentDeskId();
 
-    return fetchItems(
-        items,
-        {
-            type: 'desk',
-            desk: currentDeskId,
-            stage: sdApi.desks.getDeskStages(currentDeskId).find(
-                (stage) => stage.default_incoming === true,
-            )._id,
-        },
-    );
+    return fetchItems(items, {
+        type: 'desk',
+        desk: currentDeskId,
+        stage: sdApi.desks.getDeskStages(currentDeskId).find((stage) => stage.default_incoming === true)._id,
+    });
 }

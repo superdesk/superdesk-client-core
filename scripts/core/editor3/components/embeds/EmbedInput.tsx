@@ -140,19 +140,14 @@ export class EmbedInputComponent extends React.Component<IProps, any> {
         const {error} = this.state;
 
         return (
-            <form
-                data-test-id="embed-form"
-                onSubmit={this.onSubmit}
-                className="embed-dialog"
-                onKeyUp={this.onKeyUp}
-            >
+            <form data-test-id="embed-form" onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
                 <OverlayTrigger
-                    overlay={(
+                    overlay={
                         <Tooltip id="create_new_embed_tooltip">
                             <p>{gettext('To get a responsive embed code, paste a URL.')}</p>
                             <p>{gettext('If you paste an embed code, it will be used "as is".')}</p>
                         </Tooltip>
-                    )}
+                    }
                 >
                     <i className="icon-info-sign icon--blue sd-margin-x--1" />
                 </OverlayTrigger>

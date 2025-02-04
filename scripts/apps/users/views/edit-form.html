@@ -2,25 +2,80 @@
     <div>
         <div class="action-bar" ng-class="{show:dirty}" data-test-id="action-bar">
             <div class="button-group button-group--end button-group--comfort">
-                <button id="cancel-edit-btn" type="button" class="btn" ng-click="cancel()" ng-disabled="!dirty" translate data-test-id="cancel">Cancel</button>
-                <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">Save</button>
+                <button
+                    id="cancel-edit-btn"
+                    type="button"
+                    class="btn"
+                    ng-click="cancel()"
+                    ng-disabled="!dirty"
+                    translate
+                    data-test-id="cancel"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="save-edit-btn"
+                    type="submit"
+                    class="btn btn--primary"
+                    ng-click="userForm.$valid && save()"
+                    ng-disabled="userForm.$invalid || !dirty"
+                    translate
+                    data-test-id="save"
+                >
+                    Save
+                </button>
             </div>
         </div>
 
         <div class="profile-info editmode">
             <div class="profile-info__navigation">
                 <nav class="sd-left-nav sd-left-nav--blanc sd-width--xxx-small sd-margin-t--3">
-                    <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': !activeNavigation || checkNavigation('user-general')}" ng-click="goTo('user-general')" translate>General</button>
-                    <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('user-password')}" ng-click="goTo('user-password')" translate>Password</button>
-                    <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('user-desk')}" ng-click="goTo('user-desk')" translate>Default desk</button>
-                    <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('user-language')}" ng-click="goTo('user-language')" translate>Language</button>
-                    <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('authorDetails')}" ng-click="goTo('authorDetails')" ng-show="user.is_author" translate>Author info</button>
+                    <button
+                        class="sd-left-nav__btn"
+                        ng-class="{'sd-left-nav__btn--active': !activeNavigation || checkNavigation('user-general')}"
+                        ng-click="goTo('user-general')"
+                        translate
+                    >
+                        General
+                    </button>
+                    <button
+                        class="sd-left-nav__btn"
+                        ng-class="{'sd-left-nav__btn--active': checkNavigation('user-password')}"
+                        ng-click="goTo('user-password')"
+                        translate
+                    >
+                        Password
+                    </button>
+                    <button
+                        class="sd-left-nav__btn"
+                        ng-class="{'sd-left-nav__btn--active': checkNavigation('user-desk')}"
+                        ng-click="goTo('user-desk')"
+                        translate
+                    >
+                        Default desk
+                    </button>
+                    <button
+                        class="sd-left-nav__btn"
+                        ng-class="{'sd-left-nav__btn--active': checkNavigation('user-language')}"
+                        ng-click="goTo('user-language')"
+                        translate
+                    >
+                        Language
+                    </button>
+                    <button
+                        class="sd-left-nav__btn"
+                        ng-class="{'sd-left-nav__btn--active': checkNavigation('authorDetails')}"
+                        ng-click="goTo('authorDetails')"
+                        ng-show="user.is_author"
+                        translate
+                    >
+                        Author info
+                    </button>
                 </nav>
             </div>
             <div class="profile-info__content">
                 <!-- General content -->
                 <div class="details-info">
-
                     <div
                         id="user-general"
                         class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--gradient-1 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3"
@@ -28,16 +83,37 @@
                         <div class="header-info">
                             <div class="sd-container sd-container--flex">
                                 <span class="sd-margin-e--auto">
-                                    <span class="label label--translucent label--alert" ng-if="user._id && !user.is_enabled" translate>disabled</span>
-                                    <span class="label label--translucent label--warning" ng-if="user._id && user.is_enabled && !user.is_active" translate>inactive</span>
-                                    <span class="label label--translucent label--success" ng-if="user._id && user.is_enabled && user.is_active" translate>active</span>
+                                    <span
+                                        class="label label--translucent label--alert"
+                                        ng-if="user._id && !user.is_enabled"
+                                        translate
+                                        >disabled</span
+                                    >
+                                    <span
+                                        class="label label--translucent label--warning"
+                                        ng-if="user._id && user.is_enabled && !user.is_active"
+                                        translate
+                                        >inactive</span
+                                    >
+                                    <span
+                                        class="label label--translucent label--success"
+                                        ng-if="user._id && user.is_enabled && user.is_active"
+                                        translate
+                                        >active</span
+                                    >
                                 </span>
-                                <div class="active"
+                                <div
+                                    class="active"
                                     ng-show="user.is_enabled"
                                     ng-if="!profile && user._id && !dirty"
                                     sd-tooltip="{{ _active ? 'Deactivate user' : 'Activate user' | translate }}"
-                                    flow="left">
-                                    <span sd-switch ng-model="user.is_active" ng-click="toggleStatus(user.is_active)"></span>
+                                    flow="left"
+                                >
+                                    <span
+                                        sd-switch
+                                        ng-model="user.is_active"
+                                        ng-click="toggleStatus(user.is_active)"
+                                    ></span>
                                 </div>
                             </div>
                             <div class="profile-pic">
@@ -47,28 +123,59 @@
                                         ng-if="canChangeAvatar"
                                         class="icn-btn"
                                         aria-label="{{'Change avatar' | translate }}"
-                                        ng-click="editPicture()">
+                                        ng-click="editPicture()"
+                                    >
                                         <i class="icon-photo" aria-label="edit" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
                             <h2>{{ user.display_name}}</h2>
                             <h5>{{ user.username}}</h5>
-                            <div class="field__member_since sd-text sd-text--normal sd-text-align--center sd-text--sans sd-text-color--light sd-margin-b--1-5 sd-font-size--small" sd-info-item ng-show="user._id">
+                            <div
+                                class="field__member_since sd-text sd-text--normal sd-text-align--center sd-text--sans sd-text-color--light sd-margin-b--1-5 sd-font-size--small"
+                                sd-info-item
+                                ng-show="user._id"
+                            >
                                 <span for="created" translate>Member since</span>
-                                <span id="created" class="info-value date-time" sd-reldate datetime="user._created"></span>
+                                <span
+                                    id="created"
+                                    class="info-value date-time"
+                                    sd-reldate
+                                    datetime="user._created"
+                                ></span>
                             </div>
-                            <div class="button-group button-group--center button-group--compact sd-margin-b--2 sd-flex--wrap sd-flex--justify-center">
-                                <div class="tag-label" ng-if="roles[user.role]" translate>{{roles[user.role].name}}</div>
+                            <div
+                                class="button-group button-group--center button-group--compact sd-margin-b--2 sd-flex--wrap sd-flex--justify-center"
+                            >
+                                <div class="tag-label" ng-if="roles[user.role]" translate>
+                                    {{roles[user.role].name}}
+                                </div>
                                 <div class="tag-label" ng-show="user.is_author" translate>Author</div>
-                                <div class="tag-label tag-label--highlight1" ng-show="user.user_type == 'administrator'" translate>Administrator</div>
+                                <div
+                                    class="tag-label tag-label--highlight1"
+                                    ng-show="user.user_type == 'administrator'"
+                                    translate
+                                >
+                                    Administrator
+                                </div>
                             </div>
                         </div>
-                        <div class="field__full_name form__group form__group--default form__group--mb-3" sd-info-item ng-show="user._id">
+                        <div
+                            class="field__full_name form__group form__group--default form__group--mb-3"
+                            sd-info-item
+                            ng-show="user._id"
+                        >
                             <div class="form__item">
                                 <div class="sd-input sd-input--disabled">
                                     <label class="sd-input__label" for="display-name" translate>full name</label>
-                                    <input class="sd-input__input" type="text" name="fullName" id="display-name" ng-model="user.display_name" disabled>
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="fullName"
+                                        id="display-name"
+                                        ng-model="user.display_name"
+                                        disabled
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -77,9 +184,24 @@
                             <div class="form__item">
                                 <div class="sd-input sd-input--required">
                                     <label class="sd-input__label" for="first-name" translate>first name</label>
-                                    <input class="sd-input__input" type="text" name="first_name" id="first-name" ng-model="user.first_name" required ng-readonly="user._readonly && user._readonly.first_name" data-test-id="field--first_name">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="first_name"
+                                        id="first-name"
+                                        ng-model="user.first_name"
+                                        required
+                                        ng-readonly="user._readonly && user._readonly.first_name"
+                                        data-test-id="field--first_name"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div ng-show="userForm.first_name.$error.required" class="sd-input__message" translate>This field is required.</div>
+                                        <div
+                                            ng-show="userForm.first_name.$error.required"
+                                            class="sd-input__message"
+                                            translate
+                                        >
+                                            This field is required.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -89,9 +211,24 @@
                             <div class="form__item">
                                 <div class="sd-input sd-input--required">
                                     <label class="sd-input__label" for="last-name" translate>last name</label>
-                                    <input class="sd-input__input" type="text" name="last_name" id="last-name" ng-model="user.last_name" required ng-readonly="user._readonly && user._readonly.last_name" data-test-id="field--last_name">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="last_name"
+                                        id="last-name"
+                                        ng-model="user.last_name"
+                                        required
+                                        ng-readonly="user._readonly && user._readonly.last_name"
+                                        data-test-id="field--last_name"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__message" ng-show="userForm.last_name.$error.required" translate>This field is required.</div>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.last_name.$error.required"
+                                            translate
+                                        >
+                                            This field is required.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -101,22 +238,49 @@
                             <div class="form__item">
                                 <div class="sd-input sd-input--required">
                                     <label class="sd-input__label" for="username" translate>username</label>
-                                    <input class="sd-input__input" type="text" name="username" id="username"
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="username"
+                                        id="username"
                                         ng-model="user.username"
                                         ng-model-options="{
                                             updateOn: 'default blur',
                                                     debounce: {'default': 500, 'blur': 0} }"
                                         ng-readonly="user._id"
                                         ng-pattern="usernamePattern"
-                                        sd-user-unique data-unique-field="username" data-exclude="user"
+                                        sd-user-unique
+                                        data-unique-field="username"
+                                        data-exclude="user"
                                         required
-                                        data-test-id="field--username">
+                                        data-test-id="field--username"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__message" ng-show="userForm.username.$error.required" translate>This field is required.</div>
-                                        <div class="sd-input__message" ng-show="userForm.username.$error.unique || error.username.conflict" sd-valid-error translate>sorry, this username is already taken.</div>
-                                        <div class="sd-input__message" ng-show="userForm.username.$error.pattern" sd-valid-info>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.username.$error.required"
+                                            translate
+                                        >
+                                            This field is required.
+                                        </div>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.username.$error.unique || error.username.conflict"
+                                            sd-valid-error
+                                            translate
+                                        >
+                                            sorry, this username is already taken.
+                                        </div>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.username.$error.pattern"
+                                            sd-valid-info
+                                        >
                                             <i class="icon-info-sign-warning"></i>
-                                            <span translate>please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores (_), apostrophes (') and periods (.)</span>
+                                            <span translate
+                                                >please use only letters (a-z), numbers (0-9), dashes (&mdash;),
+                                                underscores (_), apostrophes (') and periods (.)</span
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -127,15 +291,32 @@
                             <div class="form__item">
                                 <div class="sd-input sd-input--required">
                                     <label class="sd-input__label" for="email" translate>email</label>
-                                    <input class="sd-input__input" type="email" name="email" id="email"
+                                    <input
+                                        class="sd-input__input"
+                                        type="email"
+                                        name="email"
+                                        id="email"
                                         ng-model="user.email"
-                                        sd-user-unique data-unique-field="email" data-exclude="user"
+                                        sd-user-unique
+                                        data-unique-field="email"
+                                        data-exclude="user"
                                         ng-readonly="user._readonly && user._readonly.email"
                                         required
-                                        data-test-id="field--email">
+                                        data-test-id="field--email"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__message" ng-show="userForm.email.$error.required" translate>This field is required.</div>
-                                        <div class="sd-input__message" ng-show="userForm.email.$error.email" sd-valid-info>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.email.$error.required"
+                                            translate
+                                        >
+                                            This field is required.
+                                        </div>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.email.$error.email"
+                                            sd-valid-info
+                                        >
                                             <i class="icon-info-sign-warning"></i>
                                             <span translate>please provide a valid email address</span>
                                         </div>
@@ -143,82 +324,193 @@
                                             <i class="icon-info-sign-warning"></i>
                                             <span translate>{{error.email}}</span>
                                         </div>
-                                        <div class="sd-input__message" ng-show="userForm.email.$error.unique || error.email.unique" sd-valid-error translate>sorry, a user with this email already exists</div>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.email.$error.unique || error.email.unique"
+                                            sd-valid-error
+                                            translate
+                                        >
+                                            sorry, a user with this email already exists
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="user_role field__role form__group form__group--default form__group--mb-3" sd-info-item>
+                        <div
+                            class="user_role field__role form__group form__group--default form__group--mb-3"
+                            sd-info-item
+                        >
                             <div class="form__item">
                                 <div class="sd-input sd-input--is-select">
                                     <label class="sd-input__label" for="user_role" translate>Role</label>
-                                    <select class="sd-input__select"
-                                            ng-focus="focused()"
-                                            ng-disabled="!privileges.users"
-                                            ng-model="user.role"
-                                            name="user_role"
-                                            id="user_role"
-                                            ng-options="role._id as role.name for role in roles">
-                                    </select>
+                                    <select
+                                        class="sd-input__select"
+                                        ng-focus="focused()"
+                                        ng-disabled="!privileges.users"
+                                        ng-model="user.role"
+                                        name="user_role"
+                                        id="user_role"
+                                        ng-options="role._id as role.name for role in roles"
+                                    ></select>
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="user_type sd-check__group-new sd-check__group-new--vertical" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
-                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{ :: 'Administrator'|translate }}</sd-check>
-                            <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
-                            <sd-check ng-if="user.is_author" ng-model="user.private" name="user_private" id="user_private">{{'Private' | translate }}</sd-check>
+                        <div
+                            sd-info-item
+                            class="user_type sd-check__group-new sd-check__group-new--vertical"
+                            ng-if="privileges.users && isNetworkSubscription()"
+                            style="margin-bottom: 20px"
+                        >
+                            <sd-check
+                                ng-true-value="administrator"
+                                ng-false-value="user"
+                                ng-model="user.user_type"
+                                name="user_type"
+                                id="user_type"
+                                >{{ :: 'Administrator'|translate }}</sd-check
+                            >
+                            <sd-check ng-model="user.is_author" name="user_author" id="user_author"
+                                >{{ :: 'Author'|translate }}</sd-check
+                            >
+                            <sd-check
+                                ng-if="user.is_author"
+                                ng-model="user.private"
+                                name="user_private"
+                                id="user_private"
+                                >{{'Private' | translate }}</sd-check
+                            >
                         </div>
 
-                        <div class="field__phone_number form__group form__group--default form__group--mb-3" sd-info-item  ng-hide="profileConfig.phone === false">
+                        <div
+                            class="field__phone_number form__group form__group--default form__group--mb-3"
+                            sd-info-item
+                            ng-hide="profileConfig.phone === false"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="phone" translate>phone number</label>
-                                    <input class="sd-input__input" type="text" name="phone" id="phone" ng-model="user.phone">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="phone"
+                                        id="phone"
+                                        ng-model="user.phone"
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form__group form__group--default form__group--mb-3" ng-hide="profileConfig.jid === false || !xmppEnabled">
+                        <div
+                            class="form__group form__group--default form__group--mb-3"
+                            ng-hide="profileConfig.jid === false || !xmppEnabled"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="jid" translate>Jabber Identifier (JID)</label>
-                                    <input class="sd-input__input" type="text" name="jid" id="jid" ng-model="user.jid">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="jid"
+                                        id="jid"
+                                        ng-model="user.jid"
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form__group form__group--default form__group--mb-3" ng-hide="!$root.config.features.slackNotifications">
+                        <div
+                            class="form__group form__group--default form__group--mb-3"
+                            ng-hide="!$root.config.features.slackNotifications"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="slack_username">Slack Username</label>
-                                    <input class="sd-input__input" type="text" name="slack_username" id="slack_username" ng-model="user.slack_username">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="slack_username"
+                                        id="slack_username"
+                                        ng-model="user.slack_username"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <span class="sd-input__hint" translate>Your Slack user name without the leading @</span>
+                                        <span class="sd-input__hint" translate
+                                            >Your Slack user name without the leading @</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <h3 id="user-password" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Password</h3>
-                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--3">
-                        <div sd-info-item class="password button-group button-group--center button-group--comfort" ng-if="features.reset_user_password && user._id && !profile && user.is_enabled && _active" id="password-reset-trigger">
-                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.reset_password = !show.reset_password" ng-show="!show.reset_password" translate>reset password</span>
+                    <h3
+                        id="user-password"
+                        class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5"
+                        translate
+                    >
+                        Password
+                    </h3>
+                    <div
+                        class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3"
+                    >
+                        <div
+                            sd-info-item
+                            class="password button-group button-group--center button-group--comfort"
+                            ng-if="features.reset_user_password && user._id && !profile && user.is_enabled && _active"
+                            id="password-reset-trigger"
+                        >
+                            <span
+                                class="change-btn btn btn--hollow btn--primary"
+                                ng-click="show.reset_password = !show.reset_password"
+                                ng-show="!show.reset_password"
+                                translate
+                                >reset password</span
+                            >
                         </div>
-                        <div sd-info-item class="password button-group button-group--center button-group--comfort" ng-if="features.reset_user_password && user._id && profile" id="password-change-trigger">
-                            <span class="change-btn btn btn--hollow btn--primary" ng-click="show.change_password = !show.change_password" ng-show="!show.change_password" translate>change password</span>
+                        <div
+                            sd-info-item
+                            class="password button-group button-group--center button-group--comfort"
+                            ng-if="features.reset_user_password && user._id && profile"
+                            id="password-change-trigger"
+                        >
+                            <span
+                                class="change-btn btn btn--hollow btn--primary"
+                                ng-click="show.change_password = !show.change_password"
+                                ng-show="!show.change_password"
+                                translate
+                                >change password</span
+                            >
                         </div>
                     </div>
 
-                    <h3  id="user-desk" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Default desk</h3>
-                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3">
-                        <div sd-info-item class="form__group form__group--default form__group--mb-0 form__group--inline-label" ng-if="userDesks && userDesks.length > 0">
+                    <h3
+                        id="user-desk"
+                        class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5"
+                        translate
+                    >
+                        Default desk
+                    </h3>
+                    <div
+                        class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3"
+                    >
+                        <div
+                            sd-info-item
+                            class="form__group form__group--default form__group--mb-0 form__group--inline-label"
+                            ng-if="userDesks && userDesks.length > 0"
+                        >
                             <div class="form__item">
                                 <div class="sd-input sd-input--is-select">
-                                    <label class="sd-input__label a11y-only" for="user_default_desk" translate>Default Desk</label>
-                                    <select class="sd-input__select" ng-model="user.desk" name="user_default_desk" id="user_default_desk" ng-options="desk._id as desk.name for desk in userDesks">
+                                    <label class="sd-input__label a11y-only" for="user_default_desk" translate
+                                        >Default Desk</label
+                                    >
+                                    <select
+                                        class="sd-input__select"
+                                        ng-model="user.desk"
+                                        name="user_default_desk"
+                                        id="user_default_desk"
+                                        ng-options="desk._id as desk.name for desk in userDesks"
+                                    >
                                         <option value="" ng-click="user.desk = null" translate>No desk selected</option>
                                     </select>
                                 </div>
@@ -226,35 +518,77 @@
                         </div>
                     </div>
 
-                    <h3 id="user-language" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Language</h3>
-                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--3">
-                        <div sd-info-item class="field__language form__group form__group--default form__group--mb-0 form__group--inline-label">
+                    <h3
+                        id="user-language"
+                        class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5"
+                        translate
+                    >
+                        Language
+                    </h3>
+                    <div
+                        class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--3"
+                    >
+                        <div
+                            sd-info-item
+                            class="field__language form__group form__group--default form__group--mb-0 form__group--inline-label"
+                        >
                             <div class="form__item">
                                 <div class="sd-input sd-input--is-select">
-                                    <label class="sd-input__label a11y-only" for="user_language" translate>Language</label>
-                                    <select class="sd-input__select" ng-focus="focused()" ng-model="user.language" name="user_language" id="user_language" ng-options="lang.code as lang.nativeName for lang in languages"></select>
+                                    <label class="sd-input__label a11y-only" for="user_language" translate
+                                        >Language</label
+                                    >
+                                    <select
+                                        class="sd-input__select"
+                                        ng-focus="focused()"
+                                        ng-model="user.language"
+                                        name="user_language"
+                                        id="user_language"
+                                        ng-options="lang.code as lang.nativeName for lang in languages"
+                                    ></select>
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">
-                                            <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank">{{ :: "Help us translate Superdesk" | translate }}</a>
+                                            <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank"
+                                                >{{ :: "Help us translate Superdesk" | translate }}</a
+                                            >
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div><!-- END General content -->
+                </div>
+                <!-- END General content -->
 
                 <!-- Author content -->
                 <div class="details-info" ng-show="user.is_author" id="authorDetails">
-                    <h3 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>Author info</h3>
-                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus  sd-margin-b--4">
-                        <div class="field__email form__group form__group--default form__group--mb-3" sd-info-item ng-if="!hideSignOff">
+                    <h3 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-margin-b--0-5" translate>
+                        Author info
+                    </h3>
+                    <div
+                        class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--4"
+                    >
+                        <div
+                            class="field__email form__group form__group--default form__group--mb-3"
+                            sd-info-item
+                            ng-if="!hideSignOff"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="sign_off" translate>Sign-Off</label>
-                                    <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="sign_off"
+                                        id="sign_off"
+                                        ng-model="user.sign_off"
+                                        ng-pattern="signOffPattern"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.sign_off.$error.pattern || error.sign_off"
+                                            sd-valid-info
+                                        >
                                             <i class="icon-info-sign-warning"></i>
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>
                                         </div>
@@ -267,77 +601,137 @@
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="byline" translate>Byline</label>
-                                    <input class="sd-input__input" type="text" name="byline" id="byline" ng-model="user.byline">
+                                    <input
+                                        class="sd-input__input"
+                                        type="text"
+                                        name="byline"
+                                        id="byline"
+                                        ng-model="user.byline"
+                                    />
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
+                        <div
+                            sd-info-item
+                            class="field__email form__group form__group--default form__group--mb-3"
+                            ng-if="privileges.users"
+                        >
                             <div class="form__item">
                                 <div class="sd-input" ng-disabled="!user.is_author">
                                     <label class="sd-input__label" for="job_title" translate>Job Title</label>
-                                    <select class="sd-input__select" ng-focus="focused()" ng-model="user.job_title" name="job_title" id="job_title" ng-options="job.qcode as job.name for job in metadata.job_titles" ng-disabled="!user.is_author"></select>
+                                    <select
+                                        class="sd-input__select"
+                                        ng-focus="focused()"
+                                        ng-model="user.job_title"
+                                        name="job_title"
+                                        id="job_title"
+                                        ng-options="job.qcode as job.name for job in metadata.job_titles"
+                                        ng-disabled="!user.is_author"
+                                    ></select>
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
+                        <div
+                            sd-info-item
+                            class="field__email form__group form__group--default form__group--mb-3"
+                            ng-if="privileges.users"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
-                                    <label class="sd-input__label" for="biography">{{ :: 'Biography'|translate }}</label>
-                                    <textarea class="sd-input__input" id="biography" sd-auto-height ng-model="user.biography" ng-disabled="!user.is_author"></textarea>
+                                    <label class="sd-input__label" for="biography"
+                                        >{{ :: 'Biography'|translate }}</label
+                                    >
+                                    <textarea
+                                        class="sd-input__input"
+                                        id="biography"
+                                        sd-auto-height
+                                        ng-model="user.biography"
+                                        ng-disabled="!user.is_author"
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
+                        <div
+                            sd-info-item
+                            class="field__email form__group form__group--default form__group--mb-3"
+                            ng-if="privileges.users"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="facebook">{{ :: 'Facebook'|translate }}</label>
-                                    <input id="facebook"
+                                    <input
+                                        id="facebook"
                                         type="text"
                                         name="facebook"
                                         class="sd-input__input"
                                         ng-model="user.facebook"
-                                        ng-disabled="!user.is_author">
+                                        ng-disabled="!user.is_author"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__hint">{{ :: 'e.g. superdeskman from https://www.facebook.com/superdeskman'|translate }}</div>
+                                        <div class="sd-input__hint">
+                                            {{ :: 'e.g. superdeskman from
+                                            https://www.facebook.com/superdeskman'|translate }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="field__email form__group form__group--default form__group--mb-3" ng-if="privileges.users">
+                        <div
+                            sd-info-item
+                            class="field__email form__group form__group--default form__group--mb-3"
+                            ng-if="privileges.users"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
-                                    <label class="sd-input__label" for="instagram">{{ :: 'Instagram'|translate }}</label>
-                                    <input id="instagram"
+                                    <label class="sd-input__label" for="instagram"
+                                        >{{ :: 'Instagram'|translate }}</label
+                                    >
+                                    <input
+                                        id="instagram"
                                         type="text"
                                         name="instagram"
                                         class="sd-input__input"
                                         ng-model="user.instagram"
-                                        ng-disabled="!user.is_author">
+                                        ng-disabled="!user.is_author"
+                                    />
                                     <div class="sd-input__message-box">
-                                        <div class="sd-input__hint">{{ :: 'e.g. superdeskman from https://www.instagram.com/superdeskman'|translate }}</div>
+                                        <div class="sd-input__hint">
+                                            {{ :: 'e.g. superdeskman from
+                                            https://www.instagram.com/superdeskman'|translate }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div sd-info-item class="field__email form__group form__group--default form__group--mb-2" ng-if="privileges.users">
+                        <div
+                            sd-info-item
+                            class="field__email form__group form__group--default form__group--mb-2"
+                            ng-if="privileges.users"
+                        >
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="twitter">{{ :: 'Twitter'|translate }}</label>
-                                    <input id="twitter"
+                                    <input
+                                        id="twitter"
                                         type="text"
                                         name="twitter"
                                         class="sd-input__input"
                                         ng-model="user.twitter"
                                         ng-disabled="!user.is_author"
-                                        ng-pattern="twitterPattern">
+                                        ng-pattern="twitterPattern"
+                                    />
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">{{ :: 'e.g. @superdeskman'|translate }}</div>
-                                        <div class="sd-input__message" ng-show="userForm.twitter.$error.pattern" sd-valid-info>
+                                        <div
+                                            class="sd-input__message"
+                                            ng-show="userForm.twitter.$error.pattern"
+                                            sd-valid-info
+                                        >
                                             <i class="icon-info-sign-warning"></i>
                                             <span translate>Please provide a valid twitter account</span>
                                         </div>
@@ -347,14 +741,17 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- END Author Tab content -->
+            </div>
+            <!-- END Author Tab content -->
         </div>
     </div>
 </form>
 
 <div sd-modal data-model="features.reset_user_password && show.reset_password && user._id" class="modal--tabs">
     <div class="modal__header">
-        <button class="modal__close pull-right" ng-click="show.reset_password = false"><i class="icon-close-small"></i></button>
+        <button class="modal__close pull-right" ng-click="show.reset_password = false">
+            <i class="icon-close-small"></i>
+        </button>
         <h3 class="modal__heading">Reset password</h3>
     </div>
     <div class="modal__body" sd-reset-password>
@@ -379,20 +776,29 @@
                 <div class="content">
                     <div class="field">
                         <label translate>current</label>
-                        <input name="old" type="password" ng-model="oldPwd" required>
+                        <input name="old" type="password" ng-model="oldPwd" required />
                         <p sd-valid-error ng-show="oldPasswordInvalid">sorry, but this is not the original password.</p>
                     </div>
 
                     <div class="field">
                         <label translate>new</label>
-                        <input sd-password-strength name="new" type="password" ng-model="newPwd" required>
+                        <input sd-password-strength name="new" type="password" ng-model="newPwd" required />
                     </div>
 
                     <div class="field">
                         <label translate>confirm</label>
-                        <input name="confirm" type="password" ng-model="_confirm" required
-                                sd-password-confirm ng-model="_confirm" data-password="newPwd">
-                        <p sd-valid-error ng-show="changePasswordForm.confirm.$error.confirm">confirm doesn't match new password yet.</p>
+                        <input
+                            name="confirm"
+                            type="password"
+                            ng-model="_confirm"
+                            required
+                            sd-password-confirm
+                            ng-model="_confirm"
+                            data-password="newPwd"
+                        />
+                        <p sd-valid-error ng-show="changePasswordForm.confirm.$error.confirm">
+                            confirm doesn't match new password yet.
+                        </p>
                     </div>
                 </div>
             </form>
@@ -400,10 +806,12 @@
     </div>
     <div class="modal__footer">
         <button class="btn" ng-click="show.change_password = false" translate>Cancel</button>
-        <button class="btn btn--primary"
-                ng-click="changePasswordForm.$valid && changePassword(oldPwd, newPwd)"
-                ng-disabled="changePasswordForm.$invalid"
-                translate>
+        <button
+            class="btn btn--primary"
+            ng-click="changePasswordForm.$valid && changePassword(oldPwd, newPwd)"
+            ng-disabled="changePasswordForm.$invalid"
+            translate
+        >
             Save password
         </button>
     </div>

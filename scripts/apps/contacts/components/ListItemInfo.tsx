@@ -9,11 +9,7 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
     const elemProps = {className: 'line'};
 
     if (props.scope.singleLine) {
-        return (
-            <div className={cssClass}>
-                {renderArea('singleLine', itemProps, elemProps)}
-            </div>
-        );
+        return <div className={cssClass}>{renderArea('singleLine', itemProps, elemProps)}</div>;
     }
 
     return (

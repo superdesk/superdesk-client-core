@@ -35,7 +35,11 @@ export const TextWithMentions: React.FunctionComponent<IProps> = ({message}) => 
             }
             if (type === 'user') {
                 // push a user mention
-                r.push(<a key={id} href={'/#/users/' + id}>{name}</a>);
+                r.push(
+                    <a key={id} href={'/#/users/' + id}>
+                        {name}
+                    </a>,
+                );
             } else {
                 // push a desk tag
                 r.push(<span key={id}>{'#' + name.replace(' ', '_')}</span>);

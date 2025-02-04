@@ -9,12 +9,7 @@ import {superdeskApi} from '../../apis';
 
 // UI
 import {Checkbox, Icon, IconButton, Menu} from 'superdesk-ui-framework/react';
-import {
-    ListItem,
-    ListItemBorder,
-    ListItemColumn,
-    ListItemRow,
-} from '../../ui/list';
+import {ListItem, ListItemBorder, ListItemColumn, ListItemRow} from '../../ui/list';
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel} from '../../utils/ui';
@@ -94,12 +89,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 selected={this.props.selected || this.props.itemSelected}
                 shadow={1}
             >
-                {isAssetLocked(this.props.asset) ? (
-                    <ListItemBorder
-                        state="locked"
-                    />
-                ) : null
-                }
+                {isAssetLocked(this.props.asset) ? <ListItemBorder state="locked" /> : null}
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
                         <Checkbox
@@ -115,27 +105,17 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 <ListItemColumn grow={true}>
                     <ListItemRow>
                         <span className="sd-overflow-ellipsis sd-list-item--element-grow">
-                            <span className="sd-list-item__slugline">
-                                {this.props.asset.name}
-                            </span>
+                            <span className="sd-list-item__slugline">{this.props.asset.name}</span>
                             {this.props.asset.description}
                         </span>
-                        <time title={versionLong}>
-                            {gettext('Updated {{ datetime }}', {datetime: versionShort})}
-                        </time>
+                        <time title={versionLong}>{gettext('Updated {{ datetime }}', {datetime: versionShort})}</time>
                     </ListItemRow>
                     <ListItemRow>
                         {getAssetStateLabel(this.props.asset.state)}
                         <span className="sd-overflow-ellipsis">
-                            <span className="sd-list-item__text-label">
-                                {gettext('Type:')}
-                            </span>
-                            <span className="sd-list-item__inline-text">
-                                {mimetype}
-                            </span>
-                            <span className="sd-list-item__text-label">
-                                {gettext('Size:')}
-                            </span>
+                            <span className="sd-list-item__text-label">{gettext('Type:')}</span>
+                            <span className="sd-list-item__inline-text">{mimetype}</span>
+                            <span className="sd-list-item__text-label">{gettext('Size:')}</span>
                             <span className="sd-list-item__inline-text">
                                 {getHumanReadableFileSize(this.props.asset.length)}
                             </span>
@@ -150,11 +130,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                                 className="sd-list-item__action-menu sd-list-item__action-menu--direction-row"
                                 onClick={this.stopClickPropagation}
                             >
-                                <IconButton
-                                    ariaValue="dropdown-more-options"
-                                    icon="dots-vertical"
-                                    onClick={toggle}
-                                />
+                                <IconButton ariaValue="dropdown-more-options" icon="dots-vertical" onClick={toggle} />
                             </div>
                         )}
                     </Menu>

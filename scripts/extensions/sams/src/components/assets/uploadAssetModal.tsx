@@ -51,21 +51,19 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
         const assets: Dictionary<string, Partial<IAssetItem>> = {};
 
         if (this.props.initialFiles != null && this.props.initialFiles?.length > 0) {
-            this.props.initialFiles.forEach(
-                (item) => {
-                    assets[item.id] = {
-                        _id: item.id,
-                        state: this.props.defaultAssetState ?? ASSET_STATE.DRAFT,
-                        filename: item.file.name,
-                        length: item.file.size,
-                        mimetype: item.file.type,
-                        name: item.file.name,
-                        description: '',
-                        set_id: this.props.sets[0]._id,
-                    };
-                    this.onFieldChanged[item.id] = this.onChange.bind(this, item.id);
-                },
-            );
+            this.props.initialFiles.forEach((item) => {
+                assets[item.id] = {
+                    _id: item.id,
+                    state: this.props.defaultAssetState ?? ASSET_STATE.DRAFT,
+                    filename: item.file.name,
+                    length: item.file.size,
+                    mimetype: item.file.type,
+                    name: item.file.name,
+                    description: '',
+                    set_id: this.props.sets[0]._id,
+                };
+                this.onFieldChanged[item.id] = this.onChange.bind(this, item.id);
+            });
         }
 
         return assets;
@@ -136,15 +134,13 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
             }
         }
 
-        return samsApi.assets.upload(data, onProgress)
-            .then((newAsset) => {
-                if (this.props.onAssetUploaded != null) {
-                    return this.props.onAssetUploaded(newAsset)
-                        .then(() => newAsset);
-                }
+        return samsApi.assets.upload(data, onProgress).then((newAsset) => {
+            if (this.props.onAssetUploaded != null) {
+                return this.props.onAssetUploaded(newAsset).then(() => newAsset);
+            }
 
-                return newAsset;
-            });
+            return newAsset;
+        });
     }
 
     onChange(id: string, field: keyof IAssetItem, value: any) {

@@ -7,7 +7,10 @@
 .sd-widget.activity {
     .activity-holder {
         position: absolute;
-        inset-inline-start: 0; inset-inline-end: 0; inset-block-start: 0; inset-block-end: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        inset-block-start: 0;
+        inset-block-end: 0;
         background-color: var(--sd-colour__dashboard-widget-Bg);
         .shadow-list-holder {
             padding: 0 10px;
@@ -17,8 +20,8 @@
         li.with-date {
             margin-block-start: 25px;
             .date {
-                border-block-start:0;
-                inset-block-start:-15px;
+                border-block-start: 0;
+                inset-block-start: -15px;
                 span {
                     float: none;
                     padding: 3px 5px;
@@ -46,8 +49,5 @@
                 font-weight: 600;
             }
         }
-        
-
     }
-
 }

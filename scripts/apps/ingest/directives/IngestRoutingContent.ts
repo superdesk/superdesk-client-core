@@ -15,8 +15,10 @@ IngestRoutingContent.$inject = ['api', 'notify', 'modal', 'contentFilters', '$fi
 export function IngestRoutingContent(api, notify, modal, contentFilters, $filter) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-content.html',
-        link: function(scope) {
-            let _orig = null, _origRule = null, _new = false;
+        link: function (scope) {
+            let _orig = null,
+                _origRule = null,
+                _new = false;
 
             scope.editScheme = null;
             scope.selectedRule = null;
@@ -45,16 +47,21 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @param {Object} scheme Scheme data
              * @description Remove complete scheme
              */
-            scope.remove = (scheme) => confirm('scheme').then(() => {
-                api('routing_schemes').remove(scheme)
-                    .then(() => {
-                        _.remove(scope.schemes, scheme);
-                    }, (response) => {
-                        angular.isDefined(response.data._message) ?
-                            notify.error(gettext('Error: ' + response.data._message)) :
-                            notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
-                    });
-            });
+            scope.remove = (scheme) =>
+                confirm('scheme').then(() => {
+                    api('routing_schemes')
+                        .remove(scheme)
+                        .then(
+                            () => {
+                                _.remove(scope.schemes, scheme);
+                            },
+                            (response) => {
+                                angular.isDefined(response.data._message)
+                                    ? notify.error(gettext('Error: ' + response.data._message))
+                                    : notify.error(gettext('There was an error. Routing scheme cannot be deleted.'));
+                            },
+                        );
+                });
 
             /**
              * @ngdoc method
@@ -93,8 +100,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              */
             scope.selectRule = (rule) => {
                 rule.filterName = rule.filter ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name : null;
-                rule.schedule._allDay = !(_.get(rule, 'schedule.hour_of_day_from', false) ||
-                    _.get(rule, 'schedule.hour_of_day_to', false));
+                rule.schedule._allDay = !(
+                    _.get(rule, 'schedule.hour_of_day_from', false) || _.get(rule, 'schedule.hour_of_day_to', false)
+                );
 
                 scope.selectedRule = rule;
                 setCurrentRuleHandler(rule);
@@ -127,8 +135,10 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 scope.rule.filterName = rule.filter
                     ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name
                     : null;
-                scope.rule.schedule._allDay = !(_.get(scope.rule, 'schedule.hour_of_day_from', false) ||
-                    _.get(scope.rule, 'schedule.hour_of_day_to', false));
+                scope.rule.schedule._allDay = !(
+                    _.get(scope.rule, 'schedule.hour_of_day_from', false) ||
+                    _.get(scope.rule, 'schedule.hour_of_day_to', false)
+                );
 
                 setCurrentRuleHandler(rule);
             };
@@ -151,9 +161,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 });
             };
 
-            scope.getRuleHandlerLabel = (rule) => (
-                sdApi.ingest.getHandlerForIngestRule(rule)?.name
-            );
+            scope.getRuleHandlerLabel = (rule) => sdApi.ingest.getHandlerForIngestRule(rule)?.name;
 
             /**
              * @ngdoc method
@@ -171,22 +179,26 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                     delete r.schedule._allDay;
                 });
 
-                return api('routing_schemes').save(_orig, diff)
-                    .then((result) => {
-                        if (!scope.editScheme._id) {
-                            scope.schemes.push(_orig);
-                        }
+                return api('routing_schemes')
+                    .save(_orig, diff)
+                    .then(
+                        (result) => {
+                            if (!scope.editScheme._id) {
+                                scope.schemes.push(_orig);
+                            }
 
-                        scope.schemes = $filter('sortByName')(scope.schemes);
-                        scope.editScheme = _.clone(result);
-                        notify.success(gettext('Routing scheme saved.'));
-                        scope.rule = null;
-                        _new = false;
+                            scope.schemes = $filter('sortByName')(scope.schemes);
+                            scope.editScheme = _.clone(result);
+                            notify.success(gettext('Routing scheme saved.'));
+                            scope.rule = null;
+                            _new = false;
 
-                        initSchemes();
-                    }, (response) => {
-                        notify.error(gettext('I\'m sorry but there was an error when saving the routing scheme.'));
-                    });
+                            initSchemes();
+                        },
+                        (response) => {
+                            notify.error(gettext("I'm sorry but there was an error when saving the routing scheme."));
+                        },
+                    );
             };
 
             /**
@@ -195,12 +207,13 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @param {Object} rule Routing scheme rule's config data
              * @description Remove rule from list
              */
-            scope.removeRule = (rule) => confirm('rule').then(() => {
-                _.remove(scope.editScheme.rules, rule);
-                scope.selectedRule = null;
-                scope.rule = null;
-                scope.ruleHandler = null;
-            });
+            scope.removeRule = (rule) =>
+                confirm('rule').then(() => {
+                    _.remove(scope.editScheme.rules, rule);
+                    scope.selectedRule = null;
+                    scope.rule = null;
+                    scope.ruleHandler = null;
+                });
 
             /**
              * @ngdoc method
@@ -219,8 +232,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
             scope.cancelRule = () => {
                 let index = _.indexOf(scope.editScheme.rules, scope.rule);
 
-                _new ? scope.editScheme.rules.splice(-1, 1) :
-                    scope.editScheme.rules[index] = _origRule;
+                _new ? scope.editScheme.rules.splice(-1, 1) : (scope.editScheme.rules[index] = _origRule);
 
                 scope.rule = null;
                 _new = false;
@@ -234,9 +246,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @returns {Boolean} modal Based on context
              */
             function confirm(context) {
-                return context === 'scheme' ?
-                    modal.confirm(gettext('Are you sure you want to delete this scheme?')) :
-                    modal.confirm(gettext('Are you sure you want to delete this scheme rule?'));
+                return context === 'scheme'
+                    ? modal.confirm(gettext('Are you sure you want to delete this scheme?'))
+                    : modal.confirm(gettext('Are you sure you want to delete this scheme rule?'));
             }
 
             /**
@@ -245,7 +257,8 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @description Function for initialization default routing schemas
              */
             function initSchemes() {
-                api('routing_schemes').query({max_results: 200})
+                api('routing_schemes')
+                    .query({max_results: 200})
                     .then((result) => {
                         scope.schemes = $filter('sortByName')(result._items);
                     });

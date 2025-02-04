@@ -41,7 +41,7 @@ export function ItemAssociationDirective(renditions, notify) {
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
         templateUrl: 'scripts/apps/authoring/views/item-association.html',
-        link: function(scope, elem, attr, _ctrl) {
+        link: function (scope, elem, attr, _ctrl) {
             const dragOverClass = 'dragover';
 
             if (!elem.hasClass('no-drop-zone') && scope.editable) {
@@ -66,9 +66,7 @@ export function ItemAssociationDirective(renditions, notify) {
 
                     if (externalItemsCount > 1) {
                         // Check files dropped does not exceed the maxUpload limit
-                        notify.error(
-                            gettext('Select at most 1 file to upload.'),
-                        );
+                        notify.error(gettext('Select at most 1 file to upload.'));
                         removeDragOverClass();
                         return false;
                     }
@@ -118,7 +116,7 @@ export function ItemAssociationDirective(renditions, notify) {
              * @public
              * @description Remove the associations
              */
-            scope.remove = function(item) {
+            scope.remove = function (item) {
                 _ctrl.updateItemAssociation(scope, null, item.fieldId);
             };
 
@@ -128,7 +126,7 @@ export function ItemAssociationDirective(renditions, notify) {
              * @public
              * @description Upload media.
              */
-            scope.upload = function() {
+            scope.upload = function () {
                 if (scope.editable) {
                     _ctrl.uploadAndCropImages(scope);
                 }
@@ -180,9 +178,11 @@ export function isAllowedMediaType(scope, event) {
     if (isValidMedia && mediaType === 'Files' && dataTransfer.files) {
         // checks if files dropped from external folder are valid or not
         const isValidFileType = Object.values(dataTransfer.files).every(
-            (file: File) => file.type.startsWith('audio/') && allowAudio === true
-                || file.type.startsWith('image/') && allowPicture === true
-                || file.type.startsWith('video/') && allowVideo === true);
+            (file: File) =>
+                (file.type.startsWith('audio/') && allowAudio === true) ||
+                (file.type.startsWith('image/') && allowPicture === true) ||
+                (file.type.startsWith('video/') && allowVideo === true),
+        );
 
         if (!isValidFileType) {
             return false;
@@ -193,8 +193,10 @@ export function isAllowedMediaType(scope, event) {
 
 export function getAllowedTypeNames(scope) {
     return [
-        (scope.allowPicture === true ? gettext('image') : ''),
-        (scope.allowVideo === true ? gettext('video') : ''),
-        (scope.allowAudio === true ? gettext('audio') : ''),
-    ].filter(Boolean).join(', ');
+        scope.allowPicture === true ? gettext('image') : '',
+        scope.allowVideo === true ? gettext('video') : '',
+        scope.allowAudio === true ? gettext('audio') : '',
+    ]
+        .filter(Boolean)
+        .join(', ');
 }

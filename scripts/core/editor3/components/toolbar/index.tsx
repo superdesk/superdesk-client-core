@@ -124,7 +124,8 @@ class ToolbarComponent extends React.Component<IProps, IState> {
 
             const scrollableElement = document.querySelector('.page-content-container--scrollable');
 
-            setTimeout(() => { // wait for render
+            setTimeout(() => {
+                // wait for render
                 const {editorWrapperElement} = this.props;
 
                 if (editorWrapperElement instanceof Element !== true) {
@@ -212,29 +213,28 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     tableKind={activeCell.additional.tableKind}
                     editorFormat={(() => {
                         switch (activeCell.additional.tableKind) {
-                        case 'table':
-                            return editorFormat;
-                        case 'multi-line-quote':
-                            return editorFormat.filter((option) => option !== 'quote');
-                        case 'custom-block': {
-                            const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
+                            case 'table':
+                                return editorFormat;
+                            case 'multi-line-quote':
+                                return editorFormat.filter((option) => option !== 'quote');
+                            case 'custom-block': {
+                                const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
 
-                            if (vocabulary.field_type !== 'editor-block') {
-                                throw new Error();
+                                if (vocabulary.field_type !== 'editor-block') {
+                                    throw new Error();
+                                }
+
+                                const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
+
+                                const vocabularyValues = (vocabulary.field_options.formatting_options ??
+                                    []) as Array<RICH_FORMATTING_OPTION>;
+
+                                return vocabularyValues.filter((option) =>
+                                    availableOptions.has(option as RICH_FORMATTING_OPTION),
+                                );
                             }
-
-                            const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
-
-                            const vocabularyValues = (
-                                vocabulary.field_options.formatting_options ?? []
-                            ) as Array<RICH_FORMATTING_OPTION>;
-
-                            return vocabularyValues.filter(
-                                (option) => availableOptions.has(option as RICH_FORMATTING_OPTION),
-                            );
-                        }
-                        default:
-                            assertNever(activeCell.additional);
+                            default:
+                                assertNever(activeCell.additional);
                         }
                     })()}
                 />
@@ -246,9 +246,8 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 className={cx}
                 style={{
                     width: this.state.width,
-                    backgroundColor: this.props.uiTheme == null
-                        ? undefined
-                        : this.props.uiTheme.backgroundColorSecondary,
+                    backgroundColor:
+                        this.props.uiTheme == null ? undefined : this.props.uiTheme.backgroundColorSecondary,
                     color: this.props.uiTheme == null ? undefined : this.props.uiTheme.textColor,
                 }}
                 ref={this.toolbarNode}
@@ -309,14 +308,11 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         .map((vocabulary: IVocabularyEditorBlock) => ({
                             value: vocabulary.display_name,
                             onSelect: () => {
-                                const contentStateRaw = vocabulary.field_options?.template?.[0]
-                                    ?? convertToRaw(ContentState.createFromText(''));
+                                const contentStateRaw =
+                                    vocabulary.field_options?.template?.[0] ??
+                                    convertToRaw(ContentState.createFromText(''));
 
-                                addCustomBlock(
-                                    contentStateRaw,
-                                    vocabulary._id,
-                                    vocabulary.display_name,
-                                );
+                                addCustomBlock(contentStateRaw, vocabulary._id, vocabulary.display_name);
                             },
                         }))
                         .toArray();
@@ -324,11 +320,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     if (has('custom blocks') && options.length > 0) {
                         return (
                             <div style={{display: 'inline-flex'}}>
-                                <TreeMenu
-                                    getOptions={() => options}
-                                    getLabel={(item) => item}
-                                    getId={(item) => item}
-                                >
+                                <TreeMenu getOptions={() => options} getLabel={(item) => item} getId={(item) => item}>
                                     {(toggle) => (
                                         <IconButton
                                             onClick={(event) => {
@@ -357,7 +349,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                         uiTheme={this.props.uiTheme}
                     />
                 )}
-                {(has('remove all format') && !suggestingMode) && (
+                {has('remove all format') && !suggestingMode && (
                     <IconButton
                         onClick={removeAllFormat}
                         key="remove-all-format-button"
@@ -369,9 +361,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 {has('comments') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
-                        precondition={
-                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
-                        }
+                        precondition={this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)}
                         key="comment-button"
                         iconName="comment"
                         tooltip={gettext('Comment')}
@@ -381,9 +371,9 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 {has('annotation') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
-                        precondition={
-                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
-                        }
+                        precondition={this.props.highlightsManager.canAddHighlight(
+                            getHighlightsConfig().ANNOTATION.type,
+                        )}
                         key="annotation-button"
                         iconName="edit-line"
                         tooltip={gettext('Annotation')}
@@ -470,14 +460,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
     }
 }
 
-const mapStateToProps = ({
-    editorFormat,
-    activeCell,
-    popup,
-    editorState,
-    suggestingMode,
-    invisibles,
-}) => ({
+const mapStateToProps = ({editorFormat, activeCell, popup, editorState, suggestingMode, invisibles}) => ({
     editorFormat,
     activeCell,
     popup,

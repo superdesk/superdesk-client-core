@@ -7,10 +7,10 @@ and enable the widget in `../manage-widget-registration.ts`.
 
 # Adding a widget
 
-* Add a file or folder per widget.
-* Export an object or a function returning the object implementing `IAuthoringSideWidget` interface.
-* Import it in `../manage-widget-registration.ts`
-* Use `AuthoringWidgetLayout` as a root widget component.
+- Add a file or folder per widget.
+- Export an object or a function returning the object implementing `IAuthoringSideWidget` interface.
+- Import it in `../manage-widget-registration.ts`
+- Use `AuthoringWidgetLayout` as a root widget component.
 
 To update the article that is being edited, call `sdApi.article.patch`.
 

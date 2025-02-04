@@ -16,7 +16,8 @@ export enum FormFieldType {
     selectMultiple = 'selectMultiple',
 }
 
-export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't forget to update runtime type checks
+export function isIFormField(x: IFormGroup['form'][0]): x is IFormField {
+    // don't forget to update runtime type checks
     return x['direction'] == null;
 }
 

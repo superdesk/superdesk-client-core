@@ -22,9 +22,7 @@ export class Editor extends React.PureComponent<IProps> {
     handleUrlUpdate(index, urlToUpdate: IUrlObject) {
         const urls = this.props.value ?? [];
 
-        this.props.onChange(
-            urls.map((urlObj, i) => i === index ? urlToUpdate : urlObj),
-        );
+        this.props.onChange(urls.map((urlObj, i) => (i === index ? urlToUpdate : urlObj)));
     }
 
     render() {

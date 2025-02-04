@@ -50,7 +50,8 @@ export function TranslationReactDropdown(item, className, TranslationService, no
             }
 
             return React.createElement(
-                'button', {
+                'button',
+                {
                     disabled: isCurrentLang,
                     onClick: this.markTranslate,
                 },
@@ -63,7 +64,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * Creates list element for specific language
      * @return {React} Single list element
      */
-    var createTranslateItem = function(language) {
+    var createTranslateItem = function (language) {
         return React.createElement(
             'li',
             {key: 'language-' + language._id},
@@ -75,15 +76,8 @@ export function TranslationReactDropdown(item, className, TranslationService, no
      * If there are no languages, print none-langugage message
      * @return {React} List element
      */
-    var noLanguage = function() {
-        return React.createElement(
-            'li',
-            {},
-            React.createElement(
-                'button',
-                {disabled: true},
-                noLanguagesLabel),
-        );
+    var noLanguage = function () {
+        return React.createElement('li', {}, React.createElement('button', {disabled: true}, noLanguagesLabel));
     };
 
     /*

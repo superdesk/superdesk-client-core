@@ -18,24 +18,19 @@ export class AnnotationsPreview extends React.Component<IProps> {
             <div>
                 <div dangerouslySetInnerHTML={{__html: article.archive_description}} />
                 <ToggleBox variant="simple" title={gettext('Annotations')}>
-                    {
-                        (article.annotations?.length ?? 0) > 0 && (
-                            getAllAnnotations(article).map((annotation) => (
-                                <Spacer h gap="4" key={annotation.id} noWrap>
-                                    <Label text={annotation.type} style="hollow" type="primary" />
-                                    <div>
-                                        <span
-                                            className="annotation-body-react"
-                                            dangerouslySetInnerHTML={{__html: annotation.body}}
-                                        />
-                                        <sup className="annotation-id">
-                                            {annotation.id}
-                                        </sup>
-                                    </div>
-                                </Spacer>
-                            ))
-                        )
-                    }
+                    {(article.annotations?.length ?? 0) > 0 &&
+                        getAllAnnotations(article).map((annotation) => (
+                            <Spacer h gap="4" key={annotation.id} noWrap>
+                                <Label text={annotation.type} style="hollow" type="primary" />
+                                <div>
+                                    <span
+                                        className="annotation-body-react"
+                                        dangerouslySetInnerHTML={{__html: annotation.body}}
+                                    />
+                                    <sup className="annotation-id">{annotation.id}</sup>
+                                </div>
+                            </Spacer>
+                        ))}
                 </ToggleBox>
             </div>
         );

@@ -10,19 +10,11 @@ interface IProps {
 
 export class PanelContentBlockInner extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames(
-            'side-panel__content-block-inner',
-            this.props.className,
-            {
-                'side-panel__content-block-inner--grow': this.props.grow,
-                'side-panel__content-block-inner--right': this.props.right,
-            },
-        );
+        const classes = classNames('side-panel__content-block-inner', this.props.className, {
+            'side-panel__content-block-inner--grow': this.props.grow,
+            'side-panel__content-block-inner--right': this.props.right,
+        });
 
-        return (
-            <div className={classes}>
-                {this.props.children}
-            </div>
-        );
+        return <div className={classes}>{this.props.children}</div>;
     }
 }

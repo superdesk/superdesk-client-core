@@ -1,12 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {
-    IFormGroup,
-    IPage,
-    ISuperdesk,
-    IPropsGenericFormItemComponent,
-} from 'superdesk-api';
+import {IFormGroup, IPage, ISuperdesk, IPropsGenericFormItemComponent} from 'superdesk-api';
 import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
 
@@ -16,36 +11,23 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk): React.Componen
     return class AnnotationsLibraryPage extends React.Component<IProps> {
         render() {
             const {gettext} = superdesk.localization;
-            const {
-                getGenericHttpEntityListPageComponent,
-                ListItem,
-                ListItemColumn,
-                ListItemActionsMenu,
-            } = superdesk.components;
+            const {getGenericHttpEntityListPageComponent, ListItem, ListItemColumn, ListItemActionsMenu} =
+                superdesk.components;
             const {getFormFieldPreviewComponent} = superdesk.forms;
 
-            const {
-                nameField,
-                languageField,
-                definitionField,
-            } = getFields(superdesk);
+            const {nameField, languageField, definitionField} = getFields(superdesk);
 
             const formConfig: IFormGroup = {
                 direction: 'vertical',
                 type: 'inline',
-                form: [
-                    nameField,
-                    languageField,
-                    definitionField,
-                ],
+                form: [nameField, languageField, definitionField],
             };
 
-            const AnnotationsLibraryPageComponent =
-                getGenericHttpEntityListPageComponent<IKnowledgeBaseItem, never>(
-                    'concept_items',
-                    formConfig,
-                    {field: 'name', direction: 'ascending'},
-                );
+            const AnnotationsLibraryPageComponent = getGenericHttpEntityListPageComponent<IKnowledgeBaseItem, never>(
+                'concept_items',
+                formConfig,
+                {field: 'name', direction: 'ascending'},
+            );
 
             class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IKnowledgeBaseItem>> {
                 render() {

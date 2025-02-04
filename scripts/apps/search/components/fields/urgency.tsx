@@ -7,10 +7,7 @@ class UrgencyComponent extends React.Component<IPropsItemListInfo> {
         const props = this.props;
 
         return props.item.urgency
-            ? React.createElement(
-                ItemUrgency,
-                angular.extend({key: 'urgency'}, props.item),
-            )
+            ? React.createElement(ItemUrgency, angular.extend({key: 'urgency'}, props.item))
             : null;
     }
 }

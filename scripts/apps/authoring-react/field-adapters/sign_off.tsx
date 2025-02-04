@@ -75,14 +75,12 @@ class UsersDropdown extends React.Component<IProps> {
                         this.props.onChange(val);
                     }}
                     readOnly={this.props.readOnly}
-                    optionTemplate={
-                        ({item}) => (
-                            <Spacer h gap="8" noGrow>
-                                <UserAvatar user={item} size="small" />
-                                <span>{item[appConfig.user.sign_off_mapping]}</span>
-                            </Spacer>
-                        )
-                    }
+                    optionTemplate={({item}) => (
+                        <Spacer h gap="8" noGrow>
+                            <UserAvatar user={item} size="small" />
+                            <span>{item[appConfig.user.sign_off_mapping]}</span>
+                        </Spacer>
+                    )}
                     getId={(option) => option._id}
                     getLabel={(option) => option[appConfig.user.sign_off_mapping]}
                 />
@@ -101,14 +99,9 @@ export const sign_off: IFieldAdapter<IArticle> = {
             singleLine: true,
             helperComponent: allowUserDropdown
                 ? ({onChange, language, readOnly}) => {
-                    return (
-                        <UsersDropdown
-                            onChange={onChange}
-                            language={language}
-                            readOnly={readOnly}
-                        />
-                    );
-                } : undefined,
+                      return <UsersDropdown onChange={onChange} language={language} readOnly={readOnly} />;
+                  }
+                : undefined,
         };
 
         const fieldV2: IAuthoringFieldV2 = {
@@ -121,19 +114,11 @@ export const sign_off: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'sign_off',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage) =>
+        retrieveStoredValueEditor3Generic('sign_off', item, authoringStorage),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(
-            'sign_off',
-            item,
-            value,
-            config,
-        );
+        const result = storeEditor3ValueBase('sign_off', item, value, config);
 
         const articleUpdated = {...result.article};
 

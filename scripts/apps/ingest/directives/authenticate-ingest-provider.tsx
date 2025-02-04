@@ -18,36 +18,28 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
                     position="top"
                     onHide={this.props.closeModal}
                     headerTemplate={gettext('Connect an account')}
-                    footerTemplate={
-                        (
-                            <Button
-                                text={gettext('Close')}
-                                onClick={this.props.closeModal}
-                            />
-                        )
-                    }
+                    footerTemplate={<Button text={gettext('Close')} onClick={this.props.closeModal} />}
                 >
                     <Spacer h gap="4" noGrow justifyContent="start">
-                        {
-                            actions.map(({label, onClick}) => (
-                                <Button
-                                    key={label}
-                                    text={label}
-                                    type="primary"
-                                    onClick={() => {
-                                        onClick();
-                                        this.props.closeModal();
-                                    }}
-                                />
-                            ))
-                        }
+                        {actions.map(({label, onClick}) => (
+                            <Button
+                                key={label}
+                                text={label}
+                                type="primary"
+                                onClick={() => {
+                                    onClick();
+                                    this.props.closeModal();
+                                }}
+                            />
+                        ))}
                     </Spacer>
                 </Modal>
             );
         }
     }
 
-    setTimeout(() => { // timeout needed to prevent angular from closing the modal
+    setTimeout(() => {
+        // timeout needed to prevent angular from closing the modal
         showModal(IngestAuthenticationModal);
     }, 100);
 }

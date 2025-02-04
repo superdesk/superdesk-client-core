@@ -9,8 +9,8 @@ export function ActivityStream(asset, authoringWorkspace: AuthoringWorkspaceServ
             loadMore: '&',
         },
         templateUrl: asset.templateUrl('apps/stream/views/activity-stream.html'),
-        link: function(scope, element, attrs) {
-            scope.openArticle = function(activity) {
+        link: function (scope, element, attrs) {
+            scope.openArticle = function (activity) {
                 if (activity.item) {
                     authoringWorkspace.edit({_id: activity.item}, 'edit');
                 }

@@ -21,7 +21,7 @@ export function getSpellcheckWarningsByBlock(
         return Promise.resolve({});
     }
 
-    const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
+    const rangesByBlock: Array<{blockKey: string; startOffset: number; endOffset: number}> = [];
 
     let lastOffset = 0;
     const blocks = editorState.getCurrentContent().getBlocksAsArray();
@@ -31,7 +31,9 @@ export function getSpellcheckWarningsByBlock(
         const lineBreak = 1;
 
         rangesByBlock.push({
-            blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
+            blockKey: block.getKey(),
+            startOffset: lastOffset,
+            endOffset: lastOffset + blockLength,
         });
         lastOffset += blockLength + lineBreak;
     });
@@ -40,8 +42,9 @@ export function getSpellcheckWarningsByBlock(
         let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
 
         warnings.forEach((warning) => {
-            const range = rangesByBlock.find(({startOffset, endOffset}) =>
-                warning.startOffset >= startOffset && warning.startOffset < endOffset);
+            const range = rangesByBlock.find(
+                ({startOffset, endOffset}) => warning.startOffset >= startOffset && warning.startOffset < endOffset,
+            );
 
             if (range == null) {
                 logger.warn('Can not find a range for a spellchecker warning', {text, warnings, warning});
@@ -150,8 +153,9 @@ export function getSpellcheckingDecorator(
 
                 const {decoratedText, start} = this.props;
 
-                const warningForDecoration = warningsForBlock.find((warning) =>
-                    warning.startOffset === start && warning.text === decoratedText);
+                const warningForDecoration = warningsForBlock.find(
+                    (warning) => warning.startOffset === start && warning.text === decoratedText,
+                );
 
                 if (warningForDecoration == null) {
                     return <span>{this.props.children}</span>;
@@ -202,20 +206,20 @@ export function getSpellcheckingDecorator(
                                 });
                             }
                         }}
-                        ref={(el) => this.wordTypoElement = el}
+                        ref={(el) => (this.wordTypoElement = el)}
                         data-test-id="spellchecker-warning"
                         data-test-value={warningForDecoration.text}
                     >
-                        {menuShowing ?
-                            ReactDOM.createPortal(
-                                <SpellcheckerContextMenu
-                                    targetElement={this.wordTypoElement}
-                                    warning={this.state.warning}
-                                    spellchecker={spellchecker}
-                                    acceptSuggestion={acceptSuggestion}
-                                />,
-                                getElementForPortal(),
-                            )
+                        {menuShowing
+                            ? ReactDOM.createPortal(
+                                  <SpellcheckerContextMenu
+                                      targetElement={this.wordTypoElement}
+                                      warning={this.state.warning}
+                                      spellchecker={spellchecker}
+                                      acceptSuggestion={acceptSuggestion}
+                                  />,
+                                  getElementForPortal(),
+                              )
                             : null}
                         {this.props.children}
                     </span>

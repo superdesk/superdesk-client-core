@@ -20,7 +20,7 @@ export function ItemCrops(metadata) {
         scope: {
             item: '=',
         },
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             metadata.initialize().then(() => {
                 scope.crop_sizes = metadata.values.crop_sizes;
             });
@@ -31,12 +31,10 @@ export function ItemCrops(metadata) {
              *
              * @description Checks if item has crops
              */
-            scope.showCrops = () => (
-                _.includes(['picture', 'graphic'], scope.item.type) && _.get(metadata, 'values.crop_sizes') &&
-                metadata.values.crop_sizes.some(
-                    (crop) => scope.item.renditions && scope.item.renditions[crop.name],
-                )
-            );
+            scope.showCrops = () =>
+                _.includes(['picture', 'graphic'], scope.item.type) &&
+                _.get(metadata, 'values.crop_sizes') &&
+                metadata.values.crop_sizes.some((crop) => scope.item.renditions && scope.item.renditions[crop.name]);
         },
     };
 }

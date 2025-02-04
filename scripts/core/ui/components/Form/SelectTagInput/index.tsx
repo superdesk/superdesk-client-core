@@ -54,9 +54,7 @@ export class SelectTagInput extends React.Component<any, any> {
             // If the tag is not currently in the list of tags
             // Then call onChange with the new set of tags
             if (this.props.value.indexOf(valueText) === -1) {
-                const newValue = this.props.value ?
-                    [...this.props.value, valueText] :
-                    [valueText];
+                const newValue = this.props.value ? [...this.props.value, valueText] : [valueText];
 
                 this.props.onChange(this.props.field, newValue);
                 this.setState({
@@ -101,8 +99,7 @@ export class SelectTagInput extends React.Component<any, any> {
             filteredOptions = filteredOptions.filter((o) => {
                 const optionName = get(o, this.props.searchKey, '').toLowerCase();
 
-                return optionName.substr(0, inputText.length) === inputNoCase ||
-                    optionName.indexOf(inputNoCase) >= 0;
+                return optionName.substr(0, inputText.length) === inputNoCase || optionName.indexOf(inputNoCase) >= 0;
             });
         }
 
@@ -127,9 +124,7 @@ export class SelectTagInput extends React.Component<any, any> {
                         <Label text={label} />
 
                         <div className="sd-line-input__input">
-                            {get(value, 'length', 0) > 0 && (
-                                <TermsList terms={value} onClick={this.removeTag} />
-                            )}
+                            {get(value, 'length', 0) > 0 && <TermsList terms={value} onClick={this.removeTag} />}
                         </div>
                     </LineInput>
                 </Row>
@@ -148,8 +143,7 @@ export class SelectTagInput extends React.Component<any, any> {
                             className="select-tag__input"
                             readOnly={readOnly}
                             onKeyDown={(event) => {
-                                if (event.keyCode === KEYCODES.ENTER ||
-                                    event.keyCode === KEYCODES.DOWN) {
+                                if (event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.DOWN) {
                                     onEventCapture(event);
                                     this.openPopUp();
                                 }

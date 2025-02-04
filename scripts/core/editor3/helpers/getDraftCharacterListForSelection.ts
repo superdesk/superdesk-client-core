@@ -51,24 +51,12 @@ export function getDraftCharacterListForSelection(
         .map((block: ContentBlock) => {
             const blockKey = block.getKey();
 
-            if (
-                selectionStartKey === selectionEndKey &&
-                selectionStartKey === blockKey
-            ) {
-                return block
-                    .getCharacterList()
-                    .slice(
-                        selection.getStartOffset(),
-                        selection.getEndOffset(),
-                    );
+            if (selectionStartKey === selectionEndKey && selectionStartKey === blockKey) {
+                return block.getCharacterList().slice(selection.getStartOffset(), selection.getEndOffset());
             } else if (blockKey === selectionStartKey) {
-                return block
-                    .getCharacterList()
-                    .slice(selection.getStartOffset(), block.getLength());
+                return block.getCharacterList().slice(selection.getStartOffset(), block.getLength());
             } else if (blockKey === selectionEndKey) {
-                return block
-                    .getCharacterList()
-                    .slice(0, selection.getEndOffset());
+                return block.getCharacterList().slice(0, selection.getEndOffset());
             } else {
                 return block.getCharacterList();
             }

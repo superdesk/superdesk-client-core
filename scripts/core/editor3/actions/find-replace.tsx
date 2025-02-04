@@ -42,7 +42,7 @@ export function multiReplace(diff) {
     };
 }
 
-export function patchHTMLonEditorState(payload: {editorState: EditorState, html: string, simpleReplace: boolean}) {
+export function patchHTMLonEditorState(payload: {editorState: EditorState; html: string; simpleReplace: boolean}) {
     return {
         type: 'PATCH_HTML_ON_EDITOR_STATE',
         payload,

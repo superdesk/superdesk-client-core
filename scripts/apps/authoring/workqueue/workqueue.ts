@@ -36,8 +36,8 @@ class WorkqueueService {
      * Get all items locked by current user
      */
     fetch() {
-        return this.session.getIdentity()
-            .then(angular.bind(this, function(identity) {
+        return this.session.getIdentity().then(
+            angular.bind(this, function (identity) {
                 const query = {
                     source: {
                         query: {
@@ -52,13 +52,15 @@ class WorkqueueService {
                     auto: 1,
                 };
 
-                return this.api.query('workqueue', query)
-                    .then(angular.bind(this, function(res) {
+                return this.api.query('workqueue', query).then(
+                    angular.bind(this, function (res) {
                         this.items = null;
                         this.items = res._items || [];
                         return this.items;
-                    }));
-            }));
+                    }),
+                );
+            }),
+        );
     }
 
     /**
@@ -139,9 +141,11 @@ function WorkqueueCtrl(
     $scope.$on('item:unlock', (_e, data) => {
         var item: IArticle = workqueue.items.find((_item) => _item._id === data.item);
 
-        if (item && lock.isLocked(item)
-            && session.sessionId !== data.lock_session
-            && $scope.articleInEditMode !== item
+        if (
+            item &&
+            lock.isLocked(item) &&
+            session.sessionId !== data.lock_session &&
+            $scope.articleInEditMode !== item
         ) {
             authoring.unlock(item, data.user, item.headline);
         }
@@ -189,11 +193,11 @@ function WorkqueueCtrl(
         });
     }
 
-    $scope.openDashboard = function() {
+    $scope.openDashboard = function () {
         $scope.dashboardActive = true;
     };
 
-    $scope.closeDashboard = function() {
+    $scope.closeDashboard = function () {
         $scope.dashboardActive = false;
     };
 
@@ -203,30 +207,30 @@ function WorkqueueCtrl(
      * When closing last item that was in multiedit(no more items in multiedit), redirects to monitoring.
      * if there autosave version then open dialog to prompt the user to save.
      */
-    $scope.closeItem = function(item) {
+    $scope.closeItem = function (item) {
         autosave.hasUnsavedChanges(item).then((hasUnsavedChanges) => {
             if (hasUnsavedChanges) {
                 showUnsavedChangesPrompt().then(({action, closePromptFn}) => {
                     autosave.settle(item).then(() => {
                         switch (action) {
-                        case IUnsavedChangesAction.cancelAction:
-                            closePromptFn();
-                            break;
-
-                        case IUnsavedChangesAction.discardChanges:
-                            _closeItem(item).then(() => {
+                            case IUnsavedChangesAction.cancelAction:
                                 closePromptFn();
-                            });
+                                break;
 
-                            break;
+                            case IUnsavedChangesAction.discardChanges:
+                                _closeItem(item).then(() => {
+                                    closePromptFn();
+                                });
 
-                        case IUnsavedChangesAction.openItem:
-                            closePromptFn();
-                            _reOpenItem(item);
-                            break;
+                                break;
 
-                        default:
-                            assertNever(action);
+                            case IUnsavedChangesAction.openItem:
+                                closePromptFn();
+                                _reOpenItem(item);
+                                break;
+
+                            default:
+                                assertNever(action);
                         }
                     });
                 });
@@ -247,7 +251,8 @@ function WorkqueueCtrl(
     }
 
     function _closeItem(item) {
-        return lock.unlock(item)
+        return lock
+            .unlock(item)
             .then(() => {
                 if (authoringWorkspace.item && item._id === authoringWorkspace.item._id) {
                     authoringWorkspace.close(true);
@@ -265,7 +270,7 @@ function WorkqueueCtrl(
             });
     }
 
-    $scope.openMulti = function() {
+    $scope.openMulti = function () {
         $scope.isMultiedit = true;
         updateWorkqueue();
         multiEdit.open();
@@ -274,7 +279,7 @@ function WorkqueueCtrl(
     /**
      * Close multiedit.
      */
-    $scope.closeMulti = function() {
+    $scope.closeMulti = function () {
         multiEdit.exit();
         $scope.redirectOnCloseMulti();
     };
@@ -282,7 +287,7 @@ function WorkqueueCtrl(
     /**
      * If multi edit screen is opened, redirect to monitoring.
      */
-    $scope.redirectOnCloseMulti = function() {
+    $scope.redirectOnCloseMulti = function () {
         if (this.isMultiedit) {
             this.isMultiedit = false;
             $location.url(referrer.getReferrerUrl());
@@ -292,7 +297,7 @@ function WorkqueueCtrl(
     /*
      * Open article for edit
      */
-    $scope.edit = function(item, event) {
+    $scope.edit = function (item, event) {
         if (!event.ctrlKey) {
             $scope.articleInEditMode = item;
             authoringWorkspace.edit(item, item.lock_action);
@@ -306,7 +311,7 @@ function WorkqueueCtrl(
     /**
      * Get relative path to article
      */
-    $scope.link = function(item) {
+    $scope.link = function (item) {
         if (item) {
             return $rootScope.link('authoring', item);
         }
@@ -340,28 +345,29 @@ function ArticleDashboardDirective() {
             active: '=active',
             items: '=items',
         },
-        link: function(scope, elem, attrs) {
-            scope.closeItem = function(item) {
+        link: function (scope, elem, attrs) {
+            scope.closeItem = function (item) {
                 scope._closeItem({item: item});
             };
 
-            scope.edit = function(item, event) {
+            scope.edit = function (item, event) {
                 scope._edit({item: item, event: event});
             };
 
-            scope.link = function(item) {
+            scope.link = function (item) {
                 scope._link({item: item});
             };
         },
     };
 }
 
-angular.module('superdesk.apps.authoring.workqueue', [
-    'superdesk.core.activity',
-    'superdesk.apps.notification',
-    'superdesk.apps.authoring.multiedit',
-    'superdesk.apps.authoring.compare_versions',
-])
+angular
+    .module('superdesk.apps.authoring.workqueue', [
+        'superdesk.core.activity',
+        'superdesk.apps.notification',
+        'superdesk.apps.authoring.multiedit',
+        'superdesk.apps.authoring.compare_versions',
+    ])
     .service('workqueue', WorkqueueService)
     .controller('Workqueue', WorkqueueCtrl)
     .directive('sdWorkqueue', WorkqueueListDirective)

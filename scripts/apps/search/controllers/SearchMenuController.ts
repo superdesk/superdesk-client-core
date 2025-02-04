@@ -8,16 +8,32 @@ const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
 const isSameRepo = (shortcut, provider) => {
     const repo = get(shortcut, 'filter.query.repo', '');
 
-    return (repo != null && repo === provider._id) ||
-        (provider._id === '' && (repo == null || SUPERDESK_REPOS_REGEX.test(repo)));
+    return (
+        (repo != null && repo === provider._id) ||
+        (provider._id === '' && (repo == null || SUPERDESK_REPOS_REGEX.test(repo)))
+    );
 };
 
 SearchMenuController.$inject = [
-    '$rootScope', '$scope', '$filter', '$location', '$route', 'searchProviderService', 'api', 'savedSearch',
+    '$rootScope',
+    '$scope',
+    '$filter',
+    '$location',
+    '$route',
+    'searchProviderService',
+    'api',
+    'savedSearch',
     'privileges',
 ];
 export default function SearchMenuController(
-    $rootScope, $scope, $filter, $location, $route, searchProviderService, api, savedSearch,
+    $rootScope,
+    $scope,
+    $filter,
+    $location,
+    $route,
+    searchProviderService,
+    api,
+    savedSearch,
     privileges,
 ) {
     let providerLabels = {};
@@ -59,12 +75,13 @@ export default function SearchMenuController(
         if ($location.path() === '/search') {
             // prevent from changing active provider during click on article
             if (!$location.search()._id && !$location.search().item) {
-                this.activeProvider = this.providers.find(
-                    (provider) => isEqual($location.search(), getSearchParams(provider)),
+                this.activeProvider = this.providers.find((provider) =>
+                    isEqual($location.search(), getSearchParams(provider)),
                 );
             }
 
-            if (this.activeProvider == null && $location.search().repo) { // display search provider as active
+            if (this.activeProvider == null && $location.search().repo) {
+                // display search provider as active
                 this.activeProvider = this.providers.find((provider) => provider._id === $location.search().repo);
             }
         }
@@ -79,7 +96,7 @@ export default function SearchMenuController(
      *
      * @param {Object} provider
      */
-    this.providerLabel = (provider) => provider && (provider.name || providerLabels[provider.source]) || undefined;
+    this.providerLabel = (provider) => (provider && (provider.name || providerLabels[provider.source])) || undefined;
 
     // init saved searches
     const initSavedSearches = () => {
@@ -92,10 +109,12 @@ export default function SearchMenuController(
             // bundle repo and its shortcuts
             this.providers.forEach((provider) => {
                 providers.push(provider);
-                providers = providers.concat($filter('sortByName')(
-                    shortcuts.filter((shortcut) => isSameRepo(shortcut, provider)),
-                    'search_provider',
-                ));
+                providers = providers.concat(
+                    $filter('sortByName')(
+                        shortcuts.filter((shortcut) => isSameRepo(shortcut, provider)),
+                        'search_provider',
+                    ),
+                );
             });
 
             this.providers = providers;
@@ -105,7 +124,8 @@ export default function SearchMenuController(
 
     // init search providers
     if (get($rootScope.config, 'features.searchShortcut')) {
-        api.search_providers.query({max_results: 200, where: {is_closed: {$ne: true}}})
+        api.search_providers
+            .query({max_results: 200, where: {is_closed: {$ne: true}}})
             .then((result) => {
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
 
@@ -124,10 +144,9 @@ export default function SearchMenuController(
             })
             .then(initSavedSearches);
 
-        searchProviderService.getAllowedProviderTypes()
-            .then((providerTypes) => {
-                providerLabels = searchProviderService.getProviderLabels(providerTypes);
-            });
+        searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
+            providerLabels = searchProviderService.getProviderLabels(providerTypes);
+        });
     } else {
         this.providers = [SUPERDESK_PROVIDER];
         initSavedSearches();

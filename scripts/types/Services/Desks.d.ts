@@ -15,5 +15,5 @@ export interface IDesksService {
     loading: any;
     activeDeskId: any;
     activeStageId: any;
-    active: {desk: any, stage: any};
+    active: {desk: any; stage: any};
 }

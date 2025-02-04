@@ -19,7 +19,7 @@ function APIProvider() {
      *
      * Register an api.
      */
-    this.api = function(name, config) {
+    this.api = function (name, config) {
         apis[name] = config;
         return this;
     };
@@ -62,7 +62,8 @@ function APIProvider() {
          * Detect duplicate requests and serve these from cache.
          */
         function http(config) {
-            return $q.when(config.url)
+            return $q
+                .when(config.url)
                 .then((url) => {
                     config.url = url;
 
@@ -75,11 +76,7 @@ function APIProvider() {
                     let last = cache[key] || null;
 
                     if (last && now - last.now < CACHE_TTL) {
-                        console.warn('duplicate request',
-                            config.url,
-                            'after', now - last.now, 'ms',
-                            config.params,
-                        );
+                        console.warn('duplicate request', config.url, 'after', now - last.now, 'ms', config.params);
                         return last.promise;
                     }
 
@@ -92,7 +89,7 @@ function APIProvider() {
 
                     return promise;
                 })
-                .then((response) => isOK(response) ? response.data : $q.reject(response));
+                .then((response) => (isOK(response) ? response.data : $q.reject(response)));
         }
 
         /**
@@ -162,13 +159,13 @@ function APIProvider() {
          * @description
          * Get resource url.
          */
-        Resource.prototype.url = function(_id) {
+        Resource.prototype.url = function (_id) {
             function resolve(urlTemplate, data) {
                 return urlTemplate.replace(/<.*>/, data._id);
             }
 
-            return urls.resource(this.resource)
-                .then(angular.bind(this, function(url) {
+            return urls.resource(this.resource).then(
+                angular.bind(this, function (url) {
                     let addr = url;
 
                     if (this.parent) {
@@ -184,7 +181,8 @@ function APIProvider() {
                     }
 
                     return addr;
-                }));
+                }),
+            );
         };
 
         /**
@@ -194,7 +192,7 @@ function APIProvider() {
          * @description
          * Save an item
          */
-        Resource.prototype.save = function(item, diff, httpParams, options?: {skipPostProcessing: boolean}) {
+        Resource.prototype.save = function (item, diff, httpParams, options?: {skipPostProcessing: boolean}) {
             if (diff && diff._etag) {
                 item._etag = diff._etag;
             }
@@ -224,7 +222,7 @@ function APIProvider() {
          * @description
          * Replace an item
          */
-        Resource.prototype.replace = function(item) {
+        Resource.prototype.replace = function (item) {
             return http({
                 method: 'PUT',
                 url: this.url(item._id),
@@ -241,7 +239,7 @@ function APIProvider() {
          * @description
          * Query resource
          */
-        Resource.prototype.query = function(params, _cache) {
+        Resource.prototype.query = function (params, _cache) {
             return http({
                 method: 'GET',
                 url: this.url(),
@@ -258,22 +256,21 @@ function APIProvider() {
          * @description
          * Retrieve all items of a query
          */
-        Resource.prototype.getAll = function(params) {
+        Resource.prototype.getAll = function (params) {
             function _getAll(page = 1, items = []) {
-                return this.query(Object.assign({max_results: 199, page: page}, params))
-                    .then((result) => {
-                        let pg = page;
-                        let merged = items.concat(result._items);
+                return this.query(Object.assign({max_results: 199, page: page}, params)).then((result) => {
+                    let pg = page;
+                    let merged = items.concat(result._items);
 
-                        if (result._links.next) {
-                            pg++;
-                            // p = p.then(_getAll.call(this, pg, merged));
-                            return _getAll.call(this, pg, merged);
-                        } else {
-                            // deferred.resolve(merged);
-                            return merged;
-                        }
-                    });
+                    if (result._links.next) {
+                        pg++;
+                        // p = p.then(_getAll.call(this, pg, merged));
+                        return _getAll.call(this, pg, merged);
+                    } else {
+                        // deferred.resolve(merged);
+                        return merged;
+                    }
+                });
             }
             return _getAll.call(this);
         };
@@ -290,7 +287,7 @@ function APIProvider() {
          * @description
          * Get an item by _id
          */
-        Resource.prototype.getById = function(_id, params, _cache) {
+        Resource.prototype.getById = function (_id, params, _cache) {
             return http({
                 method: 'GET',
                 url: this.url(_id),
@@ -309,7 +306,7 @@ function APIProvider() {
          *
          * @description Remove an item
          */
-        Resource.prototype.remove = function(item, params) {
+        Resource.prototype.remove = function (item, params) {
             return http({
                 method: 'DELETE',
                 url: urls.item(item._links.self.href),
@@ -417,5 +414,4 @@ function APIProvider() {
     }
 }
 
-angular.module('superdesk.core.api.service', [])
-    .provider('api', APIProvider);
+angular.module('superdesk.core.api.service', []).provider('api', APIProvider);

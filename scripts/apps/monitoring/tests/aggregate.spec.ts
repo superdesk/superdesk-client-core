@@ -47,16 +47,18 @@ describe('aggregate widget', () => {
         beforeEach(window.module('superdesk.apps.aggregate'));
         beforeEach(window.module('superdesk.apps.vocabularies'));
 
-        beforeEach(window.module(($provide) => {
-            $provide.value('cards', {
-                criteria: function(card, queryString) {
-                    return {card: card, query: queryString};
-                },
-                shouldUpdate: function() {
-                    return true;
-                },
-            });
-        }));
+        beforeEach(
+            window.module(($provide) => {
+                $provide.value('cards', {
+                    criteria: function (card, queryString) {
+                        return {card: card, query: queryString};
+                    },
+                    shouldUpdate: function () {
+                        return true;
+                    },
+                });
+            }),
+        );
 
         beforeEach(inject((api, $q) => {
             spyOn(api, 'query').and.returnValue($q.defer().promise);
@@ -70,8 +72,15 @@ describe('aggregate widget', () => {
             scope.agg = {
                 total: 1,
                 cards: [
-                    {_id: 1, max_items: 10, query: null, fileType: null,
-                        header: 'Test Group', subheader: 'Sub header', type: 'stage'},
+                    {
+                        _id: 1,
+                        max_items: 10,
+                        query: null,
+                        fileType: null,
+                        header: 'Test Group',
+                        subheader: 'Sub header',
+                        type: 'stage',
+                    },
                 ],
             };
 

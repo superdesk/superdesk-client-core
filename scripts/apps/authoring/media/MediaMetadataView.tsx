@@ -24,25 +24,21 @@ export class MediaMetadataView extends React.PureComponent<IProps> {
 
         return (
             <div className={className}>
-                {
-                    showAltText !== true ? null : (
-                        <span>
-                            <em>{gettext('Alt text:')}</em>
-                            {item.alt_text ?? NO_VALUE_LABEL}
-                        </span>
-                    )
-                }
+                {showAltText !== true ? null : (
+                    <span>
+                        <em>{gettext('Alt text:')}</em>
+                        {item.alt_text ?? NO_VALUE_LABEL}
+                    </span>
+                )}
 
-                {
-                    fields
-                        .filter(({fieldId}) => validator[fieldId] != null)
-                        .map(({fieldId, label}) => (
-                            <span key={fieldId}>
-                                <em>{label}</em>
-                                {item[fieldId] ?? NO_VALUE_LABEL}
-                            </span>
-                        ))
-                }
+                {fields
+                    .filter(({fieldId}) => validator[fieldId] != null)
+                    .map(({fieldId, label}) => (
+                        <span key={fieldId}>
+                            <em>{label}</em>
+                            {item[fieldId] ?? NO_VALUE_LABEL}
+                        </span>
+                    ))}
             </div>
         );
     }

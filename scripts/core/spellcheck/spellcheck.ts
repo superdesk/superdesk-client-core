@@ -29,7 +29,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      *
      * @param {string} _lang
      */
-    this.setLanguage = function(_lang) {
+    this.setLanguage = function (_lang) {
         if (lang !== _lang) {
             lang = _lang;
             dict = {};
@@ -95,7 +95,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      * @param {Object} language
      * @returns {Object} List of dictionaries
      */
-    this.getDictionary = function(language) {
+    this.getDictionary = function (language) {
         if (!_activeCache[language]) {
             _activeCache[language] = dictionaries.getActive(language, getBaseLanguage(language));
         }
@@ -108,7 +108,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      *
      * @return {Promise}
      */
-    this.getAbbreviationsDict = function(force) {
+    this.getAbbreviationsDict = function (force) {
         if (!lang) {
             // if lang is not specified set it to en
             return $q.when({});
@@ -144,9 +144,12 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         }
     }
 
-    $rootScope.$on('abbreviations:updated', angular.bind(self, (evt, data) => {
-        updateAbbreviations(data);
-    }));
+    $rootScope.$on(
+        'abbreviations:updated',
+        angular.bind(self, (evt, data) => {
+            updateAbbreviations(data);
+        }),
+    );
 
     /**
      * Reset active dictionary cache
@@ -212,7 +215,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         var _reNonSentenceWords = '\\s+(?:' + _abbreviationString + ')(\\s+\\w+)';
         var reNonSentenceWords = new RegExp(_reNonSentenceWords, 'g');
 
-        while (!_.isNil(match = reNonSentenceWords.exec(textContent))) {
+        while (!_.isNil((match = reNonSentenceWords.exec(textContent)))) {
             wordIndex = match.index + match[0].indexOf(_.trim(match[1]));
             nonSentenceWords[currentOffset + wordIndex] = _.trim(match[1]);
         }
@@ -237,7 +240,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         var sentenceWords = {};
         // Replace quotes (",“,”,‘,’,'), that might occur at start/end of sentence/paragraph before applying regex.
 
-        while (!_.isNil(match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' ')))) {
+        while (!_.isNil((match = reSentenceWords.exec(textContent.replace(/["“”‘’']/g, ' '))))) {
             wordIndex = match.index + match[0].indexOf(match[1]);
             sentenceWords[currentOffset + wordIndex] = match[1];
         }
@@ -316,7 +319,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
             var objSentenceWords = getSentenceWords(node.textContent, currentOffset);
 
             while (tree.nextNode()) {
-                while (!_.isNil(dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent))) {
+                while (!_.isNil((dblSpacesMatch = dblSpacesRegExp.exec(tree.currentNode.textContent)))) {
                     var dblSpace = dblSpacesMatch[1];
 
                     errors.push({
@@ -326,7 +329,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
                     });
                 }
 
-                while (!_.isNil(match = regexp.exec(tree.currentNode.textContent))) {
+                while (!_.isNil((match = regexp.exec(tree.currentNode.textContent)))) {
                     var word = match[0];
                     var isSentenceWord = !!objSentenceWords[currentOffset + match.index];
 
@@ -355,21 +358,23 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
             return Promise.resolve([{key: ' ', value: 'Add single space'}]);
         }
 
-        return api.save('spellcheck', {
-            word: word,
-            language_id: lang,
-        }).then((result) => {
-            var allDict = getDict();
-            var wordFoundInDict = _.pick(allDict.content, (value, key) => {
-                if (key.toLowerCase() === word.toLowerCase()) {
-                    return key;
-                }
+        return api
+            .save('spellcheck', {
+                word: word,
+                language_id: lang,
+            })
+            .then((result) => {
+                var allDict = getDict();
+                var wordFoundInDict = _.pick(allDict.content, (value, key) => {
+                    if (key.toLowerCase() === word.toLowerCase()) {
+                        return key;
+                    }
+                });
+
+                angular.extend(result.corrections, Object.keys(wordFoundInDict));
+
+                return result.corrections.map((key) => ({key: key, value: key}));
             });
-
-            angular.extend(result.corrections, Object.keys(wordFoundInDict));
-
-            return result.corrections.map((key) => ({key: key, value: key}));
-        });
     };
 
     /**
@@ -465,12 +470,15 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     this.getSpellcheckerStatus = function getSpellcheckerStatus() {
         var status = true;
 
-        return preferencesService.get(PREFERENCES_KEY).then((result) => {
-            if (angular.isDefined(result)) {
-                status = result.enabled;
-            }
-            return status;
-        }, (error) => status);
+        return preferencesService.get(PREFERENCES_KEY).then(
+            (result) => {
+                if (angular.isDefined(result)) {
+                    status = result.enabled;
+                }
+                return status;
+            },
+            (error) => status,
+        );
     };
 
     /**
@@ -582,8 +590,10 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
                 render();
             } else {
                 spellcheck.getSpellcheckerStatus().then((status) => {
-                    self.isAuto = status && !useTansaProofing()
-                        && (spellcheck.isActiveDictionary || getSpellchecker($scope.item.language) != null);
+                    self.isAuto =
+                        status &&
+                        !useTansaProofing() &&
+                        (spellcheck.isActiveDictionary || getSpellchecker($scope.item.language) != null);
                     if (self.isAuto) {
                         runSpellchecker();
                     } else {
@@ -605,6 +615,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
     });
 }
 
-angular.module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
+angular
+    .module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
     .service('spellcheck', SpellcheckService)
     .controller('SpellcheckMenu', SpellcheckMenuController);

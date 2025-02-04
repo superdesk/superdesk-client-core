@@ -28,10 +28,12 @@ sd-suggest {
 
     .live-suggest {
         &__header {
-            inset-block-start:0;
+            inset-block-start: 0;
             background: var(--sd-item__main-Bg);
 
-            h3 {color: $sd-text-label;}
+            h3 {
+                color: $sd-text-label;
+            }
 
             .close i:before {
                 cursor: pointer;
@@ -114,7 +116,7 @@ sd-suggest {
             font-style: normal;
             padding-inline-start: 35px;
             margin-block-start: 0px;
-        }	    
+        }
 
         .headline {
             margin: 13px 0 0;

@@ -1,9 +1,4 @@
-<div
-    ng-if="item"
-    ng-repeat="field in fields track by field.field"
-    data-test-id="media-metadata-editor"
->
-
+<div ng-if="item" ng-repeat="field in fields track by field.field" data-test-id="media-metadata-editor">
     <div
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
         class="sd-line-input sd-line-input--boxed"
@@ -43,10 +38,16 @@
         data-test-id="{{'field--' + field.field}}"
     />
 
-    <div ng-if="field.cv && !field.cv.field_type" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+    <div
+        ng-if="field.cv && !field.cv.field_type"
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
+    >
         <label class="sd-line-input__label">{{ field.label }}</label>
 
-        <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
+        <div
+            sd-meta-place
+            ng-if="field.field === 'place' && features.places_autocomplete"
             class="data sd-terms--boxed"
             data-item="item"
             data-field="place"
@@ -54,7 +55,9 @@
             data-change="onChange({key: field})"
         ></div>
 
-        <div sd-meta-words-list ng-if="field.field === 'keywords'"
+        <div
+            sd-meta-words-list
+            ng-if="field.field === 'keywords'"
             class="data sd-terms--boxed sd-line-input--dark-ui sd-line-input--boxed"
             data-item="item"
             data-field="keywords"
@@ -65,7 +68,8 @@
             data-header="true"
         ></div>
 
-        <div sd-meta-terms
+        <div
+            sd-meta-terms
             ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type === 'multi selection'"
             class="data sd-terms--boxed"
             data-item="item"
@@ -80,7 +84,8 @@
             data-reload-list="true"
         ></div>
 
-        <div sd-meta-dropdown
+        <div
+            sd-meta-dropdown
             ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type !== 'multi selection'"
             class="data sd-terms--boxed"
             data-item="item"
@@ -99,9 +104,14 @@
         </span>
     </div>
 
-    <div ng-if="field.cv && field.cv.field_type === 'date'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+    <div
+        ng-if="field.cv && field.cv.field_type === 'date'"
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
+    >
         <label class="form-label">{{ field.label }}</label>
-        <div sd-datepicker
+        <div
+            sd-datepicker
             ng-disabled="isDisabled(field)"
             ng-model="item.extra[field.field]"
             data-format="YYYY-MM-DDT00:00:00+0000"
@@ -109,7 +119,11 @@
         ></div>
     </div>
 
-    <div ng-if="field.cv && field.cv.field_type === 'authors'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+    <div
+        ng-if="field.cv && field.cv.field_type === 'authors'"
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
+    >
         <label class="sd-line-input__label">{{ field.label }}</label>
         <div class="authoring-header__input-holder">
             <div
@@ -119,7 +133,7 @@
                 data-field="authors"
                 data-unique="_id"
                 data-list="field.cv.items"
-                data-label= "{{ :: 'Add author' | translate }}"
+                data-label="{{ :: 'Add author' | translate }}"
                 ng-disabled="isDisabled(field)"
                 data-header="true"
                 data-change="onChange({key: field})"

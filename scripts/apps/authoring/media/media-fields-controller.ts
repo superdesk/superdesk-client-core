@@ -22,8 +22,11 @@ export default function MediaFieldsController($q, metadata) {
         }
 
         if (cv == null && field === 'anpa_category') {
-            return {schema_field: 'anpa_category', selection_type: 'multi selection',
-                items: metadata.values.categories};
+            return {
+                schema_field: 'anpa_category',
+                selection_type: 'multi selection',
+                items: metadata.values.categories,
+            };
         }
 
         return cv;
@@ -61,14 +64,18 @@ export default function MediaFieldsController($q, metadata) {
                 .map((field) => {
                     const cv = getCV(field);
 
-                    return Object.assign({
-                        field: field,
-                        label: getLabelForFieldId(field),
-                        cv: cv,
-                        extra: cv != null && (cv.field_type === 'text' || cv.field_type === 'date'),
-                    }, editor[field], schema[field]);
+                    return Object.assign(
+                        {
+                            field: field,
+                            label: getLabelForFieldId(field),
+                            cv: cv,
+                            extra: cv != null && (cv.field_type === 'text' || cv.field_type === 'date'),
+                        },
+                        editor[field],
+                        schema[field],
+                    );
                 }),
-            (field) => field.section === 'header' ? field.order : field.order + 1000,
+            (field) => (field.section === 'header' ? field.order : field.order + 1000),
         );
     });
 }

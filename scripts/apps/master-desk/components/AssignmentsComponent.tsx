@@ -102,8 +102,10 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
 
     getDeskOverview(desk: IDesk | IDeskExtra) {
         return new Promise((resolve, reject) =>
-            dataApi.query(`desks/${desk._id}/overview/assignments`, 1, {field: '_id', direction: 'ascending'}, {})
-                .then((res) => resolve(res), (err) => reject(err)),
+            dataApi.query(`desks/${desk._id}/overview/assignments`, 1, {field: '_id', direction: 'ascending'}, {}).then(
+                (res) => resolve(res),
+                (err) => reject(err),
+            ),
         );
     }
 
@@ -112,8 +114,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
 
         if (this.state.deskData && this.state.deskData[desk._id]) {
             this.state.deskData[desk._id].forEach((item) => {
-                let assignment = this.assignmentStages.find((stage) =>
-                    stage.states.includes(item.state));
+                let assignment = this.assignmentStages.find((stage) => stage.states.includes(item.state));
 
                 if (assignment) {
                     total += item ? item.count : 0;
@@ -126,8 +127,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
 
     getStageTotal(desk: IDeskExtra, state: Array<string>) {
         if (this.state.deskData && this.state.deskData[desk._id]) {
-            let data = this.state.deskData[desk._id].filter((item) =>
-                state.includes(item.state));
+            let data = this.state.deskData[desk._id].filter((item) => state.includes(item.state));
 
             return data.reduce((total, item) => total + item.count, 0);
         }
@@ -174,8 +174,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                                 color={item.color}
                                 total={this.getStageTotal(desk, item.states)}
                             />
-                        ),
-                        )}
+                        ))}
                     </CardComponent>
                 ))}
             </div>

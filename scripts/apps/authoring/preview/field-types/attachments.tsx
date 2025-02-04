@@ -22,9 +22,7 @@ export class AttachmentsPreview extends React.PureComponent<IProps, IState> {
     }
     componentDidMount() {
         Promise.all(
-            this.props.attachmentsIds.map(
-                ({attachment}) => dataApi.findOne<IAttachment>('attachments', attachment),
-            ),
+            this.props.attachmentsIds.map(({attachment}) => dataApi.findOne<IAttachment>('attachments', attachment)),
         ).then((attachments: Array<IAttachment>) => {
             this.setState({attachments});
         });
@@ -39,12 +37,7 @@ export class AttachmentsPreview extends React.PureComponent<IProps, IState> {
         return (
             <div>
                 {attachments.map((attachment) => (
-                    <AttachmentItem
-                        key={attachment._id}
-                        attachment={attachment}
-                        selected={false}
-                        onClick={noop}
-                    />
+                    <AttachmentItem key={attachment._id} attachment={attachment} selected={false} onClick={noop} />
                 ))}
             </div>
         );

@@ -34,18 +34,18 @@ export class ColouredValuePopup extends React.PureComponent<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-                onEventCapture(event);
-                this.handleEnterKey(event);
-                break;
-            case KEYCODES.DOWN:
-                onEventCapture(event);
-                this.handleDownArrowKey(event);
-                break;
-            case KEYCODES.UP:
-                onEventCapture(event);
-                this.handleUpArrowKey(event);
-                break;
+                case KEYCODES.ENTER:
+                    onEventCapture(event);
+                    this.handleEnterKey(event);
+                    break;
+                case KEYCODES.DOWN:
+                    onEventCapture(event);
+                    this.handleDownArrowKey(event);
+                    break;
+                case KEYCODES.UP:
+                    onEventCapture(event);
+                    this.handleUpArrowKey(event);
+                    break;
             }
         }
     }
@@ -150,10 +150,12 @@ ColouredValuePopup.propTypes = {
     onChange: PropTypes.func,
     onCancel: PropTypes.func,
     title: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.string,
-        value: PropTypes.object,
-    })).isRequired,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.object,
+        }),
+    ).isRequired,
     getClassNamesForOption: PropTypes.func,
     clearable: PropTypes.bool,
     target: PropTypes.string.isRequired,

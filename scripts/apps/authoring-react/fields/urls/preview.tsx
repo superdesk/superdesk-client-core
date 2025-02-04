@@ -12,19 +12,13 @@ export class Preview extends React.PureComponent<IProps> {
 
         return (
             <Spacer v gap="16">
-                {
-                    this.props.value.map(({url, description}, i) => (
-                        <Spacer v gap="4" key={i}>
-                            <div>{url}</div>
+                {this.props.value.map(({url, description}, i) => (
+                    <Spacer v gap="4" key={i}>
+                        <div>{url}</div>
 
-                            {
-                                description.length > 0 && (
-                                    <div>{description}</div>
-                                )
-                            }
-                        </Spacer>
-                    ))
-                }
+                        {description.length > 0 && <div>{description}</div>}
+                    </Spacer>
+                ))}
             </Spacer>
         );
     }

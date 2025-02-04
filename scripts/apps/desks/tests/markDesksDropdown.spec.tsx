@@ -13,12 +13,7 @@ describe('<MarkDesksDropdown />', () => {
 
     it('check default values for dropdown', () => {
         const wrapper = mount(
-            <MarkDesksDropdown
-                desks={[desk1, desk2]}
-                item={item}
-                className="abc"
-                noDesksLabel="No desk"
-            />,
+            <MarkDesksDropdown desks={[desk1, desk2]} item={item} className="abc" noDesksLabel="No desk" />,
         );
 
         expect(wrapper.find('[data-test-id="mark-for-desk--desk"]').length).toBe(2);

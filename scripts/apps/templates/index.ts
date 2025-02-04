@@ -18,11 +18,12 @@ import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {AuthoringAngularTemplateIntegration} from 'apps/authoring-react/authoring-angular-template-integration';
 
-angular.module('superdesk.apps.templates', [
-    'superdesk.core.activity',
-    'superdesk.apps.authoring',
-    'superdesk.core.preferences',
-])
+angular
+    .module('superdesk.apps.templates', [
+        'superdesk.core.activity',
+        'superdesk.apps.authoring',
+        'superdesk.core.preferences',
+    ])
     .service('templates', TemplatesService)
 
     .filter('templatesBy', FilterTemplatesFilter)
@@ -31,23 +32,23 @@ angular.module('superdesk.apps.templates', [
     .directive('sdTemplateEditorModal', directive.TemplateEditorModal)
     .component(
         'sdEditTemplate',
-        reactToAngular1(
-            AuthoringAngularTemplateIntegration,
-            ['template', 'scopeApply'],
-            [],
-            'height: 100%;',
-        ))
+        reactToAngular1(AuthoringAngularTemplateIntegration, ['template', 'scopeApply'], [], 'height: 100%;'),
+    )
 
     .controller('CreateTemplateController', ctrl.CreateTemplateController)
     .controller('TemplateMenu', ctrl.TemplateMenuController)
 
-    .config(['superdeskProvider', 'apiProvider', function config(superdesk, apiProvider) {
-        superdesk.activity('/settings/templates', {
-            label: gettext('Templates'),
-            templateUrl: 'scripts/apps/templates/views/settings.html',
-            controller: ctrl.TemplatesSettingsController,
-            category: superdesk.MENU_SETTINGS,
-            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
-            priority: 2000,
-        });
-    }]);
+    .config([
+        'superdeskProvider',
+        'apiProvider',
+        function config(superdesk, apiProvider) {
+            superdesk.activity('/settings/templates', {
+                label: gettext('Templates'),
+                templateUrl: 'scripts/apps/templates/views/settings.html',
+                controller: ctrl.TemplatesSettingsController,
+                category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
+                priority: 2000,
+            });
+        },
+    ]);

@@ -1,13 +1,7 @@
 import * as React from 'react';
-import {
-    IEditorComponentProps,
-    IEditor3ValueOperational,
-    IEditor3Config,
-} from 'superdesk-api';
+import {IEditorComponentProps, IEditor3ValueOperational, IEditor3Config} from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
-import {
-    getInitialSpellcheckerData,
-} from 'core/editor3/store';
+import {getInitialSpellcheckerData} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
 import {Editor3} from 'core/editor3/components';
@@ -97,16 +91,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const store = this.props.value.store;
         const spellcheck = this.state.spellcheckerEnabled ? ng.get('spellcheck') : null;
 
-        store.dispatch(setExternalOptions({
-            editorFormat: this.props.config.editorFormat ?? [],
-            singleLine: this.props.config.singleLine ?? false,
-            readOnly: this.props.readOnly || this.props.config.readOnly,
-            spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
-            limitConfig: this.getCharacterLimitPreference(),
-            item: {
-                language: this.props.language, // required for annotations to work
-            },
-        }));
+        store.dispatch(
+            setExternalOptions({
+                editorFormat: this.props.config.editorFormat ?? [],
+                singleLine: this.props.config.singleLine ?? false,
+                readOnly: this.props.readOnly || this.props.config.readOnly,
+                spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
+                limitConfig: this.getCharacterLimitPreference(),
+                item: {
+                    language: this.props.language, // required for annotations to work
+                },
+            }),
+        );
     }
 
     /**
@@ -126,12 +122,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
             // setting initial spellchecker status (and marking spelling issues)
             dispatchEditorEvent('spellchecker__request_status', (status) => {
-                this.props.value.store.dispatch(
-                    setSpellcheckerStatus(
-                        status,
-                        this.unmountAbortController.signal,
-                    ),
-                );
+                this.props.value.store.dispatch(setSpellcheckerStatus(status, this.unmountAbortController.signal));
             });
 
             /**
@@ -169,9 +160,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                     return;
                 }
 
-                this.props.value.store.dispatch(
-                    setHighlightCriteria({diff: {[text]: null}, caseSensitive}),
-                );
+                this.props.value.store.dispatch(setHighlightCriteria({diff: {[text]: null}, caseSensitive}));
             }),
         );
 
@@ -189,18 +178,16 @@ export class Editor extends React.PureComponent<IProps, IState> {
                     return acc;
                 }, {});
 
-                this.props.value.store.dispatch(
-                    setHighlightCriteria({diff, caseSensitive}),
-                );
+                this.props.value.store.dispatch(setHighlightCriteria({diff, caseSensitive}));
             }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addEditorEventListener('find_and_replace__request_for_current_selection_index', (event) => {
-                dispatchEditorEvent(
-                    'find_and_replace__receive_current_selection_index',
-                    {editorId: this.props.editorId, selectionIndex: this.props.value.store.getState().searchTerm.index},
-                );
+                dispatchEditorEvent('find_and_replace__receive_current_selection_index', {
+                    editorId: this.props.editorId,
+                    selectionIndex: this.props.value.store.getState().searchTerm.index,
+                });
             }),
         );
 
@@ -283,10 +270,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.eventListenersToRemoveBeforeUnmounting.push(
             addEditorEventListener('spellchecker__set_status', (event) => {
                 this.props.value.store.dispatch(
-                    setSpellcheckerStatus(
-                        event.detail,
-                        this.unmountAbortController.signal,
-                    ),
+                    setSpellcheckerStatus(event.detail, this.unmountAbortController.signal),
                 );
             }),
         );
@@ -303,11 +287,11 @@ export class Editor extends React.PureComponent<IProps, IState> {
         if (this.props.value.store !== prevProps.value.store) {
             this.initializeEditor();
         } else if (
-            this.props.config !== prevProps.config
-            || this.props.readOnly !== prevProps.readOnly
-            || this.props.config.readOnly !== prevProps.config.readOnly
-            || this.props.editorPreferences !== prevProps.editorPreferences
-            || this.props.language !== prevProps.language
+            this.props.config !== prevProps.config ||
+            this.props.readOnly !== prevProps.readOnly ||
+            this.props.config.readOnly !== prevProps.config.readOnly ||
+            this.props.editorPreferences !== prevProps.editorPreferences ||
+            this.props.language !== prevProps.language
         ) {
             this.syncPropsWithReduxStore();
         }
@@ -330,77 +314,70 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const miniToolbar = (
             <Spacer v gap="0" noWrap>
                 <Spacer h gap="8" noWrap>
-                    {
-                        showStatistics && (
-                            <TextStatistics
-                                text={this.props.value.contentState.getPlainText()}
-                                language={this.props.language}
-                                limit={this.props.config.maxLength}
-                            />
-                        )
-                    }
+                    {showStatistics && (
+                        <TextStatistics
+                            text={this.props.value.contentState.getPlainText()}
+                            language={this.props.language}
+                            limit={this.props.config.maxLength}
+                        />
+                    )}
 
-                    {
-                        characterLimitConfig != null && (
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        showModal(({closeModal}) => (
-                                            <CharacterCountConfigModal
-                                                closeModal={closeModal}
-                                                value={characterLimitConfig.ui}
-                                                onChange={(ui) => {
-                                                    const nextValue: EditorLimit = {
-                                                        ...characterLimitConfig,
-                                                        ui: ui,
-                                                    };
+                    {characterLimitConfig != null && (
+                        <div>
+                            <button
+                                onClick={() => {
+                                    showModal(({closeModal}) => (
+                                        <CharacterCountConfigModal
+                                            closeModal={closeModal}
+                                            value={characterLimitConfig.ui}
+                                            onChange={(ui) => {
+                                                const nextValue: EditorLimit = {
+                                                    ...characterLimitConfig,
+                                                    ui: ui,
+                                                };
 
-                                                    this.props.onEditorPreferencesChange({
-                                                        characterLimitMode: ui,
-                                                    });
+                                                this.props.onEditorPreferencesChange({
+                                                    characterLimitMode: ui,
+                                                });
 
-                                                    this.props.value.store.dispatch(
-                                                        changeLimitConfig(nextValue),
-                                                    );
-                                                }}
-                                            />
-                                        ));
-                                    }}
-                                >
-                                    <i className="icon-settings" />
-                                </button>
-                            </div>
-                        )
-                    }
+                                                this.props.value.store.dispatch(changeLimitConfig(nextValue));
+                                            }}
+                                        />
+                                    ));
+                                }}
+                            >
+                                <i className="icon-settings" />
+                            </button>
+                        </div>
+                    )}
                 </Spacer>
 
-                {
-                    invalidCharsDetected.length > 0 && (
-                        <div
-                            style={{
-                                display: 'flex',
-                                gap: '10px',
-                                alignItems: 'center',
-                                justifyContent: 'end',
-                            }}
-                        >
-                            <div className="editor3-invalid-chars-error">
-                                {gettextPlural(
-                                    invalidCharsDetected.length,
-                                    'Character {{chars}} is not allowed',
-                                    'The following characters are not allowed {{chars}}',
-                                    {chars: invalidCharsDetected.join(' ')},
-                                )}
-                            </div>
+                {invalidCharsDetected.length > 0 && (
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                            alignItems: 'center',
+                            justifyContent: 'end',
+                        }}
+                    >
+                        <div className="editor3-invalid-chars-error">
+                            {gettextPlural(
+                                invalidCharsDetected.length,
+                                'Character {{chars}} is not allowed',
+                                'The following characters are not allowed {{chars}}',
+                                {chars: invalidCharsDetected.join(' ')},
+                            )}
                         </div>
-                    )
-                }
+                    </div>
+                )}
             </Spacer>
         );
 
-        const options = this.props.config.vocabularyId != null
-            ? this.props.getVocabularyItems(this.props.config.vocabularyId)
-            : null;
+        const options =
+            this.props.config.vocabularyId != null
+                ? this.props.getVocabularyItems(this.props.config.vocabularyId)
+                : null;
 
         const HelperComponent = this.props.config.helperComponent;
 
@@ -412,51 +389,44 @@ export class Editor extends React.PureComponent<IProps, IState> {
                  */
                 miniToolbar={isSpacerTreeEmpty(miniToolbar) ? undefined : miniToolbar}
             >
-                {
-                    HelperComponent != null && (
-                        <HelperComponent
-                            language={this.props.language}
-                            readOnly={this.props.readOnly}
-                            onChange={(value) => {
-                                this.props.onChange(value);
-                            }}
-                        />
-                    )
-                }
+                {HelperComponent != null && (
+                    <HelperComponent
+                        language={this.props.language}
+                        readOnly={this.props.readOnly}
+                        onChange={(value) => {
+                            this.props.onChange(value);
+                        }}
+                    />
+                )}
 
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
-                        {
-                            options != null && (
-                                <>
-                                    <Select
-                                        value=""
-                                        onChange={(value) => {
-                                            const editorState: EditorState = this.props.value.store
-                                                .getState().editorState;
+                        {options != null && (
+                            <>
+                                <Select
+                                    value=""
+                                    onChange={(value) => {
+                                        const editorState: EditorState = this.props.value.store.getState().editorState;
 
-                                            this.props.value.store.dispatch(
-                                                changeEditorState(appendText(value as string, editorState)),
-                                            );
-                                        }}
-                                        label=""
-                                        labelHidden
-                                    >
-                                        <Option value="" />
-                                        {
-                                            options.map((vocabularyItem, i) => (
-                                                <Option key={i} value={vocabularyItem.value}>
-                                                    {vocabularyItem.value}
-                                                </Option>
-                                            ))
-                                        }
-                                    </Select>
-                                    <SpacerBlock v gap="16" />
-                                </>
-                            )
-                        }
+                                        this.props.value.store.dispatch(
+                                            changeEditorState(appendText(value as string, editorState)),
+                                        );
+                                    }}
+                                    label=""
+                                    labelHidden
+                                >
+                                    <Option value="" />
+                                    {options.map((vocabularyItem, i) => (
+                                        <Option key={i} value={vocabularyItem.value}>
+                                            {vocabularyItem.value}
+                                        </Option>
+                                    ))}
+                                </Select>
+                                <SpacerBlock v gap="16" />
+                            </>
+                        )}
 
-                        <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
+                        <div className={(this.props.config.compact ?? false) ? 'sd-input-style' : undefined}>
                             <Editor3
                                 uiTheme={this.props.uiTheme}
                                 scrollContainer=".sd-editor-content__main-container"

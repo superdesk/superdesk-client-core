@@ -10,8 +10,6 @@ export class LinesCount extends React.Component<IPropsItemListInfo, any> {
             return null;
         }
 
-        return (
-            <span title={gettext('{{x}} lines', {x: lines_count})}>{lines_count}</span>
-        );
+        return <span title={gettext('{{x}} lines', {x: lines_count})}>{lines_count}</span>;
     }
 }

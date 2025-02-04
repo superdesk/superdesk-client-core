@@ -51,14 +51,18 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description Wrap $http call
      */
     function http(config) {
-        return $q.when(config.url)
+        return $q
+            .when(config.url)
             .then((url) => {
                 config.url = url;
                 return $http(config);
             })
             .then((response) => {
-                if (response.status >= 200 && response.status < 300 &&
-                (!response.data || !response.data._status || response.data._status !== 'ERR')) {
+                if (
+                    response.status >= 200 &&
+                    response.status < 300 &&
+                    (!response.data || !response.data._status || response.data._status !== 'ERR')
+                ) {
                     return response;
                 }
 
@@ -117,7 +121,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Get entity by url
      */
-    HttpEndpoint.prototype.getByUrl = function(url, cache) {
+    HttpEndpoint.prototype.getByUrl = function (url, cache) {
         return http({
             method: 'GET',
             url: urls.item(url),
@@ -136,17 +140,19 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Get entity by given id
      */
-    HttpEndpoint.prototype.getById = function(id, params, cache) {
-        return getUrl(this).then(_.bind((resourceUrl) => {
-            var url = resourceUrl.replace(/\/+$/, '') + '/' + id;
+    HttpEndpoint.prototype.getById = function (id, params, cache) {
+        return getUrl(this).then(
+            _.bind((resourceUrl) => {
+                var url = resourceUrl.replace(/\/+$/, '') + '/' + id;
 
-            return http({
-                method: 'GET',
-                url: url,
-                params: params,
-                cache: cache,
-            }).then((response) => response.data);
-        }, this));
+                return http({
+                    method: 'GET',
+                    url: url,
+                    params: params,
+                    cache: cache,
+                }).then((response) => response.data);
+            }, this),
+        );
     };
 
     /**
@@ -159,7 +165,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Resource query method
      */
-    HttpEndpoint.prototype.query = function(params, cache) {
+    HttpEndpoint.prototype.query = function (params, cache) {
         return http({
             method: 'GET',
             params: params,
@@ -182,7 +188,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Update item
      */
-    HttpEndpoint.prototype.update = function(item, diff, params) {
+    HttpEndpoint.prototype.update = function (item, diff, params) {
         let diff2 = diff || angular.extend({}, item);
 
         if (diff2._etag) {
@@ -214,7 +220,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Create new item
      */
-    HttpEndpoint.prototype.create = function(itemData) {
+    HttpEndpoint.prototype.create = function (itemData) {
         return http({
             method: 'POST',
             url: getUrl(this),
@@ -239,7 +245,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Save item
      */
-    HttpEndpoint.prototype.save = function(item, diff) {
+    HttpEndpoint.prototype.save = function (item, diff) {
         return item._id ? this.update(item, diff) : this.create(_.extend(item, diff));
     };
 
@@ -255,7 +261,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Replace item
      */
-    HttpEndpoint.prototype.replace = function(dest, item) {
+    HttpEndpoint.prototype.replace = function (dest, item) {
         return http({
             method: 'PUT',
             url: urls.item(dest),
@@ -278,12 +284,12 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Remove item
      */
-    HttpEndpoint.prototype.remove = function(item) {
+    HttpEndpoint.prototype.remove = function (item) {
         return http({
             method: 'DELETE',
             url: urls.item(item._links.self.href),
             headers: getHeaders(this, item),
-        }).then(null, (response) => response.status === 404 ? $q.when(response) : $q.reject(response));
+        }).then(null, (response) => (response.status === 404 ? $q.when(response) : $q.reject(response)));
     };
 
     /**
@@ -296,7 +302,7 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Get resource url
      */
-    HttpEndpoint.prototype.getUrl = function() {
+    HttpEndpoint.prototype.getUrl = function () {
         return getUrl(this);
     };
 
@@ -310,12 +316,11 @@ function HttpEndpointFactory($http, $q, urls, _) {
      * @description
      * Get headers
      */
-    HttpEndpoint.prototype.getHeaders = function() {
+    HttpEndpoint.prototype.getHeaders = function () {
         return getHeaders(this) || {};
     };
 
     return HttpEndpoint;
 }
 
-angular.module('superdesk.core.api.http', [])
-    .factory('HttpEndpointFactory', HttpEndpointFactory);
+angular.module('superdesk.core.api.http', []).factory('HttpEndpointFactory', HttpEndpointFactory);

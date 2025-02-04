@@ -14,15 +14,12 @@ export function hasItemChanged<T>(original: Partial<T>, updates: Partial<T>): bo
 }
 
 export function isSamsApiError(error: any): boolean {
-    return error?.error != null &&
-        error?.name != null &&
-        error?.description != null;
+    return error?.error != null && error?.name != null && error?.description != null;
 }
 
 // Provide translations here, as the SAMS API does not currently support localisation
 export const API_ERRORS: Dictionary<string, (error: IAPIError) => string> = {
-    '04002': (_error) =>
-        superdeskApi.localization.gettext('Error[04002]: Invalid search query'),
+    '04002': (_error) => superdeskApi.localization.gettext('Error[04002]: Invalid search query'),
     '04001': (_error) => {
         for (let error of Object.keys(_error.errors!)) {
             for (let key of _error.errors![error]) {

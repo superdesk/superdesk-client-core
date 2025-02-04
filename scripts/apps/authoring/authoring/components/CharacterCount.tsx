@@ -26,17 +26,11 @@ export function CharacterCount(props: IProps) {
 
     return (
         <>
-            <span className={classNames('char-count', {error: highlightLimit})}>
-                {gettext('characters')}
-            </span>
+            <span className={classNames('char-count', {error: highlightLimit})}>{gettext('characters')}</span>
 
             <span className={classNames('char-count', {error: highlightLimit})}>
                 {numChars}
-                {limit && (
-                    <span className={classNames({error: highlightLimit})}>
-                        /{limit}
-                    </span>
-                )}
+                {limit && <span className={classNames({error: highlightLimit})}>/{limit}</span>}
             </span>
         </>
     );
@@ -55,11 +49,7 @@ export function CharacterCount2(props: IProps) {
     return (
         <span className={classNames('char-count-base', {error: highlightLimit})}>
             {numChars}
-            {limit && (
-                <span className={classNames({error: highlightLimit})}>
-                    /{limit}
-                </span>
-            )}
+            {limit && <span className={classNames({error: highlightLimit})}>/{limit}</span>}
             &nbsp;
             {gettext('characters')}
         </span>

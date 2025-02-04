@@ -1,12 +1,30 @@
 import _ from 'lodash';
 
-WorkspaceDropdownDirective.$inject = ['desks', 'workspaces', '$route', 'preferencesService', '$location',
-    'reloadService', 'notifyConnectionService', 'deskNotifications', 'pageTitle'];
-export function WorkspaceDropdownDirective(desks, workspaces, $route, preferencesService, $location, reloadService,
-    notifyConnectionService, deskNotifications, pageTitle) {
+WorkspaceDropdownDirective.$inject = [
+    'desks',
+    'workspaces',
+    '$route',
+    'preferencesService',
+    '$location',
+    'reloadService',
+    'notifyConnectionService',
+    'deskNotifications',
+    'pageTitle',
+];
+export function WorkspaceDropdownDirective(
+    desks,
+    workspaces,
+    $route,
+    preferencesService,
+    $location,
+    reloadService,
+    notifyConnectionService,
+    deskNotifications,
+    pageTitle,
+) {
     return {
         templateUrl: 'scripts/apps/workspace/views/workspace-dropdown.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.workspaces = workspaces;
             scope.wsList = null;
             scope.edited = null;
@@ -19,13 +37,13 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                 pageTitle.setWorkspace('');
             });
 
-            scope.afterSave = function(workspace) {
+            scope.afterSave = function (workspace) {
                 desks.setCurrentDeskId(null);
                 workspaces.setActive(workspace);
                 scope.selected = workspace;
             };
 
-            scope.selectDesk = function(desk) {
+            scope.selectDesk = function (desk) {
                 reset();
                 scope.selected = desk;
                 scope.workspaceType = 'desk';
@@ -34,7 +52,7 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                 reloadService.activeDesk = desks.active.desk;
             };
 
-            scope.selectWorkspace = function(workspace) {
+            scope.selectWorkspace = function (workspace) {
                 reset();
                 scope.selected = workspace;
                 scope.workspaceType = 'workspace';
@@ -42,7 +60,7 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
                 workspaces.setActive(workspace);
             };
 
-            scope.createWorkspace = function() {
+            scope.createWorkspace = function () {
                 scope.edited = {};
             };
 
@@ -57,7 +75,8 @@ export function WorkspaceDropdownDirective(desks, workspaces, $route, preference
             function initialize() {
                 var activeWorkspace = null;
 
-                workspaces.getActiveId()
+                workspaces
+                    .getActiveId()
                     .then((workspace) => {
                         activeWorkspace = workspace;
                     })

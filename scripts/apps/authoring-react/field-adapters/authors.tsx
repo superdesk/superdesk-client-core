@@ -13,15 +13,15 @@ function isAuthorRole(x: IUserOption | IAuthorRole): x is IAuthorRole {
 
 function valueTemplate({item}) {
     return (
-        <span>{item.name}: {item.sub_label}</span>
+        <span>
+            {item.name}: {item.sub_label}
+        </span>
     );
 }
 
 function optionTemplate({item}: {item: IUserOption | IAuthorRole}) {
     if (isAuthorRole(item)) {
-        return (
-            <span>{item.name}</span>
-        );
+        return <span>{item.name}</span>;
     } else {
         return (
             <Spacer h gap="8" justifyContent="start" noGrow>
@@ -32,7 +32,7 @@ function optionTemplate({item}: {item: IUserOption | IAuthorRole}) {
     }
 }
 
-const getId = (item) => typeof item._id === 'string' ? item._id : JSON.stringify(item._id);
+const getId = (item) => (typeof item._id === 'string' ? item._id : JSON.stringify(item._id));
 
 interface IUserOption {
     _id: IUser['_id'];
@@ -62,10 +62,10 @@ export const authors: IFieldAdapter<IArticle> = {
                     },
                 );
 
-                return ({
+                return {
                     nodes: authorsTree.result,
                     lookup: {},
-                });
+                };
             },
             getLabel: (item: IUserOption | IAuthorRole) => item.name,
             valueTemplate: valueTemplate,

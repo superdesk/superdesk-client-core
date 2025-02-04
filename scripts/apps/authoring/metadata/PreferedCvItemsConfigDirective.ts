@@ -1,4 +1,3 @@
-
 PreferedCvItemsConfigDirective.$inject = ['metadata'];
 export default function PreferedCvItemsConfigDirective(metadata) {
     return {

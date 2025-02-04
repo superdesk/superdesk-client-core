@@ -40,7 +40,7 @@ export class MarkedDesksList extends React.Component<IProps> {
     removeMarkedDesk(desk) {
         const {desks} = this;
 
-        return function(event) {
+        return function (event) {
             event.stopPropagation();
             desks.markItem(desk._id, this.props.item);
             this.closeMenu();
@@ -82,39 +82,34 @@ export class MarkedDesksList extends React.Component<IProps> {
                 onMouseLeave={this.close}
             >
                 <li key="item-marked-label">
-                    <div className="dropdown__menu-label">{gettext('Marked For')}
+                    <div className="dropdown__menu-label">
+                        {gettext('Marked For')}
                         <button className="dropdown__menu-close" onClick={this.closeMenu}>
                             <i className="icon-close-small icon--white" />
                         </button>
                     </div>
                 </li>
-                {
-                    this.props.item.marked_desks.map(({desk_id}) => {
-                        const desk: IDesk = markedDesksById[desk_id];
+                {this.props.item.marked_desks.map(({desk_id}) => {
+                    const desk: IDesk = markedDesksById[desk_id];
 
-                        if (desk == null) {
-                            return null;
-                        }
+                    if (desk == null) {
+                        return null;
+                    }
 
-                        return (
-                            <li key={desk._id}>
-                                {desk.name}
-                                {
-                                    desks.hasMarkItemPrivilege()
-                                        ? (
-                                            <button
-                                                className="btn btn--small btn--hollow btn--primary btn--ui-dark"
-                                                onClick={this.removeMarkedDesk(desk)}
-                                            >
-                                                {gettext('REMOVE')}
-                                            </button>
-                                        )
-                                        : null
-                                }
-                            </li>
-                        );
-                    })
-                }
+                    return (
+                        <li key={desk._id}>
+                            {desk.name}
+                            {desks.hasMarkItemPrivilege() ? (
+                                <button
+                                    className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                    onClick={this.removeMarkedDesk(desk)}
+                                >
+                                    {gettext('REMOVE')}
+                                </button>
+                            ) : null}
+                        </li>
+                    );
+                })}
             </ul>
         );
     }

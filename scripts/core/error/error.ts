@@ -27,8 +27,10 @@ function ErrorHttpInterceptorFactory($q) {
  * @packageName superdesk.core
  * @description Superdesk error reporting module.
  */
-angular.module('superdesk.core.error', [])
-    .config(['$httpProvider', '$provide', function($httpProvider, $provide) {
+angular.module('superdesk.core.error', []).config([
+    '$httpProvider',
+    '$provide',
+    function ($httpProvider, $provide) {
         if (appConfig.raven != null && appConfig.raven.dsn) {
             Raven.config(appConfig.raven.dsn, {
                 logger: 'javascript-client',
@@ -37,8 +39,13 @@ angular.module('superdesk.core.error', [])
 
             $httpProvider.interceptors.push(ErrorHttpInterceptorFactory);
 
-            $provide.factory('$exceptionHandler', () => function errorCatcherHandler(exception, cause) {
-                Raven.captureException(exception, {tags: {component: 'ui'}, extra: exception});
-            });
+            $provide.factory(
+                '$exceptionHandler',
+                () =>
+                    function errorCatcherHandler(exception, cause) {
+                        Raven.captureException(exception, {tags: {component: 'ui'}, extra: exception});
+                    },
+            );
         }
-    }]);
+    },
+]);

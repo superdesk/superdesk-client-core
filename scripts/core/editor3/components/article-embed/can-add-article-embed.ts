@@ -16,30 +16,26 @@ export function canAddArticleEmbed(
     srcId: IArticle['_id'],
     destId: IArticle['_id'],
 ): Promise<{ok: true; src: IArticle} | {ok: false; error: string}> {
-    return Promise.all([
-        sdApi.article.get(srcId),
-        sdApi.article.get(destId),
-    ]).then(([src, dest]) => {
-        return Promise.all([
-            sdApi.contentProfiles.get(src.profile),
-            sdApi.contentProfiles.get(dest.profile),
-        ]).then(([srcProfile, destProfile]) => {
-            if (srcProfile.embeddable !== true) {
-                return {
-                    ok: false,
-                    error: gettext('Item content profile is not configured to allow embedding.'),
-                };
-            } else if (srcProfile.embeddable === true && destProfile.embeddable === true) {
-                return {
-                    ok: false,
-                    error: gettext('Can not embed to item which itself can be embedded.'),
-                };
-            } else {
-                return {
-                    ok: true,
-                    src,
-                };
-            }
-        });
+    return Promise.all([sdApi.article.get(srcId), sdApi.article.get(destId)]).then(([src, dest]) => {
+        return Promise.all([sdApi.contentProfiles.get(src.profile), sdApi.contentProfiles.get(dest.profile)]).then(
+            ([srcProfile, destProfile]) => {
+                if (srcProfile.embeddable !== true) {
+                    return {
+                        ok: false,
+                        error: gettext('Item content profile is not configured to allow embedding.'),
+                    };
+                } else if (srcProfile.embeddable === true && destProfile.embeddable === true) {
+                    return {
+                        ok: false,
+                        error: gettext('Can not embed to item which itself can be embedded.'),
+                    };
+                } else {
+                    return {
+                        ok: true,
+                        src,
+                    };
+                }
+            },
+        );
     });
 }

@@ -8,7 +8,7 @@ interface IScope extends ng.IScope {
     item: IArticle;
 
     metadata: {
-        authors?: Array<IAuthor>,
+        authors?: Array<IAuthor>;
     };
 
     autosave(item: IArticle): any;
@@ -36,16 +36,15 @@ export function PopulateAuthorsController($scope: IScope, roles: IRolesService, 
                 return; // no user role to pick default author role
             }
 
-            roles.getUserRole(session.identity.role)
-                .then((userRole) => {
-                    if (isNewItem($scope.item) && userRole.author_role) {
-                        addAuthor(userRole.author_role, itemAuthors);
-                    }
+            roles.getUserRole(session.identity.role).then((userRole) => {
+                if (isNewItem($scope.item) && userRole.author_role) {
+                    addAuthor(userRole.author_role, itemAuthors);
+                }
 
-                    if (!isNewItem($scope.item) && userRole.editor_role) {
-                        addAuthor(userRole.editor_role, itemAuthors);
-                    }
-                });
+                if (!isNewItem($scope.item) && userRole.editor_role) {
+                    addAuthor(userRole.editor_role, itemAuthors);
+                }
+            });
 
             stopWatch(); // it populates value, so just run this once
         }

@@ -19,24 +19,24 @@ export function UserListController($scope, $location, api, _, session, usersServ
             $scope.noRolesWarning = result._items.length === 0;
         });
 
-    $scope.preview = function(user) {
+    $scope.preview = function (user) {
         $scope.selected.user = user;
     };
 
-    $scope.createUser = function() {
+    $scope.createUser = function () {
         $scope.intent('create', 'user').then(fetchUsers);
     };
 
     $scope.$on('intent:create:user', function createUser() {
-    // fallback if there is no other activity
+        // fallback if there is no other activity
         $scope.preview({});
     });
 
-    $scope.closePreview = function() {
+    $scope.closePreview = function () {
         $scope.preview(null);
     };
 
-    $scope.afterDelete = function(data) {
+    $scope.afterDelete = function (data) {
         if ($scope.selected.user && data.item && data.item.href === $scope.selected.user.href) {
             $scope.selected.user = null;
         }
@@ -44,7 +44,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
     };
 
     // make sure saved user is presented in the list
-    $scope.render = function(user) {
+    $scope.render = function (user) {
         if (!findUser($scope.users._items, user) && !findUser($scope.createdUsers, user)) {
             $scope.createdUsers.unshift(user);
         }
@@ -96,58 +96,55 @@ export function UserListController($scope, $location, api, _, session, usersServ
         }
 
         switch (filter) {
-        case 'online': {
-            const lastActivity = moment()
-                .subtract(appConfig.userOnlineMinutes, 'minutes')
-                .second(0); // reset seconds to avoid re-triggering watch all the time
+            case 'online': {
+                const lastActivity = moment().subtract(appConfig.userOnlineMinutes, 'minutes').second(0); // reset seconds to avoid re-triggering watch all the time
 
-            query.last_activity_at = {$gte: serverFormat(lastActivity)};
-            break;
-        }
-        case 'pending':
-            query.is_enabled = true;
-            query.is_active = true;
-            query.needs_activation = true;
-            break;
+                query.last_activity_at = {$gte: serverFormat(lastActivity)};
+                break;
+            }
+            case 'pending':
+                query.is_enabled = true;
+                query.is_active = true;
+                query.needs_activation = true;
+                break;
 
-        case 'inactive':
-            query.is_enabled = true;
-            query.is_active = false;
-            break;
+            case 'inactive':
+                query.is_enabled = true;
+                query.is_active = false;
+                break;
 
-        case 'disabled':
-            query.is_enabled = false;
-            break;
+            case 'disabled':
+                query.is_enabled = false;
+                break;
 
-        case 'all':
-            break;
+            case 'all':
+                break;
 
-        default:
-            query.is_active = true;
-            query.is_enabled = true;
-            query.needs_activation = false;
-            break;
+            default:
+                query.is_active = true;
+                query.is_enabled = true;
+                query.needs_activation = false;
+                break;
         }
 
         return JSON.stringify(query);
     }
 
     function fetchUsers(criteria) {
-        api.users.query(criteria)
-            .then((users) => {
-                $scope.users = users;
-                $scope.createdUsers = [];
-            });
+        api.users.query(criteria).then((users) => {
+            $scope.users = users;
+            $scope.createdUsers = [];
+        });
     }
 
     function formatSort(key, dir) {
         var val = dir === 'asc' ? 1 : -1;
 
         switch (key) {
-        case 'full_name':
-            return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
-        default:
-            return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
+            case 'full_name':
+                return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
+            default:
+                return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
         }
     }
 

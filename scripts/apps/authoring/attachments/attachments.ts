@@ -25,17 +25,15 @@ const config = (awp) =>
         feature: 'editorAttachments',
     });
 
-angular.module('superdesk.apps.authoring.attachments', [
-    'superdesk.config',
-    'superdesk.core.api',
-    'superdesk.apps.authoring.widgets',
-])
+angular
+    .module('superdesk.apps.authoring.attachments', [
+        'superdesk.config',
+        'superdesk.core.api',
+        'superdesk.apps.authoring.widgets',
+    ])
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
-    .component('sdAttachmentsWidget', reactToAngular1(
-        AttachmentsWidget,
-        ['item', 'readOnly', 'isWidget', 'updateItem'],
-        [],
-        'display:contents'),
-    )
-;
+    .component(
+        'sdAttachmentsWidget',
+        reactToAngular1(AttachmentsWidget, ['item', 'readOnly', 'isWidget', 'updateItem'], [], 'display:contents'),
+    );

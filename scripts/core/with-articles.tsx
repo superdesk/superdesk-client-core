@@ -34,26 +34,28 @@ export class WithArticles extends SuperdeskReactComponent<IProps, IState> {
         const itemsToFetch = this.props.ids.filter((id) => this.state.items.has(id) !== true);
 
         const query: ISuperdeskQuery = {
-            filter: {$and: [{'_id': {$in: itemsToFetch}}]},
+            filter: {$and: [{_id: {$in: itemsToFetch}}]},
             page: 1,
             max_results: 200,
-            sort: [{'versioncreated': 'asc'}],
+            sort: [{versioncreated: 'asc'}],
         };
 
         if (itemsToFetch.length > 0) {
-            this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-                method: 'GET',
-                path: '/search',
-                urlParams: {
-                    aggregations: 0,
-                    es_highlight: 1,
-                    ...toElasticQuery(query),
-                },
-            }).then((res) => {
-                this.setState({
-                    items: this.state.items.merge(Map(res._items.map((item) => [item._id, item]))),
+            this.asyncHelpers
+                .httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                    method: 'GET',
+                    path: '/search',
+                    urlParams: {
+                        aggregations: 0,
+                        es_highlight: 1,
+                        ...toElasticQuery(query),
+                    },
+                })
+                .then((res) => {
+                    this.setState({
+                        items: this.state.items.merge(Map(res._items.map((item) => [item._id, item]))),
+                    });
                 });
-            });
         }
     }
 

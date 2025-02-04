@@ -34,11 +34,7 @@ export function duplicateItems(items: Array<IArticle>, destination: ISendToDesti
             });
         }),
     ).then((res: Array<IArticle>) => {
-        notify.success(gettextPlural(
-            items.length,
-            'Item duplicated',
-            'Items duplicated',
-        ));
+        notify.success(gettextPlural(items.length, 'Item duplicated', 'Items duplicated'));
 
         sdApi.preferences.update('destination:active', destination);
 

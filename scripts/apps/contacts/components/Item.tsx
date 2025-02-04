@@ -1,11 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import {
-    ListItemInfo,
-    ListTypeIcon,
-    ContactInfo,
-    ContactFooter,
-} from 'apps/contacts/components';
+import {ListItemInfo, ListTypeIcon, ContactInfo, ContactFooter} from 'apps/contacts/components';
 import {Spacer} from 'superdesk-ui-framework/react';
 import {IContact} from 'superdesk-api';
 
@@ -38,10 +33,12 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.item !== this.props.item ||
+        return (
+            nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
-            nextState !== this.state;
+            nextState !== this.state
+        );
     }
 
     select(event) {
@@ -63,13 +60,10 @@ export class Item extends React.Component<IProps, IState> {
             <li
                 id={item._id}
                 key={item._id}
-                className={classNames(
-                    'list-item-view',
-                    {
-                        active: flags.selected,
-                        inactive: !item.is_active,
-                    },
-                )}
+                className={classNames('list-item-view', {
+                    active: flags.selected,
+                    inactive: !item.is_active,
+                })}
                 onMouseEnter={this.setHoverState}
                 onMouseLeave={this.unsetHoverState}
                 onClick={this.select}

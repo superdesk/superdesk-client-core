@@ -51,25 +51,25 @@ export const GET_LABEL_MAP = () => ({
 
 function getLabelForStageName(stageName: IStage['name']): string | null {
     switch (stageName.toLowerCase()) {
-    case 'working stage':
-        return gettext('Working Stage');
-    case 'incoming stage':
-        return gettext('Incoming Stage');
-    default:
-        return null;
+        case 'working stage':
+            return gettext('Working Stage');
+        case 'incoming stage':
+            return gettext('Incoming Stage');
+        default:
+            return null;
     }
 }
 
 function getLabelForStageType(stageType: ICard['type']): string | null {
     switch (stageType) {
-    case 'deskOutput':
-        return gettext('Desk Output');
-    case 'sentDeskOutput':
-        return gettext('Sent Desk Output');
-    case 'scheduledDeskOutput':
-        return gettext('Scheduled Desk Output');
-    default:
-        return null;
+        case 'deskOutput':
+            return gettext('Desk Output');
+        case 'sentDeskOutput':
+            return gettext('Sent Desk Output');
+        case 'scheduledDeskOutput':
+            return gettext('Scheduled Desk Output');
+        default:
+            return null;
     }
 }
 
@@ -100,18 +100,9 @@ export const EXTRA_EDITOR_FIELDS = Object.freeze({
     feature_media: {enabled: true},
 });
 
-
 export const EDITOR_BLOCK_FIELD_TYPE = 'editor-block';
 
 /**
  * Vocabulary types used for custom fields
  */
-export const CUSTOM_FIELD_TYPES = [
-    'text',
-    'date',
-    'media',
-    'embed',
-    'urls',
-    EDITOR_BLOCK_FIELD_TYPE,
-    'custom',
-];
+export const CUSTOM_FIELD_TYPES = ['text', 'date', 'media', 'embed', 'urls', EDITOR_BLOCK_FIELD_TYPE, 'custom'];

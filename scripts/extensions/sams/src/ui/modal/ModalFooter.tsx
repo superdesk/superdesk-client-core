@@ -6,10 +6,6 @@ interface IProps {
 
 export class ModalFooter extends React.PureComponent<IProps> {
     render() {
-        return (
-            <div className="modal__footer">
-                {this.props.children}
-            </div>
-        );
+        return <div className="modal__footer">{this.props.children}</div>;
     }
 }

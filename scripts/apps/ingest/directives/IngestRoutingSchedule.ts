@@ -12,7 +12,7 @@ export function IngestRoutingSchedule(tzdata) {
             rule: '=', // the routing rule whose schedule is being edited
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-schedule.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.$watch('rule.schedule._allDay', (newVal) => {
                 if (newVal) {
                     scope.rule.schedule.hour_of_day_from = null;

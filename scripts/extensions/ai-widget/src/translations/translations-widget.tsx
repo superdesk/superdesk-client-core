@@ -18,18 +18,16 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
     }
 
     generateTranslations() {
-        configuration.translations?.generateTranslations?.(
-            this.props.article,
-            this.props.state.activeLanguageId,
-            this.abortController.signal,
-        )
+        configuration.translations
+            ?.generateTranslations?.(this.props.article, this.props.state.activeLanguageId, this.abortController.signal)
             .then((res) => {
                 this.props.setTabState({
                     ...this.props.state,
                     loading: false,
                     translation: res,
                 });
-            }).catch(() => {
+            })
+            .catch(() => {
                 this.props.setTabState({
                     ...this.props.state,
                     loading: false,
@@ -64,13 +62,7 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
             header: (
                 <>
                     <div className="p-1">
-                        <Spacer
-                            h
-                            gap="64"
-                            noGrow
-                            justifyContent="start"
-                            alignItems="center"
-                        >
+                        <Spacer h gap="64" noGrow justifyContent="start" alignItems="center">
                             <IconButton
                                 size="small"
                                 icon="arrow-left"
@@ -94,11 +86,14 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
                     article={article}
                     error={error}
                     generateTranslation={() => {
-                        setTabState({
-                            ...this.props.state,
-                            loading: true,
-                            error: false,
-                        }, () => this.generateTranslations());
+                        setTabState(
+                            {
+                                ...this.props.state,
+                                loading: true,
+                                error: false,
+                            },
+                            () => this.generateTranslations(),
+                        );
                     }}
                     loading={loading}
                     translation={translation}
@@ -117,11 +112,14 @@ export default class TranslationsWidget extends React.Component<ICommonProps<ISt
                         });
                     }}
                     generateTranslations={() => {
-                        setTabState({
-                            ...this.props.state,
-                            loading: true,
-                            error: false,
-                        }, () => this.generateTranslations());
+                        setTabState(
+                            {
+                                ...this.props.state,
+                                loading: true,
+                                error: false,
+                            },
+                            () => this.generateTranslations(),
+                        );
                     }}
                 />
             ),

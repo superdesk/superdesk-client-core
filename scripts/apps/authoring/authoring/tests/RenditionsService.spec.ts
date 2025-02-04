@@ -30,13 +30,9 @@ describe('renditions service', () => {
         renditions.ingest(item);
         $rootScope.$digest();
 
-        expect(api.save).toHaveBeenCalledWith(
-            item.fetch_endpoint,
-            {guid: item.guid, desk: 'sports'},
-            null,
-            null,
-            {repo: item.ingest_provider},
-        );
+        expect(api.save).toHaveBeenCalledWith(item.fetch_endpoint, {guid: item.guid, desk: 'sports'}, null, null, {
+            repo: item.ingest_provider,
+        });
 
         expect(api.find).toHaveBeenCalledWith('archive', 'ingested');
     }));

@@ -11,7 +11,7 @@ export function AssignmentIcon() {
     return {
         templateUrl: 'scripts/apps/archive/views/assignment-icon.html',
         scope: {item: '='},
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             function handleAssignmentLink(event, data) {
                 if (data.item !== scope.item._id) {
                     return;

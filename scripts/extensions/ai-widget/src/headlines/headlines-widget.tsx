@@ -16,10 +16,8 @@ export class HeadlinesWidget extends React.Component<ICommonProps<IStateHeadline
     }
 
     generateHeadlines() {
-        configuration.generateHeadlines?.(
-            this.props.article,
-            this.abortController.signal,
-        )
+        configuration
+            .generateHeadlines?.(this.props.article, this.abortController.signal)
             .then((res) => {
                 this.props.setTabState({
                     activeSection: 'headlines',
@@ -27,7 +25,8 @@ export class HeadlinesWidget extends React.Component<ICommonProps<IStateHeadline
                     loading: false,
                     headlines: res,
                 });
-            }).catch(() => {
+            })
+            .catch(() => {
                 this.props.setTabState({
                     activeSection: 'headlines',
                     error: true,
@@ -55,13 +54,7 @@ export class HeadlinesWidget extends React.Component<ICommonProps<IStateHeadline
             header: (
                 <>
                     <div className="p-1">
-                        <Spacer
-                            h
-                            gap="64"
-                            noGrow
-                            justifyContent="start"
-                            alignItems="center"
-                        >
+                        <Spacer h gap="64" noGrow justifyContent="start" alignItems="center">
                             <IconButton
                                 size="small"
                                 icon="arrow-left"
@@ -92,10 +85,13 @@ export class HeadlinesWidget extends React.Component<ICommonProps<IStateHeadline
             footer: (
                 <Button
                     onClick={() => {
-                        this.props.setTabState({
-                            ...this.props.state,
-                            loading: true,
-                        }, () => this.generateHeadlines());
+                        this.props.setTabState(
+                            {
+                                ...this.props.state,
+                                loading: true,
+                            },
+                            () => this.generateHeadlines(),
+                        );
                     }}
                     text={gettext('Regenerate')}
                     style="hollow"

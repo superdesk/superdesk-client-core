@@ -76,10 +76,10 @@ export function AuthoringThemesService(storage, preferencesService) {
         ],
     };
 
-    service.get = function(key) {
+    service.get = function (key) {
         return preferencesService.get().then((result) => {
-            var theme = result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ?
-                result[PREFERENCES_KEY][key] : THEME_DEFAULT;
+            var theme =
+                result[PREFERENCES_KEY] && result[PREFERENCES_KEY][key] ? result[PREFERENCES_KEY][key] : THEME_DEFAULT;
 
             try {
                 theme = JSON.parse(theme);
@@ -91,14 +91,14 @@ export function AuthoringThemesService(storage, preferencesService) {
         });
     };
 
-    service.save = function(key, theme) {
+    service.save = function (key, theme) {
         return preferencesService.get().then((result) => {
             result[PREFERENCES_KEY][key] = JSON.stringify(theme);
             return preferencesService.update(result);
         });
     };
 
-    service.saveBoth = function(payload: {default: ITheme; proofreading: ITheme}): Promise<any> {
+    service.saveBoth = function (payload: {default: ITheme; proofreading: ITheme}): Promise<any> {
         return preferencesService.get().then((result) => {
             result[PREFERENCES_KEY]['theme'] = JSON.stringify(payload.default);
             result[PREFERENCES_KEY]['proofreadTheme'] = JSON.stringify(payload.proofreading);
@@ -111,9 +111,10 @@ export function AuthoringThemesService(storage, preferencesService) {
         let activeThemeObject = JSON.parse(themeObject);
 
         if (activeThemeObject.theme === 'default' || activeThemeObject.theme === 'dark') {
-            let activeTheme = appTheme === 'dark-ui'
-                ? {...activeThemeObject, theme: 'dark'}
-                : {...activeThemeObject, theme: 'default'};
+            let activeTheme =
+                appTheme === 'dark-ui'
+                    ? {...activeThemeObject, theme: 'dark'}
+                    : {...activeThemeObject, theme: 'default'};
 
             return activeTheme;
         } else {

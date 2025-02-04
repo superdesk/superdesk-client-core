@@ -82,52 +82,47 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.getItemsByIds = this.getItemsByIds.bind(this);
         this.reloadList = this.reloadList.bind(this);
 
-        this.handleContentChanges = throttleAndCombineArray(
-            (changes) => {
-                if (this.lazyLoaderRef == null) {
-                    return;
-                }
+        this.handleContentChanges = throttleAndCombineArray((changes) => {
+            if (this.lazyLoaderRef == null) {
+                return;
+            }
 
-                const articlesResourceChanges = changes.filter(
-                    ({resource}) => ARTICLE_RELATED_RESOURCE_NAMES.includes(resource),
-                );
+            const articlesResourceChanges = changes.filter(({resource}) =>
+                ARTICLE_RELATED_RESOURCE_NAMES.includes(resource),
+            );
 
-                // update articles in the list
-                if (articlesResourceChanges.length > 0) {
-                    const fields = articlesResourceChanges.reduce((acc, item) => {
-                        Object.keys(item.fields ?? {}).forEach((field) => {
-                            acc.add(field);
-                        });
+            // update articles in the list
+            if (articlesResourceChanges.length > 0) {
+                const fields = articlesResourceChanges.reduce((acc, item) => {
+                    Object.keys(item.fields ?? {}).forEach((field) => {
+                        acc.add(field);
+                    });
 
-                        return acc;
-                    }, new Set<string>());
+                    return acc;
+                }, new Set<string>());
 
-                    const reloadTheList = this.props?.shouldReloadTheList(fields) ?? false;
+                const reloadTheList = this.props?.shouldReloadTheList(fields) ?? false;
 
-                    if (reloadTheList || fields == null) {
-                        this.lazyLoaderRef.reset();
-                        this.idMap.clear();
-                    } else {
-                        const trackByIds: Array<string> = articlesResourceChanges
-                            .map(({itemId}) => this.idMap.get(itemId))
-                            .filter(notNullOrUndefined);
+                if (reloadTheList || fields == null) {
+                    this.lazyLoaderRef.reset();
+                    this.idMap.clear();
+                } else {
+                    const trackByIds: Array<string> = articlesResourceChanges
+                        .map(({itemId}) => this.idMap.get(itemId))
+                        .filter(notNullOrUndefined);
 
-                        if (trackByIds.length > 0) {
-                            this.lazyLoaderRef.updateItems(new Set<string>(trackByIds));
-                        }
+                    if (trackByIds.length > 0) {
+                        this.lazyLoaderRef.updateItems(new Set<string>(trackByIds));
                     }
                 }
+            }
 
-                getAndMergeRelatedEntitiesUpdated(
-                    this.state.relatedEntities,
-                    changes,
-                    this.abortController.signal,
-                ).then((relatedEntities) => {
+            getAndMergeRelatedEntitiesUpdated(this.state.relatedEntities, changes, this.abortController.signal).then(
+                (relatedEntities) => {
                     this.setState({relatedEntities});
-                });
-            },
-            300,
-        );
+                },
+            );
+        }, 300);
 
         this.idMap = new Map<IArticle['_id'], ITrackById>();
 
@@ -156,11 +151,14 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 this.state.relatedEntities,
                 this.abortController.signal,
             ).then((relatedEntities) => {
-                this.setState({
-                    relatedEntities,
-                }, () => {
-                    resolve(items);
-                });
+                this.setState(
+                    {
+                        relatedEntities,
+                    },
+                    () => {
+                        resolve(items);
+                    },
+                );
             });
         });
     }
@@ -189,21 +187,21 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         const {services} = this;
         const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
 
-        return Promise.all(
-            ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-        ).then((items) => {
-            let result = OrderedMap<ITrackById, IArticle>();
+        return Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id)))
+            .then((items) => {
+                let result = OrderedMap<ITrackById, IArticle>();
 
-            items.forEach((item) => {
-                const trackById = services.search.generateTrackByIdentifier(item);
+                items.forEach((item) => {
+                    const trackById = services.search.generateTrackByIdentifier(item);
 
-                this.idMap.set(item._id, trackById);
+                    this.idMap.set(item._id, trackById);
 
-                result = result.set(trackById, item);
-            });
+                    result = result.set(trackById, item);
+                });
 
-            return result;
-        }).then(this.fetchRelatedEntities);
+                return result;
+            })
+            .then(this.fetchRelatedEntities);
     }
 
     componentDidMount() {
@@ -216,36 +214,27 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:created', (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                    const {resource, _id, fields} = event.extra;
+            addWebsocketEventListener('resource:updated', (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                const {resource, _id, fields} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+            }),
         );
     }
 

@@ -15,12 +15,10 @@ export class CompositeDecoratorCustom {
 
     constructor(decorators: Array<any> = []) {
         this.decorators = decorators.map((decorator) => {
-            const isStandard = (decorator.strategy != null && decorator.component != null);
+            const isStandard = decorator.strategy != null && decorator.component != null;
             const isComposite = isStandard !== true;
 
-            return isComposite
-                ? decorator
-                : new CompositeDecorator([decorator]);
+            return isComposite ? decorator : new CompositeDecorator([decorator]);
         });
     }
 
@@ -37,8 +35,8 @@ export class CompositeDecoratorCustom {
         for (let charIndex = 0; charIndex < blockLength; charIndex++) {
             result = result.push(
                 JSON.stringify(
-                    this.decorators.map(
-                        (_, decoratorIndex) => decorationsByDecoratorIndex[decoratorIndex].get(charIndex),
+                    this.decorators.map((_, decoratorIndex) =>
+                        decorationsByDecoratorIndex[decoratorIndex].get(charIndex),
                     ),
                 ),
             );
@@ -75,12 +73,10 @@ export class CompositeDecoratorCustom {
                         </Component>
                     );
                 },
-                ({children}) => (<span>{children}</span>),
+                ({children}) => <span>{children}</span>,
             );
 
-            return (
-                <Composed>{props.children}</Composed>
-            );
+            return <Composed>{props.children}</Composed>;
         };
     }
 

@@ -1,10 +1,6 @@
 {
-    "include": [
-        "."
-    ],
-    "exclude": [
-        "extensions"
-    ],
+    "include": ["."],
+    "exclude": ["extensions"],
     "compilerOptions": {
         "baseUrl": ".",
         "sourceMap": false,
@@ -12,10 +8,7 @@
         "module": "commonjs",
         "target": "es5",
         "skipLibCheck": true,
-        "lib": [
-            "dom",
-            "es2020"
-        ],
+        "lib": ["dom", "es2020"],
         "jsx": "react"
     }
 }

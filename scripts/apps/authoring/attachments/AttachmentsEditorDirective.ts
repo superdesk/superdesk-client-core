@@ -1,8 +1,7 @@
-
 export default function AttachmentsEditorDirective() {
     return {
         templateUrl: 'scripts/apps/authoring/attachments/attachments.html',
-        link: function(scope, elem, attrs, controllers) {
+        link: function (scope, elem, attrs, controllers) {
             scope.attachmentsInAuthoring = true;
 
             if (attrs.readOnly != null) {

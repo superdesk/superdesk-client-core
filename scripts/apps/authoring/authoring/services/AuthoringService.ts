@@ -23,24 +23,25 @@ function canRewrite(item: IArticle): true | Array<string> {
     const errors = [];
 
     if (
-        isReadOnly(item)
-        && !(item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true)
+        isReadOnly(item) &&
+        !(item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true)
     ) {
         errors.push(gettext('The item is read-only.'));
     }
 
     if (item.type !== 'text') {
-        errors.push(gettext(
-            'Updates can only be created for text items. The type of this item is {{type}}',
-            {type: item.type},
-        ));
+        errors.push(
+            gettext('Updates can only be created for text items. The type of this item is {{type}}', {type: item.type}),
+        );
     }
 
     if (item.rewritten_by != null) {
-        errors.push(gettext(
-            'An update for this version of the item already exists. '
-            + 'To create another update, find the latest version of the item.',
-        ));
+        errors.push(
+            gettext(
+                'An update for this version of the item already exists. ' +
+                    'To create another update, find the latest version of the item.',
+            ),
+        );
     }
 
     if (item.broadcast?.master_id != null) {
@@ -139,7 +140,7 @@ export function AuthoringService(
      *
      * @returns {Object}
      */
-    this.getContentFieldDefaults = function() {
+    this.getContentFieldDefaults = function () {
         return helpers.CONTENT_FIELDS_DEFAULTS;
     };
 
@@ -184,17 +185,20 @@ export function AuthoringService(
             endpoint = 'published';
         }
 
-        return api.find(endpoint, _id, {embedded: {lock_user: 1}})
+        return api
+            .find(endpoint, _id, {embedded: {lock_user: 1}})
             .then(function _lock(item) {
                 if (readOnly) {
                     item._locked = lock.isLockedInCurrentSession(item);
                     item._editable = false;
                     return $q.when(item);
-                } else if (lock.isLocked(item)) { // is locked by someone else
+                } else if (lock.isLocked(item)) {
+                    // is locked by someone else
                     item._locked = false;
                     item._editable = false;
                     return $q.when(item);
-                } else if (lock.isLockedInCurrentSession(item)) { // we have lock
+                } else if (lock.isLockedInCurrentSession(item)) {
+                    // we have lock
                     item._locked = true;
                     item._editable = true;
                     return $q.when(item);
@@ -206,18 +210,19 @@ export function AuthoringService(
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
-    this.rewrite = function(item): void {
+    this.rewrite = function (item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
-        function getOnRewriteAfterMiddlewares()
-        : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
+        function getOnRewriteAfterMiddlewares(): Array<
+            IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']
+        > {
             return flatMap(
                 Object.values(extensions).map(({activationResult}) => activationResult),
                 (activationResult) =>
-                    activationResult.contributions != null
-                    && activationResult.contributions.entities != null
-                    && activationResult.contributions.entities.article != null
-                    && activationResult.contributions.entities.article.onRewriteAfter != null
+                    activationResult.contributions != null &&
+                    activationResult.contributions.entities != null &&
+                    activationResult.contributions.entities.article != null &&
+                    activationResult.contributions.entities.article.onRewriteAfter != null
                         ? activationResult.contributions.entities.article.onRewriteAfter
                         : [],
             );
@@ -235,32 +240,41 @@ export function AuthoringService(
             desk_id: desks.getCurrentDeskId() || item.task.desk,
         };
 
-        return api.save('archive_rewrite', {}, updates, item)
+        return api
+            .save('archive_rewrite', {}, updates, item)
             .then((newItem: IArticle) => {
                 const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
 
-                return onRewriteAfterMiddlewares.reduce(
-                    (current, next) => {
-                        return current.then((result) => {
-                            return next(Object.freeze(result));
-                        });
-                    },
-                    Promise.resolve(Object.freeze(newItem)),
-                )
-                    // Create a copy in order to avoid returning a frozen object.
-                    // Freezing is only meant to affect middlewares.
-                    .then((_item) => cloneDeep(_item));
+                return (
+                    onRewriteAfterMiddlewares
+                        .reduce(
+                            (current, next) => {
+                                return current.then((result) => {
+                                    return next(Object.freeze(result));
+                                });
+                            },
+                            Promise.resolve(Object.freeze(newItem)),
+                        )
+                        // Create a copy in order to avoid returning a frozen object.
+                        // Freezing is only meant to affect middlewares.
+                        .then((_item) => cloneDeep(_item))
+                );
             })
-            .then((newItem) => {
-                notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(newItem);
-            }, (response) => {
-                if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
-                } else {
-                    notify.error(gettext('There was an error. Failed to generate update.'));
-                }
-            });
+            .then(
+                (newItem) => {
+                    notify.success(gettext('Update Created.'));
+                    authoringWorkspace.edit(newItem);
+                },
+                (response) => {
+                    if (angular.isDefined(response.data._message)) {
+                        notify.error(
+                            gettext('Failed to generate update: {{message}}', {message: response.data._message}),
+                        );
+                    } else {
+                        notify.error(gettext('There was an error. Failed to generate update.'));
+                    }
+                },
+            );
     };
 
     /**
@@ -270,16 +284,20 @@ export function AuthoringService(
      * @description Removes the update link of a given story
      * @param {Object} item
      */
-    this.unlink = (item) => session.getIdentity()
-        .then((user) => api.remove(item, {}, 'archive_rewrite'))
-        .then((data) => notify.success(gettext('Link has been removed')),
-            (response) => {
-                if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to remove link: {{message}}', {message: response.data._message}));
-                } else {
-                    notify.error(gettext('There was an error. Failed to remove link.'));
-                }
-            });
+    this.unlink = (item) =>
+        session
+            .getIdentity()
+            .then((user) => api.remove(item, {}, 'archive_rewrite'))
+            .then(
+                (data) => notify.success(gettext('Link has been removed')),
+                (response) => {
+                    if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Failed to remove link: {{message}}', {message: response.data._message}));
+                    } else {
+                        notify.error(gettext('There was an error. Failed to remove link.'));
+                    }
+                },
+            );
 
     /**
      * * close an item and save it if dirty
@@ -297,19 +315,22 @@ export function AuthoringService(
         isDirty: boolean,
         doClose: () => void,
     ): Promise<void> {
-        return authoringApiCommon.closeAuthoring(
-            orig,
-            isDirty,
-            () => this.save(orig, diff),
-            () => lock.unlock(diff),
-            () => new Promise((resolve) => {
-                autosave.drop(orig);
-                resolve();
-            }),
-            doClose,
-        ).then(() => {
-            $rootScope.$applyAsync(); // update angular UI
-        });
+        return authoringApiCommon
+            .closeAuthoring(
+                orig,
+                isDirty,
+                () => this.save(orig, diff),
+                () => lock.unlock(diff),
+                () =>
+                    new Promise((resolve) => {
+                        autosave.drop(orig);
+                        resolve();
+                    }),
+                doClose,
+            )
+            .then(() => {
+                $rootScope.$applyAsync(); // update angular UI
+            });
     };
 
     /**
@@ -325,11 +346,14 @@ export function AuthoringService(
         var promise = $q.when();
 
         if (isEditable(diff) && isDirty) {
-            promise = confirm.confirmPublish(action)
-                .then(angular.bind(this, function save() {
+            promise = confirm.confirmPublish(action).then(
+                angular.bind(this, function save() {
                     return true;
-                }), () => // cancel
-                    false);
+                }),
+                () =>
+                    // cancel
+                    false,
+            );
         }
 
         return promise;
@@ -339,7 +363,7 @@ export function AuthoringService(
      * Removes certain properties which are irrelevant for publish actions depending on the orig.item.state.
      * If not removed the API will throw errors.
      */
-    this.cleanUpdatesBeforePublishing = function(original, updates, action = 'publish') {
+    this.cleanUpdatesBeforePublishing = function (original, updates, action = 'publish') {
         // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
@@ -399,50 +423,48 @@ export function AuthoringService(
             params.desk_id = session.identity.desk || desks.getCurrentDeskId();
         }
 
-        return api.update(endpoint, orig, extDiff, params)
-            .catch(
-                (reason) => {
-                    const issues = reason?.data?._issues;
+        return api.update(endpoint, orig, extDiff, params).catch((reason) => {
+            const issues = reason?.data?._issues;
 
-                    if (notifyErrors && issues) {
-                        Object.values(reason.data._issues).forEach((message) => {
-                            if (message != null) {
-                                notify.error(message);
-                            }
-                        });
-                    } else if (issues?.['validator exception'] && issues?.fields == null) {
-                        let errorObj: {[key: string]: Array<string>} = {};
-
-                        try {
-                            errorObj = JSON.parse(issues?.['validator exception']);
-                        } catch (e) {
-                            logger.error(e);
-                            return $q.reject(reason);
-                        }
-
-                        const publishingAction = () => {
-                            return self.publish(orig, diff, action, true);
-                        };
-
-                        if (errorObj.warnings) {
-                            return getPublishWarningConfirmModal(errorObj.warnings, publishingAction);
-                        }
+            if (notifyErrors && issues) {
+                Object.values(reason.data._issues).forEach((message) => {
+                    if (message != null) {
+                        notify.error(message);
                     }
+                });
+            } else if (issues?.['validator exception'] && issues?.fields == null) {
+                let errorObj: {[key: string]: Array<string>} = {};
 
-                    if (issues == null) {
-                        notify.error(gettext('Unknown Error: Item not published.'));
-                    }
-
+                try {
+                    errorObj = JSON.parse(issues?.['validator exception']);
+                } catch (e) {
+                    logger.error(e);
                     return $q.reject(reason);
-                },
-            );
+                }
+
+                const publishingAction = () => {
+                    return self.publish(orig, diff, action, true);
+                };
+
+                if (errorObj.warnings) {
+                    return getPublishWarningConfirmModal(errorObj.warnings, publishingAction);
+                }
+            }
+
+            if (issues == null) {
+                notify.error(gettext('Unknown Error: Item not published.'));
+            }
+
+            return $q.reject(reason);
+        });
     };
 
     this.correction = function correction(item: IPublishedArticle, handleIsCorrection, removeCorrection = false) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
         let extDiff = {};
 
-        desks.initialize()
+        desks
+            .initialize()
             .then(() => {
                 return archiveService.getVersions(item, desks, 'versions');
             })
@@ -458,25 +480,28 @@ export function AuthoringService(
                     extDiff = helpers.extendItem({}, previous_version);
                 }
 
-                return api.update('archive_correction', item, extDiff, {remove_correction: removeCorrection})
-                    .then((newItem) => {
+                return api.update('archive_correction', item, extDiff, {remove_correction: removeCorrection}).then(
+                    (newItem) => {
                         if (removeCorrection) {
                             notify.success(gettext('Correction has been removed'));
                         } else {
                             authoringWorkspace.edit(newItem);
                             notify.success(gettext('Update Created.'));
                         }
-                    }, (response) => {
+                    },
+                    (response) => {
                         if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Failed to generate update: {{message}}',
-                                {message: response.data._message}));
+                            notify.error(
+                                gettext('Failed to generate update: {{message}}', {message: response.data._message}),
+                            );
                         } else {
                             notify.error(gettext('There was an error. Failed to generate update.'));
                         }
                         if (handleIsCorrection) {
                             handleIsCorrection();
                         }
-                    });
+                    },
+                );
             });
     };
 
@@ -498,13 +523,11 @@ export function AuthoringService(
             const unpublishAction = (selected) => {
                 // get the latest updated item.
                 api.find('archive', item._id).then((updatedItem) => {
-                    self.publish(updatedItem, {}, 'unpublish', {notifyErrors: true})
-                        .then(handleSuccess);
+                    self.publish(updatedItem, {}, 'unpublish', {notifyErrors: true}).then(handleSuccess);
                 });
                 relatedItems.forEach((relatedItem) => {
                     if (selected[relatedItem._id]) {
-                        self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
-                            .then(handleSuccess);
+                        self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true}).then(handleSuccess);
                     }
                 });
             };
@@ -518,11 +541,14 @@ export function AuthoringService(
 
         if (isDirty) {
             if (isEditable(diff)) {
-                promise = confirm.confirmSaveWork(message)
-                    .then(angular.bind(this, function save() {
+                promise = confirm.confirmSaveWork(message).then(
+                    angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
-                    }), (err) => // cancel
-                        $q.when());
+                    }),
+                    (
+                        err, // cancel
+                    ) => $q.when(),
+                );
             }
         }
 
@@ -548,10 +574,10 @@ export function AuthoringService(
     this.save = function saveAuthoring(
         origItem: IArticle,
         __item: IArticle,
-        requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
+        requestEditor3DirectivesToGenerateHtml?: Array<() => void>,
         cloneAfterGeneratingHtml?: boolean,
     ) {
-        for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
+        for (const fn of requestEditor3DirectivesToGenerateHtml ?? []) {
             fn();
         }
 
@@ -576,7 +602,8 @@ export function AuthoringService(
             helpers.cutoffPreviousRenditions(diff, origItem);
             autosave.stop(item);
 
-            if (diff._etag) { // make sure we use orig item etag
+            if (diff._etag) {
+                // make sure we use orig item etag
                 delete diff._etag;
             }
 
@@ -588,28 +615,30 @@ export function AuthoringService(
             helpers.filterDefaultValues(diff, origItem);
 
             if (_.size(diff) > 0) {
-                return api.save(
-                    'archive',
-                    origItem,
-                    diff,
-                    {},
-                    {publish_from_personal: publishFromPersonal}, // DUPLICATED IN authoring-react/data-layer.ts
-                ).then((__item) => {
-                    authoringApiCommon.saveAfter(__item, origItem);
+                return api
+                    .save(
+                        'archive',
+                        origItem,
+                        diff,
+                        {},
+                        {publish_from_personal: publishFromPersonal}, // DUPLICATED IN authoring-react/data-layer.ts
+                    )
+                    .then((__item) => {
+                        authoringApiCommon.saveAfter(__item, origItem);
 
-                    if (origItem.type === 'picture') {
-                        item._etag = __item._etag;
-                    }
-                    origItem._autosave = null;
-                    origItem._autosaved = false;
-                    origItem._locked = lock.isLockedInCurrentSession(item);
+                        if (origItem.type === 'picture') {
+                            item._etag = __item._etag;
+                        }
+                        origItem._autosave = null;
+                        origItem._autosaved = false;
+                        origItem._locked = lock.isLockedInCurrentSession(item);
 
-                    const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+                        const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
-                    authoringWorkspace.update(origItem);
+                        authoringWorkspace.update(origItem);
 
-                    return origItem;
-                });
+                        return origItem;
+                    });
             }
 
             if (origItem) {
@@ -658,7 +687,7 @@ export function AuthoringService(
     /**
      * Lock an item - callback for item:lock event
      */
-    this.lock = function(
+    this.lock = function (
         item: IArticle,
         data: {
             user: string;
@@ -675,10 +704,10 @@ export function AuthoringService(
     };
 
     /**
-    * Actions that it can perform on an item
-    * @param {Object} item : item
-    */
-    this.itemActions = function(item, userDesks) {
+     * Actions that it can perform on an item
+     * @param {Object} item : item
+     */
+    this.itemActions = function (item, userDesks) {
         var currentItem = this._getCurrentItem(item);
         var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -703,8 +732,8 @@ export function AuthoringService(
         action.view = !lockedByMe;
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
         action.cancelCorrection = !this._isReadOnly(item) && currentItem.state === ITEM_STATE.CORRECTION;
-        action.export = currentItem && currentItem.type && currentItem.type === 'text'
-            && !isBeingCorrected(currentItem);
+        action.export =
+            currentItem && currentItem.type && currentItem.type === 'text' && !isBeingCorrected(currentItem);
 
         // item is published state - corrected, published, scheduled, killed
         if (isPublished(currentItem) && item.state !== 'unpublished') {
@@ -731,7 +760,7 @@ export function AuthoringService(
         return this._updateDeskActions(currentItem, action, userDesks || self.userDesks);
     };
 
-    this._updateActionsForContentApi = function(item, action) {
+    this._updateActionsForContentApi = function (item, action) {
         if (this.isContentApiItem(item)) {
             let _action = angular.extend({}, helpers.DEFAULT_ACTIONS);
 
@@ -742,14 +771,17 @@ export function AuthoringService(
         return action;
     };
 
-    this.isContentApiItem = function(item) {
+    this.isContentApiItem = function (item) {
         return item._type === 'items';
     };
 
-    this._isBroadcastItem = function(item) {
-        return item.genre && item.genre.length > 0 &&
+    this._isBroadcastItem = function (item) {
+        return (
+            item.genre &&
+            item.genre.length > 0 &&
             _.includes(['text', 'preformatted'], item.type) &&
-            item.genre.some((genre) => genre.name === 'Broadcast Script');
+            item.genre.some((genre) => genre.name === 'Broadcast Script')
+        );
     };
 
     /**
@@ -760,19 +792,25 @@ export function AuthoringService(
      * @param {Object} item
      * @returns {boolean}
      */
-    this._canUnlinkUpdate = (item) => !this._isReadOnly(item) && item.type === 'text' &&
-        !isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
+    this._canUnlinkUpdate = (item) =>
+        !this._isReadOnly(item) &&
+        item.type === 'text' &&
+        !isPublished(item) &&
+        !_.isNil(item.rewrite_of) &&
+        _.isNil(item.rewritten_by);
 
-    this._isReadOnly = function(item) {
+    this._isReadOnly = function (item) {
         return READONLY_STATES.includes(item.state);
     };
 
-    this._updatePublished = function(currentItem, action) {
+    this._updatePublished = function (currentItem, action) {
         let userPrivileges = privileges.privileges;
         let lockedByMe = !lock.isLocked(currentItem);
         let isReadOnlyState = this._isReadOnly(currentItem);
-        let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED ||
-            currentItem.state === ITEM_STATE.CORRECTED || isCorrection(currentItem);
+        let isPublishedOrCorrected =
+            currentItem.state === ITEM_STATE.PUBLISHED ||
+            currentItem.state === ITEM_STATE.CORRECTED ||
+            isCorrection(currentItem);
 
         action.view = true;
 
@@ -780,84 +818,111 @@ export function AuthoringService(
             action.deschedule = true;
         } else if (isPublishedOrCorrected) {
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
-            action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState
-                && !isBeingCorrected(currentItem) && !isCorrection(currentItem);
+            action.correct =
+                userPrivileges.correct &&
+                lockedByMe &&
+                !isReadOnlyState &&
+                !isBeingCorrected(currentItem) &&
+                !isCorrection(currentItem);
             action.takedown = userPrivileges.takedown && lockedByMe && !isReadOnlyState;
             action.unpublish = userPrivileges.unpublish && lockedByMe && !isReadOnlyState;
         }
     };
 
-    this._updateUnpublished = function(currentItem, action) {
+    this._updateUnpublished = function (currentItem, action) {
         let userPrivileges = privileges.privileges;
         var lockedByMe = !lock.isLocked(currentItem);
 
         action.save = currentItem.state !== ITEM_STATE.SPIKED;
 
-        action.publish = (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
-                currentItem.task && currentItem.task.desk &&
-                (!currentItem.highlight || currentItem.type !== 'composite') &&
-                userPrivileges.publish && currentItem.state !== 'draft';
+        action.publish =
+            (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
+            currentItem.task &&
+            currentItem.task.desk &&
+            (!currentItem.highlight || currentItem.type !== 'composite') &&
+            userPrivileges.publish &&
+            currentItem.state !== 'draft';
 
         action.edit = currentItem.state !== ITEM_STATE.SPIKED && lockedByMe;
 
-        action.spike = currentItem.state !== ITEM_STATE.SPIKED && userPrivileges.spike
-            && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
+        action.spike =
+            currentItem.state !== ITEM_STATE.SPIKED &&
+            userPrivileges.spike &&
+            !isCorrection(currentItem) &&
+            !isBeingCorrected(currentItem);
 
         action.send = currentItem._current_version > 0 && lockedByMe;
     };
 
-    this._getCurrentItem = function(item) {
+    this._getCurrentItem = function (item) {
         if (item.state === 'being_corrected') {
             return item;
         }
         return item && item.archive_item && item.archive_item.state ? item.archive_item : item;
     };
 
-    this._updateGeneralActions = function(currentItem, action) {
+    this._updateGeneralActions = function (currentItem, action) {
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
         const isPersonalSpace = sdApi.navigation.isPersonalSpace();
 
-        action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem)
-            && !isCorrection(currentItem);
-        action.resend = currentItem.type === 'text' &&
-            isPublished(currentItem, false);
+        action.re_write =
+            canRewrite(currentItem) === true && !isBeingCorrected(currentItem) && !isCorrection(currentItem);
+        action.resend = currentItem.type === 'text' && isPublished(currentItem, false);
 
         // mark item for highlights
-        action.mark_item_for_highlight = currentItem.task && currentItem.task.desk && !isPersonalSpace
-            && !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights
-            && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
+        action.mark_item_for_highlight =
+            currentItem.task &&
+            currentItem.task.desk &&
+            !isPersonalSpace &&
+            !isReadOnlyState &&
+            currentItem.type === 'text' &&
+            userPrivileges.mark_for_highlights &&
+            !isCorrection(currentItem) &&
+            !isBeingCorrected(currentItem);
 
         // mark item for desks
-        action.mark_item_for_desks = currentItem.task && currentItem.task.desk && !isPersonalSpace
-            && !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text'
-            && !isBeingCorrected(currentItem);
+        action.mark_item_for_desks =
+            currentItem.task &&
+            currentItem.task.desk &&
+            !isPersonalSpace &&
+            !isReadOnlyState &&
+            userPrivileges.mark_for_desks &&
+            currentItem.type === 'text' &&
+            !isBeingCorrected(currentItem);
 
         // allow all stories to be packaged if it doesn't have Embargo
-        action.package_item = !READONLY_STATES.includes(currentItem.state) &&
-            !currentItem.embargo && !isCorrection(currentItem) && !isBeingCorrected(currentItem)
-            && (isPublished(currentItem) || !currentItem.publish_schedule);
+        action.package_item =
+            !READONLY_STATES.includes(currentItem.state) &&
+            !currentItem.embargo &&
+            !isCorrection(currentItem) &&
+            !isBeingCorrected(currentItem) &&
+            (isPublished(currentItem) || !currentItem.publish_schedule);
 
-        action.create_broadcast = _.includes([ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED], currentItem.state) &&
+        action.create_broadcast =
+            _.includes([ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
-            !this._isBroadcastItem(currentItem) && userPrivileges.archive_broadcast;
+            !this._isBroadcastItem(currentItem) &&
+            userPrivileges.archive_broadcast;
 
         action.multi_edit = !isReadOnlyState;
     };
 
     // check for desk membership for edit rights and returns updated
     // actions accordingly
-    this._updateDeskActions = function(currentItem, oldAction, userDesks) {
+    this._updateDeskActions = function (currentItem, oldAction, userDesks) {
         let action = oldAction;
         let userPrivileges = privileges.privileges;
 
         if (currentItem.task && currentItem.task.desk) {
             // in production
 
-            action.duplicate = userPrivileges.duplicate &&
-                !CANCELED_STATES.includes(currentItem.state)
-                && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
-            const duplicateTo = action.duplicateTo = action.duplicate;
+            action.duplicate =
+                userPrivileges.duplicate &&
+                !CANCELED_STATES.includes(currentItem.state) &&
+                !isCorrection(currentItem) &&
+                !isBeingCorrected(currentItem);
+            const duplicateTo = (action.duplicateTo = action.duplicate);
 
             action.add_to_current = !READONLY_STATES.includes(currentItem.state);
 
@@ -904,7 +969,7 @@ export function AuthoringService(
      * @param {String} timezone
      * @return {Object}
      */
-    this.validateSchedule = function(datePart, timePart, timestamp, timezone) {
+    this.validateSchedule = function (datePart, timePart, timestamp, timezone) {
         function errors(key) {
             var _errors = {};
 

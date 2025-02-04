@@ -15,12 +15,7 @@ import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {
-    PanelHeader,
-    PanelHeaderSlidingToolbar,
-    PanelContentBlock,
-    PanelContentBlockInner,
-} from '../../ui';
+import {PanelHeader, PanelHeaderSlidingToolbar, PanelContentBlock, PanelContentBlockInner} from '../../ui';
 import {AssetEditor} from './assetEditor';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
 
@@ -53,8 +48,7 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
 
         if (this.props.original?._id == null) {
             this.state = {
-                updates: {
-                },
+                updates: {},
                 isDirty: true,
                 submitting: false,
             };
@@ -91,10 +85,9 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                 .then((asset: IAssetItem) => {
                     // If the submission was completed successfully
                     // then close the editor and open the preview
-                    this.props.unlockAsset(asset)
-                        .then(() => {
-                            this.props.previewAsset(asset);
-                        });
+                    this.props.unlockAsset(asset).then(() => {
+                        this.props.previewAsset(asset);
+                    });
                 })
                 .catch(() => {
                     // If there was an error submitting the request
@@ -105,12 +98,11 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 
     onCancel() {
-        this.props.unlockAsset(this.props.original!)
-            .then(() => {
-                if (this.props.original != null) {
-                    this.props.previewAsset(this.props.original);
-                }
-            });
+        this.props.unlockAsset(this.props.original!).then(() => {
+            if (this.props.original != null) {
+                this.props.previewAsset(this.props.original);
+            }
+        });
     }
 
     render() {
@@ -150,12 +142,7 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                             asset={this.props.original!}
                             onChange={this.onChange}
                             updates={this.state.updates}
-                            fields={[
-                                'name',
-                                'description',
-                                'state',
-                                'tags',
-                            ]}
+                            fields={['name', 'description', 'state', 'tags']}
                         />
                     </PanelContentBlockInner>
                 </PanelContentBlock>
@@ -164,7 +151,4 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 }
 
-export const AssetEditorPanel = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AssetEditorPanelComponent);
+export const AssetEditorPanel = connect(mapStateToProps, mapDispatchToProps)(AssetEditorPanelComponent);

@@ -47,8 +47,8 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
 
     componentDidUpdate(prevProps: Readonly<IProps>): void {
         if (
-            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
-            || this.props.spellchecking.language !== prevProps.spellchecking.language
+            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled ||
+            this.props.spellchecking.language !== prevProps.spellchecking.language
         ) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({loading: true}, this.load);

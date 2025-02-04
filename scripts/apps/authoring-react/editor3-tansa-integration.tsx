@@ -7,9 +7,7 @@ const TANSA_PROOFING_ATTRIBUTE = 'tansa-proofing';
 
 export function runTansa(contentProfile: IContentProfileV2, fieldsData: Map<string, unknown>) {
     // Disable tansa for all text fields.
-    Array.from(document.querySelectorAll(
-        'input[type="text"], textarea, [contenteditable]',
-    )).forEach((el) => {
+    Array.from(document.querySelectorAll('input[type="text"], textarea, [contenteditable]')).forEach((el) => {
         el.setAttribute(TANSA_PROOFING_ATTRIBUTE, 'false');
     });
 
@@ -20,8 +18,7 @@ export function runTansa(contentProfile: IContentProfileV2, fieldsData: Map<stri
     tansaEl.setAttribute(TANSA_PROOFING_ATTRIBUTE, 'true');
 
     const allFields = contentProfile.header.merge(contentProfile.content);
-    const editor3Fields =
-        allFields.filter((field) => field.fieldType === 'editor3').toArray();
+    const editor3Fields = allFields.filter((field) => field.fieldType === 'editor3').toArray();
 
     let textByField = Map<string, string>();
 

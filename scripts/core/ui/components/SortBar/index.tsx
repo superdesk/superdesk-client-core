@@ -18,19 +18,13 @@ interface IProps {
 
 export class SortBar extends React.Component<IProps, any> {
     render() {
-        const currentSortOption = this.props.sortOptions.find(
-            (option) => option.field === this.props.selected.field,
-        );
+        const currentSortOption = this.props.sortOptions.find((option) => option.field === this.props.selected.field);
 
         return (
             <div style={{display: 'flex', alignItems: 'center'}} data-test-id="sortbar">
                 <DropdownTree
                     getToggleElement={(isOpen, onClick) => (
-                        <button
-                            onClick={onClick}
-                            className="dropdown__toggle"
-                            data-test-id="sortbar--selected"
-                        >
+                        <button onClick={onClick} className="dropdown__toggle" data-test-id="sortbar--selected">
                             {currentSortOption.label}
                             <span className="dropdown__caret" />
                         </button>
@@ -54,33 +48,35 @@ export class SortBar extends React.Component<IProps, any> {
                     )}
                     wrapperStyles={{paddingBlockStart: 10, paddingBlockEnd: 10}}
                 />
-                {
-                    this.props.selected.direction === 'ascending'
-                        ? (
-                            <button
-                                onClick={() => this.props.onSortOptionChange({
-                                    ...this.props.selected, direction: 'descending',
-                                })}
-                                className="icn-btn direction"
-                                title={gettext('Ascending')}
-                                data-test-id="sortbar--sort-ascending"
-                            >
-                                <i className="icon-ascending" />
-                            </button>
-                        )
-                        : (
-                            <button
-                                onClick={() => this.props.onSortOptionChange({
-                                    ...this.props.selected, direction: 'ascending',
-                                })}
-                                className="icn-btn direction"
-                                title={gettext('Descending')}
-                                data-test-id="sortbar--sort-descending"
-                            >
-                                <i className="icon-descending" />
-                            </button>
-                        )
-                }
+                {this.props.selected.direction === 'ascending' ? (
+                    <button
+                        onClick={() =>
+                            this.props.onSortOptionChange({
+                                ...this.props.selected,
+                                direction: 'descending',
+                            })
+                        }
+                        className="icn-btn direction"
+                        title={gettext('Ascending')}
+                        data-test-id="sortbar--sort-ascending"
+                    >
+                        <i className="icon-ascending" />
+                    </button>
+                ) : (
+                    <button
+                        onClick={() =>
+                            this.props.onSortOptionChange({
+                                ...this.props.selected,
+                                direction: 'ascending',
+                            })
+                        }
+                        className="icn-btn direction"
+                        title={gettext('Descending')}
+                        data-test-id="sortbar--sort-descending"
+                    >
+                        <i className="icon-descending" />
+                    </button>
+                )}
             </div>
         );
     }

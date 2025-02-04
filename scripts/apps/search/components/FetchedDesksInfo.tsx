@@ -27,18 +27,16 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        this.familyService.fetchDesks(this.props.item, false)
-            .then((fetchedDesks) => {
-                this.setState({desks: fetchedDesks});
-            });
+        this.familyService.fetchDesks(this.props.item, false).then((fetchedDesks) => {
+            this.setState({desks: fetchedDesks});
+        });
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.item !== this.props.item) {
-            this.familyService.fetchDesks(this.props.item, false)
-                .then((fetchedDesks) => {
-                    this.setState({desks: fetchedDesks});
-                });
+            this.familyService.fetchDesks(this.props.item, false).then((fetchedDesks) => {
+                this.setState({desks: fetchedDesks});
+            });
         }
     }
 
@@ -74,15 +72,15 @@ export class FetchedDesksInfo extends React.Component<any, any> {
                 <dl>
                     <dt style={{paddingInlineEnd: '5px'}}>{gettext('fetched in')}</dt>
                     <dd>
-                        {
-                            desk.isUserDeskMember
-                                ? <button className="link" onClick={this.openDesk(desk)}>{name}</button>
-                                : <span className="container">{name}</span>
-                        }
+                        {desk.isUserDeskMember ? (
+                            <button className="link" onClick={this.openDesk(desk)}>
+                                {name}
+                            </button>
+                        ) : (
+                            <span className="container">{name}</span>
+                        )}
                     </dd>
-                    {this.state.desks.length > 1 && (
-                        <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
-                    )}
+                    {this.state.desks.length > 1 && <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />}
                 </dl>
             </div>
         );

@@ -81,29 +81,13 @@ export function getReadOnlyLabel() {
  *   It is also used in the Template Editor and for Archived Kill item.
  */
 
-ArticleEditDirective.$inject = [
-    'autosave',
-    'metadata',
-    '$filter',
-    'superdesk',
-    'session',
-    'suggest',
-    'renditions',
-];
-export function ArticleEditDirective(
-    autosave,
-    metadata,
-    $filter,
-    superdesk,
-    session,
-    suggest,
-    renditions,
-) {
+ArticleEditDirective.$inject = ['autosave', 'metadata', '$filter', 'superdesk', 'session', 'suggest', 'renditions'];
+export function ArticleEditDirective(autosave, metadata, $filter, superdesk, session, suggest, renditions) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
-        link: function(scope: IScope, elem) {
+        link: function (scope: IScope, elem) {
             getLabelNameResolver().then((getLabelForFieldId) => {
-                scope.handleUrlsChange = function(fieldId, value) {
+                scope.handleUrlsChange = function (fieldId, value) {
                     if (!scope.item.extra) {
                         scope.item.extra = {};
                     }
@@ -135,7 +119,7 @@ export function ArticleEditDirective(
                     day: '',
                 };
 
-                scope.preview = function(item) {
+                scope.preview = function (item) {
                     superdesk.intent('preview', 'item', item);
                 };
 
@@ -170,8 +154,9 @@ export function ArticleEditDirective(
                 });
 
                 scope.$watch('item.language', () => {
-                    scope.monthNames = getMonthNamesShort(scope.item.language ?? appConfig.default_language)
-                        .map((label, i) => ({id: i.toString(), label: label}));
+                    scope.monthNames = getMonthNamesShort(scope.item.language ?? appConfig.default_language).map(
+                        (label, i) => ({id: i.toString(), label: label}),
+                    );
                 });
 
                 scope.$watch('item', (item: IArticle) => {
@@ -208,7 +193,7 @@ export function ArticleEditDirective(
                  * Invoked by the directive after updating the property in item. This method is responsible for updating
                  * the properties dependent on dateline.
                  */
-                scope.updateDateline = function(item, city) {
+                scope.updateDateline = function (item, city) {
                     var currentItem = _.cloneDeep(item);
 
                     if (city === '') {
@@ -219,15 +204,20 @@ export function ArticleEditDirective(
                         scope.dateline.month = '';
                         scope.dateline.day = '';
                     } else {
-                        var monthAndDay = $filter('parseDateline')(currentItem.dateline.date,
-                            currentItem.dateline.located);
+                        var monthAndDay = $filter('parseDateline')(
+                            currentItem.dateline.date,
+                            currentItem.dateline.located,
+                        );
 
                         scope.dateline.month = monthAndDay.month;
                         scope.dateline.day = monthAndDay.day;
                         scope.resetNumberOfDays(false);
                         if (!currentItem.dateline.date) {
-                            currentItem.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                                parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                            currentItem.dateline.date = $filter('relativeUTCTimestamp')(
+                                scope.item.dateline.located,
+                                parseInt(scope.dateline.month, 10),
+                                parseInt(scope.dateline.day, 10),
+                            );
                         }
 
                         currentItem.dateline.text = formatDatelineText(
@@ -247,7 +237,7 @@ export function ArticleEditDirective(
                  * @param {Boolean} resetDatelineDate if true resets the dateline.date to be relative to selected date.
                  * @param {String} datelineMonth - the selected month
                  */
-                scope.resetNumberOfDays = function(resetDatelineDate, datelineMonth) {
+                scope.resetNumberOfDays = function (resetDatelineDate, datelineMonth) {
                     if (scope.dateline.month !== '') {
                         scope.daysInMonth = $filter('daysInAMonth')(parseInt(scope.dateline.month, 10));
 
@@ -267,7 +257,7 @@ export function ArticleEditDirective(
                 /**
                  * Return current signoff mapping
                  */
-                scope.getSignOffMapping = function() {
+                scope.getSignOffMapping = function () {
                     if (appConfig.user != null && appConfig.user.sign_off_mapping) {
                         return appConfig.user.sign_off_mapping;
                     }
@@ -277,7 +267,7 @@ export function ArticleEditDirective(
                 /**
                  * Modify the sign-off with the value from sign_off_mapping field from user
                  */
-                scope.modifySignOff = function(user) {
+                scope.modifySignOff = function (user) {
                     if (appConfig.user != null && appConfig.user.sign_off_mapping) {
                         scope.item.sign_off = user[appConfig.user.sign_off_mapping];
                         autosave.save(scope.item, scope.origItem);
@@ -287,7 +277,7 @@ export function ArticleEditDirective(
                 /**
                  * Update the sign-off with current search value
                  */
-                scope.searchSignOff = function(search) {
+                scope.searchSignOff = function (search) {
                     scope.item.sign_off = search;
                     autosave.save(scope.item, scope.origItem);
                 };
@@ -295,7 +285,7 @@ export function ArticleEditDirective(
                 /**
                  * Change the edit mode for Sign-Off input
                  */
-                scope.changeSignOffEdit = function() {
+                scope.changeSignOffEdit = function () {
                     scope.editSignOff = !scope.editSignOff;
                 };
 
@@ -315,14 +305,17 @@ export function ArticleEditDirective(
                  *
                  * @param {String} datelineDay - the selected day
                  */
-                scope.modifyDatelineDate = function(datelineDay) {
+                scope.modifyDatelineDate = function (datelineDay) {
                     if (scope.dateline.month !== '' && scope.dateline.day !== '') {
                         if (datelineDay) {
                             scope.dateline.day = datelineDay;
                         }
 
-                        scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
-                            parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
+                        scope.item.dateline.date = $filter('relativeUTCTimestamp')(
+                            scope.item.dateline.located,
+                            parseInt(scope.dateline.month, 10),
+                            parseInt(scope.dateline.day, 10),
+                        );
 
                         scope.item.dateline.text = formatDatelineText(
                             scope.item.dateline.located,
@@ -359,17 +352,15 @@ export function ArticleEditDirective(
                         showTabs = ['view'];
                     }
 
-                    return renditions.crop(
-                        scope.item,
-                        {
+                    return renditions
+                        .crop(scope.item, {
                             isNew: false,
                             editable: true,
                             isAssociated: false,
                             defaultTab: defaultTab,
                             tabs: showTabs,
                             showMetadata: true,
-                        },
-                    )
+                        })
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
@@ -407,14 +398,14 @@ export function ArticleEditDirective(
                  *
                  * @description Opens the Change Image Controller to modify the image metadata and crops.
                  */
-                scope.applyCrop = function() {
+                scope.applyCrop = function () {
                     return this.editMedia('crop');
                 };
 
                 /**
                  * Adds the selected Helpline to the item allowing user for further edit.
                  */
-                scope.addHelplineToFooter = function() {
+                scope.addHelplineToFooter = function () {
                     // determine and ignore if footer text have empty tags
                     var container = document.createElement('div');
 
@@ -442,9 +433,8 @@ export function ArticleEditDirective(
                 };
 
                 // Returns the maximum number upload files
-                scope.maxUploads = function(fieldOptions) {
-                    if (fieldOptions && fieldOptions.multiple_items &&
-                        fieldOptions.multiple_items.enabled) {
+                scope.maxUploads = function (fieldOptions) {
+                    if (fieldOptions && fieldOptions.multiple_items && fieldOptions.multiple_items.enabled) {
                         return fieldOptions.multiple_items.max_items ? fieldOptions.multiple_items.max_items : 1;
                     }
                     return 1;

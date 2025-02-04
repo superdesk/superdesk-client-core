@@ -7,11 +7,11 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
     $scope.origDictionary = null;
     $scope.dictionary = null;
 
-    $scope.isAdmin = function() {
+    $scope.isAdmin = function () {
         return session.identity.user_type === 'administrator';
     };
 
-    $scope.fetchDictionaries = function() {
+    $scope.fetchDictionaries = function () {
         dictionaries.fetch((result) => {
             if (!$scope.isAdmin()) {
                 $scope.dictionaries = _.filter(result._items, (f) => f.user === session.identity._id);
@@ -21,14 +21,14 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
         });
     };
 
-    $scope.createDictionary = function() {
+    $scope.createDictionary = function () {
         $scope.dictionary = {is_active: 'true'};
         $scope.origDictionary = {
             type: 'dictionary',
         };
     };
 
-    $scope.createPersonalDictionary = function() {
+    $scope.createPersonalDictionary = function () {
         return session.getIdentity().then((identity) => {
             $scope.dictionary = {
                 is_active: 'true',
@@ -40,11 +40,11 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
         });
     };
 
-    $scope.isAbbreviations = function(dict) {
+    $scope.isAbbreviations = function (dict) {
         return dictionaries.isAbbreviationsDictionary(dict);
     };
 
-    $scope.createAbbreviationsDictionary = function() {
+    $scope.createAbbreviationsDictionary = function () {
         return session.getIdentity().then((identity) => {
             $scope.dictionary = {
                 is_active: 'true',
@@ -57,7 +57,7 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
         });
     };
 
-    $scope.openDictionary = function(dictionary) {
+    $scope.openDictionary = function (dictionary) {
         $scope.loading = true;
         dictionaries.open(dictionary, (result) => {
             $scope.origDictionary = result;
@@ -71,29 +71,27 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
         });
     };
 
-    $scope.searchDictionary = function(param) {
+    $scope.searchDictionary = function (param) {
         let string = param.user ? 'Personal' : param.name;
 
         return !$scope.query || string.toLowerCase().indexOf($scope.query.toLowerCase()) !== -1;
     };
 
-    $scope.stopLoading = function() {
+    $scope.stopLoading = function () {
         $scope.loading = false;
     };
 
-    $scope.closeDictionary = function() {
+    $scope.closeDictionary = function () {
         $scope.dictionary = $scope.origDictionary = null;
     };
 
-    $scope.remove = function(dictionary) {
-        modal.confirm(gettext('Please confirm you want to delete dictionary.')).then(
-            function runConfirmed() {
-                dictionaries.remove(dictionary, () => {
-                    _.remove($scope.dictionaries, dictionary);
-                    notify.success(gettext('Dictionary deleted.'), 3000);
-                });
-            },
-        );
+    $scope.remove = function (dictionary) {
+        modal.confirm(gettext('Please confirm you want to delete dictionary.')).then(function runConfirmed() {
+            dictionaries.remove(dictionary, () => {
+                _.remove($scope.dictionaries, dictionary);
+                notify.success(gettext('Dictionary deleted.'), 3000);
+            });
+        });
     };
 
     $scope.fetchDictionaries();

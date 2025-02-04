@@ -30,18 +30,24 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
         };
     }
     removeUrl(index) {
-        this.setState({
-            urls: this.state.urls.filter((_, i) => i !== index),
-        }, () => {
-            this.props.onChange(this.props.fieldId, this.state.urls);
-        });
+        this.setState(
+            {
+                urls: this.state.urls.filter((_, i) => i !== index),
+            },
+            () => {
+                this.props.onChange(this.props.fieldId, this.state.urls);
+            },
+        );
     }
     addUrl() {
-        this.setState({
-            urls: this.state.urls.concat({url: 'https://', description: ''}),
-        }, () => {
-            this.props.onChange(this.props.fieldId, this.state.urls);
-        });
+        this.setState(
+            {
+                urls: this.state.urls.concat({url: 'https://', description: ''}),
+            },
+            () => {
+                this.props.onChange(this.props.fieldId, this.state.urls);
+            },
+        );
     }
     handleChange(index, field: keyof IUrl, event) {
         const nextUrls = this.state.urls.map((currentValue, i) => {
@@ -52,11 +58,14 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
             }
         });
 
-        this.setState({
-            urls: nextUrls,
-        }, () => {
-            this.props.onChange(this.props.fieldId, this.state.urls);
-        });
+        this.setState(
+            {
+                urls: nextUrls,
+            },
+            () => {
+                this.props.onChange(this.props.fieldId, this.state.urls);
+            },
+        );
     }
     render() {
         const {label, helperText, editable, required} = this.props;
@@ -64,9 +73,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
         return (
             <div>
                 <label className="field__label">{label}</label>
-                {editable && required && (
-                    <span className="sd-required">{gettext('Required')}</span>
-                )}
+                {editable && required && <span className="sd-required">{gettext('Required')}</span>}
 
                 {this.state.urls.map((item, i) => (
                     <div key={i}>
@@ -104,9 +111,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                     </button>
                 </div>
 
-                {
-                    helperText == null ? null : <div className="sd-editor__info-text">{helperText}</div>
-                }
+                {helperText == null ? null : <div className="sd-editor__info-text">{helperText}</div>}
             </div>
         );
     }

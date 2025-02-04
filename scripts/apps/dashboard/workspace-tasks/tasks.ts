@@ -11,7 +11,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         {_id: 'done', name: gettext('Done')},
     ];
 
-    this.save = function(orig, task) {
+    this.save = function (orig, task) {
         if (task.task.due_time) {
             task.task.due_date = datetimeHelper.mergeDateTime(task.task.due_date, task.task.due_time);
         }
@@ -20,11 +20,12 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
             delete task.task.user;
         }
 
-        return api('tasks').save(orig, task)
+        return api('tasks')
+            .save(orig, task)
             .then((result) => result);
     };
 
-    this.buildFilter = function(status) {
+    this.buildFilter = function (status) {
         var filters = [];
         var self = this;
 
@@ -53,7 +54,7 @@ function TasksService(desks, $rootScope, api, datetimeHelper) {
         return andFilter;
     };
 
-    this.fetch = function(status, filter = this.buildFilter(status)) {
+    this.fetch = function (status, filter = this.buildFilter(status)) {
         return api('tasks').query({
             source: {
                 size: 200,
@@ -76,14 +77,17 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
     $scope.statuses = tasks.statuses;
     $scope.activeStatus = $scope.statuses[0]._id;
 
-    $scope.$watch(() => desks.getCurrentDeskId(), (desk) => {
-        if (desk) {
-            fetchTasks();
-            fetchStages();
-            fetchPublished();
-            fetchScheduled();
-        }
-    });
+    $scope.$watch(
+        () => desks.getCurrentDeskId(),
+        (desk) => {
+            if (desk) {
+                fetchTasks();
+                fetchStages();
+                fetchPublished();
+                fetchScheduled();
+            }
+        },
+    );
 
     /**
      * Fetch stages of current desk
@@ -99,55 +103,60 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
      */
     function fetchTasks() {
         $timeout.cancel(timeout);
-        timeout = $timeout(() => {
-            var filter = {bool: {
-                must: {
-                    term: {'task.desk': desks.getCurrentDeskId()},
-                },
-                must_not: {
-                    terms: {state: ['published', 'spiked', 'corrected', 'killed', 'recalled']},
-                },
-            }};
+        timeout = $timeout(
+            () => {
+                var filter = {
+                    bool: {
+                        must: {
+                            term: {'task.desk': desks.getCurrentDeskId()},
+                        },
+                        must_not: {
+                            terms: {state: ['published', 'spiked', 'corrected', 'killed', 'recalled']},
+                        },
+                    },
+                };
 
-            var source = {source: {
-                size: 200,
-                sort: [{_updated: 'desc'}],
-                filter: filter,
-            }};
+                var source = {
+                    source: {
+                        size: 200,
+                        sort: [{_updated: 'desc'}],
+                        filter: filter,
+                    },
+                };
 
-            api.query('tasks', source).then((result) => {
-                $scope.stageItems = _.groupBy(result._items, (item) => item.task.stage);
-            });
-        }, 300, false);
+                api.query('tasks', source).then((result) => {
+                    $scope.stageItems = _.groupBy(result._items, (item) => item.task.stage);
+                });
+            },
+            300,
+            false,
+        );
     }
 
     /**
      * Fetch content published from a desk
      */
     function fetchPublished() {
-        var filter = {bool: {
-            must: {
-                term: {'task.desk': desks.getCurrentDeskId()},
+        var filter = {
+            bool: {
+                must: {
+                    term: {'task.desk': desks.getCurrentDeskId()},
+                },
             },
-        }};
+        };
 
-        api.query('published', {source: {filter: filter}})
-            .then((results) => {
-                $scope.published = results;
-            });
+        api.query('published', {source: {filter: filter}}).then((results) => {
+            $scope.published = results;
+        });
     }
 
     /**
      * Fetch templates scheduled for today on current desk
      */
     function fetchScheduled() {
-        var startTime = moment().hours(0)
-            .minutes(0)
-            .seconds(0);
+        var startTime = moment().hours(0).minutes(0).seconds(0);
 
-        var endTime = moment().hours(23)
-            .minutes(59)
-            .seconds(59);
+        var endTime = moment().hours(23).minutes(59).seconds(59);
 
         var filter = {
             schedule_desk: desks.getCurrentDeskId(),
@@ -170,11 +179,11 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         }
     }
 
-    $scope.preview = function(item) {
+    $scope.preview = function (item) {
         $scope.selected.preview = item;
     };
 
-    $scope.create = function() {
+    $scope.create = function () {
         $scope.newTask = {};
         archiveService.addTaskToArticle($scope.newTask, desks.getCurrentDesk());
 
@@ -184,19 +193,18 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         $scope.newTask.task.due_time = $filter('formatDateTimeString')(taskDate, 'HH:mm:ss');
     };
 
-    $scope.save = function() {
-        tasks.save({}, $scope.newTask)
-            .then((result) => {
-                notify.success(gettext('Item saved.'));
-                $scope.close();
-            });
+    $scope.save = function () {
+        tasks.save({}, $scope.newTask).then((result) => {
+            notify.success(gettext('Item saved.'));
+            $scope.close();
+        });
     };
 
-    $scope.close = function() {
+    $scope.close = function () {
         $scope.newTask = null;
     };
 
-    $scope.setView = function(view) {
+    $scope.setView = function (view) {
         if ($scope.view !== view) {
             $scope.view = view;
             $scope.tasks = null;
@@ -204,7 +212,7 @@ function TasksController($scope, $timeout, api, notify, desks, tasks, $filter, a
         }
     };
 
-    $scope.selectStatus = function(status) {
+    $scope.selectStatus = function (status) {
         if ($scope.activeStatus !== status) {
             $scope.activeStatus = status;
             $scope.tasks = null;
@@ -232,7 +240,7 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
             item: '=',
             close: '&onclose',
         },
-        link: function(scope) {
+        link: function (scope) {
             var _orig;
 
             scope.task = null;
@@ -250,27 +258,28 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
                 }
             });
 
-            scope.save = function() {
+            scope.save = function () {
                 scope.task.task = _.extend(scope.task.task, scope.task_details);
-                tasks.save(_orig, scope.task)
-                    .then((result) => {
-                        notify.success(gettext('Item saved.'));
-                        scope.editmode = false;
-                    });
+                tasks.save(_orig, scope.task).then((result) => {
+                    notify.success(gettext('Item saved.'));
+                    scope.editmode = false;
+                });
             };
 
-            scope.edit = function() {
+            scope.edit = function () {
                 scope.editmode = true;
             };
 
-            scope.reset = function() {
+            scope.reset = function () {
                 scope.editmode = false;
                 scope.task = _.create(scope.item);
                 scope.task_details = _.extend({}, scope.item.task);
-                scope.task_details.due_date = scope.task_details.due_date ?
-                    $filter('formatDateTimeString')(scope.task_details.due_date) : null;
-                scope.task_details.due_time = scope.task_details.due_time ?
-                    $filter('formatDateTimeString')(scope.task_details.due_time, 'HH:mm:ss') : null;
+                scope.task_details.due_date = scope.task_details.due_date
+                    ? $filter('formatDateTimeString')(scope.task_details.due_date)
+                    : null;
+                scope.task_details.due_time = scope.task_details.due_time
+                    ? $filter('formatDateTimeString')(scope.task_details.due_time, 'HH:mm:ss')
+                    : null;
                 _orig = scope.item;
             };
         },
@@ -287,8 +296,8 @@ function TaskKanbanBoardDirective() {
             cssClass: '@',
             selected: '=',
         },
-        link: function(scope) {
-            scope.preview = function(item) {
+        link: function (scope) {
+            scope.preview = function (item) {
                 if (scope.selected) {
                     scope.selected.preview = item;
                 }
@@ -307,7 +316,7 @@ function AssigneeViewDirective(desks) {
             task: '=',
             name: '=',
         },
-        link: function(scope) {
+        link: function (scope) {
             promise.then(function setItemAssigne() {
                 var task = angular.extend({desk: null, user: null}, scope.task);
                 var desk = desks.deskLookup[task.desk] || {};
@@ -334,7 +343,7 @@ function StagesCtrlFactory(desks) {
             self.selected = null;
 
             // select a stage as active
-            self.select = function(stage) {
+            self.select = function (stage) {
                 var stageId = stage ? stage._id : null;
 
                 self.selected = stage || null;
@@ -342,14 +351,17 @@ function StagesCtrlFactory(desks) {
             };
 
             // reload list of stages
-            self.reload = function(deskId) {
+            self.reload = function (deskId) {
                 self.stages = deskId ? desks.deskStages[deskId] : null;
                 self.select(_.find(self.stages, {_id: desks.activeStageId}));
             };
 
-            $scope.$watch(() => desks.getCurrentDeskId(), () => {
-                self.reload(desks.getCurrentDeskId());
-            });
+            $scope.$watch(
+                () => desks.getCurrentDeskId(),
+                () => {
+                    self.reload(desks.getCurrentDeskId());
+                },
+            );
         });
     };
 }
@@ -360,7 +372,8 @@ function DeskStagesDirective() {
     };
 }
 
-angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu'])
+angular
+    .module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu'])
 
     .factory('StagesCtrl', StagesCtrlFactory)
 
@@ -371,40 +384,46 @@ angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu
     .controller('TasksController', TasksController)
     .service('tasks', TasksService)
 
-    .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
-        superdesk.activity('/workspace/tasks', {
-            label: gettext('Workspace'),
-            controller: TasksController,
-            templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html',
-            topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-            sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-            filters: [{action: 'view', type: 'task'}],
-        });
+    .config([
+        'superdeskProvider',
+        'workspaceMenuProvider',
+        function (superdesk, workspaceMenuProvider) {
+            superdesk.activity('/workspace/tasks', {
+                label: gettext('Workspace'),
+                controller: TasksController,
+                templateUrl: 'scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html',
+                topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
+                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                filters: [{action: 'view', type: 'task'}],
+            });
 
-        superdesk.activity('pick.task', {
-            label: gettext('Pick task'),
-            icon: 'pick',
-            controller: ['data', 'superdesk',
-            /**
-             * Open given item using sidebar authoring
-             *
-             * @param {Object} data
-             * @param {Object} superdesk service
-             * @return {Promise}
-             */
-                function pickTask(data, superdeskService) {
-                    return superdeskService.intent('edit', 'item', data.item);
-                },
-            ],
-            filters: [{action: superdesk.ACTION_EDIT, type: 'task'}],
-        });
+            superdesk.activity('pick.task', {
+                label: gettext('Pick task'),
+                icon: 'pick',
+                controller: [
+                    'data',
+                    'superdesk',
+                    /**
+                     * Open given item using sidebar authoring
+                     *
+                     * @param {Object} data
+                     * @param {Object} superdesk service
+                     * @return {Promise}
+                     */
+                    function pickTask(data, superdeskService) {
+                        return superdeskService.intent('edit', 'item', data.item);
+                    },
+                ],
+                filters: [{action: superdesk.ACTION_EDIT, type: 'task'}],
+            });
 
-        workspaceMenuProvider.item({
-            href: '/workspace/tasks',
-            icon: 'tasks',
-            label: gettext('Tasks'),
-            shortcut: 'alt+t',
-            order: 500,
-            if: 'privileges.tasks && workspaceConfig.tasks',
-        });
-    }]);
+            workspaceMenuProvider.item({
+                href: '/workspace/tasks',
+                icon: 'tasks',
+                label: gettext('Tasks'),
+                shortcut: 'alt+t',
+                order: 500,
+                if: 'privileges.tasks && workspaceConfig.tasks',
+            });
+        },
+    ]);

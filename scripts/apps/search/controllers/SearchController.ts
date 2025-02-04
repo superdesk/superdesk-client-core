@@ -5,18 +5,22 @@ SearchController.$inject = ['$location', 'searchProviderService'];
 export function SearchController($location, searchProviderService) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
-    const DEFAULT_CONFIG = Object.assign({}, {
-        ingest: true,
-        archive: true,
-        published: true,
-        archived: true,
-        search: SUPERDESK,
-    }, appConfig.defaultSearch);
+    const DEFAULT_CONFIG = Object.assign(
+        {},
+        {
+            ingest: true,
+            archive: true,
+            published: true,
+            archived: true,
+            search: SUPERDESK,
+        },
+        appConfig.defaultSearch,
+    );
 
     this.hideNested = appConfig.features.nestedItemsInOutputStage;
 
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
-    const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
+    const resetInternalRepo = () => (this.repo = Object.assign({}, DEFAULT_CONFIG));
 
     resetInternalRepo();
 
@@ -26,32 +30,32 @@ export function SearchController($location, searchProviderService) {
     }
 
     // init search providers
-    searchProviderService.getActiveSearchProviders()
-        .then((providers) => {
-            this.providers = providers;
+    searchProviderService.getActiveSearchProviders().then((providers) => {
+        this.providers = providers;
 
-            // init selected/default provider
-            if (this.providers.length && $location.search().internal == null) {
-                const selectedProvider = this.providers.find((provider) =>
+        // init selected/default provider
+        if (this.providers.length && $location.search().internal == null) {
+            const selectedProvider = this.providers.find(
+                (provider) =>
                     provider.search_provider === $location.search().repo || provider._id === $location.search().repo,
-                );
-                const defaultProvider = $location.search().repo === undefined &&
-                                        this.providers.find((provider) => provider.is_default);
+            );
+            const defaultProvider =
+                $location.search().repo === undefined && this.providers.find((provider) => provider.is_default);
 
-                this.activeProvider = selectedProvider || defaultProvider;
-                if (this.activeProvider) {
-                    this.toggleProvider(this.activeProvider);
-                    return;
-                }
+            this.activeProvider = selectedProvider || defaultProvider;
+            if (this.activeProvider) {
+                this.toggleProvider(this.activeProvider);
+                return;
             }
+        }
 
-            // internal search - init repos
-            const repos = ($location.search().repo || '').split(',').filter((repo) => !!repo);
+        // internal search - init repos
+        const repos = ($location.search().repo || '').split(',').filter((repo) => !!repo);
 
-            INTERNAL.forEach((repo) => {
-                this.repo[repo] = repos.length === 0 ? DEFAULT_CONFIG[repo] : repos.indexOf(repo) >= 0;
-            });
+        INTERNAL.forEach((repo) => {
+            this.repo[repo] = repos.length === 0 ? DEFAULT_CONFIG[repo] : repos.indexOf(repo) >= 0;
         });
+    });
 
     /**
      * Toggle internal repo

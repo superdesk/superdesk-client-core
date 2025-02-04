@@ -17,37 +17,37 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
         }
 
         const selectedUserIds = uniq(
-            articles
-                .map((item) => item.marked_for_user)
-                .filter((marked_for_user) => marked_for_user != null),
+            articles.map((item) => item.marked_for_user).filter((marked_for_user) => marked_for_user != null),
         );
 
-        const message = selectedUserIds.length > 1
-            ? gettext('Items are marked for different users')
-            : undefined;
+        const message = selectedUserIds.length > 1 ? gettext('Items are marked for different users') : undefined;
 
-        return Promise.resolve([{
-            label: gettext('Mark for user'),
-            icon: 'icon-assign',
-            onTrigger: () => {
-                showModal(getMarkForUserModal({
-                    superdesk: superdesk,
-                    markForUser: (selectedUserId) => {
-                        articles.forEach((article) => {
-                            updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId});
-                        });
-                    },
-                    markForUserAndSend: (selectedUserId) => {
-                        articles.forEach((article) => {
-                            markForUserAndSendToNextStage(superdesk, article, selectedUserId);
-                        });
-                    },
-                    locked: someItemsLocked,
-                    lockedInOtherSession: someItemsLockedInOtherSession,
-                    markedForUserInitial: selectedUserIds[0] ?? undefined,
-                    message: message,
-                }));
+        return Promise.resolve([
+            {
+                label: gettext('Mark for user'),
+                icon: 'icon-assign',
+                onTrigger: () => {
+                    showModal(
+                        getMarkForUserModal({
+                            superdesk: superdesk,
+                            markForUser: (selectedUserId) => {
+                                articles.forEach((article) => {
+                                    updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId});
+                                });
+                            },
+                            markForUserAndSend: (selectedUserId) => {
+                                articles.forEach((article) => {
+                                    markForUserAndSendToNextStage(superdesk, article, selectedUserId);
+                                });
+                            },
+                            locked: someItemsLocked,
+                            lockedInOtherSession: someItemsLockedInOtherSession,
+                            markedForUserInitial: selectedUserIds[0] ?? undefined,
+                            message: message,
+                        }),
+                    );
+                },
             },
-        }]);
+        ]);
     };
 }

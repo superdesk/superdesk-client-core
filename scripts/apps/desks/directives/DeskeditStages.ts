@@ -8,15 +8,15 @@ import {arrayMove} from '@superdesk/common';
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
 export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             var orig = null;
 
             elem.find('.stages-list').sortable({
                 cursor: 'move',
-                start: function(event, ui) {
+                start: function (event, ui) {
                     ui.item.data('start', ui.item.index());
                 },
-                stop: function(event, ui) {
+                stop: function (event, ui) {
                     const startIndex = ui.item.data('start') - 1;
                     const endIndex = ui.item.index() - 1;
 
@@ -87,14 +87,18 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 }
             });
 
-            scope.getstages = function(previous) {
+            scope.getstages = function (previous) {
                 if (scope.desk.edit && scope.desk.edit._id) {
                     scope.message = gettext('loading...');
-                    desks.fetchDeskStages(scope.desk.edit._id, true).then((stages) => {
-                        scope.stages = stages;
-                        scope.message = null;
-                    })
-                        .finally(() => { /* no-op */ });
+                    desks
+                        .fetchDeskStages(scope.desk.edit._id, true)
+                        .then((stages) => {
+                            scope.stages = stages;
+                            scope.message = null;
+                        })
+                        .finally(() => {
+                            /* no-op */
+                        });
                 } else {
                     WizardHandler.wizard('desks').goTo(previous);
                 }
@@ -107,7 +111,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
              *      when true it exits otherwise continues
              *      to next step in wizard handler.
              */
-            scope.next = function(done) {
+            scope.next = function (done) {
                 if (!done) {
                     WizardHandler.wizard('desks').next();
                 } else {
@@ -115,7 +119,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 }
             };
 
-            scope.edit = function(stage) {
+            scope.edit = function (stage) {
                 if (_.isNil(stage.is_visible)) {
                     stage.is_visible = true;
                 }
@@ -133,20 +137,20 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 }
             };
 
-            scope.isActive = function(stage) {
+            scope.isActive = function (stage) {
                 return scope.editStage && scope.editStage._id === stage._id;
             };
 
-            scope.shouldVisible = function() {
+            scope.shouldVisible = function () {
                 scope.editStage.is_visible = scope.editStage.default_incoming ? true : scope.editStage.is_visible;
             };
 
-            scope.cancel = function() {
+            scope.cancel = function () {
                 scope.editStage = null;
                 clearErrorMessages();
             };
 
-            scope.select = function(stage) {
+            scope.select = function (stage) {
                 if (scope.editStage && scope.editStage._id !== stage._id) {
                     return false;
                 }
@@ -154,11 +158,11 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 scope.selected = stage;
             };
 
-            scope.setStatus = function(status) {
+            scope.setStatus = function (status) {
                 scope.editStage.task_status = status._id;
             };
 
-            scope.save = function() {
+            scope.save = function () {
                 scope.saving = true;
                 scope.message = gettext('Saving...');
                 var dest = orig._id ? orig : {};
@@ -169,7 +173,8 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
             };
 
             function saveStage(dest, diff) {
-                api('stages').save(dest, diff)
+                api('stages')
+                    .save(dest, diff)
                     .then((item) => {
                         scope.select(item);
                         return desks.fetchDeskById(item.desk);
@@ -199,16 +204,17 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 }
             }
 
-            scope.handleEdit = function($event) {
+            scope.handleEdit = function ($event) {
                 clearErrorMessages();
                 if (!_.isNil(scope.editStage.name)) {
                     scope._errorLimits = scope.editStage.name.length > scope.limits.stage ? true : null;
                 }
             };
 
-            scope.enableSave = function() {
-                return scope.editStage && scope.editStage.name &&
-                    scope.editStage.name.length > 0 && !scope._errorLimits;
+            scope.enableSave = function () {
+                return (
+                    scope.editStage && scope.editStage.name && scope.editStage.name.length > 0 && !scope._errorLimits
+                );
             };
 
             function clearErrorMessages() {
@@ -221,8 +227,9 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                 scope.message = null;
             }
 
-            scope.remove = function(stage) {
-                api('stages').remove(stage)
+            scope.remove = function (stage) {
+                api('stages')
+                    .remove(stage)
                     .then(() => {
                         if (stage === scope.selected) {
                             scope.selected = null;
@@ -231,16 +238,19 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                         scope.message = null;
                         return desks.fetchDeskById(stage.desk);
                     })
-                    .then((desk) => {
-                        scope.desk.edit = desk;
-                        desks.refreshStages();
-                    }, (response) => {
-                        if (angular.isDefined(response.data._message)) {
-                            scope.message = gettext('Error: ' + response.data._message);
-                        } else {
-                            scope.message = gettext('There was a problem, stage was not deleted.');
-                        }
-                    });
+                    .then(
+                        (desk) => {
+                            scope.desk.edit = desk;
+                            desks.refreshStages();
+                        },
+                        (response) => {
+                            if (angular.isDefined(response.data._message)) {
+                                scope.message = gettext('Error: ' + response.data._message);
+                            } else {
+                                scope.message = gettext('There was a problem, stage was not deleted.');
+                            }
+                        },
+                    );
             };
         },
     };

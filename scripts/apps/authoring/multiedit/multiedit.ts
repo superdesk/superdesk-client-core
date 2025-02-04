@@ -30,11 +30,11 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
 
     this.items = saved === null ? [] : saved;
 
-    this.minBoards = function() {
+    this.minBoards = function () {
         return MIN_BOARDS;
     };
 
-    this.create = function(_ids) {
+    this.create = function (_ids) {
         var self = this;
 
         self.items = [];
@@ -54,17 +54,18 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         self.open();
     };
 
-    this.exit = function(item) {
+    this.exit = function (item) {
         let someFailed = false;
 
         Promise.all(
             this.items
                 .filter((item) => item.article != null)
-                .map((item) => sdApi.article.unlock(item.article)
-                    .catch(() => {
+                .map((item) =>
+                    sdApi.article.unlock(item.article).catch(() => {
                         someFailed = true;
                         return Promise.resolve();
-                    })),
+                    }),
+                ),
         ).then(() => {
             if (someFailed) {
                 notify.error(gettext('Some articles failed to unlock'));
@@ -76,7 +77,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         });
     };
 
-    this.open = function() {
+    this.open = function () {
         if (authoringWorkspace.getState()) {
             authoringWorkspace.close(true);
         }
@@ -84,11 +85,11 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         superdesk.intent('author', 'multiedit');
     };
 
-    this.updateItems = function() {
+    this.updateItems = function () {
         storage.setItem(STORAGE_KEY, this.items);
     };
 
-    this.edit = function(_id, board) {
+    this.edit = function (_id, board) {
         if (!this.items[board]) {
             this.items[board] = createBoard(_id);
         } else {
@@ -97,12 +98,12 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         this.updateItems();
     };
 
-    this.remove = function(_id) {
+    this.remove = function (_id) {
         _.extend(_.find(this.items, {article: _id}), {article: null});
         this.updateItems();
     };
 
-    this.close = function(board) {
+    this.close = function (board) {
         if (this.items.length > MIN_BOARDS) {
             this.items.splice(board, 1);
             this.updateItems();
@@ -119,17 +120,20 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
  */
 MultieditController.$inject = ['$scope', 'multiEdit'];
 function MultieditController($scope, multiEdit) {
-    $scope.$watch(() => multiEdit.items, (items) => {
-        $scope.boards = items;
-    });
+    $scope.$watch(
+        () => multiEdit.items,
+        (items) => {
+            $scope.boards = items;
+        },
+    );
 
     $scope.minBoards = multiEdit.minBoards();
 
-    $scope.closeBoard = function(board) {
+    $scope.closeBoard = function (board) {
         multiEdit.close(board);
     };
 
-    $scope.closeMulti = function() {
+    $scope.closeMulti = function () {
         /**
          * HACK: for some reason the watcher doesn't always fire and multi edit view remains open.
          * Since authoring-react/multi-edit-modal.tsx will replace this code - I'm not doing a proper fix.
@@ -144,15 +148,18 @@ MultieditDropdownDirective.$inject = ['workqueue', 'multiEdit', '$route'];
 function MultieditDropdownDirective(workqueue, multiEdit, $route) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.current = $route.current.params.item;
             scope.queue = [scope.current];
 
-            scope.$watch(() => workqueue.items, (items) => {
-                scope.items = items;
-            });
+            scope.$watch(
+                () => workqueue.items,
+                (items) => {
+                    scope.items = items;
+                },
+            );
 
-            scope.toggle = function(_id) {
+            scope.toggle = function (_id) {
                 if (_id === scope.current) {
                     return false;
                 }
@@ -163,11 +170,11 @@ function MultieditDropdownDirective(workqueue, multiEdit, $route) {
                 }
             };
 
-            scope.selected = function(_id) {
+            scope.selected = function (_id) {
                 return _.indexOf(scope.queue, _id) !== -1;
             };
 
-            scope.open = function() {
+            scope.open = function () {
                 multiEdit.create(scope.queue);
             };
         },
@@ -178,25 +185,32 @@ MultieditDropdownInnerDirective.$inject = ['workqueue', 'multiEdit'];
 function MultieditDropdownInnerDirective(workqueue, multiEdit) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html',
-        link: function(scope, elem, attrs) {
+        link: function (scope, elem, attrs) {
             var workqueueItems = [],
                 multieditItems = [];
 
-            scope.$watch(() => multiEdit.items, (items) => {
-                multieditItems = _.map(multiEdit.items, (board) => board.article);
-                filter();
-            }, true);
+            scope.$watch(
+                () => multiEdit.items,
+                (items) => {
+                    multieditItems = _.map(multiEdit.items, (board) => board.article);
+                    filter();
+                },
+                true,
+            );
 
-            scope.$watch(() => workqueue.items, (items) => {
-                workqueueItems = items;
-                filter();
-            });
+            scope.$watch(
+                () => workqueue.items,
+                (items) => {
+                    workqueueItems = items;
+                    filter();
+                },
+            );
 
             function filter() {
                 scope.items = _.filter(workqueueItems, (item) => _.indexOf(multieditItems, item._id) === -1);
             }
 
-            scope.open = function(_id) {
+            scope.open = function (_id) {
                 multiEdit.edit(_id, attrs.board);
             };
         },
@@ -208,7 +222,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.$watch('article', (newVal, oldVal) => {
@@ -225,9 +239,13 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.isMediaType = isMediaType(scope.item);
                     scope.refreshTrigger = scope.refreshTrigger + 1 || 0;
                     if (scope.focus) {
-                        $timeout(() => {
-                            elem.children().focus();
-                        }, 0, false);
+                        $timeout(
+                            () => {
+                                elem.children().focus();
+                            },
+                            0,
+                            false,
+                        );
                     }
                     scope.isLocked = lock.isLocked(item);
 
@@ -240,45 +258,44 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             openItem();
 
-            scope.autosave = function(item, timeout) {
+            scope.autosave = function (item, timeout) {
                 scope.dirty = true;
-                return authoring.autosave(cloneDeep(item), scope.origItem, timeout)
-                    .then(
-                        () => {
-                            scope.$applyAsync(() => {
-                                InitializeMedia.initMedia(scope);
-                            });
-                        });
-            };
-
-            scope.$watch('item.flags', (newValue, oldValue) => {
-                if (newValue !== oldValue) {
-                    scope.item.flags = newValue;
-                    scope.origItem.flags = oldValue;
-                }
-            }, true);
-
-            scope.save = function() {
-                return authoring.save(
-                    scope.origItem,
-                    scope.item,
-                    scope.requestEditor3DirectivesToGenerateHtml,
-                    true,
-                ).then((res) => {
-                    scope.dirty = false;
-                    InitializeMedia.initMedia(scope);
-
-                    notify.success(gettext('Item updated.'));
-
-                    return res;
+                return authoring.autosave(cloneDeep(item), scope.origItem, timeout).then(() => {
+                    scope.$applyAsync(() => {
+                        InitializeMedia.initMedia(scope);
+                    });
                 });
             };
 
-            scope.remove = function(item) {
+            scope.$watch(
+                'item.flags',
+                (newValue, oldValue) => {
+                    if (newValue !== oldValue) {
+                        scope.item.flags = newValue;
+                        scope.origItem.flags = oldValue;
+                    }
+                },
+                true,
+            );
+
+            scope.save = function () {
+                return authoring
+                    .save(scope.origItem, scope.item, scope.requestEditor3DirectivesToGenerateHtml, true)
+                    .then((res) => {
+                        scope.dirty = false;
+                        InitializeMedia.initMedia(scope);
+
+                        notify.success(gettext('Item updated.'));
+
+                        return res;
+                    });
+            };
+
+            scope.remove = function (item) {
                 multiEdit.remove(item._id);
             };
 
-            scope.isPublished = function(item) {
+            scope.isPublished = function (item) {
                 if (!_.isNil(item)) {
                     return isPublished(item);
                 }
@@ -290,16 +307,14 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 MultieditFloatMenuDirective.$inject = ['$document'];
 function MultieditFloatMenuDirective($document) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             var open = false;
 
             elem.bind('click', (event) => {
                 if (!open) {
                     event.preventDefault();
                     event.stopPropagation();
-                    $('#multiedit-float')
-                        .css(getPosition(event.pageX, event.pageY))
-                        .show();
+                    $('#multiedit-float').css(getPosition(event.pageX, event.pageY)).show();
                 } else {
                     $('#multiedit-float').hide();
                 }
@@ -338,16 +353,18 @@ function MultieditFloatMenuDirective($document) {
     };
 }
 
-angular.module('superdesk.apps.authoring.multiedit', ['superdesk.core.activity', 'superdesk.apps.authoring'])
+angular
+    .module('superdesk.apps.authoring.multiedit', ['superdesk.core.activity', 'superdesk.apps.authoring'])
     .service('multiEdit', MultieditService)
     .directive('sdMultieditDropdown', MultieditDropdownDirective)
     .directive('sdMultieditInnerDropdown', MultieditDropdownInnerDirective)
     .directive('sdMultieditArticle', MultieditArticleDirective)
     .directive('sdMultieditFloatMenu', MultieditFloatMenuDirective)
 
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk
-            .activity('multiedit', {
+    .config([
+        'superdeskProvider',
+        function (superdesk) {
+            superdesk.activity('multiedit', {
                 category: '/authoring',
                 href: '/multiedit',
                 when: '/multiedit',
@@ -358,4 +375,5 @@ angular.module('superdesk.apps.authoring.multiedit', ['superdesk.core.activity',
                 controller: MultieditController,
                 filters: [{action: 'author', type: 'multiedit'}],
             });
-    }]);
+        },
+    ]);

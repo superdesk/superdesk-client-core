@@ -16,7 +16,8 @@ TASK PAGE
     margin: 5px 0 0;
 }
 
-.task-label , .task-labels > li {
+.task-label,
+.task-labels > li {
     float: inline-start;
     margin-inline-end: 4px;
     background: #eee;
@@ -41,8 +42,6 @@ TASK PAGE
     }
 }
 
-
-
 .task-list > header {
     padding: 10px;
     .card {
@@ -56,7 +55,7 @@ TASK PAGE
         }
     }
     button {
-        border:0;
+        border: 0;
         background: none;
     }
     .switch-view {
@@ -125,7 +124,9 @@ TASK PAGE
         .marker {
             width: 4px;
             position: absolute;
-            inset-inline-start: 0; inset-block-start: 0; inset-block-end: 0;
+            inset-inline-start: 0;
+            inset-block-start: 0;
+            inset-block-end: 0;
             @include border-radius(2px 0 0 2px);
             &.todo {
                 background: $todo-color;
@@ -271,7 +272,6 @@ TASK PAGE
 //             margin-block-end: 10px;
 //         }
 
-
 //         .task-labels {
 //             margin-block-start: 0;
 //             margin-block-end: 15px;
@@ -305,9 +305,7 @@ TASK PAGE
 // }
 
 .create-task-popup {
-
     .modal-body {
-
         textarea {
             resize: none;
         }
@@ -325,7 +323,7 @@ TASK PAGE
             }
         }
 
-        fieldset{
+        fieldset {
             &.full {
                 margin: -20px -20px 15px;
             }
@@ -371,7 +369,6 @@ TASK PAGE
             margin-block-end: 15px;
         }
     }
-
 }
 
 // stages styling
@@ -383,13 +380,14 @@ TASK PAGE
 }
 
 .stage-label {
-    a, button {
+    a,
+    button {
         background: #fff;
         border-color: #d7d7d7 !important;
         color: var(--color-text) !important;
         &:hover {
             border-color: #505050 !important;
-            @include box-shadow(0px 1px 3px 0px rgba(0,0,0,0.3));
+            @include box-shadow(0px 1px 3px 0px rgba(0, 0, 0, 0.3));
         }
     }
     &.active {
@@ -405,7 +403,6 @@ TASK PAGE
         }
     }
 }
-
 
 // Task comment list   *** UNUSED ***
 // ---------------------------------------------

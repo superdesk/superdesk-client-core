@@ -38,35 +38,27 @@ export function showOptionsModal(title: string, message: string, options: Array<
                     data-test-id={dataTestId}
                     headerTemplate={title}
                     footerTemplate={
-                        (
-                            <div>
-                                {
-                                    this.state.loading && (
-                                        <Loader grow={false} />
-                                    )
-                                }
+                        <div>
+                            {this.state.loading && <Loader grow={false} />}
 
-                                <Spacer h gap="4" justifyContent="start" noGrow>
-                                    {
-                                        options.map(({label, highlightOption, onSelect}) => (
-                                            <button
-                                                key={label}
-                                                className={classNames('btn', {'btn--primary': highlightOption})}
-                                                onClick={() => {
-                                                    this.setState({loading: true});
-                                                    const closeModalFn = () => this.props.closeModal();
+                            <Spacer h gap="4" justifyContent="start" noGrow>
+                                {options.map(({label, highlightOption, onSelect}) => (
+                                    <button
+                                        key={label}
+                                        className={classNames('btn', {'btn--primary': highlightOption})}
+                                        onClick={() => {
+                                            this.setState({loading: true});
+                                            const closeModalFn = () => this.props.closeModal();
 
-                                                    onSelect(closeModalFn);
-                                                }}
-                                                disabled={this.state.loading}
-                                            >
-                                                {label}
-                                            </button>
-                                        ))
-                                    }
-                                </Spacer>
-                            </div>
-                        )
+                                            onSelect(closeModalFn);
+                                        }}
+                                        disabled={this.state.loading}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </Spacer>
+                        </div>
                     }
                 >
                     <div>{message}</div>

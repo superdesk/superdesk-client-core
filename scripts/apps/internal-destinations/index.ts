@@ -5,11 +5,13 @@ import {InternalDestinations} from './InternalDestinations';
 
 const styles = 'display: flex; height: calc(100% - 48px)';
 
-angular.module('superdesk.apps.internal-destinations', [])
+angular
+    .module('superdesk.apps.internal-destinations', [])
     .component('sdInternalDestinations', reactToAngular1(InternalDestinations, [], [], styles))
-    .config(['superdeskProvider', (superdeskProvider) => {
-        superdeskProvider
-            .activity('/settings/internal-destinations', {
+    .config([
+        'superdeskProvider',
+        (superdeskProvider) => {
+            superdeskProvider.activity('/settings/internal-destinations', {
                 label: gettext('Internal Destinations'),
                 template: require('./views/settings.html'),
                 controllerAs: 'dest',
@@ -17,4 +19,5 @@ angular.module('superdesk.apps.internal-destinations', [])
                 settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {internal_destinations: 1},
             });
-    }]);
+        },
+    ]);

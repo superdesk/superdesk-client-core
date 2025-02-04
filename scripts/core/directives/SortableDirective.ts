@@ -1,4 +1,5 @@
-export default angular.module('superdesk.core.directives.sortable', [])
+export default angular
+    .module('superdesk.core.directives.sortable', [])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -11,21 +12,23 @@ export default angular.module('superdesk.core.directives.sortable', [])
      *
      * @description Creates a container in which contained items can be sortable by drag/drop.
      */
-    .directive('sdSortable', [function() {
-        return {
-            scope: {update: '=', placeholder: '='},
-            link: function(scope, element, attrs) {
-                element.sortable({
-                    tolerance: 'intersect',
-                    placeholder: scope.placeholder,
-                    start: function(event, ui) {
-                        $(event.target).data('ui-sortable').floating = true;
-                    },
-                    update: function(event, ui) {
-                        scope.update();
-                    },
-                });
-                element.disableSelection();
-            },
-        };
-    }]);
+    .directive('sdSortable', [
+        function () {
+            return {
+                scope: {update: '=', placeholder: '='},
+                link: function (scope, element, attrs) {
+                    element.sortable({
+                        tolerance: 'intersect',
+                        placeholder: scope.placeholder,
+                        start: function (event, ui) {
+                            $(event.target).data('ui-sortable').floating = true;
+                        },
+                        update: function (event, ui) {
+                            scope.update();
+                        },
+                    });
+                    element.disableSelection();
+                },
+            };
+        },
+    ]);

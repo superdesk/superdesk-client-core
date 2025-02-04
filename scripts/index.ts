@@ -39,7 +39,7 @@ function loadConfigs() {
         method: 'GET',
         mode: 'cors',
     })
-        .then((res) => res.ok ? res.json() : Promise.reject())
+        .then((res) => (res.ok ? res.json() : Promise.reject()))
         .then((json) => {
             merge(appConfig, json.config);
         });
@@ -51,17 +51,14 @@ function isDateFormatValid() {
     const {dateformat} = appConfig.view;
 
     if (
-        dateformat.includes('YYYY') !== true
-        || dateformat.includes('MM') !== true
-        || dateformat.includes('DD') !== true
+        dateformat.includes('YYYY') !== true ||
+        dateformat.includes('MM') !== true ||
+        dateformat.includes('DD') !== true
     ) {
         return false;
     }
 
-    const separators = dateformat
-        .replace('YYYY', '')
-        .replace('MM', '')
-        .replace('DD', '');
+    const separators = dateformat.replace('YYYY', '').replace('MM', '').replace('DD', '');
 
     if (separators.length !== 2 || separators[0] !== separators[1]) {
         return false;
@@ -107,11 +104,16 @@ export function startApp(
     var _superdesk;
     var _workspaceMenu;
 
-    angular.module('superdesk.register_extensions', [])
-        .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenu) => {
-            _superdesk = superdesk;
-            _workspaceMenu = workspaceMenu;
-        }])
+    angular
+        .module('superdesk.register_extensions', [])
+        .config([
+            'superdeskProvider',
+            'workspaceMenuProvider',
+            (superdesk, workspaceMenu) => {
+                _superdesk = superdesk;
+                _workspaceMenu = workspaceMenu;
+            },
+        ])
         .run([
             'modal',
             'privileges',
@@ -160,8 +162,8 @@ export function startApp(
                         registerLegacyExtensionCompatibilityLayer();
 
                         if (
-                            ng.get('session').sessionId != null // user logged in
-                            && ng.get('session').identity.user_type === 'administrator'
+                            ng.get('session').sessionId != null && // user logged in
+                            ng.get('session').identity.user_type === 'administrator'
                         ) {
                             maybeDisplayInvalidInstanceConfigurationMessage();
                         }
@@ -170,44 +172,45 @@ export function startApp(
             },
         ]);
 
-    loadConfigs()
-        .then(() => {
-            if (isDateFormatValid() !== true) {
-                document.write('Invalid date format specified in config.view.dateFormat');
-                return;
+    loadConfigs().then(() => {
+        if (isDateFormatValid() !== true) {
+            document.write('Invalid date format specified in config.view.dateFormat');
+            return;
+        }
+
+        /**
+         * @ngdoc module
+         * @name superdesk-client
+         * @packageName superdesk-client
+         * @description The root superdesk module.
+         */
+        angular.bootstrap(
+            body,
+            ['superdesk.config', 'superdesk.core', 'superdesk.apps', 'superdesk.register_extensions'].concat(
+                appConfig.apps || [],
+            ),
+            {strictDi: true},
+        );
+
+        window['superdeskIsReady'] = true;
+
+        body.attr('data-theme', 'dark-ui');
+
+        if (sdApi.user.isLoggedIn()) {
+            if (appConfig.features.useTansaProofing) {
+                setupTansa();
             }
 
-            /**
-             * @ngdoc module
-             * @name superdesk-client
-             * @packageName superdesk-client
-             * @description The root superdesk module.
-             */
-            angular.bootstrap(body, [
-                'superdesk.config',
-                'superdesk.core',
-                'superdesk.apps',
-                'superdesk.register_extensions',
-            ].concat(appConfig.apps || []), {strictDi: true});
-
-            window['superdeskIsReady'] = true;
-
-            body.attr('data-theme', 'dark-ui');
-
-            if (sdApi.user.isLoggedIn()) {
-                if (appConfig.features.useTansaProofing) {
-                    setupTansa();
-                }
-
-                httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'})
-                    .then(({_items}) => {
-                        store.dispatch({
-                            type: 'LOAD_SUBJECT_CODES',
-                            payload: keyBy(_items, ({qcode}) => qcode),
-                        });
+            httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'}).then(
+                ({_items}) => {
+                    store.dispatch({
+                        type: 'LOAD_SUBJECT_CODES',
+                        payload: keyBy(_items, ({qcode}) => qcode),
                     });
+                },
+            );
 
-                registerGlobalKeybindings();
-            }
-        });
+            registerGlobalKeybindings();
+        }
+    });
 }

@@ -21,14 +21,7 @@ import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/s
 
 // UI
 import {FormLabel, IconButton, Label, Menu} from 'superdesk-ui-framework/react';
-import {
-    FormRow,
-    PanelContent,
-    PanelContentBlock,
-    PanelContentBlockInner,
-    PanelHeader,
-    Text,
-} from '../../ui';
+import {FormRow, PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, Text} from '../../ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
 import {getPreviewComponent} from './preview';
 import {showImagePreviewModal} from './assetImagePreviewFullScreen';
@@ -96,8 +89,8 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         }
 
         const {gettext} = superdeskApi.localization;
-        const actions: Array<IAssetCallback> =
-            [{
+        const actions: Array<IAssetCallback> = [
+            {
                 action: ASSET_ACTIONS.EDIT,
                 onSelect: this.onEditAsset,
             },
@@ -113,7 +106,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                 action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
                 onSelect: this.onAssetImagePreview,
             },
-            ];
+        ];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
             actions.push({
@@ -177,8 +170,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <FormRow>
                                 <FormLabel text={gettext('Type')} style="light" />
                                 <Text>
-                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}
-                                    ({this.props.asset?.mimetype})
+                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}({this.props.asset?.mimetype})
                                 </Text>
                             </FormRow>
 
@@ -211,7 +203,4 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 }
 
-export const AssetPreviewPanel = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AssetPreviewPanelComponent);
+export const AssetPreviewPanel = connect(mapStateToProps, mapDispatchToProps)(AssetPreviewPanelComponent);

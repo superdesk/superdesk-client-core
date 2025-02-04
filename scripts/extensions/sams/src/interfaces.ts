@@ -1,12 +1,5 @@
 // Types
-import {
-    IAttachment,
-    IBaseRestApiResponse,
-    IDesk,
-    IRestApiResponse,
-    IUser,
-    IWebsocketMessage,
-} from 'superdesk-api';
+import {IAttachment, IBaseRestApiResponse, IDesk, IRestApiResponse, IUser, IWebsocketMessage} from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
 export enum SET_STATE {
@@ -113,7 +106,7 @@ export interface IBulkActionAssetCallback {
     onSelect(): void;
 }
 
-export interface IVersionInformation extends IBaseRestApiResponse{
+export interface IVersionInformation extends IBaseRestApiResponse {
     firstcreated: string;
     versioncreated: string;
     original_creator?: IUser['_id'];

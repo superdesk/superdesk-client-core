@@ -1,6 +1,4 @@
-import {
-    isNull, isUndefined, find, filter, keys, findIndex,
-    sortBy, map, forEach, startsWith, flatMap} from 'lodash';
+import {isNull, isUndefined, find, filter, keys, findIndex, sortBy, map, forEach, startsWith, flatMap} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
@@ -42,7 +40,7 @@ export function AuthoringHeaderDirective(
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
-        link: function(scope, elem, attrs, WidgetsManagerCtrl) {
+        link: function (scope, elem, attrs, WidgetsManagerCtrl) {
             scope.contentType = null;
             scope.displayCompanyCodes = null;
             scope.features = features;
@@ -53,10 +51,7 @@ export function AuthoringHeaderDirective(
 
             // Allow some single-selection fields to display the multi-selection
             // dropdown (useful for searching through terms)
-            scope.showDropdownAsMultiTerms = [
-                'countries',
-                'label',
-            ];
+            scope.showDropdownAsMultiTerms = ['countries', 'label'];
 
             scope.previewFields = flatMap(
                 Object.values(extensions),
@@ -102,20 +97,21 @@ export function AuthoringHeaderDirective(
                     });
             }
 
-            scope.shouldDisplayUrgency = function() {
-                return !(scope.editor.urgency || {}).service ||
-                    Array.isArray(scope.item.anpa_category) &&
-                    scope.item.anpa_category.length &&
-                    scope.item.anpa_category[0].qcode &&
-                    scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
-                ;
+            scope.shouldDisplayUrgency = function () {
+                return (
+                    !(scope.editor.urgency || {}).service ||
+                    (Array.isArray(scope.item.anpa_category) &&
+                        scope.item.anpa_category.length &&
+                        scope.item.anpa_category[0].qcode &&
+                        scope.editor.urgency.service[scope.item.anpa_category[0].qcode])
+                );
             };
 
             /**
              * Returns true if the Company Codes field should be displayed, false otherwise.
              * Company Codes field is displayed only if either Subject or Category has finance category.
              */
-            scope.shouldDisplayCompanyCodes = function() {
+            scope.shouldDisplayCompanyCodes = function () {
                 if (!metadata.values.company_codes) {
                     return false;
                 }
@@ -130,8 +126,11 @@ export function AuthoringHeaderDirective(
 
                 if (!display && scope.item.subject) {
                     financeCategory = find(scope.item.subject, (category) => {
-                        if (category.qcode === '04000000' || category.qcode === '04006018'
-                            || category.qcode === '04019000') {
+                        if (
+                            category.qcode === '04000000' ||
+                            category.qcode === '04006018' ||
+                            category.qcode === '04019000'
+                        ) {
                             return category;
                         }
                     });
@@ -153,11 +152,11 @@ export function AuthoringHeaderDirective(
                 if (!archiveService.isLegal(scope.item)) {
                     var relatedItemWidget = filter(authoringWidgets, (widget) => widget._id === 'related-item');
 
-                    scope.activateWidget = function() {
+                    scope.activateWidget = function () {
                         WidgetsManagerCtrl.activate(relatedItemWidget[0]);
                     };
 
-                    scope.previewMasterStory = function() {
+                    scope.previewMasterStory = function () {
                         var itemId = item.broadcast.master_id;
 
                         return api.find('archive', itemId).then((_item) => {
@@ -167,7 +166,7 @@ export function AuthoringHeaderDirective(
                 }
             });
 
-            scope.activateTranslationsWidget = function() {
+            scope.activateTranslationsWidget = function () {
                 WidgetsManagerCtrl.activate(authoringWidgets.find((widget) => widget._id === 'translations'));
             };
 
@@ -183,8 +182,8 @@ export function AuthoringHeaderDirective(
 
             function isMissingLink() {
                 const isUpdated = !scope.item.rewrite_of && !scope.item.rewritten_by;
-                const isCorrection = scope.action !== 'correct' && !scope.isCorrection(scope.item)
-                    && !scope.item.correction_sequence;
+                const isCorrection =
+                    scope.action !== 'correct' && !scope.isCorrection(scope.item) && !scope.item.correction_sequence;
 
                 return isUpdated && isCorrection;
             }
@@ -194,17 +193,15 @@ export function AuthoringHeaderDirective(
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
                     // get the midnight based on the default timezone not the user timezone.
-                    var fromDateTime = moment().tz(appConfig.default_timezone)
-                        .format(appConfig.view.dateformat);
+                    var fromDateTime = moment().tz(appConfig.default_timezone).format(appConfig.view.dateformat);
 
-                    archiveService.getRelatedItems(scope.item, fromDateTime)
-                        .then((items) => {
-                            scope.relatedItems = items;
-                            if (items && items._items.length && !getNoMissingLink()) {
-                                // if takes package is missing or not rewrite of.
-                                scope.missing_link = isMissingLink();
-                            }
-                        });
+                    archiveService.getRelatedItems(scope.item, fromDateTime).then((items) => {
+                        scope.relatedItems = items;
+                        if (items && items._items.length && !getNoMissingLink()) {
+                            // if takes package is missing or not rewrite of.
+                            scope.missing_link = isMissingLink();
+                        }
+                    });
                 }
             }
 
@@ -216,11 +213,11 @@ export function AuthoringHeaderDirective(
 
             function initVocabularies() {
                 if (scope.vocabulariesCollection == null) {
-                    return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
+                    return vocabularies.getVocabularies().then((vocabulariesCollection) => {
                         scope.vocabulariesCollection = vocabulariesCollection;
 
                         scope.categoriesVocabulary = vocabulariesCollection.find(({_id}) => _id === 'categories');
-                    }));
+                    });
                 }
 
                 return Promise.resolve();
@@ -261,8 +258,11 @@ export function AuthoringHeaderDirective(
                                     if (!scope.item.anpa_category) {
                                         scope.item.anpa_category = [];
                                     }
-                                    scope.item.anpa_category.splice(-1, 0,
-                                        {name: category.name, qcode: category.qcode, scheme: category.scheme});
+                                    scope.item.anpa_category.splice(-1, 0, {
+                                        name: category.name,
+                                        qcode: category.qcode,
+                                        scheme: category.scheme,
+                                    });
                                 }
                             }
                         });

@@ -14,10 +14,8 @@ export function tryLocking<T extends ILockInfo & IBaseRestApiResponse>(
         path: `${endpoint}/${entityId}`,
     }).then((entity) => {
         const locked = entity._lock === true;
-        const lockedInCurrentSession =
-            locked && entity._lock_session === currentSessionId;
-        const lockedInAnotherSession =
-            locked && entity._lock_session !== currentSessionId;
+        const lockedInCurrentSession = locked && entity._lock_session === currentSessionId;
+        const lockedInAnotherSession = locked && entity._lock_session !== currentSessionId;
 
         const doLock = (_force: boolean) => {
             const payload: Partial<ILockInfo> = {
@@ -65,8 +63,7 @@ export function tryUnlocking<T extends ILockInfo & IBaseRestApiResponse>(
         path: `${endpoint}/${entityId}`,
     }).then((entity) => {
         const locked = entity._lock === true;
-        const lockedInCurrentSession =
-            locked && entity._lock_session === currentSessionId;
+        const lockedInCurrentSession = locked && entity._lock_session === currentSessionId;
 
         if (lockedInCurrentSession) {
             const payload: Partial<ILockInfo> = {

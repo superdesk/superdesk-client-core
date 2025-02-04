@@ -4,9 +4,7 @@ import * as Setup from './suggestion_setup';
 describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
     it('should add new suggestion when link is created', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         const date = new Date();
@@ -49,9 +47,7 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
 
     it('should add a new suggestion when link is changed', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         const date = new Date();
@@ -93,9 +89,7 @@ describe('editor3.reducers.suggestion.LINK_SUGGESTIONS', () => {
 
     it('should add a new suggestion when link is removed', () => {
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         const date = new Date();

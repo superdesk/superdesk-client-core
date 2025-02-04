@@ -3,21 +3,20 @@ import {appConfig} from 'appConfig';
 
 AdminPublishSettingsService.$inject = ['api'];
 export function AdminPublishSettingsService(api) {
-    var _fetch = function(endpoint, criteria) {
+    var _fetch = function (endpoint, criteria) {
         return api[endpoint].query(criteria);
     };
 
     var service = {
         transmissionServicesMap: {},
-        fetchPublishErrors: function() {
+        fetchPublishErrors: function () {
             var criteria = {io_type: 'publish'};
 
             return _fetch('io_errors', criteria);
         },
-        registerTransmissionService: function(name, props) {
-            const templateUrl = transmissionTypes[name] != null ?
-                transmissionTypes[name].templateUrl :
-                props.templateUrl || '';
+        registerTransmissionService: function (name, props) {
+            const templateUrl =
+                transmissionTypes[name] != null ? transmissionTypes[name].templateUrl : props.templateUrl || '';
 
             this.transmissionServicesMap[name] = {
                 delivery_type: name,
@@ -26,7 +25,7 @@ export function AdminPublishSettingsService(api) {
                 config: props.config ? props.config : null,
             };
         },
-        getTransmissionServices: function() {
+        getTransmissionServices: function () {
             return this.transmissionServicesMap;
         },
     };

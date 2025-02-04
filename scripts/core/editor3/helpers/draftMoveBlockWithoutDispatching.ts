@@ -14,23 +14,18 @@ export function moveBlockWithoutDispatching(state, {block, dest, insertionMode})
     const contentState = editorState.getCurrentContent();
 
     switch (true) {
-    case block === dest:
-    case !contentState.getBlockForKey(dest):
-    case !contentState.getBlockForKey(block):
-    case dest === contentState.getKeyBefore(block) && insertionMode === 'after':
-    case dest === contentState.getKeyAfter(block) && insertionMode === 'before':
-    case dest === contentState.getKeyAfter(block) && !insertionMode:
-        return state; // noop
+        case block === dest:
+        case !contentState.getBlockForKey(dest):
+        case !contentState.getBlockForKey(block):
+        case dest === contentState.getKeyBefore(block) && insertionMode === 'after':
+        case dest === contentState.getKeyAfter(block) && insertionMode === 'before':
+        case dest === contentState.getKeyAfter(block) && !insertionMode:
+            return state; // noop
     }
 
     const atomicBlock = contentState.getBlockForKey(block);
     const targetRange = SelectionState.createEmpty(dest);
-    const withMovedAtomicBlock = AtomicBlockUtils.moveAtomicBlock(
-        editorState,
-        atomicBlock,
-        targetRange,
-        insertionMode,
-    );
+    const withMovedAtomicBlock = AtomicBlockUtils.moveAtomicBlock(editorState, atomicBlock, targetRange, insertionMode);
 
     return {...state, editorState: withMovedAtomicBlock};
 }

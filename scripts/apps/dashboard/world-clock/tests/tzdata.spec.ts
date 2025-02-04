@@ -1,13 +1,10 @@
-
 /**
-* Module with tests for the tzdata factory
-*
-* @module tzdata factory tests
-*/
+ * Module with tests for the tzdata factory
+ *
+ * @module tzdata factory tests
+ */
 describe('tzdata factory', () => {
-    var tzdata,
-        $httpBackend,
-        $rootScope;
+    var tzdata, $httpBackend, $rootScope;
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
@@ -20,8 +17,7 @@ describe('tzdata factory', () => {
     }));
 
     it('requests correct time zone data from the server', () => {
-        var expectedUrl = new RegExp(
-            'apps/dashboard/world-clock/timezones-all.json$');
+        var expectedUrl = new RegExp('apps/dashboard/world-clock/timezones-all.json$');
 
         $httpBackend.expectGET(expectedUrl).respond({zones: {}, rules: {}});
         $rootScope.$digest();
@@ -52,33 +48,29 @@ describe('tzdata factory', () => {
     });
 
     describe('getTzNames() method', () => {
-        it('returns an empty list if the data has not been fetched yet',
-            () => {
-                var result,
-                    serverResponse;
+        it('returns an empty list if the data has not been fetched yet', () => {
+            var result, serverResponse;
 
-                serverResponse = {
-                    zones: {
-                        'Europe/Rome': ['1 - CET'],
-                        'Australia/Sydney': ['10 ADN EST'],
-                        'Pacific/Auckland': ['13 NZDT'],
-                    },
-                    links: {
-                        'Foo/Bar': [],
-                    },
-                };
-                $httpBackend.whenGET(/.+/).respond(serverResponse);
+            serverResponse = {
+                zones: {
+                    'Europe/Rome': ['1 - CET'],
+                    'Australia/Sydney': ['10 ADN EST'],
+                    'Pacific/Auckland': ['13 NZDT'],
+                },
+                links: {
+                    'Foo/Bar': [],
+                },
+            };
+            $httpBackend.whenGET(/.+/).respond(serverResponse);
 
-                // NOTE: no .flush(), simulate no response from the server yet
+            // NOTE: no .flush(), simulate no response from the server yet
 
-                result = tzdata.getTzNames();
-                expect(result).toEqual([]);
-            },
-        );
+            result = tzdata.getTzNames();
+            expect(result).toEqual([]);
+        });
 
         it('returns a sorted list of available time zone names', () => {
-            var result,
-                serverResponse;
+            var result, serverResponse;
 
             serverResponse = {
                 zones: {
@@ -96,10 +88,7 @@ describe('tzdata factory', () => {
             $rootScope.$digest();
 
             result = tzdata.getTzNames();
-            expect(result).toEqual([
-                'Australia/Sydney', 'Europe/Rome',
-                'Foo/Bar', 'Pacific/Auckland',
-            ]);
+            expect(result).toEqual(['Australia/Sydney', 'Europe/Rome', 'Foo/Bar', 'Pacific/Auckland']);
         });
     });
 });

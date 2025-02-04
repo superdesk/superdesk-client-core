@@ -12,7 +12,7 @@ export function ProductsFilter() {
      * @param {Object} search - The filter. search by name and product type.
      * @returns {Array<Object>} The filtered array.
      */
-    return function(items, search) {
+    return function (items, search) {
         if (!search) {
             return items;
         }

@@ -78,23 +78,11 @@ export class RundownsList extends React.PureComponent<IProps> {
     }
 
     doPreview(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
-        this.props.onEditModeChange(
-            rundownId,
-            prepareForPreview(
-                this.props.rundownItemAction,
-                rundownItemId,
-            ),
-        );
+        this.props.onEditModeChange(rundownId, prepareForPreview(this.props.rundownItemAction, rundownItemId));
     }
 
     doEdit(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
-        this.props.onEditModeChange(
-            rundownId,
-            prepareForEditing(
-                this.props.rundownItemAction,
-                rundownItemId,
-            ),
-        );
+        this.props.onEditModeChange(rundownId, prepareForEditing(this.props.rundownItemAction, rundownItemId));
     }
 
     render() {
@@ -106,9 +94,8 @@ export class RundownsList extends React.PureComponent<IProps> {
                         height={height}
                         query={{
                             endpoint: '/rundowns',
-                            fullTextSearch: this.props.searchString.trim().length < 1
-                                ? undefined
-                                : this.props.searchString,
+                            fullTextSearch:
+                                this.props.searchString.trim().length < 1 ? undefined : this.props.searchString,
                             sort: [{_updated: 'desc'}],
                             filter: getFilters(this.props.filters),
                             join: {
@@ -130,9 +117,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                         {
                                             itemRow: [
                                                 {
-                                                    content: (
-                                                        <i className="icon-rundown" />
-                                                    ),
+                                                    content: <i className="icon-rundown" />,
                                                 },
                                             ],
                                             border: true,
@@ -144,92 +129,77 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                         <React.Fragment>
                                                             <span className="sd-list-item__slugline">
                                                                 {rundown.airtime_time}
-                                                                &nbsp;
-                                                                -
-                                                                &nbsp;
-                                                                {
-                                                                    addSeconds(
-                                                                        rundown.airtime_time,
-                                                                        (rundown.duration ?? rundown.planned_duration),
-                                                                    )
-                                                                }
+                                                                &nbsp; - &nbsp;
+                                                                {addSeconds(
+                                                                    rundown.airtime_time,
+                                                                    rundown.duration ?? rundown.planned_duration,
+                                                                )}
                                                             </span>
 
-                                                            {
-                                                                rundown.duration != null && (
-                                                                    <DurationLabel
-                                                                        duration={rundown.duration}
-                                                                        planned_duration={rundown.planned_duration}
-                                                                        size="small"
-                                                                    />
-                                                                )
-                                                            }
+                                                            {rundown.duration != null && (
+                                                                <DurationLabel
+                                                                    duration={rundown.duration}
+                                                                    planned_duration={rundown.planned_duration}
+                                                                    size="small"
+                                                                />
+                                                            )}
 
                                                             <PlannedDurationLabel
                                                                 planned_duration={rundown.planned_duration}
                                                                 size="small"
                                                             />
 
-                                                            {
-                                                                rundown._updated !== rundown._created
-                                                                    ? (
-                                                                        <DateTime
-                                                                            dateTime={rundown._updated}
-                                                                            tooltip={(dateLong) => gettext(
-                                                                                'Updated at {{date}}',
-                                                                                {date: dateLong},
-                                                                            )}
-                                                                        />
-                                                                    )
-                                                                    : (
-                                                                        <DateTime
-                                                                            dateTime={rundown._created}
-                                                                            tooltip={(dateLong) => gettext(
-                                                                                'Created at {{date}}',
-                                                                                {date: dateLong},
-                                                                            )}
-                                                                        />
-                                                                    )
-                                                            }
+                                                            {rundown._updated !== rundown._created ? (
+                                                                <DateTime
+                                                                    dateTime={rundown._updated}
+                                                                    tooltip={(dateLong) =>
+                                                                        gettext('Updated at {{date}}', {date: dateLong})
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <DateTime
+                                                                    dateTime={rundown._created}
+                                                                    tooltip={(dateLong) =>
+                                                                        gettext('Created at {{date}}', {date: dateLong})
+                                                                    }
+                                                                />
+                                                            )}
                                                         </React.Fragment>
                                                     ),
                                                 },
                                                 {
-                                                    content:
-                                                    <React.Fragment>
-                                                        {
-                                                            joined.show != null && (
+                                                    content: (
+                                                        <React.Fragment>
+                                                            {joined.show != null && (
                                                                 <Label text={joined.show.title} color="blue--800" />
-                                                            )
-                                                        }
+                                                            )}
 
-                                                        {
-                                                            joined.template != null && (
+                                                            {joined.template != null && (
                                                                 <span className="sd-list-item__compound-text">
                                                                     <span className="sd-list-item__text-label">
                                                                         {gettext('Template')}
                                                                     </span>
                                                                     <span>{joined.template.title}</span>
                                                                 </span>
-                                                            )
-                                                        }
+                                                            )}
 
-                                                        <span
-                                                            className={[
-                                                                'sd-overflow-ellipsis',
-                                                                'sd-list-item--element-grow',
-                                                                'sd-list-item__headline',
-                                                            ].join(' ')}
-                                                        >
-                                                            {rundown.title}
-                                                        </span>
-                                                    </React.Fragment>,
+                                                            <span
+                                                                className={[
+                                                                    'sd-overflow-ellipsis',
+                                                                    'sd-list-item--element-grow',
+                                                                    'sd-list-item__headline',
+                                                                ].join(' ')}
+                                                            >
+                                                                {rundown.title}
+                                                            </span>
+                                                        </React.Fragment>
+                                                    ),
                                                 },
                                             ],
                                             fullwidth: true,
                                         },
                                     ]}
-                                    action={(
+                                    action={
                                         <Menu
                                             items={[
                                                 {
@@ -241,19 +211,19 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                 {
                                                     label: gettext('Delete'),
                                                     onClick: () => {
-                                                        superdesk.ui.confirm(
-                                                            gettext('Are you sure you want to delete it?'),
-                                                        ).then((confirmed) => {
-                                                            if (confirmed) {
-                                                                httpRequestRawLocal({
-                                                                    method: 'DELETE',
-                                                                    path: `/rundowns/${rundown._id}`,
-                                                                    headers: {
-                                                                        'If-Match': rundown._etag,
-                                                                    },
-                                                                });
-                                                            }
-                                                        });
+                                                        superdesk.ui
+                                                            .confirm(gettext('Are you sure you want to delete it?'))
+                                                            .then((confirmed) => {
+                                                                if (confirmed) {
+                                                                    httpRequestRawLocal({
+                                                                        method: 'DELETE',
+                                                                        path: `/rundowns/${rundown._id}`,
+                                                                        headers: {
+                                                                            'If-Match': rundown._etag,
+                                                                        },
+                                                                    });
+                                                                }
+                                                            });
                                                     },
                                                 },
                                             ]}
@@ -266,7 +236,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                 />
                                             )}
                                         </Menu>
-                                    )}
+                                    }
                                     loading={false}
                                     activated={false}
                                     selected={rundown._id === this.props.rundownAction?.id}
@@ -278,68 +248,58 @@ export class RundownsList extends React.PureComponent<IProps> {
                                         this.props.onEditModeChange(rundown._id);
                                     }}
                                 />
-                                {
-                                    rundown.matching_items && (
-                                        <div style={{paddingInlineStart: 20, paddingBlockEnd: 8}}>
-                                            <RundownItems
-                                                rundownReadOnly={true}
-                                                items={rundown.matching_items}
-                                                getActions={((rundownItem) => {
-                                                    const preview: IMenuItem = {
-                                                        label: gettext('Preview'),
-                                                        onSelect: () => {
-                                                            this.doPreview(rundown._id, rundownItem._id);
-                                                        },
-                                                    };
+                                {rundown.matching_items && (
+                                    <div style={{paddingInlineStart: 20, paddingBlockEnd: 8}}>
+                                        <RundownItems
+                                            rundownReadOnly={true}
+                                            items={rundown.matching_items}
+                                            getActions={(rundownItem) => {
+                                                const preview: IMenuItem = {
+                                                    label: gettext('Preview'),
+                                                    onSelect: () => {
+                                                        this.doPreview(rundown._id, rundownItem._id);
+                                                    },
+                                                };
 
-                                                    const edit: IMenuItem = {
-                                                        label: gettext('Edit'),
-                                                        onSelect: () => {
-                                                            this.props.onEditModeChange(
-                                                                rundown._id,
-                                                                prepareForEditing(
-                                                                    this.props.rundownItemAction,
-                                                                    rundownItem._id,
-                                                                ),
-                                                            );
-                                                        },
-                                                    };
+                                                const edit: IMenuItem = {
+                                                    label: gettext('Edit'),
+                                                    onSelect: () => {
+                                                        this.props.onEditModeChange(
+                                                            rundown._id,
+                                                            prepareForEditing(
+                                                                this.props.rundownItemAction,
+                                                                rundownItem._id,
+                                                            ),
+                                                        );
+                                                    },
+                                                };
 
-                                                    return (
-                                                        <Dropdown items={[preview, edit]}>
-                                                            <IconButton
-                                                                ariaValue={gettext('Actions')}
-                                                                icon="dots-vertical"
-                                                                onClick={noop}
-                                                            />
-                                                        </Dropdown>
-                                                    );
-                                                })}
-                                                preview={(rundownItem) => {
-                                                    this.doPreview(rundown._id, rundownItem._id);
-                                                }}
-                                                edit={(rundownItem) => {
-                                                    this.doEdit(rundown._id, rundownItem._id);
-                                                }}
-                                            />
-                                        </div>
-                                    )
-                                }
+                                                return (
+                                                    <Dropdown items={[preview, edit]}>
+                                                        <IconButton
+                                                            ariaValue={gettext('Actions')}
+                                                            icon="dots-vertical"
+                                                            onClick={noop}
+                                                        />
+                                                    </Dropdown>
+                                                );
+                                            }}
+                                            preview={(rundownItem) => {
+                                                this.doPreview(rundown._id, rundownItem._id);
+                                            }}
+                                            edit={(rundownItem) => {
+                                                this.doEdit(rundown._id, rundownItem._id);
+                                            }}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         )}
                         noItemsTemplate={() => {
                             if (this.props.searchString == null) {
-                                return (
-                                    <Alert>{gettext('There are no rundowns yet')}</Alert>
-                                );
+                                return <Alert>{gettext('There are no rundowns yet')}</Alert>;
                             } else {
-                                return (
-                                    <Alert>
-                                        {
-                                            gettext('No items found matching search criteria')
-                                        }
-                                    </Alert>
-                                );
+                                return <Alert>{gettext('No items found matching search criteria')}</Alert>;
                             }
                         }}
                     />

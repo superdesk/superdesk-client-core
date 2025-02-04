@@ -7,9 +7,7 @@ export class PanelContent extends React.PureComponent<IPropsSendToPanel> {
         if (this.props.markupV2) {
             return (
                 <Layout.PanelContent>
-                    <Layout.PanelContentBlock>
-                        {this.props.children}
-                    </Layout.PanelContentBlock>
+                    <Layout.PanelContentBlock>{this.props.children}</Layout.PanelContentBlock>
                 </Layout.PanelContent>
             );
         } else {

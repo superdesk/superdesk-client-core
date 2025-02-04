@@ -9,12 +9,7 @@ import {noop} from 'lodash';
 const {gettext} = superdesk.localization;
 const {nameof} = superdesk.helpers;
 
-const {
-    getGenericArrayListPageComponent,
-    ListItem,
-    ListItemColumn,
-    ListItemActionsMenu,
-} = superdesk.components;
+const {getGenericArrayListPageComponent, ListItem, ListItemColumn, ListItemActionsMenu} = superdesk.components;
 const {getFormFieldPreviewComponent} = superdesk.forms;
 
 const {FormFieldType} = superdesk.forms;
@@ -80,10 +75,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
         const formConfig: IFormGroup = {
             direction: 'vertical',
             type: 'inline',
-            form: [
-                nameField,
-                definitionField,
-            ],
+            form: [nameField, definitionField],
         };
 
         const GenericArrayListPageComponent = getGenericArrayListPageComponent<IPredefinedFieldOption, never>();
@@ -92,35 +84,22 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
         const getId = (item: IPredefinedFieldOption) => item._id;
 
         const extensionConfig: IExtensionConfigurationOptions = superdesk.getExtensionConfig();
-        const availablePlaceholders =
-            Object.keys(extensionConfig.placeholderMapping ?? {})
-                .map((val) => `{{${val}}}`);
+        const availablePlaceholders = Object.keys(extensionConfig.placeholderMapping ?? {}).map((val) => `{{${val}}}`);
 
         return (
             <div>
                 <div className="form-label">{gettext('Configure predefined values')}</div>
 
-                {
-                    availablePlaceholders.length > 0 && (
-                        <div>
-                            {gettext('The following placeholders are available to be used in definitions:')}
-                            {' '}
-                            {
-                                availablePlaceholders.map((placeholder) => (
-                                    <Tag
-                                        key={placeholder}
-                                        text={placeholder}
-                                        readOnly
-                                        onClick={noop}
-                                    />
-                                ))
-                            }
-
-                            <br />
-                            <br />
-                        </div>
-                    )
-                }
+                {availablePlaceholders.length > 0 && (
+                    <div>
+                        {gettext('The following placeholders are available to be used in definitions:')}{' '}
+                        {availablePlaceholders.map((placeholder) => (
+                            <Tag key={placeholder} text={placeholder} readOnly onClick={noop} />
+                        ))}
+                        <br />
+                        <br />
+                    </div>
+                )}
 
                 <GenericArrayListPageComponent
                     defaultSortOption={{field: nameof<IPredefinedFieldOption>('title'), direction: 'ascending'}}
@@ -133,9 +112,9 @@ export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> 
                     getNewItemTemplate={() => {
                         const ids = value.map(({_id: id}) => parseInt(id, 10));
 
-                        return ({
+                        return {
                             _id: value.length < 1 ? '1' : (Math.max(...ids) + 1).toString(),
-                        });
+                        };
                     }}
                     onChange={(val) => {
                         const nextConfig: IConfig = {

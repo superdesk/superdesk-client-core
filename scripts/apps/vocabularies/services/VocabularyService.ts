@@ -28,14 +28,12 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * the cache or retrieved via an api request
      * @return {Promise} {Object} vocabularies
      */
-    this.getAllActiveVocabularies = function() {
+    this.getAllActiveVocabularies = function () {
         if (_.isNil(self.AllActiveVocabularies)) {
-            return api.getAll('vocabularies').then(
-                (result) => {
-                    self.AllActiveVocabularies = result;
-                    return self.AllActiveVocabularies;
-                },
-            );
+            return api.getAll('vocabularies').then((result) => {
+                self.AllActiveVocabularies = result;
+                return self.AllActiveVocabularies;
+            });
         }
 
         return $q.when(self.AllActiveVocabularies);
@@ -49,15 +47,13 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @param {String} noCache if true, fetch new vocabularies values again
      * @return {Promise} {Object} vocabularies
      */
-    this.getVocabularies = function(config: {noCache?: boolean}) {
+    this.getVocabularies = function (config: {noCache?: boolean}) {
         if (_.isNil(self.vocabularies) || config?.noCache) {
-            return api.getAll('vocabularies', {where: {type: 'manageable'}}).then(
-                (result) => {
-                    result._items = $filter('sortByName')(result._items, 'display_name');
-                    self.vocabularies = result;
-                    return self.vocabularies;
-                },
-            );
+            return api.getAll('vocabularies', {where: {type: 'manageable'}}).then((result) => {
+                result._items = $filter('sortByName')(result._items, 'display_name');
+                self.vocabularies = result;
+                return self.vocabularies;
+            });
         }
 
         return $q.when(self.vocabularies);
@@ -80,7 +76,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @param {String} vocabularyId
      * @return {Promise} {Object} vocabulary
      */
-    this.getVocabulary = function(vocabularyId) {
+    this.getVocabulary = function (vocabularyId) {
         return self.getAllActiveVocabularies().then((vocabularies) => _.find(vocabularies, {_id: vocabularyId}));
     };
 
@@ -92,13 +88,13 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @param {String} vocabularyId
      * @return {Object} vocabulary
      */
-    this.getVocabularySync = function(vocabularyId) {
+    this.getVocabularySync = function (vocabularyId) {
         if (self.AllActiveVocabularies) {
             return _.find(self.AllActiveVocabularies, {_id: vocabularyId});
         }
     };
 
-    this.getAllVocabulariesSync = function() {
+    this.getAllVocabulariesSync = function () {
         if (self.AllActiveVocabularies) {
             return self.AllActiveVocabularies;
         } else {
@@ -112,7 +108,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * @private
      * @description Clears the cached vocabularies.
      */
-    this._resetVocabularies = function() {
+    this._resetVocabularies = function () {
         self.AllActiveVocabularies = null;
         self.vocabularies = null;
 
@@ -120,7 +116,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
         this.getAllActiveVocabularies();
     };
 
-    this.getDefaultDatefieldShortcuts = function() {
+    this.getDefaultDatefieldShortcuts = function () {
         return [
             {
                 label: gettext('Today'),

@@ -13,11 +13,9 @@ export function previewAuthoringEntity(
 ) {
     showPrintableModal(({closeModal, Wrapper, showPrintDialog}) => (
         <Wrapper
-            toolbar={(
+            toolbar={
                 <React.Fragment>
-                    <div>
-                        {label != null && <div>{label}</div>}
-                    </div>
+                    <div>{label != null && <div>{label}</div>}</div>
 
                     <div>
                         <Button
@@ -41,15 +39,8 @@ export function previewAuthoringEntity(
                         />
                     </div>
                 </React.Fragment>
-            )}
-            contentSections={[
-                <PreviewAuthoringItem
-                    key="0"
-                    item={item}
-                    profile={profile}
-                    fieldsData={fieldsData}
-                />,
-            ]}
+            }
+            contentSections={[<PreviewAuthoringItem key="0" item={item} profile={profile} fieldsData={fieldsData} />]}
         />
     ));
 }

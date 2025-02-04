@@ -12,8 +12,7 @@ export class AuthoringMediaActions extends React.PureComponent<IProps> {
         const mediaActions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
             (activationResult) =>
-                activationResult.contributions != null
-                && activationResult.contributions.mediaActions != null
+                activationResult.contributions != null && activationResult.contributions.mediaActions != null
                     ? activationResult.contributions.mediaActions
                     : [],
         );
@@ -23,10 +22,9 @@ export class AuthoringMediaActions extends React.PureComponent<IProps> {
 
         return (
             <div style={{paddingInlineStart: 4}}>
-                {mediaActions.map(
-                    (Component, i) =>
-                        <Component key={i} article={article} />,
-                )}
+                {mediaActions.map((Component, i) => (
+                    <Component key={i} article={article} />
+                ))}
             </div>
         );
     }

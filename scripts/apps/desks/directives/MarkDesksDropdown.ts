@@ -16,7 +16,7 @@ import {gettext} from 'core/utils';
 MarkDesksDropdown.$inject = ['desks', '$timeout', '$injector'];
 export function MarkDesksDropdown(desks, $timeout, $injector) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             desks.fetchDesks().then(() => {
                 var deskList = $injector.invoke(DesksReactDropdown, null, {
                     item: scope.item,

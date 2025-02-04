@@ -7,10 +7,7 @@ export class CustomIngestRoutingAction extends React.PureComponent<IIngestRuleHa
         const ActionComponent = sdApi.ingest.getExtensionForIngestRuleHandler(this.props.rule)?.editor;
 
         return ActionComponent == null ? null : (
-            <ActionComponent
-                rule={this.props.rule}
-                updateRule={this.props.updateRule}
-            />
+            <ActionComponent rule={this.props.rule} updateRule={this.props.updateRule} />
         );
     }
 }

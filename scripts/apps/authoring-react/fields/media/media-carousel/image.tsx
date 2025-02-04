@@ -32,10 +32,9 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
     }
 
     edit(mode: 'view' | 'image-edit' | 'crop') {
-        editMetadata(this.props.prepareForExternalEditing(this.props.item), mode)
-            .then((res) => {
-                this.props.onChange(cloneDeep(res));
-            });
+        editMetadata(this.props.prepareForExternalEditing(this.props.item), mode).then((res) => {
+            this.props.onChange(cloneDeep(res));
+        });
     }
 
     render() {
@@ -53,11 +52,10 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
 
         const renditions = item.renditions ?? {};
 
-        const cropSizes =
-            sdApi.vocabularies.getAll()
-                .get('crop_sizes')
-                .items
-                .filter((cropSize) => renditions[cropSize.name] != null);
+        const cropSizes = sdApi.vocabularies
+            .getAll()
+            .get('crop_sizes')
+            .items.filter((cropSize) => renditions[cropSize.name] != null);
 
         const showCrops = this.props.showCrops === true && cropSizes.length > 0;
 
@@ -76,43 +74,41 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                                 {canRemoveItems ? removeButton : null}
                             </Spacer>
 
-                            {
-                                !readOnly && (
-                                    <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                                        <Spacer h gap="8" noGrow>
-                                            <IconButton
-                                                ariaValue={gettext('Edit metadata')}
-                                                icon="pencil"
-                                                style="outlineWhite"
-                                                size="x-large"
-                                                onClick={() => {
-                                                    this.edit('view');
-                                                }}
-                                            />
+                            {!readOnly && (
+                                <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
+                                    <Spacer h gap="8" noGrow>
+                                        <IconButton
+                                            ariaValue={gettext('Edit metadata')}
+                                            icon="pencil"
+                                            style="outlineWhite"
+                                            size="x-large"
+                                            onClick={() => {
+                                                this.edit('view');
+                                            }}
+                                        />
 
-                                            <IconButton
-                                                ariaValue={gettext('Edit image')}
-                                                icon="switches"
-                                                style="outlineWhite"
-                                                size="x-large"
-                                                onClick={() => {
-                                                    this.edit('image-edit');
-                                                }}
-                                            />
+                                        <IconButton
+                                            ariaValue={gettext('Edit image')}
+                                            icon="switches"
+                                            style="outlineWhite"
+                                            size="x-large"
+                                            onClick={() => {
+                                                this.edit('image-edit');
+                                            }}
+                                        />
 
-                                            <IconButton
-                                                ariaValue={gettext('Edit crops')}
-                                                icon="crop"
-                                                style="outlineWhite"
-                                                size="x-large"
-                                                onClick={() => {
-                                                    this.edit('crop');
-                                                }}
-                                            />
-                                        </Spacer>
-                                    </div>
-                                )
-                            }
+                                        <IconButton
+                                            ariaValue={gettext('Edit crops')}
+                                            icon="crop"
+                                            style="outlineWhite"
+                                            size="x-large"
+                                            onClick={() => {
+                                                this.edit('crop');
+                                            }}
+                                        />
+                                    </Spacer>
+                                </div>
+                            )}
 
                             <Spacer v gap="16" noWrap>
                                 {metadata}
@@ -122,35 +118,23 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                     </div>
                 </div>
 
-                {
-                    (descriptionInput != null || titleInput != null || showCrops === true) && (
-                        <div style={{padding: mediaDetailsPadding}}>
-                            <Spacer v gap="16" noWrap>
-                                {
-                                    titleInput != null && (
-                                        <div style={{width: '100%'}}>{titleInput}</div>
-                                    )
-                                }
+                {(descriptionInput != null || titleInput != null || showCrops === true) && (
+                    <div style={{padding: mediaDetailsPadding}}>
+                        <Spacer v gap="16" noWrap>
+                            {titleInput != null && <div style={{width: '100%'}}>{titleInput}</div>}
 
-                                {
-                                    descriptionInput != null && (
-                                        <div style={{width: '100%'}}>{descriptionInput}</div>
-                                    )
-                                }
+                            {descriptionInput != null && <div style={{width: '100%'}}>{descriptionInput}</div>}
 
-                                {
-                                    showCrops === true && (
-                                        <ImageCrops
-                                            renditions={renditions}
-                                            cropSizes={cropSizes}
-                                            wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}
-                                        />
-                                    )
-                                }
-                            </Spacer>
-                        </div>
-                    )
-                }
+                            {showCrops === true && (
+                                <ImageCrops
+                                    renditions={renditions}
+                                    cropSizes={cropSizes}
+                                    wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}
+                                />
+                            )}
+                        </Spacer>
+                    </div>
+                )}
             </div>
         );
     }

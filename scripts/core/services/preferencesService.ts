@@ -1,6 +1,7 @@
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
-export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
+export default angular
+    .module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
     /**
      * @ngdoc service
      * @module superdesk.core.services
@@ -14,7 +15,13 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
      *
      * @description Preferences Service (TODO)
      */
-    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'lodash',
+    .service('preferencesService', [
+        '$injector',
+        '$rootScope',
+        '$q',
+        'session',
+        'notify',
+        'lodash',
         function PreferencesService($injector, $rootScope, $q, session, notify, _) {
             var USER_PREFERENCES = 'user_preferences',
                 SESSION_PREFERENCES = 'session_preferences',
@@ -23,7 +30,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 userPreferences = {
                     'feature:preview': 1,
                     'archive:view': 1,
-                    'notifications': 1,
+                    notifications: 1,
                     'email:notification': 1,
                     'desktop:notification': 1,
                     'slack:notification': 1,
@@ -118,7 +125,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 var api = $injector.get('api');
 
                 preferences = null;
-                preferencesPromise = session.getIdentity()
+                preferencesPromise = session
+                    .getIdentity()
                     .then(fetchPreferences)
                     .then(null, (response) => {
                         if (response && response.status === 404) {
@@ -179,7 +187,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * loaded yet it will fetch it. Parameter force is used to bypass
              * the cache.
              */
-            this.get = function(key, force) {
+            this.get = function (key, force) {
                 if (!preferencesPromise || force) {
                     getPreferences(!force);
                 }
@@ -193,7 +201,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
 
             this.getSync = getValue;
 
-            this.registerUserPreference = function(key) {
+            this.registerUserPreference = function (key) {
                 userPreferences[key] = 1;
             };
 
@@ -213,7 +221,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * only cache changes. In next $digest those changes are pushed to api.
              * This way we can update multiple preferences without getting etag conflicts.
              */
-            this.update = function(updatesObject, key) {
+            this.update = function (updatesObject, key) {
                 if (!key || userPreferences[key]) {
                     return scheduleUpdate(USER_PREFERENCES, updatesObject);
                 }
@@ -221,8 +229,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 return scheduleUpdate(SESSION_PREFERENCES, updatesObject);
             };
 
-            var updates,
-                deferUpdate;
+            var updates, deferUpdate;
 
             /**
              * Schedule an update.
@@ -257,15 +264,19 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     serverUpdates = updates;
 
                 updates = null;
-                return api.save('preferences', preferences, serverUpdates)
-                    .then((result) => {
-                        preferences._etag = result._etag;
-                        deferUpdate.resolve(result);
-                        return result;
-                    }, (response) => {
-                        console.error(response);
-                        deferUpdate.reject(response);
-                    })
+                return api
+                    .save('preferences', preferences, serverUpdates)
+                    .then(
+                        (result) => {
+                            preferences._etag = result._etag;
+                            deferUpdate.resolve(result);
+                            return result;
+                        },
+                        (response) => {
+                            console.error(response);
+                            deferUpdate.reject(response);
+                        },
+                    )
                     .finally(() => {
                         deferUpdate = null;
                     });
@@ -287,15 +298,11 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 if (_.get(prefs, 'user_preferences.desktop:notification.enabled')) {
                     desktopNotification.requestPermission();
                 }
-                angular.forEach([
-                    USER_PREFERENCES,
-                    SESSION_PREFERENCES,
-                    ACTIVE_PRIVILEGES,
-                    ACTIONS,
-                ], (key) => {
+                angular.forEach([USER_PREFERENCES, SESSION_PREFERENCES, ACTIVE_PRIVILEGES, ACTIONS], (key) => {
                     if (_.isNil(prefs[key])) {
                         prefs[key] = {};
                     }
                 });
             }
-        }]);
+        },
+    ]);

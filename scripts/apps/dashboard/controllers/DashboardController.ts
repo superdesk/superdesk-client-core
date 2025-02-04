@@ -46,16 +46,15 @@ export function DashboardController(
             $scope.$applyAsync(() => {
                 self.current = workspace;
                 self.widgets = extendWidgets(workspace.widgets || []);
-                self.availableWidgets = dashboardWidgets
-                    .map((widget) => {
-                        if (widget.descriptionHtml) {
-                            return {
-                                ...widget,
-                                descriptionHtml: $sce.trustAsHtml(widget.descriptionHtml),
-                            };
-                        }
-                        return widget;
-                    });
+                self.availableWidgets = dashboardWidgets.map((widget) => {
+                    if (widget.descriptionHtml) {
+                        return {
+                            ...widget,
+                            descriptionHtml: $sce.trustAsHtml(widget.descriptionHtml),
+                        };
+                    }
+                    return widget;
+                });
             });
         }
     }
@@ -67,8 +66,10 @@ export function DashboardController(
      * @return {promise} list of widgets
      */
     function getAvailableWidgets(userWidgets) {
-        return _.filter(dashboardWidgets,
-            (widget) => widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id})));
+        return _.filter(
+            dashboardWidgets,
+            (widget) => widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id})),
+        );
     }
 
     /**
@@ -76,7 +77,7 @@ export function DashboardController(
      *
      * @param {object} widget
      */
-    this.addWidget = function(widget) {
+    this.addWidget = function (widget) {
         let w = widget;
 
         if (widget.multiple) {
@@ -101,7 +102,7 @@ export function DashboardController(
      * If widget is not selected, opens single view of specific widget
      * @param {object} widget
      */
-    this.selectWidget = function(widget) {
+    this.selectWidget = function (widget) {
         if (!this.isSelected(widget)) {
             this.selectedWidget = widget || null;
         }
@@ -112,7 +113,7 @@ export function DashboardController(
      * @param {object} widget
      * @returns {boolean}
      */
-    this.isSelected = function(widget) {
+    this.isSelected = function (widget) {
         return widget && this.selectWidget._id === widget._id;
     };
 
@@ -131,22 +132,14 @@ export function DashboardController(
      */
     function pickWidgets(widgets) {
         return _.map(widgets, (widget) =>
-            _.pick(widget, [
-                '_id',
-                'configuration',
-                'sizex',
-                'sizey',
-                'col',
-                'row',
-                'active',
-                'multiple_id',
-            ]));
+            _.pick(widget, ['_id', 'configuration', 'sizex', 'sizey', 'col', 'row', 'active', 'multiple_id']),
+        );
     }
 
     /*
      * Saves current workspace
      */
-    this.save = function() {
+    this.save = function () {
         this.edit = false;
         var diff = angular.extend({}, this.current);
 
@@ -158,21 +151,21 @@ export function DashboardController(
     /*
      * Confirms and deletes current workspace
      */
-    this.delete = function() {
+    this.delete = function () {
         workspaces.confirmAndDelete(self.current);
     };
 
     /*
      * Enables editing current workspace
      */
-    this.rename = function() {
+    this.rename = function () {
         $scope.edited = angular.copy(self.current);
     };
 
     /*
      * Updates workspaces after editing
      */
-    this.afterRename = function() {
+    this.afterRename = function () {
         workspaces.getActive();
     };
 }

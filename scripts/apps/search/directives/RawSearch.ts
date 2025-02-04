@@ -12,14 +12,14 @@ RawSearch.$inject = ['asset', '$location'];
 export function RawSearch(asset, $location) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/raw-search.html'),
-        link: function(scope) {
+        link: function (scope) {
             var params = $location.search();
 
             scope.rawquery = params.raw;
 
             const ENTER = 13;
 
-            scope.keyPressed = function(event) {
+            scope.keyPressed = function (event) {
                 if (event.keyCode === ENTER) {
                     rawQuery();
                     event.preventDefault();

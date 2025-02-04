@@ -77,76 +77,66 @@ export class FullPreview extends React.Component<IProps, IState> {
                                 <span className="form-label">{gettext('Last modified')}</span>
                             </div>
 
-                            <div
-                                className="td"
-                                style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}
-                            >
+                            <div className="td" style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}>
                                 {formatDate(new Date(item.versioncreated))}
                             </div>
                         </div>
 
-                        {
-                            getSortedFields('header', editor, item, hideMedia, this.state.customFieldVocabularies)
-                                .map((field) => {
-                                    return (
-                                        <div key={field.id} className="tr">
-                                            <div className="td" style={{paddingBlockEnd: rowSpacingVertical}}>
-                                                <span className="form-label">{this.getLabel(field.id)}</span>
-                                            </div>
-
-                                            <div
-                                                className="td"
-                                                style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}
-                                            >
-                                                <PreviewFieldType field={field} language={item.language} />
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                        }
-                    </div>
-
-                    <br />
-
-                    {
-                        item.type === 'picture' && hideMedia !== true && item.renditions?.baseImage?.href != null
-                            ? (
-                                <div>
-                                    <img src={item.renditions.baseImage.href} />
-
-                                    <MediaMetadataView
-                                        item={item}
-                                        className="media-container__metadata media-container__metadata--image"
-                                    />
-                                </div>
-                            )
-                            : null
-                    }
-
-                    <br />
-
-                    {
-                        getSortedFields('content', editor, item, hideMedia, this.state.customFieldVocabularies)
-                            .map((field) => {
+                        {getSortedFields('header', editor, item, hideMedia, this.state.customFieldVocabularies).map(
+                            (field) => {
                                 return (
-                                    <div key={field.id}>
-                                        {
-                                            appConfig?.authoring?.preview?.hideContentLabels === true ? <br /> : (
-                                                <h3 style={{marginBlockStart: 20, marginBlockEnd: 10}}>
-                                                    {this.getLabel(field.id)}
-                                                </h3>
-                                            )
-                                        }
-                                        <div>
+                                    <div key={field.id} className="tr">
+                                        <div className="td" style={{paddingBlockEnd: rowSpacingVertical}}>
+                                            <span className="form-label">{this.getLabel(field.id)}</span>
+                                        </div>
+
+                                        <div
+                                            className="td"
+                                            style={{paddingInlineStart: 30, paddingBlockEnd: rowSpacingVertical}}
+                                        >
                                             <PreviewFieldType field={field} language={item.language} />
                                         </div>
                                     </div>
                                 );
-                            })
-                    }
+                            },
+                        )}
+                    </div>
 
                     <br />
 
+                    {item.type === 'picture' && hideMedia !== true && item.renditions?.baseImage?.href != null ? (
+                        <div>
+                            <img src={item.renditions.baseImage.href} />
+
+                            <MediaMetadataView
+                                item={item}
+                                className="media-container__metadata media-container__metadata--image"
+                            />
+                        </div>
+                    ) : null}
+
+                    <br />
+
+                    {getSortedFields('content', editor, item, hideMedia, this.state.customFieldVocabularies).map(
+                        (field) => {
+                            return (
+                                <div key={field.id}>
+                                    {appConfig?.authoring?.preview?.hideContentLabels === true ? (
+                                        <br />
+                                    ) : (
+                                        <h3 style={{marginBlockStart: 20, marginBlockEnd: 10}}>
+                                            {this.getLabel(field.id)}
+                                        </h3>
+                                    )}
+                                    <div>
+                                        <PreviewFieldType field={field} language={item.language} />
+                                    </div>
+                                </div>
+                            );
+                        },
+                    )}
+
+                    <br />
                 </div>
             </div>
         );

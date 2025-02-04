@@ -3,10 +3,15 @@
         <sd-search-handler ng-model="search.name" data-debounce="200"></sd-search-handler>
         <div class="sortbar">
             <span class="lab" translate>Product Type: </span>
-            <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:120px;">
-                <select class="sd-line-input__select"
-                        ng-model="search.product_type"
-                        ng-options="p.qcode as p.name for p in product_types">
+            <div
+                class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin"
+                style="min-width: 120px"
+            >
+                <select
+                    class="sd-line-input__select"
+                    ng-model="search.product_type"
+                    ng-options="p.qcode as p.name for p in product_types"
+                >
                     <option value="" translate>Select</option>
                 </select>
             </div>
@@ -18,8 +23,11 @@
     </div>
 
     <div class="sd-page__content">
-        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-            <li ng-repeat="product in products| productsBy:search as filtered_products track by product._id" class="sd-list-item sd-shadow--z1">
+        <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px">
+            <li
+                ng-repeat="product in products| productsBy:search as filtered_products track by product._id"
+                class="sd-list-item sd-shadow--z1"
+            >
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
@@ -28,11 +36,18 @@
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                    <button class="icn-btn" ng-click="edit(product)" title="{{:: 'Edit product' | translate }}"><i class="icon-pencil"></i></button>
-                    <button class="icn-btn" ng-click="remove(product)" title="{{:: 'Remove product' | translate }}"><i class="icon-trash"></i></button>
+                    <button class="icn-btn" ng-click="edit(product)" title="{{:: 'Edit product' | translate }}">
+                        <i class="icon-pencil"></i>
+                    </button>
+                    <button class="icn-btn" ng-click="remove(product)" title="{{:: 'Remove product' | translate }}">
+                        <i class="icon-trash"></i>
+                    </button>
                 </div>
             </li>
-            <li ng-show="products.length > 0 && !filtered_products.length" class="sd-list-item sd-list-item--no-hover sd-shadow--z1">
+            <li
+                ng-show="products.length > 0 && !filtered_products.length"
+                class="sd-list-item sd-list-item--no-hover sd-shadow--z1"
+            >
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
@@ -44,4 +59,3 @@
     </div>
     <div sd-products-config-modal></div>
 </div>
-

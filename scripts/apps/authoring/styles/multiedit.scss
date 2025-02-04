@@ -9,7 +9,8 @@ $top-offset: 48px;
 
 .close-multiedit {
     position: absolute;
-    inset-block-start: 14px; inset-inline-end: 14px;
+    inset-block-start: 14px;
+    inset-inline-end: 14px;
     @include opacity(60);
     background: none;
     border: 0;
@@ -20,7 +21,6 @@ $top-offset: 48px;
 }
 
 .multiedit-screen {
-
     .boards-list {
         position: absolute;
         inset-block-start: 0;
@@ -98,12 +98,11 @@ $top-offset: 48px;
                         display: flex;
                         align-items: center;
                         justify-content: flex-end;
-                        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+                        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
                         .main-article__editbar-button {
                             visibility: hidden;
                             margin-inline-start: 0.8rem;
                         }
-
                     }
                     .main-article__content {
                         grid-row: 2/3;
@@ -148,7 +147,7 @@ $top-offset: 48px;
 }
 .board {
     .board-tools {
-        display: contents; 
+        display: contents;
     }
 }
 
@@ -156,6 +155,6 @@ $top-offset: 48px;
     inset-block-start: 0;
 }
 
-#workspace-container .main-article .owl-stage-outer.owl-height{
-    width: 577px  !important;
+#workspace-container .main-article .owl-stage-outer.owl-height {
+    width: 577px !important;
 }

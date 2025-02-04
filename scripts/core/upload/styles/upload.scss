@@ -3,12 +3,14 @@
 // ----------------------------------------------------------------------------------------
 @import '~mixins.scss';
 @import '~variables.scss';
-@import "~sf-additional.scss";
+@import '~sf-additional.scss';
 
-@mixin generic-upload-progress($height:2px) {
+@mixin generic-upload-progress($height: 2px) {
     position: absolute;
     height: $height;
-    inset-block-start: 0; inset-inline-start: 0; inset-inline-end: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     z-index: 1;
     background: var(--sd-item__main-Bg);
     .bar {
@@ -44,7 +46,7 @@ user avatar uploader
                 color: var(--sd-colour-interactive);
                 text-decoration: none;
             }
-            [class^="icon-"] {
+            [class^='icon-'] {
                 margin-inline-end: $sd-base-increment;
                 opacity: 0.75;
                 color: inherit;
@@ -59,7 +61,7 @@ user avatar uploader
                 a {
                     color: var(--sd-colour-interactive);
                 }
-                [class^="icon-"] {
+                [class^='icon-'] {
                     opacity: 1;
                 }
             }
@@ -112,9 +114,9 @@ user avatar uploader
                         cursor: pointer !important;
                     }
                     input::-webkit-file-upload-button {
-                      visibility: hidden;
+                        visibility: hidden;
                     }
-                    input[type="file"] {
+                    input[type='file'] {
                         padding-block-start: 4px;
                         font-size: 13px;
                         background-color: transparent;
@@ -166,10 +168,14 @@ user avatar uploader
             .crop-area {
                 position: absolute;
                 inset-block-start: 50px;
-                inset-inline-start: 20px; inset-inline-end: 20px; inset-block-end: 20px;
+                inset-inline-start: 20px;
+                inset-inline-end: 20px;
+                inset-block-end: 20px;
                 .original {
                     position: absolute;
-                    inset-inline-start: 0; inset-block-start:0; inset-block-end: 0;
+                    inset-inline-start: 0;
+                    inset-block-start: 0;
+                    inset-block-end: 0;
                     width: $avatar-crop-area-width;
                     img {
                         width: 100%;
@@ -177,58 +183,60 @@ user avatar uploader
                 }
                 .preview {
                     position: absolute;
-                    inset-inline-end: 0; inset-block-start:0; inset-block-end: 0;
+                    inset-inline-end: 0;
+                    inset-block-start: 0;
+                    inset-block-end: 0;
                     inset-inline-start: $avatar-crop-area-width;
                     .preview-large {
-                        width:120px;
+                        width: 120px;
                         height: 120px;
                         overflow: hidden;
                         margin: 0 15px 30px 15px;
                     }
                     .preview-large-4-3-small {
-                        width:300px;
+                        width: 300px;
                         height: 225px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-large-4-3-medium {
-                        width:400px;
+                        width: 400px;
                         height: 300px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-large-4-3-large {
-                        width:800px;
+                        width: 800px;
                         height: 600px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-large-16-9-small {
-                        width:300px;
+                        width: 300px;
                         height: 169px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-large-16-9-medium {
-                        width:400px;
+                        width: 400px;
                         height: 225px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-large-16-9-large {
-                        width:1280px;
+                        width: 1280px;
                         height: 720px;
                         overflow: hidden;
                         margin: 0 15px 30px 35px;
                         float: inline-end;
                     }
                     .preview-round {
-                        width:60px;
+                        width: 60px;
                         height: 60px;
                         overflow: hidden;
                         margin: 0 45px 30px 45px;
@@ -253,8 +261,6 @@ user avatar uploader
     @include generic-upload-progress();
 }
 
-
-
 /*
 ======================================
 media uploader
@@ -265,13 +271,14 @@ media uploader
 
     .modal__body {
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         overflow-x: hidden !important;
         padding: 0 !important;
     }
-    .drag-area { //start screen on modal show
+    .drag-area {
+        //start screen on modal show
         position: absolute;
-        inset-block-start:0;
+        inset-block-start: 0;
         inset-inline-start: 0;
         inset-block-end: 0;
         inset-inline-end: 0;
@@ -280,7 +287,8 @@ media uploader
         @include user-select(none);
     }
 
-    .upload-edit {    //detail upload screen and basic edit
+    .upload-edit {
+        //detail upload screen and basic edit
         z-index: 1;
         padding: 20px;
         flex: 1 1 auto;
@@ -320,15 +328,20 @@ media uploader
                         }
                         .failed {
                             position: absolute;
-                            inset-inline-start: 0; inset-inline-end: 0; inset-block-start:0 ; inset-block-end:0;
+                            inset-inline-start: 0;
+                            inset-inline-end: 0;
+                            inset-block-start: 0;
+                            inset-block-end: 0;
                             z-index: 2;
-                            background: rgba(255,255,255,0.7) url('~images/icon_upload_error_big.png') no-repeat center center;
+                            background: rgba(255, 255, 255, 0.7) url('~images/icon_upload_error_big.png') no-repeat
+                                center center;
                         }
                     }
 
                     .remove {
                         position: absolute;
-                        inset-block-start: 0px; inset-inline-end: 0px;
+                        inset-block-start: 0px;
+                        inset-inline-end: 0px;
                         height: 20px;
                         width: 20px;
                         background: #fff;
@@ -354,10 +367,10 @@ media uploader
 
                     .upload-progress {
                         @include generic-upload-progress();
-                        inset-block-start:-1px;
+                        inset-block-start: -1px;
                     }
 
-                    input[type="text"] {
+                    input[type='text'] {
                         width: 100%;
                         color: var(--color-text);
                         border: 0;
@@ -408,7 +421,6 @@ media uploader
                         }
                     }
 
-
                     .other-info {
                         z-index: 5;
                         background: #fff;
@@ -444,7 +456,7 @@ edit image modal
             inset-block-end: 0;
             inset-inline-start: 0;
             inset-inline-end: 0;
-            background-color: rgba(255,255,255, .8);
+            background-color: rgba(255, 255, 255, 0.8);
             z-index: 999;
         }
     }
@@ -546,7 +558,8 @@ edit image modal
         }
     }
 }
-.image-point__image, .crop-area img {
+.image-point__image,
+.crop-area img {
     max-height: 55vh;
 }
 .image-point {
@@ -573,19 +586,24 @@ edit image modal
             @include border-radius(50%);
             position: absolute;
             z-index: 2;
-            border: 2px solid rgba(255,255,255,0.7);
+            border: 2px solid rgba(255, 255, 255, 0.7);
             box-sizing: border-box;
         }
-        &__cross-left, &__cross-right, &__cross-top, &__cross-bottom {
-            background-color: rgba(255,255,255,0.7);
+        &__cross-left,
+        &__cross-right,
+        &__cross-top,
+        &__cross-bottom {
+            background-color: rgba(255, 255, 255, 0.7);
             position: absolute;
             z-index: 2;
         }
-        &__cross-left, &__cross-right {
+        &__cross-left,
+        &__cross-right {
             height: 2px;
             inset-inline-start: 0;
         }
-        &__cross-top, &__cross-bottom {
+        &__cross-top,
+        &__cross-bottom {
             width: 2px;
             inset-block-start: 0;
         }
@@ -597,7 +615,7 @@ edit image modal
     position: absolute;
     inset-block-start: 0;
     inset-inline-start: 0;
-    border-color: rgba(0,0,0,.5);
+    border-color: rgba(0, 0, 0, 0.5);
     border-style: solid;
     box-sizing: border-box;
     z-index: 1200;

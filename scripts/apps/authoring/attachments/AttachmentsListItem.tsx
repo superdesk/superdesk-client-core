@@ -29,18 +29,18 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                         <h4>{attachment.title}</h4>
                     </Row>
                     <Row>
-                        <h5>{attachment.filename} {`(${filesize(attachment.media.length)})`}</h5>
+                        <h5>
+                            {attachment.filename} {`(${filesize(attachment.media.length)})`}
+                        </h5>
                     </Row>
                     <Row>
                         <div className="description">{attachment.description}</div>
                     </Row>
-                    {
-                        attachment.internal === true && (
-                            <Row>
-                                <span className="label label--orange2">internal</span>
-                            </Row>
-                        )
-                    }
+                    {attachment.internal === true && (
+                        <Row>
+                            <span className="label label--orange2">internal</span>
+                        </Row>
+                    )}
                 </Column>
 
                 <ActionMenu row={true}>
@@ -52,29 +52,25 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                         <i className="icon-download" />
                     </button>
 
-                    {
-                        readOnly === true ? null : (
-                            <button
-                                className="dropdown__toggle"
-                                onClick={() => editAttachment(attachment)}
-                                title={gettext('Edit')}
-                            >
-                                <i className="icon-pencil" />
-                            </button>
-                        )
-                    }
+                    {readOnly === true ? null : (
+                        <button
+                            className="dropdown__toggle"
+                            onClick={() => editAttachment(attachment)}
+                            title={gettext('Edit')}
+                        >
+                            <i className="icon-pencil" />
+                        </button>
+                    )}
 
-                    {
-                        readOnly === true ? null : (
-                            <button
-                                className="dropdown__toggle"
-                                onClick={() => removeAttachment(attachment)}
-                                title={gettext('Remove')}
-                            >
-                                <i className="icon-trash" />
-                            </button>
-                        )
-                    }
+                    {readOnly === true ? null : (
+                        <button
+                            className="dropdown__toggle"
+                            onClick={() => removeAttachment(attachment)}
+                            title={gettext('Remove')}
+                        >
+                            <i className="icon-trash" />
+                        </button>
+                    )}
                 </ActionMenu>
             </Item>
         );

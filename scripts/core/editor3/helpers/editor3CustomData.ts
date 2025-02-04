@@ -1,12 +1,5 @@
 import {Map} from 'immutable';
-import {
-    SelectionState,
-    Modifier,
-    EditorState,
-    convertFromRaw,
-    ContentState,
-    ContentBlock,
-} from 'draft-js';
+import {SelectionState, Modifier, EditorState, convertFromRaw, ContentState, ContentBlock} from 'draft-js';
 import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
 import {
     getHighlightData,
@@ -18,7 +11,7 @@ import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {getUniqueStyleNames} from './getUniqueStyleNamesInDraftSelection';
 
-export function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
+export function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string; obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
     const allStyleNames = getUniqueStyleNames(editorState.getCurrentContent());
 
@@ -116,14 +109,8 @@ export function setCustomDataForEditor__deprecated(editorState, key, value) {
     return setAllCustomDataForEditor__deprecated(editorState, Map().set(key, value));
 }
 
-export function getCustomEditor3Data(
-    contentState: ContentState,
-    dataKey: keyof typeof editor3DataKeys,
-): Array<any> {
-    return contentState
-        .getFirstBlock()
-        .getData()
-        .get(dataKey);
+export function getCustomEditor3Data(contentState: ContentState, dataKey: keyof typeof editor3DataKeys): Array<any> {
+    return contentState.getFirstBlock().getData().get(dataKey);
 }
 
 export function getCustomDataFromEditor(editorState, key) {
@@ -131,11 +118,7 @@ export function getCustomDataFromEditor(editorState, key) {
         throw new Error(`Key '${key}' is not defined`);
     }
 
-    return editorState
-        .getCurrentContent()
-        .getFirstBlock()
-        .getData()
-        .get(key);
+    return editorState.getCurrentContent().getFirstBlock().getData().get(key);
 }
 
 export function getCustomDataFromEditorRawState(rawState, key) {

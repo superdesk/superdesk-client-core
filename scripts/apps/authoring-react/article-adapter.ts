@@ -5,12 +5,12 @@ import {sdApi} from 'api';
 interface IAuthoringReactArticleAdapter {
     /**
      * Remove changes done for authoring-react
-    */
+     */
     fromAuthoringReact<T extends Partial<IArticle>>(article: T): T;
 
     /**
      * Apply changes required for for authoring-react
-    */
+     */
     toAuthoringReact<T extends Partial<IArticle>>(article: T): T;
 }
 
@@ -54,7 +54,8 @@ export function getArticleAdapter(): IAuthoringReactArticleAdapter {
         toAuthoringReact: (_article) => {
             let article = {..._article}; // ensure immutability
 
-            if (_article.fields_meta != null) { // ensure immutability
+            if (_article.fields_meta != null) {
+                // ensure immutability
                 article.fields_meta = {..._article.fields_meta};
             }
 

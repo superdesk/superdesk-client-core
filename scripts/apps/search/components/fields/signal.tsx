@@ -12,7 +12,9 @@ class SignalComponent extends React.PureComponent<IPropsItemListInfo> {
         return (
             <React.Fragment>
                 {props.item.signal.map((_signal) => (
-                    <span className="signal" key={_signal.qcode}>{_signal.name || _signal.qcode}</span>
+                    <span className="signal" key={_signal.qcode}>
+                        {_signal.name || _signal.qcode}
+                    </span>
                 ))}
             </React.Fragment>
         );

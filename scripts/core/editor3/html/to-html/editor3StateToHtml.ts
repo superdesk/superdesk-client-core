@@ -8,8 +8,10 @@ export const editor3StateToHtml = (
     contentState: ContentState,
     disabled: Array<string> = [], // A set of disabled elements (ie. ['table'] will ignore
 ): string => {
-    const annotationsByStyleName = getAnnotationsFromContentState(contentState)
-        .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
+    const annotationsByStyleName = getAnnotationsFromContentState(contentState).reduce(
+        (accumulator, item) => ({...accumulator, [item.styleName]: item}),
+        {},
+    );
 
     let options = {
         inlineStyles: {
@@ -74,13 +76,7 @@ export const editor3StateToHtml = (
         trimStartExact & trimEndExact gets rid of those line breaks.
         .trim() at the end removes whitespace.
     */
-    var res = trimStartExact(
-        trimEndExact(
-            stateToHTML(contentState, options),
-            '<p><br></p>',
-        ),
-        '<p><br></p>',
-    ).trim();
+    var res = trimStartExact(trimEndExact(stateToHTML(contentState, options), '<p><br></p>'), '<p><br></p>').trim();
 
     return res;
 };

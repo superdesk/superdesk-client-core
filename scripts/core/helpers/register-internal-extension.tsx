@@ -13,10 +13,9 @@ export function registerContributionsFromCustomFields(
 ) {
     for (const customFieldType of customFieldTypes) {
         if (customFieldType.contributions != null) {
-            registerInternalExtension(
-                `field-type--${customFieldType.id}`,
-                {contributions: customFieldType.contributions},
-            );
+            registerInternalExtension(`field-type--${customFieldType.id}`, {
+                contributions: customFieldType.contributions,
+            });
         }
     }
 }

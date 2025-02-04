@@ -20,7 +20,9 @@ export function computeEditor3Output(
         },
         null,
         true,
-    ).getState().editorState.getCurrentContent();
+    )
+        .getState()
+        .editorState.getCurrentContent();
 
     const generatedValue = (() => {
         if (config.singleLine || plainTextInMultiLineMode) {

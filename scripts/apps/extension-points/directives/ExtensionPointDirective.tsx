@@ -17,40 +17,33 @@ ExtensionPointDirective.$inject = ['extensionPoints', 'lodash', '$q'];
 export function ExtensionPointDirective(extensionPoints, _, $q) {
     function _buildCompoment(extension, scope) {
         // for easy access put values from parent scope into ...
-        const callback = extension.onInit && extension.onInit(extension, scope) || $q.resolve();
+        const callback = (extension.onInit && extension.onInit(extension, scope)) || $q.resolve();
 
-        return callback
-            .then(() => {
-                if (!_.get(extension, 'props.store', null)) {
-                    // ... the component's props or ...
-                    extension.data.forEach((value) => {
-                        extension.props[value] = scope.$parent.$eval(value);
-                    });
-                } else {
-                    // ... into the component's redux store
-                    extension.data.forEach((value) => {
-                        extension.props.store.getState()[value] = scope.$parent.$eval(value);
-                    });
-                }
+        return callback.then(() => {
+            if (!_.get(extension, 'props.store', null)) {
+                // ... the component's props or ...
+                extension.data.forEach((value) => {
+                    extension.props[value] = scope.$parent.$eval(value);
+                });
+            } else {
+                // ... into the component's redux store
+                extension.data.forEach((value) => {
+                    extension.props.store.getState()[value] = scope.$parent.$eval(value);
+                });
+            }
 
-                return React.createElement(extension.componentClass, extension.props);
-            });
+            return React.createElement(extension.componentClass, extension.props);
+        });
     }
 
     return {
-        link: function(scope, elem, attr) {
+        link: function (scope, elem, attr) {
             const registeredExtensions = extensionPoints.get(attr.sdExtensionPoint);
 
-            $q.all(
-                registeredExtensions.map((extension, index) => (
-                    _buildCompoment(extension, scope)
-                )),
-            )
-                .then((components) => {
+            $q.all(registeredExtensions.map((extension, index) => _buildCompoment(extension, scope))).then(
+                (components) => {
                     const elements = components.map((component, index) => (
-                        <span key={`${attr.sdExtensionPoint}-${index}`}>
-                            {component}
-                        </span>
+                        <span key={`${attr.sdExtensionPoint}-${index}`}>{component}</span>
                     ));
 
                     ReactDOM.render(elements, elem[0]);
@@ -58,7 +51,8 @@ export function ExtensionPointDirective(extensionPoints, _, $q) {
                     scope.$on('$destroy', () => {
                         ReactDOM.unmountComponentAtNode(elem[0]);
                     });
-                });
+                },
+            );
         },
     };
 }

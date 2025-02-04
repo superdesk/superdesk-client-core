@@ -1,11 +1,12 @@
 import _ from 'lodash';
 
-var render = function(element, value) {
+var render = function (element, value) {
     element.toggleClass('checked', !!value);
     element.attr('checked', !!value);
 };
 
-export default angular.module('superdesk.core.directives.checkAll', [])
+export default angular
+    .module('superdesk.core.directives.checkAll', [])
     /**
      * sdCheckAll creates a custom-styled checkbox managing other checkboxes in the same group.
      *
@@ -24,19 +25,23 @@ export default angular.module('superdesk.core.directives.checkAll', [])
             require: 'ngModel',
             replace: true,
             template: '<span class="sd-checkbox"></span>',
-            link: function($scope, element, attrs, ngModel) {
+            link: function ($scope, element, attrs, ngModel) {
                 var checked = false;
 
                 if (attrs.checkAttribute !== undefined) {
                     checkAttribute = attrs.checkAttribute;
                 }
 
-                $scope.$watch(attrs.ngModel, (model) => {
-                    if (model) {
-                        checked = _.every(ngModel.$viewValue, checkAttribute) && ngModel.$viewValue.length > 0;
-                        render(element, checked);
-                    }
-                }, true);
+                $scope.$watch(
+                    attrs.ngModel,
+                    (model) => {
+                        if (model) {
+                            checked = _.every(ngModel.$viewValue, checkAttribute) && ngModel.$viewValue.length > 0;
+                            render(element, checked);
+                        }
+                    },
+                    true,
+                );
 
                 element.on('click', () => {
                     checked = !checked;

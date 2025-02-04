@@ -7,9 +7,7 @@ class AssociatedItemsComponent extends React.Component<IPropsItemListInfo> {
     render() {
         const {item} = this.props;
 
-        return (
-            isEmpty(item.associations) ? null : <AssociatedItemsList key="associatedItems" item={item} />
-        );
+        return isEmpty(item.associations) ? null : <AssociatedItemsList key="associatedItems" item={item} />;
     }
 }
 

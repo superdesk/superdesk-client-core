@@ -5,11 +5,4 @@ import Label from './Label';
 import Menu from './Menu';
 import Popup from './Popup';
 
-export {
-    Content,
-    Footer,
-    Header,
-    Label,
-    Menu,
-    Popup,
-};
+export {Content, Footer, Header, Label, Menu, Popup};

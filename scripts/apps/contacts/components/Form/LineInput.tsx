@@ -40,12 +40,9 @@ export const LineInput: React.StatelessComponent<any> = ({
         {hint && <div className="sd-line-input__hint">{hint}</div>}
         {message && (
             <div
-                className={classNames(
-                    'sd-line-input__message',
-                    {
-                        'sd-line-input__message--add-padding': hint,
-                    },
-                )}
+                className={classNames('sd-line-input__message', {
+                    'sd-line-input__message--add-padding': hint,
+                })}
             >
                 {message}
             </div>

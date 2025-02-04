@@ -8,15 +8,30 @@
                     <form>
                         <fieldset>
                             <div class="field">
-                               <label translate>Unique Name/ID/GUID</label>
-                               <div class="control" title="Prefix Unique Name with #">
-                                   <input type="text" ng-keyup="openOnEnter($event)" ng-model="meta.unique_name" tabindex="1" sd-autofocus ng-if="flags.enabled">
-                               </div>
+                                <label translate>Unique Name/ID/GUID</label>
+                                <div class="control" title="Prefix Unique Name with #">
+                                    <input
+                                        type="text"
+                                        ng-keyup="openOnEnter($event)"
+                                        ng-model="meta.unique_name"
+                                        tabindex="1"
+                                        sd-autofocus
+                                        ng-if="flags.enabled"
+                                    />
+                                </div>
                             </div>
                         </fieldset>
                     </form>
                     <div class="actions">
-                        <button class="btn btn--primary pull-right" ng-click="search()" tabindex="2" id="searchItemByNameBtn" translate>Go</button>
+                        <button
+                            class="btn btn--primary pull-right"
+                            ng-click="search()"
+                            tabindex="2"
+                            id="searchItemByNameBtn"
+                            translate
+                        >
+                            Go
+                        </button>
                         <button class="btn pull-right" ng-click="close();" tabindex="3" translate>Cancel</button>
                     </div>
                 </div>

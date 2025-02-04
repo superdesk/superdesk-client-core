@@ -57,10 +57,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
             },
             item.file,
             (progress) => {
-                this.updateItemProgress(
-                    index,
-                    (progress.loaded / progress.total) * 100.0,
-                );
+                this.updateItemProgress(index, (progress.loaded / progress.total) * 100.0);
             },
         );
     }
@@ -87,11 +84,10 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
 
     save() {
         this.setState({saving: true});
-        return Promise.all(this.state.items.map(this.uploadFile))
-            .then((items) => {
-                this.props.onUploaded(items);
-                this.props.closeModal();
-            });
+        return Promise.all(this.state.items.map(this.uploadFile)).then((items) => {
+            this.props.onUploaded(items);
+            this.props.closeModal();
+        });
     }
 
     cancelItem(index) {
@@ -122,25 +118,23 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 onHide={this.state.saving ? noop : this.props.closeModal}
                 headerTemplate={gettext('Attach files')}
                 footerTemplate={
-                    (
-                        <Spacer h gap="8" alignItems="center" justifyContent="end" noGrow>
-                            <span className="pull-left">{gettext('* fields are required')}</span>
-                            <ButtonGroup>
-                                <Button
-                                    text={gettext('Cancel')}
-                                    type="default"
-                                    onClick={this.props.closeModal}
-                                    disabled={this.state.saving}
-                                />
-                                <Button
-                                    text={gettext('Upload')}
-                                    type="primary"
-                                    onClick={this.save}
-                                    disabled={this.disableUploadButton()}
-                                />
-                            </ButtonGroup>
-                        </Spacer>
-                    )
+                    <Spacer h gap="8" alignItems="center" justifyContent="end" noGrow>
+                        <span className="pull-left">{gettext('* fields are required')}</span>
+                        <ButtonGroup>
+                            <Button
+                                text={gettext('Cancel')}
+                                type="default"
+                                onClick={this.props.closeModal}
+                                disabled={this.state.saving}
+                            />
+                            <Button
+                                text={gettext('Upload')}
+                                type="primary"
+                                onClick={this.save}
+                                disabled={this.disableUploadButton()}
+                            />
+                        </ButtonGroup>
+                    </Spacer>
                 }
             >
                 <form className="attachmentsForm upload-media">
@@ -149,7 +143,9 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                             {this.state.items.map((item, index) => (
                                 <li className="flex-grid__item sd-shadow--z3 sd-card" key={item.file.name}>
                                     <div className="thumb sd-card__thumbnail">
-                                        <div className="holder"><i className="big-icon--text" /></div>
+                                        <div className="holder">
+                                            <i className="big-icon--text" />
+                                        </div>
                                         <span className="remove" onClick={() => this.cancelItem(index)}>
                                             <i className="icon-close-small" />
                                         </span>
@@ -228,10 +224,5 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
 }
 
 export function showUploadAttachmentsModal(props: Omit<IProps, 'closeModal'>) {
-    showModal(({closeModal}) => (
-        <UploadAttachmentsModal
-            closeModal={closeModal}
-            {...props}
-        />
-    ));
+    showModal(({closeModal}) => <UploadAttachmentsModal closeModal={closeModal} {...props} />);
 }

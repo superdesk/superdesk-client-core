@@ -1,22 +1,22 @@
 {
-  "private": true,
-  "main": "dist/src/extension.js",
-  "scripts": {
-    "compile": "tsc -p src",
-    "compile-e2e": "tsc -p spec",
-    "watch": "tsc -watch -p src"
-  },
-  "devDependencies": {
-    "@superdesk/end-to-end-testing-helpers": "1.0.8",
-    "@types/jasmine": "2.8.9",
-    "@types/react": "16.8.23",
-    "superdesk-code-style": "1.3.0",
-    "typescript": "~4.9.5"
-  },
-  "peerDependencies": {
-    "react": "16.8.6"
-  },
-  "dependencies": {
-    "@superdesk/common": "^0.0.8"
-  }
+    "private": true,
+    "main": "dist/src/extension.js",
+    "scripts": {
+        "compile": "tsc -p src",
+        "compile-e2e": "tsc -p spec",
+        "watch": "tsc -watch -p src"
+    },
+    "devDependencies": {
+        "@superdesk/end-to-end-testing-helpers": "1.0.8",
+        "@types/jasmine": "2.8.9",
+        "@types/react": "16.8.23",
+        "superdesk-code-style": "1.3.0",
+        "typescript": "~4.9.5"
+    },
+    "peerDependencies": {
+        "react": "16.8.6"
+    },
+    "dependencies": {
+        "@superdesk/common": "^0.0.8"
+    }
 }

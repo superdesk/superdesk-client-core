@@ -11,12 +11,8 @@ const PanelInfo: React.StatelessComponent<any> = ({heading, description}) => (
         <div className="panel-info__icon">
             <i className="big-icon--comments" />
         </div>
-        {heading &&
-            <h3 className="panel-info__heading">{heading}</h3>
-        }
-        {description &&
-            <p className="panel-info__description">{description}</p>
-        }
+        {heading && <h3 className="panel-info__heading">{heading}</h3>}
+        {description && <p className="panel-info__description">{description}</p>}
     </div>
 );
 

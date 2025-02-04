@@ -7,10 +7,7 @@ class UsageTermsComponent extends React.Component<IPropsItemListInfo> {
 
         if (item.usageterms) {
             return (
-                <small
-                    key="usageterms"
-                    className="usageterms container"
-                >
+                <small key="usageterms" className="usageterms container">
                     {item.usageterms}
                 </small>
             );

@@ -66,26 +66,23 @@ export function receiveAssetsCount(counts: Dictionary<string, number>): ISetActi
 
 export function loadSets(): IThunkAction<Array<ISetItem>> {
     return (dispatch) => {
-        return samsApi.sets.getAll()
-            .then((sets: Array<ISetItem>) => {
-                const setIds: Array<string> = sets.map((set) => {
-                    return set._id;
-                });
-
-                dispatch(receiveSets(sets));
-
-                // Only load Set's Asset count if there are Sets configured
-                return !sets.length ?
-                    sets :
-                    dispatch(loadAssetsCount(setIds))
-                        .then(() => sets);
+        return samsApi.sets.getAll().then((sets: Array<ISetItem>) => {
+            const setIds: Array<string> = sets.map((set) => {
+                return set._id;
             });
+
+            dispatch(receiveSets(sets));
+
+            // Only load Set's Asset count if there are Sets configured
+            return !sets.length ? sets : dispatch(loadAssetsCount(setIds)).then(() => sets);
+        });
     };
 }
 
 export function loadAssetsCount(setIds: Array<string>): IThunkAction<Dictionary<string, number>> {
     return (dispatch) => {
-        return samsApi.assets.getCount(setIds)
+        return samsApi.assets
+            .getCount(setIds)
             .then((counts: Dictionary<string, number>) => {
                 dispatch(receiveAssetsCount(counts));
                 return Promise.resolve(counts);
@@ -112,27 +109,24 @@ function openDeleteConfirmationModal(set: ISetItem): Promise<boolean> {
     return confirm(
         gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name}),
         gettext('Delete Set?'),
-    )
-        .then((response: boolean) => {
-            el.remove();
-            return response;
-        });
+    ).then((response: boolean) => {
+        el.remove();
+        return response;
+    });
 }
 
 export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
     return (dispatch, getState) => {
-        return openDeleteConfirmationModal(set)
-            .then((response: boolean) => {
-                if (response === true) {
-                    return samsApi.sets.delete(set)
-                        .then(() => {
-                            if (getSelectedSetId(getState()) === set._id) {
-                                dispatch(closeSetContentPanel());
-                            }
-                        });
-                }
+        return openDeleteConfirmationModal(set).then((response: boolean) => {
+            if (response === true) {
+                return samsApi.sets.delete(set).then(() => {
+                    if (getSelectedSetId(getState()) === set._id) {
+                        dispatch(closeSetContentPanel());
+                    }
+                });
+            }
 
-                return Promise.resolve();
-            });
+            return Promise.resolve();
+        });
     };
 }

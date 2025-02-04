@@ -27,8 +27,8 @@ interface IDispatchProps {
     removeCol(): void;
     toggleTableHead(): void;
     toggleTableStyle(inlineStyle: any): void;
-    toggleTableBlockType(type:any): void;
-    setTablePopup(type:any, data: any): void;
+    toggleTableBlockType(type: any): void;
+    setTablePopup(type: any, data: any): void;
 }
 
 interface IReduxStateProps {
@@ -70,90 +70,70 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
 
     return (
         <div className={'table-controls ' + className} data-test-id="toolbar">
-            {
-                tableKind === 'table' && (
-                    <>
-                        <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
+            {tableKind === 'table' && (
+                <>
+                    <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
 
-                        <span
-                            className="Editor3-styleButton Editor3-styleButton--short"
-                            onClick={removeRow}
-                        >
-                            <i className="icon-minus-sign" />
-                        </span>
+                    <span className="Editor3-styleButton Editor3-styleButton--short" onClick={removeRow}>
+                        <i className="icon-minus-sign" />
+                    </span>
 
-                        <span
-                            className="Editor3-styleButton"
-                            onClick={addRowAfter}
-                        >
-                            <i className="icon-plus-sign" />
-                            {' '}{gettext('row')}
-                        </span>
+                    <span className="Editor3-styleButton" onClick={addRowAfter}>
+                        <i className="icon-plus-sign" /> {gettext('row')}
+                    </span>
 
-                        <span
-                            className="Editor3-styleButton Editor3-styleButton--short"
-                            onClick={removeCol}
-                        >
-                            <i className="icon-minus-sign" />
-                        </span>
+                    <span className="Editor3-styleButton Editor3-styleButton--short" onClick={removeCol}>
+                        <i className="icon-minus-sign" />
+                    </span>
 
-                        <span className="Editor3-styleButton" onClick={addColAfter}>
-                            <i className="icon-plus-sign" />
-                            {' '}{gettext('column')}
-                        </span>
-                    </>
-                )
-            }
+                    <span className="Editor3-styleButton" onClick={addColAfter}>
+                        <i className="icon-plus-sign" /> {gettext('column')}
+                    </span>
+                </>
+            )}
 
-            {
-                editorFormat.map((type) => {
-                    if (type === 'link') {
-                        return (
-                            <>
-                                {
-                                    <SelectionButtonCustomEditorState
-                                        editorState={cellEditorState}
-                                        onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
-                                        iconName="link"
-                                        tooltip={gettext('Link')}
-                                    />
-                                }
+            {editorFormat.map((type) => {
+                if (type === 'link') {
+                    return (
+                        <>
+                            {
+                                <SelectionButtonCustomEditorState
+                                    editorState={cellEditorState}
+                                    onClick={(payload) => setTablePopup(PopupTypes.Link, payload)}
+                                    iconName="link"
+                                    tooltip={gettext('Link')}
+                                />
+                            }
 
-                                {
-                                    popup.type === PopupTypes.Link && (
-                                        <LinkInputForTableCell
-                                            data={popup.data}
-                                            editorState={cellEditorState}
-                                        />
-                                    )
-                                }
-                            </>
-                        );
-                    } else if (type in inlineStyles) {
-                        return (
-                            <StyleButton
-                                key={type}
-                                active={currentInlineStyle.has(inlineStyles[type])}
-                                label={type}
-                                onToggle={toggleTableStyle}
-                                style={inlineStyles[type]}
-                            />
-                        );
-                    } else if (type in blockStyles) {
-                        return (
-                            <StyleButton
-                                key={type}
-                                active={blockStyles[type] === blockStyle}
-                                label={type}
-                                onToggle={() => toggleTableBlockType(blockStyles[type])}
-                                style={blockStyles[type]}
-                            />
-                        );
-                    } else {
-                        return null;
-                    }
-                })
-            }
+                            {popup.type === PopupTypes.Link && (
+                                <LinkInputForTableCell data={popup.data} editorState={cellEditorState} />
+                            )}
+                        </>
+                    );
+                } else if (type in inlineStyles) {
+                    return (
+                        <StyleButton
+                            key={type}
+                            active={currentInlineStyle.has(inlineStyles[type])}
+                            label={type}
+                            onToggle={toggleTableStyle}
+                            style={inlineStyles[type]}
+                        />
+                    );
+                } else if (type in blockStyles) {
+                    return (
+                        <StyleButton
+                            key={type}
+                            active={blockStyles[type] === blockStyle}
+                            label={type}
+                            onToggle={() => toggleTableBlockType(blockStyles[type])}
+                            style={blockStyles[type]}
+                        />
+                    );
+                } else {
+                    return null;
+                }
+            })}
 
             {/* LinkToolbar must be the last node. */}
             <LinkToolbarForTableCell

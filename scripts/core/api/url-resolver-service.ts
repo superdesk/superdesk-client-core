@@ -4,7 +4,8 @@ import {basejoin} from './url-resolver-helpers';
 
 URLResolver.$inject = ['$http', '$q', '$log'];
 function URLResolver($http, $q, $log) {
-    var _links, baseUrl = appConfig.server.url;
+    var _links,
+        baseUrl = appConfig.server.url;
 
     /**
      * Get url for given resource
@@ -12,7 +13,7 @@ function URLResolver($http, $q, $log) {
      * @param {String} resource
      * @returns Promise
      */
-    this.resource = function(resource) {
+    this.resource = function (resource) {
         return this.links().then(() => {
             if (_links[resource]) {
                 return _links[resource];
@@ -29,14 +30,14 @@ function URLResolver($http, $q, $log) {
      * @param {String} item
      * @returns {String}
      */
-    this.item = function(item) {
+    this.item = function (item) {
         return basejoin(item);
     };
 
     /**
      * Get resource links
      */
-    this.links = function() {
+    this.links = function () {
         if (_links) {
             return $q.when(_links);
         }
@@ -51,7 +52,7 @@ function URLResolver($http, $q, $log) {
      * @param {String} resource
      * @return {String}
      */
-    this.media = function(media, resource) {
+    this.media = function (media, resource) {
         const url = basejoin('upload-raw/' + media._id);
 
         return resource ? url + '?resource=' + resource : url;
@@ -87,5 +88,4 @@ function URLResolver($http, $q, $log) {
     }
 }
 
-angular.module('superdesk.core.api.urls', [])
-    .service('urls', URLResolver);
+angular.module('superdesk.core.api.urls', []).service('urls', URLResolver);

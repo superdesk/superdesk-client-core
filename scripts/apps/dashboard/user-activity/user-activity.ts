@@ -3,18 +3,16 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import UserActivityWidgetWithUser from './components/UserActivityWidgetWithUser';
 
 angular
-    .module('superdesk.apps.dashboard.user-activity', [
-        'superdesk.apps.dashboard',
-    ])
+    .module('superdesk.apps.dashboard.user-activity', ['superdesk.apps.dashboard'])
     .config([
         'dashboardWidgetsProvider',
-        function(dashboardWidgets) {
+        function (dashboardWidgets) {
             const descriptionHtml = `
 <p>
     ${gettext(
         'The user activity widget provides information about user activity. ' +
-        'Using the widget, editors can search and select a user. ' +
-        'Upon selection a list of content items is shown categorized as follows:',
+            'Using the widget, editors can search and select a user. ' +
+            'Upon selection a list of content items is shown categorized as follows:',
     )}
 </p>
 <ul class="simple-list sd-padding-start--2">
@@ -42,14 +40,10 @@ angular
                 sizex: 1,
                 sizey: 2,
                 thumbnail: 'scripts/apps/dashboard/user-activity/thumbnail.svg',
-                template:
-                    'scripts/apps/dashboard/user-activity/user-activity.html',
+                template: 'scripts/apps/dashboard/user-activity/user-activity.html',
                 descriptionHtml,
                 removeHeader: true,
             });
         },
     ])
-    .component(
-        'sdUserActivityWidgetReact',
-        reactToAngular1(UserActivityWidgetWithUser, []),
-    );
+    .component('sdUserActivityWidgetReact', reactToAngular1(UserActivityWidgetWithUser, []));

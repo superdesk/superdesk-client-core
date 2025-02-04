@@ -1,100 +1,142 @@
 <section class="main-section publish-queue" sd-loading="loading">
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
-
         <header class="subnav">
-                <div class="flat-searchbar extended">
-                    <div class="search-handler" role="search">
-                        <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
-                        <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
-                        <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}" aria-label="{{ :: 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
-                    </div>
+            <div class="flat-searchbar extended">
+                <div class="search-handler" role="search">
+                    <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
+                    <input
+                        id="search-input"
+                        type="text"
+                        placeholder="{{ :: 'Search' | translate }}"
+                        ng-model="query"
+                        ng-model-options="{debounce: 500}"
+                        ng-change="search(query)"
+                    />
+                    <button
+                        class="search-close"
+                        ng-click="search(query = null)"
+                        ng-class="{visible: query}"
+                        aria-label="{{ :: 'Clear search' | translate }}"
+                    >
+                        <i class="icon-remove-sign"></i>
+                    </button>
                 </div>
+            </div>
 
-                <div class="sortbar">
-                    <span class="lab" translate>Subscriber:</span>
-                    <div class="dropdown" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
-                            {{ selectedFilterSubscriber.name }}
-                            <span ng-if="!selectedFilterSubscriber" translate>none</span>
-                            <b class="dropdown__caret"></b>
-                        </button>
-                        <ul class="dropdown__menu dropdown__menu--scrollable">
-                            <li>
-                                <a href="" ng-click="filterPublishQueue(null, 'subscriber')" translate>None</a>
-                            </li>
-                            <li ng-repeat="subscriber in subscribers track by subscriber._id">
-                                <a href="" ng-click="filterPublishQueue(subscriber, 'subscriber')">{{ subscriber.name }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="lab" translate>Ingest Provider:</span>
-                    <div class="dropdown" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
-                            {{ selectedFilterIngestProvider.name }}
-                            <span ng-if="!selectedFilterIngestProvider" translate>none</span>
-                            <b class="dropdown__caret"></b>
-                        </button>
-                        <ul class="dropdown__menu dropdown__menu--scrollable">
-                            <li>
-                                <a href="" ng-click="filterPublishQueue(null, 'ingest_provider')" translate>None</a>
-                            </li>
-                            <li ng-repeat="provider in ingestProviders track by provider._id">
-                                <a href="" ng-click="filterPublishQueue(provider, 'ingest_provider')">{{ provider.name }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="lab" translate>Status:</span>
-                    <div class="dropdown" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
-                            {{ selectedFilterStatus }}
-                            <span ng-if="!selectedFilterStatus" translate>none</span>
-                            <b class="dropdown__caret"></b>
-                        </button>
-                        <ul class="dropdown__menu">
-                            <li><a href="" ng-click="filterPublishQueue(null, 'status')" translate>None</a></li>
-                            <li ng-repeat="status in publish_queue_statuses track by $index">
-                                <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="lab" translate>Content Type:</span>
-                    <div class="dropdown" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
-                            {{ selectedFilterContentType.name }}
-                            <span ng-if="!selectedFilterContentType" translate>none</span>
-                            <b class="dropdown__caret"></b>
-                        </button>
-                        <ul class="dropdown__menu">
-                            <li><a href="" ng-click="filterPublishQueue(null, 'type')" translate>None</a></li>
-                            <li ng-repeat="type in contentTypes track by type.qcode">
-                                <a href="" ng-click="filterPublishQueue(type, 'type')">{{ :: type.name | translate}}</a>
-                        </ul>
-                    </div>
+            <div class="sortbar">
+                <span class="lab" translate>Subscriber:</span>
+                <div class="dropdown" dropdown>
+                    <button class="dropdown__toggle" dropdown__toggle>
+                        {{ selectedFilterSubscriber.name }}
+                        <span ng-if="!selectedFilterSubscriber" translate>none</span>
+                        <b class="dropdown__caret"></b>
+                    </button>
+                    <ul class="dropdown__menu dropdown__menu--scrollable">
+                        <li>
+                            <a href="" ng-click="filterPublishQueue(null, 'subscriber')" translate>None</a>
+                        </li>
+                        <li ng-repeat="subscriber in subscribers track by subscriber._id">
+                            <a href="" ng-click="filterPublishQueue(subscriber, 'subscriber')">{{ subscriber.name }}</a>
+                        </li>
+                    </ul>
                 </div>
-
-                <div sd-pagination-alt class="pagination-box subnav__element-grow" data-page="pagination.page" data-max-page="maxPage"></div>
-
-                <div class="refresh-box">
-                    <span >{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
-                    <button class="navbtn" ng-click="reload()" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left"><i class="icon-refresh"></i></button>
+                <span class="lab" translate>Ingest Provider:</span>
+                <div class="dropdown" dropdown>
+                    <button class="dropdown__toggle" dropdown__toggle>
+                        {{ selectedFilterIngestProvider.name }}
+                        <span ng-if="!selectedFilterIngestProvider" translate>none</span>
+                        <b class="dropdown__caret"></b>
+                    </button>
+                    <ul class="dropdown__menu dropdown__menu--scrollable">
+                        <li>
+                            <a href="" ng-click="filterPublishQueue(null, 'ingest_provider')" translate>None</a>
+                        </li>
+                        <li ng-repeat="provider in ingestProviders track by provider._id">
+                            <a href="" ng-click="filterPublishQueue(provider, 'ingest_provider')"
+                                >{{ provider.name }}</a
+                            >
+                        </li>
+                    </ul>
                 </div>
-
-                <div class="multi-action-bar" ng-show="multiSelectCount > 0">
-                    <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">{{ :: 'Cancel Selection' | translate}}</button>
-                    <span id="multi-select-count"
-                            ng-show="multiSelectCount > 0"
-                            translate
-                            translate-n="multiSelectCount"
-                            translate-plural="{{multiSelectCount}} Items selected">{{multiSelectCount}} Item selected
-                    </span>
-                    <button class="btn btn--primary pull-right" ng-click="scheduleToSend()" ng-show="multiSelectCount > 0 && showResendBtn">{{ :: 'Resend' | translate}}</button>
-                    <button class="btn btn--primary pull-right" ng-click="cancelSend()" ng-show="multiSelectCount > 0 && showCancelBtn">{{ :: 'Cancel' | translate}}</button>
+                <span class="lab" translate>Status:</span>
+                <div class="dropdown" dropdown>
+                    <button class="dropdown__toggle" dropdown__toggle>
+                        {{ selectedFilterStatus }}
+                        <span ng-if="!selectedFilterStatus" translate>none</span>
+                        <b class="dropdown__caret"></b>
+                    </button>
+                    <ul class="dropdown__menu">
+                        <li><a href="" ng-click="filterPublishQueue(null, 'status')" translate>None</a></li>
+                        <li ng-repeat="status in publish_queue_statuses track by $index">
+                            <a href="" ng-click="filterPublishQueue(status, 'status')">{{ :: status | translate}}</a>
+                        </li>
+                    </ul>
                 </div>
-            </header>
+                <span class="lab" translate>Content Type:</span>
+                <div class="dropdown" dropdown>
+                    <button class="dropdown__toggle" dropdown__toggle>
+                        {{ selectedFilterContentType.name }}
+                        <span ng-if="!selectedFilterContentType" translate>none</span>
+                        <b class="dropdown__caret"></b>
+                    </button>
+                    <ul class="dropdown__menu">
+                        <li><a href="" ng-click="filterPublishQueue(null, 'type')" translate>None</a></li>
+                        <li ng-repeat="type in contentTypes track by type.qcode">
+                            <a href="" ng-click="filterPublishQueue(type, 'type')">{{ :: type.name | translate}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
+            <div
+                sd-pagination-alt
+                class="pagination-box subnav__element-grow"
+                data-page="pagination.page"
+                data-max-page="maxPage"
+            ></div>
+
+            <div class="refresh-box">
+                <span>{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>
+                <button
+                    class="navbtn"
+                    ng-click="reload()"
+                    tooltip="{{:: 'Refresh' | translate}}"
+                    tooltip-placement="left"
+                >
+                    <i class="icon-refresh"></i>
+                </button>
+            </div>
+
+            <div class="multi-action-bar" ng-show="multiSelectCount > 0">
+                <button class="btn" ng-click="cancelSelection(false)" ng-show="multiSelectCount > 0">
+                    {{ :: 'Cancel Selection' | translate}}
+                </button>
+                <span
+                    id="multi-select-count"
+                    ng-show="multiSelectCount > 0"
+                    translate
+                    translate-n="multiSelectCount"
+                    translate-plural="{{multiSelectCount}} Items selected"
+                    >{{multiSelectCount}} Item selected
+                </span>
+                <button
+                    class="btn btn--primary pull-right"
+                    ng-click="scheduleToSend()"
+                    ng-show="multiSelectCount > 0 && showResendBtn"
+                >
+                    {{ :: 'Resend' | translate}}
+                </button>
+                <button
+                    class="btn btn--primary pull-right"
+                    ng-click="cancelSend()"
+                    ng-show="multiSelectCount > 0 && showCancelBtn"
+                >
+                    {{ :: 'Cancel' | translate}}
+                </button>
+            </div>
+        </header>
 
         <div class="list-pane">
-
             <div class="content">
                 <div sd-shadow>
                     <table class="table styled-table">
@@ -119,13 +161,18 @@
                         </thead>
                         <tbody>
                             <tr
-                                ng-repeat="queue_item in publish_queue track by queue_item._id" class="{{queue_item.state| queueStatus}}"
+                                ng-repeat="queue_item in publish_queue track by queue_item._id"
+                                class="{{queue_item.state| queueStatus}}"
                                 ng-click="preview(queue_item);"
                                 data-test-id="publish-queue-item"
                                 data-test-value="{{queue_item.headline}}"
                             >
                                 <td>
-                                    <span sd-check ng-model="queue_item.selected" ng-change="selectQueuedItem(queue_item)"></span>
+                                    <span
+                                        sd-check
+                                        ng-model="queue_item.selected"
+                                        ng-change="selectQueuedItem(queue_item)"
+                                    ></span>
                                 </td>
                                 <td>{{ queue_item.published_seq_num}}</td>
                                 <td>{{ queue_item.unique_name}}</td>
@@ -133,18 +180,37 @@
                                 <td class="align-right">{{ queue_item.content_type}}</td>
                                 <td class="align-right">{{ queue_item.publishing_action}}</td>
                                 <td class="align-right">{{subscriberLookup[queue_item.subscriber_id].name}}</td>
-                                <td class="align-right">{{queue_item.ingest_provider ? ingestProvidersLookup[queue_item.ingest_provider].name : ''}}</td>
+                                <td class="align-right">
+                                    {{queue_item.ingest_provider ?
+                                    ingestProvidersLookup[queue_item.ingest_provider].name : ''}}
+                                </td>
                                 <td class="align-right">{{queue_item.destination.name}}</td>
                                 <td class="align-right">{{queue_item._created| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.publish_schedule| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.completed_at| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.state}}</td>
                                 <td class="align-right">{{queue_item.error_message}}</td>
-                                <td class="align-right" ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'">
-                                    <button class="btn btn--small" ng-click="cancelSend(queue_item); $event.stopPropagation()">{{ :: 'Cancel' | translate}}</button>
+                                <td
+                                    class="align-right"
+                                    ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'"
+                                >
+                                    <button
+                                        class="btn btn--small"
+                                        ng-click="cancelSend(queue_item); $event.stopPropagation()"
+                                    >
+                                        {{ :: 'Cancel' | translate}}
+                                    </button>
                                 </td>
-                                <td class="align-right" ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'">
-                                    <button class="btn btn--small" ng-click="scheduleToSend(queue_item); $event.stopPropagation()">{{ :: 'Resend' | translate}}</button>
+                                <td
+                                    class="align-right"
+                                    ng-if="queue_item.state === 'success' || queue_item.state === 'failed' || queue_item.state === 'canceled'"
+                                >
+                                    <button
+                                        class="btn btn--small"
+                                        ng-click="scheduleToSend(queue_item); $event.stopPropagation()"
+                                    >
+                                        {{ :: 'Resend' | translate}}
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -152,16 +218,19 @@
                 </div>
             </div>
         </div>
-        <div sd-item-preview data-item="selected.preview"
+        <div
+            sd-item-preview
+            data-item="selected.preview"
             ng-if="selected.preview && !selected.extensionPoint"
             data-hide-actions-menu="true"
             data-show-history-tab="true"
-            data-close="preview(null)">
-        </div>
-        <div sd-extension-point="publish_queue:preview"
-             data-item="selected.preview"
-             class="open-preview"
-             ng-if="selected.preview && selected.extensionPoint">
-        </div>
+            data-close="preview(null)"
+        ></div>
+        <div
+            sd-extension-point="publish_queue:preview"
+            data-item="selected.preview"
+            class="open-preview"
+            ng-if="selected.preview && selected.extensionPoint"
+        ></div>
     </div>
 </section>

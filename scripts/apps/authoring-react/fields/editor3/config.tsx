@@ -17,10 +17,10 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     <div className="form-label">{gettext('Formatting options')}</div>
 
                     <MultiSelect
-                        items={
-                            Object.entries(getEditor3RichTextFormattingOptions())
-                                .map(([id, label]) => ({id, label}))
-                        }
+                        items={Object.entries(getEditor3RichTextFormattingOptions()).map(([id, label]) => ({
+                            id,
+                            label,
+                        }))}
                         values={config?.editorFormat ?? []}
                         onChange={(editorFormat: Array<RICH_FORMATTING_OPTION>) => {
                             this.props.onChange({...config, editorFormat});
@@ -88,13 +88,11 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     <div className="form-label">{gettext('Field ID to prefill from')}</div>
 
                     <p>
-                        {
-                            gettext(
-                                'This field will initialize with the value of specified field'
-                                + ' when toggled from "off" to "on". Only plain-text gets copied.'
-                                + ' Formatting options or links are not preserved.',
-                            )
-                        }
+                        {gettext(
+                            'This field will initialize with the value of specified field' +
+                                ' when toggled from "off" to "on". Only plain-text gets copied.' +
+                                ' Formatting options or links are not preserved.',
+                        )}
                     </p>
 
                     <input
@@ -116,11 +114,14 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                     }}
                 >
                     <Option />
-                    {
-                        sdApi.vocabularies.getAll().toArray().map((item) => (
-                            <Option key={item._id} value={item._id}>{item.display_name}</Option>
-                        ))
-                    }
+                    {sdApi.vocabularies
+                        .getAll()
+                        .toArray()
+                        .map((item) => (
+                            <Option key={item._id} value={item._id}>
+                                {item.display_name}
+                            </Option>
+                        ))}
                 </Select>
             </Spacer>
         );

@@ -22,10 +22,12 @@ describe('Image Crop', () => {
             scope.rendition = {width: 800, height: 600, name: '4-3'};
             scope.original = {width: 900, height: 600};
             scope.cropData = {};
-            $elm = $compile('<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
-                ' data-original="original" ' +
-                ' data-rendition="rendition" data-box-width="boxWidth"' +
-                ' data-box-height="boxHeight" crop-data="cropData" data-on-change="onChange()"></div>')(scope);
+            $elm = $compile(
+                '<div sd-image-crop data-src="src" data-show-Min-Size-Error="true"' +
+                    ' data-original="original" ' +
+                    ' data-rendition="rendition" data-box-width="boxWidth"' +
+                    ' data-box-height="boxHeight" crop-data="cropData" data-on-change="onChange()"></div>',
+            )(scope);
         }));
 
         it('invokes watch', inject(() => {
@@ -96,20 +98,24 @@ describe('Image Crop', () => {
 
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(0);
-                expect($elm.text())
-                    .toBe(
-                        'Sorry, but image must be at least 800x600. ' +
-                        'Currently the image size is 500x600).',
-                    );
+                expect($elm.text()).toBe(
+                    'Sorry, but image must be at least 800x600. ' + 'Currently the image size is 500x600).',
+                );
             }));
 
             it('calls onChange callback on change only', inject(() => {
                 scope.onChange = jasmine.createSpy('onchange');
                 // fake jcropApi
                 jcropApi = {
-                    setOptions: function() { /* no-op */ },
-                    tellSelect: function() { /* no-op */ },
-                    destroy: function() { /* no-op */ },
+                    setOptions: function () {
+                        /* no-op */
+                    },
+                    tellSelect: function () {
+                        /* no-op */
+                    },
+                    destroy: function () {
+                        /* no-op */
+                    },
                 };
 
                 scope.$digest();

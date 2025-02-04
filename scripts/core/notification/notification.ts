@@ -1,12 +1,12 @@
 /**
-* This file is part of Superdesk.
-*
-* Copyright 2015 Sourcefabric z.u. and contributors.
-*
-* For the full copyright and license information, please see the
-* AUTHORS and LICENSE files distributed with this source code, or
-* at https://www.sourcefabric.org/superdesk/license
-*/
+ * This file is part of Superdesk.
+ *
+ * Copyright 2015 Sourcefabric z.u. and contributors.
+ *
+ * For the full copyright and license information, please see the
+ * AUTHORS and LICENSE files distributed with this source code, or
+ * at https://www.sourcefabric.org/superdesk/license
+ */
 
 import _ from 'lodash';
 import {gettext} from 'core/utils';
@@ -30,13 +30,10 @@ const internalWebsocketMessageNames: IInternalWebsocketMessages = {
     'item:publish': undefined,
 };
 
-export const getWebsocketMessageEventName = (
-    eventName: string,
-    extensionName?: string,
-) => 'websocket-event--' + eventName + (extensionName == null ? '' : '--' + extensionName);
+export const getWebsocketMessageEventName = (eventName: string, extensionName?: string) =>
+    'websocket-event--' + eventName + (extensionName == null ? '' : '--' + extensionName);
 
-export const getInternalWebsocketMessageEventName = (eventName: string) =>
-    'websocket-event-internal--' + eventName;
+export const getInternalWebsocketMessageEventName = (eventName: string) => 'websocket-event-internal--' + eventName;
 
 // can also be private, meaning it could only be accessed in extension the event is addressed to.
 export function isWebsocketEventPublic(eventName: string) {
@@ -47,7 +44,8 @@ export function isWebsocketEventInternal(eventName: string) {
     return Object.keys(internalWebsocketMessageNames).includes(eventName);
 }
 
-interface IInternalWebsocketMessages { // not exposed to client API
+interface IInternalWebsocketMessages {
+    // not exposed to client API
     'item:lock': IWebsocketMessage<{
         item: IArticle['_id'];
         item_version: string;
@@ -116,22 +114,22 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
         return;
     }
 
-    var connect = function() {
+    var connect = function () {
         if (!ws || ws.readyState === readyState.CLOSED) {
             ws = new WebSocket(appConfig.server.ws);
             bindEvents();
         }
     };
 
-    var disconnect = function() {
+    var disconnect = function () {
         if (ws) {
             ws.close();
             ws = null;
         }
     };
 
-    var bindEvents = function() {
-        ws.onmessage = function(event) {
+    var bindEvents = function () {
+        ws.onmessage = function (event) {
             var msg = angular.fromJson(event.data);
 
             // Delay all websocket events to avoid getting old data.
@@ -153,10 +151,7 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
 
                 if (isWebsocketEventInternal(msg.event)) {
                     window.dispatchEvent(
-                        new CustomEvent(
-                            getInternalWebsocketMessageEventName(msg.event),
-                            {detail: msg},
-                        ),
+                        new CustomEvent(getInternalWebsocketMessageEventName(msg.event), {detail: msg}),
                     );
                 }
 
@@ -167,24 +162,29 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
             }, 100);
         };
 
-        ws.onerror = function(event) {
+        ws.onerror = function (event) {
             console.error(event);
         };
 
-        ws.onopen = function(event) {
+        ws.onopen = function (event) {
             $interval.cancel(connectTimer);
             $rootScope.$broadcast('connected');
         };
 
-        ws.onclose = function(event) {
+        ws.onclose = function (event) {
             $rootScope.$broadcast('disconnected');
 
             $interval.cancel(connectTimer);
-            connectTimer = $interval(() => {
-                if (ws && session.sessionId) {
-                    connect(); // Retry to connect for every TIMEOUT interval.
-                }
-            }, TIMEOUT, 0, false); // passed invokeApply = false to prevent triggering digest cycle
+            connectTimer = $interval(
+                () => {
+                    if (ws && session.sessionId) {
+                        connect(); // Retry to connect for every TIMEOUT interval.
+                    }
+                },
+                TIMEOUT,
+                0,
+                false,
+            ); // passed invokeApply = false to prevent triggering digest cycle
         };
     };
 
@@ -221,8 +221,9 @@ function NotifyConnectionService($rootScope, notify, $timeout, session) {
 
     $rootScope.$on('vocabularies:updated', (event, data) => {
         if (!data || (data.user && data.user !== session.identity._id)) {
-            self.message = data.vocabulary + gettext(
-                ' vocabulary has been updated. Please re-login to see updated vocabulary values');
+            self.message =
+                data.vocabulary +
+                gettext(' vocabulary has been updated. Please re-login to see updated vocabulary values');
             $timeout(() => {
                 notify.error(self.message);
             }, 100);
@@ -265,7 +266,7 @@ function ReloadService($window, $rootScope, session, desks, superdeskFlags) {
         self.result = self.reloadIdentifier(msg);
         self.reload(self.result);
     });
-    this.reload = function(result) {
+    this.reload = function (result) {
         if (result.reload) {
             if (superdeskFlags.flags.authoring) {
                 self.broadcast(gettext(result.message));
@@ -275,51 +276,60 @@ function ReloadService($window, $rootScope, session, desks, superdeskFlags) {
         }
     };
 
-    this.forceReload = function() {
+    this.forceReload = function () {
         return $window.location.reload(true);
     };
 
-    this.broadcast = function(msg) {
+    this.broadcast = function (msg) {
         $rootScope.$broadcast('savework', msg);
     };
 
-    this.reloadIdentifier = function(msg) {
+    this.reloadIdentifier = function (msg) {
         var result = {
             reload: false,
             message: null,
         };
 
-        if (_.has(userEvents, msg.event) && !_.isNil(msg.extra.user_id) &&
-            msg.extra.user_id.indexOf(session.identity._id) !== -1) {
+        if (
+            _.has(userEvents, msg.event) &&
+            !_.isNil(msg.extra.user_id) &&
+            msg.extra.user_id.indexOf(session.identity._id) !== -1
+        ) {
             result.message = userEvents[msg.event];
             result.reload = true;
         }
 
-        if (_.has(roleEvents, msg.event) &&
-            msg.extra.role_id.indexOf(session.identity.role) !== -1) {
+        if (_.has(roleEvents, msg.event) && msg.extra.role_id.indexOf(session.identity.role) !== -1) {
             result.message = roleEvents[msg.event];
             result.reload = true;
         }
 
-        if (_.has(deskEvents, msg.event) &&
-            !_.isNil(msg.extra.desk_id) && !_.isNil(msg.extra.user_ids) &&
+        if (
+            _.has(deskEvents, msg.event) &&
+            !_.isNil(msg.extra.desk_id) &&
+            !_.isNil(msg.extra.user_ids) &&
             !_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
-            msg.extra.user_ids.indexOf(session.identity._id) !== -1) {
+            msg.extra.user_ids.indexOf(session.identity._id) !== -1
+        ) {
             result.message = deskEvents[msg.event];
             result.reload = true;
         }
 
         if (_.has(stageEvents, msg.event) && !_.isNil(msg.extra.desk_id)) {
             if (msg.event === 'stage_visibility_updated') {
-                if (_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
-                !_.isNil($window.location.hash.match('/search'))
-                    || !_.isNil($window.location.hash.match('/authoring/'))) {
+                if (
+                    (_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
+                        !_.isNil($window.location.hash.match('/search'))) ||
+                    !_.isNil($window.location.hash.match('/authoring/'))
+                ) {
                     result.message = stageEvents[msg.event];
                     result.reload = true;
                 }
             } else if (msg.event === 'stage') {
-                if (!_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id}))
-                    && self.activeDesk === msg.extra.desk_id) {
+                if (
+                    !_.isNil(_.find(self.userDesks, {_id: msg.extra.desk_id})) &&
+                    self.activeDesk === msg.extra.desk_id
+                ) {
                     result.message = stageEvents[msg.event];
                     result.reload = true;
                 }
@@ -336,7 +346,8 @@ function ReloadService($window, $rootScope, session, desks, superdeskFlags) {
  * @packageName superdesk.core
  * @description The notification package holds various types of notifications.
  */
-export default angular.module('superdesk.apps.notification', ['superdesk.apps.desks', 'superdesk.core.menu'])
+export default angular
+    .module('superdesk.apps.notification', ['superdesk.apps.desks', 'superdesk.core.menu'])
     .service('reloadService', ReloadService)
     .service('notifyConnectionService', NotifyConnectionService)
     .run(WebSocketProxy);

@@ -30,7 +30,8 @@ export class DifferenceRow extends React.PureComponent<IProps> {
                     label: gettext('Modified'),
                     backgroundColor: 'var(--diff-color-modification)',
                 };
-            } if (differenceType === 'removed') {
+            }
+            if (differenceType === 'removed') {
                 return {
                     label: gettext('Removed'),
                     backgroundColor: 'var(--diff-color-removal)',
@@ -41,7 +42,9 @@ export class DifferenceRow extends React.PureComponent<IProps> {
         })();
 
         return (
-            <div key={attachment._id} className="tr"> {/** child of .css-table */}
+            <div key={attachment._id} className="tr">
+                {' '}
+                {/** child of .css-table */}
                 <div className="td" style={{backgroundColor: change == null ? undefined : change.backgroundColor}}>
                     <AttachmentsListItem
                         attachment={attachment}
@@ -51,17 +54,14 @@ export class DifferenceRow extends React.PureComponent<IProps> {
                         noBackground={change != null}
                     />
                 </div>
-
-                {
-                    change != null && (
-                        <div className="td">
-                            <SpacerBlock h gap="16" />
-                            <div className="label" style={{backgroundColor: change.backgroundColor, color: 'black'}}>
-                                {change.label}
-                            </div>
+                {change != null && (
+                    <div className="td">
+                        <SpacerBlock h gap="16" />
+                        <div className="label" style={{backgroundColor: change.backgroundColor, color: 'black'}}>
+                            {change.label}
                         </div>
-                    )
-                }
+                    </div>
+                )}
             </div>
         );
     }

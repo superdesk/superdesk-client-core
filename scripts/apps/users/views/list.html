@@ -11,14 +11,33 @@
             <div class="subnav">
                 <div sd-searchbar></div>
                 <div class="button-list button-list--padded">
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All user types' | translate}}</button>
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                    <button
+                        type="button"
+                        class="toggle-button"
+                        ng-click="authorOnlyFilter=!authorOnlyFilter"
+                        ng-class="{'toggle-button--active': !authorOnlyFilter}"
+                    >
+                        {{:: 'All user types' | translate}}
+                    </button>
+                    <button
+                        type="button"
+                        class="toggle-button"
+                        ng-click="authorOnlyFilter=!authorOnlyFilter"
+                        ng-class="{'toggle-button--active': authorOnlyFilter}"
+                    >
+                        {{:: 'Authors only' | translate}}
+                    </button>
                 </div>
-                <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:100px; margin:0 40px;">
-                    <select class="sd-line-input__select" 
+                <div
+                    class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin"
+                    style="min-width: 100px; margin: 0 40px"
+                >
+                    <select
+                        class="sd-line-input__select"
                         ng-model="userFilter"
-                        ng-options="filter.id as filter.label | translate for filter in filterOptions" data-test-id="user-filter">
-                    </select>
+                        ng-options="filter.id as filter.label | translate for filter in filterOptions"
+                        data-test-id="user-filter"
+                    ></select>
                 </div>
                 <div class="subnav__element-grow"></div>
                 <div sd-pagination data-items="users" class="pull-right"></div>
@@ -30,49 +49,84 @@
                         <ul class="table-header">
                             <li>
                                 <div class="row-wrapper">
-                                    <div class="name" sd-sort data-label="{{ 'Full name' | translate }}" data-field="full_name"></div>
-                                    <div class="username" sd-sort data-label="{{ 'Username' | translate }}" data-field="username"></div>
+                                    <div
+                                        class="name"
+                                        sd-sort
+                                        data-label="{{ 'Full name' | translate }}"
+                                        data-field="full_name"
+                                    ></div>
+                                    <div
+                                        class="username"
+                                        sd-sort
+                                        data-label="{{ 'Username' | translate }}"
+                                        data-field="username"
+                                    ></div>
                                     <div class="role" translate>Role</div>
-                                    <div class="email" sd-sort data-label="{{ 'Email' | translate }}" data-field="email"></div>
-                                    <div class="created" sd-sort data-label="{{ 'Created' | translate }}" data-field="_created"></div>
+                                    <div
+                                        class="email"
+                                        sd-sort
+                                        data-label="{{ 'Email' | translate }}"
+                                        data-field="email"
+                                    ></div>
+                                    <div
+                                        class="created"
+                                        sd-sort
+                                        data-label="{{ 'Created' | translate }}"
+                                        data-field="_created"
+                                    ></div>
                                 </div>
                             </li>
                         </ul>
 
                         <div class="table-title" ng-show="createdUsers.length" translate>Recently added</div>
 
-                        <ul class="table-newest"
+                        <ul
+                            class="table-newest"
                             sd-user-list
                             data-roles="roles"
                             data-users="createdUsers"
                             data-selected="selected.user"
                             data-done="afterDelete"
-                            ng-if="createdUsers.length">
-                        </ul>
+                            ng-if="createdUsers.length"
+                        ></ul>
 
-                        <ul class="table-body"
+                        <ul
+                            class="table-body"
                             sd-user-list
                             data-roles="roles"
                             data-users="users._items"
                             data-author-only-filter="authorOnlyFilter"
                             data-selected="selected.user"
-                            data-done="afterDelete">
-                        </ul>
+                            data-done="afterDelete"
+                        ></ul>
                     </div>
                 </div>
             </div>
 
             <div class="preview-pane" ng-if="selected.user">
                 <header>
-                    <button ng-click="intent('detail', 'user', selected.user)" class="btn btn--small btn--hollow sd-margin-start--2" ng-show="selected.user._id" id="open-user-profile" translate>View full profile</button>
-                    <button ng-click="selected.user = null" class="icn-btn close-preview"><i class="icon-close-small"></i></button>
+                    <button
+                        ng-click="intent('detail', 'user', selected.user)"
+                        class="btn btn--small btn--hollow sd-margin-start--2"
+                        ng-show="selected.user._id"
+                        id="open-user-profile"
+                        translate
+                    >
+                        View full profile
+                    </button>
+                    <button ng-click="selected.user = null" class="icn-btn close-preview">
+                        <i class="icon-close-small"></i>
+                    </button>
                 </header>
                 <div sd-user-details-pane ng-if="selected.user">
-                    <div sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>
+                    <div
+                        sd-user-edit
+                        data-user="selected.user"
+                        data-onsave="render(user)"
+                        data-oncancel="closePreview()"
+                    ></div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </section>

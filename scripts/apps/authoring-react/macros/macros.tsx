@@ -58,7 +58,10 @@ function getGroupedOrdered(macros: Array<IMacro>): Array<IMacroGroup> {
         initiallyOpen: true,
         macros: macros.filter((m) => m.order != null),
     });
-    const groupedMacros = groupBy(macros.filter((m) => m.group != null), nameof<IMacro>('group'));
+    const groupedMacros = groupBy(
+        macros.filter((m) => m.group != null),
+        nameof<IMacro>('group'),
+    );
 
     Object.keys(groupedMacros).forEach((groupName) => {
         groupedOrdered.push({
@@ -70,9 +73,7 @@ function getGroupedOrdered(macros: Array<IMacro>): Array<IMacroGroup> {
     groupedOrdered.push({
         groupName: gettext('Miscellaneous'),
         initiallyOpen: false,
-        macros: macros
-            .filter((m) => m.group == null)
-            .sort((a, b) => a.label.localeCompare(b.label)),
+        macros: macros.filter((m) => m.group == null).sort((a, b) => a.label.localeCompare(b.label)),
     });
 
     return groupedOrdered;
@@ -121,11 +122,7 @@ export function overwriteArticle(
         }
     });
 
-    return sdApi.article.patch(
-        currentArticle,
-        patchCopy,
-        {patchDirectlyAndOverwriteAuthoringValues: true},
-    ).then(() => {
+    return sdApi.article.patch(currentArticle, patchCopy, {patchDirectlyAndOverwriteAuthoringValues: true}).then(() => {
         dispatchInternalEvent('replaceAuthoringDataWithChanges', patchCopy);
     });
 }
@@ -137,7 +134,8 @@ function handleKeepStyleReplaceMacro(
 ): IMacroProcessor {
     return {
         beforePatch: () => {
-            const editor3fields = contentProfile.header.merge(contentProfile.content)
+            const editor3fields = contentProfile.header
+                .merge(contentProfile.content)
                 .filter((value) => value.fieldType === 'editor3');
 
             editor3fields.forEach((field) => {
@@ -149,12 +147,14 @@ function handleKeepStyleReplaceMacro(
         },
         afterPatch: (resArticle: IArticle) => {
             const patch = generatePatch(article, resArticle);
-            const editor3fields = contentProfile.header.merge(contentProfile.content)
+            const editor3fields = contentProfile.header
+                .merge(contentProfile.content)
                 .filter((value) => value.fieldType === 'editor3' && Object.keys(patch).includes(value.id));
 
             editor3fields.forEach((field) => {
-                const editorStateCurrent: EditorState = (fieldsData.get(field.id) as IEditor3ValueOperational)
-                    .store.getState().editorState;
+                const editorStateCurrent: EditorState = (
+                    fieldsData.get(field.id) as IEditor3ValueOperational
+                ).store.getState().editorState;
                 const editorStateNext = patchHTMLonTopOfEditorState(editorStateCurrent, patch[field.id]);
 
                 dispatchEditorEvent('authoring__patch_html', {
@@ -189,7 +189,8 @@ function handleUpdateEditorStateMacro(article: IArticle, contentProfile: IConten
             return article;
         },
         afterPatch: (resArticle: IArticle) => {
-            const fields = contentProfile.header.merge(contentProfile.content)
+            const fields = contentProfile.header
+                .merge(contentProfile.content)
                 .filter((value) => value.fieldType === 'editor3');
 
             fields.forEach((field) => {
@@ -255,7 +256,10 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
         getAllMacros().then((macros) => {
             const frontendMacros = macros._items.filter((x) => x.access_type === 'frontend');
-            const groupedMacros = groupBy(frontendMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
+            const groupedMacros = groupBy(
+                frontendMacros.filter((x) => x.group != null),
+                nameof<IMacro>('group'),
+            );
 
             this.setState({
                 macros: frontendMacros,
@@ -279,13 +283,15 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
                 macro: macro.name,
                 item: macroProcessor.beforePatch(),
             },
-        }).then((res) => {
-            macroProcessor.afterPatch(res.item as IArticle);
-        }).catch((err) => {
-            if ((err._message?.length ?? 0) > 0) {
-                notify.error(err._message);
-            }
-        });
+        })
+            .then((res) => {
+                macroProcessor.afterPatch(res.item as IArticle);
+            })
+            .catch((err) => {
+                if ((err._message?.length ?? 0) > 0) {
+                    notify.error(err._message);
+                }
+            });
     }
 
     runInteractiveMacro(macro: IMacro): void {
@@ -306,16 +312,10 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
         if (this.state.macros == null) {
             return (
                 <AuthoringWidgetLayout
-                    header={(
-                        <AuthoringWidgetHeading
-                            widgetId={MACROS_WIDGET_ID}
-                            widgetName={getLabel()}
-                            editMode={false}
-                        />
-                    )}
-                    body={(
-                        <Label text={gettext('No macros configured.')} />
-                    )}
+                    header={
+                        <AuthoringWidgetHeading widgetId={MACROS_WIDGET_ID} widgetName={getLabel()} editMode={false} />
+                    }
+                    body={<Label text={gettext('No macros configured.')} />}
                 />
             );
         }
@@ -337,66 +337,46 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
             );
         };
 
-        const groupedOrdered = this.state.displayGrouped !== 'not-supported'
-            ? getGroupedOrdered(this.state.macros)
-            : [];
+        const groupedOrdered =
+            this.state.displayGrouped !== 'not-supported' ? getGroupedOrdered(this.state.macros) : [];
 
         return (
             <AuthoringWidgetLayout
-                header={(
-                    <AuthoringWidgetHeading
-                        widgetId={MACROS_WIDGET_ID}
-                        widgetName={getLabel()}
-                        editMode={false}
-                    />
-                )}
-                body={(
-                    Object.keys(this.state.currentMacro?.diff ?? {}).length < 1 ?
-                        (
-                            <>
-                                {this.state.displayGrouped !== 'not-supported' && (
-                                    <Switch
-                                        label={{content: gettext('Group Macros')}}
-                                        value={this.state.displayGrouped}
-                                        onChange={() =>
-                                            this.setState({displayGrouped: !this.state.displayGrouped})
-                                        }
-                                    />
-                                )}
-                                {
-                                    this.state.displayGrouped ? (
-                                        groupedOrdered.map((group, i) => {
-                                            return (
-                                                <ToggleBox
-                                                    variant="simple"
-                                                    key={i}
-                                                    initiallyOpen={group.initiallyOpen}
-                                                    title={group.groupName}
-                                                >
-                                                    {group.macros.map((macro) => (
-                                                        <RunMacroButton
-                                                            key={macro.name}
-                                                            macro={macro}
-                                                        />
-                                                    ))}
-                                                </ToggleBox>
-                                            );
-                                        })
-                                    ) : this.state.macros.map((macro) => (
-                                        <RunMacroButton
-                                            key={macro.name}
-                                            macro={macro}
-                                        />
-                                    ))
-                                }
-                            </>
-                        ) : (
-                            <InteractiveMacrosDisplay
-                                onClose={() => this.setState({currentMacro: null})}
-                                currentMacro={this.state.currentMacro}
-                            />
-                        )
-                )}
+                header={<AuthoringWidgetHeading widgetId={MACROS_WIDGET_ID} widgetName={getLabel()} editMode={false} />}
+                body={
+                    Object.keys(this.state.currentMacro?.diff ?? {}).length < 1 ? (
+                        <>
+                            {this.state.displayGrouped !== 'not-supported' && (
+                                <Switch
+                                    label={{content: gettext('Group Macros')}}
+                                    value={this.state.displayGrouped}
+                                    onChange={() => this.setState({displayGrouped: !this.state.displayGrouped})}
+                                />
+                            )}
+                            {this.state.displayGrouped
+                                ? groupedOrdered.map((group, i) => {
+                                      return (
+                                          <ToggleBox
+                                              variant="simple"
+                                              key={i}
+                                              initiallyOpen={group.initiallyOpen}
+                                              title={group.groupName}
+                                          >
+                                              {group.macros.map((macro) => (
+                                                  <RunMacroButton key={macro.name} macro={macro} />
+                                              ))}
+                                          </ToggleBox>
+                                      );
+                                  })
+                                : this.state.macros.map((macro) => <RunMacroButton key={macro.name} macro={macro} />)}
+                        </>
+                    ) : (
+                        <InteractiveMacrosDisplay
+                            onClose={() => this.setState({currentMacro: null})}
+                            currentMacro={this.state.currentMacro}
+                        />
+                    )
+                }
             />
         );
     }

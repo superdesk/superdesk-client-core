@@ -67,17 +67,13 @@ export class ContentCreateDropdown extends React.PureComponent<IProps> {
             >
                 <DropdownButton
                     onClick={(event) => {
-                        showPopup(
-                            event.target as HTMLElement,
-                            'bottom-end',
-                            ({closePopup}) => (
-                                <InitialView
-                                    closePopup={closePopup}
-                                    initializeAsUpdated={this.props.initializeAsUpdated === true}
-                                    onCreate={this.props.onCreate}
-                                />
-                            ),
-                        );
+                        showPopup(event.target as HTMLElement, 'bottom-end', ({closePopup}) => (
+                            <InitialView
+                                closePopup={closePopup}
+                                initializeAsUpdated={this.props.initializeAsUpdated === true}
+                                onCreate={this.props.onCreate}
+                            />
+                        ));
                     }}
                 />
             </DropZone3>

@@ -6,10 +6,6 @@ interface IProps {
 
 export class PanelContent extends React.PureComponent<IProps> {
     render() {
-        return (
-            <div className="side-panel__content">
-                {this.props.children}
-            </div>
-        );
+        return <div className="side-panel__content">{this.props.children}</div>;
     }
 }

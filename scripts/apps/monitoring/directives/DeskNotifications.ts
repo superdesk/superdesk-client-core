@@ -9,7 +9,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace: 
     return {
         scope: {stage: '=stage'},
         templateUrl: 'scripts/apps/monitoring/views/desk-notifications.html',
-        link: function(scope) {
+        link: function (scope) {
             function init() {
                 // Update the figures if there's a desk mention message
                 initNotifications();
@@ -41,7 +41,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace: 
              *
              * @param {object} notification The notification to be checked
              */
-            scope.open = function(notification) {
+            scope.open = function (notification) {
                 authoringWorkspace.view(notification.item);
             };
 
@@ -50,7 +50,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace: 
              *
              * @param {object} notification The notification to be checked
              */
-            scope.acknowledge = function(notification) {
+            scope.acknowledge = function (notification) {
                 deskNotifications.markAsRead(notification, scope.desk);
                 $timeout(reload, 5000, false);
             };
@@ -65,7 +65,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace: 
              * @param {object} notification The notification to be checked
              * @return {boolean} True if the notification is read by any user
              */
-            scope.isRead = function(notification) {
+            scope.isRead = function (notification) {
                 var recipient: any = getRecipient(notification);
 
                 return recipient && recipient.read;
@@ -77,7 +77,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace: 
              * @param {object} notification The notification to be checked
              * @return {string} Display name of the user
              */
-            scope.readBy = function(notification) {
+            scope.readBy = function (notification) {
                 var recipient: any = getRecipient(notification);
 
                 if (recipient && recipient.read) {

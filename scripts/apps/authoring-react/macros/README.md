@@ -11,6 +11,7 @@ When `action_type === 'interactive'`
 When `action_type === 'non-interactive ???'`
 
 #### Replace types:
+
 - `no-replace` - doesn't do anything on the front-end
 - `keep-style-replace` - replaces a part of the editor3 field - maintains inline styles
 - `simple-replace` reloading the entire article

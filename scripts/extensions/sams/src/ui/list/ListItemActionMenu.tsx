@@ -8,15 +8,10 @@ interface IProps {
 
 export class ListItemActionMenu extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames(
-            'sd-list-item__action-menu',
-            {'sd-list-item__action-menu--direction-row': this.props.row},
-        );
+        const classes = classNames('sd-list-item__action-menu', {
+            'sd-list-item__action-menu--direction-row': this.props.row,
+        });
 
-        return (
-            <div className={classes}>
-                {this.props.children}
-            </div>
-        );
+        return <div className={classes}>{this.props.children}</div>;
     }
 }

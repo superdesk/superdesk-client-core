@@ -11,8 +11,6 @@ export class TimeElem extends React.Component<IProps> {
 
         const datetime = ng.get('datetime');
 
-        return (
-            <time title={datetime.longFormat(date)}>{datetime.shortFormat(date)}</time>
-        );
+        return <time title={datetime.longFormat(date)}>{datetime.shortFormat(date)}</time>;
     }
 }

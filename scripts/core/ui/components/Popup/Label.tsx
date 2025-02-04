@@ -11,12 +11,7 @@ import {gettext} from 'core/utils';
  */
 
 const Label: React.StatelessComponent<any> = ({text, children, centerText}) => (
-    <span
-        className={classNames(
-            'popup__menu-label',
-            {'popup__menu-label--center': centerText},
-        )}
-    >
+    <span className={classNames('popup__menu-label', {'popup__menu-label--center': centerText})}>
         {gettext(text)}
         {children}
     </span>

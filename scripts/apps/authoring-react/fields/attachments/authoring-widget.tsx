@@ -38,9 +38,7 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
     }
 
     private setAttachments(val: IAttachmentsValueOperational) {
-        this.props.onFieldsDataChange(
-            this.props.fieldsData.set(fieldId, val),
-        );
+        this.props.onFieldsDataChange(this.props.fieldsData.set(fieldId, val));
     }
 
     private addAttachments(val: Array<IAttachment>) {
@@ -62,22 +60,21 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
     render() {
         const {readOnly} = this.props;
 
-        const AttachmentsEditor = CC.AuthoringAttachmentsWidget != null ?
-            CC.AuthoringAttachmentsWidget :
-            AttachmentsWidgetComponent;
+        const AttachmentsEditor =
+            CC.AuthoringAttachmentsWidget != null ? CC.AuthoringAttachmentsWidget : AttachmentsWidgetComponent;
 
         const ids = this.getAttachments().map(({id}) => id);
 
         return (
             <AuthoringWidgetLayout
-                header={(
+                header={
                     <AuthoringWidgetHeading
                         widgetId={ATTACHMENTS_WIDGET_ID}
                         widgetName={getWidgetLabel()}
                         editMode={false}
                     />
-                )}
-                body={(
+                }
+                body={
                     <WithLiveResources resources={[{resource: 'attachments', ids: ids}]}>
                         {([res]: Array<IRestApiResponse<IAttachment>>) => {
                             const attachments = res._items;
@@ -95,7 +92,7 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
                             );
                         }}
                     </WithLiveResources>
-                )}
+                }
             />
         );
     }

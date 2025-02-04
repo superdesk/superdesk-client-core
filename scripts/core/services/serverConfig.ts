@@ -14,12 +14,12 @@ export class ServerConfigService {
         this.api = api;
     }
     /**
-         * @ngdoc method
-         * @name api#save
-         * @public
-         * @description
-         * Save an item
-         */
+     * @ngdoc method
+     * @name api#save
+     * @public
+     * @description
+     * Save an item
+     */
 
     /**
      * @ngdoc method

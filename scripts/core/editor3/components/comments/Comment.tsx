@@ -51,18 +51,21 @@ export class Comment extends React.Component<any, any> {
 
         const isRoot = this.props.isReply === false;
 
-        const availableActions = isAuthor !== true ? [] : [
-            {
-                text: gettext('Edit'),
-                icon: 'icon-pencil',
-                onClick: () => this.setState({editMode: true}),
-            },
-            {
-                text: gettext('Delete'),
-                icon: 'icon-trash',
-                onClick: onRemove,
-            },
-        ];
+        const availableActions =
+            isAuthor !== true
+                ? []
+                : [
+                      {
+                          text: gettext('Edit'),
+                          icon: 'icon-pencil',
+                          onClick: () => this.setState({editMode: true}),
+                      },
+                      {
+                          text: gettext('Delete'),
+                          icon: 'icon-trash',
+                          onClick: onRemove,
+                      },
+                  ];
 
         return (
             <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
@@ -83,83 +86,71 @@ export class Comment extends React.Component<any, any> {
                         </div>
                     </EditorHighlightsHeader>
 
-                    {
-                        isReply !== false ? null : (
-                            <div className="editor-popup__content-block" style={{paddingBlockEnd: 0}}>
-                                <div className="space-between editor-popup__info-bar">
-                                    <span className="label">{gettext('Comment')}</span>
-                                    {this.props.inlineActions || null}
-                                </div>
+                    {isReply !== false ? null : (
+                        <div className="editor-popup__content-block" style={{paddingBlockEnd: 0}}>
+                            <div className="space-between editor-popup__info-bar">
+                                <span className="label">{gettext('Comment')}</span>
+                                {this.props.inlineActions || null}
                             </div>
-                        )
-                    }
+                        </div>
+                    )}
                 </FluidRow>
 
                 <FluidRow className="editor-popup__content-block" scrollable={!this.state.editMode}>
-                    {
-                        this.state.editMode === true ?
-                            (
-                                <div>
-                                    <CommentTextArea
-                                        className="comment-box__input"
-                                        value={this.state.editModeValue}
-                                        onChange={(event, value) => this.setState({editModeValue: value})}
-                                        singleLine={false}
-                                        maxHeight={isRoot === true ? 300 : undefined}
-                                    />
+                    {this.state.editMode === true ? (
+                        <div>
+                            <CommentTextArea
+                                className="comment-box__input"
+                                value={this.state.editModeValue}
+                                onChange={(event, value) => this.setState({editModeValue: value})}
+                                singleLine={false}
+                                maxHeight={isRoot === true ? 300 : undefined}
+                            />
 
-                                    <div
-                                        className={
-                                            'comment-box__button-toolbar'
-                                            + ' comment-box__button-toolbar--right'
-                                            + ' comment-box__button-toolbar--small'
-                                        }
-                                    >
-                                        <button
-                                            onClick={(event) => {
-                                                this.cancelEditing(event);
-                                            }}
-                                            className="btn btn--icon-only btn--hollow"
-                                        >
-                                            <i className="icon-close-small" />
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                this.props.updateComment(this.state.editModeValue);
-                                                this.cancelEditing();
-                                            }}
-                                            className="btn btn--primary btn--icon-only"
-                                        >
-                                            <i className="icon-ok" />
-                                        </button>
-                                    </div>
-                                </div>
-                            )
-                            : (
-                                <TextWithMentions message={this.props.data.msg} />
-                            )
-                    }
+                            <div
+                                className={
+                                    'comment-box__button-toolbar' +
+                                    ' comment-box__button-toolbar--right' +
+                                    ' comment-box__button-toolbar--small'
+                                }
+                            >
+                                <button
+                                    onClick={(event) => {
+                                        this.cancelEditing(event);
+                                    }}
+                                    className="btn btn--icon-only btn--hollow"
+                                >
+                                    <i className="icon-close-small" />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        this.props.updateComment(this.state.editModeValue);
+                                        this.cancelEditing();
+                                    }}
+                                    className="btn btn--primary btn--icon-only"
+                                >
+                                    <i className="icon-ok" />
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <TextWithMentions message={this.props.data.msg} />
+                    )}
                 </FluidRow>
 
-                {
-                    this.props.scrollableContent == null ? null : (
-                        <FluidRow className="editor-popup__secondary-content" scrollable={true}>
-                            {this.props.scrollableContent}
-                        </FluidRow>
-                    )
-                }
+                {this.props.scrollableContent == null ? null : (
+                    <FluidRow className="editor-popup__secondary-content" scrollable={true}>
+                        {this.props.scrollableContent}
+                    </FluidRow>
+                )}
 
-                {
-                    this.props.stickyFooter == null ? null : (
-                        <FluidRow scrollable={false}>
-                            <div className="editor-popup__secondary-content">
-                                <div className="editor-popup__content-block">
-                                    {this.props.stickyFooter}
-                                </div>
-                            </div>
-                        </FluidRow>
-                    )
-                }
+                {this.props.stickyFooter == null ? null : (
+                    <FluidRow scrollable={false}>
+                        <div className="editor-popup__secondary-content">
+                            <div className="editor-popup__content-block">{this.props.stickyFooter}</div>
+                        </div>
+                    </FluidRow>
+                )}
             </FluidRows>
         );
     }

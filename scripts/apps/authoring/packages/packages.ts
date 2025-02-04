@@ -20,13 +20,12 @@ function PackagesCtrl($scope, superdesk, api, search) {
         var criteria = query.getCriteria(true);
 
         criteria.repo = 'archive,published';
-        api.query('search', criteria)
-            .then((result) => {
-                $scope.contentItems = _.uniqBy(result._items, '_id');
-            });
+        api.query('search', criteria).then((result) => {
+            $scope.contentItems = _.uniqBy(result._items, '_id');
+        });
     }
 
-    $scope.openPackage = function(packageItem) {
+    $scope.openPackage = function (packageItem) {
         if (packageItem._type === 'published') {
             openArticle(packageItem._id, 'view');
         } else {
@@ -39,10 +38,12 @@ function PackagesCtrl($scope, superdesk, api, search) {
     }
 }
 
-export default angular.module('superdesk.apps.authoring.packages', ['superdesk.apps.authoring.widgets'])
-    .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
-        authoringWidgetsProvider
-            .widget('packages', {
+export default angular
+    .module('superdesk.apps.authoring.packages', ['superdesk.apps.authoring.widgets'])
+    .config([
+        'authoringWidgetsProvider',
+        function (authoringWidgetsProvider) {
+            authoringWidgetsProvider.widget('packages', {
                 icon: 'package',
                 label: gettext('Packages'),
                 template: 'scripts/apps/authoring/packages/views/packages-widget.html',
@@ -58,5 +59,6 @@ export default angular.module('superdesk.apps.authoring.packages', ['superdesk.a
                     personal: false,
                 },
             });
-    }])
+        },
+    ])
     .controller('PackagesWidgetCtrl', PackagesCtrl);

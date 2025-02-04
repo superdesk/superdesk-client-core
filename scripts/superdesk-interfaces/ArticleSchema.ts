@@ -1,4 +1,3 @@
-
 export interface IArticleSchema {
     [field: string]: {
         type: string;

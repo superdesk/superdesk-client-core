@@ -16,9 +16,7 @@ export const NestedItem: React.StatelessComponent<any> = ({collapsed, expanded, 
         )}
     >
         {parentItem}
-        <div className="sd-list-item-nested__childs sd-shadow--z1">
-            {nestedChildren}
-        </div>
+        <div className="sd-list-item-nested__childs sd-shadow--z1">{nestedChildren}</div>
     </div>
 );
 

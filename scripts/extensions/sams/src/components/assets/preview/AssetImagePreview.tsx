@@ -12,15 +12,13 @@ export class AssetImagePreview extends React.PureComponent<IAssetContentPreviewP
         return (
             <AssetImageRendition
                 asset={this.props.asset}
-                rendition={config.media?.renditions?.sams?.viewImage ?? {
-                    width: 640,
-                    height: 640,
-                }}
-                container={(_loading, children) => (
-                    <div className="side-panel__content-block--image">
-                        {children}
-                    </div>
-                )}
+                rendition={
+                    config.media?.renditions?.sams?.viewImage ?? {
+                        width: 640,
+                        height: 640,
+                    }
+                }
+                container={(_loading, children) => <div className="side-panel__content-block--image">{children}</div>}
             />
         );
     }

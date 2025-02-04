@@ -7,13 +7,10 @@ interface IProps {
 
 export class ListItemBorder extends React.PureComponent<IProps> {
     render() {
-        const classes = classNames(
-            'sd-list-item__border',
-            {[`sd-list-item__border--${this.props.state}`]: this.props.state != null},
-        );
+        const classes = classNames('sd-list-item__border', {
+            [`sd-list-item__border--${this.props.state}`]: this.props.state != null,
+        });
 
-        return (
-            <div className={classes} />
-        );
+        return <div className={classes} />;
     }
 }

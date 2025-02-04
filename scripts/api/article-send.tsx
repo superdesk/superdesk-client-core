@@ -19,10 +19,10 @@ import {UnorderedList} from 'core/ui/components/UnorderedList';
 
 function getPublishedPackageItems(_package: IArticle): Promise<Array<IArticle>> {
     const query: ISuperdeskQuery = {
-        filter: {$and: [{'guid': {$in: sdApi.article.getPackageItemIds(_package)}}]},
+        filter: {$and: [{guid: {$in: sdApi.article.getPackageItemIds(_package)}}]},
         page: 0,
         max_results: 200,
-        sort: [{'versioncreated': 'asc'}],
+        sort: [{versioncreated: 'asc'}],
     };
 
     return httpRequestJsonLocal<IRestApiResponse<IArticle>>({
@@ -35,10 +35,7 @@ function getPublishedPackageItems(_package: IArticle): Promise<Array<IArticle>> 
     }).then((res) => res._items);
 }
 
-function applyMiddlewares(
-    items: Array<IArticle>,
-    destination: ISendToDestination,
-): Promise<void> {
+function applyMiddlewares(items: Array<IArticle>, destination: ISendToDestination): Promise<void> {
     const selectedDeskObj: IDesk | null = (() => {
         if (destination.type === 'desk') {
             return sdApi.desks.getAllDesks().find((desk) => desk._id === destination.desk);
@@ -51,14 +48,11 @@ function applyMiddlewares(
         .map((ext) => ext?.activationResult?.contributions?.entities?.article?.onSendBefore)
         .filter(notNullOrUndefined);
 
-    return middlewares.reduce(
-        (current, next) => {
-            return current.then(() => {
-                return next(items, selectedDeskObj);
-            });
-        },
-        Promise.resolve(),
-    );
+    return middlewares.reduce((current, next) => {
+        return current.then(() => {
+            return next(items, selectedDeskObj);
+        });
+    }, Promise.resolve());
 }
 
 function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
@@ -70,10 +64,12 @@ function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
 
     return new Promise((resolve, reject) => {
         Promise.all(
-            packages.map((_package) => getPublishedPackageItems(_package).then((publishedPackageItems) => ({
-                _package,
-                publishedPackageItems,
-            }))),
+            packages.map((_package) =>
+                getPublishedPackageItems(_package).then((publishedPackageItems) => ({
+                    _package,
+                    publishedPackageItems,
+                })),
+            ),
         ).then((res) => {
             const withPublishedItems = res.filter(({publishedPackageItems}) => publishedPackageItems.length > 0);
 
@@ -101,64 +97,56 @@ function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
 
                     return (
                         <ModalSimple title={gettext('Warning')} closeModal={closeModal} footerButtons={actions}>
-                            {
-                                (() => {
-                                    if (withPublishedItems.length === 1) {
-                                        const _package = withPublishedItems[0]._package;
+                            {(() => {
+                                if (withPublishedItems.length === 1) {
+                                    const _package = withPublishedItems[0]._package;
 
-                                        return (
-                                            <div>
-                                                <h3>
+                                    return (
+                                        <div>
+                                            <h3>
+                                                {gettext(
+                                                    'The package "{{name}}" contains the following ' +
+                                                        'published items that can not be sent:',
                                                     {
-                                                        gettext(
-                                                            'The package "{{name}}" contains the following '
-                                                            + 'published items that can not be sent:',
-                                                            {
-                                                                name: getArticleLabel(_package),
-                                                            },
-                                                        )
-                                                    }
-                                                </h3>
+                                                        name: getArticleLabel(_package),
+                                                    },
+                                                )}
+                                            </h3>
 
-                                                <UnorderedList
-                                                    items={withPublishedItems[0].publishedPackageItems.map(
-                                                        (item) => getArticleLabel(item),
-                                                    )}
-                                                />
-                                            </div>
-                                        );
-                                    } else {
-                                        return (
-                                            <div>
-                                                <h3>
-                                                    {
-                                                        gettext(
-                                                            'Some packages contain the following '
-                                                            + 'published items that can not be sent:',
-                                                        )
-                                                    }
-                                                </h3>
+                                            <UnorderedList
+                                                items={withPublishedItems[0].publishedPackageItems.map((item) =>
+                                                    getArticleLabel(item),
+                                                )}
+                                            />
+                                        </div>
+                                    );
+                                } else {
+                                    return (
+                                        <div>
+                                            <h3>
+                                                {gettext(
+                                                    'Some packages contain the following ' +
+                                                        'published items that can not be sent:',
+                                                )}
+                                            </h3>
 
-                                                <br />
+                                            <br />
 
-                                                {
-                                                    withPublishedItems.map(({_package, publishedPackageItems}) => (
-                                                        <div key={_package._id}>
-                                                            <h3>{getArticleLabel(_package)}</h3>
+                                            {withPublishedItems.map(({_package, publishedPackageItems}) => (
+                                                <div key={_package._id}>
+                                                    <h3>{getArticleLabel(_package)}</h3>
 
-                                                            <UnorderedList
-                                                                items={publishedPackageItems.map(
-                                                                    (item) => getArticleLabel(item),
-                                                                )}
-                                                            />
-                                                        </div>
-                                                    ))
-                                                }
-                                            </div>
-                                        );
-                                    }
-                                })()
-                            }
+                                                    <UnorderedList
+                                                        items={publishedPackageItems.map((item) =>
+                                                            getArticleLabel(item),
+                                                        )}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    );
+                                }
+                            })()}
                         </ModalSimple>
                     );
                 });
@@ -178,7 +166,7 @@ export function sendItems(
     publishingDateOptions?: IPublishingDateOptions,
 ): Promise<Array<Partial<IArticle>>> {
     return applyMiddlewares(items, selectedDestination)
-        .then(() => sendPackageItems ? confirmSendingPackages(items) : Promise.resolve())
+        .then(() => (sendPackageItems ? confirmSendingPackages(items) : Promise.resolve()))
         .then(() => {
             return Promise.all(
                 items.map((item) => {
@@ -234,25 +222,28 @@ export function sendItems(
                             method: 'POST',
                             path: `/archive/${item._id}/move`,
                             payload: payload,
-                        }).then((patch2: Partial<IArticle>) => {
-                            const patchFinal = {
-                                ...patch1,
-                                ...patch2,
-                            };
+                        })
+                            .then((patch2: Partial<IArticle>) => {
+                                const patchFinal = {
+                                    ...patch1,
+                                    ...patch2,
+                                };
 
-                            // TODO: fix server response to contain correct links or none at all
-                            delete patchFinal['_links'];
+                                // TODO: fix server response to contain correct links or none at all
+                                delete patchFinal['_links'];
 
-                            return patchFinal;
-                        }).catch((err) => {
-                            notify.error(err._message ?? gettext('Unknown error occurred'));
+                                return patchFinal;
+                            })
+                            .catch((err) => {
+                                notify.error(err._message ?? gettext('Unknown error occurred'));
 
-                            throw err;
-                        });
+                                throw err;
+                            });
                     });
                 }),
             );
-        }).then((patches: Array<Partial<IArticle>>) => {
+        })
+        .then((patches: Array<Partial<IArticle>>) => {
             sdApi.preferences.update('destination:active', selectedDestination);
             notify.success(gettext('Sent successfully'));
 

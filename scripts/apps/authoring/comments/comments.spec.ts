@@ -1,33 +1,40 @@
-
 describe('item comments', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.provider('api', function() {
-            this.api = function() { /* no-op */ };
-            this.$get = function() {
-                return {
-                    item_comments: {
-                        query: function() { /* no-op */ },
-                    },
+    beforeEach(
+        window.module(($provide) => {
+            $provide.provider('api', function () {
+                this.api = function () {
+                    /* no-op */
                 };
-            };
-        });
-    }));
+                this.$get = function () {
+                    return {
+                        item_comments: {
+                            query: function () {
+                                /* no-op */
+                            },
+                        },
+                    };
+                };
+            });
+        }),
+    );
 
     beforeEach(window.module('superdesk.apps.authoring.comments'));
 
-    it('can fetch comments for an item', (done) => inject((commentsService, api, $rootScope, $q) => {
-        spyOn(api.item_comments, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
+    it('can fetch comments for an item', (done) =>
+        inject((commentsService, api, $rootScope, $q) => {
+            spyOn(api.item_comments, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));
 
-        commentsService.fetch('test-id').then(() => {
-            expect(commentsService.comments.length).toBe(1);
+            commentsService.fetch('test-id').then(() => {
+                expect(commentsService.comments.length).toBe(1);
 
-            expect(api.item_comments.query).toHaveBeenCalledWith({
-                where: {item: 'test-id'}, embedded: {user: 1},
+                expect(api.item_comments.query).toHaveBeenCalledWith({
+                    where: {item: 'test-id'},
+                    embedded: {user: 1},
+                });
+
+                done();
             });
 
-            done();
-        });
-
-        $rootScope.$apply();
-    }));
+            $rootScope.$apply();
+        }));
 });

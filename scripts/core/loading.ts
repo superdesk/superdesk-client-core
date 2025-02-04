@@ -10,10 +10,17 @@ function waitForExtensionsToLoad(): Promise<void> {
     });
 }
 
-angular.module('superdesk.core.loading', [])
+angular
+    .module('superdesk.core.loading', [])
     // prevent routing before there is auth token
-    .run(['$rootScope', '$route', '$location', '$http', 'session', 'preferencesService',
-        function($rootScope, $route, $location, $http, session, preferencesService) {
+    .run([
+        '$rootScope',
+        '$route',
+        '$location',
+        '$http',
+        'session',
+        'preferencesService',
+        function ($rootScope, $route, $location, $http, session, preferencesService) {
             var stopListener = angular.noop;
 
             $rootScope.loading = true;
@@ -24,7 +31,6 @@ angular.module('superdesk.core.loading', [])
                 // wait for extensions so menu is only rendered after all extensions
                 // have registered their custom pages.
                 waitForExtensionsToLoad(),
-
             ]).then(() => {
                 stopListener();
                 $http.defaults.headers.common.Authorization = session.token;
@@ -43,10 +49,10 @@ angular.module('superdesk.core.loading', [])
             });
 
             /**
-         * Finds out if there is a route matching given url that requires a login
-         *
-         * @param {string} url
-         */
+             * Finds out if there is a route matching given url that requires a login
+             *
+             * @param {string} url
+             */
             function requiresLogin(url) {
                 var routes = values($route.routes);
 
@@ -57,4 +63,5 @@ angular.module('superdesk.core.loading', [])
                 }
                 return false;
             }
-        }]);
+        },
+    ]);

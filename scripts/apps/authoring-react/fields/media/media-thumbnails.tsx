@@ -35,23 +35,15 @@ const SortableItem = SortableElement(
                     >
                         {(() => {
                             if (item.type === 'picture') {
-                                return (
-                                    <img src={item.renditions.thumbnail.href} draggable={false} />
-                                );
+                                return <img src={item.renditions.thumbnail.href} draggable={false} />;
                             } else if (item.type === 'video') {
                                 if (item.renditions?.thumbnail != null) {
-                                    return (
-                                        <img src={item.renditions.thumbnail.href} draggable={false} />
-                                    );
+                                    return <img src={item.renditions.thumbnail.href} draggable={false} />;
                                 } else {
-                                    return (
-                                        <i className="icon--2x icon-video" />
-                                    );
+                                    return <i className="icon--2x icon-video" />;
                                 }
                             } else if (item.type === 'audio') {
-                                return (
-                                    <i className="icon--2x icon-audio" />
-                                );
+                                return <i className="icon--2x icon-audio" />;
                             }
                         })()}
                     </button>
@@ -68,11 +60,9 @@ const SortableList = SortableContainer(
 
             return (
                 <div className="sd-media-carousel__thumb-strip" style={{margin: 0}}>
-                    {
-                        mediaItems.map((item, i) => (
-                            <SortableItem key={item._id} index={i} item={item} onSelect={onSelect} />
-                        ))
-                    }
+                    {mediaItems.map((item, i) => (
+                        <SortableItem key={item._id} index={i} item={item} onSelect={onSelect} />
+                    ))}
                 </div>
             );
         }

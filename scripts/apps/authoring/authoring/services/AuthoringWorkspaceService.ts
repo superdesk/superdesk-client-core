@@ -88,10 +88,9 @@ export class AuthoringWorkspaceService {
 
     isWidgetVisible(widget) {
         return new Promise((resolve) => {
-            Promise.all(this.widgetVisibilityCheckerFuntions.map((fn) => fn(widget)))
-                .then((res) => {
-                    resolve(res.every((i) => i === true));
-                });
+            Promise.all(this.widgetVisibilityCheckerFuntions.map((fn) => fn(widget))).then((res) => {
+                resolve(res.every((i) => i === true));
+            });
         });
     }
 
@@ -99,7 +98,7 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
+        item: {_id: IArticle['_id']; _type?: IArticle['_type']; state?: IArticle['state']},
         action?: IAuthoringActionType,
     ) {
         return sdApi.article.edit(item, action);
@@ -132,8 +131,8 @@ export class AuthoringWorkspaceService {
 
         // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
         if (
-            item._type === 'externalsource'
-            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+            item._type === 'externalsource' &&
+            !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
         ) {
             return;
         }
@@ -258,10 +257,7 @@ export class AuthoringWorkspaceService {
         const proto = this.$location.protocol();
         const baseURL = `${proto}://${host}${port !== 80 ? ':' + port : ''}`;
 
-        this.$window.open(
-            `${baseURL}/#/workspace/monitoring?item=${id}&action=${action}&popup`,
-            id,
-        );
+        this.$window.open(`${baseURL}/#/workspace/monitoring?item=${id}&action=${action}&popup`, id);
     }
 
     /**
@@ -286,10 +282,10 @@ export class AuthoringWorkspaceService {
         let evnt = this.superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
         if (
-            this.superdeskFlags.flags.previewing
-            && this.search.singleLine
-            && appConfig.list != null
-            && appConfig.list.narrowView
+            this.superdeskFlags.flags.previewing &&
+            this.search.singleLine &&
+            appConfig.list != null &&
+            appConfig.list.narrowView
         ) {
             this.$rootScope.$broadcast(evnt);
         }
@@ -308,15 +304,14 @@ export class AuthoringWorkspaceService {
      * Fetch item by id and start editing it
      */
     private authoringOpen(itemId, action: IAuthoringActionType, repo?, state?) {
-        return this.authoring.open(itemId, action === 'view', repo, action, state)
-            .then((item: IArticle) => {
-                this.item = item;
-                this.action = action !== 'view' && item._editable ? action : 'view';
+        return this.authoring.open(itemId, action === 'view', repo, action, state).then((item: IArticle) => {
+            this.item = item;
+            this.action = action !== 'view' && item._editable ? action : 'view';
 
-                this.saveState();
-                // closes preview if already opened
-                this.$rootScope.$broadcast('broadcast:preview', {item: null});
-            });
+            this.saveState();
+            // closes preview if already opened
+            this.$rootScope.$broadcast('broadcast:preview', {item: null});
+        });
     }
 }
 

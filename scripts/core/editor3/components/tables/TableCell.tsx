@@ -96,23 +96,22 @@ export class TableCell extends React.Component<IProps, IState> {
         let newState;
 
         switch (command) {
-        case 'parent-undo':
-            this.props.onUndo();
-            return 'handled';
+            case 'parent-undo':
+                this.props.onUndo();
+                return 'handled';
 
-        case 'parent-redo':
-            this.props.onRedo();
-            return 'handled';
+            case 'parent-redo':
+                this.props.onRedo();
+                return 'handled';
 
-        case 'toggle-link':
-            newState = getSelectedEntityType(this.state.editorState) === 'LINK'
-                ? this.removeLink()
-                : this.addLink();
-            break;
+            case 'toggle-link':
+                newState =
+                    getSelectedEntityType(this.state.editorState) === 'LINK' ? this.removeLink() : this.addLink();
+                break;
 
-        default:
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
+            default:
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
         }
 
         if (newState) {
@@ -141,11 +140,7 @@ export class TableCell extends React.Component<IProps, IState> {
         const url = prompt('Enter a URL');
         const contentState = editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', {url});
 
-        return RichUtils.toggleLink(
-            editorState,
-            editorState.getSelection(),
-            contentState.getLastCreatedEntityKey(),
-        );
+        return RichUtils.toggleLink(editorState, editorState.getSelection(), contentState.getLastCreatedEntityKey());
     }
 
     /**
@@ -157,17 +152,15 @@ export class TableCell extends React.Component<IProps, IState> {
         const {editorState} = this.state;
         let stateAfterChange = editorState;
 
-        getSelectedEntityRange(editorState,
-            (start, end) => {
-                const selection = editorState.getSelection();
-                const entitySelection = selection.merge({
-                    anchorOffset: start,
-                    focusOffset: end,
-                });
+        getSelectedEntityRange(editorState, (start, end) => {
+            const selection = editorState.getSelection();
+            const entitySelection = selection.merge({
+                anchorOffset: start,
+                focusOffset: end,
+            });
 
-                stateAfterChange = RichUtils.toggleLink(editorState, entitySelection as SelectionState, null);
-            },
-        );
+            stateAfterChange = RichUtils.toggleLink(editorState, entitySelection as SelectionState, null);
+        });
 
         return stateAfterChange;
     }
@@ -181,14 +174,11 @@ export class TableCell extends React.Component<IProps, IState> {
     onChange(editorState: EditorState) {
         const selection = editorState.getSelection();
 
-        this.setState(
-            {editorState},
-            () => {
-                if (selection.getHasFocus()) {
-                    this.props.onChange(editorState);
-                }
-            },
-        );
+        this.setState({editorState}, () => {
+            if (selection.getHasFocus()) {
+                this.props.onChange(editorState);
+            }
+        });
     }
 
     onFocus(event) {
@@ -208,34 +198,24 @@ export class TableCell extends React.Component<IProps, IState> {
         const {spellchecking} = this.props;
         const spellchecker = getSpellchecker(spellchecking.language);
 
-        (
-            spellchecker == null ?
-                Promise.resolve({}) // if spellchecker is no longer available, clear marked ranges
-                : getSpellcheckWarningsByBlock(
-                    spellchecker,
-                    editorState,
-                    this.spellcheckAbortController.signal,
-                )
+        (spellchecker == null
+            ? Promise.resolve({}) // if spellchecker is no longer available, clear marked ranges
+            : getSpellcheckWarningsByBlock(spellchecker, editorState, this.spellcheckAbortController.signal)
         ).then((spellcheckWarningsByBlock) => {
-            const nextEditorState = EditorState.set(
-                editorState,
-                {
-                    decorator: getDecorators(
-                        {
-                            spellchecker: {
-                                acceptSuggestion: (replaceWordData) => {
-                                    const nextState = replaceWordInEditorState(editorState, replaceWordData);
+            const nextEditorState = EditorState.set(editorState, {
+                decorator: getDecorators({
+                    spellchecker: {
+                        acceptSuggestion: (replaceWordData) => {
+                            const nextState = replaceWordInEditorState(editorState, replaceWordData);
 
-                                    this.onChange(nextState);
-                                },
-                                enabled: spellchecking.enabled,
-                                language: spellchecking.language,
-                                warnings: spellcheckWarningsByBlock,
-                            },
+                            this.onChange(nextState);
                         },
-                    ).decorator,
-                },
-            );
+                        enabled: spellchecking.enabled,
+                        language: spellchecking.language,
+                        warnings: spellcheckWarningsByBlock,
+                    },
+                }).decorator,
+            });
 
             this.onChange(nextEditorState);
         });
@@ -245,9 +225,7 @@ export class TableCell extends React.Component<IProps, IState> {
         // it needs to run unconditionally on mount to apply decorators even if spellchecking is off
         this.spellcheck();
 
-        this.eventListeners.push(
-            addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
-        );
+        this.eventListeners.push(addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck));
     }
 
     componentWillUnmount(): void {
@@ -263,20 +241,17 @@ export class TableCell extends React.Component<IProps, IState> {
         );
 
         if (contentChanged) {
-            this.setState(
-                {editorState: nextProps.editorState},
-                () => {
-                    this.scheduleSpellchecking();
-                },
-            );
+            this.setState({editorState: nextProps.editorState}, () => {
+                this.scheduleSpellchecking();
+            });
         }
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState): void {
         const contentChanged = this.state.editorState.getCurrentContent() !== prevState.editorState.getCurrentContent();
         const spellcheckerConfigChanged =
-            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
-            || this.props.spellchecking.language !== prevProps.spellchecking.language;
+            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled ||
+            this.props.spellchecking.language !== prevProps.spellchecking.language;
 
         if (contentChanged || spellcheckerConfigChanged) {
             this.scheduleSpellchecking();

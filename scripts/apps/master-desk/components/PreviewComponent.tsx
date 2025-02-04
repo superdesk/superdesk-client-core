@@ -18,19 +18,14 @@ export class PreviewComponent extends React.Component<IProps, {}> {
                                 </button>
                             </div>
                             <div className="side-panel__tools">
-                                <a
-                                    className="icn-btn"
-                                    onClick={() => this.props.onClose()}
-                                >
+                                <a className="icn-btn" onClick={() => this.props.onClose()}>
                                     <i className="icon-close-small" />
                                 </a>
                             </div>
                         </div>
 
                         <div className="side-panel__content">
-                            <div className="side-panel__content-block">
-                                {this.props.children}
-                            </div>
+                            <div className="side-panel__content-block">{this.props.children}</div>
                         </div>
                     </div>
                 </div>

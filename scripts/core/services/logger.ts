@@ -58,5 +58,4 @@ class Logger {
 
 export const logger = new Logger();
 
-export default angular.module('superdesk.core.services.logger', [])
-    .service('logger', [Logger]);
+export default angular.module('superdesk.core.services.logger', []).service('logger', [Logger]);

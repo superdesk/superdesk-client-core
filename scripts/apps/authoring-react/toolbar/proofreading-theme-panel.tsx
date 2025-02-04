@@ -64,28 +64,20 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                     <Spacer v gap="16">
                         <h2 className="proofreading-panel__heading">
                             <Spacer justifyContent="start" alignItems="center" gap="4" noGrow>
-                                {
-                                    (() => {
-                                        let badgeClasses: string = 'proofreading-panel__badge';
+                                {(() => {
+                                    let badgeClasses: string = 'proofreading-panel__badge';
 
-                                        if (this.props.badgeColor === 'green') {
-                                            badgeClasses += ' proofreading-panel__badge--green';
-                                        } else if (this.props.badgeColor === 'grey') {
-                                            badgeClasses += ' proofreading-panel__badge--grey';
-                                        } else {
-                                            assertNever(this.props.badgeColor);
-                                        }
+                                    if (this.props.badgeColor === 'green') {
+                                        badgeClasses += ' proofreading-panel__badge--green';
+                                    } else if (this.props.badgeColor === 'grey') {
+                                        badgeClasses += ' proofreading-panel__badge--grey';
+                                    } else {
+                                        assertNever(this.props.badgeColor);
+                                    }
 
-                                        return (
-                                            <span className={badgeClasses}>
-                                                &nbsp;
-                                            </span>
-                                        );
-                                    })()
-                                }
-                                <span>
-                                    {this.props.title}
-                                </span>
+                                    return <span className={badgeClasses}>&nbsp;</span>;
+                                })()}
+                                <span>{this.props.title}</span>
                             </Spacer>
                         </h2>
 
@@ -101,7 +93,11 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                 }}
                             >
                                 {availableFonts.map((option, index) => {
-                                    return <Option key={index} value={option.fontFamily}>{option.label}</Option>;
+                                    return (
+                                        <Option key={index} value={option.fontFamily}>
+                                            {option.label}
+                                        </Option>
+                                    );
                                 })}
                             </Select>
                         </div>
@@ -130,9 +126,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                 >
                     <Spacer v gap="16">
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">
-                                {gettext('Headline')}
-                            </label>
+                            <label className="proofreading-panel-content__label">{gettext('Headline')}</label>
 
                             <div
                                 className={headlineClasses}
@@ -160,9 +154,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         </div>
 
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">
-                                {gettext('Abstract')}
-                            </label>
+                            <label className="proofreading-panel-content__label">{gettext('Abstract')}</label>
 
                             <div
                                 className={abstractClasses}
@@ -171,9 +163,8 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                     fontSize: getUiThemeFontSize(this.props.theme.abstract),
                                 }}
                             >
-                                Vestibulum ante ipsum primis in faucibus orci luctus et
-                                ultrices posuere cubilia Curae; Fusce id purus.
-                                Phasellus ullamcorper…
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                                Fusce id purus. Phasellus ullamcorper…
                             </div>
 
                             <div className="proofreading-panel-content__radio-button">
@@ -192,9 +183,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         </div>
 
                         <div className="proofreading-panel-content__block">
-                            <label className="proofreading-panel-content__label">
-                                {gettext('Body')}
-                            </label>
+                            <label className="proofreading-panel-content__label">{gettext('Body')}</label>
 
                             <div
                                 className={bodyClasses}
@@ -203,9 +192,8 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                     fontSize: getUiThemeFontSize(this.props.theme.body),
                                 }}
                             >
-                                Vestibulum ante ipsum primis in faucibus orci luctus et
-                                ultrices posuere cubilia Curae; Fusce id purus.
-                                Phasellus ullamcorper…
+                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                                Fusce id purus. Phasellus ullamcorper…
                             </div>
 
                             <div className="proofreading-panel-content__radio-button">

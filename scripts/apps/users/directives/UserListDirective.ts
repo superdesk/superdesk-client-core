@@ -11,16 +11,16 @@ export function UserListDirective(keyboardManager, usersService, asset, session)
             selected: '=',
             done: '=',
         },
-        link: function(scope, elem, attrs) {
-            scope.active = function(user) {
+        link: function (scope, elem, attrs) {
+            scope.active = function (user) {
                 return usersService.isActive(user);
             };
 
-            scope.pending = function(user) {
+            scope.pending = function (user) {
                 return usersService.isPending(user);
             };
 
-            scope.select = function(user) {
+            scope.select = function (user) {
                 scope.selected = user;
                 bindKeys();
             };
@@ -31,7 +31,7 @@ export function UserListDirective(keyboardManager, usersService, asset, session)
                 }
             });
 
-            scope.isLoggedIn = function(user) {
+            scope.isLoggedIn = function (user) {
                 return usersService.isLoggedIn(user);
             };
 

@@ -32,7 +32,7 @@ interface IProps<T> {
      * label "save" doesn't work when data source is an array. The array
      * may be a part of a parent component that has it's own saving mechanism.
      */
-     labelForSaveButton: string;
+    labelForSaveButton: string;
 }
 
 interface IIssues {
@@ -78,11 +78,14 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
     }
 
     enableEditMode() {
-        this.setState({
-            nextItem: this.props.item,
-        }, () => {
-            this.props.onEditModeChange(true);
-        });
+        this.setState(
+            {
+                nextItem: this.props.item,
+            },
+            () => {
+                this.props.onEditModeChange(true);
+            },
+        );
     }
 
     handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
@@ -97,21 +100,22 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
     }
 
     handleCancel() {
-        const cancelFn = typeof this.props.onCancel === 'function'
-            ? this.props.onCancel
-            : () => {
-                this.setState(getInitialState(this.props), () => {
-                    this.props.onEditModeChange(false);
-                });
-            };
+        const cancelFn =
+            typeof this.props.onCancel === 'function'
+                ? this.props.onCancel
+                : () => {
+                      this.setState(getInitialState(this.props), () => {
+                          this.props.onEditModeChange(false);
+                      });
+                  };
 
-        (
-            this.isFormDirty() === false
-                ? Promise.resolve()
-                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
-        ).then(cancelFn)
+        (this.isFormDirty() === false
+            ? Promise.resolve()
+            : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+        )
+            .then(cancelFn)
             .catch(() => {
-            // do nothing
+                // do nothing
             });
     }
 
@@ -122,7 +126,10 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
-        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id').concat(this.props.hiddenFields);
+        const currentFieldsIds = currentFields
+            .map(({field}) => field)
+            .concat('_id')
+            .concat(this.props.hiddenFields);
 
         /*
             Form config is dynamic and can change during editing.
@@ -161,15 +168,20 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             return;
         }
 
-        this.props.onSave(nextItemCleaned).then(() => {
-            if (this._mounted) {
-                this.setState({
-                    issues: {},
-                }, () => {
-                    this.props.onEditModeChange(false);
-                });
-            }
-        })
+        this.props
+            .onSave(nextItemCleaned)
+            .then(() => {
+                if (this._mounted) {
+                    this.setState(
+                        {
+                            issues: {},
+                        },
+                        () => {
+                            this.props.onEditModeChange(false);
+                        },
+                    );
+                }
+            })
             .catch((res) => {
                 if (isHttpApiError(res)) {
                     let issues: IIssues = {};
@@ -182,17 +194,11 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                         } else {
                             for (let key in res._issues[fieldName]) {
                                 if (key === 'required') {
-                                    issuesForField.push(
-                                        gettext('Field is required'),
-                                    );
+                                    issuesForField.push(gettext('Field is required'));
                                 } else if (key === 'unique') {
-                                    issuesForField.push(
-                                        gettext('Value must be unique'),
-                                    );
+                                    issuesForField.push(gettext('Value must be unique'));
                                 } else {
-                                    issuesForField.push(
-                                        gettext('Uknown validation error'),
-                                    );
+                                    issuesForField.push(gettext('Uknown validation error'));
                                 }
                             }
                         }
@@ -216,47 +222,41 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
                 <SidePanelHeader>
                     <SidePanelHeading>{gettext('Details')}</SidePanelHeading>
-                    {
-                        this.props.editMode
-                            ? (
-                                <div
-                                    className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
-                                    data-test-id="toolbar"
-                                >
-                                    <button
-                                        className="btn"
-                                        onClick={this.handleCancel}
-                                        data-test-id="item-view-edit--cancel-save"
-                                    >
-                                        {gettext('Cancel')}
+                    {this.props.editMode ? (
+                        <div
+                            className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
+                            data-test-id="toolbar"
+                        >
+                            <button
+                                className="btn"
+                                onClick={this.handleCancel}
+                                data-test-id="item-view-edit--cancel-save"
+                            >
+                                {gettext('Cancel')}
+                            </button>
+                            <button
+                                disabled={!this.isFormDirty()}
+                                onClick={this.handleSave}
+                                className="btn btn--primary"
+                                data-test-id="item-view-edit--save"
+                            >
+                                {this.props.labelForSaveButton}
+                            </button>
+                        </div>
+                    ) : (
+                        <SidePanelTools>
+                            <div>
+                                {this.props.operation === 'editing' ? (
+                                    <button onClick={this.enableEditMode} className="icn-btn">
+                                        <i className="icon-pencil" />
                                     </button>
-                                    <button
-                                        disabled={!this.isFormDirty()}
-                                        onClick={this.handleSave}
-                                        className="btn btn--primary"
-                                        data-test-id="item-view-edit--save"
-                                    >
-                                        {this.props.labelForSaveButton}
-                                    </button>
-                                </div>
-                            )
-                            : (
-                                <SidePanelTools>
-                                    <div>
-                                        {
-                                            this.props.operation === 'editing' ? (
-                                                <button onClick={this.enableEditMode} className="icn-btn">
-                                                    <i className="icon-pencil" />
-                                                </button>
-                                            ) : null
-                                        }
-                                        <button className="icn-btn" onClick={this.props.onClose}>
-                                            <i className="icon-close-small" />
-                                        </button>
-                                    </div>
-                                </SidePanelTools>
-                            )
-                    }
+                                ) : null}
+                                <button className="icn-btn" onClick={this.props.onClose}>
+                                    <i className="icon-close-small" />
+                                </button>
+                            </div>
+                        </SidePanelTools>
+                    )}
                 </SidePanelHeader>
                 <SidePanelContent>
                     <SidePanelContentBlock>

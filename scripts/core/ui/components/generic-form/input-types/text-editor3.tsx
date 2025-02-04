@@ -19,15 +19,10 @@ export class TextEditor3 extends React.PureComponent<IProps> {
 
         return (
             <div
-                className={
-                    classNames(
-                        'sd-line-input',
-                        {
-                            'sd-line-input--invalid': this.props.issues.length > 0,
-                            'sd-line-input--required': this.props.formField.required === true,
-                        },
-                    )
-                }
+                className={classNames('sd-line-input', {
+                    'sd-line-input--invalid': this.props.issues.length > 0,
+                    'sd-line-input--required': this.props.formField.required === true,
+                })}
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <Editor3Html
@@ -37,11 +32,11 @@ export class TextEditor3 extends React.PureComponent<IProps> {
                     editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
                     readOnly={this.props.disabled}
                 />
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
+                {this.props.issues.map((str, i) => (
+                    <div key={i} className="sd-line-input__message">
+                        {str}
+                    </div>
+                ))}
             </div>
         );
     }

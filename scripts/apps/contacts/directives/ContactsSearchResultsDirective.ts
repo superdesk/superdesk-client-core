@@ -28,12 +28,15 @@ class LinkFunction {
         this.scope.fetchNext = this.fetchNext.bind(this);
         this.scope.refreshList = this.refreshList.bind(this);
 
-        this.scope.$watch(() => _.omit(this.$location.search(), '_id'),
+        this.scope.$watch(
+            () => _.omit(this.$location.search(), '_id'),
             (newValue, oldValue) => {
                 if (newValue !== oldValue && this.$location.path() === '/contacts') {
                     this.scope.refreshList({force: true});
                 }
-            }, true);
+            },
+            true,
+        );
 
         angular.forEach(['refresh:list'], (evt) => {
             this.scope.$on(evt, (event) => {
@@ -53,9 +56,13 @@ class LinkFunction {
      * @description Refresh the search results
      */
     refreshList(data) {
-        this.$timeout(() => {
-            this.queryItems(null, data);
-        }, 800, false);
+        this.$timeout(
+            () => {
+                this.queryItems(null, data);
+            },
+            800,
+            false,
+        );
     }
 
     /**
@@ -72,13 +79,18 @@ class LinkFunction {
             this.criteria.max_results = this.scope.items._items.length;
         }
 
-        return this.contacts.query(this.criteria).then((items) => {
-            this.scope.$applyAsync(() => {
-                this.render(items, null, data && data.force);
-            });
-        }, (error) => {
-            this.notify.error(gettext('Failed to run the query!'));
-        })
+        return this.contacts
+            .query(this.criteria)
+            .then(
+                (items) => {
+                    this.scope.$applyAsync(() => {
+                        this.render(items, null, data && data.force);
+                    });
+                },
+                (error) => {
+                    this.notify.error(gettext('Failed to run the query!'));
+                },
+            )
             .finally(() => {
                 this.scope.loading = false;
 
@@ -123,7 +135,8 @@ class LinkFunction {
             this.scope.loading = true;
             this.criteria.page = (this.criteria.page || 0) + 1;
 
-            this.contacts.query(this.criteria)
+            this.contacts
+                .query(this.criteria)
                 .then(setScopeItems)
                 .finally(() => {
                     this.scope.loading = false;

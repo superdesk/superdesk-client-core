@@ -15,10 +15,7 @@ const UserPopup = ({mentionName, user}: IProps) => {
             referenceElement,
             'left-end',
             ({closePopup}) => (
-                <div
-                    className="user-popup"
-                    style={{display: 'block'}}
-                >
+                <div className="user-popup" style={{display: 'block'}}>
                     <div style={{paddingBlockEnd: '20px', display: 'flex', justifyContent: 'center'}}>
                         <UserAvatar user={user} size="large" />
                     </div>

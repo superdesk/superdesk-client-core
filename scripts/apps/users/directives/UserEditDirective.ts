@@ -6,12 +6,48 @@ import {generate} from 'json-merge-patch';
 import {noop} from 'lodash';
 import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
 
-UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
-    'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal', '$q'];
-export function UserEditDirective(api, notify, usersService, userList, session, _,
-    langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, metadata, modal, $q) {
+UserEditDirective.$inject = [
+    'api',
+    'notify',
+    'usersService',
+    'userList',
+    'session',
+    'lodash',
+    'langmap',
+    '$location',
+    '$route',
+    'superdesk',
+    'features',
+    'asset',
+    'privileges',
+    'desks',
+    'keyboardManager',
+    'gettextCatalog',
+    'metadata',
+    'modal',
+    '$q',
+];
+export function UserEditDirective(
+    api,
+    notify,
+    usersService,
+    userList,
+    session,
+    _,
+    langmap,
+    $location,
+    $route,
+    superdesk,
+    features,
+    asset,
+    privileges,
+    desks,
+    keyboardManager,
+    gettextCatalog,
+    metadata,
+    modal,
+    $q,
+) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -20,7 +56,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             oncancel: '&',
             onupdate: '&',
         },
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             // origUser is set by parent scope when selecting users from GUI
             // but it also needs to be updated before editing so dirtiness can be computed correctly
             // according to the latest data on the server
@@ -37,8 +73,10 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
             scope.features = features;
-            scope.usernamePattern = appConfig.user?.username_pattern != null ?
-                new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;
+            scope.usernamePattern =
+                appConfig.user?.username_pattern != null
+                    ? new RegExp(appConfig.user.username_pattern)
+                    : usersService.usernamePattern;
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
@@ -62,10 +100,10 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             // user avatar component expects immutable data and won't update if object reference hasn't changed
             scope.userImmutable = {};
 
-            scope.isNetworkSubscription = () =>
-                ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
+            scope.isNetworkSubscription = () => ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
 
-            api('roles').query()
+            api('roles')
+                .query()
                 .then((result) => {
                     scope.roles = _.keyBy(result._items, '_id');
                 });
@@ -94,24 +132,24 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 });
             }
 
-            scope.cancel = function() {
+            scope.cancel = function () {
                 resetUser();
                 if (!scope.origUser.Id) {
                     scope.oncancel();
                 }
             };
-            scope.focused = function() {
+            scope.focused = function () {
                 keyboardManager.unbind('down');
                 keyboardManager.unbind('up');
             };
 
-            scope.editPicture = function() {
+            scope.editPicture = function () {
                 superdesk.intent('edit', 'avatar', scope.user).then((avatar) => {
                     scope.user.picture_url = avatar; // prevent replacing Avatar which would get into diff
                 });
             };
 
-            scope.goTo = function(id) {
+            scope.goTo = function (id) {
                 document.getElementById(id).scrollIntoView({
                     behavior: 'smooth',
                 });
@@ -119,7 +157,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 scope.activeNavigation = id;
             };
 
-            scope.checkNavigation = function(id) {
+            scope.checkNavigation = function (id) {
                 return scope.activeNavigation === id;
             };
 
@@ -137,11 +175,11 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 }
             }
 
-            scope.save = function() {
+            scope.save = function () {
                 new Promise((resolve) => {
                     if (
-                        scope.user._id !== session.identity._id // changing language for another user
-                        || scope.user.language === scope.origUser.language
+                        scope.user._id !== session.identity._id || // changing language for another user
+                        scope.user.language === scope.origUser.language
                     ) {
                         resolve(false);
                     } else {
@@ -154,62 +192,62 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                             }
                         });
                     }
-                })
-                    .then((reloadPage) => {
-                        scope.error = null;
-                        notify.info(gettext('Saving...'));
-                        return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
-                            .then((response) => {
-                                scope.origUser = response;
-                                resetUser();
-                                notify.pop();
-                                notify.success(gettext('user saved.'));
-                                scope.onsave({user: scope.origUser});
-                                metadata.fetchAuthors(self);
-                                if (scope.user._id === session.identity._id) {
-                                    session.updateIdentity(scope.origUser);
-                                }
+                }).then((reloadPage) => {
+                    scope.error = null;
+                    notify.info(gettext('Saving...'));
+                    return usersService.save(scope.origUser, generate(scope.origUser, scope.user)).then(
+                        (response) => {
+                            scope.origUser = response;
+                            resetUser();
+                            notify.pop();
+                            notify.success(gettext('user saved.'));
+                            scope.onsave({user: scope.origUser});
+                            metadata.fetchAuthors(self);
+                            if (scope.user._id === session.identity._id) {
+                                session.updateIdentity(scope.origUser);
+                            }
 
-                                userList.clearCache();
+                            userList.clearCache();
 
-                                if (reloadPage === true) {
-                                    window.location.reload();
-                                }
-                            }, (response) => {
-                                notify.pop();
-                                if (response.status === 404) {
-                                    if ($location.path() === '/users/') {
-                                        $route.reload();
-                                    } else {
-                                        $location.path('/users/');
-                                    }
-                                    notify.error(gettext('User was not found. The account might have been deleted.'));
+                            if (reloadPage === true) {
+                                window.location.reload();
+                            }
+                        },
+                        (response) => {
+                            notify.pop();
+                            if (response.status === 404) {
+                                if ($location.path() === '/users/') {
+                                    $route.reload();
                                 } else {
-                                    var errorMessage = gettext('There was an error when saving the user account. ');
+                                    $location.path('/users/');
+                                }
+                                notify.error(gettext('User was not found. The account might have been deleted.'));
+                            } else {
+                                var errorMessage = gettext('There was an error when saving the user account. ');
 
-                                    if (response.data && response.data._issues) {
-                                        if (angular.isDefined(response.data._issues['validator exception'])) {
-                                            errorMessage = gettext(
-                                                'Error: {{error}}',
-                                                {error: response.data._issues['validator exception']},
-                                            );
-                                        }
-
-                                        scope.error = response.data._issues;
-                                        scope.error.message = errorMessage;
-
-                                        for (var field in response.data._issues) {
-                                            validateField(response, field);
-                                        }
+                                if (response.data && response.data._issues) {
+                                    if (angular.isDefined(response.data._issues['validator exception'])) {
+                                        errorMessage = gettext('Error: {{error}}', {
+                                            error: response.data._issues['validator exception'],
+                                        });
                                     }
 
-                                    notify.error(errorMessage);
+                                    scope.error = response.data._issues;
+                                    scope.error.message = errorMessage;
+
+                                    for (var field in response.data._issues) {
+                                        validateField(response, field);
+                                    }
                                 }
-                            });
-                    });
+
+                                notify.error(errorMessage);
+                            }
+                        },
+                    );
+                });
             };
 
-            scope.toggleStatus = function(active) {
+            scope.toggleStatus = function (active) {
                 usersService.toggleStatus(scope.origUser, active).then(() => {
                     resetUser();
                     scope.onupdate({user: scope.origUser});
@@ -223,32 +261,32 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 scope.dirty = false;
                 scope.loading = true;
 
-                return $q.when()
+                return $q
+                    .when()
                     .then(() => {
                         const user = scope.origUser;
 
                         if (angular.isDefined(user._id)) {
-                            return userList.getUser(user._id, true)
-                                .then((u) => {
-                                    if (u.is_author === undefined) {
-                                        u.user.is_author = true;
-                                    }
+                            return userList.getUser(user._id, true).then((u) => {
+                                if (u.is_author === undefined) {
+                                    u.user.is_author = true;
+                                }
 
-                                    scope.error = null;
-                                    scope.origUser = u;
-                                    scope.user = Object.assign({}, u);
-                                    scope.confirm = {password: null};
-                                    scope.show = {password: false};
-                                    scope._active = usersService.isActive(u);
-                                    scope._pending = usersService.isPending(u);
-                                    scope.profile = scope.user._id === session.identity._id;
-                                    scope.userDesks = [];
-                                    if (angular.isDefined(u) && angular.isDefined(u._links)) {
-                                        desks.fetchUserDesks(u).then((response) => {
-                                            scope.userDesks = response;
-                                        });
-                                    }
-                                });
+                                scope.error = null;
+                                scope.origUser = u;
+                                scope.user = Object.assign({}, u);
+                                scope.confirm = {password: null};
+                                scope.show = {password: false};
+                                scope._active = usersService.isActive(u);
+                                scope._pending = usersService.isPending(u);
+                                scope.profile = scope.user._id === session.identity._id;
+                                scope.userDesks = [];
+                                if (angular.isDefined(u) && angular.isDefined(u._links)) {
+                                    desks.fetchUserDesks(u).then((response) => {
+                                        scope.userDesks = response;
+                                    });
+                                }
+                            });
                         } else {
                             scope.user = {};
 

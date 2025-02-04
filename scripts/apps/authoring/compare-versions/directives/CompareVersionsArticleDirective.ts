@@ -69,17 +69,22 @@ class LinkFunction {
         this.scope.isMediaType = isMediaType(this.scope.item);
 
         if (this.scope.compareWith && this.scope.article !== this.scope.compareWith) {
-            let compareWithItem = _.find(this.compareVersions.versions,
-                {_current_version: this.scope.compareWith.version});
+            let compareWithItem = _.find(this.compareVersions.versions, {
+                _current_version: this.scope.compareWith.version,
+            });
 
             this.scope.compareWithItem = _.create(compareWithItem);
             this.setVersionsDifference(this.scope.item, this.scope.compareWithItem);
         }
 
         if (this.scope.focus) {
-            this.$timeout(() => {
-                this.elem.children().focus();
-            }, 0, false);
+            this.$timeout(
+                () => {
+                    this.elem.children().focus();
+                },
+                0,
+                false,
+            );
         }
 
         this.scope.isLocked = this.lock.isLocked(item);
@@ -115,8 +120,12 @@ class LinkFunction {
                 });
             }
 
-            if (item.associations && item.associations.featuremedia &&
-                oldItem.associations && oldItem.associations.featuremedia) {
+            if (
+                item.associations &&
+                item.associations.featuremedia &&
+                oldItem.associations &&
+                oldItem.associations.featuremedia
+            ) {
                 item.associations.featuremedia.description_text = this.highlightDifferences(
                     item.associations.featuremedia.description_text,
                     oldItem.associations.featuremedia.description_text,
@@ -141,8 +150,7 @@ class LinkFunction {
         this.diffMatchPatch.diff_cleanupSemantic(diffs);
         diffs = this.splitByTranslationOfTags(diffs, this.reverseMap(mapWords, false));
 
-        let text = this.diffMatchPatch
-            .diff_prettyHtml(diffs);
+        let text = this.diffMatchPatch.diff_prettyHtml(diffs);
 
         text = this.replaceWords(text, this.reverseMap(mapWords, true));
         return text;

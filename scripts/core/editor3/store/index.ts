@@ -1,39 +1,18 @@
 /* eslint-disable complexity */
-import {
-    EditorState,
-    convertFromRaw,
-    ContentState,
-    RawDraftContentState,
-} from 'draft-js';
+import {EditorState, convertFromRaw, ContentState, RawDraftContentState} from 'draft-js';
 import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
-import {
-    PopupTypes,
-    setAbbreviations,
-    EditorLimit,
-} from '../actions';
-import {
-    fieldsMetaKeys,
-    getFieldMetadata,
-    FIELD_KEY_SEPARATOR,
-} from '../helpers/fieldsMeta';
+import {PopupTypes, setAbbreviations, EditorLimit} from '../actions';
+import {fieldsMetaKeys, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromContentState, getAnnotationsFromItem} from '../helpers/editor3CustomData';
-import {
-    initializeHighlights,
-    prepareHighlightsForExport,
-} from '../helpers/highlights';
+import {initializeHighlights, prepareHighlightsForExport} from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {LinkDecorator} from '../components/links/LinkDecorator';
-import {
-    getSpellcheckingDecorator,
-    ISpellcheckWarningsByBlock,
-} from '../components/spellchecker/SpellcheckerDecorator';
+import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {
-    formattingOptionsUnsafeToParseFromHTML,
-} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {RICH_FORMATTING_OPTION, IArticle} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
@@ -69,8 +48,8 @@ interface IProps {
 
 export interface IEditorStore {
     editorState: EditorState;
-    searchTerm: { pattern: string; index: number; caseSensitive: boolean };
-    popup: { type: any; data?: any };
+    searchTerm: {pattern: string; index: number; caseSensitive: boolean};
+    popup: {type: any; data?: any};
     readOnly: boolean;
     locked: boolean;
     showToolbar: any;
@@ -100,12 +79,12 @@ let editor3Stores = [];
 
 interface IOptions {
     spellchecker: {
-        acceptSuggestion: IAcceptSuggestion,
-        enabled?: boolean,
-        language?: string,
-        warnings?: ISpellcheckWarningsByBlock,
+        acceptSuggestion: IAcceptSuggestion;
+        enabled?: boolean;
+        language?: string;
+        warnings?: ISpellcheckWarningsByBlock;
     };
-    limitConfig?: EditorLimit,
+    limitConfig?: EditorLimit;
 }
 
 export const getDecorators = (options: IOptions) => {
@@ -115,7 +94,7 @@ export const getDecorators = (options: IOptions) => {
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
-    const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
+    const decorators: Array<{strategy: any; component: any}> = [LinkDecorator];
 
     if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
         mustReApplyDecorators = true;
@@ -128,9 +107,7 @@ export const getDecorators = (options: IOptions) => {
     if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
         mustReApplyDecorators = true;
 
-        decorators.push(
-            getTextLimitHighlightDecorator(limitConfig.chars),
-        );
+        decorators.push(getTextLimitHighlightDecorator(limitConfig.chars));
     }
 
     return {
@@ -153,10 +130,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
 
     return {
         language: language,
-        enabled:
-            !spellcheckerDisabledInConfig &&
-            spellcheck &&
-            spellcheck.isAutoSpellchecker,
+        enabled: !spellcheckerDisabledInConfig && spellcheck && spellcheck.isAutoSpellchecker,
         inProgress: false,
         warningsByBlock: {},
     };
@@ -191,23 +165,17 @@ export function initializeSpellchecker(dispatch, spellcheck): Promise<void> {
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(
-    props: IProps,
-    spellcheck,
-    isReact = false,
-): Store<IEditorStore> {
+export default function createEditorStore(props: IProps, spellcheck, isReact = false): Store<IEditorStore> {
     const content = getInitialContent(props);
 
-    const onChangeValue = isReact
-        ? props.onChange
-        : debounce(onChange.bind(props), props.debounce);
+    const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
 
     const limitConfig: EditorLimit | null = !props.limit
         ? null
         : {
-            ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
-            chars: props.limit,
-        };
+              ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
+              chars: props.limit,
+          };
 
     let editorState = EditorState.createWithContent(
         content,
@@ -254,19 +222,15 @@ export function getStores() {
 }
 
 export function unsetStore() {
-    return editor3Stores = [];
+    return (editor3Stores = []);
 }
 
 export function getAnnotationsForField(item: IArticle, fieldId: string) {
-    return ignoreInternalAnnotationFields(
-        getAnnotationsFromItem(item, fieldId),
-    );
+    return ignoreInternalAnnotationFields(getAnnotationsFromItem(item, fieldId));
 }
 
 export function getAnnotationsForStorage(contentState: ContentState) {
-    return ignoreInternalAnnotationFields(
-        getAnnotationsFromContentState(contentState),
-    );
+    return ignoreInternalAnnotationFields(getAnnotationsFromContentState(contentState));
 }
 
 /**
@@ -275,21 +239,14 @@ export function getAnnotationsForStorage(contentState: ContentState) {
  * @param {Object} item
  */
 export function generateAnnotations(item) {
-    item.annotations = ignoreInternalAnnotationFields(
-        getAnnotationsFromItem(item, 'body_html'),
-    );
+    item.annotations = ignoreInternalAnnotationFields(getAnnotationsFromItem(item, 'body_html'));
 }
 
 export function prepareEditor3StateForExport(contentState: ContentState): ContentState {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
-    const contentStateCleaned = removeInlineStyles(
-        contentState,
-        decorativeStyles,
-    );
+    const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
 
-    return prepareHighlightsForExport(
-        EditorState.createWithContent(contentStateCleaned),
-    ).getCurrentContent();
+    return prepareHighlightsForExport(EditorState.createWithContent(contentStateCleaned)).getCurrentContent();
 }
 
 // `this` points to Editor3Directive
@@ -311,43 +268,33 @@ export function getInitialContent(props): ContentState {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
-            props.editorState instanceof Array
-                ? props.editorState[0]
-                : props.editorState,
+            props.editorState instanceof Array ? props.editorState[0] : props.editorState,
         );
 
-        return initializeHighlights(
-            EditorState.createWithContent(contentState),
-        ).getCurrentContent();
+        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
     }
 
-    const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
-        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
-    );
+    const hasUnsafeFormattingOptions =
+        props.editorFormat != null &&
+        props.editorFormat.some((option: RICH_FORMATTING_OPTION) =>
+            formattingOptionsUnsafeToParseFromHTML.includes(option),
+        );
 
     /**
      * To avoid synchronization issues between html/plaintext values and draftjs object,
      * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
      */
     if (hasUnsafeFormattingOptions) {
-        const draftjsRawState = getFieldMetadata(
-            props.item,
-            props.pathToValue,
-            fieldsMetaKeys.draftjsState,
-        );
+        const draftjsRawState = getFieldMetadata(props.item, props.pathToValue, fieldsMetaKeys.draftjsState);
 
         if (draftjsRawState != null) {
             let initialContent = convertFromRaw(draftjsRawState);
 
-            return initializeHighlights(
-                EditorState.createWithContent(initialContent),
-            ).getCurrentContent();
+            return initializeHighlights(EditorState.createWithContent(initialContent)).getCurrentContent();
         }
     }
 
-    const value =
-        props.value ||
-        get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
+    const value = props.value || get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
 
     if (value != null && value !== '') {
         // we have only HTML (possibly legacy editor2 or ingested item)
@@ -370,10 +317,7 @@ export function syncAssociations(item: IArticle, rawState: RawDraftContentState)
     });
 
     Object.keys(rawState.entityMap).forEach((key) => {
-        associations['editor_' + key] = get(
-            rawState.entityMap[key],
-            'data.media',
-        );
+        associations['editor_' + key] = get(rawState.entityMap[key], 'data.media');
     });
 
     item.associations = associations;

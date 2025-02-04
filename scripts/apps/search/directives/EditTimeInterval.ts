@@ -74,27 +74,30 @@ const cronExpressionToTimeIntervalUi = (cron: CronTimeInterval): ITimeIntervalUi
 
     return {
         everyDay: everyDay ? 'true' : 'false',
-        customWeekdays: everyDay ? [] : weekdays.split(',')
-            .map((dayNumber: string) => numbersToWeekdaysLookup[dayNumber]),
+        customWeekdays: everyDay
+            ? []
+            : weekdays.split(',').map((dayNumber: string) => numbersToWeekdaysLookup[dayNumber]),
         everyHour: everyHour ? 'true' : 'false',
         customHours: everyHour ? [] : hours.split(',').map((hourNumber: string) => hourNameLookUp[hourNumber]),
     };
 };
 
 const timeIntervalUiToCronExpression = (timeInterval: ITimeIntervalUi): CronTimeInterval => {
-    const weekdays = timeInterval.everyDay === 'true' || timeInterval.customWeekdays.length < 1
-        ? '*'
-        : timeInterval.customWeekdays
-            .map((weekdayShort) => weekdaysToNumbersLookup[weekdayShort])
-            .sort((a: number, b: number) => a - b)
-            .join(',');
+    const weekdays =
+        timeInterval.everyDay === 'true' || timeInterval.customWeekdays.length < 1
+            ? '*'
+            : timeInterval.customWeekdays
+                  .map((weekdayShort) => weekdaysToNumbersLookup[weekdayShort])
+                  .sort((a: number, b: number) => a - b)
+                  .join(',');
 
-    const hours = timeInterval.everyHour === 'true' || timeInterval.customHours.length < 1
-        ? '*'
-        : timeInterval.customHours
-            .map((hourMinuteString) => parseInt(hourMinuteString.slice(0, 2), 10))
-            .sort((a: number, b: number) => a - b)
-            .join(',');
+    const hours =
+        timeInterval.everyHour === 'true' || timeInterval.customHours.length < 1
+            ? '*'
+            : timeInterval.customHours
+                  .map((hourMinuteString) => parseInt(hourMinuteString.slice(0, 2), 10))
+                  .sort((a: number, b: number) => a - b)
+                  .join(',');
 
     return createCronInterval('0', hours, '*', '*', weekdays);
 };
@@ -106,37 +109,66 @@ export function EditTimeInterval() {
             onChange: '=',
         },
         template: require('../views/edit-time-interval.html'),
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             const getDefaults = (): IModel => ({
                 everyDay: 'true',
                 customWeekdays: [],
                 everyHour: 'true',
                 customHours: [],
                 hoursList: [
-                    '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00',
-                    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-                    '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
+                    '00:00',
+                    '01:00',
+                    '02:00',
+                    '03:00',
+                    '04:00',
+                    '05:00',
+                    '06:00',
+                    '07:00',
+                    '08:00',
+                    '09:00',
+                    '10:00',
+                    '11:00',
+                    '12:00',
+                    '13:00',
+                    '14:00',
+                    '15:00',
+                    '16:00',
+                    '17:00',
+                    '18:00',
+                    '19:00',
+                    '20:00',
+                    '21:00',
+                    '22:00',
+                    '23:00',
                 ],
             });
 
             scope.wrapper = getDefaults();
 
-            scope.$watch('wrapper', () => {
-                const cronExpression: CronTimeInterval = timeIntervalUiToCronExpression(scope.wrapper);
+            scope.$watch(
+                'wrapper',
+                () => {
+                    const cronExpression: CronTimeInterval = timeIntervalUiToCronExpression(scope.wrapper);
 
-                scope.onChange(cronExpression);
-            }, true);
+                    scope.onChange(cronExpression);
+                },
+                true,
+            );
 
-            scope.$watch('initialValue', () => {
-                if (scope.initialValue != null) {
-                    scope.wrapper = {
-                        ...scope.wrapper,
-                        ...cronExpressionToTimeIntervalUi(
-                            scope.initialValue || createCronInterval('0', '*', '*', '*', '*'),
-                        ),
-                    };
-                }
-            }, true);
+            scope.$watch(
+                'initialValue',
+                () => {
+                    if (scope.initialValue != null) {
+                        scope.wrapper = {
+                            ...scope.wrapper,
+                            ...cronExpressionToTimeIntervalUi(
+                                scope.initialValue || createCronInterval('0', '*', '*', '*', '*'),
+                            ),
+                        };
+                    }
+                },
+                true,
+            );
         },
     };
 }

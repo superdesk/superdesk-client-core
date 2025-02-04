@@ -1,10 +1,13 @@
 <div class="top-menu__info" ng-show="routingTo || routingFrom">
-    <i class="top-menu__info-icon" ng-class="{
+    <i
+        class="top-menu__info-icon"
+        ng-class="{
         'top-menu__info-icon--green': routingFrom,
         'icon-download': routingFrom,
         'top-menu__info-icon--red': routingTo,
         'icon-upload': routingTo,
-}"></i>
+}"
+    ></i>
     <span class="top-menu__info-label" ng-show="routingFrom && hideRoutedDesks" translate>Routed from other desks</span>
     <span class="top-menu__info-label" ng-show="routingFrom && !hideRoutedDesks" translate>Routed from:</span>
     <span class="top-menu__info-text" ng-show="routingFrom && !hideRoutedDesks">{{ routingFrom }}</span>

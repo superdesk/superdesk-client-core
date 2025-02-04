@@ -11,9 +11,9 @@ export interface IMainPanelProps {
 
 export class MainPanel extends React.PureComponent<IMainPanelProps> {
     render() {
-        const className = !this.props.className ?
-            'sd-main-content-grid__content' :
-            `sd-main-content-grid__content ${this.props.className}`;
+        const className = !this.props.className
+            ? 'sd-main-content-grid__content'
+            : `sd-main-content-grid__content ${this.props.className}`;
 
         return (
             <div className={className} onScroll={this.props.onScroll} style={this.props.style}>

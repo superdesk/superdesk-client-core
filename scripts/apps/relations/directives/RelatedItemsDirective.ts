@@ -67,7 +67,7 @@ export function RelatedItemsDirective(
             onchange: '&onchange',
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
-        link: function(scope: IScope, elem, attr) {
+        link: function (scope: IScope, elem, attr) {
             scope.onCreated = (items: Array<IArticle>) => {
                 items.forEach((item) => {
                     scope.addRelatedItem(item);
@@ -84,12 +84,14 @@ export function RelatedItemsDirective(
             scope.canAddRelatedItems = () => {
                 const currentItemsLength = getAssociationsByFieldId(scope.item.associations, scope.field._id).length;
 
-                const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
-                    ? scope.field.field_options.multiple_items.max_items
-                    : 1;
+                const maxCount =
+                    scope.field?.field_options?.multiple_items?.enabled === true
+                        ? scope.field.field_options.multiple_items.max_items
+                        : 1;
 
-                return scope.field?.field_options?.allowed_workflows?.in_progress === true
-                    && currentItemsLength < maxCount;
+                return (
+                    scope.field?.field_options?.allowed_workflows?.in_progress === true && currentItemsLength < maxCount
+                );
             };
 
             const dragOverClass = 'dragover';
@@ -124,9 +126,10 @@ export function RelatedItemsDirective(
                         .map((key) => scope.item.associations[key]);
 
                     const currentCount = relatedItemsForCurrentField.length;
-                    const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
-                        ? scope.field.field_options.multiple_items.max_items
-                        : 1;
+                    const maxCount =
+                        scope.field?.field_options?.multiple_items?.enabled === true
+                            ? scope.field.field_options.multiple_items.max_items
+                            : 1;
 
                     const type = getSuperdeskType(event, false);
                     const item: IArticle = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
@@ -138,10 +141,11 @@ export function RelatedItemsDirective(
                     const isWorkflowAllowed = relationsService.itemHasAllowedStatus(item, scope.field);
 
                     if (!isWorkflowAllowed) {
-                        notify.error(gettext(
-                            'The following status is not allowed in this field: {{status}}',
-                            {status: item.state},
-                        ));
+                        notify.error(
+                            gettext('The following status is not allowed in this field: {{status}}', {
+                                status: item.state,
+                            }),
+                        );
                         return;
                     }
 
@@ -158,8 +162,8 @@ export function RelatedItemsDirective(
                     if (currentCount >= maxCount) {
                         notify.error(
                             gettext(
-                                'Related item was not added, because the field '
-                                + 'reached the limit of related items allowed.',
+                                'Related item was not added, because the field ' +
+                                    'reached the limit of related items allowed.',
                             ),
                         );
                         return;
@@ -190,14 +194,15 @@ export function RelatedItemsDirective(
             }
 
             /**
-            * Return true if there are association for current field
-            *
-            * @param {String} fieldId
-            * @return {Boolean}
-            */
+             * Return true if there are association for current field
+             *
+             * @param {String} fieldId
+             * @return {Boolean}
+             */
             scope.isEmptyRelatedItems = (fieldId) => {
-                const keys = Object.keys(scope.item.associations || {})
-                    .filter((key) => key.startsWith(fieldId) && scope.item.associations[key] != null);
+                const keys = Object.keys(scope.item.associations || {}).filter(
+                    (key) => key.startsWith(fieldId) && scope.item.associations[key] != null,
+                );
 
                 return keys.length === 0;
             };
@@ -222,11 +227,12 @@ export function RelatedItemsDirective(
             };
 
             /**
-            * Get related items for fieldId
-            */
+             * Get related items for fieldId
+             */
             scope.loadRelatedItems = () => {
                 scope.loading = true;
-                relationsService.getRelatedItemsForField(scope.item, scope.field._id)
+                relationsService
+                    .getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
                         scope.relatedItems = {};
                         Object.keys(items).forEach((key) => {
@@ -237,7 +243,8 @@ export function RelatedItemsDirective(
                                 notify.warning(gettext('Related item is not available.'));
                             }
                         });
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         scope.loading = false;
                     });
             };
@@ -269,7 +276,8 @@ export function RelatedItemsDirective(
              */
             scope.addRelatedItem = (_item) => {
                 scope.loading = true;
-                content.dropItem(_item)
+                content
+                    .dropItem(_item)
                     .then((item) => {
                         let data = {};
                         const {key, order} = getNextKeyAndOrder(scope.item.associations || {}, scope.field._id);
@@ -330,15 +338,15 @@ export function RelatedItemsDirective(
                 const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
 
                 switch (event.name) {
-                case 'content:update':
-                    var updateItemsIds = Object.keys(payload.items);
+                    case 'content:update':
+                        var updateItemsIds = Object.keys(payload.items);
 
-                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
-                    break;
-                case 'item:lock':
-                case 'item:unlock':
-                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
-                    break;
+                        shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                        break;
+                    case 'item:lock':
+                    case 'item:unlock':
+                        shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                        break;
                 }
 
                 if (shouldUpdateItems) {
@@ -346,11 +354,7 @@ export function RelatedItemsDirective(
                 }
             }
 
-            const removeEventListeners = [
-                'item:lock',
-                'item:unlock',
-                'content:update',
-            ].map((eventName) =>
+            const removeEventListeners = ['item:lock', 'item:unlock', 'content:update'].map((eventName) =>
                 $rootScope.$on(eventName, onItemEvent),
             );
 

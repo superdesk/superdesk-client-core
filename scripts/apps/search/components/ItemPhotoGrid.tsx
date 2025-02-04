@@ -20,18 +20,9 @@ export class ItemPhotoGrid extends React.Component<IProps> {
 
         return (
             <div className="sd-wrap-helper">
-                <PhotoDeskPreview
-                    item={item}
-                    itemSelected={itemSelected}
-                    multiSelect={multiSelect}
-                />
-                <PhotoDeskInfo
-                    item={item}
-                />
-                <PhotoDeskFooter
-                    item={item}
-                    getActionsMenu={this.props.getActionsMenu}
-                />
+                <PhotoDeskPreview item={item} itemSelected={itemSelected} multiSelect={multiSelect} />
+                <PhotoDeskInfo item={item} />
+                <PhotoDeskFooter item={item} getActionsMenu={this.props.getActionsMenu} />
                 <div className="sd-grid-item__state-border" />
             </div>
         );

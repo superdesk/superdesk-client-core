@@ -39,8 +39,7 @@ class LinkFunction {
 
         this.api.query('formatters', {criteria: 'can_export'}).then((result) => {
             this.scope.exportFormatters = result._items;
-            if (!this.scope.selectedFormatter &&
-                    this.scope.exportFormatters.length > 0) {
+            if (!this.scope.selectedFormatter && this.scope.exportFormatters.length > 0) {
                 this.scope.selectedFormatter = JSON.stringify(this.scope.exportFormatters[0]);
             }
         });
@@ -70,28 +69,33 @@ class LinkFunction {
         this.storage.setItem('selectedFormatter', formatterString);
         let formatter = JSON.parse(formatterString);
 
-        let itemIdList = this.scope.itemsForExport
-            ?? (this.scope.multi ? _.map(this.multi.getItems(), '_id') : [this.scope.item._id]);
+        let itemIdList =
+            this.scope.itemsForExport ??
+            (this.scope.multi ? _.map(this.multi.getItems(), '_id') : [this.scope.item._id]);
 
-        return this.api.save('export', {}, {item_ids: itemIdList, format_type: formatter.name, validate: validate})
-            .then((item) => {
-                this.scope.failures = item.failures;
-                // Click the url to triger download of file
-                if (item.url) {
-                    let elem = $('#exportDownloadLink');
+        return this.api
+            .save('export', {}, {item_ids: itemIdList, format_type: formatter.name, validate: validate})
+            .then(
+                (item) => {
+                    this.scope.failures = item.failures;
+                    // Click the url to triger download of file
+                    if (item.url) {
+                        let elem = $('#exportDownloadLink');
 
-                    if (elem[0]) {
-                        elem[0].href = item.url;
-                        elem[0].click();
+                        if (elem[0]) {
+                            elem[0].href = item.url;
+                            elem[0].click();
+                        }
+
+                        if (this.scope.failures === 0) {
+                            this.scope.closeExport();
+                        }
                     }
-
-                    if (this.scope.failures === 0) {
-                        this.scope.closeExport();
-                    }
-                }
-            }, (error) => {
-                this.onError(error.data._message);
-            })
+                },
+                (error) => {
+                    this.onError(error.data._message);
+                },
+            )
             .finally(() => {
                 this.scope.loading = false;
             });

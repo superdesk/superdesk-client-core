@@ -37,7 +37,8 @@ export function ThemeSelectDirective(authThemes) {
                     themeClasses += ' sd-editor--' + _key + '-' + value;
                 });
 
-                angular.element('.page-content-container .theme-container')
+                angular
+                    .element('.page-content-container .theme-container')
                     .attr('class', DEFAULT_CLASS)
                     .addClass(themeClasses);
             };
@@ -52,7 +53,7 @@ export function ThemeSelectDirective(authThemes) {
                 return scope.closeModal();
             };
 
-            scope.closeModal = () => scope.modalEditorConfig = false;
+            scope.closeModal = () => (scope.modalEditorConfig = false);
         },
     };
 }

@@ -5,18 +5,25 @@ import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 
 import {gettext} from 'core/utils';
 
-import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
-    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
-import {validateMinRequiredField, getContactTypeObject,
-    getMinRequiredFieldLabels, getMinRequiredFieldLabel} from '../../../contacts/helpers';
+import {
+    InputArray,
+    MultiTextInput,
+    Input,
+    Toggle,
+    ToggleBox,
+    ContactNumberInput,
+    Label,
+    SelectFieldSearchInput,
+} from './index';
+import {
+    validateMinRequiredField,
+    getContactTypeObject,
+    getMinRequiredFieldLabels,
+    getMinRequiredFieldLabel,
+} from '../../../contacts/helpers';
 import {IContactsService} from '../../Contacts';
 import {IContactType, IContact} from 'superdesk-api';
-import {
-    Row,
-    RowItem,
-    LineInput,
-    SelectInput,
-} from 'core/ui/components/Form';
+import {Row, RowItem, LineInput, SelectInput} from 'core/ui/components/Form';
 import {Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
@@ -29,7 +36,7 @@ interface IProps {
                 contact_job_titles: Array<any>;
                 contact_phone_usage: Array<any>;
                 contact_mobile_usage: Array<any>;
-            }
+            };
         };
         contacts: IContactsService;
         privileges: any;
@@ -65,7 +72,9 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         const {svc, contact} = props;
         const {metadata} = svc;
 
-        let stateNames = [], countries = [], contactTypes = [];
+        let stateNames = [],
+            countries = [],
+            contactTypes = [];
 
         if (metadata.values.regions) {
             stateNames = orderBy(metadata.values.regions, 'name', 'asc');
@@ -89,7 +98,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
             requiredField: !validateMinRequiredField(contact) || false,
             touched: {},
             organisations: [],
-            orgValue: (contact && contact.organisation) ? contact.organisation : '',
+            orgValue: contact && contact.organisation ? contact.organisation : '',
             contactTypes: contactTypes,
             contactType: null,
         };
@@ -105,10 +114,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
     componentDidMount(): void {
         if (this.props.contact && this.props.contact.contact_type) {
             this.setState({
-                contactType: getContactTypeObject(
-                    this.state.contactTypes,
-                    this.props.contact.contact_type,
-                ),
+                contactType: getContactTypeObject(this.state.contactTypes, this.props.contact.contact_type),
             });
         }
     }
@@ -133,8 +139,10 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         const {svc, contact} = props;
         const {metadata} = svc;
 
-        return !isEmpty(contact.contact_state) &&
-            !findKey(metadata.values.regions, (m) => m.qcode === contact.contact_state);
+        return (
+            !isEmpty(contact.contact_state) &&
+            !findKey(metadata.values.regions, (m) => m.qcode === contact.contact_state)
+        );
     }
 
     getSearchResult(field, text) {
@@ -144,11 +152,11 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         if (text) {
             contacts.queryField(field, text).then((items) => {
                 switch (field) {
-                case 'organisation':
-                    this.setState({
-                        organisations: map(items._items, field),
-                        orgValue: text,
-                    });
+                    case 'organisation':
+                        this.setState({
+                            organisations: map(items._items, field),
+                            orgValue: text,
+                        });
                 }
             });
         }
@@ -171,10 +179,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
             };
 
             if (nextProps.contact.contact_type !== this.props.contact.contact_type) {
-                newState.contactType = getContactTypeObject(
-                    this.state.contactTypes,
-                    nextProps.contact.contact_type,
-                );
+                newState.contactType = getContactTypeObject(this.state.contactTypes, nextProps.contact.contact_type);
             }
 
             this.setState(newState);
@@ -182,10 +187,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
     }
 
     onContactTypeChanged(field: string, value: IContactType) {
-        this.props.onChange(
-            'contact_type',
-            (value && value.qcode) ? value.qcode : null,
-        );
+        this.props.onChange('contact_type', value && value.qcode ? value.qcode : null);
     }
 
     render() {
@@ -200,13 +202,15 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
 
         return (
             <div className="details-info">
-
                 {!readOnly && (
                     <div className="sd-alert__container sd-margin-b--3">
                         <div className="sd-alert sd-alert--hollow">
                             <span className="alert-info-msg">
-                                {gettext('Please specify \'first name, last name\' or  \'organisation\' or both, ' +
-                                    'and at least one of [{{list}}] fields.', {list: getMinRequiredFieldLabels()})}
+                                {gettext(
+                                    "Please specify 'first name, last name' or  'organisation' or both, " +
+                                        'and at least one of [{{list}}] fields.',
+                                    {list: getMinRequiredFieldLabels()},
+                                )}
                             </span>
                         </div>
                     </div>
@@ -268,8 +272,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     <LineInput
                         required={contactType === 'person'}
                         invalid={contactType === 'person' && this.isFieldInvalid('first_name')}
-                        message={contactType === 'person' && this.isFieldInvalid('first_name') ?
-                            MSG_REQUIRED : ''}
+                        message={contactType === 'person' && this.isFieldInvalid('first_name') ? MSG_REQUIRED : ''}
                         readOnly={readOnly}
                     >
                         <Label text={gettext('first name')} />
@@ -290,8 +293,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         readOnly={readOnly}
                         required={contactType === 'person'}
                         invalid={contactType === 'person' && this.isFieldInvalid('last_name')}
-                        message={contactType === 'person' && this.isFieldInvalid('last_name') ?
-                            MSG_REQUIRED : ''}
+                        message={contactType === 'person' && this.isFieldInvalid('last_name') ? MSG_REQUIRED : ''}
                     >
                         <Label text={gettext('last name')} />
                         <Input
@@ -312,7 +314,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             required={contactType === 'organisation'}
                             invalid={contactType === 'organisation' && this.isFieldInvalid('organisation')}
                             message={
-                                (contactType === 'organisation' && this.isFieldInvalid('organisation'))
+                                contactType === 'organisation' && this.isFieldInvalid('organisation')
                                     ? MSG_REQUIRED
                                     : ''
                             }
@@ -339,7 +341,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             initValue
                             onChange={this.handleOrgChange}
                             querySearch={true}
-                            onQuerySearch={((text) => this.getSearchResult('organisation', text))}
+                            onQuerySearch={(text) => this.getSearchResult('organisation', text)}
                             dataList={this.state.organisations}
                             readOnly={readOnly}
                         />
@@ -368,14 +370,10 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     >
                         <Label text={getMinRequiredFieldLabel('contact_email')} />
                         {get(errors, 'contact_email') && (
-                            <div className="sd-line-input__message">
-                                {get(errors, 'contact_email')}
-                            </div>
+                            <div className="sd-line-input__message">{get(errors, 'contact_email')}</div>
                         )}
                         {showMinFieldsWarning && !get(errors, 'contact_email') && (
-                            <div className="sd-line-input__message">
-                                {minFieldMessage}
-                            </div>
+                            <div className="sd-line-input__message">{minFieldMessage}</div>
                         )}
                         <InputArray
                             field="contact_email"
@@ -392,11 +390,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
 
                 <Spacer v gap="4" justifyContent="center">
                     <Label text={gettext('Phone')} />
-                    {showMinFieldsWarning && (
-                        <div className="sd-line-input__message">
-                            {minFieldMessage}
-                        </div>
-                    )}
+                    {showMinFieldsWarning && <div className="sd-line-input__message">{minFieldMessage}</div>}
                     <InputArray
                         field="contact_phone"
                         value={get(contact, 'contact_phone', [])}
@@ -409,15 +403,10 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 </Spacer>
 
                 <ToggleBox title={gettext('MORE')} isOpen={false} style="toggle-box--circle" scrollInView={true}>
-
                     <Row>
                         <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
                             <Label text={getMinRequiredFieldLabel('mobile')} />
-                            {showMinFieldsWarning && (
-                                <div className="sd-line-input__message">
-                                    {minFieldMessage}
-                                </div>
-                            )}
+                            {showMinFieldsWarning && <div className="sd-line-input__message">{minFieldMessage}</div>}
                             <InputArray
                                 field="mobile"
                                 value={get(contact, 'mobile', [])}
@@ -466,9 +455,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         >
                             <Label text={getMinRequiredFieldLabel('twitter')} />
                             {showMinFieldsWarning && isEmpty(errors.twitter) && (
-                                <div className="sd-line-input__message">
-                                    {minFieldMessage}
-                                </div>
+                                <div className="sd-line-input__message">{minFieldMessage}</div>
                             )}
                             <Input
                                 field="twitter"
@@ -489,11 +476,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             hint={gettext('e.g. cityofsydney from https://www.facebook.com/cityofsydney')}
                         >
                             <Label text={getMinRequiredFieldLabel('facebook')} />
-                            {showMinFieldsWarning && (
-                                <div className="sd-line-input__message">
-                                    {minFieldMessage}
-                                </div>
-                            )}
+                            {showMinFieldsWarning && <div className="sd-line-input__message">{minFieldMessage}</div>}
                             <Input
                                 field="facebook"
                                 value={get(contact, 'facebook', '')}
@@ -513,11 +496,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             hint={gettext('e.g. cityofsydney from https://www.instagram.com/cityofsydney')}
                         >
                             <Label text={getMinRequiredFieldLabel('instagram')} />
-                            {showMinFieldsWarning && (
-                                <div className="sd-line-input__message">
-                                    {minFieldMessage}
-                                </div>
-                            )}
+                            {showMinFieldsWarning && <div className="sd-line-input__message">{minFieldMessage}</div>}
                             <Input
                                 field="instagram"
                                 value={get(contact, 'instagram', '')}
@@ -543,7 +522,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
                     <Row>
-                        <LineInput readOnly={readOnly} hint={gettext('Building, Suite, Unit, Apartment, Floor, etc.')} >
+                        <LineInput readOnly={readOnly} hint={gettext('Building, Suite, Unit, Apartment, Floor, etc.')}>
                             <Input
                                 field="contact_address[1]"
                                 value={get(contact, 'contact_address[1]', '')}
@@ -603,8 +582,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 keyField="qcode"
                                 clearable={true}
                             />
-                        )
-                        }
+                        )}
 
                         {this.state.displayOtherStateField && (
                             <LineInput readOnly={readOnly}>
@@ -649,10 +627,9 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('notes')} />
                             <textarea
-                                className={classNames(
-                                    'sd-line-input__input',
-                                    {'sd-line-input__input--add-min-height': !isEmpty(contact.notes)},
-                                )}
+                                className={classNames('sd-line-input__input', {
+                                    'sd-line-input__input--add-min-height': !isEmpty(contact.notes),
+                                })}
                                 name="notes"
                                 value={get(contact, 'notes', '')}
                                 onChange={(e) => onChange('notes', e.target.value)}
@@ -660,9 +637,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             />
                         </LineInput>
                     </Row>
-
                 </ToggleBox>
-
             </div>
         );
     }

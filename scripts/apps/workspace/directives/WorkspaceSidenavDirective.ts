@@ -5,13 +5,11 @@ import {IEvents, IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
 
-WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'Keys',
-    '$rootScope', 'workspaces', 'privileges'];
-export function WorkspaceSidenavDirective(superdeskFlags, Keys,
-    $rootScope, workspaces, privileges) {
+WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'Keys', '$rootScope', 'workspaces', 'privileges'];
+export function WorkspaceSidenavDirective(superdeskFlags, Keys, $rootScope, workspaces, privileges) {
     return {
         template: require('../views/workspace-sidenav-items.html'),
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
 
             scope.badges = {};
@@ -24,7 +22,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
 
             addEventListener('menuItemBadgeValueChange', handleBadgeValueChange);
 
-            scope.getTemplateUrl = (item) => item.hr ? HR_TEMPLATE : (item.templateUrl || DEFAULT_TEMPLATE);
+            scope.getTemplateUrl = (item) => (item.hr ? HR_TEMPLATE : item.templateUrl || DEFAULT_TEMPLATE);
 
             // Filter extraItems based on privileges
             if (workspaces.extraItems) {
@@ -40,7 +38,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
              * @param {boolean} state Gets the state of button
              * @param {object} e Gets $event from the element
              */
-            scope.hideMonitoring = function(state, e) {
+            scope.hideMonitoring = function (state, e) {
                 const fullWidthConfig: IFullWidthPageCapabilityConfiguration = scope.fullWidthConfig;
 
                 if (fullWidthConfig.enabled) {
@@ -62,7 +60,7 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
              * By using keyboard shortcuts, change the current showed view
              *
              */
-            scope.highlightsHotkey = function() {
+            scope.highlightsHotkey = function () {
                 const ddlhighlights = elem.find('.highlights-dropdown .dropdown__toggle');
 
                 if (ddlhighlights.length > 0) {
@@ -73,21 +71,13 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
 
             elem.on('keydown', function WorkspaceKeyboard(event) {
                 if (event.which === Keys.up) {
-                    elem.find('.dropdown__menu button:focus')
-                        .parent('li')
-                        .prev()
-                        .children('button')
-                        .focus();
+                    elem.find('.dropdown__menu button:focus').parent('li').prev().children('button').focus();
 
                     return false;
                 }
 
                 if (event.which === Keys.down) {
-                    elem.find('.dropdown__menu button:focus')
-                        .parent('li')
-                        .next()
-                        .children('button')
-                        .focus();
+                    elem.find('.dropdown__menu button:focus').parent('li').next().children('button').focus();
 
                     return false;
                 }

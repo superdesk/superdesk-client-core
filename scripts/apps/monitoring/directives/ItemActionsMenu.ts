@@ -5,7 +5,8 @@ import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {IActivityService} from 'core/activity/activity';
 
 type IAction =
-    {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IAuthoringAction};
+    | {kind: 'activity-based'; activity: IActivity}
+    | {kind: 'extension-action'; articleAction: IAuthoringAction};
 
 interface IAuthoringMenuGroup {
     _id: string;
@@ -40,25 +41,22 @@ export function ItemActionsMenu(
             allowedActions: '=?',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             /**
              * Populate scope actions when dropdown is opened.
              *
              * @param {boolean} isOpen
              */
-            scope.toggleActions = function(isOpen) {
+            scope.toggleActions = function (isOpen) {
                 getActions(scope.item);
 
                 scope.open = isOpen;
 
                 if (!isOpen) {
                     // After close, return focus to parent of selected element
-                    angular.element('.media-text.selected')
-                        .parents('li')
-                        .focus();
+                    angular.element('.media-text.selected').parents('li').focus();
 
-                    angular.element('.dropdown--noarrow.open')
-                        .removeClass('open');
+                    angular.element('.dropdown--noarrow.open').removeClass('open');
                 } else {
                     $rootScope.itemToggle = scope.toggleActions;
                 }
@@ -80,11 +78,11 @@ export function ItemActionsMenu(
              *
              * @param {Event} event
              */
-            scope.stopEvent = function(event) {
+            scope.stopEvent = function (event) {
                 event.stopPropagation();
             };
 
-            scope.run = function(activity) {
+            scope.run = function (activity) {
                 return activityService.start(activity, {data: {item: scope.item}});
             };
 
@@ -127,8 +125,10 @@ export function ItemActionsMenu(
                             _id: group._id,
                             label: group.label,
                             concate: group.concate,
-                            actions: activitiesByGroupName[group._id]
-                                .map((activity) => ({kind: 'activity-based', activity: activity})),
+                            actions: activitiesByGroupName[group._id].map((activity) => ({
+                                kind: 'activity-based',
+                                activity: activity,
+                            })),
                         });
                     }
                 });
@@ -142,8 +142,10 @@ export function ItemActionsMenu(
                         menuGroups.push({
                             _id: groupName,
                             label: groupName,
-                            actions: activitiesByGroupName[groupName]
-                                .map((activity) => ({kind: 'activity-based', activity: activity})),
+                            actions: activitiesByGroupName[groupName].map((activity) => ({
+                                kind: 'activity-based',
+                                activity: activity,
+                            })),
                         });
                     }
                 });
@@ -170,11 +172,10 @@ export function ItemActionsMenu(
                             menuGroups.push({
                                 _id: group,
                                 label: group,
-                                actions: extensionActionsByGroupName[group]
-                                    .map((articleAction) => ({
-                                        kind: 'extension-action',
-                                        articleAction: articleAction,
-                                    })),
+                                actions: extensionActionsByGroupName[group].map((articleAction) => ({
+                                    kind: 'extension-action',
+                                    articleAction: articleAction,
+                                })),
                             });
                         } else {
                             if (existingGroup.actions == null) {
@@ -182,11 +183,10 @@ export function ItemActionsMenu(
                             }
 
                             existingGroup.actions = existingGroup.actions.concat(
-                                extensionActionsByGroupName[group]
-                                    .map((articleAction) => ({
-                                        kind: 'extension-action',
-                                        articleAction: articleAction,
-                                    })),
+                                extensionActionsByGroupName[group].map((articleAction) => ({
+                                    kind: 'extension-action',
+                                    articleAction: articleAction,
+                                })),
                             );
                         }
                     });

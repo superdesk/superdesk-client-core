@@ -6,14 +6,7 @@ import _ from 'lodash';
 
 import {ItemList as ItemListComponent} from 'apps/contacts/components';
 
-ContactList.$inject = [
-    '$timeout',
-    '$filter',
-    'search',
-    'datetime',
-    'Keys',
-    '$rootScope',
-];
+ContactList.$inject = ['$timeout', '$filter', 'search', 'datetime', 'Keys', '$rootScope'];
 
 /**
  * @ngdoc directive
@@ -30,14 +23,7 @@ ContactList.$inject = [
  * @description Handles the functionality displaying list of items from contacts collection
  */
 
-export function ContactList(
-    $timeout,
-    $filter,
-    search,
-    datetime,
-    Keys,
-    $rootScope,
-) {
+export function ContactList($timeout, $filter, search, datetime, Keys, $rootScope) {
     // contains all the injected services to be passed down to child
     // components via props
     const services = {
@@ -49,48 +35,58 @@ export function ContactList(
     };
 
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             elem.attr('tabindex', 0);
             let scrollElem = elem.parent();
 
-            var itemList = React.createElement(ItemListComponent,
+            var itemList = React.createElement(
+                ItemListComponent,
                 angular.extend({
                     svc: services,
                     scope: scope,
-                }));
+                }),
+            );
 
             var listComponent = ReactDOM.render(itemList, elem[0]);
 
-            scope.$watch('items', (items) => {
-                if (!items || !items._items) {
-                    return;
-                }
-
-                var itemsList = [];
-                var currentItems = {};
-                var itemsById = angular.extend({}, listComponent.state.itemsById);
-
-                items._items.forEach((item) => {
-                    var oldItem = itemsById[item._id] || null;
-
-                    if (!oldItem || !_.isEqual(oldItem, item)) {
-                        itemsById[item._id] = angular.extend({}, oldItem, item);
+            scope.$watch(
+                'items',
+                (items) => {
+                    if (!items || !items._items) {
+                        return;
                     }
 
-                    if (!currentItems[item._id]) { // filter out possible duplicates
-                        currentItems[item._id] = true;
-                        itemsList.push(item._id);
-                    }
-                });
+                    var itemsList = [];
+                    var currentItems = {};
+                    var itemsById = angular.extend({}, listComponent.state.itemsById);
 
-                listComponent.setState({
-                    itemsList: itemsList,
-                    itemsById: itemsById,
-                    view: scope.view,
-                }, () => {
-                    scope.rendering = scope.loading = false;
-                });
-            }, true);
+                    items._items.forEach((item) => {
+                        var oldItem = itemsById[item._id] || null;
+
+                        if (!oldItem || !_.isEqual(oldItem, item)) {
+                            itemsById[item._id] = angular.extend({}, oldItem, item);
+                        }
+
+                        if (!currentItems[item._id]) {
+                            // filter out possible duplicates
+                            currentItems[item._id] = true;
+                            itemsList.push(item._id);
+                        }
+                    });
+
+                    listComponent.setState(
+                        {
+                            itemsList: itemsList,
+                            itemsById: itemsById,
+                            view: scope.view,
+                        },
+                        () => {
+                            scope.rendering = scope.loading = false;
+                        },
+                    );
+                },
+                true,
+            );
 
             scope.$watch('view', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
@@ -112,7 +108,8 @@ export function ContactList(
                     $rootScope.$broadcast('refresh:list');
                 }
 
-                if (scope.rendering) { // ignore
+                if (scope.rendering) {
+                    // ignore
                     $event.preventDefault();
                     return;
                 }

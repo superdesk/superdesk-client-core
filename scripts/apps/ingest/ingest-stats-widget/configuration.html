@@ -18,7 +18,11 @@
                 <div class="form__item">
                     <div class="sd-input sd-input--is-select">
                         <label class="sd-input__label" for="source-color" translate>Select color</label>
-                        <select class="sd-input__select" ng-model="configuration.colorScheme" ng-options="scheme.name as scheme.name for scheme in schemes"></select>
+                        <select
+                            class="sd-input__select"
+                            ng-model="configuration.colorScheme"
+                            ng-options="scheme.name as scheme.name for scheme in schemes"
+                        ></select>
                     </div>
                 </div>
             </div>

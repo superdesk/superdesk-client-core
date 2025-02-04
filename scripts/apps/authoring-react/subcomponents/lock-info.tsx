@@ -35,7 +35,8 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
     render() {
         const user = this.state.lockOwner;
 
-        if (user == null) { // loading
+        if (user == null) {
+            // loading
             return null;
         }
 
@@ -68,8 +69,6 @@ export class LockInfo extends React.PureComponent<IProps> {
             return null;
         }
 
-        return (
-            <LockInfoComponent {...this.props} key={this.props.article.lock_user} />
-        );
+        return <LockInfoComponent {...this.props} key={this.props.article.lock_user} />;
     }
 }

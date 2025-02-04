@@ -40,10 +40,9 @@ export function SearchWidgetCtrl($scope, packages: IPackagesService, api, search
 
         criteria.repo = 'archive,published';
 
-        api.query('search', criteria)
-            .then((result) => {
-                $scope.contentItems = result._items;
-            });
+        api.query('search', criteria).then((result) => {
+            $scope.contentItems = result._items;
+        });
     }
 
     $scope.$watch('query', (query) => {
@@ -57,36 +56,44 @@ export function SearchWidgetCtrl($scope, packages: IPackagesService, api, search
     $scope.$watch('item', (item) => {
         $scope.highlight = item.highlight;
         if ($scope.highlight) {
-            api('highlights').getById($scope.highlight)
-                .then((result) => {
-                    $scope.groupList = result.groups;
-                    init = true;
-                    fetchContentItems();
-                }, (response) => {
-                    init = true;
-                    fetchContentItems();
-                });
+            api('highlights')
+                .getById($scope.highlight)
+                .then(
+                    (result) => {
+                        $scope.groupList = result.groups;
+                        init = true;
+                        fetchContentItems();
+                    },
+                    (response) => {
+                        init = true;
+                        fetchContentItems();
+                    },
+                );
         } else {
             init = true;
             fetchContentItems();
         }
     });
 
-    $scope.$watch('item.groups', () => {
-        getPackageItems();
-    }, true);
+    $scope.$watch(
+        'item.groups',
+        () => {
+            getPackageItems();
+        },
+        true,
+    );
 
     /**
      * Add a content item to a given group
      * @param {Object} group
      * @param {Object} item
      */
-    $scope.addItemToGroup = function(group, item) {
+    $scope.addItemToGroup = function (group, item) {
         packages.addItemsToPackage($scope.item, group, [item]);
         $scope.autosave($scope.item);
     };
 
-    $scope.preview = function(item) {
+    $scope.preview = function (item) {
         $scope.selected = item;
     };
 
@@ -105,11 +112,11 @@ export function SearchWidgetCtrl($scope, packages: IPackagesService, api, search
         packageItems = items;
     }
 
-    $scope.itemInPackage = function(item) {
+    $scope.itemInPackage = function (item) {
         return _.indexOf(packageItems, item._id) > -1;
     };
 
-    $scope.addToSelected = function(pitem) {
+    $scope.addToSelected = function (pitem) {
         if (pitem.multi) {
             $scope.multiSelected.push(pitem);
         } else {
@@ -117,7 +124,7 @@ export function SearchWidgetCtrl($scope, packages: IPackagesService, api, search
         }
     };
 
-    $scope.addMultiItemsToGroup = function(group) {
+    $scope.addMultiItemsToGroup = function (group) {
         // add to group
         packages.addItemsToPackage($scope.item, group, $scope.multiSelected);
         $scope.autosave($scope.item);

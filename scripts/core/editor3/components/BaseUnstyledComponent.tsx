@@ -51,9 +51,10 @@ export function dragEventShouldShowDropZone(event, editorProps: IPropsEditor3Com
 
     const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
 
-    return editorProps.editorFormat.some(
-        (option) => formattingOptionsThatRequireDragAndDrop.has(option),
-    ) && intersection.length > 0;
+    return (
+        editorProps.editorFormat.some((option) => formattingOptionsThatRequireDragAndDrop.has(option)) &&
+        intersection.length > 0
+    );
 }
 
 interface IProps {
@@ -93,12 +94,14 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
 
         if (dataTransfer.types.includes(MIME_TYPE_SUPERDESK_TEXT_ITEM)) {
             if (articleEmbedsConfigured(this.props.editorProps)) {
-                this.props.dispatch(dragDrop(
-                    dataTransfer,
-                    MIME_TYPE_SUPERDESK_TEXT_ITEM,
-                    this.getDropBlockKey(),
-                    this.props.editorProps.canAddArticleEmbed,
-                ));
+                this.props.dispatch(
+                    dragDrop(
+                        dataTransfer,
+                        MIME_TYPE_SUPERDESK_TEXT_ITEM,
+                        this.getDropBlockKey(),
+                        this.props.editorProps.canAddArticleEmbed,
+                    ),
+                );
             } else {
                 notify.error(gettext('Embedding articles is not configured for this content profile field'));
             }
@@ -113,14 +116,16 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
             const blockKey = this.getDropBlockKey();
             const link = event.originalEvent.dataTransfer.getData('URL');
 
-            if (canDropMedia(event, this.props.editorProps)
-                && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
+            if (
+                canDropMedia(event, this.props.editorProps) &&
+                (mediaType === 'Files' || mediaType.includes('application/superdesk'))
+            ) {
                 this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
                 handled = true;
             } else if (
-                typeof link === 'string'
-                && link.startsWith('http')
-                && this.props.editorProps.editorFormat.includes('embed')
+                typeof link === 'string' &&
+                link.startsWith('http') &&
+                this.props.editorProps.editorFormat.includes('embed')
             ) {
                 getEmbedObject(link)
                     .then((oEmbed) => {

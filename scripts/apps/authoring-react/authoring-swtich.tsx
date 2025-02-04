@@ -14,27 +14,29 @@ export class AuthoringSwitch extends React.Component {
                 size="small"
                 type="highlight"
                 text={gettext('Switch authoring')}
-                onClick={() => showOptionsModal(
-                    gettext('Switch authoring?'),
-                    gettext('The page needs to be reloaded in order to do that.'),
-                    [
-                        {
-                            label: gettext('Cancel'),
-                            onSelect: (closePromptFn) => {
-                                closePromptFn();
+                onClick={() =>
+                    showOptionsModal(
+                        gettext('Switch authoring?'),
+                        gettext('The page needs to be reloaded in order to do that.'),
+                        [
+                            {
+                                label: gettext('Cancel'),
+                                onSelect: (closePromptFn) => {
+                                    closePromptFn();
+                                },
                             },
-                        },
-                        {
-                            label: gettext('Confirm'),
-                            onSelect: (closePromptFn) => {
-                                closePromptFn();
-                                toggleAuthoringReact(!authoringReactEnabledUserSelection);
-                                window.location.reload();
+                            {
+                                label: gettext('Confirm'),
+                                onSelect: (closePromptFn) => {
+                                    closePromptFn();
+                                    toggleAuthoringReact(!authoringReactEnabledUserSelection);
+                                    window.location.reload();
+                                },
+                                highlightOption: true,
                             },
-                            highlightOption: true,
-                        },
-                    ],
-                )}
+                        ],
+                    )
+                }
             />
         );
     }

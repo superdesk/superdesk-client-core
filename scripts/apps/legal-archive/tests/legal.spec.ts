@@ -44,10 +44,9 @@ describe('legal archive service', () => {
         legal.updateSearchQuery({_id: '123', headline: 'test'});
         $rootScope.$digest();
         criteria = legal.getCriteria();
-        expect(criteria.where).toBe(angular.toJson({$and: [
-            {_id: '123'},
-            {headline: {$regex: 'test', $options: 'i'}},
-        ]}));
+        expect(criteria.where).toBe(
+            angular.toJson({$and: [{_id: '123'}, {headline: {$regex: 'test', $options: 'i'}}]}),
+        );
 
         legal.updateSearchQuery({published_after: '06/16/2015'});
         $rootScope.$digest();
@@ -63,11 +62,15 @@ describe('legal archive service', () => {
         $rootScope.$digest();
         criteria = legal.getCriteria();
         /* jshint multistr: true */
-        expect(criteria.where).toBe('{"$and":[' + [
-            '{"_id":"123"}',
-            '{"headline":{"$regex":"test","$options":"i"}}',
-            '{"versioncreated":{"$gte":"2015-06-16T00:00:00+0000"}}',
-        ].join(',') + ']}');
+        expect(criteria.where).toBe(
+            '{"$and":[' +
+                [
+                    '{"_id":"123"}',
+                    '{"headline":{"$regex":"test","$options":"i"}}',
+                    '{"versioncreated":{"$gte":"2015-06-16T00:00:00+0000"}}',
+                ].join(',') +
+                ']}',
+        );
     }));
 
     it('can sort items', inject((legal, sort, $location, $rootScope) => {

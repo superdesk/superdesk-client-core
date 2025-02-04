@@ -1,5 +1,4 @@
 <div class="metadata-view">
-
     <div ng-if="!loading" class="metadata-view__content-block">
         <dl>
             <dt>{{label('slugline')}}</dt>
@@ -159,11 +158,16 @@
 
         <!-- file specific data -->
         <dl ng-if="item.FileMeta">
-            <dt translate>Aperture</dt><dd>{{ item.FileMeta.Aperture }}</dd>
-            <dt translate>Exposure time</dt><dd>{{ item.FileMeta['Exposure time'] }}</dd>
-            <dt translate>Focal length</dt><dd>{{ item.FileMeta['Focal length'] }}</dd>
-            <dt translate>Iso</dt><dd>{{ item.FileMeta['ISO speed'] }}</dd>
-            <dt translate>Flash</dt><dd>{{ item.FileMeta.Flash }}</dd>
+            <dt translate>Aperture</dt>
+            <dd>{{ item.FileMeta.Aperture }}</dd>
+            <dt translate>Exposure time</dt>
+            <dd>{{ item.FileMeta['Exposure time'] }}</dd>
+            <dt translate>Focal length</dt>
+            <dd>{{ item.FileMeta['Focal length'] }}</dd>
+            <dt translate>Iso</dt>
+            <dd>{{ item.FileMeta['ISO speed'] }}</dd>
+            <dt translate>Flash</dt>
+            <dd>{{ item.FileMeta.Flash }}</dd>
         </dl>
     </div>
 
@@ -182,14 +186,20 @@
             <dd ng-if="item.usageterms">{{ item.usageterms }}</dd>
         </dl>
     </div>
-    
+
     <div class="metadata-view__content-block">
         <dl>
             <dt translate>State</dt>
             <dd>
-                <span sd-item-state data-state=item.state data-embargo=item.embargo
-                    data-is-correction-workflow-enabled="isCorrectionWorkflowEnabled"></span>
-                <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+                <span
+                    sd-item-state
+                    data-state="item.state"
+                    data-embargo="item.embargo"
+                    data-is-correction-workflow-enabled="isCorrectionWorkflowEnabled"
+                ></span>
+                <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate
+                    >Not For Publication</span
+                >
                 <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                 <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                 <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
@@ -211,13 +221,18 @@
             <dt translate>Dimensions</dt>
             <dd>{{ item.renditions.original.width }} x {{ item.renditions.original.height }}</dd>
         </dl>
-        <dl ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
+        <dl
+            ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text"
+        >
             <dt translate>Description</dt>
             <dd sd-html-preview="item.archive_description"></dd>
         </dl>
     </div>
-    <div class="metadata-view__content-block" ng-if="item.associations && item.associations.featuremedia"
-         sd-associated-item-metadata
-         data-association="item.associations.featuremedia" data-title="Feature Media">
-    </div>
+    <div
+        class="metadata-view__content-block"
+        ng-if="item.associations && item.associations.featuremedia"
+        sd-associated-item-metadata
+        data-association="item.associations.featuremedia"
+        data-title="Feature Media"
+    ></div>
 </div>

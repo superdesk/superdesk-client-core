@@ -29,15 +29,12 @@ interface IState {
 
 export function showEditAttachmentModal(attachment: IAttachment): Promise<[IAttachment, IAssetItem]> {
     return new Promise((resolve) => {
-        showModalConnectedToStore<Partial<IProps>>(
-            EditAttachmentModal,
-            {
-                attachment: attachment,
-                onAssetUpdated: (updatedAttachment: IAttachment, updatedAsset: IAssetItem) => {
-                    resolve([updatedAttachment, updatedAsset]);
-                },
+        showModalConnectedToStore<Partial<IProps>>(EditAttachmentModal, {
+            attachment: attachment,
+            onAssetUpdated: (updatedAttachment: IAttachment, updatedAsset: IAssetItem) => {
+                resolve([updatedAttachment, updatedAsset]);
             },
-        );
+        });
     });
 }
 
@@ -58,13 +55,12 @@ export class EditAttachmentModal extends React.Component<IProps, IState> {
     componentDidMount() {
         const assetId = superdeskApi.entities.attachment.getMediaId(this.props.attachment);
 
-        samsApi.assets.getById(assetId)
-            .then((asset) => {
-                this.setState({
-                    original: asset,
-                    updates: Object.assign({}, asset),
-                });
+        samsApi.assets.getById(assetId).then((asset) => {
+            this.setState({
+                original: asset,
+                updates: Object.assign({}, asset),
             });
+        });
     }
 
     onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K]) {
@@ -78,7 +74,8 @@ export class EditAttachmentModal extends React.Component<IProps, IState> {
 
     saveAsset() {
         if (this.state.original != null) {
-            samsApi.assets.updateMetadata(this.state.original, this.props.attachment, this.state.updates)
+            samsApi.assets
+                .updateMetadata(this.state.original, this.props.attachment, this.state.updates)
                 .then(([updatedAttachment, updatedAsset]) => {
                     this.props.closeModal();
                     if (this.props.onAssetUpdated != null) {
@@ -92,45 +89,25 @@ export class EditAttachmentModal extends React.Component<IProps, IState> {
         const {gettext} = superdeskApi.localization;
 
         return (
-            <Modal
-                id="EditAttachmentModal"
-                size="large"
-                closeModal={this.props.closeModal}
-                theme="dark-ui"
-            >
-                <ModalHeader
-                    text={gettext('Edit Attachment')}
-                />
+            <Modal id="EditAttachmentModal" size="large" closeModal={this.props.closeModal} theme="dark-ui">
+                <ModalHeader text={gettext('Edit Attachment')} />
                 <ModalBody>
                     <PageLayout
                         mainClassName="sd-padding--2"
-                        main={(
-                            this.state.original == null ?
-                                null : (
-                                    <AssetEditor
-                                        asset={this.state.updates}
-                                        onChange={this.onChange}
-                                        fields={[
-                                            'name',
-                                            'description',
-                                            'state',
-                                        ]}
-                                    />
-                                )
-                        )}
+                        main={
+                            this.state.original == null ? null : (
+                                <AssetEditor
+                                    asset={this.state.updates}
+                                    onChange={this.onChange}
+                                    fields={['name', 'description', 'state']}
+                                />
+                            )
+                        }
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <Button
-                        text={gettext('Cancel')}
-                        onClick={this.props.closeModal}
-                        style="hollow"
-                    />
-                    <Button
-                        text={gettext('Save')}
-                        type="primary"
-                        onClick={this.saveAsset}
-                    />
+                    <Button text={gettext('Cancel')} onClick={this.props.closeModal} style="hollow" />
+                    <Button text={gettext('Save')} type="primary" onClick={this.saveAsset} />
                 </ModalFooter>
             </Modal>
         );

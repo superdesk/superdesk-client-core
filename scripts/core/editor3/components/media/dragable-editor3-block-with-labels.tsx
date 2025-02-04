@@ -50,11 +50,7 @@ class DraggableEditor3BlockComponentWithInlineHandle extends React.PureComponent
                         });
                     }}
                 >
-                    {
-                        this.props.customDragHandle != null
-                            ? <CustomDragHandle />
-                            : <DragHandle />
-                    }
+                    {this.props.customDragHandle != null ? <CustomDragHandle /> : <DragHandle />}
                 </div>
 
                 {this.props.children}
@@ -67,6 +63,6 @@ const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
 });
 
-export const DraggableEditor3BlockWithInlineHandle = connect(
-    mapStateToProps,
-)(DraggableEditor3BlockComponentWithInlineHandle);
+export const DraggableEditor3BlockWithInlineHandle = connect(mapStateToProps)(
+    DraggableEditor3BlockComponentWithInlineHandle,
+);

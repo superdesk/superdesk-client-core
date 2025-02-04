@@ -11,7 +11,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {Object} item
      * @param {Object} desk when passed the item will be assigned to this desk instead of user's activeDesk.
      */
-    this.addTaskToArticle = function(item, desk = desks.getCurrentDesk()) {
+    this.addTaskToArticle = function (item, desk = desks.getCurrentDesk()) {
         if ((!item.task || !item.task.desk) && desk && !sdApi.navigation.isPersonalSpace()) {
             item.task = {desk: desk._id, stage: desk.working_stage, user: session.identity._id};
         }
@@ -27,7 +27,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      *      'archived' if item is archived (no post publish actions)
      *      'archive' if none of the above is returned
      */
-    this.getType = function(item) {
+    this.getType = function (item) {
         var itemType;
 
         if (this.isLegal(item)) {
@@ -53,7 +53,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {Object} item
      * @return boolean if the item is fetched from Legal Archive, false otherwise.
      */
-    this.isLegal = function(item) {
+    this.isLegal = function (item) {
         return item._type === 'legal_archive';
     };
 
@@ -63,7 +63,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {Object} item
      * @return boolean if the item is fetched from Archived, false otherwise.
      */
-    this.isArchived = function(item) {
+    this.isArchived = function (item) {
         return item._type === 'archived';
     };
 
@@ -81,9 +81,8 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      *  @param {Datetime} fromDateTime - from datetime
      *  @return {Object} the list of archive items
      */
-    this.getRelatedItems = function(item, fromDateTime) {
-        var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
-            .format(appConfig.view.dateformat);
+    this.getRelatedItems = function (item, fromDateTime) {
+        var beforeDateTime = fromDateTime || moment().subtract(1, 'days').format(appConfig.view.dateformat);
         var params: any = {};
 
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
@@ -124,51 +123,13 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {String} versionType one of versions, operations
      * @return list of object where each object is a version of the item
      */
-    this.getVersions = function(item, deskService, versionType) {
+    this.getVersions = function (item, deskService, versionType) {
         if (this.isLegal(item)) {
-            return api.find('legal_archive', item._id, {version: 'all', max_results: 200})
-                .then((result) => {
-                    _.each(result._items, (version) => {
-                        version.desk = version.task && version.task.desk ? version.task.desk : '';
-                        version.stage = version.task && version.task.stage ? version.task.stage : '';
-                        version.creator = version.version_creator || version.original_creator;
-
-                        if (version.type === 'text') {
-                            version.typeName = 'Story';
-                        } else {
-                            version.typeName = _.capitalize(item.type);
-                        }
-                    });
-
-                    if (versionType === 'versions') {
-                        return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
-                    } else if (versionType === 'operations') {
-                        return $q.when(_.sortBy(result._items, '_current_version'));
-                    }
-                });
-        }
-
-        return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200})
-            .then((result) => {
+            return api.find('legal_archive', item._id, {version: 'all', max_results: 200}).then((result) => {
                 _.each(result._items, (version) => {
-                    if (version.task) {
-                        if (version.task.desk) {
-                            var versiondesk = deskService.deskLookup[version.task.desk];
-
-                            version.desk = versiondesk && versiondesk.name;
-                        }
-                        if (version.task.stage) {
-                            var versionstage = deskService.stageLookup[version.task.stage];
-
-                            version.stage = versionstage && versionstage.name;
-                        }
-                    }
-                    if (version.version_creator || version.original_creator) {
-                        var versioncreator =
-                            deskService.userLookup[version.version_creator || version.original_creator];
-
-                        version.creator = versioncreator && versioncreator.display_name || 'System';
-                    }
+                    version.desk = version.task && version.task.desk ? version.task.desk : '';
+                    version.stage = version.task && version.task.stage ? version.task.stage : '';
+                    version.creator = version.version_creator || version.original_creator;
 
                     if (version.type === 'text') {
                         version.typeName = 'Story';
@@ -183,6 +144,41 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
                     return $q.when(_.sortBy(result._items, '_current_version'));
                 }
             });
+        }
+
+        return api.find('archive', item._id, {version: 'all', embedded: {user: 1}, max_results: 200}).then((result) => {
+            _.each(result._items, (version) => {
+                if (version.task) {
+                    if (version.task.desk) {
+                        var versiondesk = deskService.deskLookup[version.task.desk];
+
+                        version.desk = versiondesk && versiondesk.name;
+                    }
+                    if (version.task.stage) {
+                        var versionstage = deskService.stageLookup[version.task.stage];
+
+                        version.stage = versionstage && versionstage.name;
+                    }
+                }
+                if (version.version_creator || version.original_creator) {
+                    var versioncreator = deskService.userLookup[version.version_creator || version.original_creator];
+
+                    version.creator = (versioncreator && versioncreator.display_name) || 'System';
+                }
+
+                if (version.type === 'text') {
+                    version.typeName = 'Story';
+                } else {
+                    version.typeName = _.capitalize(item.type);
+                }
+            });
+
+            if (versionType === 'versions') {
+                return $q.when(_.sortBy(_.reject(result._items, {version: 0}), '_current_version').reverse());
+            } else if (versionType === 'operations') {
+                return $q.when(_.sortBy(result._items, '_current_version'));
+            }
+        });
     };
 
     /**
@@ -192,7 +188,7 @@ export function ArchiveService(desks, session, api, $q, search, $location) {
      * @param {Object} versions
      * @return last version of the item
      */
-    this.lastVersion = function(item, versions) {
+    this.lastVersion = function (item, versions) {
         if (item._latest_version) {
             return _.find(versions, {_current_version: item._latest_version});
         }

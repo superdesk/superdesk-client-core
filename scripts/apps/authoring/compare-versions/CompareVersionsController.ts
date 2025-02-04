@@ -30,9 +30,13 @@ export default class CompareVersionsController {
     init() {
         this.$scope.minBoards = this.compareVersions.minBoards();
 
-        this.$scope.$watch(() => this.compareVersions.items, (items) => {
-            this.$scope.boards = items;
-        }, true);
+        this.$scope.$watch(
+            () => this.compareVersions.items,
+            (items) => {
+                this.$scope.boards = items;
+            },
+            true,
+        );
 
         this.$scope.closeBoard = this.closeBoard.bind(this);
         this.$scope.closeScreen = this.closeScreen.bind(this);

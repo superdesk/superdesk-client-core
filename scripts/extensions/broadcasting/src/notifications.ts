@@ -22,28 +22,30 @@ export const notifications: IExtensionNotifications = {
         name: gettext('Open item'),
         handler: (notification: IRundownItemCommentNotification) => ({
             body: notification.message,
-            actions: [{
-                label: gettext('Open item'),
-                onClick: () => {
-                    const {rundownId, rundownItemId} = notification.data;
+            actions: [
+                {
+                    label: gettext('Open item'),
+                    onClick: () => {
+                        const {rundownId, rundownItemId} = notification.data;
 
-                    function openRundownItem() {
-                        events.dispatchEvent('openRundownItem', {
-                            rundownId: rundownId,
-                            rundownItemId: rundownItemId,
-                            sidePanel: 'comments-widget-generic',
-                        });
-                    }
+                        function openRundownItem() {
+                            events.dispatchEvent('openRundownItem', {
+                                rundownId: rundownId,
+                                rundownItemId: rundownItemId,
+                                sidePanel: 'comments-widget-generic',
+                            });
+                        }
 
-                    if (superdesk.browser.location.getPage() === BROADCASTING_MODULE_PATH) {
-                        openRundownItem();
-                    } else {
-                        events.addListener('broadcastingPageDidLoad', () => openRundownItem(), {once: true});
+                        if (superdesk.browser.location.getPage() === BROADCASTING_MODULE_PATH) {
+                            openRundownItem();
+                        } else {
+                            events.addListener('broadcastingPageDidLoad', () => openRundownItem(), {once: true});
 
-                        superdesk.browser.location.setPage(BROADCASTING_MODULE_PATH);
-                    }
+                            superdesk.browser.location.setPage(BROADCASTING_MODULE_PATH);
+                        }
+                    },
                 },
-            }],
+            ],
         }),
     },
 };

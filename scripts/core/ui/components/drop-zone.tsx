@@ -70,9 +70,9 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
     }
 
     render() {
-        const className = (
-            this.props.className != null ? this.props.className : 'item-association'
-        ) + (this.state.hover ? ' dragover' : '');
+        const className =
+            (this.props.className != null ? this.props.className : 'item-association') +
+            (this.state.hover ? ' dragover' : '');
 
         return (
             <button
@@ -84,10 +84,10 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                     }
                 }}
             >
-                {this.props.children ? this.props.children : (
-                    <span className="item-association__text-label">
-                        {this.props.label}
-                    </span>
+                {this.props.children ? (
+                    this.props.children
+                ) : (
+                    <span className="item-association__text-label">{this.props.label}</span>
                 )}
                 {this.props.onFileSelect != null && (
                     <input

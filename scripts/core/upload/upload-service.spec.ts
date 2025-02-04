@@ -1,16 +1,22 @@
-
 describe('upload service', () => {
     beforeEach(window.module('superdesk.core.upload'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.service('$upload', ['$q', function($q) {
-            // angular-file-upload api
-            this.upload = function() {
-                return $q.when();
-            };
-            this.http = function() { /* no-op */ };
-        }]);
-    }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service('$upload', [
+                '$q',
+                function ($q) {
+                    // angular-file-upload api
+                    this.upload = function () {
+                        return $q.when();
+                    };
+                    this.http = function () {
+                        /* no-op */
+                    };
+                },
+            ]);
+        }),
+    );
 
     it('can start uploading', inject((upload, Upload) => {
         var config = {url: 'test', method: 'POST', data: 'test'};

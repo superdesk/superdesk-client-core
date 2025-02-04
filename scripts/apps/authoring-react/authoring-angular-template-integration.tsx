@@ -40,10 +40,7 @@ function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStora
             return Promise.resolve();
         }
 
-        schedule(
-            getItem: () => IArticle,
-            callback: (autosaved: IArticle) => void,
-        ) {
+        schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void) {
             callback(getItem());
         }
 

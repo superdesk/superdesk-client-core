@@ -1,4 +1,4 @@
-export default ({
+export default {
     input: {
         margin: 0,
 
@@ -64,4 +64,4 @@ export default ({
     mention: {
         backgroundColor: 'var(--sd-colour-interactive--alpha-30)',
     },
-});
+};

@@ -1,4 +1,8 @@
-<div class="preview-layout" ng-class="{closed: !selected.preview}" ng-init="extras={view: view, activity: {type: type, action: 'list'}, api: api}">
+<div
+    class="preview-layout"
+    ng-class="{closed: !selected.preview}"
+    ng-init="extras={view: view, activity: {type: type, action: 'list'}, api: api}"
+>
     <div class="list-pane {{ view || 'photogrid' }}-view">
         <div id="content-list" class="content">
             <div class="loading-indicator" ng-show="loading" translate>loading</div>
@@ -7,11 +11,12 @@
         </div>
         <div class="preview-pane content-item-preview" ng-if="selected.preview">
             <div class="contact-details-pane">
-                <div sd-contact-editor
+                <div
+                    sd-contact-editor
                     class="contact-editor"
                     data-contact="selected.preview"
-                    data-oncancel="selected.preview = null">
-                </div>
+                    data-oncancel="selected.preview = null"
+                ></div>
             </div>
         </div>
     </div>

@@ -36,44 +36,32 @@ export class Difference extends React.PureComponent<IProps> {
                                 <Alert type="primary" size="small" margin="none">
                                     <div>
                                         <ul style={{listStyle: 'disc', paddingInlineStart: 16}}>
-                                            {
-                                                stats.added.length > 0 && (
-                                                    <li>{gettext('{{n}} items added', {n: stats.added.length})}</li>
-                                                )
-                                            }
+                                            {stats.added.length > 0 && (
+                                                <li>{gettext('{{n}} items added', {n: stats.added.length})}</li>
+                                            )}
 
-                                            {
-                                                stats.removed.length > 0 && (
-                                                    <li>{gettext('{{n}} items removed', {n: stats.removed.length})}</li>
-                                                )
-                                            }
+                                            {stats.removed.length > 0 && (
+                                                <li>{gettext('{{n}} items removed', {n: stats.removed.length})}</li>
+                                            )}
 
-                                            {
-                                                stats.modified.length > 0 && (
-                                                    <li>
-                                                        {gettext('{{n}} items modified', {n: stats.modified.length})}
-                                                    </li>
-                                                )
-                                            }
+                                            {stats.modified.length > 0 && (
+                                                <li>{gettext('{{n}} items modified', {n: stats.modified.length})}</li>
+                                            )}
 
-                                            {
-                                                stats.reordered.length > 0 && (
-                                                    <li>
-                                                        {gettext('{{n}} items re-ordered', {n: stats.reordered.length})}
-                                                    </li>
-                                                )
-                                            }
+                                            {stats.reordered.length > 0 && (
+                                                <li>
+                                                    {gettext('{{n}} items re-ordered', {n: stats.reordered.length})}
+                                                </li>
+                                            )}
                                         </ul>
                                     </div>
                                 </Alert>
 
                                 <div>
-                                    {
-                                        gettext(
-                                            'To see detailed differences, '
-                                            + 'compare primary and secondary items visually',
-                                        )
-                                    }
+                                    {gettext(
+                                        'To see detailed differences, ' +
+                                            'compare primary and secondary items visually',
+                                    )}
                                 </div>
                             </div>
                         );

@@ -11,14 +11,27 @@
         </div>
     </div>
     <div class="form__row-item form__row-item--no-grow">
-        <button class="btn btn--hollow btn--primary" type="button" ng-click="addTarget(target)" ng-disabled="canAddTarget()" translate>Add</button>
+        <button
+            class="btn btn--hollow btn--primary"
+            type="button"
+            ng-click="addTarget(target)"
+            ng-disabled="canAddTarget()"
+            translate
+        >
+            Add
+        </button>
     </div>
 </div>
 
 <div class="terms-list terms-list--full" ng-if="targets.length">
     <ul>
-        <li ng-repeat="t in targets" ng-if="!disabled" ng-click="removeTarget(t)">{{ :: t['allow'] == false ? 'Not ' + t.name : t.name}}<i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
+        <li ng-repeat="t in targets" ng-if="!disabled" ng-click="removeTarget(t)">
+            {{ :: t['allow'] == false ? 'Not ' + t.name : t.name}}<i
+                role="button"
+                aria-label="{{'Remove item'| translate }}"
+                class="icon-close-small"
+            ></i>
+        </li>
         <li ng-repeat="t in targets" ng-if="disabled">{{ :: t['allow'] == false ? 'Not ' + t.name : t.name}}</li>
     </ul>
 </div>
-

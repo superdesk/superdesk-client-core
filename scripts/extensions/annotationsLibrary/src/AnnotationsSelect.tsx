@@ -31,10 +31,7 @@ export class AnnotationsSelect extends React.Component<IProps, IState> {
         const backButton = (
             <div className="space-between" style={{marginBlockStart: 15}}>
                 <span />
-                <button
-                    onClick={this.props.onCancel}
-                    className="btn"
-                >
+                <button onClick={this.props.onCancel} className="btn">
                     {gettext('Cancel')}
                 </button>
             </div>

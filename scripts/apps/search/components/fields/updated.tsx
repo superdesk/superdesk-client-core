@@ -6,7 +6,7 @@ class UpdatedComponent extends React.Component<IPropsItemListInfo> {
     render() {
         const props = this.props;
 
-        const openItem = function(event) {
+        const openItem = function (event) {
             event.stopPropagation();
             props.openAuthoringView(props.item.rewritten_by);
         };

@@ -55,7 +55,7 @@ interface IProps {
     storageAdapter: IStorageAdapter<IArticle>;
     closeModal(): void;
     article: IArticle;
-    versions: Array<(IArticle & IBaseRestApiResponse)>;
+    versions: Array<IArticle & IBaseRestApiResponse>;
 }
 
 const ITEM_PADDING = 8;

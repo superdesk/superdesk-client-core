@@ -92,10 +92,7 @@ export const DateTimeInput: React.StatelessComponent<any> = ({
 DateTimeInput.propTypes = {
     field: PropTypes.string.isRequired,
     label: PropTypes.string,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(moment),
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(moment)]),
     onChange: PropTypes.func.isRequired,
     timeFormat: PropTypes.string.isRequired,
     dateFormat: PropTypes.string.isRequired,

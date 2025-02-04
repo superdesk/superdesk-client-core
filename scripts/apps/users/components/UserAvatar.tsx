@@ -29,17 +29,12 @@ class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
 
             return (
                 <AvatarContentText
-                    text={initials.length > 0 ? initials : user.display_name?.[0] ?? ''}
+                    text={initials.length > 0 ? initials : (user.display_name?.[0] ?? '')}
                     tooltipText={tooltipText}
                 />
             );
         } else {
-            return (
-                <AvatarContentImage
-                    imageUrl={user.picture_url}
-                    tooltipText={tooltipText}
-                />
-            );
+            return <AvatarContentImage imageUrl={user.picture_url} tooltipText={tooltipText} />;
         }
     }
 }
@@ -96,16 +91,12 @@ export class UserAvatar extends React.PureComponent<IProps> {
                         !displayStatus
                             ? undefined
                             : isUserLoggedIn(user)
-                                ? {status: 'online', tooltipText: gettext('Online')}
-                                : {status: 'offline', tooltipText: gettext('Offline')}
+                              ? {status: 'online', tooltipText: gettext('Online')}
+                              : {status: 'offline', tooltipText: gettext('Offline')}
                     }
                     data-test-id="user-avatar"
                 >
-                    {
-                        CC.UserAvatar != null
-                            ? <CC.UserAvatar user={user} />
-                            : <DefaultAvatarDisplay user={user} />
-                    }
+                    {CC.UserAvatar != null ? <CC.UserAvatar user={user} /> : <DefaultAvatarDisplay user={user} />}
                 </AvatarWrapper>
             </LazyOrNot>
         );

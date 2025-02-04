@@ -1,4 +1,3 @@
-
 describe('desks service', () => {
     var USER_URL = 'users/1';
 
@@ -7,8 +6,8 @@ describe('desks service', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
-    it('can fetch current user desks',
-        (done) => inject((desks, session, preferencesService, $rootScope, $q) => {
+    it('can fetch current user desks', (done) =>
+        inject((desks, session, preferencesService, $rootScope, $q) => {
             spyOn(session, 'getIdentity').and.returnValue($q.when({_links: {self: {href: USER_URL}}}));
             spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([{name: 'sport'}, {name: 'news'}]));
             spyOn(preferencesService, 'get').and.returnValue($q.when([]));
@@ -23,29 +22,39 @@ describe('desks service', () => {
             $rootScope.$apply();
         }));
 
-    it('can pick personal desk if user has no current desk selected',
-        inject((desks, session, api, preferencesService, $q, $rootScope) => {
-            spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
-            spyOn(preferencesService, 'update');
-            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([]));
-            desks.fetchCurrentUserDesks();
-            $rootScope.$digest();
-            expect(desks.getCurrentDeskId()).toBe(null);
-            expect(preferencesService.update).not.toHaveBeenCalled();
-        }),
-    );
+    it('can pick personal desk if user has no current desk selected', inject((
+        desks,
+        session,
+        api,
+        preferencesService,
+        $q,
+        $rootScope,
+    ) => {
+        spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
+        spyOn(preferencesService, 'update');
+        spyOn(desks, 'fetchUserDesks').and.returnValue($q.when([]));
+        desks.fetchCurrentUserDesks();
+        $rootScope.$digest();
+        expect(desks.getCurrentDeskId()).toBe(null);
+        expect(preferencesService.update).not.toHaveBeenCalled();
+    }));
 
-    it('can checks if current desk is part of user desks, personal will be selected',
-        inject((desks, session, api, preferencesService, $q, $rootScope) => {
-            spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
-            spyOn(preferencesService, 'update');
-            spyOn(desks, 'fetchUserDesks').and.returnValue($q.when({_items: []}));
-            desks.fetchCurrentUserDesks();
-            $rootScope.$digest();
-            expect(desks.getCurrentDeskId()).toBe(null);
-            expect(preferencesService.update).not.toHaveBeenCalled();
-        }),
-    );
+    it('can checks if current desk is part of user desks, personal will be selected', inject((
+        desks,
+        session,
+        api,
+        preferencesService,
+        $q,
+        $rootScope,
+    ) => {
+        spyOn(preferencesService, 'get').and.returnValue($q.when('missing'));
+        spyOn(preferencesService, 'update');
+        spyOn(desks, 'fetchUserDesks').and.returnValue($q.when({_items: []}));
+        desks.fetchCurrentUserDesks();
+        $rootScope.$digest();
+        expect(desks.getCurrentDeskId()).toBe(null);
+        expect(preferencesService.update).not.toHaveBeenCalled();
+    }));
 
     it('can save desk changes', inject((desks, api, $q) => {
         spyOn(api, 'save').and.returnValue($q.when({}));
@@ -107,20 +116,22 @@ describe('desks service', () => {
         expect(active).toBe(desks.active);
     }));
 
-    it('can get stages for given desk', (done) => inject((desks, api, $q, $rootScope) => {
-        spyOn(api, 'query').and.returnValue($q.when({
-            _items: [{desk: 'foo'}, {desk: 'bar'}],
-            _links: {},
+    it('can get stages for given desk', (done) =>
+        inject((desks, api, $q, $rootScope) => {
+            spyOn(api, 'query').and.returnValue(
+                $q.when({
+                    _items: [{desk: 'foo'}, {desk: 'bar'}],
+                    _links: {},
+                }),
+            );
+
+            desks.fetchDeskStages('foo').then((stages) => {
+                expect(stages.length).toBe(1);
+                done();
+            });
+
+            $rootScope.$apply();
         }));
-
-
-        desks.fetchDeskStages('foo').then((stages) => {
-            expect(stages.length).toBe(1);
-            done();
-        });
-
-        $rootScope.$apply();
-    }));
 
     describe('getCurrentDeskId() method', () => {
         var desks;

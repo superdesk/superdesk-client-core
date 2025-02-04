@@ -48,11 +48,11 @@ export const InputArray: React.StatelessComponent<any> = ({
     const Component = element;
 
     const showAddButton = (maxCount ? value.length < maxCount : true) && !readOnly;
-    const isIndexReadOnly = (index) => (addOnly && index === originalCount) ? false : readOnly;
+    const isIndexReadOnly = (index) => (addOnly && index === originalCount ? false : readOnly);
     const customButton = addButtonComponent ? React.createElement(addButtonComponent, {onAdd: add}) : false;
     const addButton = row
-        ? (customButton || <Button onClick={add} text={addButtonText} />)
-        : (customButton || <Button onClick={add} text={addButtonText} tabIndex={0} enterKeyIsClick />);
+        ? customButton || <Button onClick={add} text={addButtonText} />
+        : customButton || <Button onClick={add} text={addButtonText} tabIndex={0} enterKeyIsClick />;
 
     const labelComponent = label ? (
         <div>
@@ -64,51 +64,42 @@ export const InputArray: React.StatelessComponent<any> = ({
     const getComponent = (val, index, _row) => {
         const indexReadOnly = isIndexReadOnly(index);
 
-        return _row ?
-            (
-                <Component
-                    key={index}
-                    index={index}
-                    field={`${field}[${index}]`}
-                    onChange={onChange}
-                    value={val}
-                    remove={remove.bind(null, index)}
-                    readOnly={indexReadOnly}
-                    message={get(message, `[${index}]`)}
-                    invalid={!!get(message, `[${index}]`)}
-                    openComponent={addOnly && !indexReadOnly}
-                    {...props}
-                />
-            ) :
-            (
-                <Component
-                    key={index}
-                    index={index}
-                    field={`${field}[${index}]`}
-                    onChange={onChange}
-                    value={val}
-                    remove={remove.bind(null, index)}
-                    readOnly={indexReadOnly}
-                    message={get(message, `[${index}]`)}
-                    invalid={!!get(message, `[${index}]`)}
-                    openComponent={addOnly && !indexReadOnly}
-                    {...props}
-                />
-            );
+        return _row ? (
+            <Component
+                key={index}
+                index={index}
+                field={`${field}[${index}]`}
+                onChange={onChange}
+                value={val}
+                remove={remove.bind(null, index)}
+                readOnly={indexReadOnly}
+                message={get(message, `[${index}]`)}
+                invalid={!!get(message, `[${index}]`)}
+                openComponent={addOnly && !indexReadOnly}
+                {...props}
+            />
+        ) : (
+            <Component
+                key={index}
+                index={index}
+                field={`${field}[${index}]`}
+                onChange={onChange}
+                value={val}
+                remove={remove.bind(null, index)}
+                readOnly={indexReadOnly}
+                message={get(message, `[${index}]`)}
+                invalid={!!get(message, `[${index}]`)}
+                openComponent={addOnly && !indexReadOnly}
+                {...props}
+            />
+        );
     };
 
     return (
         <Row noPadding={!!message}>
             {labelComponent}
-            {get(message, field) && (
-                <LineInput
-                    invalid={true}
-                    message={get(message, field)}
-                    readOnly
-                    noLabel
-                />
-            )}
-            {value && value.map((val, index) => (getComponent(val, index, row)))}
+            {get(message, field) && <LineInput invalid={true} message={get(message, field)} readOnly noLabel />}
+            {value && value.map((val, index) => getComponent(val, index, row))}
             {!buttonWithLabel && showAddButton && addButton}
         </Row>
     );
@@ -127,10 +118,7 @@ InputArray.propTypes = {
     defaultElement: PropTypes.any,
 
     hint: PropTypes.string,
-    message: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object,
-    ]),
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     required: PropTypes.bool,
     invalid: PropTypes.bool,
     readOnly: PropTypes.bool,
@@ -144,10 +132,7 @@ InputArray.propTypes = {
     errors: PropTypes.object,
     showErrors: PropTypes.bool,
     row: PropTypes.bool,
-    addButtonComponent: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.object,
-    ]),
+    addButtonComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
     labelClassName: PropTypes.string,
 };
 

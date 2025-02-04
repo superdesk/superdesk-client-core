@@ -37,11 +37,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
 
         this.highlightMatches.bind(this);
 
-        this.scheduleHighlightingOfMatches = throttle(
-            this.highlightMatches,
-            500,
-            {leading: false},
-        );
+        this.scheduleHighlightingOfMatches = throttle(this.highlightMatches, 500, {leading: false});
     }
 
     private highlightMatches() {
@@ -64,14 +60,14 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
     render() {
         return (
             <AuthoringWidgetLayout
-                header={(
+                header={
                     <AuthoringWidgetHeading
                         widgetId={FIND_AND_REPLACE_WIDGET_ID}
                         widgetName={getLabel()}
                         editMode={false}
                     />
-                )}
-                body={(
+                }
+                body={
                     <Spacer v gap="16">
                         <Input
                             type="text"
@@ -155,7 +151,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
                             </Spacer>
                         </div>
                     </Spacer>
-                )}
+                }
             />
         );
     }

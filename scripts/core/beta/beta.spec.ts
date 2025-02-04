@@ -1,8 +1,8 @@
 describe('beta service', () => {
     beforeEach(window.module('superdesk.core.services.beta'));
 
-    it('can filter out sd-beta from html when beta is off',
-        (done) => inject((betaService, $rootScope, $http, $httpBackend) => {
+    it('can filter out sd-beta from html when beta is off', (done) =>
+        inject((betaService, $rootScope, $http, $httpBackend) => {
             $rootScope.beta = false;
             var isBeta = null;
 
@@ -26,40 +26,46 @@ describe('beta service', () => {
             $httpBackend.flush();
         }));
 
-    it('keeps it there when beta is on',
-        (done) => inject((betaService, preferencesService, $rootScope, $http, $httpBackend, $q) => {
+    it('keeps it there when beta is on', (done) =>
+        inject((betaService, preferencesService, $rootScope, $http, $httpBackend, $q) => {
             $rootScope.beta = true;
 
             spyOn(preferencesService, 'get').and.returnValue($q.when({enabled: true}));
 
             let promise = Promise.resolve();
 
-            promise = promise.then(() => new Promise<void>((resolve) => {
-                betaService.isBeta().then((_beta) => {
-                    expect(_beta).toBe(true);
+            promise = promise.then(
+                () =>
+                    new Promise<void>((resolve) => {
+                        betaService.isBeta().then((_beta) => {
+                            expect(_beta).toBe(true);
 
-                    resolve();
-                });
+                            resolve();
+                        });
 
-                $rootScope.$digest();
-            }));
+                        $rootScope.$digest();
+                    }),
+            );
 
-            promise = promise.then(() => new Promise<void>((resolve) => {
-                var template = '<div sd-beta>beta</div>',
-                    data;
+            promise = promise.then(
+                () =>
+                    new Promise<void>((resolve) => {
+                        var template = '<div sd-beta>beta</div>',
+                            data;
 
-                $httpBackend.expectGET('view_on.html').respond(200, template);
+                        $httpBackend.expectGET('view_on.html').respond(200, template);
 
-                $http.get('view_on.html').then((response) => {
-                    data = response.data;
+                        $http.get('view_on.html').then((response) => {
+                            data = response.data;
 
-                    expect(data).toContain('beta');
+                            expect(data).toContain('beta');
 
-                    resolve();
-                });
+                            resolve();
+                        });
 
-                $httpBackend.flush();
-            }));
+                        $httpBackend.flush();
+                    }),
+            );
 
             promise = promise.then(() => {
                 done();

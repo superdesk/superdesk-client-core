@@ -23,9 +23,10 @@ export class Difference extends React.PureComponent<IProps> {
             <WithLiveResources resources={[{resource: 'attachments', ids: allIds}]}>
                 {([res]: [IRestApiResponse<IAttachment>]) => {
                     const attachmentsById = keyBy(res._items, ({_id}) => _id);
-                    const AttachmentsDifferenceView = CC.AuthoringAttachmentsDiffView != null
-                        ? CC.AuthoringAttachmentsDiffView
-                        : DifferenceDefaultImplementation;
+                    const AttachmentsDifferenceView =
+                        CC.AuthoringAttachmentsDiffView != null
+                            ? CC.AuthoringAttachmentsDiffView
+                            : DifferenceDefaultImplementation;
 
                     return (
                         <AttachmentsDifferenceView

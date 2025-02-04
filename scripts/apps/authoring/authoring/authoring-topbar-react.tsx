@@ -66,8 +66,7 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
         const articleDisplayWidgets = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
             (activationResult) =>
-                activationResult.contributions != null
-                && activationResult.contributions.authoringTopbarWidgets != null
+                activationResult.contributions != null && activationResult.contributions.authoringTopbarWidgets != null
                     ? activationResult.contributions.authoringTopbarWidgets
                     : [],
         );
@@ -77,23 +76,19 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
 
         return (
             <div style={{paddingInlineStart: 10}}>
-                {articleDisplayWidgets.map(
-                    (widget, i) => {
-                        const Component = widget.component;
+                {articleDisplayWidgets.map((widget, i) => {
+                    const Component = widget.component;
 
-                        return (
-                            <span key={i} style={{marginInlineEnd: 10}}>
-                                <Component
-                                    entity={
-                                        this.props.action === 'view'
-                                            ? this.state.articleOriginal
-                                            : articleUpdatedReference
-                                    }
-                                />
-                            </span>
-                        );
-                    },
-                )}
+                    return (
+                        <span key={i} style={{marginInlineEnd: 10}}>
+                            <Component
+                                entity={
+                                    this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
+                                }
+                            />
+                        </span>
+                    );
+                })}
             </div>
         );
     }

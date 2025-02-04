@@ -33,12 +33,7 @@ describe('editor3.components.toolbar', () => {
     it('(BlockStyleButtons) should render only given types', () => {
         const opts = ['h1', 'h2', 'ul'];
         const editorState = EditorState.createEmpty();
-        const wrapper = mount(
-            <BlockStyleButtons
-                editorFormat={opts}
-                editorState={editorState}
-            />,
-        );
+        const wrapper = mount(<BlockStyleButtons editorFormat={opts} editorState={editorState} />);
 
         wrapper.find('StyleButton').forEach((btn) => {
             const key = btn.key();
@@ -51,12 +46,7 @@ describe('editor3.components.toolbar', () => {
     it('(InlineStyleButtons) should render only given types', () => {
         const opts = ['BOLD', 'UNDERLINE'];
         const editorState = EditorState.createEmpty();
-        const wrapper = mount(
-            <InlineStyleButtons
-                editorFormat={opts}
-                editorState={editorState}
-            />,
-        );
+        const wrapper = mount(<InlineStyleButtons editorFormat={opts} editorState={editorState} />);
 
         wrapper.find('StyleButton').forEach((btn) => {
             const key = btn.key();

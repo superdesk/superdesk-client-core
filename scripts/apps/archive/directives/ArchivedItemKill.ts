@@ -10,7 +10,7 @@ export function ArchivedItemKill(authoring, api, notify, content) {
             item: '=',
             action: '=',
         },
-        link: function(scope, elem, attr) {
+        link: function (scope, elem, attr) {
             scope._editable = true;
 
             var itemToDelete = {_id: scope.item._id, _etag: scope.item._etag};
@@ -20,19 +20,23 @@ export function ArchivedItemKill(authoring, api, notify, content) {
                     var fields = _.union(_.keys(authoring.getContentFieldDefaults()), ['_id', 'versioncreated']);
                     let itemForTemplate: any = {template_name: scope.action, item: _.pick(scope.item, fields)};
 
-                    api.save('content_templates_apply', {}, itemForTemplate, {}).then((result) => {
-                        itemForTemplate = _.pick(result, _.keys(authoring.getContentFieldDefaults()));
-                        scope.item = _.create(scope.item);
-                        _.each(itemForTemplate, (value, key) => {
-                            if (!_.isUndefined(value) && !_.isEmpty(value)) {
-                                scope.item[key] = value;
-                            }
-                        });
-                        scope.item['operation'] = scope.action;
-                    }, (err) => {
-                        notify.error(gettext('Failed to apply kill template to the item.'));
-                    });
-                }, (response) => {
+                    api.save('content_templates_apply', {}, itemForTemplate, {}).then(
+                        (result) => {
+                            itemForTemplate = _.pick(result, _.keys(authoring.getContentFieldDefaults()));
+                            scope.item = _.create(scope.item);
+                            _.each(itemForTemplate, (value, key) => {
+                                if (!_.isUndefined(value) && !_.isEmpty(value)) {
+                                    scope.item[key] = value;
+                                }
+                            });
+                            scope.item['operation'] = scope.action;
+                        },
+                        (err) => {
+                            notify.error(gettext('Failed to apply kill template to the item.'));
+                        },
+                    );
+                },
+                (response) => {
                     if (response.data._message) {
                         notify.error(response.data._message);
                     } else {
@@ -41,24 +45,26 @@ export function ArchivedItemKill(authoring, api, notify, content) {
                 },
             );
 
-            scope.kill = function() {
-                api.save('archived', scope.item, _.pick(scope.item, ['headline', 'abstract', 'body_html', 'operation']))
-                    .then((response) => {
-                        notify.success(gettext('Item has been killed.'));
-                        scope.cancel();
-                    });
+            scope.kill = function () {
+                api.save(
+                    'archived',
+                    scope.item,
+                    _.pick(scope.item, ['headline', 'abstract', 'body_html', 'operation']),
+                ).then((response) => {
+                    notify.success(gettext('Item has been killed.'));
+                    scope.cancel();
+                });
             };
 
-            scope.cancel = function() {
+            scope.cancel = function () {
                 scope.item = null;
             };
 
             scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, scope, scope.item)
-                    .then(() => {
-                        authoring.schema = scope.schema;
-                        authoring.editor = scope.editor;
-                    });
+                content.setupAuthoring(profile, scope, scope.item).then(() => {
+                    authoring.schema = scope.schema;
+                    authoring.editor = scope.editor;
+                });
             });
         },
     };

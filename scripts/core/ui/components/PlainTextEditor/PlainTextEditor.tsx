@@ -42,11 +42,7 @@ interface IState {
 function updateStateWithValue(value: string, editorState: EditorState) {
     const currentContent = editorState.getCurrentContent();
     const selectionAll = getDraftSelectionForEntireContent(editorState);
-    const newContent = Modifier.replaceText(
-        currentContent,
-        selectionAll,
-        value,
-    );
+    const newContent = Modifier.replaceText(currentContent, selectionAll, value);
     let newState = EditorState.set(editorState, {allowUndo: false});
 
     newState = EditorState.push(newState, newContent, 'insert-characters');
@@ -67,9 +63,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         this.lastComputedValue = props.value?.toString() || '';
 
         this.state = {
-            editorState: EditorState.createWithContent(
-                ContentState.createFromText(this.lastComputedValue),
-            ),
+            editorState: EditorState.createWithContent(ContentState.createFromText(this.lastComputedValue)),
             hasFocus: false,
         };
 
@@ -116,13 +110,8 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                     },
                     {disableContextMenu: true},
                 );
-                const decorator = new CompositeDecorator([
-                    spellcheckerDecorator,
-                ]);
-                const editorStateDecorated = EditorState.set(
-                    this.state.editorState,
-                    {decorator},
-                );
+                const decorator = new CompositeDecorator([spellcheckerDecorator]);
+                const editorStateDecorated = EditorState.set(this.state.editorState, {decorator});
 
                 this.setState({
                     editorState: editorStateDecorated,
@@ -145,19 +134,14 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     }
 
     handleEditorChange(editorState: EditorState) {
-        if (
-            this.state.editorState.getCurrentContent() !==
-            editorState.getCurrentContent()
-        ) {
+        if (this.state.editorState.getCurrentContent() !== editorState.getCurrentContent()) {
             const value = editorState.getCurrentContent().getPlainText();
 
             this.lastComputedValue = value;
             this.props.onChange(value, this.props.onChangeData);
         }
 
-        this.selection = this.state.hasFocus
-            ? editorState.getSelection()
-            : null;
+        this.selection = this.state.hasFocus ? editorState.getSelection() : null;
 
         this.setState({editorState}, () => {
             if (this.props.spellcheck) {
@@ -193,10 +177,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         let editorState = this.state.editorState;
 
         if (this.state.hasFocus && this.selection) {
-            editorState = EditorState.forceSelection(
-                editorState,
-                this.selection,
-            );
+            editorState = EditorState.forceSelection(editorState, this.selection);
         }
 
         return (

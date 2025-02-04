@@ -9,7 +9,7 @@ export class ToggleBox extends React.Component<any, any> {
     static defaultProps: any;
 
     dom: {
-        node: any,
+        node: any;
     };
 
     constructor(props) {
@@ -43,54 +43,36 @@ export class ToggleBox extends React.Component<any, any> {
 
     componentDidUpdate(prevProps, prevState) {
         // Scroll into view only upon first opening
-        if (prevState.isOpen !== this.state.isOpen &&
-            this.state.isOpen &&
-            this.props.scrollInView
-        ) {
+        if (prevState.isOpen !== this.state.isOpen && this.state.isOpen && this.props.scrollInView) {
             this.scrollInView();
         }
     }
 
     render() {
-        const {
-            style,
-            title,
-            children,
-            hideUsingCSS,
-        } = this.props;
+        const {style, title, children, hideUsingCSS} = this.props;
 
         return (
             <div
-                className={classNames(
-                    'toggle-box toggle-box--margin-normal toggle-box--circle',
-                    style,
-                    {hidden: !this.state.isOpen},
-                )}
-                ref={(node) => this.dom.node = node}
+                className={classNames('toggle-box toggle-box--margin-normal toggle-box--circle', style, {
+                    hidden: !this.state.isOpen,
+                })}
+                ref={(node) => (this.dom.node = node)}
             >
-                <div
-                    className="toggle-box__header"
-                    tabIndex={0}
-                    onClick={this.toggle}
-                    onKeyDown={this.handleKeyDown}
-                >
-                    <div className="toggle-box__chevron"><i className="icon-chevron-right-thin" /></div>
+                <div className="toggle-box__header" tabIndex={0} onClick={this.toggle} onKeyDown={this.handleKeyDown}>
+                    <div className="toggle-box__chevron">
+                        <i className="icon-chevron-right-thin" />
+                    </div>
                     <div className="toggle-box__label">{title}</div>
                     <div className="toggle-box__line" />
                 </div>
                 <div className="toggle-box__content-wraper">
-                    {this.state.isOpen && !hideUsingCSS && (
-                        <div className="toggle-box__content">
-                            {children}
-                        </div>
-                    )}
+                    {this.state.isOpen && !hideUsingCSS && <div className="toggle-box__content">{children}</div>}
 
                     {hideUsingCSS && (
                         <div
-                            className={classNames(
-                                'toggle-box__content',
-                                {'toggle-box__content--hidden': !this.state.isOpen},
-                            )}
+                            className={classNames('toggle-box__content', {
+                                'toggle-box__content--hidden': !this.state.isOpen,
+                            })}
                         >
                             {children}
                         </div>

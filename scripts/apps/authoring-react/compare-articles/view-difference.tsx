@@ -19,21 +19,15 @@ interface IProps {
 
 export class ViewDifference extends React.PureComponent<IProps> {
     render() {
-        const {
-            profile1,
-            profile2,
-            fieldsData1,
-            fieldsData2,
-            fieldPadding,
-        } = this.props;
+        const {profile1, profile2, fieldsData1, fieldsData2, fieldPadding} = this.props;
 
         const allFields1 = profile1.header.merge(profile1.content);
         const allFields2 = profile2.header.merge(profile2.content);
 
         return (
             <Spacer v gap={this.props.gapBetweenFields} noWrap>
-                {
-                    allFields2.map((field) => {
+                {allFields2
+                    .map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         // field is present in previous version, show diff
@@ -41,10 +35,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
                             if (FieldEditorConfig.differenceComponent != null) {
                                 return (
                                     <div key={field.id} style={{padding: fieldPadding}}>
-                                        <span
-                                            className="field-label--base"
-                                            style={{marginBottom: 20}}
-                                        >
+                                        <span className="field-label--base" style={{marginBottom: 20}}>
                                             {field.name}
                                         </span>
 
@@ -61,23 +52,18 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                 return (
                                     <div key={field.id} style={{padding: fieldPadding}}>
                                         <div>
-                                            <span
-                                                className="field-label--base"
-                                                style={{marginBottom: 20}}
-                                            >
+                                            <span className="field-label--base" style={{marginBottom: 20}}>
                                                 {field.name}
                                             </span>
                                         </div>
 
                                         <Alert type="warning" style="hollow" size="small" margin="none">
-                                            {
-                                                gettext(
-                                                    'Difference view for "{{type}}" fields'
-                                                    + ' is not implemented.'
-                                                    + ' Latter version is being displayed.',
-                                                    {type: field.fieldType},
-                                                )
-                                            }
+                                            {gettext(
+                                                'Difference view for "{{type}}" fields' +
+                                                    ' is not implemented.' +
+                                                    ' Latter version is being displayed.',
+                                                {type: field.fieldType},
+                                            )}
                                         </Alert>
 
                                         <SpacerBlock v gap="16" />
@@ -92,16 +78,11 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                     </div>
                                 );
                             }
-                        } else { // field is not present in previous version - show as added
+                        } else {
+                            // field is not present in previous version - show as added
                             return (
-                                <div
-                                    key={field.id}
-                                    style={{padding: fieldPadding, backgroundColor: '#e6ffe6'}}
-                                >
-                                    <span
-                                        className="field-label--base"
-                                        style={{marginBottom: 20}}
-                                    >
+                                <div key={field.id} style={{padding: fieldPadding, backgroundColor: '#e6ffe6'}}>
+                                    <span className="field-label--base" style={{marginBottom: 20}}>
                                         {field.name}
                                     </span>
 
@@ -115,34 +96,32 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                 </div>
                             );
                         }
-                    }).toArray()
-                }
-                { // show removed fields
-                    allFields1.filter((field) => allFields2.has(field.id) !== true).map((field) => {
-                        const FieldEditorConfig = getField(field.fieldType);
+                    })
+                    .toArray()}
+                {
+                    // show removed fields
+                    allFields1
+                        .filter((field) => allFields2.has(field.id) !== true)
+                        .map((field) => {
+                            const FieldEditorConfig = getField(field.fieldType);
 
-                        return (
-                            <div
-                                key={field.id}
-                                style={{padding: fieldPadding, backgroundColor: '#ffe6e6'}}
-                            >
-                                <span
-                                    className="field-label--base"
-                                    style={{marginBottom: 20}}
-                                >
-                                    {field.name}
-                                </span>
+                            return (
+                                <div key={field.id} style={{padding: fieldPadding, backgroundColor: '#ffe6e6'}}>
+                                    <span className="field-label--base" style={{marginBottom: 20}}>
+                                        {field.name}
+                                    </span>
 
-                                <div>
-                                    <FieldEditorConfig.previewComponent
-                                        item={this.props.item1}
-                                        value={fieldsData1.get(field.id)}
-                                        config={field.fieldConfig}
-                                    />
+                                    <div>
+                                        <FieldEditorConfig.previewComponent
+                                            item={this.props.item1}
+                                            value={fieldsData1.get(field.id)}
+                                            config={field.fieldConfig}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    }).toArray()
+                            );
+                        })
+                        .toArray()
                 }
             </Spacer>
         );

@@ -5,7 +5,7 @@ export function PackagingController($scope, item, packages: IPackagesService, ap
     $scope.origItem = item;
     $scope.action = 'edit';
 
-    $scope.lock = function() {
+    $scope.lock = function () {
         superdesk.intent('author', 'package', item);
     };
 

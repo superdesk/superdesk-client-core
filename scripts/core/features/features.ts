@@ -16,5 +16,4 @@ function Features(urls) {
  * @description Superdesk features module provides information about features
  * that are enabled on the server.
  */
-angular.module('superdesk.core.features', ['superdesk.core.api'])
-    .service('features', Features);
+angular.module('superdesk.core.features', ['superdesk.core.api']).service('features', Features);

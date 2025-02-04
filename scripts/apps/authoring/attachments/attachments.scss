@@ -1,6 +1,5 @@
 @import '~variables.scss';
 
-
 .field .attachments-pane {
     .attachments-list {
         color: $grayDark;
@@ -8,58 +7,57 @@
 }
 
 .sd-widget.attachments {
-	.attachments-pane {
+    .attachments-pane {
+        .attachments-list {
+            position: absolute;
+            inset-block-start: 12px;
+            inset-inline-end: 12px;
+            inset-block-end: 212px;
+            inset-inline-start: 12px;
+            overflow-y: scroll;
+        }
 
-		.attachments-list {
-			position: absolute;
-			inset-block-start: 12px;
-			inset-inline-end: 12px;
-			inset-block-end: 212px;
-			inset-inline-start: 12px;
-			overflow-y: scroll;
-		}
+        .attach-indicator {
+            position: absolute;
+            inset-block-end: 12px;
+            inset-inline-start: 50%;
+            margin-inline-start: -125px;
+            width: 250px;
+            text-align: center;
 
-		.attach-indicator {
-			position: absolute;
-			inset-block-end: 12px;
-			inset-inline-start: 50%;
-			margin-inline-start: -125px;
-			width: 250px;
-			text-align: center;
+            &.empty {
+                inset-block-end: 50%;
 
-			&.empty {
-				inset-block-end: 50%;
+                .round-box i.icon {
+                    color: $sd-blue;
+                }
+            }
 
-				.round-box i.icon {
-					color: $sd-blue;
-				}
-			}
+            .round-box {
+                display: block;
+                box-sizing: border-box;
+                padding-block-start: 16px;
+                height: 90px;
+                width: 90px;
+                background-color: var(--sd-item__main-Bg);
+                border-radius: var(--b-radius--full);
+                margin: 0 auto;
+                box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.12);
 
-			.round-box {
-				display: block;
-				box-sizing: border-box;
-				padding-block-start: 16px;
-				height: 90px;
-				width: 90px;
-				background-color: var(--sd-item__main-Bg);
-				border-radius: var(--b-radius--full);
-				margin: 0 auto;
-				box-shadow: 0 0 6px 1px rgba(0,0,0,0.12);
+                i.icon {
+                    display: block;
+                    width: 56px;
+                    height: 48px;
+                    margin: 1.4rem auto 0 auto;
+                    font-size: 5.2rem;
+                    color: var(--color-text-light);
+                }
+            }
 
-				i.icon {
-					display: block;
-					width: 56px;
-					height: 48px;
-					margin: 1.4rem auto 0 auto;
-					font-size: 5.2rem;
-					color: var(--color-text-light);
-				}
-			}
-
-			.subtext {
-				margin: 16px 0;
-				color: var(--color-text-lighter);
-			}
-		}
-	}
+            .subtext {
+                margin: 16px 0;
+                color: var(--color-text-lighter);
+            }
+        }
+    }
 }

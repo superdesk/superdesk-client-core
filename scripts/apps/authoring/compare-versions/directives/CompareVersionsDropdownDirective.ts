@@ -41,7 +41,8 @@ class LinkFunction {
      * @description fetches all the versions of currently opened article.
      */
     fetchVersions() {
-        this.desks.initialize()
+        this.desks
+            .initialize()
             .then(() => {
                 this.scope.desks = this.desks.desks;
                 this.scope.stages = this.desks.deskStages;
@@ -111,8 +112,7 @@ class LinkFunction {
 export function CompareVersionsDropdownDirective(compareVersions, desks, archiveService) {
     return {
         template: require('scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html'),
-        link: (scope, elem) =>
-            new LinkFunction(compareVersions, desks, archiveService, scope, elem),
+        link: (scope, elem) => new LinkFunction(compareVersions, desks, archiveService, scope, elem),
     };
 }
 

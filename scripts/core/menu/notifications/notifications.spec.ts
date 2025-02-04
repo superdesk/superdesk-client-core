@@ -1,10 +1,26 @@
-
 describe('user notifications', () => {
-    var notifications = {_items: [
-        {recipients: [{user_id: 'foo', read: 0}, {user_id: 'bar', read: 1}]},
-        {recipients: [{user_id: 'foo', read: 1}, {user_id: 'bar', read: 1}]},
-        {recipients: [{user_id: 'foo', read: 1}, {user_id: 'bar', read: 0}]},
-    ]};
+    var notifications = {
+        _items: [
+            {
+                recipients: [
+                    {user_id: 'foo', read: 0},
+                    {user_id: 'bar', read: 1},
+                ],
+            },
+            {
+                recipients: [
+                    {user_id: 'foo', read: 1},
+                    {user_id: 'bar', read: 1},
+                ],
+            },
+            {
+                recipients: [
+                    {user_id: 'foo', read: 1},
+                    {user_id: 'bar', read: 0},
+                ],
+            },
+        ],
+    };
 
     beforeEach(window.module('superdesk.core.auth.session'));
     beforeEach(window.module('superdesk.core.api'));
@@ -43,45 +59,60 @@ describe('user notifications', () => {
         expect(query.user).toEqual({$exists: true});
     }));
 
-    it('can fetch system notification for admins',
-        inject((userNotifications, session, api, $rootScope) => {
-            session.identity = {_id: 'foo', user_type: 'administrator'};
-            userNotifications.reload();
-            $rootScope.$digest();
-            var args = api.query.calls.argsFor(0);
-            var query = args[1].where;
+    it('can fetch system notification for admins', inject((userNotifications, session, api, $rootScope) => {
+        session.identity = {_id: 'foo', user_type: 'administrator'};
+        userNotifications.reload();
+        $rootScope.$digest();
+        var args = api.query.calls.argsFor(0);
+        var query = args[1].where;
 
-            expect(query.user).toBeUndefined();
-            expect(query.item).toBeUndefined();
-        }));
+        expect(query.user).toBeUndefined();
+        expect(query.item).toBeUndefined();
+    }));
 
-    it('can refresh when user is mentioned in comment',
-        inject((userNotifications, session, $rootScope, $timeout) => {
-            spyOn(userNotifications, 'reload');
-            $rootScope.$digest();
-            expect(userNotifications.reload).not.toHaveBeenCalled();
+    it('can refresh when user is mentioned in comment', inject((userNotifications, session, $rootScope, $timeout) => {
+        spyOn(userNotifications, 'reload');
+        $rootScope.$digest();
+        expect(userNotifications.reload).not.toHaveBeenCalled();
 
-            session.identity = {_id: 'foo'};
+        session.identity = {_id: 'foo'};
 
-            $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'bar'}]});
-            $rootScope.$digest();
+        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'bar'}]});
+        $rootScope.$digest();
 
-            expect(userNotifications.reload).not.toHaveBeenCalled();
+        expect(userNotifications.reload).not.toHaveBeenCalled();
 
-            $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'foo'}]});
-            $rootScope.$digest();
-            $timeout.flush(1000);
+        $rootScope.$broadcast('user:mention', {_dest: [{user_id: 'foo'}]});
+        $rootScope.$digest();
+        $timeout.flush(1000);
 
-            expect(userNotifications.reload).toHaveBeenCalled();
-        }));
+        expect(userNotifications.reload).toHaveBeenCalled();
+    }));
 });
 
 describe('desk notifications', () => {
-    var notifications = {_items: [
-        {recipients: [{desk_id: 'desk1', read: 0}, {desk_id: 'desk2', read: 1}]},
-        {recipients: [{desk_id: 'desk1', read: 1}, {desk_id: 'desk2', read: 0}]},
-        {recipients: [{desk_id: 'desk1', read: 1}, {desk_id: 'desk2', read: 0}]},
-    ]};
+    var notifications = {
+        _items: [
+            {
+                recipients: [
+                    {desk_id: 'desk1', read: 0},
+                    {desk_id: 'desk2', read: 1},
+                ],
+            },
+            {
+                recipients: [
+                    {desk_id: 'desk1', read: 1},
+                    {desk_id: 'desk2', read: 0},
+                ],
+            },
+            {
+                recipients: [
+                    {desk_id: 'desk1', read: 1},
+                    {desk_id: 'desk2', read: 0},
+                ],
+            },
+        ],
+    };
 
     beforeEach(window.module('superdesk.core.auth.session'));
     beforeEach(window.module('superdesk.core.api'));

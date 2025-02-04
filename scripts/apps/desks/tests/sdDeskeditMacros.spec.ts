@@ -1,16 +1,10 @@
-
 /**
-* Module with tests for the sdDeskeditMacros directive
-*
-* @module sdDeskeditMacros directive tests
-*/
+ * Module with tests for the sdDeskeditMacros directive
+ *
+ * @module sdDeskeditMacros directive tests
+ */
 describe('sdDeskeditMacros directive', () => {
-    var macros,
-        scope,
-        getMacrosDeferred,
-        getMacrosByDeskDeferred,
-        $compile,
-        $rootScope;
+    var macros, scope, getMacrosDeferred, getMacrosByDeskDeferred, $compile, $rootScope;
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -25,8 +19,7 @@ describe('sdDeskeditMacros directive', () => {
         getMacrosByDeskDeferred = $q.defer();
 
         spyOn(macros, 'get').and.returnValue(getMacrosDeferred.promise);
-        spyOn(macros, 'getByDesk')
-            .and.returnValue(getMacrosByDeskDeferred.promise);
+        spyOn(macros, 'getByDesk').and.returnValue(getMacrosByDeskDeferred.promise);
     }));
 
     /**
@@ -39,9 +32,7 @@ describe('sdDeskeditMacros directive', () => {
      * @return {Object} - the root DOM node of the compiled directive element
      */
     function compileDirective(scopeValues) {
-        var html,
-            newScope,
-            $element;
+        var html, newScope, $element;
 
         newScope = $rootScope.$new();
         angular.extend(newScope, scopeValues);
@@ -55,8 +46,7 @@ describe('sdDeskeditMacros directive', () => {
     }
 
     it('fetches macros for the current desk if desk is defined', () => {
-        var scopeValues,
-            $element;
+        var scopeValues, $element;
 
         scopeValues = {
             desk: {
@@ -71,33 +61,28 @@ describe('sdDeskeditMacros directive', () => {
         expect(macros.getByDesk).toHaveBeenCalledWith('Desk D', true);
     });
 
-    it('stores macro list in scope when desk macros data is fetched',
-        () => {
-            var macrosFromServer,
-                scopeValues,
-                $element;
+    it('stores macro list in scope when desk macros data is fetched', () => {
+        var macrosFromServer, scopeValues, $element;
 
-            scopeValues = {
-                desk: {
-                    edit: {name: 'Desk D'},
-                },
-            };
+        scopeValues = {
+            desk: {
+                edit: {name: 'Desk D'},
+            },
+        };
 
-            $element = compileDirective(scopeValues);
-            scope = $element.scope();
+        $element = compileDirective(scopeValues);
+        scope = $element.scope();
 
-            scope.macros = null;
-            macrosFromServer = [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}];
-            getMacrosByDeskDeferred.resolve(macrosFromServer);
-            scope.$digest();
+        scope.macros = null;
+        macrosFromServer = [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}];
+        getMacrosByDeskDeferred.resolve(macrosFromServer);
+        scope.$digest();
 
-            expect(scope.macros).toEqual(macrosFromServer);
-        },
-    );
+        expect(scope.macros).toEqual(macrosFromServer);
+    });
 
     it('fetches all macros if current desk is not set', () => {
-        var scopeValues,
-            $element;
+        var scopeValues, $element;
 
         scopeValues = {desk: undefined};
 
@@ -109,9 +94,7 @@ describe('sdDeskeditMacros directive', () => {
     });
 
     it('stores macro list in scope when macros data is fetched', () => {
-        var macrosFromServer,
-            scopeValues,
-            $element;
+        var macrosFromServer, scopeValues, $element;
 
         scopeValues = {desk: undefined};
 

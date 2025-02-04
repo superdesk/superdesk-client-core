@@ -17,70 +17,65 @@ import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {ignoreAbortError} from '../SuperdeskReactComponent';
 
-export function queryElastic(
-    parameters: IQueryElasticParameters,
-) {
+export function queryElastic(parameters: IQueryElasticParameters) {
     const {endpoint, page, sort, aggregations} = parameters;
 
-    return ng.getServices(['session', 'api'])
-        .then((res: any) => {
-            const [session] = res;
+    return ng.getServices(['session', 'api']).then((res: any) => {
+        const [session] = res;
 
-            function toElasticFilter(filterValues) {
-                return Object.keys(filterValues ?? {}).map((key) => ({terms: {[key]: filterValues[key]}}));
-            }
+        function toElasticFilter(filterValues) {
+            return Object.keys(filterValues ?? {}).map((key) => ({terms: {[key]: filterValues[key]}}));
+        }
 
-            const source = {
-                query: {
-                    filtered: {
-                        filter: {
-                            bool: {
-                                must: toElasticFilter(parameters.filterValues),
-                                must_not: [
-                                    {term: {state: 'spiked'}},
-                                    {term: {package_type: 'takes'}},
-                                    ...toElasticFilter(parameters.filterValuesNegative),
-                                ],
-                                should: [
-                                    {
-                                        bool: {
-                                            must: [
-                                                {term: {state: 'draft'}},
-                                                {term: {original_creator: session.identity._id}},
-                                            ],
-                                        },
+        const source = {
+            query: {
+                filtered: {
+                    filter: {
+                        bool: {
+                            must: toElasticFilter(parameters.filterValues),
+                            must_not: [
+                                {term: {state: 'spiked'}},
+                                {term: {package_type: 'takes'}},
+                                ...toElasticFilter(parameters.filterValuesNegative),
+                            ],
+                            should: [
+                                {
+                                    bool: {
+                                        must: [
+                                            {term: {state: 'draft'}},
+                                            {term: {original_creator: session.identity._id}},
+                                        ],
                                     },
-                                    {
-                                        bool: {
-                                            must_not: [
-                                                {term: {state: 'draft'}},
-                                            ],
-                                        },
+                                },
+                                {
+                                    bool: {
+                                        must_not: [{term: {state: 'draft'}}],
                                     },
-                                ],
-                                minimum_should_match: 1,
-                            },
+                                },
+                            ],
+                            minimum_should_match: 1,
                         },
                     },
                 },
-                sort: sort,
-                size: page.size,
-                from: page.from,
-            };
+            },
+            sort: sort,
+            size: page.size,
+            from: page.from,
+        };
 
-            const query = {
-                aggregations: aggregations === true ? 1 : 0,
-                es_highlight: 0,
-                // projections: [],
-                source,
-            };
+        const query = {
+            aggregations: aggregations === true ? 1 : 0,
+            es_highlight: 0,
+            // projections: [],
+            source,
+        };
 
-            return httpRequestJsonLocal({
-                method: 'GET',
-                path: `/${endpoint}`,
-                urlParams: query,
-            });
+        return httpRequestJsonLocal({
+            method: 'GET',
+            path: `/${endpoint}`,
+            urlParams: query,
         });
+    });
 }
 
 export const dataApiByEntity = {
@@ -153,21 +148,23 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
         return Promise.resolve(currentItems);
     }
 
-    const [changesCreated, changesUpdatedDeleted] =
-        partition(changesToResource, (change) => change.changeType === 'created');
+    const [changesCreated, changesUpdatedDeleted] = partition(
+        changesToResource,
+        (change) => change.changeType === 'created',
+    );
 
     if (changesCreated.length > 0 && dontRefetchForNewItems !== true) {
         return Promise.resolve('requires-refetching-all');
     }
 
-    const [changesDeleted, changesUpdated] =
-        partition(changesUpdatedDeleted, (change) => change.changeType === 'deleted');
+    const [changesDeleted, changesUpdated] = partition(
+        changesUpdatedDeleted,
+        (change) => change.changeType === 'deleted',
+    );
 
     if (
-        changesUpdated.some(
-            ({fields}) => (fields == null ? [] : Object.keys(fields)).some(
-                (field) => refreshAllOnFieldsChange.has(field),
-            ),
+        changesUpdated.some(({fields}) =>
+            (fields == null ? [] : Object.keys(fields)).some((field) => refreshAllOnFieldsChange.has(field)),
         )
     ) {
         return Promise.resolve('requires-refetching-all');
@@ -179,14 +176,14 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
     const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
 
     return Promise.all(
-        changesUpdated.filter(({itemId}) => updatedIds.has(itemId))
-            .map(
-                ({itemId}) => httpRequestJsonLocal({
+        changesUpdated
+            .filter(({itemId}) => updatedIds.has(itemId))
+            .map(({itemId}) =>
+                httpRequestJsonLocal({
                     method: 'GET',
                     path: `/${resource}/${itemId}`,
                     abortSignal: abortSignal,
-                })
-                    .then((res: T) => res),
+                }).then((res: T) => res),
             ),
     ).then((itemsUpdated) => {
         const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
@@ -203,24 +200,26 @@ function fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
 ): Promise<{[id: string]: T}> {
     const itemsArray = Object.values(currentItems);
 
-    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), abortSignal, true)
-        .then((res: Array<T>) => {
+    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), abortSignal, true).then(
+        (res: Array<T>) => {
             if (res === itemsArray) {
                 return currentItems; // keep the same reference if there were no changes.
             } else {
                 return keyBy(res, ({_id}) => _id);
             }
-        });
+        },
+    );
 }
 
 export const dataApi: IDataApi = {
     findOne: findOne,
-    create: (endpoint, item, urlParams) => httpRequestJsonLocal({
-        'method': 'POST',
-        path: '/' + endpoint,
-        payload: item,
-        urlParams: urlParams ?? {},
-    }),
+    create: (endpoint, item, urlParams) =>
+        httpRequestJsonLocal({
+            method: 'POST',
+            path: '/' + endpoint,
+            payload: item,
+            urlParams: urlParams ?? {},
+        }),
     query: (
         endpoint: string,
         page: number,
@@ -238,20 +237,25 @@ export const dataApi: IDataApi = {
         }
 
         if (Object.keys(filterValues).length > 0) {
-            query['where'] = typeof formatFiltersForServer === 'function'
-                ? formatFiltersForServer(filterValues)
-                : filterValues;
+            query['where'] =
+                typeof formatFiltersForServer === 'function' ? formatFiltersForServer(filterValues) : filterValues;
         }
 
         if (typeof max_results === 'number') {
             query['max_results'] = max_results;
         }
 
-        const queryString = '?' + Object.keys(query).map((key) =>
-            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`).join('&');
+        const queryString =
+            '?' +
+            Object.keys(query)
+                .map(
+                    (key) =>
+                        `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`,
+                )
+                .join('&');
 
         return httpRequestJsonLocal({
-            'method': 'GET',
+            method: 'GET',
             path: '/' + endpoint + queryString,
         });
     },
@@ -273,12 +277,14 @@ export const dataApi: IDataApi = {
         const abortController = new AbortController();
 
         return {
-            response: ignoreAbortError(httpRequestRawLocal({
-                method: 'GET',
-                path: '/' + endpoint,
-                urlParams: params,
-                abortSignal: abortController.signal,
-            })),
+            response: ignoreAbortError(
+                httpRequestRawLocal({
+                    method: 'GET',
+                    path: '/' + endpoint,
+                    urlParams: params,
+                    abortSignal: abortController.signal,
+                }),
+            ),
             abort: () => abortController.abort(),
         };
     },
@@ -286,7 +292,7 @@ export const dataApi: IDataApi = {
         const patch = generatePatch(item1, item2);
 
         return httpRequestJsonLocal({
-            'method': 'PATCH',
+            method: 'PATCH',
             path: '/' + endpoint + '/' + item1._id,
             payload: patch,
             headers: {
@@ -296,7 +302,7 @@ export const dataApi: IDataApi = {
     },
     patchRaw: (endpoint, id, etag, patch) => {
         return httpRequestJsonLocal({
-            'method': 'PATCH',
+            method: 'PATCH',
             path: '/' + endpoint + '/' + id,
             payload: patch,
             headers: {
@@ -304,13 +310,14 @@ export const dataApi: IDataApi = {
             },
         });
     },
-    delete: (endpoint, item) => httpRequestVoidLocal({
-        method: 'DELETE',
-        path: '/' + endpoint + '/' + item._id,
-        headers: {
-            'If-Match': item._etag,
-        },
-    }),
+    delete: (endpoint, item) =>
+        httpRequestVoidLocal({
+            method: 'DELETE',
+            path: '/' + endpoint + '/' + item._id,
+            headers: {
+                'If-Match': item._etag,
+            },
+        }),
     uploadFileWithProgress: uploadFileWithProgress,
     createProvider: (requestFactory, responseHandler, listenTo) =>
         new DataProvider(requestFactory, responseHandler, listenTo),

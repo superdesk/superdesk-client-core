@@ -24,7 +24,7 @@ export function sortByDisplayPriority<T extends {label: string; priority?: IDisp
     const sorted = [...withDefaults].sort((a, b) => a.priority - b.priority);
 
     if (hasDebugSetting('logDisplayPriorities')) {
-        console.table(sorted.map((item) => ([item.label, item.priority])));
+        console.table(sorted.map((item) => [item.label, item.priority]));
     }
 
     return sorted;

@@ -80,12 +80,7 @@ describe('custom authoring field', () => {
         const onChange = jasmine.createSpy();
 
         const wrapper = mount(
-            <AuthoringCustomField
-                item={article}
-                field={vocabulary}
-                editable={true}
-                onChange={onChange}
-            />,
+            <AuthoringCustomField item={article} field={vocabulary} editable={true} onChange={onChange} />,
         );
 
         expect(onChange).toHaveBeenCalledTimes(0);
@@ -99,10 +94,7 @@ describe('custom authoring field', () => {
 
         setTimeout(() => {
             expect(onChange).toHaveBeenCalledTimes(1);
-            expect(onChange).toHaveBeenCalledWith(
-                vocabulary,
-                'abcd',
-            );
+            expect(onChange).toHaveBeenCalledWith(vocabulary, 'abcd');
 
             done();
         }, 500); // take debouncing into account
@@ -112,12 +104,7 @@ describe('custom authoring field', () => {
         const onChange = jasmine.createSpy();
 
         const wrapper = mount(
-            <AuthoringCustomField
-                item={article}
-                field={vocabulary}
-                editable={true}
-                onChange={onChange}
-            />,
+            <AuthoringCustomField item={article} field={vocabulary} editable={true} onChange={onChange} />,
         );
 
         expect(onChange).toHaveBeenCalledTimes(0);

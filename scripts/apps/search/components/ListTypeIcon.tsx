@@ -56,20 +56,16 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                     {gettext('Article Type: {{type}}', {type: translateArticleType(this.props.item.type)})}
                 </span>
 
-                {
-                    showSelect
-                        ? (
-                            <SelectBox item={this.props.item} onMultiSelect={this.props.onMultiSelect} />
-                        )
-                        : (
-                            <TypeIcon
-                                type={this.props.item.type}
-                                contentProfileId={this.props.item.profile}
-                                highlight={this.props.item.highlight}
-                                aria-hidden={true}
-                            />
-                        )
-                }
+                {showSelect ? (
+                    <SelectBox item={this.props.item} onMultiSelect={this.props.onMultiSelect} />
+                ) : (
+                    <TypeIcon
+                        type={this.props.item.type}
+                        contentProfileId={this.props.item.profile}
+                        highlight={this.props.item.highlight}
+                        aria-hidden={true}
+                    />
+                )}
             </div>
         );
     }

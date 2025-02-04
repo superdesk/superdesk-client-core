@@ -15,16 +15,8 @@ export class PanelInfo extends React.PureComponent<IProps> {
                         <i className={this.props.icon} />
                     </div>
                 )}
-                {this.props.heading && (
-                    <div className="panel-info__heading">
-                        {this.props.heading}
-                    </div>
-                )}
-                {this.props.description && (
-                    <div className="panel-info__description">
-                        {this.props.description}
-                    </div>
-                )}
+                {this.props.heading && <div className="panel-info__heading">{this.props.heading}</div>}
+                {this.props.description && <div className="panel-info__description">{this.props.description}</div>}
             </div>
         );
     }

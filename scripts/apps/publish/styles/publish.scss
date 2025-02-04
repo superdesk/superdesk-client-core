@@ -16,7 +16,7 @@ div {
     .content {
         .active {
             background-color: #eff7fa !important;
-            border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
+            border-inline-end: 2px solid rgba(94, 169, 200, 0.75) !important;
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;
@@ -68,14 +68,14 @@ div {
     }
     .preview-layout {
         .list-pane {
-            >.content {
+            > .content {
                 overflow: auto;
                 inset-inline-end: 400px;
             }
         }
         &.closed {
             .list-pane {
-                >.content {
+                > .content {
                     inset-inline-end: 0;
                 }
             }
@@ -101,7 +101,8 @@ div {
     }
 }
 
-.products-content, .subscribers-content {
+.products-content,
+.subscribers-content {
     .sortbar {
         span {
             margin-inline-start: 5px;

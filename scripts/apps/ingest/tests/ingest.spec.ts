@@ -1,4 +1,3 @@
-
 describe('ingest', () => {
     describe('registering activities in superdesk.apps.ingest module', () => {
         beforeEach(window.module('superdesk.apps.ingest'));
@@ -21,7 +20,7 @@ describe('ingest', () => {
                 // get the function that checks the additional conditions
                 extraCondition = extraCondition[extraCondition.length - 1];
                 fakeDesks = {
-                    getCurrentDeskId: function() {
+                    getCurrentDeskId: function () {
                         return '1234';
                     },
                 };
@@ -36,7 +35,7 @@ describe('ingest', () => {
                 // get the function that checks the additional conditions
                 extraCondition = extraCondition[extraCondition.length - 1];
                 fakeDesks = {
-                    getCurrentDeskId: function() {
+                    getCurrentDeskId: function () {
                         return null;
                     },
                 };

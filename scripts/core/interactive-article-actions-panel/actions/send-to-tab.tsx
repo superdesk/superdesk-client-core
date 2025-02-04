@@ -36,7 +36,8 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        this.availableDesks = sdApi.desks.getAllDesks()
+        this.availableDesks = sdApi.desks
+            .getAllDesks()
             .filter((desk) => desk.send_to_desk_not_allowed !== true)
             .toOrderedMap();
 
@@ -58,26 +59,25 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
         return handleUnsavedChanges(this.props.items)
             .then((items) => {
-                sdApi.article.sendItems(
-                    items,
-                    selectedDestination,
-                    sendPackageItems,
-                    this.state.publishingDateOptions,
-                ).then(() => {
-                    closeSendToView();
+                sdApi.article
+                    .sendItems(items, selectedDestination, sendPackageItems, this.state.publishingDateOptions)
+                    .then(() => {
+                        closeSendToView();
 
-                    if (itemToOpenAfterSending != null) {
-                        openArticle(itemToOpenAfterSending, 'edit');
-                    } else if (items.length === 1 && applicationState.articleInEditMode === items[0]._id) {
-                        authoringApiCommon.closeAuthoringForce();
-                    }
-                }).catch(() => {
-                    /**
-                     * Middleware that rejected the promise is responsible
-                     * for informing the user regarding the reason.
-                     */
-                });
-            }).catch(() => {
+                        if (itemToOpenAfterSending != null) {
+                            openArticle(itemToOpenAfterSending, 'edit');
+                        } else if (items.length === 1 && applicationState.articleInEditMode === items[0]._id) {
+                            authoringApiCommon.closeAuthoringForce();
+                        }
+                    })
+                    .catch(() => {
+                        /**
+                         * Middleware that rejected the promise is responsible
+                         * for informing the user regarding the reason.
+                         */
+                    });
+            })
+            .catch(() => {
                 // sending cancelled by user
             });
     }
@@ -130,45 +130,40 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                             includePersonalSpace={canSendToPersonal(items)}
-                            disallowedStages={// if only one item is being sent, disallow current stage
-                                items.length === 1 && items[0]?.task?.stage != null
-                                    ? [items[0].task.stage]
-                                    : undefined
+                            disallowedStages={
+                                // if only one item is being sent, disallow current stage
+                                items.length === 1 && items[0]?.task?.stage != null ? [items[0].task.stage] : undefined
                             }
                         />
                     </ToggleBox>
 
-                    {
-                        this.props.items.length === 1 && (
-                            <PublishingDateOptions
-                                items={this.props.items}
-                                value={this.state.publishingDateOptions}
-                                onChange={(val) => {
-                                    this.setState({publishingDateOptions: val});
-                                }}
-                                allowSettingEmbargo={appConfig.ui.sendEmbargo}
-                                allowSettingPublishSchedule={appConfig.authoring.panels.sendTo.publishSchedule}
-                            />
-                        )
-                    }
+                    {this.props.items.length === 1 && (
+                        <PublishingDateOptions
+                            items={this.props.items}
+                            value={this.state.publishingDateOptions}
+                            onChange={(val) => {
+                                this.setState({publishingDateOptions: val});
+                            }}
+                            allowSettingEmbargo={appConfig.ui.sendEmbargo}
+                            allowSettingPublishSchedule={appConfig.authoring.panels.sendTo.publishSchedule}
+                        />
+                    )}
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
                     <ButtonGroup orientation="vertical">
-                        {
-                            itemToOpenAfterSending != null && (
-                                <Button
-                                    text={gettext('Send and open')}
-                                    onClick={() => {
-                                        this.sendItems(itemToOpenAfterSending);
-                                    }}
-                                    size="large"
-                                    type="primary"
-                                    expand
-                                    data-test-id="send-and-open"
-                                />
-                            )
-                        }
+                        {itemToOpenAfterSending != null && (
+                            <Button
+                                text={gettext('Send and open')}
+                                onClick={() => {
+                                    this.sendItems(itemToOpenAfterSending);
+                                }}
+                                size="large"
+                                type="primary"
+                                expand
+                                data-test-id="send-and-open"
+                            />
+                        )}
 
                         <Button
                             text={gettext('Send')}
@@ -181,23 +176,21 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                             data-test-id="send"
                         />
 
-                        {
-                            sendPackages && (
-                                <Button
-                                    text={gettextPlural(
-                                        this.props.items.length,
-                                        'Send package and items',
-                                        'Send packages and items',
-                                    )}
-                                    onClick={() => {
-                                        this.sendItems(undefined, true);
-                                    }}
-                                    size="large"
-                                    type="primary"
-                                    expand
-                                />
-                            )
-                        }
+                        {sendPackages && (
+                            <Button
+                                text={gettextPlural(
+                                    this.props.items.length,
+                                    'Send package and items',
+                                    'Send packages and items',
+                                )}
+                                onClick={() => {
+                                    this.sendItems(undefined, true);
+                                }}
+                                size="large"
+                                type="primary"
+                                expand
+                            />
+                        )}
                     </ButtonGroup>
                 </PanelFooter>
             </React.Fragment>

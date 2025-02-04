@@ -7,11 +7,7 @@ import {IArticle} from 'superdesk-api';
 
 interface IPropsSelectBox {
     item: IArticle;
-    onMultiSelect(
-        item: IArticle,
-        value: boolean,
-        multiSelectMode: boolean,
-    ): void;
+    onMultiSelect(item: IArticle, value: boolean, multiSelectMode: boolean): void;
 }
 
 export class SelectBox extends React.Component<IPropsSelectBox> {

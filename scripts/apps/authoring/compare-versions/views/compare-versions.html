@@ -5,17 +5,30 @@
 
 <div class="compare-versions-screen main-section">
     <div class="boards-list">
-        <div ng-repeat="board in boards"
-            class="board"
-            style="width:{{ 100 / boards.length }}%">
+        <div ng-repeat="board in boards" class="board" style="width:{{ 100 / boards.length }}%">
             <div class="navbtn dropdown" dropdown>
-                <button class="dropdown__toggle" dropdown__toggle title="{{ 'Select current version.' | translate }}"><i class="icon-collapse"></i></button>
+                <button class="dropdown__toggle" dropdown__toggle title="{{ 'Select current version.' | translate }}">
+                    <i class="icon-collapse"></i>
+                </button>
                 <div class="dropdown__menu">
-                    <ul class="dropdown__menu--compare-versions" sd-compare-versions-inner-dropdown data-board="{{$index}}"></ul>
+                    <ul
+                        class="dropdown__menu--compare-versions"
+                        sd-compare-versions-inner-dropdown
+                        data-board="{{$index}}"
+                    ></ul>
                 </div>
             </div>
-            <div ng-if="!board.article" class="board__no-article" translate>* choose article version from dropdown menu</div>
-            <div sd-compare-versions-article data-article="board.article" data-compare-with="boards[1].article" data-focus="$first" class="board-article" ng-if="board.article"></div>
+            <div ng-if="!board.article" class="board__no-article" translate>
+                * choose article version from dropdown menu
+            </div>
+            <div
+                sd-compare-versions-article
+                data-article="board.article"
+                data-compare-with="boards[1].article"
+                data-focus="$first"
+                class="board-article"
+                ng-if="board.article"
+            ></div>
         </div>
     </div>
 </div>

@@ -13,24 +13,24 @@ describe('editor3.components.embed-block', () => {
         const {block, contentState} = embedBlockAndContent();
         const wrapper = mount(
             <Provider store={createStore(() => ({}), {})}>
-                <EmbedBlock
-                    block={block}
-                    contentState={contentState}
-                />
+                <EmbedBlock block={block} contentState={contentState} />
             </Provider>,
         );
 
-        expect(wrapper.find('.embed-block__wrapper').html())
-            .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
+        expect(wrapper.find('.embed-block__wrapper').html()).toBe(
+            '<div class="embed-block__wrapper"><h1>Embed Title</h1></div>',
+        );
     });
 });
 
 describe('editor3.components.embed-input', () => {
-    beforeEach(window.module(($provide) => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {iframely: {key: 'key'}};
+    beforeEach(
+        window.module(($provide) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {iframely: {key: 'key'}};
 
-        Object.assign(appConfig, testConfig);
-    }));
+            Object.assign(appConfig, testConfig);
+        }),
+    );
 
     it('should render', () => {
         const {options} = mockStore();
@@ -77,9 +77,11 @@ describe('editor3.components.embed-input', () => {
         const noop = () => ({});
         const wrapper = mount(<EmbedInput hidePopups={noop} embed={noop} />, options);
 
-        spyOn($, 'ajax').and.returnValue($q.reject({
-            responseJSON: {error: 'this is the error'},
-        }));
+        spyOn($, 'ajax').and.returnValue(
+            $q.reject({
+                responseJSON: {error: 'this is the error'},
+            }),
+        );
 
         const instance: any = wrapper.find('input').instance();
 

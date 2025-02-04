@@ -11,7 +11,7 @@ export function arrayToTree<T>(
     itemsFlat: Array<T>,
     getId: (item: T) => string,
     getParentId: (item: T) => string | undefined | null,
-): {result: Array<ITreeNode<T>>, errors: Array<T>} {
+): {result: Array<ITreeNode<T>>; errors: Array<T>} {
     const initialTree = itemsFlat.reduce<{[key: string]: ITreeNode<T>}>((acc, item) => {
         const id = getId(item);
 
@@ -65,14 +65,10 @@ export function treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T> {
     return items;
 }
 
-export function sortTree<T>(
-    tree: Array<ITreeNode<T>>,
-    sortFn: (a: T, b: T) => number,
-): Array<ITreeNode<T>> {
-    const result: Array<ITreeNode<T>> =
-        tree
-            .map((node) => ({...node})) // create a new reference in order not to mutate the argument
-            .sort((a, b) => sortFn(a.value, b.value));
+export function sortTree<T>(tree: Array<ITreeNode<T>>, sortFn: (a: T, b: T) => number): Array<ITreeNode<T>> {
+    const result: Array<ITreeNode<T>> = tree
+        .map((node) => ({...node})) // create a new reference in order not to mutate the argument
+        .sort((a, b) => sortFn(a.value, b.value));
 
     for (const branch of result) {
         if (branch.children?.length > 0) {

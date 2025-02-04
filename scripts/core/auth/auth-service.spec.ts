@@ -29,44 +29,45 @@ describe('auth service', () => {
         spyOn(api.users, 'getById').and.returnValue($q.when({username: 'foo'}));
     }));
 
-    it('can login', (done) => inject((auth, session, $httpBackend, $rootScope) => {
-        $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {user: 'foo', token: 'bar'});
+    it('can login', (done) =>
+        inject((auth, session, $httpBackend, $rootScope) => {
+            $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(200, {user: 'foo', token: 'bar'});
 
-        expect(session.identity).toBe(null);
-        expect(session.token).toBe(null);
+            expect(session.identity).toBe(null);
+            expect(session.token).toBe(null);
 
-        auth.login('admin', 'admin').then(() => {
-            expect(session.start).toHaveBeenCalled();
+            auth.login('admin', 'admin').then(() => {
+                expect(session.start).toHaveBeenCalled();
 
-            done();
-        });
+                done();
+            });
 
-        $rootScope.$apply();
-        $httpBackend.flush();
-        $rootScope.$apply();
+            $rootScope.$apply();
+            $httpBackend.flush();
+            $rootScope.$apply();
 
-        $httpBackend.verifyNoOutstandingExpectation();
-    }));
+            $httpBackend.verifyNoOutstandingExpectation();
+        }));
 
-    it('checks credentials', (done) => inject((auth, $httpBackend, $rootScope) => {
-        const onSuccess = jasmine.createSpy('onSuccess');
+    it('checks credentials', (done) =>
+        inject((auth, $httpBackend, $rootScope) => {
+            const onSuccess = jasmine.createSpy('onSuccess');
 
-        $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(403, {});
+            $httpBackend.expectPOST('http://localhost:5000/api/auth').respond(403, {});
 
-        auth.login('wrong', 'credentials').then(onSuccess, () => {
-            expect(onSuccess).not.toHaveBeenCalled();
+            auth.login('wrong', 'credentials').then(onSuccess, () => {
+                expect(onSuccess).not.toHaveBeenCalled();
 
-            done();
-        });
+                done();
+            });
 
-        $httpBackend.flush();
-        $rootScope.$apply();
-    }));
+            $httpBackend.flush();
+            $rootScope.$apply();
+        }));
 
     it('handles oauth login', inject((auth, session, $http, $rootScope) => {
         auth.loginOAuth({data: {token: 'foo'}});
-        expect($http.defaults.headers.common.Authorization)
-            .toBe('Basic ' + btoa('foo:'));
+        expect($http.defaults.headers.common.Authorization).toBe('Basic ' + btoa('foo:'));
         $rootScope.$digest();
         expect(session.start).toHaveBeenCalled();
     }));

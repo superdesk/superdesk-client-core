@@ -16,15 +16,17 @@ export class MarkDesksDropdown extends React.Component<IProps> {
 
         return (
             <ul className={className}>
-                {
-                    desks.length > 0
-                        ? desks.map((desk) => (
-                            <li key={desk._id}>
-                                <MarkForDeskButton item={item} desk={desk} />
-                            </li>
-                        ))
-                        : <li><button disabled>{noDesksLabel}</button></li>
-                }
+                {desks.length > 0 ? (
+                    desks.map((desk) => (
+                        <li key={desk._id}>
+                            <MarkForDeskButton item={item} desk={desk} />
+                        </li>
+                    ))
+                ) : (
+                    <li>
+                        <button disabled>{noDesksLabel}</button>
+                    </li>
+                )}
             </ul>
         );
     }

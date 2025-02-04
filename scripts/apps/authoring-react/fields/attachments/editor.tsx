@@ -25,13 +25,13 @@ export class Editor extends React.PureComponent<IProps> {
     }
 
     addAttachments(val: Array<IAttachment>) {
-        const attachments = (this.props.value ?? []);
+        const attachments = this.props.value ?? [];
 
         this.props.onChange(attachments.concat(val.map(({_id}) => ({id: _id}))));
     }
 
     removeAttachment(val: IAttachment) {
-        const attachments = (this.props.value ?? []);
+        const attachments = this.props.value ?? [];
 
         this.props.onChange(attachments.filter(({id}) => id !== val._id));
     }
@@ -45,9 +45,8 @@ export class Editor extends React.PureComponent<IProps> {
         const ids = (this.props.value ?? []).map(({id}) => id);
         const {readOnly} = this.props;
 
-        const AttachmentsEditor = CC.AuthoringAttachmentsWidget != null ?
-            CC.AuthoringAttachmentsWidget :
-            AttachmentsWidgetComponent;
+        const AttachmentsEditor =
+            CC.AuthoringAttachmentsWidget != null ? CC.AuthoringAttachmentsWidget : AttachmentsWidgetComponent;
 
         return (
             <Container>

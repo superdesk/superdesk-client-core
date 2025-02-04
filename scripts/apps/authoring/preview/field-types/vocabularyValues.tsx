@@ -26,9 +26,7 @@ export class VocabularyValuePreview extends React.PureComponent<IProps, IState> 
     componentDidMount() {
         dataApi.findOne<IVocabulary>('vocabularies', this.props.vocabularyId).then((vocabulary) => {
             this.setState({
-                vocabularyItems: Map(
-                    vocabulary.items.map((item) => [item.qcode, item]),
-                ),
+                vocabularyItems: Map(vocabulary.items.map((item) => [item.qcode, item])),
             });
         });
     }
@@ -42,18 +40,15 @@ export class VocabularyValuePreview extends React.PureComponent<IProps, IState> 
 
         return (
             <SmallTags
-                tags={
-                    qcodes.map((qcode) => {
-                        const vocabularyItem = vocabularyItems.get(qcode);
+                tags={qcodes.map((qcode) => {
+                    const vocabularyItem = vocabularyItems.get(qcode);
 
-                        return {
-                            id: qcode,
-                            label: vocabularyItem != null
-                                ? getVocabularyItemNameTranslated(vocabularyItem, language)
-                                : qcode,
-                        };
-                    })
-                }
+                    return {
+                        id: qcode,
+                        label:
+                            vocabularyItem != null ? getVocabularyItemNameTranslated(vocabularyItem, language) : qcode,
+                    };
+                })}
             />
         );
     }

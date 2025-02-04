@@ -2,17 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const Label: React.StatelessComponent<any> = ({text, row, light, className}) => (!text ? null : (
-    <label
-        className={classNames({
-            'sd-line-input__label': !row,
-            'form-label': row,
-            'form-label--light': row && light,
-        }, className)}
-    >
-        {text}
-    </label>
-));
+export const Label: React.StatelessComponent<any> = ({text, row, light, className}) =>
+    !text ? null : (
+        <label
+            className={classNames(
+                {
+                    'sd-line-input__label': !row,
+                    'form-label': row,
+                    'form-label--light': row && light,
+                },
+                className,
+            )}
+        >
+            {text}
+        </label>
+    );
 
 Label.propTypes = {
     text: PropTypes.string,

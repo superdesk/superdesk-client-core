@@ -5,13 +5,7 @@ import * as React from 'react';
 import {ISetItem, IStorageDestinationItem} from '../../interfaces';
 
 // UI
-import {
-    ListHeader,
-    ListItemGroup,
-    ListItem,
-    ListItemColumn,
-    ListItemRow,
-} from '../../ui/';
+import {ListHeader, ListItemGroup, ListItem, ListItemColumn, ListItemRow} from '../../ui/';
 import {SetListItem} from './setListItem';
 
 interface IProps {
@@ -37,9 +31,7 @@ export class SetListGroup extends React.PureComponent<IProps> {
                         <ListItem inactive={true} shadow={2} noHover={true}>
                             <ListItemColumn>
                                 <ListItemRow>
-                                    <span>
-                                        {this.props.noItemTitle}
-                                    </span>
+                                    <span>{this.props.noItemTitle}</span>
                                 </ListItemRow>
                             </ListItemColumn>
                         </ListItem>
@@ -48,13 +40,11 @@ export class SetListGroup extends React.PureComponent<IProps> {
                             <SetListItem
                                 key={set._id}
                                 set={set}
-                                count={this.props.counts[set._id] === undefined ?
-                                    0 :
-                                    this.props.counts[set._id]
-                                }
-                                storageDestination={set?.destination_name == null ?
-                                    undefined :
-                                    this.props.storageDestinations[set.destination_name]
+                                count={this.props.counts[set._id] === undefined ? 0 : this.props.counts[set._id]}
+                                storageDestination={
+                                    set?.destination_name == null
+                                        ? undefined
+                                        : this.props.storageDestinations[set.destination_name]
                                 }
                                 onClick={this.props.previewSet}
                                 deleteSet={this.props.deleteSet}

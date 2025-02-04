@@ -83,7 +83,7 @@ export function Activities(superdesk, asset) {
                     type: 'user',
                 },
             ],
-            condition: function(data) {
+            condition: function (data) {
                 return data.is_enabled;
             },
             privileges: {users: 1},
@@ -152,8 +152,9 @@ export function Permissions(superdesk) {
         });
 }
 
-export var KeyboardShortcuts = ['keyboardManager',
-    function(keyboardManager) {
+export var KeyboardShortcuts = [
+    'keyboardManager',
+    function (keyboardManager) {
         keyboardManager.register('Users', 'Up', gettext('Previous user'));
         keyboardManager.register('Users', 'Down', gettext('Next user'));
     },

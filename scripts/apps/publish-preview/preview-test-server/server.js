@@ -27,7 +27,7 @@ app.post('/preview', (req, res) => {
 
     /* eslint-disable indent */
     res.send(
-`<!DOCTYPE html>
+        `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -38,7 +38,7 @@ app.post('/preview', (req, res) => {
         ${getContent(req.headers['content-type'], req.body)}
     </div>
 </body>
-</html>`
+</html>`,
     );
 });
 

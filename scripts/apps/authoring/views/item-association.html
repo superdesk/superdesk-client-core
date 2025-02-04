@@ -1,93 +1,129 @@
 <div class="" ng-class="{'sd-media-carousel__content': related}">
-
     <!-- if -->
     <button
         tabindex="{{tabindex}}"
         ng-if="editable && associations.isMediaEditable() && !related"
         ng-click="upload()"
         ng-class="{'item-association--loading': loading}"
-        class="item-association">
-        <span class="item-association__text-label">
-            {{'Drop items here or click to upload' | translate}}
-        </span>
+        class="item-association"
+    >
+        <span class="item-association__text-label"> {{'Drop items here or click to upload' | translate}} </span>
     </button>
 
     <!-- else -->
     <figure
         ng-if="!(editable && associations.isMediaEditable() && !related)"
         class="item-association"
-        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"\
-        ng-disabled="!editable">
-            <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
-                <i class="icon-close-small"></i>
-            </a>
-            <!-- video -->
-            <div class="item-association__video-container" ng-if="related && related.type === 'video'">
-                <sd-video item="related"></sd-video>
-                
+        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"
+        \
+        ng-disabled="!editable"
+    >
+        <a
+            ng-if="related && editable"
+            class="item-association__remove-item"
+            ng-click="remove(related); $event.stopPropagation()"
+        >
+            <i class="icon-close-small"></i>
+        </a>
+        <!-- video -->
+        <div class="item-association__video-container" ng-if="related && related.type === 'video'">
+            <sd-video item="related"></sd-video>
+
+            <sd-media-metadata-view item="related" class-name="'item-association__metadata'"></sd-media-metadata-view>
+
+            <div class="item-association__action-bar" ng-if="related && editable">
+                <div class="flex-grid flex-grid--medium-3">
+                    <div class="flex-grid__item sd-text__left" style="text-align: start">
+                        <sd-video-thumbnail-editor
+                            data-item="related"
+                            data-on-change="onRenditionChange"
+                        ></sd-video-thumbnail-editor>
+                    </div>
+                    <div class="flex-grid__item"></div>
+                    <div class="flex-grid__item">
+                        <a
+                            class="btn btn--hollow btn--small"
+                            ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"
+                        >
+                            <span translate>Edit metadata</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- audio -->
+        <div class="item-association__audio-container" ng-if="related && related.type === 'audio'">
+            <audio controls="controls">
+                <source
+                    vsrc="{{ rendition.href}}"
+                    ng-repeat="(key, rendition) in related.renditions"
+                    ng-if="associations.checkRenditions.isAudio(rendition)"
+                    html5vfix
+                />
+            </audio>
+
+            <sd-media-metadata-view item="related" class-name="'item-association__metadata'"></sd-media-metadata-view>
+
+            <div class="item-association__action-bar" ng-if="related && editable">
+                <a
+                    class="btn btn--hollow btn--small"
+                    ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"
+                    ><span translate>Edit metadata</span></a
+                >
+            </div>
+        </div>
+        <!-- image -->
+        <div
+            class="item-association__image-container"
+            ng-if="related && (related.type === 'picture' || related.type === 'graphic')"
+        >
+            <div class="item-association__image-overlay">
+                <div class="item-association__metadata item-association__metadata--top-overlay">
+                    <span>
+                        <em>{{:: 'Title:' | translate}}</em>
+                        {{related.headline || ('[No Value]' | translate)}}
+                    </span>
+                </div>
+                <div
+                    ng-show="related._type !== 'externalsource' && associations.isMediaEditable(related)"
+                    class="item-association__icons-block"
+                >
+                    <a
+                        ng-if="related && editable"
+                        class="item-association__image-action"
+                        ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()"
+                        sd-tooltip="{{'Edit metadata' | translate}}"
+                        ><i class="icon-pencil"></i
+                    ></a>
+                    <a
+                        ng-if="related && editable"
+                        class="item-association__image-action"
+                        ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()"
+                        sd-tooltip="{{'Edit image' | translate}}"
+                        ><i class="icon-switches"></i
+                    ></a>
+                    <a
+                        ng-if="related && editable"
+                        class="item-association__image-action"
+                        ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()"
+                        sd-tooltip="{{'Edit crops' | translate}}"
+                        ><i class="icon-crop"></i
+                    ></a>
+                </div>
+
                 <sd-media-metadata-view
+                    ng-if="related.type === 'picture' || related.type === 'graphic'"
                     item="related"
-                    class-name="'item-association__metadata'"
+                    class-name="'item-association__metadata item-association__metadata--bottom-overlay'"
+                    show-alt-text="true"
                 ></sd-media-metadata-view>
-
-                <div class="item-association__action-bar" ng-if="related && editable">
-                    <div class="flex-grid flex-grid--medium-3">
-                        <div class="flex-grid__item sd-text__left" style="text-align: start;">
-                            <sd-video-thumbnail-editor data-item="related" data-on-change="onRenditionChange"></sd-video-thumbnail-editor>
-                        </div>
-                        <div class="flex-grid__item">
-                        </div>
-                        <div class="flex-grid__item">
-                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
-                                <span translate>Edit metadata</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- audio -->
-            <div class="item-association__audio-container" ng-if="related && related.type === 'audio'" >
-                <audio controls="controls">
-                    <source vsrc="{{ rendition.href}}"
-                            ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.checkRenditions.isAudio(rendition)" html5vfix>
-                </audio>
-                
-                <sd-media-metadata-view
-                    item="related"
-                    class-name="'item-association__metadata'"
-                ></sd-media-metadata-view>
-
-                <div class="item-association__action-bar" ng-if="related && editable">
-                    <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>
-                </div>
-            </div>
-            <!-- image -->
-            <div class="item-association__image-container" ng-if="related && (related.type === 'picture' || related.type === 'graphic')">
-                <div class="item-association__image-overlay">
-                    <div class="item-association__metadata item-association__metadata--top-overlay">
-                        <span>
-                            <em>{{:: 'Title:' | translate}}</em>
-                            {{related.headline || ('[No Value]' | translate)}}
-                        </span>
-                    </div>
-                    <div ng-show="related._type !== 'externalsource' && associations.isMediaEditable(related)" class="item-association__icons-block">
-                        <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="{{'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
-                        <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="{{'Edit image' | translate}}"><i class="icon-switches"></i></a>
-                        <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()" sd-tooltip="{{'Edit crops' | translate}}"><i class="icon-crop"></i></a>
-                    </div>
-
-                    <sd-media-metadata-view
-                        ng-if="related.type === 'picture' || related.type === 'graphic'"
-                        item="related"
-                        class-name="'item-association__metadata item-association__metadata--bottom-overlay'"
-                        show-alt-text="true"
-                     ></sd-media-metadata-view>
-                </div>
-                <img ng-src="{{ related.renditions.viewImage.href}}"
-                    ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
-                    ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
-            </div>
+            <img
+                ng-src="{{ related.renditions.viewImage.href}}"
+                ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
+                ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"
+            />
+        </div>
     </figure>
     <!-- if/else end -->
 
@@ -99,7 +135,8 @@
         ng-change="onMetadataChange('headline')"
         placeholder="{{:: 'Add title' | translate}}"
         ng-if="related && showTitle"
-        class="sd-media-carousel__media-title">
+        class="sd-media-carousel__media-title"
+    >
     </textarea>
     <textarea
         sd-auto-height
@@ -109,6 +146,7 @@
         ng-change="onMetadataChange('description_text')"
         placeholder="{{:: 'Add caption' | translate}}"
         ng-if="related"
-        class="sd-media-carousel__media-caption">
+        class="sd-media-carousel__media-caption"
+    >
     </textarea>
 </div>

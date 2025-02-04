@@ -1,4 +1,3 @@
-
 describe('profile service', () => {
     beforeEach(window.module('superdesk.apps.users.profile'));
 

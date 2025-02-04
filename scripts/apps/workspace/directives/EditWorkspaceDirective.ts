@@ -6,15 +6,15 @@ export function EditWorkspaceDirective(workspaces) {
             workspace: '=',
             done: '=',
         },
-        link: function(scope) {
+        link: function (scope) {
             scope.workspaces = workspaces;
 
             /**
              * Trigger workspace.save and in case there is an error returned assign it to scope.
              */
-            scope.save = function() {
-                workspaces.save(scope.workspace)
-                    .then(() => {
+            scope.save = function () {
+                workspaces.save(scope.workspace).then(
+                    () => {
                         scope.errors = null;
                         var workspace = scope.workspace;
 
@@ -22,12 +22,14 @@ export function EditWorkspaceDirective(workspaces) {
                         if (scope.done) {
                             return scope.done(workspace);
                         }
-                    }, (response) => {
+                    },
+                    (response) => {
                         scope.errors = response.data._issues;
-                    });
+                    },
+                );
             };
 
-            scope.cancel = function() {
+            scope.cancel = function () {
                 scope.workspace = null;
             };
         },

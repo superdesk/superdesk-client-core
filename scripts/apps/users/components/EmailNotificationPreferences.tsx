@@ -15,23 +15,22 @@ export class EmailNotificationPreferences extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
             <CheckGroup orientation="vertical">
-                {Object.entries(this.props.preferences.notifications)
-                    .map(([notificationId, notificationSettings]) => {
-                        return (
-                            <Checkbox
-                                key={notificationId}
-                                label={{
-                                    text: gettext(
-                                        'Send {{name}} notifications',
-                                        {name: this.props.notificationLabels[notificationId]},
-                                    )}}
-                                onChange={() => {
-                                    this.props.toggleEmailNotification(notificationId);
-                                }}
-                                checked={notificationSettings.email}
-                            />
-                        );
-                    })}
+                {Object.entries(this.props.preferences.notifications).map(([notificationId, notificationSettings]) => {
+                    return (
+                        <Checkbox
+                            key={notificationId}
+                            label={{
+                                text: gettext('Send {{name}} notifications', {
+                                    name: this.props.notificationLabels[notificationId],
+                                }),
+                            }}
+                            onChange={() => {
+                                this.props.toggleEmailNotification(notificationId);
+                            }}
+                            checked={notificationSettings.email}
+                        />
+                    );
+                })}
             </CheckGroup>
         );
     }

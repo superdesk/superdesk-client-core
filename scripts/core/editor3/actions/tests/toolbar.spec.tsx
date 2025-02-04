@@ -1,15 +1,17 @@
 import {cropImage, insertMedia} from '..';
 
 describe('editor3.actions.toolbar', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.service('superdesk', ($q) => ({
-            intent: jasmine.createSpy().and.returnValue($q.when([])),
-        }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service('superdesk', ($q) => ({
+                intent: jasmine.createSpy().and.returnValue($q.when([])),
+            }));
 
-        $provide.service('renditions', ($q) => ({
-            crop: jasmine.createSpy().and.returnValue($q.when('cropped_image')),
-        }));
-    }));
+            $provide.service('renditions', ($q) => ({
+                crop: jasmine.createSpy().and.returnValue($q.when('cropped_image')),
+            }));
+        }),
+    );
 
     it('cropImage', inject((renditions, $rootScope) => {
         const dispatch = jasmine.createSpy('dispatcher');

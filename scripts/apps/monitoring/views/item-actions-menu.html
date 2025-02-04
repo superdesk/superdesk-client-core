@@ -1,14 +1,20 @@
-<div class="dropdown dropdown--align-right dropdown--more-activity item-actions-menu"
-     dropdown
-     dropdown-append-to-body
-     is-open="open"
-     on-toggle="toggleActions(open)">
-    <button class="icn-btn more-activity-toggle-ref condensed dropdown__toggle"
-            ng-click="stopEvent($event)"
-            ng-dblclick="stopEvent($event)"
-            ng-show="active || open"
-            aria-label="{{ :: 'More actions' | translate }}"
-            dropdown__toggle><i class="icon-dots-vertical"></i></button>
+<div
+    class="dropdown dropdown--align-right dropdown--more-activity item-actions-menu"
+    dropdown
+    dropdown-append-to-body
+    is-open="open"
+    on-toggle="toggleActions(open)"
+>
+    <button
+        class="icn-btn more-activity-toggle-ref condensed dropdown__toggle"
+        ng-click="stopEvent($event)"
+        ng-dblclick="stopEvent($event)"
+        ng-show="active || open"
+        aria-label="{{ :: 'More actions' | translate }}"
+        dropdown__toggle
+    >
+        <i class="icon-dots-vertical"></i>
+    </button>
 
     <ul class="dropdown dropdown--align-right dropdown__menu more-activity-menu" ng-class="{open: open}">
         <li>
@@ -20,14 +26,9 @@
         <li ng-repeat-start="group in menuGroups"></li>
         <li class="dropdown__menu-divider"></li>
 
-
         <li ng-repeat="action in group.actions">
             <!-- Render activity based actions. Should be migrated to extension actions. -->
-            <span
-                ng-if="action.kind === 'activity-based'"
-                ng-init="activity = action.activity"
-                sd-activity-item
-            ></span>
+            <span ng-if="action.kind === 'activity-based'" ng-init="activity = action.activity" sd-activity-item></span>
 
             <!-- Render actions from extensions -->
             <a ng-if="action.kind === 'extension-action'" ng-click="action.articleAction.onTrigger()">
@@ -36,9 +37,7 @@
             </a>
         </li>
 
-
         <li ng-if="group.concate" sd-activity-dropdown-item data-group="{group.label}"></li>
-
 
         <li ng-if="!menuGroups.length">
             <div class="info-block" translate>You don't have the privileges to perform any action</div>

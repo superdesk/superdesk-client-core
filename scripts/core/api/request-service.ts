@@ -16,10 +16,9 @@ function RequestService($injector) {
      * @param {Object} config
      * @returns {Promise}
      */
-    this.resend = function(config) {
+    this.resend = function (config) {
         return this.isUpload(config) ? $injector.get('upload').restart(config) : $injector.get('$http')(config);
     };
 }
 
-angular.module('superdesk.core.api.request', [])
-    .service('request', RequestService);
+angular.module('superdesk.core.api.request', []).service('request', RequestService);

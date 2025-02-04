@@ -27,7 +27,7 @@ export function DeskConfigModal(metadata, content, templates, api) {
         },
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
-        link: function(scope, elem, attrs, ctrl) {
+        link: function (scope, elem, attrs, ctrl) {
             const views = {};
 
             views[''] = {label: gettext('None')};

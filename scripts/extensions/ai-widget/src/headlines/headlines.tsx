@@ -40,11 +40,7 @@ export default class HeadlinesBody extends React.Component<IProps> {
         if (error) {
             return (
                 <Spacer v alignItems="center" gap="8" justifyContent="center" noWrap>
-                    <Button
-                        style="hollow"
-                        onClick={generateHeadlines}
-                        text={gettext('Regenerate')}
-                    />
+                    <Button style="hollow" onClick={generateHeadlines} text={gettext('Regenerate')} />
                     <Heading type="h6" align="center">
                         {gettext('There was an error when trying to generate headlines.')}
                     </Heading>
@@ -79,12 +75,13 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                         {rawContentState: rawState},
                                                         article.language,
                                                     ),
-                                                ));
-                                        } else {
-                                            superdesk.ui.article.applyFieldChangesToEditor(
-                                                article._id,
-                                                {key: 'headline', value: headline},
+                                                ),
                                             );
+                                        } else {
+                                            superdesk.ui.article.applyFieldChangesToEditor(article._id, {
+                                                key: 'headline',
+                                                value: headline,
+                                            });
                                         }
                                     }}
                                     type="default"

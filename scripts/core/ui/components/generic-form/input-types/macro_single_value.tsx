@@ -7,23 +7,22 @@ import {IRestApiResponse} from 'superdesk-api';
 export function getMacroSingleValue() {
     return getSelectSingleValue(
         (props) =>
-            ng.getService('api')
-                .then((api) => {
-                    const deskId = props.formValues[props.formField.component_parameters['deskField']];
+            ng.getService('api').then((api) => {
+                const deskId = props.formValues[props.formField.component_parameters['deskField']];
 
-                    if (deskId == null) {
-                        return Promise.resolve(null);
-                    } else {
-                        return api('macros').query({
+                if (deskId == null) {
+                    return Promise.resolve(null);
+                } else {
+                    return api('macros')
+                        .query({
                             where: {desk: deskId},
                             max_results: 200,
                         })
-                            .then(
-                                (stages: IRestApiResponse<IMacro>) =>
-                                    stages._items.map(({label, name}) => ({id: name, label: label})),
-                            );
-                    }
-                }),
+                        .then((stages: IRestApiResponse<IMacro>) =>
+                            stages._items.map(({label, name}) => ({id: name, label: label})),
+                        );
+                }
+            }),
         gettext('Select a desk first'),
         (props) => [props.formField.component_parameters['deskField']],
     );

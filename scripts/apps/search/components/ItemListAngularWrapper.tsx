@@ -71,20 +71,15 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.abortController = new AbortController();
         this.eventListenersToRemoveBeforeUnmounting = [];
 
-        this.handleContentChanges = throttleAndCombineArray(
-            (changes) => {
-                getAndMergeRelatedEntitiesUpdated(
-                    this.state.relatedEntities,
-                    changes,
-                    this.abortController.signal,
-                ).then((relatedEntities) => {
+        this.handleContentChanges = throttleAndCombineArray((changes) => {
+            getAndMergeRelatedEntitiesUpdated(this.state.relatedEntities, changes, this.abortController.signal).then(
+                (relatedEntities) => {
                     if (this._mounted) {
                         this.setState({relatedEntities});
                     }
-                });
-            },
-            300,
-        );
+                },
+            );
+        }, 300);
     }
 
     focus() {
@@ -211,36 +206,27 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this._mounted = true;
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:created', (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                    const {resource, _id, fields} = event.extra;
+            addWebsocketEventListener('resource:updated', (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                const {resource, _id, fields} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+            }),
         );
     }
 
@@ -257,11 +243,11 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     render() {
         const {scope, monitoringState} = this.props;
 
-        const style = scope.styleProperties == null
-            ? null
-
-            // styleProperties will be modified on the angular side so it can not be directly used as a react prop.
-            : Object.assign({}, scope.styleProperties);
+        const style =
+            scope.styleProperties == null
+                ? null
+                : // styleProperties will be modified on the angular side so it can not be directly used as a react prop.
+                  Object.assign({}, scope.styleProperties);
 
         return (
             <SmoothLoader loading={this.state.loading}>
@@ -287,19 +273,23 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                         groupId={scope.$id}
                         edit={scope.edit}
                         preview={scope.preview}
-                        multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
-                            kind: 'legacy',
-                            multiSelect: (item: IArticle, selected: boolean, multiSelectMode: boolean) => {
-                                if (multiSelectMode) {
-                                    this.selectMultipleItems(item);
-                                } else {
-                                    this.multiSelect([item], selected);
-                                }
-                            },
-                            setSelectedItem: (itemId) => {
-                                this.setState({selected: itemId});
-                            },
-                        }}
+                        multiSelect={
+                            scope.disableMonitoringMultiSelect
+                                ? undefined
+                                : {
+                                      kind: 'legacy',
+                                      multiSelect: (item: IArticle, selected: boolean, multiSelectMode: boolean) => {
+                                          if (multiSelectMode) {
+                                              this.selectMultipleItems(item);
+                                          } else {
+                                              this.multiSelect([item], selected);
+                                          }
+                                      },
+                                      setSelectedItem: (itemId) => {
+                                          this.setState({selected: itemId});
+                                      },
+                                  }
+                        }
                         narrow={this.state.narrow}
                         view={this.state.view}
                         selected={this.state.selected}

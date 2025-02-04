@@ -60,8 +60,8 @@ interface IScope extends ng.IScope {
     currentGroup: any;
     fetchNext(i: number): any;
     refreshGroup(): void;
-    customSortOptions: { [field: string]: { label: string } };
-    customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
+    customSortOptions: {[field: string]: {label: string}};
+    customSortOptionActive?: {field: string; order: 'asc' | 'desc'};
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
@@ -128,15 +128,15 @@ export function MonitoringGroup(
             onMonitoringItemSelect: '=?',
             onMonitoringItemDoubleClick: '=?',
         },
-        link: function(scope: IScope, elem, attrs, ctrls) {
+        link: function (scope: IScope, elem, attrs, ctrls) {
             if (scope.group == null) {
                 scope.group = {};
             }
 
             if (
-                scope.customDataSource != null
-                && typeof scope.customDataSource === 'object'
-                && typeof scope.customDataSource.getItem !== typeof scope.customDataSource.getItems
+                scope.customDataSource != null &&
+                typeof scope.customDataSource === 'object' &&
+                typeof scope.customDataSource.getItem !== typeof scope.customDataSource.getItems
             ) {
                 throw new Error(
                     'Both values have to be either supplied or not. Supplying only one of them is not supported.',
@@ -148,19 +148,22 @@ export function MonitoringGroup(
             // happening at around same time, plus wait for query to finish
             // before sending another query so if server is slow to respond
             // it will slow down requests.
-            const scheduleQuery = debounce((event, data) => {
-                if (queryPromise == null) {
-                    queryPromise = queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
-                        .finally(() => {
+            const scheduleQuery = debounce(
+                (event, data) => {
+                    if (queryPromise == null) {
+                        queryPromise = queryItems(event, data, {auto: data && data.force ? 0 : 1}).finally(() => {
                             queryPromise = null;
                             scope.$applyAsync();
                         });
-                } else {
-                    // There is already request pending so queue another one to run when it finishes.
-                    // It's using debounce inside so if there are more those will be ingored.
-                    queryPromise.then(() => scheduleQuery(event, data));
-                }
-            }, 1000, {maxWait: 3000});
+                    } else {
+                        // There is already request pending so queue another one to run when it finishes.
+                        // It's using debounce inside so if there are more those will be ingored.
+                        queryPromise.then(() => scheduleQuery(event, data));
+                    }
+                },
+                1000,
+                {maxWait: 3000},
+            );
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
@@ -256,8 +259,12 @@ export function MonitoringGroup(
                     return false;
                 }
 
-                let limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
-                || scope.group.type === 'spike' || scope.group.type === 'personal');
+                let limited = !(
+                    monitoring.singleGroup ||
+                    scope.group.type === 'highlights' ||
+                    scope.group.type === 'spike' ||
+                    scope.group.type === 'personal'
+                );
 
                 if (!_.isNil(scope.forceLimited)) {
                     limited = JSON.parse(scope.forceLimited);
@@ -274,8 +281,11 @@ export function MonitoringGroup(
                         _etag: data.from_stage, // this must change to make it re-render
                     });
                     scheduleQuery(event, data);
-                } else if (scope.group.type === DESK_OUTPUT && data &&
-                     scope.group._id === _.get(data, 'from_desk') + ':output') {
+                } else if (
+                    scope.group.type === DESK_OUTPUT &&
+                    data &&
+                    scope.group._id === _.get(data, 'from_desk') + ':output'
+                ) {
                     // item was moved to production desk, therefore it should comes in from_desk's output stage too
                     scheduleQuery(event, data);
                 } else if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
@@ -405,7 +415,7 @@ export function MonitoringGroup(
             }
 
             // forced refresh on refresh button click or on refresh:list
-            scope.refreshGroup = function() {
+            scope.refreshGroup = function () {
                 monitoring.showRefresh = scope.showRefresh = false;
                 scheduleQuery(null, {force: true});
                 // update scroll position to top when forced refresh
@@ -464,10 +474,9 @@ export function MonitoringGroup(
                 let activity = _.find(superdesk.findActivities(intent, item), {_id: activityId});
 
                 if (!_.isNil(activity)) {
-                    activityService.start(activity, {data: {item: item}})
-                        .then((_item) => {
-                            authoringWorkspace.edit(_item);
-                        });
+                    activityService.start(activity, {data: {item: item}}).then((_item) => {
+                        authoringWorkspace.edit(_item);
+                    });
                 }
             }
 
@@ -488,7 +497,7 @@ export function MonitoringGroup(
 
                     scope.loading = true;
 
-                    (function() {
+                    (function () {
                         if (scope.customDataSource != null && typeof scope.customDataSource.getItem === 'function') {
                             return scope.customDataSource.getItem(item);
                         } else {
@@ -521,8 +530,10 @@ export function MonitoringGroup(
 
             // For highlight page return only highlights items, i.e, include only last version if item type is published
             function getOnlyHighlightsItems(items) {
-                items._items = _.filter(items._items, (item) =>
-                    item._type === 'published' && item.last_published_version || item._type !== 'published');
+                items._items = _.filter(
+                    items._items,
+                    (item) => (item._type === 'published' && item.last_published_version) || item._type !== 'published',
+                );
                 return items;
             }
 
@@ -540,19 +551,16 @@ export function MonitoringGroup(
                 // reset in order to display loading indicator
                 scope.items = undefined;
 
-                return (function() {
+                return (function () {
                     const customFilters: {[key: string]: IMonitoringFilter} = JSON.parse(
                         scope?.group?.customFilters ?? '{}',
                     );
 
-                    if (
-                        scope.customDataSource != null
-                        && typeof scope.customDataSource.getItems === 'function'
-                    ) {
+                    if (scope.customDataSource != null && typeof scope.customDataSource.getItems === 'function') {
                         return scope.customDataSource.getItems(0, PAGE_SIZE);
                     } else if (
-                        scope?.group?.type === 'search'
-                        && Object.values(customFilters).some(
+                        scope?.group?.type === 'search' &&
+                        Object.values(customFilters).some(
                             (filter) => filter?.displayOptions?.ignoreMatchesInSavedSearchMonitoringGroups,
                         )
                     ) {
@@ -600,18 +608,18 @@ export function MonitoringGroup(
 
                         // custom sort for group (if it exists)
                         if (scope.customSortOptionActive) {
-                            criteria.source.sort =
-                                [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
+                            criteria.source.sort = [
+                                {[scope.customSortOptionActive.field]: scope.customSortOptionActive.order},
+                            ];
                         }
 
-                        return apiquery(criteria, true)
-                            .then((res) => {
-                                if (originalQuery) {
-                                    criteria.source.query = originalQuery;
-                                }
+                        return apiquery(criteria, true).then((res) => {
+                            if (originalQuery) {
+                                criteria.source.query = originalQuery;
+                            }
 
-                                return res;
-                            });
+                            return res;
+                        });
                     }
                 })()
                     .then((items) => {
@@ -621,16 +629,15 @@ export function MonitoringGroup(
 
                         if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
                             monitoring.showRefresh = scope.showRefresh = showRefresh(
-                                (scopeItemsSaved?._items ?? []),
+                                scopeItemsSaved?._items ?? [],
                                 items._items,
                             );
                         }
 
-                        if (!scope.showRefresh || data && data.force) {
+                        if (!scope.showRefresh || (data && data.force)) {
                             scope.total = items._meta.total;
-                            let onlyHighlighted = scope.group.type === 'highlights'
-                                ? getOnlyHighlightsItems(items)
-                                : items;
+                            let onlyHighlighted =
+                                scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
 
                             monitoring.totalItems = onlyHighlighted._meta.total;
                             scope.items = search.mergeItems(onlyHighlighted, scopeItemsSaved, null, true);
@@ -638,17 +645,18 @@ export function MonitoringGroup(
                             // update scope items only with the matching fetched items
                             scope.items = search.updateItems(items, scopeItemsSaved);
                         }
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         // reset page size to default
                         criteria.source.size = PAGE_SIZE;
                     });
             }
 
-            scope.selectDefaultSortOption = function() {
+            scope.selectDefaultSortOption = function () {
                 scope.selectCustomSortOption(null);
             };
 
-            scope.selectCustomSortOption = function(field: string | null) {
+            scope.selectCustomSortOption = function (field: string | null) {
                 if (field === null) {
                     scope.customSortOptionActive = null;
                 } else {
@@ -660,7 +668,7 @@ export function MonitoringGroup(
                 queryItems();
             };
 
-            scope.toggleCustomSortOrder = function() {
+            scope.toggleCustomSortOrder = function () {
                 if (scope.customSortOptionActive.order === 'asc') {
                     scope.customSortOptionActive.order = 'desc';
                 } else {
@@ -669,32 +677,29 @@ export function MonitoringGroup(
                 queryItems();
             };
 
-            scope.fetchNext = function(from) {
+            scope.fetchNext = function (from) {
                 if (typeof criteria === 'object' && typeof criteria.source === 'object') {
                     criteria.source.from = from;
                 }
 
                 const next = true;
 
-                (function() {
+                (function () {
                     if (scope.customDataSource != null && typeof scope.customDataSource.getItems === 'function') {
                         return scope.customDataSource.getItems(from, PAGE_SIZE);
                     } else {
                         return apiquery(criteria, true);
                     }
-                })()
-                    .then((items) => {
-                        scope.$applyAsync(() => {
-                            if (!scope.showRefresh && scope.total !== items._meta.total) {
-                                scope.total = items._meta.total;
-                            }
-                            let onlyHighlighted = scope.group.type === 'highlights'
-                                ? getOnlyHighlightsItems(items)
-                                : items;
+                })().then((items) => {
+                    scope.$applyAsync(() => {
+                        if (!scope.showRefresh && scope.total !== items._meta.total) {
+                            scope.total = items._meta.total;
+                        }
+                        let onlyHighlighted = scope.group.type === 'highlights' ? getOnlyHighlightsItems(items) : items;
 
-                            scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
-                        });
+                        scope.items = search.mergeItems(onlyHighlighted, scope.items, next);
                     });
+                });
             };
 
             /**
@@ -713,9 +718,10 @@ export function MonitoringGroup(
                             searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
-                } else if (scope.group != null
-                    && (personalGroups.includes(scope.group.type)
-                        || personalSectionIds.includes(scope.group.type))) {
+                } else if (
+                    scope.group != null &&
+                    (personalGroups.includes(scope.group.type) || personalSectionIds.includes(scope.group.type))
+                ) {
                     provider = 'news';
                 } else {
                     provider = 'archive';

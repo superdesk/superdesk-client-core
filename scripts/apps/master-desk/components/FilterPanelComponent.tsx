@@ -88,8 +88,9 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const showClearFiltersButton = Object.keys(this.props.filters)
-            .some((key) => this.props.filters[key].length !== 0);
+        const showClearFiltersButton = Object.keys(this.props.filters).some(
+            (key) => this.props.filters[key].length !== 0,
+        );
 
         return (
             <div className={'sd-main-content-grid__filter' + (this.props.open ? ' open-filters' : '')}>
@@ -170,15 +171,9 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                             <ButtonGroup orientation="vertical">
                                 <Button type="primary" onClick={this.addFilter} text={gettext('Apply Filters')} />
 
-                                {
-                                    showClearFiltersButton &&
-                                    (
-                                        <Button
-                                            onClick={this.clearFilters}
-                                            text={gettext('Clear Filters')}
-                                        />
-                                    )
-                                }
+                                {showClearFiltersButton && (
+                                    <Button onClick={this.clearFilters} text={gettext('Clear Filters')} />
+                                )}
                             </ButtonGroup>
                         </div>
                     </div>

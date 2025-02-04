@@ -16,18 +16,12 @@ export const attachmentsApi: IAttachmentsApi = {
         const attachments: IArticle['attachments'] = article.attachments ?? [];
         const ids = attachments.map((ref) => ref.attachment);
 
-        return dataApi.query<IAttachment>(
-            RESOURCE,
-            1,
-            {field: 'title', direction: 'ascending'},
-            {_id: {$in: ids}},
-        )
+        return dataApi
+            .query<IAttachment>(RESOURCE, 1, {field: 'title', direction: 'ascending'}, {_id: {$in: ids}})
             .then((response) => {
-                response._items.forEach(
-                    (attachment) => {
-                        _byIdCache[attachment._id] = attachment;
-                    },
-                );
+                response._items.forEach((attachment) => {
+                    _byIdCache[attachment._id] = attachment;
+                });
 
                 return response._items;
             });
@@ -38,12 +32,11 @@ export const attachmentsApi: IAttachmentsApi = {
             return Promise.resolve(_byIdCache[id]);
         }
 
-        return dataApi.findOne<IAttachment>(RESOURCE, id)
-            .then((attachment) => {
-                _byIdCache[attachment._id] = attachment;
+        return dataApi.findOne<IAttachment>(RESOURCE, id).then((attachment) => {
+            _byIdCache[attachment._id] = attachment;
 
-                return attachment;
-            });
+            return attachment;
+        });
     },
 
     create(attachment: Partial<IAttachment>) {
@@ -75,11 +68,7 @@ export const attachmentsApi: IAttachmentsApi = {
             formData.append('internal', 'true');
         }
 
-        return dataApi.uploadFileWithProgress(
-            '/' + RESOURCE,
-            formData,
-            onProgress,
-        );
+        return dataApi.uploadFileWithProgress('/' + RESOURCE, formData, onProgress);
     },
 
     download(attachment: IAttachment) {

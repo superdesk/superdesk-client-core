@@ -38,7 +38,8 @@ export class DayPicker extends React.Component<any, any> {
     }
 
     setDatesForProps(props) {
-        const firstDayOfMonth = moment().year(props.selectedDate.year())
+        const firstDayOfMonth = moment()
+            .year(props.selectedDate.year())
             .month(props.selectedDate.month())
             .date(1)
             .isoWeekday();
@@ -47,11 +48,11 @@ export class DayPicker extends React.Component<any, any> {
 
         let prevMonthDates = [];
 
-        if (firstDayOfMonth !== 7) { // In this case, need to also have dates of previous month in the view
-            const previousYear = props.selectedDate.month() === 0 ? props.selectedDate.year() - 1 :
-                props.selectedDate.year();
-            const previousMonth = props.selectedDate.month() === 0 ? 11 :
-                props.selectedDate.month() - 1;
+        if (firstDayOfMonth !== 7) {
+            // In this case, need to also have dates of previous month in the view
+            const previousYear =
+                props.selectedDate.month() === 0 ? props.selectedDate.year() - 1 : props.selectedDate.year();
+            const previousMonth = props.selectedDate.month() === 0 ? 11 : props.selectedDate.month() - 1;
             const daysOfPreviousMonth = this.getDaysInMonth(previousYear, previousMonth);
 
             prevMonthDates = range(daysOfPreviousMonth - firstDayOfMonth + 1, daysOfPreviousMonth + 1);
@@ -60,11 +61,8 @@ export class DayPicker extends React.Component<any, any> {
         const nextMonthDates = range(1, 43 - (prevMonthDates.length + daysInCurrentMonth.length));
 
         this.setState({
-            dates: [...prevMonthDates,
-                ...daysInCurrentMonth,
-                ...nextMonthDates],
-            selectedDateIndex: daysInCurrentMonth.indexOf(props.selectedDate.date())
-                + prevMonthDates.length,
+            dates: [...prevMonthDates, ...daysInCurrentMonth, ...nextMonthDates],
+            selectedDateIndex: daysInCurrentMonth.indexOf(props.selectedDate.date()) + prevMonthDates.length,
             monthStartIndex: prevMonthDates.length,
             monthEndIndex: prevMonthDates.length + daysInCurrentMonth.length - 1,
         });
@@ -73,8 +71,7 @@ export class DayPicker extends React.Component<any, any> {
     getDaysInMonth(year, month) {
         const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-        return ((month === 1) && (year % 4 === 0) &&
-            ((year % 100 !== 0) || (year % 400 === 0))) ? 29 : DAYS_IN_MONTH[month];
+        return month === 1 && year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : DAYS_IN_MONTH[month];
     }
 
     onDateChange(index) {
@@ -102,7 +99,9 @@ export class DayPicker extends React.Component<any, any> {
                 <thead>
                     <tr>
                         {dayNames.map((day, index) => (
-                            <th key={index} className="text-center"><small>{day}</small></th>
+                            <th key={index} className="text-center">
+                                <small>{day}</small>
+                            </th>
                         ))}
                     </tr>
                 </thead>
@@ -112,17 +111,16 @@ export class DayPicker extends React.Component<any, any> {
                             {row.map((date, index) => (
                                 <td key={index} className="text-center">
                                     <Button
-                                        className={(rowIndex * 7 + index) === this.state.selectedDateIndex ?
-                                            'active' :
-                                            null
+                                        className={
+                                            rowIndex * 7 + index === this.state.selectedDateIndex ? 'active' : null
                                         }
-                                        onClick={this.onDateChange.bind(this, (rowIndex * 7 + index))}
+                                        onClick={this.onDateChange.bind(this, rowIndex * 7 + index)}
                                     >
                                         <span
                                             className={classNames({
                                                 'text-muted':
-                                                (rowIndex * 7 + index) < this.state.monthStartIndex ||
-                                                (rowIndex * 7 + index) > this.state.monthEndIndex,
+                                                    rowIndex * 7 + index < this.state.monthStartIndex ||
+                                                    rowIndex * 7 + index > this.state.monthEndIndex,
                                             })}
                                         >
                                             {date}

@@ -14,43 +14,34 @@ interface IState {
 const itemTemplate = (props: {option: IUser}) => {
     const user: IUser | null = props.option;
 
-    return user == null
-        ? (
+    return user == null ? (
+        <div>{gettext('Select a user')}</div>
+    ) : (
+        <Spacer h gap="8" noWrap justifyContent="start">
             <div>
-                {gettext('Select a user')}
+                <UserAvatar user={user} displayStatus={true} />
             </div>
-        )
-        : (
-            <Spacer h gap="8" noWrap justifyContent="start">
-                <div>
-                    <UserAvatar user={user} displayStatus={true} />
-                </div>
 
-                <Spacer v gap="4" noWrap>
-                    <div>{user.display_name}</div>
-                    <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
-                </Spacer>
-
+            <Spacer v gap="4" noWrap>
+                <div>{user.display_name}</div>
+                <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
             </Spacer>
-        );
+        </Spacer>
+    );
 };
 
 const valueTemplateDefault = (props: {option: IUser}) => {
     const user: IUser | null = props.option;
 
-    return user == null
-        ? (
-            <div>
-                {gettext('Select a user')}
-            </div>
-        )
-        : (
-            <Spacer h gap="8" justifyContent="start" noGrow>
-                <UserAvatar user={user} displayStatus={true} />
+    return user == null ? (
+        <div>{gettext('Select a user')}</div>
+    ) : (
+        <Spacer h gap="8" justifyContent="start" noGrow>
+            <UserAvatar user={user} displayStatus={true} />
 
-                {user.display_name}
-            </Spacer>
-        );
+            {user.display_name}
+        </Spacer>
+    );
 };
 
 export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
@@ -66,12 +57,14 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
     componentDidMount() {
         if (this.props.selectedUserId != null) {
-            this.asyncHelpers.httpRequestJsonLocal<IUser>({
-                method: 'GET',
-                path: `/users/${this.props.selectedUserId}`,
-            }).then((selectedUser) => {
-                this.setState({selectedUser});
-            });
+            this.asyncHelpers
+                .httpRequestJsonLocal<IUser>({
+                    method: 'GET',
+                    path: `/users/${this.props.selectedUserId}`,
+                })
+                .then((selectedUser) => {
+                    this.setState({selectedUser});
+                });
         }
     }
 
@@ -86,19 +79,21 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({selectedUser: null});
             } else if (
-                this.state.selectedUser === 'loading'
-                || this.state.selectedUser?._id !== this.props.selectedUserId
+                this.state.selectedUser === 'loading' ||
+                this.state.selectedUser?._id !== this.props.selectedUserId
             ) {
                 // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({selectedUser: 'loading'});
 
-                this.asyncHelpers.httpRequestJsonLocal<IUser>({
-                    method: 'GET',
-                    path: `/users/${this.props.selectedUserId}`,
-                }).then((selectedUser) => {
-                    // eslint-disable-next-line react/no-did-update-set-state
-                    this.setState({selectedUser});
-                });
+                this.asyncHelpers
+                    .httpRequestJsonLocal<IUser>({
+                        method: 'GET',
+                        path: `/users/${this.props.selectedUserId}`,
+                    })
+                    .then((selectedUser) => {
+                        // eslint-disable-next-line react/no-did-update-set-state
+                        this.setState({selectedUser});
+                    });
             }
         }
     }
@@ -142,15 +137,17 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                             path: url,
                             urlParams,
                             abortSignal: this.abortController.signal,
-                        }).then((res) => {
-                            resolve(res._items);
-                        }).catch((err) => {
-                            // If user types something in the filter input all unfinished requests will be aborted.
-                            // This is expected behaviour here and should not throw an error.
-                            if (err?.name !== 'AbortError') {
-                                throw err;
-                            }
-                        });
+                        })
+                            .then((res) => {
+                                resolve(res._items);
+                            })
+                            .catch((err) => {
+                                // If user types something in the filter input all unfinished requests will be aborted.
+                                // This is expected behaviour here and should not throw an error.
+                                if (err?.name !== 'AbortError') {
+                                    throw err;
+                                }
+                            });
                     });
                 }}
                 value={this.state.selectedUser}

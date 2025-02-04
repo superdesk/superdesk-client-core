@@ -6,21 +6,18 @@ import {IArticle} from 'superdesk-api';
 import {IDestination} from 'superdesk-interfaces/Destination';
 import {Button, Modal} from 'superdesk-ui-framework/react';
 
-const getFormattedDocument = (url) => fetch(
-    url,
-    {
+const getFormattedDocument = (url) =>
+    fetch(url, {
         method: 'GET',
         headers: {
-            'Authorization': ng.get('session').token,
+            Authorization: ng.get('session').token,
         },
-    },
-).then(
-    (response) => response.text()
-        .then((responseText) => ({
+    }).then((response) =>
+        response.text().then((responseText) => ({
             fomattedDocument: responseText,
             documentContentType: response.headers.get('content-type'),
         })),
-);
+    );
 
 interface IProps {
     subscribers: Array<ISubscriber>;
@@ -44,8 +41,9 @@ export class PreviewModal extends React.Component<IProps> {
 
         nextWindow.document.body.innerText = gettext('Loading preview');
 
-        const url = urls.item('format-document-for-preview')
-            + `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${itemId}`;
+        const url =
+            urls.item('format-document-for-preview') +
+            `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${itemId}`;
 
         getFormattedDocument(url).then(({fomattedDocument, documentContentType}) => {
             const headers = new Headers();
@@ -57,26 +55,29 @@ export class PreviewModal extends React.Component<IProps> {
                 mode: 'cors',
                 body: fomattedDocument,
                 headers: headers,
-            })
-                .then((res) => res.text().then((responseText) => {
+            }).then((res) =>
+                res.text().then((responseText) => {
                     if (res.status === 200) {
                         nextWindow.document.body.innerHTML = responseText;
                     } else {
                         nextWindow.document.body.innerHTML =
-                            `<h1>${gettext('An error occurred while trying to preview the item.')}</h1>`
-                            + `<p>${gettext('Ensure correct preview endpoint is configured'
-                                + ' or contact endpoint maintainers.')}</p>`
-                            + '<br /><br />' + responseText;
+                            `<h1>${gettext('An error occurred while trying to preview the item.')}</h1>` +
+                            `<p>${gettext(
+                                'Ensure correct preview endpoint is configured' + ' or contact endpoint maintainers.',
+                            )}</p>` +
+                            '<br /><br />' +
+                            responseText;
                     }
-                }));
+                }),
+            );
         });
     }
 
     render() {
         const {closeModal} = this.props;
 
-        const subscribers = this.props.subscribers.filter(
-            ({destinations}) => (destinations ?? []).some((dest) => publishPreviewEnabled(dest)),
+        const subscribers = this.props.subscribers.filter(({destinations}) =>
+            (destinations ?? []).some((dest) => publishPreviewEnabled(dest)),
         );
 
         return (
@@ -85,49 +86,43 @@ export class PreviewModal extends React.Component<IProps> {
                 size="small"
                 position="top"
                 headerTemplate={gettext('Select preview target')}
-                footerTemplate={
-                    <Button type="default" text={gettext('Cancel')} onClick={closeModal} />
-                }
+                footerTemplate={<Button type="default" text={gettext('Cancel')} onClick={closeModal} />}
             >
                 <ul>
-                    {
-                        subscribers.map((subscriber, i) => (
-                            <li key={i}>
-                                <strong>{subscriber.name}</strong>
-                                <ul>
-                                    {
-                                        subscriber.destinations
-                                            .filter((dest) => publishPreviewEnabled(dest))
-                                            .map((destination, j) => (
-                                                <li
-                                                    key={j}
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                        margin: '4px 0',
-                                                    }}
-                                                >
-                                                    <span>{destination.name}</span>
-                                                    <button
-                                                        className="btn btn--primary btn--small"
-                                                        onClick={() => {
-                                                            this.openPreviewForItem(
-                                                                subscriber._id,
-                                                                destination.format,
-                                                                destination.preview_endpoint_url,
-                                                            );
-                                                        }}
-                                                    >
-                                                        {gettext('preview')}
-                                                    </button>
-                                                </li>
-                                            ))
-                                    }
-                                </ul>
-                            </li>
-                        ))
-                    }
+                    {subscribers.map((subscriber, i) => (
+                        <li key={i}>
+                            <strong>{subscriber.name}</strong>
+                            <ul>
+                                {subscriber.destinations
+                                    .filter((dest) => publishPreviewEnabled(dest))
+                                    .map((destination, j) => (
+                                        <li
+                                            key={j}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                margin: '4px 0',
+                                            }}
+                                        >
+                                            <span>{destination.name}</span>
+                                            <button
+                                                className="btn btn--primary btn--small"
+                                                onClick={() => {
+                                                    this.openPreviewForItem(
+                                                        subscriber._id,
+                                                        destination.format,
+                                                        destination.preview_endpoint_url,
+                                                    );
+                                                }}
+                                            >
+                                                {gettext('preview')}
+                                            </button>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </li>
+                    ))}
                 </ul>
             </Modal>
         );

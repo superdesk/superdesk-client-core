@@ -50,9 +50,13 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.lastPropsValue = this.state.value;
 
-        this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
-            this.props.onChange(field, value);
-        }, 300, {leading: false});
+        this.onChangeThrottled = throttle(
+            (field: IVocabulary, value: any) => {
+                this.props.onChange(field, value);
+            },
+            300,
+            {leading: false},
+        );
 
         this.setValue = this.setValue.bind(this);
     }
@@ -87,50 +91,47 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         return (
             <div>
-                {this.props.template != null && FieldType.templateEditorComponent != null ?
-                    (
-                        <FieldType.templateEditorComponent
-                            language={item.language}
-                            value={this.state.value}
-                            setValue={(value) => this.setValue(value)}
-                            readOnly={!editable}
-                            config={field.custom_field_config}
-                        />
-                    ) :
-                    (
-                        <FieldType.editorComponent
-                            editorId={field._id}
-                            language={item.language}
-                            value={this.state.value}
-                            fieldsData={getFieldsData(this.props)}
-                            onChange={(value) => this.setValue(value)}
-                            reinitialize={noop}
-                            readOnly={!editable}
-                            config={field.custom_field_config}
-                            fieldId={field._id}
-                            editorPreferences={preferencesForFields[field._id]}
-                            onEditorPreferencesChange={(val) => {
-                                const nextFieldPreferences = {
-                                    ...preferencesForFields,
-                                    [field._id]: val,
-                                };
+                {this.props.template != null && FieldType.templateEditorComponent != null ? (
+                    <FieldType.templateEditorComponent
+                        language={item.language}
+                        value={this.state.value}
+                        setValue={(value) => this.setValue(value)}
+                        readOnly={!editable}
+                        config={field.custom_field_config}
+                    />
+                ) : (
+                    <FieldType.editorComponent
+                        editorId={field._id}
+                        language={item.language}
+                        value={this.state.value}
+                        fieldsData={getFieldsData(this.props)}
+                        onChange={(value) => this.setValue(value)}
+                        reinitialize={noop}
+                        readOnly={!editable}
+                        config={field.custom_field_config}
+                        fieldId={field._id}
+                        editorPreferences={preferencesForFields[field._id]}
+                        onEditorPreferencesChange={(val) => {
+                            const nextFieldPreferences = {
+                                ...preferencesForFields,
+                                [field._id]: val,
+                            };
 
-                                preferences.update(AUTHORING_FIELD_PREFERENCES, nextFieldPreferences);
+                            preferences.update(AUTHORING_FIELD_PREFERENCES, nextFieldPreferences);
 
-                                this.setState({
-                                    preferences: {
-                                        ...this.state.preferences,
-                                        [AUTHORING_FIELD_PREFERENCES]: nextFieldPreferences,
-                                    },
-                                });
-                            }}
-                            getVocabularyItems={() => []} // only used in authoring-react
-                            container={({children}) => (<div>{children}</div>)}
-                            item={item}
-                            computeLatestEntity={() => item}
-                        />
-                    )
-                }
+                            this.setState({
+                                preferences: {
+                                    ...this.state.preferences,
+                                    [AUTHORING_FIELD_PREFERENCES]: nextFieldPreferences,
+                                },
+                            });
+                        }}
+                        getVocabularyItems={() => []} // only used in authoring-react
+                        container={({children}) => <div>{children}</div>}
+                        item={item}
+                        computeLatestEntity={() => item}
+                    />
+                )}
             </div>
         );
     }

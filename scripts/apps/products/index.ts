@@ -13,10 +13,12 @@ import {gettext} from 'core/utils';
  * @packageName superdesk.apps
  * @description Adds products support to Superdesk.
  */
-export default angular.module('superdesk.apps.products', ['superdesk.apps.users'])
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk
-            .activity('/settings/products', {
+export default angular
+    .module('superdesk.apps.products', ['superdesk.apps.users'])
+    .config([
+        'superdeskProvider',
+        function (superdesk) {
+            superdesk.activity('/settings/products', {
                 label: gettext('Products'),
                 controller: ProductsConfigController,
                 templateUrl: 'scripts/apps/products/views/settings.html',
@@ -24,11 +26,15 @@ export default angular.module('superdesk.apps.products', ['superdesk.apps.users'
                 settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {products: 1},
             });
-    }])
+        },
+    ])
 
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('products', {type: 'http', backend: {rel: 'products'}});
-    }])
+    .config([
+        'apiProvider',
+        function (apiProvider) {
+            apiProvider.api('products', {type: 'http', backend: {rel: 'products'}});
+        },
+    ])
     .filter('productsBy', ProductsFilter)
     .controller('ProductsConfigCtrl', ProductsConfigController)
 

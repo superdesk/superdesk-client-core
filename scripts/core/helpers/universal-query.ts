@@ -1,14 +1,7 @@
 import {toElasticQuery, toPyEveQuery} from 'core/query-formatting';
 import {IHttpRequestOptionsLocal, ISuperdeskQuery} from 'superdesk-api';
 
-const elasticEndpoints = [
-    '/archive',
-    '/search',
-    '/rundowns',
-    '/rundown_items',
-    '/events',
-    '/planning',
-];
+const elasticEndpoints = ['/archive', '/search', '/rundowns', '/rundown_items', '/events', '/planning'];
 
 export function prepareSuperdeskQuery(
     endpoint: string,

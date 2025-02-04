@@ -51,8 +51,9 @@ export class HighlightsCardContent extends React.PureComponent<IProps, IState> {
             this.setState({
                 ...this.state,
                 initialized: true,
-                selectedHighlighIds: res._items
-                    .filter((highlight) => this.props.article.highlights.includes(highlight._id)),
+                selectedHighlighIds: res._items.filter((highlight) =>
+                    this.props.article.highlights.includes(highlight._id),
+                ),
             });
         });
     }
@@ -65,34 +66,28 @@ export class HighlightsCardContent extends React.PureComponent<IProps, IState> {
         }
 
         return (
-            <Card
-                background="#000000"
-            >
+            <Card background="#000000">
                 <Spacer v gap="16">
                     <Spacer h gap="64" noGrow>
                         <Heading color="lighter" type="h5">
                             {gettext('Marked for')}
                         </Heading>
-                        <IconButton
-                            onClick={this.props.close}
-                            icon="close-small"
-                            ariaValue={gettext('Close')}
-                        />
+                        <IconButton onClick={this.props.close} icon="close-small" ariaValue={gettext('Close')} />
                     </Spacer>
-                    {
-                        state.selectedHighlighIds.map(({name, _id}) => (
-                            <Spacer gap="32" h key={_id} justifyContent="space-between" noGrow>
-                                <Text size="small" color="lighter">{name}</Text>
-                                <Button
-                                    size="small"
-                                    style="hollow"
-                                    type="primary"
-                                    text={gettext('Remove')}
-                                    onClick={() => this.unmarkHighlight(_id)}
-                                />
-                            </Spacer>
-                        ))
-                    }
+                    {state.selectedHighlighIds.map(({name, _id}) => (
+                        <Spacer gap="32" h key={_id} justifyContent="space-between" noGrow>
+                            <Text size="small" color="lighter">
+                                {name}
+                            </Text>
+                            <Button
+                                size="small"
+                                style="hollow"
+                                type="primary"
+                                text={gettext('Remove')}
+                                onClick={() => this.unmarkHighlight(_id)}
+                            />
+                        </Spacer>
+                    ))}
                 </Spacer>
             </Card>
         );

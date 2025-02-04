@@ -51,10 +51,28 @@ function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
     return wordList.map((word) => ({text: word}));
 }
 
-VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
-    'api', 'notify', 'modal', 'session'];
-export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
-    api, notify, modal, session) {
+VocabularyConfigController.$inject = [
+    '$scope',
+    '$route',
+    '$routeParams',
+    'vocabularies',
+    '$rootScope',
+    'api',
+    'notify',
+    'modal',
+    'session',
+];
+export function VocabularyConfigController(
+    $scope: IScope,
+    $route,
+    $routeParams,
+    vocabularies,
+    $rootScope,
+    api,
+    notify,
+    modal,
+    session,
+) {
     $scope.loading = true;
     $scope.mediaTypes = getMediaTypes();
 
@@ -109,15 +127,15 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * Match field type to vocabularies tab
      */
     $scope.matchFieldTypeToTab = (tab, fieldType) =>
-        tab === 'vocabularies' && !fieldType || fieldType &&
-        (tab === 'text-fields' && fieldType === 'text' ||
-            tab === 'custom-editor-blocks' && fieldType === EDITOR_BLOCK_FIELD_TYPE ||
-            tab === 'date-fields' && fieldType === 'date' ||
-            tab === 'urls-fields' && fieldType === 'urls' ||
-            tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType) ||
-            tab === 'embed-fields' && fieldType === 'embed' ||
-            tab === 'custom-fields' && fieldType === 'custom'
-        );
+        (tab === 'vocabularies' && !fieldType) ||
+        (fieldType &&
+            ((tab === 'text-fields' && fieldType === 'text') ||
+                (tab === 'custom-editor-blocks' && fieldType === EDITOR_BLOCK_FIELD_TYPE) ||
+                (tab === 'date-fields' && fieldType === 'date') ||
+                (tab === 'urls-fields' && fieldType === 'urls') ||
+                (tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType)) ||
+                (tab === 'embed-fields' && fieldType === 'embed') ||
+                (tab === 'custom-fields' && fieldType === 'custom')));
 
     /**
      * Reload list of vocabularies
@@ -133,9 +151,11 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
     };
 
     function checkTag(vocabulary: IVocabulary, currentTag: IVocabularyTag, tab: string) {
-        return $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-        (currentTag.text === getOther() && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
-        (vocabulary.tags || []).some((tag) => tag.text === currentTag.text));
+        return (
+            $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
+            ((currentTag.text === getOther() && (vocabulary.tags == null || vocabulary.tags.length === 0)) ||
+                (vocabulary.tags || []).some((tag) => tag.text === currentTag.text))
+        );
     }
 
     $scope.getVocabulariesForTag = (currentTag: IVocabularyTag, tab: string) =>
@@ -148,13 +168,14 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * Checks if a vocabulary's display_name matches the search
      * query or if it matches a translation of that vocabulary.
      */
-    $scope.filterVocabulary = function(vocabulary: IVocabulary): boolean {
+    $scope.filterVocabulary = function (vocabulary: IVocabulary): boolean {
         if (($scope.searchString?.length ?? 0) === 0) {
             return true;
         }
 
-        const translationMach = Object.values(vocabulary?.translations?.display_name ?? {})
-            .find((translation: string) => translation.toLowerCase().indexOf($scope.searchString) !== -1);
+        const translationMach = Object.values(vocabulary?.translations?.display_name ?? {}).find(
+            (translation: string) => translation.toLowerCase().indexOf($scope.searchString) !== -1,
+        );
         const displayNameMatch = vocabulary.display_name.toLowerCase().indexOf($scope.searchString) !== -1;
 
         if (displayNameMatch || translationMach != null) {
@@ -169,9 +190,10 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      */
     $scope.canShowTag = (currentTag: IVocabularyTag, tab: string) =>
         currentTag.text !== getOther() ||
-        ($scope.vocabularies || []).some((vocabulary) =>
-            $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-            (vocabulary.tags || []).some((tag) => tag.text !== getOther()),
+        ($scope.vocabularies || []).some(
+            (vocabulary) =>
+                $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
+                (vocabulary.tags || []).some((tag) => tag.text !== getOther()),
         );
 
     /**
@@ -205,7 +227,8 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
 
     // remove is the UI callback for deleting a vocabulary entry
     $scope.remove = (vocabulary: IVocabulary) => {
-        modal.confirm(gettext('Please confirm you want to delete the vocabulary.'))
+        modal
+            .confirm(gettext('Please confirm you want to delete the vocabulary.'))
             .then(() => api.remove(vocabulary, {}, 'vocabularies'))
             .then(vocabularyRemoved(vocabulary), errorRemovingVocabulary);
     };
@@ -226,8 +249,11 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         } else if (issues._message) {
             notify.error(issues._message);
         } else if (issues.content_types) {
-            const contentTypes = reduce(issues.content_types,
-                (result, value) => result ? `${result}, ${value.label}` : value.label, null);
+            const contentTypes = reduce(
+                issues.content_types,
+                (result, value) => (result ? `${result}, ${value.label}` : value.label),
+                null,
+            );
 
             notify.error(gettext('The vocabulary is used in the following content types:') + ' ' + contentTypes);
         }

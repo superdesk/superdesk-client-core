@@ -31,30 +31,31 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
     getAssociations() {
         const content = ng.get('content');
         const associations = this.props.item.associations || {};
-        const related = Object.values(associations)
-            .filter((_related) => _related != null);
-        const relatedTypes = related
-            .map((_related: IRelatedArticle) => _related.type)
-            .filter((type) => type != null);
+        const related = Object.values(associations).filter((_related) => _related != null);
+        const relatedTypes = related.map((_related: IRelatedArticle) => _related.type).filter((type) => type != null);
 
-        if (relatedTypes.length === related.length) { // types for all
+        if (relatedTypes.length === related.length) {
+            // types for all
             this.setState({types: relatedTypes});
             return;
         }
 
         content.fetchAssociations(this.props.item).then((_associations: Array<IArticle>) => {
             this.setState({
-                types: Object.values(_associations).filter((assoc) => assoc != null).map((assoc) => assoc.type),
+                types: Object.values(_associations)
+                    .filter((assoc) => assoc != null)
+                    .map((assoc) => assoc.type),
             });
         });
     }
 
     render() {
-        const icons = Object.keys(TYPES_TO_ICONS).map((type) => ({
-            type: type,
-            icon: TYPES_TO_ICONS[type],
-            count: this.state.types.filter((_type) => _type === type).length,
-        }))
+        const icons = Object.keys(TYPES_TO_ICONS)
+            .map((type) => ({
+                type: type,
+                icon: TYPES_TO_ICONS[type],
+                count: this.state.types.filter((_type) => _type === type).length,
+            }))
             .filter((data) => data.count > 0)
             .map((associatedType) => (
                 <span key={associatedType.type} className="sd-text-icon sd-text-icon--aligned-r">
@@ -64,7 +65,9 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
             ));
 
         return icons.length ? (
-            <span style={{marginInlineStart: 'auto'}}> {/* push it right */}
+            <span style={{marginInlineStart: 'auto'}}>
+                {' '}
+                {/* push it right */}
                 {icons}
             </span>
         ) : null;

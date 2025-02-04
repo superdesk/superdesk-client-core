@@ -8,37 +8,38 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
-    case FormFieldType.plainText:
-    case FormFieldType.textEditor3:
-        return {[field]: ''};
-    case FormFieldType.vocabularySingleValue:
-    case FormFieldType.contentFilterSingleValue:
-    case FormFieldType.deskSingleValue:
-    case FormFieldType.stageSingleValue:
-    case FormFieldType.macroSingleValue:
-    case FormFieldType.yesNo:
-    case FormFieldType.select:
-    case FormFieldType.selectMultiple:
-    case FormFieldType.number:
-    case FormFieldType.duration:
-        return {[field]: undefined};
-    case FormFieldType.checkbox:
-        return {[field]: false};
-    default:
-        assertNever(type);
+        case FormFieldType.plainText:
+        case FormFieldType.textEditor3:
+            return {[field]: ''};
+        case FormFieldType.vocabularySingleValue:
+        case FormFieldType.contentFilterSingleValue:
+        case FormFieldType.deskSingleValue:
+        case FormFieldType.stageSingleValue:
+        case FormFieldType.macroSingleValue:
+        case FormFieldType.yesNo:
+        case FormFieldType.select:
+        case FormFieldType.selectMultiple:
+        case FormFieldType.number:
+        case FormFieldType.duration:
+            return {[field]: undefined};
+        case FormFieldType.checkbox:
+            return {[field]: false};
+        default:
+            assertNever(type);
     }
 }
 
 function getInitialValuesForForm(form: Array<IFormField | IFormGroup>): {readonly [field: string]: any} {
-    return form.map((item) => {
-        if (isIFormGroup(item)) {
-            return getInitialValues(item);
-        } else if (isIFormField(item)) {
-            return getInitialValueForFieldType(item);
-        } else {
-            return assertNever(item);
-        }
-    })
+    return form
+        .map((item) => {
+            if (isIFormGroup(item)) {
+                return getInitialValues(item);
+            } else if (isIFormField(item)) {
+                return getInitialValueForFieldType(item);
+            } else {
+                return assertNever(item);
+            }
+        })
         .reduce((accumulator, item) => ({...accumulator, ...item}), {});
 }
 

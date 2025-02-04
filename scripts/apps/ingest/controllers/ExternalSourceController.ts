@@ -15,18 +15,28 @@ import {gettext} from 'core/utils';
  */
 ExternalSourceController.$inject = ['api', 'data', 'desks', 'notify'];
 export function ExternalSourceController(api, data, desks, notify) {
-    return api.save(data.item.fetch_endpoint, {
-        guid: data.item.guid,
-        desk: desks.getCurrentDeskId(),
-    }, null, null, {repo: data.item.ingest_provider})
-        .then((response) => {
-            data.item = response;
-            data.item.actioning = angular.extend({}, data.item.actioning, {externalsource: false});
-            notify.success(gettext('Item Fetched.'));
-            return data.item;
-        }, (error) => {
-            data.item.error = error;
-            notify.error(gettext('Failed to get item.'));
-            return data.item;
-        });
+    return api
+        .save(
+            data.item.fetch_endpoint,
+            {
+                guid: data.item.guid,
+                desk: desks.getCurrentDeskId(),
+            },
+            null,
+            null,
+            {repo: data.item.ingest_provider},
+        )
+        .then(
+            (response) => {
+                data.item = response;
+                data.item.actioning = angular.extend({}, data.item.actioning, {externalsource: false});
+                notify.success(gettext('Item Fetched.'));
+                return data.item;
+            },
+            (error) => {
+                data.item.error = error;
+                notify.error(gettext('Failed to get item.'));
+                return data.item;
+            },
+        );
 }

@@ -37,11 +37,14 @@ class DraggableEditor3BlockComponent extends React.PureComponent<IProps, IState>
                     gap: 4,
                 }}
                 onMouseEnter={() => {
-                    this.setState({
-                        displayHandle: true,
-                    }, () => {
-                        window.clearTimeout(this.timeoutId);
-                    });
+                    this.setState(
+                        {
+                            displayHandle: true,
+                        },
+                        () => {
+                            window.clearTimeout(this.timeoutId);
+                        },
+                    );
                 }}
                 onMouseLeave={() => {
                     this.timeoutId = window.setTimeout(() => {
@@ -58,18 +61,24 @@ class DraggableEditor3BlockComponent extends React.PureComponent<IProps, IState>
                         e.dataTransfer.setData(EDITOR_BLOCK_TYPE, this.props.block.getKey());
                     }}
                     onMouseOver={() => {
-                        this.setState({
-                            displayHandle: true,
-                        }, () => {
-                            window.clearTimeout(this.timeoutId);
-                        });
+                        this.setState(
+                            {
+                                displayHandle: true,
+                            },
+                            () => {
+                                window.clearTimeout(this.timeoutId);
+                            },
+                        );
                     }}
                     onMouseEnter={() => {
-                        this.setState({
-                            displayHandle: true,
-                        }, () => {
-                            window.clearTimeout(this.timeoutId);
-                        });
+                        this.setState(
+                            {
+                                displayHandle: true,
+                            },
+                            () => {
+                                window.clearTimeout(this.timeoutId);
+                            },
+                        );
                     }}
                 >
                     <DragHandle />
@@ -84,6 +93,4 @@ const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
 });
 
-export const DraggableEditor3Block = connect(
-    mapStateToProps,
-)(DraggableEditor3BlockComponent);
+export const DraggableEditor3Block = connect(mapStateToProps)(DraggableEditor3BlockComponent);

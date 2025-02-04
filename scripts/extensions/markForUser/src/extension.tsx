@@ -51,10 +51,12 @@ const extension: IExtension = {
                             name: gettext('Mark for User'),
                             handler: (notification: any) => ({
                                 body: notification.message,
-                                actions: [{
-                                    label: gettext('open item'),
-                                    onClick: () => superdesk.ui.article.view(notification.item),
-                                }],
+                                actions: [
+                                    {
+                                        label: gettext('open item'),
+                                        onClick: () => superdesk.ui.article.view(notification.item),
+                                    },
+                                ],
                             }),
                         },
                     },

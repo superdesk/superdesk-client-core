@@ -13,11 +13,7 @@ export function createLink(editorState: EditorState, link): EditorState {
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {link});
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const stateAfterChange = RichUtils.toggleLink(
-        editorState,
-        editorState.getSelection(),
-        entityKey,
-    );
+    const stateAfterChange = RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey);
 
     return stateAfterChange;
 }
@@ -32,18 +28,16 @@ export function createLink(editorState: EditorState, link): EditorState {
 export function removeLink(editorState) {
     let stateAfterChange = {...editorState};
 
-    entityUtils.getSelectedEntityRange(editorState,
-        (start, end) => {
-            const selection = editorState.getSelection();
-            const entitySelection = selection.merge({
-                anchorOffset: start,
-                focusOffset: end,
-                isBackward: false,
-            });
+    entityUtils.getSelectedEntityRange(editorState, (start, end) => {
+        const selection = editorState.getSelection();
+        const entitySelection = selection.merge({
+            anchorOffset: start,
+            focusOffset: end,
+            isBackward: false,
+        });
 
-            stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
-        },
-    );
+        stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
+    });
 
     return stateAfterChange;
 }

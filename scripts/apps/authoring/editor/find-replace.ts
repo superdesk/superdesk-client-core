@@ -16,7 +16,7 @@ FindReplaceDirective.$inject = ['editorResolver', 'macros'];
  */
 function FindReplaceDirective(editorResolver, macros) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             const editor = editorResolver.get();
 
             scope.to = '';
@@ -29,21 +29,21 @@ function FindReplaceDirective(editorResolver, macros) {
             /**
              * Highlight next matching string
              */
-            scope.next = function() {
+            scope.next = function () {
                 editor.selectNext();
             };
 
             /**
              * Highlight previous matching string
              */
-            scope.prev = function() {
+            scope.prev = function () {
                 editor.selectPrev();
             };
 
             /**
              * Replace currently highlighted matching string with text
              */
-            scope.replace = function() {
+            scope.replace = function () {
                 editor.replace(scope.to || '');
                 editor.selectNext();
             };
@@ -51,7 +51,7 @@ function FindReplaceDirective(editorResolver, macros) {
             /**
              * Replace all matching string with text
              */
-            scope.replaceAll = function() {
+            scope.replaceAll = function () {
                 editor.replaceAll(scope.to || '');
             };
 
@@ -86,11 +86,13 @@ function FindReplaceDirective(editorResolver, macros) {
     };
 }
 
-angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authoring.widgets'])
+angular
+    .module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authoring.widgets'])
     .directive('sdFindReplace', FindReplaceDirective)
-    .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
-        authoringWidgetsProvider
-            .widget('find-replace', {
+    .config([
+        'authoringWidgetsProvider',
+        function (authoringWidgetsProvider) {
+            authoringWidgetsProvider.widget('find-replace', {
                 icon: 'find-replace',
                 label: gettext('Find and Replace'),
                 template: 'scripts/apps/authoring/editor/views/find-replace.html',
@@ -108,4 +110,5 @@ angular.module('superdesk.apps.authoring.find-replace', ['superdesk.apps.authori
                     personal: true,
                 },
             });
-    }]);
+        },
+    ]);

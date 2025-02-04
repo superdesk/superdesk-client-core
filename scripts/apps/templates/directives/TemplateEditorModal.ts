@@ -4,7 +4,7 @@ import {ITemplate} from 'superdesk-api';
 export function TemplateEditorModal() {
     return {
         templateUrl: 'scripts/apps/templates/views/template-editor-modal.html',
-        link: function(scope) {
+        link: function (scope) {
             let _isDirty;
 
             /**
@@ -28,7 +28,7 @@ export function TemplateEditorModal() {
 
             scope.isDirty = (templateForm, metadataForm) => templateForm.$dirty || metadataForm.$dirty || _isDirty;
 
-            scope.templatesFilter = function(templateType) {
+            scope.templatesFilter = function (templateType) {
                 if (scope.template._id && scope.template.template_type === 'kill') {
                     return templateType._id === 'kill';
                 }
@@ -47,11 +47,15 @@ export function TemplateEditorModal() {
                     }
                 }
 
-                scope.$watch('template.schedule.day_of_week', (newValue, oldValue) => {
-                    if (newValue && newValue.length > 0 && !_.isEqual(newValue, oldValue)) {
-                        modalBodyContainer.scope().metadataForm.$setDirty();
-                    }
-                }, true);
+                scope.$watch(
+                    'template.schedule.day_of_week',
+                    (newValue, oldValue) => {
+                        if (newValue && newValue.length > 0 && !_.isEqual(newValue, oldValue)) {
+                            modalBodyContainer.scope().metadataForm.$setDirty();
+                        }
+                    },
+                    true,
+                );
 
                 modalBodyContainer.on('keydown', handleKeyDown);
 

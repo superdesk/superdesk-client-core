@@ -10,8 +10,6 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        return (
-            <div dangerouslySetInnerHTML={{__html: this.props.value}} />
-        );
+        return <div dangerouslySetInnerHTML={{__html: this.props.value}} />;
     }
 }

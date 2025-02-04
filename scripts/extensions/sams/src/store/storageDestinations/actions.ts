@@ -13,11 +13,10 @@ export function receiveDestinations(destinations: Array<IStorageDestinationItem>
 
 export function loadStorageDestinations(): IThunkAction<Array<IStorageDestinationItem>> {
     return (dispatch) => {
-        return samsApi.storageDestinations.getAll()
-            .then((destinations: Array<IStorageDestinationItem>) => {
-                dispatch(receiveDestinations(destinations));
+        return samsApi.storageDestinations.getAll().then((destinations: Array<IStorageDestinationItem>) => {
+            dispatch(receiveDestinations(destinations));
 
-                return Promise.resolve(destinations);
-            });
+            return Promise.resolve(destinations);
+        });
     };
 }

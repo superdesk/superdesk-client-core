@@ -11,9 +11,7 @@ export const SwimlaneField: React.StatelessComponent<IProps> = (props) => {
     const {item, fieldId} = props;
 
     const Component = fields[fieldId];
-    const value = Component != null
-        ? <Component item={item} />
-        : item[fieldId];
+    const value = Component != null ? <Component item={item} /> : item[fieldId];
 
     if (value == null) {
         return null;

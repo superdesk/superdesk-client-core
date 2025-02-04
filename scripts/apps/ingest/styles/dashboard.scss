@@ -3,7 +3,6 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 // Ingest dashboard
 // -------------------------------------------------
 
@@ -12,7 +11,7 @@
     overflow: auto;
     .card-list {
         display: flex;
-        flex-wrap: wrap;        
+        flex-wrap: wrap;
     }
     .card-list > li {
         width: 240px;
@@ -62,13 +61,13 @@
                 background: #970000;
             }
             .uppercase {
-                padding-inline-end: .3em;
+                padding-inline-end: 0.3em;
             }
         }
         .ingested-count {
             padding: 10px 16px;
             text-align: center;
-            border-block-end: 1px  solid var(--sd-colour-line--light);
+            border-block-end: 1px solid var(--sd-colour-line--light);
             .count {
                 font-size: 30px;
                 line-height: 34px;
@@ -81,7 +80,7 @@
         }
         .update-time {
             padding: 0 15px 10px 15px;
-            border-block-end: 1px  solid var(--sd-colour-line--light);
+            border-block-end: 1px solid var(--sd-colour-line--light);
             .text {
                 margin-block-start: 10px;
                 font-size: 12px;

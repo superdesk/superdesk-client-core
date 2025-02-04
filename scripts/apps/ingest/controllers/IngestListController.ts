@@ -17,7 +17,7 @@ export class IngestListController extends BaseListController {
         $scope.api = api.ingest;
         $rootScope.currentModule = 'ingest';
 
-        this.fetchItems = function(criteria, next) {
+        this.fetchItems = function (criteria, next) {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
@@ -26,18 +26,19 @@ export class IngestListController extends BaseListController {
             // and re-rendering after receiving a response.
             criteria.max_results = 50;
 
-            api.query('ingest', criteria).then((items) => {
-                $scope.items = search.mergeItems(items, $scope.items, next);
-                $scope.total = items._meta.total;
+            api.query('ingest', criteria)
+                .then((items) => {
+                    $scope.items = search.mergeItems(items, $scope.items, next);
+                    $scope.total = items._meta.total;
 
-                setTotalCount(items._meta.total);
-            })
+                    setTotalCount(items._meta.total);
+                })
                 .finally(() => {
                     $scope.loading = false;
                 });
         };
 
-        this.fetchItem = function(id) {
+        this.fetchItem = function (id) {
             return api.ingest.getById(id);
         };
 

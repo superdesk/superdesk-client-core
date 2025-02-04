@@ -13,7 +13,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
     static defaultProps: any;
 
     dom: {
-        itemList: any,
+        itemList: any;
     };
 
     constructor(props) {
@@ -27,18 +27,18 @@ export class SelectFieldPopup extends React.Component<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-                onEventCapture(event);
-                this.handleEnterKey(event);
-                break;
-            case KEYCODES.DOWN:
-                onEventCapture(event);
-                this.handleDownArrowKey(event);
-                break;
-            case KEYCODES.UP:
-                onEventCapture(event);
-                this.handleUpArrowKey(event);
-                break;
+                case KEYCODES.ENTER:
+                    onEventCapture(event);
+                    this.handleEnterKey(event);
+                    break;
+                case KEYCODES.DOWN:
+                    onEventCapture(event);
+                    this.handleDownArrowKey(event);
+                    break;
+                case KEYCODES.UP:
+                    onEventCapture(event);
+                    this.handleUpArrowKey(event);
+                    break;
             }
         }
     }
@@ -67,37 +67,26 @@ export class SelectFieldPopup extends React.Component<any, any> {
     }
 
     render() {
-        const {
-            onClose,
-            target,
-            dataList,
-        } = this.props;
+        const {onClose, target, dataList} = this.props;
 
         return (
-            <Popup
-                close={onClose}
-                target={target}
-                onKeyDown={this.onKeyDown}
-                inheritWidth={true}
-                noPadding={true}
-            >
+            <Popup close={onClose} target={target} onKeyDown={this.onKeyDown} inheritWidth={true} noPadding={true}>
                 <div className="field-search__popup">
-                    <ul
-                        className="field-search__popup-list"
-                        ref={(ref) => this.dom.itemList = ref}
-                    >
-                        {dataList && dataList.length > 0 && dataList.map((fieldItem, index) => (
-                            <li
-                                key={index}
-                                className={classNames('field-search__popup-item',
-                                    {'field-search__popup-item--active': index === this.state.activeIndex},
-                                )}
-                            >
-                                <button type="button" onClick={this.handleOnChange.bind(null, fieldItem)}>
-                                    <div className="field-search__popup-item-label">{fieldItem}</div>
-                                </button>
-                            </li>
-                        ))}
+                    <ul className="field-search__popup-list" ref={(ref) => (this.dom.itemList = ref)}>
+                        {dataList &&
+                            dataList.length > 0 &&
+                            dataList.map((fieldItem, index) => (
+                                <li
+                                    key={index}
+                                    className={classNames('field-search__popup-item', {
+                                        'field-search__popup-item--active': index === this.state.activeIndex,
+                                    })}
+                                >
+                                    <button type="button" onClick={this.handleOnChange.bind(null, fieldItem)}>
+                                        <div className="field-search__popup-item-label">{fieldItem}</div>
+                                    </button>
+                                </li>
+                            ))}
                     </ul>
                 </div>
             </Popup>

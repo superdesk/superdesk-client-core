@@ -15,10 +15,9 @@ export default class PackageGroupList extends React.Component<any, any> {
         const pkg = this.props.package;
 
         if (pkg.highlight) {
-            this.props.api.find('highlights', pkg.highlight)
-                .then((result) => {
-                    this.setState({groups: result.groups});
-                });
+            this.props.api.find('highlights', pkg.highlight).then((result) => {
+                this.setState({groups: result.groups});
+            });
         } else {
             // set it here to avoid flickering
             this.setState({groups: this.props.packages.groupList});

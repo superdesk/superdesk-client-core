@@ -18,19 +18,13 @@ export class Difference extends React.PureComponent<IProps> {
 
         return (
             <Spacer v gap="16">
-                {
-                    (embed1.length > 0 || embed2.length > 0) && (
-                        <div
-                            dangerouslySetInnerHTML={{__html: generateHtmlDiff(escapeHtml(embed1), escapeHtml(embed2))}}
-                        />
-                    )
-                }
+                {(embed1.length > 0 || embed2.length > 0) && (
+                    <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(escapeHtml(embed1), escapeHtml(embed2))}} />
+                )}
 
-                {
-                    (description1.length > 0 || description2.length > 0) && (
-                        <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(description1, description2)}} />
-                    )
-                }
+                {(description1.length > 0 || description2.length > 0) && (
+                    <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(description1, description2)}} />
+                )}
             </Spacer>
         );
     }

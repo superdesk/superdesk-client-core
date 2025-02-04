@@ -1,5 +1,4 @@
-
-export default ({
+export default {
     input: {
         margin: 0,
 
@@ -45,7 +44,6 @@ export default ({
                 '&focused': {
                     backgroundColor: '#5ea9c8',
                 },
-
             },
         },
     },
@@ -53,4 +51,4 @@ export default ({
     mention: {
         backgroundColor: '#cee4e5',
     },
-});
+};

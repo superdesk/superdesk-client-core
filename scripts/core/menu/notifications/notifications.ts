@@ -24,7 +24,8 @@ function UserNotificationsService(
     session,
     SESSION_EVENTS,
     sdActivityMessage,
-    preferencesService) {
+    preferencesService,
+) {
     var UPDATE_TIMEOUT = 500;
 
     this._items = null;
@@ -63,24 +64,23 @@ function UserNotificationsService(
             embedded: {user: 1},
         };
 
-        return api.query('activity', criteria)
-            .then((response) => {
-                this._items = response._items;
-                this.unread = 0;
-                var identity = session.identity || {};
+        return api.query('activity', criteria).then((response) => {
+            this._items = response._items;
+            this.unread = 0;
+            var identity = session.identity || {};
 
-                _.each(this._items, (item) => {
-                    var recipients = item.recipients || {};
+            _.each(this._items, (item) => {
+                var recipients = item.recipients || {};
 
-                    item._unread = !isRead(recipients, identity._id);
-                    this.unread += item._unread ? 1 : 0;
-                    item.message = gettext(item.message, item.data);
-                });
+                item._unread = !isRead(recipients, identity._id);
+                this.unread += item._unread ? 1 : 0;
+                item.message = gettext(item.message, item.data);
             });
+        });
     };
 
     // mark an item as read
-    this.markAsRead = function(notification) {
+    this.markAsRead = function (notification) {
         var _notification = angular.extend({}, notification);
         var recipients = notification.recipients;
         var recipient: any = _.find(recipients, {user_id: session.identity._id});
@@ -127,9 +127,7 @@ function UserNotificationsService(
             if (isCurrentUser(extras)) {
                 $timeout(this.reload, UPDATE_TIMEOUT, false);
                 // check for permission and send a desktop notificiation
-                preferencesService.desktopNotification.send(
-                    sdActivityMessage.format(extras.activity),
-                );
+                preferencesService.desktopNotification.send(sdActivityMessage.format(extras.activity));
             }
         });
     });
@@ -154,16 +152,16 @@ function DeskNotificationsService($rootScope, api, session) {
         return filter;
     }
 
-    this.getUnreadCount = function(deskId) {
+    this.getUnreadCount = function (deskId) {
         return this.unread[deskId] || 0;
     };
 
-    this.getNotifications = function(deskId) {
+    this.getNotifications = function (deskId) {
         return this._items && this._items[deskId];
     };
 
     // reload notifications
-    this.reload = function() {
+    this.reload = function () {
         var criteria = {
             where: getFilter(),
             embedded: {
@@ -173,30 +171,29 @@ function DeskNotificationsService($rootScope, api, session) {
             max_results: 20,
         };
 
-        return api.query('activity', criteria)
-            .then((response) => {
-                this._items = {};
-                this.unread = {};
-                _.each(response._items, (item) => {
-                    var recipients = item.recipients || {};
+        return api.query('activity', criteria).then((response) => {
+            this._items = {};
+            this.unread = {};
+            _.each(response._items, (item) => {
+                var recipients = item.recipients || {};
 
-                    _.each(recipients, (recipient) => {
-                        if (recipient.desk_id) {
-                            if (!(recipient.desk_id in this.unread)) {
-                                this._items[recipient.desk_id] = [];
-                                this.unread[recipient.desk_id] = 0;
-                            }
-
-                            this._items[recipient.desk_id].push(item);
-                            this.unread[recipient.desk_id] += !isRead(recipients, recipient.desk_id) ? 1 : 0;
+                _.each(recipients, (recipient) => {
+                    if (recipient.desk_id) {
+                        if (!(recipient.desk_id in this.unread)) {
+                            this._items[recipient.desk_id] = [];
+                            this.unread[recipient.desk_id] = 0;
                         }
-                    });
+
+                        this._items[recipient.desk_id].push(item);
+                        this.unread[recipient.desk_id] += !isRead(recipients, recipient.desk_id) ? 1 : 0;
+                    }
                 });
             });
+        });
     };
 
     // mark an item as read
-    this.markAsRead = function(notification, deskId) {
+    this.markAsRead = function (notification, deskId) {
         var _notification = angular.extend({}, notification);
         var recipients = _.clone(notification.recipients);
         var recipient: any = _.find(recipients, {desk_id: deskId});
@@ -240,7 +237,7 @@ function MarkAsReadDirective(userNotifications, $timeout) {
     var TIMEOUT = 1500;
 
     return {
-        link: function(scope) {
+        link: function (scope) {
             if (!scope.notification._unread) {
                 return;
             }
@@ -256,52 +253,55 @@ function MarkAsReadDirective(userNotifications, $timeout) {
     };
 }
 
-angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.asset', 'superdesk.core.auth.session'])
+angular
+    .module('superdesk.core.menu.notifications', ['superdesk.core.services.asset', 'superdesk.core.auth.session'])
 
     .service('userNotifications', UserNotificationsService)
     .service('deskNotifications', DeskNotificationsService)
     .directive('sdMarkAsRead', MarkAsReadDirective)
 
-    .directive('sdNotificationFromExtension', ['asset', function(asset) {
-        return {
-            require: '^sdSuperdeskView',
-            scope: {
-                notification: '=',
-                handlers: '=',
-            },
-            templateUrl: asset.templateUrl('core/menu/notifications/views/notification-from-extension.html'),
-            link: function(scope, elem, attrs, ctrl) {
-                const result = scope.handlers[scope.notification.name](scope.notification);
+    .directive('sdNotificationFromExtension', [
+        'asset',
+        function (asset) {
+            return {
+                require: '^sdSuperdeskView',
+                scope: {
+                    notification: '=',
+                    handlers: '=',
+                },
+                templateUrl: asset.templateUrl('core/menu/notifications/views/notification-from-extension.html'),
+                link: function (scope, elem, attrs, ctrl) {
+                    const result = scope.handlers[scope.notification.name](scope.notification);
 
-                scope.label = result.body;
-                scope.actions = result.actions;
+                    scope.label = result.body;
+                    scope.actions = result.actions;
 
-                scope.executeAction = (action) => {
-                    ctrl.flags.notifications = !ctrl.flags.notifications;
-                    action.onClick();
-                };
-            },
-        };
-    }])
-    .directive('sdNotifications',
-        ['asset', 'authoringWorkspace', '$rootScope', function(
-            asset,
-            authoringWorkspace: AuthoringWorkspaceService,
-            $rootScope,
-        ) {
+                    scope.executeAction = (action) => {
+                        ctrl.flags.notifications = !ctrl.flags.notifications;
+                        action.onClick();
+                    };
+                },
+            };
+        },
+    ])
+    .directive('sdNotifications', [
+        'asset',
+        'authoringWorkspace',
+        '$rootScope',
+        function (asset, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
-                link: function(scope, elem, attrs, ctrl) {
+                link: function (scope, elem, attrs, ctrl) {
                     scope.emptyState = emptyState;
 
                     // merged from all extensions
                     const notificationsKeyed: {[key: string]: IMultiChannelNotification['handler']} = {};
 
                     for (const extension of Object.values(extensions)) {
-                        const notificationsFromExtensions = extension
-                            .activationResult
-                            .contributions?.notifications as {[key: string]: IMultiChannelNotification};
+                        const notificationsFromExtensions = extension.activationResult.contributions?.notifications as {
+                            [key: string]: IMultiChannelNotification;
+                        };
 
                         if (notificationsFromExtensions != null) {
                             for (const key in notificationsFromExtensions) {
@@ -323,14 +323,15 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
 
                     scope.flags = ctrl.flags;
 
-                    scope.openArticle = function(notification) {
+                    scope.openArticle = function (notification) {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
                         authoringWorkspace.edit({_id: notification.item}, 'edit');
                     };
 
-                    scope.onNotificationClick = function(notification) {
+                    scope.onNotificationClick = function (notification) {
                         $rootScope.$broadcast('notification:click', {notification});
                     };
                 },
             };
-        }]);
+        },
+    ]);

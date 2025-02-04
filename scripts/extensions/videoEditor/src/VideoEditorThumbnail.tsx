@@ -32,7 +32,7 @@ const initialState: IState = {type: null, value: 0, rotateDegree: 0, scale: 1};
 
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLCanvasElement>;
-    private maxCanvasSize: { width: number; height: number };
+    private maxCanvasSize: {width: number; height: number};
     private interval: number;
 
     constructor(props: IProps) {

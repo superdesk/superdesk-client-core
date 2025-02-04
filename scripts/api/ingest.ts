@@ -9,13 +9,15 @@ function getRuleHandlers(): Promise<{[key: string]: IIngestRuleHandler}> {
         return Promise.resolve(_ruleHandlers);
     }
 
-    return dataApi.queryRawJson<IRestApiResponse<IIngestRuleHandler>>('ingest_rule_handlers').then((response) => {
-        return response._items.reduce((handlers, handler) => {
-            handlers[handler._id] = handler;
+    return dataApi
+        .queryRawJson<IRestApiResponse<IIngestRuleHandler>>('ingest_rule_handlers')
+        .then((response) => {
+            return response._items.reduce((handlers, handler) => {
+                handlers[handler._id] = handler;
 
-            return handlers;
-        }, {});
-    })
+                return handlers;
+            }, {});
+        })
         .then((handlers) => {
             _ruleHandlers = handlers;
 
@@ -30,12 +32,9 @@ function getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler | undefi
 function getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandlerExtension | undefined {
     const handlerName = rule.handler || 'desk_fetch_publish';
 
-    return Object
-        .values(extensions)
-        .find(({activationResult}) => (
-            activationResult.contributions?.entities?.ingest?.ruleHandlers[handlerName] != null
-        ))
-        ?.activationResult?.contributions?.entities?.ingest?.ruleHandlers[handlerName];
+    return Object.values(extensions).find(
+        ({activationResult}) => activationResult.contributions?.entities?.ingest?.ruleHandlers[handlerName] != null,
+    )?.activationResult?.contributions?.entities?.ingest?.ruleHandlers[handlerName];
 }
 
 interface IIngestApi {

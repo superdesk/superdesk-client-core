@@ -81,12 +81,10 @@ export class Editor extends React.PureComponent<IProps> {
 
         if (dropEvent != null) {
             if (
-                type == null // if `dropEvent` is defined, `type` can't be null
-                || (
-                    (config.allowPicture !== true && type === SUPERDESK_MEDIA_TYPES.PICTURE)
-                    || (config.allowVideo !== true && type === SUPERDESK_MEDIA_TYPES.VIDEO)
-                    || (config.allowAudio !== true && type === SUPERDESK_MEDIA_TYPES.AUDIO)
-                )
+                type == null || // if `dropEvent` is defined, `type` can't be null
+                (config.allowPicture !== true && type === SUPERDESK_MEDIA_TYPES.PICTURE) ||
+                (config.allowVideo !== true && type === SUPERDESK_MEDIA_TYPES.VIDEO) ||
+                (config.allowAudio !== true && type === SUPERDESK_MEDIA_TYPES.AUDIO)
             ) {
                 return false;
             }
@@ -109,7 +107,8 @@ export class Editor extends React.PureComponent<IProps> {
             allowAudio: config.allowVideo,
         };
 
-        ng.get('superdesk').intent('upload', 'media', uploadData)
+        ng.get('superdesk')
+            .intent('upload', 'media', uploadData)
             .then((res: Array<IArticle>) => {
                 const nextItems = mediaItems.concat(res);
 
@@ -130,12 +129,7 @@ export class Editor extends React.PureComponent<IProps> {
         }
 
         if (config.maxItems != null && this.getMaxRemainingItemsCount() < 1) {
-            notify.error(
-                gettext(
-                    'Item not added. Maximum limit of {{n}} items exceeded.',
-                    {n: config.maxItems},
-                ),
-            );
+            notify.error(gettext('Item not added. Maximum limit of {{n}} items exceeded.', {n: config.maxItems}));
 
             return;
         }
@@ -156,10 +150,7 @@ export class Editor extends React.PureComponent<IProps> {
             }
 
             notify.error(
-                gettext(
-                    'Only the following media types are allowed: {{types}}',
-                    {types: allowedMediaTypes.join(', ')},
-                ),
+                gettext('Only the following media types are allowed: {{types}}', {types: allowedMediaTypes.join(', ')}),
             );
 
             return;
@@ -177,13 +168,10 @@ export class Editor extends React.PureComponent<IProps> {
                 return;
             }
 
-            const workflowValidation = validateWorkflow(
-                __item,
-                {
-                    in_progress: config.allowedWorkflows.inProgress,
-                    published: config.allowedWorkflows.published,
-                },
-            );
+            const workflowValidation = validateWorkflow(__item, {
+                in_progress: config.allowedWorkflows.inProgress,
+                published: config.allowedWorkflows.published,
+            });
 
             if (workflowValidation.result !== true) {
                 notify.error(workflowValidation.error);
@@ -210,8 +198,66 @@ export class Editor extends React.PureComponent<IProps> {
 
         return (
             <Container>
-                {
-                    mediaItems.length > 0 && (
+                {mediaItems.length > 0 && (
+                    <DropZone3
+                        onDrop={this.handleDragDrop}
+                        canDrop={canDrop}
+                        onFileSelect={this.upload}
+                        multiple={canAddMultipleItems}
+                        fileAccept={allowedMimeTypesForUpload}
+                        disabled={this.props.readOnly}
+                    >
+                        <MediaCarousel
+                            mediaItems={mediaItems}
+                            onChange={(val) => {
+                                if (config.__editingOriginal) {
+                                    const item = val[0];
+
+                                    item.fields_meta = {};
+
+                                    this.props.reinitialize(item);
+                                } else {
+                                    this.props.onChange(val);
+                                }
+                            }}
+                            showPictureCrops={config.showPictureCrops === true}
+                            showTitleInput={config.showTitleEditingInput ?? false}
+                            showDescriptionInput={config.showDescriptionEditingInput ?? true}
+                            readOnly={readOnly}
+                            maxItemsAllowed={config.maxItems ?? maxItemsDefault}
+                            ref={(component) => {
+                                this.mediaCarouselRef = component;
+                            }}
+                            canRemoveItems={config.canRemoveItems ?? true}
+                            prepareForExternalEditing={(item) => {
+                                if (config.__editingOriginal) {
+                                    return this.props.computeLatestEntity();
+                                } else {
+                                    return item;
+                                }
+                            }}
+                        />
+                    </DropZone3>
+                )}
+
+                {(config.maxItems ?? maxItemsDefault) > 1 && mediaItems.length > 0 && (
+                    <div>
+                        <SpacerBlock v gap="16" />
+
+                        <MediaThumbnails
+                            mediaItems={mediaItems}
+                            onSelect={(item) => {
+                                this.mediaCarouselRef.goToPage(mediaItems.indexOf(item));
+                            }}
+                            onChange={this.props.onChange}
+                        />
+                    </div>
+                )}
+
+                {!readOnly && this.getMaxRemainingItemsCount() > 0 && (
+                    <div>
+                        <SpacerBlock v gap="16" />
+
                         <DropZone3
                             onDrop={this.handleDragDrop}
                             canDrop={canDrop}
@@ -219,73 +265,9 @@ export class Editor extends React.PureComponent<IProps> {
                             multiple={canAddMultipleItems}
                             fileAccept={allowedMimeTypesForUpload}
                             disabled={this.props.readOnly}
-                        >
-                            <MediaCarousel
-                                mediaItems={mediaItems}
-                                onChange={(val) => {
-                                    if (config.__editingOriginal) {
-                                        const item = val[0];
-
-                                        item.fields_meta = {};
-
-                                        this.props.reinitialize(item);
-                                    } else {
-                                        this.props.onChange(val);
-                                    }
-                                }}
-                                showPictureCrops={config.showPictureCrops === true}
-                                showTitleInput={config.showTitleEditingInput ?? false}
-                                showDescriptionInput={config.showDescriptionEditingInput ?? true}
-                                readOnly={readOnly}
-                                maxItemsAllowed={config.maxItems ?? maxItemsDefault}
-                                ref={(component) => {
-                                    this.mediaCarouselRef = component;
-                                }}
-                                canRemoveItems={config.canRemoveItems ?? true}
-                                prepareForExternalEditing={(item) => {
-                                    if (config.__editingOriginal) {
-                                        return this.props.computeLatestEntity();
-                                    } else {
-                                        return item;
-                                    }
-                                }}
-                            />
-                        </DropZone3>
-                    )
-                }
-
-                {
-                    (config.maxItems ?? maxItemsDefault) > 1 && mediaItems.length > 0 && (
-                        <div>
-                            <SpacerBlock v gap="16" />
-
-                            <MediaThumbnails
-                                mediaItems={mediaItems}
-                                onSelect={(item) => {
-                                    this.mediaCarouselRef.goToPage(mediaItems.indexOf(item));
-                                }}
-                                onChange={this.props.onChange}
-                            />
-                        </div>
-                    )
-                }
-
-                {
-                    (!readOnly && this.getMaxRemainingItemsCount() > 0) && (
-                        <div>
-                            <SpacerBlock v gap="16" />
-
-                            <DropZone3
-                                onDrop={this.handleDragDrop}
-                                canDrop={canDrop}
-                                onFileSelect={this.upload}
-                                multiple={canAddMultipleItems}
-                                fileAccept={allowedMimeTypesForUpload}
-                                disabled={this.props.readOnly}
-                            />
-                        </div>
-                    )
-                }
+                        />
+                    </div>
+                )}
             </Container>
         );
     }

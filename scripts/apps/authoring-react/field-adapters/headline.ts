@@ -23,19 +23,11 @@ export const headline: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'headline',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage) =>
+        retrieveStoredValueEditor3Generic('headline', item, authoringStorage),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(
-            'headline',
-            item,
-            value,
-            config,
-        );
+        const result = storeEditor3ValueBase('headline', item, value, config);
 
         const articleUpdated = {...result.article};
 

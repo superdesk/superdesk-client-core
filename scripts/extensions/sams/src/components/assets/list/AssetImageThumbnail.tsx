@@ -13,10 +13,12 @@ export class AssetImageThumbnail extends React.PureComponent<IAssetContentThumbn
             <AssetImageRendition
                 asset={this.props.asset}
                 file={this.props.file}
-                rendition={config.media?.renditions?.sams?.thumbnail ?? {
-                    width: 220,
-                    height: 140,
-                }}
+                rendition={
+                    config.media?.renditions?.sams?.thumbnail ?? {
+                        width: 220,
+                        height: 140,
+                    }
+                }
             />
         );
     }

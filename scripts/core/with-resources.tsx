@@ -18,8 +18,10 @@ interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
-class WithLiveResourcesComponent
-    extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
+class WithLiveResourcesComponent extends SuperdeskReactComponent<
+    ILiveResourcesProps & {onInitialized(): void},
+    IState
+> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
     private updatingRequestInProgress: boolean;
@@ -35,55 +37,45 @@ class WithLiveResourcesComponent
         this.fetchItems = this.fetchItems.bind(this);
         this.handleContentChanges = this.handleContentChanges.bind(this);
 
-        this.handleContentChangesThrottled = throttleAndCombineArray(
-            (changes: Array<IResourceChange>) => {
-                this.handleContentChanges(changes);
-            },
-            1000,
+        this.handleContentChangesThrottled = throttleAndCombineArray((changes: Array<IResourceChange>) => {
+            this.handleContentChanges(changes);
+        }, 1000);
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:created', (event) => {
+                const {resource, _id} = event.extra;
+
+                if (this.props.resources.find((r) => r.resource === resource) != null) {
+                    this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                }
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:updated', (event) => {
+                const {resource, _id, fields} = event.extra;
 
-                    if (this.props.resources.find((r) => r.resource === resource) != null) {
-                        this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
-                    }
-                },
-            ),
-        );
-
-        this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event) => {
-                    const {resource, _id, fields} = event.extra;
-
-                    if (this.props.resources.find((r) => r.resource === resource) != null) {
-                        this.handleContentChangesThrottled([{
+                if (this.props.resources.find((r) => r.resource === resource) != null) {
+                    this.handleContentChangesThrottled([
+                        {
                             changeType: 'updated',
                             resource: resource,
                             itemId: _id,
                             fields: fields,
-                        }]);
-                    }
-                },
-            ),
+                        },
+                    ]);
+                }
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event) => {
+                const {resource, _id} = event.extra;
 
-                    if (this.props.resources.find((r) => r.resource === resource) != null) {
-                        this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
-                    }
-                },
-            ),
+                if (this.props.resources.find((r) => r.resource === resource) != null) {
+                    this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                }
+            }),
         );
     }
 
@@ -95,34 +87,34 @@ class WithLiveResourcesComponent
         }
 
         return Promise.all(
-            resources.filter(({ids}) => ids.length > 0).map(({resource, ids}) => {
-                const query: ISuperdeskQuery = {
-                    filter: {
-                        $and: [
-                            {_id: {$in: ids}},
-                        ],
-                    },
-                    sort: [{_updated: 'asc'}],
-                    page: 1,
-                    max_results: 200,
-                };
+            resources
+                .filter(({ids}) => ids.length > 0)
+                .map(({resource, ids}) => {
+                    const query: ISuperdeskQuery = {
+                        filter: {
+                            $and: [{_id: {$in: ids}}],
+                        },
+                        sort: [{_updated: 'asc'}],
+                        page: 1,
+                        max_results: 200,
+                    };
 
-                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
-                    prepareSuperdeskQuery(`/${resource}`, query),
-                ).then((res) => {
-                    const itemsById = keyBy(res._items, (item) => item._id);
+                    return this.asyncHelpers
+                        .httpRequestJsonLocal<IRestApiResponse<unknown>>(prepareSuperdeskQuery(`/${resource}`, query))
+                        .then((res) => {
+                            const itemsById = keyBy(res._items, (item) => item._id);
 
-                    return toPair(
-                        resource,
+                            return toPair(
+                                resource,
 
-                        /**
-                         * Fix ordering: `query` sorts the result by `_updated`
-                         * while we need it sorted exactly in the same order as `ids` were provided
-                         */
-                        {...res, _items: ids.map((id) => itemsById[id])},
-                    );
-                });
-            }),
+                                /**
+                                 * Fix ordering: `query` sorts the result by `_updated`
+                                 * while we need it sorted exactly in the same order as `ids` were provided
+                                 */
+                                {...res, _items: ids.map((id) => itemsById[id])},
+                            );
+                        });
+                }),
         ).then((pairs) => {
             var data = {};
 
@@ -176,21 +168,23 @@ class WithLiveResourcesComponent
                     return {resource: resource, value: nextItemsResponse};
                 });
             }),
-        ).then((updatesArray) => {
-            const updates = updatesArray.reduce((acc, {resource, value}) => {
-                acc[resource] = value;
+        )
+            .then((updatesArray) => {
+                const updates = updatesArray.reduce((acc, {resource, value}) => {
+                    acc[resource] = value;
 
-                return acc;
-            }, {});
+                    return acc;
+                }, {});
 
-            this.setState({data: {...state.data, ...updates}});
+                this.setState({data: {...state.data, ...updates}});
 
-            this.updatingRequestInProgress = false;
-        }).catch((err) => {
-            if (err !== 'will-refetch-all') {
-                throw err;
-            }
-        });
+                this.updatingRequestInProgress = false;
+            })
+            .catch((err) => {
+                if (err !== 'will-refetch-all') {
+                    throw err;
+                }
+            });
     }
 
     componentDidMount() {
@@ -216,8 +210,7 @@ class WithLiveResourcesComponent
     }
 }
 
-export class WithLiveResources
-    extends React.PureComponent<ILiveResourcesProps, {loading: boolean}> {
+export class WithLiveResources extends React.PureComponent<ILiveResourcesProps, {loading: boolean}> {
     private smoothLoaderRef: SmoothLoaderForKey;
 
     constructor(props: ILiveResourcesProps) {
@@ -240,10 +233,7 @@ export class WithLiveResources
                     this.smoothLoaderRef = ref;
                 }}
             >
-                <WithLiveResourcesComponent
-                    {...this.props}
-                    onInitialized={this.setLoaded}
-                />
+                <WithLiveResourcesComponent {...this.props} onInitialized={this.setLoaded} />
             </SmoothLoaderForKey>
         );
     }

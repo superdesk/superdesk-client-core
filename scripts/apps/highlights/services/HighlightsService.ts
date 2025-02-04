@@ -34,14 +34,14 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * @param {string} key
      * @return {Object}
      */
-    service.getSync = function(key) {
+    service.getSync = function (key) {
         return cache.get(key);
     };
 
     /**
      * Fetches and caches highlights, or returns from the cache.
      */
-    service.get = function(desk) {
+    service.get = function (desk) {
         var DEFAULT_CACHE_KEY = '_nodesk';
         var key = desk || DEFAULT_CACHE_KEY;
         var value = service.getSync(key);
@@ -57,15 +57,13 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
         if (desk) {
             criteria = {
                 where: {
-                    $or: [
-                        {desks: desk},
-                        {desks: {$size: 0}},
-                    ],
+                    $or: [{desks: desk}, {desks: {$size: 0}}],
                 },
             };
         }
 
-        promise[key] = api('highlights').query(criteria)
+        promise[key] = api('highlights')
+            .query(criteria)
             .then((result) => {
                 result._items = _.sortBy(result._items, (i) => i.name.toLowerCase());
                 setLabel(result._items);
@@ -86,7 +84,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     /**
      * Clear user cache
      */
-    service.clearCache = function() {
+    service.clearCache = function () {
         cache.removeAll();
         promise = {};
     };
@@ -94,7 +92,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     /**
      * Saves highlight configuration
      */
-    service.saveConfig = function(config, configEdit) {
+    service.saveConfig = function (config, configEdit) {
         return api.highlights.save(config, configEdit).then((item) => {
             service.clearCache();
             return item;
@@ -104,7 +102,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     /**
      * Removes highlight configuration
      */
-    service.removeConfig = function(config) {
+    service.removeConfig = function (config) {
         return api.highlights.remove(config).then(() => {
             service.clearCache();
         });
@@ -113,24 +111,21 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     /**
      * Mark/Unmark an item for a highlight
      */
-    service.markItem = function(highlight: string, markedItem: IArticle) {
+    service.markItem = function (highlight: string, markedItem: IArticle) {
         const addToHighlight = (markedItem.highlights ?? []).includes(highlight) === false;
 
         return trackArticleActionProgress(
-            () => api.save(
-                'marked_for_highlights',
-                {highlights: [highlight], marked_item: markedItem._id},
-            ),
+            () => api.save('marked_for_highlights', {highlights: [highlight], marked_item: markedItem._id}),
             markedItem._id,
             addToHighlight ? gettext('Item marked') : gettext('Item unmarked'),
-            addToHighlight ? gettext('Couldn\'t mark item') : gettext('Couldn\'t unmark item'),
+            addToHighlight ? gettext("Couldn't mark item") : gettext("Couldn't unmark item"),
         );
     };
 
     /**
      * Create empty highlight package
      */
-    service.createEmptyHighlight = function(highlight) {
+    service.createEmptyHighlight = function (highlight) {
         var pkgDefaults: any = {
             headline: highlight.name,
             highlight: highlight._id,
@@ -154,11 +149,11 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * @param {string} _id
      * @return {Promise}
      */
-    service.find = function(_id) {
+    service.find = function (_id) {
         return api.find('highlights', _id);
     };
 
-    service.hasMarkItemPrivilege = function() {
+    service.hasMarkItemPrivilege = function () {
         return !!privileges.privileges.mark_for_highlights;
     };
 
@@ -170,7 +165,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
      * @param {int} hourDifference
      * @return {bool}
      */
-    service.isInDateRange = function(highlight, hourDifference) {
+    service.isInDateRange = function (highlight, hourDifference) {
         if (highlight) {
             if (highlight.auto_insert === 'now/d') {
                 return hourDifference <= 24;

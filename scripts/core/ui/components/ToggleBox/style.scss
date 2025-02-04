@@ -1,7 +1,6 @@
 @import '~superdesk-ui-framework/app/styles/variables/_colors.scss';
 
 .toggle-box {
-
     &__content--hidden {
         display: none;
     }
@@ -19,7 +18,6 @@
             }
         }
     }
-
 
     &--no-margin {
         margin: 0 !important;

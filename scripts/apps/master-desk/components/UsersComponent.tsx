@@ -18,10 +18,12 @@ interface IProps {
 
 interface IUserByRole {
     role?: IUserRole['_id'];
-    authors: {[userId: string]: {
-        assigned: number;
-        locked: number;
-    }};
+    authors: {
+        [userId: string]: {
+            assigned: number;
+            locked: number;
+        };
+    };
 }
 
 interface IState {
@@ -108,55 +110,49 @@ class UsersComponent extends React.Component<IProps, IState> {
     render() {
         return (
             <div className="sd-kanban-list sd-pdding-x--2 sd-padding-t--2">
-                {
-                    this.props.desks.map((desk) => {
-                        const usersWithoutRole = this.getUsersWithoutRole(desk);
+                {this.props.desks.map((desk) => {
+                    const usersWithoutRole = this.getUsersWithoutRole(desk);
 
-                        return (
-                            <div className="sd-board" key={desk._id}>
-                                <div className="sd-board__header">
-                                    <h3 className="sd-board__header-title">{desk.name}</h3>
-                                </div>
-                                <div className="sd-board__content sd-padding-t--1">
-                                    {
-                                        (usersWithoutRole?.length ?? 0) > 0 && (
+                    return (
+                        <div className="sd-board" key={desk._id}>
+                            <div className="sd-board__header">
+                                <h3 className="sd-board__header-title">{desk.name}</h3>
+                            </div>
+                            <div className="sd-board__content sd-padding-t--1">
+                                {(usersWithoutRole?.length ?? 0) > 0 && (
+                                    <UserListComponent
+                                        key="no-role"
+                                        desk={desk}
+                                        users={usersWithoutRole}
+                                        onUserSelect={(user) => this.selectUser(user)}
+                                    />
+                                )}
+                                {this.state.roles.map((role) => {
+                                    const users = this.getUsers(desk, role);
+
+                                    return (
+                                        users.length && (
                                             <UserListComponent
-                                                key="no-role"
+                                                key={role._id}
                                                 desk={desk}
-                                                users={usersWithoutRole}
+                                                role={role}
+                                                users={users}
                                                 onUserSelect={(user) => this.selectUser(user)}
                                             />
                                         )
-                                    }
-                                    {
-                                        this.state.roles.map((role) => {
-                                            const users = this.getUsers(desk, role);
-
-                                            return users.length && (
-                                                <UserListComponent
-                                                    key={role._id}
-                                                    desk={desk}
-                                                    role={role}
-                                                    users={users}
-                                                    onUserSelect={(user) => this.selectUser(user)}
-                                                />
-                                            );
-                                        })
-                                    }
-                                    {
-                                        !this.state.deskMembers[desk._id].length && (
-                                            <div className="sd-board__subheader">
-                                                <h5 className="sd-board__subheader-title">
-                                                    {gettext('There are no users assigned to this desk')}
-                                                </h5>
-                                            </div>
-                                        )
-                                    }
-                                </div>
+                                    );
+                                })}
+                                {!this.state.deskMembers[desk._id].length && (
+                                    <div className="sd-board__subheader">
+                                        <h5 className="sd-board__subheader-title">
+                                            {gettext('There are no users assigned to this desk')}
+                                        </h5>
+                                    </div>
+                                )}
                             </div>
-                        );
-                    })
-                }
+                        </div>
+                    );
+                })}
             </div>
         );
     }

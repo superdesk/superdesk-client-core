@@ -59,7 +59,8 @@ export default class MenuItem extends React.Component<IProps, IState> {
 
         this.updateActioningStatus(true);
         this.props.scopeApply(() => {
-            this.activityService.start(this.props.activity, {data: {item: this.props.item}})
+            this.activityService
+                .start(this.props.activity, {data: {item: this.props.item}})
                 .finally(() => this.updateActioningStatus(false));
         });
 
@@ -98,10 +99,14 @@ export default class MenuItem extends React.Component<IProps, IState> {
 
     close() {
         if (this.state.open && !this.closeTimeout) {
-            this.closeTimeout = this.$timeout(() => {
-                this.closeTimeout = null;
-                this.setState({open: false});
-            }, 100, false);
+            this.closeTimeout = this.$timeout(
+                () => {
+                    this.closeTimeout = null;
+                    this.setState({open: false});
+                },
+                100,
+                false,
+            );
         }
     }
 
@@ -136,40 +141,29 @@ export default class MenuItem extends React.Component<IProps, IState> {
 
         if (activity.dropdown) {
             return (
-                <li
-                    onMouseEnter={this.open}
-                    onMouseLeave={this.close}
-                    onClick={this.toggle}
-                >
+                <li onMouseEnter={this.open} onMouseLeave={this.close} onClick={this.toggle}>
                     <div className={'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')}>
                         <button
                             className="dropdown__toggle"
                             title={activity.label}
-
                             // aria label is needed because playwright treats icon as a character
                             // and can not do an exact match
                             aria-label={activity.label}
                         >
-                            {
-                                activity.icon
-                                    ? (<i className={'icon-' + activity.icon} />)
-                                    : null
-                            }
+                            {activity.icon ? <i className={'icon-' + activity.icon} /> : null}
 
                             {activity.label}
                         </button>
 
-                        {
-                            this.state.open && invoke
-                                ? this.$injector.invoke(activity.dropdown, activity, {
-                                    item: this.props.item,
-                                    className: 'dropdown__menu upward ' + this.state.position,
-                                    noHighlightsLabel: gettext('No available highlights'),
-                                    noDesksLabel: gettext('No available desks'),
-                                    noLanguagesLabel: gettext('No available translations'),
-                                })
-                                : null
-                        }
+                        {this.state.open && invoke
+                            ? this.$injector.invoke(activity.dropdown, activity, {
+                                  item: this.props.item,
+                                  className: 'dropdown__menu upward ' + this.state.position,
+                                  noHighlightsLabel: gettext('No available highlights'),
+                                  noDesksLabel: gettext('No available desks'),
+                                  noLanguagesLabel: gettext('No available translations'),
+                              })
+                            : null}
                     </div>
                 </li>
             );
@@ -180,20 +174,13 @@ export default class MenuItem extends React.Component<IProps, IState> {
                 <button
                     title={activity.label}
                     onClick={this.run}
-
                     // aria label is needed because playwright treats icon as a character
                     // and can not do an exact match
                     aria-label={activity.label}
                 >
-                    {
-                        activity.icon
-                            ? (<i className={'icon-' + activity.icon} />)
-                            : null
-                    }
+                    {activity.icon ? <i className={'icon-' + activity.icon} /> : null}
 
-                    <span style={{display: 'inline'}}>
-                        {activity.label}
-                    </span>
+                    <span style={{display: 'inline'}}>{activity.label}</span>
                 </button>
             </li>
         );

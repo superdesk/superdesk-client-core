@@ -86,7 +86,7 @@ export function MonitoringView(
             selectedHighlightId: '=?',
             contentStyle: '=?',
         },
-        link: function(scope: IScope, elem) {
+        link: function (scope: IScope, elem) {
             let containerElem = elem.find('.sd-column-box__main-column');
 
             scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
@@ -117,7 +117,7 @@ export function MonitoringView(
             /**
              * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
              * So I added $broadcast and listener for updating onScroll binding and containerElem for it.
-            */
+             */
             $rootScope.$on('stage:single', () => {
                 containerElem = elem.find('.sd-column-box__main-column');
                 containerElem.on('scroll', handleContainerScroll);
@@ -141,37 +141,39 @@ export function MonitoringView(
                 if (scope.activeDeskId != null) {
                     session.getIdentity().then((user: IUser) => {
                         scope.spikedItemsQuery = {
-                            filter: {$and: [
-                                {'state': {$eq: 'spiked'}},
-                                {$or: [
-                                    {$and: [
-                                        {'state': {$eq: 'draft'}},
-                                        {'original_creator': {$eq: user._id}},
-                                    ]},
-                                    {'state': {$ne: 'draft'}},
-                                ]},
-                                {'package_type': {$ne: 'takes'}},
-                                {'task.desk': {$eq: scope.activeDeskId}},
-                            ]},
-                            sort: [{'versioncreated': 'desc'}],
+                            filter: {
+                                $and: [
+                                    {state: {$eq: 'spiked'}},
+                                    {
+                                        $or: [
+                                            {$and: [{state: {$eq: 'draft'}}, {original_creator: {$eq: user._id}}]},
+                                            {state: {$ne: 'draft'}},
+                                        ],
+                                    },
+                                    {package_type: {$ne: 'takes'}},
+                                    {'task.desk': {$eq: scope.activeDeskId}},
+                                ],
+                            },
+                            sort: [{versioncreated: 'desc'}],
                             page: 1,
                             max_results: PAGE_SIZE,
                         };
 
                         scope.highlightedItemsQuery = {
-                            filter: {$and: [
-                                {'state': {$ne: 'spiked'}},
-                                {$or: [
-                                    {$and: [
-                                        {'state': {$eq: 'draft'}},
-                                        {'original_creator': {$eq: user._id}},
-                                    ]},
-                                    {'state': {$ne: 'draft'}},
-                                ]},
-                                {'package_type': {$ne: 'takes'}},
-                                {'highlights': {$eq: $location.search().highlight}},
-                            ]},
-                            sort: [{'versioncreated': 'desc'}],
+                            filter: {
+                                $and: [
+                                    {state: {$ne: 'spiked'}},
+                                    {
+                                        $or: [
+                                            {$and: [{state: {$eq: 'draft'}}, {original_creator: {$eq: user._id}}]},
+                                            {state: {$ne: 'draft'}},
+                                        ],
+                                    },
+                                    {package_type: {$ne: 'takes'}},
+                                    {highlights: {$eq: $location.search().highlight}},
+                                ],
+                            },
+                            sort: [{versioncreated: 'desc'}],
                             page: 1,
                             max_results: PAGE_SIZE,
                         };
@@ -182,7 +184,8 @@ export function MonitoringView(
                                     {
                                         label: gettext('Create'),
                                         onClick: () => {
-                                            highlightsService.find(scope.selectedHighlightId)
+                                            highlightsService
+                                                .find(scope.selectedHighlightId)
                                                 .then(highlightsService.createEmptyHighlight)
                                                 .then(authoringWorkspace.edit);
                                         },
@@ -197,18 +200,18 @@ export function MonitoringView(
 
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
-                    case 'list':
-                        scope.switchView('compact');
-                        break;
-                    case 'swimlane':
-                        scope.switchView('compact', true);
-                        break;
-                    case 'photogrid':
-                        scope.switchView('photogrid');
-                        break;
-                    default:
-                        scope.switchView('compact'); // list by default
-                        break;
+                        case 'list':
+                            scope.switchView('compact');
+                            break;
+                        case 'swimlane':
+                            scope.switchView('compact', true);
+                            break;
+                        case 'photogrid':
+                            scope.switchView('photogrid');
+                            break;
+                        default:
+                            scope.switchView('compact'); // list by default
+                            break;
                     }
                 }
             });
@@ -220,7 +223,7 @@ export function MonitoringView(
              * @param {Boolean} value
              * @param {Boolean} swimlane
              */
-            scope.switchView = function(value, swimlane) {
+            scope.switchView = function (value, swimlane) {
                 scope.monitoring.switchViewColumn(swimlane, true);
                 scope.view = value;
                 scope.swimlane = swimlane;
@@ -231,7 +234,7 @@ export function MonitoringView(
              * @param {Object} group
              * @returns {Boolean}
              */
-            scope.isActiveGroup = function(group) {
+            scope.isActiveGroup = function (group) {
                 return scope.monitoring.selectedGroup ? scope.monitoring.selectedGroup._id === group._id : true;
             };
 
@@ -275,17 +278,21 @@ export function MonitoringView(
              */
             function scheduleFetchNext() {
                 if (!fetchNextTimeout) {
-                    fetchNextTimeout = $timeout(() => {
-                        scope.$broadcast('render:next');
-                        scope.$applyAsync(() => {
-                            fetchNextTimeout = null;
-                        });
-                    }, 1000, false);
+                    fetchNextTimeout = $timeout(
+                        () => {
+                            scope.$broadcast('render:next');
+                            scope.$applyAsync(() => {
+                                fetchNextTimeout = null;
+                            });
+                        },
+                        1000,
+                        false,
+                    );
                 }
             }
 
             // force refresh on refresh button click when in specific view such as single, highlights or spiked.
-            scope.refreshGroup = function(group, triggeredByScrolling?: boolean) {
+            scope.refreshGroup = function (group, triggeredByScrolling?: boolean) {
                 scope.$broadcast('refresh:list', group, triggeredByScrolling ? {event_origin: 'scroll'} : undefined);
             };
 
@@ -301,14 +308,18 @@ export function MonitoringView(
                 }
             });
 
-            scope.$watch(() => authoringWorkspace.item, (newValue, oldValue) => {
-                if (newValue !== oldValue) {
-                    scope.shouldRefresh = false; // when item opened or closed
-                    if (newValue) { // when item opened
-                        scope.monitoring.closePreview();
+            scope.$watch(
+                () => authoringWorkspace.item,
+                (newValue, oldValue) => {
+                    if (newValue !== oldValue) {
+                        scope.shouldRefresh = false; // when item opened or closed
+                        if (newValue) {
+                            // when item opened
+                            scope.monitoring.closePreview();
+                        }
                     }
-                }
-            });
+                },
+            );
         },
     };
 }

@@ -71,8 +71,9 @@ export class LockInfo<T extends ILockInfo & IBaseRestApiResponse> extends React.
     }
 }
 
-export class LockInfoHttp<T extends ILockInfo & IBaseRestApiResponse>
-    extends React.PureComponent<IPropsLockInfoHttp<T>> {
+export class LockInfoHttp<T extends ILockInfo & IBaseRestApiResponse> extends React.PureComponent<
+    IPropsLockInfoHttp<T>
+> {
     render() {
         return (
             <LockInfo

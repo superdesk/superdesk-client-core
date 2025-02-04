@@ -31,7 +31,7 @@ export default class Submenu extends React.Component<any, any> {
         return (
             <ul
                 className={'dropdown__menu upward dropdown__menu--submenu-' + this.state.position}
-                ref={(ref) => this.element = ref}
+                ref={(ref) => (this.element = ref)}
             >
                 {this.props.children}
             </ul>

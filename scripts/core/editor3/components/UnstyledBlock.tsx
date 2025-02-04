@@ -27,7 +27,7 @@ class UnstyledBlock extends BaseUnstyledComponent {
 
         return (
             <div
-                ref={(div) => this.div = div}
+                ref={(div) => (this.div = div)}
                 {...propsToTransfer}
                 className={className ?? '' + (this.state.over ? ' unstyled__block--over' : ' unstyled__block')}
             >

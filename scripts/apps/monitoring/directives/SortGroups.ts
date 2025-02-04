@@ -1,6 +1,6 @@
 export function SortGroups() {
     return {
-        link: function(scope, element) {
+        link: function (scope, element) {
             var updated = false;
 
             element.sortable({
@@ -9,33 +9,26 @@ export function SortGroups() {
                 containment: '.groups',
                 tolerance: 'pointer',
                 placeholder: {
-                    element: function(current) {
+                    element: function (current) {
                         var height = Math.max(15, current.height() - 20);
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
-                    update: function() { /* no-op */ },
+                    update: function () {
+                        /* no-op */
+                    },
                 },
-                start: function(event, ui) {
-                    ui.item
-                        .data('start_index',
-                            ui.item
-                                .parent()
-                                .find('li.sort-item')
-                                .index(ui.item),
-                        );
+                start: function (event, ui) {
+                    ui.item.data('start_index', ui.item.parent().find('li.sort-item').index(ui.item));
                 },
-                stop: function(event, ui) {
+                stop: function (event, ui) {
                     if (updated) {
                         updated = false;
                         var start = {
                             index: ui.item.data('start_index'),
                         };
                         var end = {
-                            index: ui.item
-                                .parent()
-                                .find('li.sort-item')
-                                .index(ui.item),
+                            index: ui.item.parent().find('li.sort-item').index(ui.item),
                         };
 
                         scope.reorder(start, end, ui.item);
@@ -43,7 +36,7 @@ export function SortGroups() {
                         scope.$apply();
                     }
                 },
-                update: function(event, ui) {
+                update: function (event, ui) {
                     updated = true;
                 },
                 cancel: '.fake',

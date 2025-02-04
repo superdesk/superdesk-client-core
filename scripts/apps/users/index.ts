@@ -24,10 +24,8 @@ import {UserMentionDirective} from './directives/UserMentionDirective';
  * @packageName superdesk.apps
  * @description Superdesk user roles, privileges and profiles module.
  */
-export default angular.module('superdesk.apps.users', [
-    'superdesk.core.activity',
-    'superdesk.core.services.asset',
-])
+export default angular
+    .module('superdesk.apps.users', ['superdesk.core.activity', 'superdesk.core.services.asset'])
     .controller('UserEditController', UserEditController) // make it available to user.profile
 
     .service('usersService', svc.UsersService)
@@ -53,46 +51,60 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserMention', UserMentionDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
 
-    .filter('username', () => (user) => user ?
-        user.display_name || user.username : null)
+    .filter('username', () => (user) => (user ? user.display_name || user.username : null))
 
     .config(config.Permissions)
     .config(config.Activities)
     .config(config.API)
 
-    .config(['$compileProvider', function($compileProvider) {
-        // configure new 'compile' directive by passing a directive
-        // factory function. The factory function injects the '$compile'
-        $compileProvider.directive('compile', ['$compile', function($compile) {
-            // directive factory creates a link function
-            return function(scope, element, attrs) {
-                var value = scope.$eval(attrs.compile);
+    .config([
+        '$compileProvider',
+        function ($compileProvider) {
+            // configure new 'compile' directive by passing a directive
+            // factory function. The factory function injects the '$compile'
+            $compileProvider.directive('compile', [
+                '$compile',
+                function ($compile) {
+                    // directive factory creates a link function
+                    return function (scope, element, attrs) {
+                        var value = scope.$eval(attrs.compile);
 
-                element.html(value);
-                var nscope = scope.$new(true);
+                        element.html(value);
+                        var nscope = scope.$new(true);
 
-                _.each(scope.$eval(attrs.data), (val, key) => {
-                    nscope[key] = val;
-                });
-                $compile(element.contents())(nscope);
-            };
-        }]);
-    }])
+                        _.each(scope.$eval(attrs.data), (val, key) => {
+                            nscope[key] = val;
+                        });
+                        $compile(element.contents())(nscope);
+                    };
+                },
+            ]);
+        },
+    ])
 
     .run(config.KeyboardShortcuts);
 
-angular.module('superdesk.apps.users.profile', ['superdesk.core.api', 'superdesk.apps.users'])
+angular
+    .module('superdesk.apps.users.profile', ['superdesk.core.api', 'superdesk.apps.users'])
     .directive('sdUserActivity', directive.UserActivityDirective)
     .service('profileService', svc.ProfileService)
-    .config(['superdeskProvider', 'assetProvider', function(superdeskProvider, asset) {
-        superdeskProvider.activity('/profile/', {
-            label: gettext('My Profile'),
-            controller: UserEditController,
-            templateUrl: asset.templateUrl('apps/users/views/edit.html'),
-            resolve: {
-                user: ['session', 'api', function(session, api) {
-                    return session.getIdentity().then((identity) => api.get(identity._links.self.href));
-                }],
-            },
-        });
-    }]);
+    .config([
+        'superdeskProvider',
+        'assetProvider',
+        function (superdeskProvider, asset) {
+            superdeskProvider.activity('/profile/', {
+                label: gettext('My Profile'),
+                controller: UserEditController,
+                templateUrl: asset.templateUrl('apps/users/views/edit.html'),
+                resolve: {
+                    user: [
+                        'session',
+                        'api',
+                        function (session, api) {
+                            return session.getIdentity().then((identity) => api.get(identity._links.self.href));
+                        },
+                    ],
+                },
+            });
+        },
+    ]);

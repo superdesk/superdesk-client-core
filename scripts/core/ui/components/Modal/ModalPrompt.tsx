@@ -43,21 +43,15 @@ export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
                 position="top"
                 headerTemplate={this.props.title}
                 footerTemplate={
-                    (
-                        <ButtonGroup align="end">
-                            <Button
-                                type="default"
-                                text={gettext('Cancel')}
-                                onClick={this.props.close}
-                            />
-                            <Button
-                                type="primary"
-                                text={gettext('Submit')}
-                                disabled={this.state.value.length < 1}
-                                onClick={this.submitValue}
-                            />
-                        </ButtonGroup>
-                    )
+                    <ButtonGroup align="end">
+                        <Button type="default" text={gettext('Cancel')} onClick={this.props.close} />
+                        <Button
+                            type="primary"
+                            text={gettext('Submit')}
+                            disabled={this.state.value.length < 1}
+                            onClick={this.submitValue}
+                        />
+                    </ButtonGroup>
                 }
             >
                 <Textarea

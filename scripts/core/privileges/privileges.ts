@@ -48,5 +48,4 @@ function PrivilegesService($rootScope, preferencesService) {
  * @packageName superdesk.core
  * @description Superdesk privileges enables and helps manage user privileges.
  */
-angular.module('superdesk.core.privileges', ['superdesk.core.preferences'])
-    .service('privileges', PrivilegesService);
+angular.module('superdesk.core.privileges', ['superdesk.core.preferences']).service('privileges', PrivilegesService);

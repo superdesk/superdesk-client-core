@@ -69,13 +69,13 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                 httpRequestJsonLocal<IRestApiResponse<IDesk>>({
                     method: 'GET',
                     path: '/desks',
-                    urlParams: {$in: deskIds}},
-                ),
+                    urlParams: {$in: deskIds},
+                }),
                 httpRequestJsonLocal<IRestApiResponse<IStage>>({
                     method: 'GET',
                     path: '/stages',
-                    urlParams: {$in: stageIds}},
-                ),
+                    urlParams: {$in: stageIds},
+                }),
             ]).then(([resDesks, resStages]) => {
                 this.setState({
                     versions: itemsReversed,
@@ -140,8 +140,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
         const {versions, desks, stages, selectedForComparison} = this.state;
         const {readOnly, contentProfile, fieldsData} = this.props;
 
-        const userEntities =
-            store.getState().entities.users;
+        const userEntities = store.getState().entities.users;
 
         return (
             <Spacer v gap="8" noWrap alignItems="stretch">
@@ -183,8 +182,9 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Button
                             text={gettext('Compare')}
-                            disabled={selectedForComparison?.from != null
-                                && (selectedForComparison.from === selectedForComparison.to)
+                            disabled={
+                                selectedForComparison?.from != null &&
+                                selectedForComparison.from === selectedForComparison.to
                             }
                             onClick={() => {
                                 this.compareVersions();
@@ -197,94 +197,84 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                     <SpacerBlock v gap="8" />
                 </ToggleBox>
 
-                {
-                    versions.map((item, i) => {
-                        const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
+                {versions.map((item, i) => {
+                    const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
 
-                        return (
-                            <Card key={i}>
+                    return (
+                        <Card key={i}>
+                            <Spacer h gap="8" justifyContent="space-between" noGrow>
+                                <TimeElem date={item._created} />
+                                <span>
+                                    {gettext('by {{user}}', {
+                                        user: userEntities[item.version_creator].display_name,
+                                    })}
+                                </span>
+                            </Spacer>
+
+                            <SpacerBlock v gap="8" />
+
+                            <div>
+                                <strong>{getArticleLabel(item)}</strong>
+                            </div>
+
+                            <SpacerBlock v gap="8" />
+
+                            {item.task.desk != null && (
                                 <Spacer h gap="8" justifyContent="space-between" noGrow>
-                                    <TimeElem date={item._created} />
-                                    <span>
-                                        {
-                                            gettext('by {{user}}', {
-                                                user: userEntities[item.version_creator].display_name,
-                                            })
-                                        }
-                                    </span>
+                                    <span>{desks.get(item.task.desk).name}</span>
+                                    <span>{stages.get(item.task.stage).name}</span>
                                 </Spacer>
+                            )}
 
-                                <SpacerBlock v gap="8" />
+                            <SpacerBlock v gap="8" />
 
-                                <div>
-                                    <strong>{getArticleLabel(item)}</strong>
+                            <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
+                                <div>{gettext('version: {{n}}', {n: item._current_version})}</div>
+
+                                <div style={{display: 'flex'}}>
+                                    <StateComponent item={item} />
                                 </div>
+                            </Spacer>
 
-                                <SpacerBlock v gap="8" />
+                            <SpacerBlock v gap="8" />
 
-                                {
-                                    item.task.desk != null && (
-                                        <Spacer h gap="8" justifyContent="space-between" noGrow>
-                                            <span>{desks.get(item.task.desk).name}</span>
-                                            <span>{stages.get(item.task.stage).name}</span>
-                                        </Spacer>
-                                    )
-                                }
+                            <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
+                                <div />
 
-                                <SpacerBlock v gap="8" />
-
-                                <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
+                                <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                                     <div>
-                                        {gettext('version: {{n}}', {n: item._current_version})}
+                                        <Button
+                                            text={gettext('Preview')}
+                                            onClick={() => {
+                                                previewAuthoringEntity(
+                                                    item,
+                                                    contentProfile,
+                                                    fieldsData,
+                                                    gettext('version {{n}}', {n: item._current_version}),
+                                                );
+                                            }}
+                                            style="hollow"
+                                            size="small"
+                                        />
                                     </div>
 
-                                    <div style={{display: 'flex'}}>
-                                        <StateComponent item={item} />
-                                    </div>
-                                </Spacer>
-
-                                <SpacerBlock v gap="8" />
-
-                                <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
-                                    <div />
-
-                                    <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
+                                    {canRevert && (
                                         <div>
                                             <Button
-                                                text={gettext('Preview')}
+                                                text={gettext('Revert')}
                                                 onClick={() => {
-                                                    previewAuthoringEntity(
-                                                        item,
-                                                        contentProfile,
-                                                        fieldsData,
-                                                        gettext('version {{n}}', {n: item._current_version}),
-                                                    );
+                                                    this.revert(item);
                                                 }}
                                                 style="hollow"
                                                 size="small"
                                             />
                                         </div>
-
-                                        {
-                                            canRevert && (
-                                                <div>
-                                                    <Button
-                                                        text={gettext('Revert')}
-                                                        onClick={() => {
-                                                            this.revert(item);
-                                                        }}
-                                                        style="hollow"
-                                                        size="small"
-                                                    />
-                                                </div>
-                                            )
-                                        }
-                                    </Spacer>
+                                    )}
                                 </Spacer>
-                            </Card>
-                        );
-                    })
-                }
+                            </Spacer>
+                        </Card>
+                    );
+                })}
             </Spacer>
         );
     }

@@ -70,14 +70,7 @@ export class Editor3Standalone extends React.Component<IProps> {
 
         this.onChangeInterceptor = this.onChangeInterceptor.bind(this);
 
-        const {
-            language,
-            readOnly,
-            singleLine,
-            tabindex,
-            showTitle,
-            editorFormat,
-        } = this.props;
+        const {language, readOnly, singleLine, tabindex, showTitle, editorFormat} = this.props;
 
         const store = createEditorStore(
             {

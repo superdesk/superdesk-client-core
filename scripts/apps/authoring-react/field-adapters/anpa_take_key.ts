@@ -23,19 +23,11 @@ export const anpa_take_key: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'anpa_take_key',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage) =>
+        retrieveStoredValueEditor3Generic('anpa_take_key', item, authoringStorage),
 
     storeValue: (value, item, config) => {
-        const result = storeEditor3ValueBase(
-            'anpa_take_key',
-            item,
-            value,
-            config,
-        );
+        const result = storeEditor3ValueBase('anpa_take_key', item, value, config);
 
         const articleUpdated = {...result.article};
 

@@ -34,8 +34,9 @@ enum ISchemaFields {
     maxlength = 'maxlength',
 }
 
-const allSchemaFieldKeys: Array<keyof typeof ISchemaFields> =
-    Object.keys(ISchemaFields).map((key) => ISchemaFields[key]);
+const allSchemaFieldKeys: Array<keyof typeof ISchemaFields> = Object.keys(ISchemaFields).map(
+    (key) => ISchemaFields[key],
+);
 
 function isSchemaKey(x: string): x is keyof typeof ISchemaFields {
     return ISchemaFields[x] != null;
@@ -86,7 +87,7 @@ function getAllContentProfileSections(): Array<IContentProfileSection> {
     return Object.keys(IContentProfileSection).map((key) => IContentProfileSection[key]);
 }
 
-function getTabs(): Array<{label: string, value: IState['activeTab']}> {
+function getTabs(): Array<{label: string; value: IState['activeTab']}> {
     return [
         ...getAllContentProfileSections().map((section) => ({
             label: getLabelForSection(section),
@@ -112,28 +113,20 @@ type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemI
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
         const {item, page, index, inEditMode, getId} = this.props.wrapper;
-        const {
-            sortingInProgress,
-            setIndexForNewItem,
-            getLabel,
-            availableIds,
-            selectedSection,
-        } = this.props.wrapper.additionalProps;
+        const {sortingInProgress, setIndexForNewItem, getLabel, availableIds, selectedSection} =
+            this.props.wrapper.additionalProps;
         const itemLabel = getLabel(item.id);
         const isLast = index === page.getItemsCount() - 1;
         const canAddNewField =
-            availableIds.length > 0
-            && !sortingInProgress
-            && !page.itemIsBeingEdited()
-            && !page.itemIsBeingCreated();
+            availableIds.length > 0 && !sortingInProgress && !page.itemIsBeingEdited() && !page.itemIsBeingCreated();
 
         return (
             <div
                 className={'sd-list-item sd-shadow--z1' + (inEditMode ? ' sd-list-item--activated' : '')}
                 onClick={(e: any) => {
                     if (
-                        querySelectorParent(e.target, 'select', {self: true}) == null
-                        && querySelectorParent(e.target, 'button', {self: true}) == null
+                        querySelectorParent(e.target, 'select', {self: true}) == null &&
+                        querySelectorParent(e.target, 'button', {self: true}) == null
                     ) {
                         page.startEditing(getId(item));
                     }
@@ -141,75 +134,63 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 data-test-id="field"
                 data-test-value={getLabel(item.id)}
             >
-                {
-                    canAddNewField
-                        ? (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    position: 'absolute',
-                                    insetBlockStart: '-19px',
-                                }}
-                            >
-                                <NewFieldSelect
-                                    availableFields={availableIds}
-                                    onSelect={(selectedId) => {
-                                        setIndexForNewItem(index);
-                                        page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
-                                    }}
-                                />
-                            </div>
-                        )
-                        : null
-                }
+                {canAddNewField ? (
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '100%',
+                            position: 'absolute',
+                            insetBlockStart: '-19px',
+                        }}
+                    >
+                        <NewFieldSelect
+                            availableFields={availableIds}
+                            onSelect={(selectedId) => {
+                                setIndexForNewItem(index);
+                                page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
+                            }}
+                        />
+                    </div>
+                ) : null}
 
                 <div
                     className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border"
                     data-test-id="content-profile-item"
                     data-test-value={itemLabel}
                 >
-                    <span className="sd-overflow-ellipsis sd-list-item__text-strong">
-                        {itemLabel}
-                    </span>
+                    <span className="sd-overflow-ellipsis sd-list-item__text-strong">{itemLabel}</span>
                 </div>
 
-                {
-                    item.required === true ? (
-                        <div className="sd-list-item__column sd-list-item__column--no-border">
-                            <span className="label label--alert label--hollow">{gettext('required')}</span>
-                        </div>
-                    ) : null
-                }
+                {item.required === true ? (
+                    <div className="sd-list-item__column sd-list-item__column--no-border">
+                        <span className="label label--alert label--hollow">{gettext('required')}</span>
+                    </div>
+                ) : null}
 
                 <div className="sd-list-item__action-menu">
                     <IconButton icon="trash" ariaValue={gettext('Delete')} onClick={() => page.deleteItem(item)} />
                 </div>
 
-                {
-                    canAddNewField && isLast
-                        ? (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    position: 'absolute',
-                                    bottom: '-17px',
-                                }}
-                            >
-                                <NewFieldSelect
-                                    availableFields={availableIds}
-                                    onSelect={(selectedId) => {
-                                        setIndexForNewItem(index + 1);
-                                        page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
-                                    }}
-                                />
-                            </div>
-                        )
-                        : null
-                }
+                {canAddNewField && isLast ? (
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '100%',
+                            position: 'absolute',
+                            bottom: '-17px',
+                        }}
+                    >
+                        <NewFieldSelect
+                            availableFields={availableIds}
+                            onSelect={(selectedId) => {
+                                setIndexForNewItem(index + 1);
+                                page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
+                            }}
+                        />
+                    </div>
+                ) : null}
             </div>
         );
     }
@@ -219,12 +200,7 @@ const ItemBaseSortable = SortableElement(ItemBase);
 
 class ItemComponent extends React.PureComponent<IPropsItem> {
     render() {
-        return (
-            <ItemBaseSortable
-                wrapper={this.props}
-                index={this.props.index}
-            />
-        );
+        return <ItemBaseSortable wrapper={this.props} index={this.props.index} />;
     }
 }
 
@@ -291,8 +267,9 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
             this.setState({sortingInProgress: true});
         };
 
-        class ItemsContainerComponent
-            extends React.PureComponent<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>> {
+        class ItemsContainerComponent extends React.PureComponent<
+            IPropsGenericFormContainer<IContentProfileFieldWithSystemId>
+        > {
             render() {
                 return (
                     <ItemsContainerBaseSortable
@@ -314,13 +291,12 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
 
     /** Checks in all sections */
     existsInFields(id: string) {
-        return getAllContentProfileSections()
-            .some((section) => this.state.fields[section].some((item) => item.id === id));
+        return getAllContentProfileSections().some((section) =>
+            this.state.fields[section].some((item) => item.id === id),
+        );
     }
 
-    updateCurrentFields(
-        fn: (items: Array<IContentProfileField>) => Array<IContentProfileField>,
-    ): IState['fields'] {
+    updateCurrentFields(fn: (items: Array<IContentProfileField>) => Array<IContentProfileField>): IState['fields'] {
         return {
             ...this.state.fields,
             [this.state.selectedSection]: fn(this.state.fields[this.state.selectedSection]),
@@ -384,66 +360,58 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
             const editorCopy = {...this.state.editor};
             const schemaCopy = {...this.state.schema};
 
-            const fieldsFlat = getAllContentProfileSections()
-                .reduce<Array<IContentProfileField>>(
-                    (acc, sectionId) => [...acc, ...this.state.fields[sectionId]],
-                    [],
-                );
+            const fieldsFlat = getAllContentProfileSections().reduce<Array<IContentProfileField>>(
+                (acc, sectionId) => [...acc, ...this.state.fields[sectionId]],
+                [],
+            );
 
-            const patch
-            : {[key: string]: {editor: Partial<IContentProfileEditorConfig>, schema: {}}}
-            = fieldsFlat.reduce((acc, field, index) => {
-                let schemaPatch = {};
-                let editorPatch: Partial<IContentProfileEditorConfig[0]> = {};
+            const patch: {[key: string]: {editor: Partial<IContentProfileEditorConfig>; schema: {}}} =
+                fieldsFlat.reduce((acc, field, index) => {
+                    let schemaPatch = {};
+                    let editorPatch: Partial<IContentProfileEditorConfig[0]> = {};
 
-                acc[field.id] = {
-                    editorPatch: {},
-                    schemaPatch: {},
-                };
+                    acc[field.id] = {
+                        editorPatch: {},
+                        schemaPatch: {},
+                    };
 
-                Object.keys(field).forEach((_property) => {
-                    if (_property === 'id') {
-                        return;
-                    }
-
-                    if (isSchemaKey(_property)) {
-                        schemaPatch[_property] = field[_property];
-
-                        if (_property === 'readonly' || _property === 'required') {
-                            editorPatch[_property] = field[_property];
+                    Object.keys(field).forEach((_property) => {
+                        if (_property === 'id') {
+                            return;
                         }
-                    } else {
-                        editorPatch[_property] = field[_property];
 
-                        if (_property === 'minlength' || _property === 'maxlenght') {
+                        if (isSchemaKey(_property)) {
                             schemaPatch[_property] = field[_property];
+
+                            if (_property === 'readonly' || _property === 'required') {
+                                editorPatch[_property] = field[_property];
+                            }
+                        } else {
+                            editorPatch[_property] = field[_property];
+
+                            if (_property === 'minlength' || _property === 'maxlenght') {
+                                schemaPatch[_property] = field[_property];
+                            }
                         }
-                    }
-                });
+                    });
 
-                editorPatch.order = index;
+                    editorPatch.order = index;
 
-                acc[field.id] = {
-                    editor: editorPatch,
-                    schema: schemaPatch,
-                };
+                    acc[field.id] = {
+                        editor: editorPatch,
+                        schema: schemaPatch,
+                    };
 
-                return acc;
-            }, {});
+                    return acc;
+                }, {});
 
             Object.keys(editorCopy).forEach((key) => {
-                editorCopy[key] = Object.assign(
-                    {},
-                    editorCopy[key],
-                    patch[key]?.editor ?? {},
-                    {order: patch[key]?.editor?.order ?? null, enabled: patch[key] != null},
-                );
+                editorCopy[key] = Object.assign({}, editorCopy[key], patch[key]?.editor ?? {}, {
+                    order: patch[key]?.editor?.order ?? null,
+                    enabled: patch[key] != null,
+                });
 
-                schemaCopy[key] = Object.assign(
-                    {},
-                    schemaCopy[key],
-                    patch[key]?.schema ?? {},
-                );
+                schemaCopy[key] = Object.assign({}, schemaCopy[key], patch[key]?.schema ?? {});
             });
 
             this.props.patchContentProfile({
@@ -460,29 +428,30 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
 
         const tabs = (
             <div className="sd-nav-tabs" data-test-id="content-profile-tabs">
-                {
-                    getTabs().map((tab) => (
-                        <button
-                            className={'sd-nav-tabs__tab ' +
-                                (this.state.activeTab === tab.value ? 'sd-nav-tabs__tab--active' : '')}
-                            role="tab"
-                            key={tab.value}
-                            onClick={() => {
-                                if (tab.value === 'widgets') {
-                                    this.setState({
-                                        activeTab: tab.value,
-                                    });
-                                } else {
-                                    this.setState({
-                                        selectedSection: tab.value,
-                                        activeTab: tab.value,
-                                    });
-                                }
-                            }}
-                            aria-selected={this.state.activeTab === tab.value}
-                        >{tab.label}</button>
-                    ))
-                }
+                {getTabs().map((tab) => (
+                    <button
+                        className={
+                            'sd-nav-tabs__tab ' + (this.state.activeTab === tab.value ? 'sd-nav-tabs__tab--active' : '')
+                        }
+                        role="tab"
+                        key={tab.value}
+                        onClick={() => {
+                            if (tab.value === 'widgets') {
+                                this.setState({
+                                    activeTab: tab.value,
+                                });
+                            } else {
+                                this.setState({
+                                    selectedSection: tab.value,
+                                    activeTab: tab.value,
+                                });
+                            }
+                        }}
+                        aria-selected={this.state.activeTab === tab.value}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
             </div>
         );
 
@@ -511,12 +480,9 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
             };
 
-            const availableIds: Array<{id: string; label: string; fieldType: string;}> = this.state.allFieldIds
+            const availableIds: Array<{id: string; label: string; fieldType: string}> = this.state.allFieldIds
                 .filter((id) => {
-                    return (
-                        this.isAllowedForSection(this.state.selectedSection, id)
-                        && !this.existsInFields(id)
-                    );
+                    return this.isAllowedForSection(this.state.selectedSection, id) && !this.existsInFields(id);
                 })
                 .map((id) => ({
                     id,
@@ -568,10 +534,9 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                     availableFields={availableIds}
                                     onSelect={(selectedId) => {
                                         setIndexForNewItem(0);
-                                        page.openNewItemForm(getNewItemTemplate(
-                                            selectedId,
-                                            this.state.selectedSection,
-                                        ));
+                                        page.openNewItemForm(
+                                            getNewItemTemplate(selectedId, this.state.selectedSection),
+                                        );
                                     }}
                                 />
                             </div>

@@ -10,10 +10,9 @@ import classNames from 'classnames';
 export const Content: React.StatelessComponent<any> = ({children, first}) => (
     <div className="sd-slide-in-panel__content">
         <div
-            className={classNames(
-                'sd-slide-in-panel__content-block',
-                {'sd-slide-in-panel__content-block--first': first},
-            )}
+            className={classNames('sd-slide-in-panel__content-block', {
+                'sd-slide-in-panel__content-block--first': first,
+            })}
         >
             {children}
         </div>

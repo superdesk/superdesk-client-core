@@ -39,7 +39,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
     render() {
         const {props} = this;
         const {getId, getLabel} = props;
-        const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => (<span>{getLabel(item)}</span>);
+        const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => <span>{getLabel(item)}</span>;
         const OptionTemplate = this.props.optionTemplate ?? optionTemplateDefault;
         const ValueTemplate = this.props.valueTemplate ?? OptionTemplate;
         const values = Array.isArray(this.props.values) ? this.props.values : [];
@@ -60,7 +60,11 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     getId={getId}
                     selectBranchWithChildren={props.canSelectBranchWithChildren ?? false}
                     optionTemplate={(item) => <OptionTemplate item={item} />}
-                    valueTemplate={(item, Wrapper) => <Wrapper><ValueTemplate item={item} /></Wrapper>}
+                    valueTemplate={(item, Wrapper) => (
+                        <Wrapper>
+                            <ValueTemplate item={item} />
+                        </Wrapper>
+                    )}
                     allowMultiple={this.props.allowMultiple}
                     singleLevelSearch
                     readOnly={this.props.readOnly}

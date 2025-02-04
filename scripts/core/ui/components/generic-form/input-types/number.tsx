@@ -14,16 +14,11 @@ export class NumberComponent extends React.Component<IInputType<number>> {
 
         return (
             <div
-                className={
-                    classNames(
-                        'sd-line-input',
-                        {
-                            'sd-line-input--invalid': this.props.issues.length > 0,
-                            'sd-line-input--required': this.props.formField.required === true,
-                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
-                        },
-                    )
-                }
+                className={classNames('sd-line-input', {
+                    'sd-line-input--invalid': this.props.issues.length > 0,
+                    'sd-line-input--required': this.props.formField.required === true,
+                    'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                })}
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <input
@@ -34,11 +29,11 @@ export class NumberComponent extends React.Component<IInputType<number>> {
                     className="sd-line-input__input"
                     data-test-id={`gform-input--${this.props.formField.field}`}
                 />
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
+                {this.props.issues.map((str, i) => (
+                    <div key={i} className="sd-line-input__message">
+                        {str}
+                    </div>
+                ))}
             </div>
         );
     }

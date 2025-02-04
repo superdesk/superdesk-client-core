@@ -27,10 +27,10 @@ export class ColouredValueInput extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name ColouredValueInput#togglePopup
-    * @description togglePopup method to toggle open state of opop-up component
-    */
+     * @ngdoc method
+     * @name ColouredValueInput#togglePopup
+     * @description togglePopup method to toggle open state of opop-up component
+     */
     togglePopup() {
         this.setState({openPopup: !this.state.openPopup});
     }
@@ -42,9 +42,13 @@ export class ColouredValueInput extends React.Component<any, any> {
      * @returns {string} Icon class-name
      */
     getIconClasses(val) {
-        return val ? classNames('line-input',
-            this.props.iconName,
-            this.props.iconName + '--' + get(val, this.props.valueKey, get(val, this.props.labelKey))) : 'line-input';
+        return val
+            ? classNames(
+                  'line-input',
+                  this.props.iconName,
+                  this.props.iconName + '--' + get(val, this.props.valueKey, get(val, this.props.labelKey)),
+              )
+            : 'line-input';
     }
 
     onChange(value) {
@@ -86,9 +90,7 @@ export class ColouredValueInput extends React.Component<any, any> {
                         <span className={this.getIconClasses(value)}>
                             {get(value, valueKey, get(value, labelKey, noValueString || gettext('None')))}
                         </span>
-                        <span>
-                        &nbsp;&nbsp;{get(value, labelKey, '')}
-                        </span>
+                        <span>&nbsp;&nbsp;{get(value, labelKey, '')}</span>
                     </LineInput>
                 ) : (
                     <button
@@ -125,10 +127,12 @@ export class ColouredValueInput extends React.Component<any, any> {
 }
 
 ColouredValueInput.propTypes = {
-    options: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.string,
-        value: PropTypes.object,
-    })).isRequired,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.object,
+        }),
+    ).isRequired,
     readOnly: PropTypes.bool,
     iconName: PropTypes.string.isRequired,
     required: PropTypes.bool,

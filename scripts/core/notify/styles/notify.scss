@@ -4,8 +4,7 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
-$notif-holder-w : 340px;
+$notif-holder-w: 340px;
 .notification-holder {
     position: fixed;
     z-index: 9050;
@@ -23,12 +22,12 @@ $notif-holder-w : 340px;
         margin: 0 0 10px;
         @include opacity(98);
         &.success {
-            border-color:#a6d5a2;
+            border-color: #a6d5a2;
         }
     }
 }
 .zen-mode {
     .notification-holder {
-        background:none;
+        background: none;
     }
 }

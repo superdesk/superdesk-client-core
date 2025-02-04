@@ -1,14 +1,19 @@
-<div class="highlights-list dropdown"
-     dropdown
-     dropdown-append-to-body
-     ng-if="marks.length>0"
-     ng-click="toggleClass(open, $event)">
-
+<div
+    class="highlights-list dropdown"
+    dropdown
+    dropdown-append-to-body
+    ng-if="marks.length>0"
+    ng-click="toggleClass(open, $event)"
+>
     <button class="dropdown__toggle" dropdown__toggle>
         <i class="{{className}} icon-open"></i>
     </button>
 
-    <ul class="dropdown dropdown__menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
+    <ul
+        class="dropdown dropdown__menu highlights-list-menu"
+        ng-class="{open: open}"
+        ng-click="$event.stopPropagation()"
+    >
         <li>
             <div class="dropdown__menu-label" translate>Marked For</div>
             <button class="dropdown__menu-close" dropdown-toggle>
@@ -17,7 +22,14 @@
         </li>
         <li ng-repeat="mark in markObjects | orderBy: 'name' track by mark._id" title="{{ :: mark.name }}">
             {{ :: mark.name }}
-            <button class="btn btn--small btn--hollow btn--primary btn--ui-dark" ng-if="hasMarkItemPrivilege" ng-click="unmark(mark._id)" translate>Remove</button>
+            <button
+                class="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                ng-if="hasMarkItemPrivilege"
+                ng-click="unmark(mark._id)"
+                translate
+            >
+                Remove
+            </button>
         </li>
         <li class="none" ng-show="marks.length === 0" translate>None</li>
     </ul>

@@ -28,10 +28,14 @@ describe('archive-history', () => {
             _id_document: 123,
         };
 
-        spyOn(highlightsService, 'get').and.returnValue($q.when({_items: [
-            {_id: '1', name: 'Spotlight'},
-            {_id: '2', name: 'New'},
-        ]}));
+        spyOn(highlightsService, 'get').and.returnValue(
+            $q.when({
+                _items: [
+                    {_id: '1', name: 'Spotlight'},
+                    {_id: '2', name: 'New'},
+                ],
+            }),
+        );
 
         spyOn(desks, 'initialize').and.returnValue($q.when({}));
 
@@ -59,7 +63,8 @@ describe('archive-history', () => {
         expect(api.query).toHaveBeenCalledWith('archive_history', {
             where: {item_id: 123},
             max_results: 200,
-            sort: '[(\'_created\', 1)]'});
+            sort: "[('_created', 1)]",
+        });
         expect(api.query).not.toHaveBeenCalledWith('legal_archive_history');
     }));
 
@@ -75,12 +80,13 @@ describe('archive-history', () => {
         expect(api.query).toHaveBeenCalledWith('legal_archive_history', {
             where: {item_id: 123},
             max_results: 200,
-            sort: '[(\'_created\', 1)]'});
+            sort: "[('_created', 1)]",
+        });
         expect(api.query).not.toHaveBeenCalledWith('archive_history');
     }));
 
-    it('returns history if history starts from version 1',
-        (done) => inject(($controller, $rootScope, api, $q) => {
+    it('returns history if history starts from version 1', (done) =>
+        inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 user_id: 2,
@@ -104,8 +110,8 @@ describe('archive-history', () => {
             });
         }));
 
-    it('returns System as user if no user in history',
-        (done) => inject(($controller, $rootScope, api, $q) => {
+    it('returns System as user if no user in history', (done) =>
+        inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 item_id: 123,
@@ -127,25 +133,30 @@ describe('archive-history', () => {
             });
         }));
 
-    it('ignores lock history entries',
-        (done) => inject(($controller, $rootScope, api, $q) => {
-            const historyItems = [{
-                version: 1,
-                item_id: 123,
-                operation: 'create',
-            }, {
-                version: 1,
-                item_id: 123,
-                operation: 'item_lock',
-            }, {
-                version: 1,
-                item_id: 123,
-                operation: 'update',
-            }, {
-                version: 1,
-                item_id: 123,
-                operation: 'item_unlock',
-            }];
+    it('ignores lock history entries', (done) =>
+        inject(($controller, $rootScope, api, $q) => {
+            const historyItems = [
+                {
+                    version: 1,
+                    item_id: 123,
+                    operation: 'create',
+                },
+                {
+                    version: 1,
+                    item_id: 123,
+                    operation: 'item_lock',
+                },
+                {
+                    version: 1,
+                    item_id: 123,
+                    operation: 'update',
+                },
+                {
+                    version: 1,
+                    item_id: 123,
+                    operation: 'item_unlock',
+                },
+            ];
 
             spyOn(api, 'query').and.returnValue($q.when({_items: historyItems}));
 

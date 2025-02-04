@@ -1,9 +1,5 @@
 import {rundownItemContentProfile} from '../rundown-items/content-profile';
-import {
-    IAuthoringAutoSave,
-    IAuthoringStorage,
-    IPatchResponseExtraFields,
-} from 'superdesk-api';
+import {IAuthoringAutoSave, IAuthoringStorage, IPatchResponseExtraFields} from 'superdesk-api';
 import {IRundown, IRundownItem} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {IWithAuthoringReactKey} from '../rundown-templates/template-edit';
@@ -54,10 +50,7 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
             return Promise.resolve();
         }
 
-        schedule(
-            getItem: () => IRundownItem,
-            callback: (autosaved: IRundownItem) => void,
-        ) {
+        schedule(getItem: () => IRundownItem, callback: (autosaved: IRundownItem) => void) {
             callback(getItem());
         }
 
@@ -80,17 +73,16 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
         },
         isLockedInCurrentSession: () => false,
         forceLock: (entity) => {
-            return tryLocking<IRundownItem>('/rundown_items', entity._id, true)
-
-                // force-unlock can't fail
-                .then((res) => res.success ? res.latestEntity : entity);
+            return (
+                tryLocking<IRundownItem>('/rundown_items', entity._id, true)
+                    // force-unlock can't fail
+                    .then((res) => (res.success ? res.latestEntity : entity))
+            );
         },
         saveEntity: (current, original) => {
             const patch: Partial<IRundownItem> = {
                 ...fixPatchRequest(
-                    prepareRundownItemForSaving(
-                        generatePatch(original, current, {undefinedEqNull: true}),
-                    ),
+                    prepareRundownItemForSaving(generatePatch(original, current, {undefinedEqNull: true})),
                 ),
                 fields_meta: current.fields_meta ?? {}, // maintain fields_meta; attempting to patch would drop fields
             };
@@ -140,10 +132,7 @@ function getRundownItemCreationAuthoringStorage(
             return Promise.resolve();
         }
 
-        schedule(
-            getItem: () => IRundownItem,
-            callback: (autosaved: IRundownItem) => void,
-        ) {
+        schedule(getItem: () => IRundownItem, callback: (autosaved: IRundownItem) => void) {
             callback(getItem());
         }
 
@@ -217,20 +206,13 @@ export function prepareForCreation(
         type: 'create',
         rundownId,
         initialData: initialValue,
-        authoringStorage: getRundownItemCreationAuthoringStorage(
-            rundownId,
-            initialValue,
-            onSave,
-        ),
+        authoringStorage: getRundownItemCreationAuthoringStorage(rundownId, initialValue, onSave),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
         sideWidget: null,
     };
 }
 
-export function prepareForEditing(
-    currentAction: IRundownItemActionNext,
-    id: IRundownItem['_id'],
-): IEdit {
+export function prepareForEditing(currentAction: IRundownItemActionNext, id: IRundownItem['_id']): IEdit {
     return {
         type: 'edit',
         itemId: id,
@@ -240,10 +222,7 @@ export function prepareForEditing(
     };
 }
 
-export function prepareForPreview(
-    currentAction: IRundownItemActionNext,
-    id: IRundownItem['_id'],
-): IPreview {
+export function prepareForPreview(currentAction: IRundownItemActionNext, id: IRundownItem['_id']): IPreview {
     return {
         type: 'preview',
         itemId: id,

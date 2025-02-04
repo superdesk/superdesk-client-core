@@ -8,25 +8,15 @@ import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
 import {getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
-ItemList.$inject = [
-    '$timeout',
-    'search',
-    'monitoringState',
-    '$rootScope',
-];
+ItemList.$inject = ['$timeout', 'search', 'monitoringState', '$rootScope'];
 
 /**
  * Handles the functionality displaying list of items from repos
  * (archive, ingest, publish, external, content api, archived)
-*/
-export function ItemList(
-    $timeout,
-    search,
-    monitoringState,
-    $rootScope,
-) {
+ */
+export function ItemList($timeout, search, monitoringState, $rootScope) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             const abortController = new AbortController();
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
@@ -38,20 +28,18 @@ export function ItemList(
 
             monitoringState.init().then(() => {
                 var listComponent = ReactDOM.render(
-                    (
-                        <ItemListAngularWrapper
-                            scope={scope}
-                            monitoringState={monitoringState}
-                        />
-                    ),
+                    <ItemListAngularWrapper scope={scope} monitoringState={monitoringState} />,
                     elem[0],
                 ) as unknown as ItemListAngularWrapper;
 
-                scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
-                    if (activeGroup === groupId) {
-                        listComponent.focus();
-                    }
-                });
+                scope.$watch(
+                    () => monitoringState.state.activeGroup,
+                    (activeGroup) => {
+                        if (activeGroup === groupId) {
+                            listComponent.focus();
+                        }
+                    },
+                );
 
                 /**
                  * Test if item a equals to item b
@@ -61,8 +49,12 @@ export function ItemList(
                  * @return {Boolean}
                  */
                 function isSameVersion(a, b) {
-                    return a._etag === b._etag && a._current_version === b._current_version &&
-                        a._updated === b._updated && isSameElasticHighlights(a, b);
+                    return (
+                        a._etag === b._etag &&
+                        a._current_version === b._current_version &&
+                        a._updated === b._updated &&
+                        isSameElasticHighlights(a, b)
+                    );
                 }
 
                 /**
@@ -77,7 +69,7 @@ export function ItemList(
                         return true;
                     }
 
-                    if (!a.es_highlight && b.es_highlight || a.es_highlight && !b.es_highlight) {
+                    if ((!a.es_highlight && b.es_highlight) || (a.es_highlight && !b.es_highlight)) {
                         return false;
                     }
 
@@ -85,8 +77,10 @@ export function ItemList(
                         return item[0];
                     }
 
-                    return _.map(a.es_highlight, getEsHighlight).join('-') ===
-                        _.map(b.es_highlight, getEsHighlight).join('-');
+                    return (
+                        _.map(a.es_highlight, getEsHighlight).join('-') ===
+                        _.map(b.es_highlight, getEsHighlight).join('-')
+                    );
                 }
 
                 /**
@@ -106,8 +100,10 @@ export function ItemList(
                             return false; // take package of the new item might have changed
                         }
 
-                        return a.archive_item._current_version === b.archive_item._current_version &&
-                        a.archive_item._updated === b.archive_item._updated;
+                        return (
+                            a.archive_item._current_version === b.archive_item._current_version &&
+                            a.archive_item._updated === b.archive_item._updated
+                        );
                     }
 
                     return false;
@@ -128,68 +124,81 @@ export function ItemList(
                     }
 
                     if (oldItem && newItem) {
-                        return _.get(oldItem, 'associations.featuremedia._id') ===
-                                _.get(newItem, 'associations.featuremedia._id');
+                        return (
+                            _.get(oldItem, 'associations.featuremedia._id') ===
+                            _.get(newItem, 'associations.featuremedia._id')
+                        );
                     }
 
                     return false;
                 }
 
-                scope.$watch('items', (items) => {
-                    if (!items || !items._items) {
-                        /**
-                         * The list is being reloaded.
-                         *
-                         * listComponent.loading is not updated here to avoid
-                         * loading screens being displayed too frequently.
-                         *
-                         * Due to implementation of `scheduleIfShouldUpdate` in `MonitoringGroup.ts`
-                         * reloading lists is triggered more frequently when it should be.
-                         * For example, spiking one item triggers reloading for all monitoring groups.
-                         *
-                         * Articles list code is being rewritten and the old code will be deleted
-                         * so instead of doing a proper fix I'm restoring the old behavior
-                         * which is not displaying a loading indicator at all.
-                         */
-                        return;
-                    }
-
-                    var itemsList = [];
-                    var currentItems = {};
-                    var itemsById = angular.extend({}, listComponent.state.itemsById);
-
-                    items._items.forEach((item) => {
-                        var itemId = search.generateTrackByIdentifier(item);
-                        var oldItem = itemsById[itemId] || null;
-
-                        if (!oldItem || !isSameVersion(oldItem, item) ||
-                            !isArchiveItemSameVersion(oldItem, item) ||
-                            !isContentApiItemAssociation(oldItem, item)) {
-                            itemsById[itemId] = angular.extend({}, oldItem, item);
+                scope.$watch(
+                    'items',
+                    (items) => {
+                        if (!items || !items._items) {
+                            /**
+                             * The list is being reloaded.
+                             *
+                             * listComponent.loading is not updated here to avoid
+                             * loading screens being displayed too frequently.
+                             *
+                             * Due to implementation of `scheduleIfShouldUpdate` in `MonitoringGroup.ts`
+                             * reloading lists is triggered more frequently when it should be.
+                             * For example, spiking one item triggers reloading for all monitoring groups.
+                             *
+                             * Articles list code is being rewritten and the old code will be deleted
+                             * so instead of doing a proper fix I'm restoring the old behavior
+                             * which is not displaying a loading indicator at all.
+                             */
+                            return;
                         }
 
-                        if (!currentItems[itemId]) { // filter out possible duplicates
-                            currentItems[itemId] = true;
-                            itemsList.push(itemId);
-                        }
-                    });
+                        var itemsList = [];
+                        var currentItems = {};
+                        var itemsById = angular.extend({}, listComponent.state.itemsById);
 
-                    getAndMergeRelatedEntitiesForArticles(
-                        items._items,
-                        listComponent.state.relatedEntities,
-                        abortController.signal,
-                    ).then((relatedEntities) => {
-                        listComponent.setState({
-                            itemsList: itemsList,
-                            itemsById: itemsById,
-                            relatedEntities,
-                            view: scope.view,
-                            loading: false,
-                        }, () => {
-                            scope.rendering = scope.loading = false;
+                        items._items.forEach((item) => {
+                            var itemId = search.generateTrackByIdentifier(item);
+                            var oldItem = itemsById[itemId] || null;
+
+                            if (
+                                !oldItem ||
+                                !isSameVersion(oldItem, item) ||
+                                !isArchiveItemSameVersion(oldItem, item) ||
+                                !isContentApiItemAssociation(oldItem, item)
+                            ) {
+                                itemsById[itemId] = angular.extend({}, oldItem, item);
+                            }
+
+                            if (!currentItems[itemId]) {
+                                // filter out possible duplicates
+                                currentItems[itemId] = true;
+                                itemsList.push(itemId);
+                            }
                         });
-                    });
-                }, true);
+
+                        getAndMergeRelatedEntitiesForArticles(
+                            items._items,
+                            listComponent.state.relatedEntities,
+                            abortController.signal,
+                        ).then((relatedEntities) => {
+                            listComponent.setState(
+                                {
+                                    itemsList: itemsList,
+                                    itemsById: itemsById,
+                                    relatedEntities,
+                                    view: scope.view,
+                                    loading: false,
+                                },
+                                () => {
+                                    scope.rendering = scope.loading = false;
+                                },
+                            );
+                        });
+                    },
+                    true,
+                );
 
                 scope.$watch('view', (newValue, oldValue) => {
                     if (newValue !== oldValue) {
@@ -316,14 +325,16 @@ export function ItemList(
                     // force refresh the group or list, if scroll bar hits the top of list.
                     // unless multi-select is in progress
 
-                    const multiSelectInProgress = Object.values(listComponent.state.itemsById)
-                        .some((item) => item.selected === true);
+                    const multiSelectInProgress = Object.values(listComponent.state.itemsById).some(
+                        (item) => item.selected === true,
+                    );
 
                     if (elem[0].scrollTop === 0 && !multiSelectInProgress) {
                         $rootScope.$broadcast('refresh:list', scope.group, {event_origin: 'scroll'});
                     }
 
-                    if (scope.rendering) { // ignore
+                    if (scope.rendering) {
+                        // ignore
                         $event.preventDefault();
                         return;
                     }

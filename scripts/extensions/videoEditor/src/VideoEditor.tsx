@@ -548,39 +548,30 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         switch (rotate) {
-        case -90:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
+            case -90:
+                return this.getCropSize(this.videoRef.current, {
                     ...crop,
                     x: Math.abs(currentHeight - height - y),
                     y: x,
                     width: height,
                     height: width,
-                },
-            );
-        case -180:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
+                });
+            case -180:
+                return this.getCropSize(this.videoRef.current, {
                     ...crop,
                     x: Math.abs(currentWidth - (x + width)),
                     y: Math.abs(currentHeight - (y + height)),
-                },
-            );
-        case -270:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
+                });
+            case -270:
+                return this.getCropSize(this.videoRef.current, {
                     ...crop,
                     x: y,
                     y: Math.abs(currentWidth - width - x),
                     width: height,
                     height: width,
-                },
-            );
-        default:
-            return this.getCropSize(this.videoRef.current, crop);
+                });
+            default:
+                return this.getCropSize(this.videoRef.current, crop);
         }
     }
 
@@ -635,7 +626,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const vh = videoHeight < wrapperHeight ? videoHeight : wrapperHeight;
         // round approximate 1 value (e.g. 1.0059880239)
         // avoid running unnecessary transformation transition on resetting state when rotating 360 degree
-        const scale = Math.trunc(vh / height * 100) / 100;
+        const scale = Math.trunc((vh / height) * 100) / 100;
 
         if (scale === 1) {
             return scale;
@@ -772,7 +763,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                             ...this.state.article,
                                                             renditions: renditions,
                                                             _etag: etag,
-                                                        }})
+                                                        },
+                                                    })
                                                 }
                                                 onError={this.showErrorMessage}
                                                 crop={this.state.transformations.crop}

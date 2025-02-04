@@ -8,21 +8,21 @@ export function TransmissionDetailsDirective(api) {
             item: '=',
             type: '=',
         },
-        link: function(scope) {
+        link: function (scope) {
             scope.transmitted_item = null;
             scope.show_transmission_details = false;
 
             /**
              * Sets the model to be displayed in the modal-body.
              */
-            scope.showFormattedItem = function(item) {
+            scope.showFormattedItem = function (item) {
                 scope.transmitted_item = item.formatted_item;
             };
 
             /**
              * Sets the model of the modal to null when and is hidden.
              */
-            scope.hideFormattedItem = function() {
+            scope.hideFormattedItem = function () {
                 scope.transmitted_item = null;
             };
 
@@ -31,7 +31,7 @@ export function TransmissionDetailsDirective(api) {
              *
              * When user clicks on + symbol, it hits the API to bring the transmission details from publish queue.
              */
-            scope.showOrHideTransmissionDetails = function() {
+            scope.showOrHideTransmissionDetails = function () {
                 scope.show_transmission_details = !scope.show_transmission_details;
 
                 if (scope.show_transmission_details) {

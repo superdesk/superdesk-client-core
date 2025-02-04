@@ -43,12 +43,11 @@ export class WithInteractiveArticleActionsPanel extends React.PureComponent<IPro
                 const {items} = event.detail;
 
                 const triggeredFromAuthoring =
-                    items.length === 1
-                    && items[0]._id === applicationState.articleInEditMode;
+                    items.length === 1 && items[0]._id === applicationState.articleInEditMode;
 
                 if (
-                    (this.props.location === 'authoring' && triggeredFromAuthoring === true)
-                    || (this.props.location !== 'authoring' && triggeredFromAuthoring !== true)
+                    (this.props.location === 'authoring' && triggeredFromAuthoring === true) ||
+                    (this.props.location !== 'authoring' && triggeredFromAuthoring !== true)
                 ) {
                     this.setState({
                         active: true,

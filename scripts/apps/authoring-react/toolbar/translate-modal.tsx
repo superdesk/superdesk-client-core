@@ -64,9 +64,9 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                     guid: this.props.article._id,
                 },
             }).then((item) => {
-                const onTranslateAfterMiddlewares
-                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']>
-                = flatMap(
+                const onTranslateAfterMiddlewares: Array<
+                    IExtensionActivationResult['contributions']['entities']['article']['onTranslateAfter']
+                > = flatMap(
                     Object.values(extensions).map(({activationResult}) => activationResult),
                     (activationResult) => activationResult?.contributions?.entities?.article?.onTranslateAfter ?? [],
                 );
@@ -93,30 +93,25 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
         }
 
         return (
-            <Modal
-                visible
-                onHide={() => this.props.closeModal()}
-                size="small"
-                headerTemplate={gettext('Translate')}
-            >
+            <Modal visible onHide={() => this.props.closeModal()} size="small" headerTemplate={gettext('Translate')}>
                 <Spacer v gap="16">
                     <Select
-                        onChange={(value) => this.setState({
-                            ...state,
-                            selectedLanguage: value,
-                        })}
+                        onChange={(value) =>
+                            this.setState({
+                                ...state,
+                                selectedLanguage: value,
+                            })
+                        }
                         label={gettext('Available languages')}
                     >
                         <Option />
-                        {
-                            state.availableLanguages.map((lang) => {
-                                return (
-                                    <Option key={lang._id} value={lang.language}>
-                                        {gettext(lang.label)}
-                                    </Option>
-                                );
-                            })
-                        }
+                        {state.availableLanguages.map((lang) => {
+                            return (
+                                <Option key={lang._id} value={lang.language}>
+                                    {gettext(lang.label)}
+                                </Option>
+                            );
+                        })}
                     </Select>
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button
@@ -125,11 +120,7 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                             type="primary"
                             disabled={(state.selectedLanguage?.length ?? 0) < 1}
                         />
-                        <Button
-                            onClick={() => this.props.closeModal()}
-                            text={gettext('Cancel')}
-                            type="default"
-                        />
+                        <Button onClick={() => this.props.closeModal()} text={gettext('Cancel')} type="default" />
                     </Spacer>
                 </Spacer>
             </Modal>

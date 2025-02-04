@@ -3,7 +3,7 @@ export function UserUniqueDirective($q, api) {
     return {
         require: 'ngModel',
         scope: {exclude: '='},
-        link: function(scope, element, attrs, ctrl) {
+        link: function (scope, element, attrs, ctrl) {
             /**
              * Test if given value is unique for seleted field
              */
@@ -14,15 +14,13 @@ export function UserUniqueDirective($q, api) {
                     var criteria = {where: {}};
 
                     criteria.where[attrs.uniqueField] = value;
-                    return api.users.query(criteria)
-                        .then((users) => {
-                            if (users._items.length
-                                && (!scope.exclude._id || users._items[0]._id !== scope.exclude._id)) {
-                                return $q.reject(users);
-                            }
+                    return api.users.query(criteria).then((users) => {
+                        if (users._items.length && (!scope.exclude._id || users._items[0]._id !== scope.exclude._id)) {
+                            return $q.reject(users);
+                        }
 
-                            return users;
-                        });
+                        return users;
+                    });
                 }
 
                 // mark as ok

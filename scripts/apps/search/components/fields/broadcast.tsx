@@ -11,11 +11,7 @@ export class BroadcastFieldComponent extends React.Component<Pick<IPropsItemList
             return null;
         }
 
-        return React.createElement(
-            'span',
-            {className: 'broadcast-status', title: status, key: 'broadcast'},
-            '!',
-        );
+        return React.createElement('span', {className: 'broadcast-status', title: status, key: 'broadcast'}, '!');
     }
 }
 

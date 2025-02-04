@@ -37,8 +37,6 @@ export class Difference extends React.PureComponent<IProps> {
             }
         })();
 
-        return (
-            <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(str1, str2)}} />
-        );
+        return <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(str1, str2)}} />;
     }
 }

@@ -21,10 +21,7 @@ function getPageSize(from, to): number {
  * computes page size and index
  * for fetching the items using pagination API
  */
-export function getPaginationInfo(
-    from: number,
-    to: number,
-): {pageSize: number, nextPage: number} {
+export function getPaginationInfo(from: number, to: number): {pageSize: number; nextPage: number} {
     const pageSize = getPageSize(from, to);
     const remainder = from % pageSize;
     const fromPage = (from - remainder) / pageSize;

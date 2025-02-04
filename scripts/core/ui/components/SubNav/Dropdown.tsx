@@ -54,32 +54,21 @@ export class Dropdown extends React.Component<any, any> {
 
     render() {
         const isCreate = this.props.icon === 'icon-plus-large';
-        const buttonClassName = classNames(
-            'dropdown-toggle',
-            'dropdown__toggle',
-            this.props.buttonLabelClassName,
-            {
-                navbtn: this.props.navbtn,
-                'sd-create-btn': isCreate,
-                'navbtn--text-only': this.props.buttonLabel,
-            },
-        );
+        const buttonClassName = classNames('dropdown-toggle', 'dropdown__toggle', this.props.buttonLabelClassName, {
+            navbtn: this.props.navbtn,
+            'sd-create-btn': isCreate,
+            'navbtn--text-only': this.props.buttonLabel,
+        });
 
         const buttonDropMenu = (
             <button
                 className={buttonClassName}
                 onClick={this.props.disableSelection ? this.props.defaultAction : this.toggle}
             >
-                {this.props.icon && (
-                    <i className={this.props.icon} />
-                )}
+                {this.props.icon && <i className={this.props.icon} />}
                 {this.props.buttonLabel && this.props.buttonLabel}
-                {this.props.buttonLabel && (
-                    <span className="dropdown__caret" />
-                )}
-                {isCreate && (
-                    <span className="circle" />
-                )}
+                {this.props.buttonLabel && <span className="dropdown__caret" />}
+                {isCreate && <span className="circle" />}
             </button>
         );
 
@@ -93,29 +82,17 @@ export class Dropdown extends React.Component<any, any> {
                 {this.props.tooltip ? (
                     <OverlayTrigger
                         placement="left"
-                        overlay={(
-                            <Tooltip id="create_new_btn">
-                                {this.props.tooltip}
-                            </Tooltip>
-                        )}
+                        overlay={<Tooltip id="create_new_btn">{this.props.tooltip}</Tooltip>}
                     >
                         <span>{buttonDropMenu}</span>
                     </OverlayTrigger>
-                ) :
+                ) : (
                     buttonDropMenu
-                }
-                <Menu
-                    isOpen={this.state.open}
-                    alignRight={false}
-                    scrollable={this.props.scrollable}
-                >
-                    {this.props.label && (
-                        <Label>{this.props.label}</Label>
-                    )}
+                )}
+                <Menu isOpen={this.state.open} alignRight={false} scrollable={this.props.scrollable}>
+                    {this.props.label && <Label>{this.props.label}</Label>}
 
-                    {this.props.label && (
-                        <Divider />
-                    )}
+                    {this.props.label && <Divider />}
 
                     {this.props.items.map((item, index) => {
                         if (item.divider) {
@@ -125,12 +102,7 @@ export class Dropdown extends React.Component<any, any> {
                                 <li key={index}>
                                     <button onClick={() => item.action()}>
                                         {item.icon && (
-                                            <i
-                                                className={classNames(
-                                                    {'icon--gray': item.disabled},
-                                                    item.icon,
-                                                )}
-                                            />
+                                            <i className={classNames({'icon--gray': item.disabled}, item.icon)} />
                                         )}
 
                                         <span
@@ -157,14 +129,16 @@ Dropdown.propTypes = {
     buttonLabel: PropTypes.string,
     buttonLabelClassName: PropTypes.string,
     label: PropTypes.string,
-    items: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.string,
-        divider: PropTypes.bool,
-        icon: PropTypes.string,
-        action: PropTypes.func,
-        className: PropTypes.string,
-        disabled: PropTypes.bool,
-    })),
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string,
+            divider: PropTypes.bool,
+            icon: PropTypes.string,
+            action: PropTypes.func,
+            className: PropTypes.string,
+            disabled: PropTypes.bool,
+        }),
+    ),
     alignRight: PropTypes.bool,
     disableSelection: PropTypes.bool,
     defaultAction: PropTypes.func,

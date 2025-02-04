@@ -6,7 +6,8 @@
 
 .close-compare-versions {
     position: absolute;
-    inset-block-start: 14px; inset-inline-end: 14px;
+    inset-block-start: 14px;
+    inset-inline-end: 14px;
     @include opacity(60);
     background: none;
     border: 0;
@@ -22,11 +23,17 @@
 
     .boards-list {
         position: absolute;
-        inset-block-start: 0; inset-inline-start: 0; inset-block-end: 0; inset-inline-end: 0;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inset-block-end: 0;
+        inset-inline-end: 0;
     }
     .boards-create {
         position: absolute;
-        inset-block-start: 0; inset-block-end: 0; inset-inline-end: 0; width: 0;
+        inset-block-start: 0;
+        inset-block-end: 0;
+        inset-inline-end: 0;
+        width: 0;
         @include border-box();
         i {
             font-size: 48px;
@@ -110,7 +117,7 @@
                         margin: 0 0 2.4rem 3.2rem;
                         &__metadata {
                             display: inline-block;
-                            margin-inline-end: .6rem;
+                            margin-inline-end: 0.6rem;
                             font-size: 12px;
                             font-weight: 500;
                             color: $grayDark;

@@ -4,7 +4,7 @@ RoleUnique.$inject = ['api', '$q'];
 export function RoleUnique(api, $q) {
     return {
         require: 'ngModel',
-        link: function(scope, element, attrs, ctrl) {
+        link: function (scope, element, attrs, ctrl) {
             /**
              * Test if given value is unique for seleted field
              */
@@ -17,13 +17,12 @@ export function RoleUnique(api, $q) {
                     if (!_.isNil(scope.editRole) && !_.isNil(scope.editRole._id)) {
                         criteria.where._id = {$ne: scope.editRole._id};
                     }
-                    return api.roles.query(criteria)
-                        .then((roles) => {
-                            if (roles._items.length) {
-                                return $q.reject(roles);
-                            }
-                            return roles;
-                        });
+                    return api.roles.query(criteria).then((roles) => {
+                        if (roles._items.length) {
+                            return $q.reject(roles);
+                        }
+                        return roles;
+                    });
                 }
 
                 // mark as ok

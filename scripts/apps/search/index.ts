@@ -12,11 +12,12 @@ import {SearchPanelWidgets} from './components/search-panel-widgets';
 import {PreviewSubject} from './components/preview-subject';
 import {EmailNotificationPreferences} from 'apps/users/components/EmailNotificationPreferences';
 
-angular.module('superdesk.apps.search.react', [
-    'superdesk.apps.highlights',
-    'superdesk.core.datetime',
-    'superdesk.apps.authoring.metadata',
-])
+angular
+    .module('superdesk.apps.search.react', [
+        'superdesk.apps.highlights',
+        'superdesk.core.datetime',
+        'superdesk.apps.authoring.metadata',
+    ])
     .service('monitoringState', svc.MonitoringState)
     .directive('sdItemsList', directive.ItemList);
 
@@ -28,16 +29,17 @@ angular.module('superdesk.apps.search.react', [
  * @description Superdesk search module. Allows searching existing and ingested
  * content.
  */
-angular.module('superdesk.apps.search', [
-    'superdesk.core.api',
-    'superdesk.apps.desks',
-    'superdesk.apps.publish',
-    'superdesk.core.activity',
-    'superdesk.core.list',
-    'superdesk.core.keyboard',
-    'superdesk.apps.search.react',
-    'superdesk.apps.workspace.menu',
-])
+angular
+    .module('superdesk.apps.search', [
+        'superdesk.core.api',
+        'superdesk.apps.desks',
+        'superdesk.apps.publish',
+        'superdesk.core.activity',
+        'superdesk.core.list',
+        'superdesk.core.keyboard',
+        'superdesk.apps.search.react',
+        'superdesk.apps.workspace.menu',
+    ])
     .value('searchCommon', {meta: {}})
     .service('search', svc.SearchService)
     .service('savedSearch', svc.SavedSearchService)
@@ -68,41 +70,27 @@ angular.module('superdesk.apps.search', [
 
     .component(
         'sdMultiActionBarReact',
-        reactToAngular1(
-            MultiActionBarReact,
-            ['articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
-        ),
+        reactToAngular1(MultiActionBarReact, ['articles', 'hideMultiActionBar', 'getCoreActions', 'compact']),
     )
 
     .component(
         'sdEmailNotificationsList',
-        reactToAngular1(
-            EmailNotificationPreferences,
-            ['toggleEmailNotification', 'preferences', 'notificationLabels'],
-        ),
+        reactToAngular1(EmailNotificationPreferences, ['toggleEmailNotification', 'preferences', 'notificationLabels']),
     )
 
-    .component(
-        'searchPanelWidgets',
-        reactToAngular1(
-            SearchPanelWidgets,
-            ['provider', 'params', 'setParams'],
-        ),
-    )
+    .component('searchPanelWidgets', reactToAngular1(SearchPanelWidgets, ['provider', 'params', 'setParams']))
 
-    .component('sdPreviewSubject',
-        reactToAngular1(
-            PreviewSubject,
-            ['item', 'fields', 'editor'],
-        ),
-    )
+    .component('sdPreviewSubject', reactToAngular1(PreviewSubject, ['item', 'fields', 'editor']))
 
     .directive('sdMultiActionBar', directive.MultiActionBar)
     .directive('sdRawSearch', directive.RawSearch)
     .directive('sdRepoDropdown', directive.RepoDropdown)
     .directive('sdMultiImageEdit', MultiImageEditDirective)
 
-    .config(['superdeskProvider', 'assetProvider', 'workspaceMenuProvider',
+    .config([
+        'superdeskProvider',
+        'assetProvider',
+        'workspaceMenuProvider',
         (superdesk, asset, workspaceMenuProvider) => {
             superdesk.activity('/search', {
                 description: gettext('Find live and archived content'),
@@ -134,7 +122,10 @@ angular.module('superdesk.apps.search', [
         },
     ])
 
-    .run(['keyboardManager', function(keyboardManager) {
-        keyboardManager.register('Search', 'ctrl + 0', gettext('Show search modal'));
-        keyboardManager.register('Search', 'v', gettext('Toggle search view'));
-    }]);
+    .run([
+        'keyboardManager',
+        function (keyboardManager) {
+            keyboardManager.register('Search', 'ctrl + 0', gettext('Show search modal'));
+            keyboardManager.register('Search', 'v', gettext('Toggle search view'));
+        },
+    ]);

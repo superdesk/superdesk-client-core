@@ -50,33 +50,30 @@ export class SelectFieldPopup extends React.Component<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-                onEventCapture(event);
-                this.handleEnterKey();
-                break;
-            case KEYCODES.DOWN:
-                onEventCapture(event);
-                this.handleDownArrowKey(event);
-                break;
-            case KEYCODES.UP:
-                onEventCapture(event);
-                this.handleUpArrowKey();
-                break;
-            case KEYCODES.LEFT:
-                onEventCapture(event);
-                if (this.state.selectedAncestry.length > 0) {
-                    this.popParent(true);
-                }
-                break;
-            case KEYCODES.RIGHT:
-                onEventCapture(event);
-                if (this.state.activeOptionIndex !== -1) {
-                    this.onMutiLevelSelect(
-                        this.state.filteredList[this.state.activeOptionIndex],
-                        true,
-                    );
-                }
-                break;
+                case KEYCODES.ENTER:
+                    onEventCapture(event);
+                    this.handleEnterKey();
+                    break;
+                case KEYCODES.DOWN:
+                    onEventCapture(event);
+                    this.handleDownArrowKey(event);
+                    break;
+                case KEYCODES.UP:
+                    onEventCapture(event);
+                    this.handleUpArrowKey();
+                    break;
+                case KEYCODES.LEFT:
+                    onEventCapture(event);
+                    if (this.state.selectedAncestry.length > 0) {
+                        this.popParent(true);
+                    }
+                    break;
+                case KEYCODES.RIGHT:
+                    onEventCapture(event);
+                    if (this.state.activeOptionIndex !== -1) {
+                        this.onMutiLevelSelect(this.state.filteredList[this.state.activeOptionIndex], true);
+                    }
+                    break;
             }
         }
     }
@@ -161,11 +158,12 @@ export class SelectFieldPopup extends React.Component<any, any> {
             if (searchList) {
                 filteredList = searchList;
             } else {
-                filteredList = currentParent ?
-                    this.props.options.filter((option) => (
-                        option.parent === get(currentParent, this.props.valueKey)
-                    ), this) :
-                    this.props.options.filter((option) => !option.parent);
+                filteredList = currentParent
+                    ? this.props.options.filter(
+                          (option) => option.parent === get(currentParent, this.props.valueKey),
+                          this,
+                      )
+                    : this.props.options.filter((option) => !option.parent);
             }
             return filteredList;
         } else {
@@ -180,7 +178,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
      */
     onMutiLevelSelect(opt, keyDown = false) {
         if (opt && !this.state.searchList && this.isOptionAParent(opt)) {
-            if (!this.state.selectedAncestry.find((o) => (opt[this.props.valueKey] === o[this.props.valueKey]))) {
+            if (!this.state.selectedAncestry.find((o) => opt[this.props.valueKey] === o[this.props.valueKey])) {
                 this.setState({
                     currentParent: opt,
                     selectedAncestry: [...this.state.selectedAncestry, opt],
@@ -194,9 +192,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
     }
 
     isOptionAParent(opt) {
-        return this.props.options.filter((option) => (
-            option.parent === get(opt, this.props.valueKey)
-        )).length > 0;
+        return this.props.options.filter((option) => option.parent === get(opt, this.props.valueKey)).length > 0;
     }
 
     /**
@@ -240,10 +236,11 @@ export class SelectFieldPopup extends React.Component<any, any> {
         }
 
         const valueNoCase = val.toLowerCase();
-        let searchResults = this.props.options.filter((opt) => (
-            opt[this.props.searchKey].toLowerCase().substr(0, val.length) === valueNoCase ||
-                opt[this.props.searchKey].toLowerCase().indexOf(valueNoCase) >= 0
-        ));
+        let searchResults = this.props.options.filter(
+            (opt) =>
+                opt[this.props.searchKey].toLowerCase().substr(0, val.length) === valueNoCase ||
+                opt[this.props.searchKey].toLowerCase().indexOf(valueNoCase) >= 0,
+        );
 
         if (this.props.multiLevel && this.props.value) {
             searchResults = differenceBy(searchResults, this.props.value, this.props.valueKey);
@@ -269,31 +266,27 @@ export class SelectFieldPopup extends React.Component<any, any> {
                 onKeyDown={this.onKeyDown}
                 popupContainer={this.props.popupContainer}
             >
-                <div className="Select__popup" ref={(node) => this.dom.root = node}>
+                <div className="Select__popup" ref={(node) => (this.dom.root = node)}>
                     <div className="Select__popup__search">
                         <SearchBar
                             onSearch={this.filterSearchResults}
                             minLength={1}
                             extendOnOpen={true}
-                            ref={(node) => this.dom.search = node}
+                            ref={(node) => (this.dom.search = node)}
                             allowCollapsed={false}
                         />
                     </div>
-                    <ul className="Select__popup__list" ref={(node) => this.dom.list = node}>
+                    <ul className="Select__popup__list" ref={(node) => (this.dom.list = node)}>
                         {this.state.filteredList.map((opt, index) => (
                             <li
                                 key={index}
-                                className={classNames(
-                                    'Select__popup__item',
-                                    {'Select__popup__item--active': index === this.state.activeOptionIndex},
-                                )}
+                                className={classNames('Select__popup__item', {
+                                    'Select__popup__item--active': index === this.state.activeOptionIndex,
+                                })}
                             >
                                 <button
                                     type="button"
-                                    onClick={this.onSelect.bind(
-                                        this,
-                                        this.state.filteredList[index],
-                                    )}
+                                    onClick={this.onSelect.bind(this, this.state.filteredList[index])}
                                 >
                                     <span>{get(opt, this.props.labelKey)}</span>
                                 </button>
@@ -319,56 +312,48 @@ export class SelectFieldPopup extends React.Component<any, any> {
                 onKeyDown={this.onKeyDown}
                 popupContainer={this.props.popupContainer}
             >
-                <div className="Select__popup" ref={(node) => this.dom.root = node}>
+                <div className="Select__popup" ref={(node) => (this.dom.root = node)}>
                     <div className="Select__popup__search">
-                        { this.state.currentParent && (
+                        {(this.state.currentParent && (
                             <div className="search-handler">
                                 <i className="backlink" onClick={this.popParent} />
                                 <button
                                     type="button"
-                                    className={classNames(
-                                        'Select__popup__category',
-                                        {'Select__popup__item--active': this.state.activeOptionIndex === -1},
-                                    )}
+                                    className={classNames('Select__popup__category', {
+                                        'Select__popup__item--active': this.state.activeOptionIndex === -1,
+                                    })}
                                     onClick={this.chooseEntireCategory}
                                 >
                                     <div className="Select__popup__parent">
                                         {get(this.state.currentParent, this.props.labelKey)}
                                     </div>
-                                    <div className="Select__popup__parent--choose">
-                                        Choose entire category
-                                    </div>
+                                    <div className="Select__popup__parent--choose">Choose entire category</div>
                                 </button>
                             </div>
-                        ) || (
+                        )) || (
                             <SearchBar
                                 onSearch={this.filterSearchResults}
                                 minLength={1}
                                 extendOnOpen={true}
-                                ref={(node) => this.dom.search = node}
+                                ref={(node) => (this.dom.search = node)}
                                 allowCollapsed={false}
                             />
                         )}
                     </div>
-                    <ul className="dropdown-menu Select__popup__list" ref={(node) => this.dom.list = node}>
+                    <ul className="dropdown-menu Select__popup__list" ref={(node) => (this.dom.list = node)}>
                         {this.state.filteredList.map((opt, index) => (
                             <li
                                 key={index}
-                                className={classNames(
-                                    'Select__popup__item',
-                                    {'Select__popup__item--active': index === this.state.activeOptionIndex},
-                                )}
+                                className={classNames('Select__popup__item', {
+                                    'Select__popup__item--active': index === this.state.activeOptionIndex,
+                                })}
                             >
                                 <button
                                     type="button"
-                                    onClick={this.onMutiLevelSelect.bind(
-                                        this,
-                                        this.state.filteredList[index],
-                                        false,
-                                    )}
+                                    onClick={this.onMutiLevelSelect.bind(this, this.state.filteredList[index], false)}
                                 >
                                     <span>{get(opt, this.props.labelKey)}</span>
-                                    { !this.state.search && this.isOptionAParent(opt) && (
+                                    {!this.state.search && this.isOptionAParent(opt) && (
                                         <i className="icon-chevron-right-thin" />
                                     )}
                                 </button>
@@ -393,10 +378,12 @@ SelectFieldPopup.propTypes = {
     valueKey: PropTypes.string,
     searchKey: PropTypes.string,
     multiLevel: PropTypes.bool,
-    value: PropTypes.arrayOf(PropTypes.shape({
-        label: PropTypes.string,
-        value: PropTypes.object,
-    })),
+    value: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.object,
+        }),
+    ),
     target: PropTypes.string,
     popupContainer: PropTypes.func,
 };

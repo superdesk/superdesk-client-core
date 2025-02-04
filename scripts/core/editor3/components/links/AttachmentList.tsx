@@ -33,11 +33,11 @@ export class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
                         <h4>{attachment.title}</h4>
                     </div>
                     <div className="sd-list-item__row">
-                        <h5>{attachment.filename} ({filesize})</h5>
+                        <h5>
+                            {attachment.filename} ({filesize})
+                        </h5>
                     </div>
-                    <div className="sd-list-item__row description">
-                        {attachment.description}
-                    </div>
+                    <div className="sd-list-item__row description">{attachment.description}</div>
                 </div>
             </div>
         );
@@ -64,25 +64,22 @@ export class AttachmentList extends React.PureComponent<IProps> {
                     if (publicAttachments.length > 0) {
                         return (
                             <div>
-                                {
-                                    publicAttachments
-                                        .map((attachment) => (
-                                            <AttachmentItem
-                                                key={`attachment-${attachment._id}`}
-                                                attachment={attachment}
-                                                selected={attachment._id === this.props.selected}
-                                                onClick={this.props.onClick}
-                                            />
-                                        ))
-                                }
+                                {publicAttachments.map((attachment) => (
+                                    <AttachmentItem
+                                        key={`attachment-${attachment._id}`}
+                                        attachment={attachment}
+                                        selected={attachment._id === this.props.selected}
+                                        onClick={this.props.onClick}
+                                    />
+                                ))}
                             </div>
                         );
                     } else {
                         return (
                             <p style={{padding: 20, margin: 0}}>
                                 {gettext(
-                                    'There are no public attachments yet. '
-                                    + 'Upload some first using Attachments widget.',
+                                    'There are no public attachments yet. ' +
+                                        'Upload some first using Attachments widget.',
                                 )}
                             </p>
                         );

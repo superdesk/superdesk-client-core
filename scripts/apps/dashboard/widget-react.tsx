@@ -2,11 +2,7 @@ import {widgetState} from 'apps/authoring-react/widget-persistance-hoc';
 import {closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {noop} from 'lodash';
 import React, {RefObject} from 'react';
-import {
-    IArticle,
-    IArticleSideWidget,
-    IArticleSideWidgetComponentType,
-} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api';
 
 interface IProps {
     widget: {
@@ -56,8 +52,10 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 initialState={(() => {
                     const localStorageWidgetState = JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
 
-                    if (localStorageWidgetState?.id
-                        === (this.props.widget.active?._id ?? this.props.widget.pinnedWidget._id)) {
+                    if (
+                        localStorageWidgetState?.id ===
+                        (this.props.widget.active?._id ?? this.props.widget.pinnedWidget._id)
+                    ) {
                         const initialState = localStorageWidgetState?.initialState;
 
                         localStorage.removeItem('SIDE_WIDGET');
@@ -75,19 +73,17 @@ export class WidgetReact extends React.PureComponent<IProps> {
                         return undefined;
                     }
                 })()}
-
                 // below props are only relevant for authoring-react
                 readOnly={undefined}
                 contentProfile={undefined}
                 fieldsData={undefined}
                 onFieldsDataChange={noop}
                 handleUnsavedChanges={undefined}
-
                 // only used in widgets compatible with authoring-react
                 authoringStorage={null}
                 fieldsAdapter={null}
                 storageAdapter={null}
-                getLatestArticle={() => ({} as IArticle)}
+                getLatestArticle={() => ({}) as IArticle}
             />
         );
     }

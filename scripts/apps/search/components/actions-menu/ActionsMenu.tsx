@@ -25,8 +25,7 @@ export class ActionsMenu extends React.PureComponent<IProps> {
         closeActionsMenu(this.props.item._id);
 
         // eslint-disable-next-line react/no-find-dom-node
-        const icon = (ReactDOM.findDOMNode(this) as HTMLElement)
-            .getElementsByClassName('icon-dots-vertical')[0];
+        const icon = (ReactDOM.findDOMNode(this) as HTMLElement).getElementsByClassName('icon-dots-vertical')[0];
 
         openActionsMenu(
             <MenuItems

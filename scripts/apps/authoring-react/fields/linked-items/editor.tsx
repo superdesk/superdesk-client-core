@@ -32,13 +32,11 @@ function getItemTemplate(that: Editor) {
 
             return (
                 <Spacer h gap="8" noWrap alignItems="center">
-                    {
-                        !readOnly && (
-                            <div>
-                                <DragHandle />
-                            </div>
-                        )
-                    }
+                    {!readOnly && (
+                        <div>
+                            <DragHandle />
+                        </div>
+                    )}
 
                     <div style={{flexGrow: 1}}>
                         <ArticleItemConcise
@@ -60,19 +58,17 @@ function getItemTemplate(that: Editor) {
                         />
                     </div>
 
-                    {
-                        !readOnly && (
-                            <div>
-                                <IconButton
-                                    icon="remove-sign"
-                                    ariaValue={gettext('Remove')}
-                                    onClick={() => {
-                                        removeItem(item._id);
-                                    }}
-                                />
-                            </div>
-                        )
-                    }
+                    {!readOnly && (
+                        <div>
+                            <IconButton
+                                icon="remove-sign"
+                                ariaValue={gettext('Remove')}
+                                onClick={() => {
+                                    removeItem(item._id);
+                                }}
+                            />
+                        </div>
+                    )}
                 </Spacer>
             );
         }
@@ -92,36 +88,32 @@ export class Editor extends React.PureComponent<IProps> {
     removeItem(idToRemove: IArticle['_id']) {
         const linkedItems = this.props.value ?? [];
 
-        this.props.onChange(
-            linkedItems.filter(({id}) => id !== idToRemove),
-        );
+        this.props.onChange(linkedItems.filter(({id}) => id !== idToRemove));
     }
 
     render() {
         const Container = this.props.container;
-        const linkedItems = (this.props.value ?? []);
+        const linkedItems = this.props.value ?? [];
         const linkedItemIds = linkedItems.map(({id}) => id);
         const {readOnly} = this.props;
 
-        const miniToolbar = readOnly
-            ? undefined
-            : (
-                <ContentCreateDropdown
-                    customButton={RelatedItemCreateNewButton}
-                    onCreate={(articles) => {
-                        this.props.onChange(linkedItems.concat(articles.map(({_id, type}) => ({id: _id, type}))));
+        const miniToolbar = readOnly ? undefined : (
+            <ContentCreateDropdown
+                customButton={RelatedItemCreateNewButton}
+                onCreate={(articles) => {
+                    this.props.onChange(linkedItems.concat(articles.map(({_id, type}) => ({id: _id, type}))));
 
-                        const createdTextItem = articles.find(({type}) => type === 'text');
+                    const createdTextItem = articles.find(({type}) => type === 'text');
 
-                        if (createdTextItem != null && applicationState.articleInEditMode != null) {
-                            sdApi.localStorage.setItem(
-                                `open-item-after-related-closed--${createdTextItem._id}`,
-                                applicationState.articleInEditMode,
-                            );
-                        }
-                    }}
-                />
-            );
+                    if (createdTextItem != null && applicationState.articleInEditMode != null) {
+                        sdApi.localStorage.setItem(
+                            `open-item-after-related-closed--${createdTextItem._id}`,
+                            applicationState.articleInEditMode,
+                        );
+                    }
+                }}
+            />
+        );
 
         return (
             <Container miniToolbar={miniToolbar}>
@@ -135,27 +127,25 @@ export class Editor extends React.PureComponent<IProps> {
                         }
                     }}
                 >
-                    {
-                        linkedItemIds.length > 0 && (
-                            <WithArticles ids={linkedItemIds}>
-                                {(items) => (
-                                    <WithSortable
-                                        items={items}
-                                        itemTemplate={this.itemTemplate}
-                                        getId={(item) => item._id}
-                                        options={{
-                                            shouldCancelStart: () => readOnly,
-                                            onSortEnd: ({oldIndex, newIndex}) => {
-                                                this.props.onChange(arrayMove(linkedItems, oldIndex, newIndex));
-                                            },
-                                            distance: 10,
-                                            helperClass: 'dragging-in-progress',
-                                        }}
-                                    />
-                                )}
-                            </WithArticles>
-                        )
-                    }
+                    {linkedItemIds.length > 0 && (
+                        <WithArticles ids={linkedItemIds}>
+                            {(items) => (
+                                <WithSortable
+                                    items={items}
+                                    itemTemplate={this.itemTemplate}
+                                    getId={(item) => item._id}
+                                    options={{
+                                        shouldCancelStart: () => readOnly,
+                                        onSortEnd: ({oldIndex, newIndex}) => {
+                                            this.props.onChange(arrayMove(linkedItems, oldIndex, newIndex));
+                                        },
+                                        distance: 10,
+                                        helperClass: 'dragging-in-progress',
+                                    }}
+                                />
+                            )}
+                        </WithArticles>
+                    )}
                 </DropZone3>
             </Container>
         );

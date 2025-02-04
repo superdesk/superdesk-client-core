@@ -64,7 +64,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
             onSubscriptionsChange: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-manage-subscribers.html'),
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             const getDefaults = (): IModel => ({
                 userSubscribers: [],
                 subscriptionInCreateOrEditMode: null,
@@ -85,11 +85,9 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                     scope.savedSearch,
                     user._id,
                     (deskId: IDesk['_id']) => desks.deskLookup[deskId],
-                )
-                && (
-                    user.display_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase())
-                )
-                && (scope.savedSearch.is_global === true || user._id === scope.savedSearch.user);
+                ) &&
+                user.display_name.toLowerCase().includes(scope.wrapper.newSubscriptionFilterText.toLowerCase()) &&
+                (scope.savedSearch.is_global === true || user._id === scope.savedSearch.user);
 
             scope.desksFilter = (desk: IDesk) =>
                 scope.savedSearch.is_global === true &&
@@ -148,21 +146,19 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                         (subscription) => subscription.user === subscriptionInCreateOrEditMode.user,
                     );
 
-                    nextUserSubscriptions = (
-                        userAlreadySubscribed
-                            ? user_subscriptions.map(
-                                (subscription) => subscription.user === subscriptionInCreateOrEditMode.user
-                                    ? {
+                    nextUserSubscriptions = userAlreadySubscribed
+                        ? user_subscriptions.map((subscription) =>
+                              subscription.user === subscriptionInCreateOrEditMode.user
+                                  ? {
                                         ...subscriptionInCreateOrEditMode,
                                         scheduling: scope.wrapper.currentlySelectedInterval,
                                     }
-                                    : subscription,
-                            )
-                            : user_subscriptions.concat({
-                                ...subscriptionInCreateOrEditMode,
-                                scheduling: scope.wrapper.currentlySelectedInterval,
-                            })
-                    );
+                                  : subscription,
+                          )
+                        : user_subscriptions.concat({
+                              ...subscriptionInCreateOrEditMode,
+                              scheduling: scope.wrapper.currentlySelectedInterval,
+                          });
                 }
 
                 let nextDeskSubscriptions = scope.savedSearch.subscribers.desk_subscriptions;
@@ -172,21 +168,19 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                         (subscription) => subscription.desk === subscriptionInCreateOrEditMode.desk,
                     );
 
-                    nextDeskSubscriptions = (
-                        deskAlreadySubscribed
-                            ? desk_subscriptions.map(
-                                (subscription) => subscription.desk === subscriptionInCreateOrEditMode.desk
-                                    ? {
+                    nextDeskSubscriptions = deskAlreadySubscribed
+                        ? desk_subscriptions.map((subscription) =>
+                              subscription.desk === subscriptionInCreateOrEditMode.desk
+                                  ? {
                                         ...subscriptionInCreateOrEditMode,
                                         scheduling: scope.wrapper.currentlySelectedInterval,
                                     }
-                                    : subscription,
-                            )
-                            : desk_subscriptions.concat({
-                                ...subscriptionInCreateOrEditMode,
-                                scheduling: scope.wrapper.currentlySelectedInterval,
-                            })
-                    );
+                                  : subscription,
+                          )
+                        : desk_subscriptions.concat({
+                              ...subscriptionInCreateOrEditMode,
+                              scheduling: scope.wrapper.currentlySelectedInterval,
+                          });
                 }
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
@@ -195,11 +189,10 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                     desk_subscriptions: nextDeskSubscriptions,
                 };
 
-                updateSubscribers(scope.savedSearch, nextSubscribers, api)
-                    .then((newSavedSearch: ISavedSearch) => {
-                        scope.onSubscriptionsChange(newSavedSearch);
-                        scope.backToList();
-                    });
+                updateSubscribers(scope.savedSearch, nextSubscribers, api).then((newSavedSearch: ISavedSearch) => {
+                    scope.onSubscriptionsChange(newSavedSearch);
+                    scope.backToList();
+                });
             };
 
             scope.handleIntervalChange = (cronExpression: CronTimeInterval) => {
@@ -210,28 +203,16 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                 scope.wrapper.subscriptionInCreateOrEditMode.scheduling !== scope.wrapper.currentlySelectedInterval;
 
             scope.unsubscribeUser = (user: IUser) =>
-                modal.confirm(
-                    gettext('Are you sure to remove this subscription?'),
-                    gettext('Unsubscribe user'),
-                )
-                    .then(() =>
-                        unsubscribeUser(scope.savedSearch, user._id, api),
-                    )
-                    .then((updatedSearch: ISavedSearch) =>
-                        scope.onSubscriptionsChange(updatedSearch),
-                    );
+                modal
+                    .confirm(gettext('Are you sure to remove this subscription?'), gettext('Unsubscribe user'))
+                    .then(() => unsubscribeUser(scope.savedSearch, user._id, api))
+                    .then((updatedSearch: ISavedSearch) => scope.onSubscriptionsChange(updatedSearch));
 
             scope.unsubscribeDesk = (desk: IDesk) =>
-                modal.confirm(
-                    gettext('Are you sure to remove this subscription?'),
-                    gettext('Unsubscribe desk'),
-                )
-                    .then(() =>
-                        unsubscribeDesk(scope.savedSearch, desk._id, api),
-                    )
-                    .then((updatedSearch) =>
-                        scope.onSubscriptionsChange(updatedSearch),
-                    );
+                modal
+                    .confirm(gettext('Are you sure to remove this subscription?'), gettext('Unsubscribe desk'))
+                    .then(() => unsubscribeDesk(scope.savedSearch, desk._id, api))
+                    .then((updatedSearch) => scope.onSubscriptionsChange(updatedSearch));
 
             scope.editUserSubscription = (user: IUser) => {
                 scope.wrapper.subscriptionInCreateOrEditMode = scope.savedSearch.subscribers.user_subscriptions.find(
@@ -245,49 +226,38 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                 );
             };
 
-            scope.$watch(
-                nameof<IScope>('savedSearch')
-                + '.'
-                + nameof<ISavedSearch>('subscribers'),
-                () => {
-                    if (
-                        scope.savedSearch != null
-                    ) {
-                        scope.wrapper.modalOpen = true;
-                        if (scope.savedSearch.subscribers == null) {
-                            scope.savedSearch.subscribers = {
-                                user_subscriptions: [],
-                                desk_subscriptions: [],
-                            };
-                        }
-
-                        userList.getAll().then((users: Array<IUser>) => {
-                            scope.wrapper.users = users;
-                            scope.wrapper.userLookup = users.reduce((lookUpObj: IModel['userLookup'], user) => {
-                                lookUpObj[user._id] = user;
-                                return lookUpObj;
-                            }, {});
-
-                            scope.wrapper.userSubscribers = scope.savedSearch.subscribers.user_subscriptions.map(
-                                (subscription) => users.find((user) => user._id === subscription.user),
-                            );
-                        });
-                    } else {
-                        scope.wrapper = getDefaults();
+            scope.$watch(nameof<IScope>('savedSearch') + '.' + nameof<ISavedSearch>('subscribers'), () => {
+                if (scope.savedSearch != null) {
+                    scope.wrapper.modalOpen = true;
+                    if (scope.savedSearch.subscribers == null) {
+                        scope.savedSearch.subscribers = {
+                            user_subscriptions: [],
+                            desk_subscriptions: [],
+                        };
                     }
-                });
 
-            scope.$watch(
-                nameof<IScope>('wrapper')
-                + '.'
-                + nameof<IModel>('modalOpen'),
-                () => {
-                    // when modal is closed via ESC key, stop managing subscription so it can be started again.
-                    if (!scope.wrapper.modalOpen) {
-                        scope.setIsManagingSubscriptions(false);
-                    }
-                },
-            );
+                    userList.getAll().then((users: Array<IUser>) => {
+                        scope.wrapper.users = users;
+                        scope.wrapper.userLookup = users.reduce((lookUpObj: IModel['userLookup'], user) => {
+                            lookUpObj[user._id] = user;
+                            return lookUpObj;
+                        }, {});
+
+                        scope.wrapper.userSubscribers = scope.savedSearch.subscribers.user_subscriptions.map(
+                            (subscription) => users.find((user) => user._id === subscription.user),
+                        );
+                    });
+                } else {
+                    scope.wrapper = getDefaults();
+                }
+            });
+
+            scope.$watch(nameof<IScope>('wrapper') + '.' + nameof<IModel>('modalOpen'), () => {
+                // when modal is closed via ESC key, stop managing subscription so it can be started again.
+                if (!scope.wrapper.modalOpen) {
+                    scope.setIsManagingSubscriptions(false);
+                }
+            });
         },
     };
 }

@@ -4,11 +4,13 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 .login-screen {
     position: fixed;
     z-index: 9000;
-    inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0; inset-block-start: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    inset-block-start: 0;
     background-color: var(--sd-colour-bg--02);
     .logo-handler {
         margin-block-end: 60px;
@@ -18,13 +20,15 @@
         height: 600px;
         padding: 0 15px;
         position: absolute;
-        inset-block-start: 50%; margin-block-start: -300px;
-        inset-inline-start: 50%; margin-inline-start: -125px;
+        inset-block-start: 50%;
+        margin-block-start: -300px;
+        inset-inline-start: 50%;
+        margin-inline-start: -125px;
         padding-block-start: 80px;
 
         .session-error {
             position: absolute;
-            inset-block-start:0;
+            inset-block-start: 0;
             width: 240px;
             padding-block-start: 10px;
             padding-block-end: 10px;
@@ -33,7 +37,7 @@
             font-size: 12px;
             background-color: hsl(38, 86%, 40%);
             text-align: center;
-            margin:0;
+            margin: 0;
         }
 
         .form-handler {
@@ -47,7 +51,9 @@
                         color: $white !important;
                         border-radius: 4px;
                         border: none;
-                        box-shadow: inset 0 1px 0 0 hsla(0, 0%, 0%, 0.8), 0 1px 0 0 hsla(214, 13%, 60%, 0.4);
+                        box-shadow:
+                            inset 0 1px 0 0 hsla(0, 0%, 0%, 0.8),
+                            0 1px 0 0 hsla(214, 13%, 60%, 0.4);
                         font-size: 14px;
                         padding-inline-start: 12px;
                         &:autofill {
@@ -56,7 +62,9 @@
                             border: 1px solid var(--sd-colour-line--light) !important;
                         }
                         &:focus {
-                            box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 4px var(--sd-colour-interactive--alpha-20) !important;
+                            box-shadow:
+                                inset 0 0 0 1px var(--sd-colour-interactive--alpha-50),
+                                inset 0 0 0 4px var(--sd-colour-interactive--alpha-20) !important;
                         }
                     }
                     input:-webkit-autofill,
@@ -113,7 +121,7 @@
                 .error {
                     background: #9d0202;
                     padding: 12px;
-                    color:#fff;
+                    color: #fff;
                     font-size: 12px;
                     line-height: 18px;
                     border-radius: 4px;
@@ -160,48 +168,55 @@
         }
     }
 
-
     .spinner {
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      text-align: center;
-      inset-inline-end: 9px;
-      inset-block-start: 6px;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        text-align: center;
+        inset-inline-end: 9px;
+        inset-block-start: 6px;
 
-      -webkit-animation: rotate 2.0s infinite linear;
-      animation: rotate 2.0s infinite linear;
+        -webkit-animation: rotate 2s infinite linear;
+        animation: rotate 2s infinite linear;
     }
 
-    .dot1, .dot2 {
-      width: 60%;
-      height: 60%;
-      display: inline-block;
-      position: absolute;
-      inset-block-start: 0;
-      background-color: #fff;
-      border-radius: 100%;
+    .dot1,
+    .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        inset-block-start: 0;
+        background-color: #fff;
+        border-radius: 100%;
 
-      -webkit-animation: bounce 2.0s infinite ease-in-out;
-      animation: bounce 2.0s infinite ease-in-out;
+        -webkit-animation: bounce 2s infinite ease-in-out;
+        animation: bounce 2s infinite ease-in-out;
     }
 
     .dot2 {
-      inset-block-start: auto;
-      inset-block-end: 0px;
-      -webkit-animation-delay: -1.0s;
-      animation-delay: -1.0s;
+        inset-block-start: auto;
+        inset-block-end: 0px;
+        -webkit-animation-delay: -1s;
+        animation-delay: -1s;
     }
 
-    @keyframes rotate { 100% { transform: rotate(360deg); -webkit-transform: rotate(360deg) }}
+    @keyframes rotate {
+        100% {
+            transform: rotate(360deg);
+            -webkit-transform: rotate(360deg);
+        }
+    }
 
     @keyframes bounce {
-      0%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
-      } 50% {
-        transform: scale(1.0);
-        -webkit-transform: scale(1.0);
-      }
+        0%,
+        100% {
+            transform: scale(0);
+            -webkit-transform: scale(0);
+        }
+        50% {
+            transform: scale(1);
+            -webkit-transform: scale(1);
+        }
     }
 }

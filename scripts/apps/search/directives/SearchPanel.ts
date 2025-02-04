@@ -19,24 +19,9 @@ import {appConfig} from 'appConfig';
  *   filters (so-called "aggregations" in Elastic's terms).
  */
 
-SearchPanel.$inject = [
-    '$location',
-    'desks',
-    'privileges',
-    'asset',
-    'metadata',
-    '$rootScope',
-    'session',
-];
+SearchPanel.$inject = ['$location', 'desks', 'privileges', 'asset', 'metadata', '$rootScope', 'session'];
 
-export function SearchPanel($location,
-    desks,
-    privileges,
-    asset,
-    metadata,
-    $rootScope,
-    session,
-) {
+export function SearchPanel($location, desks, privileges, asset, metadata, $rootScope, session) {
     desks.initialize();
     return {
         require: '^sdSearchContainer',
@@ -49,7 +34,7 @@ export function SearchPanel($location,
             toggleRepo: '=',
             providerType: '=',
         },
-        link: function(scope, element, attrs, controller) {
+        link: function (scope, element, attrs, controller) {
             scope.config = appConfig;
             scope.toggleFiltersPane = controller.toggleFiltersPane;
             scope.sTab = 'advancedSearch';
@@ -84,11 +69,11 @@ export function SearchPanel($location,
                 scope.wrapper.edit = cloneDeep(scope.editingSearch || {});
             });
 
-            scope.changeTab = function(tabName) {
+            scope.changeTab = function (tabName) {
                 scope.sTab = tabName;
             };
 
-            scope.display = function(tabName) {
+            scope.display = function (tabName) {
                 scope.innerTab = tabName;
                 if (tabName === 'filters') {
                     $rootScope.aggregations = 1;
@@ -98,23 +83,27 @@ export function SearchPanel($location,
                 }
             };
 
-            scope.searching = function() {
+            scope.searching = function () {
                 return !_.isEmpty($location.search());
             };
 
-            scope.closeFacets = function() {
+            scope.closeFacets = function () {
                 scope.toggleFiltersPane();
                 $rootScope.aggregations = 0;
             };
 
-            scope.$watch('tags.currentSearch', (currentSearch) => {
-                scope.showSaveSearch = !_.isEmpty(currentSearch);
-            }, true);
+            scope.$watch(
+                'tags.currentSearch',
+                (currentSearch) => {
+                    scope.showSaveSearch = !_.isEmpty(currentSearch);
+                },
+                true,
+            );
 
             /*
              * Checks if the user is Admin or Not.
              */
-            scope.isAdmin = function() {
+            scope.isAdmin = function () {
                 return session.identity.user_type === 'administrator';
             };
         },

@@ -8,15 +8,14 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
             ruleHandler: '=',
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-general.html',
-        link: function(scope) {
+        link: function (scope) {
             scope.dayLookup = weekdays;
             scope.macroLookup = {};
 
-            desks.initialize()
-                .then(() => {
-                    scope.deskLookup = desks.deskLookup;
-                    scope.stageLookup = desks.stageLookup;
-                });
+            desks.initialize().then(() => {
+                scope.deskLookup = desks.deskLookup;
+                scope.stageLookup = desks.stageLookup;
+            });
 
             macros.get().then((_macros) => {
                 _.transform(_macros, (lookup, macro: any, idx) => {

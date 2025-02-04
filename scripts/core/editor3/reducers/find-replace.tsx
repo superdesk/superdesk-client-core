@@ -6,28 +6,30 @@ import {onChange} from './editor3';
 import {escapeRegExp} from 'core/utils';
 import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
 
-interface IDiff { [s: string]: string; }
+interface IDiff {
+    [s: string]: string;
+}
 
 const findReplace = (state = {}, action) => {
     switch (action.type) {
-    case 'HIGHLIGHTS_FIND_NEXT':
-        return findNext(state);
-    case 'HIGHLIGHTS_FIND_PREV':
-        return findPrev(state);
-    case 'HIGHLIGHTS_REPLACE':
-        return replaceHighlight(state, action.payload);
-    case 'HIGHLIGHTS_REPLACE_MULTIPLE':
-        return replaceMultipleHighlights(state, action.payload);
-    case 'HIGHLIGHTS_REPLACE_ALL':
-        return replaceHighlight(state, action.payload, true);
-    case 'PATCH_HTML_ON_EDITOR_STATE':
-        return patchHtmloNEditorState(state, action.payload);
-    case 'HIGHLIGHTS_RENDER':
-        return render(state);
-    case 'HIGHLIGHTS_CRITERIA':
-        return setCriteria(state, action.payload);
-    default:
-        return state;
+        case 'HIGHLIGHTS_FIND_NEXT':
+            return findNext(state);
+        case 'HIGHLIGHTS_FIND_PREV':
+            return findPrev(state);
+        case 'HIGHLIGHTS_REPLACE':
+            return replaceHighlight(state, action.payload);
+        case 'HIGHLIGHTS_REPLACE_MULTIPLE':
+            return replaceMultipleHighlights(state, action.payload);
+        case 'HIGHLIGHTS_REPLACE_ALL':
+            return replaceHighlight(state, action.payload, true);
+        case 'PATCH_HTML_ON_EDITOR_STATE':
+            return patchHtmloNEditorState(state, action.payload);
+        case 'HIGHLIGHTS_RENDER':
+            return render(state);
+        case 'HIGHLIGHTS_CRITERIA':
+            return setCriteria(state, action.payload);
+        default:
+            return state;
     }
 };
 
@@ -198,11 +200,7 @@ const render = (state) => {
     const newContent = forEachMatch(content, reg, caseSensitive, (i, selection, block, _newContent) => {
         changedContent = true;
 
-        return Modifier.applyInlineStyle(
-            _newContent,
-            selection,
-            i === index ? 'HIGHLIGHT_STRONG' : 'HIGHLIGHT',
-        );
+        return Modifier.applyInlineStyle(_newContent, selection, i === index ? 'HIGHLIGHT_STRONG' : 'HIGHLIGHT');
     });
 
     if (changedContent) {

@@ -8,13 +8,7 @@ import classNames from 'classnames';
  * @description Stretch Bar of a Sub Nav bar
  */
 export const StretchBar: React.StatelessComponent<any> = ({children, className, right}) => (
-    <div
-        className={classNames(
-            'subnav__stretch-bar',
-            {'subnav__stretch-bar--right': right},
-            className,
-        )}
-    >
+    <div className={classNames('subnav__stretch-bar', {'subnav__stretch-bar--right': right}, className)}>
         {children}
     </div>
 );

@@ -33,7 +33,8 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
 
             othersGrouped.forEach((tags, groupId) => {
                 if (tags != null && groupId != null) {
-                    allGrouped = allGrouped.set(groupId,
+                    allGrouped = allGrouped.set(
+                        groupId,
                         <div>
                             <TagListComponent
                                 savedTags={savedTags}
@@ -48,43 +49,43 @@ export function getHeaderAutoTaggingComponent(superdesk: ISuperdesk) {
             });
 
             if (entitiesGroupedAndSorted.size > 0) {
-                allGrouped = allGrouped.set('entities',
+                allGrouped = allGrouped.set(
+                    'entities',
                     <div>
-                        {entitiesGroupedAndSorted.map((tags, key) => (
-                            <div key={key}>
-                                <div
-                                    className="form-label"
-                                    style={{display: 'block'}}
-                                >
-                                    {groupLabels.get(key).plural}
+                        {entitiesGroupedAndSorted
+                            .map((tags, key) => (
+                                <div key={key}>
+                                    <div className="form-label" style={{display: 'block'}}>
+                                        {groupLabels.get(key).plural}
+                                    </div>
+                                    <TagListComponent
+                                        savedTags={savedTags}
+                                        tags={tags.toMap()}
+                                        readOnly={true}
+                                        inline={true}
+                                        onRemove={() => true}
+                                    />
                                 </div>
-                                <TagListComponent
-                                    savedTags={savedTags}
-                                    tags={tags.toMap()}
-                                    readOnly={true}
-                                    inline={true}
-                                    onRemove={() => true}
-                                />
-                            </div>
-                        )).toArray()}
+                            ))
+                            .toArray()}
                     </div>,
                 );
             }
 
             const allGroupedAndSortedByConfig = allGrouped
                 .filter((_, key) => hasConfig(key, this.iMatricsFields.others))
-                .sortBy((_, key) => this.iMatricsFields.others[key].order,
-                    (a, b) => a - b);
+                .sortBy(
+                    (_, key) => this.iMatricsFields.others[key].order,
+                    (a, b) => a - b,
+                );
 
-            const allGroupedAndSortedNotInConfig = allGrouped
-                .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
-
-            const allGroupedAndSorted = allGroupedAndSortedByConfig
-                .concat(allGroupedAndSortedNotInConfig);
-
-            return (
-                allGroupedAndSorted.map((item) => item).toArray()
+            const allGroupedAndSortedNotInConfig = allGrouped.filter(
+                (_, key) => !hasConfig(key, this.iMatricsFields.others),
             );
+
+            const allGroupedAndSorted = allGroupedAndSortedByConfig.concat(allGroupedAndSortedNotInConfig);
+
+            return allGroupedAndSorted.map((item) => item).toArray();
         }
     };
 }

@@ -5,7 +5,7 @@ export function ItemRendition() {
             item: '=',
             rendition: '@',
         },
-        link: function(scope, elem, attrs) {
+        link: function (scope, elem, attrs) {
             scope.$watch('item.renditions[rendition].href', (href) => {
                 var figure = elem.find('figure'),
                     oldImg = figure.find('img').css('opacity', 0.5);
@@ -13,7 +13,7 @@ export function ItemRendition() {
                 if (href) {
                     var img = new Image();
 
-                    img.onload = function() {
+                    img.onload = function () {
                         if (oldImg.length) {
                             oldImg.replaceWith(img);
                         } else {
@@ -27,7 +27,7 @@ export function ItemRendition() {
                         }
                     };
 
-                    img.onerror = function() {
+                    img.onerror = function () {
                         figure.html('');
                     };
 

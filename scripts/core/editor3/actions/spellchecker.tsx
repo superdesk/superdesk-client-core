@@ -22,7 +22,7 @@ export function setSpellcheckerStatus(enabled: boolean, abortSignal: AbortSignal
 }
 
 export function reloadSpellcheckerWarnings(abortSignal: AbortSignal) {
-    return function(dispatch, getState) {
+    return function (dispatch, getState) {
         const state: IEditorStore = getState();
         const spellchecker = getSpellchecker(state.spellchecking.language);
 
@@ -30,13 +30,11 @@ export function reloadSpellcheckerWarnings(abortSignal: AbortSignal) {
             return;
         }
 
-        getSpellcheckWarningsByBlock(
-            spellchecker,
-            getState().editorState,
-            abortSignal,
-        ).then((spellcheckWarningsByBlock) => {
-            dispatch(applySpellcheck(spellcheckWarningsByBlock));
-        });
+        getSpellcheckWarningsByBlock(spellchecker, getState().editorState, abortSignal).then(
+            (spellcheckWarningsByBlock) => {
+                dispatch(applySpellcheck(spellcheckWarningsByBlock));
+            },
+        );
     };
 }
 

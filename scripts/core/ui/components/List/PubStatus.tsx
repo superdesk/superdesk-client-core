@@ -37,18 +37,11 @@ export const PubStatus: React.StatelessComponent<any> = ({item, isPublic}) => {
     return (
         <Column>
             {title && (
-                <OverlayTrigger
-                    placement="right"
-                    overlay={(
-                        <Tooltip id="badge_pub_status">
-                            {title}
-                        </Tooltip>
-                    )}
-                >
+                <OverlayTrigger placement="right" overlay={<Tooltip id="badge_pub_status">{title}</Tooltip>}>
                     {badge}
                 </OverlayTrigger>
             )}
-            {!title && (badge)}
+            {!title && badge}
         </Column>
     );
 };

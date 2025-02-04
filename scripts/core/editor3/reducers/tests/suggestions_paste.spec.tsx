@@ -4,9 +4,7 @@ import * as Setup from './suggestion_setup';
 describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
     it('should insert text and add a new suggestion when text is pasted', () => {
         const rawContentPaste = {
-            blocks: [
-                {key: '5vu4i', text: 'pasted text'},
-            ],
+            blocks: [{key: '5vu4i', text: 'pasted text'}],
             entityMap: {},
         };
         const pastedContent = Setup.getInitiaContent(rawContentPaste);
@@ -59,9 +57,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
         };
         const pastedContent = Setup.getInitiaContent(rawContentPaste);
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph1'}],
             entityMap: {},
         };
         const date = new Date();
@@ -108,9 +104,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
 
     it('should delete selected text and insert new text when text is pasted', () => {
         const rawContentPaste = {
-            blocks: [
-                {key: '4vu4i', text: 'pasted text'},
-            ],
+            blocks: [{key: '4vu4i', text: 'pasted text'}],
             entityMap: {},
         };
         const pastedContent = Setup.getInitiaContent(rawContentPaste);
@@ -163,9 +157,7 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
 
     it('should delete multiblock selected text and insert new text when text is pasted', () => {
         const rawContentPaste = {
-            blocks: [
-                {key: '4vu4i', text: 'pasted text'},
-            ],
+            blocks: [{key: '4vu4i', text: 'pasted text'}],
             entityMap: {},
         };
         const pastedContent = Setup.getInitiaContent(rawContentPaste);
@@ -228,16 +220,12 @@ describe('editor3.reducers.suggestion.PASTE_ADD_SUGGESTION', () => {
 
     it('should delete new suggested selected text and insert new text when text is pasted', () => {
         const rawContentPaste = {
-            blocks: [
-                {key: '4vu4i', text: 'ppppp'},
-            ],
+            blocks: [{key: '4vu4i', text: 'ppppp'}],
             entityMap: {},
         };
         const pastedContent = Setup.getInitiaContent(rawContentPaste);
         const rawContent = {
-            blocks: [
-                {key: '4vu4i', text: 'paragraph'},
-            ],
+            blocks: [{key: '4vu4i', text: 'paragraph'}],
             entityMap: {},
         };
         const date = new Date();

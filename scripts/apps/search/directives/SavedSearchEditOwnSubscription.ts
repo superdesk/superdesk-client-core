@@ -26,7 +26,7 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
             cancelEditingSubscription: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-subscribe.html'),
-        link: function(scope: IScope) {
+        link: function (scope: IScope) {
             scope.closeModal = () => {
                 scope.cancelEditingSubscription();
             };
@@ -35,8 +35,8 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
                 scope.currentlySelectedInterval = cronExpression;
             };
 
-            scope.savingEnabled = () => scope.ownSubscription == null
-                    || (scope.ownSubscription.scheduling !== scope.currentlySelectedInterval);
+            scope.savingEnabled = () =>
+                scope.ownSubscription == null || scope.ownSubscription.scheduling !== scope.currentlySelectedInterval;
 
             scope.isAlreadySubscribed = () => scope.ownSubscription != null;
 
@@ -45,27 +45,28 @@ export function SavedSearchEditOwnSubscription(asset, session, api) {
 
                 const nextUserSubscriptions = scope.isAlreadySubscribed()
                     ? scope.savedSearch.subscribers.user_subscriptions.map((subscription) => {
-                        if (subscription.user === userId) {
-                            return {
-                                user: subscription.user,
-                                scheduling: scope.currentlySelectedInterval,
-                            };
-                        } else {
-                            return subscription;
-                        }
-                    })
-                    : scope.savedSearch.subscribers.user_subscriptions.concat([{
-                        user: userId,
-                        scheduling: scope.currentlySelectedInterval,
-                    }]);
+                          if (subscription.user === userId) {
+                              return {
+                                  user: subscription.user,
+                                  scheduling: scope.currentlySelectedInterval,
+                              };
+                          } else {
+                              return subscription;
+                          }
+                      })
+                    : scope.savedSearch.subscribers.user_subscriptions.concat([
+                          {
+                              user: userId,
+                              scheduling: scope.currentlySelectedInterval,
+                          },
+                      ]);
 
                 const nextSubscribers: ISavedSearch['subscribers'] = {
                     ...scope.savedSearch.subscribers,
                     user_subscriptions: nextUserSubscriptions,
                 };
 
-                updateSubscribers(scope.savedSearch, nextSubscribers, api)
-                    .then(scope.closeModal);
+                updateSubscribers(scope.savedSearch, nextSubscribers, api).then(scope.closeModal);
             };
 
             scope.unsubscribeUser = () =>

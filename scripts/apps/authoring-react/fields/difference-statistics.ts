@@ -70,10 +70,10 @@ export function getDifferenceStatistics<T>(
     }
 
     finalResults.noChanges =
-        finalResults.added.length === 0
-        && finalResults.removed.length === 0
-        && finalResults.modified.length === 0
-        && finalResults.reordered.length === 0;
+        finalResults.added.length === 0 &&
+        finalResults.removed.length === 0 &&
+        finalResults.modified.length === 0 &&
+        finalResults.reordered.length === 0;
 
     return finalResults;
 }

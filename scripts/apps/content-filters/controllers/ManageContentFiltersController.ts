@@ -25,7 +25,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
         $scope.label = (id) => getLabelForFieldId(id);
 
-        $scope.editFilter = function(pf) {
+        $scope.editFilter = function (pf) {
             $scope.origContentFilter = pf || {};
             $scope.contentFilter = _.create($scope.origContentFilter);
             $scope.contentFilter.name = $scope.origContentFilter.name;
@@ -34,7 +34,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             $scope.previewContentFilter();
         };
 
-        $scope.close = function() {
+        $scope.close = function () {
             $scope.previewContentFilter();
             $scope.origContentFilter = null;
             $scope.contentFilter = null;
@@ -42,7 +42,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             $scope.test.article_id = null;
         };
 
-        $scope.saveFilter = function() {
+        $scope.saveFilter = function () {
             delete $scope.contentFilter.article_id;
 
             for (var i = 0; i < $scope.contentFilter.content_filter.length; i++) {
@@ -52,15 +52,18 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                 }
             }
 
-            contentFilters.saveContentFilter($scope.origContentFilter, $scope.contentFilter)
+            contentFilters
+                .saveContentFilter($scope.origContentFilter, $scope.contentFilter)
                 .then(
                     () => {
                         notify.success(gettext('Content filter saved.'));
                         $scope.close();
                     },
                     (response) => {
-                        if (angular.isDefined(response.data._issues) &&
-                            angular.isDefined(response.data._issues['validator exception'])) {
+                        if (
+                            angular.isDefined(response.data._issues) &&
+                            angular.isDefined(response.data._issues['validator exception'])
+                        ) {
                             notify.error(gettext('Error: ' + response.data._issues['validator exception']));
                         } else if (angular.isDefined(response.data._issues)) {
                             if (response.data._issues.name && response.data._issues.name.unique) {
@@ -80,30 +83,34 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                 .then(fetchContentFilters);
         };
 
-        $scope.remove = function(pf) {
-            modal.confirm(gettext('Are you sure you want to delete content filter?'))
+        $scope.remove = function (pf) {
+            modal
+                .confirm(gettext('Are you sure you want to delete content filter?'))
                 .then(() => contentFilters.remove(pf))
-                .then((result) => {
-                    _.remove($scope.contentFilters, pf);
-                }, (response) => {
-                    if (angular.isDefined(response.data._message)) {
-                        notify.error(gettext('Error: ' + response.data._message));
-                    } else {
-                        notify.error(gettext('There was an error. Content filter cannot be deleted.'));
-                    }
-                });
+                .then(
+                    (result) => {
+                        _.remove($scope.contentFilters, pf);
+                    },
+                    (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Error: ' + response.data._message));
+                        } else {
+                            notify.error(gettext('There was an error. Content filter cannot be deleted.'));
+                        }
+                    },
+                );
         };
 
-        $scope.addStatement = function() {
+        $scope.addStatement = function () {
             $scope.contentFilter.content_filter.push({expression: {}});
         };
 
-        $scope.removeStatement = function(index) {
+        $scope.removeStatement = function (index) {
             $scope.contentFilter.content_filter.splice(index, 1);
             $scope.previewContentFilter();
         };
 
-        $scope.addFilter = function(filterRow, filterType) {
+        $scope.addFilter = function (filterRow, filterType) {
             if (!(filterType in filterRow.expression)) {
                 filterRow.expression[filterType] = [];
             }
@@ -115,16 +122,16 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             }
         };
 
-        $scope.removeFilter = function(filterRow, filterId, filterType) {
+        $scope.removeFilter = function (filterRow, filterId, filterType) {
             filterRow.expression[filterType] = _.without(filterRow.expression[filterType], filterId);
             $scope.previewContentFilter();
         };
 
-        $scope.productionTest = function(filter) {
+        $scope.productionTest = function (filter) {
             $scope.$broadcast('triggerTest', filter);
         };
 
-        $scope.test = function() {
+        $scope.test = function () {
             if (!$scope.test.article_id) {
                 notify.error(gettext('Please provide an article GUID'));
                 $scope.test.error_response = gettext('Please provide an article GUID');
@@ -133,32 +140,31 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
             $scope.test.content_tested = false;
 
-            contentFilters.testContentFilter({filter: $scope.contentFilter, article_id: $scope.test.article_id})
-                .then(
-                    (result) => {
-                        $scope.test.content_tested = true;
-                        $scope.test.match_results = result.match_results;
-                        $scope.test.error_response = null;
-                    },
-                    (response) => {
-                        if (angular.isDefined(response.data._issues)) {
-                            notify.error(gettext('Error: ' + response.data._issues));
-                            $scope.test.error_response = response.data._issues;
-                        } else if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Error: ' + response.data._message));
-                            $scope.test.error_response = response.data._message;
-                        } else {
-                            notify.error(gettext('Error: Failed to save content filter.'));
-                        }
-                    },
-                );
+            contentFilters.testContentFilter({filter: $scope.contentFilter, article_id: $scope.test.article_id}).then(
+                (result) => {
+                    $scope.test.content_tested = true;
+                    $scope.test.match_results = result.match_results;
+                    $scope.test.error_response = null;
+                },
+                (response) => {
+                    if (angular.isDefined(response.data._issues)) {
+                        notify.error(gettext('Error: ' + response.data._issues));
+                        $scope.test.error_response = response.data._issues;
+                    } else if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Error: ' + response.data._message));
+                        $scope.test.error_response = response.data._message;
+                    } else {
+                        notify.error(gettext('Error: Failed to save content filter.'));
+                    }
+                },
+            );
         };
 
-        $scope.previewContentFilter = function() {
+        $scope.previewContentFilter = function () {
             $scope.preview = parseContentFilter($scope.contentFilter.content_filter);
         };
 
-        var parseContentFilter = function(contentFilter) {
+        var parseContentFilter = function (contentFilter) {
             var previews = [];
 
             _.each(contentFilter, (filterRow) => {
@@ -201,8 +207,10 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
             _.each(values, (value) => {
                 if ($scope.valueLookup[filterCondition.field]) {
-                    let v = _.find($scope.valueLookup[filterCondition.field],
-                        (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value);
+                    let v = _.find(
+                        $scope.valueLookup[filterCondition.field],
+                        (val) => val[$scope.valueFieldLookup[filterCondition.field]].toString() === value,
+                    );
 
                     labels.push(v.name);
                 }
@@ -214,7 +222,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             return `${fieldLabel} ${filterCondition.operator} "${conditionValue}"`;
         };
 
-        var initContentFilter = function() {
+        var initContentFilter = function () {
             if (!$scope.contentFilter.content_filter || $scope.contentFilter.content_filter.length === 0) {
                 $scope.contentFilter.content_filter = [{expression: {}}];
             }
@@ -223,7 +231,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         /**
          * Fetches all filter conditions and filter condition parameters
          */
-        var fetchFilterConditions = function() {
+        var fetchFilterConditions = function () {
             contentFilters.getAllFilterConditions().then((_filterConditions) => {
                 $scope.filterConditions = $filter('sortByName')(_filterConditions);
                 _.each(_filterConditions, (filter) => {
@@ -240,7 +248,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             });
         };
 
-        var fetchContentFilters = function() {
+        var fetchContentFilters = function () {
             contentFilters.getAllContentFilters().then((_filters) => {
                 $scope.contentFilters = $filter('sortByName')(_filters);
 
@@ -250,17 +258,21 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             });
         };
 
-        $scope.$watch('contentFilter', (newVal, oldVal) => {
-            if (newVal && oldVal) {
-                $scope.saveEnabled = true;
-            } else {
-                $scope.saveEnabled = false;
-            }
-            // if there is filter-statement in contentFilter and preview is not available then disable the save button
-            if (newVal && newVal.content_filter.length > 0 && !$scope.preview) {
-                $scope.saveEnabled = false;
-            }
-        }, true);
+        $scope.$watch(
+            'contentFilter',
+            (newVal, oldVal) => {
+                if (newVal && oldVal) {
+                    $scope.saveEnabled = true;
+                } else {
+                    $scope.saveEnabled = false;
+                }
+                // if there is filter-statement in contentFilter and preview is not available then disable the save button
+                if (newVal && newVal.content_filter.length > 0 && !$scope.preview) {
+                    $scope.saveEnabled = false;
+                }
+            },
+            true,
+        );
 
         fetchFilterConditions();
         fetchContentFilters();

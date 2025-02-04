@@ -24,7 +24,7 @@ export function UserListService(api, $q, $cacheFactory) {
      * @param {Integer} perPage
      * @returns {Promise}
      */
-    userservice.get = function(search, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) {
+    userservice.get = function (search, page = DEFAULT_PAGE, perPage = DEFAULT_PER_PAGE) {
         var key = search || DEFAULT_CACHE_KEY;
 
         key = buildKey(key, page, perPage);
@@ -41,7 +41,8 @@ export function UserListService(api, $q, $cacheFactory) {
             criteria.where = JSON.stringify(getUserSearchMongoQuery(search));
         }
 
-        return api('users').query(criteria)
+        return api('users')
+            .query(criteria)
             .then((result) => {
                 cache.put(key, result);
                 return result;
@@ -55,14 +56,14 @@ export function UserListService(api, $q, $cacheFactory) {
      * @param {boolean} forced to bypass the cache
      * @returns {Promise}
      */
-    userservice.getUser = function(id, forced) {
+    userservice.getUser = function (id, forced) {
         return api('users').getById(id, undefined, !forced);
     };
 
     /**
      * Clear user cache
      */
-    userservice.clearCache = function() {
+    userservice.clearCache = function () {
         cache.removeAll();
     };
 

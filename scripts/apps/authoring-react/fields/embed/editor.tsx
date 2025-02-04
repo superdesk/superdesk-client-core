@@ -39,12 +39,14 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             <Button
                                 text={gettext('Generate from URL')}
                                 onClick={() => {
-                                    ng.get('embedService').get(embedObj.embed).then(({html}) => {
-                                        this.props.onChange({
-                                            ...embedObj,
-                                            embed: html,
+                                    ng.get('embedService')
+                                        .get(embedObj.embed)
+                                        .then(({html}) => {
+                                            this.props.onChange({
+                                                ...embedObj,
+                                                embed: html,
+                                            });
                                         });
-                                    });
                                 }}
                                 size="small"
                             />
@@ -72,20 +74,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
                     }
                 })()}
 
-                {
-                    !readOnly && (
-                        <Button
-                            text={gettext('Clear embed')}
-                            onClick={() => {
-                                this.props.onChange({
-                                    ...embedObj,
-                                    embed: '',
-                                });
-                            }}
-                            size="small"
-                        />
-                    )
-                }
+                {!readOnly && (
+                    <Button
+                        text={gettext('Clear embed')}
+                        onClick={() => {
+                            this.props.onChange({
+                                ...embedObj,
+                                embed: '',
+                            });
+                        }}
+                        size="small"
+                    />
+                )}
             </Spacer>
         );
 
@@ -123,15 +123,13 @@ export class Editor extends React.PureComponent<IProps, IState> {
                     style={{resize: 'vertical'}}
                 />
 
-                {
-                    this.state.previewEnabled && (
-                        <div>
-                            <SpacerBlock v gap="16" />
+                {this.state.previewEnabled && (
+                    <div>
+                        <SpacerBlock v gap="16" />
 
-                            <EmbedPreview embedHtml={embedObj.embed} />
-                        </div>
-                    )
-                }
+                        <EmbedPreview embedHtml={embedObj.embed} />
+                    </div>
+                )}
             </Container>
         );
     }

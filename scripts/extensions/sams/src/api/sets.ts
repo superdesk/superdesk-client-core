@@ -13,12 +13,8 @@ export function getAllSets(): Promise<Array<ISetItem>> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi.query<ISetItem>(
-        RESOURCE,
-        1,
-        {field: 'name', direction: 'ascending'},
-        {},
-    )
+    return superdeskApi.dataApi
+        .query<ISetItem>(RESOURCE, 1, {field: 'name', direction: 'ascending'}, {})
         .then(fixItemResponseVersionDates)
         .then((response: IRestApiResponse<ISetItem>) => {
             return response?._items ?? [];
@@ -34,20 +30,17 @@ export function getAllSets(): Promise<Array<ISetItem>> {
         });
 }
 
-export function createSet(
-    item: Partial<ISetItem>,
-    deskRestrictions?: Array<IDesk['_id']>,
-): Promise<ISetItem> {
+export function createSet(item: Partial<ISetItem>, deskRestrictions?: Array<IDesk['_id']>): Promise<ISetItem> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi.create<ISetItem>(RESOURCE, item)
+    return superdeskApi.dataApi
+        .create<ISetItem>(RESOURCE, item)
         .then((set: ISetItem) => {
             notify.success(gettext('Set created successfully'));
 
             if (deskRestrictions?.length) {
-                return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions)
-                    .then(() => set);
+                return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions).then(() => set);
             }
 
             return set;
@@ -71,12 +64,12 @@ export function updateSet(
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi.patch<ISetItem>(RESOURCE, original, updates)
+    return superdeskApi.dataApi
+        .patch<ISetItem>(RESOURCE, original, updates)
         .then((set: ISetItem) => {
             notify.success(gettext('Set updated successfully'));
 
-            return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions ?? [])
-                .then(() => set);
+            return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions ?? []).then(() => set);
         })
         .catch((error: any) => {
             if (isSamsApiError(error)) {
@@ -93,7 +86,8 @@ export function deleteSet(item: ISetItem): Promise<void> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi.delete<ISetItem>(RESOURCE, item)
+    return superdeskApi.dataApi
+        .delete<ISetItem>(RESOURCE, item)
         .then(() => {
             notify.success(gettext('Set deleted successfully'));
         })

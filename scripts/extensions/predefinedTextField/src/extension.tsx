@@ -22,9 +22,7 @@ const extension: IExtension = {
     activate: () => {
         const result: IExtensionActivationResult = {
             contributions: {
-                customFieldTypes: [
-                    predefinedField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
-                ],
+                customFieldTypes: [predefinedField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>],
             },
         };
 

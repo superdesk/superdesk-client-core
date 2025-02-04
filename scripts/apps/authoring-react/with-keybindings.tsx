@@ -19,10 +19,12 @@ export class WithKeyBindings extends React.PureComponent<IProps> {
             const shiftRequired = split.includes('shift');
             const ctrlRequired = split.includes('ctrl');
 
-            return (altRequired ? event.altKey : !event.altKey)
-                && (shiftRequired ? event.shiftKey : !event.shiftKey)
-                && (ctrlRequired ? event.ctrlKey : !event.ctrlKey)
-                && (split[split.length - 1] === event.key.toLowerCase());
+            return (
+                (altRequired ? event.altKey : !event.altKey) &&
+                (shiftRequired ? event.shiftKey : !event.shiftKey) &&
+                (ctrlRequired ? event.ctrlKey : !event.ctrlKey) &&
+                split[split.length - 1] === event.key.toLowerCase()
+            );
         });
 
         if (matchingKeyBinding != null) {

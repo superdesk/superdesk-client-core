@@ -24,10 +24,7 @@ export class BackgroundColorSelector extends React.Component<IPropsThemeSelector
                     });
 
                     return (
-                        <div
-                            key={index}
-                            className={swatchClasses}
-                        >
+                        <div key={index} className={swatchClasses}>
                             <span
                                 className="color-selector__swatch-content"
                                 style={{

@@ -35,11 +35,9 @@ export class UnspikeTab extends React.PureComponent<IProps, IState> {
 
         if (selectedDestination.type === 'desk') {
             Promise.all(
-                this.props.items.map((item) => sdApi.article.doUnspike(
-                    item,
-                    selectedDestination.desk,
-                    selectedDestination.stage,
-                )),
+                this.props.items.map((item) =>
+                    sdApi.article.doUnspike(item, selectedDestination.desk, selectedDestination.stage),
+                ),
             ).then(() => {
                 this.props.closeUnspikeView();
             });

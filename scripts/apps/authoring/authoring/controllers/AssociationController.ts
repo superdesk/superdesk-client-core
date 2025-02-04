@@ -23,24 +23,22 @@ export function applyAssociations(
     associationItems: Array<IArticle['associations']['0']>,
     fieldId: string,
 ): IArticle {
-    const orderedNext: IArticle['associations'] =
-        associationItems
-            .map((item, i) => ({...item, order: i}))
-            .reduce((acc, item) => {
-                acc[fieldId + '--' + (item.order + 1)] = item;
+    const orderedNext: IArticle['associations'] = associationItems
+        .map((item, i) => ({...item, order: i}))
+        .reduce((acc, item) => {
+            acc[fieldId + '--' + (item.order + 1)] = item;
 
-                return acc;
-            }, {});
+            return acc;
+        }, {});
 
     // filter out items matching {fieldId}
-    const filteredCurrent: IArticle['associations'] =
-        Object.entries(article.associations ?? {})
-            .filter(([key]) => key.startsWith(fieldId + '--') !== true)
-            .reduce((acc, [key, value]) => {
-                acc[key] = value;
+    const filteredCurrent: IArticle['associations'] = Object.entries(article.associations ?? {})
+        .filter(([key]) => key.startsWith(fieldId + '--') !== true)
+        .reduce((acc, [key, value]) => {
+            acc[key] = value;
 
-                return acc;
-            }, {});
+            return acc;
+        }, {});
 
     return {
         ...article,
@@ -51,10 +49,7 @@ export function applyAssociations(
     };
 }
 
-export function getRelatedMedia(
-    associations: IArticle['associations'],
-    fieldId: IVocabulary['_id'],
-): Array<IArticle> {
+export function getRelatedMedia(associations: IArticle['associations'], fieldId: IVocabulary['_id']): Array<IArticle> {
     const items: Array<IArticle> = [];
 
     getAssociationsByFieldId(associations, fieldId).forEach((item) => {
@@ -122,9 +117,10 @@ export class AssociationController {
      */
     uploadAndCropImages(scope, files): Promise<boolean> {
         // in case of feature media we dont have scope.field available as it is not a vocabulary.
-        const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
-            ? scope.maxUploads - getAssociationsByFieldId(scope.item.associations, scope.field._id).length
-            : 1;
+        const maxUploadsRemaining =
+            scope.maxUploads != null && scope.field != null
+                ? scope.maxUploads - getAssociationsByFieldId(scope.item.associations, scope.field._id).length
+                : 1;
 
         let uploadData = {
             files: files,
@@ -148,10 +144,15 @@ export class AssociationController {
                             if (imagesWithIds.length > 0) {
                                 var imageWithId = imagesWithIds.shift();
 
-                                this.edit(scope, imageWithId.image, {
-                                    customRel: imageWithId.id,
-                                    isNew: true,
-                                }, editNextFile);
+                                this.edit(
+                                    scope,
+                                    imageWithId.image,
+                                    {
+                                        customRel: imageWithId.id,
+                                        isNew: true,
+                                    },
+                                    editNextFile,
+                                );
                             } else {
                                 resolve(true);
                             }
@@ -184,12 +185,12 @@ export class AssociationController {
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
         const field = associationKey.split('--')[0];
 
-        const isItemBeingAdded = updated != null && scope.item.associations &&
-        scope.item?.associations[associationKey] == null;
+        const isItemBeingAdded =
+            updated != null && scope.item.associations && scope.item?.associations[associationKey] == null;
 
         if (
-            isItemBeingAdded
-            && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
+            isItemBeingAdded &&
+            scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
         ) {
             const mediaItemsForCurrentField = getAssociationsByFieldId(scope.item.associations, scope.field._id);
             const allowedItemsCount = scope.field.field_options.multiple_items?.enabled
@@ -197,12 +198,14 @@ export class AssociationController {
                 : 1;
 
             if (mediaItemsForCurrentField.length + 1 > allowedItemsCount) {
-                this.notify.error(gettextPlural(
-                    allowedItemsCount,
-                    'Item was not added. Only 1 item is allowed for this field.',
-                    'Item was not added. Only {{number}} items are allowed in this field.',
-                    {number: allowedItemsCount},
-                ));
+                this.notify.error(
+                    gettextPlural(
+                        allowedItemsCount,
+                        'Item was not added. Only 1 item is allowed for this field.',
+                        'Item was not added. Only {{number}} items are allowed in this field.',
+                        {number: allowedItemsCount},
+                    ),
+                );
 
                 return Promise.resolve(false);
             }
@@ -215,11 +218,10 @@ export class AssociationController {
 
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
             // get greatest order from current items(or -1 if there aren't any items) and add one
-            const nextOrder = (
-                getAssociationsByFieldId(scope.item.associations, field)
+            const nextOrder =
+                (getAssociationsByFieldId(scope.item.associations, field)
                     .map(({order}) => order)
-                    .sort((a, b) => b - a)[0] ?? -1
-            ) + 1;
+                    .sort((a, b) => b - a)[0] ?? -1) + 1;
 
             updated['order'] = nextOrder;
         }
@@ -254,7 +256,7 @@ export class AssociationController {
     edit(
         scope,
         item,
-        options: {isNew?: boolean, customRel?: string, defaultTab?: any, showMetadata?: boolean} = {},
+        options: {isNew?: boolean; customRel?: string; defaultTab?: any; showMetadata?: boolean} = {},
         callback = null,
     ): Promise<boolean> {
         if (!this.isMediaEditable()) {
@@ -274,7 +276,8 @@ export class AssociationController {
 
         if (item.renditions && item.renditions.original) {
             scope.loading = true;
-            return this.renditions.crop(item, cropOptions)
+            return this.renditions
+                .crop(item, cropOptions)
                 .then((rendition) => {
                     return this.updateItemAssociation(scope, rendition, options.customRel, callback);
                 })
@@ -293,7 +296,8 @@ export class AssociationController {
             return Promise.resolve(false);
         }
 
-        return this.content.dropItem(__item)
+        return this.content
+            .dropItem(__item)
             .then((item: IArticle) => {
                 if (item.lock_user) {
                     this.notify.error(gettext('Item is locked. Cannot associate media item.'));
@@ -305,7 +309,8 @@ export class AssociationController {
 
                 if (this.isMediaEditable(item) && item._type === 'externalsource') {
                     // if media is editable then association will be updated by this.edit method
-                    return this.renditions.ingest(item)
+                    return this.renditions
+                        .ingest(item)
                         .then((_item) => this.edit(scope, _item, {customRel: originalRel}));
                 } else {
                     // Update the association if media is not editable.
@@ -359,10 +364,7 @@ const isAudio = (rendition) => {
         return true;
     }
 
-    return some(
-        ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
-        (ext) => endsWith(rendition.href, ext),
-    );
+    return some(['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'], (ext) => endsWith(rendition.href, ext));
 };
 
 const isVideo = (rendition) => {

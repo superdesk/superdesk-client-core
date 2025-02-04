@@ -1,6 +1,7 @@
 <div class="prefered-cv-items form__row" ng-repeat="cv in cvs track by cv._id">
     <label class="form-label">{{ :: cv.display_name }}</label>
-    <div sd-meta-terms
+    <div
+        sd-meta-terms
         class="sd-line-input__select"
         data-item="updates"
         data-field="{{ cv._id }}"

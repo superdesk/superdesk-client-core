@@ -1,6 +1,5 @@
-export default angular.module('superdesk.core.upload.imagemodify', [
-    'superdesk.core.translate',
-])
+export default angular
+    .module('superdesk.core.upload.imagemodify', ['superdesk.core.translate'])
     .directive('sdImageModify', () => ({
         scope: {
             src: '=',
@@ -13,7 +12,7 @@ export default angular.module('superdesk.core.upload.imagemodify', [
             flipv: '=',
         },
         template: '<canvas id="image"></canvas>',
-        link: function(scope) {
+        link: function (scope) {
             let canvas = document.getElementById('image') as HTMLCanvasElement,
                 context = canvas.getContext('2d'),
                 baseImage = new Image(),
@@ -28,7 +27,7 @@ export default angular.module('superdesk.core.upload.imagemodify', [
                     flipV: scope.flipV ? 'rotateX(' + scope.flipv + 'deg) ' : '',
                 };
 
-            baseImage.onload = function() {
+            baseImage.onload = function () {
                 canvas.width = baseImage.width;
                 canvas.height = baseImage.height;
 
@@ -55,7 +54,7 @@ export default angular.module('superdesk.core.upload.imagemodify', [
             });
 
             scope.$watch('rotate', (value, old) => {
-                let scale = (value / 90) % 2 ? (canvas.height / canvas.width) : 1;
+                let scale = (value / 90) % 2 ? canvas.height / canvas.width : 1;
 
                 transform.rotate = 'scale(' + scale + ', ' + scale + ') rotateZ(' + value + 'deg) ';
                 setTransform();
@@ -76,10 +75,21 @@ export default angular.module('superdesk.core.upload.imagemodify', [
             });
 
             function setTransform() {
-                canvas.setAttribute('style',
-                    'transform:' + transform.rotate + transform.flipH + transform.flipV +
-                    '; -webkit-transform:' + transform.rotate + transform.flipH + transform.flipV +
-                    '; -moz-transform:' + transform.rotate + transform.flipH + transform.flipV);
+                canvas.setAttribute(
+                    'style',
+                    'transform:' +
+                        transform.rotate +
+                        transform.flipH +
+                        transform.flipV +
+                        '; -webkit-transform:' +
+                        transform.rotate +
+                        transform.flipH +
+                        transform.flipV +
+                        '; -moz-transform:' +
+                        transform.rotate +
+                        transform.flipH +
+                        transform.flipV,
+                );
             }
         },
     }));

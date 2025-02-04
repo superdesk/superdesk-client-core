@@ -8,9 +8,13 @@
     <!-- AVAILABLE WIDGETS LIST START -->
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs" data-test-id="navigation-tabs">
-            <li ng-repeat="widget in widgets | orderBy:'order'"
-                ng-class="{active: widget === active, pinned: widget.pinned}">
-                <a class="sd-sidetab-menu__btn" type="submit"
+            <li
+                ng-repeat="widget in widgets | orderBy:'order'"
+                ng-class="{active: widget === active, pinned: widget.pinned}"
+            >
+                <a
+                    class="sd-sidetab-menu__btn"
+                    type="submit"
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"
@@ -20,10 +24,16 @@
                     data-test-id="authoring-widget"
                     data-test-value="{{widget.label}}"
                 >
-                    <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
+                    <span
+                        id="unread-count"
+                        class="sd-sidetab-menu__info-label badge badge--primary"
+                        ng-show="widget._id == 'comments' && comments.length"
+                        >{{ comments.length }}</span
+                    >
 
-                    <span class="sd-sidetab-menu__info-label badge badge--primary"
-                        ng-if="badge(widget)">{{ badge(widget) }}</span>
+                    <span class="sd-sidetab-menu__info-label badge badge--primary" ng-if="badge(widget)"
+                        >{{ badge(widget) }}</span
+                    >
 
                     <i class="sd-sidetab-menu__main-icon big-icon--{{ :: widget.icon }}"></i>
                     <i class="sd-sidetab-menu__helper-icon icon-close-small"></i>
@@ -43,15 +53,8 @@
         data-test-value="{{active.label}}"
     >
         <section class="tabcontent" ng-init="widget=active">
-            <div
-                ng-if="active.template != null"
-                class="tabcontent-actions"
-            >
-                <button
-                    class="icn-btn"
-                    ng-click="pinWidget(active)"
-                    ng-class="{'active': active.pinned}"
-                >
+            <div ng-if="active.template != null" class="tabcontent-actions">
+                <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': active.pinned}">
                     <i class="icon-pin"></i>
                 </button>
             </div>

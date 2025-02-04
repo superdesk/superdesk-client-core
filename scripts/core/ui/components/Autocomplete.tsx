@@ -76,13 +76,13 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
             <Select2
                 autoFocus={this.props.autoFocus}
                 disabled={this.props.disabled}
-                placeholder={(
+                placeholder={
                     <ListItem fullWidth noBackground noShadow>
                         <ListItemColumn ellipsisAndGrow>
                             <ListItemRow>{this.props.placeholder}</ListItemRow>
                         </ListItemColumn>
                     </ListItem>
-                )}
+                }
                 value={this.props.selected == null ? undefined : this.props.selected}
                 valueObject={this.state.selectedItem}
                 items={keyedItems}

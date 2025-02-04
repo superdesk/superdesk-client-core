@@ -18,10 +18,7 @@ import {GridItemProgressCircle} from '../../ui/grid/GridItemProgressCircle';
 import {getThumbnailComponent} from './list';
 
 // Utils
-import {
-    getIconTypeFromMimetype,
-    getAssetStateLabel,
-} from '../../utils/ui';
+import {getIconTypeFromMimetype, getAssetStateLabel} from '../../utils/ui';
 import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {
@@ -97,9 +94,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
-        const typeIcon = getIconTypeFromMimetype(
-            this.props.asset.mimetype ?? 'text',
-        );
+        const typeIcon = getIconTypeFromMimetype(this.props.asset.mimetype ?? 'text');
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
         const ContentThumbnail = getThumbnailComponent(this.props.asset);
@@ -119,10 +114,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                     onCheckboxClick={this.onCheckboxClick}
                 >
                     {ContentThumbnail == null ? null : (
-                        <ContentThumbnail
-                            asset={this.props.asset}
-                            file={this.props.file}
-                        />
+                        <ContentThumbnail asset={this.props.asset} file={this.props.file} />
                     )}
                     {this.props.uploadProgress && (
                         <GridItemProgressCircle
@@ -133,27 +125,15 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                     )}
                 </GridItemThumb>
                 <GridItemContent>
-                    {this.props.asset._updated && (
-                        <time>{longFormatDateTime(this.props.asset._updated)}</time>
-                    )}
-                    <p className="sd-grid-item__title">
-                        {this.props.asset.name?.substring(0, 25)}
-                    </p>
-                    <p className="sd-grid-item--element-grow">
-                        {this.props.asset.description?.substring(0, 120)}
-                    </p>
+                    {this.props.asset._updated && <time>{longFormatDateTime(this.props.asset._updated)}</time>}
+                    <p className="sd-grid-item__title">{this.props.asset.name?.substring(0, 25)}</p>
+                    <p className="sd-grid-item--element-grow">{this.props.asset.description?.substring(0, 120)}</p>
                     <div className="sd-grid-item__content-block">
-                        <span className="sd-grid-item__text-label">
-                            {gettext('Type:')}
-                        </span>
-                        <span className="sd-grid-item__text-strong">
-                            {mimetype}
-                        </span>
+                        <span className="sd-grid-item__text-label">{gettext('Type:')}</span>
+                        <span className="sd-grid-item__text-strong">{mimetype}</span>
                     </div>
                     <div className="sd-grid-item__content-block">
-                        <span className="sd-grid-item__text-label">
-                            {gettext('Size:')}
-                        </span>
+                        <span className="sd-grid-item__text-label">{gettext('Size:')}</span>
                         <span className="sd-grid-item__text-strong">
                             {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
                         </span>
@@ -162,10 +142,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                 <GridItemFooter>
                     {this.props.asset.state && (
                         <GridItemFooterBlock multiL={true}>
-                            <Icon
-                                name={typeIcon}
-                                className="sd-grid-item__type-icn sd-grid-item__footer-block-item"
-                            />
+                            <Icon name={typeIcon} className="sd-grid-item__type-icn sd-grid-item__footer-block-item" />
                             {getAssetStateLabel(this.props.asset.state)}
                         </GridItemFooterBlock>
                     )}

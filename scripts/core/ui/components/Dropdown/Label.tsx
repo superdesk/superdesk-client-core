@@ -9,14 +9,7 @@ import classNames from 'classnames';
  */
 
 export const Label: React.StatelessComponent<any> = ({children, className}) => (
-    <li
-        className={classNames(
-            'dropdown__menu-label',
-            className,
-        )}
-    >
-        {children}
-    </li>
+    <li className={classNames('dropdown__menu-label', className)}>{children}</li>
 );
 
 Label.propTypes = {

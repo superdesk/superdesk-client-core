@@ -19,10 +19,13 @@ export class RelativeDate extends React.Component<IProps> {
         const reldate = date.fromNow();
 
         return (
-            <time dateTime={datetimeIso} title={title}>{reldate}</time>
+            <time dateTime={datetimeIso} title={title}>
+                {reldate}
+            </time>
         );
     }
 }
 
-angular.module('superdesk.core.datetime.relativeDate', [])
+angular
+    .module('superdesk.core.datetime.relativeDate', [])
     .component('sdRelativeDate', reactToAngular1(RelativeDate, ['datetime']));

@@ -1,8 +1,5 @@
 import {rundownItemContentProfile} from '../rundown-items/content-profile';
-import {
-    IAuthoringAutoSave,
-    IAuthoringStorage,
-} from 'superdesk-api';
+import {IAuthoringAutoSave, IAuthoringStorage} from 'superdesk-api';
 import {IRundownItemBase, IRundownItemTemplateInitial} from '../interfaces';
 import {ICreate, IEdit, IPreview, IRundownItemAction} from '../rundown-templates/template-edit';
 import {superdesk} from '../superdesk';
@@ -100,10 +97,7 @@ export function prepareForCreation(
     return {
         type: 'create',
         item: item,
-        authoringStorage: getRundownItemTemplateAuthoringStorage(
-            item,
-            onSave,
-        ),
+        authoringStorage: getRundownItemTemplateAuthoringStorage(item, onSave),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }
@@ -126,9 +120,8 @@ export function prepareForEditing(
     return {
         type: 'edit',
         item: item,
-        authoringStorage: getRundownItemTemplateAuthoringStorage(
-            item,
-            (res) => onSave(
+        authoringStorage: getRundownItemTemplateAuthoringStorage(item, (res) =>
+            onSave(
                 res.data as IRundownItemBase, // validated by the authoring component
             ).then((dataSaved) => {
                 const saved: IRundownItemTemplateInitial = {
@@ -164,10 +157,7 @@ export function prepareForPreview(
     return {
         type: 'preview',
         item: item,
-        authoringStorage: getRundownItemTemplateAuthoringStorage(
-            item,
-            (_) => Promise.resolve(_),
-        ),
+        authoringStorage: getRundownItemTemplateAuthoringStorage(item, (_) => Promise.resolve(_)),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }

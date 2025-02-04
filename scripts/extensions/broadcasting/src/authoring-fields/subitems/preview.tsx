@@ -11,11 +11,6 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        return (
-            <SubitemsViewEdit
-                readOnly={true}
-                subitems={this.props.value ?? []}
-            />
-        );
+        return <SubitemsViewEdit readOnly={true} subitems={this.props.value ?? []} />;
     }
 }

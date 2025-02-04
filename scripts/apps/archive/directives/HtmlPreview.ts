@@ -6,7 +6,8 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 
 function getAnnotationTypesAsync(scope) {
-    ng.get('metadata').initialize()
+    ng.get('metadata')
+        .initialize()
         .then(() => {
             const annotationTypes = ng.get('metadata').values.annotation_types;
 
@@ -59,7 +60,7 @@ export function HtmlPreview($sce, $timeout) {
             item: '=?',
         },
         templateUrl: 'scripts/apps/archive/views/html-preview.html',
-        link: function(scope, elem, attrs) {
+        link: function (scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
                 scope.html = $sce.trustAsHtml(adjustHTMLForPreview(html));
 

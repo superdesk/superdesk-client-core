@@ -21,23 +21,20 @@ export class ImageCrops extends React.PureComponent<IProps> {
             <Wrapper>
                 <ToggleBox variant="simple" title={gettext('Show/hide crops')} margin="none">
                     <div className="image-crops-container">
-                        {
-                            cropSizes
-                                .map((cropSize, i) => (
-                                    <Card borderRadius={0} key={i}>
-                                        <div className="image-crop">
-                                            <img
-                                                src={renditions[cropSize.name].href}
-                                                style={{maxWidth: '100%', maxHeight: '100%'}}
-                                            />
-                                        </div>
+                        {cropSizes.map((cropSize, i) => (
+                            <Card borderRadius={0} key={i}>
+                                <div className="image-crop">
+                                    <img
+                                        src={renditions[cropSize.name].href}
+                                        style={{maxWidth: '100%', maxHeight: '100%'}}
+                                    />
+                                </div>
 
-                                        <SpacerBlock v gap="8" />
+                                <SpacerBlock v gap="8" />
 
-                                        <div className="image-crop--label">{cropSize.name}</div>
-                                    </Card>
-                                ))
-                        }
+                                <div className="image-crop--label">{cropSize.name}</div>
+                            </Card>
+                        ))}
                     </div>
                 </ToggleBox>
             </Wrapper>

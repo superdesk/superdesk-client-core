@@ -39,25 +39,22 @@ class CommentInputBody extends React.Component<any, any> {
 
         if (msg !== '') {
             if (highlightId === undefined) {
-                this.props.highlightsManager.addHighlight(
-                    getHighlightsConfig().COMMENT.type,
-                    {
-                        data: {
-                            msg: msg,
-                            replies: [],
-                            resolutionInfo: null,
-                            ...getAuthorInfo(),
-                        },
+                this.props.highlightsManager.addHighlight(getHighlightsConfig().COMMENT.type, {
+                    data: {
+                        msg: msg,
+                        replies: [],
+                        resolutionInfo: null,
+                        ...getAuthorInfo(),
                     },
-                );
+                });
             } else {
                 const highlightData = this.props.highlightsManager.getHighlightData(highlightId);
                 const date = new Date();
 
-                this.props.highlightsManager.updateHighlightData(
-                    highlightId,
-                    {...highlightData, data: {...highlightData.data, msg, date}},
-                );
+                this.props.highlightsManager.updateHighlightData(highlightId, {
+                    ...highlightData,
+                    data: {...highlightData.data, msg, date},
+                });
             }
             this.props.hidePopups();
         }
@@ -82,10 +79,7 @@ class CommentInputBody extends React.Component<any, any> {
         return (
             <div className="comment-input">
                 <Dropdown open={true}>
-                    <CommentTextArea
-                        value={msg}
-                        onChange={this.onChange}
-                    />
+                    <CommentTextArea value={msg} onChange={this.onChange} />
                     <div
                         className="button-group button-group--end button-group--comfort sd-flex--justify-end"
                         style={{paddingBlockStart: 20}}

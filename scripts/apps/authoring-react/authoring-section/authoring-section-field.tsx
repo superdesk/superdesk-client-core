@@ -57,13 +57,17 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
                     <Container key={field.id} />
                 ) : (
                     <FieldEditorConfig.editorComponent
-                        uiTheme={this.props.uiTheme == null ? undefined : {
-                            backgroundColor: this.props.uiTheme.backgroundColor,
-                            backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
-                            textColor: this.props.uiTheme.textColor,
-                            fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
-                            fontFamily: this.props.uiTheme.fontFamily,
-                        }}
+                        uiTheme={
+                            this.props.uiTheme == null
+                                ? undefined
+                                : {
+                                      backgroundColor: this.props.uiTheme.backgroundColor,
+                                      backgroundColorSecondary: this.props.uiTheme.backgroundColorSecondary,
+                                      textColor: this.props.uiTheme.textColor,
+                                      fontSize: this.props.uiTheme.fieldTheme[field.id]?.fontSize,
+                                      fontFamily: this.props.uiTheme.fontFamily,
+                                  }
+                        }
                         key={field.id}
                         editorId={field.id}
                         container={Container}

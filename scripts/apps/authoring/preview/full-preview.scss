@@ -34,8 +34,7 @@
     }
 }
 
-@media print
-{
+@media print {
     body.prepare-to-print {
         > *:not(.print-container) {
             display: none;

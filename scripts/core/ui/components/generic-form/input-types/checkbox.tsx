@@ -12,15 +12,10 @@ export class CheckboxInput extends React.Component<IInputType<boolean>> {
 
         return (
             <div
-                className={
-                    classNames(
-                        'form__row',
-                        {
-                            'form__row--invalid': this.props.issues.length > 0,
-                            'form__row--required': this.props.formField.required === true,
-                        },
-                    )
-                }
+                className={classNames('form__row', {
+                    'form__row--invalid': this.props.issues.length > 0,
+                    'form__row--required': this.props.formField.required === true,
+                })}
             >
                 <Checkbox
                     value={this.props.value}
@@ -30,11 +25,11 @@ export class CheckboxInput extends React.Component<IInputType<boolean>> {
                     }}
                     readOnly={this.props.disabled}
                 />
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
+                {this.props.issues.map((str, i) => (
+                    <div key={i} className="sd-line-input__message">
+                        {str}
+                    </div>
+                ))}
             </div>
         );
     }

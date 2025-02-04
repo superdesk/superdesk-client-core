@@ -6,10 +6,6 @@ interface IProps {
 
 export class FormItem extends React.PureComponent<IProps> {
     render() {
-        return (
-            <div className="form__item">
-                {this.props.children}
-            </div>
-        );
+        return <div className="form__item">{this.props.children}</div>;
     }
 }

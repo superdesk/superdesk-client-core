@@ -9,25 +9,20 @@ import {CreatedInfo} from './created-info';
 import {ModifiedInfo} from './modified-info';
 import {AuthoringToolbar} from 'apps/authoring-react/subcomponents/authoring-toolbar';
 
-const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [{
-    availableOffline: true,
-    component: () => (
-        <CreatedInfo
-            entity={item}
-        />
-    ),
-    group: 'start',
-    priority: 1,
-}, {
-    availableOffline: true,
-    component: () => (
-        <ModifiedInfo
-            entity={item}
-        />
-    ),
-    group: 'start',
-    priority: 2,
-}];
+const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [
+    {
+        availableOffline: true,
+        component: () => <CreatedInfo entity={item} />,
+        group: 'start',
+        priority: 1,
+    },
+    {
+        availableOffline: true,
+        component: () => <ModifiedInfo entity={item} />,
+        group: 'start',
+        priority: 2,
+    },
+];
 
 interface IProps {
     article: IArticle;
@@ -87,11 +82,6 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         // extensions should be able to expose pure components which check equality by reference
         const articleUpdatedReference = {...this.props.article};
 
-        return (
-            <AuthoringToolbar
-                entity={articleUpdatedReference}
-                widgets={articleDisplayWidgets}
-            />
-        );
+        return <AuthoringToolbar entity={articleUpdatedReference} widgets={articleDisplayWidgets} />;
     }
 }

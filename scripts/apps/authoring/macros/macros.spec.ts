@@ -1,4 +1,3 @@
-
 describe('macros', () => {
     const allMacros = [
         {
@@ -44,13 +43,17 @@ describe('macros', () => {
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
     beforeEach(window.module('superdesk.apps.extension-points'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.service('editorResolver', () => ({get: () => ({
-            version: () => '3',
-            getHtmlForTansa: () => null,
-            setHtmlFromTansa: (html, simpleReplace) => null,
-        })}));
-    }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service('editorResolver', () => ({
+                get: () => ({
+                    version: () => '3',
+                    getHtmlForTansa: () => null,
+                    setHtmlFromTansa: (html, simpleReplace) => null,
+                }),
+            }));
+        }),
+    );
 
     var $controller;
 
@@ -103,7 +106,9 @@ describe('macros', () => {
         spyOn($rootScope, '$broadcast');
         $scope.origItem = {};
         $scope.item = item;
-        $scope.closeWidget = function() { /* no-op */ };
+        $scope.closeWidget = function () {
+            /* no-op */
+        };
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();
@@ -111,37 +116,45 @@ describe('macros', () => {
         expect($rootScope.$broadcast).toHaveBeenCalledWith('macro:diff', diff);
     }));
 
-    it('can provide group list option when group is defined in any of macros',
-        inject((macros, $q, autosave, $rootScope) => {
-            // when group defined in any of macros
-            const groupedMacros = _.groupBy(_.filter(allMacros, 'group'), 'group');
+    it('can provide group list option when group is defined in any of macros', inject((
+        macros,
+        $q,
+        autosave,
+        $rootScope,
+    ) => {
+        // when group defined in any of macros
+        const groupedMacros = _.groupBy(_.filter(allMacros, 'group'), 'group');
 
-            const $scope = $rootScope.$new();
+        const $scope = $rootScope.$new();
 
-            macros.macros = allMacros;
-            $controller('Macros', {$scope: $scope});
-            $scope.$digest();
+        macros.macros = allMacros;
+        $controller('Macros', {$scope: $scope});
+        $scope.$digest();
 
-            expect($scope.macros).toEqual(allMacros);
-            expect($scope.groupedMacros).toEqual(groupedMacros);
-            expect($scope.groupedList).toBe(true);
-        }));
+        expect($scope.macros).toEqual(allMacros);
+        expect($scope.groupedMacros).toEqual(groupedMacros);
+        expect($scope.groupedList).toBe(true);
+    }));
 
-    it('can hide group list option when group is undefined in all macros',
-        inject((macros, $q, autosave, $rootScope) => {
-            // consider, when group is not available in all macros
-            const withoutGroupMacros = _.filter(allMacros, (o) => o.group === undefined);
+    it('can hide group list option when group is undefined in all macros', inject((
+        macros,
+        $q,
+        autosave,
+        $rootScope,
+    ) => {
+        // consider, when group is not available in all macros
+        const withoutGroupMacros = _.filter(allMacros, (o) => o.group === undefined);
 
-            const $scope = $rootScope.$new();
+        const $scope = $rootScope.$new();
 
-            macros.macros = withoutGroupMacros;
-            $controller('Macros', {$scope: $scope});
-            $scope.$digest();
+        macros.macros = withoutGroupMacros;
+        $controller('Macros', {$scope: $scope});
+        $scope.$digest();
 
-            expect($scope.macros).toEqual(withoutGroupMacros);
-            expect($scope.groupedMacros).toBe(null);
-            expect($scope.groupedList).toBe(false);
-        }));
+        expect($scope.macros).toEqual(withoutGroupMacros);
+        expect($scope.groupedMacros).toBe(null);
+        expect($scope.groupedList).toBe(false);
+    }));
 
     it('can replace body html for editor 2', inject((macros, $q, autosave, $rootScope, editorResolver) => {
         let item = {
@@ -169,7 +182,9 @@ describe('macros', () => {
 
         $scope.origItem = {};
         $scope.item = item;
-        $scope.closeWidget = function() { /* no-op */ };
+        $scope.closeWidget = function () {
+            /* no-op */
+        };
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();
@@ -207,7 +222,9 @@ describe('macros', () => {
 
         $scope.origItem = {};
         $scope.item = item;
-        $scope.closeWidget = function() { /* no-op */ };
+        $scope.closeWidget = function () {
+            /* no-op */
+        };
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();
@@ -217,10 +234,9 @@ describe('macros', () => {
         expect($scope.item.abstract).toEqual('abstract');
         expect($scope.item.genre).toEqual([{qcode: 'zoo', name: 'zoo'}]);
         expect($scope.item.slugline).toEqual('slugline');
-        expect($rootScope.$broadcast.calls.allArgs())
-            .toEqual([
-                ['macro:refreshField', 'abstract', 'new abstract'],
-                ['macro:refreshField', 'slugline', 'new slugline'],
-            ]);
+        expect($rootScope.$broadcast.calls.allArgs()).toEqual([
+            ['macro:refreshField', 'abstract', 'new abstract'],
+            ['macro:refreshField', 'slugline', 'new slugline'],
+        ]);
     }));
 });

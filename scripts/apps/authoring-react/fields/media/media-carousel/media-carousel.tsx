@@ -63,13 +63,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
     }
 
     private handleChange(val: IArticle) {
-        this.props.onChange(
-            this.props.mediaItems.map(
-                (_item, i) => i === this.state.currentPage
-                    ? val
-                    : _item,
-            ),
-        );
+        this.props.onChange(this.props.mediaItems.map((_item, i) => (i === this.state.currentPage ? val : _item)));
     }
 
     private isFirstItem(): boolean {
@@ -82,7 +76,6 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
         return currentPage === pagesTotal - 1;
     }
-
 
     public next(): void {
         if (this.isLastItem()) {
@@ -121,112 +114,81 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
         const title = (
             <Spacer v gap="8" noWrap>
                 <div>
-                    <span className="field--media--metadata-label">
-                        {gettext('Title:')}
-                    </span>
+                    <span className="field--media--metadata-label">{gettext('Title:')}</span>
                     <SpacerBlock h gap="8" />
                     <span>{item.headline ?? noValueLabel}</span>
                 </div>
 
-                {
-                    readOnly && ( // when read-only, description input won't be visible
-                        <div>
-                            <span className="field--media--metadata-label">
-                                {gettext('Description:')}
-                            </span>
-                            <SpacerBlock h gap="8" />
-                            <span>{item.description_text ?? noValueLabel}</span>
-                        </div>
-                    )
-                }
+                {readOnly && ( // when read-only, description input won't be visible
+                    <div>
+                        <span className="field--media--metadata-label">{gettext('Description:')}</span>
+                        <SpacerBlock h gap="8" />
+                        <span>{item.description_text ?? noValueLabel}</span>
+                    </div>
+                )}
             </Spacer>
         );
 
-        const removeButton = (
-            !readOnly && (
-                <div>
-                    <IconButton
-                        ariaValue={gettext('Remove')}
-                        icon="remove-sign"
-                        onClick={() => {
-                            onChange(
-                                mediaItems.filter(
-                                    (_, i) => i !== currentPage,
-                                ),
-                            );
-                        }}
-                    />
-                </div>
-            )
+        const removeButton = !readOnly && (
+            <div>
+                <IconButton
+                    ariaValue={gettext('Remove')}
+                    icon="remove-sign"
+                    onClick={() => {
+                        onChange(mediaItems.filter((_, i) => i !== currentPage));
+                    }}
+                />
+            </div>
         );
 
-        const metadata = (
-            <MediaMetadata item={item} />
-        );
+        const metadata = <MediaMetadata item={item} />;
 
-        const paginationBar = maxItemsAllowed < 2 ? null : (
-            <Spacer h gap="16" justifyContent="space-between" noWrap>
-                <div>
-                    <IconButton
-                        ariaValue={gettext('Previous')}
-                        icon="arrow-left"
-                        onClick={this.prev}
-                    />
-                </div>
+        const paginationBar =
+            maxItemsAllowed < 2 ? null : (
+                <Spacer h gap="16" justifyContent="space-between" noWrap>
+                    <div>
+                        <IconButton ariaValue={gettext('Previous')} icon="arrow-left" onClick={this.prev} />
+                    </div>
 
-                <div>
-                    <span style={{opacity: 0.5}}>
-                        {(currentPage + 1)} / {pagesTotal}
-                    </span>
-                </div>
+                    <div>
+                        <span style={{opacity: 0.5}}>
+                            {currentPage + 1} / {pagesTotal}
+                        </span>
+                    </div>
 
-                <div>
-                    <IconButton
-                        ariaValue={gettext('Next')}
-                        icon="arrow-right"
-                        onClick={this.next}
-                    />
-                </div>
-            </Spacer>
-        );
+                    <div>
+                        <IconButton ariaValue={gettext('Next')} icon="arrow-right" onClick={this.next} />
+                    </div>
+                </Spacer>
+            );
 
-        const titleInput = !readOnly && showTitleInput
-            ? (
+        const titleInput =
+            !readOnly && showTitleInput ? (
                 <Input
                     type="text"
                     label={gettext('Title')}
                     value={item.headline ?? ''}
                     onChange={(val) => {
-                        onChange(
-                            mediaItems.map(
-                                (_item, i) => i === currentPage
-                                    ? {..._item, headline: val}
-                                    : _item,
-                            ),
-                        );
+                        onChange(mediaItems.map((_item, i) => (i === currentPage ? {..._item, headline: val} : _item)));
                     }}
                 />
-            )
-            : null;
+            ) : null;
 
-        const descriptionInput = !readOnly && showDescriptionInput
-            ? (
+        const descriptionInput =
+            !readOnly && showDescriptionInput ? (
                 <Input
                     type="text"
                     label={gettext('Description')}
                     value={item.description_text ?? ''}
                     onChange={(val) => {
                         onChange(
-                            mediaItems.map(
-                                (_item, i) => i === currentPage
-                                    ? {..._item, description_text: val}
-                                    : _item,
+                            mediaItems.map((_item, i) =>
+                                i === currentPage ? {..._item, description_text: val} : _item,
                             ),
                         );
                     }}
                 />
-            )
-            : null;
+            ) : null;
 
         return (
             <div className="field--media">

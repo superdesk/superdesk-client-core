@@ -31,15 +31,15 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
 
     $scope.model = {selectedType: 'true'};
 
-    $scope.close = function() {
+    $scope.close = function () {
         $scope.filter_test = null;
         $scope.testResult = null;
     };
-    $scope.preview = function(Item) {
+    $scope.preview = function (Item) {
         $location.search('_id', Item ? Item._id : Item);
     };
 
-    $scope.hideActions = function() {
+    $scope.hideActions = function () {
         return true;
     };
 
@@ -53,7 +53,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
             $scope.selected.preview = null;
         }
     }
-    $scope.handleKeyEvent = function(event) {
+    $scope.handleKeyEvent = function (event) {
         var code = event.keyCode || event.which;
 
         if (MOVES[code]) {
@@ -85,7 +85,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
             event.stopImmediatePropagation();
         }
     }
-    $scope.fetchResults = function() {
+    $scope.fetchResults = function () {
         fetchProductionTestResult();
     };
     $scope.$on('triggerTest', (event, filter) => {
@@ -94,23 +94,25 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
         $scope.selectedfilter = filter._id;
         fetchProductionTestResult();
     });
-    var fetchProductionTestResult = function() {
-        contentFilters.testContentFilter({
-            filter_id: $scope.selectedfilter,
-            return_matching: $scope.$eval($scope.model.selectedType,
-            )}).then(
-            (result) => {
-                $scope.testResult = result.match_results;
-            },
-            (response) => {
-                if (angular.isDefined(response.data._issues)) {
-                    notify.error(gettext('Error: ' + response.data._issues));
-                } else if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Error: ' + response.data._message));
-                } else {
-                    notify.error(gettext('Error: Failed to fetch production test results.'));
-                }
-            },
-        );
+    var fetchProductionTestResult = function () {
+        contentFilters
+            .testContentFilter({
+                filter_id: $scope.selectedfilter,
+                return_matching: $scope.$eval($scope.model.selectedType),
+            })
+            .then(
+                (result) => {
+                    $scope.testResult = result.match_results;
+                },
+                (response) => {
+                    if (angular.isDefined(response.data._issues)) {
+                        notify.error(gettext('Error: ' + response.data._issues));
+                    } else if (angular.isDefined(response.data._message)) {
+                        notify.error(gettext('Error: ' + response.data._message));
+                    } else {
+                        notify.error(gettext('Error: Failed to fetch production test results.'));
+                    }
+                },
+            );
     };
 }

@@ -29,9 +29,7 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
         const config: IDropdownConfig = this.props.config ?? {
             source: 'manual-entry',
             type: 'text',
-            options: [
-                newItemTemplate,
-            ],
+            options: [newItemTemplate],
             multiple: false,
             roundCorners: false,
             readOnly: false,
@@ -67,9 +65,7 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
 
         const config: IDropdownConfig = this.getConfig();
 
-        const someItemsHaveColorsSelected = config.options.some(
-            (item) => item.color != null,
-        );
+        const someItemsHaveColorsSelected = config.options.some((item) => item.color != null);
 
         const error = this.validate();
 
@@ -88,14 +84,15 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
                             this.props.onChange({
                                 ...config,
                                 type: val,
-                                options: val === 'number' ?
-                                    config.options.map((_option) => ({
-                                        ..._option,
-                                        id: isNumeric(_option.id.toString())
-                                            ? parseFloat(_option.id.toString())
-                                            : null,
-                                    }))
-                                    : config.options,
+                                options:
+                                    val === 'number'
+                                        ? config.options.map((_option) => ({
+                                              ..._option,
+                                              id: isNumeric(_option.id.toString())
+                                                  ? parseFloat(_option.id.toString())
+                                                  : null,
+                                          }))
+                                        : config.options,
                             });
                         }}
                     />
@@ -115,123 +112,119 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
                         </thead>
 
                         <tbody>
-                            {
-                                config.options.map((option, i) => (
-                                    <tr key={i}>
-                                        <td>
-                                            <input
-                                                type={config.type}
-                                                value={option.id ?? ''}
-                                                onChange={(event) => {
-                                                    const value = (() => {
-                                                        if (config.type === 'text') {
-                                                            return event.target.value;
-                                                        } else if (config.type === 'number') {
-                                                            return event.target.value === ''
-                                                                ? null
-                                                                : parseFloat(event.target.value);
-                                                        } else {
-                                                            assertNever(config.type);
-                                                        }
-                                                    })();
+                            {config.options.map((option, i) => (
+                                <tr key={i}>
+                                    <td>
+                                        <input
+                                            type={config.type}
+                                            value={option.id ?? ''}
+                                            onChange={(event) => {
+                                                const value = (() => {
+                                                    if (config.type === 'text') {
+                                                        return event.target.value;
+                                                    } else if (config.type === 'number') {
+                                                        return event.target.value === ''
+                                                            ? null
+                                                            : parseFloat(event.target.value);
+                                                    } else {
+                                                        assertNever(config.type);
+                                                    }
+                                                })();
 
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: config.options.map(
-                                                            (_opt, _i) => i === _i ? {..._opt, id: value} : _opt,
-                                                        ),
-                                                    });
-                                                }}
-                                            />
-                                        </td>
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: config.options.map((_opt, _i) =>
+                                                        i === _i ? {..._opt, id: value} : _opt,
+                                                    ),
+                                                });
+                                            }}
+                                        />
+                                    </td>
 
-                                        <td>
-                                            <input
-                                                type="text"
-                                                value={option.label}
-                                                onChange={(event) => {
-                                                    const {value} = event.target;
+                                    <td>
+                                        <input
+                                            type="text"
+                                            value={option.label}
+                                            onChange={(event) => {
+                                                const {value} = event.target;
 
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: config.options.map(
-                                                            (_opt, _i) => i === _i ? {..._opt, label: value} : _opt,
-                                                        ),
-                                                    });
-                                                }}
-                                            />
-                                        </td>
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: config.options.map((_opt, _i) =>
+                                                        i === _i ? {..._opt, label: value} : _opt,
+                                                    ),
+                                                });
+                                            }}
+                                        />
+                                    </td>
 
-                                        <td>
-                                            <input
-                                                type="color"
-                                                value={option.color ?? '#ffffff'}
-                                                onChange={(event) => {
-                                                    const {value} = event.target;
+                                    <td>
+                                        <input
+                                            type="color"
+                                            value={option.color ?? '#ffffff'}
+                                            onChange={(event) => {
+                                                const {value} = event.target;
 
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: config.options.map(
-                                                            (_opt, _i) => i === _i ? {..._opt, color: value} : _opt,
-                                                        ),
-                                                    });
-                                                }}
-                                            />
-                                        </td>
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: config.options.map((_opt, _i) =>
+                                                        i === _i ? {..._opt, color: value} : _opt,
+                                                    ),
+                                                });
+                                            }}
+                                        />
+                                    </td>
 
-                                        <td>
-                                            <IconButton
-                                                ariaValue={gettext('Remove')}
-                                                icon="remove-sign"
-                                                onClick={() => {
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: config.options.filter(
-                                                            (_opt, _i) => i !== _i,
-                                                        ),
-                                                    });
-                                                }}
-                                            />
+                                    <td>
+                                        <IconButton
+                                            ariaValue={gettext('Remove')}
+                                            icon="remove-sign"
+                                            onClick={() => {
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: config.options.filter((_opt, _i) => i !== _i),
+                                                });
+                                            }}
+                                        />
 
-                                            <IconButton
-                                                ariaValue={gettext('Move up')}
-                                                icon="chevron-up-thin"
-                                                disabled={i === 0}
-                                                onClick={() => {
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: arrayMove(config.options, i, i - 1),
-                                                    });
-                                                }}
-                                            />
+                                        <IconButton
+                                            ariaValue={gettext('Move up')}
+                                            icon="chevron-up-thin"
+                                            disabled={i === 0}
+                                            onClick={() => {
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: arrayMove(config.options, i, i - 1),
+                                                });
+                                            }}
+                                        />
 
-                                            <IconButton
-                                                ariaValue={gettext('Move down')}
-                                                icon="chevron-down-thin"
-                                                disabled={i === config.options.length - 1}
-                                                onClick={() => {
-                                                    this.props.onChange({
-                                                        ...config,
-                                                        options: arrayMove(config.options, i, i + 1),
-                                                    });
-                                                }}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))
-                            }
+                                        <IconButton
+                                            ariaValue={gettext('Move down')}
+                                            icon="chevron-down-thin"
+                                            disabled={i === config.options.length - 1}
+                                            onClick={() => {
+                                                this.props.onChange({
+                                                    ...config,
+                                                    options: arrayMove(config.options, i, i + 1),
+                                                });
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
 
-                    {
-                        error != null && (
-                            <React.Fragment>
-                                <SpacerBlock v gap="16" />
+                    {error != null && (
+                        <React.Fragment>
+                            <SpacerBlock v gap="16" />
 
-                                <Alert type="alert" size="small">{error}</Alert>
-                            </React.Fragment>
-                        )
-                    }
+                            <Alert type="alert" size="small">
+                                {error}
+                            </Alert>
+                        </React.Fragment>
+                    )}
 
                     <SpacerBlock v gap="16" />
 
@@ -246,22 +239,20 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
                     />
                 </div>
 
-                {
-                    someItemsHaveColorsSelected && (
-                        <div>
-                            <Checkbox
-                                label={{text: gettext('Round corners for dropdown items')}}
-                                checked={config.roundCorners}
-                                onChange={(val: IDropdownConfig['roundCorners']) => {
-                                    this.props.onChange({
-                                        ...config,
-                                        roundCorners: val,
-                                    });
-                                }}
-                            />
-                        </div>
-                    )
-                }
+                {someItemsHaveColorsSelected && (
+                    <div>
+                        <Checkbox
+                            label={{text: gettext('Round corners for dropdown items')}}
+                            checked={config.roundCorners}
+                            onChange={(val: IDropdownConfig['roundCorners']) => {
+                                this.props.onChange({
+                                    ...config,
+                                    roundCorners: val,
+                                });
+                            }}
+                        />
+                    </div>
+                )}
             </Spacer>
         );
     }

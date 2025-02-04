@@ -7,19 +7,14 @@ import {PromptModal} from './prompt-modal';
 import {IPromptOptions} from 'superdesk-api';
 
 export const ui = {
-    alert: (message: string) => (
+    alert: (message: string) =>
         showModal(({closeModal}) => {
             return (
-                <Modal
-                    position="top"
-                    visible
-                    onHide={closeModal}
-                >
+                <Modal position="top" visible onHide={closeModal}>
                     {message}
                 </Modal>
             );
-        })
-    ),
+        }),
     prompt: (options: IPromptOptions): Promise<string> => {
         return new Promise((resolve) => {
             showModal(({closeModal}) => {
@@ -40,9 +35,11 @@ export const ui = {
             });
         });
     },
-    confirm: (message: string, title?: string) => new Promise((resolve) => {
-        ng.get('modal').confirm(message, title ?? gettext('Confirm'))
-            .then(() => resolve(true))
-            .catch(() => resolve(false));
-    }),
+    confirm: (message: string, title?: string) =>
+        new Promise((resolve) => {
+            ng.get('modal')
+                .confirm(message, title ?? gettext('Confirm'))
+                .then(() => resolve(true))
+                .catch(() => resolve(false));
+        }),
 };

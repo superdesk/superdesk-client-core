@@ -1,9 +1,17 @@
 <div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
-    <button class="dropdown__toggle" dropdown__toggle tabindex="{{ tabindex }}" ng-disabled="disabled" ng-if="!disabled" aria-label="{{ 'Add new' | translate }}">
+    <button
+        class="dropdown__toggle"
+        dropdown__toggle
+        tabindex="{{ tabindex }}"
+        ng-disabled="disabled"
+        ng-if="!disabled"
+        aria-label="{{ 'Add new' | translate }}"
+    >
         <i class="icon--white icon-plus-large"></i>
     </button>
     <div class="dropdown__menu nested-menu pull-right" sd-loading="loading">
-        <div sd-typeahead
+        <div
+            sd-typeahead
             items="terms"
             term="selectedTerm"
             search="searchTerms(term)"
@@ -13,8 +21,9 @@
             data-debounce="1000"
         >
             <ul class="item-list">
-                <li typeahead-item="t" ng-repeat="t in terms track by t.code"j>
-                    <button>{{ :: t.name }} ({{ :: [t.state, t.country_code] | join }})
+                <li typeahead-item="t" ng-repeat="t in terms track by t.code" j>
+                    <button>
+                        {{ :: t.name }} ({{ :: [t.state, t.country_code] | join }})
                         <span ng-if="t.feature_class === 'A'">
                             <small ng-show="t.state" class="label label--hollow" translate>state, region, ...</small>
                             <small ng-show="!t.state" class="label label--hollow" translate>country</small>
@@ -28,10 +37,10 @@
 
 <div class="terms-list" ng-if="item[field].length">
     <ul>
-        <li ng-if="!disabled" class="pull-left"
-            ng-repeat="t in item[field] track by t.code"
-            ng-click="removeTerm(t)">{{ t.name }} {{ t.country_code && '('+ t.country_code +')' }} <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
-        <li ng-if="disabled" class="pull-left disabled"
-            ng-repeat="t in item[field] track by t.code">{{ t.name }}</li>
+        <li ng-if="!disabled" class="pull-left" ng-repeat="t in item[field] track by t.code" ng-click="removeTerm(t)">
+            {{ t.name }} {{ t.country_code && '('+ t.country_code +')' }}
+            <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i>
+        </li>
+        <li ng-if="disabled" class="pull-left disabled" ng-repeat="t in item[field] track by t.code">{{ t.name }}</li>
     </ul>
 </div>

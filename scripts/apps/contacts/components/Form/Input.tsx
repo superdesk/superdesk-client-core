@@ -46,11 +46,7 @@ export const Input: React.StatelessComponent<any> = ({
 Input.propTypes = {
     field: PropTypes.string,
     type: PropTypes.string,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.bool,
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
     onClick: PropTypes.func,

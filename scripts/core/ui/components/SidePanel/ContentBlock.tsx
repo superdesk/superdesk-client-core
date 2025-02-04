@@ -9,14 +9,10 @@ import classNames from 'classnames';
  */
 export const ContentBlock: React.StatelessComponent<any> = ({children, className, padSmall, flex}) => (
     <div
-        className={classNames(
-            'side-panel__content-block',
-            className,
-            {
-                'side-panel__content-block--pad-small': padSmall,
-                'side-panel__content-block--flex': flex,
-            },
-        )}
+        className={classNames('side-panel__content-block', className, {
+            'side-panel__content-block--pad-small': padSmall,
+            'side-panel__content-block--flex': flex,
+        })}
     >
         {children}
     </div>

@@ -26,47 +26,47 @@ export const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
 export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
 export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FORMATTING_OPTION, string> => ({
-    'uppercase': gettext('uppercase'),
-    'lowercase': gettext('lowercase'),
+    uppercase: gettext('uppercase'),
+    lowercase: gettext('lowercase'),
 });
 
 export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
-        'h1': gettext('h1'),
-        'h2': gettext('h2'),
-        'h3': gettext('h3'),
-        'h4': gettext('h4'),
-        'h5': gettext('h5'),
-        'h6': gettext('h6'),
+        h1: gettext('h1'),
+        h2: gettext('h2'),
+        h3: gettext('h3'),
+        h4: gettext('h4'),
+        h5: gettext('h5'),
+        h6: gettext('h6'),
         'unordered list': gettext('unordered list'),
         'ordered list': gettext('ordered list'),
-        'pre': gettext('pre'),
-        'quote': gettext('quote'),
-        'media': gettext('media'),
-        'link': gettext('link'),
-        'superscript': gettext('superscript'),
-        'subscript': gettext('subscript'),
-        'strikethrough': gettext('strikethrough'),
-        'underline': gettext('underline'),
-        'italic': gettext('italic'),
-        'bold': gettext('bold'),
-        'table': gettext('table'),
+        pre: gettext('pre'),
+        quote: gettext('quote'),
+        media: gettext('media'),
+        link: gettext('link'),
+        superscript: gettext('superscript'),
+        subscript: gettext('subscript'),
+        strikethrough: gettext('strikethrough'),
+        underline: gettext('underline'),
+        italic: gettext('italic'),
+        bold: gettext('bold'),
+        table: gettext('table'),
         'multi-line quote': gettext('multi-line quote'),
         'custom blocks': gettext('custom blocks'),
         'formatting marks': gettext('formatting marks'),
         'remove format': gettext('remove format'),
         'remove all format': gettext('remove all format'),
-        'annotation': gettext('annotation'),
-        'comments': gettext('comments'),
-        'suggestions': gettext('suggestions'),
-        'embed': gettext('embed'),
+        annotation: gettext('annotation'),
+        comments: gettext('comments'),
+        suggestions: gettext('suggestions'),
+        embed: gettext('embed'),
         'embed articles': gettext('embed articles'),
-        'tab': gettext('tab'),
+        tab: gettext('tab'),
         'tab as spaces': gettext('tab as space'),
-        'undo': gettext('undo'),
-        'redo': gettext('redo'),
-        'uppercase': gettext('uppercase'),
-        'lowercase': gettext('lowercase'),
+        undo: gettext('undo'),
+        redo: gettext('redo'),
+        uppercase: gettext('uppercase'),
+        lowercase: gettext('lowercase'),
     };
 };
 
@@ -89,12 +89,11 @@ export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTIO
 ];
 
 function hasFormattingOptions(fieldId: string, editor, customFields: Array<any>) {
-    return Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId)
-        || (
-            editor?.body_html?.editor3 === true
-            && Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(fieldId)
-        )
-        || customFields.find(({_id}) => fieldId === _id)?.field_type === 'text';
+    return (
+        Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId) ||
+        (editor?.body_html?.editor3 === true && Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(fieldId)) ||
+        customFields.find(({_id}) => fieldId === _id)?.field_type === 'text'
+    );
 }
 
 function getEditor3FormattingOptions(
@@ -147,19 +146,9 @@ export function getContentProfileFormConfig(
         required: false,
     };
 
-    const fields: Array<IFormField | IFormGroup> = [
-        requiredField,
-        readonlyField,
-        sdWidthField,
-    ];
+    const fields: Array<IFormField | IFormGroup> = [requiredField, readonlyField, sdWidthField];
 
-    if (
-        field?.id != null
-        && (
-            schema[field.id].type === 'string'
-            || customField?.field_type === 'text'
-        )
-    ) {
+    if (field?.id != null && (schema[field.id].type === 'string' || customField?.field_type === 'text')) {
         const minimumLengthField: IFormField = {
             label: gettext('Minimum length'),
             type: FormFieldType.number,
@@ -231,13 +220,10 @@ export function getContentProfileFormConfig(
      * because there is a dedicated config per field which chars are disallowed.
      */
     if (
-        authoringReactViewEnabled
-        && field?.id != null
-        && characterValidationEnabled
-        && (
-            schema[field.id]?.type === 'string'
-            || customField?.field_type === 'text'
-        )
+        authoringReactViewEnabled &&
+        field?.id != null &&
+        characterValidationEnabled &&
+        (schema[field.id]?.type === 'string' || customField?.field_type === 'text')
     ) {
         const validateCharactersField: IFormField = {
             label: gettext('Validate Characters'),
@@ -262,8 +248,9 @@ export function getContentProfileFormConfig(
             field: 'formatOptions',
             required: false,
             component_parameters: {
-                items: Object.entries(getEditor3FormattingOptions(field.id, customFields))
-                    .map(([id, translatedLabel]) => ({id: id, label: translatedLabel})),
+                items: Object.entries(getEditor3FormattingOptions(field.id, customFields)).map(
+                    ([id, translatedLabel]) => ({id: id, label: translatedLabel}),
+                ),
                 dataTestId: 'formatting-options-input',
             },
         };
@@ -283,14 +270,9 @@ export function getContentProfileFormConfig(
     }
 
     if (
-        field?.id != null
-        && (
-            schema[field.id].type === 'media'
-            || (
-                hasFormattingOptions(field.id, editor, customFields)
-                && field.formatOptions?.includes('media') === true
-            )
-        )
+        field?.id != null &&
+        (schema[field.id].type === 'media' ||
+            (hasFormattingOptions(field.id, editor, customFields) && field.formatOptions?.includes('media') === true))
     ) {
         const showImageTitleField: IFormField = {
             label: gettext('Show Image Title'),

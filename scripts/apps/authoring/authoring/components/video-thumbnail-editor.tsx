@@ -12,8 +12,8 @@ interface IProps {
 }
 
 const RENDITION_MAPPING = {
-    'original': 'thumbnail',
-    'viewImage': 'viewImage',
+    original: 'thumbnail',
+    viewImage: 'viewImage',
 };
 
 export class VideoThumbnailEditor extends React.Component<IProps> {
@@ -33,31 +33,32 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
                     data: {media: file},
                 }),
             )
-            .then(
-                (response) => {
-                    const {item, onChange} = this.props;
-                    const currentRenditions: IArticle['renditions'] = Object.assign(item.renditions ?? {});
-                    const renditionsPatch: IArticle['renditions'] = {};
+            .then((response) => {
+                const {item, onChange} = this.props;
+                const currentRenditions: IArticle['renditions'] = Object.assign(item.renditions ?? {});
+                const renditionsPatch: IArticle['renditions'] = {};
 
-                    Object.keys(RENDITION_MAPPING).forEach((renditionId) => {
-                        const rendition = response.data.renditions[renditionId];
+                Object.keys(RENDITION_MAPPING).forEach((renditionId) => {
+                    const rendition = response.data.renditions[renditionId];
 
-                        if (rendition != null) {
-                            renditionsPatch[RENDITION_MAPPING[renditionId]] = rendition;
-                        }
-                    });
+                    if (rendition != null) {
+                        renditionsPatch[RENDITION_MAPPING[renditionId]] = rendition;
+                    }
+                });
 
-                    if (Object.keys(renditionsPatch).length > 0) {
-                        onChange({
+                if (Object.keys(renditionsPatch).length > 0) {
+                    onChange(
+                        {
                             ...item,
                             renditions: {
                                 ...currentRenditions,
                                 ...renditionsPatch,
                             },
-                        }, 10);
-                    }
-                },
-            );
+                        },
+                        10,
+                    );
+                }
+            });
     }
 
     removeThumbnail() {
@@ -72,13 +73,16 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
         });
 
         if (Object.keys(renditionsPatch).length > 0) {
-            onChange({
-                ...item,
-                renditions: {
-                    ...currentRenditions,
-                    ...renditionsPatch,
+            onChange(
+                {
+                    ...item,
+                    renditions: {
+                        ...currentRenditions,
+                        ...renditionsPatch,
+                    },
                 },
-            }, 10);
+                10,
+            );
         }
     }
 
@@ -88,46 +92,38 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
         const showFigure = thumbnail != null && thumbnail.mimetype.startsWith('image');
         const readOnly = this.props.readOnly ?? false;
 
-        const content = showFigure
-            ? (
-                <figure className="item-association item-association--preview" style={{height: 'auto'}}>
-                    {
-                        !readOnly && (
-                            <a
-                                className="item-association__remove-item"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    this.removeThumbnail();
-                                }}
-                            >
-                                <i className="icon-close-small" />
-                            </a>
-                        )
-                    }
-
-                    <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
-
-                    <figcaption
-                        style={{
-                            border: '1px solid rgba(150, 150, 150, 0.15)',
-                            padding: '8px',
-                            minHeight: '1.8rem',
+        const content = showFigure ? (
+            <figure className="item-association item-association--preview" style={{height: 'auto'}}>
+                {!readOnly && (
+                    <a
+                        className="item-association__remove-item"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            this.removeThumbnail();
                         }}
                     >
-                        {gettext('Thumbnail')}
-                    </figcaption>
-                </figure>
-            )
-            : (
-                <span>{gettext('Select thumbnail')}</span>
-            );
+                        <i className="icon-close-small" />
+                    </a>
+                )}
+
+                <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
+
+                <figcaption
+                    style={{
+                        border: '1px solid rgba(150, 150, 150, 0.15)',
+                        padding: '8px',
+                        minHeight: '1.8rem',
+                    }}
+                >
+                    {gettext('Thumbnail')}
+                </figcaption>
+            </figure>
+        ) : (
+            <span>{gettext('Select thumbnail')}</span>
+        );
 
         if (readOnly) {
-            return (
-                <div>
-                    {content}
-                </div>
-            );
+            return <div>{content}</div>;
         } else {
             return (
                 <DropZone
@@ -136,8 +132,9 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
                     fileAccept="image/*"
                     onFileSelect={(files) => this.handleFiles(files)}
                     canDrop={(event) => {
-                        return event.dataTransfer.items.length > 0
-                            && event.dataTransfer.items[0].type.startsWith('image/');
+                        return (
+                            event.dataTransfer.items.length > 0 && event.dataTransfer.items[0].type.startsWith('image/')
+                        );
                     }}
                     onDrop={(event) => {
                         event.preventDefault();

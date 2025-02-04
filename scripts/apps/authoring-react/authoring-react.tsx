@@ -34,10 +34,7 @@ import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {addInternalEventListener} from 'core/internal-events';
-import {
-    showUnsavedChangesPrompt,
-    IUnsavedChangesActionWithSaving,
-} from 'core/ui/components/prompt-for-unsaved-changes';
+import {showUnsavedChangesPrompt, IUnsavedChangesActionWithSaving} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
 import {sdApi} from 'api';
@@ -66,31 +63,29 @@ export function getFieldsData<T>(
     storageAdapter: IStorageAdapter<T>,
     language: string,
 ) {
-    return fields.map((field) => {
-        const fieldEditor = getField(field.fieldType);
+    return fields
+        .map((field) => {
+            const fieldEditor = getField(field.fieldType);
 
-        const storageValue = (() => {
-            if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
-                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
-            } else {
-                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType);
-            }
-        })();
+            const storageValue = (() => {
+                if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
+                    return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
+                } else {
+                    return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType);
+                }
+            })();
 
-        const operationalValue = (() => {
-            if (fieldEditor.toOperationalFormat != null) {
-                return fieldEditor.toOperationalFormat(
-                    storageValue,
-                    field.fieldConfig,
-                    language,
-                );
-            } else {
-                return storageValue;
-            }
-        })();
+            const operationalValue = (() => {
+                if (fieldEditor.toOperationalFormat != null) {
+                    return fieldEditor.toOperationalFormat(storageValue, field.fieldConfig, language);
+                } else {
+                    return storageValue;
+                }
+            })();
 
-        return operationalValue;
-    }).toMap();
+            return operationalValue;
+        })
+        .toMap();
 }
 
 function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
@@ -110,10 +105,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
 
         const storageValue = (() => {
             if (fieldEditor.toStorageFormat != null) {
-                return fieldEditor.toStorageFormat(
-                    valueOperational,
-                    field.fieldConfig,
-                );
+                return fieldEditor.toStorageFormat(valueOperational, field.fieldConfig);
             } else {
                 return valueOperational;
             }
@@ -163,16 +155,10 @@ function getInitialState<T extends IBaseRestApiResponse>(
         language,
     );
 
-    const fieldsDataWithChanges: Map<string, unknown> = itemOriginal === itemWithChanges
-        ? fieldsOriginal
-        : getFieldsData(
-            itemWithChanges,
-            allFields,
-            fieldsAdapter,
-            authoringStorage,
-            storageAdapter,
-            language,
-        );
+    const fieldsDataWithChanges: Map<string, unknown> =
+        itemOriginal === itemWithChanges
+            ? fieldsOriginal
+            : getFieldsData(itemWithChanges, allFields, fieldsAdapter, authoringStorage, storageAdapter, language);
 
     const toggledFields = {};
 
@@ -253,12 +239,13 @@ function setCompactMode(fields: IFieldsV2): IFieldsV2 {
     fields.forEach((field, key) => {
         if (field.fieldType === EDITOR_3_FIELD_TYPE) {
             const currentConfig = field.fieldConfig as IEditor3Config;
-            const nextConfig: IEditor3Config = currentConfig.compact != null
-                ? currentConfig
-                : {
-                    ...currentConfig,
-                    compact: true,
-                };
+            const nextConfig: IEditor3Config =
+                currentConfig.compact != null
+                    ? currentConfig
+                    : {
+                          ...currentConfig,
+                          compact: true,
+                      };
 
             result = result.set(key, {
                 ...field,
@@ -303,7 +290,7 @@ interface IStateLoaded<T> {
      * Prevents changes to state while async operation is in progress(e.g. saving).
      */
     loading: boolean;
-    allThemes: {default: ITheme, proofreading: ITheme};
+    allThemes: {default: ITheme; proofreading: ITheme};
     proofreadingEnabled: boolean;
 }
 
@@ -375,9 +362,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 _id: nextPinnedWidget,
             };
 
-            dispatchEvent(new CustomEvent('resize-monitoring', {
-                detail: {value: nextPinnedWidget ? -330 : 330},
-            }));
+            dispatchEvent(
+                new CustomEvent('resize-monitoring', {
+                    detail: {value: nextPinnedWidget ? -330 : 330},
+                }),
+            );
 
             sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, update);
 
@@ -421,22 +410,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
     setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void> {
         return new Promise<void>((resolve) => {
-            this.setState({
-                ...state,
-                loading,
-            }, () => {
-                setTimeout(() => {
-                    /**
-                     * Timeout is used to wait until the view re-renders with a loading indicator.
-                     * This is a workaround for rare scenarios where a field has a lot of data
-                     * and takes a long time to synchronously serialize to storage format causing
-                     * the browser to lock up for some time.
-                     *
-                     * Without the timeout, loading indicator would only get shown AFTER the long task had finished.
-                     */
-                    resolve();
-                });
-            });
+            this.setState(
+                {
+                    ...state,
+                    loading,
+                },
+                () => {
+                    setTimeout(() => {
+                        /**
+                         * Timeout is used to wait until the view re-renders with a loading indicator.
+                         * This is a workaround for rare scenarios where a field has a lot of data
+                         * and takes a long time to synchronously serialize to storage format causing
+                         * the browser to lock up for some time.
+                         *
+                         * Without the timeout, loading indicator would only get shown AFTER the long task had finished.
+                         */
+                        resolve();
+                    });
+                },
+            );
         });
     }
 
@@ -517,9 +509,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         this.setState({
             ...state,
-            fieldsDataWithChanges: onFieldChange == null
-                ? fieldsDataUpdated
-                : onFieldChange(fieldId, fieldsDataUpdated, this.computeLatestEntity),
+            fieldsDataWithChanges:
+                onFieldChange == null
+                    ? fieldsDataUpdated
+                    : onFieldChange(fieldId, fieldsDataUpdated, this.computeLatestEntity),
         });
     }
 
@@ -536,8 +529,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
     hasUnsavedChanges() {
         if (this.state.initialized) {
-            return (this.state.itemOriginal !== this.state.itemWithChanges)
-                || (this.state.fieldsDataOriginal !== this.state.fieldsDataWithChanges);
+            return (
+                this.state.itemOriginal !== this.state.itemWithChanges ||
+                this.state.fieldsDataOriginal !== this.state.fieldsDataWithChanges
+            );
         } else {
             return false;
         }
@@ -550,20 +545,18 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             return vocabulary.items;
         }
 
-        const anpaCategoryQcodes: Array<string> = this.state.initialized ?
-            (this.state.fieldsDataWithChanges.get(ANPA_CATEGORY.fieldId) as Array<any> ?? [])
+        const anpaCategoryQcodes: Array<string> = this.state.initialized
+            ? ((this.state.fieldsDataWithChanges.get(ANPA_CATEGORY.fieldId) as Array<any>) ?? [])
             : [];
 
         if (vocabulary.service == null || vocabulary.service?.all != null) {
-            return vocabulary.items.filter(
-                (vocabularyItem) => {
-                    if (vocabularyItem.service == null) {
-                        return true;
-                    } else {
-                        return anpaCategoryQcodes.some((qcode) => vocabularyItem.service[qcode] != null);
-                    }
-                },
-            );
+            return vocabulary.items.filter((vocabularyItem) => {
+                if (vocabularyItem.service == null) {
+                    return true;
+                } else {
+                    return anpaCategoryQcodes.some((qcode) => vocabularyItem.service[qcode] != null);
+                }
+            });
         } else if (anpaCategoryQcodes.some((qcode) => vocabulary.service?.[qcode] != null)) {
             return vocabulary.items;
         } else {
@@ -587,26 +580,24 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const {authoringStorage} = this.props;
 
-        Promise.all(
-            [
-                this.getItemAndAutosave().then((item) => {
-                    const itemCurrent = item.autosaved ?? item.saved;
+        Promise.all([
+            this.getItemAndAutosave().then((item) => {
+                const itemCurrent = item.autosaved ?? item.saved;
 
-                    return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
-                        return {item, profile};
-                    });
-                }),
-                authoringStorage.getUserPreferences(),
-                authThemes.get('theme'),
-                authThemes.get('proofreadTheme'),
-            ],
-        ).then((res) => {
+                return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
+                    return {item, profile};
+                });
+            }),
+            authoringStorage.getUserPreferences(),
+            authThemes.get('theme'),
+            authThemes.get('proofreadTheme'),
+        ]).then((res) => {
             const [{item, profile}, userPreferences, defaultTheme, proofReadingTheme] = res;
 
             const spellcheckerEnabled =
-                userPreferences[SPELLCHECKER_PREFERENCE].enabled
-                ?? userPreferences[SPELLCHECKER_PREFERENCE].default
-                ?? true;
+                userPreferences[SPELLCHECKER_PREFERENCE].enabled ??
+                userPreferences[SPELLCHECKER_PREFERENCE].default ??
+                true;
 
             profile.header.merge(profile.content).forEach(({id}) => {
                 this.fieldRefs[id] = createRef();
@@ -658,64 +649,58 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
-            addInternalEventListener(
-                'replaceAuthoringDataWithChanges',
-                (event) => {
-                    const {state} = this;
-                    const article = event.detail;
+            addInternalEventListener('replaceAuthoringDataWithChanges', (event) => {
+                const {state} = this;
+                const article = event.detail;
 
-                    if (state.initialized) {
-                        this.setState(this.updateItemWithChanges(state, article));
-                    }
-                },
-            ),
+                if (state.initialized) {
+                    this.setState(this.updateItemWithChanges(state, article));
+                }
+            }),
         );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
-            addInternalEventListener(
-                'dangerouslyOverwriteAuthoringData',
-                (event) => {
-                    if (event.detail.item._id === this.props.itemId) {
-                        const patch = event.detail.item;
+            addInternalEventListener('dangerouslyOverwriteAuthoringData', (event) => {
+                if (event.detail.item._id === this.props.itemId) {
+                    const patch = event.detail.item;
 
-                        const {state} = this;
+                    const {state} = this;
 
-                        if (state.initialized) {
-                            if (state.itemOriginal === state.itemWithChanges) {
-                                /**
-                                 * if object references are the same before patching
-                                 * they should be the same after patching too
-                                 * in order for checking for changes to work correctly
-                                 * (reference equality is used for change detection)
-                                 */
+                    if (state.initialized) {
+                        if (state.itemOriginal === state.itemWithChanges) {
+                            /**
+                             * if object references are the same before patching
+                             * they should be the same after patching too
+                             * in order for checking for changes to work correctly
+                             * (reference equality is used for change detection)
+                             */
 
-                                const patched = {
+                            const patched = {
+                                ...state.itemOriginal,
+                                ...patch,
+                            };
+
+                            this.setState({
+                                ...state,
+                                itemOriginal: patched,
+                                itemWithChanges: patched,
+                            });
+                        } else {
+                            this.setState({
+                                ...state,
+                                itemWithChanges: {
+                                    ...state.itemWithChanges,
+                                    ...patch,
+                                },
+                                itemOriginal: {
                                     ...state.itemOriginal,
                                     ...patch,
-                                };
-
-                                this.setState({
-                                    ...state,
-                                    itemOriginal: patched,
-                                    itemWithChanges: patched,
-                                });
-                            } else {
-                                this.setState({
-                                    ...state,
-                                    itemWithChanges: {
-                                        ...state.itemWithChanges,
-                                        ...patch,
-                                    },
-                                    itemOriginal: {
-                                        ...state.itemOriginal,
-                                        ...patch,
-                                    },
-                                });
-                            }
+                                },
+                            });
                         }
                     }
-                },
-            ),
+                }
+            }),
         );
 
         /**
@@ -728,7 +713,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 const state = this.state;
 
-                if (state.initialized && (state.itemOriginal._id === data.extra.item)) {
+                if (state.initialized && state.itemOriginal._id === data.extra.item) {
                     /**
                      * Only patch these fields to preserve
                      * unsaved changes.
@@ -778,50 +763,47 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         );
 
         this.cleanupFunctionsToRunBeforeUnmounting.push(
-            addInternalEventListener(
-                'dangerouslyOverwriteAuthoringField',
-                (event) => {
-                    if (event.detail.itemId === this.props.itemId) {
-                        const patch = {[event.detail.field.key]: event.detail.field.value};
+            addInternalEventListener('dangerouslyOverwriteAuthoringField', (event) => {
+                if (event.detail.itemId === this.props.itemId) {
+                    const patch = {[event.detail.field.key]: event.detail.field.value};
 
-                        const {state} = this;
+                    const {state} = this;
 
-                        if (state.initialized) {
-                            if (state.itemOriginal === state.itemWithChanges) {
-                                /**
-                                 * if object references are the same before patching
-                                 * they should be the same after patching too
-                                 * in order for checking for changes to work correctly
-                                 * (reference equality is used for change detection)
-                                 */
+                    if (state.initialized) {
+                        if (state.itemOriginal === state.itemWithChanges) {
+                            /**
+                             * if object references are the same before patching
+                             * they should be the same after patching too
+                             * in order for checking for changes to work correctly
+                             * (reference equality is used for change detection)
+                             */
 
-                                const patched = {
+                            const patched = {
+                                ...state.itemOriginal,
+                                ...patch,
+                            };
+
+                            this.setState({
+                                ...state,
+                                itemOriginal: patched,
+                                itemWithChanges: patched,
+                            });
+                        } else {
+                            this.setState({
+                                ...state,
+                                itemWithChanges: {
+                                    ...state.itemWithChanges,
+                                    ...patch,
+                                },
+                                itemOriginal: {
                                     ...state.itemOriginal,
                                     ...patch,
-                                };
-
-                                this.setState({
-                                    ...state,
-                                    itemOriginal: patched,
-                                    itemWithChanges: patched,
-                                });
-                            } else {
-                                this.setState({
-                                    ...state,
-                                    itemWithChanges: {
-                                        ...state.itemWithChanges,
-                                        ...patch,
-                                    },
-                                    itemOriginal: {
-                                        ...state.itemOriginal,
-                                        ...patch,
-                                    },
-                                });
-                            }
+                                },
+                            });
                         }
                     }
-                },
-            ),
+                }
+            }),
         );
 
         /**
@@ -837,10 +819,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     return;
                 }
 
-                if (
-                    this.props.resourceNames.includes(resource) !== true
-                    || state.itemOriginal._id !== _id
-                ) {
+                if (this.props.resourceNames.includes(resource) !== true || state.itemOriginal._id !== _id) {
                     return;
                 }
 
@@ -853,19 +832,21 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
 
                 this.getItemAndAutosave().then((item) => {
-                    this.setState(getInitialState(
-                        item,
-                        state.profile,
-                        state.userPreferencesForFields,
-                        state.spellcheckerEnabled,
-                        this.props.fieldsAdapter,
-                        this.props.authoringStorage,
-                        this.props.storageAdapter,
-                        this.props.getLanguage(item.autosaved ?? item.saved),
-                        state.validationErrors,
-                        state.allThemes.default,
-                        state.allThemes.proofreading,
-                    ));
+                    this.setState(
+                        getInitialState(
+                            item,
+                            state.profile,
+                            state.userPreferencesForFields,
+                            state.spellcheckerEnabled,
+                            this.props.fieldsAdapter,
+                            this.props.authoringStorage,
+                            this.props.storageAdapter,
+                            this.props.getLanguage(item.autosaved ?? item.saved),
+                            state.validationErrors,
+                            state.allThemes.default,
+                            state.allThemes.proofreading,
+                        ),
+                    );
                 });
             }),
         );
@@ -879,19 +860,21 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
 
                 this.getItemAndAutosave().then((item) => {
-                    this.setState(getInitialState(
-                        item,
-                        state.profile,
-                        state.userPreferencesForFields,
-                        state.spellcheckerEnabled,
-                        this.props.fieldsAdapter,
-                        this.props.authoringStorage,
-                        this.props.storageAdapter,
-                        this.props.getLanguage(item.autosaved ?? item.saved),
-                        state.validationErrors,
-                        state.allThemes.default,
-                        state.allThemes.proofreading,
-                    ));
+                    this.setState(
+                        getInitialState(
+                            item,
+                            state.profile,
+                            state.userPreferencesForFields,
+                            state.spellcheckerEnabled,
+                            this.props.fieldsAdapter,
+                            this.props.authoringStorage,
+                            this.props.storageAdapter,
+                            this.props.getLanguage(item.autosaved ?? item.saved),
+                            state.validationErrors,
+                            state.allThemes.default,
+                            state.allThemes.proofreading,
+                        ),
+                    );
                 });
             }),
         );
@@ -918,12 +901,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const state = this.state;
 
         if (
-            state.initialized
-            && prevState.initialized
-            && authoringStorage.isLockedInCurrentSession(state.itemOriginal)
+            state.initialized &&
+            prevState.initialized &&
+            authoringStorage.isLockedInCurrentSession(state.itemOriginal)
         ) {
-            const articleChanged = (state.itemWithChanges !== prevState.itemWithChanges)
-                || (state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges);
+            const articleChanged =
+                state.itemWithChanges !== prevState.itemWithChanges ||
+                state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges;
 
             if (articleChanged) {
                 if (this.hasUnsavedChanges()) {
@@ -964,18 +948,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         }
                     });
                 } else if (action === IUnsavedChangesActionWithSaving.save) {
-                    this.save(state).then(() => {
-                        closePromptFn();
+                    this.save(state)
+                        .then(() => {
+                            closePromptFn();
 
-                        if (this.state.initialized) {
-                            resolve(this.state.itemOriginal);
-                        }
-                    }).catch((e) => {
-                        // Since we don't give modal control to the developer using authoring react
-                        // we close the prompt and return an error
-                        closePromptFn();
-                        reject();
-                    });
+                            if (this.state.initialized) {
+                                resolve(this.state.itemOriginal);
+                            }
+                        })
+                        .catch((e) => {
+                            // Since we don't give modal control to the developer using authoring react
+                            // we close the prompt and return an error
+                            closePromptFn();
+                            reject();
+                        });
                 } else {
                     assertNever(action);
                 }
@@ -990,7 +976,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             const {profile} = state;
             const allFields = profile.header.merge(profile.content);
 
-            const validationErrors: IAuthoringValidationErrors = allFields.toArray()
+            const validationErrors: IAuthoringValidationErrors = allFields
+                .toArray()
                 .filter((field) => {
                     if (field.fieldConfig.required === true) {
                         const FieldEditorConfig = getField(field.fieldType);
@@ -999,7 +986,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     } else {
                         return false;
                     }
-                }).reduce<IAuthoringValidationErrors>((acc, field) => {
+                })
+                .reduce<IAuthoringValidationErrors>((acc, field) => {
                     acc[field.id] = gettext('Field is required');
 
                     return acc;
@@ -1018,10 +1006,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         return this.setLoadingState(state, true)
             .then(() => this.cancelAutosave())
             .then(() => {
-                return authoringStorage.saveEntity(
-                    this.computeLatestEntity(),
-                    state.itemOriginal,
-                ).then((item: T) => {
+                return authoringStorage.saveEntity(this.computeLatestEntity(), state.itemOriginal).then((item: T) => {
                     const nextState = getInitialState(
                         {saved: item, autosaved: item},
                         state.profile,
@@ -1079,25 +1064,27 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const {authoringStorage} = this.props;
 
         this.setLoadingState(state, true).then(() => {
-            authoringStorage.closeAuthoring(
-                this.computeLatestEntity(),
-                state.itemOriginal,
-                this.hasUnsavedChanges(),
-                () => {
-                    authoringStorage.autosave.cancel();
+            authoringStorage
+                .closeAuthoring(
+                    this.computeLatestEntity(),
+                    state.itemOriginal,
+                    this.hasUnsavedChanges(),
+                    () => {
+                        authoringStorage.autosave.cancel();
 
-                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
-                },
-                () => this.props.onClose(),
-            ).then(() => {
-                /**
-                 * The promise will also resolve
-                 * if user decides to cancel closing.
-                 */
-                if (this._mounted) {
-                    this.setLoadingState(state, false);
-                }
-            });
+                        return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
+                    },
+                    () => this.props.onClose(),
+                )
+                .then(() => {
+                    /**
+                     * The promise will also resolve
+                     * if user decides to cancel closing.
+                     */
+                    if (this._mounted) {
+                        this.setLoadingState(state, false);
+                    }
+                });
         });
     }
 
@@ -1138,22 +1125,23 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
          *
          * When toggled to "on", set value returned from `onToggledOn` if it is defined.
          */
-        const fieldValuesNext = toggledValueNext === true
-            ? onToggledOn == null ?
-                fieldsDataWithChanges
+        const fieldValuesNext =
+            toggledValueNext === true
+                ? onToggledOn == null
+                    ? fieldsDataWithChanges
+                    : fieldsDataWithChanges.set(
+                          fieldId,
+                          onToggledOn({
+                              language: getLanguage(this.state.itemWithChanges),
+                              config: field.fieldConfig,
+                              editorPreferences: this.state.userPreferencesForFields[field.id],
+                              fieldsData: this.state.fieldsDataWithChanges,
+                          }),
+                      )
                 : fieldsDataWithChanges.set(
-                    fieldId,
-                    onToggledOn({
-                        language: getLanguage(this.state.itemWithChanges),
-                        config: field.fieldConfig,
-                        editorPreferences: this.state.userPreferencesForFields[field.id],
-                        fieldsData: this.state.fieldsDataWithChanges,
-                    }),
-                )
-            : fieldsDataWithChanges.set(
-                fieldId,
-                FieldEditorConfig.getEmptyValue(field.fieldConfig, getLanguage(itemWithChanges)),
-            );
+                      fieldId,
+                      FieldEditorConfig.getEmptyValue(field.fieldConfig, getLanguage(itemWithChanges)),
+                  );
 
         this.setState({
             ...this.state,
@@ -1204,11 +1192,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * and when outside code sends updated `{item:T }` there is not other way for authoring-react
      * to apply it to `fieldsData`, but to re-initialize.
      */
-    reinitialize(
-        state: IStateLoaded<T>,
-        itemWithUpdates: T,
-        newProfile?: IContentProfileV2,
-    ) {
+    reinitialize(state: IStateLoaded<T>, itemWithUpdates: T, newProfile?: IContentProfileV2) {
         const item: {
             saved: T;
             autosaved: T;
@@ -1221,26 +1205,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             this.fieldRefs[x.id] = createRef();
         });
 
-        this.setState(getInitialState(
-            item,
-            newProfile ?? state.profile,
-            state.userPreferencesForFields,
-            state.spellcheckerEnabled,
-            this.props.fieldsAdapter,
-            this.props.authoringStorage,
-            this.props.storageAdapter,
-            this.props.getLanguage(item.autosaved ?? item.saved),
-            state.validationErrors,
-            state.allThemes.default,
-            state.allThemes.proofreading,
-        ));
+        this.setState(
+            getInitialState(
+                item,
+                newProfile ?? state.profile,
+                state.userPreferencesForFields,
+                state.spellcheckerEnabled,
+                this.props.fieldsAdapter,
+                this.props.authoringStorage,
+                this.props.storageAdapter,
+                this.props.getLanguage(item.autosaved ?? item.saved),
+                state.validationErrors,
+                state.allThemes.default,
+                state.allThemes.proofreading,
+            ),
+        );
     }
 
     public getExposed(): IExposedFromAuthoring<T> {
         const {state} = this;
 
         if (state.initialized === false) {
-            throw new Error('Can\'t get exposed if state isn\'t loaded');
+            throw new Error("Can't get exposed if state isn't loaded");
         }
 
         const {onClose, authoringStorage, fieldsAdapter, storageAdapter, sideWidget} = this.props;
@@ -1270,11 +1256,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
             printPreview: () => {
-                previewAuthoringEntity(
-                    state.profile,
-                    state.profile,
-                    state.fieldsDataWithChanges,
-                );
+                previewAuthoringEntity(state.profile, state.profile, state.fieldsDataWithChanges);
             },
             configureTheme: () => {
                 this.showThemeConfigModal(state);
@@ -1312,9 +1294,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }
 
         const exposed = this.getExposed();
-        const authoringOptions: IAuthoringOptions<T> | null = this.props.getInlineToolbarActions != null
-            ? this.props.getInlineToolbarActions(exposed)
-            : null;
+        const authoringOptions: IAuthoringOptions<T> | null =
+            this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
@@ -1431,9 +1412,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             primaryToolbarWidgets.push({
                 group: 'end',
                 priority: 0.4,
-                component: () => (
-                    <AuthoringActionsMenu getActions={() => authoringActions} />
-                ),
+                component: () => <AuthoringActionsMenu getActions={() => authoringActions} />,
                 availableOffline: true,
             });
         }
@@ -1472,18 +1451,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
-                {
-                    state.loading && (
-                        <Loader overlay />
-                    )
-                }
+                {state.loading && <Loader overlay />}
 
                 <WithKeyBindings keyBindings={allKeyBindings}>
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={primaryToolbarWidgets.length < 1
-                                    && extraPrimaryToolbarWidgets?.length < 1 ? null : (
+                                header={
+                                    primaryToolbarWidgets.length < 1 &&
+                                    extraPrimaryToolbarWidgets?.length < 1 ? null : (
                                         <SubNav>
                                             <AuthoringToolbar
                                                 entity={state.itemWithChanges}
@@ -1493,26 +1469,28 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         </SubNav>
                                     )
                                 }
-                                main={(
+                                main={
                                     <Layout.AuthoringMain
                                         noPaddingForContent
                                         hideCollapseButton={state.profile.content.count() < 1}
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
-                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
-                                            <SubNav className="px-2">
-                                                <AuthoringToolbar
-                                                    entity={state.itemWithChanges}
-                                                    widgets={secondaryToolbarWidgets}
-                                                    backgroundColor={authoringOptions?.toolbarBgColor}
-                                                />
-                                            </SubNav>
-                                        )}
+                                        toolBar={
+                                            secondaryToolbarWidgets.length === 0 ? null : (
+                                                <SubNav className="px-2">
+                                                    <AuthoringToolbar
+                                                        entity={state.itemWithChanges}
+                                                        widgets={secondaryToolbarWidgets}
+                                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                                    />
+                                                </SubNav>
+                                            )
+                                        }
                                         headerPadding={{
                                             top: 8,
                                             bottom: state.profile.header.count() < 1 ? 8 : undefined,
                                         }}
-                                        authoringHeader={(
+                                        authoringHeader={
                                             <div style={{width: '100%'}}>
                                                 {this.props.headerToolbar != null && (
                                                     <AuthoringToolbar
@@ -1543,7 +1521,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     fieldTemplate={this.props.fieldTemplate}
                                                 />
                                             </div>
-                                        )}
+                                        }
                                     >
                                         {state.profile.content.count() < 1 ? null : (
                                             <AuthoringSection
@@ -1570,7 +1548,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             />
                                         )}
                                     </Layout.AuthoringMain>
-                                )}
+                                }
                                 sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
                                 sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}

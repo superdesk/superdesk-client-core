@@ -19,11 +19,7 @@ export const removeBlock = (editorState, blockKey) => {
         focusOffset: block.getLength(),
     });
 
-    let newContentState = Modifier.setBlockType(
-        contentState,
-        targetRange,
-        'unstyled',
-    );
+    let newContentState = Modifier.setBlockType(contentState, targetRange, 'unstyled');
 
     newContentState = Modifier.removeRange(newContentState, targetRange, 'backward');
     return EditorState.push(editorState, newContentState, 'remove-range');

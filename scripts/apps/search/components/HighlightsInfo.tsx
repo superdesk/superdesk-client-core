@@ -7,11 +7,7 @@ import ng from 'core/services/ng';
 
 import {HighlightsList} from './index';
 
-import {
-    closeActionsMenu,
-    openActionsMenu,
-    isCheckAllowed,
-} from '../helpers';
+import {closeActionsMenu, openActionsMenu, isCheckAllowed} from '../helpers';
 
 export class HighlightsInfo extends React.PureComponent<any, any> {
     static propTypes: any;
@@ -58,9 +54,7 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
         forEach(highlights, (highlight) => {
             const hours = this.$filter('hoursFromNow')(item.versioncreated);
 
-            highlightStatuses[highlight] = this.highlightsService.isInDateRange(
-                highlightsById[highlight], hours,
-            );
+            highlightStatuses[highlight] = this.highlightsService.isInDateRange(highlightsById[highlight], hours);
         });
 
         return highlightStatuses;
@@ -70,8 +64,11 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
         let itemHighlights = [];
 
         if (isCheckAllowed(this.props.item)) {
-            if (this.props.item.archive_item && this.props.item.archive_item.highlights &&
-                this.props.item.archive_item.highlights.length) {
+            if (
+                this.props.item.archive_item &&
+                this.props.item.archive_item.highlights &&
+                this.props.item.archive_item.highlights.length
+            ) {
                 itemHighlights = this.props.item.archive_item.highlights;
             } else {
                 itemHighlights = this.props.item.highlights || [];
@@ -84,7 +81,7 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
     render() {
         const highlights = this.getHighlights();
 
-        const hasActiveHighlight = function() {
+        const hasActiveHighlight = function () {
             const statuses = this.getHighlightStatuses(highlights, this.props.item);
 
             if (this.$location.path() === '/workspace/highlights') {
@@ -96,23 +93,19 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
 
         return (
             <div className="highlights-box" onClick={this.toggle}>
-                {
-                    highlights.length
-                        ? (
-                            <div className="highlights-list dropdown">
-                                <button className="dropdown__toggle" data-test-id="highlights-indicator">
-                                    <i
-                                        className={classNames({
-                                            'icon-star': highlights.length === 1,
-                                            'icon-multi-star': highlights.length > 1,
-                                            'red': hasActiveHighlight,
-                                        })}
-                                    />
-                                </button>
-                            </div>
-                        )
-                        : null
-                }
+                {highlights.length ? (
+                    <div className="highlights-list dropdown">
+                        <button className="dropdown__toggle" data-test-id="highlights-indicator">
+                            <i
+                                className={classNames({
+                                    'icon-star': highlights.length === 1,
+                                    'icon-multi-star': highlights.length > 1,
+                                    red: hasActiveHighlight,
+                                })}
+                            />
+                        </button>
+                    </div>
+                ) : null}
             </div>
         );
     }
@@ -129,8 +122,8 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
         // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 
-        const icon = thisNode.getElementsByClassName('icon-star')[0] ||
-        thisNode.getElementsByClassName('icon-multi-star')[0];
+        const icon =
+            thisNode.getElementsByClassName('icon-star')[0] || thisNode.getElementsByClassName('icon-multi-star')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);
     }

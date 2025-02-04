@@ -29,8 +29,10 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
         const selection = editorState.getSelection();
 
         if (suggestingMode && !selection.isCollapsed()) {
-            if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+            if (
+                !Suggestions.allowEditSuggestionOnLeft(editorState, author) &&
+                !Suggestions.allowEditSuggestionOnRight(editorState, author)
+            ) {
                 return;
             }
 
@@ -46,16 +48,18 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
 
         return (
             <span>
-                {editorFormat.filter((type) => type in inlineStyles).map((type) => (
-                    <StyleButton
-                        uiTheme={this.props.uiTheme}
-                        key={type}
-                        active={currentStyle.has(inlineStyles[type])}
-                        label={type}
-                        onToggle={this.onToggle}
-                        style={inlineStyles[type]}
-                    />
-                ))}
+                {editorFormat
+                    .filter((type) => type in inlineStyles)
+                    .map((type) => (
+                        <StyleButton
+                            uiTheme={this.props.uiTheme}
+                            key={type}
+                            active={currentStyle.has(inlineStyles[type])}
+                            label={type}
+                            onToggle={this.onToggle}
+                            style={inlineStyles[type]}
+                        />
+                    ))}
             </span>
         );
     }

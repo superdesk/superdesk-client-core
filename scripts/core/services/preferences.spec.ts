@@ -1,4 +1,3 @@
-
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.core.api'));
@@ -12,10 +11,7 @@ describe('Preferences Service', () => {
                     label: 'Users archive view format',
                     type: 'string',
                     category: 'archive',
-                    allowed: [
-                        'mgrid',
-                        'compact',
-                    ],
+                    allowed: ['mgrid', 'compact'],
                     view: 'mgrid',
                 },
                 'feature:preview': {
@@ -66,75 +62,79 @@ describe('Preferences Service', () => {
         session.sessionId = 1;
     }));
 
-    it('can get user preferences', (done) => inject((api, $rootScope) => {
-        preferencesService.get();
-        $rootScope.$digest();
+    it('can get user preferences', (done) =>
+        inject((api, $rootScope) => {
+            preferencesService.get();
+            $rootScope.$digest();
 
-        preferencesService.get().then((preferences) => {
-            expect(preferences).not.toBe(null);
-            expect(preferences['archive:view'].view).toBe('mgrid');
-            expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
+            preferencesService.get().then((preferences) => {
+                expect(preferences).not.toBe(null);
+                expect(preferences['archive:view'].view).toBe('mgrid');
+                expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
 
-            done();
-        });
+                done();
+            });
 
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 
-    it('can get user preferences by key', (done) => inject(($rootScope) => {
-        preferencesService.get();
-        $rootScope.$digest();
+    it('can get user preferences by key', (done) =>
+        inject(($rootScope) => {
+            preferencesService.get();
+            $rootScope.$digest();
 
+            preferencesService.get('archive:view').then((preferences) => {
+                expect(preferences.view).toBe('mgrid');
 
-        preferencesService.get('archive:view').then((preferences) => {
-            expect(preferences.view).toBe('mgrid');
+                done();
+            });
 
-            done();
-        });
+            $rootScope.$digest();
+        }));
 
-        $rootScope.$digest();
-    }));
+    it('can get user preferences by key bypass the cache', (done) =>
+        inject(($rootScope) => {
+            preferencesService.get('feature:preview', true).then((preferences) => {
+                expect(preferences.enabled).toBe(false);
 
-    it('can get user preferences by key bypass the cache', (done) => inject(($rootScope) => {
-        preferencesService.get('feature:preview', true).then((preferences) => {
-            expect(preferences.enabled).toBe(false);
+                done();
+            });
 
-            done();
-        });
+            $rootScope.$digest();
+        }));
 
-        $rootScope.$digest();
-    }));
+    it('update user preferences by key', (done) =>
+        inject((api, $rootScope) => {
+            preferencesService.get();
+            $rootScope.$digest();
 
-    it('update user preferences by key', (done) => inject((api, $rootScope) => {
-        preferencesService.get();
-        $rootScope.$digest();
+            preferencesService.update(update, 'feature:preview');
+            preferencesService.update({'workspace:active': {workspace: ''}}, 'workspace:active');
+            $rootScope.$digest();
+            expect(api.save.calls.count()).toBe(1);
 
-        preferencesService.update(update, 'feature:preview');
-        preferencesService.update({'workspace:active': {workspace: ''}}, 'workspace:active');
-        $rootScope.$digest();
-        expect(api.save.calls.count()).toBe(1);
+            preferencesService.get('feature:preview').then((preferences) => {
+                expect(preferences.enabled).toBe(false);
 
-        preferencesService.get('feature:preview').then((preferences) => {
-            expect(preferences.enabled).toBe(false);
+                done();
+            });
 
-            done();
-        });
+            $rootScope.$digest();
+        }));
 
-        $rootScope.$digest();
-    }));
+    it('can get all active privileges', (done) =>
+        inject(($rootScope) => {
+            preferencesService.get();
+            $rootScope.$digest();
 
-    it('can get all active privileges', (done) => inject(($rootScope) => {
-        preferencesService.get();
-        $rootScope.$digest();
+            preferencesService.getPrivileges().then((privileges) => {
+                expect(privileges.privilege1).toBe(1);
 
-        preferencesService.getPrivileges().then((privileges) => {
-            expect(privileges.privilege1).toBe(1);
+                done();
+            });
 
-            done();
-        });
-
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 });
 
 describe('preferences error handling', () => {
@@ -149,16 +149,17 @@ describe('preferences error handling', () => {
         $httpBackend.expectGET('/preferences/sess2').respond({});
     }));
 
-    it('can reload on session expiry', (done) => inject((preferencesService, session, $rootScope, $httpBackend) => {
-        var error = jasmine.createSpy('error');
+    it('can reload on session expiry', (done) =>
+        inject((preferencesService, session, $rootScope, $httpBackend) => {
+            var error = jasmine.createSpy('error');
 
-        preferencesService.get().then(() => {
-            expect(error).not.toHaveBeenCalled();
+            preferencesService.get().then(() => {
+                expect(error).not.toHaveBeenCalled();
 
-            done();
-        }, error);
-        $rootScope.$digest();
-        session.sessionId = 'sess2';
-        $httpBackend.flush();
-    }));
+                done();
+            }, error);
+            $rootScope.$digest();
+            session.sessionId = 'sess2';
+            $httpBackend.flush();
+        }));
 });

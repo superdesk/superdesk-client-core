@@ -30,21 +30,18 @@ export function SubscriberTokenController($scope, api, $rootScope) {
 
     const fetchTokens = () => {
         if (subscriber._id) {
-            api.query('subscriber_token', {where: {subscriber: subscriber._id}})
-                .then((response) => {
-                    this.tokens = response._items;
-                    $scope.$watchGroup([() => this.tokens.length, () => this.ttl], (newVal, oldVal) => {
-                        if (newVal !== oldVal) {
-                            $rootScope.$broadcast('subcriber: saveEnabled');
-                        }
-                    });
+            api.query('subscriber_token', {where: {subscriber: subscriber._id}}).then((response) => {
+                this.tokens = response._items;
+                $scope.$watchGroup([() => this.tokens.length, () => this.ttl], (newVal, oldVal) => {
+                    if (newVal !== oldVal) {
+                        $rootScope.$broadcast('subcriber: saveEnabled');
+                    }
                 });
+            });
         }
     };
 
-    const expiry = (ttl) => moment().utc()
-        .add(parseInt(ttl, 10), 'days')
-        .format();
+    const expiry = (ttl) => moment().utc().add(parseInt(ttl, 10), 'days').format();
 
     /**
      * @ngdoc method
@@ -53,10 +50,12 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @description Generate new token on server and refresh the list.
      */
     this.generate = (ttl) =>
-        api.save('subscriber_token', {
-            subscriber: subscriber._id,
-            expiry_days: ttl,
-        }).then(fetchTokens);
+        api
+            .save('subscriber_token', {
+                subscriber: subscriber._id,
+                expiry_days: ttl,
+            })
+            .then(fetchTokens);
 
     /**
      * @ngdoc method
@@ -64,8 +63,7 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @param {Object} token Token object from api.
      * @description Revoke an existing token and refresh the list.
      */
-    this.revoke = (token) =>
-        api.remove(token).then(fetchTokens);
+    this.revoke = (token) => api.remove(token).then(fetchTokens);
 
     /**
      * @ngdoc property

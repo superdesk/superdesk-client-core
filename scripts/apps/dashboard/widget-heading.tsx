@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {IPropsWidgetHeading} from 'superdesk-api';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';

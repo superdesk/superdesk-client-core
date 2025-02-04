@@ -6,9 +6,7 @@ class VersionCreatedComponent extends React.Component<Pick<IPropsItemListInfo, '
     render() {
         const props = this.props;
 
-        return (
-            <TimeElem key={'versioncreated'} date={props.item.versioncreated} />
-        );
+        return <TimeElem key={'versioncreated'} date={props.item.versioncreated} />;
     }
 }
 

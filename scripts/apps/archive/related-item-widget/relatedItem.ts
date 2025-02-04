@@ -3,48 +3,55 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 
-angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
-    'superdesk.apps.dashboard.widgets.base',
-    'superdesk.apps.authoring.widgets',
-])
+angular
+    .module('superdesk.apps.dashboard.widgets.relatedItem', [
+        'superdesk.apps.dashboard.widgets.base',
+        'superdesk.apps.authoring.widgets',
+    ])
     .controller('relatedItemController', RelatedItemController)
-    .config(['authoringWidgetsProvider', function(authoringWidgets) {
-        authoringWidgets.widget('related-item', {
-            label: gettext('Related Items'),
-            icon: 'related',
-            template: 'scripts/apps/archive/related-item-widget/widget-relatedItem.html',
-            order: 7,
-            side: 'right',
-            display: {
-                authoring: true,
-                packages: false,
-                killedItem: true,
-                legalArchive: false,
-                archived: false,
-                picture: false,
-                personal: false,
-            },
-            isWidgetVisible: (item) => ['content', function(content) {
-                if (item.profile == null) {
-                    return Promise.resolve(true);
-                }
+    .config([
+        'authoringWidgetsProvider',
+        function (authoringWidgets) {
+            authoringWidgets.widget('related-item', {
+                label: gettext('Related Items'),
+                icon: 'related',
+                template: 'scripts/apps/archive/related-item-widget/widget-relatedItem.html',
+                order: 7,
+                side: 'right',
+                display: {
+                    authoring: true,
+                    packages: false,
+                    killedItem: true,
+                    legalArchive: false,
+                    archived: false,
+                    picture: false,
+                    personal: false,
+                },
+                isWidgetVisible: (item) => [
+                    'content',
+                    function (content) {
+                        if (item.profile == null) {
+                            return Promise.resolve(true);
+                        }
 
-                return new Promise((resolve) => {
-                    content.getType(item.profile).then((type) => {
-                        resolve(type.schema.hasOwnProperty('slugline'));
-                    });
-                });
-            }],
-            configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
-            configurable: false,
-            needEditable: true,
-            needUnlock: true,
-            configuration: {
-                sluglineMatch: 'EXACT',
-                modificationDateAfter: 'today',
-            },
-        });
-    }]);
+                        return new Promise((resolve) => {
+                            content.getType(item.profile).then((type) => {
+                                resolve(type.schema.hasOwnProperty('slugline'));
+                            });
+                        });
+                    },
+                ],
+                configurationTemplate: 'scripts/apps/archive/related-item-widget/relatedItem-configuration.html',
+                configurable: false,
+                needEditable: true,
+                needUnlock: true,
+                configuration: {
+                    sluglineMatch: 'EXACT',
+                    modificationDateAfter: 'today',
+                },
+            });
+        },
+    ]);
 
 RelatedItemController.$inject = [
     '$scope',
@@ -84,8 +91,10 @@ function RelatedItemController(
         notStates: ['spiked'],
         types: ['text', 'composite'],
         page: 1,
-        modificationDateAfter: storage.getItem('modificationDateAfter') === 'today' ? today() :
-            storage.getItem('modificationDateAfter') || today(),
+        modificationDateAfter:
+            storage.getItem('modificationDateAfter') === 'today'
+                ? today()
+                : storage.getItem('modificationDateAfter') || today(),
         sluglineMatch: storage.getItem('sluglineMatch') || 'EXACT',
     };
     $scope.options = {
@@ -100,7 +109,8 @@ function RelatedItemController(
     };
 
     $scope.loading = true;
-    familyService.fetchRelatedItems($scope.item)
+    familyService
+        .fetchRelatedItems($scope.item)
         .then((items) => {
             if (items && items._items && items._items.length > 1) {
                 $scope.options.existingRelations = items._items;
@@ -120,9 +130,11 @@ function RelatedItemController(
 
     function today() {
         if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
-            return moment()
-                .tz(appConfig.default_timezone)
-                .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(appConfig.default_timezone).format('ZZ');
+            return (
+                moment().tz(appConfig.default_timezone).format('YYYY-MM-DD') +
+                'T00:00:00' +
+                moment.tz(appConfig.default_timezone).format('ZZ')
+            );
         }
         return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
     }
@@ -133,8 +145,7 @@ function RelatedItemController(
      * defined in the content profile only
      */
     const copyMetadata = (source, destination) => {
-        const fields = ['subject', 'anpa_category', 'headline',
-            'urgency', 'priority', 'slugline', 'place'];
+        const fields = ['subject', 'anpa_category', 'headline', 'urgency', 'priority', 'slugline', 'place'];
 
         destination.related_to = source._id;
         if (destination.profile) {
@@ -157,52 +168,52 @@ function RelatedItemController(
     $scope.actions = {
         apply: {
             title: 'Associate metadata',
-            method: function(item) {
+            method: function (item) {
                 $scope.origItem = $scope.options.item;
 
-                copyMetadata(item, {}).then((copied) => api.save('archive', $scope.origItem, copied)
-                    .then(() => {
+                copyMetadata(item, {}).then((copied) =>
+                    api.save('archive', $scope.origItem, copied).then(() => {
                         Object.assign($scope.options.item, copied);
                         notify.success(gettext('item metadata associated.'));
                         return item;
-                    }));
+                    }),
+                );
             },
             class: 'open',
             icon: 'icon-expand',
-            condition: function(item) {
+            condition: function (item) {
                 return item.type !== 'composite';
             },
         },
         update: {
             title: 'Associate as update',
-            method: function(item) {
-                api.save('archive_rewrite', {},
-                    {update: angular.extend({}, $scope.origItem, $scope.item)},
-                    item)
-                    .then((newItem) => {
+            method: function (item) {
+                api.save('archive_rewrite', {}, {update: angular.extend({}, $scope.origItem, $scope.item)}, item).then(
+                    (newItem) => {
                         notify.success(gettext('Story is associated as update.'));
                         authoringWorkspace.edit(newItem);
-                    }, (response) => {
+                    },
+                    (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(
-                                gettext(
-                                    'Failed to associate update: {{message}}',
-                                    {message: response.data._message},
-                                ),
+                                gettext('Failed to associate update: {{message}}', {message: response.data._message}),
                             );
                         } else {
                             notify.error(gettext('There is an error. Failed to associate update.'));
                         }
-                    });
+                    },
+                );
             },
             class: 'open',
             icon: 'icon-expand',
-            condition: function(item) {
+            condition: function (item) {
                 var userHasPermission = privileges.userHasPrivileges({rewrite: 1});
 
-                var canBeRewrite = !isPublished($scope.item) &&
-                $scope.item.type === 'text' &&
-                !$scope.item.rewrite_of && (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
+                var canBeRewrite =
+                    !isPublished($scope.item) &&
+                    $scope.item.type === 'text' &&
+                    !$scope.item.rewrite_of &&
+                    (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
 
                 var canBeRewritten = authoring.itemActions(item).re_write;
 
@@ -211,14 +222,14 @@ function RelatedItemController(
         },
         open: {
             title: 'Open',
-            method: function(item) {
+            method: function (item) {
                 $q.when(superdesk.intent('edit', 'item', item)).then(null, (value) => {
                     superdesk.intent('view', 'item', item);
                 });
             },
             class: 'open',
             icon: 'icon-external',
-            condition: function(item) {
+            condition: function (item) {
                 return true;
             },
         },
@@ -226,20 +237,27 @@ function RelatedItemController(
 
     BaseWidgetController.call(this, $scope);
 
-    $scope.$watch('widget.configuration', (_config) => {
-        if (_config && _config.sluglineMatch && _config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
-            $scope.itemListOptions.sluglineMatch = _config.sluglineMatch;
-        }
-
-        if (_config && _config.modificationDateAfter &&
-            _config.modificationDateAfter !== $scope.itemListOptions.modificationDateAfter) {
-            if (_config.modificationDateAfter === 'today') {
-                $scope.itemListOptions.modificationDateAfter = today();
-            } else {
-                $scope.itemListOptions.modificationDateAfter = _config.modificationDateAfter;
+    $scope.$watch(
+        'widget.configuration',
+        (_config) => {
+            if (_config && _config.sluglineMatch && _config.sluglineMatch !== $scope.itemListOptions.sluglineMatch) {
+                $scope.itemListOptions.sluglineMatch = _config.sluglineMatch;
             }
-        }
-    }, true);
+
+            if (
+                _config &&
+                _config.modificationDateAfter &&
+                _config.modificationDateAfter !== $scope.itemListOptions.modificationDateAfter
+            ) {
+                if (_config.modificationDateAfter === 'today') {
+                    $scope.itemListOptions.modificationDateAfter = today();
+                } else {
+                    $scope.itemListOptions.modificationDateAfter = _config.modificationDateAfter;
+                }
+            }
+        },
+        true,
+    );
 
     function reset() {
         if ($scope.active && $scope.active.configuration) {
@@ -249,7 +267,7 @@ function RelatedItemController(
     }
 
     if ($scope.active) {
-        $scope.active.save = function() {
+        $scope.active.save = function () {
             storage.setItem('sluglineMatch', $scope.active.configuration.sluglineMatch);
             storage.setItem('modificationDateAfter', $scope.active.configuration.modificationDateAfter);
         };

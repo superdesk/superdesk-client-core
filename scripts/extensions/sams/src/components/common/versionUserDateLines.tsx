@@ -25,7 +25,8 @@ export class VersionUserDateLines extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: Readonly<IProps>) {
-        if (this.props.item.original_creator !== prevProps.item.original_creator ||
+        if (
+            this.props.item.original_creator !== prevProps.item.original_creator ||
             this.props.item.version_creator !== prevProps.item.version_creator
         ) {
             this.loadUsers();
@@ -33,10 +34,7 @@ export class VersionUserDateLines extends React.Component<IProps, IState> {
     }
 
     loadUsers() {
-        const userIds = [
-            this.props.item.original_creator,
-            this.props.item.version_creator,
-        ].filter(
+        const userIds = [this.props.item.original_creator, this.props.item.version_creator].filter(
             (user) => user != null,
         ) as Array<IUser['_id']>;
 
@@ -44,19 +42,18 @@ export class VersionUserDateLines extends React.Component<IProps, IState> {
             return;
         }
 
-        superdeskApi.entities.users.getUsersByIds(userIds)
-            .then((users) => {
-                this.setState({
-                    users: users.reduce(
-                        (userList, user) => {
-                            userList[user._id] = user;
+        superdeskApi.entities.users.getUsersByIds(userIds).then((users) => {
+            this.setState({
+                users: users.reduce(
+                    (userList, user) => {
+                        userList[user._id] = user;
 
-                            return userList;
-                        },
-                        {} as Dictionary<string, IUser>,
-                    ),
-                });
+                        return userList;
+                    },
+                    {} as Dictionary<string, IUser>,
+                ),
             });
+        });
     }
 
     render() {
@@ -64,15 +61,12 @@ export class VersionUserDateLines extends React.Component<IProps, IState> {
         const {config} = superdeskApi.instance;
         const {item} = this.props;
 
-        const createdUser: IUser | null = item.original_creator == null ?
-            null :
-            this.state.users[item.original_creator];
+        const createdUser: IUser | null =
+            item.original_creator == null ? null : this.state.users[item.original_creator];
 
         const createdDate = getRelativeOrAbsoluteDateTime(item.firstcreated, config.view.dateformat);
         const createdDateLong = longFormatDateTime(item.firstcreated);
-        const updatedUser: IUser | null = item.version_creator == null ?
-            null :
-            this.state.users[item.version_creator];
+        const updatedUser: IUser | null = item.version_creator == null ? null : this.state.users[item.version_creator];
         const updateDate = getRelativeOrAbsoluteDateTime(item.versioncreated, config.view.dateformat);
         const updateDateLong = longFormatDateTime(item.versioncreated);
 
@@ -88,25 +82,19 @@ export class VersionUserDateLines extends React.Component<IProps, IState> {
                             <time title={createdDateLong}>
                                 {gettext('Created {{ datetime }} by ', {datetime: createdDate})}
                             </time>
-                            <span className="sd-text__author">
-                                {createdUser.display_name}
-                            </span>
+                            <span className="sd-text__author">{createdUser.display_name}</span>
                         </React.Fragment>
                     )}
                 </p>
                 <p className="sd-text__date-and-author sd-margin-b--0">
                     {updatedUser == null ? (
-                        <time title={updateDateLong}>
-                            {gettext('Updated {{ datetime }}', {datetime: updateDate})}
-                        </time>
+                        <time title={updateDateLong}>{gettext('Updated {{ datetime }}', {datetime: updateDate})}</time>
                     ) : (
                         <React.Fragment>
                             <time title={updateDateLong}>
                                 {gettext('Updated {{ datetime }} by ', {datetime: updateDate})}
                             </time>
-                            <span className="sd-text__author">
-                                {updatedUser.display_name}
-                            </span>
+                            <span className="sd-text__author">{updatedUser.display_name}</span>
                         </React.Fragment>
                     )}
                 </p>

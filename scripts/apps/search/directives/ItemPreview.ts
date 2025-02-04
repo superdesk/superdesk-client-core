@@ -28,8 +28,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
      */
     function shouldClosePreview(scope, __, args) {
         // if preview pane currently previewed then close
-        if (__.name === 'content:update' && scope.item && args &&
-                Object.keys(args.items)[0] === scope.item._id) {
+        if (__.name === 'content:update' && scope.item && args && Object.keys(args.items)[0] === scope.item._id) {
             scope.close();
         } else if (scope.item && args && args.item === scope.item._id) {
             scope.close();
@@ -45,11 +44,11 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
             hideActionsMenu: '=',
             showHistoryTab: '=',
         },
-        controller: function() {
+        controller: function () {
             this.current_tab = 'content';
         },
         controllerAs: 'vm',
-        link: function(scope) {
+        link: function (scope) {
             scope.showRelatedTab = false;
             scope.toggleLeft = JSON.parse(storage.getItem('shiftLeft'));
 
@@ -57,7 +56,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              * Toggle preview pane position - left or right
              * available only when screen size is smaller and authoring is open.
              */
-            scope.shiftPreview = function() {
+            scope.shiftPreview = function () {
                 scope.$applyAsync(() => {
                     scope.toggleLeft = !scope.toggleLeft;
                     storage.setItem('shiftLeft', scope.toggleLeft);
@@ -81,8 +80,8 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                 }
 
                 if (newItem !== oldItem) {
-                    const isMedia = newItem?.type != null &&
-                        ['audio', 'video', 'picture', 'graphic'].includes(newItem.type);
+                    const isMedia =
+                        newItem?.type != null && ['audio', 'video', 'picture', 'graphic'].includes(newItem.type);
 
                     fetchRelatedItems();
 
@@ -117,9 +116,10 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                 'item:spike',
                 'item:unspike',
                 'item:move',
-                'content:update'];
+                'content:update',
+            ];
 
-            angular.forEach(closePreviewEvents, function(event) {
+            angular.forEach(closePreviewEvents, function (event) {
                 scope.$on(event, shouldClosePreview.bind(this, scope));
             });
 
@@ -129,7 +129,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              *
              * @return {boolean}
              */
-            scope.hideActions = function() {
+            scope.hideActions = function () {
                 return scope.hideActionsMenu;
             };
 
@@ -149,10 +149,12 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              * This is then used to calculate if we show the 'Duplicates' tab,
              */
             function fetchRelatedItems() {
-                if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)
-                    && scope.item.family_id) {
-                    familyService.fetchItems(scope.item.family_id, scope.item)
-                        .then(setRelatedItems);
+                if (
+                    scope.item &&
+                    ['archive', 'archived', 'published'].includes(scope.item._type) &&
+                    scope.item.family_id
+                ) {
+                    familyService.fetchItems(scope.item.family_id, scope.item).then(setRelatedItems);
                 } else {
                     setRelatedItems(null);
                 }

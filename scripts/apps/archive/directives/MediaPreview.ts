@@ -25,11 +25,12 @@ MediaPreview.$inject = ['api', '$rootScope', 'desks', 'superdesk', 'content', 's
 export function MediaPreview(api, $rootScope, desks, superdesk, content, storage) {
     return {
         template: require('../views/preview.html'),
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
             const setSubjectPreviewFields = () => {
-                scope.subjectPreviewFields = content.previewFields(scope.editor, scope.fields)
+                scope.subjectPreviewFields = content
+                    .previewFields(scope.editor, scope.fields)
                     .filter((field: IVocabulary) => field.field_type == null);
             };
 
@@ -37,12 +38,11 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {
-                content.getType(scope.selected.preview.profile)
-                    .then((type) => {
-                        scope.editor = content.editor(type);
-                        scope.fields = content.fields(type);
-                        setSubjectPreviewFields();
-                    });
+                content.getType(scope.selected.preview.profile).then((type) => {
+                    scope.editor = content.editor(type);
+                    scope.fields = content.fields(type);
+                    setSubjectPreviewFields();
+                });
             } else {
                 content.getCustomFields().then(() => {
                     scope.editor = content.editor(null, scope.selected.preview.type);
@@ -73,7 +73,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
              *
              * @description Preview the rewrite story.
              */
-            scope.previewRewriteStory = function() {
+            scope.previewRewriteStory = function () {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});
                 });
@@ -85,7 +85,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
              *
              * @description Preview the item (picture, story).
              */
-            scope.preview = function(item) {
+            scope.preview = function (item) {
                 superdesk.intent('preview', 'item', item);
             };
 
@@ -99,11 +99,11 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                 setPreviewState(!scope.previewState.toggleHeader);
             };
 
-            scope.getCompanyCodes = function() {
+            scope.getCompanyCodes = function () {
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
             };
 
-            scope.associationExists = function(associations, fieldId) {
+            scope.associationExists = function (associations, fieldId) {
                 return _.size(scope.getAssociatedItems(associations, fieldId));
             };
 

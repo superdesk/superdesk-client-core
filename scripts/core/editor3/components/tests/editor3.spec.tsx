@@ -72,11 +72,7 @@ describe('editor3.component', () => {
             expect(onDragOver(makeEvent(validType))).toBe(false);
         });
 
-        [
-            'text/md',
-            'application/javascript',
-            'invalid',
-        ].forEach((invalidType) => {
+        ['text/md', 'application/javascript', 'invalid'].forEach((invalidType) => {
             expect(onDragOver(makeEvent(invalidType))).toBeTruthy();
         });
     });
@@ -107,11 +103,7 @@ describe('editor3.component', () => {
 
     it('should not accept dragging when editor does not support images', () => {
         const wrapper = shallow(
-            <Editor3Component
-                {...editor3mandatoryProps}
-                editorState={editorState}
-                {...stubForHighlights}
-            />,
+            <Editor3Component {...editor3mandatoryProps} editorState={editorState} {...stubForHighlights} />,
         );
         const {onDragOver} = wrapper.instance() as any;
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
@@ -180,12 +172,13 @@ describe('editor3.blockRenderer', () => {
 
     it('should return non-null as component for recognised blocks', () => {
         const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
-        const contentState: any = {getEntity: () => ({
-            getType: () => CustomEditor3Entity.EMBED,
-            getData: () => ({data: {html: 'abc'}}),
-        })};
-        const component = blockRenderer(block)
-            .component({block, contentState, blockProps: {spellchecking}});
+        const contentState: any = {
+            getEntity: () => ({
+                getType: () => CustomEditor3Entity.EMBED,
+                getData: () => ({data: {html: 'abc'}}),
+            }),
+        };
+        const component = blockRenderer(block).component({block, contentState, blockProps: {spellchecking}});
         const store = mockStore().store as unknown as Store;
 
         expect(component).not.toBe(null);

@@ -17,7 +17,8 @@ export function toPythonDateFormat(
 
 export function toSuperdeskDateFormat(
     dateTemplate: string, // python format
-): string { // returns superdesk format from config.view.dateformat
+): string {
+    // returns superdesk format from config.view.dateformat
     let result = dateTemplate;
 
     result = result.replace('%Y', 'YYYY');

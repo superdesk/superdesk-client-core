@@ -1,13 +1,7 @@
 /* eslint-disable jasmine/no-unsafe-spy */
 
 import {dataApi} from 'core/helpers/CrudManager';
-import {
-    IDataApi,
-    IBaseRestApiResponse,
-    ISortOption,
-    ICrudManagerFilters,
-    IVocabulary,
-} from 'superdesk-api';
+import {IDataApi, IBaseRestApiResponse, ISortOption, ICrudManagerFilters, IVocabulary} from 'superdesk-api';
 
 const testBaseApiResponse: IBaseRestApiResponse = {
     _created: '2020-01-01T00:00:00+0000',

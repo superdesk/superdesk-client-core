@@ -1,28 +1,34 @@
 describe('request service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.core.api'));
-    beforeEach(window.module(($provide) => {
-        $provide.service('$upload', ['$q', function($q) {
-            this.upload = function() {
-                return $q.when();
-            };
-        }]);
-    }));
+    beforeEach(
+        window.module(($provide) => {
+            $provide.service('$upload', [
+                '$q',
+                function ($q) {
+                    this.upload = function () {
+                        return $q.when();
+                    };
+                },
+            ]);
+        }),
+    );
     beforeEach(window.module('superdesk.core.upload'));
 
-    it('can resend $http request', (done) => inject((request, $httpBackend) => {
-        var config = {url: 'test', method: 'GET'};
+    it('can resend $http request', (done) =>
+        inject((request, $httpBackend) => {
+            var config = {url: 'test', method: 'GET'};
 
-        $httpBackend.expectGET('test').respond('data');
+            $httpBackend.expectGET('test').respond('data');
 
-        request.resend(config).then((response) => {
-            expect(response.status).toBe(200);
+            request.resend(config).then((response) => {
+                expect(response.status).toBe(200);
 
-            done();
-        });
+                done();
+            });
 
-        $httpBackend.flush();
-    }));
+            $httpBackend.flush();
+        }));
 
     it('can resend upload request', inject((request, upload) => {
         var config = {url: 'upload', method: 'POST'};

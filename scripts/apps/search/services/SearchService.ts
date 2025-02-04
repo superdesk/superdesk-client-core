@@ -117,16 +117,8 @@ export function showRefresh(currentItems: Array<IArticle> | null, newItems: Arra
  *
  * @description Search Service is responsible for creation and manipulation of Query object
  */
-SearchService.$inject = [
-    '$location',
-    'session',
-    'multi',
-    'preferencesService',
-    'moment',
-    'sort',
-];
-export function SearchService($location, session, multi,
-    preferencesService, moment, sortService) {
+SearchService.$inject = ['$location', 'session', 'multi', 'preferencesService', 'moment', 'sort'];
+export function SearchService($location, session, multi, preferencesService, moment, sortService) {
     const PARAMETERS = getParameters();
     const EXCLUDE_FACETS = getExcludeFacets();
 
@@ -134,19 +126,20 @@ export function SearchService($location, session, multi,
 
     var self = this;
 
-    this.cvs = appConfig.search_cvs ||
-        [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
-            {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
+    this.cvs = appConfig.search_cvs || [
+        {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
+        {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
+    ];
 
     preferencesService.get('singleline:view').then((result) => {
         if (result) {
             // No preference, but global config set
             if (
-                result.enabled === null
-                && appConfig.list != null
-                && appConfig.list.singleLineView
-                && appConfig.list != null
-                && appConfig.list.singleLine
+                result.enabled === null &&
+                appConfig.list != null &&
+                appConfig.list.singleLineView &&
+                appConfig.list != null &&
+                appConfig.list.singleLine
             ) {
                 this.singleLine = true;
                 return;
@@ -166,7 +159,7 @@ export function SearchService($location, session, multi,
      * Set filters for parameters
      */
     function setParameters(filters, params: IQueryParams) {
-        const addFromDeskFilter = function(key) {
+        const addFromDeskFilter = function (key) {
             let desk = params[key].split('-');
 
             if (desk.length === 2) {
@@ -178,7 +171,7 @@ export function SearchService($location, session, multi,
             }
         };
 
-        const addToDeskFilter = function(key) {
+        const addToDeskFilter = function (key) {
             let desk = params[key].split('-');
 
             if (desk.length === 2) {
@@ -210,81 +203,83 @@ export function SearchService($location, session, multi,
             }
 
             switch (key) {
-            case 'from_desk':
-                addFromDeskFilter(key);
-                break;
-            case 'to_desk':
-                addToDeskFilter(key);
-                break;
-            case 'spike':
-                // Will get set in the base filters
-                break;
-            case 'featuremedia':
-                filters.push({exists: {field: 'associations.featuremedia'}});
-                break;
-            case 'subject':
-                filters.push({or: [
-                    {terms: {'subject.qcode': JSON.parse(params[key])}},
-                    {terms: {'subject.parent': JSON.parse(params[key])}},
-                ]});
-                break;
-            case 'company_codes':
-                filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
-                break;
-            case 'marked_desks':
-                filters.push({terms: {'marked_desks.desk_id': JSON.parse(params[key])}});
-                break;
-            case 'firstpublished':
-            case 'firstpublishedfrom':
-            case 'firstpublishedto':
-                var zeroHourSuffix = 'T00:00:00';
-                var midnightSuffix = 'T23:59:59';
+                case 'from_desk':
+                    addFromDeskFilter(key);
+                    break;
+                case 'to_desk':
+                    addToDeskFilter(key);
+                    break;
+                case 'spike':
+                    // Will get set in the base filters
+                    break;
+                case 'featuremedia':
+                    filters.push({exists: {field: 'associations.featuremedia'}});
+                    break;
+                case 'subject':
+                    filters.push({
+                        or: [
+                            {terms: {'subject.qcode': JSON.parse(params[key])}},
+                            {terms: {'subject.parent': JSON.parse(params[key])}},
+                        ],
+                    });
+                    break;
+                case 'company_codes':
+                    filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
+                    break;
+                case 'marked_desks':
+                    filters.push({terms: {'marked_desks.desk_id': JSON.parse(params[key])}});
+                    break;
+                case 'firstpublished':
+                case 'firstpublishedfrom':
+                case 'firstpublishedto':
+                    var zeroHourSuffix = 'T00:00:00';
+                    var midnightSuffix = 'T23:59:59';
 
-                getDateFilters().forEach((dateFilter) => {
-                    const fieldname = dateFilter.fieldname;
-                    const dateRangeKey = params[key];
+                    getDateFilters().forEach((dateFilter) => {
+                        const fieldname = dateFilter.fieldname;
+                        const dateRangeKey = params[key];
 
-                    if (params[key] != null && dateRangesByKey[dateRangeKey] != null) {
-                        // handle predefined ranges
-                        facetrange[key] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
-                    } else {
-                        // handle manual ranges
+                        if (params[key] != null && dateRangesByKey[dateRangeKey] != null) {
+                            // handle predefined ranges
+                            facetrange[key] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
+                        } else {
+                            // handle manual ranges
 
-                        const value = params[key];
+                            const value = params[key];
 
-                        if (params[key] != null && key === fieldname + 'to') {
-                            if (facetrange[key] == null) {
-                                facetrange[key] = {};
+                            if (params[key] != null && key === fieldname + 'to') {
+                                if (facetrange[key] == null) {
+                                    facetrange[key] = {};
+                                }
+
+                                if (isElasticDateFormat(value)) {
+                                    facetrange[key].lte = value;
+                                } else {
+                                    facetrange[key].lte = formatDate(value, midnightSuffix);
+                                }
                             }
+                            if (params[key] != null && key === fieldname + 'from') {
+                                if (facetrange[key] == null) {
+                                    facetrange[key] = {};
+                                }
 
-                            if (isElasticDateFormat(value)) {
-                                facetrange[key].lte = value;
-                            } else {
-                                facetrange[key].lte = formatDate(value, midnightSuffix);
+                                if (isElasticDateFormat(value)) {
+                                    facetrange[key].gte = value;
+                                } else {
+                                    facetrange[key].gte = formatDate(value, zeroHourSuffix);
+                                }
                             }
                         }
-                        if (params[key] != null && key === fieldname + 'from') {
-                            if (facetrange[key] == null) {
-                                facetrange[key] = {};
-                            }
-
-                            if (isElasticDateFormat(value)) {
-                                facetrange[key].gte = value;
-                            } else {
-                                facetrange[key].gte = formatDate(value, zeroHourSuffix);
-                            }
-                        }
+                    });
+                    if (key) {
+                        filters.push({range: {firstpublished: facetrange[key]}});
                     }
-                });
-                if (key) {
-                    filters.push({range: {'firstpublished': facetrange[key]}});
-                }
-                break;
-            default:
-                var filter = {term: {}};
+                    break;
+                default:
+                    var filter = {term: {}};
 
-                filter.term[key] = params[key];
-                filters.push(filter);
+                    filter.term[key] = params[key];
+                    filters.push(filter);
             }
         });
 
@@ -318,8 +313,9 @@ export function SearchService($location, session, multi,
     /*
      * Function for finding object by string array for cv codes
      */
-    this.getSelectedCodes = function(currentTags, codeList, field) {
-        var queryArray = currentTags.selectedParameters, filteredArray = [];
+    this.getSelectedCodes = function (currentTags, codeList, field) {
+        var queryArray = currentTags.selectedParameters,
+            filteredArray = [];
 
         if (!$location.search().q) {
             return filteredArray;
@@ -327,8 +323,10 @@ export function SearchService($location, session, multi,
         for (var i = 0, queryArrayLength = queryArray.length; i < queryArrayLength; i++) {
             var queryArrayElement = queryArray[i];
 
-            if (queryArrayElement.indexOf(field + '.qcode') === -1 &&
-                queryArrayElement.indexOf(field + '.name') === -1) {
+            if (
+                queryArrayElement.indexOf(field + '.qcode') === -1 &&
+                queryArrayElement.indexOf(field + '.name') === -1
+            ) {
                 continue;
             }
             var elementName = queryArrayElement.substring(
@@ -348,14 +346,14 @@ export function SearchService($location, session, multi,
     /*
      * Function for finding object by string array for subject codes
      */
-    this.getSubjectCodes = function(currentTags, subjectcodes) {
+    this.getSubjectCodes = function (currentTags, subjectcodes) {
         return this.getSelectedCodes(currentTags, subjectcodes, 'subject');
     };
 
     /*
      * Function for finding object by string array for company codes
      */
-    this.getCompanyCodes = function(currentTags, codes) {
+    this.getCompanyCodes = function (currentTags, codes) {
         return this.getSelectedCodes(currentTags, codes, 'company_codes');
     };
 
@@ -457,10 +455,10 @@ export function SearchService($location, session, multi,
         }
 
         /**
-          * Builds Post Filter search query used when the filtering done via facets/aggregates.
-          * @param {String} params - search parameters
-          * @param {Object} query - Query object
-          */
+         * Builds Post Filter search query used when the filtering done via facets/aggregates.
+         * @param {String} params - search parameters
+         * @param {Object} query - Query object
+         */
         function buildFilters(paramsObject: any, query) {
             // date filters start
             var facetrange = {};
@@ -547,13 +545,15 @@ export function SearchService($location, session, multi,
             setParameters(filters, params);
 
             if (this.options.hidePreviousVersions) {
-                filters.push({bool: {
-                    must_not: [
-                        {term: {last_published_version: false}},
-                        {exists: {field: 'rewritten_by'}},
-                        {term: {rewritten_by: ''}},
-                    ],
-                }});
+                filters.push({
+                    bool: {
+                        must_not: [
+                            {term: {last_published_version: false}},
+                            {exists: {field: 'rewritten_by'}},
+                            {term: {rewritten_by: ''}},
+                        ],
+                    },
+                });
             }
 
             let criteria: any = {
@@ -581,11 +581,13 @@ export function SearchService($location, session, multi,
             }
 
             if (queryString) {
-                criteria.query.filtered.query = {query_string: {
-                    query: queryString,
-                    lenient: true,
-                    default_operator: 'AND',
-                }};
+                criteria.query.filtered.query = {
+                    query_string: {
+                        query: queryString,
+                        lenient: true,
+                        default_operator: 'AND',
+                    },
+                };
             }
 
             if (withSource) {
@@ -667,7 +669,8 @@ export function SearchService($location, session, multi,
          */
         this.filter({
             not: {
-                and: [ // matches personal items that belong to other users
+                and: [
+                    // matches personal items that belong to other users
                     {not: {exists: {field: 'task.desk'}}},
                     {exists: {field: 'task.user'}},
                     {not: {term: {'task.user': session.identity._id}}},
@@ -701,7 +704,7 @@ export function SearchService($location, session, multi,
 
     this.getTrackByIdentifier = getTrackByIdentifier;
 
-    this.extractIdFromTrackByIndentifier = function(identifier: string) {
+    this.extractIdFromTrackByIndentifier = function (identifier: string) {
         return identifier.slice(0, identifier.lastIndexOf(':'));
     };
 
@@ -726,7 +729,7 @@ export function SearchService($location, session, multi,
      * @param {Object} item
      * @returns {Object}
      */
-    this.mergeHighlightFields = function(item) {
+    this.mergeHighlightFields = function (item) {
         if (item.es_highlight) {
             _.forEach(_.keys(item.es_highlight), (key) => {
                 item[key] = item.es_highlight[key][0];
@@ -746,7 +749,7 @@ export function SearchService($location, session, multi,
      * @param {boolean} force
      * @returns {Object}
      */
-    this.mergeItems = function(newItems, scopeItems, append, force) {
+    this.mergeItems = function (newItems, scopeItems, append, force) {
         if (this.getElasticHighlight()) {
             newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
@@ -795,7 +798,7 @@ export function SearchService($location, session, multi,
     /**
      * Check if elasticsearch highlight feature is configured or not.
      */
-    this.getElasticHighlight = function() {
+    this.getElasticHighlight = function () {
         return appConfig.features != null && appConfig.features.elasticHighlight ? 1 : 0;
     };
 
@@ -804,7 +807,7 @@ export function SearchService($location, session, multi,
      *
      * @param {Object} items - {_id: 1}
      */
-    this.getItemQuery = function(items) {
+    this.getItemQuery = function (items) {
         var updatedItems = _.keys(items);
 
         return {filtered: {filter: {terms: {_id: updatedItems}}}};
@@ -819,7 +822,7 @@ export function SearchService($location, session, multi,
      * @param {Object} search search criteria
      * @param {String} repo name of the repo: ingest, archive, published, archived
      */
-    this.doesSearchAgainstRepo = function(search, repo) {
+    this.doesSearchAgainstRepo = function (search, repo) {
         return !search.filter.query.repo || search.filter.query.repo.toLowerCase().indexOf(repo.toLowerCase()) !== -1;
     };
 
@@ -833,7 +836,7 @@ export function SearchService($location, session, multi,
      * @param {Object} item
      * @param {Object} criteria
      */
-    this.getSingleItemCriteria = function(item, criteria) {
+    this.getSingleItemCriteria = function (item, criteria) {
         let itemCriteria = criteria || this.query($location.search()).getCriteria(true);
 
         itemCriteria.source.from = 0;
@@ -843,9 +846,7 @@ export function SearchService($location, session, multi,
         let itemId = item._type !== 'published' ? item._id : item.item_id;
 
         itemCriteria.source.query.filtered.filter = {
-            or: [
-                {term: {_id: itemId}}, {term: {item_id: itemId}},
-            ],
+            or: [{term: {_id: itemId}}, {term: {item_id: itemId}}],
         };
         return itemCriteria;
     };
@@ -857,11 +858,13 @@ export function SearchService($location, session, multi,
      * @param {Object} scopeItems
      * @return {Object}
      */
-    this.updateItems = function(newItems, scopeItems) {
+    this.updateItems = function (newItems, scopeItems) {
         _.map(scopeItems._items, (item) => {
             if (item._type === 'published') {
-                return _.extend(item, _.find(newItems._items,
-                    {_id: item._id, _current_version: item._current_version}));
+                return _.extend(
+                    item,
+                    _.find(newItems._items, {_id: item._id, _current_version: item._current_version}),
+                );
             }
 
             // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
@@ -896,7 +899,7 @@ export function SearchService($location, session, multi,
      * @returns {Boolean}
      * @description updates singleLine value after computation
      */
-    this.updateSingleLineStatus = function(singleLinePref) {
+    this.updateSingleLineStatus = function (singleLinePref) {
         if (singleLinePref && appConfig.list != null && appConfig.list.singleLine) {
             self.singleLine = true;
             return;

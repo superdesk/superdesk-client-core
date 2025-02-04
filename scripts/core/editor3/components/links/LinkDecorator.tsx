@@ -14,14 +14,11 @@ import {appConfig} from 'appConfig';
  * @description The function that defines the strategy for identifying ranges to decorate.
  */
 function LinkStrategy(contentBlock, callback, contentState) {
-    contentBlock.findEntityRanges(
-        (character) => {
-            const entityKey = character.getEntity();
+    contentBlock.findEntityRanges((character) => {
+        const entityKey = character.getEntity();
 
-            return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
-        },
-        callback,
-    );
+        return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+    }, callback);
 }
 
 /**
@@ -68,10 +65,9 @@ class LinkComponent extends React.Component<any, any> {
         }
 
         if (this.link.attachment) {
-            attachmentsApi.byId(this.link.attachment)
-                .then((attachment) => {
-                    this.setState({title: attachment.title});
-                });
+            attachmentsApi.byId(this.link.attachment).then((attachment) => {
+                this.setState({title: attachment.title});
+            });
         }
     }
 
@@ -88,18 +84,15 @@ class LinkComponent extends React.Component<any, any> {
             );
         }
 
-        return appConfig.linksBlankTarget
-            ? (
-                <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={this.link.href}
-                    title={this.link.href}
-                >
-                    {this.props.children}
-                </a>
-            )
-            : (<a href={this.link.href} title={this.link.href}>{this.props.children}</a>);
+        return appConfig.linksBlankTarget ? (
+            <a target="_blank" rel="noopener noreferrer" href={this.link.href} title={this.link.href}>
+                {this.props.children}
+            </a>
+        ) : (
+            <a href={this.link.href} title={this.link.href}>
+                {this.props.children}
+            </a>
+        );
     }
 }
 

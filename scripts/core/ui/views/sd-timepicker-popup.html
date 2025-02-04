@@ -8,19 +8,25 @@
         <div class="select-area">
             <div class="header" translate>Hours</div>
             <ul>
-                <li ng-repeat="h in hours" ng-click="$parent.hour = h" ng-class="{active: hour === h}">{{h | leadingZero}}</li>
+                <li ng-repeat="h in hours" ng-click="$parent.hour = h" ng-class="{active: hour === h}">
+                    {{h | leadingZero}}
+                </li>
             </ul>
         </div>
         <div class="select-area">
             <div class="header" translate>Minutes</div>
             <ul>
-                <li ng-repeat="m in minutes" ng-click="$parent.minute = m" ng-class="{active: minute === m}">{{m | leadingZero}}</li>
+                <li ng-repeat="m in minutes" ng-click="$parent.minute = m" ng-class="{active: minute === m}">
+                    {{m | leadingZero}}
+                </li>
             </ul>
         </div>
         <div class="select-area" ng-show="seconds">
             <div class="header" translate>Seconds</div>
             <ul>
-                <li ng-repeat="s in seconds" ng-click="$parent.second = s" ng-class="{active: second === s}">{{s | leadingZero}}</li>
+                <li ng-repeat="s in seconds" ng-click="$parent.second = s" ng-class="{active: second === s}">
+                    {{s | leadingZero}}
+                </li>
             </ul>
         </div>
         <div class="timepicker-popup__foter">

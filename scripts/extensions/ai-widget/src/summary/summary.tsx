@@ -2,16 +2,7 @@
 import React from 'react';
 import {ReactNode} from 'react';
 import {IArticle} from 'superdesk-api';
-import {
-    IconButton,
-    Container,
-    ButtonGroup,
-    Button,
-    Text,
-    Loader,
-    Heading,
-    Spacer,
-} from 'superdesk-ui-framework/react';
+import {IconButton, Container, ButtonGroup, Button, Text, Loader, Heading, Spacer} from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
 
 interface IProps {
@@ -36,11 +27,7 @@ export default class SummaryBody extends React.Component<IProps> {
         if (error) {
             return (
                 <Spacer v alignItems="center" gap="8" justifyContent="center" noWrap>
-                    <Button
-                        style="hollow"
-                        onClick={generateSummary}
-                        text={gettext('Regenerate')}
-                    />
+                    <Button style="hollow" onClick={generateSummary} text={gettext('Regenerate')} />
                     <Heading type="h6" align="center">
                         {gettext('There was an error when trying to generate a summary.')}
                     </Heading>
@@ -82,10 +69,13 @@ export default class SummaryBody extends React.Component<IProps> {
                                 return {user: article.task.user};
                             })();
 
-                            superdesk.entities.article.createNewWithData({
-                                body_html: summary,
-                                task: taskData,
-                            }, article.profile);
+                            superdesk.entities.article.createNewWithData(
+                                {
+                                    body_html: summary,
+                                    task: taskData,
+                                },
+                                article.profile,
+                            );
                         }}
                         size="small"
                         text={gettext('Create article')}

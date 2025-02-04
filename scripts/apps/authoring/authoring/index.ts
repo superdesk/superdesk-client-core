@@ -61,35 +61,36 @@ angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.
  * @packageName superdesk.apps
  * @description Superdesk authoring application module.
  */
-angular.module('superdesk.apps.authoring', [
-    'superdesk.core.menu',
-    'superdesk.core.activity',
-    'superdesk.apps.authoring.widgets',
-    'superdesk.apps.authoring.metadata',
-    'superdesk.apps.authoring.translations',
-    'superdesk.apps.authoring.comments',
-    'superdesk.apps.authoring.track-changes.inline-comments',
-    'superdesk.apps.authoring.track-changes.suggestions',
-    'superdesk.apps.authoring.versioning',
-    'superdesk.apps.authoring.versioning.versions',
-    'superdesk.apps.authoring.versioning.history',
-    'superdesk.apps.authoring.workqueue',
-    'superdesk.apps.authoring.packages',
-    'superdesk.apps.authoring.find-replace',
-    'superdesk.apps.authoring.macros',
-    'superdesk.apps.authoring.attachments',
-    'superdesk.apps.authoring.autosave',
-    'superdesk.apps.authoring.suggest',
-    'superdesk.apps.desks',
-    'superdesk.apps.notification',
-    'superdesk.apps.vocabularies',
-    'superdesk.apps.relations',
-    'contenteditable',
-    'decipher.history',
-    'superdesk.config',
-    'angular-embed',
-    mediaModule.name,
-])
+angular
+    .module('superdesk.apps.authoring', [
+        'superdesk.core.menu',
+        'superdesk.core.activity',
+        'superdesk.apps.authoring.widgets',
+        'superdesk.apps.authoring.metadata',
+        'superdesk.apps.authoring.translations',
+        'superdesk.apps.authoring.comments',
+        'superdesk.apps.authoring.track-changes.inline-comments',
+        'superdesk.apps.authoring.track-changes.suggestions',
+        'superdesk.apps.authoring.versioning',
+        'superdesk.apps.authoring.versioning.versions',
+        'superdesk.apps.authoring.versioning.history',
+        'superdesk.apps.authoring.workqueue',
+        'superdesk.apps.authoring.packages',
+        'superdesk.apps.authoring.find-replace',
+        'superdesk.apps.authoring.macros',
+        'superdesk.apps.authoring.attachments',
+        'superdesk.apps.authoring.autosave',
+        'superdesk.apps.authoring.suggest',
+        'superdesk.apps.desks',
+        'superdesk.apps.notification',
+        'superdesk.apps.vocabularies',
+        'superdesk.apps.relations',
+        'contenteditable',
+        'decipher.history',
+        'superdesk.config',
+        'angular-embed',
+        mediaModule.name,
+    ])
 
     .service('authoring', svc.AuthoringService)
     .service('confirm', svc.ConfirmDirtyService)
@@ -101,22 +102,22 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
-    .component('sdAuthoringIntegrationWrapper', reactToAngular1(
-        AuthoringAngularIntegration, ['itemId', 'action', 'setFullWidth', 'fullWidth'],
-        [],
-    ))
+    .component(
+        'sdAuthoringIntegrationWrapper',
+        reactToAngular1(AuthoringAngularIntegration, ['itemId', 'action', 'setFullWidth', 'fullWidth'], []),
+    )
     .component(
         'sdInteractiveArticleActionsPanelCombined',
-        reactToAngular1(InteractiveArticleActionsPanelCombined, [
-            'onError',
-            'handleUnsavedChanges',
-            'onDataChange',
-            'location',
-        ], []),
+        reactToAngular1(
+            InteractiveArticleActionsPanelCombined,
+            ['onError', 'handleUnsavedChanges', 'onDataChange', 'location'],
+            [],
+        ),
     )
-    .component('sdCharacterCountConfigButton', reactToAngular1(
-        CharacterCountConfigButton, ['field'], [], 'display: inline',
-    ))
+    .component(
+        'sdCharacterCountConfigButton',
+        reactToAngular1(CharacterCountConfigButton, ['field'], [], 'display: inline'),
+    )
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
@@ -138,328 +139,420 @@ angular.module('superdesk.apps.authoring', [
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
-    .component('sdLineCount',
-        reactToAngular1(
-            LineCount,
-            ['html'],
-            [],
-            'display:contents',
-        ),
+    .component('sdLineCount', reactToAngular1(LineCount, ['html'], [], 'display:contents'))
+
+    .component(
+        'sdArticleUrlFields',
+        reactToAngular1(ArticleUrlFields, [
+            'label',
+            'urls',
+            'helperText',
+            'onChange',
+            'fieldId',
+            'editable',
+            'required',
+        ]),
     )
 
-    .component('sdArticleUrlFields',
-        reactToAngular1(
-            ArticleUrlFields,
-            ['label', 'urls', 'helperText', 'onChange', 'fieldId', 'editable', 'required'],
-        ),
+    .component(
+        'sdAuthoringCustomField',
+        reactToAngular1(AuthoringCustomField, ['item', 'field', 'editable', 'onChange', 'template']),
     )
 
-    .component('sdAuthoringCustomField',
-        reactToAngular1(
-            AuthoringCustomField,
-            ['item', 'field', 'editable', 'onChange', 'template'],
-        ),
-    )
+    .component('sdHeaderComponentField', reactToAngular1(HeaderComponentField, ['item', 'component']))
 
-    .component('sdHeaderComponentField',
-        reactToAngular1(
-            HeaderComponentField,
-            ['item', 'component'],
-        ),
-    )
+    .component('sdPreviewCustomField', reactToAngular1(PreviewCustomField, ['item', 'field']))
 
-    .component('sdPreviewCustomField',
-        reactToAngular1(
-            PreviewCustomField,
-            ['item', 'field'],
-        ),
-    )
-
-    .component('sdValidateCharacters',
-        reactToAngular1(
-            ValidateCharacters,
-            ['item', 'field'],
-        ),
-    )
+    .component('sdValidateCharacters', reactToAngular1(ValidateCharacters, ['item', 'field']))
 
     .controller('PopulateAuthorsController', PopulateAuthorsController)
 
     .filter('embeddedFilter', filter.EmbeddedFilter)
 
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk
-            .activity('authoring', {
-                category: '/authoring',
-                href: '/authoring/:_id',
-                when: '/authoring/:_id',
-                label: gettext('Authoring'),
-                templateUrl: 'scripts/apps/authoring/views/authoring.html',
-                topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-                sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-                controller: ctrl.AuthoringController,
-                filters: [{action: 'author', type: 'article'}],
-                resolve: {
-                    item: ['$route', 'authoring', function($route, authoring) {
-                        return authoring.open($route.current.params._id, false);
-                    }],
-                    action: [function() {
-                        return 'edit';
-                    }],
+    .config([
+        'superdeskProvider',
+        function (superdesk) {
+            superdesk
+                .activity('authoring', {
+                    category: '/authoring',
+                    href: '/authoring/:_id',
+                    when: '/authoring/:_id',
+                    label: gettext('Authoring'),
+                    templateUrl: 'scripts/apps/authoring/views/authoring.html',
+                    topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
+                    sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                    controller: ctrl.AuthoringController,
+                    filters: [{action: 'author', type: 'article'}],
+                    resolve: {
+                        item: [
+                            '$route',
+                            'authoring',
+                            function ($route, authoring) {
+                                return authoring.open($route.current.params._id, false);
+                            },
+                        ],
+                        action: [
+                            function () {
+                                return 'edit';
+                            },
+                        ],
+                    },
+                    authoring: true,
+                })
+                .activity('edit.item', {
+                    label: gettext('Edit'),
+                    priority: 10,
+                    icon: 'pencil',
+                    keyboardShortcut: 'ctrl+alt+e',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        function (data, authoringWorkspace: AuthoringWorkspaceService) {
+                            authoringWorkspace.edit(data.item ? data.item : data);
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'edit', type: 'item'},
+                    ],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        function (authoring, item) {
+                            return authoring.itemActions(item).edit;
+                        },
+                    ],
+                })
+                .activity('edit.item.popup', {
+                    label: gettext('Edit in new Window'),
+                    priority: 5,
+                    icon: 'pencil',
+                    keyboardShortcut: 'ctrl+alt+n',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        (data, authoringWorkspace: AuthoringWorkspaceService) => {
+                            authoringWorkspace.popup(data.item, 'edit');
+                        },
+                    ],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        'lock',
+                        function (authoring, item, lock) {
+                            return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
+                        },
+                    ],
+                })
+                .activity('edit.media.metadata', {
+                    label: gettext('Edit Media Metadata'),
+                    priority: 3,
+                    icon: 'edit-line',
+                    keyboardShortcut: 'ctrl+alt+m',
+                    controller: [
+                        'data',
+                        'multiImageEdit',
+                        'authoring',
+                        'lock',
+                        function (data, multiImageEdit, authoring, lock) {
+                            lock.lock(data.item, true, 'edit').then((item) => {
+                                multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
+                            });
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'edit', type: 'metadata'},
+                    ],
+                    additionalCondition: [
+                        'item',
+                        'authoring',
+                        (item, authoring) => {
+                            const mediaTypes = ['audio', 'picture', 'video'];
+
+                            return (
+                                !sdApi.article.isLocked(item) &&
+                                mediaTypes.includes(item.type) &&
+                                authoring.itemActions(item).edit
+                            );
+                        },
+                    ],
+                })
+                .activity('move.item', {
+                    label: gettext('Send to'),
+                    icon: 'share-alt',
+                    controller: [
+                        'data',
+                        (data) => {
+                            dispatchInternalEvent('interactiveArticleActionStart', {
+                                items: [data.item],
+                                tabs: ['send_to'],
+                                activeTab: 'send_to',
+                            });
+                        },
+                    ],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        (authoring, item) => authoring.itemActions(item).send && item.type !== 'composite',
+                    ],
+                })
+                .activity('move.item.personal_space', {
+                    label: gettext('Send to Personal Space'),
+                    icon: 'share-alt',
+                    controller: [
+                        'data',
+                        (data) => {
+                            sdApi.article.sendItems([data.item], {type: 'personal-space'});
+                        },
+                    ],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        (authoring, item) =>
+                            authoring.itemActions(item).send &&
+                            item.type !== 'composite' &&
+                            appConfig?.features?.sendToPersonal &&
+                            item.task?.desk != null,
+                    ],
+                    privileges: {send_to_personal: 1},
+                })
+                .activity('kill.text', {
+                    label: gettext('Kill item'),
+                    priority: 100,
+                    icon: 'kill',
+                    group: 'corrections',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        '$rootScope',
+                        function (data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
+                            if (data.item._type === 'archived') {
+                                $rootScope.$broadcast('open:archived_kill', data.item, 'kill');
+                            } else {
+                                authoringWorkspace.kill(data.item);
+                            }
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'list', type: 'archived'},
+                    ],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        'privileges',
+                        function (authoring, item, privileges) {
+                            if (item._type === 'archived') {
+                                return privileges.privileges.archived && item.type === 'text';
+                            }
+
+                            return authoring.itemActions(item).kill;
+                        },
+                    ],
+                    privileges: {kill: 1},
+                })
+                .activity('takedown.text', {
+                    label: gettext('Takedown item'),
+                    priority: 100,
+                    icon: 'kill',
+                    group: 'corrections',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        '$rootScope',
+                        function (data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
+                            if (data.item._type === 'archived') {
+                                $rootScope.$broadcast('open:archived_kill', data.item, 'takedown');
+                            } else {
+                                authoringWorkspace.takedown(data.item);
+                            }
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'list', type: 'archived'},
+                    ],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        'privileges',
+                        function (authoring, item, privileges) {
+                            if (item._type === 'archived') {
+                                return privileges.privileges.archived && item.type === 'text';
+                            }
+
+                            return authoring.itemActions(item).takedown;
+                        },
+                    ],
+                    privileges: {takedown: 1},
+                })
+                .activity('correct.text', {
+                    label: gettext('Correct item'),
+                    priority: 100,
+                    icon: 'edit-line',
+                    group: 'corrections',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        'authoring',
+                        function (data, authoringWorkspace: AuthoringWorkspaceService, authoring) {
+                            if (
+                                appConfig?.corrections_workflow &&
+                                (data.item.state === 'published' || data.item.state === 'corrected')
+                            ) {
+                                authoring.correction(data.item.archive_item);
+                            } else {
+                                authoringWorkspace.correct(data.item);
+                            }
+                        },
+                    ],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        function (authoring, item) {
+                            return authoring.itemActions(item).correct;
+                        },
+                    ],
+                    privileges: {correct: 1},
+                })
+                .activity('view.item', {
+                    label: gettext('Open'),
+                    priority: 2000,
+                    icon: 'external',
+                    keyboardShortcut: 'alt+o',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        function (data, authoringWorkspace: AuthoringWorkspaceService) {
+                            authoringWorkspace.view(data.item || data);
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'list', type: 'archived'},
+                        {action: 'list', type: 'legal_archive'},
+                        {action: 'view', type: 'item'},
+                    ],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        function (authoring, item) {
+                            return authoring.itemActions(item).view;
+                        },
+                    ],
+                })
+                .activity('view.item.popup', {
+                    label: gettext('Open in new Window'),
+                    priority: 1990,
+                    icon: 'external',
+                    keyboardShortcut: 'ctrl+alt+n',
+                    controller: [
+                        'data',
+                        'authoringWorkspace',
+                        (data, authoringWorkspace: AuthoringWorkspaceService) => {
+                            authoringWorkspace.popup(data.item, 'view');
+                        },
+                    ],
+                    filters: [
+                        {action: 'list', type: 'archive'},
+                        {action: 'list', type: 'archived'},
+                        {action: 'list', type: 'legal_archive'},
+                    ],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        function (authoring, item) {
+                            return authoring.itemActions(item).view;
+                        },
+                    ],
+                })
+                .activity('edit.crop', {
+                    label: gettext('Details'),
+                    modal: true,
+                    cssClass: 'modal--fullscreen',
+                    controller: ctrl.ChangeImageController,
+                    templateUrl: 'scripts/apps/authoring/views/change-image.html',
+                    filters: [{action: 'edit', type: 'crop'}],
+                })
+                .activity('unpublish', {
+                    label: gettext('Unpublish'),
+                    priority: 50,
+                    icon: 'kill',
+                    group: 'corrections',
+                    controller: [
+                        'data',
+                        'authoring',
+                        'api',
+                        (data, authoring, api) => {
+                            return api.find('archive', data.item._id).then((updatedItem) => {
+                                return authoring.unpublish(updatedItem);
+                            });
+                        },
+                    ],
+                    filters: [{action: 'list', type: 'archive'}],
+                    additionalCondition: [
+                        'authoring',
+                        'item',
+                        (authoring, item) => authoring.itemActions(item).unpublish,
+                    ],
+                    privileges: {unpublish: 1},
+                });
+        },
+    ])
+    .config([
+        'apiProvider',
+        function (apiProvider) {
+            apiProvider.api('move', {
+                type: 'http',
+                backend: {
+                    rel: 'move',
                 },
-                authoring: true,
-            })
-            .activity('edit.item', {
-                label: gettext('Edit'),
-                priority: 10,
-                icon: 'pencil',
-                keyboardShortcut: 'ctrl+alt+e',
-                controller: ['data', 'authoringWorkspace', function(
-                    data,
-                    authoringWorkspace: AuthoringWorkspaceService,
-                ) {
-                    authoringWorkspace.edit(data.item ? data.item : data);
-                }],
-                filters: [
-                    {action: 'list', type: 'archive'},
-                    {action: 'edit', type: 'item'},
-                ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).edit;
-                }],
-            })
-            .activity('edit.item.popup', {
-                label: gettext('Edit in new Window'),
-                priority: 5,
-                icon: 'pencil',
-                keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
-                    authoringWorkspace.popup(data.item, 'edit');
-                }],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'lock', function(authoring, item, lock) {
-                    return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
-                }],
-            })
-            .activity('edit.media.metadata', {
-                label: gettext('Edit Media Metadata'),
-                priority: 3,
-                icon: 'edit-line',
-                keyboardShortcut: 'ctrl+alt+m',
-                controller: ['data', 'multiImageEdit', 'authoring', 'lock',
-                    function(data, multiImageEdit, authoring, lock) {
-                        lock.lock(data.item, true, 'edit').then((item) => {
-                            multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
-                        });
-                    }],
-                filters: [
-                    {action: 'list', type: 'archive'},
-                    {action: 'edit', type: 'metadata'},
-                ],
-                additionalCondition: ['item', 'authoring', (item, authoring) => {
-                    const mediaTypes = ['audio', 'picture', 'video'];
-
-                    return !sdApi.article.isLocked(item)
-                        && mediaTypes.includes(item.type)
-                        && authoring.itemActions(item).edit;
-                }],
-            })
-            .activity('move.item', {
-                label: gettext('Send to'),
-                icon: 'share-alt',
-                controller: ['data', (data) => {
-                    dispatchInternalEvent('interactiveArticleActionStart', {
-                        items: [data.item],
-                        tabs: ['send_to'],
-                        activeTab: 'send_to',
-                    });
-                }],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', (authoring, item) =>
-                    authoring.itemActions(item).send && item.type !== 'composite',
-                ],
-            })
-            .activity('move.item.personal_space', {
-                label: gettext('Send to Personal Space'),
-                icon: 'share-alt',
-                controller: ['data', (data) => {
-                    sdApi.article.sendItems(
-                        [data.item],
-                        {type: 'personal-space'},
-                    );
-                }],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', (authoring, item) =>
-                    authoring.itemActions(item).send && item.type !== 'composite'
-                    && appConfig?.features?.sendToPersonal
-                    && item.task?.desk != null,
-                ],
-                privileges: {send_to_personal: 1},
-            })
-            .activity('kill.text', {
-                label: gettext('Kill item'),
-                priority: 100,
-                icon: 'kill',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', '$rootScope',
-                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
-                        if (data.item._type === 'archived') {
-                            $rootScope.$broadcast('open:archived_kill', data.item, 'kill');
-                        } else {
-                            authoringWorkspace.kill(data.item);
-                        }
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
-                additionalCondition: ['authoring', 'item', 'privileges', function(authoring, item, privileges) {
-                    if (item._type === 'archived') {
-                        return privileges.privileges.archived && item.type === 'text';
-                    }
-
-                    return authoring.itemActions(item).kill;
-                }],
-                privileges: {kill: 1},
-            })
-            .activity('takedown.text', {
-                label: gettext('Takedown item'),
-                priority: 100,
-                icon: 'kill',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', '$rootScope',
-                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
-                        if (data.item._type === 'archived') {
-                            $rootScope.$broadcast('open:archived_kill', data.item, 'takedown');
-                        } else {
-                            authoringWorkspace.takedown(data.item);
-                        }
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}, {action: 'list', type: 'archived'}],
-                additionalCondition: ['authoring', 'item', 'privileges', function(authoring, item, privileges) {
-                    if (item._type === 'archived') {
-                        return privileges.privileges.archived && item.type === 'text';
-                    }
-
-                    return authoring.itemActions(item).takedown;
-                }],
-                privileges: {takedown: 1},
-            })
-            .activity('correct.text', {
-                label: gettext('Correct item'),
-                priority: 100,
-                icon: 'edit-line',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'authoring', function(
-                    data,
-                    authoringWorkspace: AuthoringWorkspaceService,
-                    authoring,
-                ) {
-                    if (appConfig?.corrections_workflow
-                    && (data.item.state === 'published' || data.item.state === 'corrected')) {
-                        authoring.correction(data.item.archive_item);
-                    } else {
-                        authoringWorkspace.correct(data.item);
-                    }
-                }],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).correct;
-                }],
-                privileges: {correct: 1},
-            })
-            .activity('view.item', {
-                label: gettext('Open'),
-                priority: 2000,
-                icon: 'external',
-                keyboardShortcut: 'alt+o',
-                controller: ['data', 'authoringWorkspace', function(
-                    data,
-                    authoringWorkspace: AuthoringWorkspaceService,
-                ) {
-                    authoringWorkspace.view(data.item || data);
-                }],
-                filters: [
-                    {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'},
-                    {action: 'list', type: 'legal_archive'},
-                    {action: 'view', type: 'item'},
-                ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).view;
-                }],
-            })
-            .activity('view.item.popup', {
-                label: gettext('Open in new Window'),
-                priority: 1990,
-                icon: 'external',
-                keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
-                    authoringWorkspace.popup(data.item, 'view');
-                }],
-                filters: [
-                    {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'},
-                    {action: 'list', type: 'legal_archive'},
-                ],
-                additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).view;
-                }],
-            })
-            .activity('edit.crop', {
-                label: gettext('Details'),
-                modal: true,
-                cssClass: 'modal--fullscreen',
-                controller: ctrl.ChangeImageController,
-                templateUrl: 'scripts/apps/authoring/views/change-image.html',
-                filters: [{action: 'edit', type: 'crop'}],
-            })
-            .activity('unpublish', {
-                label: gettext('Unpublish'),
-                priority: 50,
-                icon: 'kill',
-                group: 'corrections',
-                controller: ['data', 'authoring', 'api',
-                    (data, authoring, api) => {
-                        return api.find('archive', data.item._id).then((updatedItem) => {
-                            return authoring.unpublish(updatedItem);
-                        });
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
-                privileges: {unpublish: 1},
-            })
-        ;
-    }])
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('move', {
-            type: 'http',
-            backend: {
-                rel: 'move',
-            },
-        });
-    }])
-    .config(['apiProvider', function(apiProvider) {
-        apiProvider.api('content_templates_apply', {
-            type: 'http',
-            backend: {
-                rel: 'content_templates_apply',
-            },
-        });
-    }])
-    .config(['embedServiceProvider', 'iframelyServiceProvider',
-        function(embedServiceProvider, iframelyServiceProvider) {
+            });
+        },
+    ])
+    .config([
+        'apiProvider',
+        function (apiProvider) {
+            apiProvider.api('content_templates_apply', {
+                type: 'http',
+                backend: {
+                    rel: 'content_templates_apply',
+                },
+            });
+        },
+    ])
+    .config([
+        'embedServiceProvider',
+        'iframelyServiceProvider',
+        function (embedServiceProvider, iframelyServiceProvider) {
             iframelyServiceProvider.setKey(appConfig.iframely.key);
             // don't use noembed as first choice
             embedServiceProvider.setConfig('useOnlyFallback', true);
             // iframely respect the original embed for more services than 'embedly'
             embedServiceProvider.setConfig('fallbackService', 'iframely');
-        }])
-    .run(['keyboardManager', 'embedService', function(keyboardManager) {
-        keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));
-        keyboardManager.register('Authoring', 'ctrl + shift + l',
-            gettext('Preview formatted article, when previewFormats feature configured'));
-        keyboardManager.register('Authoring', 'ctrl + shift + y',
-            gettext('Instant Spellchecking, when automatic spellchecking turned off'));
-    }]);
+        },
+    ])
+    .run([
+        'keyboardManager',
+        'embedService',
+        function (keyboardManager) {
+            keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
+            keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
+            keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));
+            keyboardManager.register(
+                'Authoring',
+                'ctrl + shift + l',
+                gettext('Preview formatted article, when previewFormats feature configured'),
+            );
+            keyboardManager.register(
+                'Authoring',
+                'ctrl + shift + y',
+                gettext('Instant Spellchecking, when automatic spellchecking turned off'),
+            );
+        },
+    ]);

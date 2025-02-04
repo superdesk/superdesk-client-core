@@ -35,18 +35,19 @@ interface IScope extends ng.IScope {
 }
 
 function getItemsCount(items: Array<any>): number {
-    return items
-        .filter((_item) => _item[_item.fieldId] != null)
-        .length;
+    return items.filter((_item) => _item[_item.fieldId] != null).length;
 }
 
 function isOrderOrItemsChanged(items: Array<any>, prevItems: Array<any>): boolean {
     return !!items.filter((_item, index) => {
         const fieldId = _item.fieldId;
 
-        return items[index][fieldId] != null && prevItems[index][fieldId] != null
-        && (items[index][fieldId]._id !== prevItems[index][fieldId]._id
-            || items[index][fieldId].order !== prevItems[index][fieldId].order);
+        return (
+            items[index][fieldId] != null &&
+            prevItems[index][fieldId] != null &&
+            (items[index][fieldId]._id !== prevItems[index][fieldId]._id ||
+                items[index][fieldId].order !== prevItems[index][fieldId].order)
+        );
     }).length;
 }
 
@@ -75,20 +76,21 @@ export function ItemCarouselDirective(notify, relationsService) {
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
-        link: function(scope: IScope, elem, attr, controller) {
+        link: function (scope: IScope, elem, attr, controller) {
             let carousel;
             let previousItems: Array<any>;
 
             scope.currentIndex = 0;
 
-            scope.getUploadButtonTitle = () => scope.carouselItems.length < scope.maxUploads
-                ? ''
-                : gettextPlural(
-                    scope.maxUploads,
-                    'Only 1 image is allowed in this field',
-                    'Only {{number}} images are allowed in this field',
-                    {number: scope.maxUploads},
-                );
+            scope.getUploadButtonTitle = () =>
+                scope.carouselItems.length < scope.maxUploads
+                    ? ''
+                    : gettextPlural(
+                          scope.maxUploads,
+                          'Only 1 image is allowed in this field',
+                          'Only {{number}} images are allowed in this field',
+                          {number: scope.maxUploads},
+                      );
 
             scope.waitForMediaAndInitCarousel = (items) => {
                 previousItems = _.cloneDeep(items);
@@ -96,8 +98,10 @@ export function ItemCarouselDirective(notify, relationsService) {
 
                 scope.rel = field ? field.fieldId : null;
 
-                scope.carouselItems = _.sortBy(_.filter(items, (item: any) => item[item.fieldId]),
-                    [(item: any) => item[item.fieldId].order]);
+                scope.carouselItems = _.sortBy(
+                    _.filter(items, (item: any) => item[item.fieldId]),
+                    [(item: any) => item[item.fieldId].order],
+                );
 
                 scope.$applyAsync(() => {
                     // waiting for angular to render items
@@ -110,15 +114,9 @@ export function ItemCarouselDirective(notify, relationsService) {
                     // so elements like <video> from <sd-video> won't be available right away
                     setTimeout(() => {
                         const carouselImages: Array<HTMLImageElement> = Array.from(
-                            elem
-                                .get(0)
-                                .querySelectorAll(
-                                    `${carouselContainerSelector} img`,
-                                ),
+                            elem.get(0).querySelectorAll(`${carouselContainerSelector} img`),
                         );
-                        const carouselAudiosAndVideos: Array<
-                            HTMLAudioElement | HTMLVideoElement
-                        > = Array.from(
+                        const carouselAudiosAndVideos: Array<HTMLAudioElement | HTMLVideoElement> = Array.from(
                             elem
                                 .get(0)
                                 .querySelectorAll(
@@ -126,20 +124,11 @@ export function ItemCarouselDirective(notify, relationsService) {
                                 ),
                         );
 
-                        if (
-                            items.length < 1 ||
-                            carouselImages.length +
-                                carouselAudiosAndVideos.length <
-                                1
-                        ) {
+                        if (items.length < 1 || carouselImages.length + carouselAudiosAndVideos.length < 1) {
                             return;
                         }
 
-                        const mediaItems: Array<
-                            | HTMLAudioElement
-                            | HTMLVideoElement
-                            | HTMLImageElement
-                        > = []
+                        const mediaItems: Array<HTMLAudioElement | HTMLVideoElement | HTMLImageElement> = []
                             .concat(carouselImages)
                             .concat(carouselAudiosAndVideos);
 
@@ -154,8 +143,12 @@ export function ItemCarouselDirective(notify, relationsService) {
              */
             scope.$watchCollection('items', (items: Array<any>) => {
                 // Don't execute if there are no items or their length is same as before and their order is unchanged
-                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
-                    && !isOrderOrItemsChanged(items, previousItems)) {
+                if (
+                    items == null ||
+                    (previousItems &&
+                        getItemsCount(items) === getItemsCount(previousItems) &&
+                        !isOrderOrItemsChanged(items, previousItems))
+                ) {
                     return false;
                 }
 
@@ -204,10 +197,9 @@ export function ItemCarouselDirective(notify, relationsService) {
                 // check files from external folder does not exceed the maxUploads limit
                 if (currentUploads + uploadsCount > scope.maxUploads) {
                     notify.error(
-                        gettext(
-                            'Select at most {{maxUploads}} files to upload.',
-                            {maxUploads: scope.maxUploads - currentUploads},
-                        ),
+                        gettext('Select at most {{maxUploads}} files to upload.', {
+                            maxUploads: scope.maxUploads - currentUploads,
+                        }),
                     );
                     return false;
                 }
@@ -243,10 +235,11 @@ export function ItemCarouselDirective(notify, relationsService) {
 
                     removeDragOverClass();
                     if (!isWorkflowAllowed) {
-                        notify.error(gettext(
-                            'The following status is not allowed in this field: {{status}}',
-                            {status: item.state},
-                        ));
+                        notify.error(
+                            gettext('The following status is not allowed in this field: {{status}}', {
+                                status: item.state,
+                            }),
+                        );
                         return;
                     }
 
@@ -258,9 +251,8 @@ export function ItemCarouselDirective(notify, relationsService) {
                                 if (res === true) {
                                     // add a new item at the last position in the carousel
 
-                                    scope.currentIndex = scope.carouselItems != null
-                                        ? scope.carouselItems.length - 1
-                                        : 0;
+                                    scope.currentIndex =
+                                        scope.carouselItems != null ? scope.carouselItems.length - 1 : 0;
                                 }
                             });
                         }
@@ -279,7 +271,7 @@ export function ItemCarouselDirective(notify, relationsService) {
              * @public
              * @description Upload media.
              */
-            scope.upload = function() {
+            scope.upload = function () {
                 if (scope.editable) {
                     controller.uploadAndCropImages(scope);
                 }
@@ -292,7 +284,7 @@ export function ItemCarouselDirective(notify, relationsService) {
              * @description Remove the associations
              * @param {Object} item Item object
              */
-            scope.remove = function(item) {
+            scope.remove = function (item) {
                 controller.updateItemAssociation(scope, null, item.fieldId).then(() => reorderMediaItems());
                 // if we deleted the last item from the carousel then reduce the currentIndex by one so that
                 // gallery does not disappear
@@ -317,9 +309,13 @@ export function ItemCarouselDirective(notify, relationsService) {
             scope.handleInputChange = (value: string, onChangeData) => {
                 const {association, field} = onChangeData;
 
-                if (typeof scope.item.associations?.[association]?.[field] === 'string'
-                    || (scope.item.associations?.[association] !== null
-                        && field !== null && value !== null && typeof value === 'string')) {
+                if (
+                    typeof scope.item.associations?.[association]?.[field] === 'string' ||
+                    (scope.item.associations?.[association] !== null &&
+                        field !== null &&
+                        value !== null &&
+                        typeof value === 'string')
+                ) {
                     scope.item.associations[association][field] = value;
                     scope.onchange();
                     scope.$applyAsync();
@@ -346,9 +342,9 @@ export function ItemCarouselDirective(notify, relationsService) {
                 elem.find('.sd-media-carousel__thumb-strip').sortable({
                     items: '.sd-media-carousel__thumb-strip-item',
                     start: (event, ui) => {
-                        ui.item.data('start_index',
-                            ui.item.parent().find('.sd-media-carousel__thumb-strip-item')
-                                .index(ui.item),
+                        ui.item.data(
+                            'start_index',
+                            ui.item.parent().find('.sd-media-carousel__thumb-strip-item').index(ui.item),
                         );
                     },
                     stop: (event, ui) => {
@@ -356,14 +352,13 @@ export function ItemCarouselDirective(notify, relationsService) {
                             updated = false;
 
                             let start = ui.item.data('start_index'),
-                                end = ui.item.parent().find('.sd-media-carousel__thumb-strip-item')
-                                    .index(ui.item);
+                                end = ui.item.parent().find('.sd-media-carousel__thumb-strip-item').index(ui.item);
 
                             scope.carouselItems.splice(end, 0, scope.carouselItems.splice(start, 1)[0]);
                             reorderMediaItems();
                         }
                     },
-                    update: function(event, ui) {
+                    update: function (event, ui) {
                         updated = true;
                     },
                 });

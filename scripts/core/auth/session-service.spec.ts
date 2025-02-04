@@ -33,20 +33,21 @@ describe('session service', () => {
         expect($rootScope.$broadcast).toHaveBeenCalledWith('logout');
     }));
 
-    it('can resolve identity on start', (done) => inject((session, $rootScope) => {
-        session.getIdentity().then((identity) => {
-            session.getIdentity().then((i2) => {
-                expect(identity.name).toBe('foo');
-                expect(identity).toBe(i2);
+    it('can resolve identity on start', (done) =>
+        inject((session, $rootScope) => {
+            session.getIdentity().then((identity) => {
+                session.getIdentity().then((i2) => {
+                    expect(identity.name).toBe('foo');
+                    expect(identity).toBe(i2);
 
-                done();
+                    done();
+                });
             });
-        });
 
-        session.start(SESSION, {name: 'foo'});
+            session.start(SESSION, {name: 'foo'});
 
-        $rootScope.$apply();
-    }));
+            $rootScope.$apply();
+        }));
 
     it('can store state for future requests', inject((session, $rootScope) => {
         session.start(SESSION, {name: 'bar'});
@@ -109,34 +110,36 @@ describe('session service', () => {
         expect(nextSession.identity.name).toBe('baz');
     }));
 
-    it('can return identity after session start', (done) => inject((session, $rootScope) => {
-        session.start(SESSION, {name: 'bar'});
-        $rootScope.$digest();
+    it('can return identity after session start', (done) =>
+        inject((session, $rootScope) => {
+            session.start(SESSION, {name: 'bar'});
+            $rootScope.$digest();
 
-        session.getIdentity().then(() => {
-            done();
-        });
+            session.getIdentity().then(() => {
+                done();
+            });
 
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 
-    it('should not resolve identity after expiry', (done) => inject((session, $rootScope) => {
-        session.start(SESSION, {name: 'bar'});
-        $rootScope.$digest();
+    it('should not resolve identity after expiry', (done) =>
+        inject((session, $rootScope) => {
+            session.start(SESSION, {name: 'bar'});
+            $rootScope.$digest();
 
-        session.expire();
-        $rootScope.$digest();
+            session.expire();
+            $rootScope.$digest();
 
-        var success = jasmine.createSpy('success');
+            var success = jasmine.createSpy('success');
 
-        session.getIdentity().then(success);
+            session.getIdentity().then(success);
 
-        setTimeout(() => {
-            expect(success).not.toHaveBeenCalled();
+            setTimeout(() => {
+                expect(success).not.toHaveBeenCalled();
 
-            done();
-        }, 2000);
+                done();
+            }, 2000);
 
-        $rootScope.$digest();
-    }));
+            $rootScope.$digest();
+        }));
 });

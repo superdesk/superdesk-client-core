@@ -13,12 +13,11 @@ export function RemoveIngestedService(api, $rootScope) {
      */
     function fetchProviders() {
         if (api.ingestProviders) {
-            return api.ingestProviders.query({max_results: 200})
-                .then((result) => {
-                    _.each(result._items, (provider) => {
-                        providers[provider._id] = provider.allow_remove_ingested || false;
-                    });
+            return api.ingestProviders.query({max_results: 200}).then((result) => {
+                _.each(result._items, (provider) => {
+                    providers[provider._id] = provider.allow_remove_ingested || false;
                 });
+            });
         }
     }
 

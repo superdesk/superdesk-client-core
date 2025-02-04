@@ -54,7 +54,7 @@ interface IScope extends IScopeConfigController {
     schema: any;
     schemaFields: Array<any>;
     itemsValidation: {valid: boolean};
-    customFieldTypes: Array<{id: string, label: string}>;
+    customFieldTypes: Array<{id: string; label: string}>;
     setCustomFieldConfig: (config: any) => void;
     editForm: any;
     tab: 'general' | 'items';
@@ -66,16 +66,14 @@ const editorBlockFieldId = 'editor_block_field';
 
 type IFormattingOptionTuple = [notTranslatedOption: RICH_FORMATTING_OPTION, translatedOption: string];
 
-export function VocabularyEditController(
-    $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,
-) {
+export function VocabularyEditController($scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout) {
     let componentRef: VocabularyItemsViewEdit = null;
 
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.tab = 'general';
 
-    $scope.setTab = function(tab: IScope['tab']) {
+    $scope.setTab = function (tab: IScope['tab']) {
         $scope.tab = tab;
     };
 
@@ -85,8 +83,8 @@ export function VocabularyEditController(
     $scope.selectionTypes = getVocabularySelectionTypes();
 
     if (
-        $scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)
-        && $scope.vocabulary.field_type === 'related_content'
+        $scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type) &&
+        $scope.vocabulary.field_type === 'related_content'
     ) {
         const vocab = $scope.vocabulary;
 
@@ -109,12 +107,10 @@ export function VocabularyEditController(
         if (angular.isDefined(response.data._issues)) {
             if (angular.isDefined(response.data._issues['validator exception'])) {
                 notify.error(gettext('Error: {{ message }}', {message: response.data._issues['validator exception']}));
-            } else if (angular.isDefined(response.data._issues.error) &&
-                response.data._issues.error.required_field) {
+            } else if (angular.isDefined(response.data._issues.error) && response.data._issues.error.required_field) {
                 let params = response.data._issues.params;
 
-                notify.error(gettext(
-                    'Required {{field}} in item {{item}}', {field: params.field, item: params.item}));
+                notify.error(gettext('Required {{field}} in item {{item}}', {field: params.field, item: params.item}));
             } else {
                 $scope.issues = response.data._issues;
                 notify.error(gettext('Error. Vocabulary not saved.'));
@@ -141,14 +137,14 @@ export function VocabularyEditController(
 
         $scope.fakeItem = {
             fields_meta: {
-
                 /**
                  * Fake field, needed for compatibility with sdEditor3 directive
                  */
                 [editorBlockFieldId]: {
-                    draftjsState: vocabulary.field_options?.template != null
-                        ? vocabulary.field_options.template
-                        : [convertToRaw(ContentState.createFromText(''))],
+                    draftjsState:
+                        vocabulary.field_options?.template != null
+                            ? vocabulary.field_options.template
+                            : [convertToRaw(ContentState.createFromText(''))],
                 },
             },
         };
@@ -156,12 +152,12 @@ export function VocabularyEditController(
         $scope.editorBlockFormattingOptions = ((): Array<{value: IFormattingOptionTuple}> => {
             const allFormattingOptionsTranslated = getEditor3RichTextFormattingOptions();
 
-            return getFormattingOptionsForTableLikeBlocks().map(
-                (option) => ({value: [option, allFormattingOptionsTranslated[option]]}),
-            );
+            return getFormattingOptionsForTableLikeBlocks().map((option) => ({
+                value: [option, allFormattingOptionsTranslated[option]],
+            }));
         })();
 
-        $scope.formattingOptionsOnChange = function(options) {
+        $scope.formattingOptionsOnChange = function (options) {
             if (vocabulary.field_options == null) {
                 vocabulary.field_options = {};
             }
@@ -183,7 +179,7 @@ export function VocabularyEditController(
     /**
      * Save current edit modal contents on backend.
      */
-    $scope.save = function() {
+    $scope.save = function () {
         $scope.vocabulary.items = componentRef.getItemsForSaving();
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
@@ -214,8 +210,9 @@ export function VocabularyEditController(
                 }
 
                 if (!name || name.match(idRegex) === null) {
-                    $scope.errorMessage =
-                        gettext('Name field should only have alphanumeric characters, dashes and underscores');
+                    $scope.errorMessage = gettext(
+                        'Name field should only have alphanumeric characters, dashes and underscores',
+                    );
                 }
             });
         }
@@ -237,14 +234,9 @@ export function VocabularyEditController(
         }
 
         if (_.isNil($scope.errorMessage)) {
-            api.save(
-                'vocabularies',
-                $scope.vocabulary,
-                undefined,
-                undefined,
-                undefined,
-                {skipPostProcessing: true},
-            ).then(onSuccess, onError);
+            api.save('vocabularies', $scope.vocabulary, undefined, undefined, undefined, {
+                skipPostProcessing: true,
+            }).then(onSuccess, onError);
         }
 
         // discard metadata cache:
@@ -255,14 +247,14 @@ export function VocabularyEditController(
     /**
      * Return true if at least one content type should be selected
      */
-    $scope.requireAllowedTypesSelection = function() {
+    $scope.requireAllowedTypesSelection = function () {
         if (!getMediaTypeKeys().includes($scope.vocabulary.field_type)) {
             return false;
         }
 
         // `field options` only exist on related_content and media field type
         // but we don't want to hard-code the check and maintain the condition inside `getMediaTypeKeys`
-        const vocabulary = ($scope.vocabulary as any);
+        const vocabulary = $scope.vocabulary as any;
 
         const allowedTypes = vocabulary.field_options.allowed_types;
         const selectedKeys = Object.keys(allowedTypes).filter((key) => allowedTypes[key] === true);
@@ -273,7 +265,7 @@ export function VocabularyEditController(
     /**
      * Discard changes and close modal.
      */
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         const editing = origVocabulary?._id != null;
 
         if (editing) {
@@ -284,11 +276,7 @@ export function VocabularyEditController(
     };
 
     // try to reproduce data model of vocabulary:
-    var model = _.mapValues(_.keyBy(
-        _.uniq(_.flatten(
-            _.map($scope.vocabulary.items, (o) => _.keys(o)),
-        )),
-    ), () => null);
+    var model = _.mapValues(_.keyBy(_.uniq(_.flatten(_.map($scope.vocabulary.items, (o) => _.keys(o))))), () => null);
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
@@ -296,14 +284,12 @@ export function VocabularyEditController(
     if ($scope.schema) {
         $scope.schemaFields = Object.keys($scope.schema)
             .sort()
-            .map((key) => angular.extend(
-                {key: key},
-                $scope.schema[key],
-            ));
+            .map((key) => angular.extend({key: key}, $scope.schema[key]));
     }
 
-    $scope.schemaFields = $scope.schemaFields
-        || Object.keys($scope.model)
+    $scope.schemaFields =
+        $scope.schemaFields ||
+        Object.keys($scope.model)
             .filter((key) => key !== 'is_active')
             .map((key) => ({key: key, label: key, type: key}));
 
@@ -311,10 +297,12 @@ export function VocabularyEditController(
 
     const fields = getFields();
 
-    $scope.customFieldTypes = Object.keys(fields).filter((id) => fields[id].generic === true).map((id) => ({
-        id: id,
-        label: fields[id].label,
-    }));
+    $scope.customFieldTypes = Object.keys(fields)
+        .filter((id) => fields[id].generic === true)
+        .map((id) => ({
+            id: id,
+            label: fields[id].label,
+        }));
 
     $scope.updateUI = () => {
         $scope.editForm.$setDirty();
@@ -332,7 +320,7 @@ export function VocabularyEditController(
     $timeout(() => {
         placeholderElement = document.querySelector('#vocabulary-items-view-edit-placeholder');
 
-        ReactDOM.render((
+        ReactDOM.render(
             <VocabularyItemsViewEdit
                 ref={(ref) => {
                     componentRef = ref;
@@ -347,8 +335,9 @@ export function VocabularyEditController(
                     $scope.itemsValidation.valid = valid;
                     $scope.$apply();
                 }}
-            />
-        ), placeholderElement);
+            />,
+            placeholderElement,
+        );
     });
 
     $scope.$watch('errorMessage', (errorMessage: string) => {

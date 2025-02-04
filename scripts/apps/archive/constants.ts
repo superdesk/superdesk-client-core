@@ -66,7 +66,7 @@ export enum ITEM_STATE {
 
     /**
      * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
-    */
+     */
     BEING_CORRECTED = 'being_corrected',
 
     /**
@@ -96,10 +96,7 @@ export const PUBLISHED_STATES = [
  *
  * KILLED | RECALLED | UNPUBLISHED
  */
-export const KILLED_STATES = [
-    ITEM_STATE.KILLED,
-    ITEM_STATE.RECALLED,
-];
+export const KILLED_STATES = [ITEM_STATE.KILLED, ITEM_STATE.RECALLED];
 
 /**
  * Item is canceled before or after publishing

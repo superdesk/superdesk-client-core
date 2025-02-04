@@ -29,9 +29,7 @@ export class Editor extends React.PureComponent<IProps> {
                             return;
                         }
 
-                        this.props.onChange(
-                            dateToServerString(new Date(dateString)),
-                        );
+                        this.props.onChange(dateToServerString(new Date(dateString)));
                     }}
                     dateFormat={appConfig.view.dateformat}
                     locale={getLocaleForDatePicker(this.props.language)}

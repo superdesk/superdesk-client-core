@@ -15,12 +15,14 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
     render() {
         const {selectedItemLabel, options, language, tabIndex, disabled} = this.props;
 
-        const optionsWithTranslations = options.map((option) =>
-            ({label: getVocabularyItemNameTranslated(option, language), value: option.qcode, option}));
+        const optionsWithTranslations = options.map((option) => ({
+            label: getVocabularyItemNameTranslated(option, language),
+            value: option.qcode,
+            option,
+        }));
 
-        const selectedValue = optionsWithTranslations.find(
-            (option) => option.label === selectedItemLabel,
-        )?.option.qcode ?? '';
+        const selectedValue =
+            optionsWithTranslations.find((option) => option.label === selectedItemLabel)?.option.qcode ?? '';
 
         return (
             <div className="sd-line-input sd-line-input--no-label sd-line-input--is-select">
@@ -35,12 +37,14 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
                     tabIndex={tabIndex}
                     className="sd-line-input__select"
                 >
-                    <option value="" disabled hidden>{gettext('-- Choose --')}</option>
-                    {
-                        optionsWithTranslations.map(({label, value}) => (
-                            <option key={value} value={value}>{label}</option>
-                        ))
-                    }
+                    <option value="" disabled hidden>
+                        {gettext('-- Choose --')}
+                    </option>
+                    {optionsWithTranslations.map(({label, value}) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
                 </select>
             </div>
         );

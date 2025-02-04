@@ -69,22 +69,18 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                         type="text"
                         label={gettext('Template name')}
                         value={state.templateName}
-                        onChange={(value) => this.setState({
-                            ...state,
-                            templateName: value,
-                        })}
+                        onChange={(value) =>
+                            this.setState({
+                                ...state,
+                                templateName: value,
+                            })
+                        }
                     />
-                    {
-                        state.responseError != null && (
-                            <Alert
-                                margin="none"
-                                size="small"
-                                type="alert"
-                            >
-                                {state.responseError}
-                            </Alert>
-                        )
-                    }
+                    {state.responseError != null && (
+                        <Alert margin="none" size="small" type="alert">
+                            {state.responseError}
+                        </Alert>
+                    )}
                     {
                         /**
                          * A new template will be created:
@@ -94,78 +90,57 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                          *
                          * Else the existing template will be updated
                          */
-                        wasRenamed(state.template, state.templateName)
-                            || state.template == null
-                            || canEdit(state.template, state.deskId != null) !== true
-                            ? (
-                                <Alert
-                                    margin="none"
-                                    size="small"
-                                    type="warning"
-                                    style="hollow"
-                                >
-                                    {gettext('A new template will be created')}
-                                </Alert>
-                            )
-                            : (
-                                <Alert
-                                    margin="none"
-                                    size="small"
-                                    type="warning"
-                                    style="hollow"
-                                >
-                                    {gettext('Template will be updated')}
-                                </Alert>
-                            )
+                        wasRenamed(state.template, state.templateName) ||
+                        state.template == null ||
+                        canEdit(state.template, state.deskId != null) !== true ? (
+                            <Alert margin="none" size="small" type="warning" style="hollow">
+                                {gettext('A new template will be created')}
+                            </Alert>
+                        ) : (
+                            <Alert margin="none" size="small" type="warning" style="hollow">
+                                {gettext('Template will be updated')}
+                            </Alert>
+                        )
                     }
-                    {
-                        availableDesks != null && state.template.is_public &&
-                        (
-                            <>
-                                <Checkbox
-                                    label={{text: gettext('Desk template')}}
-                                    checked={state.isDeskTemplate}
-                                    onChange={() => this.setState({
+                    {availableDesks != null && state.template.is_public && (
+                        <>
+                            <Checkbox
+                                label={{text: gettext('Desk template')}}
+                                checked={state.isDeskTemplate}
+                                onChange={() =>
+                                    this.setState({
                                         ...state,
                                         deskId: state.isDeskTemplate ? null : state.deskId,
                                         isDeskTemplate: !state.isDeskTemplate,
-                                    })}
-                                />
-                                {
-                                    state.isDeskTemplate && (
-                                        <Select
-                                            label={gettext('Desks')}
-                                            value={state.deskId}
-                                            onChange={(value) => {
-                                                this.setState({...state, deskId: value});
-                                            }}
-                                        >
-                                            <Option />
-                                            {
-                                                availableDesks.map(({_id, name}) => (
-                                                    <Option key={_id} value={_id}>{name}</Option>
-                                                ))
-                                            }
-                                        </Select>
-                                    )
+                                    })
                                 }
-                            </>
-                        )
-                    }
+                            />
+                            {state.isDeskTemplate && (
+                                <Select
+                                    label={gettext('Desks')}
+                                    value={state.deskId}
+                                    onChange={(value) => {
+                                        this.setState({...state, deskId: value});
+                                    }}
+                                >
+                                    <Option />
+                                    {availableDesks.map(({_id, name}) => (
+                                        <Option key={_id} value={_id}>
+                                            {name}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            )}
+                        </>
+                    )}
                     <Spacer h gap="8" justifyContent="end" noGrow>
-                        <Button
-                            text={gettext('Cancel')}
-                            onClick={() => this.props.closeModal()}
-                        />
+                        <Button text={gettext('Cancel')} onClick={() => this.props.closeModal()} />
                         <Button
                             type="primary"
                             text={gettext('Save')}
                             onClick={() => {
-                                sdApi.templates.createTemplateFromArticle(
-                                    this.props.item,
-                                    state.templateName,
-                                    state.deskId,
-                                )
+                                sdApi.templates
+                                    .createTemplateFromArticle(this.props.item, state.templateName, state.deskId)
                                     .then(() => {
                                         this.props.closeModal();
                                     })
@@ -175,7 +150,6 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                             }}
                         />
                     </Spacer>
-
                 </Spacer>
             </Modal>
         );

@@ -2,13 +2,13 @@ import {IContact} from 'superdesk-api';
 
 export interface IContactsService {
     getCriteria(param: any): {
-        max_results: number,
-        sort: string,
-        page: number,
-        all: boolean,
-        q?: string,
-        default_operator?: string,
-        filter?: string,
+        max_results: number;
+        sort: string;
+        page: number;
+        all: boolean;
+        q?: string;
+        default_operator?: string;
+        filter?: string;
     };
     query(param: any): Promise<{_items: Array<IContact>}>;
     queryField(field: string, text: string): Promise<{_items: Array<IContact>}>;

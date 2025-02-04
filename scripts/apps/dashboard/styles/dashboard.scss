@@ -28,9 +28,9 @@
 
 .sd-widget {
     background: var(--sd-colour__dashboard-widget-Bg);
-    border-block-start:0;
+    border-block-start: 0;
     border-radius: var(--b-radius--medium);
-    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     width: 100%;
     height: 100%;
     display: grid;
@@ -100,11 +100,17 @@
         position: relative;
         grid-row: mainContent;
         overflow-y: hidden;
-        .activity-list.card-list>li {
-            box-shadow: 0 0 0 1px var(--sd-shadow-outline--2), 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
+        .activity-list.card-list > li {
+            box-shadow:
+                0 0 0 1px var(--sd-shadow-outline--2),
+                0 1px 4px 0 rgba(0, 0, 0, 0.12),
+                0 0 1px 0 rgba(0, 0, 0, 0.2);
             border-radius: 2px;
             &:hover {
-                box-shadow: 0 0 0 1px var(--sd-shadow-outline--2), 0 1px 4px 0 rgba(0,0,0,.12), 0 0 1px 0 rgba(0,0,0,.2);
+                box-shadow:
+                    0 0 0 1px var(--sd-shadow-outline--2),
+                    0 1px 4px 0 rgba(0, 0, 0, 0.12),
+                    0 0 1px 0 rgba(0, 0, 0, 0.2);
             }
         }
     }
@@ -116,7 +122,7 @@
     }
     .widget-settings {
         position: absolute;
-        top : 2px;
+        top: 2px;
         inset-inline-end: 6px;
         line-height: 1;
         width: 28px;
@@ -170,14 +176,13 @@
         background: $background-main !important;
         border-inline-start: 3px solid $background-main !important;
         &:hover {
-            background: rgba(0,0,0,.05) !important;
+            background: rgba(0, 0, 0, 0.05) !important;
         }
     }
     ::-webkit-scrollbar-thumb {
         border-inline-start: 3px solid $background-main !important;
     }
 }
-
 
 /*
 ---------------------------------------------
@@ -208,15 +213,14 @@ Widgets styles
     }
 }
 
-
 .statistics {
     .stats-container {
         float: inline-start;
         &.size1 {
-            width:372px;
+            width: 372px;
         }
         &.size2 {
-            width:744px;
+            width: 744px;
         }
     }
     .stats-block {
@@ -243,12 +247,11 @@ Widgets styles
             border-color: #000;
             .title {
                 color: #a8a8a8;
-                border-color:#313131;
+                border-color: #313131;
             }
         }
     }
 }
-
 
 /*
 ---------------------------------------------
@@ -264,9 +267,6 @@ STREAM PAGE
     }
 }
 
-
-
-
 /*
 =============================================
 Gridster library
@@ -274,16 +274,16 @@ Gridster library
 */
 
 .gridster {
-    position:relative;
+    position: relative;
 }
 
 .gridster > * {
     margin: 0 auto;
-    -webkit-transition: height .4s;
-    -moz-transition: height .4s;
-    -o-transition: height .4s;
-    -ms-transition: height .4s;
-    transition: height .4s;
+    -webkit-transition: height 0.4s;
+    -moz-transition: height 0.4s;
+    -o-transition: height 0.4s;
+    -ms-transition: height 0.4s;
+    transition: height 0.4s;
 }
 
 .gridster .gs_w {
@@ -292,17 +292,49 @@ Gridster library
 }
 
 .ready .gs_w:not(.preview-holder) {
-    -webkit-transition: opacity .3s, left .3s, top .3s;
-    -moz-transition: opacity .3s, left .3s, top .3s;
-    -o-transition: opacity .3s, left .3s, top .3s;
-    transition: opacity .3s, left .3s, top .3s;
+    -webkit-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s;
+    -moz-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s;
+    -o-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s;
+    transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s;
 }
 
 .ready .gs_w:not(.preview-holder) {
-    -webkit-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
-    -moz-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
-    -o-transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
-    transition: opacity .3s, left .3s, top .3s, width .3s, height .3s;
+    -webkit-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s,
+        width 0.3s,
+        height 0.3s;
+    -moz-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s,
+        width 0.3s,
+        height 0.3s;
+    -o-transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s,
+        width 0.3s,
+        height 0.3s;
+    transition:
+        opacity 0.3s,
+        left 0.3s,
+        top 0.3s,
+        width 0.3s,
+        height 0.3s;
 }
 
 .gridster .preview-holder {
@@ -314,15 +346,23 @@ Gridster library
 }
 
 .gridster .player-revert {
-    z-index: 10!important;
-    -webkit-transition: left .3s, top .3s !important;
-    -moz-transition: left .3s, top .3s !important;
-    -o-transition: left .3s, top .3s !important;
-    transition:  left .3s, top .3s !important;
+    z-index: 10 !important;
+    -webkit-transition:
+        left 0.3s,
+        top 0.3s !important;
+    -moz-transition:
+        left 0.3s,
+        top 0.3s !important;
+    -o-transition:
+        left 0.3s,
+        top 0.3s !important;
+    transition:
+        left 0.3s,
+        top 0.3s !important;
 }
 
 .gridster .dragging {
-    z-index: 10!important;
+    z-index: 10 !important;
     @include transition(all 0s !important);
     @include opacity(80);
     cursor: move;
@@ -337,19 +377,18 @@ Gridster library
                 position: absolute;
                 width: 30px;
                 height: 30px;
-                background: url("~images/round-close.png") no-repeat 0 0;
+                background: url('~images/round-close.png') no-repeat 0 0;
                 z-index: 100;
                 inset-inline-end: -15px;
                 inset-block-start: -15px;
                 cursor: pointer;
             }
 
-
-            .widget-resize-width , .widget-resize-height {
+            .widget-resize-width,
+            .widget-resize-height {
                 cursor: pointer;
                 position: absolute;
             }
-
 
             .widget-resize-width {
                 width: 47px;
@@ -358,13 +397,14 @@ Gridster library
                 inset-inline-end: -25px;
                 inset-block-start: 50%;
                 margin-block-start: -22px;
-                .resize-left, .resize-right {
-                    width : 23px;
+                .resize-left,
+                .resize-right {
+                    width: 23px;
                     height: 43px;
                     float: inline-start;
                     @include opacity(0);
                     @include transition(all 0.3s linear);
-                    background: url("~images/widget-resize-icons.png") no-repeat 0 0;
+                    background: url('~images/widget-resize-icons.png') no-repeat 0 0;
                 }
                 .resize-right {
                     background-position: -23px 0;
@@ -379,10 +419,11 @@ Gridster library
                 inset-block-end: -24px;
                 margin-inline-start: -22px;
 
-                .resize-up, .resize-down {
-                    width : 43px;
+                .resize-up,
+                .resize-down {
+                    width: 43px;
                     height: 23px;
-                    background: url("~images/widget-resize-icons.png") no-repeat -47px 0;
+                    background: url('~images/widget-resize-icons.png') no-repeat -47px 0;
                     @include opacity(0);
                     @include transition(all 0.3s linear);
                 }
@@ -391,14 +432,15 @@ Gridster library
                     margin-block-start: 1px;
                 }
             }
-
-
         }
     }
     &.editmode {
         .dash-grid li {
             &:hover {
-                .resize-left, .resize-right, .resize-up, .resize-down  {
+                .resize-left,
+                .resize-right,
+                .resize-up,
+                .resize-down {
                     @include opacity(50);
                     @include transition(all 0.3s linear);
                     &:hover {
@@ -408,22 +450,19 @@ Gridster library
                 }
             }
             &.dragging {
-                .widget-resize-width , .widget-resize-height {
+                .widget-resize-width,
+                .widget-resize-height {
                     @include opacity(30);
                 }
             }
         }
         .d-widget {
             border-color: #999;
-            @include box-shadow(0 0 4px 1px #b8b8b8 );
+            @include box-shadow(0 0 4px 1px #b8b8b8);
             @include transition(all 0.3s linear);
         }
-
-
     }
-
 }
-
 
 /*
 =============================================
@@ -432,7 +471,6 @@ Add new widget modal
 */
 
 .widget-select {
-
     .modal-screen {
         inset-block-start: $nav-height;
         inset-block-end: auto;
@@ -449,7 +487,6 @@ Add new widget modal
                 color: #989898;
             }
         }
-
     }
     .modal-footer {
         min-height: 60px;
@@ -478,7 +515,7 @@ Add new widget modal
         width: calc(#{33%} - #{40px});
         margin: 20px;
         padding: 0;
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 4px;
         background-color: var(--sd-item__main-Bg);
         position: relative;
@@ -489,13 +526,13 @@ Add new widget modal
             min-height: 177px;
             background-color: var(--sd-item__main-Bg--hover);
             &::before {
-                content: "";
+                content: '';
                 position: absolute;
                 inset-block-start: 0;
                 inset-inline-start: 0;
                 inset-inline-end: 0;
                 height: 8px;
-                background-color: rgba(0,0,0,.2);
+                background-color: rgba(0, 0, 0, 0.2);
                 border-radius: 4px 4px 0 0;
             }
             img {
@@ -512,8 +549,8 @@ Add new widget modal
             padding: 8px 0;
         }
         &:hover {
-            cursor:pointer;
-            box-shadow: 0 1px 8px 0 rgba(0,0,0,0.5);
+            cursor: pointer;
+            box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.5);
         }
         &.widget {
             // specific colors
@@ -570,13 +607,14 @@ Add new widget modal
             // selected
             &.selected {
                 cursor: default;
-                @include box-shadow (0 1px 4px 0 rgba(0,0,0,0.06));
-                .thumbnail, .title {
+                @include box-shadow(0 1px 4px 0 rgba(0, 0, 0, 0.06));
+                .thumbnail,
+                .title {
                     @include opacity(30);
                 }
                 //green checkmark
                 &::before {
-                    content: "";
+                    content: '';
                     position: absolute;
                     width: 32px;
                     height: 32px;
@@ -589,7 +627,7 @@ Add new widget modal
                     inset-block-start: -16px;
                     inset-inline-end: -16px;
                     z-index: 1;
-                    @include box-shadow (0 2px 6px 0 rgba(0,0,0,0.55));
+                    @include box-shadow(0 2px 6px 0 rgba(0, 0, 0, 0.55));
                 }
             }
         }
@@ -603,18 +641,18 @@ Add new widget modal
         position: relative;
         width: calc(#{60%} - #{30px});
         margin-inline-end: 30px;
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
         border-radius: 2px;
         &::before {
-            content: "";
+            content: '';
             position: absolute;
             inset-block-start: 0;
             inset-inline-start: 0;
             inset-inline-end: 0;
             height: 8px;
-            background-color: rgba(0,0,0,.2);
+            background-color: rgba(0, 0, 0, 0.2);
             border-radius: 4px 4px 0 0;
-            }
+        }
 
         // specific colors
         &.world-clock {

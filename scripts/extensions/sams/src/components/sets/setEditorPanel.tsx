@@ -173,13 +173,9 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         let newState: string;
 
         if (this.props.original?.state === SET_STATE.DRAFT) {
-            newState = value === true ?
-                SET_STATE.USABLE :
-                SET_STATE.DRAFT;
+            newState = value === true ? SET_STATE.USABLE : SET_STATE.DRAFT;
         } else {
-            newState = value === true ?
-                SET_STATE.USABLE :
-                SET_STATE.DISABLED;
+            newState = value === true ? SET_STATE.USABLE : SET_STATE.DISABLED;
         }
 
         this.onFieldChange('state', newState);
@@ -188,18 +184,17 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
     onDesksChange(deskIds: Array<IDesk['_id']>) {
         this.setState((prevState: IState) => ({
             desks: deskIds,
-            isDirty: this.hasDeskRestrictionsChanged() ?
-                true :
-                prevState.isDirty,
+            isDirty: this.hasDeskRestrictionsChanged() ? true : prevState.isDirty,
         }));
     }
 
     onSave() {
         this.setState({submitting: true});
 
-        const promise = this.props.original != null ?
-            samsApi.sets.update(this.props.original, this.state.updates, this.state.desks) :
-            samsApi.sets.create(this.state.updates, this.state.desks);
+        const promise =
+            this.props.original != null
+                ? samsApi.sets.update(this.props.original, this.state.updates, this.state.desks)
+                : samsApi.sets.create(this.state.updates, this.state.desks);
 
         promise
             .then((set: ISetItem) => {
@@ -240,10 +235,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 disabled={this.state.submitting}
                             />
                             <Button
-                                text={this.props.original != null ?
-                                    gettext('Save') :
-                                    gettext('Create')
-                                }
+                                text={this.props.original != null ? gettext('Save') : gettext('Create')}
                                 type="primary"
                                 disabled={!this.state.isDirty || this.state.submitting}
                                 onClick={this.onSave}
@@ -307,10 +299,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                     />
                                 </FormRow>
                                 <FormRow>
-                                    <Select
-                                        label={gettext('Storage Unit')}
-                                        onChange={this.onChange.storage_unit}
-                                    >
+                                    <Select label={gettext('Storage Unit')} onChange={this.onChange.storage_unit}>
                                         <Option value={DATA_UNIT.BYTES}>{gettext('Bytes')}</Option>
                                         <Option value={DATA_UNIT.KB}>{gettext('KB')}</Option>
                                         <Option value={DATA_UNIT.MB}>{gettext('MB')}</Option>
@@ -318,7 +307,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                     </Select>
                                 </FormRow>
                             </FormGroup>
-                            {(this.props.original == null || updates.state === SET_STATE.DRAFT) ? (
+                            {this.props.original == null || updates.state === SET_STATE.DRAFT ? (
                                 <FormGroup>
                                     <FormRow>
                                         <Select
@@ -338,24 +327,19 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 </FormGroup>
                             ) : (
                                 <React.Fragment>
-                                    <FormLabel
-                                        text={gettext('Storage Destination')}
-                                        style="light"
-                                    />
+                                    <FormLabel text={gettext('Storage Destination')} style="light" />
                                     <Text>{currentDestination?._id}</Text>
 
-                                    <FormLabel
-                                        text={gettext('Storage Provider')}
-                                        style="light"
-                                    />
+                                    <FormLabel text={gettext('Storage Provider')} style="light" />
                                     <Text>{currentDestination?.provider}</Text>
                                 </React.Fragment>
                             )}
                             <DesksSelectInput
                                 label={gettext('Allowed Desks')}
-                                value={this.props.original?._id != null ?
-                                    this.props.allowedDesksForSet[this.props.original._id] ?? [] :
-                                    []
+                                value={
+                                    this.props.original?._id != null
+                                        ? (this.props.allowedDesksForSet[this.props.original._id] ?? [])
+                                        : []
                                 }
                                 onChange={this.onChange.desks}
                             />
@@ -367,7 +351,4 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const SetEditorPanel = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(SetEditorPanelComponent);
+export const SetEditorPanel = connect(mapStateToProps, mapDispatchToProps)(SetEditorPanelComponent);

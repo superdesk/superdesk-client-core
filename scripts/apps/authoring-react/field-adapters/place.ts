@@ -66,7 +66,8 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
                 };
             },
         };
-    } else { // use "locators" vocabulary
+    } else {
+        // use "locators" vocabulary
         return {
             getFieldV2: () => {
                 const multiple = isMultiple('locators');
@@ -104,9 +105,7 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
                 if (Array.isArray(val)) {
                     return {
                         ...article,
-                        place: val.map(
-                            (qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''}),
-                        ),
+                        place: val.map((qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''})),
                     };
                 } else if (val == null) {
                     return {

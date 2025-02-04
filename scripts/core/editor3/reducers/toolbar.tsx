@@ -20,42 +20,42 @@ import {CustomEditor3Entity} from '../constants';
  */
 const toolbar = (state: IEditorStore, action) => {
     switch (action.type) {
-    case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
-        return toggleBlockStyle(state, action.payload);
-    case 'TOOLBAR_TOGGLE_INLINE_STYLE':
-        return toggleInlineStyle(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK':
-        return applyLink(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
-        return applyLinkOnTableCell(state, action.payload);
-    case 'TOOLBAR_REMOVE_LINK':
-        return removeLink(state);
-    case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
-        return removeLinkInTableCell(state);
-    case 'TOOLBAR_REMOVE_FORMAT':
-        return removeFormat(state);
-    case 'TOOLBAR_REMOVE_ALL_FORMAT':
-        return removeAllFormat(state);
-    case 'TOOLBAR_INSERT_MEDIA':
-        return insertMedia(state, action.payload);
-    case 'TOOLBAR_UPDATE_IMAGE':
-        return updateImage(state, action.payload);
-    case 'TOOLBAR_REMOVE_BLOCK':
-        return removeBlock(state, action.payload);
-    case 'TOOLBAR_SET_POPUP':
-        return setPopup(state, action.payload);
-    case 'TOOLBAR_TOGGLE_INVISIBLES':
-        return toggleInvisibles(state);
-    case 'CHANGE_CASE':
-        return changeCase(state, action.payload);
-    case 'UNDO':
-        return onChange(state, EditorState.undo(state.editorState));
-    case 'REDO':
-        return onChange(state, EditorState.redo(state.editorState));
-    case 'SET_TABLE_POPUP' :
-        return setTablePopup(state, action.payload);
-    default:
-        return state;
+        case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
+            return toggleBlockStyle(state, action.payload);
+        case 'TOOLBAR_TOGGLE_INLINE_STYLE':
+            return toggleInlineStyle(state, action.payload);
+        case 'TOOLBAR_APPLY_LINK':
+            return applyLink(state, action.payload);
+        case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
+            return applyLinkOnTableCell(state, action.payload);
+        case 'TOOLBAR_REMOVE_LINK':
+            return removeLink(state);
+        case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
+            return removeLinkInTableCell(state);
+        case 'TOOLBAR_REMOVE_FORMAT':
+            return removeFormat(state);
+        case 'TOOLBAR_REMOVE_ALL_FORMAT':
+            return removeAllFormat(state);
+        case 'TOOLBAR_INSERT_MEDIA':
+            return insertMedia(state, action.payload);
+        case 'TOOLBAR_UPDATE_IMAGE':
+            return updateImage(state, action.payload);
+        case 'TOOLBAR_REMOVE_BLOCK':
+            return removeBlock(state, action.payload);
+        case 'TOOLBAR_SET_POPUP':
+            return setPopup(state, action.payload);
+        case 'TOOLBAR_TOGGLE_INVISIBLES':
+            return toggleInvisibles(state);
+        case 'CHANGE_CASE':
+            return changeCase(state, action.payload);
+        case 'UNDO':
+            return onChange(state, EditorState.undo(state.editorState));
+        case 'REDO':
+            return onChange(state, EditorState.redo(state.editorState));
+        case 'SET_TABLE_POPUP':
+            return setTablePopup(state, action.payload);
+        default:
+            return state;
     }
 };
 
@@ -67,10 +67,7 @@ const toolbar = (state: IEditorStore, action) => {
  */
 const toggleBlockStyle = (state, blockType) => {
     const {editorState} = state;
-    const stateAfterChange = RichUtils.toggleBlockType(
-        editorState,
-        blockType,
-    );
+    const stateAfterChange = RichUtils.toggleBlockType(editorState, blockType);
 
     return onChange(state, stateAfterChange);
 };
@@ -84,10 +81,7 @@ const toggleBlockStyle = (state, blockType) => {
 const toggleInlineStyle = (state, inlineStyle) => {
     const {editorState} = state;
 
-    let stateAfterChange = RichUtils.toggleInlineStyle(
-        editorState,
-        inlineStyle,
-    );
+    let stateAfterChange = RichUtils.toggleInlineStyle(editorState, inlineStyle);
 
     // Check if there was a suggestions to toggle that style
     stateAfterChange = handleExistingInlineStyleSuggestionOnToggle(stateAfterChange, inlineStyle);
@@ -153,11 +147,9 @@ function applyChangesToTableCell(
     return onChange(state, newMainState, true);
 }
 
-const applyLinkOnTableCell = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
+const applyLinkOnTableCell = (state, {link, entity}: {link: ILink; entity: EntityInstance}) =>
     applyChangesToTableCell(state, (editorState) =>
-        entity
-            ? entityUtils.replaceSelectedEntityData(editorState, {link})
-            : Links.createLink(editorState, link),
+        entity ? entityUtils.replaceSelectedEntityData(editorState, {link}) : Links.createLink(editorState, link),
     );
 
 /**
@@ -174,8 +166,7 @@ const removeLinkInTableCell = (state) => {
     const contentState = mainEditorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
     const data = getData(contentState, block.getKey());
-    const cellEditorStateWithRemovedLink =
-        Links.removeLink(getCell(data, i, j, currentStyle, selection));
+    const cellEditorStateWithRemovedLink = Links.removeLink(getCell(data, i, j, currentStyle, selection));
 
     const newData: IEditor3TableData = {
         ...data.data,
@@ -337,18 +328,15 @@ const setPopup = (state: IEditorStore, {type, data}) => {
 
 type PopupType = keyof typeof PopupTypes;
 
-const setTablePopup = (state: IEditorStore, {type, data}: {type: PopupType, data: SelectionState }) =>
-    processCells(
-        state,
-        (tableData, _activeCell) => {
-            return {
-                data: tableData,
-                popup: {type, data},
-            };
-        },
-    );
+const setTablePopup = (state: IEditorStore, {type, data}: {type: PopupType; data: SelectionState}) =>
+    processCells(state, (tableData, _activeCell) => {
+        return {
+            data: tableData,
+            popup: {type, data},
+        };
+    });
 
-function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {
+function changeCase(state: IEditorStore, payload: {changeTo: ITextCase; selection: SelectionState}) {
     const getChangedText = (text: string) => {
         if (changeTo === 'uppercase') {
             return text.toUpperCase();
@@ -367,32 +355,35 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
     const startKey = selection.getStartKey();
     const endKey = selection.getEndKey();
 
-    const nextBlockMap = state.editorState.getCurrentContent().getBlockMap().map((block) => {
-        const key = block.getKey();
-        const from = key === startKey ? selection.getStartOffset() : 0;
-        const to = key === endKey ? selection.getEndOffset() : block.getLength();
+    const nextBlockMap = state.editorState
+        .getCurrentContent()
+        .getBlockMap()
+        .map((block) => {
+            const key = block.getKey();
+            const from = key === startKey ? selection.getStartOffset() : 0;
+            const to = key === endKey ? selection.getEndOffset() : block.getLength();
 
-        if (key === startKey) {
-            started = true;
-        }
+            if (key === startKey) {
+                started = true;
+            }
 
-        if (ended === true || started === false) {
-            return block;
-        }
+            if (ended === true || started === false) {
+                return block;
+            }
 
-        const text = block.getText();
-        const before = text.slice(0, from);
-        const toReplace = text.slice(from, to);
-        const after = text.slice(to, block.getLength());
+            const text = block.getText();
+            const before = text.slice(0, from);
+            const toReplace = text.slice(from, to);
+            const after = text.slice(to, block.getLength());
 
-        if (key === endKey) {
-            ended = true;
-        }
+            if (key === endKey) {
+                ended = true;
+            }
 
-        return block.merge({
-            text: before + getChangedText(toReplace) + after,
-        });
-    }) as ContentState;
+            return block.merge({
+                text: before + getChangedText(toReplace) + after,
+            });
+        }) as ContentState;
 
     const nextContentState = contentState.merge({
         blockMap: nextBlockMap,

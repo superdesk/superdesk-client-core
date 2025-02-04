@@ -33,7 +33,6 @@ export interface IGeoName {
  * Search service for populated places (city, village)
  */
 export interface IPlacesService {
-
     /**
      * Search for dateline
      *
@@ -81,11 +80,13 @@ export default function PlacesServiceFactory(api, features, metadata) {
         }
 
         _searchCities(name: string) {
-            return metadata.fetchCities().then((cities) =>
-                name != null && name.length
-                    ? cities.filter((t) => t.city.toLowerCase().indexOf(name.toLowerCase()) !== -1)
-                    : cities,
-            );
+            return metadata
+                .fetchCities()
+                .then((cities) =>
+                    name != null && name.length
+                        ? cities.filter((t) => t.city.toLowerCase().indexOf(name.toLowerCase()) !== -1)
+                        : cities,
+                );
         }
 
         _searchGeonames(name: string, lang: string, dateline: boolean = false, abortSignal?: AbortSignal) {
@@ -102,12 +103,11 @@ export default function PlacesServiceFactory(api, features, metadata) {
 
             return features.places_autocomplete
                 ? httpRequestJsonLocal<IRestApiResponse<ILocated>>({
-                    method: 'GET',
-                    abortSignal: abortSignal,
-                    path: '/places_autocomplete',
-                    urlParams: params,
-                })
-                    .then((response) => response._items.map((place) => omit(place, ['_created', '_updated', '_etag'])))
+                      method: 'GET',
+                      abortSignal: abortSignal,
+                      path: '/places_autocomplete',
+                      urlParams: params,
+                  }).then((response) => response._items.map((place) => omit(place, ['_created', '_updated', '_etag'])))
                 : Promise.reject();
         }
     }

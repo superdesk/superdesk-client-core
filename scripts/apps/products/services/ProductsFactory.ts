@@ -7,7 +7,7 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
      *
      * @return {*}
      */
-    var _getAllProducts = function(page = 1, products = []) {
+    var _getAllProducts = function (page = 1, products = []) {
         return api('products')
             .query({max_results: 200, page: page})
             .then((result) => {
@@ -27,33 +27,31 @@ export function ProductsFactory($q, api, contentFilters, $filter) {
         products: null,
         contentFilters: null,
         productLookup: {},
-        fetchProducts: function() {
+        fetchProducts: function () {
             var self = this;
 
-            return _getAllProducts()
-                .then((result) => {
-                    self.products = result;
-                    _.each(result._items, (product) => {
-                        self.productLookup[product._id] = product;
-                    });
+            return _getAllProducts().then((result) => {
+                self.products = result;
+                _.each(result._items, (product) => {
+                    self.productLookup[product._id] = product;
                 });
+            });
         },
-        fetchAllProducts: function() {
+        fetchAllProducts: function () {
             return _getAllProducts();
         },
-        fetchContentFilters: function() {
+        fetchContentFilters: function () {
             var self = this;
 
             return contentFilters.getAllContentFilters().then((filters) => {
                 self.contentFilters = $filter('sortByName')(filters);
             });
         },
-        testProducts: function(diff) {
+        testProducts: function (diff) {
             return api.save('product_tests', {}, diff);
         },
-        initialize: function() {
-            return this.fetchProducts()
-                .then(angular.bind(this, this.fetchContentFilters));
+        initialize: function () {
+            return this.fetchProducts().then(angular.bind(this, this.fetchContentFilters));
         },
     };
 

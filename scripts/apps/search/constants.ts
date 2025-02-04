@@ -2,7 +2,7 @@ import {IArticle, ISuperdeskGlobalConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**
-  * Global search parameters and label mapping.
+ * Global search parameters and label mapping.
  */
 
 export function getParameters() {
@@ -46,10 +46,7 @@ export function getExcludeFacets() {
  * Default list of fields
  */
 export const DEFAULT_LIST_CONFIG: ISuperdeskGlobalConfig['list'] = {
-    priority: [
-        'priority',
-        'urgency',
-    ],
+    priority: ['priority', 'urgency'],
     firstLine: [
         'wordcount',
         'slugline',
@@ -82,30 +79,15 @@ export const DEFAULT_LIST_CONFIG: ISuperdeskGlobalConfig['list'] = {
 };
 
 export const DEFAULT_RELATED_ITEMS_LIST_CONFIG = {
-    firstLine: [
-        'slugline',
-        'headline',
-        'versioncreated',
-    ],
-    secondLine: [
-        'state',
-        'desk',
-    ],
+    firstLine: ['slugline', 'headline', 'versioncreated'],
+    secondLine: ['state', 'desk'],
 };
 
-export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
-    'source',
-];
+export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = ['source'];
 
 export const DEFAULT_GRID_VIEW_FOOTER_CONFIG = {
-    left: [
-        'type',
-        'urgency',
-        'priority',
-    ],
-    right: [
-        'state',
-    ],
+    left: ['type', 'urgency', 'priority'],
+    right: ['state'],
 };
 
 interface ISwimlaneGroup {
@@ -113,7 +95,7 @@ interface ISwimlaneGroup {
     ellipsis?: boolean;
 }
 
-export const DEFAULT_SWIMLANE_FIELDS_CONFIG: { [key: string]: Array<ISwimlaneGroup> } = {
+export const DEFAULT_SWIMLANE_FIELDS_CONFIG: {[key: string]: Array<ISwimlaneGroup>} = {
     left: [{fields: ['urgency']}, {fields: ['slugline', 'headline'], ellipsis: true}],
     right: [{fields: ['versioncreated']}],
 };

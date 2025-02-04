@@ -45,10 +45,7 @@ export class GridItemProgressCircle extends React.Component<IProps, IState> {
             if (circleNode != null) {
                 this.setState({
                     width: boundingBox.width,
-                    strokeWidth: parseInt(
-                        window.getComputedStyle(circleNode).strokeWidth,
-                        10,
-                    ),
+                    strokeWidth: parseInt(window.getComputedStyle(circleNode).strokeWidth, 10),
                 });
             }
         } else {
@@ -64,9 +61,9 @@ export class GridItemProgressCircle extends React.Component<IProps, IState> {
         };
 
         if (this.state.width > 0 && this.state.strokeWidth > 0) {
-            attributes.radius = (this.state.width / 2) - (this.state.strokeWidth / 2);
+            attributes.radius = this.state.width / 2 - this.state.strokeWidth / 2;
             attributes.circumference = 2 * Math.PI * attributes.radius;
-            attributes.dashOffset = attributes.circumference * (1 - (this.props.value / 100));
+            attributes.dashOffset = attributes.circumference * (1 - this.props.value / 100);
         }
 
         return attributes;
@@ -82,50 +79,37 @@ export class GridItemProgressCircle extends React.Component<IProps, IState> {
             status = 'completed';
         }
 
-        const progressDoneClasses = classNames(
-            'progress-done',
-            {
-                'progress-done--completed': status === 'completed',
-                'progress-done--error': status === 'error',
-            },
-        );
+        const progressDoneClasses = classNames('progress-done', {
+            'progress-done--completed': status === 'completed',
+            'progress-done--error': status === 'error',
+        });
 
-        const svgClasses = classNames(
-            'progress-svg',
-            {
-                'error': this.props.error,
-                'completed': status === 'completed',
-            },
-        );
+        const svgClasses = classNames('progress-svg', {
+            error: this.props.error,
+            completed: status === 'completed',
+        });
 
-        const circleTransitionStyle = this.state.addCSSTransition === false ?
-            {} :
-            {transition: 'stroke-dashoffset ease-in-out .3s'};
+        const circleTransitionStyle =
+            this.state.addCSSTransition === false ? {} : {transition: 'stroke-dashoffset ease-in-out .3s'};
 
         return (
             <span className="sd-grid-item__progress-circle">
                 <div className="sd-circular-progress--m">
                     <div className="progress-bar-container">
                         <div className={progressDoneClasses}>
-                            {status === 'error' ? null : (
-                                <i className="icon-ok" ng-hide="status === 'error'" />
-                            )}
+                            {status === 'error' ? null : <i className="icon-ok" ng-hide="status === 'error'" />}
                             {status === 'completed' ? null : (
                                 <i className="icon-close-small" ng-hide="status === 'completed'" />
                             )}
                         </div>
                         {this.props.counter !== true ? null : (
                             <span className="progress-text" ng-if="counter">
-                                {this.props.value}<em>%</em>
+                                {this.props.value}
+                                <em>%</em>
                             </span>
                         )}
                         <svg className={svgClasses} ref={this.svgNode}>
-                            <circle
-                                r={radius}
-                                cx="50%"
-                                cy="50%"
-                                style={circleTransitionStyle}
-                            />
+                            <circle r={radius} cx="50%" cy="50%" style={circleTransitionStyle} />
                             <circle
                                 className="progressbar"
                                 r={radius}

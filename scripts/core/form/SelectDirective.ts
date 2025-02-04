@@ -1,4 +1,3 @@
-
 export default function SelectDirective() {
     return {
         scope: {

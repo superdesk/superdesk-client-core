@@ -8,14 +8,7 @@ import classNames from 'classnames';
  * @description Panel Component to be used in a preview pane
  */
 export const Panel: React.StatelessComponent<any> = ({children, className}) => (
-    <div
-        className={classNames(
-            'sd-preview-panel',
-            className,
-        )}
-    >
-        {children}
-    </div>
+    <div className={classNames('sd-preview-panel', className)}>{children}</div>
 );
 
 Panel.propTypes = {

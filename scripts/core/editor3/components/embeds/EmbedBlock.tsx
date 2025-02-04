@@ -94,13 +94,11 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         const entityKey = this.getEntityKey();
         const blockKey = this.getBlockKey();
 
-        this.props.dispatch(actions.mergeEntityDataByKey(
-            blockKey,
-            entityKey,
-            {
+        this.props.dispatch(
+            actions.mergeEntityDataByKey(blockKey, entityKey, {
                 description: event.target.value,
-            },
-        ));
+            }),
+        );
     }
 
     editEmbedHtml() {
@@ -109,16 +107,13 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         const blockKey = this.getBlockKey();
         const modal = ng.get('modal');
 
-        modal.prompt(gettext('Edit embed'), embed.data.html)
-            .then((html) => {
-                this.props.dispatch(actions.mergeEntityDataByKey(
-                    blockKey,
-                    entityKey,
-                    {
-                        data: {...embed.data, html: processEmbedCode(html)},
-                    },
-                ));
-            });
+        modal.prompt(gettext('Edit embed'), embed.data.html).then((html) => {
+            this.props.dispatch(
+                actions.mergeEntityDataByKey(blockKey, entityKey, {
+                    data: {...embed.data, html: processEmbedCode(html)},
+                }),
+            );
+        });
     }
 
     data() {
@@ -169,26 +164,22 @@ export class EmbedBlockComponent extends React.Component<IProps> {
 
         return (
             <div className="embed-block">
-                {
-                    readOnly ? null : (
-                        <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
-                            <i className="icon-close-small" />
-                        </a>
-                    )
-                }
-                {
-                    readOnly ? null : (
-                        <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
-                            <i className="icon-pencil" />
-                        </a>
-                    )
-                }
+                {readOnly ? null : (
+                    <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
+                        <i className="icon-close-small" />
+                    </a>
+                )}
+                {readOnly ? null : (
+                    <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
+                        <i className="icon-pencil" />
+                    </a>
+                )}
 
-                {
-                    isQumu
-                        ? <QumuWidget html={html} />
-                        : <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
-                }
+                {isQumu ? (
+                    <QumuWidget html={html} />
+                ) : (
+                    <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+                )}
 
                 <Textarea
                     placeholder={gettext('Description')}

@@ -11,20 +11,13 @@ interface IProps {
 
 export class GridItemFooter extends React.PureComponent<IProps> {
     render() {
-        const parentClasses = classNames(
-            'sd-grid-item__footer',
-            {
-                'sd-grid-item__footer--light': this.props.light,
-                'sd-grid-item__footer--right-align': this.props.rightAlign,
-                'sd-grid-item__footer--spread': this.props.spread,
-                'sd-grid-item__footer--padded': this.props.padded,
-            },
-        );
+        const parentClasses = classNames('sd-grid-item__footer', {
+            'sd-grid-item__footer--light': this.props.light,
+            'sd-grid-item__footer--right-align': this.props.rightAlign,
+            'sd-grid-item__footer--spread': this.props.spread,
+            'sd-grid-item__footer--padded': this.props.padded,
+        });
 
-        return (
-            <div className={parentClasses}>
-                {this.props.children}
-            </div>
-        );
+        return <div className={parentClasses}>{this.props.children}</div>;
     }
 }

@@ -193,12 +193,13 @@ export class TableBlockComponent extends React.Component<IProps> {
     render() {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
-        const cx = this.props.className != null
-            ? this.props.className
-            : classNames('table-inside', {
-                'table-block': true,
-                'table-header': withHeader,
-            });
+        const cx =
+            this.props.className != null
+                ? this.props.className
+                : classNames('table-inside', {
+                      'table-block': true,
+                      'table-header': withHeader,
+                  });
 
         const fullWidthStyle = this.props.fullWidth ? {width: '100%'} : {};
 
@@ -227,11 +228,9 @@ export class TableBlockComponent extends React.Component<IProps> {
                                         onRedo={this.onRedo.bind(this)}
                                         onFocus={(styles, selection) => this.onFocus(i, j, styles, selection)}
                                     />
-                                ),
-                                )}
+                                ))}
                             </tr>
-                        ),
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -241,9 +240,7 @@ export class TableBlockComponent extends React.Component<IProps> {
 
 const mapDispatchToProps = (dispatch) => ({
     parentOnChange: (editorState, force) => dispatch(actions.changeEditorState(editorState, force)),
-    setActiveCell: (activeCell: IActiveCell) => dispatch(
-        actions.setActiveCell(activeCell),
-    ),
+    setActiveCell: (activeCell: IActiveCell) => dispatch(actions.setActiveCell(activeCell)),
 });
 
 const mapStateToProps = (state) => ({

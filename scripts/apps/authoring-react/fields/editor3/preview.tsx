@@ -13,13 +13,9 @@ export class Preview extends React.PureComponent<IPreviewComponentProps<IEditor3
         const contentState = value.contentState;
 
         if (config.singleLine) {
-            return (
-                <div>{contentState.getPlainText()}</div>
-            );
+            return <div>{contentState.getPlainText()}</div>;
         } else {
-            return (
-                <div dangerouslySetInnerHTML={{__html: editor3StateToHtml(contentState)}} />
-            );
+            return <div dangerouslySetInnerHTML={{__html: editor3StateToHtml(contentState)}} />;
         }
     }
 }

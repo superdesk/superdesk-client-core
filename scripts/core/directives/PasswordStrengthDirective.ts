@@ -43,15 +43,24 @@ function PasswordStrength() {
 
     // helpText holds the text that will be shown when the user hovers over the
     // informational icon.
-    var helpText = gettext(
-        'Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:',
-        {MIN_LENGTH: config.MIN_LENGTH, MIN_STRENGTH: config.MIN_STRENGTH},
-    ) +
+    var helpText =
+        gettext('Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:', {
+            MIN_LENGTH: config.MIN_LENGTH,
+            MIN_STRENGTH: config.MIN_STRENGTH,
+        }) +
         '<ul>' +
-            '<li>' + gettext('a lower case letter (a-z)') + '</li>' +
-            '<li>' + gettext('an upper case letter (A-Z)') + '</li>' +
-            '<li>' + gettext('a number (0-9)') + '</li>' +
-            '<li>' + gettext('a special character (!@#$%^&...)') + '</li>' +
+        '<li>' +
+        gettext('a lower case letter (a-z)') +
+        '</li>' +
+        '<li>' +
+        gettext('an upper case letter (A-Z)') +
+        '</li>' +
+        '<li>' +
+        gettext('a number (0-9)') +
+        '</li>' +
+        '<li>' +
+        gettext('a special character (!@#$%^&...)') +
+        '</li>' +
         '</ul>';
 
     return {
@@ -59,12 +68,13 @@ function PasswordStrength() {
         scope: {
             password: '=ngModel',
         },
-        link: function($scope, el, attr, ngModel) {
+        link: function ($scope, el, attr, ngModel) {
             var indicator = angular.element(
                 '<div class="password-strength">' +
-                    gettext('Strength') + ': <span class="label"></span>' +
+                    gettext('Strength') +
+                    ': <span class="label"></span>' +
                     '<div class="icon-question-sign"></div>' +
-                '</div>',
+                    '</div>',
             );
 
             indicator.find('.icon-question-sign').tooltip({
@@ -79,18 +89,21 @@ function PasswordStrength() {
              * reflect the strength of the given password.
              * @param {string} pass the password to compute the strength of
              */
-            var updateStrength = function(pass) {
+            var updateStrength = function (pass) {
                 var strength = 0;
 
                 if (typeof pass === 'string') {
-                    strength = pass.length >= config.MIN_LENGTH ?
-                        (config.ONE_LOWER.test(pass) ? 1 : 0) +
-                    (config.ONE_UPPER.test(pass) ? 1 : 0) +
-                    (config.ONE_NUMBER.test(pass) ? 1 : 0) +
-                    (config.ONE_OTHER.test(pass) ? 1 : 0) : 0;
+                    strength =
+                        pass.length >= config.MIN_LENGTH
+                            ? (config.ONE_LOWER.test(pass) ? 1 : 0) +
+                              (config.ONE_UPPER.test(pass) ? 1 : 0) +
+                              (config.ONE_NUMBER.test(pass) ? 1 : 0) +
+                              (config.ONE_OTHER.test(pass) ? 1 : 0)
+                            : 0;
                 }
 
-                indicator.find('.label')
+                indicator
+                    .find('.label')
                     .text(styles[strength].txt)
                     .removeClass('red yellow green')
                     .addClass(styles[strength].cls);

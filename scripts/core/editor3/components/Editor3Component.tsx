@@ -53,12 +53,7 @@ export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.compatible.embed',
 ];
 
-const VALID_MEDIA_TYPES = [
-    ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
-    'text/uri-list',
-    'text/html',
-    'Files',
-];
+const VALID_MEDIA_TYPES = [...MEDIA_TYPES_TRIGGER_DROP_ZONE, 'text/uri-list', 'text/html', 'Files'];
 
 export const EDITOR_GLOBAL_REFS = 'editor3-refs';
 const editor3AutocompleteClassName = 'editor3-autocomplete';
@@ -93,8 +88,9 @@ export function canDropMedia(e, editorConfig): undefined | boolean {
         if (mediaType === 'Files' && dataTransfer.files.length > 0) {
             // checks if files dropped from external folder are valid or not
             const isValidFileType = Object.values(dataTransfer.files).every(
-                (file: File) => file.type.startsWith('audio/')
-                || file.type.startsWith('image/') || file.type.startsWith('video/'));
+                (file: File) =>
+                    file.type.startsWith('audio/') || file.type.startsWith('image/') || file.type.startsWith('video/'),
+            );
 
             if (!isValidFileType) {
                 return false;
@@ -235,10 +231,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             return;
         }
 
-        getSpellcheckWarningsByBlock(spellchecker, this.props.editorState, this.spellcheckAbortController.signal)
-            .then((spellcheckWarningsByBlock) => {
+        getSpellcheckWarningsByBlock(spellchecker, this.props.editorState, this.spellcheckAbortController.signal).then(
+            (spellcheckWarningsByBlock) => {
                 this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
-            });
+            },
+        );
     }
 
     /**
@@ -274,10 +271,10 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
         if (
-            key === 'k'
-            && modifierKey
-            && this.props.editorFormat.includes('link')
-            && selectionState.isCollapsed() !== true
+            key === 'k' &&
+            modifierKey &&
+            this.props.editorFormat.includes('link') &&
+            selectionState.isCollapsed() !== true
         ) {
             this.props.showPopup(PopupTypes.Link, selectionState);
             e.preventDefault();
@@ -334,11 +331,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     handleKeyCommand(command) {
         const author = getCurrentAuthor();
         const {editorState, onChange, singleLine, suggestingMode} = this.props;
-        const {
-            onCreateSplitParagraphSuggestion,
-            onCreateDeleteSuggestion,
-            onCreateChangeStyleSuggestion,
-        } = this.props;
+        const {onCreateSplitParagraphSuggestion, onCreateDeleteSuggestion, onCreateChangeStyleSuggestion} = this.props;
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -347,88 +340,92 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         let newState;
 
         switch (command) {
-        case 'bold':
-        case 'italic':
-        case 'underline':
-            if (suggestingMode) {
-                // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+            case 'bold':
+            case 'italic':
+            case 'underline':
+                if (suggestingMode) {
+                    // prevent to change other user suggestion
+                    if (
+                        !Suggestions.allowEditSuggestionOnLeft(editorState, author) &&
+                        !Suggestions.allowEditSuggestionOnRight(editorState, author)
+                    ) {
+                        return 'handled';
+                    }
+
+                    const style = command.toUpperCase();
+                    const inlineStyles = editorState.getCurrentInlineStyle();
+                    const active = inlineStyles.has(style);
+
+                    onCreateChangeStyleSuggestion(style, active);
                     return 'handled';
                 }
 
-                const style = command.toUpperCase();
-                const inlineStyles = editorState.getCurrentInlineStyle();
-                const active = inlineStyles.has(style);
-
-                onCreateChangeStyleSuggestion(style, active);
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'soft-newline':
-            newState = RichUtils.insertSoftNewline(editorState);
-            break;
-        case 'split-block':
-            if (suggestingMode) {
-                // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateSplitParagraphSuggestion();
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'delete':
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is after current position
-                if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('delete');
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
-            newState = EditorState.redo(editorState);
-            break;
-        case 'backspace': {
-            this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
-
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is before current position
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('backspace');
-                return 'handled';
-            }
-
-            // This is a workaround for un/ordered-list-item, when it is deleted an empty
-            // ordered list(just 1. is shown) it will delete the previous block if it exists
-            // (for example a table and then imediately after the ordered list)
-            const selection = editorState.getSelection();
-            const key = selection.getAnchorKey();
-            const content = editorState.getCurrentContent();
-            const block = content.getBlockForKey(key);
-            const commands = ['unordered-list-item', 'ordered-list-item'];
-
-            if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
-                newState = RichUtils.toggleBlockType(editorState, block.getType());
+                newState = RichUtils.handleKeyCommand(editorState, command);
                 break;
-            }
-        } // fall through
-        default:
-            newState = RichUtils.handleKeyCommand(editorState, command);
+            case 'soft-newline':
+                newState = RichUtils.insertSoftNewline(editorState);
+                break;
+            case 'split-block':
+                if (suggestingMode) {
+                    // prevent to change other user suggestion
+                    if (
+                        !Suggestions.allowEditSuggestionOnLeft(editorState, author) &&
+                        !Suggestions.allowEditSuggestionOnRight(editorState, author)
+                    ) {
+                        return 'handled';
+                    }
+
+                    onCreateSplitParagraphSuggestion();
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'delete':
+                if (suggestingMode) {
+                    // prevent to change other user suggestion that is after current position
+                    if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('delete');
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
+                newState = EditorState.redo(editorState);
+                break;
+            case 'backspace': {
+                this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
+                if (suggestingMode) {
+                    // prevent to change other user suggestion that is before current position
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('backspace');
+                    return 'handled';
+                }
+
+                // This is a workaround for un/ordered-list-item, when it is deleted an empty
+                // ordered list(just 1. is shown) it will delete the previous block if it exists
+                // (for example a table and then imediately after the ordered list)
+                const selection = editorState.getSelection();
+                const key = selection.getAnchorKey();
+                const content = editorState.getCurrentContent();
+                const block = content.getBlockForKey(key);
+                const commands = ['unordered-list-item', 'ordered-list-item'];
+
+                if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                    newState = RichUtils.toggleBlockType(editorState, block.getType());
+                    break;
+                }
+            } // fall through
+            default:
+                newState = RichUtils.handleKeyCommand(editorState, command);
         }
 
         if (newState) {
@@ -455,8 +452,10 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
         if (suggestingMode) {
-            if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+            if (
+                !Suggestions.allowEditSuggestionOnLeft(editorState, author) &&
+                !Suggestions.allowEditSuggestionOnRight(editorState, author)
+            ) {
                 return 'handled';
             }
 
@@ -506,17 +505,17 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
 
         if (appConfig.features.showCharacterLimit) {
-            document.documentElement.style.
-                setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
+            document.documentElement.style.setProperty(
+                '--preCharacterLimit',
+                appConfig.features.showCharacterLimit + 'ch',
+            );
         }
 
         if (this.props.spellchecking.enabled) {
             this.spellcheck();
         }
 
-        this.removeListeners.push(
-            addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
-        );
+        this.removeListeners.push(addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck));
     }
 
     handleRefs(editor) {
@@ -525,10 +524,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
 
         // eslint-disable-next-line react/no-find-dom-node
-        this.editorNode.current = this.editor === null ?
-            undefined :
-            // eslint-disable-next-line react/no-find-dom-node
-            ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
+        this.editorNode.current =
+            this.editor === null
+                ? undefined
+                : // eslint-disable-next-line react/no-find-dom-node
+                  (ReactDOM.findDOMNode(this.editor) as HTMLDivElement);
     }
 
     componentWillUnmount() {
@@ -555,16 +555,8 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     render() {
-        const {
-            readOnly,
-            locked,
-            showToolbar,
-            onChange,
-            tabindex,
-            scrollContainer,
-            cleanPastedHtml,
-            editorState,
-        } = this.props;
+        const {readOnly, locked, showToolbar, onChange, tabindex, scrollContainer, cleanPastedHtml, editorState} =
+            this.props;
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
@@ -581,19 +573,23 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
          * add much performance overhead if it was replaced unconditionally, but I don't want to break it
          * nor spend time on testing so I'm keeping it as is for now.
          */
-        const dropAreaEnabled = this.props.editorFormat.some(
-            (option) => formattingOptionsThatRequireDragAndDrop.has(option),
+        const dropAreaEnabled = this.props.editorFormat.some((option) =>
+            formattingOptionsThatRequireDragAndDrop.has(option),
         );
 
-        const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
-            dropAreaEnabled ? {
-                unstyled: {
-                    element: UnstyledBlock,
-                    aliasedElements: ['p'],
-                    wrapper: <UnstyledWrapper dispatch={this.props.dispatch} editorProps={this.props} />,
-                },
-            } : {},
-        ));
+        const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+            Map(
+                dropAreaEnabled
+                    ? {
+                          unstyled: {
+                              element: UnstyledBlock,
+                              aliasedElements: ['p'],
+                              wrapper: <UnstyledWrapper dispatch={this.props.dispatch} editorProps={this.props} />,
+                          },
+                      }
+                    : {},
+            ),
+        );
 
         const blockStyle = (contentBlock): string => {
             const type = contentBlock.getType();
@@ -606,7 +602,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         return (
             <div
                 className={cx}
-                ref={(div) => this.div = div}
+                ref={(div) => (this.div = div)}
                 onDragStart={() => {
                     if (this.state.draggingInProgress !== true) {
                         setTimeout(() => {
@@ -619,7 +615,6 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                     }
                 }}
                 data-test-id="editor3"
-
                 // "dragend" event won't fire if an item is dropped inside draft-js field
                 // it's handled there separately
                 onDragEnd={this.onDragEnd}
@@ -630,23 +625,21 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                     this.props.uiTheme == null
                         ? undefined
                         : {
-                            borderColor: this.props.uiTheme.backgroundColorSecondary,
-                        }
+                              borderColor: this.props.uiTheme.backgroundColorSecondary,
+                          }
                 }
             >
-                {
-                    showToolbar && (
-                        <Toolbar
-                            uiTheme={this.props.uiTheme}
-                            disabled={locked || readOnly}
-                            scrollContainer={scrollContainer}
-                            editorNode={this.editorNode}
-                            highlightsManager={this.props.highlightsManager}
-                            editorWrapperElement={this.div}
-                            draggingInProgress={this.state.draggingInProgress}
-                        />
-                    )
-                }
+                {showToolbar && (
+                    <Toolbar
+                        uiTheme={this.props.uiTheme}
+                        disabled={locked || readOnly}
+                        scrollContainer={scrollContainer}
+                        editorNode={this.editorNode}
+                        highlightsManager={this.props.highlightsManager}
+                        editorWrapperElement={this.div}
+                        draggingInProgress={this.state.draggingInProgress}
+                    />
+                )}
 
                 <HighlightsPopup
                     editorNode={this.editorNode}
@@ -661,10 +654,10 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         this.props.uiTheme == null
                             ? {}
                             : {
-                                fontSize: this.props.uiTheme.fontSize,
-                                color: this.props.uiTheme.textColor,
-                                fontFamily: this.props.uiTheme.fontFamily,
-                            }
+                                  fontSize: this.props.uiTheme.fontSize,
+                                  color: this.props.uiTheme.textColor,
+                                  fontFamily: this.props.uiTheme.fontFamily,
+                              }
                     }
                 >
                     <Editor
@@ -697,29 +690,26 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         stripPastedStyles={cleanPastedHtml}
                         onBlur={(event: any) => {
                             if (
-                                event?.relatedTarget == null
-                                || querySelectorParent(
-                                    event.relatedTarget,
-                                    `.${editor3AutocompleteClassName}`,
-                                    {self: true},
-                                ) == null
-                            ) { // check whether focus went to autocomplete or to an item inside it
+                                event?.relatedTarget == null ||
+                                querySelectorParent(event.relatedTarget, `.${editor3AutocompleteClassName}`, {
+                                    self: true,
+                                }) == null
+                            ) {
+                                // check whether focus went to autocomplete or to an item inside it
                                 this.setState({contentChangesAfterLastFocus: 0});
                             }
                         }}
                     />
 
-                    {
-                        this.state.contentChangesAfterLastFocus > 0 && (
-                            <Editor3Autocomplete
-                                editorState={editorState}
-                                editorNode={this.editorNode.current}
-                                dispatch={this.props.dispatch}
-                                autocompleteSuggestions={this.props.autocompleteSuggestions}
-                                className={editor3AutocompleteClassName}
-                            />
-                        )
-                    }
+                    {this.state.contentChangesAfterLastFocus > 0 && (
+                        <Editor3Autocomplete
+                            editorState={editorState}
+                            editorNode={this.editorNode.current}
+                            dispatch={this.props.dispatch}
+                            autocompleteSuggestions={this.props.autocompleteSuggestions}
+                            className={editor3AutocompleteClassName}
+                        />
+                    )}
 
                     {this.props.loading && <div className="loading-overlay active" />}
                 </div>

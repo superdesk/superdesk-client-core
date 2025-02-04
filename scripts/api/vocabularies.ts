@@ -5,9 +5,10 @@ import {getVocabularyItemNameTranslated} from 'core/utils';
 
 function getAll(): OrderedMap<IVocabulary['_id'], IVocabulary> {
     return OrderedMap<string, IVocabulary>(
-        ng.get('vocabularies').getAllVocabulariesSync().map(
-            (vocabulary) => [vocabulary._id, vocabulary],
-        ),
+        ng
+            .get('vocabularies')
+            .getAllVocabulariesSync()
+            .map((vocabulary) => [vocabulary._id, vocabulary]),
     );
 }
 
@@ -40,8 +41,7 @@ const vocabularyItemsToString = (
     array: Array<IVocabularyItem>,
     propertyName?: keyof IVocabularyItem,
     schemeName?: string,
-): string =>
-    getVocabularyItemsByPropertyName(array, propertyName, schemeName).join(', ');
+): string => getVocabularyItemsByPropertyName(array, propertyName, schemeName).join(', ');
 
 const getVocabularyItemsByPropertyName = (
     array: Array<IVocabularyItem>,
@@ -82,16 +82,17 @@ const getVocabularyItemsPreview = (
  * Selection vocabularies may be configured to be included in content profiles.
  */
 function isSelectionVocabulary(vocabulary: IVocabulary): boolean {
-    return !isCustomFieldVocabulary(vocabulary) && (
-        vocabulary.selection_type === 'multi selection'
-        || vocabulary.selection_type === 'single selection'
+    return (
+        !isCustomFieldVocabulary(vocabulary) &&
+        (vocabulary.selection_type === 'multi selection' || vocabulary.selection_type === 'single selection')
     );
 }
 
 function getCustomFieldVocabularies(): Array<IVocabulary> {
-    return getAll().filter((vocabulary) => isCustomFieldVocabulary(vocabulary)).toArray();
+    return getAll()
+        .filter((vocabulary) => isCustomFieldVocabulary(vocabulary))
+        .toArray();
 }
-
 
 interface IVocabulariesApi {
     getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;

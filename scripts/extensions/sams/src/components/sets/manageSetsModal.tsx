@@ -15,12 +15,7 @@ import {getSetContentPanelState, getSelectedSetId} from '../../store/sets/select
 // UI
 import {Button, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
 import {PageLayout} from '../../containers/PageLayout';
-import {
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
-} from '../../ui';
+import {Modal, ModalBody, ModalFooter, ModalHeader} from '../../ui';
 import {SetListPanel} from './setListPanel';
 import {SetPreviewPanel} from './setPreviewPanel';
 import {SetEditorPanel} from './setEditorPanel';
@@ -79,27 +74,16 @@ export class ManageSetsModalComponent extends React.PureComponent<IProps> {
         const {gettext} = superdeskApi.localization;
 
         const ContentPanel = this.getContentPanelComponent();
-        const addButtonDisabled = this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
+        const addButtonDisabled =
+            this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
             this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT;
 
         return (
-            <Modal
-                id="ManageSetsModal"
-                size="x-large"
-                closeModal={this.closeModal}
-                closeOnEsc={true}
-                fullHeight={true}
-            >
-                <ModalHeader
-                    text={gettext('Manage Sets')}
-                    onClose={this.closeModal}
-                />
-                <ModalBody
-                    noPadding={true}
-                    fullHeight={true}
-                >
+            <Modal id="ManageSetsModal" size="x-large" closeModal={this.closeModal} closeOnEsc={true} fullHeight={true}>
+                <ModalHeader text={gettext('Manage Sets')} onClose={this.closeModal} />
+                <ModalBody noPadding={true} fullHeight={true}>
                     <PageLayout
-                        header={(
+                        header={
                             <SubNav>
                                 <ButtonGroup align="end">
                                     <Button
@@ -111,29 +95,19 @@ export class ManageSetsModalComponent extends React.PureComponent<IProps> {
                                     />
                                 </ButtonGroup>
                             </SubNav>
-                        )}
+                        }
                         mainClassName="sd-padding--2"
                         main={<SetListPanel />}
                         rightPanelOpen={ContentPanel != null}
-                        rightPanel={ContentPanel == null ? (
-                            <div />
-                        ) : (
-                            <ContentPanel key={this.props.selectedSetId} />
-                        )}
+                        rightPanel={ContentPanel == null ? <div /> : <ContentPanel key={this.props.selectedSetId} />}
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <Button
-                        text={gettext('Close')}
-                        onClick={this.closeModal}
-                    />
+                    <Button text={gettext('Close')} onClick={this.closeModal} />
                 </ModalFooter>
             </Modal>
         );
     }
 }
 
-export const ManageSetsModal = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ManageSetsModalComponent);
+export const ManageSetsModal = connect(mapStateToProps, mapDispatchToProps)(ManageSetsModalComponent);

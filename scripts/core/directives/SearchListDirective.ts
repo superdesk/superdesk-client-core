@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-export default angular.module('superdesk.core.directives.searchList', ['superdesk.core.services.asset'])
+export default angular
+    .module('superdesk.core.directives.searchList', ['superdesk.core.services.asset'])
     /**
      * @ngdoc directive
      * @module superdesk.core.directives
@@ -41,89 +42,96 @@ export default angular.module('superdesk.core.directives.searchList', ['superdes
      * </div>
      * ```
      */
-    .directive('sdSearchList', ['asset', 'api', function(asset, api) {
-        var defaults = {
-            pageSize: 25,
-        };
+    .directive('sdSearchList', [
+        'asset',
+        'api',
+        function (asset, api) {
+            var defaults = {
+                pageSize: 25,
+            };
 
-        return {
-            scope: {
-                endpoint: '@',
-                pageSize: '@',
-                labelKey: '@',
-                searchKey: '@',
-                maxSelectedItems: '=',
-                criteria: '=',
-                disabledItems: '=',
-                selectedItems: '=',
-                selectedItemsHelperTemplate: '=',
-                selectedItemsHelperData: '=',
-            },
-            templateUrl: asset.templateUrl('core/views/sdSearchList.html'),
-            link: function(scope, element, attrs) {
-                scope.open = false;
-                scope.page = 1;
-                scope.maxPage = 0;
-                scope.items = null;
-                scope.keyword = null;
-                scope.editable = true;
-
-                if (!_.isNil(scope.$parent._editable)) {
-                    scope.editable = scope.$parent._editable;
-                }
-
-                var _update = function() {
-                    var criteria = scope.criteria || {};
-
-                    if (scope.keyword && scope.searchKey) {
-                        var search = {};
-
-                        search[scope.searchKey] = {$regex: scope.keyword, $options: 'i'};
-                        criteria.where = JSON.stringify({$or: [search]});
-                    }
-                    api[scope.endpoint].query(_.assign({}, criteria, {
-                        max_results: scope.pageSize,
-                        page: scope.page,
-                    }))
-                        .then((result) => {
-                            var pageSize = scope.pageSize || defaults.pageSize;
-
-                            scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
-                            scope.items = result._items;
-                        });
-                };
-                var update = _.debounce(_update, 500);
-
-                scope.$watch('keyword', () => {
+            return {
+                scope: {
+                    endpoint: '@',
+                    pageSize: '@',
+                    labelKey: '@',
+                    searchKey: '@',
+                    maxSelectedItems: '=',
+                    criteria: '=',
+                    disabledItems: '=',
+                    selectedItems: '=',
+                    selectedItemsHelperTemplate: '=',
+                    selectedItemsHelperData: '=',
+                },
+                templateUrl: asset.templateUrl('core/views/sdSearchList.html'),
+                link: function (scope, element, attrs) {
+                    scope.open = false;
                     scope.page = 1;
-                    update();
-                });
-                scope.$watch('page', update);
+                    scope.maxPage = 0;
+                    scope.items = null;
+                    scope.keyword = null;
+                    scope.editable = true;
 
-                scope.selectItem = function(item) {
-                    scope.selectedItems = scope.selectedItems || [];
-                    scope.selectedItems.push(item);
-                    scope.selectedItems = _.uniq(scope.selectedItems);
-                    if (scope.maxSelectedItems === 1) {
-                        scope.open = false;
+                    if (!_.isNil(scope.$parent._editable)) {
+                        scope.editable = scope.$parent._editable;
                     }
-                };
 
-                scope.unselectItem = function(item) {
-                    _.remove(scope.selectedItems, (i: any) => i._id === item._id);
-                };
+                    var _update = function () {
+                        var criteria = scope.criteria || {};
 
-                scope.isSelected = function(item) {
-                    return scope.selectedItems ?
-                        _.findIndex(scope.selectedItems, (i: any) => i._id === item._id) !== -1
-                        : false;
-                };
+                        if (scope.keyword && scope.searchKey) {
+                            var search = {};
 
-                scope.isDisabled = function(item) {
-                    return scope.disabledItems ?
-                        _.findIndex(scope.disabledItems, (i: any) => i._id === item._id) !== -1
-                        : false;
-                };
-            },
-        };
-    }]);
+                            search[scope.searchKey] = {$regex: scope.keyword, $options: 'i'};
+                            criteria.where = JSON.stringify({$or: [search]});
+                        }
+                        api[scope.endpoint]
+                            .query(
+                                _.assign({}, criteria, {
+                                    max_results: scope.pageSize,
+                                    page: scope.page,
+                                }),
+                            )
+                            .then((result) => {
+                                var pageSize = scope.pageSize || defaults.pageSize;
+
+                                scope.maxPage = Math.ceil(result._meta.total / pageSize) || 0;
+                                scope.items = result._items;
+                            });
+                    };
+                    var update = _.debounce(_update, 500);
+
+                    scope.$watch('keyword', () => {
+                        scope.page = 1;
+                        update();
+                    });
+                    scope.$watch('page', update);
+
+                    scope.selectItem = function (item) {
+                        scope.selectedItems = scope.selectedItems || [];
+                        scope.selectedItems.push(item);
+                        scope.selectedItems = _.uniq(scope.selectedItems);
+                        if (scope.maxSelectedItems === 1) {
+                            scope.open = false;
+                        }
+                    };
+
+                    scope.unselectItem = function (item) {
+                        _.remove(scope.selectedItems, (i: any) => i._id === item._id);
+                    };
+
+                    scope.isSelected = function (item) {
+                        return scope.selectedItems
+                            ? _.findIndex(scope.selectedItems, (i: any) => i._id === item._id) !== -1
+                            : false;
+                    };
+
+                    scope.isDisabled = function (item) {
+                        return scope.disabledItems
+                            ? _.findIndex(scope.disabledItems, (i: any) => i._id === item._id) !== -1
+                            : false;
+                    };
+                },
+            };
+        },
+    ]);

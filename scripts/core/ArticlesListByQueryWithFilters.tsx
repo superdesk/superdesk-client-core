@@ -74,10 +74,7 @@ function getQueryWithFilters(
         });
 
         patch['filter'] = {
-            $and: [
-                originalQuery.filter,
-                filtersQuery.$and.length > 1 ? filtersQuery : filtersQuery.$and[0],
-            ],
+            $and: [originalQuery.filter, filtersQuery.$and.length > 1 ? filtersQuery : filtersQuery.$and[0]],
         };
     }
 
@@ -95,7 +92,6 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
             activeFilters: Map(),
             fullTextSearch: '',
             sortOption: {field: 'versioncreated', direction: 'descending'},
-
         };
 
         this.setFilter = this.setFilter.bind(this);
@@ -119,17 +115,15 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         }
 
         if (
-            value == null
-            || filter.size === 1 // don't leave a key without filters
+            value == null ||
+            filter.size === 1 // don't leave a key without filters
         ) {
             this.setState({
                 activeFilters: activeFilters.remove(key),
             });
         } else {
             this.setState({
-                activeFilters: value == null
-                    ? activeFilters.remove(key)
-                    : activeFilters.set(key, filter.remove(value)),
+                activeFilters: value == null ? activeFilters.remove(key) : activeFilters.set(key, filter.remove(value)),
             });
         }
     }
@@ -182,18 +176,16 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                 },
             };
 
-            const options: Array<IFileTypeOption> =
-            getItemTypes().map((itemType) => {
+            const options: Array<IFileTypeOption> = getItemTypes().map((itemType) => {
                 return {
                     label: itemType.label,
                     icon: itemType.type !== 'all' ? `filetype-icon-${itemType.type}` : null,
-                    selected: itemType.type !== 'all' ?
-                        this.hasFilter('type', itemType.type) :
-                        this.hasFilter('type') === false,
+                    selected:
+                        itemType.type !== 'all'
+                            ? this.hasFilter('type', itemType.type)
+                            : this.hasFilter('type') === false,
                     onSelect: () => {
-                        itemType.type !== 'all' ?
-                            this.toggleFilter('type', itemType.type) :
-                            this.removeFilter('type');
+                        itemType.type !== 'all' ? this.toggleFilter('type', itemType.type) : this.removeFilter('type');
                     },
                 };
             });
@@ -206,20 +198,13 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         {options.map(({label, icon, selected, onSelect}) => (
                             <button
                                 key={label}
-                                className={classNames(
-                                    'toggle-button',
-                                    {'toggle-button--active': selected},
-                                )}
+                                className={classNames('toggle-button', {'toggle-button--active': selected})}
                                 onClick={() => {
                                     onSelect();
                                 }}
                                 aria-label={label}
                             >
-                                {
-                                    icon != null
-                                        ? <i className={`toggle-button__icon ${icon}`} />
-                                        : label
-                                }
+                                {icon != null ? <i className={`toggle-button__icon ${icon}`} /> : label}
                             </button>
                         ))}
                     </ButtonGroup>
@@ -256,10 +241,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         page: 0,
                         max_results: 200,
                         filter: {
-                            $and: [
-                                query.filter,
-                                {'_id': {$in: ids.toJS()}},
-                            ],
+                            $and: [query.filter, {_id: {$in: ids.toJS()}}],
                         },
                     };
 
@@ -286,10 +268,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         const getSelectedItems = () => articles;
                         const unselectAll = () => multiSelectOptions.unselectAll();
 
-                        const multiActions = getMultiActions(
-                            getSelectedItems,
-                            unselectAll,
-                        );
+                        const multiActions = getMultiActions(getSelectedItems, unselectAll);
 
                         const actions: Array<IArticleActionBulkExtended> = getBulkActions(
                             articles,
@@ -366,22 +345,13 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                         />
                                     </div>
 
-                                    {
-                                        extraButtons == null ? null : (
-                                            <ButtonGroup padded={true} align="end">
-                                                {
-                                                    extraButtons.map(({label, onClick}) => (
-                                                        <Button
-                                                            key={label}
-                                                            text={label}
-                                                            type="primary"
-                                                            onClick={onClick}
-                                                        />
-                                                    ))
-                                                }
-                                            </ButtonGroup>
-                                        )
-                                    }
+                                    {extraButtons == null ? null : (
+                                        <ButtonGroup padded={true} align="end">
+                                            {extraButtons.map(({label, onClick}) => (
+                                                <Button key={label} text={label} type="primary" onClick={onClick} />
+                                            ))}
+                                        </ButtonGroup>
+                                    )}
                                 </SubNav>
 
                                 {(() => {
@@ -403,7 +373,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             onItemClick={this.props.onItemClick}
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
-                            padding={`${3 / 4 * padding}px ${padding}px`}
+                            padding={`${(3 / 4) * padding}px ${padding}px`}
                             getMultiSelect={(items) => ({
                                 kind: 'new',
                                 options: multiSelectOptions,

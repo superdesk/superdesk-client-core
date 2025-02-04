@@ -4,7 +4,6 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 .package-item {
     @include border-radius(1px);
     background: $white;
@@ -17,19 +16,19 @@
     transition: all 0.2s;
     &__icon-holder {
         margin: 0 12px 0 0 !important;
-        opacity:0.5;
+        opacity: 0.5;
         max-width: 24px;
         min-width: 24px;
         padding-inline-end: 10px;
     }
     &__drag-handle {
         position: absolute;
-        inset-block-start:3px;
+        inset-block-start: 3px;
         inset-block-end: 3px;
-        inset-inline-start:2px;
+        inset-inline-start: 2px;
         background: url(~images/draggable-bg.png) repeat 0 0;
         width: 6px;
-        opacity:0;
+        opacity: 0;
         transition: all 0.2s;
     }
     &__open-item {
@@ -116,11 +115,11 @@
     .alert-error {
         font-size: 12px;
         padding: 10px;
-        height:80px;
+        height: 80px;
     }
     &:hover {
         .package-item__open-item {
-            opacity:0.3;
+            opacity: 0.3;
             &:hover {
                 opacity: 1;
             }
@@ -129,7 +128,9 @@
 }
 .sort-item {
     .package-item:hover {
-        box-shadow: 0 0 1px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.4);
+        box-shadow:
+            0 0 1px rgba(0, 0, 0, 0.16),
+            0 1px 6px rgba(0, 0, 0, 0.4);
         padding-inline-start: 16px;
         cursor: move;
         .package-item__drag-handle {
@@ -139,7 +140,6 @@
 }
 
 .packaging-screen {
-
     .page-content-container {
         > .content {
             width: auto;
@@ -156,7 +156,7 @@
 
         .toggle-box h6 {
             background: var(--sd-editor-colour__main-bg);
-            color: var(--sd-editor-colour__txt)
+            color: var(--sd-editor-colour__txt);
         }
 
         .package-header {
@@ -170,7 +170,8 @@
                 line-height: 1.4;
             }
 
-            input, textarea {
+            input,
+            textarea {
                 border: 1px solid var(--sd-editor-colour__controls-border);
                 transition: all ease 0.2s;
                 border-radius: var(--b-radius--small);
@@ -206,7 +207,7 @@
         .group-info {
             position: relative;
             &:before {
-                content: " ";
+                content: ' ';
                 position: absolute;
                 border-block-end: 1px solid #dcdcdc;
                 height: 1px;

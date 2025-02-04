@@ -1,10 +1,10 @@
 .quick-publish--item {
-    border-block-end: 1px dotted #A7A7A7;
+    border-block-end: 1px dotted #a7a7a7;
     padding-block-start: 7px;
     padding-block-end: 7px;
 
     &:first-child {
-        border-block-start: 1px dotted #A7A7A7;
+        border-block-start: 1px dotted #a7a7a7;
     }
 }
 
@@ -12,14 +12,14 @@
     display: flex;
 
     * {
-        white-space: normal!important;
+        white-space: normal !important;
     }
 }
 
 .quick-publish--scheduled {
     display: inline-block;
-    background: #F4E8DA;
-    color: #DC780A;
+    background: #f4e8da;
+    color: #dc780a;
     padding: 3px 13px;
     margin-block-start: 3px;
     border-radius: 40px;

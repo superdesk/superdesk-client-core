@@ -8,11 +8,7 @@ import {
 } from '../store/assets/actions';
 import {superdeskApi} from '../../src/apis';
 import {ISAMSWebsocketEvent} from '../interfaces';
-import {
-    getAssetListItemIds,
-    getSelectedAssetId,
-    getSelectedAssetIds,
-} from '../store/assets/selectors';
+import {getAssetListItemIds, getSelectedAssetId, getSelectedAssetIds} from '../store/assets/selectors';
 
 export function onAssetCreated() {
     const store = getStore();

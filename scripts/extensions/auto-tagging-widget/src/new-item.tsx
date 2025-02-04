@@ -74,18 +74,15 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         <div className="sd-card__heading">{gettext('Add entity')}</div>
                     </div>
                     <div className="sd-card__content">
-                        {
-                            this.state.validationErrors.map((error) => (
-                                <Alert key={error} type="alert" size="small">{error}</Alert>
-                            ))
-                        }
+                        {this.state.validationErrors.map((error) => (
+                            <Alert key={error} type="alert" size="small">
+                                {error}
+                            </Alert>
+                        ))}
 
                         <div className="form__row">
                             <div className="sd-input">
-                                <label
-                                    className="sd-input__label"
-                                    htmlFor="at-name"
-                                >
+                                <label className="sd-input__label" htmlFor="at-name">
                                     {gettext('Name')}
                                 </label>
 
@@ -128,33 +125,30 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                             </div>
                         */}
 
-                        {
-                            this.state.type !== 'entity' ? null : (
-                                <div className="form__row">
-                                    <Select
-                                        label={gettext('Entity type')}
-                                        value={this.state.entityType ?? ''}
-                                        onChange={(value) => {
-                                            this.setState({entityType: value});
-                                        }}
-                                    >
-                                        <Option>{gettext('Select type')}</Option>
-                                        {
-                                            entityGroupsWithLabels.map((g, id) => (
-                                                <Option key={id} value={id}>{g.singular}</Option>
-                                            )).toArray()
-                                        }
-                                    </Select>
-                                </div>
-                            )
-                        }
+                        {this.state.type !== 'entity' ? null : (
+                            <div className="form__row">
+                                <Select
+                                    label={gettext('Entity type')}
+                                    value={this.state.entityType ?? ''}
+                                    onChange={(value) => {
+                                        this.setState({entityType: value});
+                                    }}
+                                >
+                                    <Option>{gettext('Select type')}</Option>
+                                    {entityGroupsWithLabels
+                                        .map((g, id) => (
+                                            <Option key={id} value={id}>
+                                                {g.singular}
+                                            </Option>
+                                        ))
+                                        .toArray()}
+                                </Select>
+                            </div>
+                        )}
 
                         <div className="form__row">
                             <div className="sd-input">
-                                <label
-                                    className="sd-input__label"
-                                    htmlFor="at-description"
-                                >
+                                <label className="sd-input__label" htmlFor="at-description">
                                     {gettext('Description')}
                                 </label>
 

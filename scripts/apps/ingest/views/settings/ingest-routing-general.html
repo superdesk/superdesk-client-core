@@ -15,7 +15,10 @@
     <div class="form-block">
         <h3 class="form-block__title" translate>Action</h3>
 
-        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length && ruleHandler.supported_actions.fetch_to_desk && ruleHandler.supported_actions.publish_from_desk">
+        <div
+            class="form-block__sub-section"
+            ng-if="!rule.actions.fetch.length && !rule.actions.publish.length && ruleHandler.supported_actions.fetch_to_desk && ruleHandler.supported_actions.publish_from_desk"
+        >
             <div class="list-row list-row--dotted list-row--flex">
                 <span class="text-label" translate>No fetch or publish actions defined</span>
             </div>
@@ -24,14 +27,19 @@
         <div class="form-block__sub-section" ng-show="rule.actions.fetch && rule.actions.fetch.length">
             <label class="form-label">{{ :: 'Fetch' | translate }}</label>
             <div class="list-row list-row--dotted list-row--flex" ng-repeat="fetchAction in rule.actions.fetch">
-                <span class="list-row__item">{{deskLookup[fetchAction.desk].name}} / {{stageLookup[fetchAction.stage].name}} / {{macroLookup[fetchAction.macro].label}}</span>
+                <span class="list-row__item"
+                    >{{deskLookup[fetchAction.desk].name}} / {{stageLookup[fetchAction.stage].name}} /
+                    {{macroLookup[fetchAction.macro].label}}</span
+                >
             </div>
         </div>
 
         <div class="form-block__sub-section" ng-show="rule.actions.publish && rule.actions.publish.length">
             <label class="form-label">{{ :: 'Publish' | translate }}</label>
             <div class="list-row list-row--dotted list-row--flex" ng-repeat="publishAction in rule.actions.publish">
-                <span class="list-row__item">{{deskLookup[publishAction.desk].name}} / {{stageLookup[publishAction.stage].name}}</span>
+                <span class="list-row__item"
+                    >{{deskLookup[publishAction.desk].name}} / {{stageLookup[publishAction.stage].name}}</span
+                >
             </div>
         </div>
 

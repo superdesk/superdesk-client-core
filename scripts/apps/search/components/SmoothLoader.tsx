@@ -52,17 +52,15 @@ export class SmoothLoader extends React.Component<IProps> {
                  */}
                 <div style={style}>{children}</div>
 
-                {
-                    loading && (
-                        <div style={{height: '100%', position: 'relative'}}>
-                            <ListItemLoader />
-                            <div
-                                dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}}
-                                style={{height: '100%'}}
-                            />
-                        </div>
-                    )
-                }
+                {loading && (
+                    <div style={{height: '100%', position: 'relative'}}>
+                        <ListItemLoader />
+                        <div
+                            dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}}
+                            style={{height: '100%'}}
+                        />
+                    </div>
+                )}
             </div>
         );
     }

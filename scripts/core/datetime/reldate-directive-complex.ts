@@ -27,7 +27,7 @@ function ReldateComplex() {
             useutc: '=',
         },
         template: '<time datetime="{{ datetimeIso }}"><span>{{rday}}, &nbsp;{{ rdate }}</span></time>',
-        link: function(scope, element, attrs, ngModel) {
+        link: function (scope, element, attrs, ngModel) {
             var useutc = angular.isUndefined(scope.useutc) ? true : !!scope.useutc;
 
             scope.$watch('datetime', (datetime) => {

@@ -16,22 +16,20 @@ export class Card extends React.PureComponent<IPropsCard> {
                     width: this.props.width,
                 }}
             >
-                {
-                    this.props.heading != null && (
-                        <div
-                            style={{
-                                margin: -spacing,
-                                marginBottom: spacing,
-                                padding: spacing,
-                                borderStartStartRadius: borderRadius,
-                                borderStartEndRadius: borderRadius,
-                                borderBlockEnd: '1px solid grey',
-                            }}
-                        >
-                            {this.props.heading}
-                        </div>
-                    )
-                }
+                {this.props.heading != null && (
+                    <div
+                        style={{
+                            margin: -spacing,
+                            marginBottom: spacing,
+                            padding: spacing,
+                            borderStartStartRadius: borderRadius,
+                            borderStartEndRadius: borderRadius,
+                            borderBlockEnd: '1px solid grey',
+                        }}
+                    >
+                        {this.props.heading}
+                    </div>
+                )}
                 {this.props.children}
             </div>
         );

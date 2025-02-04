@@ -1,4 +1,3 @@
-
 const MEDIA_FIELD_FORMAT = /(\S+)--(\d+)/i;
 
 // Generates a new identifer based on the root field and the last version

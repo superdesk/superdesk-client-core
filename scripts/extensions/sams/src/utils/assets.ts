@@ -16,28 +16,13 @@ import {superdeskApi} from '../apis';
 import {getSetsSync} from '../api/assets';
 
 const isActionAllowed: {[key: string]: (asset: Partial<IAssetItem>) => boolean} = {
-    [ASSET_ACTIONS.PREVIEW]: (asset) => (
-        asset._created != null
-    ),
-    [ASSET_ACTIONS.DOWNLOAD]: (asset) => (
-        asset._created != null
-    ),
-    [ASSET_ACTIONS.DELETE]: (asset) => (
-        asset._created != null &&
-        !isAssetLocked(asset)
-    ),
-    [ASSET_ACTIONS.EDIT]: (asset) => (
-        asset._created != null &&
-        isSetDisabled(asset) &&
-        isAssetLockedInCurrentSession(asset)
-    ),
-    [ASSET_ACTIONS.FORCE_UNLOCK]: (asset) => (
-        asset._created != null &&
-        isAssetLocked(asset)
-    ),
-    [ASSET_ACTIONS.VIEW_FULL_SCREEN]: (asset) => (
-        isImageAsset(asset)
-    ),
+    [ASSET_ACTIONS.PREVIEW]: (asset) => asset._created != null,
+    [ASSET_ACTIONS.DOWNLOAD]: (asset) => asset._created != null,
+    [ASSET_ACTIONS.DELETE]: (asset) => asset._created != null && !isAssetLocked(asset),
+    [ASSET_ACTIONS.EDIT]: (asset) =>
+        asset._created != null && isSetDisabled(asset) && isAssetLockedInCurrentSession(asset),
+    [ASSET_ACTIONS.FORCE_UNLOCK]: (asset) => asset._created != null && isAssetLocked(asset),
+    [ASSET_ACTIONS.VIEW_FULL_SCREEN]: (asset) => isImageAsset(asset),
 };
 
 function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
@@ -45,57 +30,57 @@ function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
     const {assertNever} = superdeskApi.helpers;
 
     switch (action) {
-    case ASSET_ACTIONS.PREVIEW:
-        return {
-            id: ASSET_ACTIONS.PREVIEW,
-            label: gettext('Preview'),
-            icon: 'eye-open',
-        };
-    case ASSET_ACTIONS.DOWNLOAD:
-        return {
-            id: ASSET_ACTIONS.DOWNLOAD,
-            label: gettext('Download'),
-            icon: 'download',
-        };
-    case ASSET_ACTIONS.DELETE:
-        return {
-            id: ASSET_ACTIONS.DELETE,
-            label: gettext('Delete'),
-            icon: 'trash',
-        };
-    case ASSET_ACTIONS.EDIT:
-        return {
-            id: ASSET_ACTIONS.EDIT,
-            label: gettext('Edit'),
-            icon: 'pencil',
-        };
-    case ASSET_ACTIONS.FORCE_UNLOCK:
-        return {
-            id: ASSET_ACTIONS.FORCE_UNLOCK,
-            label: gettext('Force Unlock'),
-            icon: 'unlocked',
-        };
-    case ASSET_ACTIONS.VIEW_FULL_SCREEN:
-        return {
-            id: ASSET_ACTIONS.VIEW_FULL_SCREEN,
-            label: gettext('Full-screen preview'),
-            icon: 'fullscreen',
-        };
+        case ASSET_ACTIONS.PREVIEW:
+            return {
+                id: ASSET_ACTIONS.PREVIEW,
+                label: gettext('Preview'),
+                icon: 'eye-open',
+            };
+        case ASSET_ACTIONS.DOWNLOAD:
+            return {
+                id: ASSET_ACTIONS.DOWNLOAD,
+                label: gettext('Download'),
+                icon: 'download',
+            };
+        case ASSET_ACTIONS.DELETE:
+            return {
+                id: ASSET_ACTIONS.DELETE,
+                label: gettext('Delete'),
+                icon: 'trash',
+            };
+        case ASSET_ACTIONS.EDIT:
+            return {
+                id: ASSET_ACTIONS.EDIT,
+                label: gettext('Edit'),
+                icon: 'pencil',
+            };
+        case ASSET_ACTIONS.FORCE_UNLOCK:
+            return {
+                id: ASSET_ACTIONS.FORCE_UNLOCK,
+                label: gettext('Force Unlock'),
+                icon: 'unlocked',
+            };
+        case ASSET_ACTIONS.VIEW_FULL_SCREEN:
+            return {
+                id: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                label: gettext('Full-screen preview'),
+                icon: 'fullscreen',
+            };
     }
 
     assertNever(action);
 }
 
 export function getActions(asset: Partial<IAssetItem>, actions?: Array<IAssetCallback>): Array<IAssetAction> {
-    return actions == null || actions.length === 0 ?
-        [] :
-        actions
-            .map((actionCallback) => ({
-                ...getBaseAssetAction(actionCallback.action),
-                onSelect: actionCallback.onSelect,
-                isAllowed: isActionAllowed[actionCallback.action],
-            }))
-            .filter((action) => action.isAllowed(asset));
+    return actions == null || actions.length === 0
+        ? []
+        : actions
+              .map((actionCallback) => ({
+                  ...getBaseAssetAction(actionCallback.action),
+                  onSelect: actionCallback.onSelect,
+                  isAllowed: isActionAllowed[actionCallback.action],
+              }))
+              .filter((action) => action.isAllowed(asset));
 }
 
 export function getBulkActions(
@@ -103,11 +88,7 @@ export function getBulkActions(
     actions: Array<IBulkActionAssetCallback>,
 ): Array<IBulkAction> {
     return actions
-        .filter((action) => (
-            assets.every(
-                (asset) => isActionAllowed[action.action](asset),
-            )
-        ))
+        .filter((action) => assets.every((asset) => isActionAllowed[action.action](asset)))
         .map((action) => ({
             ...getBaseAssetAction(action.action),
             onSelect: action.onSelect,
@@ -121,13 +102,11 @@ export function getDropdownItemsForActions(
     const allowedActions = getActions(asset, requestedActions);
 
     if (allowedActions.length > 0) {
-        return allowedActions.map(
-            (action) => ({
-                label: action.label,
-                icon: `icon-${action.icon}`,
-                onClick: () => action.onSelect(asset),
-            }),
-        );
+        return allowedActions.map((action) => ({
+            label: action.label,
+            icon: `icon-${action.icon}`,
+            onClick: () => action.onSelect(asset),
+        }));
     }
 
     return [];
@@ -188,10 +167,7 @@ export function isAssetLockedInCurrentSession(asset: Partial<IAssetItem>): boole
     const userId = superdeskApi.session.getCurrentUserId();
     const sessionId = superdeskApi.session.getSessionId();
 
-    return !isAssetLocked(asset) || (
-        asset.lock_session === sessionId &&
-        asset.lock_user === userId
-    );
+    return !isAssetLocked(asset) || (asset.lock_session === sessionId && asset.lock_user === userId);
 }
 
 export function convertTagSearchResultToAssetTags(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {

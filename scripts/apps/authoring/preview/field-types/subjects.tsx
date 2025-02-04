@@ -7,10 +7,6 @@ interface IProps {
 
 export class SubjectsPreview extends React.Component<IProps> {
     render() {
-        return (
-            <SmallTags
-                tags={this.props.subjects.map(({qcode, name}) => ({id: qcode, label: name}))}
-            />
-        );
+        return <SmallTags tags={this.props.subjects.map(({qcode, name}) => ({id: qcode, label: name}))} />;
     }
 }

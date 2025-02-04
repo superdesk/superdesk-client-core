@@ -51,69 +51,54 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
 
         this.eventListenersToRemoveBeforeUnmounting = [];
 
-        this.handleContentChanges = throttleAndCombineArray(
-            (changes) => {
-                getAndMergeRelatedEntitiesUpdated(
-                    this.state.relatedEntities,
-                    changes,
-                    this.abortController.signal,
-                ).then((relatedEntities) => {
+        this.handleContentChanges = throttleAndCombineArray((changes) => {
+            getAndMergeRelatedEntitiesUpdated(this.state.relatedEntities, changes, this.abortController.signal).then(
+                (relatedEntities) => {
                     this.setState({relatedEntities});
-                });
-            },
-            300,
-        );
+                },
+            );
+        }, 300);
     }
     componentDidMount() {
         const {ids} = this.props;
 
         this.monitoringState.init().then(() => {
-            Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id)))
-                .then((items) => {
-                    getAndMergeRelatedEntitiesForArticles(
+            Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id))).then((items) => {
+                getAndMergeRelatedEntitiesForArticles(
+                    items,
+                    this.state.relatedEntities,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({
                         items,
-                        this.state.relatedEntities,
-                        this.abortController.signal,
-                    ).then((relatedEntities) => {
-                        this.setState({
-                            items,
-                            relatedEntities,
-                        });
+                        relatedEntities,
                     });
                 });
+            });
         });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:created',
-                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:created', (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                    const {resource, _id, fields} = event.extra;
+            addWebsocketEventListener('resource:updated', (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                const {resource, _id, fields} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+            }),
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addWebsocketEventListener(
-                'resource:deleted',
-                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                    const {resource, _id} = event.extra;
+            addWebsocketEventListener('resource:deleted', (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                const {resource, _id} = event.extra;
 
-                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
-                },
-            ),
+                this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+            }),
         );
     }
     componentWillUnmount() {
@@ -178,12 +163,6 @@ export class ItemsListLimited extends React.Component<IProps> {
         const {ids, onItemClick} = this.props;
         const key = JSON.stringify(ids); // re-mount when ids change
 
-        return (
-            <ItemsListLimitedComponent
-                key={key}
-                ids={ids}
-                onItemClick={onItemClick}
-            />
-        );
+        return <ItemsListLimitedComponent key={key} ids={ids} onItemClick={onItemClick} />;
     }
 }

@@ -4,24 +4,33 @@
         <h3 class="stage-header__name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
             <span class="stage-header__separator">/</span>
-            <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }} {{ :: group.type | translate }}</a>
+            <a href="" ng-click="viewSingleGroup(group, 'stage')"
+                >{{ :: group.subheader }} {{ :: group.type | translate }}</a
+            >
         </h3>
         <!-- Desk output stages-->
         <h3 class="stage-header__name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
             <span class="group-header">
-                <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: labelForStage(group) }}</a>
+                <a href="" ng-click="viewSingleGroup(group, 'single-stage')"
+                    >{{ :: group.header }} {{ :: labelForStage(group) }}</a
+                >
             </span>
         </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__stretch-bar"></div>
         <!-- desk notification section -->
         <div class="stage-header__notification" ng-if="!viewColumn">
-            <div ng-if="group.type === 'stage'"
-                sd-desk-notifications data-stage="group._id">
-            </div>
+            <div ng-if="group.type === 'stage'" sd-desk-notifications data-stage="group._id"></div>
         </div>
         <!-- refresh button -->
-        <button ng-if="showRefresh" class="btn btn--primary btn--icon-only-circle btn--small" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" aria-label="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        <button
+            ng-if="showRefresh"
+            class="btn btn--primary btn--icon-only-circle btn--small"
+            ng-click="refreshGroup(group)"
+            tooltip="{{:: 'Refresh' | translate}}"
+            aria-label="{{:: 'Refresh' | translate}}"
+            tooltip-placement="left"
+        >
             <i class="icon-repeat"></i>
         </button>
         <div class="sortbar sortbar-custom-sort-groups" ng-show="customSortOptions">
@@ -29,14 +38,14 @@
             <div class="dropdown dropdown--align-right" dropdown>
                 <button class="dropdown__toggle" dropdown__toggle>
                     <span ng-if="!customSortOptionActive" translate>Default</span>
-                    <span ng-if="customSortOptionActive">{{ customSortOptions[customSortOptionActive.field].label }}</span>
+                    <span ng-if="customSortOptionActive"
+                        >{{ customSortOptions[customSortOptionActive.field].label }}</span
+                    >
                     <span class="dropdown__caret"></span>
                 </button>
                 <ul class="dropdown__menu">
                     <li>
-                        <div class="dropdown__menu-label" translate>
-                            Sort by
-                        </div>
+                        <div class="dropdown__menu-label" translate>Sort by</div>
                     </li>
                     <li>
                         <button ng-click="selectDefaultSortOption()">
@@ -49,14 +58,18 @@
                     </li>
                 </ul>
             </div>
-            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOptionActive.order}}" ng-show="customSortOptionActive">
+            <button
+                ng-click="toggleCustomSortOrder()"
+                class="icn-btn direction"
+                title="{{customSortOptionActive.order}}"
+                ng-show="customSortOptionActive"
+            >
                 <i class="icon-ascending" ng-if="customSortOptionActive.order === 'asc'"></i>
                 <i class="icon-descending" ng-if="customSortOptionActive.order === 'desc'"></i>
             </button>
         </div>
     </div>
 </div>
-
 
 <!-- swimlane view -->
 <div class="header-container sd-list-header" ng-if="viewColumn && viewType !== 'spiked'">
@@ -68,23 +81,27 @@
         </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
-            <div ng-if="group.type === 'stage'" class=""
-                sd-desk-notifications data-stage="group._id">
-            </div>
+            <div ng-if="group.type === 'stage'" class="" sd-desk-notifications data-stage="group._id"></div>
         </div>
     </div>
     <!-- Desk output stages-->
     <div class="stage-header" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
         <h3 class="stage-header__name">
-            <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
+            <a href="" ng-click="viewSingleGroup(group, 'single-stage')"
+                >{{ :: group.header }} {{ :: group.type|splitText | translate }}</a
+            >
         </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
-            <div ng-if="group.type === 'stage'" class=""
-                sd-desk-notifications data-stage="group._id">
-            </div>
+            <div ng-if="group.type === 'stage'" class="" sd-desk-notifications data-stage="group._id"></div>
         </div>
-        <button ng-if="showRefresh" class="btn btn--text-only btn--icon-only-circle stage-header__refresh" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        <button
+            ng-if="showRefresh"
+            class="btn btn--text-only btn--icon-only-circle stage-header__refresh"
+            ng-click="refreshGroup(group)"
+            tooltip="{{:: 'Refresh' | translate}}"
+            tooltip-placement="left"
+        >
             <i class="icon-repeat icon--blue"></i>
         </button>
     </div>

@@ -66,8 +66,9 @@ export function getAndMergeRelatedEntitiesForArticles(
         });
     });
 
-    return fetchRelatedEntities(entitiesToFetch, abortSignal)
-        .then((result) => mergeRelatedEntities(alreadyFetched, result));
+    return fetchRelatedEntities(entitiesToFetch, abortSignal).then((result) =>
+        mergeRelatedEntities(alreadyFetched, result),
+    );
 }
 
 export function getAndMergeRelatedEntitiesUpdated(
@@ -76,8 +77,7 @@ export function getAndMergeRelatedEntitiesUpdated(
     abortSignal: AbortSignal,
 ): Promise<IRelatedEntities> {
     const changesToRelatedEntities = changes.filter(
-        ({changeType, resource, itemId}) =>
-            changeType !== 'deleted' && currentEntities[resource]?.get(itemId) != null,
+        ({changeType, resource, itemId}) => changeType !== 'deleted' && currentEntities[resource]?.get(itemId) != null,
     );
 
     const entitiesToFetch = changesToRelatedEntities.reduce<IEntitiesToFetch>((acc, change) => {
@@ -91,8 +91,9 @@ export function getAndMergeRelatedEntitiesUpdated(
     }, {});
 
     if (Object.keys(entitiesToFetch).length > 0) {
-        return fetchRelatedEntities(entitiesToFetch, abortSignal)
-            .then((result) => mergeRelatedEntities(currentEntities, result));
+        return fetchRelatedEntities(entitiesToFetch, abortSignal).then((result) =>
+            mergeRelatedEntities(currentEntities, result),
+        );
     } else {
         return Promise.resolve(currentEntities);
     }
@@ -119,7 +120,7 @@ export function fetchRelatedEntities(
                     },
                     page: 1,
                     max_results: 200,
-                    sort: [{'_created': 'desc'}], // doesn't matter
+                    sort: [{_created: 'desc'}], // doesn't matter
                 };
 
                 return ignoreAbortError(

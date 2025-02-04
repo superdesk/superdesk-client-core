@@ -2,7 +2,7 @@ RatioCalc.$inject = ['$window'];
 
 export function RatioCalc($window) {
     return {
-        link: function(scope, elem) {
+        link: function (scope, elem) {
             var win = angular.element($window);
 
             calcRatio();

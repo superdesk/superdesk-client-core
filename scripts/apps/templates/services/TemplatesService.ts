@@ -6,8 +6,15 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
     var PAGE_SIZE = 10;
     var PREFERENCES_KEY = 'templates:recent';
 
-    var KILL_TEMPLATE_IGNORE_FIELDS = ['dateline', 'template_desks', 'schedule_desk',
-        'schedule_stage', 'schedule', 'next_run', 'last_run'];
+    var KILL_TEMPLATE_IGNORE_FIELDS = [
+        'dateline',
+        'template_desks',
+        'schedule_desk',
+        'schedule_stage',
+        'schedule',
+        'next_run',
+        'last_run',
+    ];
     var self = this;
 
     this.TEMPLATE_METADATA = [
@@ -57,7 +64,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      * @param {Object} item
      * @return {Object}
      */
-    this.pickItemData = function(item) {
+    this.pickItemData = function (item) {
         return _.pick(item, this.TEMPLATE_METADATA);
     };
 
@@ -75,7 +82,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      * To fetch all the templates based on the user and its user_type
      * Used in template management screen.
      */
-    this.fetchAllTemplates = function(page, pageSize, type, templateName) {
+    this.fetchAllTemplates = function (page, pageSize, type, templateName) {
         var params: any = {
             sort: 'template_name',
             manage: true,
@@ -91,7 +98,8 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             criteria.template_name = {$regex: templateName, $options: 'i'};
         }
 
-        return $q.when(criteria)
+        return $q
+            .when(criteria)
             .then((criteriaReady) => {
                 if (Object.keys(criteriaReady || {}).length > 0) {
                     params.where = JSON.stringify({
@@ -103,7 +111,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             .then((_params) => api.query('content_templates', _params));
     };
 
-    this.fetchTemplatesByDesk = function(desk) {
+    this.fetchTemplatesByDesk = function (desk) {
         let params: any = {
             sort: 'template_name',
         };
@@ -123,7 +131,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         return api.query('content_templates', params);
     };
 
-    this.fetchTemplatesByIds = function(templateIds) {
+    this.fetchTemplatesByIds = function (templateIds) {
         if (!templateIds.length) {
             return $q.when([]);
         }
@@ -132,13 +140,12 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             where: JSON.stringify({_id: {$in: templateIds}}),
         };
 
-        return api.query('content_templates', params)
-            .then((result) => {
-                if (result && result._items) {
-                    result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
-                }
-                return result;
-            });
+        return api.query('content_templates', params).then((result) => {
+            if (result && result._items) {
+                result._items.sort((a, b) => templateIds.indexOf(a._id) - templateIds.indexOf(b._id));
+            }
+            return result;
+        });
     };
 
     /**
@@ -147,34 +154,31 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      * @param {String} id
      * @return {Promise}
      */
-    this.find = function(id) {
+    this.find = function (id) {
         return api.find('content_templates', id);
     };
 
-    this.addRecentTemplate = function(deskId, templateId) {
-        return preferencesService.get()
-            .then((result = {}) => {
-                result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
-                result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
-                _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
-                result[PREFERENCES_KEY][deskId].unshift(templateId);
-                return preferencesService.update(result);
-            });
+    this.addRecentTemplate = function (deskId, templateId) {
+        return preferencesService.get().then((result = {}) => {
+            result[PREFERENCES_KEY] = result[PREFERENCES_KEY] || {};
+            result[PREFERENCES_KEY][deskId] = result[PREFERENCES_KEY][deskId] || [];
+            _.remove(result[PREFERENCES_KEY][deskId], (i) => i === templateId);
+            result[PREFERENCES_KEY][deskId].unshift(templateId);
+            return preferencesService.update(result);
+        });
     };
 
-    this.getRecentTemplateIds = function(deskId, limit = PAGE_SIZE) {
-        return preferencesService.get()
-            .then((result) => {
-                if (result && result[PREFERENCES_KEY] && result[PREFERENCES_KEY][deskId]) {
-                    return _.take(result[PREFERENCES_KEY][deskId], limit);
-                }
-                return [];
-            });
+    this.getRecentTemplateIds = function (deskId, limit = PAGE_SIZE) {
+        return preferencesService.get().then((result) => {
+            if (result && result[PREFERENCES_KEY] && result[PREFERENCES_KEY][deskId]) {
+                return _.take(result[PREFERENCES_KEY][deskId], limit);
+            }
+            return [];
+        });
     };
 
-    this.getRecentTemplates = function(deskId, limit = PAGE_SIZE) {
-        return this.getRecentTemplateIds(deskId, limit)
-            .then(this.fetchTemplatesByIds);
+    this.getRecentTemplates = function (deskId, limit = PAGE_SIZE) {
+        return this.getRecentTemplateIds(deskId, limit).then(this.fetchTemplatesByIds);
     };
 
     /**
@@ -184,7 +188,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      * @param {Object} updates
      * @return {Promise}
      */
-    this.save = function(orig, updates) {
+    this.save = function (orig, updates) {
         var template = angular.extend({data: {}}, updates);
 
         delete template._datelinedate;

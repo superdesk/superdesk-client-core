@@ -1,17 +1,10 @@
-
 /**
-* Module with tests for the sdDeskeditStages directive
-*
-* @module sdDeskeditStages directive tests
-*/
+ * Module with tests for the sdDeskeditStages directive
+ *
+ * @module sdDeskeditStages directive tests
+ */
 describe('sdDeskeditStages directive', () => {
-    let macros,
-        scope,
-        getMacrosDeferred,
-        getMacrosByDeskDeferred,
-        $compile,
-        $rootScope,
-        macrosFromServer;
+    let macros, scope, getMacrosDeferred, getMacrosByDeskDeferred, $compile, $rootScope, macrosFromServer;
 
     macrosFromServer = [
         {_id: 'foo', action_type: 'direct'},
@@ -45,9 +38,7 @@ describe('sdDeskeditStages directive', () => {
      * @return {Object} - the root DOM node of the compiled directive element
      */
     function compileDirective(scopeValues) {
-        let html,
-            newScope,
-            $element;
+        let html, newScope, $element;
 
         newScope = $rootScope.$new();
         angular.extend(newScope, scopeValues);
@@ -61,8 +52,7 @@ describe('sdDeskeditStages directive', () => {
     }
 
     it('fetches macros', () => {
-        let scopeValues,
-            $element;
+        let scopeValues, $element;
 
         scopeValues = {
             desk: {
@@ -87,8 +77,7 @@ describe('sdDeskeditStages directive', () => {
     });
 
     it('stores macro list in scope where `action_type` is not `interactive`', () => {
-        let scopeValues,
-            $element;
+        let scopeValues, $element;
 
         scopeValues = {
             desk: {

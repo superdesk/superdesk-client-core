@@ -34,16 +34,13 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
      */
     return (
         <ul className={className}>
-            {highlights._items.length ? highlights._items.map((h) => (
-                <li key={`highlight-${h._id}`}>
-                    <HighlightBtn
-                        item={item}
-                        highlight={h}
-                        service={highlightsService}
-                    />
-                </li>
-            ),
-            ) : noHighlights}
+            {highlights._items.length
+                ? highlights._items.map((h) => (
+                      <li key={`highlight-${h._id}`}>
+                          <HighlightBtn item={item} highlight={h} service={highlightsService} />
+                      </li>
+                  ))
+                : noHighlights}
         </ul>
     );
 }

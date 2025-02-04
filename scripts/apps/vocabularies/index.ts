@@ -24,9 +24,8 @@ import {CustomFieldConfigs} from './custom-field-configs';
  * @packageName superdesk.apps
  * @description Superdesk vocabularies module.
  */
-angular.module('superdesk.apps.vocabularies', [
-    'superdesk.core.activity',
-])
+angular
+    .module('superdesk.apps.vocabularies', ['superdesk.core.activity'])
     .service('vocabularies', VocabularyService)
 
     .controller('VocabularyEdit', ctrl.VocabularyEditController)
@@ -38,13 +37,16 @@ angular.module('superdesk.apps.vocabularies', [
 
     .factory('cvSchema', SchemaFactory)
 
-    .config(['superdeskProvider', function(superdesk) {
-        superdesk.activity('/settings/vocabularies', {
-            label: gettext('Metadata'),
-            templateUrl: 'scripts/apps/vocabularies/views/settings.html',
-            category: superdesk.MENU_SETTINGS,
-            settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
-            priority: -800,
-            privileges: {vocabularies: 1},
-        });
-    }]);
+    .config([
+        'superdeskProvider',
+        function (superdesk) {
+            superdesk.activity('/settings/vocabularies', {
+                label: gettext('Metadata'),
+                templateUrl: 'scripts/apps/vocabularies/views/settings.html',
+                category: superdesk.MENU_SETTINGS,
+                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
+                priority: -800,
+                privileges: {vocabularies: 1},
+            });
+        },
+    ]);

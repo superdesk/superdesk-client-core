@@ -7,9 +7,11 @@ export function isMediaEditable(item?: IArticle) {
         return item._fetchable;
     }
 
-    return (appConfig.features == null || appConfig.features.editFeaturedImage == null
-        ? true
-        : appConfig.features.editFeaturedImage) === true;
+    return (
+        (appConfig.features == null || appConfig.features.editFeaturedImage == null
+            ? true
+            : appConfig.features.editFeaturedImage) === true
+    );
 }
 
 /**
@@ -44,11 +46,10 @@ function DeployConfigFactory(api, $q) {
             }
 
             if (!this.promise) {
-                this.promise = api.query('client_config', {})
-                    .then((response) => {
-                        this.config = response.config;
-                        return this.config;
-                    });
+                this.promise = api.query('client_config', {}).then((response) => {
+                    this.config = response.config;
+                    return this.config;
+                });
             }
 
             return this.promise;
@@ -97,9 +98,14 @@ function DeployConfigFactory(api, $q) {
     return deployConfig;
 }
 
-angular.module('superdesk.config', ['superdesk.core.api'])
+angular
+    .module('superdesk.config', ['superdesk.core.api'])
     .factory('deployConfig', DeployConfigFactory)
 
-    .run(['$rootScope', 'deployConfig', function($rootScope) {
-        $rootScope.config = appConfig || {};
-    }]);
+    .run([
+        '$rootScope',
+        'deployConfig',
+        function ($rootScope) {
+            $rootScope.config = appConfig || {};
+        },
+    ]);

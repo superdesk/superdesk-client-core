@@ -88,12 +88,14 @@ const BlockRendererComponent: React.FunctionComponent<IProps> = (props) => {
 
 export function getBlockRenderer(spellchecking: IEditorStore['spellchecking']) {
     return (contentBlock: ContentBlock) => {
-        return contentBlock.getType() !== 'atomic' ? null : {
-            component: BlockRendererComponent,
-            editable: false,
-            props: {
-                spellchecking,
-            },
-        };
+        return contentBlock.getType() !== 'atomic'
+            ? null
+            : {
+                  component: BlockRendererComponent,
+                  editable: false,
+                  props: {
+                      spellchecking,
+                  },
+              };
     };
 }

@@ -37,7 +37,7 @@ export class EditorService {
      */
     setStore(s) {
         if (store !== null) {
-            console.warn('You\'ve overwritten the find & replace target.');
+            console.warn("You've overwritten the find & replace target.");
         }
 
         store = s;

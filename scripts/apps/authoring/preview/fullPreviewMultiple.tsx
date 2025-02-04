@@ -39,7 +39,7 @@ class FullPreviewMultiple extends React.PureComponent<IProps, IState> {
 
         return (
             <Wrapper
-                toolbar={(
+                toolbar={
                     <React.Fragment>
                         <div>
                             <Button
@@ -74,18 +74,16 @@ class FullPreviewMultiple extends React.PureComponent<IProps, IState> {
                             />
                         </div>
                     </React.Fragment>
-                )}
-                contentSections={
-                    this.props.items.map(({article, editor, fields}, i) => (
-                        <FullPreview
-                            key={i}
-                            item={article}
-                            editor={editor}
-                            fields={fields}
-                            hideMedia={this.state.hideMedia}
-                        />
-                    ))
                 }
+                contentSections={this.props.items.map(({article, editor, fields}, i) => (
+                    <FullPreview
+                        key={i}
+                        item={article}
+                        editor={editor}
+                        fields={fields}
+                        hideMedia={this.state.hideMedia}
+                    />
+                ))}
             />
         );
     }
@@ -99,11 +97,6 @@ export function previewItems(articles: Array<IArticle>) {
     Promise.all(
         articles.map((article) => getProfile(article).then(({editor, fields}) => ({article, editor, fields}))),
     ).then((items) => {
-        showPrintableModal((props) => (
-            <FullPreviewMultiple
-                {...props}
-                items={items}
-            />
-        ));
+        showPrintableModal((props) => <FullPreviewMultiple {...props} items={items} />);
     });
 }

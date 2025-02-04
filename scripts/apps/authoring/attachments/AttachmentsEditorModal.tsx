@@ -40,40 +40,25 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
                 onHide={this.props.closeEdit}
                 headerTemplate={gettext('Edit Attachment')}
                 footerTemplate={
-                    (
-                        <ButtonGroup align="end">
-                            <Button
-                                text={gettext('Cancel')}
-                                type="default"
-                                onClick={this.props.closeEdit}
-                            />
-                            <Button
-                                text={gettext('Update')}
-                                type="primary"
-                                onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
-                                disabled={!this.state.title}
-                            />
-                        </ButtonGroup>
-                    )
+                    <ButtonGroup align="end">
+                        <Button text={gettext('Cancel')} type="default" onClick={this.props.closeEdit} />
+                        <Button
+                            text={gettext('Update')}
+                            type="primary"
+                            onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
+                            disabled={!this.state.title}
+                        />
+                    </ButtonGroup>
                 }
             >
                 <div className="sd-line-input">
                     <Label text={gettext('Title')} />
-                    <Input
-                        field="title"
-                        value={this.state.title}
-                        onChange={this.update}
-                        required
-                    />
+                    <Input field="title" value={this.state.title} onChange={this.update} required />
                 </div>
 
                 <div className="sd-line-input">
                     <Label text={gettext('Description')} />
-                    <TextArea
-                        field="description"
-                        value={this.state.description}
-                        onChange={this.update}
-                    />
+                    <TextArea field="description" value={this.state.description} onChange={this.update} />
                 </div>
             </Modal>
         );

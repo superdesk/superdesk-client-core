@@ -50,10 +50,10 @@ export class DateInputPopup extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name DateInputPopup#handleModeChange
-    * @description handleModeChange changes selection mode from days-months-years
-    */
+     * @ngdoc method
+     * @name DateInputPopup#handleModeChange
+     * @description handleModeChange changes selection mode from days-months-years
+     */
     handleModeChange() {
         const maxMode = this.props.maxMode || 'year';
 
@@ -71,32 +71,32 @@ export class DateInputPopup extends React.Component<any, any> {
     }
 
     /**
-    * @ngdoc method
-    * @name DateInputPopup#getFurtherValues
-    * @description getFurtherValues gets next set-list of options when left/right arrows are clicked
-    */
+     * @ngdoc method
+     * @name DateInputPopup#getFurtherValues
+     * @description getFurtherValues gets next set-list of options when left/right arrows are clicked
+     */
     getFurtherValues(direction) {
         let diff = 1;
         let diffType = '';
 
         switch (this.state.mode) {
-        case 'day':
-            // Have to change the month to previous value
-            diffType = 'months';
-            break;
-        case 'month':
-            // Have to change the year to previous value
-            diffType = 'years';
-            break;
-        case 'year':
-            diff = 20;
-            diffType = 'years';
-            break;
+            case 'day':
+                // Have to change the month to previous value
+                diffType = 'months';
+                break;
+            case 'month':
+                // Have to change the year to previous value
+                diffType = 'years';
+                break;
+            case 'year':
+                diff = 20;
+                diffType = 'years';
+                break;
         }
 
-        const newDate = direction ?
-            this.state.selectedDate.clone().add(diff, diffType) :
-            this.state.selectedDate.clone().subtract(diff, diffType);
+        const newDate = direction
+            ? this.state.selectedDate.clone().add(diff, diffType)
+            : this.state.selectedDate.clone().subtract(diff, diffType);
 
         this.setState({
             modeTitle: this.getModeTitle(newDate, this.state.mode),
@@ -109,25 +109,25 @@ export class DateInputPopup extends React.Component<any, any> {
         const {currentDate} = this.state;
 
         switch (toolSelect) {
-        case 0:
-            onChange(currentDate);
-            break;
-        case 1:
-            onChange(currentDate.clone().add(1, 'days'));
-            break;
-        case 2:
-            onChange(currentDate.clone().add(2, 'days'));
-            break;
+            case 0:
+                onChange(currentDate);
+                break;
+            case 1:
+                onChange(currentDate.clone().add(1, 'days'));
+                break;
+            case 2:
+                onChange(currentDate.clone().add(2, 'days'));
+                break;
         }
 
         close();
     }
 
     /**
-    * @ngdoc method
-    * @name DateInputPopup#getStartingYearForYearPicker
-    * @description getStartingYearForYearPicker returns starting year option in Year-picker
-    */
+     * @ngdoc method
+     * @name DateInputPopup#getStartingYearForYearPicker
+     * @description getStartingYearForYearPicker returns starting year option in Year-picker
+     */
     getStartingYearForYearPicker(date) {
         const yearRange = this.props.yearRange || 20;
 
@@ -138,29 +138,34 @@ export class DateInputPopup extends React.Component<any, any> {
         const yearRange = this.props.yearRange || 20;
 
         switch (mode) {
-        case 'day': return date.format('MMMM YYYY');
-        case 'month': return date.format('YYYY');
-        case 'year':
-            return this.getStartingYearForYearPicker(date) + '-' +
-                (this.getStartingYearForYearPicker(date) + yearRange - 1);
+            case 'day':
+                return date.format('MMMM YYYY');
+            case 'month':
+                return date.format('YYYY');
+            case 'year':
+                return (
+                    this.getStartingYearForYearPicker(date) +
+                    '-' +
+                    (this.getStartingYearForYearPicker(date) + yearRange - 1)
+                );
         }
     }
 
     /**
-    * @ngdoc method
-    * @name DateInputPopup#handleSelectChange
-    * @description handleSelectChange changes mode from days-months-year
-    */
+     * @ngdoc method
+     * @name DateInputPopup#handleSelectChange
+     * @description handleSelectChange changes mode from days-months-year
+     */
     handleSelectChange(newDate) {
         let nextMode = '';
 
         switch (this.state.mode) {
-        case 'month':
-            nextMode = 'day';
-            break;
-        case 'year':
-            nextMode = 'month';
-            break;
+            case 'month':
+                nextMode = 'day';
+                break;
+            case 'year':
+                nextMode = 'month';
+                break;
         }
 
         if (this.state.mode === 'day') {
@@ -186,18 +191,9 @@ export class DateInputPopup extends React.Component<any, any> {
             >
                 <Header noBorder={true} className="date-popup__header">
                     <div className="date-popup__header-row">
-                        <Button
-                            onClick={this.handleConfirm.bind(this, 0)}
-                            text={gettext('Today')}
-                        />
-                        <Button
-                            onClick={this.handleConfirm.bind(this, 1)}
-                            text={gettext('Tomorrow')}
-                        />
-                        <Button
-                            onClick={this.handleConfirm.bind(this, 2)}
-                            text={gettext('In 2 days')}
-                        />
+                        <Button onClick={this.handleConfirm.bind(this, 0)} text={gettext('Today')} />
+                        <Button onClick={this.handleConfirm.bind(this, 1)} text={gettext('Tomorrow')} />
+                        <Button onClick={this.handleConfirm.bind(this, 2)} text={gettext('In 2 days')} />
                     </div>
                     <div className="date-popup__header-row date-popup__header-row--tools">
                         <Button
@@ -223,19 +219,13 @@ export class DateInputPopup extends React.Component<any, any> {
                 </Header>
                 <Content>
                     <div className="date-popup__content">
-                        { this.state.mode === 'day' && (
-                            <DayPicker
-                                selectedDate={this.state.selectedDate}
-                                onChange={this.handleSelectChange}
-                            />
+                        {this.state.mode === 'day' && (
+                            <DayPicker selectedDate={this.state.selectedDate} onChange={this.handleSelectChange} />
                         )}
-                        { this.state.mode === 'month' && (
-                            <MonthPicker
-                                selectedDate={this.state.selectedDate}
-                                onChange={this.handleSelectChange}
-                            />
+                        {this.state.mode === 'month' && (
+                            <MonthPicker selectedDate={this.state.selectedDate} onChange={this.handleSelectChange} />
                         )}
-                        { this.state.mode === 'year' && (
+                        {this.state.mode === 'year' && (
                             <YearPicker
                                 startingYear={this.getStartingYearForYearPicker(this.state.selectedDate)}
                                 selectedDate={this.state.selectedDate}
@@ -245,12 +235,7 @@ export class DateInputPopup extends React.Component<any, any> {
                     </div>
                 </Content>
                 <Footer>
-                    <Button
-                        size="small"
-                        pullRight={true}
-                        onClick={this.props.close}
-                        text={gettext('Cancel')}
-                    />
+                    <Button size="small" pullRight={true} onClick={this.props.close} text={gettext('Cancel')} />
                 </Footer>
             </Popup>
         );
@@ -258,10 +243,7 @@ export class DateInputPopup extends React.Component<any, any> {
 }
 
 DateInputPopup.propTypes = {
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.instanceOf(moment),
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(moment)]),
     onChange: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
     target: PropTypes.string.isRequired,

@@ -4,11 +4,14 @@ import {MasterDeskApp} from './MasterDeskApp';
 
 const styles = 'margin-top: 48px';
 
-angular.module('superdesk.apps.master-desk', [])
+angular
+    .module('superdesk.apps.master-desk', [])
     .component('sdMasterDesk', reactToAngular1(MasterDeskApp, [], [], styles))
-    .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
-        superdesk
-            .activity('/master-desk', {
+    .config([
+        'superdeskProvider',
+        'workspaceMenuProvider',
+        (superdesk, workspaceMenuProvider) => {
+            superdesk.activity('/master-desk', {
                 label: gettext('Master Desk'),
                 priority: 100,
                 template: require('./views/master-desk.html'),
@@ -16,12 +19,13 @@ angular.module('superdesk.apps.master-desk', [])
                 privileges: {masterdesk: 1},
             });
 
-        workspaceMenuProvider.item({
-            if: 'privileges.masterdesk',
-            icon: 'master',
-            href: '/master-desk',
-            label: gettext('Master Desk'),
-            shortcut: 'ctrl+alt+d',
-            order: 1000,
-        });
-    }]);
+            workspaceMenuProvider.item({
+                if: 'privileges.masterdesk',
+                icon: 'master',
+                href: '/master-desk',
+                label: gettext('Master Desk'),
+                shortcut: 'ctrl+alt+d',
+                order: 1000,
+            });
+        },
+    ]);

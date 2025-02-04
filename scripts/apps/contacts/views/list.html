@@ -1,25 +1,40 @@
 <div class="subnav subnav--top">
-  <header class="search-page-header">
-      <div sd-item-searchbar class="searchbar-flex-handler"></div>
-      <div sd-contacts-sort-bar data-total="total" class="sortbar-flex-handler"></div>
-      <div class="view-select">
-          <button sd-tooltip="{{ :: 'Switch to grid view' | translate }}" flow="left" ng-show="view !== 'photogrid'" ng-click="setView('photogrid')"><i class="icon-th"></i></button>
-          <button sd-tooltip="{{ :: 'Switch to list view' | translate }}" flow="left" ng-show="view !== 'compact'" ng-click="setView('compact')"><i class="icon-th-list"></i></button>
-      </div>
-      <div ng-if="privileges.contacts"
-        sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">
-         <button class="navbtn dropdown__toggle sd-create-btn" ng-click="createContact()" dropdown__toggle></button>
-      </div>
-  </header>
+    <header class="search-page-header">
+        <div sd-item-searchbar class="searchbar-flex-handler"></div>
+        <div sd-contacts-sort-bar data-total="total" class="sortbar-flex-handler"></div>
+        <div class="view-select">
+            <button
+                sd-tooltip="{{ :: 'Switch to grid view' | translate }}"
+                flow="left"
+                ng-show="view !== 'photogrid'"
+                ng-click="setView('photogrid')"
+            >
+                <i class="icon-th"></i>
+            </button>
+            <button
+                sd-tooltip="{{ :: 'Switch to list view' | translate }}"
+                flow="left"
+                ng-show="view !== 'compact'"
+                ng-click="setView('compact')"
+            >
+                <i class="icon-th-list"></i>
+            </button>
+        </div>
+        <div ng-if="privileges.contacts" sd-tooltip="{{ :: 'Create contact' | translate }}" flow="left">
+            <button class="navbtn dropdown__toggle sd-create-btn" ng-click="createContact()" dropdown__toggle></button>
+        </div>
+    </header>
 </div>
 
 <div class="subnav subnav--top">
     <header class="search-page-header">
-        <button class="filter-trigger"
+        <button
+            class="filter-trigger"
             title="{{ :: 'Filters' | translate }}"
             aria-label="{{ :: 'Filters' | translate }}"
             ng-click="openAdvanceSearch = !openAdvanceSearch"
-            ng-class="{'filter-trigger--active': openAdvanceSearch}">
+            ng-class="{'filter-trigger--active': openAdvanceSearch}"
+        >
             <i class="icon-filter-large"></i>
         </button>
         <div class="dropdown" dropdown>
@@ -28,7 +43,7 @@
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
-                <li ng-repeat="option in filters.privacyOptions track by option.value" >
+                <li ng-repeat="option in filters.privacyOptions track by option.value">
                     <button ng-click="filterContacts('public', option)">{{option.name}}</button>
                 </li>
             </ul>
@@ -39,7 +54,7 @@
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
-                <li ng-repeat="option in filters.statusOptions track by option.value" >
+                <li ng-repeat="option in filters.statusOptions track by option.value">
                     <button ng-click="filterContacts('is_active', option)">{{option.name}}</button>
                 </li>
             </ul>
@@ -47,6 +62,6 @@
     </header>
 </div>
 <section class="main-section search-page-container contacts-section" ng-class="{'sidebar-open': openAdvanceSearch}">
-    <div sd-contacts-search-panel data-items="items" class="archive-sidebar" style="top:48px"></div>
+    <div sd-contacts-search-panel data-items="items" class="archive-sidebar" style="top: 48px"></div>
     <div sd-contacts-search-results class="archive-content"></div>
 </section>

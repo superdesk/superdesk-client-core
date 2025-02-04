@@ -22,10 +22,7 @@ Row.propTypes = {
     children: PropTypes.node,
     flex: PropTypes.bool,
     noPadding: PropTypes.bool,
-    className: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.object,
-    ]),
+    className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     halfWidth: PropTypes.bool,
 };
 

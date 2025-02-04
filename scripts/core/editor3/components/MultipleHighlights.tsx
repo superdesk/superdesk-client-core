@@ -48,30 +48,29 @@ export class MultipleHighlights extends React.Component<any, any> {
     render() {
         const {children, editorState} = this.props;
         const propsExcludingOwn = Object.keys(this.props)
-            .filter((key) => (key !== 'children'))
+            .filter((key) => key !== 'children')
             .reduce((obj, key) => {
                 obj[key] = this.props[key];
                 return obj;
             }, {});
 
-        const childrenWithProps = React.Children.map(
-            children, (child: any) =>
-                React.cloneElement(child, {
-                    ...propsExcludingOwn,
-                    highlightsManager: {
-                        styleMap: Highlights.getHighlightsStyleMap(editorState),
-                        addHighlight: this.addHighlight.bind(this),
-                        removeHighlight: this.removeHighlight.bind(this),
-                        getHighlightData: this.getHighlightData.bind(this),
-                        updateHighlightData: this.updateHighlightData.bind(this),
-                        canAddHighlight: this.canAddHighlight.bind(this),
-                        styleNameBelongsToHighlight: Highlights.styleNameBelongsToHighlight,
-                        getHighlightTypeFromStyleName: Highlights.getHighlightTypeFromStyleName,
-                        getHighlightsCount: this.getHighlightsCount.bind(this),
-                        hadHighlightsChanged: Highlights.hadHighlightsChanged,
-                        availableHighlights: Highlights.getAvailableHighlights(),
-                    },
-                }),
+        const childrenWithProps = React.Children.map(children, (child: any) =>
+            React.cloneElement(child, {
+                ...propsExcludingOwn,
+                highlightsManager: {
+                    styleMap: Highlights.getHighlightsStyleMap(editorState),
+                    addHighlight: this.addHighlight.bind(this),
+                    removeHighlight: this.removeHighlight.bind(this),
+                    getHighlightData: this.getHighlightData.bind(this),
+                    updateHighlightData: this.updateHighlightData.bind(this),
+                    canAddHighlight: this.canAddHighlight.bind(this),
+                    styleNameBelongsToHighlight: Highlights.styleNameBelongsToHighlight,
+                    getHighlightTypeFromStyleName: Highlights.getHighlightTypeFromStyleName,
+                    getHighlightsCount: this.getHighlightsCount.bind(this),
+                    hadHighlightsChanged: Highlights.hadHighlightsChanged,
+                    availableHighlights: Highlights.getAvailableHighlights(),
+                },
+            }),
         );
 
         return <div>{childrenWithProps}</div>;

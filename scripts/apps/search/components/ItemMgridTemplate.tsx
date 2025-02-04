@@ -30,10 +30,7 @@ export class ItemMgridTemplate extends React.Component<IProps> {
                     desk={this.props.desk}
                     multiSelect={this.props.multiSelect}
                 />
-                <MediaInfo
-                    item={item}
-                    ingestProvider={this.props.ingestProvider}
-                />
+                <MediaInfo item={item} ingestProvider={this.props.ingestProvider} />
                 <div className="media-box__footer">
                     <GridTypeIcon item={item} />
                     {item.priority ? <ItemPriority priority={item.priority} language={item.language} /> : null}

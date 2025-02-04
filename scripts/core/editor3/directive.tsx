@@ -52,11 +52,7 @@ export const sdEditor3 = () => new Editor3Directive();
 // used in HighlightsPopup
 export const ReactContextForEditor3 = React.createContext<Store>(null);
 
-function generateHtml(
-    store: Store<IEditorStore, AnyAction>,
-    item: IArticle,
-    pathToValue: string,
-) {
+function generateHtml(store: Store<IEditorStore, AnyAction>, item: IArticle, pathToValue: string) {
     const state = store.getState();
     const {editorState} = state;
     const contentState = editorState.getCurrentContent();
@@ -68,12 +64,7 @@ function generateHtml(
     const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
     const rawState = convertToRaw(contentStatePreparedForExport);
 
-    setFieldMetadata(
-        item,
-        pathToValue,
-        fieldsMetaKeys.draftjsState,
-        rawState,
-    );
+    setFieldMetadata(item, pathToValue, fieldsMetaKeys.draftjsState, rawState);
 
     if (pathToValue === 'body_html') {
         syncAssociations(item, rawState);
@@ -86,25 +77,21 @@ function generateHtml(
         pathToValueArray.length < 2
             ? item
             : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
-                if (obj[pathSegment] == null) {
-                    obj[pathSegment] = {};
-                }
+                  if (obj[pathSegment] == null) {
+                      obj[pathSegment] = {};
+                  }
 
-                return obj[pathSegment];
-            }, item);
+                  return obj[pathSegment];
+              }, item);
 
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
 
     const plainText = state.plainText === true || state.singleLine === true;
 
     if (plainText) {
-        objectToUpdate[
-            fieldName
-        ] = contentStatePreparedForExport.getPlainText();
+        objectToUpdate[fieldName] = contentStatePreparedForExport.getPlainText();
     } else {
-        objectToUpdate[fieldName] = editor3StateToHtml(
-            contentStatePreparedForExport,
-        );
+        objectToUpdate[fieldName] = editor3StateToHtml(contentStatePreparedForExport);
 
         copyEmbeddedArticlesIntoAssociations(contentStatePreparedForExport, item);
 
@@ -151,13 +138,7 @@ class Editor3Directive {
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = [
-            '$element',
-            'editor3',
-            '$scope',
-            '$rootScope',
-            this.initialize,
-        ];
+        this.controller = ['$element', 'editor3', '$scope', '$rootScope', this.initialize];
 
         this.bindToController = {
             /**
@@ -295,9 +276,7 @@ class Editor3Directive {
 
     initialize($element, editor3, $scope, $rootScope) {
         if (this.item == null) {
-            throw new Error(
-                'Item must be provided in order to be able to save editor_state on it',
-            );
+            throw new Error('Item must be provided in order to be able to save editor_state on it');
         }
 
         const pathValue = this.pathToValue.split(FIELD_KEY_SEPARATOR)[1];
@@ -306,334 +285,288 @@ class Editor3Directive {
             ng.get('preferencesService').get(),
             getAutocompleteSuggestions(this.pathToValue, this.language),
             getLabelNameResolver(),
-        ])
-            .then((res) => {
-                const [userPreferences, autocompleteSuggestions, getLabel] = res;
+        ]).then((res) => {
+            const [userPreferences, autocompleteSuggestions, getLabel] = res;
 
-                // defaults
-                this.language = this.language || 'en';
-                this.readOnly = this.readOnly || false;
-                this.findReplaceTarget =
-                    typeof this.findReplaceTarget !== 'undefined';
-                this.singleLine = this.singleLine || false;
-                this.plainText = this.plainText || false;
-                this.debounce = parseInt(this.debounce || '100', 10);
-                this.bindToValue = this.bindToValue || false;
-                this.tabindex = this.tabindex || 0;
-                this.refreshTrigger = this.refreshTrigger || 0;
-                this.showTitle = this.showTitle || false;
-                this.$rootScope = $rootScope;
-                this.$scope = $scope;
-                this.svc = {};
-                this.limit = this.limit || null;
-                this.limitBehavior =
-                    userPreferences[AUTHORING_FIELD_PREFERENCES]?.[
-                        pathValue || this.pathToValue
-                    ]?.characterLimitMode;
+            // defaults
+            this.language = this.language || 'en';
+            this.readOnly = this.readOnly || false;
+            this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
+            this.singleLine = this.singleLine || false;
+            this.plainText = this.plainText || false;
+            this.debounce = parseInt(this.debounce || '100', 10);
+            this.bindToValue = this.bindToValue || false;
+            this.tabindex = this.tabindex || 0;
+            this.refreshTrigger = this.refreshTrigger || 0;
+            this.showTitle = this.showTitle || false;
+            this.$rootScope = $rootScope;
+            this.$scope = $scope;
+            this.svc = {};
+            this.limit = this.limit || null;
+            this.limitBehavior =
+                userPreferences[AUTHORING_FIELD_PREFERENCES]?.[pathValue || this.pathToValue]?.characterLimitMode;
 
-                let store = createEditorStore(this, ng.get('spellcheck'));
+            let store = createEditorStore(this, ng.get('spellcheck'));
 
-                const fieldName: string | null = (() => {
-                    if (this.fieldLabel != null) {
-                        return this.fieldLabel;
-                    } else if (this.fieldId == null) {
-                        return null;
-                    } else {
-                        return getLabel(this.fieldId);
+            const fieldName: string | null = (() => {
+                if (this.fieldLabel != null) {
+                    return this.fieldLabel;
+                } else if (this.fieldId == null) {
+                    return null;
+                } else {
+                    return getLabel(this.fieldId);
+                }
+            })();
+
+            const renderEditor3 = () => {
+                const element = $element.get(0);
+
+                ReactDOM.unmountComponentAtNode(element);
+
+                const textStatistics = (
+                    <Spacer h gap="8" alignItems="center" noWrap noGrow>
+                        <TextStatisticsConnected />
+
+                        {this.limit != null && <CharacterCountConfigButton field={this.fieldId} />}
+                    </Spacer>
+                );
+
+                const validationErrors = (() => {
+                    if (this.validationError != null) {
+                        return (
+                            <div className="disallowed-char-error" style={{float: 'none', margin: 0}}>
+                                {this.validationError}
+                            </div>
+                        );
+                    } else if (this.validateCharacters != null) {
+                        return (
+                            <div>
+                                <ValidateCharactersConnected fieldId={this.fieldId} />
+                            </div>
+                        );
                     }
                 })();
 
-                const renderEditor3 = () => {
-                    const element = $element.get(0);
+                const editor3 = (
+                    <Editor3
+                        scrollContainer={this.scrollContainer}
+                        singleLine={this.singleLine}
+                        cleanPastedHtml={this.cleanPastedHtml}
+                        autocompleteSuggestions={autocompleteSuggestions}
+                        plainText={this.plainText}
+                        canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
+                    />
+                );
 
-                    ReactDOM.unmountComponentAtNode(element);
-
-                    const textStatistics = (
-                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
-                            <TextStatisticsConnected />
-
-                            {
-                                this.limit != null && (
-                                    <CharacterCountConfigButton field={this.fieldId} />
-                                )
-                            }
-                        </Spacer>
-                    );
-
-                    const validationErrors = (() => {
-                        if (this.validationError != null) {
-                            return (
-                                <div
-                                    className="disallowed-char-error"
-                                    style={{float: 'none', margin: 0}}
-                                >
-                                    {this.validationError}
-                                </div>
-                            );
-                        } else if (this.validateCharacters != null) {
-                            return (
-                                <div>
-                                    <ValidateCharactersConnected fieldId={this.fieldId} />
-                                </div>
-                            );
-                        }
-                    })();
-
-                    const editor3 = (
-                        <Editor3
-                            scrollContainer={this.scrollContainer}
-                            singleLine={this.singleLine}
-                            cleanPastedHtml={this.cleanPastedHtml}
-                            autocompleteSuggestions={autocompleteSuggestions}
-                            plainText={this.plainText}
-                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.item._id)}
-                        />
-                    );
-
-                    const getTemplateForBody = () => {
-                        const labelStyle: React.CSSProperties = {
-                            marginBlockEnd: 0,
-                        };
-
-                        if (this.validationError != null) {
-                            labelStyle.backgroundColor = 'red';
-                        }
-
-                        return (
-                            <div>
-                                <div style={{marginBlockEnd: 15}}>
-                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
-                                        <Spacer h gap="8" alignItems="center" noWrap noGrow>
-                                            <div className="field__label" style={labelStyle}>{fieldName}</div>
-
-                                            {this.required && (
-                                                <span className="sd-required">{gettext('Required')}</span>
-                                            )}
-                                        </Spacer>
-
-                                        {textStatistics}
-                                    </Spacer>
-
-                                    {validationErrors}
-                                </div>
-                                {editor3}
-
-                                <div className="sd-editor__info-text">{this.helperText}</div>
-                            </div>
-                        );
+                const getTemplateForBody = () => {
+                    const labelStyle: React.CSSProperties = {
+                        marginBlockEnd: 0,
                     };
 
-                    const getTemplateForHeader = () => {
-                        return (
-                            <div style={{display: 'flex'}} className="sd-input-style">
-                                <div className="authoring-header__item-label">
-                                    {fieldName}
-                                    {this.required && (
-                                        <span>
-                                            &nbsp;
-                                            <span
-                                                aria-label={gettext('required')}
-                                                style={{color: 'red', fontSize: 12}}
-                                            >
-                                                *
-                                            </span>
+                    if (this.validationError != null) {
+                        labelStyle.backgroundColor = 'red';
+                    }
+
+                    return (
+                        <div>
+                            <div style={{marginBlockEnd: 15}}>
+                                <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                    <Spacer h gap="8" alignItems="center" noWrap noGrow>
+                                        <div className="field__label" style={labelStyle}>
+                                            {fieldName}
+                                        </div>
+
+                                        {this.required && <span className="sd-required">{gettext('Required')}</span>}
+                                    </Spacer>
+
+                                    {textStatistics}
+                                </Spacer>
+
+                                {validationErrors}
+                            </div>
+                            {editor3}
+
+                            <div className="sd-editor__info-text">{this.helperText}</div>
+                        </div>
+                    );
+                };
+
+                const getTemplateForHeader = () => {
+                    return (
+                        <div style={{display: 'flex'}} className="sd-input-style">
+                            <div className="authoring-header__item-label">
+                                {fieldName}
+                                {this.required && (
+                                    <span>
+                                        &nbsp;
+                                        <span aria-label={gettext('required')} style={{color: 'red', fontSize: 12}}>
+                                            *
+                                        </span>
+                                    </span>
+                                )}
+                            </div>
+
+                            <div style={{flexGrow: 1}}>
+                                <div>{editor3}</div>
+
+                                <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                    {validationErrors ?? (
+                                        <span className="authoring-header__hint" style={{margin: 0}}>
+                                            {this.helperText}
                                         </span>
                                     )}
-                                </div>
-
-                                <div style={{flexGrow: 1}}>
-                                    <div>
-                                        {editor3}
-                                    </div>
-
-                                    <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
-                                        {
-                                            validationErrors ?? (
-                                                <span
-                                                    className="authoring-header__hint"
-                                                    style={{margin: 0}}
-                                                >
-                                                    {this.helperText}
-                                                </span>
-                                            )}
-                                        {textStatistics}
-                                    </Spacer>
-                                </div>
+                                    {textStatistics}
+                                </Spacer>
                             </div>
-                        );
-                    };
-
-                    ReactDOM.render(
-                        <Provider store={store}>
-                            <ReactContextForEditor3.Provider value={store}>
-                                {(() => {
-                                    if (fieldName != null && this.headerStyles === true) {
-                                        return getTemplateForHeader();
-                                    } else if (fieldName != null && this.headerStyles !== true) {
-                                        return getTemplateForBody();
-                                    } else {
-                                        return editor3;
-                                    }
-                                })()}
-                            </ReactContextForEditor3.Provider>
-                        </Provider>,
-                        element,
+                        </div>
                     );
                 };
 
-                window.dispatchEvent(new CustomEvent('editorInitialized'));
+                ReactDOM.render(
+                    <Provider store={store}>
+                        <ReactContextForEditor3.Provider value={store}>
+                            {(() => {
+                                if (fieldName != null && this.headerStyles === true) {
+                                    return getTemplateForHeader();
+                                } else if (fieldName != null && this.headerStyles !== true) {
+                                    return getTemplateForBody();
+                                } else {
+                                    return editor3;
+                                }
+                            })()}
+                        </ReactContextForEditor3.Provider>
+                    </Provider>,
+                    element,
+                );
+            };
 
-                // bind the directive value attribute bi-directionally between Angular and Redux.
-                if (this.bindToValue) {
-                    $scope.$watch('vm.value', (newValue, oldValue) => {
-                        const text = (newValue || '')
-                            .replace(/<ins/g, '<code')
-                            .replace(/<\/ins>/g, '</code>');
-                        const content = getContentStateFromHtml(text);
-                        const state = store.getState();
-                        const editorState = EditorState.push(
-                            state.editorState,
-                            content,
-                            'insert-characters',
-                        );
+            window.dispatchEvent(new CustomEvent('editorInitialized'));
 
-                        /**
-                         * `onChange` handler needs to be skipped, because it is converting
-                         * `editorState` to text or HTML and removes diff markup in the process.
-                         * It then writes the result to item field and this triggers
-                         * this exact watch with `newValue` without diff markup.
-                         */
-                        const skipOnChangeHandler = true;
+            // bind the directive value attribute bi-directionally between Angular and Redux.
+            if (this.bindToValue) {
+                $scope.$watch('vm.value', (newValue, oldValue) => {
+                    const text = (newValue || '').replace(/<ins/g, '<code').replace(/<\/ins>/g, '</code>');
+                    const content = getContentStateFromHtml(text);
+                    const state = store.getState();
+                    const editorState = EditorState.push(state.editorState, content, 'insert-characters');
 
-                        store.dispatch(changeEditorState(editorState, false, skipOnChangeHandler));
-                    });
+                    /**
+                     * `onChange` handler needs to be skipped, because it is converting
+                     * `editorState` to text or HTML and removes diff markup in the process.
+                     * It then writes the result to item field and this triggers
+                     * this exact watch with `newValue` without diff markup.
+                     */
+                    const skipOnChangeHandler = true;
+
+                    store.dispatch(changeEditorState(editorState, false, skipOnChangeHandler));
+                });
+            }
+
+            // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
+            $scope.$watch('vm.refreshTrigger', (val, old) => {
+                if (val === 0) {
+                    return;
                 }
 
-                // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
-                $scope.$watch('vm.refreshTrigger', (val, old) => {
-                    if (val === 0) {
-                        return;
-                    }
+                store = createEditorStore(this, ng.get('spellcheck'));
 
-                    store = createEditorStore(this, ng.get('spellcheck'));
+                renderEditor3();
+            });
 
-                    renderEditor3();
-                });
+            $scope.$watch('vm.editorFormat', (editorFormat) => {
+                store.dispatch(setExternalOptions({editorFormat: editorFormat}));
+            });
 
-                $scope.$watch('vm.editorFormat', (editorFormat) => {
-                    store.dispatch(setExternalOptions({editorFormat: editorFormat}));
-                });
+            // this is triggered from MacrosController.call
+            // if the current editor is for 'field' replace the current content with 'value'
+            $scope.$on('macro:refreshField', (evt, field, value, options) => {
+                if (field === this.pathToValue) {
+                    const _options = Object.assign({skipOnChange: true}, options);
+                    const content = getContentStateFromHtml(value);
+                    const state = store.getState();
+                    const editorState = EditorState.push(state.editorState, content, 'spellcheck-change');
 
-                // this is triggered from MacrosController.call
-                // if the current editor is for 'field' replace the current content with 'value'
-                $scope.$on(
-                    'macro:refreshField',
-                    (evt, field, value, options) => {
-                        if (field === this.pathToValue) {
-                            const _options = Object.assign(
-                                {skipOnChange: true},
-                                options,
-                            );
-                            const content = getContentStateFromHtml(value);
-                            const state = store.getState();
-                            const editorState = EditorState.push(
-                                state.editorState,
-                                content,
-                                'spellcheck-change',
-                            );
+                    store.dispatch(changeEditorState(editorState, true, _options.skipOnChange));
+                }
+            });
 
-                            store.dispatch(
-                                changeEditorState(
-                                    editorState,
-                                    true,
-                                    _options.skipOnChange,
-                                ),
-                            );
-                        }
-                    },
-                );
+            // bind the directive readOnly attribute bi-directionally between Angular and Redux.
+            $scope.$watch('vm.readOnly', (val, old) => {
+                if (val !== old) {
+                    store.dispatch(setReadOnly(val));
+                }
+            });
 
-                // bind the directive readOnly attribute bi-directionally between Angular and Redux.
-                $scope.$watch('vm.readOnly', (val, old) => {
-                    if (val !== old) {
-                        store.dispatch(setReadOnly(val));
-                    }
-                });
+            // when validation status changes, increment `refreshTrigger` which will cause editor3 to re-render
+            $scope.$watch('vm.validationError', (val, old) => {
+                if (val !== old) {
+                    this.refreshTrigger++;
+                }
+            });
 
-                // when validation status changes, increment `refreshTrigger` which will cause editor3 to re-render
-                $scope.$watch('vm.validationError', (val, old) => {
-                    if (val !== old) {
-                        this.refreshTrigger++;
-                    }
-                });
-
-                // bind the directive limit attribute bi-directionally between Angular and Redux.
-                $scope.$watch('vm.limit', (val, old) => {
-                    // tslint:disable-next-line:triple-equals
-                    if (val != old) { // keep `!=` cause `!==` will trigger with null !== undefined
-                        store.dispatch(changeLimitConfig({
+            // bind the directive limit attribute bi-directionally between Angular and Redux.
+            $scope.$watch('vm.limit', (val, old) => {
+                // tslint:disable-next-line:triple-equals
+                if (val != old) {
+                    // keep `!=` cause `!==` will trigger with null !== undefined
+                    store.dispatch(
+                        changeLimitConfig({
                             chars: val,
                             ui: this.limitBehavior,
-                        }));
+                        }),
+                    );
+                }
+            });
+
+            // if this editor is the find & replace target, expose the store in the editor3
+            // find & replace service.
+            if (this.findReplaceTarget) {
+                editor3.setStore(store);
+                $scope.$on('$destroy', editor3.unsetStore);
+            }
+
+            const initListeners = () => {
+                // Subscribe to changes on user preferences
+                const userPreferencesListener = addInternalEventListener('changeUserPreferences', (event) => {
+                    const limitBehavior =
+                        event.detail?.[AUTHORING_FIELD_PREFERENCES]?.[pathValue || this.pathToValue]
+                            ?.characterLimitMode;
+
+                    if (limitBehavior) {
+                        this.limitBehavior = limitBehavior;
+                        store.dispatch(
+                            changeLimitConfig({
+                                ui: limitBehavior,
+                                chars: this.limit,
+                            }),
+                        );
                     }
                 });
 
-                // if this editor is the find & replace target, expose the store in the editor3
-                // find & replace service.
-                if (this.findReplaceTarget) {
-                    editor3.setStore(store);
-                    $scope.$on('$destroy', editor3.unsetStore);
-                }
+                this.removeEventListeners = [userPreferencesListener];
+            };
 
-                const initListeners = () => {
-                    // Subscribe to changes on user preferences
-                    const userPreferencesListener = addInternalEventListener(
-                        'changeUserPreferences',
-                        (event) => {
-                            const limitBehavior =
-                                event.detail?.[AUTHORING_FIELD_PREFERENCES]?.[
-                                    pathValue || this.pathToValue
-                                ]?.characterLimitMode;
+            const removeListeners = () => {
+                this.removeEventListeners.forEach((fn) => fn());
+            };
 
-                            if (limitBehavior) {
-                                this.limitBehavior = limitBehavior;
-                                store.dispatch(
-                                    changeLimitConfig({
-                                        ui: limitBehavior,
-                                        chars: this.limit,
-                                    }),
-                                );
-                            }
-                        },
-                    );
+            // Expose the store in the editor3 spellchecker service
+            editor3.addSpellcheckerStore(store, this.pathToValue);
 
-                    this.removeEventListeners = [userPreferencesListener];
-                };
+            initListeners();
 
-                const removeListeners = () => {
-                    this.removeEventListeners.forEach((fn) => fn());
-                };
-
-                // Expose the store in the editor3 spellchecker service
-                editor3.addSpellcheckerStore(store, this.pathToValue);
-
-                initListeners();
-
-                $scope.$on('$destroy', () => {
-                    editor3.removeAllSpellcheckerStores();
-                    removeListeners();
-                });
-
-                ng.waitForServicesToBeAvailable().then(() => {
-                    renderEditor3();
-                });
-
-                (findParentScope(
-                    $scope,
-                    (_scope) => _scope['requestEditor3DirectivesToGenerateHtml'] != null,
-                ) as any)?.requestEditor3DirectivesToGenerateHtml?.push(
-                    () => generateHtml(store, this.item, this.pathToValue),
-                );
+            $scope.$on('$destroy', () => {
+                editor3.removeAllSpellcheckerStores();
+                removeListeners();
             });
+
+            ng.waitForServicesToBeAvailable().then(() => {
+                renderEditor3();
+            });
+
+            (
+                findParentScope($scope, (_scope) => _scope['requestEditor3DirectivesToGenerateHtml'] != null) as any
+            )?.requestEditor3DirectivesToGenerateHtml?.push(() => generateHtml(store, this.item, this.pathToValue));
+        });
     }
 }

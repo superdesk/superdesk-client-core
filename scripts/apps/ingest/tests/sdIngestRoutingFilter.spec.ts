@@ -1,9 +1,8 @@
-
 /**
-* Module with tests for the sdIngestRoutingFilter directive
-*
-* @module sdIngestRoutingFilter directive tests
-*/
+ * Module with tests for the sdIngestRoutingFilter directive
+ *
+ * @module sdIngestRoutingFilter directive tests
+ */
 describe('sdIngestRoutingFilter directive', () => {
     var scope, // the directive's own isolate scope
         $compile,
@@ -35,11 +34,9 @@ describe('sdIngestRoutingFilter directive', () => {
         parentScope = $rootScope.$new();
         angular.extend(parentScope, scopeValues);
 
-        html = [
-            '<div sd-ingest-routing-filter ',
-            '    rule="rule" content-filters="contentFilters"',
-            '></div>',
-        ].join('');
+        html = ['<div sd-ingest-routing-filter ', '    rule="rule" content-filters="contentFilters"', '></div>'].join(
+            '',
+        );
 
         $element = $compile(html)(parentScope);
         parentScope.$digest();
@@ -65,8 +62,7 @@ describe('sdIngestRoutingFilter directive', () => {
         });
 
         it('sets the selected content filter if it exists', () => {
-            var parentScopeValues,
-                $element;
+            var parentScopeValues, $element;
 
             parentScopeValues = {
                 rule: {filter: 'bar'},
@@ -79,46 +75,42 @@ describe('sdIngestRoutingFilter directive', () => {
             expect(scope.selectedFilter).toEqual({_id: 'bar'});
         });
 
-        it('sets the selected content to null if it does not exist',
-            () => {
-                var parentScopeValues,
-                    $element;
+        it('sets the selected content to null if it does not exist', () => {
+            var parentScopeValues, $element;
 
-                parentScopeValues = {
-                    rule: {filter: null},
-                    contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}],
-                };
+            parentScopeValues = {
+                rule: {filter: null},
+                contentFilters: [{_id: 'foo'}, {_id: 'bar'}, {_id: 'baz'}],
+            };
 
-                $element = compileDirective(parentScopeValues);
-                scope = $element.isolateScope();
+            $element = compileDirective(parentScopeValues);
+            scope = $element.isolateScope();
 
-                expect(scope.selectedFilter).toBe(null);
-            },
-        );
+            expect(scope.selectedFilter).toBe(null);
+        });
     });
 
     describe('searchFilters() scope method', () => {
-        it('changes the matching filters list to only contain those content ' +
-            'filters that match the search term',
-        () => {
-            var expectedIds,
-                matchIds;
+        it(
+            'changes the matching filters list to only contain those content ' + 'filters that match the search term',
+            () => {
+                var expectedIds, matchIds;
 
-            scope.filters = [
-                {id: 1, name: 'foo-bar name'},
-                {id: 2, name: 'body contains "Foo+1" phrase'},
-                {id: 3, name: 'text items named Foo*'},
-                {id: 4, name: 'foooo1 in slugline'},
-                {id: 5, name: 'breaking foo+1 news stories'},
-            ];
+                scope.filters = [
+                    {id: 1, name: 'foo-bar name'},
+                    {id: 2, name: 'body contains "Foo+1" phrase'},
+                    {id: 3, name: 'text items named Foo*'},
+                    {id: 4, name: 'foooo1 in slugline'},
+                    {id: 5, name: 'breaking foo+1 news stories'},
+                ];
 
-            scope.matchingFilters = [];
-            scope.searchFilters('foo+1');
+                scope.matchingFilters = [];
+                scope.searchFilters('foo+1');
 
-            matchIds = _.map(scope.matchingFilters, 'id').sort();
-            expectedIds = [2, 5].sort();
-            expect(matchIds).toEqual(expectedIds);
-        },
+                matchIds = _.map(scope.matchingFilters, 'id').sort();
+                expectedIds = [2, 5].sort();
+                expect(matchIds).toEqual(expectedIds);
+            },
         );
     });
 
@@ -130,27 +122,23 @@ describe('sdIngestRoutingFilter directive', () => {
             scope.rule = {};
         });
 
-        it('sets the selected filter in scope to the given filter',
-            () => {
-                scope.selectedFilter = null;
-                scope.selectFilter(contentFilter);
-                expect(scope.selectedFilter).toEqual(contentFilter);
-            },
-        );
+        it('sets the selected filter in scope to the given filter', () => {
+            scope.selectedFilter = null;
+            scope.selectFilter(contentFilter);
+            expect(scope.selectedFilter).toEqual(contentFilter);
+        });
 
-        it('sets the routing rule\'s filter to the given filter', () => {
+        it("sets the routing rule's filter to the given filter", () => {
             scope.rule.filter = null;
             scope.selectFilter(contentFilter);
             expect(scope.rule.filter).toEqual('abcd123');
         });
 
-        it('sets the routing rule\'s filter name to the given filter',
-            () => {
-                scope.rule.filterName = null;
-                scope.selectFilter(contentFilter);
-                expect(scope.rule.filterName).toEqual('My Filter');
-            },
-        );
+        it("sets the routing rule's filter name to the given filter", () => {
+            scope.rule.filterName = null;
+            scope.selectFilter(contentFilter);
+            expect(scope.rule.filterName).toEqual('My Filter');
+        });
 
         it('clears the filter search term', () => {
             scope.filterSearchTerm = 'foo';
@@ -170,13 +158,13 @@ describe('sdIngestRoutingFilter directive', () => {
             expect(scope.selectedFilter).toBe(null);
         });
 
-        it('clears the routing rule\'s filter', () => {
+        it("clears the routing rule's filter", () => {
             scope.rule.filter = 'f1lt3rId';
             scope.clearSelectedFilter();
             expect(scope.rule.filter).toBe(null);
         });
 
-        it('sets the routing rule\'s filter name', () => {
+        it("sets the routing rule's filter name", () => {
             scope.rule.filterName = 'Some Filter';
             scope.clearSelectedFilter();
             expect(scope.rule.filterName).toBe(null);

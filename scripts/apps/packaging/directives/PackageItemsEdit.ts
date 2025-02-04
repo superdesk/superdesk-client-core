@@ -8,7 +8,7 @@ export function PackageItemsEdit(packages: IPackagesService, notify, $rootScope)
         scope: false,
         require: 'ngModel',
         templateUrl: 'scripts/apps/packaging/views/sd-package-items-edit.html',
-        link: function(scope, elem, attrs, ngModel) {
+        link: function (scope, elem, attrs, ngModel) {
             scope.$on('package:addItems', (event, data) => {
                 var groupIndex = _.findIndex(scope.list, {id: data.group});
 
@@ -44,7 +44,7 @@ export function PackageItemsEdit(packages: IPackagesService, notify, $rootScope)
                 packages.packageGroupItems = {};
             });
 
-            ngModel.$render = function() {
+            ngModel.$render = function () {
                 scope.list = ngModel.$viewValue || [];
             };
 
@@ -107,7 +107,7 @@ export function PackageItemsEdit(packages: IPackagesService, notify, $rootScope)
                 return firstLevelGroups;
             });
 
-            scope.remove = function(groupId, residRef) {
+            scope.remove = function (groupId, residRef) {
                 var group: any = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
 
@@ -116,7 +116,7 @@ export function PackageItemsEdit(packages: IPackagesService, notify, $rootScope)
                 autosave();
             };
 
-            scope.reorder = function(start, end) {
+            scope.reorder = function (start, end) {
                 var src: any = _.find(scope.list, {id: start.group});
                 var dest: any = _.find(scope.list, {id: end.group});
 

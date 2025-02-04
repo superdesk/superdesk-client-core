@@ -6,13 +6,17 @@
     ></sd-content-create>
 </div>
 
-<button class="item-association item-association--no-click" ng-if="isEmptyRelatedItems(field._id)"
-    ng-class="{'item-association--loading': loading}" ng-disabled="!editable">
+<button
+    class="item-association item-association--no-click"
+    ng-if="isEmptyRelatedItems(field._id)"
+    ng-class="{'item-association--loading': loading}"
+    ng-disabled="!editable"
+>
     <span class="item-association__text-label" translate>Drop items here</span>
 </button>
 
 <div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
-    <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+    <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5"></div>
     <ul class="groups draggable-list" ng-if="!loading" sd-sort-groups>
         <li
             id="{{field._id}}"
@@ -21,24 +25,29 @@
             ng-class="{locked: isLocked(relatedItem)}"
         >
             <div class="sd-list-item sd-list-item--no-hover">
-                <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i>
+                <div class="sd-list-item__column">
+                    <i class="type-icon" sd-filetype-icon data-item="relatedItem"></i>
                 </div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <sd-related-item-in-list-react item="relatedItem" />
                 </div>
                 <figure class="sd-list-item__thumbnail" ng-if="getThumbnailForItem(relatedItem)">
-                    <img ng-src="{{getThumbnailForItem(relatedItem).href}}" alt="{{ 'Thumbnail for related item' | translate }}">
+                    <img
+                        ng-src="{{getThumbnailForItem(relatedItem).href}}"
+                        alt="{{ 'Thumbnail for related item' | translate }}"
+                    />
                 </figure>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
                 </div>
                 <div class="sd-list-item__action-menu--direction-row">
-                    <div class="icn-btn"
+                    <div
+                        class="icn-btn"
                         sd-item-actions-menu
                         data-item="relatedItem"
                         data-active="relatedItem"
-                        data-allowed-actions="['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup']">
-                    </div>
+                        data-allowed-actions="['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup']"
+                    ></div>
                 </div>
             </div>
         </li>

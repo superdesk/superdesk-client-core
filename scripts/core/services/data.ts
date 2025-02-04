@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-export default angular.module('superdesk.core.services.data', [])
+export default angular
+    .module('superdesk.core.services.data', [])
     /**
      * @ngdoc service
      * @module superdesk.core.services
@@ -10,15 +11,18 @@ export default angular.module('superdesk.core.services.data', [])
      *
      * @description Location State Adapter for Data Layer.
      */
-    .service('LocationStateAdapter', ['$location', function($location) {
-        this.get = function(key) {
-            return arguments.length ? $location.search()[key] : $location.search();
-        };
+    .service('LocationStateAdapter', [
+        '$location',
+        function ($location) {
+            this.get = function (key) {
+                return arguments.length ? $location.search()[key] : $location.search();
+            };
 
-        this.set = function(key, val) {
-            return $location.search(key, val);
-        };
-    }])
+            this.set = function (key, val) {
+                return $location.search(key, val);
+            };
+        },
+    ])
 
     /**
      * @ngdoc factory
@@ -34,8 +38,11 @@ export default angular.module('superdesk.core.services.data', [])
      *
      * @description Returns a data provider for a given resource.
      */
-    .factory('DataAdapter', ['$rootScope', 'em', 'LocationStateAdapter',
-        function($rootScope, em, LocationStateAdapter) {
+    .factory('DataAdapter', [
+        '$rootScope',
+        'em',
+        'LocationStateAdapter',
+        function ($rootScope, em, LocationStateAdapter) {
             return function DataAdapter(resource, params) {
                 var self = this;
                 var state = LocationStateAdapter; // @todo implement storage state adapter
@@ -80,7 +87,7 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Execute query.
                  */
-                this.query = function(criteria) {
+                this.query = function (criteria) {
                     self.loading = true;
                     var query = {resource: resource, criteria: criteria, start: Date.now()};
                     var promise = em.getRepository(resource).matching(criteria);
@@ -102,15 +109,15 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Get/set current page.
                  */
-                this.page = function(page) {
+                this.page = function (page) {
                     switch (arguments.length) {
-                    case 0:
-                        return state.get('page') || defaultParams.page;
+                        case 0:
+                            return state.get('page') || defaultParams.page;
 
-                    case 1:
-                        if (this._items) {
-                            state.set('page', page !== defaultParams.page ? page : null);
-                        }
+                        case 1:
+                            if (this._items) {
+                                state.set('page', page !== defaultParams.page ? page : null);
+                            }
                     }
                 };
 
@@ -125,17 +132,17 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Get/set current search query.
                  */
-                this.search = function(q, df) {
+                this.search = function (q, df) {
                     switch (arguments.length) {
-                    case 0:
-                        return state.get('q');
+                        case 0:
+                            return state.get('q');
 
-                    case 1:
-                        if (this._items) {
-                            state.set('q', q);
-                            state.set('df', df);
-                            state.set('page', null);
-                        }
+                        case 1:
+                            if (this._items) {
+                                state.set('q', q);
+                                state.set('df', df);
+                                state.set('page', null);
+                            }
                     }
 
                     return this;
@@ -151,14 +158,14 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Get/set filter
                  */
-                this.where = function(key, val) {
+                this.where = function (key, val) {
                     switch (arguments.length) {
-                    case 1:
-                        return state.get(key) || null;
+                        case 1:
+                            return state.get(key) || null;
 
-                    case 2:
-                        state.set(key, val || null);
-                        state.set('page', null);
+                        case 2:
+                            state.set(key, val || null);
+                            state.set('page', null);
                     }
 
                     return this;
@@ -173,7 +180,7 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Get single item by ID.
                  */
-                this.find = function(id) {
+                this.find = function (id) {
                     return em.find(resource, id);
                 };
 
@@ -186,22 +193,28 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Reset default params
                  */
-                this.reset = function(paramsObject) {
+                this.reset = function (paramsObject) {
                     cancelWatch();
 
-                    defaultParams = angular.extend({
-                        max_results: 25,
-                        page: 1,
-                        where: {},
-                        sort: [],
-                        filters: [],
-                        ttl: 0,
-                    }, paramsObject);
+                    defaultParams = angular.extend(
+                        {
+                            max_results: 25,
+                            page: 1,
+                            where: {},
+                            sort: [],
+                            filters: [],
+                            ttl: 0,
+                        },
+                        paramsObject,
+                    );
 
                     // main loop - update when query criteria change
-                    cancelWatch = $rootScope.$watchCollection(() => getQueryCriteria(), (criteria) => {
-                        self.query(criteria);
-                    });
+                    cancelWatch = $rootScope.$watchCollection(
+                        () => getQueryCriteria(),
+                        (criteria) => {
+                            self.query(criteria);
+                        },
+                    );
                 };
 
                 /**
@@ -211,7 +224,7 @@ export default angular.module('superdesk.core.services.data', [])
                  *
                  * @description Force reload with same params
                  */
-                this.reload = function() {
+                this.reload = function () {
                     self.query(getQueryCriteria());
                 };
 
@@ -219,4 +232,5 @@ export default angular.module('superdesk.core.services.data', [])
                     this.reset(params);
                 }
             };
-        }]);
+        },
+    ]);

@@ -10,7 +10,7 @@ function SourcesDirective() {
         scope: {
             renditions: '=',
         },
-        link: function(scope, elem, attrs) {
+        link: function (scope, elem, attrs) {
             function pause() {
                 elem[0].pause();
             }
@@ -20,7 +20,8 @@ function SourcesDirective() {
             }
 
             function createSource(rendition) {
-                angular.element('<source>')
+                angular
+                    .element('<source>')
                     .attr('src', rendition.href)
                     .attr('type', typeMap[rendition.mimetype] || rendition.mimetype)
                     .appendTo(elem);
@@ -45,8 +46,8 @@ function FileValidatorDirective() {
 
     return {
         require: 'ngModel',
-        link: function(scope, elem, attrs, ngModel) {
-            ngModel.$validators.fileType = function(modelValue, viewValue) {
+        link: function (scope, elem, attrs, ngModel) {
+            ngModel.$validators.fileType = function (modelValue, viewValue) {
                 var value = modelValue || viewValue;
 
                 return !value || !attrs.accept || isAcceptedFileType(value, attrs.accept);
@@ -55,14 +56,15 @@ function FileValidatorDirective() {
     };
 }
 
-angular.module('superdesk.core.upload', [
-    'ngFileUpload',
-    'superdesk.core.services.imageFactory',
-    'superdesk.core.upload.crop',
-    'superdesk.core.upload.imagecrop',
-    'superdesk.core.upload.imagepreview',
-    'superdesk.core.upload.imagemodify',
-    'superdesk.core.upload.upload',
-])
+angular
+    .module('superdesk.core.upload', [
+        'ngFileUpload',
+        'superdesk.core.services.imageFactory',
+        'superdesk.core.upload.crop',
+        'superdesk.core.upload.imagecrop',
+        'superdesk.core.upload.imagepreview',
+        'superdesk.core.upload.imagemodify',
+        'superdesk.core.upload.upload',
+    ])
     .directive('sdSources', SourcesDirective)
     .directive('sdFileTypeValidator', FileValidatorDirective);

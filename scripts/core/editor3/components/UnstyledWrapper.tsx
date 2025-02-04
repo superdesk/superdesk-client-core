@@ -18,8 +18,7 @@ class UnstyledWrapper extends BaseUnstyledComponent {
     }
 
     render() {
-        const className =
-            'unstyled ' + (this.state.over ? 'unstyled--over' : '');
+        const className = 'unstyled ' + (this.state.over ? 'unstyled--over' : '');
         const {children} = this.props;
 
         const childrenWithProps = React.Children.map(children, (child: any) =>

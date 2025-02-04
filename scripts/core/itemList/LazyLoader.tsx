@@ -94,30 +94,31 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
         const loadedItemsCount = this.state.items.size;
 
-        const pages = loadedItemsCount > 0
-            ? new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
-                const to = (i + 1) * MAX_PAGE_SIZE;
-                const to_limited = Math.min(to, loadedItemsCount);
-                const from = to - MAX_PAGE_SIZE;
+        const pages =
+            loadedItemsCount > 0
+                ? new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
+                      const to = (i + 1) * MAX_PAGE_SIZE;
+                      const to_limited = Math.min(to, loadedItemsCount);
+                      const from = to - MAX_PAGE_SIZE;
 
-                return {from: from, to: to_limited};
-            }) : (
-                [{from: this.state.items.size, to: this.state.items.size + this.props.pageSize}]
-            );
+                      return {from: from, to: to_limited};
+                  })
+                : [{from: this.state.items.size, to: this.state.items.size + this.props.pageSize}];
 
         if (this._mounted) {
-            this.setState({
-                loading: true,
-            }, () => {
-                Promise.all(
-                    pages.map(({from, to}) => this.props.loadMoreItems(from, to)),
-                ).then((res) => {
-                    this.setState({
-                        items: res.reduce((acc, item) => acc.merge(item)),
-                        loading: false,
+            this.setState(
+                {
+                    loading: true,
+                },
+                () => {
+                    Promise.all(pages.map(({from, to}) => this.props.loadMoreItems(from, to))).then((res) => {
+                        this.setState({
+                            items: res.reduce((acc, item) => acc.merge(item)),
+                            loading: false,
+                        });
                     });
-                });
-            });
+                },
+            );
         }
     }
 
@@ -192,7 +193,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                             return;
                         }
 
-                        const {scrollHeight, offsetHeight, scrollTop} = (event.target as any);
+                        const {scrollHeight, offsetHeight, scrollTop} = event.target as any;
                         const reachedBottom = scrollHeight === Math.round(offsetHeight + scrollTop);
 
                         if (reachedBottom) {
@@ -206,9 +207,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}
                     {(() => {
                         if (loading === true) {
-                            return (
-                                <ListItemLoader />
-                            );
+                            return <ListItemLoader />;
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
                                 return (

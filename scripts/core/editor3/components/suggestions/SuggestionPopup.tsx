@@ -38,7 +38,8 @@ class Suggestion extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        ng.get('api')('users').getById(this.props.suggestion.author)
+        ng.get('api')('users')
+            .getById(this.props.suggestion.author)
             .then((author) => {
                 this.setState({author});
             })
@@ -84,43 +85,43 @@ class Suggestion extends React.Component<any, any> {
         let content;
 
         switch (this.props.suggestion.type) {
-        case 'REPLACE_SUGGESTION':
-            content = (
-                <div>
+            case 'REPLACE_SUGGESTION':
+                content = (
                     <div>
-                        <strong>{gettext('Replace')}: </strong>
-                        {this.truncateText(oldText)}
+                        <div>
+                            <strong>{gettext('Replace')}: </strong>
+                            {this.truncateText(oldText)}
+                        </div>
+                        <div>
+                            <strong>{gettext('with')}: </strong>
+                            {this.truncateText(suggestionText)}
+                        </div>
                     </div>
+                );
+                break;
+
+            case 'CHANGE_LINK_SUGGESTION':
+                content = (
                     <div>
-                        <strong>{gettext('with')}: </strong>
+                        <div>
+                            <strong>{gettext('Replace link')}: </strong>
+                            {get(this.props.suggestion, 'from.href', '')}
+                        </div>
+                        <div>
+                            <strong>{gettext('with')}: </strong>
+                            {get(this.props.suggestion, 'to.href', '')}
+                        </div>
+                    </div>
+                );
+                break;
+
+            default:
+                content = (
+                    <div>
+                        <strong>{description + space + blockStyleDescription}: </strong>
                         {this.truncateText(suggestionText)}
                     </div>
-                </div>
-            );
-            break;
-
-        case 'CHANGE_LINK_SUGGESTION':
-            content = (
-                <div>
-                    <div>
-                        <strong>{gettext('Replace link')}: </strong>
-                        {get(this.props.suggestion, 'from.href', '')}
-                    </div>
-                    <div>
-                        <strong>{gettext('with')}: </strong>
-                        {get(this.props.suggestion, 'to.href', '')}
-                    </div>
-                </div>
-            );
-            break;
-
-        default:
-            content = (
-                <div>
-                    <strong>{description + space + blockStyleDescription}: </strong>
-                    {this.truncateText(suggestionText)}
-                </div>
-            );
+                );
         }
 
         return (
@@ -141,9 +142,7 @@ class Suggestion extends React.Component<any, any> {
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className="editor-popup__content-block">
-                            {content}
-                        </div>
+                        <div className="editor-popup__content-block">{content}</div>
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">

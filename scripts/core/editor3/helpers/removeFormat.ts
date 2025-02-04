@@ -15,15 +15,14 @@ export function removeInlineStyles(content: ContentState, styles): ContentState 
     let filterFn = (c) => styles.some((s) => c.hasStyle(s));
 
     contentState.getBlocksAsArray().forEach((b) => {
-        b.findStyleRanges(filterFn,
-            (start, end) => {
-                const empty = SelectionState.createEmpty(b.getKey());
-                const selection = empty.merge({anchorOffset: start, focusOffset: end});
+        b.findStyleRanges(filterFn, (start, end) => {
+            const empty = SelectionState.createEmpty(b.getKey());
+            const selection = empty.merge({anchorOffset: start, focusOffset: end});
 
-                styles.forEach((s) => {
-                    contentState = Modifier.removeInlineStyle(contentState, selection as SelectionState, s);
-                });
+            styles.forEach((s) => {
+                contentState = Modifier.removeInlineStyle(contentState, selection as SelectionState, s);
             });
+        });
     });
 
     return contentState;
@@ -39,8 +38,7 @@ export function removeInlineStyles(content: ContentState, styles): ContentState 
  */
 export function removeInlineStylesForSelection(content, selection) {
     const contentWithoutStyles = acceptedInlineStyles.reduce(
-        (newContentState, style) =>
-            Modifier.removeInlineStyle(newContentState, selection, style),
+        (newContentState, style) => Modifier.removeInlineStyle(newContentState, selection, style),
         content,
     );
 
@@ -88,23 +86,11 @@ export function removeBlockStyles(editorState, content, selection, keepTypes) {
  */
 export function removeFormatFromState(editorState): EditorState {
     const selection = editorState.getSelection();
-    const contentWithoutInlineStyles = removeInlineStylesForSelection(
-        editorState.getCurrentContent(),
-        selection,
-    );
-    const contentWithoutBlockStyles = removeBlockStyles(
-        editorState,
-        contentWithoutInlineStyles,
-        selection,
-        ['atomic'],
-    );
+    const contentWithoutInlineStyles = removeInlineStylesForSelection(editorState.getCurrentContent(), selection);
+    const contentWithoutBlockStyles = removeBlockStyles(editorState, contentWithoutInlineStyles, selection, ['atomic']);
 
     // Push new editor state as only one change so 'UNDO' will change both at the same type
-    return EditorState.push(
-        editorState,
-        contentWithoutBlockStyles,
-        'change-block-type',
-    );
+    return EditorState.push(editorState, contentWithoutBlockStyles, 'change-block-type');
 }
 
 /*
@@ -119,9 +105,5 @@ export function removeAllFormatAndStyles(editorState: EditorState): EditorState 
 
     const newContentState = ContentState.createFromText(plainText);
 
-    return EditorState.push(
-        editorState,
-        newContentState,
-        'change-block-type',
-    );
+    return EditorState.push(editorState, newContentState, 'change-block-type');
 }

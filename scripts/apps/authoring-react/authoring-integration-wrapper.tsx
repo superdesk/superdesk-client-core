@@ -58,57 +58,65 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
-const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> => [{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="preview-mode"
-            ariaValue={gettext('Print preview')}
-            onClick={() => {
+const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> => [
+    {
+        availableOffline: true,
+        component: () => (
+            <IconButton
+                icon="preview-mode"
+                ariaValue={gettext('Print preview')}
+                onClick={() => {
+                    exposed.printPreview();
+                }}
+            />
+        ),
+        group: 'end',
+        priority: 1,
+        keyBindings: {
+            'ctrl+shift+i': () => {
                 exposed.printPreview();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 1,
-    keyBindings: {'ctrl+shift+i': () => {
-        exposed.printPreview();
-    }},
-},
-{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="adjust"
-            ariaValue={gettext('Toggle theme')}
-            onClick={() => {
+            },
+        },
+    },
+    {
+        availableOffline: true,
+        component: () => (
+            <IconButton
+                icon="adjust"
+                ariaValue={gettext('Toggle theme')}
+                onClick={() => {
+                    exposed.toggleTheme();
+                }}
+            />
+        ),
+        group: 'end',
+        priority: 2,
+        keyBindings: {
+            'ctrl+shift+t': () => {
                 exposed.toggleTheme();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 2,
-    keyBindings: {'ctrl+shift+t': () => {
-        exposed.toggleTheme();
-    }},
-},
-{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="switches"
-            ariaValue={gettext('Configure themes')}
-            onClick={() => {
+            },
+        },
+    },
+    {
+        availableOffline: true,
+        component: () => (
+            <IconButton
+                icon="switches"
+                ariaValue={gettext('Configure themes')}
+                onClick={() => {
+                    exposed.configureTheme();
+                }}
+            />
+        ),
+        group: 'end',
+        priority: 3,
+        keyBindings: {
+            'ctrl+shift+c': () => {
                 exposed.configureTheme();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 3,
-    keyBindings: {'ctrl+shift+c': () => {
-        exposed.configureTheme();
-    }},
-}];
+            },
+        },
+    },
+];
 
 export type ISideWidget = {
     activeId?: string;
@@ -159,10 +167,7 @@ const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
     label: gettext('Multi-edit'),
     onTrigger: () => {
         showModal(({closeModal}) => (
-            <MultiEditToolbarAction
-                onClose={closeModal}
-                initiallySelectedArticle={getItem()}
-            />
+            <MultiEditToolbarAction onClose={closeModal} initiallySelectedArticle={getItem()} />
         ));
     },
 });
@@ -174,14 +179,10 @@ const getExportModal = (
 ): IAuthoringAction => ({
     label: gettext('Export'),
     onTrigger: () => {
-        const openModal = (article: IArticle) => showModal(({closeModal}) => {
-            return (
-                <ExportModal
-                    closeModal={closeModal}
-                    article={article}
-                />
-            );
-        });
+        const openModal = (article: IArticle) =>
+            showModal(({closeModal}) => {
+                return <ExportModal closeModal={closeModal} article={article} />;
+            });
 
         if (hasUnsavedChanges()) {
             handleUnsavedChanges().then((article) => openModal(article));
@@ -197,12 +198,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
             if (res._items.length === 0) {
                 ui.alert(gettext('No highlights have been created yet.'));
             } else {
-                showModal(({closeModal}) => (
-                    <HighlightsModal
-                        article={getItem()}
-                        closeModal={closeModal}
-                    />
-                ));
+                showModal(({closeModal}) => <HighlightsModal article={getItem()} closeModal={closeModal} />);
             }
         });
     };
@@ -220,42 +216,25 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
 const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
-    onTrigger: () => (
+    onTrigger: () =>
         showModal(({closeModal}) => {
-            return (
-                <TemplateModal
-                    closeModal={closeModal}
-                    item={getItem()}
-                />
-            );
-        })
-    ),
+            return <TemplateModal closeModal={closeModal} item={getItem()} />;
+        }),
 });
 
 const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Translate'),
     onTrigger: () => {
-        showModal(({closeModal}) => (
-            <TranslateModal
-                closeModal={closeModal}
-                article={getItem()}
-            />
-        ));
+        showModal(({closeModal}) => <TranslateModal closeModal={closeModal} article={getItem()} />);
     },
 });
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
-    onTrigger: () => (
+    onTrigger: () =>
         showModal(({closeModal}) => {
-            return (
-                <MarkForDesksModal
-                    closeModal={closeModal}
-                    article={getItem()}
-                />
-            );
-        })
-    ),
+            return <MarkForDesksModal closeModal={closeModal} article={getItem()} />;
+        }),
 });
 
 interface IPropsWrapper extends IProps {
@@ -322,8 +301,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
     componentDidUpdate(_prevProps: IPropsWrapper, prevState: IState): void {
         if (
-            this.state.sideWidget?.pinnedId != null
-            && this.state.sideWidget?.pinnedId != prevState.sideWidget?.pinnedId
+            this.state.sideWidget?.pinnedId != null &&
+            this.state.sideWidget?.pinnedId != prevState.sideWidget?.pinnedId
         ) {
             this.loadWidgetFromPreferences();
         }
@@ -371,8 +350,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     render() {
-        const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
-            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
+        const secondaryToolbarWidgetsFromExtensions = Object.values(extensions).flatMap(
+            ({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? [],
+        );
 
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
@@ -399,37 +379,38 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             },
                             retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                         }}
-                        headerToolbar={((exposed) => {
+                        headerToolbar={(exposed) => {
                             const getProfileAndReinitialize = (item: IArticle) =>
-                                this.props.authoringStorage.getContentProfile(
-                                    item,
-                                    exposed.fieldsAdapter,
-                                ).then((profile) => {
-                                    exposed.reinitialize(item, profile);
-                                });
+                                this.props.authoringStorage
+                                    .getContentProfile(item, exposed.fieldsAdapter)
+                                    .then((profile) => {
+                                        exposed.reinitialize(item, profile);
+                                    });
 
-                            return [{
-                                component: ({entity}) => (
-                                    <div className="authoring-header__general-info">
-                                        <ContentProfileDropdown
-                                            item={entity}
-                                            reinitialize={(item) => {
-                                                const handledChanges = exposed.hasUnsavedChanges()
-                                                    ? exposed.handleUnsavedChanges()
-                                                    : Promise.resolve();
+                            return [
+                                {
+                                    component: ({entity}) => (
+                                        <div className="authoring-header__general-info">
+                                            <ContentProfileDropdown
+                                                item={entity}
+                                                reinitialize={(item) => {
+                                                    const handledChanges = exposed.hasUnsavedChanges()
+                                                        ? exposed.handleUnsavedChanges()
+                                                        : Promise.resolve();
 
-                                                handledChanges.then(() => {
-                                                    getProfileAndReinitialize(item);
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                ),
-                                availableOffline: false,
-                                group: 'start',
-                                priority: 1,
-                            }];
-                        })}
+                                                    handledChanges.then(() => {
+                                                        getProfileAndReinitialize(item);
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    ),
+                                    availableOffline: false,
+                                    group: 'start',
+                                    priority: 1,
+                                },
+                            ];
+                        }}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
                             dispatchCustomEvent('articleEditStart', article);
@@ -456,12 +437,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                             return [
                                 getSaveAsTemplate(getLatestItem),
-                                getCompareVersionsModal(
-                                    getLatestItem,
-                                    authoringStorage,
-                                    fieldsAdapter,
-                                    storageAdapter,
-                                ),
+                                getCompareVersionsModal(getLatestItem, authoringStorage, fieldsAdapter, storageAdapter),
                                 getMultiEditModal(getLatestItem),
                                 getHighlightsAction(getLatestItem),
                                 getMarkedForDesksModal(getLatestItem),
@@ -482,29 +458,30 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
                                 : undefined
                         }
-                        getSidePanel={({
-                            item,
-                            getLatestItem,
-                            contentProfile,
-                            fieldsData,
-                            handleFieldsDataChange,
-                            fieldsAdapter,
-                            storageAdapter,
-                            authoringStorage,
-                            handleUnsavedChanges,
-                            sideWidget,
-                            onItemChange,
-                            addValidationErrors,
-                        }, readOnly) => {
+                        getSidePanel={(
+                            {
+                                item,
+                                getLatestItem,
+                                contentProfile,
+                                fieldsData,
+                                handleFieldsDataChange,
+                                fieldsAdapter,
+                                storageAdapter,
+                                authoringStorage,
+                                handleUnsavedChanges,
+                                sideWidget,
+                                onItemChange,
+                                addValidationErrors,
+                            },
+                            readOnly,
+                        ) => {
                             if (panelState.active === true) {
                                 return (
                                     <InteractiveArticleActionsPanel
                                         items={panelState.items}
                                         tabs={panelState.tabs}
                                         activeTab={panelState.activeTab}
-                                        handleUnsavedChanges={
-                                            () => handleUnsavedChanges().then((res) => [res])
-                                        }
+                                        handleUnsavedChanges={() => handleUnsavedChanges().then((res) => [res])}
                                         onClose={panelActions.closePanel}
                                         onError={(error) => {
                                             if (error.kind === 'publishing-error') {
@@ -525,8 +502,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 return null;
                             }
 
-                            const WidgetComponent = getWidgetsFromExtensions(item)
-                                .find((widget) => sideWidget === widget._id)?.component;
+                            const WidgetComponent = getWidgetsFromExtensions(item).find(
+                                (widget) => sideWidget === widget._id,
+                            )?.component;
 
                             return (
                                 <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
@@ -534,16 +512,17 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         <WidgetComponent
                                             ref={widgetRef}
                                             initialState={(() => {
-                                                const localStorageWidgetState =
-                                                    JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+                                                const localStorageWidgetState = JSON.parse(
+                                                    localStorage.getItem('SIDE_WIDGET') ?? 'null',
+                                                );
 
                                                 if (localStorageWidgetState?.id != null) {
                                                     const initialState = localStorageWidgetState?.initialState;
 
-                                                    sdApi.preferences.update(
-                                                        PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
-                                                        {type: 'string', _id: localStorageWidgetState?.id},
-                                                    );
+                                                    sdApi.preferences.update(PINNED_WIDGET_USER_PREFERENCE_SETTINGS, {
+                                                        type: 'string',
+                                                        _id: localStorageWidgetState?.id,
+                                                    });
 
                                                     // Once a user switches the widget, authoring gets
                                                     // re-rendered 3-4 times, causing this logic to run more
@@ -558,9 +537,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                 }
 
                                                 if (
-                                                    localStorageWidgetState == null
-                                                    && closedIntentionally.value === true
-                                                    && widgetState[this.state.sideWidget?.activeId] != null
+                                                    localStorageWidgetState == null &&
+                                                    closedIntentionally.value === true &&
+                                                    widgetState[this.state.sideWidget?.activeId] != null
                                                 ) {
                                                     return widgetState[this.state.sideWidget?.activeId];
                                                 }
@@ -583,22 +562,24 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 </WidgetStatePersistenceHOC>
                             );
                         }}
-                        getSidebar={this.state.sidebarMode !== true ? null : (options) => (
-                            <AuthoringIntegrationWrapperSidebar
-                                options={options}
-                                sideWidget={this.state.sideWidget}
-                                setSideWidget={(sideWidget) => {
-                                    this.setState({sideWidget});
-                                    closedIntentionally.value = false;
-                                }}
-                            />
-                        )}
+                        getSidebar={
+                            this.state.sidebarMode !== true
+                                ? null
+                                : (options) => (
+                                      <AuthoringIntegrationWrapperSidebar
+                                          options={options}
+                                          sideWidget={this.state.sideWidget}
+                                          setSideWidget={(sideWidget) => {
+                                              this.setState({sideWidget});
+                                              closedIntentionally.value = false;
+                                          }}
+                                      />
+                                  )
+                        }
                         getSecondaryToolbarWidgets={(exposed) => [
                             {
                                 availableOffline: true,
-                                component: () => (
-                                    <CreatedModifiedInfo article={exposed.item} />
-                                ),
+                                component: () => <CreatedModifiedInfo article={exposed.item} />,
                                 group: 'start',
                                 priority: 1,
                             },

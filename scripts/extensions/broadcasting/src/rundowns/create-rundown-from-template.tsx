@@ -85,10 +85,10 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                         }).then(() => {
                                             this.props.onClose();
 
-                                            toasted.notify(
-                                                gettext('Rundown created'),
-                                                {type: 'success', duration: 2000},
-                                            );
+                                            toasted.notify(gettext('Rundown created'), {
+                                                type: 'success',
+                                                duration: 2000,
+                                            });
                                         });
                                     }
                                 }}
@@ -130,96 +130,87 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     ref={refs.showId}
                                 />
 
-                                {
-                                    showId != null && (
-                                        <SelectFromEndpoint
-                                            label={gettext('Template')}
-                                            endpoint={`/shows/${showId}/templates`}
-                                            sort={[['name', 'asc']]}
-                                            value={template?._id ?? null}
-                                            onChange={(templateId) => {
-                                                this.setState({loading: true});
+                                {showId != null && (
+                                    <SelectFromEndpoint
+                                        label={gettext('Template')}
+                                        endpoint={`/shows/${showId}/templates`}
+                                        sort={[['name', 'asc']]}
+                                        value={template?._id ?? null}
+                                        onChange={(templateId) => {
+                                            this.setState({loading: true});
 
-                                                httpRequestJsonLocal<IRundownTemplate>({
-                                                    method: 'GET',
-                                                    path: `/shows/${showId}/templates/${templateId}`,
-                                                }).then((_template) => {
-                                                    this.setState({
-                                                        template: _template,
-                                                        rundownTitle: _template.title_template.prefix,
-                                                        loading: false,
-                                                    });
+                                            httpRequestJsonLocal<IRundownTemplate>({
+                                                method: 'GET',
+                                                path: `/shows/${showId}/templates/${templateId}`,
+                                            }).then((_template) => {
+                                                this.setState({
+                                                    template: _template,
+                                                    rundownTitle: _template.title_template.prefix,
+                                                    loading: false,
                                                 });
-                                            }}
-                                            itemTemplate={({entity: rundownTemplate}: {entity: IRundownTemplate}) => (
-                                                rundownTemplate == null
-                                                    ? (
-                                                        <span>{gettext('Select template')}</span>
-                                                    ) : (
-                                                        <span>{rundownTemplate.title}</span>
-                                                    )
-                                            )}
-                                            readOnly={this.state.loading}
-                                            validationError={validationResults.template}
-                                            ref={refs.template}
-                                            required={true}
+                                            });
+                                        }}
+                                        itemTemplate={({entity: rundownTemplate}: {entity: IRundownTemplate}) =>
+                                            rundownTemplate == null ? (
+                                                <span>{gettext('Select template')}</span>
+                                            ) : (
+                                                <span>{rundownTemplate.title}</span>
+                                            )
+                                        }
+                                        readOnly={this.state.loading}
+                                        validationError={validationResults.template}
+                                        ref={refs.template}
+                                        required={true}
+                                    />
+                                )}
+
+                                {template != null && (
+                                    <Input
+                                        type="text"
+                                        label={gettext('Rundown name')}
+                                        value={rundownTitle ?? ''}
+                                        onChange={(val) => {
+                                            this.setState({rundownTitle: val});
+                                        }}
+                                        disabled={this.state.loading}
+                                        error={validationResults.rundownTitle ?? undefined}
+                                        ref={refs.rundownTitle}
+                                    />
+                                )}
+
+                                {template != null && (
+                                    <DatePickerISO
+                                        required
+                                        dateFormat={superdesk.instance.config.view.dateformat}
+                                        label={gettext('Airtime')}
+                                        value={this.state.airTime ?? ''}
+                                        onChange={(val) => {
+                                            this.setState({airTime: val});
+                                        }}
+                                        error={validationResults.airTime ?? undefined}
+                                        invalid={validationResults.airTime != null}
+                                        ref={refs.airTime}
+                                    />
+                                )}
+
+                                {template != null && (
+                                    <div>
+                                        <InputLabel text={gettext('Template based settings')} />
+
+                                        <SpacerBlock v gap="4" />
+
+                                        <PlannedDurationLabel planned_duration={template.planned_duration} />
+
+                                        <SpacerBlock h gap="4" />
+
+                                        <IconLabel
+                                            type="primary"
+                                            text={template.airtime_time.toString()}
+                                            innerLabel={gettext('Airtime')}
+                                            style="translucent"
                                         />
-                                    )
-                                }
-
-                                {
-                                    template != null && (
-                                        <Input
-                                            type="text"
-                                            label={gettext('Rundown name')}
-                                            value={rundownTitle ?? ''}
-                                            onChange={(val) => {
-                                                this.setState({rundownTitle: val});
-                                            }}
-                                            disabled={this.state.loading}
-                                            error={validationResults.rundownTitle ?? undefined}
-                                            ref={refs.rundownTitle}
-                                        />
-                                    )
-                                }
-
-                                {
-                                    template != null && (
-                                        <DatePickerISO
-                                            required
-                                            dateFormat={superdesk.instance.config.view.dateformat}
-                                            label={gettext('Airtime')}
-                                            value={this.state.airTime ?? ''}
-                                            onChange={(val) => {
-                                                this.setState({airTime: val});
-                                            }}
-                                            error={validationResults.airTime ?? undefined}
-                                            invalid={validationResults.airTime != null}
-                                            ref={refs.airTime}
-                                        />
-                                    )
-                                }
-
-                                {
-                                    template != null && (
-                                        <div>
-                                            <InputLabel text={gettext('Template based settings')} />
-
-                                            <SpacerBlock v gap="4" />
-
-                                            <PlannedDurationLabel planned_duration={template.planned_duration} />
-
-                                            <SpacerBlock h gap="4" />
-
-                                            <IconLabel
-                                                type="primary"
-                                                text={template.airtime_time.toString()}
-                                                innerLabel={gettext('Airtime')}
-                                                style="translucent"
-                                            />
-                                        </div>
-                                    )
-                                }
+                                    </div>
+                                )}
                                 <div />
                             </Spacer>
                         </Modal>

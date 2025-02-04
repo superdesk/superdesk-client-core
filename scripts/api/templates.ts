@@ -64,16 +64,10 @@ function getUserTemplates(
     const criteria: ILogicalOperator = {
         $or: [
             {
-                $and: [
-                    {is_public: {$eq: false}},
-                    {user: {$eq: sdApi.user.getCurrentUserId()}},
-                ],
+                $and: [{is_public: {$eq: false}}, {user: {$eq: sdApi.user.getCurrentUserId()}}],
             },
             {
-                $and: [
-                    {is_public: {$eq: true}},
-                    {$or: templateDesks},
-                ],
+                $and: [{is_public: {$eq: true}}, {$or: templateDesks}],
             },
         ],
         $and: [{[nameof<ITemplate>('template_type')]: {$eq: type}}],
@@ -86,10 +80,7 @@ function getUserTemplates(
     const templateName = nameof<ITemplate>('template_name');
     const sort: ISortOptions = [{[templateName]: 'desc'}];
     const filtered: ILogicalOperator = {
-        $and: [
-            criteria,
-            {[templateName]: {$stringContains: {val: searchString, options: null}}},
-        ],
+        $and: [criteria, {[templateName]: {$stringContains: {val: searchString, options: null}}}],
     };
     const maybeFiltered: ILogicalOperator = (searchString?.length ?? 0) < 1 ? criteria : filtered;
 
@@ -163,15 +154,14 @@ function createTemplateFromArticle(
                 data: item,
             };
 
-            return (hasLinks
-                ? updateTemplate(requestPayload, resultTemplate)
-                : createTemplate(requestPayload)
-            )
-                .then((_data) => {
+            return (hasLinks ? updateTemplate(requestPayload, resultTemplate) : createTemplate(requestPayload)).then(
+                (_data) => {
                     return _data;
-                }, (response) => {
+                },
+                (response) => {
                     return Promise.reject(response);
-                });
+                },
+            );
         });
     });
 }

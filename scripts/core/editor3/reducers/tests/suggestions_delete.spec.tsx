@@ -14,20 +14,23 @@ function getInitialEditorState(startOffset = 2, endOffset = 2) {
 }
 
 function getEditorStateWithDeleteSuggestion(author, date, startOffset, endOffset, action = 'backspace') {
-    const result = reducer({
-        editorState: getInitialEditorState(startOffset, endOffset),
-        suggestingMode: true,
-        onChangeValue: () => ({}),
-    }, {
-        type: 'CREATE_DELETE_SUGGESTION',
-        payload: {
-            action: action,
-            data: {
-                date: date,
-                author: author,
+    const result = reducer(
+        {
+            editorState: getInitialEditorState(startOffset, endOffset),
+            suggestingMode: true,
+            onChangeValue: () => ({}),
+        },
+        {
+            type: 'CREATE_DELETE_SUGGESTION',
+            payload: {
+                action: action,
+                data: {
+                    date: date,
+                    author: author,
+                },
             },
         },
-    });
+    );
 
     const {editorState} = result;
 
@@ -37,20 +40,23 @@ function getEditorStateWithDeleteSuggestion(author, date, startOffset, endOffset
 describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
     it('should suggest a character delete by using backspace key', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -77,20 +83,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should suggest a character delete by using delete key', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -117,20 +126,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should not add suggestion when backspace a character at beginning of the paragraph', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(0, 0),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(0, 0),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -147,20 +159,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should not add suggestion when delete a character at the end of the paragraph', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(4, 4),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(4, 4),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -177,20 +192,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should add new suggestion when backspace a selected text', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(1, 3),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(1, 3),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -217,20 +235,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should add new suggestion when delete a selected text', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getInitialEditorState(1, 3),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getInitialEditorState(1, 3),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -257,20 +278,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should extend old suggestion when backspace before an existing suggestion with the same author', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -297,20 +321,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should extend suggestion when delete with the same author after an existing delete suggestion', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -337,20 +364,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should add new suggestion when backspace with different author before an existing delete suggestion', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id2',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id2',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -379,20 +409,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should add a new suggestion when delete with different author after an existing delete suggestion', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3, 'delete'),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id2',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id1', date, 1, 3, 'delete'),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id2',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -421,20 +454,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should extend suggestion when backspace with the same author after an existing delete suggestion', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'backspace',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3, 'delete'),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'backspace',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();
@@ -455,20 +491,23 @@ describe('editor3.reducers.suggestion.CREATE_DELETE_SUGGESTION', () => {
 
     it('should extend old suggestion when delete with the same author before an existing delete suggestion', () => {
         const date = new Date();
-        const result = reducer({
-            editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),
-            suggestingMode: true,
-            onChangeValue: () => ({}),
-        }, {
-            type: 'CREATE_DELETE_SUGGESTION',
-            payload: {
-                action: 'delete',
-                data: {
-                    date: date,
-                    author: 'author_id',
+        const result = reducer(
+            {
+                editorState: getEditorStateWithDeleteSuggestion('author_id', date, 1, 3),
+                suggestingMode: true,
+                onChangeValue: () => ({}),
+            },
+            {
+                type: 'CREATE_DELETE_SUGGESTION',
+                payload: {
+                    action: 'delete',
+                    data: {
+                        date: date,
+                        author: 'author_id',
+                    },
                 },
             },
-        });
+        );
 
         const {editorState} = result;
         const selection = editorState.getSelection();

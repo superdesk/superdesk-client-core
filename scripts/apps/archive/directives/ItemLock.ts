@@ -5,14 +5,15 @@ export function ItemLock(api, lock, privileges, desks) {
     return {
         templateUrl: 'scripts/apps/archive/views/item-lock.html',
         scope: {item: '='},
-        link: function(scope) {
+        link: function (scope) {
             init();
 
             scope.$watch('item.lock_session', () => {
                 init();
 
                 if (scope.item && lock.isLocked(scope.item)) {
-                    api('users').getById(scope.item.lock_user)
+                    api('users')
+                        .getById(scope.item.lock_user)
                         .then((user) => {
                             scope.lock.user = user;
                             scope.lock.lockbyme = lock.isLockedByMe(scope.item);
@@ -25,7 +26,7 @@ export function ItemLock(api, lock, privileges, desks) {
                 scope.lock = {user: null, lockbyme: false};
             }
 
-            scope.unlock = function() {
+            scope.unlock = function () {
                 lock.previewUnlock = true;
                 lock.unlock(scope.item).then(() => {
                     scope.item.lock_user = null;
@@ -35,7 +36,7 @@ export function ItemLock(api, lock, privileges, desks) {
                 });
             };
 
-            scope.can_unlock = function() {
+            scope.can_unlock = function () {
                 if (lock.can_unlock(scope.item)) {
                     if (scope.item.task && scope.item.task.desk && desks.userDesks) {
                         return _.find(desks.userDesks, {_id: scope.item.task.desk});

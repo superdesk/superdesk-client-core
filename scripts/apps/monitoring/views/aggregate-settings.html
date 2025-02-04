@@ -1,26 +1,49 @@
 <div class="modal__header modal__header--flex">
-    <h3 class="modal__heading">{{ :: 'Monitoring settings' | translate }} <span ng-if="settings.desk" translate translate-params-name="settings.desk.name">for "{{name}}" Desk</span></h3>
+    <h3 class="modal__heading">
+        {{ :: 'Monitoring settings' | translate }}
+        <span ng-if="settings.desk" translate translate-params-name="settings.desk.name">for "{{name}}" Desk</span>
+    </h3>
     <a href="" class="modal__close icn-btn" sd-hotkey="esc" ng-click="cancel()"><i class="icon-close-small"></i></a>
 </div>
 
-<div class="modal__body aggregate-settings" sd-wizard data-name="aggregatesettings"
-     data-current-step="step.current" ng-init="setCurrentStep()" data-finish="cancel()">
-    <div sd-wizard-step data-title="{{ :: 'Desks' | translate }}" data-code="desks"
-         data-hide="shouldHideStep('desks')">
+<div
+    class="modal__body aggregate-settings"
+    sd-wizard
+    data-name="aggregatesettings"
+    data-current-step="step.current"
+    ng-init="setCurrentStep()"
+    data-finish="cancel()"
+>
+    <div sd-wizard-step data-title="{{ :: 'Desks' | translate }}" data-code="desks" data-hide="shouldHideStep('desks')">
         <div class="content">
             <div ng-if="widget">
                 <div class="sd-line-input sd-line-input--required sd-line-input--boxed">
                     <label class="sd-line-input__label" translate>View name</label>
-                    <input class="sd-line-input__input" type="text" ng-model="widget.configuration.label" ng-keyup="handleEdit($event);" required>
-                    <sd-character-count class="sd-line-input__char-count" data-item="widget.configuration.label" data-limit="30"></sd-character-count>
+                    <input
+                        class="sd-line-input__input"
+                        type="text"
+                        ng-model="widget.configuration.label"
+                        ng-keyup="handleEdit($event);"
+                        required
+                    />
+                    <sd-character-count
+                        class="sd-line-input__char-count"
+                        data-item="widget.configuration.label"
+                        data-limit="30"
+                    ></sd-character-count>
                 </div>
             </div>
             <div class="legend" translate>Select desks for view</div>
             <div class="desk-container">
-                <div class="desk" ng-repeat="desk in desks | orderBy: 'name' track by desk._id" data-test-id="desk--{{desk.name}}">
+                <div
+                    class="desk"
+                    ng-repeat="desk in desks | orderBy: 'name' track by desk._id"
+                    data-test-id="desk--{{desk.name}}"
+                >
                     <div class="desk-title">
                         <span
-                            sd-switch ng-model="editGroups[desk._id].selected"
+                            sd-switch
+                            ng-model="editGroups[desk._id].selected"
                             ng-click="setDeskInfo(desk._id)"
                             data-test-id="active-toggle"
                         ></span>
@@ -29,7 +52,8 @@
                     <ul class="stages" ng-if="editGroups[desk._id].selected">
                         <li ng-repeat="stage in deskStages[desk._id]">
                             <span
-                                sd-check ng-model="editGroups[stage._id].selected"
+                                sd-check
+                                ng-model="editGroups[stage._id].selected"
                                 ng-click="setStageInfo(stage._id)"
                                 label-position="inside"
                                 data-test-id="monitoring-group--{{stage.name}}"
@@ -39,7 +63,8 @@
                         </li>
                         <li ng-repeat="output in deskOutputs track by output.id">
                             <span
-                                sd-check ng-model="editGroups[desk._id + output.id].selected"
+                                sd-check
+                                ng-model="editGroups[desk._id + output.id].selected"
                                 ng-click="setDeskOutputInfo(desk._id + output.id, output.type)"
                                 label-position="inside"
                                 data-test-id="monitoring-group--{{output.label}}"
@@ -59,11 +84,20 @@
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Saved Searches' | translate }}" data-code="searches"
-         data-hide="shouldHideStep('searches')">
+    <div
+        sd-wizard-step
+        data-title="{{ :: 'Saved Searches' | translate }}"
+        data-code="searches"
+        data-hide="shouldHideStep('searches')"
+    >
         <div class="content">
             <div class="legend" translate>Select saved searches for view</div>
-            <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true">
+            <div
+                sd-toggle-box
+                data-title="{{ :: 'Global saved searches' | translate}}"
+                data-style="circle"
+                data-open="true"
+            >
                 <div
                     class="desk"
                     ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'"
@@ -80,20 +114,34 @@
                         </div>
                         <div class="desk-title__text">
                             {{:: search.name}} <i>by {{:: userLookup[search.user].display_name}}</i>
-                            <div class="search-description">{{:: search.description}} </div>
+                            <div class="search-description">{{:: search.description}}</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div sd-toggle-box data-title="{{ :: 'Private saved searches' | translate}}" data-style="circle" data-open="true" ng-if="showPrivateSavedSearches">
-                <div class="desk" ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'" ng-if="showPrivateSavedSearches">
+            <div
+                sd-toggle-box
+                data-title="{{ :: 'Private saved searches' | translate}}"
+                data-style="circle"
+                data-open="true"
+                ng-if="showPrivateSavedSearches"
+            >
+                <div
+                    class="desk"
+                    ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'"
+                    ng-if="showPrivateSavedSearches"
+                >
                     <div class="desk-title desk-title--saved-search">
                         <div class="switch">
-                            <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
+                            <span
+                                sd-switch
+                                ng-model="editGroups[search._id].selected"
+                                ng-click="setSearchInfo(search._id)"
+                            ></span>
                         </div>
                         <div class="desk-title__text">
                             {{:: search.name}}
-                            <div class="search-description">{{:: search.description}} </div>
+                            <div class="search-description">{{:: search.description}}</div>
                         </div>
                     </div>
                 </div>
@@ -101,58 +149,95 @@
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Reorder Sections' | translate }}" data-code="reorder"
-         data-hide="shouldHideStep('reorder')">
+    <div
+        sd-wizard-step
+        data-title="{{ :: 'Reorder Sections' | translate }}"
+        data-code="reorder"
+        data-hide="shouldHideStep('reorder')"
+    >
         <div class="content">
             <p class="legend" translate>Reorder stages and saved searches for monitoring view</p>
-            <p translate>You are changing you personal preferences. If you would like to set the default order for the desk, you can do so from the settings page.</p>
+            <p translate>
+                You are changing you personal preferences. If you would like to set the default order for the desk, you
+                can do so from the settings page.
+            </p>
             <ul class="groups draggable-list" sd-sort-groups>
-                <li class="sort-item draggable-list__item draggable-list__item--small" ng-class="{'active': item.order < columnsLimit}"
-                 ng-repeat="item in getValues() track by item.order">
+                <li
+                    class="sort-item draggable-list__item draggable-list__item--small"
+                    ng-class="{'active': item.order < columnsLimit}"
+                    ng-repeat="item in getValues() track by item.order"
+                >
                     <div class="group-title" ng-if="item.type === 'stage'">
-                        {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{labelForStage(stageLookup[item._id])}}</span>
+                        {{deskLookup[stageLookup[item._id].desk].name}} :
+                        <span>{{labelForStage(stageLookup[item._id])}}</span>
                     </div>
                     <div class="group-title" ng-repeat="output in deskOutputs" ng-if="item.type === output.type">
                         {{item.name}} : <span translate>{{ output.listLabel }}</span>
                     </div>
-                    <div class="group-title" ng-if="item.type === 'search'">
-                        {{searchLookup[item._id].name}}
-                    </div>
+                    <div class="group-title" ng-if="item.type === 'search'">{{searchLookup[item._id].name}}</div>
                     <div class="group-title" ng-if="item.type === 'personal'" translate>Personal</div>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div sd-wizard-step data-title="{{ :: 'Items Count' | translate }}" data-code="maxitems"
-         data-hide="shouldHideStep('maxitems')">
+    <div
+        sd-wizard-step
+        data-title="{{ :: 'Items Count' | translate }}"
+        data-code="maxitems"
+        data-hide="shouldHideStep('maxitems')"
+    >
         <div class="content">
             <div class="legend" translate>Set maximum items per stages and saved searches for view</div>
             <div class="groups">
-                <div ng-repeat="max in getValues()" class="desk desk--item-count" >
+                <div ng-repeat="max in getValues()" class="desk desk--item-count">
                     <div class="desk-title" ng-if="max.type === 'stage'">
-                        {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{labelForStage(stageLookup[max._id])}}</span>
+                        {{deskLookup[stageLookup[max._id].desk].name}} :
+                        <span>{{labelForStage(stageLookup[max._id])}}</span>
                     </div>
                     <div class="desk-title" ng-repeat="output in deskOutputs" ng-if="max.type === output.type">
                         {{max.name}} : <span translate>{{ output.listLabel }}</span>
                     </div>
-                    <div class="desk-title" ng-if="max.type === 'search'">
-                        {{searchLookup[max._id].name}}
-                    </div>
+                    <div class="desk-title" ng-if="max.type === 'search'">{{searchLookup[max._id].name}}</div>
                     <div class="desk-title" ng-if="max.type === 'personal'" translate>Personal</div>
-                    <div class="box-items-count sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed">
-                        <input class="sd-line-input__input" type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" required>
+                    <div
+                        class="box-items-count sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed"
+                    >
+                        <input
+                            class="sd-line-input__input"
+                            type="number"
+                            id="maxItems"
+                            ng-model="max.max_items"
+                            min="1"
+                            max="25"
+                            required
+                        />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="modal__footer">
-    <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
+    <button
+        id="previousBtn"
+        class="btn btn--hollow pull-left"
+        ng-if="step.current !== 'desks' && !displayOnlyCurrentStep"
+        ng-click="previous()"
+        translate
+    >
+        Previous
+    </button>
     <button class="btn" ng-click="cancel()" translate>Cancel</button>
     <button class="btn btn--primary" ng-click="save()" translate data-test-id="done">Done</button>
-    <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
+    <button
+        id="nextBtn"
+        class="btn btn--hollow"
+        ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep"
+        ng-click="next()"
+        translate
+    >
+        Next
+    </button>
 </div>

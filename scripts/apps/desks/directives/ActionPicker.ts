@@ -16,7 +16,7 @@ export function ActionPicker(desks, macros) {
             required: '=',
         },
         template: require('../views/actionpicker.html'),
-        link: function(scope, elem, attrs) {
+        link: function (scope, elem, attrs) {
             scope.desks = null;
             scope.deskStages = null;
             scope.deskMacros = null;
@@ -33,14 +33,13 @@ export function ActionPicker(desks, macros) {
 
             scope.$watchGroup(['desk', 'stage'], () => {
                 if (!scope.desks || !scope.deskStages) {
-                    desks.initialize()
-                        .then(() => {
-                            scope.desks = desks.desks._items;
-                            scope.deskStages = desks.deskStages;
-                            if (scope.desk) {
-                                updateMacros();
-                            }
-                        });
+                    desks.initialize().then(() => {
+                        scope.desks = desks.desks._items;
+                        scope.deskStages = desks.deskStages;
+                        if (scope.desk) {
+                            updateMacros();
+                        }
+                    });
                 } else if (scope.desk) {
                     updateMacros();
                 }

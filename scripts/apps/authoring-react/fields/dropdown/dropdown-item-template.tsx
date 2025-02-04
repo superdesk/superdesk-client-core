@@ -34,8 +34,6 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             whiteSpace: 'nowrap',
         };
 
-        return (
-            <span style={itemStyle}>{option.label}</span>
-        );
+        return <span style={itemStyle}>{option.label}</span>;
     }
 }

@@ -10,17 +10,15 @@ interface IProps extends IIgnoreCancelSaveProps {
 
 export function showIgnoreCancelSaveDialog(modalProps: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse> {
     return new Promise((resolve) => {
-        showModal(
-            (props) => (
-                <IgnoreCancelSaveDialog
-                    closeModal={(response) => {
-                        props.closeModal();
-                        resolve(response);
-                    }}
-                    {...modalProps}
-                />
-            ),
-        );
+        showModal((props) => (
+            <IgnoreCancelSaveDialog
+                closeModal={(response) => {
+                    props.closeModal();
+                    resolve(response);
+                }}
+                {...modalProps}
+            />
+        ));
     });
 }
 
@@ -50,31 +48,17 @@ class IgnoreCancelSaveDialog extends React.PureComponent<IProps> {
                 onHide={this.respond.cancel}
                 headerTemplate={this.props.title}
                 footerTemplate={
-                    (
-                        <ButtonGroup align="end">
-                            {this.props.hideIgnore ? null : (
-                                <Button
-                                    text={gettext('Ignore')}
-                                    style="hollow"
-                                    onClick={this.respond.ignore}
-                                />
-                            )}
-                            {this.props.hideCancel ? null : (
-                                <Button
-                                    text={gettext('Cancel')}
-                                    style="hollow"
-                                    onClick={this.respond.cancel}
-                                />
-                            )}
-                            {this.props.hideSave ? null : (
-                                <Button
-                                    text={gettext('Save')}
-                                    type="primary"
-                                    onClick={this.respond.save}
-                                />
-                            )}
-                        </ButtonGroup>
-                    )
+                    <ButtonGroup align="end">
+                        {this.props.hideIgnore ? null : (
+                            <Button text={gettext('Ignore')} style="hollow" onClick={this.respond.ignore} />
+                        )}
+                        {this.props.hideCancel ? null : (
+                            <Button text={gettext('Cancel')} style="hollow" onClick={this.respond.cancel} />
+                        )}
+                        {this.props.hideSave ? null : (
+                            <Button text={gettext('Save')} type="primary" onClick={this.respond.save} />
+                        )}
+                    </ButtonGroup>
                 }
             >
                 {this.props.body}

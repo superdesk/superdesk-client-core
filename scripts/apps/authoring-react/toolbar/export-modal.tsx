@@ -75,12 +75,7 @@ export class ExportModal extends React.PureComponent<IProps, IState> {
         }
 
         return (
-            <Modal
-                size="medium"
-                onHide={this.props.closeModal}
-                visible
-                headerTemplate={gettext('Export')}
-            >
+            <Modal size="medium" onHide={this.props.closeModal} visible headerTemplate={gettext('Export')}>
                 <Spacer v gap="32">
                     <Select
                         value={state.selectedFormatter}
@@ -88,17 +83,9 @@ export class ExportModal extends React.PureComponent<IProps, IState> {
                         label={gettext('Formatters')}
                     >
                         <Option />
-                        {
-                            state.availableFormatters.map(({name}) => {
-                                return (
-                                    <Option
-                                        key={name}
-                                    >
-                                        {name}
-                                    </Option>
-                                );
-                            })
-                        }
+                        {state.availableFormatters.map(({name}) => {
+                            return <Option key={name}>{name}</Option>;
+                        })}
                     </Select>
                     <Switch
                         label={{content: gettext('Validate'), side: 'left'}}
@@ -112,11 +99,7 @@ export class ExportModal extends React.PureComponent<IProps, IState> {
                             text={gettext('Export')}
                             disabled={(state.selectedFormatter?.length ?? 0) < 1}
                         />
-                        <Button
-                            onClick={() => this.props.closeModal()}
-                            type="default"
-                            text={gettext('Cancel')}
-                        />
+                        <Button onClick={() => this.props.closeModal()} type="default" text={gettext('Cancel')} />
                     </Spacer>
                 </Spacer>
             </Modal>

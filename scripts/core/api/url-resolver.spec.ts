@@ -14,18 +14,19 @@ describe('url resolver', () => {
         Object.assign(appConfig, testConfig);
     });
 
-    it('can resolve resource urls', (done) => inject((urls, $httpBackend, $rootScope) => {
-        $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
+    it('can resolve resource urls', (done) =>
+        inject((urls, $httpBackend, $rootScope) => {
+            $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);
 
-        urls.resource('users').then((url) => {
-            expect(url).toBe(SERVER_URL + USERS_URL);
+            urls.resource('users').then((url) => {
+                expect(url).toBe(SERVER_URL + USERS_URL);
 
-            done();
-        });
+                done();
+            });
 
-        $httpBackend.flush();
-        $rootScope.$digest();
-    }));
+            $httpBackend.flush();
+            $rootScope.$digest();
+        }));
 
     it('can resolve item urls', inject((urls) => {
         expect(urls.item('/users/1')).toBe(SERVER_URL + '/users/1');

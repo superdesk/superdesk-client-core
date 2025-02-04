@@ -14,12 +14,10 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
                 {header && <React.Fragment>{header}</React.Fragment>}
 
                 <Layout.PanelContent>
-                    <Layout.PanelContentBlock>
-                        {body}
-                    </Layout.PanelContentBlock>
+                    <Layout.PanelContentBlock>{body}</Layout.PanelContentBlock>
                 </Layout.PanelContent>
 
-                {footer && (<Layout.PanelFooter>{footer}</Layout.PanelFooter>)}
+                {footer && <Layout.PanelFooter>{footer}</Layout.PanelFooter>}
             </Layout.Panel>
         );
     }

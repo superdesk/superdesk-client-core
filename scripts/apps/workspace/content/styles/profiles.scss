@@ -7,7 +7,9 @@ sd-content-schema-editor {
         box-sizing: border-box;
         cursor: pointer;
 
-        h4 { padding: 5px; }
+        h4 {
+            padding: 5px;
+        }
 
         ul.pills-list {
             padding-block-start: 10px;
@@ -40,9 +42,9 @@ sd-content-schema-editor {
 
                 .dropdown--add-more {
                     > button {
-                        opacity: .1;
+                        opacity: 0.1;
                         z-index: 99;
-                        @include transition(all .3s);
+                        @include transition(all 0.3s);
                     }
                     .dropdown__menu {
                         margin-block-start: 10px;
@@ -56,7 +58,7 @@ sd-content-schema-editor {
                 &:hover {
                     background: var(--sd-item__main-Bg);
                     .header button {
-                        opacity: 1
+                        opacity: 1;
                     }
                     .dropdown--add-more > button {
                         opacity: 1;
@@ -74,7 +76,9 @@ sd-content-schema-editor {
                 }
                 &.ui-sortable-helper {
                     border-color: var(--sd-colour-interactive--alpha-50);
-                    box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.24), 0 0 1px hsla(0, 0%, 0%, 0.1);
+                    box-shadow:
+                        0 2px 8px hsla(0, 0%, 0%, 0.24),
+                        0 0 1px hsla(0, 0%, 0%, 0.1);
                     cursor: grabbing !important;
                     .dropdown--add-more {
                         display: none;
@@ -103,10 +107,14 @@ sd-content-schema-editor {
                 line-height: 23px;
             }
 
-            input, select, .input-medium {
+            input,
+            select,
+            .input-medium {
                 width: 90px;
             }
-            .dropdown { margin-block-start: 0; }
+            .dropdown {
+                margin-block-start: 0;
+            }
             .sd-check__wrapper {
                 margin-inline-start: 0;
                 .sd-checkbox {

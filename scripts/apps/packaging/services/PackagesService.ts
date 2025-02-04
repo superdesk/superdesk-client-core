@@ -2,10 +2,28 @@ import _ from 'lodash';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {gettext} from 'core/utils';
 
-PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
-    'authoringWorkspace', 'desks', '$rootScope'];
-export function PackagesService(api, $q, archiveService, lock, autosave, authoring,
-    authoringWorkspace: AuthoringWorkspaceService, desks, $rootScope) {
+PackagesService.$inject = [
+    'api',
+    '$q',
+    'archiveService',
+    'lock',
+    'autosave',
+    'authoring',
+    'authoringWorkspace',
+    'desks',
+    '$rootScope',
+];
+export function PackagesService(
+    api,
+    $q,
+    archiveService,
+    lock,
+    autosave,
+    authoring,
+    authoringWorkspace: AuthoringWorkspaceService,
+    desks,
+    $rootScope,
+) {
     var self = this;
 
     this.groupList = ['main', 'story', 'sidebars', 'fact box'];
@@ -19,7 +37,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return authoring.open(_id, readOnly);
     };
 
-    this.createPackageFromItems = function(items, defaults) {
+    this.createPackageFromItems = function (items, defaults) {
         const idRef = 'main';
         const label = gettext('main');
         const item = items[0];
@@ -31,12 +49,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             type: 'composite',
             version: 0,
         };
-        const groups = [{
-            role: 'grpRole:NEP',
-            refs: [{idRef, label}],
-            id: 'root',
-        },
-        getGroupFor(null, idRef),
+        const groups = [
+            {
+                role: 'grpRole:NEP',
+                refs: [{idRef, label}],
+                id: 'root',
+            },
+            getGroupFor(null, idRef),
         ];
 
         newPackage = setDefaults(newPackage, defaults);
@@ -48,7 +67,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.createEmptyPackage = function(
+    this.createEmptyPackage = function (
         defaults,
         initializeAsUpdated?: boolean,
         idRef = 'main',
@@ -79,7 +98,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.addItemsToPackage = function(current, groupId, items) {
+    this.addItemsToPackage = function (current, groupId, items) {
         var origGroups = _.cloneDeep(current.groups);
 
         var targetGroup = _.find(origGroups, (group) => group.id.toLowerCase() === groupId);
@@ -101,27 +120,31 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         _.extend(current, {groups: origGroups});
     };
 
-    this.isAdded = function(pkg, item) {
-        var added = pkg.groups ?
-            pkg.groups.some((group) => group.refs.some((ref) => ref.guid === item._id || ref.residRef === item._id))
+    this.isAdded = function (pkg, item) {
+        var added = pkg.groups
+            ? pkg.groups.some((group) => group.refs.some((ref) => ref.guid === item._id || ref.residRef === item._id))
             : false;
         var addedToPkg = this.isAddedToPackage(pkg, item);
 
         return added || addedToPkg;
     };
 
-    this.fetchItem = function(packageItem) {
+    this.fetchItem = function (packageItem) {
         var repo = packageItem.location || 'ingest';
 
-        return api(repo).getById(packageItem.residRef)
-            .then((item) => item, (response) => {
-                if (response.status === 404) {
-                    console.error('Item not found.');
-                }
-            });
+        return api(repo)
+            .getById(packageItem.residRef)
+            .then(
+                (item) => item,
+                (response) => {
+                    if (response.status === 404) {
+                        console.error('Item not found.');
+                    }
+                },
+            );
     };
 
-    this.getReferenceFor = function(item) {
+    this.getReferenceFor = function (item) {
         return {
             type: item.type || '',
             headline: item.headline || '',
@@ -144,7 +167,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         });
     }
 
-    this.setItemLabel = function(item, label) {
+    this.setItemLabel = function (item, label) {
         var pkg = authoringWorkspace.getItem();
 
         if (pkg._autosaved) {
@@ -156,7 +179,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         }
     };
 
-    this.isSetItemLabel = function(item, label) {
+    this.isSetItemLabel = function (item, label) {
         var qcode = label ? label.qcode : null;
         var pkg = authoringWorkspace.getItem();
         var isSet = false;
@@ -171,7 +194,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return isSet;
     };
 
-    this.addPackageGroupItem = function(group, item, broadcast) {
+    this.addPackageGroupItem = function (group, item, broadcast) {
         var pkg = authoringWorkspace.getItem();
         var pkgId = pkg._id;
 
@@ -186,13 +209,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         }
     };
 
-    this.removePackageGroupItem = function(group, item) {
+    this.removePackageGroupItem = function (group, item) {
         var pkg = authoringWorkspace.getItem();
 
         _.remove(this.packageGroupItems[pkg._id], item._id);
     };
 
-    this.isAddedToPackage = function(pkg, item) {
+    this.isAddedToPackage = function (pkg, item) {
         return pkg ? _.indexOf(this.packageGroupItems[pkg._id], item._id) !== -1 : false;
     };
 

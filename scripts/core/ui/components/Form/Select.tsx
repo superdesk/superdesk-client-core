@@ -6,9 +6,17 @@ import PropTypes from 'prop-types';
  * @name Select
  * @description Component to select a list from dropdown
  */
-export const Select: React.StatelessComponent<any> = (
-    {field, value, onChange, options, readOnly, clearable, autoFocus, onFocus, refNode},
-) => (
+export const Select: React.StatelessComponent<any> = ({
+    field,
+    value,
+    onChange,
+    options,
+    readOnly,
+    clearable,
+    autoFocus,
+    onFocus,
+    refNode,
+}) => (
     <select
         className="sd-line-input__select"
         value={value}
@@ -19,14 +27,9 @@ export const Select: React.StatelessComponent<any> = (
         ref={refNode}
         onFocus={onFocus}
     >
-        {clearable && (
-            <option value="" />
-        )}
+        {clearable && <option value="" />}
         {options.map((opt) => (
-            <option
-                key={opt.key}
-                value={opt.key}
-            >
+            <option key={opt.key} value={opt.key}>
                 {opt.label}
             </option>
         ))}
@@ -35,18 +38,14 @@ export const Select: React.StatelessComponent<any> = (
 
 Select.propTypes = {
     field: PropTypes.string,
-    value: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     onChange: PropTypes.func.isRequired,
-    options: PropTypes.arrayOf(PropTypes.shape({
-        key: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.number,
-        ]),
-        label: PropTypes.string,
-    })),
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            label: PropTypes.string,
+        }),
+    ),
     readOnly: PropTypes.bool,
     clearable: PropTypes.bool,
     autoFocus: PropTypes.bool,

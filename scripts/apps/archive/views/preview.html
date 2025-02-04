@@ -1,94 +1,166 @@
 <div>
     <div class="content-container">
+        <header class="preview-header" ng-class="{active: previewState.toggleHeader}">
+            <div
+                class="preview-header__timestamp"
+                title="{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}"
+            >
+                <label translate>Created</label><time sd-datetime data-date="selected.preview.firstcreated"></time>
+                <label ng-if="selected.preview.original_creator" translate>by</label
+                ><b
+                    >{{userLookup[selected.preview.original_creator].display_name ||
+                    selected.preview.original_creator}}</b
+                >
+                <div ng-if="selected.preview.versioncreated" class="preview-header__border-block">
+                    <label translate>Modified</label>
+                    <time sd-datetime data-date="selected.preview.versioncreated"></time>
+                </div>
+            </div>
 
-      <header class="preview-header" ng-class="{active: previewState.toggleHeader}">
-        <div class="preview-header__timestamp" title="{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}">
-            <label translate>Created</label><time sd-datetime data-date="selected.preview.firstcreated"></time>
-            <label ng-if="selected.preview.original_creator" translate>by</label><b>{{userLookup[selected.preview.original_creator].display_name || selected.preview.original_creator}}</b>
-            <div ng-if="selected.preview.versioncreated" class="preview-header__border-block">
-                <label translate>Modified</label>
-                <time sd-datetime data-date="selected.preview.versioncreated"></time>
+            <div class="preview-header__flex-container">
+                <div class="preview-header__icon-block">
+                    <div class="preview-header__flex-row">
+                        <i
+                            class="filetype-icon-{{selected.preview.type }}"
+                            title="{{'Article Type' | translate }}: {{selected.preview.type}}"
+                        ></i>
+                    </div>
+                    <div
+                        class="preview-header__flex-row"
+                        sd-item-priority
+                        data-priority="selected.preview.priority"
+                    ></div>
+                    <div class="preview-header__flex-row" sd-item-urgency data-urgency="selected.preview.urgency"></div>
+                </div>
+                <div class="preview-header__main-block">
+                    <div class="preview-header__flex-row">
+                        <span
+                            ng-if="selected.preview.slugline"
+                            class="keyword"
+                            title="{{selected.preview.slugline}}"
+                            sd-html-preview="selected.preview.slugline"
+                        ></span>
+                    </div>
+                    <div
+                        class="preview-header__flex-row preview-header__flex-row--single-line"
+                        ng-if="selected.preview.anpa_take_key"
+                    >
+                        <span class="inline-label">takekey:</span
+                        ><span class="takekey">{{selected.preview.anpa_take_key | translate}}</span>
+                    </div>
+                    <div
+                        class="preview-header__flex-row preview-header__flex-row--single-line"
+                        ng-if="selected.preview.ednote"
+                    >
+                        <span class="inline-label">ednote:</span
+                        ><span class="ednote">{{selected.preview.ednote | translate}}</span>
+                    </div>
+                    <div
+                        class="preview-header__flex-row preview-header__flex-row--single-line"
+                        ng-if="selected.preview.company_codes.length"
+                    >
+                        <span class="inline-label">company codes:</span
+                        ><span class="company-codes">{{getCompanyCodes()}}</span>
+                    </div>
+                    <div class="preview-header__flex-row">
+                        <span
+                            sd-item-state
+                            data-state="selected.preview.state"
+                            data-embargo="item.embargo"
+                            data-is-correction-workflow-enabled="isCorrectionWorkflowEnabled"
+                        ></span>
+                        <span
+                            class="state-label not-for-publication"
+                            ng-if="item.flags.marked_for_not_publication"
+                            translate
+                            >Not For Publication</span
+                        >
+                        <span class="state-label legal" ng-if="selected.preview.flags.marked_for_legal" translate
+                            >Legal</span
+                        >
+                        <span class="state-label sms" ng-if="selected.preview.flags.marked_for_sms" translate>Sms</span>
+                        <span class="state-label updated" ng-if="selected.preview.rewritten_by" translate>Updated</span>
+                    </div>
+                    <div class="preview-header__flex-row preview-header__flex-row--single-line">
+                        <span
+                            ng-if="item._type === 'archived'"
+                            class="stage"
+                            tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage }}"
+                            tooltip-placement="bottom"
+                            ng-show="stage"
+                            ><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span
+                        >
+                        <span
+                            ng-if="item._type !== 'archived'"
+                            class="stage"
+                            tooltip="{{deskName}} / {{ stage }}"
+                            tooltip-placement="bottom"
+                            ng-show="stage"
+                            ><b>{{deskName}}</b> / {{ stage }}</span
+                        >
+                    </div>
+                    <div class="tag-main" ng-if="selected.preview.authors">
+                        <span class="inline-label">{{ 'Author' | translate}}:</span>
+                        <span
+                            class="tag-label"
+                            ng-repeat="author in selected.preview.authors"
+                            title="{{author.role}}:{{author.sub_label}}"
+                            >{{author.role}}:{{author.sub_label}}</span
+                        >
+                    </div>
+                    <div class="tag-main" ng-if="selected.preview.keywords">
+                        <span class="inline-label"><br />{{ 'Keywords' | translate}}:</span>
+                        <span class="tag-label" ng-repeat="keyword in selected.preview.keywords" title="{{keyword}}"
+                            >{{keyword}}</span
+                        >
+                    </div>
+                    <div
+                        class="preview-header__flex-row preview-header__flex-row--single-line"
+                        ng-if="subjectPreviewFields.length"
+                    >
+                        <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>
+                    </div>
+                </div>
+                <div class="preview-header__side-block">
+                    <div class="preview-header__flex-row" ng-if="item.type === 'text'">
+                        <span class="word-count"
+                            ><b>{{ selected.preview.word_count || 0 }}</b>
+                            <span translate translate-n="selected.preview.word_count" translate-plural="WORDS"
+                                >WORD</span
+                            ></span
+                        >
+                    </div>
+                    <div class="preview-header__flex-row">
+                        <span class="data">{{ item.source }}</span>
+                    </div>
+                    <div class="preview-header__flex-row">
+                        <div sd-highlights-info data-item="selected.preview"></div>
+                    </div>
+                    <div class="preview-header__flex-row" sd-assignment-icon data-item="item" />
+                </div>
             </div>
-        </div>
 
-        <div class="preview-header__flex-container">
-          <div class="preview-header__icon-block">
-            <div class="preview-header__flex-row">
-              <i class="filetype-icon-{{selected.preview.type }}" title="{{'Article Type' | translate }}: {{selected.preview.type}}"></i>
-            </div>
-            <div class="preview-header__flex-row"
-              sd-item-priority data-priority="selected.preview.priority"></div>
-            <div class="preview-header__flex-row"
-              sd-item-urgency data-urgency="selected.preview.urgency"></div>
-          </div>
-          <div class="preview-header__main-block">
-            <div class="preview-header__flex-row">
-              <span ng-if="selected.preview.slugline" class="keyword" title="{{selected.preview.slugline}}" sd-html-preview="selected.preview.slugline"></span>
-            </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.anpa_take_key">
-              <span class="inline-label">takekey:</span><span class="takekey">{{selected.preview.anpa_take_key | translate}}</span>
-            </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.ednote">
-              <span class="inline-label">ednote:</span><span class="ednote">{{selected.preview.ednote | translate}}</span>
-            </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.company_codes.length">
-              <span class="inline-label">company codes:</span><span class="company-codes">{{getCompanyCodes()}}</span>
-            </div>
-            <div class="preview-header__flex-row">
-              <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo
-                data-is-correction-workflow-enabled="isCorrectionWorkflowEnabled"></span>
-              <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
-              <span class="state-label legal" ng-if="selected.preview.flags.marked_for_legal" translate>Legal</span>
-              <span class="state-label sms" ng-if="selected.preview.flags.marked_for_sms" translate>Sms</span>
-              <span class="state-label updated" ng-if="selected.preview.rewritten_by" translate>Updated</span>
-            </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line">
-              <span ng-if="item._type === 'archived'" class="stage" tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span>
-              <span ng-if="item._type !== 'archived'" class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{deskName}}</b> / {{ stage }}</span>
-            </div>
-            <div class="tag-main" ng-if="selected.preview.authors">
-              <span class="inline-label">{{ 'Author' | translate}}:</span>
-              <span class="tag-label" ng-repeat="author in selected.preview.authors" title="{{author.role}}:{{author.sub_label}}">{{author.role}}:{{author.sub_label}}</span>
-            </div>
-            <div class="tag-main" ng-if="selected.preview.keywords">
-              <span class="inline-label"><br/>{{ 'Keywords' | translate}}:</span>
-              <span class="tag-label" ng-repeat="keyword in selected.preview.keywords" title="{{keyword}}">{{keyword}}</span>
-            </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
-              <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>
-            </div>
-          </div>
-          <div class="preview-header__side-block">
-            <div class="preview-header__flex-row" ng-if="item.type === 'text'">
-                <span class="word-count"><b>{{ selected.preview.word_count || 0 }}</b> <span translate translate-n="selected.preview.word_count" translate-plural="WORDS">WORD</span></span>
-            </div>
-            <div class="preview-header__flex-row">
-              <span class="data">{{ item.source }}</span>
-            </div>
-            <div class="preview-header__flex-row">
-              <div sd-highlights-info data-item="selected.preview"></div>
-            </div>
-            <div class="preview-header__flex-row" sd-assignment-icon data-item="item" />
-          </div>
-        </div>
-
-        <button
+            <button
                 class="preview-header__toggle"
                 ng-class="{active: previewState.toggleHeader}"
                 ng-click="togglePreviewHeader()"
                 aria-label="{{:: 'Toggle header info' | translate}}"
-                tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
-      </header>
+                tabindex="-1"
+            >
+                <i class="icon-chevron-down-thin"></i>
+            </button>
+        </header>
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
-          <i class="filetype-icon-large-composite"></i>
-          <p class="title preview-headline"
-            order="{{editor['headline'].order}}"
-            ng-if="selected.preview.headline"
-            ng-class="{condensed: !lock}"
-            sd-html-preview="selected.preview.headline"
-            data-test-id="field--headline"
-          ></p>
+            <i class="filetype-icon-large-composite"></i>
+            <p
+                class="title preview-headline"
+                order="{{editor['headline'].order}}"
+                ng-if="selected.preview.headline"
+                ng-class="{condensed: !lock}"
+                sd-html-preview="selected.preview.headline"
+                data-test-id="field--headline"
+            ></p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
@@ -97,19 +169,24 @@
 
         <div id="locked" class="clearfix" sd-item-lock data-item="selected.preview"></div>
 
-        <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
-            class="open-item"><i class="icon-external"></i></a></div>
+        <div class="rewrite" ng-if="selected.preview.rewrite_id">
+            {{ :: 'This story has been rewritten by: ' | translate }}<a
+                ng-click="previewRewriteStory()"
+                class="open-item"
+                ><i class="icon-external"></i
+            ></a>
+        </div>
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 
         <div class="core-content">
-
-            <p class="title preview-headline"
-              order="{{editor['headline'].order}}"
-              ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
-              ng-class="{condensed: !lock}"
-              sd-html-preview="selected.preview.headline"
-              data-test-id="field--headline"
+            <p
+                class="title preview-headline"
+                order="{{editor['headline'].order}}"
+                ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+                ng-class="{condensed: !lock}"
+                sd-html-preview="selected.preview.headline"
+                data-test-id="field--headline"
             ></p>
 
             <p ng-if="selected.preview.is_spiked" class="alert alert-warning expires">
@@ -117,93 +194,170 @@
             </p>
 
             <!-- item rendition -->
-            <div ng-if="selected.preview.type === 'picture' || selected.preview.type === 'graphic'" class="picture-preview">
+            <div
+                ng-if="selected.preview.type === 'picture' || selected.preview.type === 'graphic'"
+                class="picture-preview"
+            >
                 <div>
                     <span translate>Original</span>
-                    <div sd-item-rendition
+                    <div
+                        sd-item-rendition
                         data-item="selected.preview"
                         data-rendition="viewImage"
-                        ng-click="preview(item)"></div>
-                    <p class="nav-space description-text" ng-if="selected.preview.headline !== selected.preview.description_text &&
-                      selected.preview.description_text">{{selected.preview.description_text}}</p>
+                        ng-click="preview(item)"
+                    ></div>
+                    <p
+                        class="nav-space description-text"
+                        ng-if="selected.preview.headline !== selected.preview.description_text &&
+                      selected.preview.description_text"
+                    >
+                        {{selected.preview.description_text}}
+                    </p>
                 </div>
             </div>
 
             <div ng-if="selected.preview.associations.featuremedia" order="{{editor['feature_media'].order}}">
-                <div sd-item-rendition
+                <div
+                    sd-item-rendition
                     data-item="selected.preview.associations.featuremedia"
-                    data-rendition="viewImage"></div>
-                <p class="nav-space description-text">{{selected.preview.associations.featuremedia.description_text}}</p>
+                    data-rendition="viewImage"
+                ></div>
+                <p class="nav-space description-text">
+                    {{selected.preview.associations.featuremedia.description_text}}
+                </p>
             </div>
 
             <div ng-if="selected.preview.type === 'audio'">
                 <audio controls="controls" sd-sources data-renditions="selected.preview.renditions"></audio>
-                <p class="nav-space description-text" ng-if="selected.preview.description_text" sd-html-preview="selected.preview.description_text" item="selected.preview"></p>
+                <p
+                    class="nav-space description-text"
+                    ng-if="selected.preview.description_text"
+                    sd-html-preview="selected.preview.description_text"
+                    item="selected.preview"
+                ></p>
             </div>
 
             <div ng-if="selected.preview.type === 'video'">
                 <sd-video item="selected.preview"></sd-video>
-                <p class="nav-space description-text" ng-if= "selected.preview.description_text" sd-html-preview="selected.preview.description_text" item="selected.preview"></p>
+                <p
+                    class="nav-space description-text"
+                    ng-if="selected.preview.description_text"
+                    sd-html-preview="selected.preview.description_text"
+                    item="selected.preview"
+                ></p>
             </div>
 
-            <div class="text abstract" order="{{editor['abstract'].order}}" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
-              sd-html-preview="selected.preview.abstract"></div>
+            <div
+                class="text abstract"
+                order="{{editor['abstract'].order}}"
+                ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
+                sd-html-preview="selected.preview.abstract"
+            ></div>
 
-            <div class="text byline" order="{{editor['byline'].order}}" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
+            <div
+                class="text byline"
+                order="{{editor['byline'].order}}"
+                ng-show="selected.preview.byline"
+                sd-html-preview="selected.preview.byline"
+            ></div>
 
-            <div class="text dateline" order="{{editor['dateline'].order}}" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
+            <div
+                class="text dateline"
+                order="{{editor['dateline'].order}}"
+                ng-show="selected.preview.dateline"
+                sd-html-preview="selected.preview.dateline.text"
+            ></div>
 
-            <div class="text body-text" order="{{editor['body_html'].order}}" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html" item="selected.preview"></div>
+            <div
+                class="text body-text"
+                order="{{editor['body_html'].order}}"
+                ng-show="selected.preview.body_html"
+                sd-html-preview="selected.preview.body_html"
+                item="selected.preview"
+            ></div>
 
-            <div class="text body-footer" order="{{editor['body_footer'].order}}" ng-show="selected.preview.body_footer" sd-html-preview="selected.preview.body_footer" item="selected.preview"></div>
+            <div
+                class="text body-footer"
+                order="{{editor['body_footer'].order}}"
+                ng-show="selected.preview.body_footer"
+                sd-html-preview="selected.preview.body_footer"
+                item="selected.preview"
+            ></div>
 
-            <div class="text sign-off" order="{{editor['sign_off'].order}}" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
+            <div
+                class="text sign-off"
+                order="{{editor['sign_off'].order}}"
+                ng-show="selected.preview.sign_off"
+                sd-html-preview="selected.preview.sign_off"
+            ></div>
 
             <!-- custom date, text and url fields -->
-            <div ng-repeat="field in fields track by field._id" order="{{editor[field._id].order}}"
-              ng-if="selected.preview.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date' || field.field_type === 'urls' || field.field_type === 'custom')">
+            <div
+                ng-repeat="field in fields track by field._id"
+                order="{{editor[field._id].order}}"
+                ng-if="selected.preview.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date' || field.field_type === 'urls' || field.field_type === 'custom')"
+            >
+                <div
+                    class="text body-text"
+                    sd-short-date
+                    ng-if="field.field_type === 'date'"
+                    data-date="selected.preview.extra[field._id]"
+                ></div>
 
-              <div class="text body-text" sd-short-date ng-if="field.field_type === 'date'" data-date="selected.preview.extra[field._id]"></div>
+                <div
+                    class="text body-text"
+                    ng-if="field.field_type === 'text'"
+                    sd-html-preview="selected.preview.extra[field._id]"
+                ></div>
 
-              <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
+                <sd-preview-custom-field
+                    ng-if="field.field_type === 'custom'"
+                    item="selected.preview"
+                    field="field"
+                ></sd-preview-custom-field>
 
-              <sd-preview-custom-field ng-if="field.field_type === 'custom'" item="selected.preview" field="field"></sd-preview-custom-field>
-
-              <ul class="text body-text" ng-if="field.field_type === 'urls'">
-                <li ng-repeat="item in selected.preview.extra[field._id] track by $index" order="{{editor[field._id].order}}">{{item.url}}<br>
-                  <p class="nav-space description-text">{{item.description}}</p>
-                </li>
-              </ul>
+                <ul class="text body-text" ng-if="field.field_type === 'urls'">
+                    <li
+                        ng-repeat="item in selected.preview.extra[field._id] track by $index"
+                        order="{{editor[field._id].order}}"
+                    >
+                        {{item.url}}<br />
+                        <p class="nav-space description-text">{{item.description}}</p>
+                    </li>
+                </ul>
             </div>
 
             <!-- custom media and related item fields -->
-            <div ng-repeat="field in fields track by field._id"
+            <div
+                ng-repeat="field in fields track by field._id"
                 ng-if="(field.field_type === 'media' || field.field_type === 'related_content')
                 && associationExists(item.associations, field._id)"
                 order="{{editor[field._id].order}}"
-                class="body preview-editor">
+                class="body preview-editor"
+            >
                 <div>
                     <label class="preview-label">{{field.display_name}}</label>
                 </div>
                 <div ng-if="field.field_type === 'media'" class="association">
-                    <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
-                        <img ng-src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
+                    <div
+                        ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId"
+                    >
+                        <img ng-src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'" />
                         <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
                         <audio controls="controls" ng-if="media.type === 'audio'">
-                            <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in media.renditions"
-                                    ng-if="checkRenditions.isAudio(rendition)" html5vfix>
+                            <source
+                                vsrc="{{rendition.href}}"
+                                ng-repeat="(key, rendition) in media.renditions"
+                                ng-if="checkRenditions.isAudio(rendition)"
+                                html5vfix
+                            />
                         </audio>
                         <p>{{media.description_text}}</p>
                     </div>
                 </div>
 
                 <div ng-if="field.field_type === 'related_content'">
-                    <div sd-related-items-preview
-                        data-item="item"
-                        data-field="field"
-                        data-preview="true">
-                    </div>
+                    <div sd-related-items-preview data-item="item" data-field="field" data-preview="true"></div>
                 </div>
             </div>
 

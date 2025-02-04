@@ -44,7 +44,8 @@ export const setupTansa = () => {
         script.src = tansa.settings.baseUrl + 'tansaLoader.js?' + new Date().getTime();
         script.async = true;
         script.onload = () => {
-            const setupBrowser = () => { // let tansa finish loading
+            const setupBrowser = () => {
+                // let tansa finish loading
                 if (!window.tansaJQuery) {
                     return;
                 }

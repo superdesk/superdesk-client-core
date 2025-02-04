@@ -15,7 +15,7 @@ export class WidgetLayoutComponent extends React.PureComponent<IAuthoringWidgetL
                 <div className="widget-content sd-padding-all--2">
                     {body}
 
-                    {footer && (<div className="widget-content__footer">{footer}</div>)}
+                    {footer && <div className="widget-content__footer">{footer}</div>}
                 </div>
             </React.Fragment>
         );

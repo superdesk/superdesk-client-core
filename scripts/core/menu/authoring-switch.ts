@@ -19,9 +19,8 @@ export const setupAuthoringReact = (url: string) => {
     ).map((page) => page.url);
 
     const parsedPath = new URL(url);
-    const isNavigatingToAnExtensionPage = extensionUrls.find(
-        (extensionUrl) => extensionUrl.startsWith(trimStartExact(parsedPath.hash, '#')),
-    ) != null;
+    const isNavigatingToAnExtensionPage =
+        extensionUrls.find((extensionUrl) => extensionUrl.startsWith(trimStartExact(parsedPath.hash, '#'))) != null;
     const isNavigatingToPlanning = parsedPath.hash.startsWith('#/planning');
 
     const action: 'register' | 'deregister' = (() => {

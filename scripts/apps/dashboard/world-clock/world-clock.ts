@@ -4,9 +4,8 @@ import d3 from 'd3';
 import {gettext} from 'core/utils';
 import {getTimezoneLabel} from './timezones-all-labels';
 
-angular.module('superdesk.apps.dashboard.world-clock', [
-    'superdesk.apps.dashboard', 'superdesk.core.datetime',
-])
+angular
+    .module('superdesk.apps.dashboard.world-clock', ['superdesk.apps.dashboard', 'superdesk.core.datetime'])
     /**
      * @ngdoc controller
      * @module superdesk.apps.dashboard
@@ -14,8 +13,11 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      * @description
      *   Controller for the world clock widget configuration modal.
      */
-    .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
-        function($scope, notify, tzdata) {
+    .controller('WorldClockConfigController', [
+        '$scope',
+        'notify',
+        'tzdata',
+        function ($scope, notify, tzdata) {
             $scope.availableZones = [];
             $scope.getTimezoneLabel = getTimezoneLabel;
 
@@ -23,21 +25,17 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 $scope.availableZones = tzdata.getTzNames();
             });
 
-            $scope.searchZones = function(searchString) {
+            $scope.searchZones = function (searchString) {
                 if (searchString) {
                     $scope.availableZones = tzdata
                         .getTzNames()
-                        .filter((tz) =>
-                            getTimezoneLabel(tz)
-                                .toLowerCase()
-                                .includes(searchString.toLowerCase()),
-                        );
+                        .filter((tz) => getTimezoneLabel(tz).toLowerCase().includes(searchString.toLowerCase()));
                 } else {
                     $scope.availableZones = tzdata.getTzNames();
                 }
             };
 
-            $scope.notify = function(action, zone) {
+            $scope.notify = function (action, zone) {
                 if (action === 'add') {
                     notify.success(gettext('World clock added: {{zone}}', {zone}), 3000);
                 } else if (action === 'remove') {
@@ -45,14 +43,15 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 }
             };
 
-            $scope.notIn = function(haystack) {
-                return function(needle) {
+            $scope.notIn = function (haystack) {
+                return function (needle) {
                     return haystack.indexOf(needle) === -1;
                 };
             };
 
             $scope.configuration.zones = $scope.configuration.zones || [];
-        }])
+        },
+    ])
 
     /**
      * @ngdoc controller
@@ -63,9 +62,14 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      *   a dashboard widget for displaying the current time in different
      *   time zones around the world.
      */
-    .controller('WorldClockController', ['$scope', '$interval', 'tzdata', 'moment',
-        function($scope, $interval, tzdata, moment) {
-            var interval, INTERVAL_DELAY = 500;
+    .controller('WorldClockController', [
+        '$scope',
+        '$interval',
+        'tzdata',
+        'moment',
+        function ($scope, $interval, tzdata, moment) {
+            var interval,
+                INTERVAL_DELAY = 500;
 
             function updateUTC() {
                 $scope.utc = moment();
@@ -77,16 +81,15 @@ angular.module('superdesk.apps.dashboard.world-clock', [
             this._moment = moment;
 
             tzdata.$promise.then(() => {
-                moment.tz.add(
-                    _.pick(tzdata, ['zones', 'links']),
-                );
+                moment.tz.add(_.pick(tzdata, ['zones', 'links']));
             });
 
             interval = $interval(updateUTC, INTERVAL_DELAY, 0, false);
             $scope.$on('$destroy', function stopTimeout() {
                 $interval.cancel(interval);
             });
-        }])
+        },
+    ])
     /**
      * sdClock analog clock
      */
@@ -112,7 +115,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                 utc: '=',
                 tz: '@',
             },
-            link: function(scope, element, attrs) {
+            link: function (scope, element, attrs) {
                 var width = 105,
                     height = 100,
                     r = Math.min(width, height) * 0.8 * 0.5,
@@ -123,33 +126,26 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     nightClockhands = '#e0e0e0',
                     nightNumbers = '#848484';
 
-                var svg = d3.select(element[0])
-                    .append('svg')
-                    .attr('width', width)
-                    .attr('height', height);
+                var svg = d3.select(element[0]).append('svg').attr('width', width).attr('height', height);
 
-                var clock = svg.append('g')
-                    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+                var clock = svg.append('g').attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
                 // background circle
-                clock.append('circle')
-                    .attr('r', r)
-                    .attr('class', 'clock-outer')
-                    .style('stroke-width', 1.5);
+                clock.append('circle').attr('r', r).attr('class', 'clock-outer').style('stroke-width', 1.5);
 
                 // inner dot
-                clock.append('circle')
-                    .attr('r', 1.5)
-                    .attr('class', 'clock-inner');
+                clock.append('circle').attr('r', 1.5).attr('class', 'clock-inner');
 
                 // numbers
-                clock.selectAll('.number-lines')
+                clock
+                    .selectAll('.number-lines')
                     .data(_.range(0, 59, 5))
                     .enter()
                     .append('path')
                     .attr('d', (d) => {
                         var angle = scales.m(d);
-                        var arc = d3.svg.arc()
+                        var arc = d3.svg
+                            .arc()
                             .innerRadius(r * 0.7)
                             .outerRadius(r * 0.9)
                             .startAngle(angle)
@@ -186,13 +182,15 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     }
 
                     clock.selectAll('.clockhand').remove();
-                    clock.selectAll('.clockhand')
+                    clock
+                        .selectAll('.clockhand')
                         .data(data)
                         .enter()
                         .append('path')
                         .attr('d', (d) => {
                             var angle = scales[d.unit](d.val);
-                            var arc = d3.svg.arc()
+                            var arc = d3.svg
+                                .arc()
                                 .innerRadius(r * 0)
                                 .outerRadius(r * d.r)
                                 .startAngle(angle)
@@ -207,20 +205,23 @@ angular.module('superdesk.apps.dashboard.world-clock', [
             },
         };
     })
-    .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
-        dashboardWidgets.addWidget('world-clock', {
-            label: gettext('World Clock'),
-            multiple: true,
-            icon: 'time',
-            max_sizex: 2,
-            max_sizey: 1,
-            sizex: 1,
-            sizey: 1,
-            classes: 'tabs modal--nested-fix',
-            thumbnail: 'scripts/apps/dashboard/world-clock/thumbnail.svg',
-            template: 'scripts/apps/dashboard/world-clock/widget-worldclock.html',
-            configurationTemplate: 'scripts/apps/dashboard/world-clock/configuration.html',
-            configuration: {zones: ['Europe/London', 'Asia/Tokyo', 'Europe/Moscow']},
-            description: gettext('World clock widget'),
-        });
-    }]);
+    .config([
+        'dashboardWidgetsProvider',
+        function (dashboardWidgets) {
+            dashboardWidgets.addWidget('world-clock', {
+                label: gettext('World Clock'),
+                multiple: true,
+                icon: 'time',
+                max_sizex: 2,
+                max_sizey: 1,
+                sizex: 1,
+                sizey: 1,
+                classes: 'tabs modal--nested-fix',
+                thumbnail: 'scripts/apps/dashboard/world-clock/thumbnail.svg',
+                template: 'scripts/apps/dashboard/world-clock/widget-worldclock.html',
+                configurationTemplate: 'scripts/apps/dashboard/world-clock/configuration.html',
+                configuration: {zones: ['Europe/London', 'Asia/Tokyo', 'Europe/Moscow']},
+                description: gettext('World clock widget'),
+            });
+        },
+    ]);

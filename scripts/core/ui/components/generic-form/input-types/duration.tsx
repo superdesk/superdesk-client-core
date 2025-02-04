@@ -7,9 +7,7 @@ export class DurationComponent extends React.Component<IInputType<number>> {
     render() {
         if (this.props.previewOutput) {
             return (
-                <div
-                    data-test-id={`gform-output--${this.props.formField.field}`}
-                >
+                <div data-test-id={`gform-output--${this.props.formField.field}`}>
                     {getDurationString(this.props.value)}
                 </div>
             );
@@ -17,16 +15,11 @@ export class DurationComponent extends React.Component<IInputType<number>> {
 
         return (
             <div
-                className={
-                    classNames(
-                        'sd-line-input',
-                        {
-                            'sd-line-input--invalid': this.props.issues.length > 0,
-                            'sd-line-input--required': this.props.formField.required === true,
-                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
-                        },
-                    )
-                }
+                className={classNames('sd-line-input', {
+                    'sd-line-input--invalid': this.props.issues.length > 0,
+                    'sd-line-input--required': this.props.formField.required === true,
+                    'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                })}
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
 
@@ -43,11 +36,11 @@ export class DurationComponent extends React.Component<IInputType<number>> {
                     required={this.props.formField.required === true}
                 />
 
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
+                {this.props.issues.map((str, i) => (
+                    <div key={i} className="sd-line-input__message">
+                        {str}
+                    </div>
+                ))}
             </div>
         );
     }

@@ -22,24 +22,24 @@ export function FilterTemplatesFilter(session, desks) {
      * other value is a hash that represents the desk to filter by.
      * @returns {Array<Object>} The filtered array.
      */
-    return function(all, f) {
+    return function (all, f) {
         let template_list = (all || []).filter((item) => {
             switch (f.value) {
-            case TEMPLATEFILTERS.All.value:
-                return item.is_public || (session.identity._id === item.user);
-            case TEMPLATEFILTERS.NoDesk.value:
-                return item.is_public && !(item.template_desks && item.template_desks.length);
-            case TEMPLATEFILTERS.Personal.value:
-                return !item.is_public && (session.identity._id === item.user);
-            case TEMPLATEFILTERS.Private.value:
-                return !item.is_public && (session.identity._id !== item.user);
-            default:
-                return _.find(item.template_desks, (desk) => desk === f.value);
+                case TEMPLATEFILTERS.All.value:
+                    return item.is_public || session.identity._id === item.user;
+                case TEMPLATEFILTERS.NoDesk.value:
+                    return item.is_public && !(item.template_desks && item.template_desks.length);
+                case TEMPLATEFILTERS.Personal.value:
+                    return !item.is_public && session.identity._id === item.user;
+                case TEMPLATEFILTERS.Private.value:
+                    return !item.is_public && session.identity._id !== item.user;
+                default:
+                    return _.find(item.template_desks, (desk) => desk === f.value);
             }
         });
 
         if (f.value === TEMPLATEFILTERS.Private.value) {
-            return _.sortBy(template_list, [((t) => desks.userLookup[t.user].display_name), 'template_name']);
+            return _.sortBy(template_list, [(t) => desks.userLookup[t.user].display_name, 'template_name']);
         }
         return template_list;
     };

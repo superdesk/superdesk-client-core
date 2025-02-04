@@ -18,9 +18,7 @@ export const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'authors',
 ]);
 
-export const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>([
-    'slugline',
-]);
+export const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>(['slugline']);
 
 export const getArticleHeaderFields = (customVocabulariesForArticleHeader): Set<string> => {
     const articleHeaderFields = new Set<string>();
@@ -46,10 +44,7 @@ const getArticleCommonFields = (customTextAndDateVocabularies, customFields): Se
     const fieldsFromExtensions = Object.keys(getFields());
 
     customFields.forEach((customField) => {
-        if (
-            customField.custom_field_type != null
-            && fieldsFromExtensions.includes(customField.custom_field_type)
-        ) {
+        if (customField.custom_field_type != null && fieldsFromExtensions.includes(customField.custom_field_type)) {
             articleCommonFields.add(customField._id);
         }
     });
@@ -65,10 +60,7 @@ export function getEditorConfig(contentTypeId) {
     const content = ng.get('content');
     const metadata = ng.get('metadata');
 
-    return Promise.all([
-        content.getCustomFields(),
-        content.getTypeMetadata(contentTypeId),
-    ]).then((res) => {
+    return Promise.all([content.getCustomFields(), content.getTypeMetadata(contentTypeId)]).then((res) => {
         const [customFields, typeMetadata] = res;
 
         let editor: IContentProfileEditorConfig = angular.extend({}, content.contentProfileEditor);
@@ -79,35 +71,34 @@ export function getEditorConfig(contentTypeId) {
 
         schema = angular.extend({}, typeMetadata.schema);
 
-        return metadata.getAllCustomVocabulariesForArticleHeader(
-            editor,
-            schema,
-        ).then(({customVocabulariesForArticleHeader, customTextAndDateVocabularies}) => {
-            const articleHeaderFields = getArticleHeaderFields(customVocabulariesForArticleHeader);
-            const articleCommonFields = getArticleCommonFields(customTextAndDateVocabularies, customFields);
+        return metadata
+            .getAllCustomVocabulariesForArticleHeader(editor, schema)
+            .then(({customVocabulariesForArticleHeader, customTextAndDateVocabularies}) => {
+                const articleHeaderFields = getArticleHeaderFields(customVocabulariesForArticleHeader);
+                const articleCommonFields = getArticleCommonFields(customTextAndDateVocabularies, customFields);
 
-            for (const key in editor) {
-                const isHeaderField = articleHeaderFields.has(key) || articleCommonFields.has(key);
-                const section = editor[key].section || (isHeaderField ? 'header' : 'content');
+                for (const key in editor) {
+                    const isHeaderField = articleHeaderFields.has(key) || articleCommonFields.has(key);
+                    const section = editor[key].section || (isHeaderField ? 'header' : 'content');
 
-                if (editor[key] != null) {
-                    editor[key].section = section;
-                }
-            }
-
-            return {
-                editor,
-                schema,
-                isAllowedForSection: (section: 'header' | 'content', fieldId) => {
-                    if (section === 'header') {
-                        return articleHeaderFields.has(fieldId) || articleCommonFields.has(fieldId);
-                    } else if (section === 'content') {
-                        return !articleHeaderFields.has(fieldId);
-                    } else {
-                        return assertNever(section);
+                    if (editor[key] != null) {
+                        editor[key].section = section;
                     }
-                },
-            };
-        });
+                }
+
+                return {
+                    editor,
+                    schema,
+                    isAllowedForSection: (section: 'header' | 'content', fieldId) => {
+                        if (section === 'header') {
+                            return articleHeaderFields.has(fieldId) || articleCommonFields.has(fieldId);
+                        } else if (section === 'content') {
+                            return !articleHeaderFields.has(fieldId);
+                        } else {
+                            return assertNever(section);
+                        }
+                    },
+                };
+            });
     });
 }

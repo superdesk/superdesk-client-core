@@ -2,115 +2,111 @@
     <div class="sd-page__header">
         <sd-search-handler ng-model="searchString" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
-        <button class="btn btn--primary"
-          ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createCustomField('text')" ng-if="tab === 'text-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
 
-        <button class="btn btn--primary"
-          ng-click="createCustomField('date')" ng-if="tab === 'date-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createCustomField('date')" ng-if="tab === 'date-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
-        <button class="btn btn--primary"
-          ng-click="createCustomField('editor-block')" ng-if="tab === 'custom-editor-blocks'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
-        </button>
-
-        <button class="btn btn--primary"
-          ng-click="createCustomField('media')" ng-if="tab === 'related-content-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button
+            class="btn btn--primary"
+            ng-click="createCustomField('editor-block')"
+            ng-if="tab === 'custom-editor-blocks'"
+        >
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
 
-        <button class="btn btn--primary"
-          ng-click="createVocabulary()" ng-if="tab === 'vocabularies'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createCustomField('media')" ng-if="tab === 'related-content-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
 
-        <button class="btn btn--primary"
-          ng-click="createCustomField('embed')" ng-if="tab === 'embed-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createVocabulary()" ng-if="tab === 'vocabularies'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
 
-        <button class="btn btn--primary"
-          ng-click="createCustomField('urls')" ng-if="tab === 'urls-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createCustomField('embed')" ng-if="tab === 'embed-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
 
-        <button class="btn btn--primary"
-          ng-click="createCustomField('custom')" ng-if="tab === 'custom-fields'">
-          <i class="icon-plus-sign icon--white"></i>
-          <span translate>Add New</span>
+        <button class="btn btn--primary" ng-click="createCustomField('urls')" ng-if="tab === 'urls-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
+        </button>
+
+        <button class="btn btn--primary" ng-click="createCustomField('custom')" ng-if="tab === 'custom-fields'">
+            <i class="icon-plus-sign icon--white"></i>
+            <span translate>Add New</span>
         </button>
     </div>
 
     <div class="sd-page__content">
-        <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+        <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5"></div>
 
         <div ng-repeat="tag in tags" ng-if="existsVocabulariesForTag(tag, tab)">
             <div class="sd-list-header" ng-if="canShowTag(tag, tab)">
                 <span class="sd-list-header__name">{{tag.text}}</span>
             </div>
 
-            <div class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
+            <div class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px">
                 <div
-                  class="sd-list-item sd-shadow--z1"
-                  ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: filterVocabulary track by vocabulary._id"
-                  data-test-id="vocabulary-item"
-                  data-test-value="{{ vocabulary.display_name }}"
+                    class="sd-list-item sd-shadow--z1"
+                    ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: filterVocabulary track by vocabulary._id"
+                    data-test-id="vocabulary-item"
+                    data-test-value="{{ vocabulary.display_name }}"
                 >
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
                             <span
-                              class="sd-list-item__text-strong sd-list-item__element-rm-10"
-                              data-test-id="vocabulary-item--name"
+                                class="sd-list-item__text-strong sd-list-item__element-rm-10"
+                                data-test-id="vocabulary-item--name"
                             >
-                              {{vocabulary.display_name}}
+                                {{vocabulary.display_name}}
                             </span>
-                            <span class="badge badge--light  sd-list-item__element-rm-10" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
+                            <span class="badge badge--light sd-list-item__element-rm-10" ng-if="tab === 'vocabularies'"
+                                >{{ vocabulary.items.length }}</span
+                            >
                             <span class="sd-overflow-ellipsis">{{vocabulary.description}}</span>
                         </div>
                     </div>
                     <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                      <div>
+                        <div>
+                            <button
+                                ng-click="downloadVocabulary(vocabulary)"
+                                sd-tooltip="{{:: 'Download config' | translate }}"
+                                data-test-id="vocabulary-item--start-download"
+                            >
+                                <i class="icon-download"></i>
+                            </button>
+                        </div>
                         <button
-                          ng-click="downloadVocabulary(vocabulary)"
-                          sd-tooltip="{{:: 'Download config' | translate }}"
-                          data-test-id="vocabulary-item--start-download"
+                            ng-click="openVocabulary(vocabulary)"
+                            sd-tooltip="{{:: 'Edit vocabulary' | translate }}"
+                            data-test-id="vocabulary-item--start-editing"
                         >
-                          <i class="icon-download"></i>
+                            <i class="icon-pencil"></i>
                         </button>
-                      </div>
                         <button
-                          ng-click="openVocabulary(vocabulary)"
-                          sd-tooltip="{{:: 'Edit vocabulary' | translate }}"
-                          data-test-id="vocabulary-item--start-editing"
+                            ng-click="remove(vocabulary)"
+                            ng-if="tab !== 'vocabularies'"
+                            sd-tooltip="{{:: 'Remove vocabulary' | translate }}"
                         >
-                          <i class="icon-pencil"></i>
-                        </button>
-                        <button ng-click="remove(vocabulary)" ng-if="tab !== 'vocabularies'" sd-tooltip="{{:: 'Remove vocabulary' | translate }}">
                             <i class="icon-trash"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <br>
+            <br />
         </div>
-
     </div>
 </div>
 
-<sd-upload-config-modal>
-
-</sd-upload-config-modal>
+<sd-upload-config-modal> </sd-upload-config-modal>
 
 <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
-
-
-
