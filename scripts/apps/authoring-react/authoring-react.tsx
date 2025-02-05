@@ -24,7 +24,6 @@ import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
-import {appConfig} from 'appConfig';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
     closedIntentionally,
@@ -48,7 +47,7 @@ import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
-import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
+import {addEditorEventListener} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
@@ -129,7 +128,9 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
     return result;
 }
 
-const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
+export const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
+
+const MIN_HEADER_PADDING = 1;
 
 const ANPA_CATEGORY = {
     vocabularyId: 'categories',
@@ -1320,87 +1321,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const authoringActions: Array<IAuthoringAction> = (() => {
             const actions = this.props.getActions?.(exposed) ?? [];
-            const coreActions: Array<IAuthoringAction> = [];
 
-            if (appConfig.features.useTansaProofing !== true) {
-                if (state.spellcheckerEnabled) {
-                    const nextValue = false;
-
-                    coreActions.push({
-                        label: gettext('Disable spellchecker'),
-                        onTrigger: () => {
-                            this.setState({
-                                ...state,
-                                spellcheckerEnabled: nextValue,
-                            });
-
-                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                type: 'bool',
-                                enabled: nextValue,
-                                default: true,
-                            });
-                        },
-                        keyBindings: {
-                            'ctrl+shift+y': () => {
-                                this.setState({
-                                    ...state,
-                                    spellcheckerEnabled: nextValue,
-                                });
-
-                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                    type: 'bool',
-                                    enabled: nextValue,
-                                    default: true,
-                                });
-                            },
-                        },
-                    });
-                } else {
-                    coreActions.push({
-                        label: gettext('Enable spellchecker'),
-                        onTrigger: () => {
-                            const nextValue = true;
-
-                            this.setState({
-                                ...state,
-                                spellcheckerEnabled: true,
-                            });
-
-                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                type: 'bool',
-                                enabled: nextValue,
-                                default: true,
-                            });
-                        },
-                        keyBindings: {
-                            'ctrl+shift+y': () => {
-                                const nextValue = true;
-
-                                this.setState({
-                                    ...state,
-                                    spellcheckerEnabled: true,
-                                });
-
-                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                    type: 'bool',
-                                    enabled: nextValue,
-                                    default: true,
-                                });
-                            },
-                        },
-                    });
-                }
-            }
-
-            return [...coreActions, ...actions];
+            return [...(this.props.extraActions ?? []), ...actions];
         })();
 
         const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
@@ -1469,6 +1391,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         const isPinned = this.props.sideWidget?.pinnedId != null;
+        const allWidgets = primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets);
 
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
@@ -1482,16 +1405,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={primaryToolbarWidgets.length < 1
-                                    && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                        <SubNav>
-                                            <AuthoringToolbar
-                                                entity={state.itemWithChanges}
-                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
-                                                backgroundColor={authoringOptions?.toolbarBgColor}
-                                            />
-                                        </SubNav>
-                                    )
+                                header={allWidgets.length > 1 ? null : (
+                                    <AuthoringToolbar
+                                        entity={state.itemWithChanges}
+                                        widgets={allWidgets}
+                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                    />
+                                )
                                 }
                                 main={(
                                     <Layout.AuthoringMain
@@ -1511,6 +1431,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         headerPadding={{
                                             top: 8,
                                             bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                            inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
+                                            inlineStart: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
                                         }}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>

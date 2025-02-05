@@ -14,10 +14,10 @@ import {
     IRestApiResponse,
     IFieldsData,
 } from 'superdesk-api';
-import {AuthoringReact} from './authoring-react';
+import {AuthoringReact, SPELLCHECKER_PREFERENCE} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
-import {extensions} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
@@ -46,6 +46,8 @@ import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrappe
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
 import {IconButton} from 'superdesk-ui-framework';
+import {preferences} from 'api/preferences';
+import {dispatchEditorEvent} from './authoring-react-editor-events';
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -291,6 +293,7 @@ interface IPropsWrapper extends IProps {
 interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: ISideWidget;
+    spellcheckerEnabled: boolean,
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -308,6 +311,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 pinnedId: widgetId,
                 activeId: widgetId,
             },
+            spellcheckerEnabled: true,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -378,6 +382,90 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => (
                     <AuthoringReact
+                        extraActions={(() => {
+                            const actions = [];
+                            const {state} = this;
+
+                            if (appConfig.features.useTansaProofing !== true) {
+                                if (state.spellcheckerEnabled) {
+                                    const nextValue = false;
+
+                                    actions.push({
+                                        label: gettext('Disable spellchecker'),
+                                        onTrigger: () => {
+                                            this.setState({
+                                                ...state,
+                                                spellcheckerEnabled: nextValue,
+                                            });
+
+                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                type: 'bool',
+                                                enabled: nextValue,
+                                                default: true,
+                                            });
+                                        },
+                                        keyBindings: {
+                                            'ctrl+shift+y': () => {
+                                                this.setState({
+                                                    ...state,
+                                                    spellcheckerEnabled: nextValue,
+                                                });
+
+                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                    type: 'bool',
+                                                    enabled: nextValue,
+                                                    default: true,
+                                                });
+                                            },
+                                        },
+                                    });
+                                } else {
+                                    actions.push({
+                                        label: gettext('Enable spellchecker'),
+                                        onTrigger: () => {
+                                            const nextValue = true;
+
+                                            this.setState({
+                                                ...state,
+                                                spellcheckerEnabled: true,
+                                            });
+
+                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                type: 'bool',
+                                                enabled: nextValue,
+                                                default: true,
+                                            });
+                                        },
+                                        keyBindings: {
+                                            'ctrl+shift+y': () => {
+                                                const nextValue = true;
+
+                                                this.setState({
+                                                    ...state,
+                                                    spellcheckerEnabled: true,
+                                                });
+
+                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                    type: 'bool',
+                                                    enabled: nextValue,
+                                                    default: true,
+                                                });
+                                            },
+                                        },
+                                    });
+                                }
+                            }
+
+                            return actions;
+                        })()}
                         onFieldChange={this.props.onFieldChange}
                         ref={(component) => {
                             this.authoringReactRef = component;
