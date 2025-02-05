@@ -183,12 +183,14 @@ export function startApp(
              * @packageName superdesk-client
              * @description The root superdesk module.
              */
-            angular.bootstrap(body, [
+            const injector = angular.bootstrap(body, [
                 'superdesk.config',
                 'superdesk.core',
                 'superdesk.apps',
                 'superdesk.register_extensions',
             ].concat(appConfig.apps || []), {strictDi: true});
+
+            ng.register(injector);
 
             window['superdeskIsReady'] = true;
 

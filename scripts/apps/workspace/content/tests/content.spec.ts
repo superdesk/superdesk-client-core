@@ -188,7 +188,6 @@ describe('superdesk.apps.workspace.content', () => {
 
         it('should notify appropriate error when created profile is not unique', inject((
             notify, $controller, content, $q, $rootScope) => {
-            return;
             spyOn(content, 'createProfile').and.returnValue($q.reject({
                 data: {_issues: {label: {unique: 1}}},
             }));

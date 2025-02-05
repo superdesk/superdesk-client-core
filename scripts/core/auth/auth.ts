@@ -21,13 +21,6 @@ window.fetch = (...args) => {
         return originalFetch(resource, config);
     }
 
-    if (appConfig.testing) {
-        const $http = ng.get('$http');
-
-        // use $http in tests so we can mock responses
-        return $http(Object.assign({}, config, {url: resource}));
-    }
-
     return originalFetch(resource, config)
         .then((resp) => {
             if (resp.status === 401) {

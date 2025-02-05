@@ -50,6 +50,7 @@ const customField: ICustomFieldType<string, string, string, never> = {
 };
 
 describe('custom authoring field', () => {
+    beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(inject(($injector) => {
         ng.register($injector);
 

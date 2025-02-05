@@ -14,6 +14,16 @@ beforeEach(window.module('superdesk.core.services.storage'));
 beforeEach(window.module('superdesk.core.preferences'));
 beforeEach(window.module('superdesk.apps.spellcheck'));
 
+beforeEach(() => {
+    // mock fetch to avoid making real requests
+    window.fetch = (...args) => {
+        return new Promise((resolve, reject) => {
+            // avoid resolving the promise
+            // so the code that calls fetch will stop
+        });
+    };
+});
+
 /**
  * Mock services that call server on init and thus would require mocking all the time
  */
@@ -79,3 +89,4 @@ angular.module('superdesk.mocks', [])
             return $q.when(false);
         };
     });
+
