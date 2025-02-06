@@ -19,6 +19,7 @@ import {
     IAuthoringValidationErrors,
     IFieldsV2,
     IEditor3Config,
+    IAuthoringReact,
 } from 'superdesk-api';
 import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -309,7 +310,9 @@ interface IStateLoaded<T> {
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
+export class AuthoringReact<T extends IBaseRestApiResponse>
+    extends React.PureComponent<IPropsAuthoring<T>, IState<T>>
+    implements IAuthoringReact<T> {
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
