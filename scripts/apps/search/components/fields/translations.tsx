@@ -27,7 +27,6 @@ export class Translations extends React.PureComponent<IProps> {
                     close={closePopup}
                 />
             ),
-            1050,
         );
     }
 
