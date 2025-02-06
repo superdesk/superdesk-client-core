@@ -173,8 +173,8 @@ declare module 'superdesk-api' {
         keepChangesAndClose(): void;
         stealLock(): void;
         reinitialize(item: T, profile?: IContentProfileV2): void;
-        addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
         getValidationErrors(): IAuthoringValidationErrors;
+        setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
     }
 
     export interface IAuthoringOptions<T> {
