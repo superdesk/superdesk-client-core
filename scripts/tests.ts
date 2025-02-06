@@ -15,7 +15,6 @@ window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
 Enzyme.configure({adapter: new Adapter()});
 
 const testConfig: Partial<ISuperdeskGlobalConfig> = {
-    testing: true,
     model: {
         timeformat: 'HH:mm:ss',
         dateformat: 'DD/MM/YYYY',
