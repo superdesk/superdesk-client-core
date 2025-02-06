@@ -71,7 +71,7 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png

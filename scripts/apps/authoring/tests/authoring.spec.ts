@@ -1,13 +1,19 @@
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {mediaIdGenerator} from '../authoring/services/MediaIdGeneratorService';
+import {IArticle} from 'superdesk-api';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
     var USER = 'user:1';
-    var ITEM: any = {guid: GUID};
+    var ITEM : Partial<IArticle>;
+
+    beforeEach(() => {
+        ITEM = {guid: GUID};
+    });
+
+    const createLockedItem = () => Object.create({guid: ITEM.guid, lock_session: 'sess'});
 
     beforeEach(window.module(($provide) => {
         $provide.constant('lodash', _);
@@ -55,6 +61,10 @@ describe('authoring', () => {
     beforeEach(inject(($httpBackend) => {
         $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
+
+    afterEach(() => {
+        appConfig.workflow_allow_duplicate_non_members = false;
+    });
 
     it('can open an item',
         (done) => inject((superdesk, api, lock, autosave, $injector, $q, $rootScope) => {
@@ -275,6 +285,7 @@ describe('authoring', () => {
                     headline: 'test',
                     lock_user: 'user:1',
                     state: 'submitted',
+                    lock_session: 'sess',
                 });
 
                 authoring.publishConfirmation(ITEM, edit, true, 'publish');
@@ -294,7 +305,7 @@ describe('authoring', () => {
 
         it('confirms if an item is dirty and save work in personal',
             inject((authoring, api, confirm, lock, $q, $rootScope) => {
-                var edit = Object.create(ITEM);
+                var edit = createLockedItem();
 
                 _.extend(edit, {
                     task: {desk: null, stage: null, user: 1},
@@ -778,6 +789,8 @@ describe('authoring actions', () => {
                 unlock: true,
                 archive: true,
             };
+
+            appConfig.workflow_allow_duplicate_non_members = false;
 
             privileges.setUserPrivileges(userPrivileges);
             $rootScope.$digest();

@@ -2,7 +2,16 @@ var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-var {getModuleDir} = require('./tasks/get-module-directory');
+
+function getModuleDir(moduleName) {
+    return path.join(
+        require.resolve(
+            moduleName + '/package.json',
+            {paths: [__dirname, process.cwd()]}
+        ),
+        '../'
+    );
+}
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
@@ -71,6 +80,7 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+
                 /**
                  * Ensure that react is loaded only once.
                  * external apps(planning, analytics, ui-framework) may try loading their own react,
@@ -78,6 +88,29 @@ module.exports = function makeConfig(grunt) {
                  */
                 react: getModuleDir('react'),
                 'react-dom': getModuleDir('react-dom'),
+
+                /**
+                 * Required for development mode only.
+                 * Otherwise throws "Invariant Violation: block is not a BlockNode" error
+                 * which is likely due to multiple instances of the library being loaded.
+                 * The error is only thrown in certain execution branches.
+                 */
+                'draft-js': getModuleDir('@sourcefabric/draft-js'),
+
+                /**
+                 * Required for development mode only.
+                 * Ensures that superdesk apps loaded via superdesk.config.js (planning, analytics)
+                 * use a single version of superdesk-core.
+                 *
+                 * NOTE: superdesk apps themselves are unaware of this config
+                 * and you will see import errors in code editor
+                 * with a superdesk app open and superdesk-core not installed.
+                 * running `npm link superdesk-core` inside of a superdesk app fixes this.
+                 */
+                'superdesk-core':
+                    process.cwd() === __dirname
+                        ? __dirname // when running unit tests from this project
+                        : getModuleDir('superdesk-core'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },

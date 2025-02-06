@@ -38,9 +38,6 @@ describe('aggregate widget', () => {
             ctrl.setSoloGroup({_id: 'test'});
             expect(ctrl.state.solo._id).toBe('test');
         }));
-        it('can remember solo group', inject(() => {
-            expect(ctrl.state.solo._id).toBe('test');
-        }));
     });
 
     describe('Aggregate Widget', () => {

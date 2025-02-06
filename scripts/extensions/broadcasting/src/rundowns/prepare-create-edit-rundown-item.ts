@@ -76,7 +76,7 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
             return httpRequestJsonLocal<IRundownItem>({
                 method: 'GET',
                 path: `/rundown_items/${id}`,
-            }).then((saved) => ({saved, autosaved: null}));
+            });
         },
         isLockedInCurrentSession: () => false,
         forceLock: (entity) => {
@@ -161,7 +161,7 @@ function getRundownItemCreationAuthoringStorage(
     const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
         autosave: new AutoSaveRundownItem(),
         getEntity: () => {
-            return Promise.resolve({saved: initialData as IRundownItem, autosaved: null});
+            return Promise.resolve(initialData as IRundownItem);
         },
         isLockedInCurrentSession: () => true,
         forceLock: (entity) => {

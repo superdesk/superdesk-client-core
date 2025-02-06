@@ -72,7 +72,6 @@ import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
-import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
@@ -563,7 +562,6 @@ export function getSuperdeskApiImplementation(
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
             dateToServerString,
-            memoize: memoizeLocal,
             generatePatch,
             stripHtmlTags,
             getLinesCount,
