@@ -1288,17 +1288,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
             reinitialize: (item, profile) => this.reinitialize(state, item, profile),
-            addValidationErrors: (moreValidationErrors) => {
-                this.setState({
-                    ...state,
-                    validationErrors: {
-                        ...state.validationErrors,
-                        ...moreValidationErrors,
-                    },
-                });
-            },
             getValidationErrors: () => {
                 return state.validationErrors;
+            },
+            setValidationErrors: (validationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors,
+                });
             },
         };
     }
