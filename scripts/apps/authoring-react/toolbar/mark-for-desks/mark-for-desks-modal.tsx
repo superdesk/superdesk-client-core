@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {IArticle, IDesk} from 'superdesk-api';
-import {Alert, Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
+import {Alert, Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';
 import {Spacer} from 'core/ui/components/Spacer';
@@ -37,20 +37,20 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
                 headerTemplate={gettext('Marked for desks')}
             >
                 <Spacer v gap="8">
-                    <MultiSelect
-                        label=""
-                        inlineLabel
-                        labelHidden
+                    <TreeSelect
+                        kind="synchronous"
+                        allowMultiple
+                        label={gettext('Select desks')}
+                        value={selectedDesks}
                         onChange={(value) => {
                             this.setState({
                                 ...this.state,
                                 selectedDesks: value.map((desk) => desk._id),
                             });
                         }}
-                        optionLabel={(desk) => desk.name}
-                        options={allDesks.toArray()}
-                        value={selectedDesks}
-                        placeholder={gettext('Select desks')}
+                        getId={(desk) => desk.name}
+                        getLabel={(desk) => desk.name}
+                        getOptions={() => allDesks.toArray().map((item) => ({value: item}))}
                     />
 
                     <Spacer h gap="8" justifyContent="end" noWrap>

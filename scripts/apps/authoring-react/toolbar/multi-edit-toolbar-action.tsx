@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import {IArticle} from 'superdesk-api';
 import {MultiEditModal} from '../multi-edit-modal';
-import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
+import {Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {showModal} from '@superdesk/common';
 import {getArticleLabel, gettext} from 'core/utils';
@@ -36,18 +36,21 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                 size="medium"
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
-                    <MultiSelect
-                        label=""
+                    <TreeSelect
+                        kind="synchronous"
+                        allowMultiple
                         inlineLabel
                         labelHidden
-                        optionLabel={(article) => getArticleLabel(article)}
                         value={this.state.selectedArticles}
                         onChange={(values) => {
                             this.setState({selectedArticles: values});
                         }}
-                        options={sdApi.article.getWorkQueueItems().filter((article) =>
-                            this.state.selectedArticles.map(({_id}) => _id).includes(article._id) === false,
-                        )}
+                        getId={(item) => getArticleLabel(item)}
+                        getLabel={(item) => getArticleLabel(item)}
+                        getOptions={() => sdApi.article.getWorkQueueItems().filter((article) =>
+                            this.state.selectedArticles.map(({_id}) => _id)
+                                .includes(article._id) === false,
+                        ).map((item) => ({value: item}))}
                     />
                     <Spacer h gap="8" justifyContent="end" noWrap>
                         <Button

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef, RefObject} from 'react';
 import {
     IArticle,
     IAuthoringFieldV2,
@@ -17,18 +17,14 @@ import {
     IStoreValueIncomplete,
     IAuthoringSectionTheme,
     IAuthoringValidationErrors,
+    IFieldsV2,
+    IEditor3Config,
 } from 'superdesk-api';
-import {
-    ButtonGroup,
-    Loader,
-    SubNav,
-    IconButton,
-} from 'superdesk-ui-framework/react';
+import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
-import {EditorTest} from './ui-framework-authoring-test';
-import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
     closedIntentionally,
@@ -59,6 +55,8 @@ import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofre
 import {showModal} from '@superdesk/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
+import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
+import memoizeOne from 'memoize-one';
 
 export function getFieldsData<T>(
     item: T,
@@ -193,7 +191,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
         loading: false,
         itemOriginal: itemOriginal,
         itemWithChanges: itemWithChanges,
-        autosaveEtag: item.autosaved?._etag ?? null,
+        itemAutosaved: item.autosaved ?? null,
         fieldsDataOriginal: fieldsOriginal,
         fieldsDataWithChanges: fieldsDataWithChanges,
         profile: profile,
@@ -247,6 +245,32 @@ export const getUiThemeFontSizeHeading = (value: IFontSizeOption) => {
 };
 
 /**
+ * Default compact mode to true for editor3 fields in header.
+ */
+function setCompactMode(fields: IFieldsV2): IFieldsV2 {
+    let result = fields;
+
+    fields.forEach((field, key) => {
+        if (field.fieldType === EDITOR_3_FIELD_TYPE) {
+            const currentConfig = field.fieldConfig as IEditor3Config;
+            const nextConfig: IEditor3Config = currentConfig.compact != null
+                ? currentConfig
+                : {
+                    ...currentConfig,
+                    compact: true,
+                };
+
+            result = result.set(key, {
+                ...field,
+                fieldConfig: nextConfig,
+            });
+        }
+    });
+
+    return result;
+}
+
+/**
  * Toggling a field "off" hides it and removes its values.
  * Toggling to "on", displays field's input and allows setting a value.
  *
@@ -259,7 +283,14 @@ interface IStateLoaded<T> {
     initialized: true;
     itemOriginal: T;
     itemWithChanges: T;
-    autosaveEtag: string | null;
+
+    /**
+     * is needed for etag
+     * and for passing it to schedule function
+     * which needs it passed to retrieve extra autosave-specific values like lock_user
+     */
+    itemAutosaved: T | null;
+
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
@@ -282,6 +313,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
+    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+    private prepareHeaderFields: typeof setCompactMode;
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -309,7 +342,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.reinitialize = this.reinitialize.bind(this);
         this.setRef = this.setRef.bind(this);
         this.getItemAndAutosave = this.getItemAndAutosave.bind(this);
+        this.prepareHeaderFields = memoizeOne(setCompactMode);
 
+        this.fieldRefs = {};
         const setStateOriginal = this.setState.bind(this);
 
         this.setState = (...args) => {
@@ -418,8 +453,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         authoringStorage.autosave.cancel();
 
-        if (this.state.initialized && this.state.autosaveEtag != null) {
-            return authoringStorage.autosave.delete(this.state.itemOriginal['_id'], this.state.autosaveEtag);
+        if (this.state.initialized && this.state.itemAutosaved != null) {
+            return authoringStorage.autosave.delete(this.state.itemOriginal['_id'], this.state.itemAutosaved._etag);
         } else {
             return Promise.resolve();
         }
@@ -572,6 +607,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 userPreferences[SPELLCHECKER_PREFERENCE].enabled
                 ?? userPreferences[SPELLCHECKER_PREFERENCE].default
                 ?? true;
+
+            profile.header.merge(profile.content).forEach(({id}) => {
+                this.fieldRefs[id] = createRef();
+            });
 
             const initialState = getInitialState(
                 item,
@@ -895,9 +934,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         (autosaved) => {
                             this.setState({
                                 ...state,
-                                autosaveEtag: autosaved._etag,
+                                itemAutosaved: autosaved,
                             });
                         },
+                        state.itemAutosaved,
                     );
                 }
             }
@@ -930,6 +970,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         if (this.state.initialized) {
                             resolve(this.state.itemOriginal);
                         }
+                    }).catch((e) => {
+                        // Since we don't give modal control to the developer using authoring react
+                        // we close the prompt and return an error
+                        closePromptFn();
+                        reject();
                     });
                 } else {
                     assertNever(action);
@@ -1041,7 +1086,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 () => {
                     authoringStorage.autosave.cancel();
 
-                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+                    return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
                 },
                 () => this.props.onClose(),
             ).then(() => {
@@ -1172,6 +1217,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             autosaved: itemWithUpdates,
         };
 
+        newProfile.header.merge(newProfile.header).forEach((x) => {
+            this.fieldRefs[x.id] = createRef();
+        });
+
         this.setState(getInitialState(
             item,
             newProfile ?? state.profile,
@@ -1187,24 +1236,16 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         ));
     }
 
-    render() {
-        const state = this.state;
-        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
+    public getExposed(): IExposedFromAuthoring<T> {
+        const {state} = this;
 
-        if (state.initialized !== true) {
-            return null;
+        if (state.initialized === false) {
+            throw new Error('Can\'t get exposed if state isn\'t loaded');
         }
 
-        // TODO: remove test code
-        if (uiFrameworkAuthoringPanelTest) {
-            return (
-                <div>
-                    <EditorTest />
-                </div>
-            );
-        }
+        const {onClose, authoringStorage, fieldsAdapter, storageAdapter, sideWidget} = this.props;
 
-        const exposed: IExposedFromAuthoring<T> = {
+        return {
             item: state.itemWithChanges,
             contentProfile: state.profile,
             getLatestItem: this.computeLatestEntity,
@@ -1212,15 +1253,16 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             handleFieldsDataChange: this.handleFieldsDataChange,
             hasUnsavedChanges: () => this.hasUnsavedChanges(),
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
+            discardUnsavedChanges: () => this.discardUnsavedChanges(state),
             save: () => this.save(state),
             initiateClosing: () => this.initiateClosing(state),
-            keepChangesAndClose: () => this.props.onClose(),
+            keepChangesAndClose: () => onClose(),
             onItemChange: (item: T) => this.onItemChange(state, item),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
-            sideWidget: this.props.sideWidget?.activeId,
+            sideWidget: sideWidget?.activeId,
             toggleTheme: () => {
                 this.setState({
                     ...state,
@@ -1246,19 +1288,30 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
             reinitialize: (item, profile) => this.reinitialize(state, item, profile),
-            addValidationErrors: (moreValidationErrors) => {
+            getValidationErrors: () => {
+                return state.validationErrors;
+            },
+            setValidationErrors: (validationErrors) => {
                 this.setState({
                     ...state,
-                    validationErrors: {
-                        ...state.validationErrors,
-                        ...moreValidationErrors,
-                    },
+                    validationErrors,
                 });
             },
         };
+    }
 
-        const authoringOptions: IAuthoringOptions<T> | null =
-            this.props.getInlineToolbarActions != null ? this.props.getInlineToolbarActions(exposed) : null;
+    render() {
+        const state = this.state;
+        const {getLanguage, getSidePanel} = this.props;
+
+        if (state.initialized !== true) {
+            return null;
+        }
+
+        const exposed = this.getExposed();
+        const authoringOptions: IAuthoringOptions<T> | null = this.props.getInlineToolbarActions != null
+            ? this.props.getInlineToolbarActions(exposed)
+            : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
@@ -1466,7 +1519,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     />
                                                 )}
                                                 <AuthoringSection
-                                                    fields={state.profile.header}
+                                                    fieldRefs={this.fieldRefs}
+                                                    fields={this.prepareHeaderFields(state.profile.header)}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     reinitialize={(item) => {
@@ -1483,12 +1537,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     validationErrors={state.validationErrors}
                                                     item={state.itemWithChanges}
                                                     computeLatestEntity={this.computeLatestEntity}
+                                                    fieldTemplate={this.props.fieldTemplate}
                                                 />
                                             </div>
                                         )}
                                     >
                                         {state.profile.content.count() < 1 ? null : (
                                             <AuthoringSection
+                                                fieldRefs={this.fieldRefs}
                                                 uiTheme={uiTheme}
                                                 padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}
@@ -1507,6 +1563,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 validationErrors={state.validationErrors}
                                                 item={state.itemWithChanges}
                                                 computeLatestEntity={this.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
                                             />
                                         )}
                                     </Layout.AuthoringMain>

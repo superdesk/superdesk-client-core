@@ -104,7 +104,7 @@ declare module 'superdesk-api' {
          * In order to get the latest article, data has to be serialized. Using a function
          * allows to only do it once after timeout passes, instead of on every character change.
          */
-        schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+        schedule(getItem: () => T, callback: (autosaved: T) => void, currentAutosavedItem: T): void;
 
         /**
         * Immediately autosaves without a delay if there is anything to autosave.
@@ -165,6 +165,7 @@ declare module 'superdesk-api' {
         fieldsAdapter: IFieldsAdapter<T>;
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
+        discardUnsavedChanges(): Promise<void>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         onItemChange(item: T): void;
         save(): Promise<T>;
@@ -172,7 +173,8 @@ declare module 'superdesk-api' {
         keepChangesAndClose(): void;
         stealLock(): void;
         reinitialize(item: T, profile?: IContentProfileV2): void;
-        addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
+        getValidationErrors(): IAuthoringValidationErrors;
+        setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
     }
 
     export interface IAuthoringOptions<T> {
@@ -187,6 +189,13 @@ declare module 'superdesk-api' {
         priority: IDisplayPriority;
         group: 'start' | 'middle' | 'end';
         keyBindings?: IKeyBindings;
+    }
+
+    interface IPropsAuthoringFieldTemplate {
+        field: IAuthoringFieldV2;
+        input: React.ReactNode;
+        validationError?: string;
+        miniToolbar?: React.ReactNode;
     }
 
     interface IPropsAuthoring<T> {
@@ -231,6 +240,8 @@ declare module 'superdesk-api' {
             pinnedId?: string;
             activeId?: string;
         };
+
+        fieldTemplate?: React.ComponentType<IPropsAuthoringFieldTemplate>;
 
         getSideWidgetIdAtIndex(item: T, index: number): string;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
@@ -323,7 +334,7 @@ declare module 'superdesk-api' {
 
     // AUTHORING-REACT FIELD TYPES - datetime
 
-    export type IDateTimeValueOperational = string; // ISO 8601, 13:59:01.123
+    export type IDateTimeValueOperational = Date | null;
     export type IDateTimeValueStorage = IDateTimeValueOperational;
     export interface IDateTimeFieldConfig extends ICommonFieldConfig {
         allowSeconds?: boolean;
@@ -431,6 +442,7 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
         minLength?: number;
         maxLength?: number;
+        compact?: boolean; // smaller UI element
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
@@ -2365,7 +2377,7 @@ declare module 'superdesk-api' {
     }
 
     export interface ILiveResourcesProps {
-        resources: Array<{resource: string, ids?: Array<string>}>;
+        resources: Array<{resource: string, ids: Array<string>}>;
         children: (result: Array<IRestApiResponse<any>>) => JSX.Element;
     }
 
@@ -3254,7 +3266,6 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
-            memoize<T extends ICallable>(func: T, maxCacheEntryCount?: number): T; // maxCacheEntryCount = 1
             generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IPatchingOptions): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
@@ -3319,6 +3330,7 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+
         // FROM SERVER
         default_language: string;
         disallowed_characters: Array<string>; // applies to slugline
@@ -3645,7 +3657,6 @@ declare module 'superdesk-api' {
          * (it will be rendered in different DOM locations depending if field is in header or content section)
          */
         miniToolbar?: JSX.Element;
-        sectionClassNames?: IAuthoringSectionClassNames;
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {
@@ -3746,11 +3757,6 @@ declare module 'superdesk-api' {
                 fontSize: string | undefined;
             };
         };
-    }
-
-    export interface IAuthoringSectionClassNames {
-        header?: string;
-        content?: string;
     }
 
     export interface ICommonFieldConfig {

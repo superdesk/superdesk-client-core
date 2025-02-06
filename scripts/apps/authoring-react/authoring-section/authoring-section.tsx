@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {RefObject} from 'react';
 import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem, IAuthoringValidationErrors} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
+import {IGetFieldContainerOptions} from './get-field-container';
 
 export interface IPropsAuthoringSection<T> {
+    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement>};
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
@@ -22,6 +24,7 @@ export interface IPropsAuthoringSection<T> {
     uiTheme?: IAuthoringSectionTheme;
     item: T;
     computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
+    fieldTemplate: IGetFieldContainerOptions['fieldTemplate'];
 }
 
 function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
@@ -112,6 +115,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     return (
                                         <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
                                             <AuthoringSectionField
+                                                fieldRef={this.props.fieldRefs[field.id]}
                                                 uiTheme={themeApplies ? this.props.uiTheme : undefined}
                                                 field={field}
                                                 fieldsData={this.props.fieldsData}
@@ -132,6 +136,7 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                                 validationError={this.props.validationErrors[field.id]}
                                                 item={this.props.item}
                                                 computeLatestEntity={this.props.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
                                             />
                                         </div>
                                     );

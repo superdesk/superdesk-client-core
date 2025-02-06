@@ -13,16 +13,6 @@ describe('sdIngestSourcesContent directive', () => {
     beforeEach(window.module('superdesk.apps.ingest'));
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            default_timezone: 'Europe/London',
-            server: {url: undefined, ws: undefined},
             ingest: {
                 PROVIDER_DASHBOARD_DEFAULTS: {
                     show_log_messages: true,
