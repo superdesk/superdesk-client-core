@@ -1,8 +1,4 @@
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
-
-/* jshint maxlen:false */
-var SERVER_URL = 'http://localhost/resource',
+var SERVER_URL = 'http://localhost:5000',
     LOGIN_URL = SERVER_URL + '/auth_db',
     username = 'admin',
     password = 'admin',
@@ -18,20 +14,10 @@ describe('basic auth adapter', () => {
     beforeEach(inject((_$httpBackend_) => {
         $httpBackend = _$httpBackend_;
     }));
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {
-                url: '',
-                ws: undefined,
-            },
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
 
     afterEach(() => {
-        $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
+        $httpBackend.verifyNoOutstandingExpectation();
     });
 
     it('can login', (done) => inject((authAdapter, urls, $q) => {

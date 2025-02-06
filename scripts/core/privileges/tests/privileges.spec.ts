@@ -3,9 +3,9 @@ describe('privileges', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.privileges'));
 
-    beforeEach(inject((preferencesService, api, $q) => {
+    beforeEach(inject((preferencesService, $q, privileges) => {
         spyOn(preferencesService, 'getPrivileges').and.returnValue($q.when({tests: 1}));
-        spyOn(api, 'find').and.returnValue($q.reject()); // stop preferences processing
+        privileges.reload();
     }));
 
     it('can expose user privileges on $rootScope', inject((privileges, $rootScope) => {

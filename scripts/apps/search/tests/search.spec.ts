@@ -1,6 +1,4 @@
 import {gettext} from 'core/utils';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
 import {getMultiActions} from '../controllers/get-multi-actions';
 
 describe('search service', () => {
@@ -266,20 +264,6 @@ describe('sdSearchPanel directive', () => {
      * Mock some of the dependencies of the parent directives.
      */
     beforeEach(window.module(($provide) => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            server: {url: undefined, ws: undefined},
-        };
-
-        Object.assign(appConfig, testConfig);
-
         fakeApi = {
             ingestProviders: {
                 query: jasmine.createSpy(),

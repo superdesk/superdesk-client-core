@@ -1,17 +1,4 @@
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
-
 describe('related item widget', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {
-                url: '',
-                ws: undefined,
-            },
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.dashboard.widgets.relatedItem'));
 
