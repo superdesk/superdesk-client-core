@@ -61,7 +61,7 @@ describe('vocabularies', () => {
         const fakeEvent = {target: {value: '2'}};
 
         wrapper.find('input[type="number"]').simulate('change', fakeEvent);
-        expect(instance.getItemsForSaving()[0].qcode).toBe(2);
+        expect(instance.getItemsForSaving()[0].qcode).toEqual('2');
     });
 
     describe('config controller', () => {

@@ -1,9 +1,9 @@
 import {sortBy, get} from 'lodash';
-import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
 
-MediaFieldsController.$inject = ['$q', 'metadata'];
-export default function MediaFieldsController($q, metadata) {
+MediaFieldsController.$inject = ['$q', 'metadata', 'vocabularies'];
+export default function MediaFieldsController($q, metadata, vocabularies) {
     function getCV(field) {
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
@@ -30,8 +30,9 @@ export default function MediaFieldsController($q, metadata) {
     }
 
     $q.all({
-        getLabelForFieldId: getLabelNameResolver(),
         metadataInit: metadata.initialize(),
+        getLabelForFieldId: vocabularies.getAllActiveVocabularies()
+            .then((vocabulariesCollection) => (fieldId) => getLabelForFieldId(fieldId, vocabulariesCollection)),
     }).then(({getLabelForFieldId}) => {
         const editor = get(appConfig.editor, 'picture', {});
         const schema = get(appConfig.schema, 'picture', {});

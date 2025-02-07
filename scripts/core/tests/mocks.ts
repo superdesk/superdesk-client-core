@@ -9,7 +9,6 @@ beforeEach(window.module(($provide) => {
 beforeEach(window.module('superdesk.mocks'));
 beforeEach(window.module('superdesk.core.auth.session'));
 beforeEach(window.module('superdesk.core.services.storage'));
-beforeEach(window.module('superdesk.apps.spellcheck'));
 
 // required for react authoring fields
 beforeEach(window.module('superdesk.core.preferences'));
@@ -50,7 +49,9 @@ angular.module('superdesk.mocks', [])
 
         $httpBackend.whenGET('http://localhost:5000/preferences/sess').respond({});
     }])
-    .run(['$injector', ng.register])
+    .run(['$injector', ($injector) => {
+        ng.register($injector);
+    }])
     .constant('config', {
         server: {url: 'http://localhost:5000'},
         editor: {},

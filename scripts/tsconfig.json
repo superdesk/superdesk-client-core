@@ -9,7 +9,7 @@
         "baseUrl": ".",
         "sourceMap": true,
         "esModuleInterop": true,
-        "module": "commonjs",
+        "module": "CommonJS",
         "target": "es5",
         "skipLibCheck": true,
         "lib": [
