@@ -117,7 +117,7 @@ describe('core.editor3.html.from-html', () => {
         expect(getRawContentStateWithoutBlockAndEntityKeys(convertToRaw(contentState))).toEqual({
             'blocks': [
                 {
-                    key: '1',
+                    'key': '',
                     'text': 'Line 1-1',
                     'type': 'unstyled',
                     'depth': 0,
@@ -126,14 +126,14 @@ describe('core.editor3.html.from-html', () => {
                     'data': {},
                 },
                 {
-                    key: '2',
+                    'key': '',
                     'text': ' ',
                     'type': 'atomic',
                     'depth': 0,
                     'inlineStyleRanges': [],
                     'entityRanges': [
                         {
-                            'key': 1,
+                            'key': 0,
                             'offset': 0,
                             'length': 1,
                         },
@@ -141,7 +141,7 @@ describe('core.editor3.html.from-html', () => {
                     'data': {},
                 },
                 {
-                    key: '3',
+                    'key': '',
                     'text': '"',
                     'type': 'unstyled',
                     'depth': 0,
@@ -150,7 +150,7 @@ describe('core.editor3.html.from-html', () => {
                     'data': {},
                 },
                 {
-                    key: '4',
+                    'key': '',
                     'text': 'Line 2',
                     'type': 'unstyled',
                     'depth': 0,
