@@ -19,7 +19,6 @@ export class ToggleFullWidth extends React.Component<IProps> {
             <Tooltip
                 text={this.props.fullWidth ? gettext('Leave full width mode') : gettext('Full width mode')}
                 flow="right"
-                appendToBody={true}
             >
                 <button
                     className={classes}
