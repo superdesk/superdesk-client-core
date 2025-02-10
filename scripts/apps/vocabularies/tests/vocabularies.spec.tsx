@@ -61,7 +61,10 @@ describe('vocabularies', () => {
         const fakeEvent = {target: {value: '2'}};
 
         wrapper.find('input[type="number"]').simulate('change', fakeEvent);
-        expect(instance.getItemsForSaving()[0].priority).toBe(2); // @ts-ignore
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        expect(instance.getItemsForSaving()[0].priority).toBe(2);
     });
 
     describe('config controller', () => {
