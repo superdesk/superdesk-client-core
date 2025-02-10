@@ -382,90 +382,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => (
                     <AuthoringReact
-                        extraActions={(() => {
-                            const actions = [];
-                            const {state} = this;
-
-                            if (appConfig.features.useTansaProofing !== true) {
-                                if (state.spellcheckerEnabled) {
-                                    const nextValue = false;
-
-                                    actions.push({
-                                        label: gettext('Disable spellchecker'),
-                                        onTrigger: () => {
-                                            this.setState({
-                                                ...state,
-                                                spellcheckerEnabled: nextValue,
-                                            });
-
-                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                type: 'bool',
-                                                enabled: nextValue,
-                                                default: true,
-                                            });
-                                        },
-                                        keyBindings: {
-                                            'ctrl+shift+y': () => {
-                                                this.setState({
-                                                    ...state,
-                                                    spellcheckerEnabled: nextValue,
-                                                });
-
-                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                    type: 'bool',
-                                                    enabled: nextValue,
-                                                    default: true,
-                                                });
-                                            },
-                                        },
-                                    });
-                                } else {
-                                    actions.push({
-                                        label: gettext('Enable spellchecker'),
-                                        onTrigger: () => {
-                                            const nextValue = true;
-
-                                            this.setState({
-                                                ...state,
-                                                spellcheckerEnabled: true,
-                                            });
-
-                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                type: 'bool',
-                                                enabled: nextValue,
-                                                default: true,
-                                            });
-                                        },
-                                        keyBindings: {
-                                            'ctrl+shift+y': () => {
-                                                const nextValue = true;
-
-                                                this.setState({
-                                                    ...state,
-                                                    spellcheckerEnabled: true,
-                                                });
-
-                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                    type: 'bool',
-                                                    enabled: nextValue,
-                                                    default: true,
-                                                });
-                                            },
-                                        },
-                                    });
-                                }
-                            }
-
-                            return actions;
-                        })()}
                         onFieldChange={this.props.onFieldChange}
                         ref={(component) => {
                             this.authoringReactRef = component;
@@ -535,6 +451,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             authoringStorage,
                             fieldsAdapter,
                             storageAdapter,
+                            spellchecker,
                         }) => {
                             const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
@@ -542,7 +459,28 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 fieldsData,
                             );
 
+                            const getSpellcheckerAction = (): IAuthoringAction => {
+                                if (appConfig.features.useTansaProofing !== true) {
+                                    return {
+                                        label: spellchecker.enabled
+                                            ? gettext('Disable spellchecker')
+                                            : gettext('Enable spellchecker'),
+                                        onTrigger: () => {
+                                            spellchecker.toggleSpellchecker(!spellchecker.enabled);
+                                        },
+                                        keyBindings: {
+                                            'ctrl+shift+y': () => {
+                                                spellchecker.toggleSpellchecker(!spellchecker.enabled);
+                                            },
+                                        },
+                                    } as IAuthoringAction;
+                                }
+
+                                return {} as IAuthoringAction;
+                            };
+
                             return [
+                                getSpellcheckerAction(),
                                 getSaveAsTemplate(getLatestItem),
                                 getCompareVersionsModal(
                                     getLatestItem,

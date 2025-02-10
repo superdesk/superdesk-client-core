@@ -47,7 +47,7 @@ import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
-import {addEditorEventListener} from './authoring-react-editor-events';
+import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
@@ -1301,6 +1301,23 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             getValidationErrors: () => {
                 return state.validationErrors;
             },
+            spellchecker: {
+                enabled: state.spellcheckerEnabled,
+                toggleSpellchecker: (nextValue: boolean) => {
+                    this.setState({
+                        ...state,
+                        spellcheckerEnabled: nextValue,
+                    });
+
+                    dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                    preferences.update(SPELLCHECKER_PREFERENCE, {
+                        type: 'bool',
+                        enabled: nextValue,
+                        default: true,
+                    });
+                },
+            },
         };
     }
 
@@ -1318,13 +1335,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
-
-        const authoringActions: Array<IAuthoringAction> = (() => {
-            const actions = this.props.getActions?.(exposed) ?? [];
-
-            return [...(this.props.extraActions ?? []), ...actions];
-        })();
-
+        const authoringActions = (() => this.props.getActions?.(exposed) ?? [])();
         const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
             return {
                 ...acc,
@@ -1333,7 +1344,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }, {});
 
         const widgetsCount = this.props.getSidebarWidgetsCount(exposed);
-
         const widgetKeybindings: IKeyBindings = {};
 
         for (let i = 0; i < widgetsCount; i++) {
@@ -1349,6 +1359,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions.actions ?? [];
 
+        debugger;
         if (authoringActions.length > 0) {
             primaryToolbarWidgets.push({
                 group: 'end',
@@ -1405,7 +1416,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={allWidgets.length > 1 ? null : (
+                                header={allWidgets.length < 1 ? null : (
                                     <AuthoringToolbar
                                         entity={state.itemWithChanges}
                                         widgets={allWidgets}

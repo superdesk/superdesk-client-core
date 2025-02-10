@@ -5,7 +5,7 @@ declare module 'superdesk-api' {
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
 
-    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
     export type DeepReadonlyObject<T> = {
         readonly [P in keyof T]: DeepReadonly<T[P]>;
@@ -13,10 +13,10 @@ declare module 'superdesk-api' {
 
     export type DeepReadonly<T> =
         T extends Function
-            ? T
-            : T extends Array<infer U>
-                ? DeepReadonlyArray<U>
-                : DeepReadonlyObject<T>;
+        ? T
+        : T extends Array<infer U>
+        ? DeepReadonlyArray<U>
+        : DeepReadonlyObject<T>;
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
@@ -175,6 +175,10 @@ declare module 'superdesk-api' {
         reinitialize(item: T, profile?: IContentProfileV2): void;
         addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
         getValidationErrors(): IAuthoringValidationErrors;
+        spellchecker: {
+            enabled: boolean;
+            toggleSpellchecker: (nextValue: boolean) => void;
+        }
     }
 
     export interface IAuthoringOptions<T> {
@@ -212,7 +216,6 @@ declare module 'superdesk-api' {
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
-        extraActions?: Array<IAuthoringAction>;
         getActions?(options: IExposedFromAuthoring<T>): Array<IAuthoringAction>; // three dots menu actions
         getInlineToolbarActions?(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
 
@@ -322,7 +325,7 @@ declare module 'superdesk-api' {
     };
     export type IDatelineValueStorage = IDatelineValueOperational;
     export type IDatelineUserPreferences = never;
-    export interface IDatelineFieldConfig extends ICommonFieldConfig {}
+    export interface IDatelineFieldConfig extends ICommonFieldConfig { }
 
     // AUTHORING-REACT FIELD TYPES - time
 
@@ -346,7 +349,7 @@ declare module 'superdesk-api' {
 
     export type ITagInputValueOperational = Array<string> | null;
     export type ITagInputValueStorage = ITagInputValueOperational;
-    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export interface ITagInputFieldConfig extends ICommonFieldConfig { };
     export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
@@ -574,7 +577,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
-    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -1223,13 +1226,13 @@ declare module 'superdesk-api' {
             [id: string]: IArticle | IRelatedArticle;
         };
         type:
-            | 'text'
-            | 'picture'
-            | 'video'
-            | 'audio'
-            | 'preformatted'
-            | 'graphic'
-            | 'composite';
+        | 'text'
+        | 'picture'
+        | 'video'
+        | 'audio'
+        | 'preformatted'
+        | 'graphic'
+        | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
             package: string;
@@ -1678,8 +1681,8 @@ declare module 'superdesk-api' {
         field_type: null;
         schema: {};
         custom_field_type?: string;
-        custom_field_config?: { [key: string]: any };
-        date_shortcuts?: Array<{ value: number; term: string; label: string }>;
+        custom_field_config?: {[key: string]: any};
+        date_shortcuts?: Array<{value: number; term: string; label: string}>;
         init_version?: number;
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
@@ -1749,7 +1752,7 @@ declare module 'superdesk-api' {
         length: number;
     }
 
-    export interface IAttachment extends IBaseRestApiResponse{
+    export interface IAttachment extends IBaseRestApiResponse {
         title: string;
         mimetype: string;
         filename: string;
@@ -3142,7 +3145,7 @@ declare module 'superdesk-api' {
             InputLabel: React.ComponentType<{text: string}>;
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?: string}>;
 
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
@@ -3199,7 +3202,7 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
-            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?:boolean}): string;
+            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?: boolean}): string;
             formatDateTime(date: Date, timezoneId?: string): string;
             longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(
