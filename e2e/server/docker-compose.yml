@@ -31,6 +31,7 @@ services:
         environment:
             - discovery.type=single-node
             - action.auto_create_index=false
+            - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
         tmpfs:
             - /usr/share/elasticsearch/data
 

@@ -82,12 +82,12 @@ const styles = 'display: flex; height: 100%;';
 core.component('sdExtensionPage', reactToAngular1(ExtensionPage, ['setupFullWidthCapability'], [], styles));
 core.config(['$routeProvider', ($routeProvider) => {
     // set initial default route to personal
-    // when user is logged in, it will be overwritten by a default route
-    // from configs if user has permissions to that route
     $routeProvider.when('/', {
-        redirectTo: '/workspace/personal',
+        redirectTo: appConfig.defaultRoute,
     });
 
+    // when user is logged in, it will be overwritten by a default route
+    // from configs if user has permissions to that route
     ng.getServices(['superdesk', 'privileges']).then((res: Array<any>) => {
         const __superdesk = res[0];
         const privileges = res[1];

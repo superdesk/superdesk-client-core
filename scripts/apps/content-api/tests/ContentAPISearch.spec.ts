@@ -7,9 +7,6 @@ describe('Content API Search', () => {
     beforeEach(window.module('superdesk.apps.search'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
-    /**
-     * Mock some of the dependencies of the parent directives.
-     */
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
@@ -24,7 +21,6 @@ describe('Content API Search', () => {
                 useDefaultTimezone: true,
             },
             default_timezone: 'UTC',
-            server: {url: undefined, ws: undefined},
         };
 
         Object.assign(appConfig, testConfig);

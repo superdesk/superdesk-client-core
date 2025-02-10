@@ -520,7 +520,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             handleUnsavedChanges,
                             sideWidget,
                             onItemChange,
-                            addValidationErrors,
+                            getValidationErrors,
+                            setValidationErrors,
                         }, readOnly) => {
                             if (panelState.active === true) {
                                 return (
@@ -534,7 +535,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         onClose={panelActions.closePanel}
                                         onError={(error) => {
                                             if (error.kind === 'publishing-error') {
-                                                addValidationErrors(error.fields);
+                                                setValidationErrors({
+                                                    ...getValidationErrors(),
+                                                    ...error.fields,
+                                                });
                                             } else {
                                                 assertNever(error.kind);
                                             }

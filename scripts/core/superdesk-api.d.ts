@@ -173,8 +173,8 @@ declare module 'superdesk-api' {
         keepChangesAndClose(): void;
         stealLock(): void;
         reinitialize(item: T, profile?: IContentProfileV2): void;
-        addValidationErrors(validationErrors: IAuthoringValidationErrors): void;
         getValidationErrors(): IAuthoringValidationErrors;
+        setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
         spellchecker: {
             enabled: boolean;
             toggleSpellchecker: (nextValue: boolean) => void;
@@ -2931,6 +2931,30 @@ declare module 'superdesk-api' {
         cancelButtonText?: string;
     }
 
+    export interface IAuthoringReact<T extends IBaseRestApiResponse> {
+        fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+        setRef(ref: HTMLElement): void;
+        setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void>;
+        initiateUnmounting(): Promise<void>;
+        cancelAutosave(): Promise<void>;
+        computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
+        handleFieldChange(fieldId: string, data: unknown): void;
+        handleFieldsDataChange(fieldsData: Immutable.Map<string, unknown>): void;
+        hasUnsavedChanges(): boolean;
+        getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
+        handleUnsavedChanges(state: IStateLoaded<T>): Promise<T>;
+        save(state: IStateLoaded<T>): Promise<T>;
+        forceLock(state: IStateLoaded<T>): void;
+        discardUnsavedChanges(state: IStateLoaded<T>): Promise<void>;
+        initiateClosing(state: IStateLoaded<T>): void;
+        setUserPreferences(val: IStateLoaded<T>['userPreferencesForFields']): void;
+        toggleField(fieldId: string): void;
+        updateItemWithChanges(state: IStateLoaded<T>, itemPartial: Partial<T>): IStateLoaded<T>;
+        onItemChange(state: IStateLoaded<T>, itemWithChanges: T): void;
+        reinitialize(state: IStateLoaded<T>, itemWithUpdates: T, newProfile?: IContentProfileV2): void;
+        getExposed(): IExposedFromAuthoring<T>;
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -3334,6 +3358,7 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+
         // FROM SERVER
         default_language: string;
         disallowed_characters: Array<string>; // applies to slugline

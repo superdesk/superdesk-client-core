@@ -35,7 +35,8 @@ describe('publish queue', () => {
         },
     ];
 
-    var publishQueue = {_items: [
+    var publishQueue;
+    var publishQueueItems = {_items: [
         {
             _created: '2015-05-15T06:27:13+0000',
             _etag: 'd18bf9f762b03815acc189fdcef633bf67f8e222',
@@ -128,6 +129,15 @@ describe('publish queue', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+
+    beforeEach(() => {
+        publishQueue = {
+            _meta: {
+                total: 3,
+            },
+            _items: publishQueueItems._items.concat(),
+        };
+    });
 
     beforeEach(inject(($rootScope, $controller, subscribersService, $q, api, ingestSources, vocabularies) => {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));

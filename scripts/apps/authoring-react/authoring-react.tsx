@@ -19,6 +19,7 @@ import {
     IAuthoringValidationErrors,
     IFieldsV2,
     IEditor3Config,
+    IAuthoringReact,
 } from 'superdesk-api';
 import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -310,7 +311,9 @@ interface IStateLoaded<T> {
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
+export class AuthoringReact<T extends IBaseRestApiResponse>
+    extends React.PureComponent<IPropsAuthoring<T>, IState<T>>
+    implements IAuthoringReact<T> {
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
@@ -1289,17 +1292,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
             reinitialize: (item, profile) => this.reinitialize(state, item, profile),
-            addValidationErrors: (moreValidationErrors) => {
-                this.setState({
-                    ...state,
-                    validationErrors: {
-                        ...state.validationErrors,
-                        ...moreValidationErrors,
-                    },
-                });
-            },
             getValidationErrors: () => {
                 return state.validationErrors;
+            },
+            setValidationErrors: (validationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors,
+                });
             },
             spellchecker: {
                 enabled: state.spellcheckerEnabled,
@@ -1359,7 +1359,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions.actions ?? [];
 
-        debugger;
         if (authoringActions.length > 0) {
             primaryToolbarWidgets.push({
                 group: 'end',

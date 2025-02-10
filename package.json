@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "2.8.1",
+  "version": "2.8.3",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -126,13 +126,13 @@
     "shallow-equal": "^3.1.0",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "4.0.11",
+    "superdesk-ui-framework": "4.0.20",
     "ts-loader": "3.5.0",
     "typescript": "4.9.5",
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
-    "webpack": "3.11.0",
-    "webpack-dev-server": "2.11.1"
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "~3.0.0"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
@@ -143,14 +143,13 @@
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^2.0.0",
-    "jasmine-core": "^2.99.1",
     "karma": "^6.4.3",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.1",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-jasmine": "^2.0.0",
     "karma-ng-html2js-preprocessor": "^1.0.0",
-    "karma-sourcemap-loader": "^0.3.7",
+    "karma-sourcemap-loader": "^0.4.0",
     "karma-spec-reporter": "0.0.36",
-    "karma-webpack": "^2.0.13",
+    "karma-webpack": "^3.0.0",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
@@ -166,7 +165,7 @@
     "test": "npm run lint && npm run unit && node tasks/verify-client-api-changes.js",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
     "unit": "karma start --single-run",
-    "lint": "python ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
+    "lint": "python3 ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "server": "grunt server",
     "dev": "npm run server"
