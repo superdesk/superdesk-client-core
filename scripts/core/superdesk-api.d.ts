@@ -3826,6 +3826,11 @@ declare module 'superdesk-api' {
          */
         getEmptyValue(config: IConfig, language: string): IValueOperational;
 
+        /**
+         * Returns an error message or `null` if value is valid.
+         * Will only get called if `hasValue` returns true.
+         */
+        validate?(valueOperational: IValueOperational, fieldConfig: IConfig): string | null;
 
         /**
          * Enables initializing with a custom value when field visibility is toggled from "off" to "on".

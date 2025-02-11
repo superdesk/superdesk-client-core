@@ -58,6 +58,7 @@ import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
 import memoizeOne from 'memoize-one';
+import {arrayToDictionary} from 'core/helpers/array-to-dictionary';
 
 export function getFieldsData<T>(
     item: T,
@@ -316,7 +317,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
-    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+    public fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
     private prepareHeaderFields: typeof setCompactMode;
 
     constructor(props: IPropsAuthoring<T>) {
@@ -993,25 +994,39 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             const {profile} = state;
             const allFields = profile.header.merge(profile.content);
 
-            const validationErrors: IAuthoringValidationErrors = allFields.toArray()
-                .filter((field) => {
-                    if (field.fieldConfig.required === true) {
-                        const FieldEditorConfig = getField(field.fieldType);
+            const validationErrorsArray: Array<{field: IAuthoringFieldV2; error: string}> =
+                allFields
+                    .toArray()
+                    .flatMap((field) => {
+                        const fieldType = getField(field.fieldType);
+                        const fieldValue = state.fieldsDataWithChanges.get(field.id);
 
-                        return !FieldEditorConfig.hasValue(state.fieldsDataWithChanges.get(field.id));
-                    } else {
-                        return false;
-                    }
-                }).reduce<IAuthoringValidationErrors>((acc, field) => {
-                    acc[field.id] = gettext('Field is required');
+                        const error = ((): string | null => {
+                            if (!fieldType.hasValue(fieldValue)) {
+                                return field.fieldConfig.required === true ? gettext('Field is required') : null;
+                            } else if (fieldType.validate != null) {
+                                return fieldType.validate(fieldValue, field.fieldConfig);
+                            } else {
+                                return null;
+                            }
+                        })();
 
-                    return acc;
-                }, {});
+                        return error == null ? [] : {field, error};
+                    });
 
-            if (Object.keys(validationErrors).length > 0) {
+            const validationErrors: IAuthoringValidationErrors = arrayToDictionary(
+                validationErrorsArray,
+                ({field, error}) => ({key: field.id, value: error}),
+            );
+
+            if (validationErrorsArray.length > 0) {
+                const firstError = validationErrorsArray[0];
+
                 this.setState({
                     ...state,
                     validationErrors,
+                }, () => {
+                    this.fieldRefs[firstError.field.id]?.current.scrollIntoView({behavior: 'smooth'});
                 });
 
                 return Promise.reject('validation errors were found');
