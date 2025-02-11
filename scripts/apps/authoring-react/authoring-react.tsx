@@ -1026,7 +1026,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     ...state,
                     validationErrors,
                 }, () => {
-                    this.fieldRefs[firstError.field.id]?.current.scrollIntoView({behavior: 'smooth'});
+                    const makeVisible = this.props.makeVisible ?? (() => Promise.resolve());
+
+                    makeVisible().then(() => {
+                        this.fieldRefs[firstError.field.id]?.current.scrollIntoView({behavior: 'smooth'});
+                    });
                 });
 
                 return Promise.reject('validation errors were found');
