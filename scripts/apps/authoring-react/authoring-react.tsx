@@ -58,7 +58,6 @@ import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
 import memoizeOne from 'memoize-one';
-import {arrayToDictionary} from 'core/helpers/array-to-dictionary';
 
 export function getFieldsData<T>(
     item: T,
