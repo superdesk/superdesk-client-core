@@ -994,42 +994,38 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             const {profile} = state;
             const allFields = profile.header.merge(profile.content);
 
-            const validationErrorsArray: Array<{field: IAuthoringFieldV2; error: string}> =
-                allFields
-                    .toArray()
-                    .flatMap((field) => {
-                        const fieldType = getField(field.fieldType);
-                        const fieldValue = state.fieldsDataWithChanges.get(field.id);
+            let validationErrors = Map<string, string>(); // fieldId, errorMessage
 
-                        const error = ((): string | null => {
-                            if (!fieldType.hasValue(fieldValue)) {
-                                return field.fieldConfig.required === true ? gettext('Field is required') : null;
-                            } else if (fieldType.validate != null) {
-                                return fieldType.validate(fieldValue, field.fieldConfig);
-                            } else {
-                                return null;
-                            }
-                        })();
+            allFields.forEach((field) => {
+                const fieldType = getField(field.fieldType);
+                const fieldValue = state.fieldsDataWithChanges.get(field.id);
 
-                        return error == null ? [] : {field, error};
-                    });
+                const error = ((): string | null => {
+                    if (!fieldType.hasValue(fieldValue)) {
+                        return field.fieldConfig.required === true ? gettext('Field is required') : null;
+                    } else if (fieldType.validate != null) {
+                        return fieldType.validate(fieldValue, field.fieldConfig);
+                    } else {
+                        return null;
+                    }
+                })();
 
-            const validationErrors: IAuthoringValidationErrors = arrayToDictionary(
-                validationErrorsArray,
-                ({field, error}) => ({key: field.id, value: error}),
-            );
+                if (error != null) {
+                    validationErrors = validationErrors.set(field.id, error);
+                }
+            });
 
-            if (validationErrorsArray.length > 0) {
-                const firstError = validationErrorsArray[0];
+            if (validationErrors.size > 0) {
+                const firstErrorFieldId = validationErrors.keySeq().first();
 
                 this.setState({
                     ...state,
-                    validationErrors,
+                    validationErrors: validationErrors.toObject(),
                 }, () => {
                     const makeVisible = this.props.makeVisible ?? (() => Promise.resolve());
 
                     makeVisible().then(() => {
-                        this.fieldRefs[firstError.field.id]?.current.scrollIntoView({behavior: 'smooth'});
+                        this.fieldRefs[firstErrorFieldId]?.current.scrollIntoView({behavior: 'smooth'});
                     });
                 });
 
