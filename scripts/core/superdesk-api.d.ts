@@ -177,7 +177,7 @@ declare module 'superdesk-api' {
         setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
         spellchecker: {
             enabled: boolean;
-            toggleSpellchecker: (nextValue: boolean) => void;
+            setSpellcheckerStatus: (enabled: boolean) => void;
         }
     }
 

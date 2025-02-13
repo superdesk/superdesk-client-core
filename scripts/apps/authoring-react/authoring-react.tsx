@@ -1303,17 +1303,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             },
             spellchecker: {
                 enabled: state.spellcheckerEnabled,
-                toggleSpellchecker: (nextValue: boolean) => {
+                setSpellcheckerStatus: (enabled) => {
                     this.setState({
                         ...state,
-                        spellcheckerEnabled: nextValue,
+                        spellcheckerEnabled: enabled,
                     });
 
-                    dispatchEditorEvent('spellchecker__set_status', nextValue);
+                    dispatchEditorEvent('spellchecker__set_status', enabled);
 
                     preferences.update(SPELLCHECKER_PREFERENCE, {
                         type: 'bool',
-                        enabled: nextValue,
+                        enabled: enabled,
                         default: true,
                     });
                 },
@@ -1335,7 +1335,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
-        const authoringActions = (() => this.props.getActions?.(exposed) ?? [])();
+        const authoringActions = this.props.getActions?.(exposed) ?? [];
         const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
             return {
                 ...acc,
