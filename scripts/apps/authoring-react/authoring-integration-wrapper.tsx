@@ -14,7 +14,7 @@ import {
     IRestApiResponse,
     IFieldsData,
 } from 'superdesk-api';
-import {AuthoringReact, SPELLCHECKER_PREFERENCE} from './authoring-react';
+import {AuthoringReact} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {appConfig, extensions} from 'appConfig';
@@ -46,8 +46,6 @@ import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrappe
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
 import {IconButton} from 'superdesk-ui-framework';
-import {preferences} from 'api/preferences';
-import {dispatchEditorEvent} from './authoring-react-editor-events';
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
