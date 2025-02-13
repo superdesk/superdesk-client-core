@@ -92,9 +92,8 @@ test('new article prefilling with content set in template', async ({page}) => {
     await page.goto('/#/workspace/monitoring');
 
     await monitoring.selectDeskOrWorkspace('Sports');
-
     await monitoring.createArticleFromTemplate('story 2');
-    await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('article 1');
+    await expect(page.locator(s('authoring', 'authoring-field=slugline')).getByRole('textbox')).toHaveText('article 1');
 });
 
 test('performing "save as" action on a template', async ({page}) => {
@@ -111,8 +110,8 @@ test('performing "save as" action on a template', async ({page}) => {
         'Save as template',
     );
 
-    await page.locator(s('modal-save-as-template')).getByLabel('name').fill('story 2.1');
-    await page.locator(s('modal-save-as-template')).getByLabel('Desk').selectOption({label: 'Sports'});
+    await page.locator(s('modal-save-as-template')).getByLabel('template name').fill('story 2.1');
+    await page.locator(s('modal-save-as-template')).getByLabel('Desks').selectOption({label: 'Sports'});
     await page.locator(s('modal-save-as-template')).getByRole('button', {name: 'Save'}).click();
 
     await page.goto('/#/settings/templates');

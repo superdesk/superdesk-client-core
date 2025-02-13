@@ -13,7 +13,8 @@ test.setTimeout(50000);
  * test added after discovering a bug SDESK-7248
  */
 test('correcting with unsaved changes', async ({page}) => {
-    const getHeadlineField = async () => await page.locator(s('authoring', 'field--headline')).getByRole('textbox');
+    const getHeadlineField = async () =>
+        await page.locator(s('authoring', 'authoring-field=headline')).getByRole('textbox');
     const getBodyField = async () =>
         await page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox');
 
@@ -31,7 +32,7 @@ test('correcting with unsaved changes', async ({page}) => {
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'open-send-publish-pane')).click();
+    await page.locator(s('authoring')).getByRole('button', {name: 'Send to / Publish'}).click();
     await page.locator(s('authoring', 'publish')).click();
 
     // publishing the article end
@@ -40,7 +41,13 @@ test('correcting with unsaved changes', async ({page}) => {
         s('monitoring-group=Sports desk output', 'article-item=test sports story'),
     ).dblclick({timeout: 10000}); // need to wait until published item appears in output
 
-    await page.locator(s('authoring', 'authoring-topbar')).getByLabel('Correct').click();
+    /*
+    * test-pr-TODO:
+    * When you try to 'correct a published article,
+    * a white screen appears with an error in the console: "Error: profile ID must be provided."
+    */
+
+    await page.locator(s('authoring', 'authoring-topbar')).getByRole('button', {name: 'C', exact: true}).click();
 
     await clearInput(await getHeadlineField());
     await (await getHeadlineField()).fill('test sports story [corrected]');
@@ -55,7 +62,7 @@ test('correcting with unsaved changes', async ({page}) => {
     ).dblclick({timeout: 10000}); // need to wait until published item appears in output
 
     // initialize correction only to make field editable and accessible using the same selector
-    await page.locator(s('authoring', 'authoring-topbar')).getByLabel('Correct').click();
+    await page.locator(s('authoring', 'authoring-topbar')).getByRole('button', {name: 'C', exact: true}).click();
 
     await expect((await getHeadlineField())).toHaveText('test sports story [corrected]');
     await expect((await getBodyField())).toHaveText('test sport story body [corrected]');

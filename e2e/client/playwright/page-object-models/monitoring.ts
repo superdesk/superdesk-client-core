@@ -1,6 +1,6 @@
 import {Page, Locator} from '@playwright/test';
 import {nameof} from 'core/helpers/typescript-helpers';
-import {s} from '../utils';
+import {s, sleep} from '../utils';
 
 export class Monitoring {
     private page: Page;
@@ -55,12 +55,14 @@ export class Monitoring {
             .getByRole('button', {name: template, exact: true})
             .click();
 
+        await sleep(2000);
+
         if (options != null) {
             let keys = Object.keys(options);
 
             for (const key of keys) {
                 if (key === nameof<typeof options>('slugline')) {
-                    await this.page.locator(s('authoring', `field-${key}`)).fill(options[key]);
+                    await this.fillEditor3Field(key, options[key]);
                 } else {
                     await this.page.locator(
                         s('authoring', `authoring-field=${key}`),
@@ -77,5 +79,13 @@ export class Monitoring {
 
     getArticleLocator(headline: string): Locator {
         return this.page.locator(s('article-item=' + headline));
+    }
+
+    async fillEditor3Field(field: string, value: string): Promise<void> {
+        await sleep(2000);
+        await this.page.locator(s('authoring', `authoring-field=${field}`)).getByRole('textbox').focus();
+        await this.page.keyboard.press('Meta+A');
+        await this.page.keyboard.press('Backspace');
+        await this.page.locator(s('authoring', `authoring-field=${field}`)).getByRole('textbox').fill(value);
     }
 }

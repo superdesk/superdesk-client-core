@@ -15,6 +15,8 @@ export class Card extends React.PureComponent<IPropsCard> {
                     borderRadius: borderRadius,
                     width: this.props.width,
                 }}
+                data-test-id={this.props['data-test-id']}
+                data-test-value={this.props['data-test-value']}
             >
                 {
                     this.props.heading != null && (

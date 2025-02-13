@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s, sleep} from './utils';
 
 test.describe('article versions', async () => {
     test('reverting to a previous article version', async ({page}) => {
@@ -14,14 +14,21 @@ test.describe('article versions', async () => {
             page.locator(s('article-item=story 2')),
             'Edit',
         );
-        await page.locator(s('authoring', 'field-slugline')).fill('story 2.1');
-        await page.locator(s('authoring-topbar', 'save')).click();
-        await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('story 2.1');
+        await sleep(2000);
 
-        await page.locator(s('navigation-tabs', 'authoring-widget=Versions/History')).click();
+        await monitoring.fillEditor3Field('slugline', 'story 2.1');
+
+        await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
+        await expect(
+            page.locator(s('authoring', 'authoring-field=slugline')).getByRole('textbox'),
+        ).toHaveText('story 2.1');
+
+        await page.locator(s('navigation-tabs', 'widget-icon=versions-and-item-history')).click();
         await page
-            .locator(s('authoring-widget-panel=Versions/History', 'article-version=3'))
+            .locator(s('authoring-widget-panel', 'article-version=3'))
             .getByRole('button', {name: 'revert'}).click();
-        await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('story 2');
+        await expect(
+            page.locator(s('authoring', 'authoring-field=slugline')).getByRole('textbox'),
+        ).toHaveText('story 2');
     });
 });

@@ -63,6 +63,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                 onHide={() => this.props.closeModal()}
                 size="medium"
                 headerTemplate={gettext('Save as template')}
+                data-test-id="modal-save-as-template"
             >
                 <Spacer v gap="16">
                     <Input

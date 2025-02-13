@@ -18,16 +18,16 @@ test('desk notifications', async ({page}) => {
     ).dblclick();
 
     await page.locator(
-        s('authoring-widget=Comments'),
+        s('widget-icon=comments-widget'),
     ).click();
 
     await page.locator(
-        s('comments-widget', 'new-comment-input'),
-    ).fill('#Sports hello');
+        s('authoring-widget-panel'),
+    ).getByPlaceholder('Type your comment').fill('#Sports hello');
 
     await page.locator(
-        s('comments-widget', 'new-comment-submit'),
-    ).click();
+        s('authoring-widget-panel'),
+    ).getByRole('button', {name: 'Post'}).click();
 
     await expect(
         page.locator(

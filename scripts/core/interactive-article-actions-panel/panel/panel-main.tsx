@@ -20,6 +20,7 @@ export class Panel extends React.PureComponent<IPropsSendToPanel> {
                     side="right"
                     open={true}
                     size={this.props.width == null ? 'x-small' : {custom: this.props.width}}
+                    data-test-id={this.props['data-test-id']}
                 >
                     {this.props.children}
                 </Layout.Panel>

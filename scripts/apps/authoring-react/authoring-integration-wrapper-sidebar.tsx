@@ -77,6 +77,7 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
                     }
                 }}
                 items={this.state.sidebarTabs}
+                data-test-id="navigation-tabs"
             />
         );
     }

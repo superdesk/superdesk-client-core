@@ -78,55 +78,57 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <Spacer v gap="0">
-                    <span
-                        className={classNames(
-                            'form-label',
-                            {'form-label--invalid': validationError != null},
-                        )}
-                    >
-                        <Spacer h gap="8" noGrow noWrap>
-                            <Spacer h gap="4" noGrow noWrap>
-                                {field.name}
-                                {field.fieldConfig.required && (
-                                    <RequiredIndicatorForHeader />
-                                )}
+                <div className={sectionClassNames?.header} data-test-id="authoring-field" data-test-value={field.id}>
+                    <Spacer v gap="0">
+                        <span
+                            className={classNames(
+                                'form-label',
+                                {'form-label--invalid': validationError != null},
+                            )}
+                        >
+                            <Spacer h gap="8" noGrow noWrap>
+                                <Spacer h gap="4" noGrow noWrap>
+                                    {field.name}
+                                    {field.fieldConfig.required && (
+                                        <RequiredIndicatorForHeader />
+                                    )}
+                                </Spacer>
+                                <span>{toggle}</span>
                             </Spacer>
-                            <span>{toggle}</span>
-                        </Spacer>
-                    </span>
+                        </span>
 
-                    <div style={{flexGrow: 1}}>
-                        {this.props.children}
+                        <div style={{flexGrow: 1}}>
+                            {this.props.children}
 
-                        <Spacer h gap="8" justifyContent="end" noGrow noWrap>
-                            {
-                                validationError != null && (
-                                    <div className="input-field-error">{validationError}</div>
-                                )
-                            }
+                            <Spacer h gap="8" justifyContent="end" noGrow noWrap>
+                                {
+                                    validationError != null && (
+                                        <div className="input-field-error">{validationError}</div>
+                                    )
+                                }
 
-                            {
-                                miniToolbar != null && (
-                                    <div>{miniToolbar}</div>
-                                )
-                            }
-                        </Spacer>
-                    </div>
-                </Spacer>
+                                {
+                                    miniToolbar != null && (
+                                        <div>{miniToolbar}</div>
+                                    )
+                                }
+                            </Spacer>
+                        </div>
+                    </Spacer>
+                </div>
             );
         }
     }
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, sectionClassNames} = this.props;
 
             return (
-                <div>
+                <div className={sectionClassNames?.content} data-test-id="authoring-field" data-test-value={field.id}>
                     <div
                         style={{
                             display: 'flex',

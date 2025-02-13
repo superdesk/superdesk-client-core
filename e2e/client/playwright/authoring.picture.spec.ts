@@ -36,6 +36,7 @@ test('media metadata editor', async ({page}) => {
 
     await monitoring.executeActionOnMonitoringItem(monitoring.getArticleLocator('picture'), 'Edit');
 
+    // test-pr-TODO: issue with data-layer
     await pictureAuthoring.openMetadataEditor();
 
     await mediaEditor.field('field--description_text').fill('test description');

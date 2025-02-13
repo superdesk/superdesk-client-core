@@ -202,7 +202,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                         const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
 
                         return (
-                            <Card key={i}>
+                            <Card key={i} data-test-id="article-version" data-test-value={item._current_version}>
                                 <Spacer h gap="8" justifyContent="space-between" noGrow>
                                     <TimeElem date={item._created} />
                                     <span>

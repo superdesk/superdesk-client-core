@@ -45,7 +45,7 @@ test('creating an article from a custom workspace', async ({page}) => {
 
     // create new article and save it
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article 2'});
-    await page.locator(s('authoring-topbar', 'save')).click();
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
 
     // check if article exist in monitoring group
     await expect(page.locator(s('monitoring-view', 'article-item=new article 2'))).toBeVisible();

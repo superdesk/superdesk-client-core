@@ -20,7 +20,7 @@ test('disabling publish embargo by adjusting instance configuration', async ({pa
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'open-send-publish-pane')).click();
+    await page.locator(s('authoring')).getByRole('button', {name: 'Send to / Publish'}).click();
 
     // "target" section is not relevant for this test
     // but is used as a control to make sure panel content has finished loading

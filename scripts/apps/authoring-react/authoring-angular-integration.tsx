@@ -217,6 +217,7 @@ function getInlineToolbarActions(
 
         if (
             item._type !== 'archived'
+            && !sdApi.article.isPersonal(item)
             && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly
         ) {
             actions.push({
@@ -832,7 +833,7 @@ export interface IProps {
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
-            <div className="sd-authoring-react">
+            <div className="sd-authoring-react" data-test-id="authoring">
                 <AuthoringIntegrationWrapper
                     sidebarMode={true}
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}

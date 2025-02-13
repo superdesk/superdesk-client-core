@@ -81,7 +81,7 @@ test.describe('highlights', async () => {
         // create fresh article
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1'});
-        await page.locator(s('authoring-topbar', 'save')).click();
+        await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=article 1')),
@@ -128,7 +128,7 @@ test.describe('highlights', async () => {
             'Edit',
         );
 
-        await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+        await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Send to / Publish'}).click();
         await page.locator(s('interactive-actions-panel', 'publish')).click();
 
         await expect(
@@ -150,7 +150,7 @@ test.describe('highlights', async () => {
         // create fresh article
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1', body_html: 'body html article'});
-        await page.locator(s('authoring-topbar', 'save')).click();
+        await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=article 1')),
@@ -162,6 +162,10 @@ test.describe('highlights', async () => {
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 1'}).click();
         await page.locator(s('articles-list--toolbar')).getByRole('button', {name: 'Create'}).click();
+        /* test-pr-TODO:
+        * When creating a highlight package, the export button does not appear until the package is saved
+        * - when we press button create state is 'draft' after saving is 'in_progress'
+        */
         await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Export'}).click();
         await page.locator(s('modal-confirm')).getByRole('button', {name: 'ok'}).click();
 

@@ -2,8 +2,9 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {Authoring} from './page-object-models/authoring';
 import {MultiEdit} from './page-object-models/multiedit';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s, sleep} from './utils';
 import {clearInput} from './utils/inputs';
+import {TreeSelectDriver} from './utils/tree-select-driver';
 
 test.describe('Multiedit', async () => {
     test.skip('editing articles in multi-edit mode', async ({page}) => {
@@ -70,14 +71,27 @@ test.describe('Multiedit', async () => {
         await monitoring.selectDeskOrWorkspace('Sports');
 
         await monitoring.executeActionOnMonitoringItem(
+            page.locator(s('article-item=story 2')),
+            'Edit',
+        );
+
+        await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story')),
             'Edit',
         );
+        await sleep(2000);
         await authoring.executeActionInEditor(
-            'Multiedit',
-            'OK',
+            'Multi-edit',
         );
 
+        await new TreeSelectDriver(
+            page,
+            page.locator(s('multi-edit-modal')),
+        ).addValue(['story 2']);
+
+        await page.locator(s('multi-edit-modal')).getByRole('button', {name: 'open multi edit'}).click();
+
+        // test-pr-TODO: there is no option to remove item from multiedit screen
         await page.locator(s('multiedit-screen', 'multiedit-article=test sports story')).hover();
         await page
             .locator(s('multiedit-screen', 'multiedit-article=test sports story'))

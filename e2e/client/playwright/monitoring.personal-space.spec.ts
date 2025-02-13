@@ -9,7 +9,7 @@ test('creating an article in personal space', async ({page}) => {
     await page.goto('/#/workspace/personal');
 
     await monitoring.createArticleFromTemplate('story', {slugline: 'article 1'});
-    await page.locator(s('authoring-topbar', 'save')).click();
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('monitoring-group=Personal Items', 'article-item=article 1'))).toBeVisible();
 });
 
@@ -23,8 +23,8 @@ test('editing an article in personal space', async ({page}) => {
         page.locator(s('article-item=personal space article 1')),
         'Edit',
     );
-    await page.locator(s('authoring', 'field-slugline')).fill('personal space article 1.1');
-    await page.locator(s('authoring-topbar', 'save')).click();
+    await monitoring.fillEditor3Field('slugline', 'personal space article 1.1');
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
     await expect(
         page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1')),
     ).not.toBeVisible();

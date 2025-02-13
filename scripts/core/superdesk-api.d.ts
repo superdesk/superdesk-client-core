@@ -2199,6 +2199,8 @@ declare module 'superdesk-api' {
         padding?: import('react').CSSProperties['padding'];
         borderRadius?: import('react').CSSProperties['borderRadius'];
         heading?: React.ReactNode;
+        ['data-test-id']?: string;
+        ['data-test-value']?: string | number;
     }
 
     export interface IPropsListItemColumn {
@@ -3657,6 +3659,8 @@ declare module 'superdesk-api' {
          * (it will be rendered in different DOM locations depending if field is in header or content section)
          */
         miniToolbar?: JSX.Element;
+        sectionClassNames?: IAuthoringSectionClassNames;
+        fieldId?: IAuthoringField['id'];
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {

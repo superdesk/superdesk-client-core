@@ -208,6 +208,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                 onHide={this.props.onClose}
                 visible
                 headerTemplate={gettext('Multi Edit')}
+                data-test-id="multiedit-screen"
             >
                 <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
                     <Spacer h gap="0" noWrap style={{height: '100%'}}>

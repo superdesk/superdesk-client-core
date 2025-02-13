@@ -1481,7 +1481,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                             <Layout.AuthoringFrame
                                 header={primaryToolbarWidgets.length < 1
                                     && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                        <SubNav>
+                                        <SubNav data-test-id="authoring-topbar">
                                             <AuthoringToolbar
                                                 entity={state.itemWithChanges}
                                                 widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}

@@ -16,7 +16,7 @@ test.describe('sending an article', async () => {
             'Edit',
         );
 
-        await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+        await page.locator(s('authoring')).getByRole('button', {name: 'Send to / Publish'}).click();
         await page.locator(s('interactive-actions-panel', 'tabs')).getByRole('tab', {name: 'Send to'}).click();
 
         // selecting other desk
@@ -51,7 +51,7 @@ test.describe('sending an article', async () => {
             'Edit',
         );
 
-        await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+        await page.locator(s('authoring')).getByRole('button', {name: 'Send to / Publish'}).click();
         await page.locator(s('interactive-actions-panel', 'tabs')).getByRole('tab', {name: 'Send to'}).click();
 
         // selecting other stage

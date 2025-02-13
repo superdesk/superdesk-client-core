@@ -121,7 +121,7 @@ test('adding word marked as a spellchecker issue to dictionary', async ({page}) 
 test('tables maintaining cursor position at the start when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
 
-    await restoreDatabaseSnapshot({snapshotName: 'editor3-tables'});
+    await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/monitoring');
 
@@ -158,7 +158,7 @@ test('tables maintaining cursor position at the start when executing "undo" acti
 test('tables maintaining cursor position in the middle when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
 
-    await restoreDatabaseSnapshot({snapshotName: 'editor3-tables'});
+    await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/monitoring');
 
@@ -195,7 +195,7 @@ test('tables maintaining cursor position in the middle when executing "undo" act
 test('tables maintaining cursor position at the end when executing "undo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
 
-    await restoreDatabaseSnapshot({snapshotName: 'editor3-tables'});
+    await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/monitoring');
 
@@ -229,7 +229,7 @@ test('tables maintaining cursor position at the end when executing "undo" action
 test('tables maintaining cursor position when executing "redo" action', async ({page}) => {
     const monitoring = new Monitoring(page);
 
-    await restoreDatabaseSnapshot({snapshotName: 'editor3-tables'});
+    await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/monitoring');
 
@@ -300,7 +300,7 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
 test('adding a custom block inside editor3', async ({page}) => {
     const monitoring = new Monitoring(page);
 
-    await restoreDatabaseSnapshot({snapshotName: 'custom-blocks'});
+    await restoreDatabaseSnapshot();
 
     await page.goto('/#/workspace/monitoring');
 

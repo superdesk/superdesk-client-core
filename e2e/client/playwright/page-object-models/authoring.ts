@@ -9,8 +9,7 @@ export class Authoring {
     }
 
     async executeActionInEditor(...actionPath: Array<string>): Promise<void> {
-        await this.page.locator(s('authoring-topbar', 'actions-button')).click();
-
+        await this.page.locator(s('authoring-topbar')).getByRole('button', {name: 'Actions menu'}).click();
         const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
 
         for (const action of actionsWithoutLast) {
@@ -18,7 +17,7 @@ export class Authoring {
         }
 
         await this.page.locator(s('actions-list'))
-            .getByRole('button', {name: actionPath[actionPath.length - 1]})
+            .getByRole('menuitem', {name: actionPath[actionPath.length - 1]})
             .click();
     }
 

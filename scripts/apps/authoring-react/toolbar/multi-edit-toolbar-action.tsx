@@ -34,6 +34,7 @@ export class MultiEditToolbarAction extends React.Component<IProps, IState> {
                 visible
                 headerTemplate={gettext('Select articles')}
                 size="medium"
+                data-test-id="multi-edit-modal"
             >
                 <Spacer v gap="8" noWrap style={{padding: 10}}>
                     <TreeSelect

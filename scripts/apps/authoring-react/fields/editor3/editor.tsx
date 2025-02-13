@@ -411,6 +411,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
                  * to allow consumers apply conditional logic based on presence of mini toolbar
                  */
                 miniToolbar={isSpacerTreeEmpty(miniToolbar) ? undefined : miniToolbar}
+                sectionClassNames={{header: 'sd-input-style'}}
+                fieldId={this.props.editorId}
             >
                 {
                     HelperComponent != null && (

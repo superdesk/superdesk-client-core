@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot, s, sleep} from './utils';
 
 test('applying "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -11,9 +11,10 @@ test('applying "populate abstract" macro', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    await page.locator(
-        s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
-    ).dblclick();
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('article-item=test sports story')),
+        'Edit',
+    );
 
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
@@ -24,14 +25,14 @@ test('applying "populate abstract" macro', async ({page}) => {
     ).toHaveText('');
 
     await page.locator(
-        s('authoring-widget=Macros'),
+        s('widget-icon=macros-widget'),
     ).click();
 
-    await page.locator(s('authoring-widget-panel=Macros'))
+    await page
+        .locator(s('authoring-widget-panel'))
         .getByRole('button', {name: 'Populate Abstract'})
         .click();
 
-    await page.getByTitle('Macros (ctrl+alt+6)').click();
     await page.getByRole('button', {name: 'Populate Abstract'}).click();
 
     await expect(
@@ -49,17 +50,16 @@ test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
 
     // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
-
-    // check unsaved changes modal is visible
-    await page.locator(s('authoring-topbar', 'close')).click();
-    await expect(page.locator(s('unsaved-changes-dialog')).getByRole('dialog')).toBeVisible();
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'close'}).click();
 
     // button - cancel
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'cancel'}).click();
+    await sleep(2000);
     await expect(page.locator(s('authoring'))).toBeVisible();
+    await sleep(2000);
 
     // button - ignore
-    await page.locator(s('authoring-topbar', 'close')).click();
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'close'}).click();
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'ignore'}).click();
     await expect(page.locator(s('authoring'))).not.toBeVisible();
     await expect(page.locator(s('monitoring-view', 'article-item=new article'))).not.toBeVisible();
@@ -75,9 +75,9 @@ test('save button from unsaved changes modal', async ({page}) => {
 
     // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'close'}).click();
 
     // button - save
-    await page.locator(s('authoring-topbar', 'close')).click();
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'save'}).click();
     await expect(page.locator(s('authoring'))).not.toBeVisible();
     await expect(page.locator(s('monitoring-view', 'article-item=new article'))).toBeVisible();
@@ -103,7 +103,7 @@ test('setting embargo', async ({page}) => {
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    await page.locator(s('authoring', 'open-send-publish-pane')).click();
+    await page.locator(s('authoring')).getByRole('button', {name: 'Send to / Publish'}).click();
 
     const embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
     const embargoTime = '04:00';
@@ -118,7 +118,7 @@ test('setting embargo', async ({page}) => {
 
     await page.locator(s('authoring', 'interactive-actions-panel')).getByRole('button', {name: 'Close'}).click();
 
-    await page.locator(s('authoring-topbar', 'save')).click();
+    await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
 
     // make sure label appears inside article item in the monitoring list
     await expect(page.locator(
@@ -126,8 +126,8 @@ test('setting embargo', async ({page}) => {
     )).toContainText('Embargo');
 
     // make sure label appears inside metadata widget
-    await page.locator(s('authoring-widget=Info')).click();
+    await page.locator(s('widget-icon=metadata-widget')).click();
     await expect(page.locator(
-        s('authoring-widget-panel=Info'),
+        s('authoring-widget-panel'),
     )).toContainText('embargo');
 });
