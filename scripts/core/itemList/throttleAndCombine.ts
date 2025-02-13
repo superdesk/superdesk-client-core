@@ -1,48 +1,35 @@
-import {throttle, ThrottleSettings} from 'lodash';
+import {throttle, ThrottleSettings, Cancelable} from 'lodash';
 
-type IHandler<T> = (items: T) => void;
-
-export function throttleAndCombine<T>(
-    fn: IHandler<T>,
-    combine: (a: T, b: T) => T,
-    wait: number,
-    options?: ThrottleSettings,
-): IHandler<T> {
-    let queue: T | null = null;
-
-    const callbackThrottled = throttle(
-        () => {
-            fn(queue);
-
-            queue = null;
-        },
-        wait,
-        options,
-    );
-
-    return (items: T) => {
-        if (queue == null) {
-            queue = items;
-        } else {
-            queue = combine(queue, items);
-        }
-
-        callbackThrottled();
-    };
-}
+type IHandlerArray<T> = (value: Array<T>) => void;
 
 export function throttleAndCombineArray<T>(
-    fn: IHandler<Array<T>>,
+    fn: IHandlerArray<T>,
     wait: number,
     options?: ThrottleSettings,
-) {
-    return throttleAndCombine(
-        fn,
-        (a, b) => a.concat(b),
-        wait,
-        options,
-    );
+): IHandlerArray<T> & Cancelable {
+    let pendingValues: Array<T> = [];
+
+    const after = () => {
+        fn(pendingValues);
+
+        pendingValues = [];
+    };
+
+    const throttled = throttle(after, wait, options);
+
+    const before: IHandlerArray<T> & Cancelable = (items) => {
+        pendingValues.push(...items);
+
+        throttled();
+    };
+
+    before.cancel = () => throttled.cancel();
+    before.flush = () => throttled.flush();
+
+    return before;
 }
+
+type IHandlerSet<T> = (value: Set<T>) => void;
 
 /**
  * When throttled function is called more frequently than specified via `wait` param,
@@ -50,26 +37,31 @@ export function throttleAndCombineArray<T>(
  * it then invokes the handler function with all stored values.
  */
 export function throttleAndCombineSet<T>(
-    fn: IHandler<Set<T>>,
+    fn: IHandlerSet<T>,
     wait: number,
     options?: ThrottleSettings,
-) {
-    return throttleAndCombine(
-        fn,
-        (a, b) => {
-            var result = new Set<T>();
+): IHandlerSet<T> & Cancelable {
+    let pendingValues: Set<T> = new Set();
 
-            a.forEach((item) => {
-                result.add(item);
-            });
+    const after = () => {
+        fn(pendingValues);
 
-            b.forEach((item) => {
-                result.add(item);
-            });
+        pendingValues.clear();
+    };
 
-            return result;
-        },
-        wait,
-        options,
-    );
+    const throttled = throttle(after, wait, options);
+
+    const before: IHandlerSet<T> & Cancelable = (items) => {
+        items.forEach((item) => {
+            pendingValues.add(item);
+        });
+
+        throttled();
+    };
+
+    before.cancel = () => throttled.cancel();
+    before.flush = () => throttled.flush();
+
+    return before;
 }
+
