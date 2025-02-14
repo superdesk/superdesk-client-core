@@ -154,10 +154,27 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.(css|scss)$/i,
+                    test: /\.css$/i,
                     use: [
                         {loader: MiniCssExtractPlugin.loader},
-                        {loader: 'css-loader'},
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: 'global',
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.scss$/i,
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: 'global',
+                            },
+                        },
                         {loader: 'sass-loader'},
                     ],
                 },
@@ -170,9 +187,14 @@ module.exports = function makeConfig(grunt) {
         devServer: {
             port: 9000,
             host: '0.0.0.0',
+            compress: true,
+            headers: {'Cache-Control': 'no-store'},
             static: [
                 {directory: path.resolve(process.cwd(), 'dist')},
                 {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},
+                {directory: path.resolve(__dirname, 'images'), publicPath: '/images'},
+                {directory: path.resolve(__dirname, 'styles'), publicPath: '/styles'},
+                {directory: path.resolve(__dirname, 'fonts'), publicPath: '/fonts'},
             ],
         },
     };
