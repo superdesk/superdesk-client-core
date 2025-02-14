@@ -5,7 +5,7 @@ declare module 'superdesk-api' {
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
 
-    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
     export type DeepReadonlyObject<T> = {
         readonly [P in keyof T]: DeepReadonly<T[P]>;
@@ -13,10 +13,10 @@ declare module 'superdesk-api' {
 
     export type DeepReadonly<T> =
         T extends Function
-            ? T
-            : T extends Array<infer U>
-                ? DeepReadonlyArray<U>
-                : DeepReadonlyObject<T>;
+        ? T
+        : T extends Array<infer U>
+        ? DeepReadonlyArray<U>
+        : DeepReadonlyObject<T>;
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
@@ -253,9 +253,27 @@ declare module 'superdesk-api' {
             computeLatestEntity: IExposedFromAuthoring<T>['getLatestItem'],
         ): IFieldsData;
 
-        validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+        /**
+         * @default true
+         *
+         * Will perform validation and not allow to save the item unless validation passes.
+         *
+         * It is sometimes desirable to skip validation in order to allow users to move fast
+         * and only validate before item changes state e.g. publishing of an article.
+         */
+        validateBeforeSaving?: boolean;
+
         headerCollapsed?: boolean; // initial value
         autoFocus?: boolean; // defaults to true; will focus first input
+
+        /**
+         * This method is only relevant if you're conditionally hiding this component
+         * e.g. rendering inside a closed accordion
+         *
+         * `makeVisible` will only be called when it is necessary to perform a DOM related operation.
+         * e.g. scrolling to a validation error
+         */
+        makeVisible?(): Promise<void>;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -321,7 +339,7 @@ declare module 'superdesk-api' {
     };
     export type IDatelineValueStorage = IDatelineValueOperational;
     export type IDatelineUserPreferences = never;
-    export interface IDatelineFieldConfig extends ICommonFieldConfig {}
+    export interface IDatelineFieldConfig extends ICommonFieldConfig { }
 
     // AUTHORING-REACT FIELD TYPES - time
 
@@ -345,7 +363,7 @@ declare module 'superdesk-api' {
 
     export type ITagInputValueOperational = Array<string> | null;
     export type ITagInputValueStorage = ITagInputValueOperational;
-    export interface ITagInputFieldConfig extends ICommonFieldConfig {};
+    export interface ITagInputFieldConfig extends ICommonFieldConfig { };
     export type ITagInputUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration
@@ -573,7 +591,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
-    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -1222,13 +1240,13 @@ declare module 'superdesk-api' {
             [id: string]: IArticle | IRelatedArticle;
         };
         type:
-            | 'text'
-            | 'picture'
-            | 'video'
-            | 'audio'
-            | 'preformatted'
-            | 'graphic'
-            | 'composite';
+        | 'text'
+        | 'picture'
+        | 'video'
+        | 'audio'
+        | 'preformatted'
+        | 'graphic'
+        | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
             package: string;
@@ -1677,8 +1695,8 @@ declare module 'superdesk-api' {
         field_type: null;
         schema: {};
         custom_field_type?: string;
-        custom_field_config?: { [key: string]: any };
-        date_shortcuts?: Array<{ value: number; term: string; label: string }>;
+        custom_field_config?: {[key: string]: any};
+        date_shortcuts?: Array<{value: number; term: string; label: string}>;
         init_version?: number;
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
@@ -1748,7 +1766,7 @@ declare module 'superdesk-api' {
         length: number;
     }
 
-    export interface IAttachment extends IBaseRestApiResponse{
+    export interface IAttachment extends IBaseRestApiResponse {
         title: string;
         mimetype: string;
         filename: string;
@@ -2927,6 +2945,30 @@ declare module 'superdesk-api' {
         cancelButtonText?: string;
     }
 
+    export interface IAuthoringReact<T extends IBaseRestApiResponse> {
+        fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+        setRef(ref: HTMLElement): void;
+        setLoadingState(state: IStateLoaded<T>, loading: boolean): Promise<void>;
+        initiateUnmounting(): Promise<void>;
+        cancelAutosave(): Promise<void>;
+        computeLatestEntity(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
+        handleFieldChange(fieldId: string, data: unknown): void;
+        handleFieldsDataChange(fieldsData: Immutable.Map<string, unknown>): void;
+        hasUnsavedChanges(): boolean;
+        getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
+        handleUnsavedChanges(state: IStateLoaded<T>): Promise<T>;
+        save(state: IStateLoaded<T>): Promise<T>;
+        forceLock(state: IStateLoaded<T>): void;
+        discardUnsavedChanges(state: IStateLoaded<T>): Promise<void>;
+        initiateClosing(state: IStateLoaded<T>): void;
+        setUserPreferences(val: IStateLoaded<T>['userPreferencesForFields']): void;
+        toggleField(fieldId: string): void;
+        updateItemWithChanges(state: IStateLoaded<T>, itemPartial: Partial<T>): IStateLoaded<T>;
+        onItemChange(state: IStateLoaded<T>, itemWithChanges: T): void;
+        reinitialize(state: IStateLoaded<T>, itemWithUpdates: T, newProfile?: IContentProfileV2): void;
+        getExposed(): IExposedFromAuthoring<T>;
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -3141,7 +3183,7 @@ declare module 'superdesk-api' {
             InputLabel: React.ComponentType<{text: string}>;
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?: string}>;
 
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
@@ -3198,7 +3240,7 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
-            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?:boolean}): string;
+            formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?: boolean}): string;
             formatDateTime(date: Date, timezoneId?: string): string;
             longFormatDateTime(date: Date | string, timezoneId?: string): string;
             getRelativeOrAbsoluteDateTime(
@@ -3802,6 +3844,11 @@ declare module 'superdesk-api' {
          */
         getEmptyValue(config: IConfig, language: string): IValueOperational;
 
+        /**
+         * Returns an error message or `null` if value is valid.
+         * Will only get called if `hasValue` returns true.
+         */
+        validate?(valueOperational: IValueOperational, fieldConfig: IConfig): string | null;
 
         /**
          * Enables initializing with a custom value when field visibility is toggled from "off" to "on".

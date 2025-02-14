@@ -19,6 +19,7 @@ import {
     IAuthoringValidationErrors,
     IFieldsV2,
     IEditor3Config,
+    IAuthoringReact,
 } from 'superdesk-api';
 import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -309,11 +310,13 @@ interface IStateLoaded<T> {
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
+export class AuthoringReact<T extends IBaseRestApiResponse>
+    extends React.PureComponent<IPropsAuthoring<T>, IState<T>>
+    implements IAuthoringReact<T> {
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
-    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+    public fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
     private prepareHeaderFields: typeof setCompactMode;
 
     constructor(props: IPropsAuthoring<T>) {
@@ -990,25 +993,39 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             const {profile} = state;
             const allFields = profile.header.merge(profile.content);
 
-            const validationErrors: IAuthoringValidationErrors = allFields.toArray()
-                .filter((field) => {
-                    if (field.fieldConfig.required === true) {
-                        const FieldEditorConfig = getField(field.fieldType);
+            let validationErrors = Map<string, string>(); // fieldId, errorMessage
 
-                        return !FieldEditorConfig.hasValue(state.fieldsDataWithChanges.get(field.id));
+            allFields.forEach((field) => {
+                const fieldType = getField(field.fieldType);
+                const fieldValue = state.fieldsDataWithChanges.get(field.id);
+
+                const error = ((): string | null => {
+                    if (!fieldType.hasValue(fieldValue)) {
+                        return field.fieldConfig.required === true ? gettext('Field is required') : null;
+                    } else if (fieldType.validate != null) {
+                        return fieldType.validate(fieldValue, field.fieldConfig);
                     } else {
-                        return false;
+                        return null;
                     }
-                }).reduce<IAuthoringValidationErrors>((acc, field) => {
-                    acc[field.id] = gettext('Field is required');
+                })();
 
-                    return acc;
-                }, {});
+                if (error != null) {
+                    validationErrors = validationErrors.set(field.id, error);
+                }
+            });
 
-            if (Object.keys(validationErrors).length > 0) {
+            if (validationErrors.size > 0) {
+                const firstErrorFieldId = validationErrors.keySeq().first();
+
                 this.setState({
                     ...state,
-                    validationErrors,
+                    validationErrors: validationErrors.toObject(),
+                }, () => {
+                    const makeVisible = this.props.makeVisible ?? (() => Promise.resolve());
+
+                    makeVisible().then(() => {
+                        this.fieldRefs[firstErrorFieldId]?.current.scrollIntoView({behavior: 'smooth'});
+                    });
                 });
 
                 return Promise.reject('validation errors were found');

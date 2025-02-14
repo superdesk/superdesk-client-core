@@ -21,7 +21,7 @@ interface IState {
 class WithLiveResourcesComponent
     extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
-    private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private handleContentChangesThrottled: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveResourcesProps & {onInitialized(): void}) {
@@ -41,6 +41,10 @@ class WithLiveResourcesComponent
             },
             1000,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChangesThrottled.cancel();
+        });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener(
