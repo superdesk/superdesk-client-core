@@ -296,7 +296,6 @@ class Editor3Directive {
     }
 
     initialize($element, editor3, $scope, $rootScope) {
-
         this.$onInit = () => {
             if (this.item == null) {
                 throw new Error(
@@ -639,6 +638,6 @@ class Editor3Directive {
                         () => generateHtml(store, this.item, this.pathToValue),
                     );
                 });
-            };
+        };
     }
 }
