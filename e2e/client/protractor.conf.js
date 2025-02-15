@@ -1,5 +1,6 @@
 /* eslint-disable comma-dangle */
 
+const {log} = require('console');
 var path = require('path');
 const execSync = require('child_process').execSync;
 
@@ -90,6 +91,8 @@ var config = {
         }
         jasmine.getEnv().addReporter(new CustomReporter());
     },
+
+    logLevel: 'INFO',
 };
 
 exports.config = config;
