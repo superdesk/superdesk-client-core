@@ -131,7 +131,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
 
 export const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
 
-const MIN_HEADER_PADDING = 1;
+const MIN_HEADER_PADDING = 4;
 
 const ANPA_CATEGORY = {
     vocabularyId: 'categories',
