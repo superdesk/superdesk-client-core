@@ -291,7 +291,6 @@ interface IPropsWrapper extends IProps {
 interface IState {
     sidebarMode: boolean | 'hidden';
     sideWidget: ISideWidget;
-    spellcheckerEnabled: boolean,
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -309,7 +308,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                 pinnedId: widgetId,
                 activeId: widgetId,
             },
-            spellcheckerEnabled: true,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
