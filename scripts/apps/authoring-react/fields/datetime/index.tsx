@@ -10,7 +10,7 @@ import {Editor} from './editor';
 import {Preview} from './preview';
 import {Difference} from './difference';
 
-export const DATETIME_FIELD_ID = 'datetime';
+export const DATETIME_FIELD_ID = 'datetime-v2';
 
 export function getDatetimeField()
 : ICustomFieldType<IDateTimeValueOperational, IDateTimeValueStorage, IDateTimeFieldConfig, IDateTimeUserPreferences> {

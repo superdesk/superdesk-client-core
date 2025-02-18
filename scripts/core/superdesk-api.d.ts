@@ -175,6 +175,10 @@ declare module 'superdesk-api' {
         reinitialize(item: T, profile?: IContentProfileV2): void;
         getValidationErrors(): IAuthoringValidationErrors;
         setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
+        spellchecker: {
+            enabled: boolean;
+            setSpellcheckerStatus: (enabled: boolean) => void;
+        }
     }
 
     export interface IAuthoringOptions<T> {
