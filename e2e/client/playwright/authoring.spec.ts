@@ -54,9 +54,7 @@ test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
 
     // button - cancel
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'cancel'}).click();
-    await sleep(2000);
     await expect(page.locator(s('authoring'))).toBeVisible();
-    await sleep(2000);
 
     // button - ignore
     await page.locator(s('authoring-topbar')).getByRole('button', {name: 'close'}).click();

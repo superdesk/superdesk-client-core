@@ -79,7 +79,6 @@ test.describe('Multiedit', async () => {
             page.locator(s('article-item=test sports story')),
             'Edit',
         );
-        await sleep(2000);
         await authoring.executeActionInEditor(
             'Multi-edit',
         );

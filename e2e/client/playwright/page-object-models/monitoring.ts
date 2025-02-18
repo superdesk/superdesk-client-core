@@ -36,6 +36,8 @@ export class Monitoring {
         await this.page.locator(s('context-menu'))
             .getByRole('button', {name: actionPath[actionPath.length - 1], exact: true})
             .click();
+
+        await sleep(2000);
     }
 
     async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {

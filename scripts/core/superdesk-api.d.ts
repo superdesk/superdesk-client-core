@@ -3660,7 +3660,6 @@ declare module 'superdesk-api' {
          */
         miniToolbar?: JSX.Element;
         sectionClassNames?: IAuthoringSectionClassNames;
-        fieldId?: IAuthoringField['id'];
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {

@@ -14,7 +14,6 @@ test.describe('article versions', async () => {
             page.locator(s('article-item=story 2')),
             'Edit',
         );
-        await sleep(2000);
 
         await monitoring.fillEditor3Field('slugline', 'story 2.1');
 
