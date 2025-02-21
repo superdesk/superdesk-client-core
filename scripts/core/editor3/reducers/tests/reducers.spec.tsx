@@ -251,24 +251,24 @@ describe('editor3.reducers', () => {
         expect(text).toBe('apple banana kiwi ananas apple prune');
     });
 
-    it('HIGHLIGHTS_FIND_REPLACE_ALL', () => {
-        const startState = withSearchTerm(
-            'apple banana apple ananas apple prune',
-            {index: 1, pattern: 'Apple', caseSensitive: false},
-        );
+    describe('find and replace', () => {
+        it('can replace all', () => {
+            const startState = withSearchTerm(
+                'apple watermelon apple orange apple pear',
+                {index: 0, pattern: 'apple', caseSensitive: false},
+            );
 
-        const state = reducer(startState, {
-            type: 'HIGHLIGHTS_REPLACE_ALL',
-            payload: 'kiwi',
+            const state = reducer(startState, {
+                type: 'HIGHLIGHTS_REPLACE_ALL',
+                payload: 'avocado',
+            });
+
+            const text = state.editorState.getCurrentContent().getPlainText('\n');
+
+            expect(text).toBe('avocado watermelon avocado orange avocado pear');
         });
 
-        const text = state.editorState.getCurrentContent().getPlainText('\n');
-
-        expect(text).toBe('kiwi banana kiwi ananas kiwi prune');
-    });
-
-    describe('find and replace', () => {
-        it('works correctly when the replace string matches search pattern', () => {
+        it('can replace all when the replace string matches search pattern', () => {
             // This used to cause an infinite loop
             // due to a faulty assumption that search pattern must not match anything after the replacement operation
 

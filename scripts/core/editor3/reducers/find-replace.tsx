@@ -41,12 +41,12 @@ function patchHtmloNEditorState(state, payload) {
 /**
  * @name replaceHighlight
  * @param {Object} state
- * @param {string} txt The text to replace the highlight with
+ * @param {string} replaceWith The text to replace the highlight with
  * @param {boolean=} all If set to true, it replaces all occurrences, otherwise it replaces
  * only the current one.
  * @description Replaces highlights with the given text.
  */
-const replaceHighlight = (state, txt, all = false) => {
+const replaceHighlight = (state, replaceWith: string, all = false) => {
     const {index, pattern, caseSensitive, diff} = state.searchTerm;
     const es = state.editorState;
 
@@ -57,13 +57,27 @@ const replaceHighlight = (state, txt, all = false) => {
 
     let matchCount = 0;
 
+    /**
+     * Replacing occurrences happens in steps.
+     * After the first occurrence is replaced,
+     * the second occurrence becomes the first occurrence.
+     *
+     * In most cases, in order to replace 5 occurrences,
+     * you will need to call `replaceAt` 5 times and replace the first occurrence.
+     *
+     * There is an exception when replacement result still matches the original pattern
+     * e.g. "air" -> "airplane" - we need to increment replacement index
+     * in order not to perform replacement on what is already a replacement result.
+     */
+    let replacementIndex = 0;
+
     forEachMatch(content, regexp, caseSensitive, () => {
         matchCount++;
 
         return content;
     });
 
-    // tries to replace the occurrence at position pos and returns true if successful.
+    // tries to replace the occurrence at position pos
     const replaceAt = (pos, _content) =>
         forEachMatch(_content, regexp, caseSensitive, (i, selection, block, newContent) => {
             if (i === pos) {
@@ -71,15 +85,19 @@ const replaceHighlight = (state, txt, all = false) => {
                 const styleAt = block.getInlineStyleAt(selection.anchorOffset) || null;
                 const entityAt = block.getEntityAt(selection.anchorOffset) || null;
 
+                if (replaceWith.match(regexp) != null) {
+                    replacementIndex++;
+                }
+
                 contentChanged = true;
-                return Modifier.replaceText(newContent, selection, txt, styleAt, entityAt);
+                return Modifier.replaceText(newContent, selection, replaceWith, styleAt, entityAt);
             }
             return newContent;
         });
 
     if (all) {
         for (let i = 0; i < matchCount; i++) {
-            content = replaceAt(i, content);
+            content = replaceAt(replacementIndex, content);
         }
     } else {
         content = replaceAt(index, content);
