@@ -267,6 +267,27 @@ describe('editor3.reducers', () => {
         expect(text).toBe('kiwi banana kiwi ananas kiwi prune');
     });
 
+    describe('find and replace', () => {
+        it('works correctly when the replace string matches search pattern', () => {
+            // This used to cause an infinite loop due
+            // due to a faulty assumption that search pattern must not match anything after the replacement operation
+
+            const startState = withSearchTerm(
+                'dev dev dev',
+                {index: 0, pattern: 'dev', caseSensitive: false},
+            );
+
+            const state = reducer(startState, {
+                type: 'HIGHLIGHTS_REPLACE_ALL',
+                payload: 'developers',
+            });
+
+            const text = state.editorState.getCurrentContent().getPlainText('\n');
+
+            expect(text).toBe('developers developers developers');
+        });
+    });
+
     it('SPELLCHECKER_REPLACE_WORD', () => {
         const editorState = EditorState.createWithContent(
             ContentState.createFromText('abcd efgh'),

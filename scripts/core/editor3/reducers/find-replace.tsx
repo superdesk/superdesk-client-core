@@ -51,10 +51,17 @@ const replaceHighlight = (state, txt, all = false) => {
     const es = state.editorState;
 
     let contentChanged = false;
-    let contentChangedInAll = true;
     let {content, editorState} = clearHighlights(es.getCurrentContent(), es);
 
     const regexp = getRegExp(diff, pattern, caseSensitive);
+
+    let matchCount = 0;
+
+    forEachMatch(content, regexp, caseSensitive, () => {
+        matchCount++;
+
+        return content;
+    });
 
     // tries to replace the occurrence at position pos and returns true if successful.
     const replaceAt = (pos, _content) =>
@@ -65,17 +72,14 @@ const replaceHighlight = (state, txt, all = false) => {
                 const entityAt = block.getEntityAt(selection.anchorOffset) || null;
 
                 contentChanged = true;
-                contentChangedInAll = true;
                 return Modifier.replaceText(newContent, selection, txt, styleAt, entityAt);
             }
             return newContent;
         });
 
     if (all) {
-        // each replace alters the content and changes text offsets, so we need to call this method repeatedly
-        while (contentChangedInAll) {
-            contentChangedInAll = false;
-            content = replaceAt(0, content);
+        for (let i = 0; i < matchCount; i++) {
+            content = replaceAt(i, content);
         }
     } else {
         content = replaceAt(index, content);
