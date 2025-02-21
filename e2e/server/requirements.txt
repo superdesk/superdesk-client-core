@@ -247,7 +247,7 @@ six==1.17.0
     #   flask-oidc-ex
     #   oauth2client
     #   python-dateutil
-superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@develop
+superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@release/2.9
     # via -r requirements.in
 types-python-dateutil==2.9.0.20241206
     # via arrow
