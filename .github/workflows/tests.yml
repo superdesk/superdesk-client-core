@@ -34,6 +34,8 @@ jobs:
         docker compose build
         docker compose up -d
       working-directory: e2e/server
+    - name: Install core dependencies
+      run: npm ci
     - name: Build client
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
