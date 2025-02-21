@@ -269,7 +269,7 @@ describe('editor3.reducers', () => {
 
     describe('find and replace', () => {
         it('works correctly when the replace string matches search pattern', () => {
-            // This used to cause an infinite loop due
+            // This used to cause an infinite loop
             // due to a faulty assumption that search pattern must not match anything after the replacement operation
 
             const startState = withSearchTerm(
