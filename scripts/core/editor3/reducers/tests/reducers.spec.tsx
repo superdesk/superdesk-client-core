@@ -273,18 +273,18 @@ describe('editor3.reducers', () => {
             // due to a faulty assumption that search pattern must not match anything after the replacement operation
 
             const startState = withSearchTerm(
-                'dev dev dev',
+                'dev tools dev tools dev tools',
                 {index: 0, pattern: 'dev', caseSensitive: false},
             );
 
             const state = reducer(startState, {
                 type: 'HIGHLIGHTS_REPLACE_ALL',
-                payload: 'developers',
+                payload: 'developer',
             });
 
             const text = state.editorState.getCurrentContent().getPlainText('\n');
 
-            expect(text).toBe('developers developers developers');
+            expect(text).toBe('developer tools developer tools developer tools');
         });
     });
 
