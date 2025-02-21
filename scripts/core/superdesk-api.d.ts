@@ -175,6 +175,10 @@ declare module 'superdesk-api' {
         reinitialize(item: T, profile?: IContentProfileV2): void;
         getValidationErrors(): IAuthoringValidationErrors;
         setValidationErrors(validationErrors: IAuthoringValidationErrors): void;
+        spellchecker: {
+            enabled: boolean;
+            setSpellcheckerStatus: (enabled: boolean) => void;
+        }
     }
 
     export interface IAuthoringOptions<T> {
@@ -253,9 +257,27 @@ declare module 'superdesk-api' {
             computeLatestEntity: IExposedFromAuthoring<T>['getLatestItem'],
         ): IFieldsData;
 
-        validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+        /**
+         * @default true
+         *
+         * Will perform validation and not allow to save the item unless validation passes.
+         *
+         * It is sometimes desirable to skip validation in order to allow users to move fast
+         * and only validate before item changes state e.g. publishing of an article.
+         */
+        validateBeforeSaving?: boolean;
+
         headerCollapsed?: boolean; // initial value
         autoFocus?: boolean; // defaults to true; will focus first input
+
+        /**
+         * This method is only relevant if you're conditionally hiding this component
+         * e.g. rendering inside a closed accordion
+         *
+         * `makeVisible` will only be called when it is necessary to perform a DOM related operation.
+         * e.g. scrolling to a validation error
+         */
+        makeVisible?(): Promise<void>;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -3826,6 +3848,11 @@ declare module 'superdesk-api' {
          */
         getEmptyValue(config: IConfig, language: string): IValueOperational;
 
+        /**
+         * Returns an error message or `null` if value is valid.
+         * Will only get called if `hasValue` returns true.
+         */
+        validate?(valueOperational: IValueOperational, fieldConfig: IConfig): string | null;
 
         /**
          * Enables initializing with a custom value when field visibility is toggled from "off" to "on".

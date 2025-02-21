@@ -57,7 +57,7 @@ type ITrackById = string;
 export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     private monitoringState: any;
     private lazyLoaderRef: LazyLoader<IArticle>;
-    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private handleContentChanges: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private services: {search: any};
@@ -136,6 +136,10 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChanges.cancel();
+        });
     }
 
     public reloadList() {

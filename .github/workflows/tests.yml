@@ -45,7 +45,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm install
+    - run: npm install  # npm ci on different version won't work
       working-directory: ./
 
     - run: npm install
@@ -67,7 +67,6 @@ jobs:
       working-directory: e2e/server
 
     # playwright start
-
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests

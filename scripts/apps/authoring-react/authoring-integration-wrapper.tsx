@@ -17,7 +17,7 @@ import {
 import {AuthoringReact} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
-import {extensions} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
@@ -447,6 +447,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             authoringStorage,
                             fieldsAdapter,
                             storageAdapter,
+                            spellchecker,
                         }) => {
                             const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
@@ -454,7 +455,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 fieldsData,
                             );
 
-                            return [
+                            const actions = [
                                 getSaveAsTemplate(getLatestItem),
                                 getCompareVersionsModal(
                                     getLatestItem,
@@ -469,6 +470,34 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 getTranslateModal(getLatestItem),
                                 ...authoringActionsFromExtensions,
                             ];
+
+                            const getSpellcheckerAction = (): IAuthoringAction | null => {
+                                if (appConfig.features.useTansaProofing !== true) {
+                                    return {
+                                        label: spellchecker.enabled
+                                            ? gettext('Disable spellchecker')
+                                            : gettext('Enable spellchecker'),
+                                        onTrigger: () => {
+                                            spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
+                                        },
+                                        keyBindings: {
+                                            'ctrl+shift+y': () => {
+                                                spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
+                                            },
+                                        },
+                                    } satisfies IAuthoringAction;
+                                }
+
+                                return null;
+                            };
+
+                            const spellcheckerAction = getSpellcheckerAction();
+
+                            if (spellcheckerAction != null) {
+                                actions.push(spellcheckerAction);
+                            }
+
+                            return actions;
                         }}
                         getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
                         sideWidget={this.state.sideWidget}
