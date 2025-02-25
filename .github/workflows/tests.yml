@@ -99,7 +99,7 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v4
       with:
-        name: screenshots-e2e-${{ matrix.suite }}
+        name: screenshots-e2e-node-${{ matrix.node-version }}-${{ matrix.suite }}
         path: /tmp/*.png
 
     # protractor end
