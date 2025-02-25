@@ -65,9 +65,6 @@ export const ECE: IExpectedConditionsExtended = {
     },
 
     elementsEqual: (a: ElementFinder | WebElementPromise, b: ElementFinder | WebElementPromise) => {
-        const webElementPromiseA: WebElementPromise = a instanceof WebElementPromise ? a : a.getWebElement();
-        const webElementPromiseB: WebElementPromise = b instanceof WebElementPromise ? b : b.getWebElement();
-
-        return WebElement.equals(webElementPromiseA, webElementPromiseB);
+        return WebElement.equals(a, b);
     },
 };
