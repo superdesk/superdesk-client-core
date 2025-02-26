@@ -1,6 +1,5 @@
 /* eslint-disable comma-dangle */
 
-const {log} = require('console');
 var path = require('path');
 const execSync = require('child_process').execSync;
 

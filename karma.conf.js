@@ -57,7 +57,7 @@ module.exports = function(config) {
 
         // test results reporter to use
         // options: 'progress', 'dots', 'spec'(via "karma-spec-reporter" package)
-        reporters: ['dots'],
+        reporters: ['spec'],
 
         // web server port
         port: 8080,
