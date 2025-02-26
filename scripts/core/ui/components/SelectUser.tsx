@@ -1,57 +1,17 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
+import {IPropsSelectUser, IUser, IRestApiResponse, ITreeNode} from 'superdesk-api';
 import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
+import {Spacer, TreeSelect} from 'superdesk-ui-framework/react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
+    options: Array<ITreeNode<IUser>>;
+    loading: boolean;
 }
-
-const itemTemplate = (props: {option: IUser}) => {
-    const user: IUser | null = props.option;
-
-    return user == null
-        ? (
-            <div>
-                {gettext('Select a user')}
-            </div>
-        )
-        : (
-            <Spacer h gap="8" noWrap justifyContent="start">
-                <div>
-                    <UserAvatar user={user} displayStatus={true} />
-                </div>
-
-                <Spacer v gap="4" noWrap>
-                    <div>{user.display_name}</div>
-                    <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
-                </Spacer>
-
-            </Spacer>
-        );
-};
-
-const valueTemplateDefault = (props: {option: IUser}) => {
-    const user: IUser | null = props.option;
-
-    return user == null
-        ? (
-            <div>
-                {gettext('Select a user')}
-            </div>
-        )
-        : (
-            <Spacer h gap="8" justifyContent="start" noGrow>
-                <UserAvatar user={user} displayStatus={true} />
-
-                {user.display_name}
-            </Spacer>
-        );
-};
 
 export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
     constructor(props: IPropsSelectUser) {
@@ -59,6 +19,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         this.state = {
             selectedUser: props.selectedUserId == null ? null : 'loading',
+            options: [],
+            loading: true,
         };
 
         this.abortController = null;
@@ -73,6 +35,17 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 this.setState({selectedUser});
             });
         }
+
+        httpRequestJsonLocal<IRestApiResponse<IUser>>({
+            method: 'GET',
+            path: this.props.deskId ? `/desks/${this.props.deskId}/users` : '/users',
+            urlParams: {max_results: 50},
+        }).then((res) => {
+            this.setState({
+                options: res._items.map((user) => ({value: user})),
+                loading: false,
+            });
+        });
     }
 
     componentWillUnmount() {
@@ -108,69 +81,87 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
             return null;
         }
 
-        const valueTemplate = this.props.valueTemplate != null ? this.props.valueTemplate : valueTemplateDefault;
-
         return (
-            <SelectWithTemplate
-                key={this.props.deskId}
-                label={gettext('Select a user')}
-                inlineLabel={true}
-                labelHidden={true}
-                getItems={(searchString) => {
-                    this.abortController?.abort();
-                    this.abortController = new AbortController();
+            this.state.options.length && (
+                <TreeSelect
+                    kind="asynchronous"
+                    label={gettext('Select a user')}
+                    inlineLabel={true}
+                    labelHidden={true}
+                    loading={this.state.loading}
+                    value={this.state.selectedUser ? [this.state.selectedUser] : []}
+                    getOptions={() => this.state.options}
+                    searchOptions={(term, callback) => {
+                        this.abortController?.abort();
+                        this.abortController = new AbortController();
 
-                    let url = '/users';
+                        let url = '/users';
 
-                    if (this.props.deskId != null && this.props.deskId != '') {
-                        url = `/desks/${this.props.deskId}/users`;
-                    }
+                        if (this.props.deskId != null && this.props.deskId != '') {
+                            url = `/desks/${this.props.deskId}/users`;
+                        }
 
-                    const urlParams = {max_results: 50};
+                        const urlParams = {
+                            max_results: 50,
+                            where: term ? getUserSearchMongoQuery(term) : undefined,
+                        };
 
-                    if (searchString != null && searchString.length > 0) {
-                        urlParams['where'] = getUserSearchMongoQuery(searchString);
-                    }
-
-                    // Wrapping into additional promise in order to avoid having to handle rejected promise
-                    // in `SelectWithTemplate` component. The component takes a generic promise
-                    // as an argument and not a fetch result so it wouldn't be good to handle
-                    // fetch-specific rejections there.
-                    return new Promise((resolve) => {
                         httpRequestJsonLocal<IRestApiResponse<IUser>>({
                             method: 'GET',
                             path: url,
                             urlParams,
                             abortSignal: this.abortController.signal,
                         }).then((res) => {
-                            resolve(res._items);
+                            const options = res._items.map((user) => ({value: user}));
+                            
+                            callback?.(options);
                         }).catch((err) => {
-                            // If user types something in the filter input all unfinished requests will be aborted.
-                            // This is expected behaviour here and should not throw an error.
                             if (err?.name !== 'AbortError') {
                                 throw err;
                             }
                         });
-                    });
-                }}
-                value={this.state.selectedUser}
-                onChange={(user) => {
-                    this.setState({selectedUser: user});
-                    this.props.onSelect(user);
-                }}
-                getLabel={(option) => option.display_name}
-                itemTemplate={itemTemplate}
-                valueTemplate={valueTemplate}
-                areEqual={(a, b) => a._id === b._id}
-                autoFocus={this.props.autoFocus}
-                autoOpen={this.state.selectedUser == null}
-                width="100%"
-                zIndex={1050}
-                noResultsFoundMessage={gettext('No results found.')}
-                filterPlaceholder={gettext('Search...')}
-                data-test-id="select-user-dropdown"
-                required={!(this.props.clearable ?? true)}
-            />
+
+                        return () => {
+                            this.abortController?.abort();
+                        };
+                    }}
+                    onChange={(users) => {
+                        const user = users[0] ?? null;
+                        this.setState({selectedUser: user});
+                        this.props.onSelect(user);
+                    }}
+                    getLabel={(user) => user.display_name}
+                    getId={(user) => user._id}
+                    optionTemplate={(user) => (
+                        <Spacer h gap="8" noWrap justifyContent="start">
+                            <div>
+                                <UserAvatar user={user} displayStatus={true} />
+                            </div>
+
+                            <Spacer v gap="4" noWrap>
+                                <div>{user.display_name}</div>
+                                <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
+                            </Spacer>
+                        </Spacer>
+                    )}
+                    valueTemplate={(user, Wrapper) => (
+                        this.props.valueTemplate != null
+                            ? this.props.valueTemplate(user, Wrapper)
+                            : (
+                                <Wrapper>
+                                    <Spacer h gap="8" justifyContent="start" noGrow>
+                                        <UserAvatar user={user} displayStatus={true} />
+                                        {user.display_name}
+                                    </Spacer>
+                                </Wrapper>
+                            )
+                    )}
+                    placeholder={gettext('Select a user')}
+                    searchPlaceholder={gettext('Search...')}
+                    noResultsFoundMessage={gettext('No results found.')}
+                    data-test-id="select-user-dropdown"
+                />
+            )
         );
     }
 }

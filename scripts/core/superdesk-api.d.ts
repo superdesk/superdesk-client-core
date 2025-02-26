@@ -2308,7 +2308,7 @@ declare module 'superdesk-api' {
         disabled?: boolean;
         autoFocus?: boolean;
         horizontalSpacing?: boolean;
-        valueTemplate?: React.ComponentType<{option: IUser}>;
+        valueTemplate?(item: IUser, Wrapper: React.ElementType): React.ComponentType<T> | JSX.Element;
         clearable: boolean;
         deskId?: string
     }
