@@ -1,5 +1,6 @@
-import {Modifier, EditorState, SelectionState} from 'draft-js';
+import {Modifier, EditorState, SelectionState, ContentState} from 'draft-js';
 import {clearHighlights, quietPush, forEachMatch} from '../helpers/find-replace';
+import {getData, setDataForContent, getCell, setCell} from '../helpers/table';
 import {onChange} from './editor3';
 import {escapeRegExp} from 'core/utils';
 
@@ -59,50 +60,223 @@ const replaceHighlight = (state, txt, all = false) => {
             }
             return newContent;
         });
-    const replaceAtAll = (_content) => {
+    const shouldSkipReplacement = (currentText, startPos, posMatch) => {
+        if (txt.length <= posMatch.length) {
+            return false;
+        }
+
+        const endPos = Math.min(startPos + txt.length, currentText.length);
+        const textAtCurrentPosition = currentText.substring(startPos, endPos);
+
+        return (
+            textAtCurrentPosition === txt ||
+        (txt.includes(posMatch) && currentText.substring(startPos, startPos + txt.length) === txt)
+        );
+    };
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const handleBlockReplacement = (content, block, callback) => {
+        const key = block.getKey();
+        const text = block.getText();
+        const entityKey = block.getEntityAt(0);
+        const entity = entityKey != null ? content.getEntity(entityKey) : null;
+
+        if (entity != null && entity.getType() === 'TABLE') {
+            handleTableReplacement(content, block, callback);
+            return;
+        }
+
+        handleTextBlockReplacement(content, block, text, callback);
+    };
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const handleTextBlockReplacement = (content, block, text, callback) => {
+        const key = block.getKey();
+        let updatedContent = content;
+        let changed = false;
+
+        regexp.lastIndex = 0;
+
+        let offsetAdjustment = 0;
+        let match;
+        const originalText = text;
+
+        while ((match = regexp.exec(originalText)) !== null) {
+            const startPos = match.index + offsetAdjustment;
+            const endPos = startPos + match[0].length;
+            const currentBlock = updatedContent.getBlockForKey(key);
+            const currentText = currentBlock.getText();
+            const posMatch = match[0];
+
+            if (shouldSkipReplacement(currentText, startPos, posMatch)) {
+                continue;
+            }
+
+            const selection = createSelection(key, startPos, endPos);
+            const styleAt = block.getInlineStyleAt(match.index) || null;
+            const entityAt = block.getEntityAt(match.index) || null;
+
+            const replacementResult = Modifier.replaceText(
+                updatedContent,
+                selection,
+                txt,
+                styleAt,
+                entityAt,
+            );
+
+            if (replacementResult !== updatedContent) {
+                changed = true;
+                updatedContent = replacementResult;
+
+                const newBlock = updatedContent.getBlockForKey(key);
+                const newText = newBlock.getText();
+
+                offsetAdjustment += (newText.length - currentText.length);
+            }
+        }
+
+        callback(updatedContent, changed);
+    };
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const handleTableReplacement = (content, block, callback) => {
+        const key = block.getKey();
+        let updatedContent = content;
+        let changed = false;
+
+        const selection = createSelection(key, 0, 1);
+        const data = getData(updatedContent, key);
+
+        for (let i = 0; i < (data.numRows || 0); i++) {
+            for (let j = 0; j < (data.numCols || 0); j++) {
+                let cellEditorState = getCell(data, i, j, null, null);
+
+                if (!cellEditorState || !cellEditorState.getCurrentContent()) {
+                    continue;
+                }
+
+                let cellContent = cellEditorState.getCurrentContent();
+
+                cellContent.getBlocksAsArray().forEach((_block) => {
+                    handleCellBlockReplacement(updatedContent, _block, (resultContent, cellChanged) => {
+                        updatedContent = resultContent;
+                        if (cellChanged) {
+                            changed = true;
+                        }
+                    });
+                });
+
+                cellEditorState = EditorState.push(cellEditorState, cellContent, 'insert-characters');
+                setCell(data, i, j, cellEditorState);
+            }
+        }
+
+        const contentWithTableData = setDataForContent(updatedContent, selection, block, data) || content;
+
+        if (!contentWithTableData) {
+            callback(content, changed);
+            return;
+        }
+
+        callback(contentWithTableData, changed);
+    };
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const handleCellBlockReplacement = (content, block, callback) => {
+        let updatedContent = content;
+        let changed = false;
+        let lengthDifference = 0;
+        let text = block.getText();
+
+        regexp.lastIndex = 0;
+        let match;
+
+        while ((match = regexp.exec(text)) !== null) {
+            const adjustedIndex = match.index + lengthDifference;
+
+            if (adjustedIndex < 0 || adjustedIndex >= text.length) {
+                continue;
+            }
+
+            const updatedBlock = updatedContent.getBlockForKey(block.getKey());
+
+            if (!updatedBlock) {
+                continue;
+            }
+
+            const updatedText = updatedBlock.getText();
+
+            if (updatedText.substring(adjustedIndex, adjustedIndex + txt.length) === txt) {
+                continue;
+            }
+
+            const selection = createSelection(
+                block.getKey(),
+                adjustedIndex,
+                adjustedIndex + match[0].length,
+            );
+
+            const anchorOffset = selection.getAnchorOffset();
+            const styleAt = block.getInlineStyleAt(anchorOffset) || null;
+            const entityAt = block.getEntityAt(anchorOffset) || null;
+
+            changed = true;
+            updatedContent = Modifier.replaceText(
+                updatedContent,
+                selection,
+                txt,
+                styleAt,
+                entityAt,
+            );
+
+            lengthDifference += (txt.length - match[0].length);
+        }
+
+        callback(updatedContent, changed);
+    };
+
+    const replaceAtAll = (initialContent) => {
         if (!regexp) {
             return false;
         }
-        let newContent = content = _content;
 
-        content.getBlocksAsArray().forEach((block) => {
-            const key = block.getKey();
-            const text = block.getText();
-
-            let match;
-            let selection;
-            let lengthDifference = 0;
-
-            // eslint-disable-next-line no-cond-assign
-            while (match = regexp.exec(text)) {
-                const adjustedIndex = match.index + lengthDifference;
-
-                if (adjustedIndex < 0 || adjustedIndex >= text.length) {
-                    continue;
+        let resultContent = initialContent;
+        const processBlock = (block, nextBlock) => {
+            handleBlockReplacement(resultContent, block, (newContent, blockChanged) => {
+                resultContent = newContent;
+                if (blockChanged) {
+                    contentChanged = true;
                 }
 
-                const updatedBlock = newContent.getBlockForKey(key);
-                const updatedText = updatedBlock.getText();
-
-                if (updatedText.substring(adjustedIndex, adjustedIndex + txt.length) === txt) {
-                    continue;
+                if (nextBlock) {
+                    nextBlock();
                 }
+            });
+        };
 
+        const blocks = initialContent.getBlocksAsArray();
+        let blockIndex = 0;
 
-                selection = createSelection(key, adjustedIndex, adjustedIndex + match[0].length);
-                const styleAt = block.getInlineStyleAt(selection.anchorOffset) || null;
-                const entityAt = block.getEntityAt(selection.anchorOffset) || null;
+        const processNextBlock = () => {
+            if (blockIndex < blocks.length) {
+                const block = blocks[blockIndex++];
 
-                contentChanged = true;
-                newContent = Modifier.replaceText(newContent, selection, txt, styleAt, entityAt);
-                lengthDifference += txt.length - match[0].length;
+                processBlock(block, blockIndex < blocks.length ? processNextBlock : null);
             }
-        });
-        return newContent;
+        };
+
+        if (blocks.length > 0) {
+            processNextBlock();
+        }
+
+        return contentChanged ? resultContent : false;
     };
 
-    content = all ? replaceAtAll(content) : typeof index === 'number' ? replaceAtIndex(index, content) : content;
-
+    content = all
+        ? replaceAtAll(content)
+        : typeof index === 'number'
+            ? replaceAtIndex(index, content)
+            : content;
     if (contentChanged) {
         editorState = EditorState.push(editorState, content, 'insert-characters');
     }
@@ -214,6 +388,7 @@ const render = (state) => {
 
     return {...state, editorState};
 };
+
 export default findReplace;
 
 /**

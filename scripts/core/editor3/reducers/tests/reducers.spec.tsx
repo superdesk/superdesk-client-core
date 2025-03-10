@@ -2,6 +2,8 @@ import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
 import {LIMIT_CHARACTERS_OVERFLOW_STYLE} from 'core/editor3/helpers/characters-limit';
+// @ts-ignore
+import {convertFromRaw} from 'draft-js';
 
 /**
  * @description Creates a new store state that contains the editorState and searchTerm.
@@ -9,8 +11,15 @@ import {LIMIT_CHARACTERS_OVERFLOW_STYLE} from 'core/editor3/helpers/characters-l
  * @param {Object} searchTerm The searchTerm data (index, pattern, caseSensitive)
  * @returns {Object}
  */
-function withSearchTerm(txt, searchTerm) {
-    const editorState = EditorState.createWithContent(ContentState.createFromText(txt));
+function withSearchTerm(content, searchTerm, isRaw = false) {
+    let editorState;
+
+    if (isRaw) {
+        editorState = EditorState.createWithContent(convertFromRaw(content));
+    } else {
+        editorState = EditorState.createWithContent(ContentState.createFromText(content));
+    }
+
     const onChangeValue = function() {
         // noop
     };
@@ -484,26 +493,56 @@ describe('Find and Replace Functionality', () => {
         });
 
         it('replaces all instances of "fruit" with "veggie" and verifies lowercase output', () => {
-            const initialText =
-            // tslint:disable-next-line:max-line-length
-        'I love eating fruit,My favorite fruit is apple, but sometimes I prefer tropical fruit."Fruit" is a broad category The fruit market is booming.';
-            const searchConfig = {index: 0, pattern: 'fruit', caseSensitive: false};
+            const initialText = 'Hello dev dev developer';
+            const searchConfig = {index: 0, pattern: 'dev', caseSensitive: false};
             const startState = withSearchTerm(initialText, searchConfig);
 
             const updatedState = reducer(startState, {
                 type: 'HIGHLIGHTS_REPLACE_ALL',
-                payload: 'veggie',
+                payload: 'developer',
             });
 
             const resultText = updatedState.editorState.getCurrentContent().getPlainText('\n').toLowerCase();
+            // eslint-disable-next-line no-console
 
             expect(resultText).toBe(
                 // tslint:disable-next-line:max-line-length
-                'i love eating veggie,my favorite veggie is apple, but sometimes i prefer tropical veggie."veggie" is a broad category the veggie market is booming.',
+                'hello developer developer developer',
             );
         });
     });
 
+    describe('Replace All shrinking replacements ', () => {
+        it('replaces all "$AUD" with "$" without skipping or duplicating replacements', () => {
+            const initialText = 'I have $AUD100 in my wallet. The total cost is $AUD50, but sometimes it is $60.';
+            const searchConfig = {index: 0, pattern: '$AUD', caseSensitive: false};
+            const startState = withSearchTerm(initialText, searchConfig);
+
+            const updatedState = reducer(startState, {
+                type: 'HIGHLIGHTS_REPLACE_ALL',
+                payload: '$',
+            });
+
+            const resultText = updatedState.editorState.getCurrentContent().getPlainText('\n');
+
+            expect(resultText).toBe('I have $100 in my wallet. The total cost is $50, but sometimes it is $60.');
+        });
+
+        it('ensures replacing "$AUD" with "$" does not affect unrelated text', () => {
+            const initialText = 'The exchange rate is 1$AUD = 1.3$. I earned $AUD200 today.';
+            const searchConfig = {index: 0, pattern: '$AUD', caseSensitive: false};
+            const startState = withSearchTerm(initialText, searchConfig);
+
+            const updatedState = reducer(startState, {
+                type: 'HIGHLIGHTS_REPLACE_ALL',
+                payload: '$',
+            });
+
+            const resultText = updatedState.editorState.getCurrentContent().getPlainText('\n');
+
+            expect(resultText).toBe('The exchange rate is 1$ = 1.3$. I earned $200 today.');
+        });
+    });
     // Combined Replacement Tests
     describe('Combined Replacement Scenarios', () => {
         it('replaces first "$" with "$AUD" then replaces all remaining "$" occurrences', () => {
@@ -558,5 +597,125 @@ describe('Find and Replace Functionality', () => {
 
             expect(textReplaceAll).toBe('Total: $AUD100, cost: $AUD50, rate: 1$AUD = 1.3AUD.');
         });
+    });
+});
+describe('Find and Replace in Tables', () => {
+    it('replaces all occurrences of "$" with "$AUD" inside a table', () => {
+        const rawContent = {
+            blocks: [
+                {
+                    key: 'cell1',
+                    type: 'unstyled',
+                    text: '$100',
+                    entityRanges: [{offset: 0, length: 4, key: 0}],
+                },
+            ],
+            entityMap: {
+                '0': {
+                    type: 'TABLE',
+                    mutability: 'IMMUTABLE',
+                    data: {
+                        numRows: 1,
+                        numCols: 1,
+                        cells: [
+                            // tslint:disable-next-line:max-line-length
+                            [{blocks: [{key: 'cell1', type: 'unstyled', text: '$100', entityRanges: []}], entityMap: {}}],
+                        ],
+                    },
+                },
+            },
+        };
+
+        const searchConfig = {index: 0, pattern: '$', caseSensitive: false};
+        const startState = withSearchTerm(rawContent, searchConfig, true);
+
+        const updatedState = reducer(startState, {
+            type: 'HIGHLIGHTS_REPLACE_ALL',
+            payload: '$AUD',
+        });
+
+        const resultText = updatedState.editorState.getCurrentContent().getPlainText('\n');
+
+        expect(resultText).toContain('$AUD100');
+    });
+    it('replaces all occurrences of "$" with "$AUD" inside a complex table', () => {
+        const rawContent = {
+            blocks: [
+                {
+                    key: 'row1_col1',
+                    type: 'unstyled',
+                    text: 'Total: $100',
+                    entityRanges: [{offset: 7, length: 4, key: 0}],
+                },
+                {
+                    key: 'row1_col2',
+                    type: 'unstyled',
+                    text: 'Cost: $50',
+                    entityRanges: [{offset: 6, length: 3, key: 0}],
+                },
+                {
+                    key: 'row2_col1',
+                    type: 'unstyled',
+                    text: 'Rate: 1$ = 1.3AUD',
+                    entityRanges: [{offset: 7, length: 1, key: 0}],
+                },
+                {
+                    key: 'row2_col2',
+                    type: 'unstyled',
+                    text: 'Final Price: $200 or $AUD250',
+                    entityRanges: [{offset: 14, length: 4, key: 0}, {offset: 22, length: 5, key: 0}],
+                },
+            ],
+            entityMap: {
+                '0': {
+                    type: 'TABLE',
+                    mutability: 'IMMUTABLE',
+                    data: {
+                        numRows: 2,
+                        numCols: 2,
+                        cells: [
+                            [
+                                {
+                                    // tslint:disable-next-line:max-line-length
+                                    blocks: [{key: 'row1_col1', type: 'unstyled', text: 'Total: $100', entityRanges: []}],
+                                    entityMap: {},
+                                },
+                                {
+                                    blocks: [{key: 'row1_col2', type: 'unstyled', text: 'Cost: $50', entityRanges: []}],
+                                    entityMap: {},
+                                },
+                            ],
+                            [
+                                {
+                                    // tslint:disable-next-line:max-line-length
+                                    blocks: [{key: 'row2_col1', type: 'unstyled', text: 'Rate: 1$ = 1.3AUD', entityRanges: []}],
+                                    entityMap: {},
+                                },
+                                {
+                                    // tslint:disable-next-line:max-line-length
+                                    blocks: [{key: 'row2_col2', type: 'unstyled', text: 'Final Price: $200 or $AUD250', entityRanges: []}],
+                                    entityMap: {},
+                                },
+                            ],
+                        ],
+                    },
+                },
+            },
+        };
+
+        const searchConfig = {index: 0, pattern: '$', caseSensitive: false};
+        const startState = withSearchTerm(rawContent, searchConfig, true);
+
+        const updatedState = reducer(startState, {
+            type: 'HIGHLIGHTS_REPLACE_ALL',
+            payload: '$AUD',
+        });
+
+        const resultText = updatedState.editorState.getCurrentContent().getPlainText('\n');
+
+        expect(resultText).toContain('Total: $AUD100');
+        expect(resultText).toContain('Cost: $AUD50');
+        expect(resultText).toContain('Rate: 1$AUD = 1.3AUD');
+        expect(resultText).toContain('Final Price: $AUD200 or $AUD250');
     });
 });

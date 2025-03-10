@@ -96,7 +96,29 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
 
     return {data, needUpdate, forceUpdate};
 }
+export function getData(contentState: ContentState, blockKey: string) {
+    const block = contentState.getBlockForKey(blockKey);
+    const entityKey = block.getEntityAt(0);
 
+    if (!entityKey) {
+        return {};
+    }
+
+    const entity = contentState.getEntity(entityKey);
+    const entityData = entity.getData();
+
+    const blockData = block.getData()?.get('data');
+
+    if (!blockData) {
+        return entityData || {};
+    }
+
+    try {
+        return JSON.parse(blockData);
+    } catch (error) {
+        return {};
+    }
+}
 /**
  * @ngdoc method
  * @name getData
@@ -105,7 +127,7 @@ export function setCell(data, row, col, cellEditorState: EditorState) {
  * @description Returns the data contained in the entity of this atomic block.
  * @return {Object}
  */
-export function getData(contentState: ContentState, blockKey: string) {
+export function getDataOld(contentState: ContentState, blockKey: string) {
     const block = contentState.getBlockForKey(blockKey);
     const entityKey = block.getEntityAt(0);
     const {data} = contentState.getEntity(entityKey).getData();
@@ -118,7 +140,6 @@ export function getData(contentState: ContentState, blockKey: string) {
 
     return JSON.parse(blockData);
 }
-
 /**
  * @ngdoc method
  * @name setData
