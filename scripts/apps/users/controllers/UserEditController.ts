@@ -50,7 +50,7 @@ export function UserEditController($scope, user, session, usersService) {
         getCoreSections,
         ...getSectionsFromExtension,
     ]
-        .flatMap((getSectionsFn) => getSectionsFn($scope.user._id))
+        .flatMap((getSectionsFn) => getSectionsFn($scope.user))
         .sort((a, b) => a.priority - b.priority);
 
     $scope.selectedSection = $scope.sections[0];
