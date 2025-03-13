@@ -99,7 +99,7 @@ class WithLiveResourcesComponent
         }
 
         return Promise.all(
-            resources.filter(({ids}) => ids.length > 0).map(({resource, ids}) => {
+            resources.map(({resource, ids}) => {
                 const query: ISuperdeskQuery = {
                     filter: {
                         $and: [
@@ -111,9 +111,13 @@ class WithLiveResourcesComponent
                     max_results: 200,
                 };
 
-                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
-                    prepareSuperdeskQuery(`/${resource}`, query),
-                ).then((res) => {
+                const request = ids.length < 1
+                    ? Promise.resolve({_items: []})
+                    : this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
+                        prepareSuperdeskQuery(`/${resource}`, query),
+                    );
+
+                return request.then((res) => {
                     const itemsById = keyBy(res._items, (item) => item._id);
 
                     return toPair(

@@ -276,9 +276,9 @@
     }
     .action-bar {
         inset-block-start: -48px;
-        &.show { 
+        &.show {
             inset-block-start:0;
-            z-index: 2; 
+            z-index: 2;
         }
     }
 
@@ -338,7 +338,7 @@
     }
     .validation-info {
         font-size: 11px;
-        color: var(--color-text-light);
+        color: var(--error-text-color);
     }
     .profile-pic {
         display: flex;
@@ -393,7 +393,7 @@
             background-color: var(--sd-colour__webkit-scrollbar--hover);
             cursor: pointer;
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--sd-colour__webkit-scrollbar-thumb);
         }
@@ -749,7 +749,7 @@ Profile page styles
 
 .mini-modal {
     background-color: #fff;
-    
+
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0,0,0,.2),0 6px 16px rgba(0,0,0,.3);
     .title {
@@ -812,7 +812,7 @@ Profile page styles
         }
         .action-bar {
             inset-block-start: -48px;
-            &.show { 
+            &.show {
                 inset-block-start: 0px;
                 z-index: 1;
             }
