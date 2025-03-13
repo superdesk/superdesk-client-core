@@ -6,7 +6,7 @@ on:
 jobs:
   test:
     strategy:
-      fail-fast: false  
+      fail-fast: false
       matrix:
         node-version: ['14', '20', '22']
 
@@ -21,9 +21,7 @@ jobs:
 
     - run: npm install # needed while we support v14
 
-    - run: npm run lint
-    - run: npm run unit
-    - run: npm run verify-client-api-changes
+    - run: npm run test
 
       env:
         TZ: "Europe/Prague"
