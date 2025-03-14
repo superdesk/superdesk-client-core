@@ -124,7 +124,7 @@
     "shortid": "2.2.8",
     "superdesk-ui-framework": "4.0.23",
     "ts-loader": "^8.4.0",
-    "typescript": "~4.9.5",
+    "typescript": "4.9.5",
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
     "webpack": "^4.47.0",
@@ -151,7 +151,8 @@
     "karma-sourcemap-loader": "^0.4.0",
     "karma-spec-reporter": "0.0.36",
     "karma-webpack": "^4.0.0",
-    "react-test-renderer": "~16.9.0",
+    "react-addons-test-utils": "^15.6.0",
+    "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
     "superdesk-code-style": "1.5.0",
     "typescript-eslint-parser": "^18.0.0"
