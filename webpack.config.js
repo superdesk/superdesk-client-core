@@ -112,13 +112,13 @@ module.exports = function makeConfig(grunt) {
                         ? __dirname // when running unit tests from this project
                         : getModuleDir('superdesk-core'),
             },
-            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx'],
         },
 
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx)$/,
+                    test: /\.(ts|tsx|js|jsx|mjs)$/,
                     exclude: function(absolutePath) {
                         // Exclude files inside `WEBPACK_IGNORE` folder.
                         // This is only relevant in development.
