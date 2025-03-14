@@ -17,8 +17,5 @@
     "protractor": "7.0.0",
     "superdesk-code-style": "1.3.0",
     "typescript": "~4.9.5"
-  },
-  "peerDependencies": {
-    "protractor": "7.0.0"
   }
 }

@@ -89,7 +89,7 @@ function compileTranslationsPoToJson(translationsPoDir, translationsJsonDir) {
             return;
         }
 
-        if (/\.po$/.test() !== true) {
+        if (filename.endsWith('.po') !== true) {
             return;
         }
 

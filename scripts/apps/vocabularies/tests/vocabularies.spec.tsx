@@ -62,9 +62,7 @@ describe('vocabularies', () => {
 
         wrapper.find('input[type="number"]').simulate('change', fakeEvent);
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        expect(instance.getItemsForSaving()[0].priority).toBe(2);
+        expect((instance.getItemsForSaving()[0].priority) as any).toBe(2);
     });
 
     describe('config controller', () => {

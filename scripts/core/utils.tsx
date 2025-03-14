@@ -53,16 +53,11 @@ function requestListener() {
 if (language === 'en') {
     applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
 } else {
-    fetch(filename).then((response) => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return Promise.reject('Failed to load translations');
-        }
-    })
-        .then((translations) => Object.assign({'': {language}}, translations[language]))
-        .then(applyTranslations)
-        .catch((reason) => console.error('There was error when loading translations', reason));
+    const req = new XMLHttpRequest();
+
+    req.addEventListener('load', requestListener);
+    req.open('GET', filename, false);
+    req.send();
 }
 
 export const i18n = gettextjs();

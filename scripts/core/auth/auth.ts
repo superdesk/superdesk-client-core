@@ -17,7 +17,7 @@ window.fetch = (...args) => {
     /**
      * Prevent requests not coming from our app get intercepted.
      */
-    if (resource.toString().includes(appConfig.server.url) === false || resource.toString().includes('client_config')) {
+    if (resource.toString().includes(appConfig.server.url) === false) {
         return originalFetch(resource, config);
     }
 
