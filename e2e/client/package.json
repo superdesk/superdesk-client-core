@@ -13,8 +13,10 @@
     "jasmine-reporters": "2.5.2",
     "protractor": "7.0.0",
     "protractor-flake": "4.0.0",
-    "typescript": "4.9.3",
     "webdriver-manager": "~12.1.9"
+  },
+  "peerDependencies": {
+    "typescript": "*"
   },
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
