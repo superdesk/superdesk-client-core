@@ -70,7 +70,7 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
-import {appConfig, authoringReactViewEnabled} from 'appConfig';
+import {appConfig, authoringReactViewEnabled, getUserInterfaceLanguage} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -517,6 +517,7 @@ export function getSuperdeskApiImplementation(
                 }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
+            locale: getUserInterfaceLanguage(),
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

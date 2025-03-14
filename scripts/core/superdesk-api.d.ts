@@ -3269,6 +3269,7 @@ declare module 'superdesk-api' {
                 relativeDuration?: number, // = 1
                 relativeUnit?: string, // = 'days'
             ): string;
+            locale: string;
         };
         privileges: {
             getOwnPrivileges(): Promise<IUserPrivileges>;
