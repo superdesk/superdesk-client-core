@@ -2,6 +2,9 @@ import * as React from 'react';
 
 interface IProps {
     children: React.ReactNode;
+    paddingBlock?: React.CSSProperties['paddingBlock'];
+    paddingBlockStart?: React.CSSProperties['paddingBlockStart'];
+    paddingBlockEnd?: React.CSSProperties['paddingBlockEnd'];
 }
 
 /**
@@ -16,6 +19,9 @@ export class Card extends React.PureComponent<IProps> {
                 borderRadius: 'var(--b-radius--medium)',
                 padding: 'calc(3* var(--base-increment))',
                 boxShadow: 'var(--sd-shadow--z2)',
+                paddingBlock: this.props.paddingBlock,
+                paddingBlockStart: this.props.paddingBlockStart,
+                paddingBlockEnd: this.props.paddingBlockEnd,
             }}>
                 {this.props.children}
             </div>
