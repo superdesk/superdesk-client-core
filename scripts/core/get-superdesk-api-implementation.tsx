@@ -517,7 +517,10 @@ export function getSuperdeskApiImplementation(
                 }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
-            locale: getUserInterfaceLanguage(),
+            locale: {
+                code: getUserInterfaceLanguage(),
+                firstDayOfWeek: appConfig.startingDay,
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

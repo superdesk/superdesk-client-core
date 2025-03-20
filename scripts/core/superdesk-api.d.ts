@@ -3269,7 +3269,10 @@ declare module 'superdesk-api' {
                 relativeDuration?: number, // = 1
                 relativeUnit?: string, // = 'days'
             ): string;
-            locale: string;
+            locale: {
+                code: string;
+                firstDayOfWeek: number; // 0 - sunday
+            };
         };
         privileges: {
             getOwnPrivileges(): Promise<IUserPrivileges>;
