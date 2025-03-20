@@ -1,5 +1,5 @@
 import {IExtension, IExtensionActivationResult} from 'superdesk-api';
-import {AvailabilitySettings} from './availability-settings';
+import {AvailabilitySettings} from './settings';
 import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;

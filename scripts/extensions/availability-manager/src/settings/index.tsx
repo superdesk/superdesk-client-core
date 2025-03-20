@@ -4,9 +4,9 @@ import {groupBy, pick, range} from 'lodash';
 import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {Button, Icon, IconButton, showPopup, Text} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
-import {superdesk} from './superdesk';
-import {Card} from './card';
-import {Separator} from './separator';
+import {superdesk} from '../superdesk';
+import {Card} from '../card';
+import {Separator} from '../separator';
 
 interface IAvailabilityRecord extends IBaseRestApiResponse {
     date: string;
