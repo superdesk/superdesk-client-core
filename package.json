@@ -168,8 +168,6 @@
     "unit": "karma start --single-run",
     "lint": "python3 ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
-    "server": "grunt server",
-    "dev": "npm run server",
     "verify-client-api-changes": "node tasks/verify-client-api-changes.js"
   },
   "volta": {
