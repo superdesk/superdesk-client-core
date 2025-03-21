@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const fs = require('fs');
 
 function getModuleDir(moduleName) {
     return path.join(
@@ -39,6 +40,18 @@ module.exports = function makeConfig(grunt) {
     ].concat(apps);
 
     const jQueryModule = getModuleDir('jquery');
+
+    const superdeskCorePath = process.cwd() === __dirname
+        ? __dirname // when running unit tests from this project
+        : getModuleDir('superdesk-core');
+
+    // only relevant in development mode
+    const uiFrameworkInsideClientCore = path.join(superdeskCorePath, 'node_modules/superdesk-ui-framework');
+
+    const uiFrameworkPath =
+        fs.existsSync(uiFrameworkInsideClientCore)
+            ? uiFrameworkInsideClientCore
+            : getModuleDir('superdesk-ui-framework');
 
     return {
         entry: {
@@ -107,10 +120,9 @@ module.exports = function makeConfig(grunt) {
                  * with a superdesk app open and superdesk-core not installed.
                  * running `npm link superdesk-core` inside of a superdesk app fixes this.
                  */
-                'superdesk-core':
-                    process.cwd() === __dirname
-                        ? __dirname // when running unit tests from this project
-                        : getModuleDir('superdesk-core'),
+                'superdesk-core': superdeskCorePath,
+
+                'superdesk-ui-framework': uiFrameworkPath,
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
@@ -120,13 +132,6 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.(ts|tsx|js|jsx)$/,
                     exclude: function(absolutePath) {
-                        // Exclude files inside `WEBPACK_IGNORE` folder.
-                        // This is only relevant in development.
-                        // It was added to enable linking ui-framework.
-                        if (absolutePath.includes('WEBPACK_IGNORE')) {
-                            return true;
-                        }
-
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
                             return false;
