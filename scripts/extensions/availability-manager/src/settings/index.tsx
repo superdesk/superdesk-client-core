@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {addMonths, format, startOfMonth} from 'date-fns';
-import {groupBy, pick, range} from 'lodash';
+import {keyBy, pick, range} from 'lodash';
 import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {Button, Icon, IconButton, showPopup, Text} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
@@ -8,12 +8,17 @@ import {superdesk} from '../superdesk';
 import {Card} from '../card';
 import {Separator} from '../separator';
 
-interface IAvailabilityRecord extends IBaseRestApiResponse {
-    date: string;
-    status: 'available' | 'unavailable' | 'partial';
+interface IWorkingHours {
     start_time: string;
     end_time: string;
     tags: Array<{name: string; code: string}>;
+}
+
+interface IAvailabilityRecord extends IBaseRestApiResponse {
+    date: string;
+    status: 'available' | 'unavailable' | 'partial';
+    working_hours?: Array<IWorkingHours>;
+    language: string;
 }
 
 const {httpRequestJsonLocal} = superdesk;
@@ -70,13 +75,14 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
             <Page>
                 <WithAvailabilityRecordsQuery resource='user_availability' query={query}>
                     {(res) => {
-                        const grouped = groupBy(res._items, (item) => item.date);
+                        const grouped = keyBy(res._items, (item) => item.date);
 
                         const defaultDayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
                             const {day, dayFromOtherMonth} = props.day;
 
                             const dateKey = format(props.day.date, 'yyyy-MM-dd');
-                            const entriesForDay = grouped[dateKey] ?? [];
+                            const workingDay: IAvailabilityRecord | null = grouped[dateKey];
+                            const workingHours: IAvailabilityRecord['working_hours'] = workingDay?.working_hours ?? [];
 
                             return (
                                 <div
@@ -88,7 +94,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        background: !dayFromOtherMonth && entriesForDay.length > 0 ? 'orange' : undefined,
+                                        background: !dayFromOtherMonth && workingHours.length > 0 ? 'orange' : undefined,
                                         borderRadius: 20,
                                         cursor: 'pointer',
                                     }}
@@ -142,7 +148,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                     </Text>
 
                                                     <div>
-                                                        {entriesForDay.map((entry) => (
+                                                        {workingHours.map((entry) => (
                                                             <Spacer h gap="4" noWrap alignItems="center" justifyContent="start">
                                                                 <Icon name="time" />
                                                                 <div style={{whiteSpace: 'nowrap'}}>
@@ -244,18 +250,33 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                 <br />
 
                 <button onClick={() => {
+                    const item: Omit<IAvailabilityRecord, keyof IBaseRestApiResponse> = {
+                        date: '2025-03-05',
+                        status: 'partial',
+                        working_hours: [
+                            {
+                                start_time: "09:00",
+                                end_time: "10:00",
+                                tags: [
+                                    {name: "Regular Shift", code: "regular"}
+                                ]
+                            },
+
+                            {
+                                start_time: "11:00",
+                                end_time: "12:00",
+                                tags: [
+                                    {name: "Regular Shift", code: "regular"}
+                                ]
+                            },
+                        ],
+                        language: 'en',
+                    };
+
                     httpRequestJsonLocal({
                         method: 'POST',
                         path: `/user_availability`,
-                        payload: {
-                            "date": "2025-03-05",
-                            "status": "partial",
-                            "start_time": "20:00",
-                            "end_time": "22:00",
-                            "tags": [
-                                {"name": "Regular Shift", "code": "regular"}
-                            ]
-                        }
+                        payload: item,
                     });
                 }}>
                     post
