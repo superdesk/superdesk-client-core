@@ -2,24 +2,12 @@ import * as React from 'react';
 import {addMonths, format, startOfMonth} from 'date-fns';
 import {keyBy, pick, range} from 'lodash';
 import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
-import {Button, Icon, IconButton, showPopup, Text} from 'superdesk-ui-framework/react';
+import {Button, IconButton, showPopup} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {Card} from '../card';
-import {Separator} from '../separator';
-
-interface IWorkingHours {
-    start_time: string;
-    end_time: string;
-    tags: Array<{name: string; code: string}>;
-}
-
-interface IAvailabilityRecord extends IBaseRestApiResponse {
-    date: string;
-    status: 'available' | 'unavailable' | 'partial';
-    working_hours?: Array<IWorkingHours>;
-    language: string;
-}
+import {IAvailabilityRecord} from '../interfaces';
+import {WorkingDayView} from './working-day-view-edit';
 
 const {httpRequestJsonLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
@@ -104,59 +92,12 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                             'bottom-end',
                                             ({closePopup}) => (
                                                 <Card>
-                                                    <Spacer h gap="0" justifyContent="end" noWrap>
-                                                        <IconButton
-                                                            icon="pencil"
-                                                            ariaValue={gettext('Edit')}
-                                                            onClick={() => {
-                                                                //
-                                                            }}
-                                                        />
-
-                                                        <IconButton
-                                                            icon="trash"
-                                                            ariaValue={gettext('Remove')}
-                                                            onClick={() => {
-                                                                //
-                                                            }}
-                                                        />
-
-                                                        <SpacerBlock h gap="4" />
-
-                                                        <Separator length="50%" color="var(--color-text-light)" />
-
-                                                        <SpacerBlock h gap="4" />
-
-                                                        <IconButton
-                                                            icon="close-small"
-                                                            ariaValue={gettext('Close')}
-                                                            onClick={() => {
-                                                                closePopup();
-                                                            }}
-                                                        />
-                                                    </Spacer>
-
-                                                    <Text size="small">
-                                                        {
-                                                            new Intl.DateTimeFormat(locale.code, {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                weekday: 'long',
-                                                                day: 'numeric',
-                                                            }).format(props.day.date)
-                                                        }
-                                                    </Text>
-
-                                                    <div>
-                                                        {workingHours.map((entry) => (
-                                                            <Spacer h gap="4" noWrap alignItems="center" justifyContent="start">
-                                                                <Icon name="time" />
-                                                                <div style={{whiteSpace: 'nowrap'}}>
-                                                                    {entry.start_time} - {entry.end_time}
-                                                                </div>
-                                                            </Spacer>
-                                                        ))}
-                                                    </div>
+                                                    <WorkingDayView
+                                                        day={workingDay}
+                                                        onChange={() => null}
+                                                        onRemove={() => null}
+                                                        onCloseView={closePopup}
+                                                    />
                                                 </Card>
                                             ),
                                         );
@@ -251,7 +192,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                 <button onClick={() => {
                     const item: Omit<IAvailabilityRecord, keyof IBaseRestApiResponse> = {
-                        date: '2025-03-05',
+                        date: '2025-03-08',
                         status: 'partial',
                         working_hours: [
                             {
@@ -266,7 +207,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                 start_time: "11:00",
                                 end_time: "12:00",
                                 tags: [
-                                    {name: "Regular Shift", code: "regular"}
+                                    {name: "lorem ipsum", code: "regular"},
+                                    {name: "dolor sit amet", code: "regular"},
+                                    {name: "consectetur adipiscing ", code: "regular"},
                                 ]
                             },
                         ],
