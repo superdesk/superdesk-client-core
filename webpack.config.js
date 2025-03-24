@@ -45,7 +45,6 @@ module.exports = function makeConfig(grunt) {
         ? __dirname // when running unit tests from this project
         : getModuleDir('superdesk-core');
 
-    // only relevant in development mode
     const uiFrameworkInsideClientCore = path.join(superdeskCorePath, 'node_modules/superdesk-ui-framework');
 
     const uiFrameworkPath =
