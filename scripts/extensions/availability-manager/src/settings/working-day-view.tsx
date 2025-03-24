@@ -1,22 +1,27 @@
 import {Spacer, SpacerBlock} from '@sourcefabric/common';
 import * as React from 'react';
 import {Icon, IconButton, Label, Text} from 'superdesk-ui-framework/react';
+import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
 import {Separator} from '../separator';
 import {superdesk} from '../superdesk';
+import {getLocalizedDateString} from '../utils';
 
 const {locale, gettext} = superdesk.localization;
+const {vocabulary} = superdesk.entities;
 
 interface IProps {
     day: IAvailabilityRecord;
-    onChange(day: IAvailabilityRecord): void;
-    onRemove(day: IAvailabilityRecord): void;
-    onCloseView(): void;
+    onRemove(): void;
+    onEdit(): void;
+    onClose(): void;
 }
 
 export class WorkingDayView extends React.PureComponent<IProps> {
     render() {
         const workingHours: IAvailabilityRecord['working_hours'] = this.props.day?.working_hours ?? [];
+
+        // const tagsById = vocabulary.getAll().get(TAGS_VOCABULARY_ID).items;
 
         return (
             <>
@@ -25,7 +30,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         icon="pencil"
                         ariaValue={gettext('Edit')}
                         onClick={() => {
-                            //
+                            this.props.onEdit();
                         }}
                     />
 
@@ -33,7 +38,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         icon="trash"
                         ariaValue={gettext('Remove')}
                         onClick={() => {
-                            //
+                            this.props.onRemove();
                         }}
                     />
 
@@ -47,20 +52,13 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         icon="close-small"
                         ariaValue={gettext('Close')}
                         onClick={() => {
-                            this.props.onCloseView();
+                            this.props.onClose();
                         }}
                     />
                 </Spacer>
 
                 <Text size="small">
-                    {
-                        new Intl.DateTimeFormat(locale.code, {
-                            year: 'numeric',
-                            month: 'long',
-                            weekday: 'long',
-                            day: 'numeric',
-                        }).format(new Date(this.props.day.date))
-                    }
+                    {getLocalizedDateString(locale.code, new Date(this.props.day.date))}
                 </Text>
 
                 <div>
@@ -73,10 +71,10 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                             </div>
 
                             {
-                                (entry.tags ?? []).map((tag) => {
-                                    // PR-TODO: should label name from a vocabulary be used?
+                                (entry.tags ?? []).map((tag, i) => {
+                                    // PR-TODO: use translated tag name
                                     return (
-                                        <Label key={tag.code} text={tag.name} size="small" />
+                                        <Label key={i} text={tag.code} size="small" />
                                     );
                                 })
                             }

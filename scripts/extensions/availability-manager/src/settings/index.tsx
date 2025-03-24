@@ -2,12 +2,12 @@ import * as React from 'react';
 import {addMonths, format, startOfMonth} from 'date-fns';
 import {keyBy, pick, range} from 'lodash';
 import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
-import {Button, IconButton, showPopup} from 'superdesk-ui-framework/react';
+import {Button, IconButton} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {Card} from '../card';
 import {IAvailabilityRecord} from '../interfaces';
-import {WorkingDayView} from './working-day-view-edit';
+import {manageWorkingHours} from './manage-working-hours';
 
 const {httpRequestJsonLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
@@ -87,20 +87,10 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         cursor: 'pointer',
                                     }}
                                     onClick={(event) => {
-                                        showPopup(
-                                            event.target as HTMLElement,
-                                            'bottom-end',
-                                            ({closePopup}) => (
-                                                <Card>
-                                                    <WorkingDayView
-                                                        day={workingDay}
-                                                        onChange={() => null}
-                                                        onRemove={() => null}
-                                                        onCloseView={closePopup}
-                                                    />
-                                                </Card>
-                                            ),
-                                        );
+                                        manageWorkingHours({
+                                            initiatorElement: event.target as HTMLElement,
+                                            workingDay: workingDay,
+                                        });
                                     }}
                                 >
                                     {day}
@@ -199,7 +189,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                 start_time: "09:00",
                                 end_time: "10:00",
                                 tags: [
-                                    {name: "Regular Shift", code: "regular"}
+                                    {code: "tag1"}
                                 ]
                             },
 
@@ -207,9 +197,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                 start_time: "11:00",
                                 end_time: "12:00",
                                 tags: [
-                                    {name: "lorem ipsum", code: "regular"},
-                                    {name: "dolor sit amet", code: "regular"},
-                                    {name: "consectetur adipiscing ", code: "regular"},
+                                    {code: "tag1"},
+                                    {code: "tag1"},
+                                    {code: "tag1"},
                                 ]
                             },
                         ],
