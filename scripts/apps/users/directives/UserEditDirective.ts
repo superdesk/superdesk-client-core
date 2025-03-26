@@ -163,7 +163,15 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     .then((reloadPage) => {
                         scope.error = null;
 
-                        return scope.$parent.$parent.onSave(scope.user)
+                        /**
+                         * onSave from parent scope(UserEditController) needs to be used when editing a user
+                         * (because UserEditController stores latest user with latest etag
+                         * which will be used my extension point)
+                         * usersService.save is only intended to be used when creating a new user
+                         */
+                        const save = scope.$parent.$parent.onSave ?? usersService.save;
+
+                        return save(scope.user)
                             .then((response) => {
                                 notify.success(gettext('Saved'));
                                 scope.origUser = response;
