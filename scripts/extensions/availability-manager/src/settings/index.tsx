@@ -1,17 +1,20 @@
 import * as React from 'react';
-import {addMonths, format, startOfMonth} from 'date-fns';
-import {keyBy, pick, range} from 'lodash';
+import * as ReactDOM from 'react-dom';
+import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
+import {keyBy, range} from 'lodash';
 import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
-import {Button, IconButton} from 'superdesk-ui-framework/react';
+import {Button, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {Card} from '../card';
 import {IAvailabilityRecord} from '../interfaces';
-import {manageWorkingHours} from './manage-working-hours';
+import {WorkingDayView} from './working-day-view';
+import {EditWorkdayModal} from './edit-workday-modal';
 
-const {httpRequestJsonLocal} = superdesk;
+const {httpRequestVoidLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
 const {firstDayOfWeek} = superdesk.localization.locale;
+const {assertNever} = superdesk.helpers;
 const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
 
 const verticalSpacing = '1.4rem';
@@ -31,27 +34,39 @@ type IProps = React.ComponentProps<IUserProfileSection['component']>;
 interface IState {
     user: IUser;
     calendarStart: Date;
+    overlay:
+        null
+        | {kind: 'view'; date: string}
+        | {kind: 'edit'; date: string}
+        | {kind: 'create'; date: string};
 }
 
 export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
+    private dayRefs: {[key: string]: React.RefObject<HTMLDivElement>};
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {
             user: props.user,
             calendarStart: startOfMonth(new Date()),
+            overlay: null,
         }
+
+        this.dayRefs = {};
     }
 
     render() {
         const monthsToDisplayAtOnce = 4;
         const months: Array<Date> = range(0, monthsToDisplayAtOnce).map((toAdd) => addMonths(this.state.calendarStart, toAdd));
 
+        const calendarEnd = endOfMonth(months[months.length - 1]);
+
         const query: ISuperdeskQuery = {
             filter: {
                 $and: [
                     {[nameof<IAvailabilityRecord>('date')]: {$gte: format(months[0], 'yyyy-MM-dd')}},
-                    {[nameof<IAvailabilityRecord>('date')]: {$lte: format(months[months.length - 1], 'yyyy-MM-dd')}},
+                    {[nameof<IAvailabilityRecord>('date')]: {$lte: format(calendarEnd, 'yyyy-MM-dd')}},
                 ],
             },
             page: 1,
@@ -70,11 +85,29 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                             const dateKey = format(props.day.date, 'yyyy-MM-dd');
                             const workingDay: IAvailabilityRecord | null = grouped[dateKey];
-                            const workingHours: IAvailabilityRecord['working_hours'] = workingDay?.working_hours ?? [];
+
+                            if (this.dayRefs[dateKey] == null) {
+                                this.dayRefs[dateKey] = React.createRef<HTMLDivElement>();
+                            }
+
+                            const background: React.CSSProperties['background'] = (() => {
+                                if (dayFromOtherMonth || workingDay == null) {
+                                    return undefined;
+                                } else if (workingDay.status === 'available') {
+                                    return 'var(--color-success-highlight)';
+                                } else if (workingDay.status === 'unavailable') {
+                                    return 'var(--color-alert-highlight)';
+                                } else if (workingDay.status === 'partial') {
+                                    return 'var(--color-warning-highlight)';
+                                } else {
+                                    return assertNever(workingDay.status);
+                                }
+                            })();
 
                             return (
                                 <div
                                     key={day}
+                                    ref={this.dayRefs[dateKey]}
                                     style={{
                                         opacity: dayFromOtherMonth ? 0.5 : undefined,
                                         width: '100%',
@@ -82,14 +115,14 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        background: !dayFromOtherMonth && workingHours.length > 0 ? 'orange' : undefined,
+                                        color: background == null ? undefined : getTextColor(background),
+                                        background: background,
                                         borderRadius: 20,
                                         cursor: 'pointer',
                                     }}
-                                    onClick={(event) => {
-                                        manageWorkingHours({
-                                            initiatorElement: event.target as HTMLElement,
-                                            workingDay: workingDay,
+                                    onClick={() => {
+                                        this.setState({
+                                            overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
                                         });
                                     }}
                                 >
@@ -152,68 +185,111 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     }
                                 </div>
 
-                                {/* PR-TODO: remove demo code */}
-                                {res._items.map((item) => (
-                                    <div key={item._id}>
-                                        <pre>
-                                            {JSON.stringify(pick(item, 'date', 'status', 'start_time', 'end_time'), null, 4)}
-                                        </pre>
-                                    </div>
-                                ))}
+                                {(() => {
+                                    const {overlay} = this.state;
+
+                                    if (overlay == null) {
+                                        return null;
+                                    } else if (overlay.kind === 'view') {
+                                        const handleClose = () => {
+                                            this.setState({overlay: null});
+                                        };
+
+                                        const workingDay = grouped[overlay.date];
+
+                                        /**
+                                         * After creating a new item we might switch to view mode.
+                                         * It takes a moment for live query to pick up the new item
+                                         * We render `null` initially and when the item arrives,
+                                         * it will render the intended component.
+                                         */
+                                        if (workingDay == null) {
+                                            return null;
+                                        }
+
+                                        return (
+                                            <PopupPositioner
+                                                getReferenceElement={() => this.dayRefs[overlay.date].current as HTMLElement}
+                                                placement="bottom-end"
+                                                onClose={handleClose}
+                                            >
+                                                <Card>
+                                                    <WorkingDayView
+                                                        day={workingDay}
+                                                        onEdit={() => {
+                                                            handleClose();
+                                                            this.setState({overlay: {kind: 'edit', date: overlay.date}});
+                                                        }}
+                                                        onRemove={() => {
+                                                            httpRequestVoidLocal({
+                                                                method: 'DELETE',
+                                                                path: `/user_availability/${workingDay._id}`,
+                                                                headers: {
+                                                                    'If-Match': workingDay._etag,
+                                                                },
+                                                            }).then(() => {
+                                                                handleClose();
+                                                            });
+                                                        }}
+                                                        onClose={handleClose}
+                                                    />
+                                                </Card>
+                                            </PopupPositioner>
+                                        );
+                                    } else if (overlay.kind === 'edit' || overlay.kind === 'create') {
+                                        const handleClose = () => {
+                                            this.setState({overlay: null});
+                                        };
+
+                                        const workingDay = grouped[overlay.date];
+
+                                        const referenceElement = this.dayRefs[overlay.date].current;
+
+                                        if (referenceElement == null) {
+                                            throw new Error();
+                                        }
+
+                                        return (
+                                            ReactDOM.createPortal(
+                                                (
+                                                    <EditWorkdayModal
+                                                        workingDay={(() => {
+                                                            if (overlay.kind === 'edit') {
+                                                                return {kind: 'saved', value: workingDay};
+                                                            } else if (overlay.kind === 'create') {
+                                                                return {
+                                                                    kind: 'draft',
+                                                                    template: {
+                                                                        date: overlay.date,
+                                                                        status: 'available',
+                                                                    } satisfies Omit<IAvailabilityRecord, keyof IBaseRestApiResponse>,
+                                                                };
+                                                            } else {
+                                                                return assertNever(overlay);
+                                                            }
+                                                        })()}
+                                                        onClose={(item) => {
+                                                            handleClose();
+
+                                                            if (item?.status === 'partial') {
+                                                                this.setState({overlay: {kind: 'view', date: overlay.date}});
+                                                            } else {
+                                                                this.setState({overlay: null});
+                                                            }
+                                                        }}
+                                                    />
+                                                ),
+                                                document.body,
+                                            )
+                                        );
+                                    } else {
+                                        return assertNever(overlay);
+                                    }
+                                })()}
                             </div>
                         )
                     }}
                 </WithAvailabilityRecordsQuery>
-
-
-
-
-
-                {/* PR-TODO: remove demo code below */}
-
-
-
-
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-
-                <button onClick={() => {
-                    const item: Omit<IAvailabilityRecord, keyof IBaseRestApiResponse> = {
-                        date: '2025-03-08',
-                        status: 'partial',
-                        working_hours: [
-                            {
-                                start_time: "09:00",
-                                end_time: "10:00",
-                                tags: [
-                                    {code: "tag1"}
-                                ]
-                            },
-
-                            {
-                                start_time: "11:00",
-                                end_time: "12:00",
-                                tags: [
-                                    {code: "tag1"},
-                                    {code: "tag1"},
-                                    {code: "tag1"},
-                                ]
-                            },
-                        ],
-                        language: 'en',
-                    };
-
-                    httpRequestJsonLocal({
-                        method: 'POST',
-                        path: `/user_availability`,
-                        payload: item,
-                    });
-                }}>
-                    post
-                </button>
             </Page>
         );
     }

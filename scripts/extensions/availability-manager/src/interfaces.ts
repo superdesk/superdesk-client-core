@@ -10,5 +10,4 @@ export interface IAvailabilityRecord extends IBaseRestApiResponse {
     date: string;
     status: 'available' | 'unavailable' | 'partial';
     working_hours?: Array<IWorkingHours>;
-    language: string;
 }

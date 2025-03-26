@@ -1,14 +1,12 @@
 import {Spacer, SpacerBlock} from '@sourcefabric/common';
 import * as React from 'react';
 import {Icon, IconButton, Label, Text} from 'superdesk-ui-framework/react';
-import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
 import {Separator} from '../separator';
 import {superdesk} from '../superdesk';
 import {getLocalizedDateString} from '../utils';
 
 const {locale, gettext} = superdesk.localization;
-const {vocabulary} = superdesk.entities;
 
 interface IProps {
     day: IAvailabilityRecord;
