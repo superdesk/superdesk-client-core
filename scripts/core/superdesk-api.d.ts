@@ -3101,6 +3101,11 @@ declare module 'superdesk-api' {
                 getCustomFieldVocabularies(): Array<IVocabulary>;
                 getLanguageVocabulary(): IVocabulary;
                 isCustomVocabulary(vocabulary: IVocabulary): boolean;
+
+                /**
+                 * If language is not passed, it will default to user interface language
+                 */
+                getVocabularyItemNameTranslated(item: IVocabularyItem, language?: string): string;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;

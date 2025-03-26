@@ -1,12 +1,15 @@
 import {Spacer, SpacerBlock} from '@sourcefabric/common';
+import {keyBy} from 'lodash';
 import * as React from 'react';
 import {Icon, IconButton, Label, Text} from 'superdesk-ui-framework/react';
+import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
 import {Separator} from '../separator';
 import {superdesk} from '../superdesk';
 import {getLocalizedDateString} from '../utils';
 
 const {locale, gettext} = superdesk.localization;
+const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
 
 interface IProps {
     day: IAvailabilityRecord;
@@ -18,8 +21,10 @@ interface IProps {
 export class WorkingDayView extends React.PureComponent<IProps> {
     render() {
         const workingHours: IAvailabilityRecord['working_hours'] = this.props.day?.working_hours ?? [];
-
-        // const tagsById = vocabulary.getAll().get(TAGS_VOCABULARY_ID).items;
+        const tagsById = keyBy(
+            superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID).items,
+            (item) => item.qcode,
+        );
 
         return (
             <>
@@ -70,9 +75,14 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                             {
                                 (entry.tags ?? []).map((tag, i) => {
-                                    // PR-TODO: use translated tag name
+                                    const vocabularyItem = tagsById[tag.code];
+
                                     return (
-                                        <Label key={i} text={tag.code} size="small" />
+                                        <Label
+                                            key={i}
+                                            text={vocabularyItem != null ? getVocabularyItemNameTranslated(vocabularyItem) : tag.code}
+                                            size="small"
+                                        />
                                     );
                                 })
                             }

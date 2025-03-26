@@ -259,7 +259,7 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string) {
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string): string {
     const _language = _lang ?? getUserInterfaceLanguage();
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.

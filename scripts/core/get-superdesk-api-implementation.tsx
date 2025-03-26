@@ -3,7 +3,6 @@ import {
     ISuperdesk,
     IExtensions,
     IArticle,
-    IContentProfile,
     IEvents,
     IStage,
     IUser,
@@ -19,6 +18,7 @@ import {
     stripLockingFields,
     getProjectedFieldsArticle,
     getArticleLabel,
+    getVocabularyItemNameTranslated,
 } from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -359,6 +359,7 @@ export function getSuperdeskApiImplementation(
                 getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
                 getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
                 isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
+                getVocabularyItemNameTranslated: getVocabularyItemNameTranslated,
             },
             attachment: attachmentsApi,
             users: {
