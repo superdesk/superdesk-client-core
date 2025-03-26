@@ -89,17 +89,6 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         </Spacer>
                     ))}
                 </div>
-
-                <div>
-                    <span>
-                        {gettext('Language')}:
-                    </span>
-
-                    <span>
-                        {/* PR-TODO: use value from database */}
-                        English
-                    </span>
-                </div>
             </>
         );
     }
