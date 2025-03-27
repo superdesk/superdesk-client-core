@@ -115,6 +115,8 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                     ? workingDay
                                     : {...workingDay, working_hours: []};
 
+                                // PR-TODO: implement validation
+
                                 const savePromise = (() => {
                                     if (this.props.workingDay.kind === 'saved') {
                                         return httpRequestJsonLocal<IAvailabilityRecord>({
