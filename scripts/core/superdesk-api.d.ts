@@ -856,6 +856,16 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IUserProfileSection {
+        id: string;
+        label: string;
+        priority: IDisplayPriority;
+        component: React.ComponentType<{
+            user: IUser;
+            onSave(user: IUser): Promise<IUser>;
+        }>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -891,6 +901,12 @@ declare module 'superdesk-api' {
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+
+            /**
+             * Sections for editing user profile.
+             */
+            getUserProfileSections?: (user: IUser) => Array<IUserProfileSection>;
+
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {

@@ -43,6 +43,11 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
             scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
+            scope.isSaving = false;
+
+            scope.$watch('$parent.$parent.savingInProgress', (newVal) => {
+                scope.isSaving = newVal;
+            });
 
             // disallow changing an avatar if custom avatars are configured for the instance
             scope.canChangeAvatar = CC.UserAvatar == null;
@@ -157,13 +162,20 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 })
                     .then((reloadPage) => {
                         scope.error = null;
-                        notify.info(gettext('Saving...'));
-                        return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
+
+                        /**
+                         * onSave from parent scope(UserEditController) needs to be used when editing a user
+                         * (because UserEditController stores latest user with latest etag
+                         * which will be used my extension point)
+                         * usersService.save is only intended to be used when creating a new user
+                         */
+                        const save = scope.$parent.$parent.onSave ?? usersService.save;
+
+                        return save(scope.user)
                             .then((response) => {
+                                notify.success(gettext('Saved'));
                                 scope.origUser = response;
                                 resetUser();
-                                notify.pop();
-                                notify.success(gettext('user saved.'));
                                 scope.onsave({user: scope.origUser});
                                 metadata.fetchAuthors(self);
                                 if (scope.user._id === session.identity._id) {
@@ -176,7 +188,6 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                     window.location.reload();
                                 }
                             }, (response) => {
-                                notify.pop();
                                 if (response.status === 404) {
                                     if ($location.path() === '/users/') {
                                         $route.reload();

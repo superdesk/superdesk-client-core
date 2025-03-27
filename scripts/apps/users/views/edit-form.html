@@ -3,7 +3,10 @@
         <div class="action-bar" ng-class="{show:dirty}" data-test-id="action-bar">
             <div class="button-group button-group--end button-group--comfort">
                 <button id="cancel-edit-btn" type="button" class="btn" ng-click="cancel()" ng-disabled="!dirty" translate data-test-id="cancel">Cancel</button>
-                <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">Save</button>
+                <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">
+                    <sd-spinner ng-if="isSaving" data-test-id="loading-indicator" data-size="'mini'"></sd-spinner>
+                    Save
+                </button>
             </div>
         </div>
 
