@@ -10,6 +10,7 @@ import {Card} from '../card';
 import {IAvailabilityRecord} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
+import {getStatusColor} from '../utils';
 
 const {httpRequestVoidLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
@@ -22,7 +23,7 @@ const verticalSpacing = '1.4rem';
 const Page: React.ComponentType<{children: React.ReactNode}> = (props) => (
     <div style={{display: 'flex', justifyContent: 'center'}}>
         <div style={{margin: '2rem'}}>
-            <Card paddingBlockStart={0}>
+            <Card paddingBase="3" paddingBlockStart={0}>
                 {props.children}
             </Card>
         </div>
@@ -93,14 +94,8 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                             const background: React.CSSProperties['background'] = (() => {
                                 if (dayFromOtherMonth || workingDay == null) {
                                     return undefined;
-                                } else if (workingDay.status === 'available') {
-                                    return 'var(--color-success-highlight)';
-                                } else if (workingDay.status === 'unavailable') {
-                                    return 'var(--color-alert-highlight)';
-                                } else if (workingDay.status === 'partial') {
-                                    return 'var(--color-warning-highlight)';
                                 } else {
-                                    return assertNever(workingDay.status);
+                                    return getStatusColor(workingDay.status);
                                 }
                             })();
 
@@ -213,7 +208,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                 placement="bottom-end"
                                                 onClose={handleClose}
                                             >
-                                                <Card>
+                                                <Card paddingBase="0">
                                                     <WorkingDayView
                                                         day={workingDay}
                                                         onEdit={() => {

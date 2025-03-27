@@ -1,12 +1,12 @@
 import {Spacer, SpacerBlock} from '@sourcefabric/common';
 import {keyBy} from 'lodash';
 import * as React from 'react';
-import {Icon, IconButton, Label, Text} from 'superdesk-ui-framework/react';
+import {Icon, IconButton, Label, Tooltip} from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
 import {Separator} from '../separator';
 import {superdesk} from '../superdesk';
-import {getLocalizedDateString} from '../utils';
+import {getLabelForStatus, getLocalizedDateString, getStatusColor} from '../utils';
 
 const {locale, gettext} = superdesk.localization;
 const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
@@ -28,7 +28,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
         return (
             <>
-                <Spacer h gap="0" justifyContent="end" noWrap>
+                <Spacer h gap="0" justifyContent="end" noWrap style={{paddingInline: 4, paddingBlockStart: 4}}>
                     <IconButton
                         icon="pencil"
                         ariaValue={gettext('Edit')}
@@ -47,6 +47,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                     <SpacerBlock h gap="4" />
 
+                    {/** PR-TODO: exact color variable needed */}
                     <Separator length="50%" color="var(--color-text-light)" />
 
                     <SpacerBlock h gap="4" />
@@ -60,34 +61,71 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                     />
                 </Spacer>
 
-                <Text size="small">
-                    {getLocalizedDateString(locale.code, new Date(this.props.day.date))}
-                </Text>
+                <div
+                    style={{
+                        padding: 'calc(var(--base-increment) * 2)',
+                        paddingInlineEnd: 'calc(var(--base-increment) * 5)',
+                        paddingBlockStart: 'var(--base-increment) * 0.5',
+                    }}
+                >
+                    <Spacer h gap="8" justifyContent="start" noWrap style={{paddingBlock: 'var(--base-increment)'}}>
+                        <Tooltip text={getLabelForStatus(this.props.day.status)}>
+                            <div
+                                style={{
+                                    width: '1.6rem',
+                                    height: '1.6rem',
+                                    borderRadius: 9999,
+                                    background: getStatusColor(this.props.day.status),
+                                    marginBlockStart: -2, // fixing vertical alignment
+                                }}
+                            />
+                        </Tooltip>
 
-                <div>
-                    {workingHours.map((entry, i) => (
-                        <Spacer key={i} h gap="4" noWrap alignItems="center" justifyContent="start">
-                            <Icon name="time" />
+                        <h3 style={{fontWeight: 'normal', fontSize: '1.6rem', lineHeight: '1em'}}>
+                            {getLocalizedDateString(locale.code, new Date(this.props.day.date))}
+                        </h3>
+                    </Spacer>
 
-                            <div style={{whiteSpace: 'nowrap'}}>
-                                {entry.start_time} - {entry.end_time}
-                            </div>
-
-                            {
-                                (entry.tags ?? []).map((tag, i) => {
-                                    const vocabularyItem = tagsById[tag.code];
+                    {
+                        workingHours.length > 0 && (
+                            <Spacer v gap="8" noWrap>
+                                {workingHours.map((entry, i) => {
+                                    const tags = entry.tags ?? [];
 
                                     return (
-                                        <Label
-                                            key={i}
-                                            text={vocabularyItem != null ? getVocabularyItemNameTranslated(vocabularyItem) : tag.code}
-                                            size="small"
-                                        />
+                                        <Spacer v gap="4">
+                                            <Spacer key={i} h gap="4" noWrap alignItems="center" justifyContent="start">
+                                                <Icon name="time" />
+
+                                                <div style={{whiteSpace: 'nowrap'}}>
+                                                    {entry.start_time} - {entry.end_time}
+                                                </div>
+                                            </Spacer>
+
+                                            {
+                                                tags.length < 1 ? null : (
+                                                    <Spacer h gap="4" noWrap justifyContent="start">
+                                                        {tags.map((tag, i) => {
+                                                            const vocabularyItem = tagsById[tag.code];
+
+                                                            // PR-TODO: color code required
+                                                            return (
+                                                                <Label
+                                                                    key={i}
+                                                                    text={vocabularyItem != null ? getVocabularyItemNameTranslated(vocabularyItem) : tag.code}
+                                                                    size="small"
+                                                                />
+                                                            );
+                                                        })}
+                                                    </Spacer>
+                                                )
+                                            }
+                                        </Spacer>
                                     );
-                                })
-                            }
-                        </Spacer>
-                    ))}
+                                })}
+                            </Spacer>
+                        )
+                    }
                 </div>
             </>
         );

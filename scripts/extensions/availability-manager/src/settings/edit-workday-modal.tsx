@@ -7,10 +7,10 @@ import {
     Spacer,
     SpacerBlock,
 } from 'superdesk-ui-framework/react';
-import {availabilityStatuses, getLabelForStatus} from '../constants';
+import {availabilityStatuses} from '../constants';
 import {IAvailabilityRecord, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {getLocalizedDateString} from '../utils';
+import {getLabelForStatus, getLocalizedDateString} from '../utils';
 import {EditWorkingHours} from './edit-working-hours';
 
 const {gettext, locale} = superdesk.localization;
