@@ -1,10 +1,9 @@
-import {Spacer, SpacerBlock} from '@sourcefabric/common';
+import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
 import {keyBy} from 'lodash';
 import * as React from 'react';
 import {Icon, IconButton, Label, Tooltip} from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
-import {Separator} from '../separator';
 import {superdesk} from '../superdesk';
 import {getLabelForStatus, getLocalizedDateString, getStatusColor} from '../utils';
 
@@ -48,7 +47,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                     <SpacerBlock h gap="4" />
 
                     {/** PR-TODO: exact color variable needed */}
-                    <Separator length="50%" color="var(--color-text-light)" />
+                    <Divider length="50%" color="var(--color-text-light)" />
 
                     <SpacerBlock h gap="4" />
 
