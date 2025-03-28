@@ -90,6 +90,8 @@ var config = {
         }
         jasmine.getEnv().addReporter(new CustomReporter());
     },
+
+    logLevel: 'INFO',
 };
 
 exports.config = config;

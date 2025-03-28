@@ -135,7 +135,11 @@ describe('Image Crop', () => {
                 callbackHandler.apply(jcropApi);
                 expect(jcropApi.tellSelect).not.toHaveBeenCalled();
 
-                var callbackResult = callbackSpy.calls.mostRecent().args;
+                interface CallbackResult {
+                    onSelect: (any);
+                }
+
+                const callbackResult = callbackSpy.calls.mostRecent().args as Array<CallbackResult>;
 
                 // calls onChange callback on selection
                 callbackResult[0].onSelect(coords);

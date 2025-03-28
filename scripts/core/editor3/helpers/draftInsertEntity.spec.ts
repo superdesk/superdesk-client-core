@@ -3,22 +3,18 @@
 import {insertEntity} from './draftInsertEntity';
 import {convertFromRaw, SelectionState, EditorState, RawDraftContentState, convertToRaw} from 'draft-js';
 
-// removes keys from blocks and their entity ranges so resulting objects can be compared by value as JSON strings
+// set static keys for blocks and their entity ranges so resulting objects can be compared by value as JSON strings
 export function getRawContentStateWithoutBlockAndEntityKeys(
     rawContentState: RawDraftContentState,
 ): Partial<RawDraftContentState> {
     return {
         ...rawContentState,
         blocks: rawContentState.blocks.map((block) => {
-            const nextBlock = {...block, entityRanges: block.entityRanges.map((range) => {
-                const newRange = {...range};
-
-                delete newRange.key;
+            const nextBlock = {...block, key: '', entityRanges: block.entityRanges.map((range) => {
+                const newRange = {...range, key: 0};
 
                 return newRange;
             })};
-
-            delete nextBlock.key;
 
             return nextBlock;
         }),

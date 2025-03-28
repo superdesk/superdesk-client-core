@@ -166,7 +166,7 @@ describe('authoring', () => {
         let success = jasmine.createSpy('success');
 
         spyOn(api, 'update').and.returnValue($q.reject('err'));
-        spyOn(lock, 'unlock').and.returnValue();
+        spyOn(lock, 'unlock').and.returnValue({});
 
         authoring.publish({}, {}).then(success, (error) => {
             expect(api.update).toHaveBeenCalled();

@@ -109,9 +109,11 @@ core.config(['$routeProvider', ($routeProvider) => {
 // due to angular 1.6
 core.config(['$locationProvider', ($locationProvider) => $locationProvider.hashPrefix('')]);
 core.config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(true)]);
-core.config(['$compileProvider', ($compileProvider) => $compileProvider.preAssignBindingsEnabled(true)]);
 
-core.run(['$injector', ng.register]);
+core.run(['$injector', ($injector) => {
+    ng.register($injector);
+}]);
+
 core.run(['$document', ($document) => {
     if (window.navigator.userAgent.toLowerCase().includes('firefox')) {
         // workaround for firefox drag event not reporting mouse coordinates

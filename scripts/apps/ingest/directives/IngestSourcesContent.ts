@@ -49,7 +49,7 @@ interface IProvider extends IBaseRestApiResponse {
 }
 
 IngestSourcesContent.$inject = ['ingestSources', 'api', '$location',
-    'modal', '$filter', 'privileges'];
+    'modal', '$filter', 'privileges', '$q'];
 
 /**
  * @ngdoc directive
@@ -68,12 +68,12 @@ IngestSourcesContent.$inject = ['ingestSources', 'api', '$location',
  * @description Handles the management for Ingest Sources.
  */
 export function IngestSourcesContent(ingestSources, api, $location,
-    modal, $filter, privileges) {
+    modal, $filter, privileges, $q) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
             $scope.waitForDirectiveReady = function() {
-                return Promise.all([
+                return $q.all([
                     ingestSources.fetchAllFeedingServicesAllowed(),
                 ]);
             };

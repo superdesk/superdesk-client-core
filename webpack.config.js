@@ -1,7 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fs = require('fs');
 
 function getModuleDir(moduleName) {
@@ -74,8 +75,9 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
-            new ExtractTextPlugin({
+            new MiniCssExtractPlugin({
                 filename: '[name].bundle.css',
+                chunkFilename: '[id].bundle.css',
             }),
         ],
 
@@ -92,6 +94,7 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+                'shallow-equal': 'shallow-equal/dist/index',
 
                 /**
                  * Ensure that react is loaded only once.
@@ -156,38 +159,47 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.(css|scss)$/i,
-                    use: ExtractTextPlugin.extract({
-                        fallback: [{
-                            loader: 'style-loader',
+                    test: /\.css$/i,
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {
+                            loader: 'css-loader',
                             options: {
-                                sourceMap: true,
+                                modules: 'global',
                             },
-                        }],
-                        use: [
-                            {
-                                loader: 'css-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                        ],
-                    }),
+                        },
+                    ],
                 },
                 {
-                    test: /\.json$/,
-                    use: ['json-loader'],
+                    test: /\.scss$/i,
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: 'global',
+                            },
+                        },
+                        {loader: 'sass-loader'},
+                    ],
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
                     loader: 'file-loader',
                 },
+            ],
+        },
+        devServer: {
+            port: 9000,
+            host: '0.0.0.0',
+            compress: true,
+            headers: {'Cache-Control': 'no-store'},
+            static: [
+                {directory: path.resolve(process.cwd(), 'dist')},
+                {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},
+                {directory: path.resolve(__dirname, 'images'), publicPath: '/images'},
+                {directory: path.resolve(__dirname, 'styles'), publicPath: '/styles'},
+                {directory: path.resolve(__dirname, 'fonts'), publicPath: '/fonts'},
             ],
         },
     };
