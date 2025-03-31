@@ -143,7 +143,7 @@ export interface IPropsEditor3Component {
     uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     showPopup?(type: any, data: any): void;
     expandable?: {
-        enabled: boolean;
+        enabled: true;
         defaultValue: boolean;
         numberOfRowsWhenCollapsed: number;
     };

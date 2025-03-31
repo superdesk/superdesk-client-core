@@ -470,7 +470,7 @@ declare module 'superdesk-api' {
         disallowedCharacters?: Array<string>;
 
         expandable?: {
-            enabled: boolean;
+            enabled: true;
             defaultValue: boolean;
             numberOfRowsWhenCollapsed: boolean;
         };
