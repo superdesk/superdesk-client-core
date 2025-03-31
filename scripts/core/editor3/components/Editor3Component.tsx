@@ -145,6 +145,7 @@ export interface IPropsEditor3Component {
     expandable?: {
         enabled: boolean;
         defaultValue: boolean;
+        numberOfRowsWhenCollapsed: number;
     };
 }
 
@@ -676,7 +677,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                                 }
                                 : {
                                     overflowY: 'hidden',
-                                    height: LINE_HEIGHT * 2,
+                                    height: LINE_HEIGHT * this.props.expandable.numberOfRowsWhenCollapsed,
                                 }),
                         }}
                     >

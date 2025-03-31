@@ -472,6 +472,7 @@ declare module 'superdesk-api' {
         expandable?: {
             enabled: boolean;
             defaultValue: boolean;
+            numberOfRowsWhenCollapsed: boolean;
         };
 
         // Users may configure predefined text
