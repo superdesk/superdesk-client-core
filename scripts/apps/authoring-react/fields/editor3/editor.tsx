@@ -458,6 +458,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
                         <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
                             <Editor3
+                                expandable={this.props.config.expandable}
                                 uiTheme={this.props.uiTheme}
                                 scrollContainer=".sd-editor-content__main-container"
                                 singleLine={config.singleLine ?? false}

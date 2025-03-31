@@ -40,9 +40,10 @@ import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/Char
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
-import {isMacOS} from 'core/utils';
+import {gettext, isMacOS} from 'core/utils';
 import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
+import {IconButton, Spacer} from 'superdesk-ui-framework/react';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -62,6 +63,8 @@ const VALID_MEDIA_TYPES = [
 
 export const EDITOR_GLOBAL_REFS = 'editor3-refs';
 const editor3AutocompleteClassName = 'editor3-autocomplete';
+const LINE_HEIGHT = 30;
+
 
 /**
  * Get valid media type from event dataTransfer types
@@ -139,10 +142,15 @@ export interface IPropsEditor3Component {
     canAddArticleEmbed?: (srcId: string) => Promise<typeof canAddArticleEmbed>;
     uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     showPopup?(type: any, data: any): void;
+    expandable?: {
+        enabled: boolean;
+        defaultValue: boolean;
+    };
 }
 
 interface IState {
     draggingInProgress: boolean;
+    expanded?: boolean;
 
     /**
      * Only content changes are tracked (addition/removal of chars, whitespace).
@@ -205,6 +213,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         };
 
         this.state = {
+            expanded: this.props.expandable?.defaultValue ?? false,
             draggingInProgress: false,
             contentChangesAfterLastFocus: 0,
         };
@@ -269,7 +278,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey, ctrlKey, metaKey} = e;
+        const {key, ctrlKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -294,7 +303,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        if (key === 'Enter' && shiftKey) {
+        if (key === 'Enter') {
             return 'soft-newline';
         }
 
@@ -604,38 +613,36 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         };
 
         return (
-            <div
-                className={cx}
-                ref={(div) => this.div = div}
-                onDragStart={() => {
-                    if (this.state.draggingInProgress !== true) {
-                        setTimeout(() => {
+            <Spacer v gap="0" justifyContent="center" alignItems="center" noWrap>
+                <div
+                    className={cx}
+                    ref={(div) => this.div = div}
+                    onDragStart={() => {
+                        if (this.state.draggingInProgress !== true) {
+                            setTimeout(() => {
                             // known issue: dragging text doesn't work when the top of the editor is in the viewport
                             // https://github.com/facebook/draft-js/issues/2218
                             // it's not clear why, but using setTimeout seems to work around the issue
-
-                            this.setState({draggingInProgress: true});
-                        });
-                    }
-                }}
-                data-test-id="editor3"
-
-                // "dragend" event won't fire if an item is dropped inside draft-js field
-                // it's handled there separately
-                onDragEnd={this.onDragEnd}
-                onFocus={() => {
-                    this.setState({contentChangesAfterLastFocus: 0});
-                }}
-                style={
-                    this.props.uiTheme == null
-                        ? undefined
-                        : {
-                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                                this.setState({draggingInProgress: true});
+                            });
                         }
-                }
-            >
-                {
-                    showToolbar && (
+                    }}
+                    data-test-id="editor3"
+
+                    // "dragend" event won't fire if an item is dropped inside draft-js field
+                    // it's handled there separately
+                    onDragEnd={this.onDragEnd}
+                    onFocus={() => {
+                        this.setState({contentChangesAfterLastFocus: 0});
+                    }}
+                    style={this.props.uiTheme == null
+                        ? {width: '100%'}
+                        : {
+                            width: '100%',
+                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                        }}
+                >
+                    {showToolbar && (
                         <Toolbar
                             uiTheme={this.props.uiTheme}
                             disabled={locked || readOnly}
@@ -645,72 +652,74 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                             editorWrapperElement={this.div}
                             draggingInProgress={this.state.draggingInProgress}
                         />
-                    )
-                }
-
-                <HighlightsPopup
-                    editorNode={this.editorNode}
-                    editorState={editorState}
-                    highlightsManager={this.props.highlightsManager}
-                    onChange={this.props.onChange}
-                />
-                <div
-                    className="focus-screen"
-                    onMouseDown={this.focus}
-                    style={
-                        this.props.uiTheme == null
-                            ? {}
-                            : {
-                                fontSize: this.props.uiTheme.fontSize,
-                                color: this.props.uiTheme.textColor,
-                                fontFamily: this.props.uiTheme.fontFamily,
-                            }
-                    }
-                >
-                    <Editor
+                    )}
+                    <HighlightsPopup
+                        editorNode={this.editorNode}
                         editorState={editorState}
-                        handleDrop={this.handleDropOnEditor}
-                        handleKeyCommand={this.handleKeyCommand}
-                        keyBindingFn={this.keyBindingFn}
-                        handleBeforeInput={this.handleBeforeInput}
-                        blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer(this.props.spellchecking)}
-                        blockStyleFn={blockStyle}
-                        customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(editorStateNext: EditorState) => {
+                        highlightsManager={this.props.highlightsManager}
+                        onChange={this.props.onChange}
+                    />
+                    <div
+                        className="focus-screen"
+                        onMouseDown={this.focus}
+                        style={{
+                            ...(this.props.uiTheme == null
+                                ? {}
+                                : {
+                                    fontSize: this.props.uiTheme.fontSize,
+                                    color: this.props.uiTheme.textColor,
+                                    fontFamily: this.props.uiTheme?.fontFamily,
+                                }),
+                            ...(this.state.expanded
+                                ? {
+                                    height: 'auto',
+                                }
+                                : {
+                                    overflowY: 'hidden',
+                                    height: LINE_HEIGHT * 2,
+                                }),
+                        }}
+                    >
+                        <Editor
+                            editorState={editorState}
+                            handleDrop={this.handleDropOnEditor}
+                            handleKeyCommand={this.handleKeyCommand}
+                            keyBindingFn={this.keyBindingFn}
+                            handleBeforeInput={this.handleBeforeInput}
+                            blockRenderMap={blockRenderMap}
+                            blockRendererFn={getBlockRenderer(this.props.spellchecking)}
+                            blockStyleFn={blockStyle}
+                            customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
+                            onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
+                                const selectionRect = getVisibleSelectionRect(window);
 
-                            const selectionRect = getVisibleSelectionRect(window);
+                                if (this.editorNode?.current != null && selectionRect != null) {
+                                    this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                                }
 
-                            if (this.editorNode?.current != null && selectionRect != null) {
-                                this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
-                            }
-
-                            onChange(editorStateNext);
-                        }}
-                        tabIndex={tabindex}
-                        handlePastedText={handlePastedText.bind(this)}
-                        readOnly={locked || readOnly}
-                        ref={(editor) => this.handleRefs(editor)}
-                        spellCheck={appConfig.editor3.browserSpellCheck}
-                        stripPastedStyles={cleanPastedHtml}
-                        onBlur={(event: any) => {
-                            if (
-                                event?.relatedTarget == null
+                                onChange(editorStateNext);
+                            }}
+                            tabIndex={tabindex}
+                            handlePastedText={handlePastedText.bind(this)}
+                            readOnly={locked || readOnly}
+                            ref={(editor) => this.handleRefs(editor)}
+                            spellCheck={appConfig.editor3.browserSpellCheck}
+                            stripPastedStyles={cleanPastedHtml}
+                            onBlur={(event: any) => {
+                                if (event?.relatedTarget == null
                                 || querySelectorParent(
                                     event.relatedTarget,
                                     `.${editor3AutocompleteClassName}`,
                                     {self: true},
-                                ) == null
-                            ) { // check whether focus went to autocomplete or to an item inside it
-                                this.setState({contentChangesAfterLastFocus: 0});
-                            }
-                        }}
-                    />
+                                ) == null) { // check whether focus went to autocomplete or to an item inside it
+                                    this.setState({contentChangesAfterLastFocus: 0});
+                                }
+                            }}
+                        />
 
-                    {
-                        this.state.contentChangesAfterLastFocus > 0 && (
+                        {this.state.contentChangesAfterLastFocus > 0 && (
                             <Editor3Autocomplete
                                 editorState={editorState}
                                 editorNode={this.editorNode.current}
@@ -718,12 +727,24 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                                 autocompleteSuggestions={this.props.autocompleteSuggestions}
                                 className={editor3AutocompleteClassName}
                             />
-                        )
-                    }
+                        )}
 
-                    {this.props.loading && <div className="loading-overlay active" />}
+                        {this.props.loading && <div className="loading-overlay active" />}
+                    </div>
                 </div>
-            </div>
+                {this.props.expandable?.enabled && (
+                    <IconButton
+                        size="small"
+                        ariaValue={this.state.expanded ? gettext('Collapse') : gettext('Expand')}
+                        icon={this.state.expanded ? 'chevron-up-thin' : 'chevron-down-thin'}
+                        onClick={() => {
+                            this.setState({
+                                expanded: !this.state.expanded,
+                            });
+                        }}
+                    />
+                )}
+            </Spacer>
         );
     }
 }
