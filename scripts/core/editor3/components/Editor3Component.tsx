@@ -677,7 +677,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                                 }
                                 : {
                                     overflowY: 'hidden',
-                                    height: LINE_HEIGHT * this.props.expandable.numberOfRowsWhenCollapsed,
+                                    height: LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1),
                                 }),
                         }}
                     >
