@@ -68,7 +68,10 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
     return null;
 }
 
-export function validateSchedule(schedule: {[weekDayIndex: string]: IScheduleRecord}, localeCode: string): {[weekdayIndex: string]: string} {
+export function validateSchedule(
+    schedule: {[weekDayIndex: string]: IScheduleRecord},
+    localeCode: string,
+): {[weekdayIndex: string]: string} {
     const errors: ReturnType<typeof validateSchedule> = {};
 
     for (const [key, value] of Object.entries(schedule)) {

@@ -49,16 +49,16 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
 
         return this.props.children({
             labels: [
-                <FormLabel text={gettext('Working hours')} noMinHeight />,
-                <FormLabel text={gettext('Tags')} noMinHeight />,
-                <span />, // column for controls
+                <FormLabel text={gettext('Working hours')} noMinHeight key="Working hours" />,
+                <FormLabel text={gettext('Tags')} noMinHeight key="Tags" />,
+                <span key="controls" />, // column for controls
             ],
             inputs: workingHours.map((item, rowIndex) => {
                 const isLast = rowIndex === workingHours.length - 1;
 
                 return [
                     (
-                        <Spacer h gap="4" justifyContent="start" noWrap>
+                        <Spacer h gap="4" justifyContent="start" noWrap key="time-pickers">
                             <TimePicker
                                 inlineLabel
                                 labelHidden
@@ -105,7 +105,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                     ),
 
                     (
-                        <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div style={{display: 'flex', alignItems: 'center'}} key="tag-select">
                             <TreeSelect
                                 inlineLabel
                                 labelHidden
@@ -131,7 +131,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                     ),
 
                     (
-                        <div style={{display: 'flex', alignItems: 'center', whiteSpace: 'nowrap'}}>
+                        <div style={{display: 'flex', alignItems: 'center', whiteSpace: 'nowrap'}} key="controls">
                             {isLast && (
                                 <>
                                     <IconButton

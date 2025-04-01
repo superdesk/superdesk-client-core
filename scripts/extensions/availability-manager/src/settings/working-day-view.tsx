@@ -108,7 +108,13 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                             return (
                                                                 <Label
                                                                     key={i}
-                                                                    text={vocabularyItem != null ? getVocabularyItemNameTranslated(vocabularyItem) : tag.code}
+                                                                    text={
+                                                                        vocabularyItem != null
+                                                                            ? getVocabularyItemNameTranslated(
+                                                                                vocabularyItem,
+                                                                            )
+                                                                            : tag.code
+                                                                    }
                                                                     size="small"
                                                                 />
                                                             );

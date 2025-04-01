@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
@@ -60,7 +62,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
     render() {
         const monthsToDisplayAtOnce = 4;
-        const months: Array<Date> = range(0, monthsToDisplayAtOnce).map((toAdd) => addMonths(this.state.calendarStart, toAdd));
+        const months: Array<Date> =
+            range(0, monthsToDisplayAtOnce)
+                .map((toAdd) => addMonths(this.state.calendarStart, toAdd));
 
         const calendarEnd = endOfMonth(months[months.length - 1]);
 
@@ -82,7 +86,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                     {(res) => {
                         const grouped = keyBy(res._items, (item) => item.date);
 
-                        const defaultDayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
+                        const dayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
                             const {day, dayFromOtherMonth} = props.day;
 
                             const dateKey = format(props.day.date, 'yyyy-MM-dd');
@@ -129,14 +133,23 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                         return (
                             <div>
-                                <Spacer h gap="16" noWrap justifyContent="space-between" style={{paddingBlock: verticalSpacing}}>
+                                <Spacer
+                                    h
+                                    gap="16"
+                                    noWrap
+                                    justifyContent="space-between"
+                                    style={{paddingBlock: verticalSpacing}}
+                                >
                                     <Spacer h gap="0" noGrow>
                                         <IconButton
                                             icon="chevron-left-thin"
                                             ariaValue={gettext('Previous')}
                                             onClick={() => {
                                                 this.setState({
-                                                    calendarStart: addMonths(this.state.calendarStart, -monthsToDisplayAtOnce),
+                                                    calendarStart: addMonths(
+                                                        this.state.calendarStart,
+                                                        -monthsToDisplayAtOnce,
+                                                    ),
                                                 });
                                             }}
                                         />
@@ -145,7 +158,10 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                             ariaValue={gettext('Next')}
                                             onClick={() => {
                                                 this.setState({
-                                                    calendarStart: addMonths(this.state.calendarStart, monthsToDisplayAtOnce),
+                                                    calendarStart: addMonths(
+                                                        this.state.calendarStart,
+                                                        monthsToDisplayAtOnce,
+                                                    ),
                                                 });
                                             }}
                                         />
@@ -164,9 +180,19 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     />
                                 </Spacer>
 
-                                <hr style={{borderColor: 'graylight', marginBlock: 0, marginBlockEnd: verticalSpacing}} />
+                                <hr
+                                    style={{borderColor: 'graylight', marginBlock: 0, marginBlockEnd: verticalSpacing}}
+                                />
 
-                                <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, auto)', gridRowGap: '1.4rem', columnGap: '2.8rem', placeItems: 'start'}}>
+                                <div
+                                    style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(2, auto)',
+                                        gridRowGap: '1.4rem',
+                                        columnGap: '2.8rem',
+                                        placeItems: 'start',
+                                    }}
+                                >
                                     {
                                         months.map((month, i) => (
                                             <MonthCalendar
@@ -174,7 +200,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                 month={month}
                                                 firstDayOfWeek={firstDayOfWeek}
                                                 locale={locale.code}
-                                                dayTemplate={defaultDayTemplate}
+                                                dayTemplate={dayTemplate}
                                             />
                                         ))
                                     }
@@ -204,7 +230,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                                         return (
                                             <PopupPositioner
-                                                getReferenceElement={() => this.dayRefs[overlay.date].current as HTMLElement}
+                                                getReferenceElement={
+                                                    () => this.dayRefs[overlay.date].current as HTMLElement
+                                                }
                                                 placement="bottom-end"
                                                 onClose={handleClose}
                                             >
@@ -213,7 +241,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                         day={workingDay}
                                                         onEdit={() => {
                                                             handleClose();
-                                                            this.setState({overlay: {kind: 'edit', date: overlay.date}});
+                                                            this.setState({
+                                                                overlay: {kind: 'edit', date: overlay.date},
+                                                            });
                                                         }}
                                                         onRemove={() => {
                                                             httpRequestVoidLocal({
@@ -257,7 +287,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                                     template: {
                                                                         date: overlay.date,
                                                                         status: 'available',
-                                                                    } satisfies Omit<IAvailabilityRecord, keyof IBaseRestApiResponse>,
+                                                                    } satisfies Omit<
+                                                                        IAvailabilityRecord, keyof IBaseRestApiResponse
+                                                                    >,
                                                                 };
                                                             } else {
                                                                 return assertNever(overlay);
@@ -267,7 +299,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                             handleClose();
 
                                                             if (item?.status === 'partial') {
-                                                                this.setState({overlay: {kind: 'view', date: overlay.date}});
+                                                                this.setState({
+                                                                    overlay: {kind: 'view', date: overlay.date},
+                                                                });
                                                             } else {
                                                                 this.setState({overlay: null});
                                                             }

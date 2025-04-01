@@ -95,7 +95,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                 },
             );
         } else {
-            console.log('success');
+            // console.log('success');
         }
     }
 
@@ -147,7 +147,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                     label={{text: weekday.nameShort}}
                                     onChange={() => {
                                         if (this.state.schedule[weekday.index] == null) {
-                                            this.handleScheduleItemChange(weekday.index, placeholder)
+                                            this.handleScheduleItemChange(weekday.index, placeholder);
                                         } else {
                                             this.handleRemoveScheduleItem(weekday.index);
                                         }
@@ -176,7 +176,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                             const getExtraColumns = (rowIndex: number) => {
                                                 const extraColumns = [
                                                     (
-                                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                                        <div
+                                                            style={{display: 'flex', alignItems: 'center'}}
+                                                            key="name"
+                                                        >
                                                             <strong>{weekday.nameLong}</strong>
                                                         </div>
                                                     ),
@@ -189,6 +192,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                 // PR-TODO: drop after fix in ui-framework
                                                                 minWidth: 200,
                                                             }}
+                                                            key="status"
                                                         >
                                                             <TreeSelect
                                                                 kind="synchronous"
@@ -214,7 +218,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                         <div>
                                                                             <div
                                                                                 style={{
-                                                                                    ...getStylesForStatusDot(id)
+                                                                                    ...getStylesForStatusDot(id),
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -237,8 +241,15 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
 
                                                 return rowIndex === 0
                                                     ? extraColumns
-                                                    : <>{range(0, additionalColumnCount).map(() => <span />)}</>;
-                                            }
+                                                    : (
+                                                        <>
+                                                            {
+                                                                range(0, additionalColumnCount)
+                                                                    .map((_, i) => <span key={i} />)
+                                                            }
+                                                        </>
+                                                    );
+                                            };
 
                                             return (
                                                 <WithWorkingHoursEditor
@@ -253,7 +264,8 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                 >
                                                     {(props) => {
                                                         const labels: Array<React.ReactNode> = [
-                                                            ...range(0, additionalColumnCount).map(() => <span />),
+                                                            ...range(0, additionalColumnCount)
+                                                                .map((_, i) => <span key={i} />),
                                                         ];
 
                                                         if (renderLabels) {
@@ -263,7 +275,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                 ...range(
                                                                     0,
                                                                     workingHoursEditorColumnCount,
-                                                                ).map(() => <span />)
+                                                                ).map((_, i) => <span key={i} />),
                                                             );
                                                         }
 
@@ -283,14 +295,14 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                     props.inputs.map((rowInputs, rowIndex) => {
                                                                         const emptyColumns =
                                                                             range(0, workingHoursEditorColumnCount)
-                                                                                .map(() => <span />);
+                                                                                .map((_, i) => <span key={i} />);
 
                                                                         // if status is not partial,
                                                                         // do not show columns from HOC
                                                                         const baseColumns =
                                                                             scheduleRecord.status === 'partial'
                                                                                 ? <>{...rowInputs}</>
-                                                                                : <>{...emptyColumns}</>
+                                                                                : <>{...emptyColumns}</>;
 
                                                                         return (
                                                                             <React.Fragment key={rowIndex}>
@@ -304,7 +316,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                         );
                                                     }}
                                                 </WithWorkingHoursEditor>
-                                            )
+                                            );
                                         })
                                 }
                             </div>

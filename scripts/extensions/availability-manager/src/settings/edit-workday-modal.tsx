@@ -63,7 +63,8 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
         this.setState({
             workingDay: {
                 ...this.state.workingDay,
-                working_hours: (this.state.workingDay.working_hours ?? []).map((current, i) => index === i ? next : current),
+                working_hours:
+                    (this.state.workingDay.working_hours ?? []).map((current, i) => index === i ? next : current),
             },
         });
     }
