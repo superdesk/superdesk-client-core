@@ -131,7 +131,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                     } else if (this.props.workingDay.kind === 'draft') {
                                         return httpRequestJsonLocal<IAvailabilityRecord>({
                                             method: 'POST',
-                                            path: `/user_availability`,
+                                            path: '/user_availability',
                                             payload: workingDayNext,
                                         });
                                     } else {
@@ -172,7 +172,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                             workingDay: {
                                 ...workingDay,
                                 status: nextStatus as IAvailabilityRecord['status'],
-                            }
+                            },
                         });
                     }}
                     disabled={this.state.loading}

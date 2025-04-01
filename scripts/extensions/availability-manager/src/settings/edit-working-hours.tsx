@@ -135,7 +135,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                             {isLast && (
                                 <>
                                     <IconButton
-                                        icon='plus-sign'
+                                        icon="plus-sign"
                                         ariaValue={gettext('Add')}
                                         onClick={() => {
                                             this.props.onChange([
@@ -147,11 +147,11 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                     />
 
                                     <IconButton
-                                        icon='minus-sign'
+                                        icon="minus-sign"
                                         ariaValue={gettext('Remove')}
                                         onClick={() => {
                                             this.props.onChange(
-                                                workingHours.slice(0, workingHours.length - 1)
+                                                workingHours.slice(0, workingHours.length - 1),
                                             );
                                         }}
                                         disabled={disabled || workingHours.length <= 1}
@@ -160,7 +160,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                             )}
                         </div>
                     ),
-                ]
+                ];
             }),
         });
     }

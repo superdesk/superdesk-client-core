@@ -27,15 +27,15 @@ export function getStatusColor(status: IAvailabilityRecord['status']) {
 }
 
 export function getLabelForStatus(status: IAvailabilityRecord['status']) {
-    switch(status) {
-        case 'available':
-            return gettext('Available');
-        case 'unavailable':
-            return gettext('Unavailable');
-        case 'partial':
-            return gettext('Partially available');
-        default:
-            return assertNever(status);
+    switch (status) {
+    case 'available':
+        return gettext('Available');
+    case 'unavailable':
+        return gettext('Unavailable');
+    case 'partial':
+        return gettext('Partially available');
+    default:
+        return assertNever(status);
     }
 }
 
@@ -46,7 +46,7 @@ export function getStylesForStatusDot(status: IAvailabilityRecord['status']): Re
         borderRadius: 9999,
         whiteSpace: 'nowrap',
         background: getStatusColor(status),
-    }
+    };
 }
 
 export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeCode: string): string | null {
@@ -60,7 +60,7 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
         } else if (new Date(`1970-01-01 ${start_time}`) > new Date(`1970-01-01 ${end_time}`)) {
             return gettext(
                 'start time can not be greater than end time ({{start_time}} - {{end_time}})',
-                {start_time: formatTime(start_time, localeCode), end_time: formatTime(end_time, localeCode)}
+                {start_time: formatTime(start_time, localeCode), end_time: formatTime(end_time, localeCode)},
             );
         }
     }

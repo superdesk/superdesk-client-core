@@ -53,7 +53,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
             user: props.user,
             calendarStart: startOfMonth(new Date()),
             overlay: null,
-        }
+        };
 
         this.dayRefs = {};
     }
@@ -78,7 +78,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
         return (
             <Page>
-                <WithAvailabilityRecordsQuery resource='user_availability' query={query}>
+                <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
                     {(res) => {
                         const grouped = keyBy(res._items, (item) => item.date);
 
@@ -137,7 +137,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                             onClick={() => {
                                                 this.setState({
                                                     calendarStart: addMonths(this.state.calendarStart, -monthsToDisplayAtOnce),
-                                                })
+                                                });
                                             }}
                                         />
                                         <IconButton
@@ -146,7 +146,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                             onClick={() => {
                                                 this.setState({
                                                     calendarStart: addMonths(this.state.calendarStart, monthsToDisplayAtOnce),
-                                                })
+                                                });
                                             }}
                                         />
 
@@ -282,7 +282,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     }
                                 })()}
                             </div>
-                        )
+                        );
                     }}
                 </WithAvailabilityRecordsQuery>
             </Page>

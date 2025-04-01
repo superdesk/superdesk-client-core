@@ -146,7 +146,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                     label={{text: weekday.nameShort}}
                                     onChange={() => {
                                         if (this.state.schedule[weekday.index] == null) {
-                                            this.handleScheduleItemChange(weekday.index, placeholder)
+                                            this.handleScheduleItemChange(weekday.index, placeholder);
                                         } else {
                                             this.handleRemoveScheduleItem(weekday.index);
                                         }
@@ -200,7 +200,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                     <div>
                                                                         <div
                                                                             style={{
-                                                                                ...getStylesForStatusDot(id)
+                                                                                ...getStylesForStatusDot(id),
                                                                             }}
                                                                         />
                                                                     </div>
@@ -240,7 +240,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                 ...range(
                                                                     0,
                                                                     workingHoursEditorColumnCount,
-                                                                ).map(() => <span />)
+                                                                ).map(() => <span />),
                                                             );
                                                         }
 
@@ -293,7 +293,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                         );
                                                     }}
                                                 </WithWorkingHoursEditor>
-                                            )
+                                            );
                                         })
                                 }
                             </div>
@@ -305,7 +305,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             <div ref={this.errorsElementRef}>
                                 <Alert style="hollow" type="alert">
                                     <Spacer v gap="8" noWrap>
-                                        <Label text={gettext('Errors')} type="alert"/>
+                                        <Label text={gettext('Errors')} type="alert" />
 
                                         {
                                             Object.entries(this.state.validationErrors).map(([weekdayIndex, error]) => {
