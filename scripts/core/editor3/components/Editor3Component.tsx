@@ -160,6 +160,8 @@ interface IState {
     contentChangesAfterLastFocus: number;
 }
 
+type IEditor3 = Editor & {_editorKey?: string;};
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -182,9 +184,12 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     // to use this reference in a render property to a component.
     editorNode: React.MutableRefObject<HTMLDivElement>;
 
-    div: any;
-    editor: any;
+    div: HTMLDivElement;
+    editor: IEditor3;
     onDragEnd: () => void;
+    showExpandButton: boolean;
+    collapsedHeight: number;
+
     private removeListeners: Array<() => void> = [];
 
     private spellcheckAbortController: AbortController;
@@ -206,6 +211,9 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
+
+        this.showExpandButton = true;
+        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -509,6 +517,16 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
 
+
+        const textInputArea = this.div.querySelector('.focus-screen');
+
+        if (textInputArea.scrollHeight > this.collapsedHeight) {
+            this.showExpandButton = true;
+        } else {
+            this.showExpandButton = false;
+        }
+
+
         if (!window[EDITOR_GLOBAL_REFS]) {
             window[EDITOR_GLOBAL_REFS] = {};
         }
@@ -529,7 +547,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         );
     }
 
-    handleRefs(editor) {
+    handleRefs(editor: IEditor3) {
         this.editor = editor;
 
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
@@ -554,6 +572,14 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentDidUpdate(prevProps) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
+        }
+
+        const textInputArea = this.div.querySelector('.focus-screen');
+
+        if (textInputArea.scrollHeight > this.collapsedHeight) {
+            this.showExpandButton = true;
+        } else {
+            this.showExpandButton = false;
         }
 
         if (
@@ -664,21 +690,20 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         className="focus-screen"
                         onMouseDown={this.focus}
                         style={{
-                            ...(this.props.uiTheme == null
-                                ? {}
-                                : {
-                                    fontSize: this.props.uiTheme.fontSize,
-                                    color: this.props.uiTheme.textColor,
-                                    fontFamily: this.props.uiTheme?.fontFamily,
-                                }),
+                            ...(this.props.uiTheme == null ? {} : {
+                                fontSize: this.props.uiTheme.fontSize,
+                                color: this.props.uiTheme.textColor,
+                                fontFamily: this.props.uiTheme.fontFamily,
+                            }),
                             ...(this.state.expanded
                                 ? {
                                     height: 'auto',
                                 }
                                 : {
-                                    overflowY: 'hidden',
-                                    height: LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1),
-                                }),
+                                    overflowY: 'auto',
+                                    maxHeight: this.collapsedHeight,
+                                }
+                            ),
                         }}
                     >
                         <Editor
@@ -733,7 +758,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         {this.props.loading && <div className="loading-overlay active" />}
                     </div>
                 </div>
-                {this.props.expandable?.enabled && (
+                {this.showExpandButton && this.props.expandable?.enabled && (
                     <IconButton
                         size="small"
                         ariaValue={this.state.expanded ? gettext('Collapse') : gettext('Expand')}
