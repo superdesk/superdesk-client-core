@@ -5,7 +5,7 @@ import {Icon, IconButton, Label, Tooltip} from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {getLabelForStatus, getLocalizedDateString, getStatusColor} from '../utils';
+import {getLabelForStatus, getLocalizedDateString, getStylesForStatusDot} from '../utils';
 
 const {locale, gettext} = superdesk.localization;
 const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
@@ -71,10 +71,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         <Tooltip text={getLabelForStatus(this.props.day.status)}>
                             <div
                                 style={{
-                                    width: '1.6rem',
-                                    height: '1.6rem',
-                                    borderRadius: 9999,
-                                    background: getStatusColor(this.props.day.status),
+                                    ...getStylesForStatusDot(this.props.day.status),
                                     marginBlockStart: -2, // fixing vertical alignment
                                 }}
                             />
@@ -92,7 +89,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                     const tags = entry.tags ?? [];
 
                                     return (
-                                        <Spacer v gap="4">
+                                        <Spacer v gap="4" key={i}>
                                             <Spacer key={i} h gap="4" noWrap alignItems="center" justifyContent="start">
                                                 <Icon name="time" />
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {range} from 'lodash';
 import {IBaseRestApiResponse} from 'superdesk-api';
 import {
     Button,
@@ -11,7 +12,7 @@ import {availabilityStatuses} from '../constants';
 import {IAvailabilityRecord, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {getLabelForStatus, getLocalizedDateString} from '../utils';
-import {EditWorkingHours} from './edit-working-hours';
+import {WithWorkingHoursEditor} from './edit-working-hours';
 
 const {gettext, locale} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
@@ -181,7 +182,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
 
                 {
                     workingDay.status === 'partial' && (
-                        <EditWorkingHours
+                        <WithWorkingHoursEditor
                             value={workingDay.working_hours ?? []}
                             onChange={(nextValue) => {
                                 this.setState({
@@ -192,7 +193,36 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                             disabled={this.state.loading}
-                        />
+                        >
+                            {({inputs, labels}) => {
+                                const columnCount = labels.length;
+
+                                return (
+                                    <div
+                                        style={{
+                                            display: 'grid',
+                                            gap: '8px',
+                                            gridTemplateColumns: range(0, columnCount).map(() => 'auto').join(' '),
+                                        }}
+                                    >
+                                        {
+                                            labels.map((label, i) => (
+                                                <React.Fragment key={i}>
+                                                    {label}
+                                                </React.Fragment>
+                                            ))
+                                        }
+                                        {
+                                            inputs.map((row, i) => (
+                                                <React.Fragment key={i}>
+                                                    {...row}
+                                                </React.Fragment>
+                                            ))
+                                        }
+                                    </div>
+                                );
+                            }}
+                        </WithWorkingHoursEditor>
                     )
                 }
             </Modal>

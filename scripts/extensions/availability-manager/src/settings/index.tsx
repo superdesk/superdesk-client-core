@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
-import {MonthCalendar, nameof, Spacer, SpacerBlock} from '@sourcefabric/common';
+import {MonthCalendar, nameof, showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {Button, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
@@ -11,6 +11,7 @@ import {IAvailabilityRecord} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
 import {getStatusColor} from '../utils';
+import {ManageScheduleModal} from './manage-schedule';
 
 const {httpRequestVoidLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
@@ -158,8 +159,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         text={gettext('Manage')}
                                         style="hollow"
                                         onClick={() => {
-                                            // PR-TODO: implement
-                                            return null;
+                                            showModal(({closeModal}) => <ManageScheduleModal onClose={closeModal} />);
                                         }}
                                     />
                                 </Spacer>

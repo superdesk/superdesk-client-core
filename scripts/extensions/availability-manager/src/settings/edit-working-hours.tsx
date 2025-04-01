@@ -30,9 +30,10 @@ interface IProps {
     value: Array<IWorkingHours>;
     onChange(value: Array<IWorkingHours>): void;
     disabled?: boolean;
+    children(options: {labels: Array<React.ReactNode>, inputs: Array<Array<React.ReactNode>>}): React.ReactNode;
 }
 
-export class EditWorkingHours extends React.PureComponent<IProps> {
+export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
     render() {
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
 
@@ -46,120 +47,121 @@ export class EditWorkingHours extends React.PureComponent<IProps> {
 
         const disabled = this.props.disabled ?? false;
 
-        return (
-            <div style={{display: 'grid', gap: '8px', gridTemplateColumns: 'auto auto auto'}}>
-                <FormLabel text={gettext('Working hours')} noMinHeight />
-                <FormLabel text={gettext('Tags')} noMinHeight />
-                <span /> {/** column for controls */}
+        return this.props.children({
+            labels: [
+                <FormLabel text={gettext('Working hours')} noMinHeight />,
+                <FormLabel text={gettext('Tags')} noMinHeight />,
+                <span />, // column for controls
+            ],
+            inputs: workingHours.map((item, rowIndex) => {
+                const isLast = rowIndex === workingHours.length - 1;
 
-                {
-                    workingHours.map((item, i) => {
-                        const isLast = i === workingHours.length - 1;
+                return [
+                    (
+                        <Spacer h gap="4" justifyContent="start" noWrap>
+                            <TimePicker
+                                inlineLabel
+                                labelHidden
+                                value={item.start_time}
+                                onChange={(nextTime) => {
+                                    this.props.onChange(setValueAtIndex(
+                                        workingHours,
+                                        rowIndex,
+                                        {
+                                            ...item,
+                                            start_time: nextTime,
+                                        },
+                                    ));
+                                }}
+                                disabled={disabled}
+                            />
 
-                        return (
-                            <React.Fragment key={i}>
-                                <Spacer h gap="4" key={i} justifyContent="start" noWrap>
-                                    <TimePicker
-                                        inlineLabel
-                                        labelHidden
-                                        value={item.start_time}
-                                        onChange={(nextTime) => {
-                                            this.props.onChange(setValueAtIndex(
-                                                workingHours,
-                                                i,
-                                                {
-                                                    ...item,
-                                                    start_time: nextTime,
-                                                },
-                                            ));
+                            <div
+                                style={{
+                                    color: 'var(--color-text-light)',
+                                    paddingInline: '4px',
+                                }}
+                            >
+                                {gettext('to')}
+                            </div>
+
+                            <TimePicker
+                                inlineLabel
+                                labelHidden
+                                value={item.end_time}
+                                onChange={(nextTime) => {
+                                    this.props.onChange(setValueAtIndex(
+                                        workingHours,
+                                        rowIndex,
+                                        {
+                                            ...item,
+                                            end_time: nextTime,
+                                        },
+                                    ));
+                                }}
+                                disabled={disabled}
+                            />
+                        </Spacer>
+                    ),
+
+                    (
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <TreeSelect
+                                inlineLabel
+                                labelHidden
+                                kind="synchronous"
+                                value={item.tags ?? []}
+                                getId={({code}) => code}
+                                getLabel={({code}) => code}
+                                getOptions={() => tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}))}
+                                onChange={(nextTags) => {
+                                    this.props.onChange(setValueAtIndex(
+                                        workingHours,
+                                        rowIndex,
+                                        {
+                                            ...item,
+                                            tags: nextTags,
+                                        },
+                                    ));
+                                }}
+                                allowMultiple
+                                disabled={disabled}
+                            />
+                        </div>
+                    ),
+
+                    (
+                        <div style={{display: 'flex', alignItems: 'center', whiteSpace: 'nowrap'}}>
+                            {isLast && (
+                                <>
+                                    <IconButton
+                                        icon='plus-sign'
+                                        ariaValue={gettext('Add')}
+                                        onClick={() => {
+                                            this.props.onChange([
+                                                ...workingHours,
+                                                placeholder,
+                                            ]);
                                         }}
                                         disabled={disabled}
                                     />
 
-                                    <div
-                                        style={{
-                                            color: 'var(--color-text-light)',
-                                            paddingInline: '4px',
+                                    <IconButton
+                                        icon='minus-sign'
+                                        ariaValue={gettext('Remove')}
+                                        onClick={() => {
+                                            this.props.onChange(
+                                                workingHours.slice(0, workingHours.length - 1)
+                                            );
                                         }}
-                                    >
-                                        {gettext('to')}
-                                    </div>
-
-                                    <TimePicker
-                                        inlineLabel
-                                        labelHidden
-                                        value={item.end_time}
-                                        onChange={(nextTime) => {
-                                            this.props.onChange(setValueAtIndex(
-                                                workingHours,
-                                                i,
-                                                {
-                                                    ...item,
-                                                    end_time: nextTime,
-                                                },
-                                            ));
-                                        }}
-                                        disabled={disabled}
+                                        disabled={disabled || workingHours.length <= 1}
                                     />
-                                </Spacer>
-
-                                <div>
-                                    <TreeSelect
-                                        inlineLabel
-                                        labelHidden
-                                        kind="synchronous"
-                                        value={item.tags ?? []}
-                                        getId={({code}) => code}
-                                        getLabel={({code}) => code}
-                                        getOptions={() => tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}))}
-                                        onChange={(nextTags) => {
-                                            this.props.onChange(setValueAtIndex(
-                                                workingHours,
-                                                i,
-                                                {
-                                                    ...item,
-                                                    tags: nextTags,
-                                                },
-                                            ));
-                                        }}
-                                        allowMultiple
-                                        disabled={disabled}
-                                    />
-                                </div>
-
-                                <div>
-                                    {isLast && (
-                                        <div>
-                                            <IconButton
-                                                icon='plus-sign'
-                                                ariaValue={gettext('Add')}
-                                                onClick={() => {
-                                                    this.props.onChange([
-                                                        ...workingHours,
-                                                        placeholder,
-                                                    ]);
-                                                }}
-                                                disabled={disabled}
-                                            />
-
-                                            <IconButton
-                                                icon='minus-sign'
-                                                ariaValue={gettext('Remove')}
-                                                onClick={() => {
-                                                    this.props.onChange(
-                                                        workingHours.slice(0, workingHours.length - 1)
-                                                    );
-                                                }}
-                                                disabled={disabled || workingHours.length <= 1}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </React.Fragment>
-                        );
-                    })
-                }
-            </div>
-        );
+                                </>
+                            )}
+                        </div>
+                    ),
+                ]
+            }),
+        });
     }
 }

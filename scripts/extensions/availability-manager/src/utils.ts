@@ -1,4 +1,5 @@
-import {IAvailabilityRecord} from './interfaces';
+import {formatTime} from '@sourcefabric/common';
+import {IAvailabilityRecord, IScheduleRecord, IWorkingHours} from './interfaces';
 import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;
@@ -36,4 +37,59 @@ export function getLabelForStatus(status: IAvailabilityRecord['status']) {
         default:
             return assertNever(status);
     }
+}
+
+export function getStylesForStatusDot(status: IAvailabilityRecord['status']): React.CSSProperties {
+    return {
+        width: '1.6rem',
+        height: '1.6rem',
+        borderRadius: 9999,
+        whiteSpace: 'nowrap',
+        background: getStatusColor(status),
+    }
+}
+
+export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeCode: string): string | null {
+    for (const range of workingHours) {
+        const {start_time, end_time} = range;
+
+        if (start_time.length < 1) {
+            return gettext('{{field}} can not be empty', {field: gettext('start time')});
+        } else if (end_time.length < 1) {
+            return gettext('{{field}} can not be empty', {field: gettext('end time')});
+        } else if (new Date(`1970-01-01 ${start_time}`) > new Date(`1970-01-01 ${end_time}`)) {
+            return gettext(
+                'start time can not be greater than end time ({{start_time}} - {{end_time}})',
+                {start_time: formatTime(start_time, localeCode), end_time: formatTime(end_time, localeCode)}
+            );
+        }
+    }
+
+    return null;
+}
+
+export function validateSchedule(schedule: {[weekDayIndex: string]: IScheduleRecord}, localeCode: string): {[weekdayIndex: string]: string} {
+    const errors: ReturnType<typeof validateSchedule> = {};
+
+    for (const [key, value] of Object.entries(schedule)) {
+        const setError = (error: string) => errors[key] = error;
+
+        if (value.status == null) {
+            setError(
+                gettext('{{field}} can not be empty', {field: gettext('status')}),
+            );
+        }
+
+        if (value.status === 'partial' && (value.working_hours ?? []).length < 1) {
+            setError(gettext('working hours are not set'));
+        }
+
+        const result = validateWorkingHours((value.working_hours ?? []), localeCode);
+
+        if (result != null) {
+            setError(result);
+        }
+    }
+
+    return errors;
 }
