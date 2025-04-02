@@ -19,6 +19,7 @@ import {
     getProjectedFieldsArticle,
     getArticleLabel,
     getVocabularyItemNameTranslated,
+    omitBaseApiResponse,
 } from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -577,6 +578,7 @@ export function getSuperdeskApiImplementation(
             isLockedInOtherSession,
             isLockedInCurrentSession,
             getTextColor,
+            omitBaseApiResponse,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

@@ -479,3 +479,18 @@ export function stripLockingFields<T extends {}>(entity: T): T {
 
     return omit(entity, keysArray) as T;
 }
+
+export function omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Omit<T, keyof IBaseRestApiResponse> {
+    const keys: {[key in keyof IBaseRestApiResponse]: 1} = {
+        _id: 1,
+        _etag: 1,
+        _status: 1,
+        _links: 1,
+        _created: 1,
+        _updated: 1,
+        _current_version: 1,
+        _latest_version: 1,
+    };
+
+    return omit(item, Object.keys(keys)) as Omit<T, keyof IBaseRestApiResponse>;
+}

@@ -3374,6 +3374,8 @@ declare module 'superdesk-api' {
             getTextColor(
                 background: string, // HEX color
             ): 'black' | 'white';
+
+            omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Omit<T, keyof IBaseRestApiResponse>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
