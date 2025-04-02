@@ -208,6 +208,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
+        this.shouldShowCollapse = this.shouldShowCollapse.bind(this);
         this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
@@ -228,6 +229,16 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         };
 
         this.removeListeners = [];
+    }
+
+    shouldShowCollapse() {
+        const textInputArea = this.div?.querySelector?.('.focus-screen');
+
+        if (textInputArea?.scrollHeight > this?.collapsedHeight) {
+            this.showExpandButton = true;
+        } else {
+            this.showExpandButton = false;
+        }
     }
 
     /**
@@ -517,15 +528,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
 
-
-        const textInputArea = this.div.querySelector('.focus-screen');
-
-        if (textInputArea.scrollHeight > this.collapsedHeight) {
-            this.showExpandButton = true;
-        } else {
-            this.showExpandButton = false;
-        }
-
+        this.shouldShowCollapse();
 
         if (!window[EDITOR_GLOBAL_REFS]) {
             window[EDITOR_GLOBAL_REFS] = {};
@@ -574,13 +577,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             window.instgrm.Embeds.process();
         }
 
-        const textInputArea = this.div.querySelector('.focus-screen');
-
-        if (textInputArea.scrollHeight > this.collapsedHeight) {
-            this.showExpandButton = true;
-        } else {
-            this.showExpandButton = false;
-        }
+        this.shouldShowCollapse();
 
         if (
             this.props.spellchecking.enabled &&
