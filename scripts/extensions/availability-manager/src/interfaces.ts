@@ -17,4 +17,17 @@ export type IAvailabilityRecordTemplate = {
     working_hours?: Array<IWorkingHours>;
 }
 
+export interface IDefaultAvailability extends IBaseRestApiResponse {
+    working_days: {
+        sunday: IScheduleRecord;
+        monday: IScheduleRecord;
+        tuesday: IScheduleRecord;
+        wednesday: IScheduleRecord;
+        thursday: IScheduleRecord;
+        friday: IScheduleRecord;
+        saturday: IScheduleRecord;
+    };
+    language: Array<string>;
+}
+
 export type IAvailabilityRecord = IAvailabilityRecordTemplate & IBaseRestApiResponse;
