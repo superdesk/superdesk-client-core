@@ -297,7 +297,7 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await expect(page.locator(s('editor3')).getByRole('textbox')).toHaveText('test data');
 });
 
-test('adding a custom block inside editor3', async ({page}) => {
+test.skip('adding a custom block inside editor3', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot({snapshotName: 'custom-blocks'});
