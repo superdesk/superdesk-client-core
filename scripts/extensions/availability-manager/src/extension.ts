@@ -1,4 +1,4 @@
-import {IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'superdesk-api';
 import {AvailabilitySettings} from './settings';
 import {superdesk} from './superdesk';
 
@@ -8,14 +8,21 @@ const extension: IExtension = {
     activate: () => {
         const result: IExtensionActivationResult = {
             contributions: {
-                getUserProfileSections: () => [
-                    {
-                        id: 'availability',
-                        label: gettext('Availability'),
-                        priority: 5,
-                        component: AvailabilitySettings,
-                    },
-                ],
+                getUserProfileSections: (user) => {
+                    const result: Array<IUserProfileSection> = [];
+
+                    // Availability widget is only available to edit own user
+                    if (user._id === superdesk.session.getCurrentUserId()) {
+                        result.push({
+                            id: 'availability',
+                            label: gettext('Availability'),
+                            priority: 5,
+                            component: AvailabilitySettings,
+                        });
+                    }
+
+                    return result;
+                },
             },
         };
 
