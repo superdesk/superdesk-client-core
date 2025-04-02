@@ -270,6 +270,21 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                         <div>{getLabelForStatus(id)}</div>
                                                                     </Spacer>
                                                                 )}
+                                                                valueTemplate={(id, Wrapper) => (
+                                                                    <Wrapper>
+                                                                        <Spacer h gap="4" justifyContent="start" noWrap>
+                                                                            <div>
+                                                                                <div
+                                                                                    style={{
+                                                                                        ...getStylesForStatusDot(id),
+                                                                                    }}
+                                                                                />
+                                                                            </div>
+
+                                                                            <div>{getLabelForStatus(id)}</div>
+                                                                        </Spacer>
+                                                                    </Wrapper>
+                                                                )}
                                                                 inlineLabel
                                                                 labelHidden
                                                                 required
