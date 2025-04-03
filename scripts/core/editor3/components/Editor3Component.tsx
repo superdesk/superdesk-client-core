@@ -213,7 +213,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
         this.spellcheckAbortController = new AbortController();
 
-        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
+        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1) + PADDING;
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -673,7 +673,9 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         // check if the expand button should still show
                         if (div) {
                             const resizeObserver = new ResizeObserver(() => {
-                                this.shouldShowFieldToggle();
+                                requestAnimationFrame(() => {
+                                    this.shouldShowFieldToggle();
+                                });
                             });
 
                             resizeObserver.observe(div);
