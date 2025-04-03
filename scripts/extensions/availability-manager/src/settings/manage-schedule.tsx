@@ -3,16 +3,15 @@ import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, range} from 'lodash';
 import {Alert, Button, CheckboxButton, CheckButtonGroup, Label, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex} from '../constants';
-import {getLabelForStatus, getStylesForStatusDot, validateSchedule} from '../utils';
+import {getLabelForStatus, getStylesForStatusDot, setUserAvailability, validateSchedule} from '../utils';
 import {IDefaultAvailability, IScheduleRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {WithWorkingHoursEditor} from './edit-working-hours';
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IUser} from 'superdesk-api';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
-const {omitBaseApiResponse} = superdesk.utilities;
 
 const placeholder: IScheduleRecord = {
     status: 'available',
@@ -30,6 +29,7 @@ const additionalColumnCount = 2;
 const columnCount = workingHoursEditorColumnCount + additionalColumnCount;
 
 interface IProps {
+    user: IUser;
     onClose(): void;
 }
 
@@ -100,15 +100,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                 },
             );
         } else {
-            httpRequestJsonLocal({
-                method: 'PUT',
-                path: `/default_user_availability/${superdesk.session.getCurrentUserId()}`,
-                payload: {
-                    ...(
-                        this.state.defaultAvailabilityRecord == null
-                            ? {}
-                            : omitBaseApiResponse(this.state.defaultAvailabilityRecord)
-                    ),
+            setUserAvailability(
+                this.props.user._id,
+                this.state.defaultAvailabilityRecord,
+                {
                     working_days:
                         Object.entries(this.state.schedule)
                             .reduce((acc: IDefaultAvailability['working_days'], [index, value]) => {
@@ -116,12 +111,8 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
 
                                 return acc;
                             }, {} as IDefaultAvailability['working_days']),
-                    language: [],
-                } satisfies Omit<IDefaultAvailability, keyof IBaseRestApiResponse>,
-                headers: this.state.defaultAvailabilityRecord == null ? {} : {
-                    'If-Match': this.state.defaultAvailabilityRecord._etag,
                 },
-            }).then(() => {
+            ).then(() => {
                 this.props.onClose();
             });
         }
@@ -130,7 +121,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
     componentDidMount(): void {
         httpRequestJsonLocal<IDefaultAvailability>({
             method: 'GET',
-            path: `/default_user_availability/${superdesk.session.getCurrentUserId()}`,
+            path: `/default_user_availability/${this.props.user._id}`,
         }).then((res) => {
             this.setState({
                 schedule: Object.entries(res.working_days).reduce((acc: IState['schedule'], [dayCode, value]) => {
@@ -320,6 +311,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                             {working_hours: val},
                                                         );
                                                     }}
+                                                    tagsWhitelist={new Set(
+                                                        (this.state.defaultAvailabilityRecord?.tags ?? [])
+                                                            .map(({code}) => code),
+                                                    )}
                                                 >
                                                     {(props) => {
                                                         const labels: Array<React.ReactNode> = [

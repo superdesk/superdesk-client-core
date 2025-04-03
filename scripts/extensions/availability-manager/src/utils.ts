@@ -1,9 +1,11 @@
 import {formatTime} from '@sourcefabric/common';
-import {IAvailabilityRecord, IScheduleRecord, IWorkingHours} from './interfaces';
+import {IAvailabilityRecord, IDefaultAvailability, IScheduleRecord, IWorkingHours} from './interfaces';
 import {superdesk} from './superdesk';
 
+const {httpRequestJsonLocal} = superdesk;
 const {gettext} = superdesk.localization;
 const {assertNever} = superdesk.helpers;
+const {omitBaseApiResponse} = superdesk.utilities;
 
 export function getLocalizedDateString(localeCode: string, date: Date) {
     return new Intl.DateTimeFormat(localeCode, {
@@ -95,4 +97,26 @@ export function validateSchedule(
     }
 
     return errors;
+}
+
+export function setUserAvailability(
+    userId: string,
+    currentAvailability: IDefaultAvailability | null,
+    patch: Partial<IDefaultAvailability>,
+): Promise<IDefaultAvailability> {
+    return httpRequestJsonLocal<IDefaultAvailability>({
+        method: 'PUT',
+        path: `/default_user_availability/${userId}`,
+        payload: {
+            ...(
+                currentAvailability == null
+                    ? {}
+                    : omitBaseApiResponse(currentAvailability)
+            ),
+            ...patch,
+        } satisfies Partial<IDefaultAvailability>,
+        headers: currentAvailability == null ? {} : {
+            'If-Match': currentAvailability._etag,
+        },
+    });
 }

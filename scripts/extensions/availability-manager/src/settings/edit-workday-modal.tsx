@@ -9,7 +9,7 @@ import {
     SpacerBlock,
 } from 'superdesk-ui-framework/react';
 import {availabilityStatuses} from '../constants';
-import {IAvailabilityRecord, IWorkingHours} from '../interfaces';
+import {IAvailabilityRecord, ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {getLabelForStatus, getLocalizedDateString} from '../utils';
 import {WithWorkingHoursEditor} from './edit-working-hours';
@@ -28,6 +28,8 @@ interface IProps {
      * item is returned so parent component can conditionally show preview after closing
      */
     onClose(item: IAvailabilityRecord | null): void;
+
+    tagsWhitelist: ITagsWhiteList;
 }
 
 interface IState {
@@ -194,6 +196,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                             disabled={this.state.loading}
+                            tagsWhitelist={this.props.tagsWhitelist}
                         >
                             {({inputs, labels}) => {
                                 const columnCount = labels.length;

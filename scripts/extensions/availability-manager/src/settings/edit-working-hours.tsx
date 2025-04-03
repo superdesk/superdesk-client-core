@@ -1,3 +1,4 @@
+import {mergeSets} from '@sourcefabric/common';
 import * as React from 'react';
 import {
     FormLabel,
@@ -7,7 +8,7 @@ import {
     TreeSelect,
 } from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
-import {IWorkingHours} from '../interfaces';
+import {ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
@@ -30,6 +31,7 @@ interface IProps {
     value: Array<IWorkingHours>;
     onChange(value: Array<IWorkingHours>): void;
     disabled?: boolean;
+    tagsWhitelist: ITagsWhiteList;
     children(options: {labels: Array<React.ReactNode>, inputs: Array<Array<React.ReactNode>>}): React.ReactNode;
 }
 
@@ -113,7 +115,16 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                 value={item.tags ?? []}
                                 getId={({code}) => code}
                                 getLabel={({code}) => code}
-                                getOptions={() => tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}))}
+                                getOptions={() => {
+                                    if (this.props.tagsWhitelist.size < 1) {
+                                        return tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}));
+                                    } else {
+                                        const current = new Set<string>((item.tags ?? []).map(({code}) => code));
+
+                                        return Array.from(mergeSets(current, this.props.tagsWhitelist))
+                                            .map((code) => ({value: {code}}));
+                                    }
+                                }}
                                 onChange={(nextTags) => {
                                     this.props.onChange(setValueAtIndex(
                                         workingHours,

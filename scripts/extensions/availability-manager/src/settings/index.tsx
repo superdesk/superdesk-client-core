@@ -5,28 +5,29 @@ import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
 import {MonthCalendar, nameof, showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
-import {Button, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
-import {IBaseRestApiResponse, ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
+import {Button, getTextColor, IconButton, PopupPositioner, TreeSelect} from 'superdesk-ui-framework/react';
+import {IBaseRestApiResponse, ISuperdeskQuery, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {Card} from '../card';
-import {IAvailabilityRecord} from '../interfaces';
+import {IAvailabilityRecord, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
-import {getStatusColor} from '../utils';
+import {getStatusColor, setUserAvailability} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
+import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 
-const {httpRequestVoidLocal} = superdesk;
+const {httpRequestVoidLocal, httpRequestJsonLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
 const {firstDayOfWeek} = superdesk.localization.locale;
 const {assertNever} = superdesk.helpers;
 const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
 
-const verticalSpacing = '1.4rem';
+const verticalSpacing = '1.6rem';
 
 const Page: React.ComponentType<{children: React.ReactNode}> = (props) => (
     <div style={{display: 'flex', justifyContent: 'center'}}>
         <div style={{margin: '2rem'}}>
-            <Card paddingBase="3" paddingBlockStart={0}>
+            <Card paddingBase="3">
                 {props.children}
             </Card>
         </div>
@@ -36,13 +37,37 @@ const Page: React.ComponentType<{children: React.ReactNode}> = (props) => (
 type IProps = React.ComponentProps<IUserProfileSection['component']>;
 
 interface IState {
-    user: IUser;
+    defaultAvailability: IDefaultAvailability | null;
     calendarStart: Date;
     overlay:
         null
         | {kind: 'view'; date: string}
         | {kind: 'edit'; date: string}
         | {kind: 'create'; date: string};
+    savingLanguages: boolean;
+    savingTags: boolean;
+    count: number;
+}
+
+function getQuery(
+    options: {
+        dateFrom: string,
+        dateTo: string,
+    },
+): ISuperdeskQuery {
+    const {dateFrom, dateTo} = options;
+
+    return {
+        filter: {
+            $and: [
+                {[nameof<IAvailabilityRecord>('date')]: {$gte: dateFrom}},
+                {[nameof<IAvailabilityRecord>('date')]: {$lte: dateTo}},
+            ],
+        },
+        page: 1,
+        max_results: 200,
+        sort: [{'versioncreated': 'asc'}], // sorting isn't relevant
+    } satisfies ISuperdeskQuery;
 }
 
 export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
@@ -52,15 +77,36 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            user: props.user,
             calendarStart: startOfMonth(new Date()),
             overlay: null,
+            defaultAvailability: null,
+            savingLanguages: false,
+            savingTags: false,
+            count: 1,
         };
 
         this.dayRefs = {};
     }
 
+    componentDidMount(): void {
+        httpRequestJsonLocal<IDefaultAvailability>({
+            method: 'GET',
+            path: `/default_user_availability/${this.props.user._id}`,
+        }).then((res) => {
+            this.setState({defaultAvailability: res});
+        }).catch(() => {
+            // hasn't been set yet, keep it `null`
+        });
+    }
+
     render() {
+        const languagesVocabulary = superdesk.entities.vocabulary.getVocabulary(LANGUAGES_VOCABULARY);
+        const languageVocabularyItemsKeyed = keyBy(languagesVocabulary.items, ({qcode}) => qcode);
+
+        const tagsVocabulary = superdesk.entities.vocabulary.getVocabulary(TAGS_VOCABULARY_ID);
+        const tagsVocabularyItemsKeyed = keyBy(tagsVocabulary.items, ({qcode}) => qcode);
+
+        const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
         const monthsToDisplayAtOnce = 4;
         const months: Array<Date> =
             range(0, monthsToDisplayAtOnce)
@@ -68,17 +114,10 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
         const calendarEnd = endOfMonth(months[months.length - 1]);
 
-        const query: ISuperdeskQuery = {
-            filter: {
-                $and: [
-                    {[nameof<IAvailabilityRecord>('date')]: {$gte: format(months[0], 'yyyy-MM-dd')}},
-                    {[nameof<IAvailabilityRecord>('date')]: {$lte: format(calendarEnd, 'yyyy-MM-dd')}},
-                ],
-            },
-            page: 1,
-            max_results: 200,
-            sort: [{'versioncreated': 'asc'}], // sorting isn't relevant
-        };
+        const query = getQuery({
+            dateFrom: format(months[0], 'yyyy-MM-dd'),
+            dateTo: format(calendarEnd, 'yyyy-MM-dd'),
+        });
 
         return (
             <Page>
@@ -133,6 +172,77 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                         return (
                             <div>
+                                <div>
+                                    <TreeSelect
+                                        kind="synchronous"
+                                        label={languagesVocabulary.display_name}
+                                        value={this.state.defaultAvailability?.language ?? []}
+                                        getOptions={() => languagesVocabulary.items.map(({qcode}) => ({value: qcode}))}
+                                        getId={(qcode) => qcode}
+                                        getLabel={(qcode) => getVocabularyItemNameTranslated(
+                                            languageVocabularyItemsKeyed[qcode],
+                                        )}
+                                        onChange={(val) => {
+                                            this.setState({savingLanguages: true});
+
+                                            setUserAvailability(
+                                                this.props.user._id,
+                                                this.state.defaultAvailability,
+                                                {
+                                                    language: val,
+                                                },
+                                            )
+                                                .then((res) => {
+                                                    this.setState({
+                                                        defaultAvailability: res,
+                                                    });
+                                                })
+                                                .finally(() => {
+                                                    this.setState({savingLanguages: false});
+                                                });
+                                        }}
+                                        disabled={this.state.savingLanguages}
+                                    />
+                                </div>
+
+                                <SpacerBlock v gap="16" />
+
+                                <div>
+                                    <TreeSelect
+                                        kind="synchronous"
+                                        allowMultiple
+                                        label={tagsVocabulary.display_name}
+                                        value={this.state.defaultAvailability?.tags ?? []}
+                                        getOptions={
+                                            () => tagsVocabulary.items.map(({qcode}) => ({value: {code: qcode}}))
+                                        }
+                                        getId={(item) => item.code}
+                                        getLabel={(item) => getVocabularyItemNameTranslated(
+                                            tagsVocabularyItemsKeyed[item.code],
+                                        )}
+                                        onChange={(val) => {
+                                            this.setState({savingTags: true});
+
+                                            setUserAvailability(
+                                                this.props.user._id,
+                                                this.state.defaultAvailability,
+                                                {
+                                                    tags: val,
+                                                },
+                                            )
+                                                .then((res) => {
+                                                    this.setState({
+                                                        defaultAvailability: res,
+                                                    });
+                                                })
+                                                .finally(() => {
+                                                    this.setState({savingTags: false});
+                                                });
+                                        }}
+                                        disabled={this.state.savingTags}
+                                    />
+                                </div>
+
                                 <Spacer
                                     h
                                     gap="16"
@@ -175,7 +285,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         text={gettext('Manage')}
                                         style="hollow"
                                         onClick={() => {
-                                            showModal(({closeModal}) => <ManageScheduleModal onClose={closeModal} />);
+                                            showModal(({closeModal}) => (
+                                                <ManageScheduleModal onClose={closeModal} user={this.props.user} />
+                                            ));
                                         }}
                                     />
                                 </Spacer>
@@ -306,6 +418,12 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                                 this.setState({overlay: null});
                                                             }
                                                         }}
+                                                        tagsWhitelist={
+                                                            new Set(
+                                                                (this.state.defaultAvailability?.tags ?? [])
+                                                                    .map(({code}) => code),
+                                                            )
+                                                        }
                                                     />
                                                 ),
                                                 document.body,

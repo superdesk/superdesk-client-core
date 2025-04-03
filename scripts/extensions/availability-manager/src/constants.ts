@@ -1,6 +1,7 @@
 import {IAvailabilityRecord} from './interfaces';
 
 export const TAGS_VOCABULARY_ID = 'availability_manager_tags';
+export const LANGUAGES_VOCABULARY = 'languages';
 
 const statusesObj: {[key in IAvailabilityRecord['status']]: 1} = {
     available: 1,

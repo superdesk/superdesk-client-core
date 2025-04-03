@@ -27,7 +27,15 @@ export interface IDefaultAvailability extends IBaseRestApiResponse {
         friday: IScheduleRecord;
         saturday: IScheduleRecord;
     };
-    language: Array<string>;
+    language?: Array<string>;
+    tags?: Array<{code: string}>
 }
 
 export type IAvailabilityRecord = IAvailabilityRecordTemplate & IBaseRestApiResponse;
+
+/**
+ * Set contains IDs
+ * Users will only be able to choose from vocabulary items in this set.
+ * Or tags that are not in the set, but are already saved in the database.
+ */
+export type ITagsWhiteList = Set<string>;
