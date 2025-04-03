@@ -37,10 +37,12 @@ interface IState {
     schedule: {[weekDayIndex: string]: IScheduleRecord};
     validationErrors: {[weekDayIndex: string]: string};
     defaultAvailabilityRecord: IDefaultAvailability | null;
+    savingInProgress: boolean;
 }
 
 export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
     private errorsElementRef: React.RefObject<HTMLDivElement>;
+    private _mounted: boolean;
 
     constructor(props: IProps) {
         super(props);
@@ -49,6 +51,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
             schedule: {},
             defaultAvailabilityRecord: null,
             validationErrors: {},
+            savingInProgress: false,
         };
 
         this.handleScheduleItemChange = this.handleScheduleItemChange.bind(this);
@@ -56,6 +59,8 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         this.save = this.save.bind(this);
 
         this.errorsElementRef = React.createRef<HTMLDivElement>();
+
+        this._mounted = false;
     }
 
     private handleScheduleItemChange(index: number, patch: Partial<IScheduleRecord>) {
@@ -100,6 +105,8 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                 },
             );
         } else {
+            this.setState({savingInProgress: true});
+
             setUserAvailability(
                 this.props.user._id,
                 this.state.defaultAvailabilityRecord,
@@ -114,11 +121,17 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                 },
             ).then(() => {
                 this.props.onClose();
+            }).finally(() => {
+                if (this._mounted) {
+                    this.setState({savingInProgress: false});
+                }
             });
         }
     }
 
     componentDidMount(): void {
+        this._mounted = true;
+
         httpRequestJsonLocal<IDefaultAvailability>({
             method: 'GET',
             path: `/default_user_availability/${this.props.user._id}`,
@@ -134,6 +147,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         });
     }
 
+    componentWillUnmount(): void {
+        this._mounted = false;
+    }
+
     render() {
         const weekdays = getWeekdayNames(locale.firstDayOfWeek, locale.code);
         const weekdaysKeyed = keyBy(weekdays, (weekday) => weekday.index);
@@ -141,9 +158,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         const renderLabels = enabledWeekdays.some(
             (weekday) => this.state.schedule[weekday.index]?.status === 'partial',
         );
-
-        // PR-TODO: implement when connected to HTTP endpoint
-        const loading = false;
+        const {savingInProgress} = this.state;
 
         return (
             <Modal
@@ -156,7 +171,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             text={gettext('Cancel')}
                             onClick={() => this.props.onClose()}
                             noMargin
-                            disabled={loading}
+                            disabled={savingInProgress}
                         />
 
                         <Button
@@ -165,8 +180,8 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             onClick={() => {
                                 this.save();
                             }}
-                            disabled={loading}
-                            isLoading={loading}
+                            disabled={savingInProgress}
+                            isLoading={savingInProgress}
                             noMargin
                         />
                     </Spacer>
@@ -187,7 +202,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                             this.handleRemoveScheduleItem(weekday.index);
                                         }
                                     }}
-                                    disabled={loading}
+                                    disabled={savingInProgress}
                                 />
                             ))
                         }
@@ -315,6 +330,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                         (this.state.defaultAvailabilityRecord?.tags ?? [])
                                                             .map(({code}) => code),
                                                     )}
+                                                    disabled={savingInProgress}
                                                 >
                                                     {(props) => {
                                                         const labels: Array<React.ReactNode> = [
