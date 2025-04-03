@@ -528,8 +528,8 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
         hiddenDiv.style.visibility = 'hidden';
         hiddenDiv.textContent = 'a';
-        this.div.querySelector('.focus-screen').appendChild(hiddenDiv);
-        const rowHeight = hiddenDiv.clientHeight;
+        this.div?.querySelector?.('.focus-screen').appendChild?.(hiddenDiv);
+        const rowHeight = hiddenDiv?.clientHeight ?? 0;
 
         this.collapsedHeight = rowHeight * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
 
