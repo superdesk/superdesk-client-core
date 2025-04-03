@@ -152,6 +152,7 @@ export interface IPropsEditor3Component {
 interface IState {
     draggingInProgress: boolean;
     expanded?: boolean;
+    showExpandButton?: boolean;
 
     /**
      * Only content changes are tracked (addition/removal of chars, whitespace).
@@ -187,7 +188,6 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     div: HTMLDivElement;
     editor: IEditor3;
     onDragEnd: () => void;
-    showExpandButton: boolean;
     collapsedHeight: number;
 
     private removeListeners: Array<() => void> = [];
@@ -208,12 +208,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
-        this.shouldShowCollapse = this.shouldShowCollapse.bind(this);
+        this.shouldShowFieldToggle = this.shouldShowFieldToggle.bind(this);
         this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
 
-        this.showExpandButton = true;
         this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
 
         this.onDragEnd = () => {
@@ -223,6 +222,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         };
 
         this.state = {
+            showExpandButton: true,
             expanded: this.props.expandable?.defaultValue ?? false,
             draggingInProgress: false,
             contentChangesAfterLastFocus: 0,
@@ -231,13 +231,14 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.removeListeners = [];
     }
 
-    shouldShowCollapse() {
+    shouldShowFieldToggle() {
         const textInputArea = this.div?.querySelector?.('.focus-screen');
+        const shouldShowExpand = textInputArea?.scrollHeight > this?.collapsedHeight;
 
-        if (textInputArea?.scrollHeight > this?.collapsedHeight) {
-            this.showExpandButton = true;
-        } else {
-            this.showExpandButton = false;
+        if (this.state.showExpandButton != shouldShowExpand) {
+            this.setState({
+                showExpandButton: shouldShowExpand,
+            });
         }
     }
 
@@ -528,7 +529,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
 
-        this.shouldShowCollapse();
+        this.shouldShowFieldToggle();
 
         if (!window[EDITOR_GLOBAL_REFS]) {
             window[EDITOR_GLOBAL_REFS] = {};
@@ -572,12 +573,19 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
         }
 
-        this.shouldShowCollapse();
+        if (this.props.expandable?.defaultValue != prevProps.expandable?.defaultValue) {
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({
+                expanded: this.props.expandable?.defaultValue,
+            });
+        }
+
+        this.shouldShowFieldToggle();
 
         if (
             this.props.spellchecking.enabled &&
@@ -640,7 +648,21 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             <Spacer v gap="0" justifyContent="center" alignItems="center" noWrap>
                 <div
                     className={cx}
-                    ref={(div) => this.div = div}
+                    ref={(div) => {
+                        this.div = div;
+
+                        // if element gets resized from somewhere we should
+                        // check if the expand button should still show
+                        if (div) {
+                            const resizeObserver = new ResizeObserver(() => {
+                                this.shouldShowFieldToggle();
+                            });
+
+                            resizeObserver.observe(div);
+
+                            this.removeListeners.push(() => resizeObserver.disconnect());
+                        }
+                    }}
                     onDragStart={() => {
                         if (this.state.draggingInProgress !== true) {
                             setTimeout(() => {
@@ -755,7 +777,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         {this.props.loading && <div className="loading-overlay active" />}
                     </div>
                 </div>
-                {this.showExpandButton && this.props.expandable?.enabled && (
+                {this.state.showExpandButton && this.props.expandable?.enabled && (
                     <IconButton
                         size="small"
                         ariaValue={this.state.expanded ? gettext('Collapse') : gettext('Expand')}
