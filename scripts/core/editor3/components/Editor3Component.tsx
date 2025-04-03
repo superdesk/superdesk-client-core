@@ -63,7 +63,6 @@ const VALID_MEDIA_TYPES = [
 
 export const EDITOR_GLOBAL_REFS = 'editor3-refs';
 const editor3AutocompleteClassName = 'editor3-autocomplete';
-const LINE_HEIGHT = 30;
 
 /**
  * Get valid media type from event dataTransfer types
@@ -211,8 +210,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
-
-        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
+        this.collapsedHeight = 0;
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -525,9 +523,23 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         return 'not-handled';
     }
 
+    setRowHeight() {
+        const hiddenDiv = document.createElement('div');
+
+        hiddenDiv.style.visibility = 'hidden';
+        hiddenDiv.textContent = 'a';
+        this.div.querySelector('.focus-screen').appendChild(hiddenDiv);
+        const rowHeight = hiddenDiv.clientHeight;
+
+        this.collapsedHeight = rowHeight * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
+
+        hiddenDiv.remove();
+    }
+
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
 
+        this.setRowHeight();
         this.shouldShowFieldToggle();
 
         if (!window[EDITOR_GLOBAL_REFS]) {
@@ -572,16 +584,19 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         }
     }
 
+    static getDerivedStateFromProps(props: IPropsEditor3Component, state: IState): Partial<IState> | null {
+        if (state.expanded != props.expandable?.defaultValue) {
+            return {
+                expanded: props.expandable?.defaultValue,
+            };
+        } else {
+            return null;
+        }
+    }
+
     componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
-        }
-
-        if (this.props.expandable?.defaultValue != prevProps.expandable?.defaultValue) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({
-                expanded: this.props.expandable?.defaultValue,
-            });
         }
 
         this.shouldShowFieldToggle();
