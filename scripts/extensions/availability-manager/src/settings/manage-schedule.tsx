@@ -1,13 +1,14 @@
 import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, range} from 'lodash';
-import {Alert, Button, CheckboxButton, CheckButtonGroup, Label, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex} from '../constants';
 import {getLabelForStatus, getStylesForStatusDot, setUserAvailability, validateSchedule} from '../utils';
 import {IDefaultAvailability, IScheduleRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {WithWorkingHoursEditor} from './edit-working-hours';
 import {IUser} from 'superdesk-api';
+import {ValidationErrors} from '../validation-errors';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
@@ -395,27 +396,21 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
 
                     {
                         Object.keys(this.state.validationErrors).length > 0 && (
-                            <div ref={this.errorsElementRef}>
-                                <Alert style="hollow" type="alert">
-                                    <Spacer v gap="8" noWrap>
-                                        <Label text={gettext('Errors')} type="alert" />
+                            <ValidationErrors scrollRef={this.errorsElementRef}>
+                                {
+                                    Object.entries(this.state.validationErrors).map(([weekdayIndex, error]) => {
+                                        return (
+                                            <Spacer h gap="8" justifyContent="start" noWrap key={weekdayIndex}>
+                                                <strong>
+                                                    {weekdaysKeyed[weekdayIndex].nameLong}
+                                                </strong>
 
-                                        {
-                                            Object.entries(this.state.validationErrors).map(([weekdayIndex, error]) => {
-                                                return (
-                                                    <Spacer h gap="8" justifyContent="start" noWrap key={weekdayIndex}>
-                                                        <strong>
-                                                            {weekdaysKeyed[weekdayIndex].nameLong}
-                                                        </strong>
-
-                                                        <span>{error}</span>
-                                                    </Spacer>
-                                                );
-                                            })
-                                        }
-                                    </Spacer>
-                                </Alert>
-                            </div>
+                                                <span>{error}</span>
+                                            </Spacer>
+                                        );
+                                    })
+                                }
+                            </ValidationErrors>
                         )
                     }
                 </Spacer>
