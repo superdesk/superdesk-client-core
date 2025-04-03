@@ -644,6 +644,24 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         };
 
+        const inputStyle: React.CSSProperties = (() => {
+            const style: React.CSSProperties = {};
+
+            if (this.props.uiTheme != null) {
+                style.fontSize = this.props.uiTheme.fontSize;
+                style.color = this.props.uiTheme.textColor;
+                style.fontFamily = this.props.uiTheme.fontFamily;
+            }
+
+            if (this.state.expanded) {
+                return {...style, height: 'auto'};
+            } else if (this.props.expandable?.enabled) {
+                return {...style, overflowY: 'auto', maxHeight: this.collapsedHeight};
+            }
+
+            return {...style};
+        })();
+
         return (
             <Spacer v gap="0" justifyContent="center" alignItems="center" noWrap>
                 <div
@@ -708,22 +726,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                     <div
                         className="focus-screen"
                         onMouseDown={this.focus}
-                        style={{
-                            ...(this.props.uiTheme == null ? {} : {
-                                fontSize: this.props.uiTheme.fontSize,
-                                color: this.props.uiTheme.textColor,
-                                fontFamily: this.props.uiTheme.fontFamily,
-                            }),
-                            ...(this.state.expanded
-                                ? {
-                                    height: 'auto',
-                                }
-                                : {
-                                    overflowY: 'auto',
-                                    maxHeight: this.collapsedHeight,
-                                }
-                            ),
-                        }}
+                        style={inputStyle}
                     >
                         <Editor
                             editorState={editorState}
