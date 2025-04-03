@@ -65,7 +65,6 @@ export const EDITOR_GLOBAL_REFS = 'editor3-refs';
 const editor3AutocompleteClassName = 'editor3-autocomplete';
 const LINE_HEIGHT = 30;
 
-
 /**
  * Get valid media type from event dataTransfer types
  *
@@ -213,7 +212,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
         this.spellcheckAbortController = new AbortController();
 
-        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1) + PADDING;
+        this.collapsedHeight = LINE_HEIGHT * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
