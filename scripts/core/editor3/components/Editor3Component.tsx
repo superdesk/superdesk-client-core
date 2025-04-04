@@ -590,13 +590,6 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             window.instgrm.Embeds.process();
         }
 
-        if (prevProps.expandable?.defaultValue !== this.props.expandable?.defaultValue) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({
-                expanded: this.props.expandable?.defaultValue,
-            });
-        }
-
         this.shouldShowFieldToggle();
 
         if (
