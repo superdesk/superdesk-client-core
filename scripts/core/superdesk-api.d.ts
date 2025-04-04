@@ -469,6 +469,12 @@ declare module 'superdesk-api' {
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
 
+        expandable?: {
+            enabled: true;
+            defaultValue: boolean;
+            numberOfRowsWhenCollapsed: number;
+        };
+
         // Users may configure predefined text
         // snippets to append to the field
         vocabularyId?: string;
