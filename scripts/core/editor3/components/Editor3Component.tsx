@@ -187,6 +187,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     editor: IEditor3;
     onDragEnd: () => void;
     collapsedHeight: number;
+    resizeObserver: ResizeObserver;
 
     private removeListeners: Array<() => void> = [];
 
@@ -584,19 +585,16 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         }
     }
 
-    static getDerivedStateFromProps(props: IPropsEditor3Component, state: IState): Partial<IState> | null {
-        if (state.expanded != props.expandable?.defaultValue) {
-            return {
-                expanded: props.expandable?.defaultValue,
-            };
-        } else {
-            return null;
-        }
-    }
-
     componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
+        }
+
+        if (prevProps.expandable?.defaultValue !== this.props.expandable?.defaultValue) {
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({
+                expanded: this.props.expandable?.defaultValue,
+            });
         }
 
         this.shouldShowFieldToggle();
@@ -686,15 +684,20 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         // if element gets resized from somewhere we should
                         // check if the expand button should still show
                         if (div) {
-                            const resizeObserver = new ResizeObserver(() => {
+                            // this function may run more than once,
+                            // thus make sure there is always one observer per instance of this class
+                            if (this.resizeObserver != null) {
+                                this.resizeObserver.disconnect();
+                            }
+
+                            this.resizeObserver = new ResizeObserver(() => {
                                 requestAnimationFrame(() => {
                                     this.shouldShowFieldToggle();
                                 });
                             });
 
-                            resizeObserver.observe(div);
-
-                            this.removeListeners.push(() => resizeObserver.disconnect());
+                            this.resizeObserver.observe(div);
+                            this.removeListeners.push(() => this.resizeObserver.disconnect());
                         }
                     }}
                     onDragStart={() => {
