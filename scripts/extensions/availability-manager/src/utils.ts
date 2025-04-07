@@ -56,12 +56,12 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
         const {start_time, end_time} = range;
 
         if (start_time.length < 1) {
-            return gettext('{{field}} can not be empty', {field: gettext('start time')});
+            return gettext('{{field}} cannot be empty', {field: gettext('start time')});
         } else if (end_time.length < 1) {
-            return gettext('{{field}} can not be empty', {field: gettext('end time')});
+            return gettext('{{field}} cannot be empty', {field: gettext('end time')});
         } else if (new Date(`1970-01-01 ${start_time}`) > new Date(`1970-01-01 ${end_time}`)) {
             return gettext(
-                'start time can not be greater than end time ({{start_time}} - {{end_time}})',
+                'start time cannot be greater than end time ({{start_time}} - {{end_time}})',
                 {start_time: formatTime(start_time, localeCode), end_time: formatTime(end_time, localeCode)},
             );
         }
@@ -81,7 +81,7 @@ export function validateSchedule(
 
         if (value.status == null) {
             setError(
-                gettext('{{field}} can not be empty', {field: gettext('status')}),
+                gettext('{{field}} cannot be empty', {field: gettext('status')}),
             );
         }
 
