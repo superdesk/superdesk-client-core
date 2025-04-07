@@ -29,8 +29,10 @@ test('media metadata editor', async ({page}) => {
 
     await expect(mediaEditor.field('field--headline')).toContainText('The Headline');
 
-    await mediaEditor.field('field--headline').clear();
+    await mediaEditor.field('field--headline').fill('');
     await mediaEditor.field('field--headline').fill('picture');
+
+    await expect(mediaEditor.field('field--headline')).toHaveText('picture');
 
     await upload.startUpload();
 

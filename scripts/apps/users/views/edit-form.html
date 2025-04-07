@@ -118,7 +118,6 @@
                                         <div class="sd-input__message" ng-show="userForm.username.$error.required" translate>This field is required.</div>
                                         <div class="sd-input__message" ng-show="userForm.username.$error.unique || error.username.conflict" sd-valid-error translate>sorry, this username is already taken.</div>
                                         <div class="sd-input__message" ng-show="userForm.username.$error.pattern" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores (_), apostrophes (') and periods (.)</span>
                                         </div>
                                     </div>
@@ -139,11 +138,9 @@
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.email.$error.required" translate>This field is required.</div>
                                         <div class="sd-input__message" ng-show="userForm.email.$error.email" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>please provide a valid email address</span>
                                         </div>
                                         <div class="sd-input__message" ng-show="error.email" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>{{error.email}}</span>
                                         </div>
                                         <div class="sd-input__message" ng-show="userForm.email.$error.unique || error.email.unique" sd-valid-error translate>sorry, a user with this email already exists</div>
@@ -258,7 +255,6 @@
                                     <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>
                                         </div>
                                     </div>
@@ -341,7 +337,6 @@
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">{{ :: 'e.g. @superdeskman'|translate }}</div>
                                         <div class="sd-input__message" ng-show="userForm.twitter.$error.pattern" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>Please provide a valid twitter account</span>
                                         </div>
                                     </div>

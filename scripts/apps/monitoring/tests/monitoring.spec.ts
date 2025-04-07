@@ -8,7 +8,11 @@ describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.services.pageTitle'));
     beforeEach(window.module('superdesk.templates-cache'));
-    beforeEach(window.module('superdesk.mocks'));
+
+    beforeEach(inject((session, $rootScope) => {
+        session.start({token: 's1', _id: 'foo', href: ''}, {_id: 'foo'});
+        $rootScope.$digest();
+    }));
 
     beforeEach(inject(($templateCache) => {
         // change template not to require aggregate config but rather render single group
@@ -107,7 +111,6 @@ describe('monitoring', () => {
     }));
 
     it('can edit item', inject(($controller, $rootScope, session) => {
-        session.identity = {_id: 'foo'};
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),
             item = {};
@@ -126,7 +129,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for stage', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123'};
             var criteria = cards.criteria(card);
 
@@ -143,7 +145,6 @@ describe('monitoring', () => {
         it('can get criteria for personal', inject((cards, session) => {
             var card = {type: 'personal'};
 
-            session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({
@@ -162,7 +163,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for saved search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {type: 'search', search: {filter: {query: {q: 'foo'}}}};
             var criteria = cards.criteria(card);
 
@@ -170,7 +170,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for spike desk', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card: any = {type: 'spike'};
             var criteria = cards.criteria(card);
 
@@ -183,7 +182,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for highlight', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
@@ -194,7 +192,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for stage with search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', query: 'test'};
             var criteria = cards.criteria(card);
 
@@ -204,14 +201,12 @@ describe('monitoring', () => {
         it('can get criteria for personal with search', inject((cards, session) => {
             var card = {type: 'personal', query: 'test'};
 
-            session.identity = {_id: 'foo'};
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.query.query_string.query).toBe('test');
         }));
 
         it('can get criteria for spike with search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'spike', query: 'test'};
             var criteria = cards.criteria(card);
 
@@ -219,7 +214,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for highlight with search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {type: 'highlights', query: 'test'};
             var queryParam = {highlight: '123'};
             var criteria = cards.criteria(card, null, queryParam);
@@ -228,7 +222,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for file type filter', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text'])};
             var criteria = cards.criteria(card);
 
@@ -238,7 +231,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for saved search with search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
                 search: {filter: {query: {q: 'foo', type: '["picture"]'}}},
             };
@@ -249,7 +241,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for file type filter with search', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text']), query: 'test'};
             var criteria = cards.criteria(card);
 
@@ -259,7 +250,6 @@ describe('monitoring', () => {
         }));
 
         it('can get criteria for multiple file type filter', inject((cards, session) => {
-            session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
             var criteria = cards.criteria(card);
 
@@ -272,21 +262,20 @@ describe('monitoring', () => {
     describe('monitoring group directive', () => {
         it('can update items on item:move event',
             (done) => inject(($rootScope, $compile, $q, api, $timeout, session) => {
-                session.identity = {_id: 'foo'};
                 var scope = $rootScope.$new();
 
                 $compile('<div sd-monitoring-view></div>')(scope);
-                scope.$digest();
+                scope.$apply();
 
                 spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
-                scope.$digest();
+                scope.$apply();
 
                 expect(api.query).not.toHaveBeenCalled();
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
-                scope.$digest();
+                scope.$apply();
 
                 setTimeout(() => {
                     expect(api.query).toHaveBeenCalled();
@@ -303,14 +292,11 @@ describe('monitoring', () => {
                 var scope = $rootScope.$new();
 
                 $compile('<div sd-monitoring-view></div>')(scope);
-
-                session.identity = {_id: 'foo'};
-                scope.$digest();
+                scope.$apply();
 
                 spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
                 spyOn(search, 'mergeItems');
 
-                session.identity = {_id: 'foo'};
                 scope.$broadcast('ingest:update', {});
 
                 setTimeout(() => {
@@ -329,7 +315,6 @@ describe('monitoring', () => {
             authoringWorkspace: AuthoringWorkspaceService,
             session,
         ) => {
-            session.identity = {_id: 'foo'};
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);
 

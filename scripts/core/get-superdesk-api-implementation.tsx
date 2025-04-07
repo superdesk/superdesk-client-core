@@ -229,9 +229,10 @@ export const formatDate = (
     } else {
         const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
         const keepLocalTime = timezone === 'browser';
+        const defaultTimezone = appConfig.default_timezone || moment.tz.guess();
 
         return momentDate
-            .tz(appConfig.default_timezone, keepLocalTime)
+            .tz(defaultTimezone, keepLocalTime)
             .format(dateFormat);
     }
 };
