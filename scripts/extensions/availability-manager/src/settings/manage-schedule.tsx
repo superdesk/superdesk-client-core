@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
-import {keyBy, range} from 'lodash';
+import {keyBy, noop, range} from 'lodash';
 import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex} from '../constants';
 import {getLabelForStatus, getStylesForStatusDot, setUserAvailability, validateSchedule} from '../utils';
@@ -145,7 +145,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                 }, {}),
                 defaultAvailabilityRecord: res,
             });
-        });
+        }).catch(noop);
     }
 
     componentWillUnmount(): void {
