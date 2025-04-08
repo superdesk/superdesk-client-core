@@ -1,4 +1,5 @@
 import {mergeSets} from '@sourcefabric/common';
+import {keyBy} from 'lodash';
 import * as React from 'react';
 import {
     FormLabel,
@@ -12,6 +13,7 @@ import {ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
+const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
 
 const placeholder: IWorkingHours = {
     start_time: '',
@@ -38,6 +40,7 @@ interface IProps {
 export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
     render() {
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
+        const tagsVocabularyItems = keyBy(tagsVocabulary.items, (item) => item.qcode);
 
         const workingHours: Array<IWorkingHours> = (() => {
             if (this.props.value == null || this.props.value.length < 1) {
@@ -118,7 +121,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                 kind="synchronous"
                                 value={item.tags ?? []}
                                 getId={({code}) => code}
-                                getLabel={({code}) => code}
+                                getLabel={({code}) => getVocabularyItemNameTranslated(tagsVocabularyItems[code])}
                                 getOptions={() => {
                                     if (this.props.tagsWhitelist.size < 1) {
                                         return tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}));
