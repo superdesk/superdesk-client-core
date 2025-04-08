@@ -51,8 +51,12 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
 
         return this.props.children({
             labels: [
-                <FormLabel text={gettext('Working hours')} noMinHeight key="Working hours" />,
-                <FormLabel text={tagsVocabulary.display_name} noMinHeight key="Tags" />,
+                <div style={{whiteSpace: 'nowrap'}} key="working hours">
+                    <FormLabel text={gettext('Working hours')} noMinHeight />
+                </div>,
+                <div style={{whiteSpace: 'nowrap'}} key="tags">
+                    <FormLabel text={tagsVocabulary.display_name} noMinHeight />
+                </div>,
                 <span key="controls" />, // column for controls
             ],
             inputs: workingHours.map((item, rowIndex) => {
@@ -136,6 +140,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                     ));
                                 }}
                                 allowMultiple
+                                fullWidth={false}
                                 disabled={disabled}
                             />
                         </div>

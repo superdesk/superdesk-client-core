@@ -239,9 +239,6 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                             style={{
                                                                 display: 'flex',
                                                                 alignItems: 'center',
-
-                                                                // PR-TODO: drop after fix in ui-framework
-                                                                minWidth: 200,
                                                             }}
                                                             key="status"
                                                         >
@@ -292,6 +289,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                         </Spacer>
                                                                     </Wrapper>
                                                                 )}
+                                                                fullWidth={false}
                                                                 inlineLabel
                                                                 labelHidden
                                                                 required
