@@ -362,6 +362,8 @@ export function getSuperdeskApiImplementation(
                 getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
                 isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
                 getVocabularyItemNameTranslated: getVocabularyItemNameTranslated,
+                pickVocabularyItems: (vocabularyId, itemsToInclude) =>
+                    sdApi.vocabularies.pickVocabularyItems(vocabularyId, itemsToInclude),
             },
             attachment: attachmentsApi,
             users: {

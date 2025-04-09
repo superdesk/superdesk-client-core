@@ -3112,6 +3112,11 @@ declare module 'superdesk-api' {
                  * If language is not passed, it will default to user interface language
                  */
                 getVocabularyItemNameTranslated(item: IVocabularyItem, language?: string): string;
+
+                pickVocabularyItems(
+                    vocabularyId: string,
+                    itemsToInclude: Set<IVocabularyItem['qcode']>,
+                ): Array<IVocabularyItem>;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
