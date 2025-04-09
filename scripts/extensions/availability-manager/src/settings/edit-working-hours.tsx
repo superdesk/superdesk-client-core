@@ -1,19 +1,17 @@
-import {mergeSets} from '@sourcefabric/common';
-import {keyBy} from 'lodash';
 import * as React from 'react';
 import {
     FormLabel,
     IconButton,
     Spacer,
     TimePicker,
-    TreeSelect,
 } from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
+import {getTags} from '../utils';
 
 const {gettext} = superdesk.localization;
-const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
+const {VocabularySelect} = superdesk.components;
 
 const placeholder: IWorkingHours = {
     start_time: '',
@@ -40,7 +38,6 @@ interface IProps {
 export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
     render() {
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
-        const tagsVocabularyItems = keyBy(tagsVocabulary.items, (item) => item.qcode);
 
         const workingHours: Array<IWorkingHours> = (() => {
             if (this.props.value == null || this.props.value.length < 1) {
@@ -115,36 +112,29 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
 
                     (
                         <div style={{display: 'flex', alignItems: 'center'}} key="tag-select">
-                            <TreeSelect
-                                inlineLabel
-                                labelHidden
-                                kind="synchronous"
-                                value={item.tags ?? []}
-                                getId={({code}) => code}
-                                getLabel={({code}) => getVocabularyItemNameTranslated(tagsVocabularyItems[code])}
+                            <VocabularySelect
+                                label={{text: tagsVocabulary.display_name, hidden: true}}
+                                value={(item.tags ?? []).map(({code}) => code)}
                                 getOptions={() => {
-                                    if (this.props.tagsWhitelist.size < 1) {
-                                        return tagsVocabulary.items.map((item) => ({value: {code: item.qcode}}));
-                                    } else {
-                                        const current = new Set<string>((item.tags ?? []).map(({code}) => code));
-
-                                        return Array.from(mergeSets(current, this.props.tagsWhitelist))
-                                            .map((code) => ({value: {code}}));
-                                    }
+                                    return getTags(
+                                        this.props.tagsWhitelist,
+                                        new Set<string>((item.tags ?? []).map(({code}) => code)),
+                                    );
                                 }}
-                                onChange={(nextTags) => {
+                                onChange={(qcodes) => {
                                     this.props.onChange(setValueAtIndex(
                                         workingHours,
                                         rowIndex,
                                         {
                                             ...item,
-                                            tags: nextTags,
+                                            tags: qcodes.map((qcode) => ({code: qcode})),
                                         },
                                     ));
                                 }}
-                                allowMultiple
+                                multiple={true}
                                 fullWidth={false}
                                 disabled={disabled}
+                                selectBranchWithChildren
                             />
                         </div>
                     ),

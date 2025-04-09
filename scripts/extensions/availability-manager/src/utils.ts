@@ -1,4 +1,6 @@
-import {formatTime} from '@sourcefabric/common';
+import {formatTime, mergeSets} from '@sourcefabric/common';
+import {IVocabularyItem} from 'superdesk-api';
+import {TAGS_VOCABULARY_ID} from './constants';
 import {IAvailabilityRecord, IDefaultAvailability, IScheduleRecord, IWorkingHours} from './interfaces';
 import {superdesk} from './superdesk';
 
@@ -119,4 +121,17 @@ export function setUserAvailability(
             'If-Match': currentAvailability._etag,
         },
     });
+}
+
+export function getTags(tagsWhitelist: Set<string>, alreadySelected: Set<string>): Array<IVocabularyItem> {
+    const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
+
+    if (tagsWhitelist.size < 1) {
+        return tagsVocabulary.items;
+    } else {
+        return superdesk.entities.vocabulary.pickVocabularyItems(
+            tagsVocabulary._id,
+            mergeSets(tagsWhitelist, alreadySelected),
+        );
+    }
 }
