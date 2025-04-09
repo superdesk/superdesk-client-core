@@ -2308,6 +2308,21 @@ declare module 'superdesk-api' {
         disabled?: boolean;
     }
 
+    export interface IPropsVocabularySelect {
+        label: {
+            text: string;
+            hidden?: boolean;
+            position?: 'top' | 'left'; // defaults to top
+        },
+        getOptions(): Array<IVocabularyItem>;
+        value: Array<IVocabularyItem['qcode']>;
+        onChange(value: Array<IVocabularyItem['qcode']>): void;
+        multiple?: boolean; // defaults to false
+        selectBranchWithChildren?: boolean;
+        disabled?: boolean;
+        fullWidth: boolean;
+    }
+
     export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -3180,6 +3195,7 @@ declare module 'superdesk-api' {
             prepareSuperdeskQuery(endpoint: string, query: ISuperdeskQuery): IHttpRequestOptionsLocal & {method: 'GET'};
         },
         components: {
+            VocabularySelect: React.ComponentType<IPropsVocabularySelect>;
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,

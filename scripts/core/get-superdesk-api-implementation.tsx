@@ -121,6 +121,7 @@ import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
+import {VocabularySelect} from './ui/components/vocabulary-select';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -431,6 +432,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         components: {
+            VocabularySelect,
             UserHtmlSingleLine,
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
