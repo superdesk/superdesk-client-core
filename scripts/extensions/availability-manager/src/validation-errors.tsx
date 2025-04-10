@@ -13,7 +13,7 @@ interface IProps {
 export class ValidationErrors extends React.PureComponent<IProps> {
     render() {
         return (
-            <div ref={this.props.scrollRef}>
+            <div ref={this.props.scrollRef} style={{width: '100%'}}>
                 <Alert style="hollow" type="alert" fullWidth margin="none">
                     <Spacer v gap="8" noWrap>
                         <Label text={gettext('Errors')} type="alert" />
