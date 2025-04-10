@@ -3393,6 +3393,15 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+            filterFlatTree<T>(
+                options: {
+                    itemsFlat: Array<T>;
+                    filterFn: (item: T) => boolean;
+                    getId: (item: T) => string;
+                    getParentId: (item: T) => string | undefined | null;
+                    includeParents: boolean;
+                },
+            ): Array<T>;
 
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;

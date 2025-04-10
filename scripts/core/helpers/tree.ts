@@ -1,3 +1,5 @@
+import {notNullOrUndefined} from '@sourcefabric/common';
+import {keyBy} from 'lodash';
 import {ITreeNode} from 'superdesk-api';
 
 /**
@@ -81,4 +83,54 @@ export function sortTree<T>(
     }
 
     return result;
+}
+
+/**
+ * Will include idsToInclude and parents.
+ */
+export function filterFlatTree<T>(
+    options: {
+        itemsFlat: Array<T>;
+        filterFn: (item: T) => boolean;
+        getId: (item: T) => string;
+        getParentId: (item: T) => string | undefined | null;
+        includeParents: boolean;
+    },
+): Array<T> {
+    const {
+        itemsFlat,
+        filterFn,
+        getId,
+        getParentId,
+        includeParents,
+    } = options;
+
+    const itemsKeyed = keyBy(itemsFlat, (item) => getId(item));
+
+    function getParents(item: T): Array<T> {
+        const parentId = getParentId(item);
+
+        if (parentId == null) {
+            return [item];
+        } else {
+            return [item, ...getParents(itemsKeyed[parentId])];
+        }
+    }
+
+    function getChildren(item: T): Array<T> {
+        const directChildren = itemsFlat.filter((listItem) => getParentId(listItem) === getId(item));
+
+        if (directChildren.length < 1) {
+            return [];
+        } else {
+            return [...directChildren, ...directChildren.flatMap((item) => getChildren(item))];
+        }
+    }
+
+    const itemsToInclude = itemsFlat.filter((item) => filterFn(item));
+
+    return itemsToInclude.flatMap((item) => [
+        ...(includeParents ? getParents(item).reverse() : [item]),
+        ...getChildren(item),
+    ]);
 }

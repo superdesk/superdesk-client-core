@@ -12,7 +12,7 @@ import {Card} from '../card';
 import {IAvailabilityRecord, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
-import {getStatusColor, getTags, setUserAvailability} from '../utils';
+import {getStatusColor, setUserAvailability} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 
@@ -210,14 +210,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     <VocabularySelect
                                         label={{text: tagsVocabulary.display_name}}
                                         value={(this.state.defaultAvailability?.tags ?? []).map(({code}) => code)}
-                                        getOptions={() => {
-                                            return getTags(
-                                                tagsWhitelist,
-                                                new Set<string>(
-                                                    (this.state.defaultAvailability?.tags ?? []).map(({code}) => code),
-                                                ),
-                                            );
-                                        }}
+                                        getOptions={() => tagsVocabulary.items}
                                         onChange={(val) => {
                                             this.setState({savingTags: true});
 
