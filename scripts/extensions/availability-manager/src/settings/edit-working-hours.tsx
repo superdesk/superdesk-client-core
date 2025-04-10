@@ -145,7 +145,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                     ));
                                 }}
                                 multiple={true}
-                                fullWidth={false}
+                                fullWidth={true}
                                 disabled={disabled}
                                 selectBranchWithChildren
                             />

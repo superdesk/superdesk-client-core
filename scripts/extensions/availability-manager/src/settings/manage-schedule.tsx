@@ -215,7 +215,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                 style={{
                                     display: 'grid',
                                     gap: 'var(--gap-1)',
-                                    gridTemplateColumns: range(0, columnCount).map(() => 'min-content').join(' '),
+                                    gridTemplateColumns: range(0, columnCount).map(() => 'max-content').join(' '),
                                 }}
                             >
                                 {
@@ -289,7 +289,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                         </Spacer>
                                                                     </Wrapper>
                                                                 )}
-                                                                fullWidth={false}
+                                                                fullWidth={true}
                                                                 inlineLabel
                                                                 labelHidden
                                                                 required
