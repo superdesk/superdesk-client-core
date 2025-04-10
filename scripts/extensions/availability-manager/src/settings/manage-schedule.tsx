@@ -107,18 +107,18 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
             );
         } else {
             this.setState({savingInProgress: true});
+            const initial: Required<IDefaultAvailability>['working_days'] = {};
 
             setUserAvailability(
                 this.props.user._id,
                 this.state.defaultAvailabilityRecord,
                 {
-                    working_days:
-                        Object.entries(this.state.schedule)
-                            .reduce((acc: IDefaultAvailability['working_days'], [index, value]) => {
-                                acc[dayCodes[index as IDayIndex]] = value;
+                    working_days: Object.entries(this.state.schedule)
+                        .reduce((acc, [index, value]) => {
+                            acc[dayCodes[index as IDayIndex]] = value;
 
-                                return acc;
-                            }, {} as IDefaultAvailability['working_days']),
+                            return acc;
+                        }, initial),
                 },
             ).then(() => {
                 this.props.onClose();
@@ -136,16 +136,18 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         httpRequestJsonLocal<IDefaultAvailability>({
             method: 'GET',
             path: `/default_user_availability/${this.props.user._id}`,
-        }).then((res) => {
-            this.setState({
-                schedule: Object.entries(res.working_days).reduce((acc: IState['schedule'], [dayCode, value]) => {
-                    acc[dayIndexesByDayCode[dayCode]] = value;
+        }).catch(noop).then((res) => {
+            if (res != null) {
+                this.setState({
+                    schedule: Object.entries(res.working_days ?? {}).reduce((acc: IState['schedule'], [dayCode, value]) => {
+                        acc[dayIndexesByDayCode[dayCode]] = value;
 
-                    return acc;
-                }, {}),
-                defaultAvailabilityRecord: res,
-            });
-        }).catch(noop);
+                        return acc;
+                    }, {}),
+                    defaultAvailabilityRecord: res,
+                });
+            }
+        });
     }
 
     componentWillUnmount(): void {
