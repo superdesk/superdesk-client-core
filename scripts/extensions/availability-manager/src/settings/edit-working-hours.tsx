@@ -1,5 +1,6 @@
 import {mergeSets} from '@sourcefabric/common';
 import * as React from 'react';
+import {IVocabularyItem} from 'superdesk-api';
 import {
     FormLabel,
     IconButton,
@@ -26,6 +27,24 @@ function setValueAtIndex<T>(array: Array<T>, index: number, item: T): Array<T> {
     copy[index] = item;
 
     return copy;
+}
+
+function getFilteredTags(alreadySelected: Set<string>, tagsWhitelist: Set<string>): Array<IVocabularyItem> {
+    const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
+
+    if (tagsWhitelist.size < 1) {
+        return tagsVocabulary.items;
+    } else {
+        const itemsToInclude = mergeSets(tagsWhitelist, alreadySelected);
+
+        return filterFlatTree({
+            itemsFlat: tagsVocabulary.items,
+            filterFn: (item) => itemsToInclude.has(item.qcode),
+            getId: (item) => item.qcode,
+            getParentId: (item) => item.parent,
+            includeParents: false,
+        });
+    }
 }
 
 interface IProps {
@@ -116,24 +135,10 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                             <VocabularySelect
                                 label={{text: tagsVocabulary.display_name, hidden: true}}
                                 value={(item.tags ?? []).map(({code}) => code)}
-                                getOptions={() => {
-                                    const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
-                                    const alreadySelected = new Set<string>((item.tags ?? []).map(({code}) => code));
-
-                                    if (this.props.tagsWhitelist.size < 1) {
-                                        return tagsVocabulary.items;
-                                    } else {
-                                        const itemsToInclude = mergeSets(this.props.tagsWhitelist, alreadySelected);
-
-                                        return filterFlatTree({
-                                            itemsFlat: tagsVocabulary.items,
-                                            filterFn: (item) => itemsToInclude.has(item.qcode),
-                                            getId: (item) => item.qcode,
-                                            getParentId: (item) => item.parent,
-                                            includeParents: false,
-                                        });
-                                    }
-                                }}
+                                getOptions={() => getFilteredTags(
+                                    new Set<string>((item.tags ?? []).map(({code}) => code)),
+                                    this.props.tagsWhitelist,
+                                )}
                                 onChange={(qcodes) => {
                                     this.props.onChange(setValueAtIndex(
                                         workingHours,
