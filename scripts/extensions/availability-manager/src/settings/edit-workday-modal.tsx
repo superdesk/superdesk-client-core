@@ -75,6 +75,59 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
         });
     }
 
+    private save() {
+        const {workingDay} = this.state;
+
+        const validationError = validateWorkingHours(
+            workingDay.working_hours ?? [],
+            locale.code,
+        );
+
+        if (validationError != null) {
+            this.setState({validationError}, () => {
+                this.errorsElementRef.current?.scrollIntoView();
+            });
+
+            return;
+        }
+
+        this.setState({savingInProgress: true});
+
+        // drop working hours if working day is not partial
+        const workingDayNext: IAvailabilityRecord = workingDay.status === 'partial'
+            ? workingDay
+            : {...workingDay, working_hours: []};
+
+        const savePromise = (() => {
+            if (this.props.workingDay.kind === 'saved') {
+                return httpRequestJsonLocal<IAvailabilityRecord>({
+                    method: 'PATCH',
+                    path: `/user_availability/${workingDay._id}`,
+                    payload: generatePatch(this.props.workingDay.value, workingDayNext),
+                    headers: {
+                        'If-Match': workingDay._etag,
+                    },
+                });
+            } else if (this.props.workingDay.kind === 'draft') {
+                return httpRequestJsonLocal<IAvailabilityRecord>({
+                    method: 'POST',
+                    path: '/user_availability',
+                    payload: workingDayNext,
+                });
+            } else {
+                return assertNever(this.props.workingDay);
+            }
+        })();
+
+        savePromise.then((res) => {
+            this.handleClose(res);
+        }).finally(() => {
+            if (this._mounted) {
+                this.setState({savingInProgress: false});
+            }
+        });
+    }
+
     componentDidMount(): void {
         this._mounted = true;
     }
@@ -116,55 +169,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                         <Button
                             text={gettext('Save')}
                             type="primary"
-                            onClick={() => {
-                                const validationError = validateWorkingHours(
-                                    this.state.workingDay.working_hours ?? [],
-                                    locale.code,
-                                );
-
-                                if (validationError != null) {
-                                    this.setState({validationError}, () => {
-                                        this.errorsElementRef.current?.scrollIntoView();
-                                    });
-
-                                    return;
-                                }
-
-                                this.setState({savingInProgress: true});
-
-                                const workingDayNext: IAvailabilityRecord = workingDay.status === 'partial'
-                                    ? workingDay
-                                    : {...workingDay, working_hours: []};
-
-                                const savePromise = (() => {
-                                    if (this.props.workingDay.kind === 'saved') {
-                                        return httpRequestJsonLocal<IAvailabilityRecord>({
-                                            method: 'PATCH',
-                                            path: `/user_availability/${workingDay._id}`,
-                                            payload: generatePatch(this.props.workingDay.value, workingDayNext),
-                                            headers: {
-                                                'If-Match': workingDay._etag,
-                                            },
-                                        });
-                                    } else if (this.props.workingDay.kind === 'draft') {
-                                        return httpRequestJsonLocal<IAvailabilityRecord>({
-                                            method: 'POST',
-                                            path: '/user_availability',
-                                            payload: workingDayNext,
-                                        });
-                                    } else {
-                                        return assertNever(this.props.workingDay);
-                                    }
-                                })();
-
-                                savePromise.then((res) => {
-                                    this.handleClose(res);
-                                }).finally(() => {
-                                    if (this._mounted) {
-                                        this.setState({savingInProgress: false});
-                                    }
-                                });
-                            }}
+                            onClick={() => this.save()}
                             disabled={this.state.savingInProgress}
                             isLoading={this.state.savingInProgress}
                             noMargin
