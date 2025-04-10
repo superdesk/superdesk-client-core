@@ -86,7 +86,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                             <div
                                 style={{
                                     color: 'var(--color-text-light)',
-                                    paddingInline: '4px',
+                                    paddingInline: 'var(--gap-0-5)',
                                 }}
                             >
                                 {gettext('to')}

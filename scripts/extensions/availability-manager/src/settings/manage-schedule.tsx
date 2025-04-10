@@ -214,7 +214,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             <div
                                 style={{
                                     display: 'grid',
-                                    gap: '8px',
+                                    gap: 'var(--gap-1)',
                                     gridTemplateColumns: range(0, columnCount).map(() => 'min-content').join(' '),
                                 }}
                             >
