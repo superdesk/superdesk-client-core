@@ -2,7 +2,6 @@ import {OrderedMap} from 'immutable';
 import ng from 'core/services/ng';
 import {IArticle, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
-import {keyBy} from 'lodash';
 
 function getAll(): OrderedMap<IVocabulary['_id'], IVocabulary> {
     return OrderedMap<string, IVocabulary>(
@@ -93,29 +92,6 @@ function getCustomFieldVocabularies(): Array<IVocabulary> {
     return getAll().filter((vocabulary) => isCustomFieldVocabulary(vocabulary)).toArray();
 }
 
-/**
- * Will include children
- */
-function pickVocabularyItems(
-    vocabularyId: string,
-    itemsToInclude: Set<IVocabularyItem['qcode']>,
-): Array<IVocabularyItem> {
-    const vocabulary = getAll().get(vocabularyId);
-    const itemsKeyed = keyBy(vocabulary.items, (item) => item.qcode);
-
-    const isAllowed = (item: IVocabularyItem): boolean => {
-        if (itemsToInclude.has(item.qcode)) {
-            return true;
-        } else if (item.parent == null) {
-            return false;
-        } else {
-            return isAllowed(itemsKeyed[item.parent]);
-        }
-    };
-
-    return vocabulary.items.filter((item) => isAllowed(item));
-}
-
 
 interface IVocabulariesApi {
     getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
@@ -135,10 +111,6 @@ interface IVocabulariesApi {
         propertyName?: keyof IVocabularyItem,
         schemeName?: string,
     ) => string;
-    pickVocabularyItems(
-        vocabularyId: string,
-        itemsToInclude: Set<IVocabularyItem['qcode']>,
-    ): Array<IVocabularyItem>;
 }
 
 export const vocabularies: IVocabulariesApi = {
@@ -150,5 +122,4 @@ export const vocabularies: IVocabulariesApi = {
     vocabularyItemsToString,
     isCustomVocabulary,
     getCustomFieldVocabularies,
-    pickVocabularyItems,
 };
