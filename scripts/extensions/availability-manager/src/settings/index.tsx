@@ -122,311 +122,309 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
         );
 
         return (
-            <Page>
-                <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
-                    {(res) => {
-                        const grouped = keyBy(res._items, (item) => item.date);
+            <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
+                {(res) => {
+                    const grouped = keyBy(res._items, (item) => item.date);
 
-                        const dayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
-                            const {day, dayFromOtherMonth} = props.day;
+                    const dayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
+                        const {day, dayFromOtherMonth} = props.day;
 
-                            const dateKey = format(props.day.date, 'yyyy-MM-dd');
-                            const workingDay: IAvailabilityRecord | null = grouped[dateKey];
+                        const dateKey = format(props.day.date, 'yyyy-MM-dd');
+                        const workingDay: IAvailabilityRecord | null = grouped[dateKey];
 
-                            if (this.dayRefs[dateKey] == null) {
-                                this.dayRefs[dateKey] = React.createRef<HTMLDivElement>();
+                        if (this.dayRefs[dateKey] == null) {
+                            this.dayRefs[dateKey] = React.createRef<HTMLDivElement>();
+                        }
+
+                        const background: React.CSSProperties['background'] = (() => {
+                            if (dayFromOtherMonth || workingDay == null) {
+                                return undefined;
+                            } else {
+                                return getStatusColor(workingDay.status);
                             }
-
-                            const background: React.CSSProperties['background'] = (() => {
-                                if (dayFromOtherMonth || workingDay == null) {
-                                    return undefined;
-                                } else {
-                                    return getStatusColor(workingDay.status);
-                                }
-                            })();
-
-                            return (
-                                <div
-                                    key={day}
-                                    ref={this.dayRefs[dateKey]}
-                                    style={{
-                                        opacity: dayFromOtherMonth ? 0.5 : undefined,
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        color: background == null ? undefined : getTextColor(background),
-                                        background: background,
-                                        borderRadius: 20,
-                                        cursor: 'pointer',
-                                    }}
-                                    onClick={() => {
-                                        this.setState({
-                                            overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
-                                        });
-                                    }}
-                                >
-                                    {day}
-                                </div>
-                            );
-                        };
+                        })();
 
                         return (
-                            <div>
-                                <div>
-                                    <VocabularySelect
-                                        label={{text: languagesVocabulary.display_name}}
-                                        value={this.state.defaultAvailability?.language ?? []}
-                                        getOptions={() => languagesVocabulary.items}
-                                        onChange={(val) => {
-                                            this.setState({savingLanguages: true});
-
-                                            setUserAvailability(
-                                                this.props.user._id,
-                                                this.state.defaultAvailability,
-                                                {
-                                                    language: val,
-                                                },
-                                            )
-                                                .then((res) => {
-                                                    this.setState({
-                                                        defaultAvailability: res,
-                                                    });
-                                                })
-                                                .finally(() => {
-                                                    this.setState({savingLanguages: false});
-                                                });
-                                        }}
-                                        disabled={this.state.savingLanguages}
-                                        multiple={false}
-                                        fullWidth={true}
-                                    />
-                                </div>
-
-                                <SpacerBlock v gap="16" />
-
-                                <div>
-                                    <VocabularySelect
-                                        label={{text: tagsVocabulary.display_name}}
-                                        value={(this.state.defaultAvailability?.tags ?? []).map(({code}) => code)}
-                                        getOptions={() => tagsVocabulary.items}
-                                        onChange={(val) => {
-                                            this.setState({savingTags: true});
-
-                                            setUserAvailability(
-                                                this.props.user._id,
-                                                this.state.defaultAvailability,
-                                                {
-                                                    tags: val.map((qcode) => ({code: qcode})),
-                                                },
-                                            )
-                                                .then((res) => {
-                                                    this.setState({
-                                                        defaultAvailability: res,
-                                                    });
-                                                })
-                                                .finally(() => {
-                                                    this.setState({savingTags: false});
-                                                });
-                                        }}
-                                        disabled={this.state.savingTags}
-                                        fullWidth={true}
-                                        multiple={true}
-                                        selectBranchWithChildren={true}
-                                    />
-                                </div>
-
-                                <Spacer
-                                    h
-                                    gap="16"
-                                    noWrap
-                                    justifyContent="space-between"
-                                    style={{paddingBlock: verticalSpacing}}
-                                >
-                                    <Spacer h gap="0" noGrow>
-                                        <IconButton
-                                            icon="chevron-left-thin"
-                                            ariaValue={gettext('Previous')}
-                                            onClick={() => {
-                                                this.setState({
-                                                    calendarStart: addMonths(
-                                                        this.state.calendarStart,
-                                                        -monthsToDisplayAtOnce,
-                                                    ),
-                                                });
-                                            }}
-                                        />
-                                        <IconButton
-                                            icon="chevron-right-thin"
-                                            ariaValue={gettext('Next')}
-                                            onClick={() => {
-                                                this.setState({
-                                                    calendarStart: addMonths(
-                                                        this.state.calendarStart,
-                                                        monthsToDisplayAtOnce,
-                                                    ),
-                                                });
-                                            }}
-                                        />
-
-                                        <SpacerBlock h gap="8" />
-
-                                        <h3>{gettext('Availability schedule')}</h3>
-                                    </Spacer>
-
-                                    <Button
-                                        text={gettext('Manage')}
-                                        style="hollow"
-                                        onClick={() => {
-                                            showModal(({closeModal}) => (
-                                                <ManageScheduleModal onClose={closeModal} user={this.props.user} />
-                                            ));
-                                        }}
-                                    />
-                                </Spacer>
-
-                                <hr
-                                    style={{borderColor: 'graylight', marginBlock: 0, marginBlockEnd: verticalSpacing}}
-                                />
-
-                                <div
-                                    style={{
-                                        display: 'grid',
-                                        gridTemplateColumns: 'repeat(2, auto)',
-                                        gridRowGap: '1.4rem',
-                                        columnGap: '2.8rem',
-                                        placeItems: 'start',
-                                    }}
-                                >
-                                    {
-                                        months.map((month, i) => (
-                                            <MonthCalendar
-                                                key={i}
-                                                month={month}
-                                                firstDayOfWeek={firstDayOfWeek}
-                                                locale={locale.code}
-                                                dayTemplate={dayTemplate}
-                                            />
-                                        ))
-                                    }
-                                </div>
-
-                                {(() => {
-                                    const {overlay} = this.state;
-
-                                    if (overlay == null) {
-                                        return null;
-                                    } else if (overlay.kind === 'view') {
-                                        const handleClose = () => {
-                                            this.setState({overlay: null});
-                                        };
-
-                                        const workingDay = grouped[overlay.date];
-
-                                        /**
-                                         * After creating a new item we might switch to view mode.
-                                         * It takes a moment for live query to pick up the new item
-                                         * We render `null` initially and when the item arrives,
-                                         * it will render the intended component.
-                                         */
-                                        if (workingDay == null) {
-                                            return null;
-                                        }
-
-                                        return (
-                                            <PopupPositioner
-                                                getReferenceElement={
-                                                    () => this.dayRefs[overlay.date].current as HTMLElement
-                                                }
-                                                placement="bottom-end"
-                                                onClose={handleClose}
-                                            >
-                                                <Card paddingBase="0">
-                                                    <WorkingDayView
-                                                        day={workingDay}
-                                                        onEdit={() => {
-                                                            handleClose();
-                                                            this.setState({
-                                                                overlay: {kind: 'edit', date: overlay.date},
-                                                            });
-                                                        }}
-                                                        onRemove={() => {
-                                                            httpRequestVoidLocal({
-                                                                method: 'DELETE',
-                                                                path: `/user_availability/${workingDay._id}`,
-                                                                headers: {
-                                                                    'If-Match': workingDay._etag,
-                                                                },
-                                                            }).then(() => {
-                                                                handleClose();
-                                                            });
-                                                        }}
-                                                        onClose={handleClose}
-                                                    />
-                                                </Card>
-                                            </PopupPositioner>
-                                        );
-                                    } else if (overlay.kind === 'edit' || overlay.kind === 'create') {
-                                        const handleClose = () => {
-                                            this.setState({overlay: null});
-                                        };
-
-                                        const workingDay = grouped[overlay.date];
-
-                                        const referenceElement = this.dayRefs[overlay.date].current;
-
-                                        if (referenceElement == null) {
-                                            throw new Error();
-                                        }
-
-                                        return (
-                                            ReactDOM.createPortal(
-                                                (
-                                                    <EditWorkdayModal
-                                                        workingDay={(() => {
-                                                            if (overlay.kind === 'edit') {
-                                                                return {kind: 'saved', value: workingDay};
-                                                            } else if (overlay.kind === 'create') {
-                                                                return {
-                                                                    kind: 'draft',
-                                                                    template: {
-                                                                        date: overlay.date,
-                                                                        status: 'available',
-                                                                    } satisfies Omit<
-                                                                        IAvailabilityRecord, keyof IBaseRestApiResponse
-                                                                    >,
-                                                                };
-                                                            } else {
-                                                                return assertNever(overlay);
-                                                            }
-                                                        })()}
-                                                        onClose={(item) => {
-                                                            handleClose();
-
-                                                            if (item?.status === 'partial') {
-                                                                this.setState({
-                                                                    overlay: {kind: 'view', date: overlay.date},
-                                                                });
-                                                            } else {
-                                                                this.setState({overlay: null});
-                                                            }
-                                                        }}
-                                                        tagsWhitelist={tagsWhitelist}
-                                                    />
-                                                ),
-                                                document.body,
-                                            )
-                                        );
-                                    } else {
-                                        return assertNever(overlay);
-                                    }
-                                })()}
+                            <div
+                                key={day}
+                                ref={this.dayRefs[dateKey]}
+                                style={{
+                                    opacity: dayFromOtherMonth ? 0.5 : undefined,
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    color: background == null ? undefined : getTextColor(background),
+                                    background: background,
+                                    borderRadius: 20,
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    this.setState({
+                                        overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
+                                    });
+                                }}
+                            >
+                                {day}
                             </div>
                         );
-                    }}
-                </WithAvailabilityRecordsQuery>
-            </Page>
+                    };
+
+                    return (
+                        <Page>
+                            <div>
+                                <VocabularySelect
+                                    label={{text: languagesVocabulary.display_name}}
+                                    value={this.state.defaultAvailability?.language ?? []}
+                                    getOptions={() => languagesVocabulary.items}
+                                    onChange={(val) => {
+                                        this.setState({savingLanguages: true});
+
+                                        setUserAvailability(
+                                            this.props.user._id,
+                                            this.state.defaultAvailability,
+                                            {
+                                                language: val,
+                                            },
+                                        )
+                                            .then((res) => {
+                                                this.setState({
+                                                    defaultAvailability: res,
+                                                });
+                                            })
+                                            .finally(() => {
+                                                this.setState({savingLanguages: false});
+                                            });
+                                    }}
+                                    disabled={this.state.savingLanguages}
+                                    multiple={false}
+                                    fullWidth={true}
+                                />
+                            </div>
+
+                            <SpacerBlock v gap="16" />
+
+                            <div>
+                                <VocabularySelect
+                                    label={{text: tagsVocabulary.display_name}}
+                                    value={(this.state.defaultAvailability?.tags ?? []).map(({code}) => code)}
+                                    getOptions={() => tagsVocabulary.items}
+                                    onChange={(val) => {
+                                        this.setState({savingTags: true});
+
+                                        setUserAvailability(
+                                            this.props.user._id,
+                                            this.state.defaultAvailability,
+                                            {
+                                                tags: val.map((qcode) => ({code: qcode})),
+                                            },
+                                        )
+                                            .then((res) => {
+                                                this.setState({
+                                                    defaultAvailability: res,
+                                                });
+                                            })
+                                            .finally(() => {
+                                                this.setState({savingTags: false});
+                                            });
+                                    }}
+                                    disabled={this.state.savingTags}
+                                    fullWidth={true}
+                                    multiple={true}
+                                    selectBranchWithChildren={true}
+                                />
+                            </div>
+
+                            <Spacer
+                                h
+                                gap="16"
+                                noWrap
+                                justifyContent="space-between"
+                                style={{paddingBlock: verticalSpacing}}
+                            >
+                                <Spacer h gap="0" noGrow>
+                                    <IconButton
+                                        icon="chevron-left-thin"
+                                        ariaValue={gettext('Previous')}
+                                        onClick={() => {
+                                            this.setState({
+                                                calendarStart: addMonths(
+                                                    this.state.calendarStart,
+                                                    -monthsToDisplayAtOnce,
+                                                ),
+                                            });
+                                        }}
+                                    />
+                                    <IconButton
+                                        icon="chevron-right-thin"
+                                        ariaValue={gettext('Next')}
+                                        onClick={() => {
+                                            this.setState({
+                                                calendarStart: addMonths(
+                                                    this.state.calendarStart,
+                                                    monthsToDisplayAtOnce,
+                                                ),
+                                            });
+                                        }}
+                                    />
+
+                                    <SpacerBlock h gap="8" />
+
+                                    <h3>{gettext('Availability schedule')}</h3>
+                                </Spacer>
+
+                                <Button
+                                    text={gettext('Manage')}
+                                    style="hollow"
+                                    onClick={() => {
+                                        showModal(({closeModal}) => (
+                                            <ManageScheduleModal onClose={closeModal} user={this.props.user} />
+                                        ));
+                                    }}
+                                />
+                            </Spacer>
+
+                            <hr
+                                style={{borderColor: 'graylight', marginBlock: 0, marginBlockEnd: verticalSpacing}}
+                            />
+
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(2, auto)',
+                                    gridRowGap: '1.4rem',
+                                    columnGap: '2.8rem',
+                                    placeItems: 'start',
+                                }}
+                            >
+                                {
+                                    months.map((month, i) => (
+                                        <MonthCalendar
+                                            key={i}
+                                            month={month}
+                                            firstDayOfWeek={firstDayOfWeek}
+                                            locale={locale.code}
+                                            dayTemplate={dayTemplate}
+                                        />
+                                    ))
+                                }
+                            </div>
+
+                            {(() => {
+                                const {overlay} = this.state;
+
+                                if (overlay == null) {
+                                    return null;
+                                } else if (overlay.kind === 'view') {
+                                    const handleClose = () => {
+                                        this.setState({overlay: null});
+                                    };
+
+                                    const workingDay = grouped[overlay.date];
+
+                                    /**
+                                     * After creating a new item we might switch to view mode.
+                                     * It takes a moment for live query to pick up the new item
+                                     * We render `null` initially and when the item arrives,
+                                     * it will render the intended component.
+                                     */
+                                    if (workingDay == null) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <PopupPositioner
+                                            getReferenceElement={
+                                                () => this.dayRefs[overlay.date].current as HTMLElement
+                                            }
+                                            placement="bottom-end"
+                                            onClose={handleClose}
+                                        >
+                                            <Card paddingBase="0">
+                                                <WorkingDayView
+                                                    day={workingDay}
+                                                    onEdit={() => {
+                                                        handleClose();
+                                                        this.setState({
+                                                            overlay: {kind: 'edit', date: overlay.date},
+                                                        });
+                                                    }}
+                                                    onRemove={() => {
+                                                        httpRequestVoidLocal({
+                                                            method: 'DELETE',
+                                                            path: `/user_availability/${workingDay._id}`,
+                                                            headers: {
+                                                                'If-Match': workingDay._etag,
+                                                            },
+                                                        }).then(() => {
+                                                            handleClose();
+                                                        });
+                                                    }}
+                                                    onClose={handleClose}
+                                                />
+                                            </Card>
+                                        </PopupPositioner>
+                                    );
+                                } else if (overlay.kind === 'edit' || overlay.kind === 'create') {
+                                    const handleClose = () => {
+                                        this.setState({overlay: null});
+                                    };
+
+                                    const workingDay = grouped[overlay.date];
+
+                                    const referenceElement = this.dayRefs[overlay.date].current;
+
+                                    if (referenceElement == null) {
+                                        throw new Error();
+                                    }
+
+                                    return (
+                                        ReactDOM.createPortal(
+                                            (
+                                                <EditWorkdayModal
+                                                    workingDay={(() => {
+                                                        if (overlay.kind === 'edit') {
+                                                            return {kind: 'saved', value: workingDay};
+                                                        } else if (overlay.kind === 'create') {
+                                                            return {
+                                                                kind: 'draft',
+                                                                template: {
+                                                                    date: overlay.date,
+                                                                    status: 'available',
+                                                                } satisfies Omit<
+                                                                    IAvailabilityRecord, keyof IBaseRestApiResponse
+                                                                >,
+                                                            };
+                                                        } else {
+                                                            return assertNever(overlay);
+                                                        }
+                                                    })()}
+                                                    onClose={(item) => {
+                                                        handleClose();
+
+                                                        if (item?.status === 'partial') {
+                                                            this.setState({
+                                                                overlay: {kind: 'view', date: overlay.date},
+                                                            });
+                                                        } else {
+                                                            this.setState({overlay: null});
+                                                        }
+                                                    }}
+                                                    tagsWhitelist={tagsWhitelist}
+                                                />
+                                            ),
+                                            document.body,
+                                        )
+                                    );
+                                } else {
+                                    return assertNever(overlay);
+                                }
+                            })()}
+                        </Page>
+                    );
+                }}
+            </WithAvailabilityRecordsQuery>
         );
     }
 }
