@@ -39,6 +39,7 @@ interface IState {
     validationErrors: {[weekDayIndex: string]: string};
     defaultAvailabilityRecord: IDefaultAvailability | null;
     savingInProgress: boolean;
+    initialized: boolean;
 }
 
 export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
@@ -53,6 +54,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
             defaultAvailabilityRecord: null,
             validationErrors: {},
             savingInProgress: false,
+            initialized: false,
         };
 
         this.handleScheduleItemChange = this.handleScheduleItemChange.bind(this);
@@ -146,6 +148,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             return acc;
                         }, {}),
                     defaultAvailabilityRecord: res,
+                    initialized: true,
                 });
             }
         });
@@ -156,6 +159,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
     }
 
     render() {
+        if (!this.state.initialized) {
+            return null;
+        }
+
         const weekdays = getWeekdayNames(locale.firstDayOfWeek, locale.code);
         const weekdaysKeyed = keyBy(weekdays, (weekday) => weekday.index);
         const enabledWeekdays = weekdays.filter(({index}) => this.state.schedule[index] != null);
