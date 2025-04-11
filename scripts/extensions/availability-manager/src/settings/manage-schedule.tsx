@@ -139,11 +139,12 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         }).catch(noop).then((res) => {
             if (res != null) {
                 this.setState({
-                    schedule: Object.entries(res.working_days ?? {}).reduce((acc: IState['schedule'], [dayCode, value]) => {
-                        acc[dayIndexesByDayCode[dayCode]] = value;
+                    schedule: Object.entries(res.working_days ?? {})
+                        .reduce((acc: IState['schedule'], [dayCode, value]) => {
+                            acc[dayIndexesByDayCode[dayCode]] = value;
 
-                        return acc;
-                    }, {}),
+                            return acc;
+                        }, {}),
                     defaultAvailabilityRecord: res,
                 });
             }
