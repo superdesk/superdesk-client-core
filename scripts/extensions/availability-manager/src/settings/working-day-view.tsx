@@ -100,7 +100,15 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                                             {
                                                 tags.length < 1 ? null : (
-                                                    <Spacer h gap="4" noWrap justifyContent="start">
+                                                    <div
+                                                        style={{
+                                                            display: 'grid', // limit to 2 tags per row
+                                                            gridTemplateColumns: 'repeat(2, auto)',
+                                                            gridRowGap: 'var(--gap-0-5)',
+                                                            columnGap: 'var(--gap-0-5)',
+                                                            placeItems: 'start',
+                                                        }}
+                                                    >
                                                         {tags.map((tag, i) => {
                                                             const vocabularyItem = tagsById[tag.code];
 
@@ -119,7 +127,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                                 />
                                                             );
                                                         })}
-                                                    </Spacer>
+                                                    </div>
                                                 )
                                             }
                                         </Spacer>
