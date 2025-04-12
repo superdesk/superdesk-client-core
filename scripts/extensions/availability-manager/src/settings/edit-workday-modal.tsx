@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {pick, range} from 'lodash';
 import {omit} from '@sourcefabric/common';
-import {IBaseRestApiResponse} from 'superdesk-api';
 import {
     Button,
     Modal,
@@ -9,7 +8,7 @@ import {
     Spacer,
 } from 'superdesk-ui-framework/react';
 import {availabilityStatuses, TAGS_VOCABULARY_ID} from '../constants';
-import {IAvailabilityRecord, ITagsWhiteList} from '../interfaces';
+import {IAvailabilityRecord, IAvailabilityRecordTemplate, ITagsWhiteList} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {
     getAvailabilityRecordBaseFields,
@@ -29,7 +28,7 @@ const {VocabularySelect} = superdesk.components;
 interface IProps {
     workingDay:
         {kind: 'saved'; value: IAvailabilityRecord}
-        | {kind: 'draft'; template: Omit<IAvailabilityRecord, keyof IBaseRestApiResponse>};
+        | {kind: 'draft'; template: IAvailabilityRecordTemplate};
 
     /**
      * item is returned so parent component can conditionally show preview after closing

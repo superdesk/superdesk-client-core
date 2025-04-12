@@ -1,4 +1,4 @@
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 
 export interface IWorkingHours {
     start_time: string; // ISO 8601
@@ -39,7 +39,7 @@ export interface IDefaultAvailability extends IBaseRestApiResponse {
     tags?: Array<{code: string}>
 }
 
-export type IAvailabilityRecord = IAvailabilityRecordTemplate & IBaseRestApiResponse;
+export type IAvailabilityRecord = IAvailabilityRecordTemplate & {user: IUser['_id']} & IBaseRestApiResponse;
 
 /**
  * Set contains IDs

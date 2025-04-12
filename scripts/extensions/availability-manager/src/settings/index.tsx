@@ -6,10 +6,10 @@ import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
 import {MonthCalendar, nameof, showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {Button, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
-import {IBaseRestApiResponse, ISuperdeskQuery, IUserProfileSection} from 'superdesk-api';
+import {ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {Card} from '../card';
-import {IAvailabilityRecord, IDefaultAvailability} from '../interfaces';
+import {IAvailabilityRecord, IAvailabilityRecordTemplate, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
 import {getStatusColor, setUserAvailability} from '../utils';
@@ -52,15 +52,17 @@ interface IState {
 
 function getQuery(
     options: {
+        user: IUser,
         dateFrom: string,
         dateTo: string,
     },
 ): ISuperdeskQuery {
-    const {dateFrom, dateTo} = options;
+    const {user, dateFrom, dateTo} = options;
 
     return {
         filter: {
             $and: [
+                {[nameof<IAvailabilityRecord>('user')]: {$eq: user._id}},
                 {[nameof<IAvailabilityRecord>('date')]: {$gte: dateFrom}},
                 {[nameof<IAvailabilityRecord>('date')]: {$lte: dateTo}},
             ],
@@ -112,6 +114,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
         const calendarEnd = endOfMonth(months[months.length - 1]);
 
         const query = getQuery({
+            user: this.props.user,
             dateFrom: format(months[0], 'yyyy-MM-dd'),
             dateTo: format(calendarEnd, 'yyyy-MM-dd'),
         });
@@ -392,9 +395,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                                 template: {
                                                                     date: overlay.date,
                                                                     status: 'available',
-                                                                } satisfies Omit<
-                                                                    IAvailabilityRecord, keyof IBaseRestApiResponse
-                                                                >,
+                                                                } satisfies IAvailabilityRecordTemplate,
                                                             };
                                                         } else {
                                                             return assertNever(overlay);

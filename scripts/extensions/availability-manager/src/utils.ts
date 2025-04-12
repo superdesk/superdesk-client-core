@@ -154,13 +154,13 @@ export function getAvailabilityRecordBaseFields(status: IAvailabilityRecord['sta
             date: 1,
             status: 1,
             working_hours: 1,
-        } satisfies {[key in keyof IAvailabilityPartial]: 1});
+        } satisfies {[key in keyof Required<IAvailabilityPartial>]: 1});
     } else if (status === 'available' || status === 'unavailable') {
         return Object.keys({
             date: 1,
             status: 1,
             working_hours: 1,
-        } satisfies {[key in keyof IAvailabilityAllDay]: 1});
+        } satisfies {[key in keyof Required<IAvailabilityAllDay>]: 1});
     } else {
         return assertNever(status);
     }
