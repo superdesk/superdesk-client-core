@@ -1,6 +1,4 @@
-import {mergeSets} from '@sourcefabric/common';
 import * as React from 'react';
-import {IVocabularyItem} from 'superdesk-api';
 import {
     FormLabel,
     IconButton,
@@ -10,10 +8,10 @@ import {
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';
+import {getFilteredTags} from '../utils';
 
 const {gettext} = superdesk.localization;
 const {VocabularySelect} = superdesk.components;
-const {filterFlatTree} = superdesk.utilities;
 
 const placeholder: IWorkingHours = {
     start_time: '',
@@ -27,24 +25,6 @@ function setValueAtIndex<T>(array: Array<T>, index: number, item: T): Array<T> {
     copy[index] = item;
 
     return copy;
-}
-
-function getFilteredTags(alreadySelected: Set<string>, tagsWhitelist: Set<string>): Array<IVocabularyItem> {
-    const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
-
-    if (tagsWhitelist.size < 1) {
-        return tagsVocabulary.items;
-    } else {
-        const itemsToInclude = mergeSets(tagsWhitelist, alreadySelected);
-
-        return filterFlatTree({
-            itemsFlat: tagsVocabulary.items,
-            filterFn: (item) => itemsToInclude.has(item.qcode),
-            getId: (item) => item.qcode,
-            getParentId: (item) => item.parent,
-            includeParents: false,
-        });
-    }
 }
 
 interface IProps {

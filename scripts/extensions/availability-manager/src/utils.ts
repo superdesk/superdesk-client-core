@@ -1,11 +1,20 @@
-import {formatTime} from '@sourcefabric/common';
-import {IAvailabilityRecord, IDefaultAvailability, IScheduleRecord, IWorkingHours} from './interfaces';
+import {formatTime, mergeSets} from '@sourcefabric/common';
+import {IVocabularyItem} from 'superdesk-api';
+import {TAGS_VOCABULARY_ID} from './constants';
+import {
+    IAvailabilityRecord,
+    IAvailabilityAllDay,
+    IAvailabilityPartial,
+    IDefaultAvailability,
+    IScheduleRecord,
+    IWorkingHours,
+} from './interfaces';
 import {superdesk} from './superdesk';
 
 const {httpRequestJsonLocal} = superdesk;
 const {gettext} = superdesk.localization;
 const {assertNever} = superdesk.helpers;
-const {omitBaseApiResponse} = superdesk.utilities;
+const {omitBaseApiResponse, filterFlatTree} = superdesk.utilities;
 
 export function getLocalizedDateString(localeCode: string, date: Date) {
     return new Intl.DateTimeFormat(localeCode, {
@@ -119,4 +128,40 @@ export function setUserAvailability(
             'If-Match': currentAvailability._etag,
         },
     });
+}
+
+export function getFilteredTags(alreadySelected: Set<string>, tagsWhitelist: Set<string>): Array<IVocabularyItem> {
+    const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
+
+    if (tagsWhitelist.size < 1) {
+        return tagsVocabulary.items;
+    } else {
+        const itemsToInclude = mergeSets(tagsWhitelist, alreadySelected);
+
+        return filterFlatTree({
+            itemsFlat: tagsVocabulary.items,
+            filterFn: (item) => itemsToInclude.has(item.qcode),
+            getId: (item) => item.qcode,
+            getParentId: (item) => item.parent,
+            includeParents: false,
+        });
+    }
+}
+
+export function getAvailabilityRecordBaseFields(status: IAvailabilityRecord['status']): Array<string> {
+    if (status === 'partial') {
+        return Object.keys({
+            date: 1,
+            status: 1,
+            working_hours: 1,
+        } satisfies {[key in keyof IAvailabilityPartial]: 1});
+    } else if (status === 'available' || status === 'unavailable') {
+        return Object.keys({
+            date: 1,
+            status: 1,
+            working_hours: 1,
+        } satisfies {[key in keyof IAvailabilityAllDay]: 1});
+    } else {
+        return assertNever(status);
+    }
 }

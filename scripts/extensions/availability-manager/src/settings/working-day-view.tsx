@@ -19,7 +19,6 @@ interface IProps {
 
 export class WorkingDayView extends React.PureComponent<IProps> {
     render() {
-        const workingHours: IAvailabilityRecord['working_hours'] = this.props.day?.working_hours ?? [];
         const tagsById = keyBy(
             superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID).items,
             (item) => item.qcode,
@@ -83,58 +82,74 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                     </Spacer>
 
                     {
-                        workingHours.length > 0 && (
-                            <Spacer v gap="8" noWrap>
-                                {workingHours.map((entry, i) => {
-                                    const tags = entry.tags ?? [];
+                        this.props.day.status === 'partial' && (() => {
+                            const workingHours: IAvailabilityRecord['working_hours'] =
+                                this.props.day.working_hours ?? [];
 
-                                    return (
-                                        <Spacer v gap="4" key={i}>
-                                            <Spacer key={i} h gap="4" noWrap alignItems="center" justifyContent="start">
-                                                <Icon name="time" />
+                            if (workingHours.length < 1) {
+                                return null;
+                            }
 
-                                                <div style={{whiteSpace: 'nowrap'}}>
-                                                    {entry.start_time} - {entry.end_time}
-                                                </div>
-                                            </Spacer>
+                            return (
+                                <Spacer v gap="8" noWrap>
+                                    {workingHours.map((entry, i) => {
+                                        const tags = entry.tags ?? [];
 
-                                            {
-                                                tags.length < 1 ? null : (
-                                                    <div
-                                                        style={{
-                                                            display: 'grid', // limit to 2 tags per row
-                                                            gridTemplateColumns: 'repeat(2, auto)',
-                                                            gridRowGap: 'var(--gap-0-5)',
-                                                            columnGap: 'var(--gap-0-5)',
-                                                            placeItems: 'start',
-                                                        }}
-                                                    >
-                                                        {tags.map((tag, i) => {
-                                                            const vocabularyItem = tagsById[tag.code];
+                                        return (
+                                            <Spacer v gap="4" key={i}>
+                                                <Spacer
+                                                    key={i}
+                                                    h
+                                                    gap="4"
+                                                    noWrap
+                                                    alignItems="center"
+                                                    justifyContent="start"
+                                                >
+                                                    <Icon name="time" />
 
-                                                            // PR-TODO: color code required
-                                                            return (
-                                                                <Label
-                                                                    key={i}
-                                                                    text={
-                                                                        vocabularyItem != null
-                                                                            ? getVocabularyItemNameTranslated(
-                                                                                vocabularyItem,
-                                                                            )
-                                                                            : tag.code
-                                                                    }
-                                                                    size="small"
-                                                                />
-                                                            );
-                                                        })}
+                                                    <div style={{whiteSpace: 'nowrap'}}>
+                                                        {entry.start_time} - {entry.end_time}
                                                     </div>
-                                                )
-                                            }
-                                        </Spacer>
-                                    );
-                                })}
-                            </Spacer>
-                        )
+                                                </Spacer>
+
+                                                {
+                                                    tags.length < 1 ? null : (
+                                                        <div
+                                                            style={{
+                                                                display: 'grid', // limit to 2 tags per row
+                                                                gridTemplateColumns: 'repeat(2, auto)',
+                                                                gridRowGap: 'var(--gap-0-5)',
+                                                                columnGap: 'var(--gap-0-5)',
+                                                                placeItems: 'start',
+                                                            }}
+                                                        >
+                                                            {tags.map((tag, i) => {
+                                                                const vocabularyItem = tagsById[tag.code];
+
+                                                                // PR-TODO: color code required
+                                                                return (
+                                                                    <Label
+                                                                        key={i}
+                                                                        text={
+                                                                            vocabularyItem != null
+                                                                                ? getVocabularyItemNameTranslated(
+                                                                                    vocabularyItem,
+                                                                                )
+                                                                                : tag.code
+                                                                        }
+                                                                        size="small"
+                                                                    />
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )
+                                                }
+                                            </Spacer>
+                                        );
+                                    })}
+                                </Spacer>
+                            );
+                        })()
                     }
                 </div>
             </>

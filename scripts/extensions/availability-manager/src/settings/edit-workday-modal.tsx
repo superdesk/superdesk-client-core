@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {range} from 'lodash';
+import {pick, range} from 'lodash';
+import {omit} from '@sourcefabric/common';
 import {IBaseRestApiResponse} from 'superdesk-api';
 import {
     Button,
@@ -7,17 +8,23 @@ import {
     RadioButtonGroup,
     Spacer,
 } from 'superdesk-ui-framework/react';
-import {availabilityStatuses} from '../constants';
-import {IAvailabilityRecord, ITagsWhiteList, IWorkingHours} from '../interfaces';
+import {availabilityStatuses, TAGS_VOCABULARY_ID} from '../constants';
+import {IAvailabilityRecord, ITagsWhiteList} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {getLabelForStatus, getLocalizedDateString, validateWorkingHours} from '../utils';
+import {
+    getAvailabilityRecordBaseFields,
+    getFilteredTags,
+    getLabelForStatus,
+    getLocalizedDateString,
+    validateWorkingHours,
+} from '../utils';
 import {WithWorkingHoursEditor} from './edit-working-hours';
 import {ValidationErrors} from '../validation-errors';
 
 const {gettext, locale} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
-const {generatePatch} = superdesk.utilities;
 const {assertNever} = superdesk.helpers;
+const {VocabularySelect} = superdesk.components;
 
 interface IProps {
     workingDay:
@@ -59,26 +66,15 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
             validationError: null,
         };
 
-        this.updateWorkingHours = this.updateWorkingHours.bind(this);
-
         this._mounted = false;
         this.errorsElementRef = React.createRef<HTMLDivElement>();
     }
 
-    private updateWorkingHours(index: number, next: IWorkingHours) {
-        this.setState({
-            workingDay: {
-                ...this.state.workingDay,
-                working_hours:
-                    (this.state.workingDay.working_hours ?? []).map((current, i) => index === i ? next : current),
-            },
-        });
-    }
 
     private save() {
         const {workingDay} = this.state;
 
-        const validationError = validateWorkingHours(
+        const validationError: string | null = workingDay.status !== 'partial' ? null : validateWorkingHours(
             workingDay.working_hours ?? [],
             locale.code,
         );
@@ -94,16 +90,14 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
         this.setState({savingInProgress: true});
 
         // drop working hours if working day is not partial
-        const workingDayNext: IAvailabilityRecord = workingDay.status === 'partial'
-            ? workingDay
-            : {...workingDay, working_hours: []};
+        const workingDayNext: IAvailabilityRecord = workingDay;
 
         const savePromise = (() => {
             if (this.props.workingDay.kind === 'saved') {
                 return httpRequestJsonLocal<IAvailabilityRecord>({
                     method: 'PATCH',
                     path: `/user_availability/${workingDay._id}`,
-                    payload: generatePatch(this.props.workingDay.value, workingDayNext),
+                    payload: pick(workingDayNext, getAvailabilityRecordBaseFields(workingDayNext.status)),
                     headers: {
                         'If-Match': workingDay._etag,
                     },
@@ -152,6 +146,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
 
     render() {
         const {workingDay} = this.state;
+        const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
 
         return (
             <Modal
@@ -189,63 +184,110 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                             value: status,
                             label: getLabelForStatus(status),
                         }))}
-                        onChange={(nextStatus) => {
+                        onChange={(nextStatus: IAvailabilityRecord['status']) => {
                             this.setState({
-                                workingDay: {
-                                    ...workingDay,
-                                    status: nextStatus as IAvailabilityRecord['status'],
-                                },
+                                workingDay: (() => {
+                                    if (nextStatus === 'partial') {
+                                        return {
+                                            ...omit(workingDay, 'status', 'date', 'working_hours'),
+                                            status: 'partial',
+                                            date: workingDay.date,
+                                            working_hours: [],
+                                        } satisfies IAvailabilityRecord;
+                                    } else {
+                                        return {
+                                            ...omit(workingDay, 'status', 'date', 'working_hours'),
+                                            status: nextStatus,
+                                            date: workingDay.date,
+                                            working_hours: [{tags: []}],
+                                        } satisfies IAvailabilityRecord;
+                                    }
+                                })(),
                             });
                         }}
                         disabled={this.state.savingInProgress}
                     />
 
                     {
-                        workingDay.status === 'partial' && (
-                            <WithWorkingHoursEditor
-                                value={workingDay.working_hours ?? []}
-                                onChange={(nextValue) => {
-                                    this.setState({
-                                        validationError: null,
-                                        workingDay: {
-                                            ...this.state.workingDay,
-                                            working_hours: nextValue,
-                                        },
-                                    });
-                                }}
-                                disabled={this.state.savingInProgress}
-                                tagsWhitelist={this.props.tagsWhitelist}
-                            >
-                                {({inputs, labels}) => {
-                                    const columnCount = labels.length;
+                        workingDay.status === 'partial'
+                            ? (
+                                <WithWorkingHoursEditor
+                                    value={workingDay.working_hours ?? []}
+                                    onChange={(nextValue) => {
+                                        this.setState({
+                                            validationError: null,
+                                            workingDay: {
+                                                ...workingDay,
+                                                working_hours: nextValue,
+                                            },
+                                        });
+                                    }}
+                                    disabled={this.state.savingInProgress}
+                                    tagsWhitelist={this.props.tagsWhitelist}
+                                >
+                                    {({inputs, labels}) => {
+                                        const columnCount = labels.length;
 
-                                    return (
-                                        <div
-                                            style={{
-                                                display: 'grid',
-                                                gap: 'var(--gap-1)',
-                                                gridTemplateColumns: range(0, columnCount).map(() => 'auto').join(' '),
-                                            }}
-                                        >
-                                            {
-                                                labels.map((label, i) => (
-                                                    <React.Fragment key={i}>
-                                                        {label}
-                                                    </React.Fragment>
-                                                ))
-                                            }
-                                            {
-                                                inputs.map((row, i) => (
-                                                    <React.Fragment key={i}>
-                                                        {...row}
-                                                    </React.Fragment>
-                                                ))
-                                            }
-                                        </div>
-                                    );
-                                }}
-                            </WithWorkingHoursEditor>
-                        )
+                                        return (
+                                            <div
+                                                style={{
+                                                    display: 'grid',
+                                                    gap: 'var(--gap-1)',
+                                                    gridTemplateColumns: range(0, columnCount)
+                                                        .map(() => 'auto')
+                                                        .join(' '),
+                                                }}
+                                            >
+                                                {
+                                                    labels.map((label, i) => (
+                                                        <React.Fragment key={i}>
+                                                            {label}
+                                                        </React.Fragment>
+                                                    ))
+                                                }
+                                                {
+                                                    inputs.map((row, i) => (
+                                                        <React.Fragment key={i}>
+                                                            {...row}
+                                                        </React.Fragment>
+                                                    ))
+                                                }
+                                            </div>
+                                        );
+                                    }}
+                                </WithWorkingHoursEditor>
+                            ) : (() => {
+                                const value: Array<string> =
+                                    ((workingDay.working_hours ?? [])?.[0]?.tags ?? []).map((item) => item.code);
+
+                                return (
+                                    <VocabularySelect
+                                        label={{text: tagsVocabulary.display_name}}
+                                        value={value}
+                                        getOptions={() => getFilteredTags(
+                                            new Set<string>(value),
+                                            this.props.tagsWhitelist,
+                                        )}
+                                        onChange={(qcodes) => {
+                                            this.setState({
+                                                validationError: null,
+                                                workingDay: {
+                                                    ...workingDay,
+                                                    working_hours: [
+                                                        {
+                                                            tags: qcodes.map((qcode) => ({code: qcode})),
+                                                        },
+                                                    ],
+                                                },
+                                            });
+                                        }}
+                                        multiple={true}
+                                        fullWidth={true}
+                                        disabled={this.state.savingInProgress}
+                                        selectBranchWithChildren
+                                    />
+                                );
+                            })()
                     }
 
                     {

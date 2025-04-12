@@ -5,7 +5,7 @@
         "outDir": "../dist/src",
         "lib": [
             "dom",
-            "es5"
+            "ES2019",
         ],
     }
 }
