@@ -1,6 +1,8 @@
-import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
-import {keyBy} from 'lodash';
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
+import {keyBy} from 'lodash';
+import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
 import {Icon, IconButton, Label, Tooltip} from 'superdesk-ui-framework/react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord} from '../interfaces';
@@ -19,10 +21,7 @@ interface IProps {
 
 export class WorkingDayView extends React.PureComponent<IProps> {
     render() {
-        const tagsById = keyBy(
-            superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID).items,
-            (item) => item.qcode,
-        );
+        const {day} = this.props;
 
         return (
             <>
@@ -67,92 +66,111 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                     }}
                 >
                     <Spacer h gap="8" justifyContent="start" noWrap style={{paddingBlock: 'var(--base-increment)'}}>
-                        <Tooltip text={getLabelForStatus(this.props.day.status)}>
+                        <Tooltip text={getLabelForStatus(day.status)}>
                             <div
                                 style={{
-                                    ...getStylesForStatusDot(this.props.day.status),
+                                    ...getStylesForStatusDot(day.status),
                                     marginBlockStart: -2, // fixing vertical alignment
                                 }}
                             />
                         </Tooltip>
 
                         <h3 style={{fontWeight: 'normal', fontSize: '1.6rem', lineHeight: '1em'}}>
-                            {getLocalizedDateString(locale.code, new Date(this.props.day.date))}
+                            {getLocalizedDateString(locale.code, new Date(day.date))}
                         </h3>
                     </Spacer>
 
                     {
-                        this.props.day.status === 'partial' && (() => {
+                        (() => {
                             const workingHours: IAvailabilityRecord['working_hours'] =
-                                this.props.day.working_hours ?? [];
+                                day.working_hours ?? [];
 
                             if (workingHours.length < 1) {
                                 return null;
                             }
 
-                            return (
-                                <Spacer v gap="8" noWrap>
-                                    {workingHours.map((entry, i) => {
-                                        const tags = entry.tags ?? [];
+                            if (day.status !== 'partial') {
+                                return (
+                                    <Tags tags={(day.working_hours ?? [])[0]?.tags} />
+                                );
+                            } else {
+                                return (
+                                    <Spacer v gap="8" noWrap>
+                                        {(day.working_hours ?? []).map((entry, i) => {
+                                            const tags = entry.tags ?? [];
 
-                                        return (
-                                            <Spacer v gap="4" key={i}>
-                                                <Spacer
-                                                    key={i}
-                                                    h
-                                                    gap="4"
-                                                    noWrap
-                                                    alignItems="center"
-                                                    justifyContent="start"
-                                                >
-                                                    <Icon name="time" />
+                                            return (
+                                                <Spacer v gap="4" key={i}>
+                                                    <Spacer
+                                                        key={i}
+                                                        h
+                                                        gap="4"
+                                                        noWrap
+                                                        alignItems="center"
+                                                        justifyContent="start"
+                                                    >
+                                                        <Icon name="time" />
 
-                                                    <div style={{whiteSpace: 'nowrap'}}>
-                                                        {entry.start_time} - {entry.end_time}
-                                                    </div>
+                                                        <div style={{whiteSpace: 'nowrap'}}>
+                                                            {entry.start_time} - {entry.end_time}
+                                                        </div>
+                                                    </Spacer>
+
+                                                    <Tags tags={tags} />
                                                 </Spacer>
-
-                                                {
-                                                    tags.length < 1 ? null : (
-                                                        <Spacer
-                                                            h gap="4"
-                                                            noWrap
-                                                            justifyContent="start"
-                                                            style={{
-                                                                maxWidth: 300,
-                                                                flexWrap: 'wrap',
-                                                            }}
-                                                        >
-                                                            {tags.map((tag, i) => {
-                                                                const vocabularyItem = tagsById[tag.code];
-
-                                                                // PR-TODO: color code required
-                                                                return (
-                                                                    <Label
-                                                                        key={i}
-                                                                        text={
-                                                                            vocabularyItem != null
-                                                                                ? getVocabularyItemNameTranslated(
-                                                                                    vocabularyItem,
-                                                                                )
-                                                                                : tag.code
-                                                                        }
-                                                                        size="small"
-                                                                    />
-                                                                );
-                                                            })}
-                                                        </Spacer>
-                                                    )
-                                                }
-                                            </Spacer>
-                                        );
-                                    })}
-                                </Spacer>
-                            );
+                                            );
+                                        })}
+                                    </Spacer>
+                                );
+                            }
                         })()
                     }
                 </div>
             </>
         );
     }
+}
+
+function Tags(props: {tags?: Array<{code: string}>}) {
+    const {tags} = props;
+    const tagsById = keyBy(
+        superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID).items,
+        (item) => item.qcode,
+    );
+
+    if (tags == null || tags.length < 1) {
+        return null;
+    }
+
+    return (
+        <Spacer
+            h
+            gap="4"
+            noWrap
+            justifyContent="start"
+            style={{
+                maxWidth: 300,
+                flexWrap: 'wrap',
+            }}
+        >
+            {tags.map((tag, i) => {
+                const vocabularyItem = tagsById[tag.code];
+
+                // PR-TODO: color code required
+                return (
+                    <Label
+                        key={i}
+                        text={
+                            vocabularyItem != null
+                                ? getVocabularyItemNameTranslated(
+                                    vocabularyItem,
+                                )
+                                : tag.code
+                        }
+                        size="small"
+                    />
+                );
+            })}
+        </Spacer>
+    );
 }
