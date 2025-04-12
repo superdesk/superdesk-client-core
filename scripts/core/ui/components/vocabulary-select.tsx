@@ -20,6 +20,7 @@ export class VocabularySelect extends React.PureComponent<IPropsVocabularySelect
                 kind="synchronous"
                 inlineLabel={this.props.label.hidden === true || this.props.label.position === 'left'}
                 labelHidden={this.props.label.hidden === true}
+                label={this.props.label.text}
                 value={value}
                 getId={(item) => item.qcode}
                 getLabel={(item) => getVocabularyItemNameTranslated(item)}
