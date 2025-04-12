@@ -114,13 +114,13 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                                                 {
                                                     tags.length < 1 ? null : (
-                                                        <div
+                                                        <Spacer
+                                                            h gap="4"
+                                                            noWrap
+                                                            justifyContent="start"
                                                             style={{
-                                                                display: 'grid', // limit to 2 tags per row
-                                                                gridTemplateColumns: 'repeat(2, auto)',
-                                                                gridRowGap: 'var(--gap-0-5)',
-                                                                columnGap: 'var(--gap-0-5)',
-                                                                placeItems: 'start',
+                                                                maxWidth: 300,
+                                                                flexWrap: 'wrap',
                                                             }}
                                                         >
                                                             {tags.map((tag, i) => {
@@ -141,7 +141,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                                     />
                                                                 );
                                                             })}
-                                                        </div>
+                                                        </Spacer>
                                                     )
                                                 }
                                             </Spacer>
