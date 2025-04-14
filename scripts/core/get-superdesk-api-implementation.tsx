@@ -120,6 +120,7 @@ import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
+import {convertToRaw} from 'draft-js';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -313,6 +314,7 @@ export function getSuperdeskApiImplementation(
             fixPatchResponse,
             computeEditor3Output,
             editor3ToOperationalFormat: editor3ToOperationalFormat,
+            convertToRaw: convertToRaw,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
