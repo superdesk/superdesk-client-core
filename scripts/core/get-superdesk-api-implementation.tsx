@@ -314,8 +314,6 @@ export function getSuperdeskApiImplementation(
             fixPatchResponse,
             computeEditor3Output,
             editor3ToOperationalFormat: editor3ToOperationalFormat,
-            convertToRaw: convertToRaw,
-            createFromText: ContentState.createFromText,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             tryLocking,
             tryUnlocking,
