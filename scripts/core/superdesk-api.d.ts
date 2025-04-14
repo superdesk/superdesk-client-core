@@ -3152,6 +3152,7 @@ declare module 'superdesk-api' {
             ): Promise<void>;
             editor3ToOperationalFormat(value: IEditor3ValueStorage, language: string): IEditor3ValueOperational;
             convertToRaw(contentState: import('draft-js').ContentState): import('draft-js').RawDraftContentState;
+            createFromText(text: string, delimiter?: string): import('draft-js').ContentState;
             computeEditor3Output(
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
