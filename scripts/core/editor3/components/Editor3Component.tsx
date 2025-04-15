@@ -297,7 +297,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, ctrlKey, metaKey} = e;
+        const {key, ctrlKey, shiftKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -322,7 +322,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        if (key === 'Enter') {
+        if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
         }
 
