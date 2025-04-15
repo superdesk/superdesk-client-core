@@ -198,7 +198,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                     </Spacer>
                 )}
             >
-                <Spacer v gap="16" noWrap>
+                <Spacer v gap="16" noWrap style={{minWidth: 870}}>
                     <CheckButtonGroup>
                         {
                             weekdays.map((weekday) => (
