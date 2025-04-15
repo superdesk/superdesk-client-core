@@ -11,6 +11,7 @@ import {availabilityStatuses, TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, ITagsWhiteList} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {
+    fullWidthNoGrow,
     getAvailabilityRecordBaseFields,
     getFilteredTags,
     getLabelForStatus,
@@ -260,31 +261,33 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                     ((workingDay.working_hours ?? [])?.[0]?.tags ?? []).map((item) => item.code);
 
                                 return (
-                                    <VocabularySelect
-                                        label={{text: tagsVocabulary.display_name}}
-                                        value={value}
-                                        getOptions={() => getFilteredTags(
-                                            new Set<string>(value),
-                                            this.props.tagsWhitelist,
-                                        )}
-                                        onChange={(qcodes) => {
-                                            this.setState({
-                                                validationError: null,
-                                                workingDay: {
-                                                    ...workingDay,
-                                                    working_hours: [
-                                                        {
-                                                            tags: qcodes.map((qcode) => ({code: qcode})),
-                                                        },
-                                                    ],
-                                                },
-                                            });
-                                        }}
-                                        multiple={true}
-                                        fullWidth={true}
-                                        disabled={this.state.savingInProgress}
-                                        selectBranchWithChildren
-                                    />
+                                    <div style={fullWidthNoGrow}>
+                                        <VocabularySelect
+                                            label={{text: tagsVocabulary.display_name}}
+                                            value={value}
+                                            getOptions={() => getFilteredTags(
+                                                new Set<string>(value),
+                                                this.props.tagsWhitelist,
+                                            )}
+                                            onChange={(qcodes) => {
+                                                this.setState({
+                                                    validationError: null,
+                                                    workingDay: {
+                                                        ...workingDay,
+                                                        working_hours: [
+                                                            {
+                                                                tags: qcodes.map((qcode) => ({code: qcode})),
+                                                            },
+                                                        ],
+                                                    },
+                                                });
+                                            }}
+                                            multiple={true}
+                                            fullWidth={true}
+                                            disabled={this.state.savingInProgress}
+                                            selectBranchWithChildren
+                                        />
+                                    </div>
                                 );
                             })()
                     }

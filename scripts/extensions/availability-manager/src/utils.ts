@@ -165,3 +165,8 @@ export function getAvailabilityRecordBaseFields(status: IAvailabilityRecord['sta
         return assertNever(status);
     }
 }
+
+export const fullWidthNoGrow: React.CSSProperties = {
+    width: 'min-content',
+    minWidth: '100%',
+};

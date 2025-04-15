@@ -12,7 +12,7 @@ import {Card} from '../card';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
-import {getStatusColor, setUserAvailability} from '../utils';
+import {fullWidthNoGrow, getStatusColor, setUserAvailability} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 
@@ -176,7 +176,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                     return (
                         <Page>
-                            <div>
+                            <div style={fullWidthNoGrow}>
                                 <VocabularySelect
                                     label={{text: languagesVocabulary.display_name}}
                                     value={this.state.defaultAvailability?.language ?? []}
@@ -208,7 +208,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
                             <SpacerBlock v gap="16" />
 
-                            <div>
+                            <div style={fullWidthNoGrow}>
                                 <VocabularySelect
                                     label={{text: tagsVocabulary.display_name}}
                                     value={(this.state.defaultAvailability?.tags ?? []).map(({code}) => code)}
