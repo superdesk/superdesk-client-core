@@ -120,7 +120,6 @@ import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
-import {ContentState, convertToRaw} from 'draft-js';
 
 export function openArticle(
     id: IArticle['_id'],
