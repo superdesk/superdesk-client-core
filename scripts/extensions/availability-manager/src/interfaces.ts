@@ -6,10 +6,6 @@ export interface IWorkingHours {
     tags: Array<{code: string}>;
 }
 
-export interface IScheduleRecord {
-    status: 'available' | 'unavailable' | 'partial';
-    working_hours?: Array<IWorkingHours>;
-}
 
 export type IAvailabilityAllDay = {
     date: string;
@@ -24,6 +20,8 @@ export type IAvailabilityPartial = {
 }
 
 export type IAvailabilityRecordTemplate = IAvailabilityAllDay | IAvailabilityPartial;
+
+export type IScheduleRecord = Omit<IAvailabilityAllDay, 'date'> | Omit<IAvailabilityPartial, 'date'>;
 
 export interface IDefaultAvailability extends IBaseRestApiResponse {
     working_days?: {

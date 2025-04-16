@@ -98,10 +98,12 @@ export function validateSchedule(
             setError(gettext('working hours are not set'));
         }
 
-        const result = validateWorkingHours((value.working_hours ?? []), localeCode);
+        if (value.status === 'partial') {
+            const result = validateWorkingHours((value.working_hours ?? []), localeCode);
 
-        if (result != null) {
-            setError(result);
+            if (result != null) {
+                setError(result);
+            }
         }
     }
 

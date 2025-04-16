@@ -16,11 +16,19 @@ const {httpRequestJsonLocal} = superdesk;
 
 const placeholder: IScheduleRecord = {
     status: 'available',
-    working_hours: [],
+    working_hours: [{tags: []}],
 };
 
 const workingHoursEditorColumnCount = 3;
 const additionalColumnCount = 2;
+
+const additionalColumnsPlaceholder = (
+    <>
+        {
+            range(0, additionalColumnCount).map((_, i) => <span key={i} />)
+        }
+    </>
+);
 
 /**
  * To use CSS grid, the number of columns need to be known in advance.
@@ -233,10 +241,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                     .map((weekday, enabledWeekdayIndex) => {
                                         const scheduleRecord = this.state.schedule[weekday.index];
 
-                                        const getExtraColumns = (rowIndex: number) => {
-                                            const extraColumns = [
+                                        const getExtraColumns = (rowKey: number | string) => {
+                                            return [
                                                 (
-                                                    <div key="weekday-name">
+                                                    <div key={`weekday-${rowKey}`}>
                                                         <div
                                                             style={{
                                                                 display: 'flex',
@@ -253,7 +261,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                     </div>
                                                 ),
                                                 (
-                                                    <div key="status">
+                                                    <div key={`status-${rowKey}`}>
                                                         <div>
                                                             <TreeSelect
                                                                 kind="synchronous"
@@ -312,94 +320,98 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                 ),
 
                                             ].map((element, i) => (
-                                                <React.Fragment key={i}>
+                                                <React.Fragment key={`${rowKey}-${i}`}>
                                                     {element}
                                                 </React.Fragment>
                                             ));
-
-                                            return rowIndex === 0
-                                                ? extraColumns
-                                                : (
-                                                    <>
-                                                        {
-                                                            range(0, additionalColumnCount)
-                                                                .map((_, i) => <span key={i} />)
-                                                        }
-                                                    </>
-                                                );
                                         };
 
-                                        return (
-                                            <WithWorkingHoursEditor
-                                                key={weekday.index}
-                                                value={scheduleRecord.working_hours ?? []}
-                                                onChange={(val) => {
-                                                    this.handleScheduleItemChange(
-                                                        weekday.index,
-                                                        {working_hours: val},
-                                                    );
-                                                }}
-                                                tagsWhitelist={new Set(
-                                                    (this.state.defaultAvailabilityRecord?.tags ?? [])
-                                                        .map(({code}) => code),
-                                                )}
-                                                disabled={savingInProgress}
-                                            >
-                                                {(props) => {
-                                                    const labels: Array<React.ReactNode> = [
-                                                        ...range(0, additionalColumnCount)
-                                                            .map((_, i) => <span key={i} />),
-                                                    ];
-
-                                                    if (renderLabels) {
-                                                        labels.push(...props.labels);
-                                                    } else {
-                                                        labels.push(
-                                                            ...range(
-                                                                0,
-                                                                workingHoursEditorColumnCount,
-                                                            ).map((_, i) => <span key={i} />),
+                                        if (scheduleRecord.status === 'partial') {
+                                            return (
+                                                <WithWorkingHoursEditor
+                                                    key={weekday.index}
+                                                    value={scheduleRecord.working_hours ?? []}
+                                                    onChange={(val) => {
+                                                        this.handleScheduleItemChange(
+                                                            weekday.index,
+                                                            {working_hours: val},
                                                         );
+                                                    }}
+                                                    tagsWhitelist={new Set(
+                                                        (this.state.defaultAvailabilityRecord?.tags ?? [])
+                                                            .map(({code}) => code),
+                                                    )}
+                                                    disabled={savingInProgress}
+                                                >
+                                                    {(props) => {
+                                                        const labels: Array<React.ReactNode> = [
+                                                            ...range(0, additionalColumnCount)
+                                                                .map((_, i) => <span key={i} />),
+                                                        ];
+
+                                                        if (renderLabels) {
+                                                            labels.push(...props.labels);
+                                                        } else {
+                                                            labels.push(
+                                                                ...range(
+                                                                    0,
+                                                                    workingHoursEditorColumnCount,
+                                                                ).map((_, i) => <span key={i} />),
+                                                            );
+                                                        }
+
+                                                        return (
+                                                            <React.Fragment key={enabledWeekdayIndex}>
+                                                                {
+                                                                    enabledWeekdayIndex === 0
+                                                                        ? labels.map((node, i) => (
+                                                                            <React.Fragment key={i}>
+                                                                                {node}
+                                                                            </React.Fragment>
+                                                                        ))
+                                                                        : null
+                                                                }
+
+                                                                {
+                                                                    props.inputs.map((rowInputs, rowIndex) => {
+                                                                        const emptyColumns =
+                                                                            range(0, workingHoursEditorColumnCount)
+                                                                                .map((_, i) => <span key={i} />);
+
+                                                                        // if status is not partial,
+                                                                        // do not show columns from HOC
+                                                                        const baseColumns =
+                                                                            scheduleRecord.status === 'partial'
+                                                                                ? <>{...rowInputs}</>
+                                                                                : <>{...emptyColumns}</>;
+
+                                                                        return (
+                                                                            <React.Fragment key={rowIndex}>
+                                                                                {rowIndex === 0
+                                                                                    ? getExtraColumns(rowIndex)
+                                                                                    : additionalColumnsPlaceholder}
+                                                                                {baseColumns}
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    })
+                                                                }
+                                                            </React.Fragment>
+                                                        );
+                                                    }}
+                                                </WithWorkingHoursEditor>
+                                            );
+                                        } else {
+                                            return (
+                                                <React.Fragment key={enabledWeekdayIndex}>
+                                                    {getExtraColumns(enabledWeekdayIndex)}
+
+                                                    {
+                                                        range(0, workingHoursEditorColumnCount)
+                                                            .map((n) => <span key={`placeholder-${n}`} />)
                                                     }
-
-                                                    return (
-                                                        <React.Fragment key={enabledWeekdayIndex}>
-                                                            {
-                                                                enabledWeekdayIndex === 0
-                                                                    ? labels.map((node, i) => (
-                                                                        <React.Fragment key={i}>
-                                                                            {node}
-                                                                        </React.Fragment>
-                                                                    ))
-                                                                    : null
-                                                            }
-
-                                                            {
-                                                                props.inputs.map((rowInputs, rowIndex) => {
-                                                                    const emptyColumns =
-                                                                        range(0, workingHoursEditorColumnCount)
-                                                                            .map((_, i) => <span key={i} />);
-
-                                                                    // if status is not partial,
-                                                                    // do not show columns from HOC
-                                                                    const baseColumns =
-                                                                        scheduleRecord.status === 'partial'
-                                                                            ? <>{...rowInputs}</>
-                                                                            : <>{...emptyColumns}</>;
-
-                                                                    return (
-                                                                        <React.Fragment key={rowIndex}>
-                                                                            {getExtraColumns(rowIndex)}
-                                                                            {baseColumns}
-                                                                        </React.Fragment>
-                                                                    );
-                                                                })
-                                                            }
-                                                        </React.Fragment>
-                                                    );
-                                                }}
-                                            </WithWorkingHoursEditor>
-                                        );
+                                                </React.Fragment>
+                                            );
+                                        }
                                     })
                             }
                         </div>
