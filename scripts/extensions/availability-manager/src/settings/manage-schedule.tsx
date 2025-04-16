@@ -2,8 +2,14 @@ import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, noop, range} from 'lodash';
 import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
-import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex} from '../constants';
-import {getLabelForStatus, getStylesForStatusDot, setUserAvailability, validateSchedule} from '../utils';
+import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex, TAGS_VOCABULARY_ID} from '../constants';
+import {
+    getFilteredTags,
+    getLabelForStatus,
+    getStylesForStatusDot,
+    setUserAvailability,
+    validateSchedule,
+} from '../utils';
 import {IDefaultAvailability, IScheduleRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {WithWorkingHoursEditor} from './edit-working-hours';
@@ -12,6 +18,7 @@ import {ValidationErrors} from '../validation-errors';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
+const {VocabularySelect} = superdesk.components;
 const {httpRequestJsonLocal} = superdesk;
 
 const placeholder: IScheduleRecord = {
@@ -40,6 +47,7 @@ const columnCount = workingHoursEditorColumnCount + additionalColumnCount;
 interface IProps {
     user: IUser;
     onClose(): void;
+    tagsWhitelist: Set<string>;
 }
 
 interface IState {
@@ -79,11 +87,6 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
             ...this.state.schedule[index],
             ...patch,
         };
-
-        // drop working hours if status changes to something else than partial
-        if (update.status !== 'partial') {
-            update.working_hours = [];
-        }
 
         this.setState({
             schedule: {
@@ -174,9 +177,11 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         const weekdays = getWeekdayNames(locale.firstDayOfWeek, locale.code);
         const weekdaysKeyed = keyBy(weekdays, (weekday) => weekday.index);
         const enabledWeekdays = weekdays.filter(({index}) => this.state.schedule[index] != null);
+        const hasPartialDays = Object.values(this.state.schedule).some(({status}) => status === 'partial');
         const renderLabels = enabledWeekdays.some(
             (weekday) => this.state.schedule[weekday.index]?.status === 'partial',
         );
+        const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
         const {savingInProgress} = this.state;
 
         return (
@@ -408,6 +413,58 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                     {
                                                         range(0, workingHoursEditorColumnCount)
                                                             .map((n) => <span key={`placeholder-${n}`} />)
+                                                            .map((placeholderJsx, i) => {
+                                                                // skip a column when schedule has partial days
+                                                                // to align tags selection component
+                                                                // to ones rendered from partial days
+                                                                const targetIndex = !hasPartialDays ? 0 : 1;
+
+                                                                if (i !== targetIndex) {
+                                                                    return placeholderJsx;
+                                                                }
+
+                                                                const workingHours = scheduleRecord.working_hours;
+
+                                                                const val = (
+                                                                    workingHours?.[0]?.tags ?? []
+                                                                ).map((a) => a.code);
+
+                                                                return (
+                                                                    <div style={{width: 300}} key="vocabulary-select">
+                                                                        <VocabularySelect
+                                                                            label={{
+                                                                                text: tagsVocabulary.display_name,
+                                                                                hidden: true,
+                                                                            }}
+                                                                            value={val}
+                                                                            getOptions={() => getFilteredTags(
+                                                                                new Set<string>(val),
+                                                                                this.props.tagsWhitelist,
+                                                                            )}
+                                                                            onChange={(qcodes) => {
+                                                                                this.handleScheduleItemChange(
+                                                                                    weekday.index,
+                                                                                    {working_hours: [
+                                                                                        {
+                                                                                            tags: qcodes.map(
+                                                                                                (qcode) => {
+                                                                                                    return {
+                                                                                                        code: qcode,
+                                                                                                    };
+                                                                                                }
+                                                                                            )
+                                                                                        }
+                                                                                    ]},
+                                                                                );
+                                                                            }}
+                                                                            multiple={true}
+                                                                            fullWidth={true}
+                                                                            disabled={this.state.savingInProgress}
+                                                                            selectBranchWithChildren
+                                                                        />
+                                                                    </div>
+                                                                );
+                                                            })
                                                     }
                                                 </React.Fragment>
                                             );

@@ -282,7 +282,11 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     style="hollow"
                                     onClick={() => {
                                         showModal(({closeModal}) => (
-                                            <ManageScheduleModal onClose={closeModal} user={this.props.user} />
+                                            <ManageScheduleModal
+                                                onClose={closeModal}
+                                                user={this.props.user}
+                                                tagsWhitelist={tagsWhitelist}
+                                            />
                                         ));
                                     }}
                                 />
