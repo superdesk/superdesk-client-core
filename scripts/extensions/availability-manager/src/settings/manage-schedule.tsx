@@ -2,7 +2,14 @@ import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, noop, range} from 'lodash';
 import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
-import {availabilityStatuses, dayCodes, dayIndexesByDayCode, IDayIndex, TAGS_VOCABULARY_ID} from '../constants';
+import {
+    availabilityStatuses,
+    dayCodes,
+    dayIndexesByDayCode,
+    IDayIndex,
+    tagsSelectWidth,
+    TAGS_VOCABULARY_ID,
+} from '../constants';
 import {
     getFilteredTags,
     getLabelForStatus,
@@ -12,9 +19,10 @@ import {
 } from '../utils';
 import {IDefaultAvailability, IScheduleRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {WithWorkingHoursEditor} from './edit-working-hours';
+import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-working-hours';
 import {IUser} from 'superdesk-api';
 import {ValidationErrors} from '../validation-errors';
+import {WorkingHoursGridLabels} from './working-hours-grid-labels';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
@@ -26,7 +34,6 @@ const placeholder: IScheduleRecord = {
     working_hours: [{tags: []}],
 };
 
-const workingHoursEditorColumnCount = 3;
 const additionalColumnCount = 2;
 
 const additionalColumnsPlaceholder = (
@@ -241,15 +248,24 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                             }}
                         >
                             {
+                                renderLabels && (
+                                    <>
+                                        {additionalColumnsPlaceholder}
+                                        <WorkingHoursGridLabels />
+                                    </>
+                                )
+                            }
+
+                            {
                                 enabledWeekdays
                                     .filter(({index}) => this.state.schedule[index] != null)
-                                    .map((weekday, enabledWeekdayIndex) => {
+                                    .map((weekday) => {
                                         const scheduleRecord = this.state.schedule[weekday.index];
 
-                                        const getExtraColumns = (rowKey: number | string) => {
-                                            return [
-                                                (
-                                                    <div key={`weekday-${rowKey}`}>
+                                        const getExtraColumns = () => {
+                                            return (
+                                                <>
+                                                    <div>
                                                         <div
                                                             style={{
                                                                 display: 'flex',
@@ -264,71 +280,48 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                             <strong>{weekday.nameLong}</strong>
                                                         </div>
                                                     </div>
-                                                ),
-                                                (
-                                                    <div key={`status-${rowKey}`}>
-                                                        <div>
-                                                            <TreeSelect
-                                                                kind="synchronous"
-                                                                value={
-                                                                    [
-                                                                        scheduleRecord.status,
-                                                                    ] as typeof availabilityStatuses
-                                                                }
-                                                                getOptions={
-                                                                    () => availabilityStatuses
-                                                                        .map((id) => ({value: id}))
-                                                                }
-                                                                getId={(id) => id}
-                                                                getLabel={(id) => getLabelForStatus(id)}
-                                                                onChange={([val]) => {
-                                                                    this.handleScheduleItemChange(
-                                                                        weekday.index,
-                                                                        {status: val},
-                                                                    );
-                                                                }}
-                                                                optionTemplate={(id) => (
-                                                                    <Spacer h gap="4" justifyContent="start" noWrap>
-                                                                        <div>
-                                                                            <div
-                                                                                style={{
-                                                                                    ...getStylesForStatusDot(id),
-                                                                                }}
-                                                                            />
-                                                                        </div>
 
-                                                                        <div>{getLabelForStatus(id)}</div>
-                                                                    </Spacer>
-                                                                )}
-                                                                valueTemplate={(id, Wrapper) => (
-                                                                    <Wrapper>
-                                                                        <Spacer h gap="4" justifyContent="start" noWrap>
-                                                                            <div>
-                                                                                <div
-                                                                                    style={{
-                                                                                        ...getStylesForStatusDot(id),
-                                                                                    }}
-                                                                                />
-                                                                            </div>
+                                                    <div>
+                                                        <TreeSelect
+                                                            kind="synchronous"
+                                                            value={
+                                                                [
+                                                                    scheduleRecord.status,
+                                                                ] as typeof availabilityStatuses
+                                                            }
+                                                            getOptions={
+                                                                () => availabilityStatuses
+                                                                    .map((id) => ({value: id}))
+                                                            }
+                                                            getId={(id) => id}
+                                                            getLabel={(id) => getLabelForStatus(id)}
+                                                            onChange={([val]) => {
+                                                                this.handleScheduleItemChange(
+                                                                    weekday.index,
+                                                                    {status: val},
+                                                                );
+                                                            }}
+                                                            optionTemplate={(id) => (
+                                                                <Spacer h gap="4" justifyContent="start" noWrap>
+                                                                    <div>
+                                                                        <div
+                                                                            style={{
+                                                                                ...getStylesForStatusDot(id),
+                                                                            }}
+                                                                        />
+                                                                    </div>
 
-                                                                            <div>{getLabelForStatus(id)}</div>
-                                                                        </Spacer>
-                                                                    </Wrapper>
-                                                                )}
-                                                                fullWidth={true}
-                                                                inlineLabel
-                                                                labelHidden
-                                                                required
-                                                            />
-                                                        </div>
+                                                                    <div>{getLabelForStatus(id)}</div>
+                                                                </Spacer>
+                                                            )}
+                                                            fullWidth={true}
+                                                            inlineLabel
+                                                            labelHidden
+                                                            required
+                                                        />
                                                     </div>
-                                                ),
-
-                                            ].map((element, i) => (
-                                                <React.Fragment key={`${rowKey}-${i}`}>
-                                                    {element}
-                                                </React.Fragment>
-                                            ));
+                                                </>
+                                            );
                                         };
 
                                         if (scheduleRecord.status === 'partial') {
@@ -347,68 +340,19 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                             .map(({code}) => code),
                                                     )}
                                                     disabled={savingInProgress}
-                                                >
-                                                    {(props) => {
-                                                        const labels: Array<React.ReactNode> = [
-                                                            ...range(0, additionalColumnCount)
-                                                                .map((_, i) => <span key={i} />),
-                                                        ];
-
-                                                        if (renderLabels) {
-                                                            labels.push(...props.labels);
+                                                    columnsBefore={({rowIndex}) => {
+                                                        if (rowIndex === 0) {
+                                                            return getExtraColumns();
                                                         } else {
-                                                            labels.push(
-                                                                ...range(
-                                                                    0,
-                                                                    workingHoursEditorColumnCount,
-                                                                ).map((_, i) => <span key={i} />),
-                                                            );
+                                                            return additionalColumnsPlaceholder;
                                                         }
-
-                                                        return (
-                                                            <React.Fragment key={enabledWeekdayIndex}>
-                                                                {
-                                                                    enabledWeekdayIndex === 0
-                                                                        ? labels.map((node, i) => (
-                                                                            <React.Fragment key={i}>
-                                                                                {node}
-                                                                            </React.Fragment>
-                                                                        ))
-                                                                        : null
-                                                                }
-
-                                                                {
-                                                                    props.inputs.map((rowInputs, rowIndex) => {
-                                                                        const emptyColumns =
-                                                                            range(0, workingHoursEditorColumnCount)
-                                                                                .map((_, i) => <span key={i} />);
-
-                                                                        // if status is not partial,
-                                                                        // do not show columns from HOC
-                                                                        const baseColumns =
-                                                                            scheduleRecord.status === 'partial'
-                                                                                ? <>{...rowInputs}</>
-                                                                                : <>{...emptyColumns}</>;
-
-                                                                        return (
-                                                                            <React.Fragment key={rowIndex}>
-                                                                                {rowIndex === 0
-                                                                                    ? getExtraColumns(rowIndex)
-                                                                                    : additionalColumnsPlaceholder}
-                                                                                {baseColumns}
-                                                                            </React.Fragment>
-                                                                        );
-                                                                    })
-                                                                }
-                                                            </React.Fragment>
-                                                        );
                                                     }}
-                                                </WithWorkingHoursEditor>
+                                                />
                                             );
                                         } else {
                                             return (
-                                                <React.Fragment key={enabledWeekdayIndex}>
-                                                    {getExtraColumns(enabledWeekdayIndex)}
+                                                <React.Fragment key={weekday.index}>
+                                                    {getExtraColumns()}
 
                                                     {
                                                         range(0, workingHoursEditorColumnCount)
@@ -430,7 +374,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                 ).map((a) => a.code);
 
                                                                 return (
-                                                                    <div style={{width: 300}} key="vocabulary-select">
+                                                                    <div style={{width: tagsSelectWidth}} key={i}>
                                                                         <VocabularySelect
                                                                             label={{
                                                                                 text: tagsVocabulary.display_name,
@@ -451,9 +395,9 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                                                     return {
                                                                                                         code: qcode,
                                                                                                     };
-                                                                                                }
-                                                                                            )
-                                                                                        }
+                                                                                                },
+                                                                                            ),
+                                                                                        },
                                                                                     ]},
                                                                                 );
                                                                             }}

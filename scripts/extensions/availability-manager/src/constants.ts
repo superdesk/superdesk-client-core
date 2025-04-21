@@ -31,4 +31,6 @@ export const dayIndexesByDayCode: {[key: string]: string} = {
     'saturday': '6',
 };
 
+export const tagsSelectWidth = 300;
+
 export type IDayIndex = keyof typeof dayCodes;

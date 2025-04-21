@@ -18,8 +18,9 @@ import {
     getLocalizedDateString,
     validateWorkingHours,
 } from '../utils';
-import {WithWorkingHoursEditor} from './edit-working-hours';
+import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-working-hours';
 import {ValidationErrors} from '../validation-errors';
+import {WorkingHoursGridLabels} from './working-hours-grid-labels';
 
 const {gettext, locale} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
@@ -211,51 +212,32 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                     {
                         workingDay.status === 'partial'
                             ? (
-                                <WithWorkingHoursEditor
-                                    value={workingDay.working_hours ?? []}
-                                    onChange={(nextValue) => {
-                                        this.setState({
-                                            validationError: null,
-                                            workingDay: {
-                                                ...workingDay,
-                                                working_hours: nextValue,
-                                            },
-                                        });
+                                <div
+                                    style={{
+                                        display: 'grid',
+                                        gap: 'var(--gap-1)',
+                                        gridTemplateColumns: range(0, workingHoursEditorColumnCount)
+                                            .map(() => 'auto')
+                                            .join(' '),
                                     }}
-                                    disabled={this.state.savingInProgress}
-                                    tagsWhitelist={this.props.tagsWhitelist}
                                 >
-                                    {({inputs, labels}) => {
-                                        const columnCount = labels.length;
+                                    <WorkingHoursGridLabels />
 
-                                        return (
-                                            <div
-                                                style={{
-                                                    display: 'grid',
-                                                    gap: 'var(--gap-1)',
-                                                    gridTemplateColumns: range(0, columnCount)
-                                                        .map(() => 'auto')
-                                                        .join(' '),
-                                                }}
-                                            >
-                                                {
-                                                    labels.map((label, i) => (
-                                                        <React.Fragment key={i}>
-                                                            {label}
-                                                        </React.Fragment>
-                                                    ))
-                                                }
-                                                {
-                                                    inputs.map((row, i) => (
-                                                        <React.Fragment key={i}>
-                                                            {...row}
-                                                        </React.Fragment>
-                                                    ))
-                                                }
-                                            </div>
-                                        );
-                                    }}
-                                </WithWorkingHoursEditor>
+                                    <WithWorkingHoursEditor
+                                        value={workingDay.working_hours ?? []}
+                                        onChange={(nextValue) => {
+                                            this.setState({
+                                                validationError: null,
+                                                workingDay: {
+                                                    ...workingDay,
+                                                    working_hours: nextValue,
+                                                },
+                                            });
+                                        }}
+                                        disabled={this.state.savingInProgress}
+                                        tagsWhitelist={this.props.tagsWhitelist}
+                                    />
+                                </div>
                             ) : (() => {
                                 const value: Array<string> =
                                     ((workingDay.working_hours ?? [])?.[0]?.tags ?? []).map((item) => item.code);
