@@ -150,7 +150,11 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                         return (
                             <div
                                 key={day}
-                                ref={this.dayRefs[dateKey]}
+
+                                // do not set ref if day is from other month
+                                // otherwise it would cause incorrect popover positioning
+                                ref={dayFromOtherMonth ? undefined : this.dayRefs[dateKey]}
+
                                 style={{
                                     opacity: dayFromOtherMonth ? 0.5 : undefined,
                                     width: '100%',
@@ -163,7 +167,12 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     borderRadius: 20,
                                     cursor: 'pointer',
                                 }}
+
                                 onClick={() => {
+                                    if (dayFromOtherMonth) {
+                                        return;
+                                    }
+
                                     this.setState({
                                         overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
                                     });
