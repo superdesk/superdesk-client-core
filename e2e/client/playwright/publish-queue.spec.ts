@@ -40,7 +40,7 @@ test('item appearing in publish queue after publishing with subscriber', async (
         'Edit',
     );
 
-    authoring.publish(page, ['Subscriber 1']);
+    authoring.publish({subscribers: ['Subscriber 1']});
 
     await expect(page.locator(
         s('monitoring-group=Sports desk output', 'article-item=test sports story'),

@@ -17,7 +17,7 @@ test.describe('sending an article', async () => {
             'Edit',
         );
 
-        authoring.sendTo(page, 'Working Stage', ['Education']);
+        authoring.sendTo({desk: 'Education', stage: 'Working Stage'});
 
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
@@ -28,20 +28,22 @@ test.describe('sending an article', async () => {
         ).toBeVisible();
     });
 
-    test('sending an article to another stage', async ({page}) => {
+    test('sending an article to another stage of the same desk', async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 
+        const currentDesk = 'Sports';
+
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
-        await monitoring.selectDeskOrWorkspace('Sports');
+        await monitoring.selectDeskOrWorkspace(currentDesk);
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
             'Edit',
         );
 
-        authoring.sendTo(page, 'Incoming Stage');
+        authoring.sendTo({desk: currentDesk, stage: 'Incoming Stage'});
 
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
