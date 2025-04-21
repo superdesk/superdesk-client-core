@@ -913,6 +913,12 @@ declare module 'superdesk-api' {
              */
             getUserProfileSections?: (user: IUser) => Array<IUserProfileSection>;
 
+
+            /**
+             * Use it to warn instance administrators about missing/incorrect configuration
+             */
+            getInstanceConfigurationIssues?(): Promise<Array<{message: string}>>;
+
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {

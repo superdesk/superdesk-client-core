@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {showModal} from '@superdesk/common';
 import {authoringReactEnabledUserSelection, extensions} from 'appConfig';
 import {flatMap} from 'lodash';
@@ -11,50 +11,98 @@ interface IError {
     content: React.ReactNode;
 }
 
-function getError(): Promise<IError | null> {
+const Heading = (props: {text: string}) => (
+    <h4 style={{paddingBlockEnd: 'var(--gap-1)'}}>
+        {props.text}
+    </h4>
+);
+
+async function getError(): Promise<IError | null> {
+    const issues: Array<React.ReactNode> = [];
+
     const authoringHeaderComponentsFromExtensions = flatMap(
         Object.values(extensions),
         (extension) => extension.activationResult?.contributions?.authoringHeaderComponents ?? [],
     );
 
     if (authoringHeaderComponentsFromExtensions.length > 0 && authoringReactEnabledUserSelection === true) {
-        return Promise.resolve({
-            title: 'Incompatible extension detected',
-            content: (
-                <>
-                    <p>
-                        Unsupported extension point is being used: `contributions.authoringHeaderComponents`
-                    </p>
+        issues.push((
+            <>
+                <Heading
+                    text={'Unsupported extension point is being used: `contributions.authoringHeaderComponents`'}
+                />
 
-                    <p>
-                        You are likely running an outdated version of auto tagging extension.
-                    </p>
+                <p>
+                    You are likely running an outdated version of auto tagging extension.
+                </p>
 
-                    <p>
-                        Update or disable incompatible extensions.
-                    </p>
-                </>
-            ),
-        });
+                <p>
+                    Update or disable incompatible extensions.
+                </p>
+            </>
+        ));
     }
 
-    return ng.get('vocabularies').getAllActiveVocabularies().then((vocabularies) => {
-        const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') == null;
+    const vocabularies = await ng.get('vocabularies').getAllActiveVocabularies();
+    const categoriesMissing = vocabularies.find(({_id}) => _id === 'categories') == null;
 
-        if (categoriesMissing) {
-            return {
-                title: 'Instance configuration is missing!',
-                content: (
+    if (categoriesMissing) {
+        issues.push(
+            (
+                <>
+                    <Heading
+                        text={'Vocabulary with ID "categories" is required`'}
+                    />
+
+                    <p>{gettext('Add it via Settings > Metadata')}</p>
+                </>
+            ),
+        );
+    }
+
+    for (const [extensionId, extension] of Object.entries(extensions)) {
+        const extensionIssues = await (
+            extension.activationResult?.contributions?.getInstanceConfigurationIssues
+            ?? (() => Promise.resolve([] as Array<{message: string}>))
+        )();
+
+        if (extensionIssues.length > 0) {
+            issues.push(
+                (
                     <>
-                        <p>{gettext('Vocabulary with ID "categories" is required.')}</p>
-                        <p>{gettext('Add it via Settings > Metadata')}</p>
+                        <Heading
+                            text={gettextPlural(
+                                extensionIssues.length,
+                                'Issue with extension "{{id}}":',
+                                'Issues with extension "{{id}}":',
+                                {
+                                    id: extensionId,
+                                },
+                            )}
+                        />
+
+                        {
+                            extensionIssues.map(({message}, i) => (
+                                <p key={i}>{message}</p>
+                            ))
+                        }
                     </>
                 ),
-            };
-        } else {
-            return null;
+            );
         }
-    });
+    }
+
+    return issues.length > 0
+        ? {
+            title: gettext('There are issues with instance configuration'),
+            content: issues.map((node, i) => (
+                <React.Fragment key={i}>
+                    {i !== 0 && <hr />}
+                    {node}
+                </React.Fragment>
+            )),
+        }
+        : null;
 }
 
 export function maybeDisplayInvalidInstanceConfigurationMessage() {
