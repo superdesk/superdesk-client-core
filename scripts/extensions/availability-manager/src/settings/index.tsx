@@ -1,6 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
+import {ReactNode} from 'react';
 import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
@@ -15,6 +16,7 @@ import {EditWorkdayModal} from './edit-workday-modal';
 import {fullWidthNoGrow, getStatusColor, setUserAvailability} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
+import {monthNamesByIndex} from '../test-utils';
 
 const {httpRequestVoidLocal, httpRequestJsonLocal} = superdesk;
 const {locale, gettext} = superdesk.localization;
@@ -25,8 +27,13 @@ const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvail
 
 const verticalSpacing = '1.6rem';
 
-const Page: React.ComponentType<{children: React.ReactNode}> = (props) => (
-    <div style={{display: 'flex', justifyContent: 'center'}}>
+interface IPropsPage {
+    children: ReactNode;
+    'data-test-id'?: string;
+}
+
+const Page: React.ComponentType<{children: React.ReactNode}> = (props: IPropsPage) => (
+    <div style={{display: 'flex', justifyContent: 'center'}} data-test-id={props['data-test-id']}>
         <div style={{margin: '2rem'}}>
             <Card paddingBase="3">
                 {props.children}
@@ -74,7 +81,7 @@ function getQuery(
 }
 
 export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
-    private dayRefs: {[key: string]: React.RefObject<HTMLDivElement>};
+    private dayRefs: {[key: string]: React.RefObject<HTMLButtonElement>};
 
     constructor(props: IProps) {
         super(props);
@@ -136,7 +143,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                         const workingDay: IAvailabilityRecord | null = grouped[dateKey];
 
                         if (this.dayRefs[dateKey] == null) {
-                            this.dayRefs[dateKey] = React.createRef<HTMLDivElement>();
+                            this.dayRefs[dateKey] = React.createRef<HTMLButtonElement>();
                         }
 
                         const background: React.CSSProperties['background'] = (() => {
@@ -148,7 +155,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                         })();
 
                         return (
-                            <div
+                            <button
                                 key={day}
 
                                 // do not set ref if day is from other month
@@ -177,14 +184,16 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
                                     });
                                 }}
+
+                                data-test-status={workingDay?.status ?? undefined}
                             >
                                 {day}
-                            </div>
+                            </button>
                         );
                     };
 
                     return (
-                        <Page>
+                        <Page data-test-id="availability-settings">
                             <div style={fullWidthNoGrow}>
                                 <VocabularySelect
                                     label={{text: languagesVocabulary.display_name}}
@@ -322,6 +331,8 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                             firstDayOfWeek={firstDayOfWeek}
                                             locale={locale.code}
                                             dayTemplate={dayTemplate}
+                                            data-test-id="month"
+                                            data-test-value={monthNamesByIndex[month.getMonth().toString()]}
                                         />
                                     ))
                                 }

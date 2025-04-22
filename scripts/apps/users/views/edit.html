@@ -14,7 +14,7 @@
     <div class="form-content">
         <div class="user-details-pane">
             <header>
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs" data-test-id="page-sections">
                     <li ng-repeat="section in sections track by section.id" ng-class="{active: selectedSection.id === section.id}">
                         <button translate ng-click="setSelectedSection(section)"">{{section.label}}</button>
                     </li>

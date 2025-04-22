@@ -173,6 +173,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                     </Spacer>
                 )}
                 onHide={() => this.handleClose()}
+                data-test-id="edit-workday"
             >
                 <Spacer v gap="16" noWrap>
                     <h4>
@@ -207,6 +208,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                             });
                         }}
                         disabled={this.state.savingInProgress}
+                        data-test-id="status"
                     />
 
                     {
