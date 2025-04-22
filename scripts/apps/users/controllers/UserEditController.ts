@@ -1,9 +1,9 @@
 import {sdApi} from 'api';
 import {extensions} from 'appConfig';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
-import {notify} from 'core/notify/notify';
 import {gettext} from 'core/utils';
 import {generate} from 'json-merge-patch';
+import {omit} from 'lodash';
 import {IExtensionActivationResult, IUser, IUserProfileSection} from 'superdesk-api';
 
 const getCoreSections: IExtensionActivationResult['contributions']['getUserProfileSections'] = (user) => {
@@ -37,8 +37,8 @@ const getCoreSections: IExtensionActivationResult['contributions']['getUserProfi
     return sections;
 };
 
-UserEditController.$inject = ['$scope', 'user', 'session', 'usersService'];
-export function UserEditController($scope, user, session, usersService) {
+UserEditController.$inject = ['$scope', 'user', 'usersService'];
+export function UserEditController($scope, user, usersService) {
     $scope.user = user;
     $scope.savingInProgress = false;
 
@@ -62,7 +62,7 @@ export function UserEditController($scope, user, session, usersService) {
     $scope.onSave = (nextUser): Promise<IUser> => {
         $scope.savingInProgress = true;
 
-        return usersService.save(user, generate(user, nextUser))
+        return usersService.save(user, omit(generate(user, nextUser), ['dateline_source', 'last_activity_at']))
             .then((saved) => {
                 $scope.user = saved;
 
