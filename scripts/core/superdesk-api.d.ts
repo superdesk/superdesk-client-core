@@ -1568,6 +1568,7 @@ declare module 'superdesk-api' {
         avatar_renditions: {};
         role?: IUserRole['_id'];
         privileges: IUserPrivileges;
+        dateline_source?: string;
         user_type: 'user' | 'administrator';
         is_support: boolean;
         is_author: boolean;

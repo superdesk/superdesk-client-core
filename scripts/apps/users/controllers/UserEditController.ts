@@ -5,6 +5,7 @@ import {gettext} from 'core/utils';
 import {generate} from 'json-merge-patch';
 import {omit} from 'lodash';
 import {IExtensionActivationResult, IUser, IUserProfileSection} from 'superdesk-api';
+import {readOnlyUserFields} from '../directives/UserEditDirective';
 
 const getCoreSections: IExtensionActivationResult['contributions']['getUserProfileSections'] = (user) => {
     const sections: Array<IUserProfileSection> = [
@@ -62,7 +63,7 @@ export function UserEditController($scope, user, usersService) {
     $scope.onSave = (nextUser): Promise<IUser> => {
         $scope.savingInProgress = true;
 
-        return usersService.save(user, omit(generate(user, nextUser), ['dateline_source', 'last_activity_at']))
+        return usersService.save(user, omit(generate(user, nextUser), readOnlyUserFields))
             .then((saved) => {
                 $scope.user = saved;
 

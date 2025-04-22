@@ -54,6 +54,10 @@ interface IScope {
     $watchCollection: (...args: any) => any;
 }
 
+const notAllowedToChangeYourself = ['is_active', 'is_enabled'] satisfies Array<keyof IUser>;
+
+export const readOnlyUserFields = ['dateline_source', 'last_activity_at'] satisfies Array<keyof IUser>;
+
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
     'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal', '$q'];
@@ -217,8 +221,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                          * which will be used my extension point)
                          * usersService.save is only intended to be used when creating a new user
                          */
-                        const notAllowedToChangeYourself = ['is_active', 'is_enabled'];
-                        const fieldsToOmit = ['dateline_source', 'last_activity_at'];
+                        const fieldsToOmit: Array<keyof IUser> = readOnlyUserFields;
 
                         if (session.identity._id === scope.user._id) {
                             fieldsToOmit.push(...notAllowedToChangeYourself);
