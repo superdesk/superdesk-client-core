@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         features: {
             swimlane: {defaultNumberOfColumns: 4},
             editor3: true,
-            qumu: true,
+            qumu: false, // disable in order to prevent loading 3rd party libraries
             savedSearch: {
                 subscriptions: true,
             },
