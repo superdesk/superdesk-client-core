@@ -157,7 +157,13 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
             method: 'GET',
             path: `/default_user_availability/${this.props.user._id}`,
         }).catch(noop).then((res) => {
-            if (res != null) {
+            if (res == null) { // no value saved yet
+                this.setState({
+                    schedule: {},
+                    defaultAvailabilityRecord: null,
+                    initialized: true,
+                });
+            } else {
                 this.setState({
                     schedule: Object.entries(res.working_days ?? {})
                         .reduce((acc: IState['schedule'], [dayCode, value]) => {
