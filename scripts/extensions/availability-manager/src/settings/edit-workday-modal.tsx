@@ -270,6 +270,7 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                                             fullWidth={true}
                                             disabled={this.state.savingInProgress}
                                             selectBranchWithChildren
+                                            data-test-id="tags"
                                         />
                                     </div>
                                 );

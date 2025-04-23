@@ -2327,6 +2327,7 @@ declare module 'superdesk-api' {
         selectBranchWithChildren?: boolean;
         disabled?: boolean;
         fullWidth: boolean;
+        'data-test-id'?: string;
     }
 
     export interface IGenericListPageComponent<T> {

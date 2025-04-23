@@ -24,7 +24,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
         const {day} = this.props;
 
         return (
-            <>
+            <div data-test-id="working-day-view">
                 <Spacer h gap="0" justifyContent="end" noWrap style={{paddingInline: 4, paddingBlockStart: 4}}>
                     <IconButton
                         icon="pencil"
@@ -126,7 +126,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         })()
                     }
                 </div>
-            </>
+            </div>
         );
     }
 }
@@ -152,6 +152,7 @@ function Tags(props: {tags?: Array<{code: string}>}) {
                 maxWidth: 300,
                 flexWrap: 'wrap',
             }}
+            data-test-id="tags"
         >
             {tags.map((tag, i) => {
                 const vocabularyItem = tagsById[tag.code];
@@ -168,6 +169,7 @@ function Tags(props: {tags?: Array<{code: string}>}) {
                                 : tag.code
                         }
                         size="small"
+                        data-test-id="tag"
                     />
                 );
             })}

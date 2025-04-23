@@ -38,6 +38,7 @@ export class VocabularySelect extends React.PureComponent<IPropsVocabularySelect
                 fullWidth={this.props.fullWidth}
                 disabled={this.props.disabled}
                 selectBranchWithChildren={this.props.selectBranchWithChildren}
+                data-test-id={this.props['data-test-id']}
             />
         );
     }
