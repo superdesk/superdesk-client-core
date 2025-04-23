@@ -61,7 +61,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                 <ColumnsBefore rowIndex={rowIndex} />
 
                                 <div>
-                                    <Spacer h gap="4" justifyContent="start">
+                                    <Spacer h gap="4" justifyContent="start" noGrow>
                                         <TimePicker
                                             inlineLabel
                                             labelHidden
