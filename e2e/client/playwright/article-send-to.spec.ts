@@ -23,7 +23,7 @@ test.describe('sending an article', async () => {
         await new TreeSelectDriver(
             page,
             page.locator(s('destination-select')),
-        ).setValue(['Education']);
+        ).setValues(['Education']);
         await page
             .locator(s('interactive-actions-panel', 'stage-select'))
             .getByRole('radio', {name: 'Working Stage'})
