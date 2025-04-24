@@ -27,15 +27,30 @@ test.describe('availability manager settings', async () => {
         await expect(page.locator(s('working-day-view'))).toHaveScreenshot();
     });
 
+    test('deletion of day record', async ({page}) => {
+        await openAvailabilitySettings(page);
+
+        const mar10 = page.locator(s('month=mar')).getByRole('button', {name: '10'});
+
+        await expect(mar10).toHaveAttribute('data-test-status', 'available');
+
+        // click to view
+        await mar10.click();
+
+        await page.locator(s('working-day-view')).getByRole('button', {name: 'Remove'}).click();
+
+        await expect(mar10).not.toHaveAttribute('data-test-status', 'available');
+    });
+
     test('setting availability to "available" for a single day', async ({page}) => {
         await openAvailabilitySettings(page);
 
         const feb15 = page.locator(s('month=feb')).getByRole('button', {name: '15'});
 
         await expect(feb15).toBeVisible();
-        await expect(feb15).not.toHaveAttribute('data-test-status', 'Available');
+        await expect(feb15).not.toHaveAttribute('data-test-status', 'available');
 
-        // click to edit
+        // click to create
         await feb15.click();
 
         // choose status
