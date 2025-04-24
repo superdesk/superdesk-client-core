@@ -1,6 +1,6 @@
 import {test, expect, Page} from '@playwright/test';
-import {restoreDatabaseSnapshot, s} from '../utils';
-import {TreeSelectDriver} from '../utils/tree-select-driver';
+import {restoreDatabaseSnapshot, s} from '../../utils';
+import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
 async function openAvailabilitySettings(page: Page) {
     await page.clock.setFixedTime(new Date('1970-02-15'));
