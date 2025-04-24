@@ -27,5 +27,6 @@ module.exports = function(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
+        isTestEnvironment: true,
     };
 };

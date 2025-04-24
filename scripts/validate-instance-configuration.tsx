@@ -3,7 +3,7 @@ import {Modal} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {gettext, gettextPlural} from 'core/utils';
 import {showModal} from '@superdesk/common';
-import {authoringReactEnabledUserSelection, extensions} from 'appConfig';
+import {appConfig, authoringReactEnabledUserSelection, extensions} from 'appConfig';
 import {flatMap} from 'lodash';
 
 interface IError {
@@ -61,6 +61,15 @@ async function getError(): Promise<IError | null> {
     }
 
     for (const [extensionId, extension] of Object.entries(extensions)) {
+        if (appConfig.isTestEnvironment) {
+            /**
+             * Do not show invalid instance config messages from extensions during e2e tests.
+             * Some extensions use a custom database snapshot which has correct configs, but we don't have a method yet
+             * to conditionally enable extensions only for certain tests.
+             */
+            break;
+        }
+
         const extensionIssues = await (
             extension.activationResult?.contributions?.getInstanceConfigurationIssues
             ?? (() => Promise.resolve([] as Array<{message: string}>))
