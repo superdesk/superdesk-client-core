@@ -64,9 +64,9 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
     for (const range of workingHours) {
         const {start_time, end_time} = range;
 
-        if (start_time.length < 1) {
+        if (start_time == null || start_time.length < 1) {
             return gettext('{{field}} cannot be empty', {field: gettext('start time')});
-        } else if (end_time.length < 1) {
+        } else if (end_time == null || end_time.length < 1) {
             return gettext('{{field}} cannot be empty', {field: gettext('end time')});
         } else if (new Date(`1970-01-01 ${start_time}`) > new Date(`1970-01-01 ${end_time}`)) {
             return gettext(

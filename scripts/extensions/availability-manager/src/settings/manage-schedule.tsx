@@ -223,9 +223,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                         />
                     </Spacer>
                 )}
+                data-test-id="manage-schedule"
             >
                 <Spacer v gap="16" noWrap style={{minWidth: 870}}>
-                    <CheckButtonGroup>
+                    <CheckButtonGroup data-test-id="weekdays">
                         {
                             weekdays.map((weekday) => (
                                 <CheckboxButton
@@ -324,6 +325,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                             inlineLabel
                                                             labelHidden
                                                             required
+                                                            data-test-id="status"
                                                         />
                                                     </div>
                                                 </>
@@ -411,6 +413,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                             fullWidth={true}
                                                                             disabled={this.state.savingInProgress}
                                                                             selectBranchWithChildren
+                                                                            data-test-id="tags"
                                                                         />
                                                                     </div>
                                                                 );
