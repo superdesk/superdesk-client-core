@@ -36,7 +36,7 @@ test('desk notifications', async ({page}) => {
     ).toContainText('1', {timeout: 10000});
 });
 
-test('can mark and unmarked for desk', async ({page}) => {
+test('can mark/unmark for desk', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -53,11 +53,8 @@ test('can mark and unmarked for desk', async ({page}) => {
     await page.locator(
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story', 'mark-for-desk--bell'),
     ).click();
-    await expect(
-        page.locator(
-            s('marked-desk-list'),
-        ),
-    ).toContainText('Finances');
+
+    await expect(page.locator(s('marked-desk-list'))).toContainText('Finances');
 
     // unmark from a desk
     await page.locator(s(
@@ -65,7 +62,9 @@ test('can mark and unmarked for desk', async ({page}) => {
         'article-item=test sports story',
         'mark-for-desk--bell',
     )).click();
+
     await page.locator(s('marked-desk-list')).getByRole('button', {name: 'remove'}).click();
+
     await expect(
         page.locator(s(
             'monitoring-group=Sports / Working Stage',
@@ -106,7 +105,7 @@ test('Removing desks', async ({page}) => {
     await page.locator(s('modal-confirm')).getByRole('button', {name: 'Ok'}).click();
     await expect(page.locator(s('desk--Education'))).not.toBeVisible();
 
-    // desk Sports is NOT empty one and can NOT be removed
+    // desk Sports is NOT empty and can NOT be removed
     await page.locator(s('desk--Sports', 'desk-actions')).click();
     await page.locator(s('desk-actions--options')).getByRole('button', {name: 'Remove'}).click();
     await page.locator(s('modal-confirm')).getByRole('button', {name: 'Ok'}).click();
