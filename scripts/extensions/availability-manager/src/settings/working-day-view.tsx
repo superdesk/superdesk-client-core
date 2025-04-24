@@ -100,7 +100,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                             const tags = entry.tags ?? [];
 
                                             return (
-                                                <Spacer v gap="4" key={i}>
+                                                <Spacer v gap="4" key={i} data-test-id="working-hours-record">
                                                     <Spacer
                                                         key={i}
                                                         h
@@ -108,6 +108,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                         noWrap
                                                         alignItems="center"
                                                         justifyContent="start"
+                                                        data-test-id="time-range"
                                                     >
                                                         <Icon name="time" />
 

@@ -63,6 +63,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                 <div>
                                     <Spacer h gap="4" justifyContent="start" noGrow>
                                         <TimePicker
+                                            label={gettext('Time from')}
                                             inlineLabel
                                             labelHidden
                                             value={item.start_time}
@@ -89,6 +90,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                         </div>
 
                                         <TimePicker
+                                            label={gettext('Time to')}
                                             inlineLabel
                                             labelHidden
                                             value={item.end_time}
@@ -129,6 +131,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                         fullWidth={true}
                                         disabled={disabled}
                                         selectBranchWithChildren
+                                        data-test-id="tags"
                                     />
                                 </div>
 

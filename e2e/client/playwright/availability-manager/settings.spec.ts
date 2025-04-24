@@ -43,7 +43,7 @@ test.describe('availability manager settings', async () => {
 
         await new TreeSelectDriver(
             page,
-            page.locator(s('edit-workday', 'tags')),
+            page.locator(s('edit-workday', 'tags')).first(),
         ).setValues(['Austria', 'Vienna'], ['North Macedonia']);
 
         await expect(page.locator(s('edit-workday'))).toHaveScreenshot();
@@ -53,5 +53,71 @@ test.describe('availability manager settings', async () => {
 
         // should be visible, and marked as available
         await expect(feb15).toHaveAttribute('data-test-status', 'available');
+    });
+
+    test('setting availability to "partially available" for a single day', async ({page}) => {
+        test.setTimeout(1000 * 60);
+
+        await openAvailabilitySettings(page);
+
+        const feb15 = page.locator(s('month=feb')).getByRole('button', {name: '15'});
+
+        await expect(feb15).not.toHaveAttribute('data-test-status', 'partial');
+
+        // enter creation mode
+        await feb15.click();
+
+        await page.locator(s('edit-workday', 'status', 'item=Partially available')).click();
+
+        await page.locator(s('edit-workday')).getByLabel('Time from').first().click();
+        await page.locator(s('edit-workday')).getByLabel('Time from').first().fill('10:00');
+        await page.locator(s('edit-workday')).getByLabel('Time from').first().press('Tab');
+
+        await page.locator(s('edit-workday')).getByLabel('Time to').first().click();
+        await page.locator(s('edit-workday')).getByLabel('Time to').first().fill('11:00');
+
+        await new TreeSelectDriver(
+            page,
+            page.locator(s('edit-workday', 'tags')).first(),
+        ).setValues(['Bosnia and Herzegovina'], ['North Macedonia']);
+
+        await page.locator(s('edit-workday')).getByRole('button', {name: 'Add'}).click();
+
+        await page.locator(s('edit-workday')).getByLabel('Time from').nth(1).click();
+        await page.locator(s('edit-workday')).getByLabel('Time from').nth(1).fill('11:30');
+        await page.locator(s('edit-workday')).getByLabel('Time from').nth(1).press('Tab');
+
+        await page.locator(s('edit-workday')).getByLabel('Time to').nth(1).fill('12:30');
+
+        await new TreeSelectDriver(
+            page,
+            page.locator(s('edit-workday', 'tags')).nth(1),
+        ).setValues('Austria');
+
+        await expect(page.locator(s('edit-workday'))).toHaveScreenshot();
+
+        await page.locator(s('edit-workday')).getByRole('button', {name: 'Save'}).click();
+
+        await expect(feb15).toHaveAttribute('data-test-status', 'partial');
+
+        await expect(page.locator(s('working-day-view'))).toContainText('Sunday, February 15, 1970');
+
+        await expect(
+            page.locator(s('working-day-view', 'working-hours-record')).nth(0).locator(s('time-range')),
+        ).toContainText('10:00 - 11:00');
+
+        await expect(
+            page.locator(s('working-day-view', 'working-hours-record')).nth(0).locator(s('tags', 'tag')),
+        ).toHaveText(['Bosnia and Herzegovina', 'North Macedonia']);
+
+        await expect(page.locator(
+            s('working-day-view', 'working-hours-record')).nth(1).locator(s('time-range')),
+        ).toContainText('11:30 - 12:30');
+
+        await expect(
+            page.locator(s('working-day-view', 'working-hours-record')).nth(1).locator(s('tags', 'tag')),
+        ).toHaveText(['Austria']);
+
+        await expect(page.locator(s('working-day-view'))).toHaveScreenshot();
     });
 });
