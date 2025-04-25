@@ -2,6 +2,7 @@ import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'super
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from './constants';
 import {AvailabilitySettings} from './settings';
 import {superdesk} from './superdesk';
+import {CorrespondentAvailability} from './correspondent-availability';
 
 const {gettext} = superdesk.localization;
 
@@ -55,6 +56,16 @@ const extension: IExtension = {
 
                 return result;
             };
+
+            // PR-TODO: add privilege check
+            contributions.pages = [
+                {
+                    title: 'Correspondent availability',
+                    url: '/correspondent-availability',
+                    priority: 1,
+                    component: CorrespondentAvailability,
+                },
+            ];
         }
 
         return Promise.resolve({contributions} satisfies IExtensionActivationResult);
