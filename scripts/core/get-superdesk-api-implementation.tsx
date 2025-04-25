@@ -122,6 +122,7 @@ import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
 import {VocabularySelect} from './ui/components/vocabulary-select';
+import {store} from './data';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -366,16 +367,7 @@ export function getSuperdeskApiImplementation(
             },
             attachment: attachmentsApi,
             users: {
-                getUsersByIds: (ids) => (
-                    dataApi.query<IUser>(
-                        'users',
-                        1,
-                        {field: 'display_name', direction: 'ascending'},
-                        {_id: {$in: ids}},
-                        200,
-                    )
-                        .then((response) => response._items)
-                ),
+                getAllUsers: () => store.getState().entities.users,
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,

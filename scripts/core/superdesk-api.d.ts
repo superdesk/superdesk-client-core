@@ -24,6 +24,8 @@ declare module 'superdesk-api' {
 
     export type ICallable = (...args: Array<any>) => any;
 
+    export type Dictionary<K, V> = {[key: string]: V};
+
     // FORMATS
 
 
@@ -3143,7 +3145,7 @@ declare module 'superdesk-api' {
             };
             attachment: IAttachmentsApi;
             users: {
-                getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+                getAllUsers(): Dictionary<IUser['_id'], User>;
             };
             templates: {
                 getUserTemplates(

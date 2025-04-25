@@ -9,70 +9,22 @@ interface IProps {
     item: IVersionInformation;
 }
 
-interface IState {
-    users: Dictionary<string, IUser>;
-}
-
-export class VersionUserDateLines extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {users: {}};
-    }
-
-    componentDidMount() {
-        this.loadUsers();
-    }
-
-    componentDidUpdate(prevProps: Readonly<IProps>) {
-        if (this.props.item.original_creator !== prevProps.item.original_creator ||
-            this.props.item.version_creator !== prevProps.item.version_creator
-        ) {
-            this.loadUsers();
-        }
-    }
-
-    loadUsers() {
-        const userIds = [
-            this.props.item.original_creator,
-            this.props.item.version_creator,
-        ].filter(
-            (user) => user != null,
-        ) as Array<IUser['_id']>;
-
-        if (userIds.length === 0) {
-            return;
-        }
-
-        superdeskApi.entities.users.getUsersByIds(userIds)
-            .then((users) => {
-                this.setState({
-                    users: users.reduce(
-                        (userList, user) => {
-                            userList[user._id] = user;
-
-                            return userList;
-                        },
-                        {} as Dictionary<string, IUser>,
-                    ),
-                });
-            });
-    }
-
+export class VersionUserDateLines extends React.Component<IProps> {
     render() {
+        const users = superdeskApi.entities.users.getAllUsers();
         const {gettext, longFormatDateTime, getRelativeOrAbsoluteDateTime} = superdeskApi.localization;
         const {config} = superdeskApi.instance;
         const {item} = this.props;
 
         const createdUser: IUser | null = item.original_creator == null ?
             null :
-            this.state.users[item.original_creator];
+            users[item.original_creator];
 
         const createdDate = getRelativeOrAbsoluteDateTime(item.firstcreated, config.view.dateformat);
         const createdDateLong = longFormatDateTime(item.firstcreated);
         const updatedUser: IUser | null = item.version_creator == null ?
             null :
-            this.state.users[item.version_creator];
+            users[item.version_creator];
         const updateDate = getRelativeOrAbsoluteDateTime(item.versioncreated, config.view.dateformat);
         const updateDateLong = longFormatDateTime(item.versioncreated);
 
