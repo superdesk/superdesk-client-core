@@ -39,14 +39,14 @@ export function getStatusColor(status: IAvailabilityRecord['status']) {
 
 export function getLabelForStatus(status: IAvailabilityRecord['status']) {
     switch (status) {
-    case 'available':
-        return gettext('Available');
-    case 'unavailable':
-        return gettext('Unavailable');
-    case 'partial':
-        return gettext('Partially available');
-    default:
-        return assertNever(status);
+        case 'available':
+            return gettext('Available');
+        case 'unavailable':
+            return gettext('Unavailable');
+        case 'partial':
+            return gettext('Partially available');
+        default:
+            return assertNever(status);
     }
 }
 
@@ -172,3 +172,47 @@ export const fullWidthNoGrow: React.CSSProperties = {
     width: 'min-content',
     minWidth: '100%',
 };
+
+export function compareTime(
+    str1: string,
+    str2: string,
+): number {
+    const num1 = parseInt(str1.replace(':', ''), 10);
+    const num2 = parseInt(str2.replace(':', ''), 10);
+
+    if (num1 < num2) {
+        return -1;
+    } else if (num1 === num2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+export function getTimeNumber(
+    time: string, // ISO time e.g. 23:59
+) {
+    return parseInt(time.replace(':', ''), 10);
+}
+
+export function getLowest(items: Array<number>): number | null {
+    return items.sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+
+        return 0;
+    })[0] ?? null;
+}
+
+export function getLowestThrows(items: Array<number>): number {
+    if (items.length < 1) {
+        throw new Error();
+    }
+
+    return items.sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+
+        return 0;
+    })[0];
+}
