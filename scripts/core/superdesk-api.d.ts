@@ -913,6 +913,12 @@ declare module 'superdesk-api' {
              */
             getUserProfileSections?: (user: IUser) => Array<IUserProfileSection>;
 
+
+            /**
+             * Use it to warn instance administrators about missing/incorrect configuration
+             */
+            getInstanceConfigurationIssues?(): Promise<Array<{message: string}>>;
+
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
@@ -2308,6 +2314,22 @@ declare module 'superdesk-api' {
         disabled?: boolean;
     }
 
+    export interface IPropsVocabularySelect {
+        label: {
+            text: string;
+            hidden?: boolean;
+            position?: 'top' | 'left'; // defaults to top
+        },
+        getOptions(): Array<IVocabularyItem>;
+        value: Array<IVocabularyItem['qcode']>;
+        onChange(value: Array<IVocabularyItem['qcode']>): void;
+        multiple?: boolean; // defaults to false
+        selectBranchWithChildren?: boolean;
+        disabled?: boolean;
+        fullWidth: boolean;
+        'data-test-id'?: string;
+    }
+
     export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -3107,6 +3129,11 @@ declare module 'superdesk-api' {
                 getCustomFieldVocabularies(): Array<IVocabulary>;
                 getLanguageVocabulary(): IVocabulary;
                 isCustomVocabulary(vocabulary: IVocabulary): boolean;
+
+                /**
+                 * If language is not passed, it will default to user interface language
+                 */
+                getVocabularyItemNameTranslated(item: IVocabularyItem, language?: string): string;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -3170,6 +3197,7 @@ declare module 'superdesk-api' {
             prepareSuperdeskQuery(endpoint: string, query: ISuperdeskQuery): IHttpRequestOptionsLocal & {method: 'GET'};
         },
         components: {
+            VocabularySelect: React.ComponentType<IPropsVocabularySelect>;
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
@@ -3275,6 +3303,10 @@ declare module 'superdesk-api' {
                 relativeDuration?: number, // = 1
                 relativeUnit?: string, // = 'days'
             ): string;
+            locale: {
+                code: string;
+                firstDayOfWeek: number; // 0 - sunday
+            };
         };
         privileges: {
             getOwnPrivileges(): Promise<IUserPrivileges>;
@@ -3363,6 +3395,15 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+            filterFlatTree<T>(
+                options: {
+                    itemsFlat: Array<T>;
+                    filterFn: (item: T) => boolean;
+                    getId: (item: T) => string;
+                    getParentId: (item: T) => string | undefined | null;
+                    includeParents: boolean;
+                },
+            ): Array<T>;
 
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
@@ -3371,6 +3412,8 @@ declare module 'superdesk-api' {
             getTextColor(
                 background: string, // HEX color
             ): 'black' | 'white';
+
+            omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Omit<T, keyof IBaseRestApiResponse>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

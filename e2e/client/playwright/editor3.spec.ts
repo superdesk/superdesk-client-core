@@ -274,7 +274,7 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await new TreeSelectDriver(
         page,
         page.locator(s('vocabulary-edit-content', 'formatting-options')),
-    ).setValue(['h1']);
+    ).setValues(['h1']);
 
     await page.locator(s('vocabulary-edit-content', 'editor3')).getByRole('textbox').fill('test data');
 

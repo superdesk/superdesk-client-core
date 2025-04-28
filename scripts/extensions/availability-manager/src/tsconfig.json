@@ -1,0 +1,11 @@
+{
+    "extends": "superdesk-code-style/tsconfig-strict",
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "../dist/src",
+        "lib": [
+            "dom",
+            "ES2019",
+        ],
+    }
+}
