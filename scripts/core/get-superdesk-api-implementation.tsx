@@ -5,7 +5,6 @@ import {
     IArticle,
     IEvents,
     IStage,
-    IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
     IOpenSideWidget,
@@ -122,7 +121,7 @@ import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
 import {VocabularySelect} from './ui/components/vocabulary-select';
-import {store} from './data';
+import {dataStore} from 'data-store';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -367,7 +366,7 @@ export function getSuperdeskApiImplementation(
             },
             attachment: attachmentsApi,
             users: {
-                getAllUsers: () => store.getState().entities.users,
+                getAllUsers: () => dataStore.users.toJS(),
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,
