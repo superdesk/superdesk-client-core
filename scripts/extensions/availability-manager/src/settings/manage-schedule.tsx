@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, noop, range} from 'lodash';
-import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Button, CheckboxButton, CheckButtonGroup, Modal} from 'superdesk-ui-framework/react';
 import {
     availabilityStatuses,
     dayCodes,
@@ -12,8 +12,6 @@ import {
 } from '../constants';
 import {
     getFilteredTags,
-    getLabelForStatus,
-    getStylesForStatusDot,
     setUserAvailability,
     validateSchedule,
 } from '../utils';
@@ -23,6 +21,7 @@ import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-work
 import {IUser} from 'superdesk-api';
 import {ValidationErrors} from '../validation-errors';
 import {WorkingHoursGridLabels} from './working-hours-grid-labels';
+import {StatusSelect} from '../components/status-select';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
@@ -289,43 +288,18 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                     </div>
 
                                                     <div>
-                                                        <TreeSelect
-                                                            kind="synchronous"
+                                                        <StatusSelect
                                                             value={
                                                                 [
                                                                     scheduleRecord.status,
                                                                 ] as typeof availabilityStatuses
                                                             }
-                                                            getOptions={
-                                                                () => availabilityStatuses
-                                                                    .map((id) => ({value: id}))
-                                                            }
-                                                            getId={(id) => id}
-                                                            getLabel={(id) => getLabelForStatus(id)}
                                                             onChange={([val]) => {
                                                                 this.handleScheduleItemChange(
                                                                     weekday.index,
                                                                     {status: val},
                                                                 );
                                                             }}
-                                                            optionTemplate={(id) => (
-                                                                <Spacer h gap="4" justifyContent="start" noWrap>
-                                                                    <div>
-                                                                        <div
-                                                                            style={{
-                                                                                ...getStylesForStatusDot(id),
-                                                                            }}
-                                                                        />
-                                                                    </div>
-
-                                                                    <div>{getLabelForStatus(id)}</div>
-                                                                </Spacer>
-                                                            )}
-                                                            fullWidth={true}
-                                                            inlineLabel
-                                                            labelHidden
-                                                            required
-                                                            data-test-id="status"
                                                         />
                                                     </div>
                                                 </>
