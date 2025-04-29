@@ -1,16 +1,15 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {keyBy} from 'lodash';
+
 import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
-import {Icon, IconButton, Label, Tooltip} from 'superdesk-ui-framework/react';
-import {TAGS_VOCABULARY_ID} from '../constants';
+import {Icon, IconButton, Tooltip} from 'superdesk-ui-framework/react';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {getLabelForStatus, getLocalizedDateString, getStylesForStatusDot} from '../utils';
+import {TagsPreview} from '../components/tags-preview';
 
 const {locale, gettext} = superdesk.localization;
-const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
 
 interface IProps {
     day: IAvailabilityRecord;
@@ -91,7 +90,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                             if (day.status !== 'partial') {
                                 return (
-                                    <Tags tags={(day.working_hours ?? [])[0]?.tags} />
+                                    <TagsPreview tags={(day.working_hours ?? [])[0]?.tags} />
                                 );
                             } else {
                                 return (
@@ -117,7 +116,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                         </div>
                                                     </Spacer>
 
-                                                    <Tags tags={tags} />
+                                                    <TagsPreview tags={tags} />
                                                 </Spacer>
                                             );
                                         })}
@@ -130,50 +129,4 @@ export class WorkingDayView extends React.PureComponent<IProps> {
             </div>
         );
     }
-}
-
-function Tags(props: {tags?: Array<{code: string}>}) {
-    const {tags} = props;
-    const tagsById = keyBy(
-        superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID).items,
-        (item) => item.qcode,
-    );
-
-    if (tags == null || tags.length < 1) {
-        return null;
-    }
-
-    return (
-        <Spacer
-            h
-            gap="4"
-            noWrap
-            justifyContent="start"
-            style={{
-                maxWidth: 300,
-                flexWrap: 'wrap',
-            }}
-            data-test-id="tags"
-        >
-            {tags.map((tag, i) => {
-                const vocabularyItem = tagsById[tag.code];
-
-                // PR-TODO: color code required
-                return (
-                    <Label
-                        key={i}
-                        text={
-                            vocabularyItem != null
-                                ? getVocabularyItemNameTranslated(
-                                    vocabularyItem,
-                                )
-                                : tag.code
-                        }
-                        size="small"
-                        data-test-id="tag"
-                    />
-                );
-            })}
-        </Spacer>
-    );
 }
