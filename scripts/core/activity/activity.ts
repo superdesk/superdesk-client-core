@@ -228,14 +228,14 @@ function SuperdeskProvider($routeProvider, _) {
                     var _activities = this.findActivities(intent);
 
                     switch (_activities.length) {
-                    case 0:
-                        return $q.reject();
+                        case 0:
+                            return $q.reject();
 
-                    case 1:
-                        return $q.when(_activities[0]);
+                        case 1:
+                            return $q.when(_activities[0]);
 
-                    default:
-                        return chooseActivity(_activities);
+                        default:
+                            return chooseActivity(_activities);
                     }
                 },
 

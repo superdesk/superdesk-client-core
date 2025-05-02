@@ -6,22 +6,22 @@ import {getSpacingProps} from 'core/helpers/utils';
 
 function getClassNameForBadgeStyle(type: IPropsBadge['type']) {
     switch (type) {
-    case 'default':
-        return null;
-    case 'primary':
-        return 'badge--primary';
-    case 'success':
-        return 'badge--success';
-    case 'warning':
-        return 'badge--warning';
-    case 'alert':
-        return 'badge--alert';
-    case 'highlight':
-        return 'badge--highlight';
-    case 'light':
-        return 'badge--light';
-    default:
-        assertNever(type);
+        case 'default':
+            return null;
+        case 'primary':
+            return 'badge--primary';
+        case 'success':
+            return 'badge--success';
+        case 'warning':
+            return 'badge--warning';
+        case 'alert':
+            return 'badge--alert';
+        case 'highlight':
+            return 'badge--highlight';
+        case 'light':
+            return 'badge--light';
+        default:
+            assertNever(type);
     }
 }
 

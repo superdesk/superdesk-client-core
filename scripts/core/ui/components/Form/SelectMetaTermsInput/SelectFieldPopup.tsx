@@ -50,33 +50,33 @@ export class SelectFieldPopup extends React.Component<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-                onEventCapture(event);
-                this.handleEnterKey();
-                break;
-            case KEYCODES.DOWN:
-                onEventCapture(event);
-                this.handleDownArrowKey(event);
-                break;
-            case KEYCODES.UP:
-                onEventCapture(event);
-                this.handleUpArrowKey();
-                break;
-            case KEYCODES.LEFT:
-                onEventCapture(event);
-                if (this.state.selectedAncestry.length > 0) {
-                    this.popParent(true);
-                }
-                break;
-            case KEYCODES.RIGHT:
-                onEventCapture(event);
-                if (this.state.activeOptionIndex !== -1) {
-                    this.onMutiLevelSelect(
-                        this.state.filteredList[this.state.activeOptionIndex],
-                        true,
-                    );
-                }
-                break;
+                case KEYCODES.ENTER:
+                    onEventCapture(event);
+                    this.handleEnterKey();
+                    break;
+                case KEYCODES.DOWN:
+                    onEventCapture(event);
+                    this.handleDownArrowKey(event);
+                    break;
+                case KEYCODES.UP:
+                    onEventCapture(event);
+                    this.handleUpArrowKey();
+                    break;
+                case KEYCODES.LEFT:
+                    onEventCapture(event);
+                    if (this.state.selectedAncestry.length > 0) {
+                        this.popParent(true);
+                    }
+                    break;
+                case KEYCODES.RIGHT:
+                    onEventCapture(event);
+                    if (this.state.activeOptionIndex !== -1) {
+                        this.onMutiLevelSelect(
+                            this.state.filteredList[this.state.activeOptionIndex],
+                            true,
+                        );
+                    }
+                    break;
             }
         }
     }

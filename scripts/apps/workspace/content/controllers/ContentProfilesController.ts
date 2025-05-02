@@ -37,31 +37,31 @@ interface IScope extends ng.IScope {
 
 function getContentProfileIcon(type: IContentProfileType): string {
     switch (type) {
-    case IContentProfileType.text:
-        return 'icon-text';
-    case IContentProfileType.picture:
-        return 'icon-picture';
-    case IContentProfileType.audio:
-        return 'icon-audio';
-    case IContentProfileType.video:
-        return 'icon-video';
-    default:
-        return 'icon-text';
+        case IContentProfileType.text:
+            return 'icon-text';
+        case IContentProfileType.picture:
+            return 'icon-picture';
+        case IContentProfileType.audio:
+            return 'icon-audio';
+        case IContentProfileType.video:
+            return 'icon-video';
+        default:
+            return 'icon-text';
     }
 }
 
 function getLabelForContentProfileType(type: IContentProfileType): string {
     switch (type) {
-    case IContentProfileType.text:
-        return gettext('Text');
-    case IContentProfileType.picture:
-        return gettext('Picture');
-    case IContentProfileType.audio:
-        return gettext('Audio');
-    case IContentProfileType.video:
-        return gettext('Video');
-    default:
-        return assertNever(type);
+        case IContentProfileType.text:
+            return gettext('Text');
+        case IContentProfileType.picture:
+            return gettext('Picture');
+        case IContentProfileType.audio:
+            return gettext('Audio');
+        case IContentProfileType.video:
+            return gettext('Video');
+        default:
+            return assertNever(type);
     }
 }
 

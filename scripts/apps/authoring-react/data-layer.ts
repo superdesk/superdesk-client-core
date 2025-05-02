@@ -46,12 +46,12 @@ export function getArticleContentProfile<T>(
      */
     function adjustId(fieldId: string): string {
         switch (fieldId) {
-        case 'sms':
+            case 'sms':
             // in content profile the field ID is "sms"
             // but value is written to `IArticle['sms_message']`
-            return 'sms_message';
-        default:
-            return fieldId;
+                return 'sms_message';
+            default:
+                return fieldId;
         }
     }
 

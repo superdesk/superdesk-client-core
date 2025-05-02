@@ -50,24 +50,24 @@ export class AtomicBlockParser {
         const entityType: CustomEditor3Entity = entity.getType();
 
         switch (entityType) {
-        case CustomEditor3Entity.MEDIA:
-            return this.parseMedia(data, rawKey).trim();
-        case CustomEditor3Entity.EMBED:
-            return this.parseEmbed(data).trim();
-        case CustomEditor3Entity.TABLE:
-            return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
-        case CustomEditor3Entity.MULTI_LINE_QUOTE:
-            return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
-        case CustomEditor3Entity.CUSTOM_BLOCK:
-            return this.parseCustomBlock(getData(this.contentState, contentBlock.getKey())).trim();
-        case CustomEditor3Entity.ARTICLE_EMBED:
+            case CustomEditor3Entity.MEDIA:
+                return this.parseMedia(data, rawKey).trim();
+            case CustomEditor3Entity.EMBED:
+                return this.parseEmbed(data).trim();
+            case CustomEditor3Entity.TABLE:
+                return this.parseTable(getData(this.contentState, contentBlock.getKey())).trim();
+            case CustomEditor3Entity.MULTI_LINE_QUOTE:
+                return this.parseMultiLineQuote(getData(this.contentState, contentBlock.getKey())).trim();
+            case CustomEditor3Entity.CUSTOM_BLOCK:
+                return this.parseCustomBlock(getData(this.contentState, contentBlock.getKey())).trim();
+            case CustomEditor3Entity.ARTICLE_EMBED:
             // eslint-disable-next-line no-case-declarations
-            const item = (data as IEditorDragDropArticleEmbed['data']).item;
+                const item = (data as IEditorDragDropArticleEmbed['data']).item;
 
-            return `<div data-association-key="${item._id}">${item.body_html}</div>`;
-        default:
-            logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
-            assertNever(entityType);
+                return `<div data-association-key="${item._id}">${item.body_html}</div>`;
+            default:
+                logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
+                assertNever(entityType);
         }
     }
 
@@ -118,17 +118,17 @@ export class AtomicBlockParser {
         let type, content, desc = media.description_text;
 
         switch (mediaType) {
-        case 'video':
-            type = 'Video';
-            content = `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
-            break;
-        case 'audio':
-            type = 'Audio';
-            content = `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
-            break;
-        default:
-            type = 'Image';
-            content = `<img src="${href}" alt="${alt}" />`;
+            case 'video':
+                type = 'Video';
+                content = `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+                break;
+            case 'audio':
+                type = 'Audio';
+                content = `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+                break;
+            default:
+                type = 'Image';
+                content = `<img src="${href}" alt="${alt}" />`;
         }
 
         return this.formatEmbed(type, rawKey, content, desc);
