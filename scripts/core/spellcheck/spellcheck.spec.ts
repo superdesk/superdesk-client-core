@@ -22,7 +22,6 @@ describe('spellcheck', () => {
 
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {url: undefined, ws: undefined},
             iframely: {key: '123'},
             editor: {},
             features: {},

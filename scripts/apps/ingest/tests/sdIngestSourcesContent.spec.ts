@@ -13,16 +13,6 @@ describe('sdIngestSourcesContent directive', () => {
     beforeEach(window.module('superdesk.apps.ingest'));
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            default_timezone: 'Europe/London',
-            server: {url: undefined, ws: undefined},
             ingest: {
                 PROVIDER_DASHBOARD_DEFAULTS: {
                     show_log_messages: true,
@@ -40,7 +30,7 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     beforeEach(inject(($compile, $rootScope, $templateCache, ingestSources, $q) => {
-        spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue(Promise.resolve([{
+        spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue($q.resolve([{
             feeding_service: 'rss',
             label: 'RSS',
             fields: [
@@ -77,7 +67,7 @@ describe('sdIngestSourcesContent directive', () => {
     describe('edit() method', () => {
         var fakeProvider;
 
-        beforeEach((done) => {
+        beforeEach((done) => inject(($rootScope) => {
             fakeProvider = {
                 _id: 'test-id',
                 feeding_service: 'rss',
@@ -93,8 +83,12 @@ describe('sdIngestSourcesContent directive', () => {
                 _items: [fakeProvider],
             };
 
-            scope.waitForDirectiveReady().then(done);
-        });
+            scope.waitForDirectiveReady().then(() => {
+                done();
+            });
+
+            $rootScope.$apply();
+        }));
 
         it('updates the list of field name aliases to match provider\'s configuration', () => {
             scope.edit(fakeProvider);
@@ -171,9 +165,10 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('addFieldAlias() method', () => {
-        beforeEach((done) => {
-            scope.waitForDirectiveReady().then(done);
-        });
+        beforeEach((done) => inject(($rootScope) => {
+            scope.waitForDirectiveReady().then(() => done());
+            $rootScope.$apply();
+        }));
 
         it('appends a new item to the list of field aliases', () => {
             scope.fieldAliases = {field_aliases: [
@@ -192,7 +187,7 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('removeFieldAlias() and fieldSelectionChanged() methods', () => {
-        beforeEach((done) => {
+        beforeEach((done) => inject(($rootScope) => {
             scope.fieldAliases = {field_aliases: [
                 {fieldName: 'foo1', alias: 'bar1'},
                 {fieldName: 'foo2', alias: 'bar2'},
@@ -200,8 +195,9 @@ describe('sdIngestSourcesContent directive', () => {
             ]};
             scope.fieldsNotSelected = {field_aliases: ['foo4']};
 
-            scope.waitForDirectiveReady().then(done);
-        });
+            scope.waitForDirectiveReady().then(() => done());
+            $rootScope.$apply();
+        }));
 
         it('removes an item at given index from the list of field aliases', () => {
             scope.removeFieldAlias('field_aliases', 1);
@@ -232,11 +228,12 @@ describe('sdIngestSourcesContent directive', () => {
     });
 
     describe('availableFieldOptions() method', () => {
-        beforeEach((done) => {
+        beforeEach((done) => inject(($rootScope) => {
             scope.fieldsNotSelected = {field_aliases: ['foo1', 'foo3']};
 
-            scope.waitForDirectiveReady().then(done);
-        });
+            scope.waitForDirectiveReady().then(() => done());
+            $rootScope.$apply();
+        }));
 
         it('returns only the field names currently not selected if no field name is given', () => {
             var fieldNames = scope.availableFieldOptions('field_aliases', null);
@@ -255,7 +252,7 @@ describe('sdIngestSourcesContent directive', () => {
         var deferredSave, fakeProvider;
 
         beforeEach((done) => {
-            inject(($q, api) => {
+            inject(($q, api, $rootScope) => {
                 deferredSave = $q.defer();
 
                 api.ingestProviders.save = jasmine.createSpy().and.returnValue(deferredSave.promise);
@@ -266,7 +263,9 @@ describe('sdIngestSourcesContent directive', () => {
                     _items: [fakeProvider],
                 };
 
-                scope.waitForDirectiveReady().then(done);
+                scope.waitForDirectiveReady().then(() => done());
+
+                $rootScope.$apply();
             });
         });
 

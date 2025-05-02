@@ -134,6 +134,11 @@ describe('fetch', () => {
         expect(content.count()).toBe(3);
     });
 
+    /**
+     * @deprecated
+     * It tests on /workspace/ingest which is not used anymore.
+     * The test needs to be rewritten to use /search
+     */
     it('can fetch as multiple items', () => {
         workspace.openIngest();
         content.selectItem(0);

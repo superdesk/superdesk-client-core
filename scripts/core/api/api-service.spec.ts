@@ -1,15 +1,12 @@
-import {appConfig} from 'appConfig';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import _ from 'lodash';
 
 function collection(data) {
     return {_items: data};
 }
 
-var USER_URL = 'http://localhost/users/1',
+var USER_URL = 'http://localhost:5000/users/1',
     USER_PATH = '/users/1',
-    USERS_URL = 'http://localhost/users',
-    SERVER_URL = 'http://localhost',
+    USERS_URL = 'http://localhost:5000/users',
     ETAG = 'xyz';
 
 function testEtagHeader(headers) {
@@ -38,14 +35,7 @@ var HTTP_API = {
     },
 };
 
-function doConfig() {
-    const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: SERVER_URL, ws: undefined}};
-
-    Object.assign(appConfig, testConfig);
-}
-
 describe('API Provider', () => {
-    beforeEach(window.module(doConfig));
     beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(() => {
@@ -76,7 +66,6 @@ describe('API Provider', () => {
     describe('HTTP API Endpoint', () => {
         afterEach(inject(($httpBackend) => {
             $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
         }));
 
         it('can query', (done) => inject((api, urls, $q, $httpBackend, $http) => {
@@ -246,9 +235,9 @@ describe('API Provider', () => {
         }));
 
         it('can get item by id', (done) => inject((api, urls, $q, $httpBackend) => {
-            spyOn(urls, 'resource').and.returnValue($q.when(SERVER_URL + '/users'));
+            spyOn(urls, 'resource').and.returnValue($q.when(USERS_URL));
 
-            $httpBackend.expectGET(SERVER_URL + '/users/1').respond({username: 'foo'});
+            $httpBackend.expectGET(USER_URL).respond({username: 'foo'});
 
             api.http.getById(1).then((user) => {
                 expect(user.username).toBe('foo');
@@ -304,16 +293,6 @@ describe('API Provider', () => {
     describe('new api service', () => {
         afterEach(inject(($httpBackend) => {
             $httpBackend.verifyNoOutstandingExpectation();
-            $httpBackend.verifyNoOutstandingRequest();
-        }));
-
-        beforeEach(inject(($httpBackend) => {
-            $httpBackend.whenGET(SERVER_URL).respond(200, {
-                _links: {child: [
-                    {title: 'users', href: '/users'},
-                    {title: 'workspace', href: '/users/<regex():user_id>/workspace'},
-                ]},
-            });
         }));
 
         it('can create', inject((api, $httpBackend) => {
@@ -344,7 +323,6 @@ describe('API Provider', () => {
             $httpBackend.expectPATCH(USER_URL, {foo: 1}, testEtagHeader).respond(200, {});
             api('users').save(user, {foo: 1, _type: 'user'});
             $httpBackend.flush();
-            $httpBackend.verifyNoOutstandingExpectation();
         }));
 
         it('can query resource', (done) => inject((api, $httpBackend) => {

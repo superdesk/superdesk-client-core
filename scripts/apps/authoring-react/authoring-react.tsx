@@ -19,12 +19,12 @@ import {
     IAuthoringValidationErrors,
     IFieldsV2,
     IEditor3Config,
+    IAuthoringReact,
 } from 'superdesk-api';
 import {Loader, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
-import {appConfig} from 'appConfig';
 import {
     PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
     closedIntentionally,
@@ -48,7 +48,7 @@ import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
-import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
+import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
@@ -71,9 +71,9 @@ export function getFieldsData<T>(
 
         const storageValue = (() => {
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
-                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
+                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage, field.fieldConfig);
             } else {
-                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType);
+                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType, field.fieldConfig);
             }
         })();
 
@@ -129,7 +129,9 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
     return result;
 }
 
-const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
+export const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
+
+const MIN_HEADER_PADDING = 4;
 
 const ANPA_CATEGORY = {
     vocabularyId: 'categories',
@@ -309,11 +311,13 @@ interface IStateLoaded<T> {
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
+export class AuthoringReact<T extends IBaseRestApiResponse>
+    extends React.PureComponent<IPropsAuthoring<T>, IState<T>>
+    implements IAuthoringReact<T> {
     private cleanupFunctionsToRunBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private componentRef: HTMLElement | null;
-    fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
+    public fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement> | null};
     private prepareHeaderFields: typeof setCompactMode;
 
     constructor(props: IPropsAuthoring<T>) {
@@ -990,25 +994,39 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             const {profile} = state;
             const allFields = profile.header.merge(profile.content);
 
-            const validationErrors: IAuthoringValidationErrors = allFields.toArray()
-                .filter((field) => {
-                    if (field.fieldConfig.required === true) {
-                        const FieldEditorConfig = getField(field.fieldType);
+            let validationErrors = Map<string, string>(); // fieldId, errorMessage
 
-                        return !FieldEditorConfig.hasValue(state.fieldsDataWithChanges.get(field.id));
+            allFields.forEach((field) => {
+                const fieldType = getField(field.fieldType);
+                const fieldValue = state.fieldsDataWithChanges.get(field.id);
+
+                const error = ((): string | null => {
+                    if (!fieldType.hasValue(fieldValue)) {
+                        return field.fieldConfig.required === true ? gettext('Field is required') : null;
+                    } else if (fieldType.validate != null) {
+                        return fieldType.validate(fieldValue, field.fieldConfig);
                     } else {
-                        return false;
+                        return null;
                     }
-                }).reduce<IAuthoringValidationErrors>((acc, field) => {
-                    acc[field.id] = gettext('Field is required');
+                })();
 
-                    return acc;
-                }, {});
+                if (error != null) {
+                    validationErrors = validationErrors.set(field.id, error);
+                }
+            });
 
-            if (Object.keys(validationErrors).length > 0) {
+            if (validationErrors.size > 0) {
+                const firstErrorFieldId = validationErrors.keySeq().first();
+
                 this.setState({
                     ...state,
-                    validationErrors,
+                    validationErrors: validationErrors.toObject(),
+                }, () => {
+                    const makeVisible = this.props.makeVisible ?? (() => Promise.resolve());
+
+                    makeVisible().then(() => {
+                        this.fieldRefs[firstErrorFieldId]?.current.scrollIntoView({behavior: 'smooth'});
+                    });
                 });
 
                 return Promise.reject('validation errors were found');
@@ -1288,17 +1306,31 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 });
             },
             reinitialize: (item, profile) => this.reinitialize(state, item, profile),
-            addValidationErrors: (moreValidationErrors) => {
-                this.setState({
-                    ...state,
-                    validationErrors: {
-                        ...state.validationErrors,
-                        ...moreValidationErrors,
-                    },
-                });
-            },
             getValidationErrors: () => {
                 return state.validationErrors;
+            },
+            setValidationErrors: (validationErrors) => {
+                this.setState({
+                    ...state,
+                    validationErrors,
+                });
+            },
+            spellchecker: {
+                enabled: state.spellcheckerEnabled,
+                setSpellcheckerStatus: (enabled) => {
+                    this.setState({
+                        ...state,
+                        spellcheckerEnabled: enabled,
+                    });
+
+                    dispatchEditorEvent('spellchecker__set_status', enabled);
+
+                    preferences.update(SPELLCHECKER_PREFERENCE, {
+                        type: 'bool',
+                        enabled: enabled,
+                        default: true,
+                    });
+                },
             },
         };
     }
@@ -1317,92 +1349,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             : null;
         const readOnly = state.initialized ? authoringOptions?.readOnly : false;
         const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
-
-        const authoringActions: Array<IAuthoringAction> = (() => {
-            const actions = this.props.getActions?.(exposed) ?? [];
-            const coreActions: Array<IAuthoringAction> = [];
-
-            if (appConfig.features.useTansaProofing !== true) {
-                if (state.spellcheckerEnabled) {
-                    const nextValue = false;
-
-                    coreActions.push({
-                        label: gettext('Disable spellchecker'),
-                        onTrigger: () => {
-                            this.setState({
-                                ...state,
-                                spellcheckerEnabled: nextValue,
-                            });
-
-                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                type: 'bool',
-                                enabled: nextValue,
-                                default: true,
-                            });
-                        },
-                        keyBindings: {
-                            'ctrl+shift+y': () => {
-                                this.setState({
-                                    ...state,
-                                    spellcheckerEnabled: nextValue,
-                                });
-
-                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                    type: 'bool',
-                                    enabled: nextValue,
-                                    default: true,
-                                });
-                            },
-                        },
-                    });
-                } else {
-                    coreActions.push({
-                        label: gettext('Enable spellchecker'),
-                        onTrigger: () => {
-                            const nextValue = true;
-
-                            this.setState({
-                                ...state,
-                                spellcheckerEnabled: true,
-                            });
-
-                            dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                type: 'bool',
-                                enabled: nextValue,
-                                default: true,
-                            });
-                        },
-                        keyBindings: {
-                            'ctrl+shift+y': () => {
-                                const nextValue = true;
-
-                                this.setState({
-                                    ...state,
-                                    spellcheckerEnabled: true,
-                                });
-
-                                dispatchEditorEvent('spellchecker__set_status', nextValue);
-
-                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                    type: 'bool',
-                                    enabled: nextValue,
-                                    default: true,
-                                });
-                            },
-                        },
-                    });
-                }
-            }
-
-            return [...coreActions, ...actions];
-        })();
-
+        const authoringActions = this.props.getActions?.(exposed) ?? [];
         const keyBindingsFromAuthoringActions: IKeyBindings = authoringActions.reduce((acc, action) => {
             return {
                 ...acc,
@@ -1411,7 +1358,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         }, {});
 
         const widgetsCount = this.props.getSidebarWidgetsCount(exposed);
-
         const widgetKeybindings: IKeyBindings = {};
 
         for (let i = 0; i < widgetsCount; i++) {
@@ -1469,6 +1415,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         const isPinned = this.props.sideWidget?.pinnedId != null;
+        const allWidgets = primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets);
 
         return (
             <div style={{display: 'contents'}} ref={this.setRef}>
@@ -1482,16 +1429,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     <WithInteractiveArticleActionsPanel location="authoring">
                         {() => (
                             <Layout.AuthoringFrame
-                                header={primaryToolbarWidgets.length < 1
-                                    && extraPrimaryToolbarWidgets?.length < 1 ? null : (
-                                        <SubNav>
-                                            <AuthoringToolbar
-                                                entity={state.itemWithChanges}
-                                                widgets={primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets)}
-                                                backgroundColor={authoringOptions?.toolbarBgColor}
-                                            />
-                                        </SubNav>
-                                    )
+                                header={allWidgets.length < 1 ? null : (
+                                    <AuthoringToolbar
+                                        entity={state.itemWithChanges}
+                                        widgets={allWidgets}
+                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                    />
+                                )
                                 }
                                 main={(
                                     <Layout.AuthoringMain
@@ -1511,6 +1455,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                         headerPadding={{
                                             top: 8,
                                             bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                            inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
+                                            inlineStart: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
                                         }}
                                         authoringHeader={(
                                             <div style={{width: '100%'}}>

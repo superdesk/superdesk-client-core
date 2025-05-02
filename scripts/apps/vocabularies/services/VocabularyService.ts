@@ -28,7 +28,7 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
      * the cache or retrieved via an api request
      * @return {Promise} {Object} vocabularies
      */
-    this.getAllActiveVocabularies = function() {
+    this.getAllActiveVocabularies = () => {
         if (_.isNil(self.AllActiveVocabularies)) {
             return api.getAll('vocabularies').then(
                 (result) => {

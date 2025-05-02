@@ -42,6 +42,9 @@ function loadConfigs() {
         .then((res) => res.ok ? res.json() : Promise.reject())
         .then((json) => {
             merge(appConfig, json.config);
+
+            // allow e2e tests to overwrite appConfig via local storage
+            merge(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
         });
 }
 
@@ -194,20 +197,22 @@ export function startApp(
 
             body.attr('data-theme', 'dark-ui');
 
-            if (sdApi.user.isLoggedIn()) {
-                if (appConfig.features.useTansaProofing) {
-                    setupTansa();
-                }
+            ng.waitForServicesToBeAvailable().then(() => {
+                if (sdApi.user.isLoggedIn()) {
+                    if (appConfig.features.useTansaProofing) {
+                        setupTansa();
+                    }
 
-                httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'})
-                    .then(({_items}) => {
-                        store.dispatch({
-                            type: 'LOAD_SUBJECT_CODES',
-                            payload: keyBy(_items, ({qcode}) => qcode),
+                    httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'})
+                        .then(({_items}) => {
+                            store.dispatch({
+                                type: 'LOAD_SUBJECT_CODES',
+                                payload: keyBy(_items, ({qcode}) => qcode),
+                            });
                         });
-                    });
 
-                registerGlobalKeybindings();
-            }
+                    registerGlobalKeybindings();
+                }
+            });
         });
 }

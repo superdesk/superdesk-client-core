@@ -76,7 +76,6 @@
                     <input type="password" name="passwordConfirm" ng-model="passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
                     <i ng-show="changePasswordForm.passwordConfirm.$error.required" class="required-asteriks">*</i>
                     <div ng-show="changePasswordForm.passwordConfirm.$error.confirm" sd-valid-info>
-                        <i class="icon-info-sign-warning"></i>
                         <span translate>passwords must be same</span>
                     </div>
                 </fieldset>

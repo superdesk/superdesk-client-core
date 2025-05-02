@@ -43,7 +43,7 @@ export class PositionInline extends React.PureComponent<IProps, IState> {
                 {
                     this.state.ready && ReactDOM.createPortal((
                         <PopupPositioner
-                            referenceElement={this.referenceEl}
+                            getReferenceElement={() => this.referenceEl}
                             placement={this.props.placement}
                             onClose={this.props.onClose}
                         >
