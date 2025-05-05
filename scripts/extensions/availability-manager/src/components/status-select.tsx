@@ -9,6 +9,7 @@ interface IProps {
     onChange(value: typeof availabilityStatuses): void;
     allowMultiple?: boolean;
     required?: boolean; // false
+    inputWrapper?: React.ComponentProps<typeof TreeSelect>['inputWrapper'];
 }
 
 export class StatusSelect extends React.PureComponent<IProps> {
@@ -43,6 +44,7 @@ export class StatusSelect extends React.PureComponent<IProps> {
                 label={this.props.label.text}
                 required={this.props.required}
                 allowMultiple={this.props.allowMultiple ?? false}
+                inputWrapper={this.props.inputWrapper}
                 data-test-id="status"
             />
         );

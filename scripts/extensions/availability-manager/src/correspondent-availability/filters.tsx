@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
-import {Button, DatePicker, IconButton, RadioButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, DatePicker, FormLabel, IconButton, RadioButtonGroup, InputWrapper} from 'superdesk-ui-framework/react';
 import {StatusSelect} from '../components/status-select';
 import {filterPeriods, LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -17,6 +17,19 @@ interface IProps {
     onFilterPeriodChange(value: 'day' | 'week'): void;
     paddingInline: string;
 }
+
+const inputWrapperHorizontal: React.ComponentProps<typeof InputWrapper>['inputWrapper'] = {
+    kind: 'custom',
+    component: ({label, input}) => (
+        <Spacer h gap="4" noGrow>
+            <FormLabel text={label} noMinHeight noMinWidth />
+
+            <div style={{minWidth: 130}}>
+                {input}
+            </div>
+        </Spacer>
+    ),
+};
 
 export class Filters extends React.PureComponent<IProps> {
     render() {
@@ -95,55 +108,52 @@ export class Filters extends React.PureComponent<IProps> {
 
                 <hr style={{borderColor: 'var(--color-border-line--light)', width: '100%', margin: 0}} />
 
-                <Spacer h gap="8" justifyContent="start" noWrap style={{paddingInline}}>
-                    <div style={{minWidth: 300}}>
-                        <VocabularySelect
-                            label={{text: languagesVocabulary.display_name, position: 'left'}}
-                            value={this.props.value.language}
-                            getOptions={() => languagesVocabulary.items}
-                            onChange={(items) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    language: items,
-                                });
-                            }}
-                            multiple={true}
-                            fullWidth={true}
-                            data-test-id="languages"
-                        />
-                    </div>
+                <Spacer h gap="16" justifyContent="start" alignItems="center" noGrow style={{paddingInline}}>
+                    <VocabularySelect
+                        label={{text: languagesVocabulary.display_name, position: 'left'}}
+                        value={this.props.value.language}
+                        getOptions={() => languagesVocabulary.items}
+                        onChange={(items) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                language: items,
+                            });
+                        }}
+                        multiple={true}
+                        fullWidth={true}
+                        data-test-id="languages"
+                        inputWrapper={inputWrapperHorizontal}
+                    />
 
-                    <div style={{minWidth: 300}}>
-                        <StatusSelect
-                            label={{text: gettext('Status'), inline: true}}
-                            value={this.props.value.status.map(({code}) => code as IAvailabilityRecord['status'])}
-                            onChange={(val) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    status: val.map((qcode) => ({code: qcode})),
-                                });
-                            }}
-                            allowMultiple
-                        />
-                    </div>
+                    <StatusSelect
+                        label={{text: gettext('Status'), inline: true}}
+                        value={this.props.value.status.map(({code}) => code as IAvailabilityRecord['status'])}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                status: val.map((qcode) => ({code: qcode})),
+                            });
+                        }}
+                        allowMultiple={false}
+                        inputWrapper={inputWrapperHorizontal}
+                    />
 
-                    <div style={{minWidth: 300}}>
-                        <VocabularySelect
-                            label={{text: tagsVocabulary.display_name, position: 'left'}}
-                            value={this.props.value.tags.map(({code}) => code)}
-                            getOptions={() => tagsVocabulary.items}
-                            onChange={(items) => {
-                                this.props.onChange({
-                                    ...this.props.value,
-                                    tags: items.map((qcode) => ({code: qcode})),
-                                });
-                            }}
-                            multiple={true}
-                            fullWidth={true}
-                            selectBranchWithChildren
-                            data-test-id="tags"
-                        />
-                    </div>
+                    <VocabularySelect
+                        label={{text: tagsVocabulary.display_name, position: 'left'}}
+                        value={this.props.value.tags.map(({code}) => code)}
+                        getOptions={() => tagsVocabulary.items}
+                        onChange={(items) => {
+                            this.props.onChange({
+                                ...this.props.value,
+                                tags: items.map((qcode) => ({code: qcode})),
+                            });
+                        }}
+                        multiple={true}
+                        fullWidth={false}
+                        selectBranchWithChildren
+                        inputWrapper={inputWrapperHorizontal}
+                        data-test-id="tags"
+                    />
                 </Spacer>
             </Spacer>
         );

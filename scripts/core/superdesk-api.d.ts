@@ -2329,6 +2329,7 @@ declare module 'superdesk-api' {
         selectBranchWithChildren?: boolean;
         disabled?: boolean;
         fullWidth: boolean;
+        inputWrapper?: React.ComponentProps<typeof import('superdesk-ui-framework').InputWrapper>['inputWrapper'];
         'data-test-id'?: string;
     }
 
