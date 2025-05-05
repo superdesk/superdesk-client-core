@@ -62,7 +62,7 @@ const extension: IExtension = {
                 {
                     title: 'Correspondent availability',
                     url: '/correspondent-availability',
-                    priority: 1,
+                    priority: 160,
                     component: CorrespondentAvailability,
                 },
             ];
