@@ -1,7 +1,7 @@
 import {Spacer} from '@sourcefabric/common';
 import * as React from 'react';
 import {IUser} from 'superdesk-api';
-import {BoxedList, BoxedListItem} from 'superdesk-ui-framework/react';
+import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -23,8 +23,6 @@ export class ListView extends React.PureComponent<IProps> {
         }
 
         const users: {[key: string]: IUser} = superdesk.entities.users.getAllUsers();
-
-        // PR-TODO: show language in list view
 
         return (
             <BoxedList>
@@ -55,10 +53,16 @@ export class ListView extends React.PureComponent<IProps> {
                                         <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
                                             <UserAvatar userId={item.user} />
 
-                                            {user.display_name}
+                                            <strong style={{color: 'var(--sd-colour-interactive--darken-20)'}}>
+                                                {user.display_name}
+                                            </strong>
+
+                                            <span style={{color: 'var(--color-text-light)'}}>
+                                                @{user.sign_off}
+                                            </span>
 
                                             <span>
-                                                @{user.sign_off}
+                                                {item.language.map((lang) => <Label text={lang} key={lang} />)}
                                             </span>
                                         </Spacer>
                                     </div>
@@ -71,7 +75,7 @@ export class ListView extends React.PureComponent<IProps> {
                                                         <Spacer key={i} gap="16" justifyContent="end" noWrap>
                                                             <TagsPreview tags={hours.tags} justifyContent="end" />
 
-                                                            <span style={{whiteSpace: 'nowrap'}}>
+                                                            <span style={{whiteSpace: 'nowrap', color: 'var(--color-text-light)'}}>
                                                                 {hours.start_time} - {hours.end_time}
                                                             </span>
                                                         </Spacer>
