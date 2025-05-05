@@ -1,4 +1,4 @@
-import {sortByMultipleCriteria} from '@sourcefabric/common'
+import {sortByMultipleCriteria} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -23,14 +23,14 @@ export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Arra
             } else if (timeA > timeB) {
                 return 1;
             } else {
-                return 0
-            };
+                return 0;
+            }
         },
         (a, b) => {
             const nameA: string = users[a.user].display_name ?? users[a.user].username;
             const nameB: string = users[b.user].display_name ?? users[b.user].username;
 
             return nameA.localeCompare(nameB);
-        }
+        },
     );
 }

@@ -1,4 +1,5 @@
 import {formatTime, mergeSets} from '@sourcefabric/common';
+import {format} from 'date-fns';
 import {IVocabularyItem} from 'superdesk-api';
 import {TAGS_VOCABULARY_ID} from './constants';
 import {
@@ -215,4 +216,11 @@ export function getLowestThrows(items: Array<number>): number {
 
         return 0;
     })[0];
+}
+
+/**
+ * Only formats to ISO 8601, doesn't convert it.
+ */
+export function formatDateIso(date: Date) {
+    return format(date, 'yyyy-MM-dd');
 }

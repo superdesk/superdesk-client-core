@@ -289,6 +289,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
 
                                                     <div>
                                                         <StatusSelect
+                                                            label={{text: gettext('Status'), hidden: true}}
                                                             value={
                                                                 [
                                                                     scheduleRecord.status,
@@ -300,6 +301,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                                     {status: val},
                                                                 );
                                                             }}
+                                                            required
                                                         />
                                                     </div>
                                                 </>

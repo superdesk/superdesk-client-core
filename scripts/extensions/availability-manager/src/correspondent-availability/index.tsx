@@ -1,36 +1,71 @@
 import * as React from 'react';
-import {nameof} from '@sourcefabric/common';
-import {IPage, ISuperdeskQuery} from 'superdesk-api';
-import {IAvailabilityRecord} from '../interfaces';
+import {Spacer} from '@sourcefabric/common';
+import {IPage} from 'superdesk-api';
+import {IAvailabilityRecord, IFilterPeriod, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {ListView} from './list-view';
+import {Filters} from './filters';
+import {getQueryWithFilters} from './get-query-with-filters';
 
 const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
 
 type IProps = React.ComponentProps<IPage['component']>;
 
-export class CorrespondentAvailability extends React.PureComponent<IProps> {
-    render() {
-        const date = '2025-04-24';
+interface IState {
+    filters: IFilters;
+    filterPeriod: IFilterPeriod;
+}
 
-        const query: ISuperdeskQuery = {
-            filter: {
-                $and: [
-                    {[nameof<IAvailabilityRecord>('date')]: {$gte: date}},
-                    {[nameof<IAvailabilityRecord>('date')]: {$lte: date}},
-                ],
+export class CorrespondentAvailability extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            filters: {
+                date: new Date(),
+                status: [],
+                language: [],
+                tags: [],
             },
-            page: 1,
-            max_results: 200,
-            sort: [{'versioncreated': 'asc'}], // sorting isn't relevant
-        }
+            filterPeriod: 'day',
+        };
+    }
+
+    render() {
+        const paddingInline = 'var(--gap-3)';
 
         return (
-            <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
-                {(res) => (
-                    <ListView items={res._items} />
-                )}
-            </WithAvailabilityRecordsQuery>
+            <Spacer v gap="16" style={{width: '100%'}}>
+                <div
+                    style={{
+                        background: 'var(--sd-item__main-Bg)',
+                        borderBlockEnd: '1px solid var(--color-border-line--light)',
+                        paddingBlock: 'var(--gap-1)',
+                    }}
+                >
+                    <Filters
+                        value={this.state.filters}
+                        onChange={(filters) => {
+                            this.setState({filters});
+                        }}
+                        paddingInline={paddingInline}
+                        filterPeriod={this.state.filterPeriod}
+                        onFilterPeriodChange={(val) => {
+                            this.setState({filterPeriod: val});
+                        }}
+                    />
+                </div>
+
+
+                <div style={{paddingInline}}>
+                    <WithAvailabilityRecordsQuery
+                        resource="user_availability"
+                        query={getQueryWithFilters(this.state.filters)}
+                    >
+                        {(res) => <ListView items={res._items} />}
+                    </WithAvailabilityRecordsQuery>
+                </div>
+            </Spacer>
         );
     }
 }

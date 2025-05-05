@@ -13,7 +13,7 @@ import {Card} from '../card';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
-import {fullWidthNoGrow, getStatusColor, setUserAvailability} from '../utils';
+import {fullWidthNoGrow, getStatusColor, setUserAvailability, formatDateIso} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 import {monthNamesByIndex} from '../test-utils';
@@ -122,8 +122,8 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
 
         const query = getQuery({
             user: this.props.user,
-            dateFrom: format(months[0], 'yyyy-MM-dd'),
-            dateTo: format(calendarEnd, 'yyyy-MM-dd'),
+            dateFrom: formatDateIso(months[0]),
+            dateTo: formatDateIso(calendarEnd),
         });
 
         const tagsWhitelist = new Set(

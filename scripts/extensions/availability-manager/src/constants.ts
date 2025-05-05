@@ -1,4 +1,7 @@
-import {IAvailabilityRecord} from './interfaces';
+import {IAvailabilityRecord, IFilterPeriod} from './interfaces';
+import {superdesk} from './superdesk';
+
+const {gettext} = superdesk.localization;
 
 export const TAGS_VOCABULARY_ID = 'availability_manager_tags';
 export const LANGUAGES_VOCABULARY = 'languages';
@@ -34,3 +37,10 @@ export const dayIndexesByDayCode: {[key: string]: string} = {
 export const tagsSelectWidth = 300;
 
 export type IDayIndex = keyof typeof dayCodes;
+
+const filterPeriodsObject: {[key in IFilterPeriod]: {label: string}} = {
+    'day': {label: gettext('Day')},
+    'week': {label: gettext('Week')},
+};
+
+export const filterPeriods = Object.entries(filterPeriodsObject).map(([id, {label}]) => ({id, label}));
