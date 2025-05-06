@@ -57,15 +57,19 @@ const extension: IExtension = {
                 return result;
             };
 
-            // PR-TODO: add privilege check
-            contributions.pages = [
-                {
+            if (superdesk.privileges.hasPrivilege('user_availability')) {
+                if (contributions.pages == null) {
+                    contributions.pages = [];
+                }
+
+                contributions.pages.push({
                     title: 'Correspondent availability',
                     url: '/correspondent-availability',
                     priority: 160,
                     component: CorrespondentAvailability,
-                },
-            ];
+                });
+            }
+
         }
 
         return Promise.resolve({contributions} satisfies IExtensionActivationResult);
