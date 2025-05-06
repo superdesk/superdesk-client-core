@@ -1,0 +1,84 @@
+import {test, expect} from '@playwright/test';
+import {Monitoring} from './page-object-models/monitoring';
+import {restoreDatabaseSnapshot, s} from './utils';
+import {TreeSelectDriver} from './utils/tree-select-driver';
+
+test('Fetching article - Fetch to', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+
+    // checking that articles is loaded
+    await expect(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+    ).toBeVisible();
+
+    await expect(
+        page.locator(s(
+            'monitoring-group=Sports / Working Stage',
+            'article-item=Indonesia opens pasteurized milk facility to back free meals program',
+        )),
+    ).not.toBeVisible();
+
+    await page.goto('/#/search?repo=ingest');
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('article-item=Indonesia opens pasteurized milk facility to back free meals program')),
+        'Fetch To',
+    );
+
+    // select desk
+    await new TreeSelectDriver(
+        page,
+        page.locator(s('destination-select')),
+    ).setValue('Sports');
+
+    // select stage
+    await page
+        .locator(s('interactive-actions-panel', 'stage-select'))
+        .locator(s('item=Working Stage'))
+        .click();
+
+    await page.locator(s('interactive-actions-panel', 'fetch')).click();
+
+    await page.goto('/#/workspace/monitoring');
+    await expect(
+        page.locator(s(
+            'monitoring-group=Sports / Working Stage',
+            'article-item=Indonesia opens pasteurized milk facility to back free meals program',
+        )),
+    ).toBeVisible();
+});
+
+test('Fetching article - Fetch', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+
+    // checking that articles is loaded
+    await expect(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+    ).toBeVisible();
+
+    await expect(
+        page.locator(s(
+            'monitoring-group=Sports / Incoming Stage',
+            'article-item=Indonesia opens pasteurized milk facility to back free meals program',
+        )),
+    ).not.toBeVisible();
+
+    await page.goto('/#/search?repo=ingest');
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('article-item=Indonesia opens pasteurized milk facility to back free meals program')),
+        'Fetch',
+    );
+
+    await page.goto('/#/workspace/monitoring');
+    await expect(
+        page.locator(s(
+            'monitoring-group=Sports / Incoming Stage',
+            'article-item=Indonesia opens pasteurized milk facility to back free meals program',
+        )),
+    ).toBeVisible();
+});
