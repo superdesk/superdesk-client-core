@@ -3,7 +3,7 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
-test('Fetching article - Fetch to', async ({page}) => {
+test('fetching an article to selected desk', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -50,7 +50,7 @@ test('Fetching article - Fetch to', async ({page}) => {
     ).toBeVisible();
 });
 
-test('Fetching article - Fetch', async ({page}) => {
+test('fetching an article', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
