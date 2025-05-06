@@ -9,7 +9,7 @@ test('fetching an article to selected desk', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles is loaded
+    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();
@@ -56,7 +56,7 @@ test('fetching an article', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles is loaded
+    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();
