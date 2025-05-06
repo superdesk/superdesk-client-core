@@ -74,7 +74,7 @@ declare module 'superdesk-api' {
         /**
          * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
          */
-        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>): unknown;
+        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>, config: unknown): unknown;
 
         /**
          * Must return a value in operational format.
@@ -86,7 +86,7 @@ declare module 'superdesk-api' {
 
     export interface IStorageAdapter<T> {
         storeValue(value: unknown, fieldId: string, entity: T, config: unknown, fieldType: string): T;
-        retrieveStoredValue(item: T, fieldId: string, fieldType: string): unknown;
+        retrieveStoredValue(item: T, fieldId: string, fieldType: string, config: unknown): unknown;
     }
 
     export interface IAuthoringAutoSave<T> {
@@ -1574,6 +1574,7 @@ declare module 'superdesk-api' {
         avatar_renditions: {};
         role?: IUserRole['_id'];
         privileges: IUserPrivileges;
+        dateline_source?: string;
         user_type: 'user' | 'administrator';
         is_support: boolean;
         is_author: boolean;
@@ -3182,6 +3183,7 @@ declare module 'superdesk-api' {
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
                 language: string,
+                plainTextInMultiLineMode?: boolean,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
 

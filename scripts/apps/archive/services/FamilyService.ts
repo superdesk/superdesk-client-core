@@ -164,39 +164,39 @@ export function FamilyService(api, desks) {
         }
 
         switch (sluglineMatch) {
-        case 'ANY': // any words in the slugline
-            if (keyword.indexOf(' ') >= 0) {
-                queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
-            }
+            case 'ANY': // any words in the slugline
+                if (keyword.indexOf(' ') >= 0) {
+                    queryRelatedItem.push('slugline:("' + sanitizedKeyword + '")');
+                }
 
-            addSlugs(queryRelatedItem, queryWords);
+                addSlugs(queryRelatedItem, queryWords);
 
-            if (queryRelatedItem.length) {
+                if (queryRelatedItem.length) {
+                    queryString = {
+                        query_string: {
+                            query: queryRelatedItem.join(' '),
+                            lenient: true,
+                            default_operator: 'OR',
+                        },
+                    };
+                }
+
+                break;
+            case 'PREFIX': // phrase prefix
                 queryString = {
-                    query_string: {
-                        query: queryRelatedItem.join(' '),
-                        lenient: true,
-                        default_operator: 'OR',
+                    match_phrase_prefix: {
+                        'slugline.phrase': sanitizedKeyword,
                     },
                 };
-            }
-
-            break;
-        case 'PREFIX': // phrase prefix
-            queryString = {
-                match_phrase_prefix: {
-                    'slugline.phrase': sanitizedKeyword,
-                },
-            };
-            break;
-        default:
+                break;
+            default:
             // exact match on slugline
-            queryString = {
-                query_string: {
-                    query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: true,
-                },
-            };
+                queryString = {
+                    query_string: {
+                        query: 'slugline.phrase:("' + sanitizedKeyword + '")',
+                        lenient: true,
+                    },
+                };
         }
 
         return query(filter, 'firstcreated', 'asc', queryString);

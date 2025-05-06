@@ -12,40 +12,40 @@ export class Difference extends React.PureComponent<IDifferenceComponentProps<ID
         const {source} = config;
 
         switch (source) {
-        case 'manual-entry':
-            return (
-                <DifferenceManualEntry
-                    value1={value1}
-                    value2={value2}
-                    config={config}
-                />
-            );
-        case 'vocabulary':
-            return (
-                <DifferenceVocabulary
-                    value1={value1}
-                    value2={value2}
-                    config={config}
-                />
-            );
-        case 'remote-source':
-            return (
-                <DifferenceRemoteSource
-                    value1={value1}
-                    value2={value2}
-                    config={config}
-                />
-            );
-        case 'dropdown-tree':
-            return (
-                <DifferenceDropdownTree
-                    value1={value1}
-                    value2={value2}
-                    config={config}
-                />
-            );
-        default:
-            assertNever(source);
+            case 'manual-entry':
+                return (
+                    <DifferenceManualEntry
+                        value1={value1}
+                        value2={value2}
+                        config={config}
+                    />
+                );
+            case 'vocabulary':
+                return (
+                    <DifferenceVocabulary
+                        value1={value1}
+                        value2={value2}
+                        config={config}
+                    />
+                );
+            case 'remote-source':
+                return (
+                    <DifferenceRemoteSource
+                        value1={value1}
+                        value2={value2}
+                        config={config}
+                    />
+                );
+            case 'dropdown-tree':
+                return (
+                    <DifferenceDropdownTree
+                        value1={value1}
+                        value2={value2}
+                        config={config}
+                    />
+                );
+            default:
+                assertNever(source);
         }
     }
 }
