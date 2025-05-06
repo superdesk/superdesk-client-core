@@ -39,7 +39,7 @@ export interface IDefaultAvailability extends IBaseRestApiResponse {
 
 interface IAvailabilityRecordReadOnly {
     readonly user: IUser['_id'];
-    readonly language: Array<string>;
+    readonly language?: Array<string>;
 }
 
 export type IAvailabilityRecord = IAvailabilityRecordTemplate & IAvailabilityRecordReadOnly & IBaseRestApiResponse;

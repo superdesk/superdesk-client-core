@@ -62,7 +62,7 @@ export class ListView extends React.PureComponent<IProps> {
                                             </span>
 
                                             <span>
-                                                {item.language.map((lang) => <Label text={lang} key={lang} />)}
+                                                {(item.language ?? []).map((lang) => <Label text={lang} key={lang} />)}
                                             </span>
                                         </Spacer>
                                     </div>
