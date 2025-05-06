@@ -69,7 +69,6 @@ const extension: IExtension = {
                     component: CorrespondentAvailability,
                 });
             }
-
         }
 
         return Promise.resolve({contributions} satisfies IExtensionActivationResult);

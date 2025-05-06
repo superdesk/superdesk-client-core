@@ -406,33 +406,33 @@ export class ItemList extends React.Component<IProps, IState> {
         };
 
         switch (event.keyCode) {
-        case Keys.right:
-        case Keys.down:
-            diff = 1;
-            closeActionsMenu();
-            break;
+            case Keys.right:
+            case Keys.down:
+                diff = 1;
+                closeActionsMenu();
+                break;
 
-        case Keys.left:
-        case Keys.up:
-            diff = -1;
-            closeActionsMenu();
-            break;
+            case Keys.left:
+            case Keys.up:
+                diff = -1;
+                closeActionsMenu();
+                break;
 
-        case Keys.enter:
-            openItem(event);
-            closeActionsMenu();
-            break;
+            case Keys.enter:
+                openItem(event);
+                closeActionsMenu();
+                break;
 
-        case Keys.pageup:
-        case Keys.pagedown:
-            moveActiveGroup(event);
-            closeActionsMenu();
-            break;
+            case Keys.pageup:
+            case Keys.pagedown:
+                moveActiveGroup(event);
+                closeActionsMenu();
+                break;
 
-        case KEY_CODES.X:
-            performMultiSelect();
-            closeActionsMenu();
-            break;
+            case KEY_CODES.X:
+                performMultiSelect();
+                closeActionsMenu();
+                break;
         }
 
         if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {

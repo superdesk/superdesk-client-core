@@ -297,7 +297,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, ctrlKey, metaKey} = e;
+        const {key, ctrlKey, shiftKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -322,7 +322,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        if (key === 'Enter') {
+        if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
         }
 
@@ -375,88 +375,88 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         let newState;
 
         switch (command) {
-        case 'bold':
-        case 'italic':
-        case 'underline':
-            if (suggestingMode) {
+            case 'bold':
+            case 'italic':
+            case 'underline':
+                if (suggestingMode) {
                 // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
                     && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    const style = command.toUpperCase();
+                    const inlineStyles = editorState.getCurrentInlineStyle();
+                    const active = inlineStyles.has(style);
+
+                    onCreateChangeStyleSuggestion(style, active);
                     return 'handled';
                 }
 
-                const style = command.toUpperCase();
-                const inlineStyles = editorState.getCurrentInlineStyle();
-                const active = inlineStyles.has(style);
-
-                onCreateChangeStyleSuggestion(style, active);
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'soft-newline':
-            newState = RichUtils.insertSoftNewline(editorState);
-            break;
-        case 'split-block':
-            if (suggestingMode) {
-                // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateSplitParagraphSuggestion();
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'delete':
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is after current position
-                if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('delete');
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
-            newState = EditorState.redo(editorState);
-            break;
-        case 'backspace': {
-            this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
-
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is before current position
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('backspace');
-                return 'handled';
-            }
-
-            // This is a workaround for un/ordered-list-item, when it is deleted an empty
-            // ordered list(just 1. is shown) it will delete the previous block if it exists
-            // (for example a table and then imediately after the ordered list)
-            const selection = editorState.getSelection();
-            const key = selection.getAnchorKey();
-            const content = editorState.getCurrentContent();
-            const block = content.getBlockForKey(key);
-            const commands = ['unordered-list-item', 'ordered-list-item'];
-
-            if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
-                newState = RichUtils.toggleBlockType(editorState, block.getType());
+                newState = RichUtils.handleKeyCommand(editorState, command);
                 break;
-            }
-        } // fall through
-        default:
-            newState = RichUtils.handleKeyCommand(editorState, command);
+            case 'soft-newline':
+                newState = RichUtils.insertSoftNewline(editorState);
+                break;
+            case 'split-block':
+                if (suggestingMode) {
+                // prevent to change other user suggestion
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateSplitParagraphSuggestion();
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'delete':
+                if (suggestingMode) {
+                // prevent to change other user suggestion that is after current position
+                    if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('delete');
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
+                newState = EditorState.redo(editorState);
+                break;
+            case 'backspace': {
+                this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
+                if (suggestingMode) {
+                // prevent to change other user suggestion that is before current position
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('backspace');
+                    return 'handled';
+                }
+
+                // This is a workaround for un/ordered-list-item, when it is deleted an empty
+                // ordered list(just 1. is shown) it will delete the previous block if it exists
+                // (for example a table and then imediately after the ordered list)
+                const selection = editorState.getSelection();
+                const key = selection.getAnchorKey();
+                const content = editorState.getCurrentContent();
+                const block = content.getBlockForKey(key);
+                const commands = ['unordered-list-item', 'ordered-list-item'];
+
+                if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                    newState = RichUtils.toggleBlockType(editorState, block.getType());
+                    break;
+                }
+            } // fall through
+            default:
+                newState = RichUtils.handleKeyCommand(editorState, command);
         }
 
         if (newState) {

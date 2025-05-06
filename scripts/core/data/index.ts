@@ -78,69 +78,69 @@ function reducer(state: IStoreState = initialState, action: IAction): IStoreStat
     /**
      * USER ACTIONS
      */
-    case 'UPDATE_USER_LAST_ACTIVE':
-        return (() => {
-            const userId = action.payload;
+        case 'UPDATE_USER_LAST_ACTIVE':
+            return (() => {
+                const userId = action.payload;
 
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    users: {
-                        ...state.entities.users,
-                        [userId]: {
-                            ...state.entities.users[userId],
-                            last_activity_at: (new Date()).toISOString(),
+                return {
+                    ...state,
+                    entities: {
+                        ...state.entities,
+                        users: {
+                            ...state.entities.users,
+                            [userId]: {
+                                ...state.entities.users[userId],
+                                last_activity_at: (new Date()).toISOString(),
+                            },
                         },
                     },
-                },
-            };
-        })();
+                };
+            })();
 
-    /**
+            /**
      * OTHER ACTIONS
      */
-    case 'LOAD_SUBJECT_CODES':
-        return {
-            ...state,
-            subjectCodes: action.payload,
-        };
+        case 'LOAD_SUBJECT_CODES':
+            return {
+                ...state,
+                subjectCodes: action.payload,
+            };
 
-    /**
+            /**
      * GENERIC ACTIONS THAT APPLY TO ALL ENTITIES
      */
-    case 'INIT_ENTITY':
-        return (() => {
-            const {resource, items} = action.payload;
+        case 'INIT_ENTITY':
+            return (() => {
+                const {resource, items} = action.payload;
 
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    [resource]: keyBy(items, (entity) => entity._id),
-                },
-            };
-        })();
-
-    case 'UPDATE_ENTITY':
-        return (() => {
-            const resource = action.payload.resource;
-            const entity = action.payload.data;
-
-            return {
-                ...state,
-                entities: {
-                    ...state.entities,
-                    [resource]: {
-                        ...state.entities[resource],
-                        [entity._id]: entity,
+                return {
+                    ...state,
+                    entities: {
+                        ...state.entities,
+                        [resource]: keyBy(items, (entity) => entity._id),
                     },
-                },
-            };
-        })();
+                };
+            })();
 
-    default:
-        return state;
+        case 'UPDATE_ENTITY':
+            return (() => {
+                const resource = action.payload.resource;
+                const entity = action.payload.data;
+
+                return {
+                    ...state,
+                    entities: {
+                        ...state.entities,
+                        [resource]: {
+                            ...state.entities[resource],
+                            [entity._id]: entity,
+                        },
+                    },
+                };
+            })();
+
+        default:
+            return state;
     }
 }
 

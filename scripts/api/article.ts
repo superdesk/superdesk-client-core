@@ -503,25 +503,25 @@ function isEditable(_article: IArticle): boolean {
     const authoring = ng.get('authoring');
 
     switch (itemState) {
-    case ITEM_STATE.DRAFT:
-    case ITEM_STATE.CORRECTION:
-    case ITEM_STATE.SUBMITTED:
-    case ITEM_STATE.IN_PROGRESS:
-    case ITEM_STATE.ROUTED:
-    case ITEM_STATE.FETCHED:
-    case ITEM_STATE.UNPUBLISHED:
-        return authoring.itemActions(_article).edit === true;
-    case ITEM_STATE.INGESTED:
-    case ITEM_STATE.SPIKED:
-    case ITEM_STATE.SCHEDULED:
-    case ITEM_STATE.PUBLISHED:
-    case ITEM_STATE.CORRECTED:
-    case ITEM_STATE.BEING_CORRECTED:
-    case ITEM_STATE.KILLED:
-    case ITEM_STATE.RECALLED:
-        return false;
-    default:
-        assertNever(itemState);
+        case ITEM_STATE.DRAFT:
+        case ITEM_STATE.CORRECTION:
+        case ITEM_STATE.SUBMITTED:
+        case ITEM_STATE.IN_PROGRESS:
+        case ITEM_STATE.ROUTED:
+        case ITEM_STATE.FETCHED:
+        case ITEM_STATE.UNPUBLISHED:
+            return authoring.itemActions(_article).edit === true;
+        case ITEM_STATE.INGESTED:
+        case ITEM_STATE.SPIKED:
+        case ITEM_STATE.SCHEDULED:
+        case ITEM_STATE.PUBLISHED:
+        case ITEM_STATE.CORRECTED:
+        case ITEM_STATE.BEING_CORRECTED:
+        case ITEM_STATE.KILLED:
+        case ITEM_STATE.RECALLED:
+            return false;
+        default:
+            assertNever(itemState);
     }
 }
 

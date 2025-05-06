@@ -13,46 +13,46 @@ function getAllInputTypes(): Array<FormFieldType> {
 
 function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
-    case FormFieldType.plainText:
-    case FormFieldType.textEditor3:
-    case FormFieldType.number:
-    case FormFieldType.duration:
-    case FormFieldType.checkbox:
-    case FormFieldType.contentFilterSingleValue:
-    case FormFieldType.deskSingleValue:
-    case FormFieldType.yesNo:
-        return {
-            type: type,
-            field: 'test-field',
-        };
-    case FormFieldType.select:
-    case FormFieldType.selectMultiple:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                items: [],
-            },
-        };
-    case FormFieldType.vocabularySingleValue:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                vocabulary_id: 'test_vocabulary_id',
-            },
-        };
-    case FormFieldType.stageSingleValue:
-    case FormFieldType.macroSingleValue:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                deskField: 'test-desk-field',
-            },
-        };
-    default:
-        assertNever(type);
+        case FormFieldType.plainText:
+        case FormFieldType.textEditor3:
+        case FormFieldType.number:
+        case FormFieldType.duration:
+        case FormFieldType.checkbox:
+        case FormFieldType.contentFilterSingleValue:
+        case FormFieldType.deskSingleValue:
+        case FormFieldType.yesNo:
+            return {
+                type: type,
+                field: 'test-field',
+            };
+        case FormFieldType.select:
+        case FormFieldType.selectMultiple:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    items: [],
+                },
+            };
+        case FormFieldType.vocabularySingleValue:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    vocabulary_id: 'test_vocabulary_id',
+                },
+            };
+        case FormFieldType.stageSingleValue:
+        case FormFieldType.macroSingleValue:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    deskField: 'test-desk-field',
+                },
+            };
+        default:
+            assertNever(type);
     }
 }
 

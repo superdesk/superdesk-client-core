@@ -34,7 +34,7 @@ export class ListView extends React.PureComponent<IProps> {
                             <BoxedListItem
                                 key={i}
                                 type={(() => {
-                                    switch(item.status) {
+                                    switch (item.status) {
                                         case 'available':
                                             return 'success';
                                         case 'partial':
@@ -75,7 +75,12 @@ export class ListView extends React.PureComponent<IProps> {
                                                         <Spacer key={i} gap="16" justifyContent="end" noWrap>
                                                             <TagsPreview tags={hours.tags} justifyContent="end" />
 
-                                                            <span style={{whiteSpace: 'nowrap', color: 'var(--color-text-light)'}}>
+                                                            <span
+                                                                style={{
+                                                                    whiteSpace: 'nowrap',
+                                                                    color: 'var(--color-text-light)',
+                                                                }}
+                                                            >
                                                                 {hours.start_time} - {hours.end_time}
                                                             </span>
                                                         </Spacer>

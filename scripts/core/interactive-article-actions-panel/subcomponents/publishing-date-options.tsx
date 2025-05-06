@@ -72,12 +72,8 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             timeZone,
         } = this.props.value;
 
-        const canSetEmbargo =
-            publishSchedule == null
-            && this.props.allowSettingEmbargo
-            && sdApi.user.hasPrivilege('embargo');
-
-        const canSetPublishSchedule = embargo == null && this.props.allowSettingPublishSchedule;
+        const canSetEmbargo = this.props.allowSettingEmbargo && sdApi.user.hasPrivilege('embargo');
+        const canSetPublishSchedule = this.props.allowSettingPublishSchedule;
 
         return (
             <div>
@@ -93,7 +89,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                                                 this.props.onChange({
                                                     embargo: val,
                                                     timeZone: timeZone ?? appConfig.default_timezone,
-                                                    publishSchedule: null,
+                                                    publishSchedule: publishSchedule,
                                                 });
                                             }}
                                             data-test-id="embargo"
@@ -111,7 +107,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                                                 this.props.onChange({
                                                     publishSchedule: val,
                                                     timeZone: timeZone ?? appConfig.default_timezone,
-                                                    embargo: null,
+                                                    embargo: embargo,
                                                 });
                                             }}
                                             data-test-id="publish-schedule"

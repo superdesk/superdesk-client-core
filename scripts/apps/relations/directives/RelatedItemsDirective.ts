@@ -330,15 +330,15 @@ export function RelatedItemsDirective(
                 const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
 
                 switch (event.name) {
-                case 'content:update':
-                    var updateItemsIds = Object.keys(payload.items);
+                    case 'content:update':
+                        var updateItemsIds = Object.keys(payload.items);
 
-                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
-                    break;
-                case 'item:lock':
-                case 'item:unlock':
-                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
-                    break;
+                        shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                        break;
+                    case 'item:lock':
+                    case 'item:unlock':
+                        shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                        break;
                 }
 
                 if (shouldUpdateItems) {

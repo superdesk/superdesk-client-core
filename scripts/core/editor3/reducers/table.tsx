@@ -11,33 +11,33 @@ import {IActiveCell} from '../components/tables/TableBlock';
  */
 const table = (state: IEditorStore = {} as IEditorStore, action) => {
     switch (action.type) {
-    case 'TOOLBAR_ADD_TABLE': {
-        const payload: IEditor3TableData = action.payload;
+        case 'TOOLBAR_ADD_TABLE': {
+            const payload: IEditor3TableData = action.payload;
 
-        return addTable(
-            state,
-            {
-                entityKind: CustomEditor3Entity.TABLE,
-                entityData: payload,
-            },
-        );
-    }
-    case 'TOOLBAR_ADD_ROW_AFTER':
-        return addRowAfter(state);
-    case 'TOOLBAR_ADD_COL_AFTER':
-        return addColAfter(state);
-    case 'TOOLBAR_REMOVE_ROW':
-        return removeRow(state);
-    case 'TOOLBAR_REMOVE_COL':
-        return removeCol(state);
-    case 'TOOLBAR_TABLE_HEADER':
-        return toggleTableHeader(state);
-    case 'TOOLBAR_TABLE_STYLE':
-        return toggleTableInlineStyle(state, action.payload);
-    case 'TOOLBAR_TABLE_BLOCK_TYPE':
-        return toggleTableBlockType(state, action.payload);
-    default:
-        return state;
+            return addTable(
+                state,
+                {
+                    entityKind: CustomEditor3Entity.TABLE,
+                    entityData: payload,
+                },
+            );
+        }
+        case 'TOOLBAR_ADD_ROW_AFTER':
+            return addRowAfter(state);
+        case 'TOOLBAR_ADD_COL_AFTER':
+            return addColAfter(state);
+        case 'TOOLBAR_REMOVE_ROW':
+            return removeRow(state);
+        case 'TOOLBAR_REMOVE_COL':
+            return removeCol(state);
+        case 'TOOLBAR_TABLE_HEADER':
+            return toggleTableHeader(state);
+        case 'TOOLBAR_TABLE_STYLE':
+            return toggleTableInlineStyle(state, action.payload);
+        case 'TOOLBAR_TABLE_BLOCK_TYPE':
+            return toggleTableBlockType(state, action.payload);
+        default:
+            return state;
     }
 };
 

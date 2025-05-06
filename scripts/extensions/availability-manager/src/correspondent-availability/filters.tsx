@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
@@ -30,6 +32,8 @@ const inputWrapperHorizontal: React.ComponentProps<typeof InputWrapper>['inputWr
         </Spacer>
     ),
 };
+
+inputWrapperHorizontal.component.displayName = 'inputWrapperHorizontal';
 
 export class Filters extends React.PureComponent<IProps> {
     render() {

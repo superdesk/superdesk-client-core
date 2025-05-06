@@ -29,15 +29,17 @@ async function getError(): Promise<IError | null> {
         issues.push((
             <>
                 <Heading
-                    text={'Unsupported extension point is being used: `contributions.authoringHeaderComponents`'}
+                    text={gettext(
+                        'Unsupported extension point is being used: `contributions.authoringHeaderComponents`',
+                    )}
                 />
 
                 <p>
-                    You are likely running an outdated version of auto tagging extension.
+                    {gettext('You are likely running an outdated version of auto tagging extension.')}
                 </p>
 
                 <p>
-                    Update or disable incompatible extensions.
+                    {gettext('Update or disable incompatible extensions.')}
                 </p>
             </>
         ));
@@ -51,7 +53,7 @@ async function getError(): Promise<IError | null> {
             (
                 <>
                     <Heading
-                        text={'Vocabulary with ID "categories" is required`'}
+                        text={gettext('Vocabulary with ID "categories" is required')}
                     />
 
                     <p>{gettext('Add it via Settings > Metadata')}</p>
