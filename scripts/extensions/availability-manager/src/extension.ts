@@ -63,8 +63,8 @@ const extension: IExtension = {
                 }
 
                 contributions.pages.push({
-                    title: 'Correspondent availability',
-                    url: '/correspondent-availability',
+                    title: gettext('Availability Management'),
+                    url: '/availability-management',
                     priority: 160,
                     component: CorrespondentAvailability,
                 });
