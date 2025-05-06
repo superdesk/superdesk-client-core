@@ -8,24 +8,24 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
-    case FormFieldType.plainText:
-    case FormFieldType.textEditor3:
-        return {[field]: ''};
-    case FormFieldType.vocabularySingleValue:
-    case FormFieldType.contentFilterSingleValue:
-    case FormFieldType.deskSingleValue:
-    case FormFieldType.stageSingleValue:
-    case FormFieldType.macroSingleValue:
-    case FormFieldType.yesNo:
-    case FormFieldType.select:
-    case FormFieldType.selectMultiple:
-    case FormFieldType.number:
-    case FormFieldType.duration:
-        return {[field]: undefined};
-    case FormFieldType.checkbox:
-        return {[field]: false};
-    default:
-        assertNever(type);
+        case FormFieldType.plainText:
+        case FormFieldType.textEditor3:
+            return {[field]: ''};
+        case FormFieldType.vocabularySingleValue:
+        case FormFieldType.contentFilterSingleValue:
+        case FormFieldType.deskSingleValue:
+        case FormFieldType.stageSingleValue:
+        case FormFieldType.macroSingleValue:
+        case FormFieldType.yesNo:
+        case FormFieldType.select:
+        case FormFieldType.selectMultiple:
+        case FormFieldType.number:
+        case FormFieldType.duration:
+            return {[field]: undefined};
+        case FormFieldType.checkbox:
+            return {[field]: false};
+        default:
+            assertNever(type);
     }
 }
 

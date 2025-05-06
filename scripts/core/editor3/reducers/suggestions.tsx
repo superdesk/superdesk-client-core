@@ -16,32 +16,32 @@ import {replaceSelectedEntityData} from '../components/links/entityUtils';
 
 const suggestions = (state = {}, action) => {
     switch (action.type) {
-    case 'TOGGLE_SUGGESTING_MODE':
-        return toggleSuggestingMode(state);
-    case 'CREATE_ADD_SUGGESTION':
-        return createAddSuggestion(state, action.payload);
-    case 'CREATE_DELETE_SUGGESTION':
-        return createDeleteSuggestion(state, action.payload);
-    case 'CREATE_CHANGE_STYLE_SUGGESTION':
-        return createChangeStyleSuggestion(state, action.payload);
-    case 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION':
-        return createChangeBlockStyleSuggestion(state, action.payload);
-    case 'CREATE_SPLIT_PARAGRAPH_SUGGESTION':
-        return createSplitParagraphSuggestion(state, action.payload);
-    case 'PASTE_ADD_SUGGESTION':
-        return pasteAddSuggestion(state, action.payload);
-    case 'CREATE_LINK_SUGGESTION':
-        return createLinkSuggestion(state, action.payload);
-    case 'CHANGE_LINK_SUGGESTION':
-        return changeLinkSuggestion(state, action.payload);
-    case 'REMOVE_LINK_SUGGESTION':
-        return removeLinkSuggestion(state, action.payload);
-    case 'ACCEPT_SUGGESTION':
-        return processSuggestion(state, action.payload, true);
-    case 'REJECT_SUGGESTION':
-        return processSuggestion(state, action.payload, false);
-    default:
-        return state;
+        case 'TOGGLE_SUGGESTING_MODE':
+            return toggleSuggestingMode(state);
+        case 'CREATE_ADD_SUGGESTION':
+            return createAddSuggestion(state, action.payload);
+        case 'CREATE_DELETE_SUGGESTION':
+            return createDeleteSuggestion(state, action.payload);
+        case 'CREATE_CHANGE_STYLE_SUGGESTION':
+            return createChangeStyleSuggestion(state, action.payload);
+        case 'CREATE_CHANGE_BLOCK_STYLE_SUGGESTION':
+            return createChangeBlockStyleSuggestion(state, action.payload);
+        case 'CREATE_SPLIT_PARAGRAPH_SUGGESTION':
+            return createSplitParagraphSuggestion(state, action.payload);
+        case 'PASTE_ADD_SUGGESTION':
+            return pasteAddSuggestion(state, action.payload);
+        case 'CREATE_LINK_SUGGESTION':
+            return createLinkSuggestion(state, action.payload);
+        case 'CHANGE_LINK_SUGGESTION':
+            return changeLinkSuggestion(state, action.payload);
+        case 'REMOVE_LINK_SUGGESTION':
+            return removeLinkSuggestion(state, action.payload);
+        case 'ACCEPT_SUGGESTION':
+            return processSuggestion(state, action.payload, true);
+        case 'REJECT_SUGGESTION':
+            return processSuggestion(state, action.payload, false);
+        default:
+            return state;
     }
 };
 

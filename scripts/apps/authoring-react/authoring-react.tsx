@@ -71,9 +71,9 @@ export function getFieldsData<T>(
 
         const storageValue = (() => {
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
-                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
+                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage, field.fieldConfig);
             } else {
-                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType);
+                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType, field.fieldConfig);
             }
         })();
 

@@ -209,24 +209,24 @@ function WorkqueueCtrl(
                 showUnsavedChangesPrompt().then(({action, closePromptFn}) => {
                     autosave.settle(item).then(() => {
                         switch (action) {
-                        case IUnsavedChangesAction.cancelAction:
-                            closePromptFn();
-                            break;
-
-                        case IUnsavedChangesAction.discardChanges:
-                            _closeItem(item).then(() => {
+                            case IUnsavedChangesAction.cancelAction:
                                 closePromptFn();
-                            });
+                                break;
 
-                            break;
+                            case IUnsavedChangesAction.discardChanges:
+                                _closeItem(item).then(() => {
+                                    closePromptFn();
+                                });
 
-                        case IUnsavedChangesAction.openItem:
-                            closePromptFn();
-                            _reOpenItem(item);
-                            break;
+                                break;
 
-                        default:
-                            assertNever(action);
+                            case IUnsavedChangesAction.openItem:
+                                closePromptFn();
+                                _reOpenItem(item);
+                                break;
+
+                            default:
+                                assertNever(action);
                         }
                     });
                 });

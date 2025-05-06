@@ -86,15 +86,15 @@ export class ItemList extends React.Component<IProps, IState> {
         let diff;
 
         switch (event.keyCode) {
-        case Keys.right:
-        case Keys.down:
-            diff = 1;
-            break;
+            case Keys.right:
+            case Keys.down:
+                diff = 1;
+                break;
 
-        case Keys.left:
-        case Keys.up:
-            diff = -1;
-            break;
+            case Keys.left:
+            case Keys.up:
+                diff = -1;
+                break;
         }
 
         const highlightSelected = () => {

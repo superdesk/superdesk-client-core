@@ -20,42 +20,42 @@ import {CustomEditor3Entity} from '../constants';
  */
 const toolbar = (state: IEditorStore, action) => {
     switch (action.type) {
-    case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
-        return toggleBlockStyle(state, action.payload);
-    case 'TOOLBAR_TOGGLE_INLINE_STYLE':
-        return toggleInlineStyle(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK':
-        return applyLink(state, action.payload);
-    case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
-        return applyLinkOnTableCell(state, action.payload);
-    case 'TOOLBAR_REMOVE_LINK':
-        return removeLink(state);
-    case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
-        return removeLinkInTableCell(state);
-    case 'TOOLBAR_REMOVE_FORMAT':
-        return removeFormat(state);
-    case 'TOOLBAR_REMOVE_ALL_FORMAT':
-        return removeAllFormat(state);
-    case 'TOOLBAR_INSERT_MEDIA':
-        return insertMedia(state, action.payload);
-    case 'TOOLBAR_UPDATE_IMAGE':
-        return updateImage(state, action.payload);
-    case 'TOOLBAR_REMOVE_BLOCK':
-        return removeBlock(state, action.payload);
-    case 'TOOLBAR_SET_POPUP':
-        return setPopup(state, action.payload);
-    case 'TOOLBAR_TOGGLE_INVISIBLES':
-        return toggleInvisibles(state);
-    case 'CHANGE_CASE':
-        return changeCase(state, action.payload);
-    case 'UNDO':
-        return onChange(state, EditorState.undo(state.editorState));
-    case 'REDO':
-        return onChange(state, EditorState.redo(state.editorState));
-    case 'SET_TABLE_POPUP' :
-        return setTablePopup(state, action.payload);
-    default:
-        return state;
+        case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
+            return toggleBlockStyle(state, action.payload);
+        case 'TOOLBAR_TOGGLE_INLINE_STYLE':
+            return toggleInlineStyle(state, action.payload);
+        case 'TOOLBAR_APPLY_LINK':
+            return applyLink(state, action.payload);
+        case 'TOOLBAR_APPLY_LINK_ON_TABLE_CELL':
+            return applyLinkOnTableCell(state, action.payload);
+        case 'TOOLBAR_REMOVE_LINK':
+            return removeLink(state);
+        case 'TOOLBAR_REMOVE_LINK_IN_TABLE_CELL':
+            return removeLinkInTableCell(state);
+        case 'TOOLBAR_REMOVE_FORMAT':
+            return removeFormat(state);
+        case 'TOOLBAR_REMOVE_ALL_FORMAT':
+            return removeAllFormat(state);
+        case 'TOOLBAR_INSERT_MEDIA':
+            return insertMedia(state, action.payload);
+        case 'TOOLBAR_UPDATE_IMAGE':
+            return updateImage(state, action.payload);
+        case 'TOOLBAR_REMOVE_BLOCK':
+            return removeBlock(state, action.payload);
+        case 'TOOLBAR_SET_POPUP':
+            return setPopup(state, action.payload);
+        case 'TOOLBAR_TOGGLE_INVISIBLES':
+            return toggleInvisibles(state);
+        case 'CHANGE_CASE':
+            return changeCase(state, action.payload);
+        case 'UNDO':
+            return onChange(state, EditorState.undo(state.editorState));
+        case 'REDO':
+            return onChange(state, EditorState.redo(state.editorState));
+        case 'SET_TABLE_POPUP' :
+            return setTablePopup(state, action.payload);
+        default:
+            return state;
     }
 };
 

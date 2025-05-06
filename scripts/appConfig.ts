@@ -86,9 +86,6 @@ if (appConfig.features.autorefreshContent == null) {
     appConfig.features.autorefreshContent = true; // default to true
 }
 
-// allow e2e tests to overwrite appConfig via local storage
-Object.assign(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
-
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
 export const extensions: IExtensions = {};

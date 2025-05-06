@@ -1236,12 +1236,12 @@ function multiSelectDirective() {
 
             function updateItem() {
                 switch (scope.output) {
-                case 'string':
-                    scope.item = scope.selectedItems.join(', ');
-                    break;
+                    case 'string':
+                        scope.item = scope.selectedItems.join(', ');
+                        break;
 
-                default:
-                    scope.item = scope.selectedItems;
+                    default:
+                        scope.item = scope.selectedItems;
                 }
 
                 scope.change(scope.item);

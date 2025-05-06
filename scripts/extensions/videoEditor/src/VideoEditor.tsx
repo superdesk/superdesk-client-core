@@ -548,39 +548,39 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         switch (rotate) {
-        case -90:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
-                    ...crop,
-                    x: Math.abs(currentHeight - height - y),
-                    y: x,
-                    width: height,
-                    height: width,
-                },
-            );
-        case -180:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
-                    ...crop,
-                    x: Math.abs(currentWidth - (x + width)),
-                    y: Math.abs(currentHeight - (y + height)),
-                },
-            );
-        case -270:
-            return this.getCropSize(
-                this.videoRef.current,
-                {
-                    ...crop,
-                    x: y,
-                    y: Math.abs(currentWidth - width - x),
-                    width: height,
-                    height: width,
-                },
-            );
-        default:
-            return this.getCropSize(this.videoRef.current, crop);
+            case -90:
+                return this.getCropSize(
+                    this.videoRef.current,
+                    {
+                        ...crop,
+                        x: Math.abs(currentHeight - height - y),
+                        y: x,
+                        width: height,
+                        height: width,
+                    },
+                );
+            case -180:
+                return this.getCropSize(
+                    this.videoRef.current,
+                    {
+                        ...crop,
+                        x: Math.abs(currentWidth - (x + width)),
+                        y: Math.abs(currentHeight - (y + height)),
+                    },
+                );
+            case -270:
+                return this.getCropSize(
+                    this.videoRef.current,
+                    {
+                        ...crop,
+                        x: y,
+                        y: Math.abs(currentWidth - width - x),
+                        width: height,
+                        height: width,
+                    },
+                );
+            default:
+                return this.getCropSize(this.videoRef.current, crop);
         }
     }
 

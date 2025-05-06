@@ -42,6 +42,9 @@ function loadConfigs() {
         .then((res) => res.ok ? res.json() : Promise.reject())
         .then((json) => {
             merge(appConfig, json.config);
+
+            // allow e2e tests to overwrite appConfig via local storage
+            merge(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
         });
 }
 

@@ -271,22 +271,22 @@ export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: s
 
 export function translateArticleType(type: IArticle['type']) {
     switch (type) {
-    case 'audio':
-        return gettext('audio');
-    case 'composite':
-        return gettext('composite');
-    case 'graphic':
-        return gettext('graphic');
-    case 'picture':
-        return gettext('picture');
-    case 'preformatted':
-        return gettext('preformatted');
-    case 'text':
-        return gettext('text');
-    case 'video':
-        return gettext('video');
-    default:
-        assertNever(type);
+        case 'audio':
+            return gettext('audio');
+        case 'composite':
+            return gettext('composite');
+        case 'graphic':
+            return gettext('graphic');
+        case 'picture':
+            return gettext('picture');
+        case 'preformatted':
+            return gettext('preformatted');
+        case 'text':
+            return gettext('text');
+        case 'video':
+            return gettext('video');
+        default:
+            assertNever(type);
     }
 }
 

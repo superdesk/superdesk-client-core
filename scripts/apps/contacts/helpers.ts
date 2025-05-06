@@ -70,8 +70,8 @@ export function validateRequiredField(contact: IContact): boolean {
 
     let invalid = _.some(REQUIRED_CONTACT_FIELDS, (field) => {
         switch (field) {
-        default:
-            return _.isEmpty(contact[field]);
+            default:
+                return _.isEmpty(contact[field]);
         }
     });
 
@@ -86,14 +86,14 @@ function contactHasEmailAddress(contact: IContact): boolean {
 export function validateMinRequiredField(contact: IContact): boolean {
     return _.some(getLookupFields(), (field) => {
         switch (field.name) {
-        case 'contact_email':
-            return contactHasEmailAddress(contact);
-        case 'contact_phone':
-        case 'mobile':
-            return _.get(contact, field.name, []).length > 0 &&
+            case 'contact_email':
+                return contactHasEmailAddress(contact);
+            case 'contact_phone':
+            case 'mobile':
+                return _.get(contact, field.name, []).length > 0 &&
                 !_.some(_.map(contact[field.name], 'number'), (v) => _.isEmpty(v));
-        default:
-            return !_.isEmpty(contact[field.name]);
+            default:
+                return !_.isEmpty(contact[field.name]);
         }
     });
 }
