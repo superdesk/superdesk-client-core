@@ -2,7 +2,7 @@ import {sortByMultipleCriteria} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {getLowest, getTimeNumber} from '../utils';
+import {getTimeNumber} from '../utils';
 
 export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Array<IAvailabilityRecord> {
     const users: {[key: string]: IUser} = superdesk.entities.users.getAllUsers();
@@ -11,11 +11,11 @@ export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Arra
         items,
         (a, b) => {
             const timeA = a.status === 'partial'
-                ? getLowest((a.working_hours ?? []).map((a) => getTimeNumber(a.start_time))) ?? 0
+                ? Math.min(0, ...((a.working_hours ?? []).map((a) => getTimeNumber(a.start_time))))
                 : 0;
 
             const timeB = b.status === 'partial'
-                ? getLowest((b.working_hours ?? []).map((b) => getTimeNumber(b.start_time))) ?? 0
+                ? Math.min(0, ...((b.working_hours ?? []).map((b) => getTimeNumber(b.start_time))))
                 : 0;
 
             if (timeA < timeB) {

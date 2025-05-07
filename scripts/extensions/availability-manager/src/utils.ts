@@ -196,28 +196,6 @@ export function getTimeNumber(
     return parseInt(time.replace(':', ''), 10);
 }
 
-export function getLowest(items: Array<number>): number | null {
-    return items.sort((a, b) => {
-        if (a < b) return -1;
-        if (a > b) return 1;
-
-        return 0;
-    })[0] ?? null;
-}
-
-export function getLowestThrows(items: Array<number>): number {
-    if (items.length < 1) {
-        throw new Error();
-    }
-
-    return items.sort((a, b) => {
-        if (a < b) return -1;
-        if (a > b) return 1;
-
-        return 0;
-    })[0];
-}
-
 /**
  * Only formats to ISO 8601, doesn't convert it.
  */
