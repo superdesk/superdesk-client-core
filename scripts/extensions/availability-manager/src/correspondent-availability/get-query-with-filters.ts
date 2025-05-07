@@ -5,7 +5,7 @@ import {superdesk} from '../superdesk';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {formatDateIso} from '../utils';
 
-const {arrayToTree, treeToArray, buildTreeDictionary} = superdesk.utilities;
+const {arrayToTree, treeToArray, getTreeParents, buildTreeDictionary} = superdesk.utilities;
 
 export function getQueryWithFilters(filters: IFilters): ISuperdeskQuery {
     const where: Array<IComparison> = [
@@ -36,7 +36,7 @@ export function getQueryWithFilters(filters: IFilters): ISuperdeskQuery {
         const lookup = buildTreeDictionary(tagsTree, (node) => node.value.qcode);
 
         // include children
-        const tagIds = filters.tags.flatMap(({code}) => {
+        const tagIds: Array<string> = filters.tags.flatMap(({code}) => {
             const branch = lookup[code];
 
             if (branch == null) {
@@ -45,6 +45,11 @@ export function getQueryWithFilters(filters: IFilters): ISuperdeskQuery {
                 return treeToArray([branch]).map(({qcode}) => qcode);
             }
         });
+
+        // include parents
+        for (const parent of getTreeParents(filters.tags.map(({code}) => lookup[code]))) {
+            tagIds.push(parent.value.qcode);
+        }
 
         where.push(
             {

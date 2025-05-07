@@ -3400,6 +3400,7 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+            getTreeParents<T>(nodes: Array<ITreeNode<T>>): Array<ITreeNode<T>>;
             filterFlatTree<T>(
                 options: {
                     itemsFlat: Array<T>;

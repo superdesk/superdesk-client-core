@@ -150,3 +150,15 @@ export function filterFlatTree<T>(
         ...getChildren(item),
     ]);
 }
+
+export function getTreeParents<T>(nodes: Array<ITreeNode<T>>): Array<ITreeNode<T>> {
+    const result = [];
+
+    for (const node of nodes) {
+        if (node.parent != null) {
+            result.push(node.parent, ...getTreeParents([node.parent]));
+        }
+    }
+
+    return result;
+}
