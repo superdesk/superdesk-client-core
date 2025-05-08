@@ -6,6 +6,9 @@ import {superdesk} from '../superdesk';
 import {ListView} from './list-view';
 import {Filters} from './filters';
 import {getQueryWithFilters} from './get-query-with-filters';
+import {Alert} from 'superdesk-ui-framework/react';
+
+const {gettext} = superdesk.localization;
 
 const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
 
@@ -62,7 +65,17 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
                         resource="user_availability"
                         query={getQueryWithFilters(this.state.filters)}
                     >
-                        {(res) => <ListView items={res._items} />}
+                        {(res) => {
+                            if (res._items.length < 1) {
+                                return (
+                                    <Alert style="hollow" size="small">
+                                        <div>{gettext('No data available for the given day')}</div>
+                                    </Alert>
+                                );
+                            } else {
+                                return <ListView items={res._items} />;
+                            }
+                        }}
                     </WithAvailabilityRecordsQuery>
                 </div>
             </Spacer>
