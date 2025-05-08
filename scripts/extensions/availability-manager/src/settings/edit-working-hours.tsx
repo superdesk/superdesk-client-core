@@ -86,7 +86,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                     />
                                 </div>
 
-                                <div>
+                                <div style={{display: 'flex', alignItems: 'start'}}>
                                     <Spacer h gap="4" justifyContent="start" noGrow>
                                         <TimePicker
                                             label={gettext('Time from')}
@@ -137,7 +137,7 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
 
                                 {
                                     !isLast ? <span /> : (
-                                        <Spacer h gap="0" noWrap>
+                                        <Spacer h gap="0" alignItems="start" noWrap>
                                             <IconButton
                                                 icon="plus-sign"
                                                 ariaValue={gettext('Add')}
