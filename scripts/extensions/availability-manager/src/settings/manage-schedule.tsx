@@ -190,9 +190,6 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         const weekdaysKeyed = keyBy(weekdays, (weekday) => weekday.index);
         const enabledWeekdays = weekdays.filter(({index}) => this.state.schedule[index] != null);
         const hasPartialDays = Object.values(this.state.schedule).some(({status}) => status === 'partial');
-        const renderLabels = enabledWeekdays.some(
-            (weekday) => this.state.schedule[weekday.index]?.status === 'partial',
-        );
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
         const {savingInProgress} = this.state;
 
@@ -253,14 +250,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                 gridTemplateColumns: range(0, columnCount).map(() => 'max-content').join(' '),
                             }}
                         >
-                            {
-                                renderLabels && (
-                                    <>
-                                        {additionalColumnsPlaceholder}
-                                        <WorkingHoursGridLabels />
-                                    </>
-                                )
-                            }
+                            <>
+                                {additionalColumnsPlaceholder}
+                                <WorkingHoursGridLabels showWorkingHoursLabel={hasPartialDays} />
+                            </>
 
                             {
                                 enabledWeekdays
@@ -342,12 +335,11 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                         range(0, workingHoursEditorColumnCount)
                                                             .map((n) => <span key={`placeholder-${n}`} />)
                                                             .map((placeholderJsx, i) => {
-                                                                // skip a column when schedule has partial days
-                                                                // to align tags selection component
-                                                                // to ones rendered from partial days
-                                                                const targetIndex = !hasPartialDays ? 0 : 1;
+                                                                const displayTagsSelectAtIndex = 0;
 
-                                                                if (i !== targetIndex) {
+                                                                if (i !== displayTagsSelectAtIndex) {
+                                                                    // placeholders needed for remaining columns
+                                                                    // so it aligns correctly in the CSS grid
                                                                     return placeholderJsx;
                                                                 }
 
