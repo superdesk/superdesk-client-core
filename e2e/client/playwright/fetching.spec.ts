@@ -31,7 +31,7 @@ test('fetching an article to selected desk', async ({page}) => {
     await new TreeSelectDriver(
         page,
         page.locator(s('destination-select')),
-    ).setValue('Sports');
+    ).setValue('Education');
 
     // select stage
     await page
@@ -42,9 +42,10 @@ test('fetching an article to selected desk', async ({page}) => {
     await page.locator(s('interactive-actions-panel', 'fetch')).click();
 
     await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Education');
     await expect(
         page.locator(s(
-            'monitoring-group=Sports / Working Stage',
+            'monitoring-group=Education / Working Stage',
             'article-item=Indonesia opens pasteurized milk facility to back free meals program',
         )),
     ).toBeVisible();
