@@ -109,6 +109,6 @@ test('Removing desks', async ({page}) => {
     await page.locator(s('desk--Sports', 'desk-actions')).click();
     await page.locator(s('desk-actions--options')).getByRole('button', {name: 'Remove'}).click();
     await page.locator(s('modal-confirm')).getByRole('button', {name: 'Ok'}).click();
-    await expect(page.locator(s('notification--error'))).toBeVisible();
+    await expect(page.locator(s('notification--error'))).toHaveText('Error: Cannot delete desk as it is assigned as default desk to user(s).');
     await expect(page.locator(s('desk--Sports'))).toBeVisible();
 });
