@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {getCellValueByColumTitle, restoreDatabaseSnapshot, s} from './utils';
 
 test.setTimeout(50000);
 
@@ -47,11 +47,19 @@ test('item appearing in publish queue after publishing with subscriber', async (
     )).toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeAttached({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeVisible({timeout: 10000});
 
     await page.locator(s('publish-queue-item=test sports story')).click();
 
     await expect(page.locator(
         s('authoring-preview', 'field--headline'),
     )).toHaveText('test sports story');
+
+    const value = await getCellValueByColumTitle(
+        page.locator('[data-test-id="publish-queue-table"]'),
+        page.locator(s('publish-queue-item=test sports story')),
+        'Subscriber',
+    );
+
+    await expect(value).toBe('Subscriber 1');
 });

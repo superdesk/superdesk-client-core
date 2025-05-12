@@ -1,5 +1,5 @@
 import * as request from 'request';
-import {expect, Page} from '@playwright/test';
+import {expect, Locator, Page} from '@playwright/test';
 
 export function restoreDatabaseSnapshot(options?: {snapshotName?: string}): Promise<void> {
     return new Promise((resolve) => {
@@ -49,4 +49,26 @@ export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
+}
+
+export async function getCellValueByColumTitle(
+    table: Locator,
+    row: Locator,
+    tableHeading: string,
+): Promise<String> {
+    const headers = table.locator('thead tr th');
+    const count = await headers.count();
+    let columnIndex = -1;
+
+    for (let i = 0; i < count; i++) {
+        const text = await headers.nth(i).innerText();
+
+        if (text === tableHeading) {
+            columnIndex = i;
+            break;
+        }
+    }
+
+    const item = row.locator(`td:nth-child(${columnIndex + 1})`);
+    return item.innerText();
 }
