@@ -70,5 +70,6 @@ export async function getCellValueByColumTitle(
     }
 
     const item = row.locator(`td:nth-child(${columnIndex + 1})`);
+
     return item.innerText();
 }
