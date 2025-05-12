@@ -50,3 +50,11 @@ export function sleep(ms: number): Promise<void> {
         setTimeout(resolve, ms);
     });
 }
+
+export async function waitingForToastMsg(page: Page, type: string, text: string): Promise<void> {
+    const selector = s(`notification--${type}=${text}`);
+
+    await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator(selector)).toHaveText(`${text}`);
+    await expect(page.locator(selector)).not.toBeVisible();
+}

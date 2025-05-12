@@ -1,13 +1,17 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s, sleep} from './utils';
-import {getStorageState} from './utils/storage-state';
 
 test('can correct published item', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
+
+    // checking that articles are loaded
+    await expect(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+    ).toBeVisible();
 
     await expect(
         page.locator(s('monitoring-group=Sports desk output', 'article-item=Story 5.1')),
@@ -29,5 +33,5 @@ test('can correct published item', async ({page}) => {
     ).toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeAttached({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible({timeout: 10000});
 });

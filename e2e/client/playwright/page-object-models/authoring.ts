@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page} from '@playwright/test';
 import {s} from '../utils';
 
 export class Authoring {
@@ -24,14 +24,6 @@ export class Authoring {
 
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
-    }
-
-    async waitingForToastMsg(type: string, text: string): Promise<void> {
-        const selector = `notification--${type}=${text}`;
-
-        await expect(this.page.locator(s(selector))).toBeVisible();
-        await expect(this.page.locator(s(selector))).toHaveText(`${text}`);
-        await expect(this.page.locator(s(selector))).not.toBeVisible();
     }
 }
 
