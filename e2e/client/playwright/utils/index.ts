@@ -69,6 +69,10 @@ export async function getCellValueByColumTitle(
         }
     }
 
+    if (columnIndex === -1) {
+        throw new Error(`Column heading "${tableHeading}" not found in table`);
+    }
+
     const item = row.locator(`td:nth-child(${columnIndex + 1})`);
 
     return item.innerText();

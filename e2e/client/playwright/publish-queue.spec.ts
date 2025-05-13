@@ -56,7 +56,7 @@ test('item appearing in publish queue after publishing with subscriber', async (
     )).toHaveText('test sports story');
 
     const value = await getCellValueByColumTitle(
-        page.locator('[data-test-id="publish-queue-table"]'),
+        page.locator(s('publish-queue-table')),
         page.locator(s('publish-queue-item=test sports story')),
         'Subscriber',
     );
