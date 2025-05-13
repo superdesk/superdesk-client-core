@@ -98,7 +98,7 @@ export class Filters extends React.PureComponent<IProps> {
                         />
                     </Spacer>
 
-                    <div style={{display: 'none' /** PR-TODO: implement */}}>
+                    <div>
                         <RadioButtonGroup
                             value={this.props.filterPeriod}
                             options={filterPeriods.map(({id, label}) => ({value: id, label}))}

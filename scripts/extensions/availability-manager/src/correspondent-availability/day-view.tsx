@@ -14,7 +14,7 @@ interface IProps {
     items: Array<IAvailabilityRecord>;
 }
 
-export class ListView extends React.PureComponent<IProps> {
+export class DayView extends React.PureComponent<IProps> {
     render() {
         const {items} = this.props;
 

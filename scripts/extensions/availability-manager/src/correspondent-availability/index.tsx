@@ -3,12 +3,14 @@ import {Spacer} from '@sourcefabric/common';
 import {IPage} from 'superdesk-api';
 import {IAvailabilityRecord, IFilterPeriod, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {ListView} from './list-view';
+import {DayView} from './day-view';
 import {Filters} from './filters';
 import {getQueryWithFilters} from './get-query-with-filters';
 import {Alert} from 'superdesk-ui-framework/react';
+import {WeekView} from './week-view';
 
 const {gettext} = superdesk.localization;
+const {assertNever} = superdesk.helpers;
 
 const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
 
@@ -38,7 +40,7 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
         const paddingInline = 'var(--gap-3)';
 
         return (
-            <Spacer v gap="16" style={{width: '100%'}}>
+            <Spacer v gap="16" style={{width: '100%', height: '100%', overflow: 'auto'}}>
                 <div
                     style={{
                         background: 'var(--sd-item__main-Bg)',
@@ -59,25 +61,40 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
                     />
                 </div>
 
-
-                <div style={{paddingInline}}>
-                    <WithAvailabilityRecordsQuery
-                        resource="user_availability"
-                        query={getQueryWithFilters(this.state.filters)}
-                    >
-                        {(res) => {
-                            if (res._items.length < 1) {
-                                return (
-                                    <Alert style="hollow" size="small">
-                                        <div>{gettext('No data available for the given day')}</div>
-                                    </Alert>
-                                );
-                            } else {
-                                return <ListView items={res._items} />;
-                            }
-                        }}
-                    </WithAvailabilityRecordsQuery>
-                </div>
+                {(() => {
+                    if (this.state.filterPeriod === 'day') {
+                        return (
+                            <div style={{paddingInline}}>
+                                <WithAvailabilityRecordsQuery
+                                    resource="user_availability"
+                                    query={getQueryWithFilters(
+                                        this.state.filters,
+                                        this.state.filters.date,
+                                        this.state.filters.date,
+                                    )}
+                                >
+                                    {(res) => {
+                                        if (res._items.length < 1) {
+                                            return (
+                                                <Alert style="hollow" size="small">
+                                                    <div>{gettext('No data available for the given day')}</div>
+                                                </Alert>
+                                            );
+                                        } else if (this.state.filterPeriod === 'day') {
+                                            return <DayView items={res._items} />;
+                                        } else if (this.state.filterPeriod === 'week') {
+                                            return <WeekView filters={this.state.filters} />;
+                                        } else {
+                                            return assertNever(this.state.filterPeriod);
+                                        }
+                                    }}
+                                </WithAvailabilityRecordsQuery>
+                            </div>
+                        );
+                    } else {
+                        return <WeekView filters={this.state.filters} />
+                    }
+                })()}
             </Spacer>
         );
     }

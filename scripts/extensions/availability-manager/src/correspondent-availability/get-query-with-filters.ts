@@ -7,10 +7,10 @@ import {formatDateIso} from '../utils';
 
 const {arrayToTree, treeToArray, getTreeParents, buildTreeDictionary} = superdesk.utilities;
 
-export function getQueryWithFilters(filters: IFilters): ISuperdeskQuery {
+export function getQueryWithFilters(filters: Omit<IFilters, 'date'>, dateFrom: Date, dateTo: Date): ISuperdeskQuery {
     const where: Array<IComparison> = [
-        {[nameof<IAvailabilityRecord>('date')]: {$gte: formatDateIso(filters.date)}},
-        {[nameof<IAvailabilityRecord>('date')]: {$lte: formatDateIso(filters.date)}},
+        {[nameof<IAvailabilityRecord>('date')]: {$gte: formatDateIso(dateFrom)}},
+        {[nameof<IAvailabilityRecord>('date')]: {$lte: formatDateIso(dateTo)}},
     ];
 
     if (filters.language.length > 0) {
