@@ -80,6 +80,7 @@ export class MarkedDesksList extends React.Component<IProps> {
                 className="dropdown dropdown__menu highlights-list-menu open"
                 onMouseEnter={this.stopTimeout}
                 onMouseLeave={this.close}
+                data-test-id="marked-desk-list"
             >
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
