@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Spacer} from '@sourcefabric/common';
+import {Spacer, SpacerBlock} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
 import {groupBy, range} from 'lodash';
 import {IUser} from 'superdesk-api';
-import {CalendarWeekDayItem, Text} from 'superdesk-ui-framework/react';
+import {CalendarWeekDayItem, Text, WeeklyCalendarGrid, WeeklyCalendarGridItem} from 'superdesk-ui-framework/react';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -40,52 +40,52 @@ export class WeekView extends React.PureComponent<IProps> {
                     }
 
                     return (
-                        <div className='calendar-user-week-row mb-2 p-2'>
+                        <WeeklyCalendarGrid style={{padding: 'var(--space--2)'}}>
                             {/* grid headers */}
-                            <div /> {/** spacer for user column */}
-                            {
-                                days.map((day, i) => (
-                                    <div className='calendar-week-day__container' key={i}>
-                                        <WeekViewHeaderDay day={day} />
-                                    </div>
-                                ))
-                            }
+                            <WeeklyCalendarGridItem /> {/** spacer for user column */}
+                            {days.map((day, i) => (
+                                <WeeklyCalendarGridItem key={i}>
+                                    <WeekViewHeaderDay day={day} />
+                                </WeeklyCalendarGridItem>
+                            ))}
 
                             {
                                 users.map((user) => {
                                     return (
                                         <React.Fragment key={user._id}>
-                                            <CalendarWeekDayItem coloredBg={true}>
-                                                <UserAvatar userId={user._id} />
-
-                                                {/* PR-TODO: drop util classnames */}
-                                                <Text size='medium' className='mt-1 mb-0-5 line-height-sm'>
-                                                    {user.display_name}
-                                                </Text>
-
-                                                <Text size='small' color='light'>@{user.sign_off}</Text>
-                                            </CalendarWeekDayItem>
+                                            <WeeklyCalendarGridItem>
+                                                <CalendarWeekDayItem coloredBg={true}>
+                                                    <UserAvatar userId={user._id} />
+                                                    <SpacerBlock v gap="8" />
+                                                    <Text size='medium' noMargin>
+                                                        {user.display_name}
+                                                    </Text>
+                                                    <SpacerBlock v gap="4" />
+                                                    <Text size='small' color='light' noMargin>
+                                                        @{user.sign_off}
+                                                    </Text>
+                                                </CalendarWeekDayItem>
+                                            </WeeklyCalendarGridItem>
 
                                             {days.map((day, i) => {
                                                 const dayISo = formatDateIso(day);
                                                 const [item] = byUserByDate?.[user._id]?.[dayISo] ?? [];
 
                                                 if (item == null) {
-                                                    return (<div />);
+                                                    return (<WeeklyCalendarGridItem />);
                                                 }
 
                                                 return (
-                                                    <div className='calendar-week-day__container' key={i}>
-                                                        <Weekday item={item} />
-                                                    </div>
+                                                    <WeeklyCalendarGridItem key={i}>
+                                                        <Weekday item={item}  />
+                                                    </WeeklyCalendarGridItem>
                                                 );
                                             })}
                                         </React.Fragment>
                                     );
                                 })
                             }
-
-                        </div>
+                        </WeeklyCalendarGrid>
                     );
                 }}
             </WithAvailabilityRecordsQuery>
