@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s, waitingForToastMsg} from './utils';
+import {restoreDatabaseSnapshot, s, waitForToastMessage} from './utils';
 import {getStorageState} from './utils/storage-state';
 
 test.use({
@@ -39,7 +39,7 @@ test('can correct published item using corrections workflow', async ({page}) => 
     await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').clear();
     await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').fill('Story 5.1');
     await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
-    await waitingForToastMsg(page, 'success', 'Item updated.');
+    await waitForToastMessage(page, 'success', 'Item updated.');
 
     await page.locator(s('authoring', 'open-send-publish-pane')).click();
     await page
