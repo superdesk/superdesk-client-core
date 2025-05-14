@@ -24,6 +24,7 @@ export type IAvailabilityRecordTemplate = IAvailabilityAllDay | IAvailabilityPar
 export type IScheduleRecord = Omit<IAvailabilityAllDay, 'date'> | Omit<IAvailabilityPartial, 'date'>;
 
 export interface IDefaultAvailability extends IBaseRestApiResponse {
+    enabled: boolean;
     working_days?: {
         sunday?: IScheduleRecord;
         monday?: IScheduleRecord;
@@ -34,7 +35,7 @@ export interface IDefaultAvailability extends IBaseRestApiResponse {
         saturday?: IScheduleRecord;
     };
     language?: Array<string>;
-    tags?: Array<{code: string}>
+    tags?: Array<{code: string}>;
 }
 
 interface IAvailabilityRecordReadOnly {
