@@ -138,7 +138,7 @@ export class Filters extends React.PureComponent<IProps> {
                                 status: val.map((qcode) => ({code: qcode})),
                             });
                         }}
-                        allowMultiple={false}
+                        allowMultiple={true}
                         inputWrapper={inputWrapperHorizontal}
                     />
 

@@ -8,6 +8,7 @@ import {Filters} from './filters';
 import {getQueryWithFilters} from './get-query-with-filters';
 import {Alert} from 'superdesk-ui-framework/react';
 import {WeekView} from './week-view';
+import {availabilityStatuses} from '../constants';
 
 const {gettext} = superdesk.localization;
 const {assertNever} = superdesk.helpers;
@@ -28,7 +29,7 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
         this.state = {
             filters: {
                 date: new Date(),
-                status: [],
+                status: availabilityStatuses.map((code) => ({code})),
                 language: [],
                 tags: [],
             },
