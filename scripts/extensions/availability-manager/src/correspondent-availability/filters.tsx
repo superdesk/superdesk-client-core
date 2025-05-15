@@ -130,15 +130,30 @@ export class Filters extends React.PureComponent<IProps> {
                     />
 
                     <StatusSelect
+                        allowNotSet={true}
                         label={{text: gettext('Status'), inline: true}}
-                        value={this.props.value.status.map(({code}) => code as IAvailabilityRecord['status'])}
-                        onChange={(val) => {
+                        value={(() => {
+                            if (this.props.value.status === null) {
+                                return [{notSet: true}];
+                            } else if (typeof this.props.value.status === 'undefined') {
+                                return [];
+                            } else {
+                                return [this.props.value.status.code as IAvailabilityRecord['status']]
+                            }
+                        })()}
+                        onChange={([val]) => {
                             this.props.onChange({
                                 ...this.props.value,
-                                status: val.map((qcode) => ({code: qcode})),
+                                status: ((): IFilters['status'] => {
+                                    if (typeof val === 'string') {
+                                        return {code: val};
+                                    } else {
+                                        return null;
+                                    }
+                                })(),
                             });
                         }}
-                        allowMultiple={true}
+                        allowMultiple={false}
                         inputWrapper={inputWrapperHorizontal}
                     />
 

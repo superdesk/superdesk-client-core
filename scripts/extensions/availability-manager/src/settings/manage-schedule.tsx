@@ -282,6 +282,7 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
 
                                                     <div>
                                                         <StatusSelect
+                                                            allowNotSet={false}
                                                             label={{text: gettext('Status'), hidden: true}}
                                                             value={
                                                                 [

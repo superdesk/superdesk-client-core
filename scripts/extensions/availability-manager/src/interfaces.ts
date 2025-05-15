@@ -55,7 +55,11 @@ export type ITagsWhiteList = Set<string>;
 export interface IFilters {
     language: Array<string>;
     date: Date;
-    status: Array<{code: string}>;
+
+    // undefined means status is not filtered, null - items are filtered where status is not set
+    // in either case - filtering is front-end only
+    status: {code: string} | undefined | null;
+
     tags: Array<{code: string}>;
 }
 
