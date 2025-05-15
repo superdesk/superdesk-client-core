@@ -205,6 +205,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                         showConfirmationPrompt({
                             title: 'Do you want to reload the page now?',
                             message: 'The page needs to be reloaded to change the language',
+                            dataTestId: 'confirmation-modal',
                         }).then((confirmed) => {
                             if (confirmed) {
                                 resolve(true);
