@@ -145,7 +145,9 @@ export class Filters extends React.PureComponent<IProps> {
                             this.props.onChange({
                                 ...this.props.value,
                                 status: ((): IFilters['status'] => {
-                                    if (typeof val === 'string') {
+                                    if (typeof val === 'undefined') {
+                                        return undefined;
+                                    } else if (typeof val === 'string') {
                                         return {code: val};
                                     } else {
                                         return null;
