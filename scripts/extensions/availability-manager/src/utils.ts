@@ -1,6 +1,6 @@
 import {formatTime, mergeSets} from '@sourcefabric/common';
 import {format} from 'date-fns';
-import {IVocabularyItem} from 'superdesk-api';
+import {IBaseRestApiResponse, IVocabularyItem} from 'superdesk-api';
 import {TAGS_VOCABULARY_ID} from './constants';
 import {
     IAvailabilityRecord,
@@ -116,13 +116,20 @@ export function setUserAvailability(
     currentAvailability: IDefaultAvailability | null,
     patch: Partial<IDefaultAvailability>,
 ): Promise<IDefaultAvailability> {
+    const initialDefaultAvailability: Omit<IDefaultAvailability, keyof IBaseRestApiResponse> = {
+        working_days: {},
+        language: [],
+        tags: [],
+        enabled: false,
+    };
+
     return httpRequestJsonLocal<IDefaultAvailability>({
         method: 'PUT',
         path: `/default_user_availability/${userId}`,
         payload: {
             ...(
                 currentAvailability == null
-                    ? {}
+                    ? initialDefaultAvailability
                     : omitBaseApiResponse(currentAvailability)
             ),
             ...patch,
