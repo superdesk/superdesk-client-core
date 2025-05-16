@@ -48,12 +48,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
         const users: {[key: string]: IUser} = superdesk.entities.users.getAllUsers();
 
         return (
-            <WithAvailabilityRecords
-                dateFrom={filters.date}
-                dateTo={filters.date}
-                filters={filters}
-                style={{padding: 'var(--space--2)'}}
-            >
+            <WithAvailabilityRecords dateFrom={filters.date} dateTo={filters.date} filters={filters}>
                 {({byUserByDateFiltered}) => {
                     const records: Array<IAvailabilityRecord> = [];
 
@@ -82,7 +77,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                     });
 
                     return (
-                        <BoxedList>
+                        <BoxedList style={{padding: 'var(--space--2)'}}>
                             {participantsIds.map((participantId) => {
                                 const record = recordsByUser[participantId] as IAvailabilityRecord | null;
                                 const user = users[participantId];
