@@ -28,13 +28,13 @@ export class DayView extends React.PureComponent<IProps, IState> {
 
         this.state = {
             participantIds: null,
-        }
+        };
     }
 
     componentDidMount(): void {
         fetchParticipants().then((items) => {
             this.setState({participantIds: items});
-        })
+        });
     }
 
     render() {
@@ -130,7 +130,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
 
                                             {(() => {
                                                 if (record == null) {
-                                                    return null
+                                                    return null;
                                                 } else if (record.status === 'partial') {
                                                     return (
                                                         <Spacer v gap="4">

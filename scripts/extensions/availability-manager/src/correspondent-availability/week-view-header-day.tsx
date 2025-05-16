@@ -17,7 +17,7 @@ interface IProps {
 
 export class WeekViewHeaderDay extends React.PureComponent<IProps> {
     render() {
-        const {day} = this.props
+        const {day} = this.props;
         const today = isToday(day);
 
         return (

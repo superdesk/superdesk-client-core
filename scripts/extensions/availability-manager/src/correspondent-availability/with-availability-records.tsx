@@ -34,13 +34,13 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
 
         this.state = {
             participantIds: null,
-        }
+        };
     }
 
     componentDidMount(): void {
         fetchParticipants().then((items) => {
             this.setState({participantIds: items});
-        })
+        });
     }
 
     render() {
@@ -97,7 +97,7 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
 }
 
 export function getItemsByUserByDate(
-    items: Array<IAvailabilityRecord>
+    items: Array<IAvailabilityRecord>,
 ): {[userId: string]: {[date: string]: Array<IAvailabilityRecord>}} {
     const byUser = groupBy(items, ({user}) => user);
     const byUserByDate: {[userId: string]: {[date: string]: Array<IAvailabilityRecord>}} = {};

@@ -32,7 +32,7 @@ export function filterParticipants(
         days: Array<Date>;
         filters: IFilters;
         byUserByDateFiltered: ReturnType<typeof getItemsByUserByDate>;
-    }
+    },
 ): Array<IUser['_id']> {
     const {
         participantIds,
@@ -52,5 +52,5 @@ export function filterParticipants(
             } else {
                 return byUserByDateFiltered[participantId] != null;
             }
-        })
+        });
 }

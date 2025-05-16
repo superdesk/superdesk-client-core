@@ -138,7 +138,7 @@ export class Filters extends React.PureComponent<IProps> {
                             } else if (typeof this.props.value.status === 'undefined') {
                                 return [];
                             } else {
-                                return [this.props.value.status.code as IAvailabilityRecord['status']]
+                                return [this.props.value.status.code as IAvailabilityRecord['status']];
                             }
                         })()}
                         onChange={([val]) => {

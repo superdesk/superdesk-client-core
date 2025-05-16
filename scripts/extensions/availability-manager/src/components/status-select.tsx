@@ -40,7 +40,7 @@ export class StatusSelect extends React.PureComponent<IProps> {
             } else {
                 return gettext('Not set');
             }
-        }
+        };
 
         return (
             <TreeSelect
@@ -76,7 +76,7 @@ export class StatusSelect extends React.PureComponent<IProps> {
                                 {getLabel(id)}
                             </div>
                         </Spacer>
-                    )
+                    );
                 }}
                 fullWidth={true}
                 inlineLabel={inlineLabel || labelHidden}

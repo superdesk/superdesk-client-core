@@ -30,13 +30,13 @@ export class WeekView extends React.PureComponent<IProps, IState> {
 
         this.state = {
             participantIds: null,
-        }
+        };
     }
 
     componentDidMount(): void {
         fetchParticipants().then((items) => {
             this.setState({participantIds: items});
-        })
+        });
     }
 
     render() {
@@ -82,11 +82,11 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                                                 <CalendarWeekDayItem coloredBg={true}>
                                                     <UserAvatar userId={user._id} />
                                                     <SpacerBlock v gap="8" />
-                                                    <Text size='medium' noMargin>
+                                                    <Text size="medium" noMargin>
                                                         {user.display_name}
                                                     </Text>
                                                     <SpacerBlock v gap="4" />
-                                                    <Text size='small' color='light' noMargin>
+                                                    <Text size="small" color="light" noMargin>
                                                         @{user.sign_off}
                                                     </Text>
                                                 </CalendarWeekDayItem>
@@ -186,4 +186,4 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
         default:
             return assertNever(item);
     }
-}
+};
