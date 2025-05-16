@@ -37,7 +37,12 @@ export interface IDefaultAvailability extends IBaseRestApiResponse {
     tags?: Array<{code: string}>
 }
 
-export type IAvailabilityRecord = IAvailabilityRecordTemplate & {user: IUser['_id']} & IBaseRestApiResponse;
+interface IAvailabilityRecordReadOnly {
+    readonly user: IUser['_id'];
+    readonly language?: Array<string>;
+}
+
+export type IAvailabilityRecord = IAvailabilityRecordTemplate & IAvailabilityRecordReadOnly & IBaseRestApiResponse;
 
 /**
  * Set contains IDs
@@ -45,3 +50,12 @@ export type IAvailabilityRecord = IAvailabilityRecordTemplate & {user: IUser['_i
  * Or tags that are not in the set, but are already saved in the database.
  */
 export type ITagsWhiteList = Set<string>;
+
+export interface IFilters {
+    language: Array<string>;
+    date: Date;
+    status: Array<{code: string}>;
+    tags: Array<{code: string}>;
+}
+
+export type IFilterPeriod = 'day' | 'week';

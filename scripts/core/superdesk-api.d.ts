@@ -24,6 +24,8 @@ declare module 'superdesk-api' {
 
     export type ICallable = (...args: Array<any>) => any;
 
+    export type Dictionary<K, V> = {[key: string]: V};
+
     // FORMATS
 
 
@@ -2328,6 +2330,7 @@ declare module 'superdesk-api' {
         selectBranchWithChildren?: boolean;
         disabled?: boolean;
         fullWidth: boolean;
+        inputWrapper?: React.ComponentProps<typeof import('superdesk-ui-framework').InputWrapper>['inputWrapper'];
         'data-test-id'?: string;
     }
 
@@ -3144,7 +3147,7 @@ declare module 'superdesk-api' {
             };
             attachment: IAttachmentsApi;
             users: {
-                getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+                getAllUsers(): Dictionary<IUser['_id'], User>;
             };
             templates: {
                 getUserTemplates(
@@ -3397,6 +3400,7 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+            getTreeParents<T>(nodes: Array<ITreeNode<T>>): Array<ITreeNode<T>>;
             filterFlatTree<T>(
                 options: {
                     itemsFlat: Array<T>;
@@ -3406,6 +3410,11 @@ declare module 'superdesk-api' {
                     includeParents: boolean;
                 },
             ): Array<T>;
+
+            buildTreeDictionary<T>(
+                tree: Array<ITreeNode<T>>,
+                getId: (node: ITreeNode<T>) => string,
+            ): Dictionary<string, ITreeNode<T>>;
 
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;

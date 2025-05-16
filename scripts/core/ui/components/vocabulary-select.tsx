@@ -39,6 +39,7 @@ export class VocabularySelect extends React.PureComponent<IPropsVocabularySelect
                 disabled={this.props.disabled}
                 selectBranchWithChildren={this.props.selectBranchWithChildren}
                 data-test-id={this.props['data-test-id']}
+                inputWrapper={this.props.inputWrapper}
             />
         );
     }

@@ -60,6 +60,32 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                             <React.Fragment key={rowIndex}>
                                 <ColumnsBefore rowIndex={rowIndex} />
 
+                                <div style={{width: tagsSelectWidth}}>
+                                    <VocabularySelect
+                                        label={{text: tagsVocabulary.display_name, hidden: true}}
+                                        value={(item.tags ?? []).map(({code}) => code)}
+                                        getOptions={() => getFilteredTags(
+                                            new Set<string>((item.tags ?? []).map(({code}) => code)),
+                                            this.props.tagsWhitelist,
+                                        )}
+                                        onChange={(qcodes) => {
+                                            this.props.onChange(setValueAtIndex(
+                                                workingHours,
+                                                rowIndex,
+                                                {
+                                                    ...item,
+                                                    tags: qcodes.map((qcode) => ({code: qcode})),
+                                                },
+                                            ));
+                                        }}
+                                        multiple={true}
+                                        fullWidth={true}
+                                        disabled={disabled}
+                                        selectBranchWithChildren
+                                        data-test-id="tags"
+                                    />
+                                </div>
+
                                 <div>
                                     <Spacer h gap="4" justifyContent="start" noGrow>
                                         <TimePicker
@@ -107,32 +133,6 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                             disabled={disabled}
                                         />
                                     </Spacer>
-                                </div>
-
-                                <div style={{width: tagsSelectWidth}}>
-                                    <VocabularySelect
-                                        label={{text: tagsVocabulary.display_name, hidden: true}}
-                                        value={(item.tags ?? []).map(({code}) => code)}
-                                        getOptions={() => getFilteredTags(
-                                            new Set<string>((item.tags ?? []).map(({code}) => code)),
-                                            this.props.tagsWhitelist,
-                                        )}
-                                        onChange={(qcodes) => {
-                                            this.props.onChange(setValueAtIndex(
-                                                workingHours,
-                                                rowIndex,
-                                                {
-                                                    ...item,
-                                                    tags: qcodes.map((qcode) => ({code: qcode})),
-                                                },
-                                            ));
-                                        }}
-                                        multiple={true}
-                                        fullWidth={true}
-                                        disabled={disabled}
-                                        selectBranchWithChildren
-                                        data-test-id="tags"
-                                    />
                                 </div>
 
                                 {

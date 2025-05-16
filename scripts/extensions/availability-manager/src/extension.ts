@@ -2,6 +2,7 @@ import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'super
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from './constants';
 import {AvailabilitySettings} from './settings';
 import {superdesk} from './superdesk';
+import {CorrespondentAvailability} from './correspondent-availability';
 
 const {gettext} = superdesk.localization;
 
@@ -55,6 +56,19 @@ const extension: IExtension = {
 
                 return result;
             };
+
+            if (superdesk.privileges.hasPrivilege('user_availability')) {
+                if (contributions.pages == null) {
+                    contributions.pages = [];
+                }
+
+                contributions.pages.push({
+                    title: gettext('Availability Management'),
+                    url: '/availability-management',
+                    priority: 160,
+                    component: CorrespondentAvailability,
+                });
+            }
         }
 
         return Promise.resolve({contributions} satisfies IExtensionActivationResult);

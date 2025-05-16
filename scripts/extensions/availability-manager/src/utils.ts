@@ -1,4 +1,5 @@
 import {formatTime, mergeSets} from '@sourcefabric/common';
+import {format} from 'date-fns';
 import {IVocabularyItem} from 'superdesk-api';
 import {TAGS_VOCABULARY_ID} from './constants';
 import {
@@ -39,14 +40,14 @@ export function getStatusColor(status: IAvailabilityRecord['status']) {
 
 export function getLabelForStatus(status: IAvailabilityRecord['status']) {
     switch (status) {
-    case 'available':
-        return gettext('Available');
-    case 'unavailable':
-        return gettext('Unavailable');
-    case 'partial':
-        return gettext('Partially available');
-    default:
-        return assertNever(status);
+        case 'available':
+            return gettext('Available');
+        case 'unavailable':
+            return gettext('Unavailable');
+        case 'partial':
+            return gettext('Partially available');
+        default:
+            return assertNever(status);
     }
 }
 
@@ -172,3 +173,32 @@ export const fullWidthNoGrow: React.CSSProperties = {
     width: 'min-content',
     minWidth: '100%',
 };
+
+export function compareTime(
+    str1: string,
+    str2: string,
+): number {
+    const num1 = parseInt(str1.replace(':', ''), 10);
+    const num2 = parseInt(str2.replace(':', ''), 10);
+
+    if (num1 < num2) {
+        return -1;
+    } else if (num1 === num2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+export function getTimeNumber(
+    time: string, // ISO time e.g. 23:59
+) {
+    return parseInt(time.replace(':', ''), 10);
+}
+
+/**
+ * Only formats to ISO 8601, doesn't convert it.
+ */
+export function formatDateIso(date: Date) {
+    return format(date, 'yyyy-MM-dd');
+}

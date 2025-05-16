@@ -1,6 +1,5 @@
-import {notNullOrUndefined} from '@sourcefabric/common';
 import {keyBy} from 'lodash';
-import {ITreeNode} from 'superdesk-api';
+import {Dictionary, ITreeNode} from 'superdesk-api';
 
 /**
  * 1. Initialize flat tree from `itemsFlat` (ITreeNode interface without parents or children set)
@@ -65,6 +64,23 @@ export function treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T> {
     }
 
     return items;
+}
+
+export function buildTreeDictionary<T>(
+    tree: Array<ITreeNode<T>>,
+    getId: (node: ITreeNode<T>) => string,
+): Dictionary<string, ITreeNode<T>> {
+    const dictionary: Dictionary<string, ITreeNode<T>> = {};
+
+    for (const node of tree) {
+        dictionary[getId(node)] = node;
+
+        if (node.children != null) {
+            Object.assign(dictionary, buildTreeDictionary(node.children, getId));
+        }
+    }
+
+    return dictionary;
 }
 
 export function sortTree<T>(
@@ -133,4 +149,16 @@ export function filterFlatTree<T>(
         ...(includeParents ? getParents(item).reverse() : [item]),
         ...getChildren(item),
     ]);
+}
+
+export function getTreeParents<T>(nodes: Array<ITreeNode<T>>): Array<ITreeNode<T>> {
+    const result = [];
+
+    for (const node of nodes) {
+        if (node.parent != null) {
+            result.push(node.parent, ...getTreeParents([node.parent]));
+        }
+    }
+
+    return result;
 }

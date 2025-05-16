@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, noop, range} from 'lodash';
-import {Button, CheckboxButton, CheckButtonGroup, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Button, CheckboxButton, CheckButtonGroup, Modal} from 'superdesk-ui-framework/react';
 import {
     availabilityStatuses,
     dayCodes,
@@ -12,8 +12,6 @@ import {
 } from '../constants';
 import {
     getFilteredTags,
-    getLabelForStatus,
-    getStylesForStatusDot,
     setUserAvailability,
     validateSchedule,
 } from '../utils';
@@ -23,6 +21,7 @@ import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-work
 import {IUser} from 'superdesk-api';
 import {ValidationErrors} from '../validation-errors';
 import {WorkingHoursGridLabels} from './working-hours-grid-labels';
+import {StatusSelect} from '../components/status-select';
 
 const {locale} = superdesk.localization;
 const {gettext} = superdesk.localization;
@@ -191,9 +190,6 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
         const weekdaysKeyed = keyBy(weekdays, (weekday) => weekday.index);
         const enabledWeekdays = weekdays.filter(({index}) => this.state.schedule[index] != null);
         const hasPartialDays = Object.values(this.state.schedule).some(({status}) => status === 'partial');
-        const renderLabels = enabledWeekdays.some(
-            (weekday) => this.state.schedule[weekday.index]?.status === 'partial',
-        );
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
         const {savingInProgress} = this.state;
 
@@ -254,14 +250,10 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                 gridTemplateColumns: range(0, columnCount).map(() => 'max-content').join(' '),
                             }}
                         >
-                            {
-                                renderLabels && (
-                                    <>
-                                        {additionalColumnsPlaceholder}
-                                        <WorkingHoursGridLabels />
-                                    </>
-                                )
-                            }
+                            <>
+                                {additionalColumnsPlaceholder}
+                                <WorkingHoursGridLabels showWorkingHoursLabel={hasPartialDays} />
+                            </>
 
                             {
                                 enabledWeekdays
@@ -289,43 +281,20 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                     </div>
 
                                                     <div>
-                                                        <TreeSelect
-                                                            kind="synchronous"
+                                                        <StatusSelect
+                                                            label={{text: gettext('Status'), hidden: true}}
                                                             value={
                                                                 [
                                                                     scheduleRecord.status,
                                                                 ] as typeof availabilityStatuses
                                                             }
-                                                            getOptions={
-                                                                () => availabilityStatuses
-                                                                    .map((id) => ({value: id}))
-                                                            }
-                                                            getId={(id) => id}
-                                                            getLabel={(id) => getLabelForStatus(id)}
                                                             onChange={([val]) => {
                                                                 this.handleScheduleItemChange(
                                                                     weekday.index,
                                                                     {status: val},
                                                                 );
                                                             }}
-                                                            optionTemplate={(id) => (
-                                                                <Spacer h gap="4" justifyContent="start" noWrap>
-                                                                    <div>
-                                                                        <div
-                                                                            style={{
-                                                                                ...getStylesForStatusDot(id),
-                                                                            }}
-                                                                        />
-                                                                    </div>
-
-                                                                    <div>{getLabelForStatus(id)}</div>
-                                                                </Spacer>
-                                                            )}
-                                                            fullWidth={true}
-                                                            inlineLabel
-                                                            labelHidden
                                                             required
-                                                            data-test-id="status"
                                                         />
                                                     </div>
                                                 </>
@@ -366,12 +335,11 @@ export class ManageScheduleModal extends React.PureComponent<IProps, IState> {
                                                         range(0, workingHoursEditorColumnCount)
                                                             .map((n) => <span key={`placeholder-${n}`} />)
                                                             .map((placeholderJsx, i) => {
-                                                                // skip a column when schedule has partial days
-                                                                // to align tags selection component
-                                                                // to ones rendered from partial days
-                                                                const targetIndex = !hasPartialDays ? 0 : 1;
+                                                                const displayTagsSelectAtIndex = 0;
 
-                                                                if (i !== targetIndex) {
+                                                                if (i !== displayTagsSelectAtIndex) {
+                                                                    // placeholders needed for remaining columns
+                                                                    // so it aligns correctly in the CSS grid
                                                                     return placeholderJsx;
                                                                 }
 

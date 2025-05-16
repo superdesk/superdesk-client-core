@@ -5,7 +5,6 @@ import {
     IArticle,
     IEvents,
     IStage,
-    IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
     IOpenSideWidget,
@@ -85,7 +84,7 @@ import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
-import {arrayToTree, filterFlatTree, treeToArray} from './helpers/tree';
+import {arrayToTree, buildTreeDictionary, filterFlatTree, getTreeParents, treeToArray} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {patchArticle} from 'api/article-patch';
@@ -122,6 +121,7 @@ import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
 import {VocabularySelect} from './ui/components/vocabulary-select';
+import {dataStore} from 'data-store';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -366,16 +366,7 @@ export function getSuperdeskApiImplementation(
             },
             attachment: attachmentsApi,
             users: {
-                getUsersByIds: (ids) => (
-                    dataApi.query<IUser>(
-                        'users',
-                        1,
-                        {field: 'display_name', direction: 'ascending'},
-                        {_id: {$in: ids}},
-                        200,
-                    )
-                        .then((response) => response._items)
-                ),
+                getAllUsers: () => dataStore.users.toJS(),
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,
@@ -577,8 +568,10 @@ export function getSuperdeskApiImplementation(
             throttleAndCombineArray,
             querySelectorParent,
             arrayToTree,
+            getTreeParents,
             treeToArray,
             filterFlatTree,
+            buildTreeDictionary,
             isLockedInOtherSession,
             isLockedInCurrentSession,
             getTextColor,
