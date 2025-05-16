@@ -1,0 +1,110 @@
+import * as React from 'react';
+import {Alert} from 'superdesk-ui-framework/react';
+import {groupBy} from 'lodash';
+import {IUser} from 'superdesk-api';
+import {IAvailabilityRecord, IFilters} from '../interfaces';
+import {superdesk} from '../superdesk';
+import {getQueryWithFilters} from './get-query-with-filters';
+import {fetchParticipants} from './participants';
+
+const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvailabilityRecord>();
+const {gettext} = superdesk.localization;
+
+interface IProps {
+    dateFrom: Date;
+    dateTo: Date;
+    filters: Omit<IFilters, 'date'>;
+    children: (
+        options: {
+            byUserByDateAll: ReturnType<typeof getItemsByUserByDate>,
+            byUserByDateFiltered: ReturnType<typeof getItemsByUserByDate>,
+        },
+    ) => React.ReactNode;
+    style?: React.CSSProperties;
+}
+
+interface IState {
+    // participants are users that have availability management enabled
+    participantIds: Set<IUser['_id']> | null;
+}
+
+export class WithAvailabilityRecords extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            participantIds: null,
+        }
+    }
+
+    componentDidMount(): void {
+        fetchParticipants().then((items) => {
+            this.setState({participantIds: items});
+        })
+    }
+
+    render() {
+        const {participantIds} = this.state;
+
+        if (participantIds == null) {
+            return null;
+        }
+
+        const {filters, dateFrom, dateTo} = this.props;
+
+        return (
+            <div style={this.props.style}>
+                <WithAvailabilityRecordsQuery
+                    resource="user_availability"
+                    query={getQueryWithFilters(filters, dateFrom, dateTo)}
+                >
+                    {(itemsFiltered) => (
+                        <WithAvailabilityRecordsQuery
+                            resource="user_availability"
+                            query={getQueryWithFilters(
+                                {
+                                    tags: [],
+                                    status: undefined,
+                                    language: [],
+                                },
+                                dateFrom,
+                                dateTo,
+                            )}
+                        >
+                            {(itemsAll) => {
+                                const byUserByDateAll = getItemsByUserByDate(itemsAll._items);
+                                const byUserByDateFiltered = getItemsByUserByDate(itemsFiltered._items);
+
+                                if (Object.keys(byUserByDateFiltered).length < 1) {
+                                    return (
+                                        <div style={{padding: 'var(--space--2)'}}>
+                                            <Alert style="hollow" size="small">
+                                                <div>{gettext('No data available')}</div>
+                                            </Alert>
+                                        </div>
+
+                                    );
+                                } else {
+                                    return this.props.children({byUserByDateAll, byUserByDateFiltered});
+                                }
+                            }}
+                        </WithAvailabilityRecordsQuery>
+                    )}
+                </WithAvailabilityRecordsQuery>
+            </div>
+        );
+    }
+}
+
+export function getItemsByUserByDate(
+    items: Array<IAvailabilityRecord>
+): {[userId: string]: {[date: string]: Array<IAvailabilityRecord>}} {
+    const byUser = groupBy(items, ({user}) => user);
+    const byUserByDate: {[userId: string]: {[date: string]: Array<IAvailabilityRecord>}} = {};
+
+    for (const [userId, items] of Object.entries(byUser)) {
+        byUserByDate[userId] = groupBy(items, ({date}) => date);
+    }
+
+    return byUserByDate;
+}

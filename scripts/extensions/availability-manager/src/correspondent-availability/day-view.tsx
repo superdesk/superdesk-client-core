@@ -1,110 +1,183 @@
-import {Spacer} from '@sourcefabric/common';
 import * as React from 'react';
-import {IUser} from 'superdesk-api';
+import {difference, keyBy} from 'lodash';
 import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
+import {Spacer} from '@sourcefabric/common';
+import {IUser} from 'superdesk-api';
 import {TagsPreview} from '../components/tags-preview';
-import {IAvailabilityRecord} from '../interfaces';
+import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {sortAvailabilityRecords} from './sort-availability-records';
+import {fetchParticipants, filterParticipants} from './participants';
+import {compareUsersByName, sortAvailabilityRecords} from './sort-availability-records';
+import {WithAvailabilityRecords} from './with-availability-records';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
 
 interface IProps {
-    items: Array<IAvailabilityRecord>;
+    filters: IFilters;
 }
 
-export class DayView extends React.PureComponent<IProps> {
-    render() {
-        const {items} = this.props;
+interface IState {
+    // participants are users that have availability management enabled
+    participantIds: Set<IUser['_id']> | null;
+}
 
-        if (items.length < 1) {
+export class DayView extends React.PureComponent<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            participantIds: null,
+        }
+    }
+
+    componentDidMount(): void {
+        fetchParticipants().then((items) => {
+            this.setState({participantIds: items});
+        })
+    }
+
+    render() {
+        const {filters} = this.props;
+        const {participantIds} = this.state;
+
+        if (participantIds == null) { // loading
             return null;
         }
 
         const users: {[key: string]: IUser} = superdesk.entities.users.getAllUsers();
 
         return (
-            <BoxedList>
-                {
-                    sortAvailabilityRecords(items).map((item, i) => {
-                        const user = users[item.user];
+            <WithAvailabilityRecords
+                dateFrom={filters.date}
+                dateTo={filters.date}
+                filters={filters}
+                style={{padding: 'var(--space--2)'}}
+            >
+                {({byUserByDateFiltered}) => {
+                    const records: Array<IAvailabilityRecord> = [];
 
-                        return (
-                            <BoxedListItem
-                                key={i}
-                                type={(() => {
-                                    switch (item.status) {
-                                        case 'available':
-                                            return 'success';
-                                        case 'partial':
-                                            return 'warning';
-                                        case 'unavailable':
-                                            return 'alert';
-                                        default:
-                                            return assertNever(item);
-                                    }
-                                })()}
-                                coloredBg={item.status !== 'available'}
-                                density="compact"
-                            >
-                                <Spacer gap="32" alignItems="center" justifyContent="space-between" noGrow>
-                                    <div>
-                                        <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
-                                            <UserAvatar userId={item.user} />
+                    for (const byDate of Object.values(byUserByDateFiltered)) {
+                        for (const _records of Object.values(byDate)) {
+                            records.push(..._records);
+                        }
+                    }
 
-                                            <strong style={{color: 'var(--sd-colour-interactive--darken-20)'}}>
-                                                {user.display_name}
-                                            </strong>
+                    const recordsByUser: {[userId: string]: IAvailabilityRecord} = keyBy(records, ({user}) => user);
+                    const recordsSorted = sortAvailabilityRecords(records);
+                    const usersWithRecord = recordsSorted.map(({user}) => user);
+                    const usersWithoutRecord = difference(
+                        Array.from(participantIds),
+                        usersWithRecord,
+                    ).sort((a, b) => compareUsersByName(users[a], users[b]));
 
-                                            <span style={{color: 'var(--color-text-light)'}}>
-                                                @{user.sign_off}
-                                            </span>
+                    const participantsIds = filterParticipants({
+                        participantIds: [
+                            ...usersWithRecord,
+                            ...usersWithoutRecord,
+                        ],
+                        days: [filters.date],
+                        filters: filters,
+                        byUserByDateFiltered,
+                    });
 
-                                            <span>
-                                                {(item.language ?? []).map((lang) => <Label text={lang} key={lang} />)}
-                                            </span>
-                                        </Spacer>
-                                    </div>
+                    return (
+                        <BoxedList>
+                            {participantsIds.map((participantId) => {
+                                const record = recordsByUser[participantId] as IAvailabilityRecord | null;
+                                const user = users[participantId];
 
-                                    {(() => {
-                                        if (item.status === 'partial') {
-                                            return (
-                                                <Spacer v gap="4">
-                                                    {(item.working_hours ?? []).map((hours, i) => (
-                                                        <Spacer key={i} gap="16" justifyContent="end" noWrap>
-                                                            <TagsPreview tags={hours.tags} justifyContent="end" />
+                                return (
+                                    <BoxedListItem
+                                        key={participantId}
+                                        type={(() => {
+                                            if (record == null) {
+                                                return 'default';
+                                            }
 
-                                                            <span
-                                                                style={{
-                                                                    whiteSpace: 'nowrap',
-                                                                    color: 'var(--color-text-light)',
-                                                                }}
-                                                            >
-                                                                {hours.start_time} - {hours.end_time}
+                                            switch (record.status) {
+                                                case 'available':
+                                                    return 'success';
+                                                case 'partial':
+                                                    return 'warning';
+                                                case 'unavailable':
+                                                    return 'alert';
+                                                default:
+                                                    return assertNever(record);
+                                            }
+                                        })()}
+                                        coloredBg={record != null && record.status !== 'available'}
+                                        density="compact"
+                                    >
+                                        <Spacer gap="32" alignItems="center" justifyContent="space-between" noGrow>
+                                            <div>
+                                                <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
+                                                    <UserAvatar userId={user._id} />
+
+                                                    <strong style={{color: 'var(--sd-colour-interactive--darken-20)'}}>
+                                                        {user.display_name}
+                                                    </strong>
+
+                                                    <span style={{color: 'var(--color-text-light)'}}>
+                                                        @{user.sign_off}
+                                                    </span>
+
+                                                    {
+                                                        record != null && (
+                                                            <span>
+                                                                {(record.language ?? [])
+                                                                    .map((lang) => <Label text={lang} key={lang} />)}
                                                             </span>
+                                                        )
+                                                    }
+                                                </Spacer>
+                                            </div>
+
+                                            {(() => {
+                                                if (record == null) {
+                                                    return null
+                                                } else if (record.status === 'partial') {
+                                                    return (
+                                                        <Spacer v gap="4">
+                                                            {(record.working_hours ?? []).map((hours, i) => (
+                                                                <Spacer key={i} gap="16" justifyContent="end" noWrap>
+                                                                    <TagsPreview
+                                                                        tags={hours.tags}
+                                                                        justifyContent="end"
+                                                                    />
+
+                                                                    <span
+                                                                        style={{
+                                                                            whiteSpace: 'nowrap',
+                                                                            color: 'var(--color-text-light)',
+                                                                        }}
+                                                                    >
+                                                                        {hours.start_time} - {hours.end_time}
+                                                                    </span>
+                                                                </Spacer>
+                                                            ))}
                                                         </Spacer>
-                                                    ))}
-                                                </Spacer>
-                                            );
-                                        } else {
-                                            return (
-                                                <Spacer h gap="0" justifyContent="end" noWrap>
-                                                    <span />
-                                                    <TagsPreview
-                                                        tags={item.working_hours?.[0]?.tags ?? []}
-                                                        justifyContent="end"
-                                                    />
-                                                </Spacer>
-                                            );
-                                        }
-                                    })()}
-                                </Spacer>
-                            </BoxedListItem>
-                        );
-                    })
-                }
-            </BoxedList>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <Spacer h gap="0" justifyContent="end" noWrap>
+                                                            <span />
+                                                            <TagsPreview
+                                                                tags={record.working_hours?.[0]?.tags ?? []}
+                                                                justifyContent="end"
+                                                            />
+                                                        </Spacer>
+                                                    );
+                                                }
+                                            })()}
+                                        </Spacer>
+                                    </BoxedListItem>
+                                );
+                            })}
+                        </BoxedList>
+                    );
+                }}
+            </WithAvailabilityRecords>
         );
     }
 }

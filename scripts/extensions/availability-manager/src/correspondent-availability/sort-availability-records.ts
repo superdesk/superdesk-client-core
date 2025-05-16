@@ -27,10 +27,14 @@ export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Arra
             }
         },
         (a, b) => {
-            const nameA: string = users[a.user].display_name ?? users[a.user].username;
-            const nameB: string = users[b.user].display_name ?? users[b.user].username;
-
-            return nameA.localeCompare(nameB);
+            return compareUsersByName(users[a.user], users[b.user]);
         },
     );
+}
+
+export function compareUsersByName(a: IUser, b: IUser) {
+    const nameA: string = a.display_name ?? a.username;
+    const nameB: string = b.display_name ?? b.username;
+
+    return nameA.localeCompare(nameB);
 }
