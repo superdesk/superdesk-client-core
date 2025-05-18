@@ -44,3 +44,5 @@ const filterPeriodsObject: {[key in IFilterPeriod]: {label: string}} = {
 };
 
 export const filterPeriods = Object.entries(filterPeriodsObject).map(([id, {label}]) => ({id, label}));
+
+export const STATUS_NOT_SET = 'not-set';

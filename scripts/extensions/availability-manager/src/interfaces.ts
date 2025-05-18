@@ -9,7 +9,11 @@ export interface IWorkingHours {
 
 export type IAvailabilityAllDay = {
     date: string;
+
+    // there is also 'not-set' status, but it's not being used anywhere,
+    // thus we'll filter those items out since current code treats
     status: 'available' | 'unavailable';
+
     working_hours?: [{tags: Array<{code: string}>}];
 }
 
@@ -24,6 +28,8 @@ export type IAvailabilityRecordTemplate = IAvailabilityAllDay | IAvailabilityPar
 export type IScheduleRecord = Omit<IAvailabilityAllDay, 'date'> | Omit<IAvailabilityPartial, 'date'>;
 
 export interface IDefaultAvailability extends IBaseRestApiResponse {
+    // IDefaultAvailability['_id'] stores IUser['_id']
+
     enabled: boolean;
     working_days: {
         sunday?: IScheduleRecord;
