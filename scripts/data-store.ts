@@ -58,7 +58,7 @@ class DataStore {
             const query: ISuperdeskQuery = {
                 filter: {},
                 page: 1,
-                max_results: 200,
+                max_results: 500,
                 sort: [{[sortKey]: 'asc'}],
             };
 
