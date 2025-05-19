@@ -12,6 +12,7 @@ export function getQueryWithFilters(filters: Omit<IFilters, 'date'>, dateFrom: D
         {[nameof<IAvailabilityRecord>('date')]: {$gte: formatDateIso(dateFrom)}},
         {[nameof<IAvailabilityRecord>('date')]: {$lte: formatDateIso(dateTo)}},
         {[nameof<IAvailabilityRecord>('status')]: {$ne: STATUS_NOT_SET}},
+        {[nameof<IAvailabilityRecord>('status')]: {$ne: ''}}, // PR-TODO: drop old version of 'not-set'
     ];
 
     if (filters.language.length > 0) {
