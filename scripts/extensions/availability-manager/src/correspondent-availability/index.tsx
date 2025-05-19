@@ -32,8 +32,18 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
     }
 
     render() {
+        const dataTestId: string = (() => {
+            if (this.state.filterPeriod === 'day') {
+                return 'day-view';
+            } else if (this.state.filterPeriod === 'week') {
+                return 'week-view';
+            } else {
+                return assertNever(this.state.filterPeriod);
+            }
+        })();
+
         return (
-            <Spacer v gap="16" style={{width: '100%', height: '100%', overflow: 'auto'}}>
+            <Spacer v gap="16" style={{width: '100%', height: '100%', overflow: 'auto'}} data-test-id={dataTestId}>
                 <div
                     style={{
                         background: 'var(--sd-item__main-Bg)',

@@ -31,7 +31,7 @@ export class TreeSelectDriver {
         for (const option of options) {
             await this.page.locator(
                 s('tree-select-popover'),
-            ).getByRole('button', {name: new RegExp(option, 'i')}).click();
+            ).getByRole('button', {name: option, exact: true}).click();
 
             // if option is last in the list, but has children - select entire category
             if (option === options[options.length - 1]) {

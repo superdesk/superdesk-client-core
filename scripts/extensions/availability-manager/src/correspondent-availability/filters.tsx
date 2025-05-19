@@ -22,8 +22,8 @@ interface IProps {
 
 const inputWrapperHorizontal: React.ComponentProps<typeof InputWrapper>['inputWrapper'] = {
     kind: 'custom',
-    component: ({label, input}) => (
-        <Spacer h gap="4" noGrow>
+    component: ({label, input, ...props}) => (
+        <Spacer h gap="4" noGrow data-test-id={props['data-test-id']}>
             <FormLabel text={label} noMinHeight noMinWidth />
 
             <div style={{minWidth: 130}}>
@@ -43,7 +43,7 @@ export class Filters extends React.PureComponent<IProps> {
         const {paddingInline} = this.props;
 
         return (
-            <Spacer v gap="8" noWrap>
+            <Spacer v gap="8" noWrap data-test-id="filters">
                 <Spacer h gap="8" justifyContent="space-between" noWrap style={{paddingInline}}>
                     <Spacer h gap="8" justifyContent="start" noGrow>
                         <Button
