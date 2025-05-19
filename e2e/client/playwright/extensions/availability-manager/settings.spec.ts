@@ -1,3 +1,4 @@
+import path from 'path';
 import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from '../../utils';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
@@ -11,6 +12,8 @@ async function openAvailabilitySettings(page: Page) {
 }
 
 test.describe('availability manager settings', async () => {
+    test.use({storageState: path.join(__dirname, './user-michael.json')});
+
     test('main view', async ({page}) => {
         await openAvailabilitySettings(page);
 
