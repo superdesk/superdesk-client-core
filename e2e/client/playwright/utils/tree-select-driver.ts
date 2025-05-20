@@ -10,7 +10,7 @@ export class TreeSelectDriver {
     private page: Page;
     private element: Locator;
 
-    constructor(page, element) {
+    constructor(page: Page, element: Locator) {
         this.page = page;
         this.element = element;
 
