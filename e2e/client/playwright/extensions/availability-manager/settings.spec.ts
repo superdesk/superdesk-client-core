@@ -6,7 +6,7 @@ import {TreeSelectDriver} from '../../utils/tree-select-driver';
 async function openAvailabilitySettings(page: Page) {
     await page.clock.setFixedTime(new Date('1970-02-15'));
 
-    await restoreDatabaseSnapshot({snapshotName: 'availability-manager'});
+    await restoreDatabaseSnapshot({snapshotName: 'availability-management'});
     await page.goto('/#/profile');
     await page.locator(s('page-sections')).getByRole('button', {name: 'Availability'}).click();
 }

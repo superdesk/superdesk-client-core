@@ -6,7 +6,7 @@ import {TreeSelectDriver} from '../../utils/tree-select-driver';
 test.use({storageState: path.join(__dirname, './user-michael.json')});
 
 test('filtering in daily view', async ({page}) => {
-    await restoreDatabaseSnapshot({snapshotName: 'availability-manager'});
+    await restoreDatabaseSnapshot({snapshotName: 'availability-management'});
     await page.clock.setFixedTime(new Date('1970-02-03'));
 
     await page.goto('/#/availability-management');
