@@ -514,7 +514,7 @@ export function getSuperdeskApiImplementation(
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
             locale: {
-                code: getUserInterfaceLanguage(),
+                code: getUserInterfaceLanguage().replace('_', '-'),
                 firstDayOfWeek: appConfig.startingDay,
             },
         },
