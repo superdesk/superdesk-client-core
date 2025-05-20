@@ -10,7 +10,8 @@ import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
 
 const {VocabularySelect} = superdesk.components;
-const {gettext} = superdesk.localization;
+const {gettext, locale} = superdesk.localization;
+const {getLocaleForDatePicker} = superdesk.ui.framework;
 
 interface IProps {
     value: IFilters;
@@ -95,6 +96,10 @@ export class Filters extends React.PureComponent<IProps> {
                                 }
                             }}
                             dateFormat={superdesk.instance.config.view.dateformat}
+                            locale={{
+                                type: 'full',
+                                payload: getLocaleForDatePicker(locale.code),
+                            }}
                         />
                     </Spacer>
 
