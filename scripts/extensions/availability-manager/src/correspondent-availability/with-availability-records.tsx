@@ -25,7 +25,7 @@ interface IProps {
 
 interface IState {
     // participants are users that have availability management enabled
-    participantIds: Set<IUser['_id']> | null;
+    participantIds: Array<IUser['_id']> | null;
 }
 
 export class WithAvailabilityRecords extends React.PureComponent<IProps, IState> {
@@ -39,7 +39,7 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
 
     componentDidMount(): void {
         fetchParticipants().then((items) => {
-            this.setState({participantIds: items});
+            this.setState({participantIds: Array.from(items)});
         });
     }
 
@@ -56,12 +56,13 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
             <div style={this.props.style}>
                 <WithAvailabilityRecordsQuery
                     resource="user_availability"
-                    query={getQueryWithFilters(filters, dateFrom, dateTo)}
+                    query={getQueryWithFilters(participantIds, filters, dateFrom, dateTo)}
                 >
                     {(itemsFiltered) => (
                         <WithAvailabilityRecordsQuery
                             resource="user_availability"
                             query={getQueryWithFilters(
+                                participantIds,
                                 {
                                     tags: [],
                                     status: undefined,

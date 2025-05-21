@@ -1,4 +1,4 @@
-import {IComparison, ILogicalOperator, ISuperdeskQuery} from 'superdesk-api';
+import {IComparison, ILogicalOperator, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {nameof} from '@sourcefabric/common';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -7,8 +7,14 @@ import {formatDateIso} from '../utils';
 
 const {arrayToTree, treeToArray, getTreeParents, buildTreeDictionary} = superdesk.utilities;
 
-export function getQueryWithFilters(filters: Omit<IFilters, 'date'>, dateFrom: Date, dateTo: Date): ISuperdeskQuery {
+export function getQueryWithFilters(
+    participantIds: Array<IUser['_id']>,
+    filters: Omit<IFilters, 'date'>,
+    dateFrom: Date,
+    dateTo: Date,
+): ISuperdeskQuery {
     const where: Array<IComparison | ILogicalOperator> = [
+        {[nameof<IAvailabilityRecord>('user')]: {$in: participantIds}},
         {[nameof<IAvailabilityRecord>('date')]: {$gte: formatDateIso(dateFrom)}},
         {[nameof<IAvailabilityRecord>('date')]: {$lte: formatDateIso(dateTo)}},
     ];
