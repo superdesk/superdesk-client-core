@@ -1,13 +1,15 @@
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
 import {IPage} from 'superdesk-api';
-import {IFilterPeriod, IFilters} from '../interfaces';
+import {IFilterPeriod, IFilters, IWeekday} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {DayView} from './day-view';
 import {Filters} from './filters';
 import {WeekView} from './week-view';
+import {startOfWeek} from 'date-fns';
 
 const {assertNever} = superdesk.helpers;
+const {locale} = superdesk.localization;
 
 type IProps = React.ComponentProps<IPage['component']>;
 
@@ -59,7 +61,27 @@ export class CorrespondentAvailability extends React.PureComponent<IProps, IStat
                         paddingInline={'var(--gap-3)'}
                         filterPeriod={this.state.filterPeriod}
                         onFilterPeriodChange={(val) => {
-                            this.setState({filterPeriod: val});
+                            switch (val) {
+                                case 'week':
+                                    this.setState({
+                                        filterPeriod: val,
+                                        filters: {
+                                            ...this.state.filters,
+                                            date: startOfWeek(
+                                                this.state.filters.date,
+                                                {
+                                                    weekStartsOn: locale.firstDayOfWeek as IWeekday,
+                                                },
+                                            ),
+                                        },
+                                    });
+                                    break;
+                                case 'day':
+                                    this.setState({filterPeriod: val});
+                                    break;
+                                default:
+                                    assertNever(val);
+                            }
                         }}
                     />
                 </div>

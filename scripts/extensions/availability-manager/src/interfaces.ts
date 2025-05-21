@@ -45,6 +45,8 @@ interface IAvailabilityRecordReadOnly {
     readonly language?: Array<string>;
 }
 
+export type IWeekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 export type IAvailabilityRecord = IAvailabilityRecordTemplate & IAvailabilityRecordReadOnly & IBaseRestApiResponse;
 
 /**

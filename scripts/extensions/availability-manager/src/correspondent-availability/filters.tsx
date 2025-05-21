@@ -2,16 +2,17 @@
 
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
-import {addDays} from 'date-fns';
+import {addDays, startOfWeek} from 'date-fns';
 import {Button, DatePicker, FormLabel, IconButton, RadioButtonGroup, InputWrapper} from 'superdesk-ui-framework/react';
 import {StatusSelect} from '../components/status-select';
 import {filterPeriods, LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
-import {IAvailabilityRecord, IFilters} from '../interfaces';
+import {IAvailabilityRecord, IFilters, IWeekday} from '../interfaces';
 import {superdesk} from '../superdesk';
 
 const {VocabularySelect} = superdesk.components;
 const {gettext, locale} = superdesk.localization;
 const {getLocaleForDatePicker} = superdesk.ui.framework;
+const {assertNever} = superdesk.helpers;
 
 interface IProps {
     value: IFilters;
@@ -37,11 +38,30 @@ const inputWrapperHorizontal: React.ComponentProps<typeof InputWrapper>['inputWr
 inputWrapperHorizontal.component.displayName = 'inputWrapperHorizontal';
 
 export class Filters extends React.PureComponent<IProps> {
+    /** @deprecated workaround for a bug in datepicker */
+    private dayChangeCount: number;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.dayChangeCount = 0;
+    }
     render() {
         const tagsVocabulary = superdesk.entities.vocabulary.getAll().get(TAGS_VOCABULARY_ID);
         const languagesVocabulary = superdesk.entities.vocabulary.getAll().get(LANGUAGES_VOCABULARY);
 
         const {paddingInline} = this.props;
+
+        const dayStep = (() => {
+            switch (this.props.filterPeriod) {
+                case 'day':
+                    return 1;
+                case 'week':
+                    return 7;
+                default:
+                    return assertNever(this.props.filterPeriod);
+            }
+        })();
 
         return (
             <Spacer v gap="8" noWrap data-test-id="filters">
@@ -65,7 +85,7 @@ export class Filters extends React.PureComponent<IProps> {
                                 onClick={() => {
                                     this.props.onChange({
                                         ...this.props.value,
-                                        date: addDays(this.props.value.date, -1),
+                                        date: addDays(this.props.value.date, -dayStep),
                                     });
                                 }}
                             />
@@ -76,22 +96,41 @@ export class Filters extends React.PureComponent<IProps> {
                                 onClick={() => {
                                     this.props.onChange({
                                         ...this.props.value,
-                                        date: addDays(this.props.value.date, 1),
+                                        date: addDays(this.props.value.date, dayStep),
                                     });
                                 }}
                             />
                         </div>
 
                         <DatePicker
+                            key={this.dayChangeCount}
                             label={gettext('Day')}
                             inlineLabel
                             labelHidden
                             value={this.props.value.date}
                             onChange={(val) => {
                                 if (val != null) {
+                                    const nextVal: Date = (() => {
+                                        switch (this.props.filterPeriod) {
+                                            case 'day':
+                                                return val;
+                                            case 'week':
+                                                this.dayChangeCount++;
+
+                                                return startOfWeek(
+                                                    val,
+                                                    {
+                                                        weekStartsOn: locale.firstDayOfWeek as IWeekday,
+                                                    },
+                                                );
+                                            default:
+                                                return assertNever(this.props.filterPeriod);
+                                        }
+                                    })();
+
                                     this.props.onChange({
                                         ...this.props.value,
-                                        date: val,
+                                        date: nextVal,
                                     });
                                 }
                             }}
