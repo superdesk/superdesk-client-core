@@ -71,9 +71,30 @@ export class Filters extends React.PureComponent<IProps> {
                             text={gettext('Today')}
                             style="hollow"
                             onClick={() => {
+                                const val = new Date();
+
+                                // PR-TODO: use stashed setState middleware instead
+                                const nextVal: Date = (() => {
+                                    switch (this.props.filterPeriod) {
+                                        case 'day':
+                                            return val;
+                                        case 'week':
+                                            this.dayChangeCount++;
+
+                                            return startOfWeek(
+                                                val,
+                                                {
+                                                    weekStartsOn: locale.firstDayOfWeek as IWeekday,
+                                                },
+                                            );
+                                        default:
+                                            return assertNever(this.props.filterPeriod);
+                                    }
+                                })();
+
                                 this.props.onChange({
                                     ...this.props.value,
-                                    date: new Date(),
+                                    date: nextVal,
                                 });
                             }}
                         />
