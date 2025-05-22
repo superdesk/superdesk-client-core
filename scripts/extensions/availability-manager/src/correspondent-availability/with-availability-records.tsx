@@ -76,14 +76,24 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
                                 const byUserByDateAll = getItemsByUserByDate(itemsAll._items);
                                 const byUserByDateFiltered = getItemsByUserByDate(itemsFiltered._items);
 
-                                if (Object.keys(byUserByDateFiltered).length < 1) {
+                                // usage of triple-equals required
+                                const notSet = filters.status === null;
+
+                                const hasData = (() => {
+                                    if (notSet) {
+                                        return participantIds.length > 0;
+                                    } else {
+                                        return Object.keys(byUserByDateFiltered).length > 0;
+                                    }
+                                })();
+
+                                if (!hasData) {
                                     return (
                                         <div style={{padding: 'var(--space--2)'}}>
                                             <Alert style="hollow" size="small">
                                                 <div>{gettext('No data available')}</div>
                                             </Alert>
                                         </div>
-
                                     );
                                 } else {
                                     return this.props.children({byUserByDateAll, byUserByDateFiltered});
