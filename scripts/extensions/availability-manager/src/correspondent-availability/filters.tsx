@@ -101,7 +101,7 @@ export class Filters extends React.PureComponent<IProps> {
 
                         <div>
                             <IconButton
-                                ariaValue={gettext('Previous day')}
+                                ariaValue={gettext('Previous')}
                                 icon="chevron-left-thin"
                                 onClick={() => {
                                     this.props.onChange({
@@ -112,7 +112,7 @@ export class Filters extends React.PureComponent<IProps> {
                             />
 
                             <IconButton
-                                ariaValue={gettext('Next day')}
+                                ariaValue={gettext('Next')}
                                 icon="chevron-right-thin"
                                 onClick={() => {
                                     this.props.onChange({
