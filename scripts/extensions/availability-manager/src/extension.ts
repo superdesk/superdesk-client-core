@@ -1,6 +1,6 @@
 import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'superdesk-api';
 import {LANGUAGES_VOCABULARY, privileges, TAGS_VOCABULARY_ID} from './constants';
-import {AvailabilitySettings} from './settings';
+import {AvailabilitySettings} from './settings/availability-settings';
 import {superdesk} from './superdesk';
 import {CorrespondentAvailability} from './correspondent-availability';
 
