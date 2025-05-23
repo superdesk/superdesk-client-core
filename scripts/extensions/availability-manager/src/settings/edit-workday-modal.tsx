@@ -16,7 +16,7 @@ import {
     getFilteredTags,
     getLabelForStatus,
     getLocalizedDateString,
-    validateWorkingHours,
+    validateAvailabilityRecord,
 } from '../utils';
 import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-working-hours';
 import {ValidationErrors} from '../validation-errors';
@@ -78,8 +78,8 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
     private save() {
         const {workingDay} = this.state;
 
-        const validationError: string | null = workingDay.status !== 'partial' ? null : validateWorkingHours(
-            workingDay.working_hours ?? [],
+        const validationError: string | null = workingDay.status !== 'partial' ? null : validateAvailabilityRecord(
+            workingDay,
             locale.code,
         );
 

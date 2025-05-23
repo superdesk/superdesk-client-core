@@ -80,6 +80,26 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
     return null;
 }
 
+export function validateAvailabilityRecord(record: IScheduleRecord, localeCode: string,): string | null {
+    if (record.status == null) {
+        return gettext('{{field}} cannot be empty', {field: gettext('status')});
+    }
+
+    if (record.status === 'partial' && (record.working_hours ?? []).length < 1) {
+        return gettext('working hours are not set');
+    }
+
+    if (record.status === 'partial') {
+        const result = validateWorkingHours((record.working_hours ?? []), localeCode);
+
+        if (result != null) {
+            return result;
+        }
+    }
+
+    return null;
+}
+
 export function validateSchedule(
     schedule: {[weekDayIndex: string]: IScheduleRecord},
     localeCode: string,
@@ -87,24 +107,10 @@ export function validateSchedule(
     const errors: ReturnType<typeof validateSchedule> = {};
 
     for (const [key, value] of Object.entries(schedule)) {
-        const setError = (error: string) => errors[key] = error;
+        const validationResult = validateAvailabilityRecord(value, localeCode);
 
-        if (value.status == null) {
-            setError(
-                gettext('{{field}} cannot be empty', {field: gettext('status')}),
-            );
-        }
-
-        if (value.status === 'partial' && (value.working_hours ?? []).length < 1) {
-            setError(gettext('working hours are not set'));
-        }
-
-        if (value.status === 'partial') {
-            const result = validateWorkingHours((value.working_hours ?? []), localeCode);
-
-            if (result != null) {
-                setError(result);
-            }
+        if (validationResult != null) {
+            errors[key] = validationResult
         }
     }
 
