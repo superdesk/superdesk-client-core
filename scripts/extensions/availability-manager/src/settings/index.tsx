@@ -446,6 +446,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                 ReactDOM.createPortal(
                                                     (
                                                         <EditWorkdayModal
+                                                            user={this.props.user}
                                                             workingDay={(() => {
                                                                 if (overlay.kind === 'edit') {
                                                                     return {kind: 'saved', value: workingDay};

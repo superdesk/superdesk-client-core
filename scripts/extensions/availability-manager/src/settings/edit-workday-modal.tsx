@@ -21,6 +21,7 @@ import {
 import {WithWorkingHoursEditor, workingHoursEditorColumnCount} from './edit-working-hours';
 import {ValidationErrors} from '../validation-errors';
 import {WorkingHoursGridLabels} from './working-hours-grid-labels';
+import {IUser} from 'superdesk-api';
 
 const {gettext, locale} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
@@ -28,6 +29,8 @@ const {assertNever} = superdesk.helpers;
 const {VocabularySelect} = superdesk.components;
 
 interface IProps {
+    user: IUser;
+
     workingDay:
         {kind: 'saved'; value: IAvailabilityRecord}
         | {kind: 'draft'; template: IAvailabilityRecordTemplate};
@@ -107,7 +110,10 @@ export class EditWorkdayModal extends React.PureComponent<IProps, IState> {
                 return httpRequestJsonLocal<IAvailabilityRecord>({
                     method: 'POST',
                     path: '/user_availability',
-                    payload: workingDayNext,
+                    payload: {
+                        ...workingDayNext,
+                        user: this.props.user._id,
+                    },
                 });
             } else {
                 return assertNever(this.props.workingDay);

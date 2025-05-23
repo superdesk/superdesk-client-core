@@ -117,6 +117,7 @@ export function setUserAvailability(
     patch: Partial<IDefaultAvailability>,
 ): Promise<IDefaultAvailability> {
     const initialDefaultAvailability: Omit<IDefaultAvailability, keyof IBaseRestApiResponse> = {
+        user: userId,
         working_days: {},
         language: [],
         tags: [],

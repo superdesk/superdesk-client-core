@@ -1,5 +1,5 @@
 import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'superdesk-api';
-import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from './constants';
+import {LANGUAGES_VOCABULARY, privileges, TAGS_VOCABULARY_ID} from './constants';
 import {AvailabilitySettings} from './settings';
 import {superdesk} from './superdesk';
 import {CorrespondentAvailability} from './correspondent-availability';
@@ -44,8 +44,10 @@ const extension: IExtension = {
             contributions.getUserProfileSections = (user) => {
                 const result: Array<IUserProfileSection> = [];
 
-                // Availability widget is only available to edit own user
-                if (user._id === superdesk.session.getCurrentUserId()) {
+                if (
+                    user._id === superdesk.session.getCurrentUserId()
+                    || superdesk.privileges.hasPrivilege(privileges.user_availability_manage)
+                ) {
                     result.push({
                         id: 'availability',
                         label: gettext('Availability'),
@@ -57,7 +59,7 @@ const extension: IExtension = {
                 return result;
             };
 
-            if (superdesk.privileges.hasPrivilege('user_availability')) {
+            if (superdesk.privileges.hasPrivilege(privileges.user_availability)) {
                 if (contributions.pages == null) {
                     contributions.pages = [];
                 }
