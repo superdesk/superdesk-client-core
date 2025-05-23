@@ -69,6 +69,7 @@ export class WeekView extends React.PureComponent<IProps, IState> {
 
                             {filterParticipants({
                                 participantIds: Array.from(participantIds),
+                                days: days,
                                 filters: filters,
                                 byUserByDateFiltered,
                             })

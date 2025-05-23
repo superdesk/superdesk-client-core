@@ -71,6 +71,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                             ...usersWithRecord,
                             ...usersWithoutRecord,
                         ],
+                        days: [filters.date],
                         filters: filters,
                         byUserByDateFiltered,
                     });

@@ -1,6 +1,7 @@
 import {IRestApiResponse, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {IDefaultAvailability, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
+import {formatDateIso} from '../utils';
 import {getItemsByUserByDate} from './with-availability-records';
 
 const {nameof} = superdesk.helpers;
@@ -28,12 +29,14 @@ export function fetchParticipants(): Promise<Set<IUser['_id']>> {
 export function filterParticipants(
     options: {
         participantIds: Array<IUser['_id']>;
+        days: Array<Date>;
         filters: IFilters;
         byUserByDateFiltered: ReturnType<typeof getItemsByUserByDate>;
     },
 ): Array<IUser['_id']> {
     const {
         participantIds,
+        days,
         filters,
         byUserByDateFiltered,
     } = options;
@@ -41,7 +44,11 @@ export function filterParticipants(
     return participantIds
         .filter((participantId) => {
             if (filters.status === null) { // not set, usage of triple-equals required
-                return true;
+                return days.some((day) => {
+                    const dayIso = formatDateIso(day);
+
+                    return byUserByDateFiltered[participantId]?.[dayIso] == null;
+                });
             } else {
                 return byUserByDateFiltered[participantId] != null;
             }
