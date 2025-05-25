@@ -1,6 +1,6 @@
 import {IExtension, IExtensionActivationResult, IUserProfileSection} from 'superdesk-api';
 import {LANGUAGES_VOCABULARY, privileges, TAGS_VOCABULARY_ID} from './constants';
-import {AvailabilitySettings} from './settings/availability-settings';
+import {AvailabilitySettingsPage} from './settings/availability-settings-page';
 import {superdesk} from './superdesk';
 import {CorrespondentAvailability} from './correspondent-availability';
 
@@ -52,7 +52,7 @@ const extension: IExtension = {
                         id: 'availability',
                         label: gettext('Availability'),
                         priority: 5,
-                        component: AvailabilitySettings,
+                        component: AvailabilitySettingsPage,
                     });
                 }
 

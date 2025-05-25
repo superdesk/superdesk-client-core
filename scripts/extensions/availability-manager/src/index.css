@@ -1,0 +1,8 @@
+.username {
+    font-weight: bold;
+    color: var(--sd-colour-interactive--darken-20);
+}
+
+.username:hover {
+    text-decoration: underline;
+}

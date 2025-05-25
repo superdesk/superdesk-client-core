@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {difference, keyBy} from 'lodash';
-import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
-import {Spacer} from '@sourcefabric/common';
+import {BoxedList, BoxedListItem, Label, Modal} from 'superdesk-ui-framework/react';
+import {showModal, Spacer} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -9,9 +9,11 @@ import {superdesk} from '../superdesk';
 import {fetchParticipants, filterParticipants} from './participants';
 import {compareUsersByName, sortAvailabilityRecords} from './sort-availability-records';
 import {WithAvailabilityRecords} from './with-availability-records';
+import {AvailabilitySettings} from '../settings/availability-settings';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
+const {getClass} = superdesk.utilities.CSS;
 
 interface IProps {
     filters: IFilters;
@@ -109,9 +111,18 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                 <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
                                                     <UserAvatar userId={user._id} />
 
-                                                    <strong style={{color: 'var(--sd-colour-interactive--darken-20)'}}>
+                                                    <button
+                                                        className={getClass('username')}
+                                                        onClick={() => {
+                                                            showModal(({closeModal}) => (
+                                                                <Modal visible onHide={closeModal}>
+                                                                    <AvailabilitySettings user={user} />
+                                                                </Modal>
+                                                            ));
+                                                        }}
+                                                    >
                                                         {user.display_name}
-                                                    </strong>
+                                                    </button>
 
                                                     <span style={{color: 'var(--color-text-light)'}}>
                                                         @{user.sign_off}
