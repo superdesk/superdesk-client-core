@@ -80,7 +80,7 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
     return null;
 }
 
-export function validateAvailabilityRecord(record: IScheduleRecord, localeCode: string,): string | null {
+export function validateAvailabilityRecord(record: IScheduleRecord, localeCode: string): string | null {
     if (record.status == null) {
         return gettext('{{field}} cannot be empty', {field: gettext('status')});
     }
@@ -110,7 +110,7 @@ export function validateSchedule(
         const validationResult = validateAvailabilityRecord(value, localeCode);
 
         if (validationResult != null) {
-            errors[key] = validationResult
+            errors[key] = validationResult;
         }
     }
 
