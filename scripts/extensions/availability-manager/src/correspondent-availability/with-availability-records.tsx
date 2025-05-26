@@ -73,8 +73,12 @@ export class WithAvailabilityRecords extends React.PureComponent<IProps, IState>
                             )}
                         >
                             {(itemsAll) => {
-                                const byUserByDateAll = getItemsByUserByDate(itemsAll._items);
-                                const byUserByDateFiltered = getItemsByUserByDate(itemsFiltered._items);
+                                if (itemsAll.loading || itemsFiltered.loading) {
+                                    return null;
+                                }
+
+                                const byUserByDateAll = getItemsByUserByDate(itemsAll.data._items);
+                                const byUserByDateFiltered = getItemsByUserByDate(itemsFiltered.data._items);
 
                                 // usage of triple-equals required
                                 const notSet = filters.status === null;

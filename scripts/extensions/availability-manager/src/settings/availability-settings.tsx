@@ -121,7 +121,11 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
         return (
             <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
                 {(res) => {
-                    const grouped = keyBy(res._items, (item) => item.date);
+                    if (res.loading) {
+                        return null;
+                    }
+
+                    const grouped = keyBy(res.data._items, (item) => item.date);
 
                     const dayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
                         const {day, dayFromOtherMonth} = props.day;
