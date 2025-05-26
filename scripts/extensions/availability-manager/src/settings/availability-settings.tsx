@@ -15,9 +15,10 @@ import {fullWidthNoGrow, getStatusColor, setUserAvailability, formatDateIso} fro
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 import {monthNamesByIndex} from '../test-utils';
+import {WithTooltip} from 'superdesk-ui-framework/react/components/Tooltip';
 
 const {httpRequestVoidLocal, httpRequestJsonLocal} = superdesk;
-const {locale, gettext} = superdesk.localization;
+const {locale, gettext, formatDateTime} = superdesk.localization;
 const {VocabularySelect} = superdesk.components;
 const {firstDayOfWeek} = superdesk.localization.locale;
 const {assertNever} = superdesk.helpers;
@@ -99,6 +100,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
     render() {
         const languagesVocabulary = superdesk.entities.vocabulary.getVocabulary(LANGUAGES_VOCABULARY);
         const tagsVocabulary = superdesk.entities.vocabulary.getVocabulary(TAGS_VOCABULARY_ID);
+        const allUsers = superdesk.entities.users.getAllUsers();
 
         const monthsToDisplayAtOnce = 4;
         const months: Array<Date> =
@@ -145,41 +147,70 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                             }
                         })();
 
-                        return (
-                            <button
-                                key={day}
-
-                                // do not set ref if day is from other month
-                                // otherwise it would cause incorrect popover positioning
-                                ref={dayFromOtherMonth ? undefined : this.dayRefs[dateKey]}
-
-                                style={{
-                                    opacity: dayFromOtherMonth ? 0.5 : undefined,
-                                    width: '100%',
-                                    height: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    color: background == null ? undefined : getTextColor(background),
-                                    background: background,
-                                    borderRadius: 20,
-                                    cursor: 'pointer',
-                                }}
-
-                                onClick={() => {
-                                    if (dayFromOtherMonth) {
-                                        return;
+                        const modifiedBySomeoneElseWarning: string | null = (() => {
+                            if (
+                                workingDay != null
+                                && workingDay.last_updated_by != null
+                                && workingDay.last_updated_by !== this.props.user._id
+                            ) {
+                                return gettext(
+                                    'Modified by {{user}} at {{date}}',
+                                    {
+                                        user: allUsers[workingDay.last_updated_by].display_name,
+                                        date: formatDateTime(new Date(workingDay._updated)),
                                     }
+                                );
+                            } else {
+                                return null;
+                            }
+                        })();
 
-                                    this.setState({
-                                        overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
-                                    });
+                        return (
+                            <WithTooltip text={modifiedBySomeoneElseWarning}>
+                                {({attributes}) => {
+                                    return (
+                                        <button
+                                            key={day}
+
+                                            // do not set ref if day is from other month
+                                            // otherwise it would cause incorrect popover positioning
+                                            ref={dayFromOtherMonth ? undefined : this.dayRefs[dateKey]}
+
+                                            style={{
+                                                opacity: dayFromOtherMonth ? 0.5 : undefined,
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                color: background == null ? undefined : getTextColor(background),
+                                                background: background,
+                                                borderRadius: 20,
+                                                cursor: 'pointer',
+                                                border: modifiedBySomeoneElseWarning == null
+                                                    ? undefined
+                                                    : '2px solid var(--color-primary-highlight)',
+                                            }}
+
+                                            onClick={() => {
+                                                if (dayFromOtherMonth) {
+                                                    return;
+                                                }
+
+                                                this.setState({
+                                                    overlay: {kind: workingDay == null ? 'create' : 'view', date: dateKey},
+                                                });
+                                            }}
+
+                                            data-test-status={workingDay?.status ?? undefined}
+
+                                            {...attributes}
+                                        >
+                                            {day}
+                                        </button>
+                                    );
                                 }}
-
-                                data-test-status={workingDay?.status ?? undefined}
-                            >
-                                {day}
-                            </button>
+                            </WithTooltip>
                         );
                     };
 

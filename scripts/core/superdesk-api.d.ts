@@ -3149,7 +3149,7 @@ declare module 'superdesk-api' {
             };
             attachment: IAttachmentsApi;
             users: {
-                getAllUsers(): Dictionary<IUser['_id'], User>;
+                getAllUsers(): {[id: IUser['_id']]: IUser};
             };
             templates: {
                 getUserTemplates(
