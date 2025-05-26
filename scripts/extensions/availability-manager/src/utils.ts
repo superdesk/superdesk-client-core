@@ -13,7 +13,7 @@ import {
 import {superdesk} from './superdesk';
 
 const {httpRequestJsonLocal} = superdesk;
-const {gettext} = superdesk.localization;
+const {gettext, formatDateTime} = superdesk.localization;
 const {assertNever} = superdesk.helpers;
 const {omitBaseApiResponse, filterFlatTree} = superdesk.utilities;
 
@@ -115,6 +115,28 @@ export function validateSchedule(
     }
 
     return errors;
+}
+
+export function getModifiedBySomeoneElseWarning(
+    workingDay: IAvailabilityRecord | null,
+): string | null {
+    const allUsers = superdesk.entities.users.getAllUsers();
+
+    if (
+        workingDay != null
+        && workingDay.last_updated_by != null
+        && workingDay.last_updated_by !== workingDay.user
+    ) {
+        return gettext(
+            'Modified by {{user}} at {{date}}',
+            {
+                user: allUsers[workingDay.last_updated_by].display_name,
+                date: formatDateTime(new Date(workingDay._updated)),
+            },
+        );
+    } else {
+        return null;
+    }
 }
 
 export function setUserAvailability(
