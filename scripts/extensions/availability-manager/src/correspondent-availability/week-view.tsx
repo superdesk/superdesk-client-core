@@ -1,8 +1,14 @@
 import * as React from 'react';
-import {Spacer, SpacerBlock} from '@sourcefabric/common';
+import {showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
 import {range} from 'lodash';
-import {CalendarWeekDayItem, Text, WeeklyCalendarGrid, WeeklyCalendarGridItem} from 'superdesk-ui-framework/react';
+import {
+    CalendarWeekDayItem,
+    Text,
+    WeeklyCalendarGrid,
+    WeeklyCalendarGridItem,
+    Modal,
+} from 'superdesk-ui-framework/react';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -11,9 +17,11 @@ import {WeekViewHeaderDay} from './week-view-header-day';
 import {IUser} from 'superdesk-api';
 import {WithAvailabilityRecords} from './with-availability-records';
 import {fetchParticipants, filterParticipants} from './participants';
+import {AvailabilitySettings} from '../settings/availability-settings';
 
 const {UserAvatar} = superdesk.components;
 const {assertNever} = superdesk.helpers;
+const {getClass} = superdesk.utilities.CSS;
 
 interface IProps {
     filters: IFilters;
@@ -82,9 +90,20 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                                                 <CalendarWeekDayItem coloredBg={true}>
                                                     <UserAvatar userId={user._id} />
                                                     <SpacerBlock v gap="8" />
-                                                    <Text size="medium" noMargin>
+
+                                                    <button
+                                                        className={getClass('username-weekly-view')}
+                                                        onClick={() => {
+                                                            showModal(({closeModal}) => (
+                                                                <Modal visible onHide={closeModal}>
+                                                                    <AvailabilitySettings user={user} />
+                                                                </Modal>
+                                                            ));
+                                                        }}
+                                                    >
                                                         {user.display_name}
-                                                    </Text>
+                                                    </button>
+
                                                     <SpacerBlock v gap="4" />
                                                     <Text size="small" color="light" noMargin>
                                                         @{user.sign_off}

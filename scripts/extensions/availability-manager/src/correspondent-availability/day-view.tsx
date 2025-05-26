@@ -112,7 +112,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                     <UserAvatar userId={user._id} />
 
                                                     <button
-                                                        className={getClass('username')}
+                                                        className={getClass('username-day-view')}
                                                         onClick={() => {
                                                             showModal(({closeModal}) => (
                                                                 <Modal visible onHide={closeModal}>
