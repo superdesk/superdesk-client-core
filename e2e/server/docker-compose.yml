@@ -9,18 +9,13 @@ services:
             - e2e
 
     mongo:
-        image: mongo:4.4
+        image: mongo:6
         ports:
             - "27017:27017"
         networks:
             - e2e
-        environment:
-            - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:
             - /data/db
-        volumes:
-          - ./mongo-rs-initialize.js:/docker-entrypoint-initdb.d/mongo-rs-initialize.js:ro
-        command: --replSet rs0
 
     elastic:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
