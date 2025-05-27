@@ -115,7 +115,11 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                         className={getClass('username-day-view')}
                                                         onClick={() => {
                                                             showModal(({closeModal}) => (
-                                                                <Modal visible onHide={closeModal}>
+                                                                <Modal
+                                                                    visible
+                                                                    onHide={closeModal}
+                                                                    headerTemplate={user.display_name}
+                                                                >
                                                                     <AvailabilitySettings user={user} />
                                                                 </Modal>
                                                             ));

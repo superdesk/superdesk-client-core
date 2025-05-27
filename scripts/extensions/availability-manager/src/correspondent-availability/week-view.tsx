@@ -95,7 +95,11 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                                                         className={getClass('username-weekly-view')}
                                                         onClick={() => {
                                                             showModal(({closeModal}) => (
-                                                                <Modal visible onHide={closeModal}>
+                                                                <Modal
+                                                                    visible
+                                                                    onHide={closeModal}
+                                                                    headerTemplate={user.display_name}
+                                                                >
                                                                     <AvailabilitySettings user={user} />
                                                                 </Modal>
                                                             ));
