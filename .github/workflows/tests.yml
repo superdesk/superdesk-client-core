@@ -72,7 +72,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: ${{ failure() }}
       with:
-        name: playwright-report-${{ matrix.suite }}
+        name: playwright-report-${{ matrix.node-version }}-${{ matrix.suite }}
         path: e2e/client/test-results
     # playwright end
 
