@@ -1,16 +1,19 @@
 import moment from 'moment';
-import {DatePickerLocaleSettings} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {IDatePickerISOLocaleSettings} from 'superdesk-api';
 
-export function getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings {
-    function getLocale() {
+export function getLocaleForDatePicker(targetLocale?: string): IDatePickerISOLocaleSettings {
+    function getLocale(): IDatePickerISOLocaleSettings {
         return {
-            firstDayOfWeek: appConfig.startingDay,
-            dayNames: moment.weekdays(),
-            dayNamesShort: moment.weekdaysShort(),
-            dayNamesMin: moment.weekdaysMin(),
-            monthNames: moment.months(),
-            monthNamesShort: moment.monthsShort(),
+            type: 'full',
+            payload: {
+                firstDayOfWeek: appConfig.startingDay,
+                dayNames: moment.weekdays(),
+                dayNamesShort: moment.weekdaysShort(),
+                dayNamesMin: moment.weekdaysMin(),
+                monthNames: moment.months(),
+                monthNamesShort: moment.monthsShort(),
+            },
         };
     }
 
