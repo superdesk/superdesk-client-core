@@ -64,7 +64,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 inlineLabel
                                 label={gettext('Date')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
-                                locale={datePickerLocale}
+                                locale={{type: 'full', payload: datePickerLocale}}
                                 value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {
