@@ -25,9 +25,10 @@ export class TreeSelectDriver {
             for (const option of options) {
                 if (typeof option == 'string') {
                     await this.element.locator(s('open-popover')).click();
-                    await this.page.locator(s('tree-select-popover'))
-                        .getByRole('button', {name: new RegExp(option, 'i')})
-                        .click();
+
+                    await this.page.locator(
+                        s('tree-select-popover', 'options'),
+                    ).getByRole('treeitem', {name: option, exact: true}).click();
                 } else if (option != null) {
                     await setOptions(option);
                 }
