@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var execSync = require('child_process').execSync;
-var _ = require('lodash');
 const {isDirectory} = require('../utils');
 
 function getModuleDir(moduleName) {
@@ -90,7 +89,7 @@ function compileTranslationsPoToJson(translationsPoDir, translationsJsonDir) {
             return;
         }
 
-        if (_.endsWith(filename, '.po') !== true) {
+        if (filename.endsWith('.po') !== true) {
             return;
         }
 

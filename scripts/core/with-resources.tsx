@@ -18,13 +18,10 @@ interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
-/**
- * Doesn't work with elastic search endpoints, only with mongo ones.
- */
 class WithLiveResourcesComponent
     extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
-    private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private handleContentChangesThrottled: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveResourcesProps & {onInitialized(): void}) {
@@ -44,6 +41,10 @@ class WithLiveResourcesComponent
             },
             1000,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChangesThrottled.cancel();
+        });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener(
@@ -110,9 +111,13 @@ class WithLiveResourcesComponent
                     max_results: 200,
                 };
 
-                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
-                    prepareSuperdeskQuery(`/${resource}`, query),
-                ).then((res) => {
+                const request = ids.length < 1
+                    ? Promise.resolve({_items: []})
+                    : this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
+                        prepareSuperdeskQuery(`/${resource}`, query),
+                    );
+
+                return request.then((res) => {
                     const itemsById = keyBy(res._items, (item) => item._id);
 
                     return toPair(

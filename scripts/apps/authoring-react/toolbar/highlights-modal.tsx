@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
-import {Button, Modal, MultiSelect} from 'superdesk-ui-framework/react';
+import {Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
@@ -69,25 +69,26 @@ export class HighlightsModal extends React.PureComponent<IProps, IState> {
         return (
             <Modal
                 onHide={this.props.closeModal}
-                zIndex={1050}
                 size="small"
                 visible
                 headerTemplate={gettext('Highlights')}
             >
                 <Spacer v gap="16">
-                    <MultiSelect
-                        label=""
+                    <TreeSelect
+                        kind="synchronous"
+                        allowMultiple
                         inlineLabel
                         labelHidden
+                        value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
                         onChange={(value) => {
                             this.setState({
                                 ...state,
                                 markedHighlights: value.map(({_id}) => _id),
                             });
                         }}
-                        optionLabel={(option) => option.name}
-                        options={state.availableHighlights}
-                        value={state.availableHighlights.filter(({_id}) => state.markedHighlights?.includes(_id))}
+                        getId={(option) => option.name}
+                        getLabel={(option) => option.name}
+                        getOptions={() => state.availableHighlights.map((item) => ({value: item}))}
                     />
                     <Spacer h gap="16" justifyContent="end" noWrap>
                         <Button

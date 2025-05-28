@@ -22,6 +22,7 @@ type TagInputFieldType = ICustomFieldType<
 export function getTagInputField(): TagInputFieldType {
     const field: TagInputFieldType = {
         id: TAG_INPUT_FIELD_ID,
+        generic: true,
         label: gettext('Tag-input (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

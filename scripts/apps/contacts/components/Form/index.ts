@@ -1,5 +1,4 @@
 export {ContactFormContainer} from './ContactFormContainer';
-export {ActionBar} from './ActionBar';
 export {ProfileDetail} from './ProfileDetail';
 export {Row} from './Row';
 export {InputArray} from './InputArray';

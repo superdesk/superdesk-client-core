@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil, isObject} from 'lodash';
+import {get, set, isEqual, cloneDeep, isEmpty, extend, each, omit, isNil, isObject} from 'lodash';
 
 import {gettext} from 'core/utils';
 import {StretchBar} from 'core/ui/components/SubNav';
@@ -13,7 +12,8 @@ import {
 } from '../../helpers';
 import {FB_URL, IG_URL} from '../../constants';
 import {ProfileDetail} from './ProfileDetail';
-import {IContact, IContactsService} from '../../Contacts';
+import {IContactsService} from '../../Contacts';
+import {IContact} from 'superdesk-api';
 
 interface IProps {
     svc: {
@@ -28,7 +28,7 @@ interface IProps {
     onDirty(): void;
     onValidation(valid: boolean): void;
     triggerSave: boolean;
-    hideActionBar: boolean;
+    hideActionBar?: boolean;
     formClass?: string;
 }
 
@@ -219,7 +219,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {svc, contact, onCancel, hideActionBar, formClass} = this.props;
+        const {svc, contact, onCancel, hideActionBar = false, formClass} = this.props;
         const {
             isFormValid = false,
             dirty = false,
@@ -284,15 +284,3 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     }
 }
 
-ContactFormContainer.propTypes = {
-    svc: PropTypes.object.isRequired,
-    contact: PropTypes.object.isRequired,
-    onSave: PropTypes.func,
-    onCancel: PropTypes.func,
-    onDirty: PropTypes.func,
-    onValidation: PropTypes.func,
-    triggerSave: PropTypes.bool,
-    hideActionBar: PropTypes.bool,
-};
-
-ContactFormContainer.defaultProps = {hideActionBar: false};

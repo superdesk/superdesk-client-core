@@ -45,7 +45,6 @@ class IgnoreCancelSaveDialog extends React.PureComponent<IProps> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="small"
                 position="top"
                 onHide={this.respond.cancel}

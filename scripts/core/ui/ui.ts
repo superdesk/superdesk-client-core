@@ -926,23 +926,36 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 }, 0, false);
             }
 
-            /*
-             * Resize on request
-             */
-            $rootScope.$on('resize:monitoring', (e, value) => {
-                if ((workspace.outerWidth() + value) < MONITORING_MIN_WIDTH) {
+            const resizeOnDemandHandler = (resizeWith: number) => {
+                if ((workspace.outerWidth() + resizeWith) < MONITORING_MIN_WIDTH) {
                     return;
                 }
 
-                workspace.width(workspace.outerWidth() + value);
+                workspace.width(workspace.outerWidth() + resizeWith);
 
                 resize();
 
                 $timeout(() => {
                     afterResize();
                 }, 500, false);
+            };
+
+            addEventListener('resize-monitoring', (e: CustomEvent) => {
+                resizeOnDemandHandler(e.detail.value);
             });
 
+            /*
+             * Resize on request
+             */
+            $rootScope.$on('resize:monitoring', (e, value) => {
+                resizeOnDemandHandler(value);
+            });
+
+            $rootScope.$on('$destroy', () => {
+                removeEventListener('resize-monitoring', (e: CustomEvent) => {
+                    resizeOnDemandHandler(e.detail.value);
+                });
+            });
             /*
              * If authoring is not initialized,
              * wait, and initialize it again
@@ -1223,12 +1236,12 @@ function multiSelectDirective() {
 
             function updateItem() {
                 switch (scope.output) {
-                case 'string':
-                    scope.item = scope.selectedItems.join(', ');
-                    break;
+                    case 'string':
+                        scope.item = scope.selectedItems.join(', ');
+                        break;
 
-                default:
-                    scope.item = scope.selectedItems;
+                    default:
+                        scope.item = scope.selectedItems;
                 }
 
                 scope.change(scope.item);

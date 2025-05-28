@@ -5,16 +5,15 @@ import {ModifiedInfo} from 'apps/authoring/authoring/modified-info';
 
 interface IProps {
     article: IArticle;
-    reinitialize: () => void;
 }
 
 export class CreatedModifiedInfo extends React.PureComponent<IProps> {
     render() {
         return (
             <div className="created-modified-info">
-                <CreatedInfo article={this.props.article} />
+                <CreatedInfo entity={this.props.article} />
                 <span className="created-modified-info--separator" />
-                <ModifiedInfo article={this.props.article} />
+                <ModifiedInfo entity={this.props.article} />
             </div>
         );
     }

@@ -35,7 +35,6 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="small"
                 position="top"
                 onHide={this.props.closeEdit}

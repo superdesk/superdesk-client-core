@@ -130,7 +130,7 @@ class Workspace {
          * @param {string} name
          */
         this.showHighlightList = function(name) {
-            var item = this.getHighlightListItem(name);
+            const item = this.getHighlightListItem(name);
 
             browser.wait(ECE.elementToBeClickable(item), 1000);
             item.click();
@@ -146,7 +146,7 @@ class Workspace {
          * @return {promise} highlight element
          */
         this.getHighlightListItem = function(name) {
-            var menu = element(by.id('highlightPackage'));
+            const menu = element(by.id('highlightPackage'));
 
             browser.actions()
                 .mouseMove(menu)

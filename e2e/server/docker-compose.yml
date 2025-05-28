@@ -1,5 +1,5 @@
 name: superdesk-client-core_e2e
-version: "3.2"
+
 services:
     redis:
         image: redis:alpine
@@ -31,8 +31,16 @@ services:
         environment:
             - discovery.type=single-node
             - action.auto_create_index=false
+            - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
         tmpfs:
             - /usr/share/elasticsearch/data
+
+    mail:
+        image: marlonb/mailcrab:latest
+        networks:
+            - e2e
+        ports:
+            - "1080:1080"
 
     server:
         build: .
@@ -53,6 +61,8 @@ services:
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
             - CELERY_ALWAYS_EAGER=true
+            - MAIL_SERVER=mail
+            - MAIL_PORT=1025
         volumes:
           - ./dump:/opt/superdesk/dump:rw
         user: 1000:1000

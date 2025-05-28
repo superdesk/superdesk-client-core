@@ -45,7 +45,6 @@ export function showSpikeDialog<T>(
                     openModal(
                         <Modal
                             visible
-                            zIndex={1050}
                             size="small"
                             position="top"
                             headerTemplate={

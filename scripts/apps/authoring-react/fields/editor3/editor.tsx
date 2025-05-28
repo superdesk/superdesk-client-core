@@ -36,9 +36,10 @@ import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {EditorState} from 'draft-js';
 import {Select, Option} from 'superdesk-ui-framework/react';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
-import {SpacerBlock} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';
 import {TextStatistics} from '../../../authoring/authoring/components/text-statistics';
+import {isSpacerTreeEmpty} from '@sourcefabric/common';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -321,8 +322,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const showStatistics = config.showStatistics ?? true;
 
         const miniToolbar = (
-            <div>
-                <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <Spacer v gap="0" noWrap>
+                <Spacer h gap="8" noWrap>
                     {
                         showStatistics && (
                             <TextStatistics
@@ -365,7 +366,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             </div>
                         )
                     }
-                </div>
+                </Spacer>
 
                 {
                     invalidCharsDetected.length > 0 && (
@@ -388,7 +389,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         </div>
                     )
                 }
-            </div>
+            </Spacer>
         );
 
         const options = this.props.config.vocabularyId != null
@@ -398,7 +399,13 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const HelperComponent = this.props.config.helperComponent;
 
         return (
-            <Container miniToolbar={miniToolbar} sectionClassNames={{header: 'sd-input-style'}}>
+            <Container
+                /**
+                 * if spacer is empty, pass undefined
+                 * to allow consumers apply conditional logic based on presence of mini toolbar
+                 */
+                miniToolbar={isSpacerTreeEmpty(miniToolbar) ? undefined : miniToolbar}
+            >
                 {
                     HelperComponent != null && (
                         <HelperComponent
@@ -410,6 +417,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         />
                     )
                 }
+
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         {
@@ -441,14 +449,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                 </>
                             )
                         }
-                        <Editor3
-                            uiTheme={this.props.uiTheme}
-                            scrollContainer=".sd-editor-content__main-container"
-                            singleLine={config.singleLine ?? false}
-                            cleanPastedHtml={config.cleanPastedHtml ?? false}
-                            autocompleteSuggestions={this.state.autocompleteSuggestions}
-                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
-                        />
+
+                        <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
+                            <Editor3
+                                expandable={this.props.config.expandable}
+                                uiTheme={this.props.uiTheme}
+                                scrollContainer=".sd-editor-content__main-container"
+                                singleLine={config.singleLine ?? false}
+                                cleanPastedHtml={config.cleanPastedHtml ?? false}
+                                autocompleteSuggestions={this.state.autocompleteSuggestions}
+                                canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
+                            />
+                        </div>
                     </ReactContextForEditor3.Provider>
                 </Provider>
             </Container>

@@ -3,7 +3,6 @@ import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {IArticle, IExposedFromAuthoring} from 'superdesk-api';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {getWidgetsFromExtensions, ISideWidget} from './authoring-integration-wrapper';
-import {closedIntentionally} from 'apps/authoring/widgets/widgets';
 
 interface IProps {
     options: IExposedFromAuthoring<IArticle>;
@@ -58,33 +57,24 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
             return null;
         }
 
-        const {sideWidget} = this.props;
+        const {sideWidget, setSideWidget} = this.props;
 
         return (
             <Nav.SideBarTabs
-                disabled={sideWidget?.pinned}
-                activeTab={sideWidget?.id}
+                activeTab={sideWidget?.activeId}
                 onActiveTabChange={(nextWidgetId) => {
-                    if (nextWidgetId == null && closedIntentionally.value == true) {
-                        closedIntentionally.value = false;
+                    // active is closed, we set the pinned as active
+                    if (nextWidgetId == null && sideWidget.pinnedId != null) {
+                        setSideWidget({
+                            activeId: sideWidget?.pinnedId,
+                            pinnedId: sideWidget?.pinnedId,
+                        });
+                    } else {
+                        setSideWidget({
+                            activeId: nextWidgetId,
+                            pinnedId: sideWidget?.pinnedId,
+                        });
                     }
-
-                    const isWidgetPinned = (() => {
-                        if (sideWidget?.id != null && sideWidget.id === nextWidgetId) {
-                            return sideWidget.pinned;
-                        }
-
-                        return false;
-                    })();
-
-                    this.props.setSideWidget(
-                        nextWidgetId == null
-                            ? null
-                            : {
-                                id: nextWidgetId,
-                                pinned: isWidgetPinned,
-                            },
-                    );
                 }}
                 items={this.state.sidebarTabs}
             />

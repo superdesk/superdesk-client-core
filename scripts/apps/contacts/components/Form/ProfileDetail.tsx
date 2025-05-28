@@ -9,14 +9,15 @@ import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {validateMinRequiredField, getContactTypeObject,
     getMinRequiredFieldLabels, getMinRequiredFieldLabel} from '../../../contacts/helpers';
-import {IContact, IContactsService, IContactType} from '../../Contacts';
-
+import {IContactsService} from '../../Contacts';
+import {IContactType, IContact} from 'superdesk-api';
 import {
     Row,
     RowItem,
     LineInput,
     SelectInput,
 } from 'core/ui/components/Form';
+import {Spacer} from 'superdesk-ui-framework/react';
 
 interface IProps {
     svc: {
@@ -143,11 +144,11 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         if (text) {
             contacts.queryField(field, text).then((items) => {
                 switch (field) {
-                case 'organisation':
-                    this.setState({
-                        organisations: map(items._items, field),
-                        orgValue: text,
-                    });
+                    case 'organisation':
+                        this.setState({
+                            organisations: map(items._items, field),
+                            orgValue: text,
+                        });
                 }
             });
         }
@@ -389,25 +390,23 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </LineInput>
                 </Row>
 
-                <Row>
-                    <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
-                        <Label text={getMinRequiredFieldLabel('contact_phone')} />
-                        {showMinFieldsWarning && (
-                            <div className="sd-line-input__message">
-                                {minFieldMessage}
-                            </div>
-                        )}
-                        <InputArray
-                            field="contact_phone"
-                            value={get(contact, 'contact_phone', [])}
-                            onChange={onChange}
-                            component={ContactNumberInput}
-                            usages={get(this.state, 'phoneUsages', [])}
-                            defaultValue={{number: '', usage: '', public: true}}
-                            readOnly={readOnly}
-                        />
-                    </LineInput>
-                </Row>
+                <Spacer v gap="4" justifyContent="center">
+                    <Label text={gettext('Phone')} />
+                    {showMinFieldsWarning && (
+                        <div className="sd-line-input__message">
+                            {minFieldMessage}
+                        </div>
+                    )}
+                    <InputArray
+                        field="contact_phone"
+                        value={get(contact, 'contact_phone', [])}
+                        onChange={onChange}
+                        component={ContactNumberInput}
+                        usages={get(this.state, 'phoneUsages', [])}
+                        defaultValue={{number: '', usage: '', public: true}}
+                        readOnly={readOnly}
+                    />
+                </Spacer>
 
                 <ToggleBox title={gettext('MORE')} isOpen={false} style="toggle-box--circle" scrollInView={true}>
 

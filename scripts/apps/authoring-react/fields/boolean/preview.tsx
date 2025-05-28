@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {ICommonFieldConfig, IPreviewComponentProps} from 'superdesk-api';
-import {IValueOperational} from './interfaces';
+import {IBooleanFieldValueOperational, ICommonFieldConfig, IPreviewComponentProps} from 'superdesk-api';
 import {Switch} from 'superdesk-ui-framework/react';
 import {noop} from 'lodash';
 
-export class Preview extends React.PureComponent<IPreviewComponentProps<IValueOperational, ICommonFieldConfig>> {
+export class Preview extends React.PureComponent<
+    IPreviewComponentProps<IBooleanFieldValueOperational, ICommonFieldConfig>
+> {
     render() {
         return (
             <Switch

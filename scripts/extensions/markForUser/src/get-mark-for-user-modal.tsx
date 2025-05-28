@@ -58,7 +58,6 @@ export function getMarkForUserModal(options: {
                     size="large"
                     position="top"
                     onHide={this.props.closeModal}
-                    zIndex={1050}
                     headerTemplate={gettext('Mark for user')}
                     footerTemplate={
                         (

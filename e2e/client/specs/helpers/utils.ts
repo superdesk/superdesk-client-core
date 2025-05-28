@@ -235,7 +235,7 @@ export function waitHidden(elem, time?) {
 }
 
 export function scrollToView(elem: ElementFinder) {
-    browser.executeScript('arguments[0].scrollIntoViewIfNeeded();', elem);
+    browser.executeScript('arguments[0]?.scrollIntoViewIfNeeded?.();', elem);
 }
 
 export function scrollRelative(elem: ElementFinder, direction: 'up'| 'down', pixelsToScroll: number) {

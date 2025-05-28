@@ -216,7 +216,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
                         text="post"
                         type="primary"
                         onClick={this.save}
-                        disabled={this.state.newCommentMessage.length < 1}
+                        disabled={(this.state.newCommentMessage ?? '').length < 1}
                     />
                 </Spacer>
             </Spacer>

@@ -25,7 +25,7 @@ export default new class ProviderService {
      * up for it, it returns that instead.
      */
     get(name) {
-        if ($injector === null) {
+        if ($injector == null) {
             throw new Error('ng: $injector not registered for core/services/ng');
         }
 
@@ -33,12 +33,17 @@ export default new class ProviderService {
     }
 
     waitForServicesToBeAvailable() {
+        if ($injector != null) {
+            return Promise.resolve();
+        }
+
         return waitUntil(() => $injector != null);
     }
 
     getService(name) {
         return this.getServices([name]).then((res) => res[0]);
     }
+
     getServices(names) {
         return new Promise((resolve, reject) => {
             this.waitForServicesToBeAvailable()

@@ -28,7 +28,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
 
     onDrop(event: IJQueryDragEvent) {
         event.stopPropagation();
-        if (this.props.canDrop(event.originalEvent)) {
+        if (this.props.disabled !== true && this.props.canDrop(event.originalEvent)) {
             event.preventDefault();
 
             if (this.state.hover) {
@@ -41,7 +41,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
 
     onDragEnter(event: IJQueryDragEvent) {
         event.stopPropagation();
-        const isAllowed = this.props.canDrop(event.originalEvent);
+        const isAllowed = this.props.disabled !== true && this.props.canDrop(event.originalEvent);
 
         if (isAllowed) {
             event.preventDefault();

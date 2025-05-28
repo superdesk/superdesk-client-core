@@ -71,7 +71,6 @@ export function maybeDisplayInvalidInstanceConfigurationMessage() {
                         </span>
                     )}
                     onHide={closeModal}
-                    zIndex={9999}
                 >
                     {error.content}
                 </Modal>

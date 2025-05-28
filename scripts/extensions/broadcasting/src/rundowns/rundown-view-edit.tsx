@@ -665,7 +665,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     };
                                                 }}
                                                 getAuthoringPrimaryToolbarWidgets={() => []}
-                                                secondaryToolbarWidgets={[]}
                                                 getSidebarWidgetsCount={({item}) => {
                                                     return getAvailableSideWidgets(item).length;
                                                 }}
@@ -682,9 +681,13 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Nav.SideBarTabs
-                                                            activeTab={sideWidget?.id ?? null}
-                                                            onActiveTabChange={(val) => {
-                                                                toggleSideWidget(val);
+                                                            activeTab={sideWidget?.activeId ?? null}
+                                                            onActiveTabChange={(nextWidget) => {
+                                                                if (sideWidget?.pinnedId && nextWidget == null) {
+                                                                    toggleSideWidget(sideWidget.pinnedId);
+                                                                } else {
+                                                                    toggleSideWidget(nextWidget);
+                                                                }
                                                             }}
                                                             items={sideWidgetsAllowed.map(({icon, _id}) => {
                                                                 const sidebarTab: ISideBarTab = {
@@ -715,7 +718,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     authoringStorage,
                                                     handleUnsavedChanges,
                                                 }) => {
-                                                    const sideWidgetName = sideWidget?.id ?? null;
+                                                    const sideWidgetName = sideWidget?.activeId ?? null;
 
                                                     if (
                                                         sideWidgetName == null

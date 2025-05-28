@@ -8,13 +8,13 @@ export const Toggle: React.StatelessComponent<any> = ({value, onChange, readOnly
     const handleKeyDown = (event) => {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-            case KEYCODES.SPACE:
-                event.preventDefault();
-                onClick();
-                break;
-            default:
-                break;
+                case KEYCODES.ENTER:
+                case KEYCODES.SPACE:
+                    event.preventDefault();
+                    onClick();
+                    break;
+                default:
+                    break;
             }
         }
     };

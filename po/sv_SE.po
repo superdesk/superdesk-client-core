@@ -1,6 +1,6 @@
 # 
 # Translators:
-# Anton Borgström <anton.borgstrom@etc.se>, 2021-2024
+# Anton Borgström <anton.borgstrom@etc.se>, 2021-2025
 # Carl Gustafsson <carl@cubefive.com>, 2018
 # ETC IT <itadmin@etc.se>, 2020-2021
 # Eva Borgström <eva.stjerne@gmail.com>, 2021,2023
@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
 "PO-Revision-Date: 2015-05-07 07:31+0000\n"
-"Last-Translator: Anton Borgström <anton.borgstrom@etc.se>, 2021-2024\n"
+"Last-Translator: Anton Borgström <anton.borgstrom@etc.se>, 2021-2025\n"
 "Language-Team: Swedish (Sweden) (http://app.transifex.com/sourcefabric/superdesk/language/sv_SE/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -171,7 +171,7 @@ msgstr "1 timme"
 msgid "1 item selected"
 msgid_plural "{{number}} items selected"
 msgstr[0] "1 artikel vald"
-msgstr[1] "{{number}} artiklar valda"
+msgstr[1] "{{ number }} artiklar valda"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:222
 msgid "1 item was not included in the export."
@@ -194,7 +194,7 @@ msgstr "1 sekund"
 msgid "1 tag can not be displayed"
 msgid_plural "{{n}} tags can not be displayed"
 msgstr[0] "1 nyckelord kan inte visas"
-msgstr[1] "{{n}} taggar kan inte visas"
+msgstr[1] "{{ n }} taggar kan inte visas"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 week"
@@ -2466,7 +2466,7 @@ msgstr "Författare:"
 #: scripts/apps/authoring/multiedit/multiedit.ts:345
 #: scripts/apps/authoring/views/authoring.html:2
 msgid "Authoring"
-msgstr "Textproduktion"
+msgstr "Redigering"
 
 #: scripts/apps/desks/views/desk-config-modal.html:106
 msgid ""
@@ -5007,12 +5007,12 @@ msgstr "Fallande ordning"
 #: scripts/apps/authoring/views/authoring-topbar.html:96
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:317
 msgid "Deschedule"
-msgstr "Flytta fram"
+msgstr "Ta bort tid"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:113
 #: scripts/apps/authoring/versioning/history/views/history.html:17
 msgid "Descheduled by"
-msgstr "Framflyttad av"
+msgstr "Omplanerad av"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:48
 #: ../superdesk-planning/client/components/fields/preview/index.ts:224
@@ -5436,7 +5436,7 @@ msgstr "Vill du länka till det där utlägget ?"
 msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish {{number}} articles?"
 msgstr[0] "Vill du publicera artikeln?"
-msgstr[1] "Vill du publicera {{number}} artiklar?"
+msgstr[1] "Vill du publicera {{ number }} artiklar?"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:148
 msgid "Do you want to remove Abbreviation?"
@@ -5592,19 +5592,19 @@ msgstr "Rullgardinsmeny (authoring-react)"
 #: ../superdesk-planning/client/components/fields/preview/index.ts:189
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:75
 msgid "Due"
-msgstr "Förfallen"
+msgstr "Deadline"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:21
 msgid "Due Date"
-msgstr "Förfallodatum"
+msgstr "Inlämningsdatum"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:34
 msgid "Due date"
-msgstr "Förfallodatum"
+msgstr "Inlämningsdatum"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:38
 msgid "Due time"
-msgstr "Förfallotid"
+msgstr "Inlämningstid"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:134
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:172
@@ -7538,7 +7538,7 @@ msgstr "Filtyper"
 msgid "File uploaded successfully"
 msgid_plural "{{count}} files uploaded successfully"
 msgstr[0] "Filen laddades upp framgångsrikt"
-msgstr[1] "{{count}} filer laddades upp"
+msgstr[1] "{{ count }} filer laddades upp"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:224
 #: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:116
@@ -9202,7 +9202,7 @@ msgstr "Senaste 8 timmar"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:63
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Last Day"
-msgstr "Igår"
+msgstr "Sista dagen"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:34
 msgid "Last Item Arrived"
@@ -11465,7 +11465,7 @@ msgstr "PDF-fil"
 
 #: ../superdesk-planning/client/validators/planning.ts:24
 msgid "PLANNING DATE cannot be in the past"
-msgstr "PLANERINGSDATUM kan ej bakdateras"
+msgstr "PUBLICERINGSDATUM kan ej bakdateras"
 
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:92
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:102
@@ -11819,7 +11819,7 @@ msgstr "Planering borttagen"
 #: ../superdesk-planning/client/components/fields/preview/index.ts:172
 #: ../superdesk-planning/client/utils/contentProfiles.ts:193
 msgid "Planning Date"
-msgstr "Planeringsdatum"
+msgstr "Publiceringssdatum"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.tsx:167
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.tsx:86
@@ -11874,7 +11874,7 @@ msgstr "Planering borttagen:"
 
 #: ../superdesk-planning/client/validators/planning.ts:21
 msgid "Planning date is in the past"
-msgstr "Planeringsdatum passerat"
+msgstr "Publiceringsdatum har redan passerat"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:208
 msgid "Planning duplicated"
@@ -13977,7 +13977,7 @@ msgstr "Schemaläggning"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:107
 msgid "Schedule an update"
-msgstr "Schemalägg en uppdatering"
+msgstr "Schemalägg en uppföljning"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:113
 #: ../superdesk-planning/client/components/Tooltips.tsx:15
@@ -15418,7 +15418,7 @@ msgstr "Status:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:112
 msgid "Status: Unassigned"
-msgstr "Status: Osignerad"
+msgstr "Status: Ej tilldelad"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:143
 msgid "Status: {{ state }}"
@@ -15713,11 +15713,11 @@ msgstr "Växla artikel"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:16
 msgid "Switch authoring"
-msgstr "Växla textproduktion"
+msgstr "Växla redigering"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:18
 msgid "Switch authoring?"
-msgstr "Växla textproduktion?"
+msgstr "Växla redigering?"
 
 #: scripts/apps/monitoring/index.ts:89
 msgid "Switch between grouped/single desk view"
@@ -16489,7 +16489,7 @@ msgstr "Det finns en artikel öppen i redigeringsläge. Vill du kasta ändringar
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:275
 msgid "There is an update assignment for this story due at ''."
-msgstr "Det finns en inplanerad uppdatering av denna story den ''."
+msgstr "Det finns en uppdatering av denna story med deadline den ''."
 
 #: scripts/apps/publish/views/subscribers.html:260
 msgid "There is no token for subscriber."
@@ -17641,7 +17641,7 @@ msgstr "Uppdateringscykel:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:200
 msgid "Update Due:"
-msgstr "Uppdatering förfaller:"
+msgstr "Deadline uppdatering:"
 
 #: ../superdesk-planning/client/utils/planning.ts:470
 msgid "Update Event Time"
@@ -18731,7 +18731,7 @@ msgstr "författare"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "authoring"
-msgstr "textproduktion"
+msgstr "redigering"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:52
 msgid "bold"
@@ -19586,7 +19586,7 @@ msgstr "på vardagar"
 msgid "one word"
 msgid_plural "{{x}} words"
 msgstr[0] "ett ord"
-msgstr[1] "{{x}} ord"
+msgstr[1] "{{ x }} ord"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:32
 msgid "open in a new window"
@@ -20462,8 +20462,8 @@ msgstr "{{width}} * {{height}}"
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:55
 msgid "{{wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] "{{wordsCount}} ord"
-msgstr[1] "{{ $count}} ord"
+msgstr[0] "{{ wordsCount }} ord"
+msgstr[1] "{{ $count }} ord"
 
 #: scripts/extensions/datetimeField/dist/src/editor.js:77
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:75

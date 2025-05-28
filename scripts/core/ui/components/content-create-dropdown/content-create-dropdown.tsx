@@ -2,10 +2,9 @@
 
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, showPopup} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {showPopup} from '../popupNew';
 import {InitialView} from './initial-view';
 import {DropZone3} from '../drop-zone-3';
 import {getSuperdeskType} from 'utils/dragging';
@@ -78,7 +77,6 @@ export class ContentCreateDropdown extends React.PureComponent<IProps> {
                                     onCreate={this.props.onCreate}
                                 />
                             ),
-                            1050,
                         );
                     }}
                 />

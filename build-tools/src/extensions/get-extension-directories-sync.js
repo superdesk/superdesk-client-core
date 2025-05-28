@@ -110,7 +110,7 @@ function getExtensionDirectoriesSync(clientPath) {
                     .then((res) => res.default),
         }
      */
-    var extensionRegistrationPattern = /id:\W*'(.*)',\W*load:\W*import\('(.+?)'/g;
+    var extensionRegistrationPattern = /id:\W*['"](.*)['"],\W*load:\W*import\(['"](.+?)['"]/g;
 
     const matches = [];
 

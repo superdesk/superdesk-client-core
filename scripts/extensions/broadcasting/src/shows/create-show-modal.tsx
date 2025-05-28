@@ -78,7 +78,6 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                 {(form, save) => (
                     <Modal
                         visible
-                        zIndex={1050}
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}

@@ -92,36 +92,36 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
 
     private getDefaultState(section: IAiAssistantSection): IStateAiWidget['currentTab'] {
         switch (section) {
-        case null:
-        case undefined:
-            return {
-                activeSection: null,
-            };
-        case 'translations':
-            return {
-                activeSection: 'translations',
-                mode: 'current',
-                translation: '',
-                loading: false,
-                error: false,
-                activeLanguageId: this.props.article.language,
-            };
-        case 'headlines':
-            return {
-                activeSection: 'headlines',
-                headlines: [],
-                error: false,
-                loading: true,
-            };
-        case 'summary':
-            return {
-                activeSection: 'summary',
-                summary: '',
-                loading: false,
-                error: true,
-            };
-        default:
-            return assertNever(section);
+            case null:
+            case undefined:
+                return {
+                    activeSection: null,
+                };
+            case 'translations':
+                return {
+                    activeSection: 'translations',
+                    mode: 'current',
+                    translation: '',
+                    loading: false,
+                    error: false,
+                    activeLanguageId: this.props.article.language,
+                };
+            case 'headlines':
+                return {
+                    activeSection: 'headlines',
+                    headlines: [],
+                    error: false,
+                    loading: true,
+                };
+            case 'summary':
+                return {
+                    activeSection: 'summary',
+                    summary: '',
+                    loading: false,
+                    error: true,
+                };
+            default:
+                return assertNever(section);
         }
     }
 
@@ -150,55 +150,55 @@ export class AiAssistantWidget extends React.PureComponent<IArticleSideWidgetCom
         };
 
         switch (state.currentTab.activeSection) {
-        case null:
-            return (
-                <AuthoringWidgetLayout
-                    header={(
-                        <AuthoringWidgetHeading
-                            widgetId={AI_WIDGET_ID}
-                            widgetName={gettext('Ai Assistant')}
-                            editMode={false}
-                        />
-                    )}
-                    body={(
-                        <DefaultAiAssistantPanel
-                            setSection={this.setSection}
-                        />
-                    )}
-                />
-            );
-        case 'headlines':
-            return (
-                <HeadlinesWidget
-                    state={state.currentTab}
-                    {...tabManagementProps}
-                    {...this.props}
-                >
-                    {renderResult}
-                </HeadlinesWidget>
-            );
-        case 'summary':
-            return (
-                <SummaryWidget
-                    state={state.currentTab}
-                    {...tabManagementProps}
-                    {...this.props}
-                >
-                    {renderResult}
-                </SummaryWidget>
-            );
-        case 'translations':
-            return (
-                <TranslationsWidget
-                    state={state.currentTab}
-                    {...tabManagementProps}
-                    {...this.props}
-                >
-                    {renderResult}
-                </TranslationsWidget>
-            );
-        default:
-            return assertNever(state.currentTab);
+            case null:
+                return (
+                    <AuthoringWidgetLayout
+                        header={(
+                            <AuthoringWidgetHeading
+                                widgetId={AI_WIDGET_ID}
+                                widgetName={gettext('Ai Assistant')}
+                                editMode={false}
+                            />
+                        )}
+                        body={(
+                            <DefaultAiAssistantPanel
+                                setSection={this.setSection}
+                            />
+                        )}
+                    />
+                );
+            case 'headlines':
+                return (
+                    <HeadlinesWidget
+                        state={state.currentTab}
+                        {...tabManagementProps}
+                        {...this.props}
+                    >
+                        {renderResult}
+                    </HeadlinesWidget>
+                );
+            case 'summary':
+                return (
+                    <SummaryWidget
+                        state={state.currentTab}
+                        {...tabManagementProps}
+                        {...this.props}
+                    >
+                        {renderResult}
+                    </SummaryWidget>
+                );
+            case 'translations':
+                return (
+                    <TranslationsWidget
+                        state={state.currentTab}
+                        {...tabManagementProps}
+                        {...this.props}
+                    >
+                        {renderResult}
+                    </TranslationsWidget>
+                );
+            default:
+                return assertNever(state.currentTab);
         }
     }
 }

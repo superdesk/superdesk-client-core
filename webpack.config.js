@@ -1,8 +1,19 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-var {getModuleDir} = require('./tasks/get-module-directory');
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const fs = require('fs');
+
+function getModuleDir(moduleName) {
+    return path.join(
+        require.resolve(
+            moduleName + '/package.json',
+            {paths: [__dirname, process.cwd()]}
+        ),
+        '../'
+    );
+}
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
@@ -31,6 +42,17 @@ module.exports = function makeConfig(grunt) {
 
     const jQueryModule = getModuleDir('jquery');
 
+    const superdeskCorePath = process.cwd() === __dirname
+        ? __dirname // when running unit tests from this project
+        : getModuleDir('superdesk-core');
+
+    const uiFrameworkInsideClientCore = path.join(superdeskCorePath, 'node_modules/superdesk-ui-framework');
+
+    const uiFrameworkPath =
+        fs.existsSync(uiFrameworkInsideClientCore)
+            ? uiFrameworkInsideClientCore
+            : getModuleDir('superdesk-ui-framework');
+
     return {
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
@@ -53,8 +75,9 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
-            new ExtractTextPlugin({
+            new MiniCssExtractPlugin({
                 filename: '[name].bundle.css',
+                chunkFilename: '[id].bundle.css',
             }),
         ],
 
@@ -71,6 +94,8 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+                'shallow-equal': 'shallow-equal/dist/index',
+
                 /**
                  * Ensure that react is loaded only once.
                  * external apps(planning, analytics, ui-framework) may try loading their own react,
@@ -78,6 +103,28 @@ module.exports = function makeConfig(grunt) {
                  */
                 react: getModuleDir('react'),
                 'react-dom': getModuleDir('react-dom'),
+
+                /**
+                 * Required for development mode only.
+                 * Otherwise throws "Invariant Violation: block is not a BlockNode" error
+                 * which is likely due to multiple instances of the library being loaded.
+                 * The error is only thrown in certain execution branches.
+                 */
+                'draft-js': getModuleDir('@sourcefabric/draft-js'),
+
+                /**
+                 * Required for development mode only.
+                 * Ensures that superdesk apps loaded via superdesk.config.js (planning, analytics)
+                 * use a single version of superdesk-core.
+                 *
+                 * NOTE: superdesk apps themselves are unaware of this config
+                 * and you will see import errors in code editor
+                 * with a superdesk app open and superdesk-core not installed.
+                 * running `npm link superdesk-core` inside of a superdesk app fixes this.
+                 */
+                'superdesk-core': superdeskCorePath,
+
+                'superdesk-ui-framework': uiFrameworkPath,
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
@@ -87,13 +134,6 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.(ts|tsx|js|jsx)$/,
                     exclude: function(absolutePath) {
-                        // Exclude files inside `WEBPACK_IGNORE` folder.
-                        // This is only relevant in development.
-                        // It was added to enable linking ui-framework.
-                        if (absolutePath.includes('WEBPACK_IGNORE')) {
-                            return true;
-                        }
-
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
                             return false;
@@ -119,38 +159,47 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.(css|scss)$/i,
-                    use: ExtractTextPlugin.extract({
-                        fallback: [{
-                            loader: 'style-loader',
+                    test: /\.css$/i,
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {
+                            loader: 'css-loader',
                             options: {
-                                sourceMap: true,
+                                modules: 'global',
                             },
-                        }],
-                        use: [
-                            {
-                                loader: 'css-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: {
-                                    sourceMap: true,
-                                },
-                            },
-                        ],
-                    }),
+                        },
+                    ],
                 },
                 {
-                    test: /\.json$/,
-                    use: ['json-loader'],
+                    test: /\.scss$/i,
+                    use: [
+                        {loader: MiniCssExtractPlugin.loader},
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                modules: 'global',
+                            },
+                        },
+                        {loader: 'sass-loader'},
+                    ],
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
                     loader: 'file-loader',
                 },
+            ],
+        },
+        devServer: {
+            port: 9000,
+            host: '0.0.0.0',
+            compress: true,
+            headers: {'Cache-Control': 'no-store'},
+            static: [
+                {directory: path.resolve(process.cwd(), 'dist')},
+                {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},
+                {directory: path.resolve(__dirname, 'images'), publicPath: '/images'},
+                {directory: path.resolve(__dirname, 'styles'), publicPath: '/styles'},
+                {directory: path.resolve(__dirname, 'fonts'), publicPath: '/fonts'},
             ],
         },
     };

@@ -212,7 +212,6 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                         this.props.closeModal();
                     }
                 }}
-                zIndex={1050}
             >
                 <Layout.LayoutContainer>
                     <Layout.LeftPanel open={template == null || template.type === 'preview'}>

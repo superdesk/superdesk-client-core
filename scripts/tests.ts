@@ -1,25 +1,49 @@
 import 'vendor';
 import 'angular-mocks';
-import 'core';
 import 'core/tests/mocks';
+import 'core';
 import 'apps';
 
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 window.translations = DEFAULT_ENGLISH_TRANSLATIONS;
 
 Enzyme.configure({adapter: new Adapter()});
 
-var testsContext = require.context('scripts', true, /.spec.(ts|tsx)$/);
+const testConfig: Partial<ISuperdeskGlobalConfig> = {
+    model: {
+        timeformat: 'HH:mm:ss',
+        dateformat: 'DD/MM/YYYY',
+    },
+    view: {
+        timeformat: 'HH:mm',
+        dateformat: 'MM/DD/YYYY',
+    },
+    features: {
+        editFeaturedImage: true,
+    },
+    search: {
+        useDefaultTimezone: true,
+    },
+    default_timezone: 'Europe/London',
+    server: {
+        url: 'http://localhost:5000',
+        ws: undefined,
+    },
+};
 
-testsContext.keys().filter((path) => {
-    /*
-        Excluding anything from extensions because:
-        1. Extensions contain dependencies in node_modules directories
-            which contain their own tests which we don't want to run.
-        2. It's probably better if extensions run units test on their own.
-    */
-    return path.startsWith('./extensions/') === false;
-}).forEach(testsContext);
+beforeEach(() => { // reset config before each test
+    Object.assign(appConfig, testConfig);
+});
+
+function runTests(context) {
+    context.keys().forEach(context);
+}
+
+// selecting specific folders to avoid importing extensions
+runTests(require.context('scripts/core', true, /.spec.(ts|tsx)$/));
+runTests(require.context('scripts/apps', true, /.spec.(ts|tsx)$/));

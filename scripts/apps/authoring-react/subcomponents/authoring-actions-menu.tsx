@@ -65,28 +65,19 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
 
             return (
                 <div>
-                    <Menu items={menuItems}>
+                    <Menu items={menuItems} data-test-id="actions-list">
                         {(toggle) => (
-                            <div
-                                ref={(el) => {
-                                    // open immediately on mount
-
+                            <MoreActionsButton
+                                aria-label={gettext('Actions menu')}
+                                onClick={toggle}
+                                buttonRef={(el) => {
                                     if (el != null) {
-                                        const button = el.querySelector('button');
-
-                                        if (button != null) {
-                                            setTimeout(() => {
-                                                button.click();
-                                            });
-                                        }
+                                        setTimeout(() => {
+                                            el.click();
+                                        });
                                     }
                                 }}
-                            >
-                                <MoreActionsButton
-                                    aria-label={gettext('Actions menu')}
-                                    onClick={toggle}
-                                />
-                            </div>
+                            />
                         )}
                     </Menu>
                 </div>

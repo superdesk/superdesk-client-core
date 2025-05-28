@@ -21,7 +21,6 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
                             : <>{label}</>;
                     }}
                     getLabel={({label}) => label}
-                    zIndex={1050}
                     getOptions={() => availableFields
                         .map((field) => ({
                             value: field,

@@ -208,23 +208,23 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
     $scope.filterPublishQueue = function(item, type) {
         switch (type) {
-        case 'subscriber':
-            $scope.selectedFilterSubscriber = item;
-            break;
-        case 'ingest_provider':
-            $scope.selectedFilterIngestProvider = item;
-            break;
-        case 'status':
-            $scope.selectedFilterStatus = item;
-            break;
-        case 'type':
-            $scope.selectedFilterContentType = item;
-            break;
-        default:
-            $scope.selectedFilterSubscriber = null;
-            $scope.selectedFilterIngestProvider = null;
-            $scope.selectedFilterStatus = null;
-            $scope.selectedFilterContentType = null;
+            case 'subscriber':
+                $scope.selectedFilterSubscriber = item;
+                break;
+            case 'ingest_provider':
+                $scope.selectedFilterIngestProvider = item;
+                break;
+            case 'status':
+                $scope.selectedFilterStatus = item;
+                break;
+            case 'type':
+                $scope.selectedFilterContentType = item;
+                break;
+            default:
+                $scope.selectedFilterSubscriber = null;
+                $scope.selectedFilterIngestProvider = null;
+                $scope.selectedFilterStatus = null;
+                $scope.selectedFilterContentType = null;
         }
         populatePublishQueue();
         $scope.multiSelectCount = 0;

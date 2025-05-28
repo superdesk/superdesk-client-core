@@ -105,7 +105,6 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                             onHide={this.props.onClose}
                             footerTemplate={footerTemplate}
                             visible
-                            zIndex={1051}
                         >
                             <Spacer v gap="16">
                                 <SelectShow

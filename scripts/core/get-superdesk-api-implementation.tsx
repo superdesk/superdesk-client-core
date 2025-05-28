@@ -72,7 +72,6 @@ import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
-import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
@@ -109,7 +108,6 @@ import {
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
-import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
 import {showModal} from '@superdesk/common';
@@ -120,6 +118,8 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
+import {showPopup} from 'superdesk-ui-framework/react';
+import {ui} from './ui-utils';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -228,9 +228,10 @@ export const formatDate = (
     } else {
         const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
         const keepLocalTime = timezone === 'browser';
+        const defaultTimezone = appConfig.default_timezone || moment.tz.guess();
 
         return momentDate
-            .tz(appConfig.default_timezone, keepLocalTime)
+            .tz(defaultTimezone, keepLocalTime)
             .format(dateFormat);
     }
 };
@@ -418,6 +419,7 @@ export function getSuperdeskApiImplementation(
                 title: title ?? gettext('Confirm'),
                 message,
             }),
+            prompt: ui.prompt,
             showIgnoreCancelSaveDialog,
             notify: notify,
             framework: {
@@ -561,7 +563,6 @@ export function getSuperdeskApiImplementation(
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
             dateToServerString,
-            memoize: memoizeLocal,
             generatePatch,
             stripHtmlTags,
             getLinesCount,

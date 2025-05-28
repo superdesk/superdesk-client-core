@@ -67,6 +67,8 @@ describe('editor3.component.table-block', () => {
 });
 
 describe('editor3.component.table-cell', () => {
+    beforeEach(window.module('superdesk.apps.spellcheck'));
+
     it('should render', () => {
         const wrapper = shallow(
             <TableCell

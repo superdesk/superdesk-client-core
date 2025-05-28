@@ -112,17 +112,17 @@ export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISe
 
         sets.forEach((set: ISetItem) => {
             switch (set.state) {
-            case SET_STATE.USABLE:
-                groupedSets.usable.push(set);
-                break;
-            case SET_STATE.DISABLED:
-                groupedSets.disabled.push(set);
-                break;
-            case SET_STATE.DRAFT:
-                groupedSets.draft.push(set);
-                break;
-            default:
-                assertNever(set.state);
+                case SET_STATE.USABLE:
+                    groupedSets.usable.push(set);
+                    break;
+                case SET_STATE.DISABLED:
+                    groupedSets.disabled.push(set);
+                    break;
+                case SET_STATE.DRAFT:
+                    groupedSets.draft.push(set);
+                    break;
+                default:
+                    assertNever(set.state);
             }
         });
 

@@ -101,9 +101,9 @@ function AuthoringWidgetsProvider() {
 export interface IWidgetIntegrationComponentProps {
     widgetName: string;
     pinned: boolean;
-    widget: any;
+    widget: string;
     editMode: boolean;
-    pinWidget(widget: any): void;
+    pinWidget(sideWidget?: IWidget): void;
     closeWidget(): void;
 
     /**
@@ -121,7 +121,7 @@ export interface IWidgetIntegrationComponentProps {
  * and styles in the angular based authoring.
  */
 interface IWidgetIntegration {
-    pinWidget(widget: any): void;
+    pinWidget(sideWidget?: IWidget): void;
     getActiveWidget(): any;
     closeActiveWidget(): any;
     getPinnedWidget(): any;

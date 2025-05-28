@@ -1,11 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IPropsSelectUser, IUser} from 'superdesk-api';
-import {gettext, searchUsers} from 'core/utils';
+import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
+import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate, Spacer} from 'superdesk-ui-framework/react';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
-import {sdApi} from 'api';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
@@ -117,11 +117,41 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 inlineLabel={true}
                 labelHidden={true}
                 getItems={(searchString) => {
-                    const users = this.props.deskId
-                        ? sdApi.desks.getDeskMembers(this.props.deskId)
-                        : sdApi.user.getAll().toArray();
+                    this.abortController?.abort();
+                    this.abortController = new AbortController();
 
-                    return Promise.resolve(searchUsers(users, searchString));
+                    let url = '/users';
+
+                    if (this.props.deskId != null && this.props.deskId != '') {
+                        url = `/desks/${this.props.deskId}/users`;
+                    }
+
+                    const urlParams = {max_results: 50};
+
+                    if (searchString != null && searchString.length > 0) {
+                        urlParams['where'] = getUserSearchMongoQuery(searchString);
+                    }
+
+                    // Wrapping into additional promise in order to avoid having to handle rejected promise
+                    // in `SelectWithTemplate` component. The component takes a generic promise
+                    // as an argument and not a fetch result so it wouldn't be good to handle
+                    // fetch-specific rejections there.
+                    return new Promise((resolve) => {
+                        httpRequestJsonLocal<IRestApiResponse<IUser>>({
+                            method: 'GET',
+                            path: url,
+                            urlParams,
+                            abortSignal: this.abortController.signal,
+                        }).then((res) => {
+                            resolve(res._items);
+                        }).catch((err) => {
+                            // If user types something in the filter input all unfinished requests will be aborted.
+                            // This is expected behaviour here and should not throw an error.
+                            if (err?.name !== 'AbortError') {
+                                throw err;
+                            }
+                        });
+                    });
                 }}
                 value={this.state.selectedUser}
                 onChange={(user) => {

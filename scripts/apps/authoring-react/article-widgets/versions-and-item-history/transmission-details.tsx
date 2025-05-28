@@ -117,7 +117,6 @@ export class TransmissionDetails extends React.PureComponent<IProps, IState> {
                                     showModal(({closeModal}) => (
                                         <Modal
                                             visible
-                                            zIndex={1050}
                                             size="large"
                                             position="center"
                                             onHide={closeModal}

@@ -24,8 +24,9 @@ import {gettext} from 'core/utils';
  */
 angular.module('superdesk.apps.dictionaries', [
     'vs-repeat',
-    'superdesk.core.activity',
     'superdesk.core.upload',
+    'superdesk.core.notify',
+    'superdesk.core.activity',
 ])
     .config(['superdeskProvider', function(superdesk) {
         superdesk.activity('/settings/dictionaries', {

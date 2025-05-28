@@ -63,7 +63,6 @@ export function UploadConfig(updateVocabulary) {
             return (
                 <Modal
                     visible
-                    zIndex={1050}
                     size="large"
                     position="center"
                     onHide={this.props.closeModal}
