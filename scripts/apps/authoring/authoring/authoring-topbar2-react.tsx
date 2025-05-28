@@ -72,6 +72,23 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             this.fetchArticleFromServer();
         }
     }
+    shouldComponentUpdate(nextProps: IProps, nextState: IState) {
+        for (const key in this.props) {
+            if (key === 'children') continue;
+
+            if (this.props[key] !== nextProps[key]) {
+                return true;
+            }
+        }
+
+        for (const key in this.state) {
+            if (this.state[key] !== nextState[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
             return null; // fetching article from the server
