@@ -33,5 +33,5 @@ test('can correct published item', async ({page}) => {
     ).toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible();
 });
