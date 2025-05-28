@@ -12,6 +12,6 @@
     "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "superdesk-ui-framework": "*"
+    "superdesk-ui-framework": "4.0.46"
   }
 }

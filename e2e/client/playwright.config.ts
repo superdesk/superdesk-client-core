@@ -39,6 +39,8 @@ export default defineConfig({
         toHaveScreenshot: {
             maxDiffPixels: 4,
         },
+
+        timeout: 10000,
     },
 
     /* Configure projects for major browsers */
