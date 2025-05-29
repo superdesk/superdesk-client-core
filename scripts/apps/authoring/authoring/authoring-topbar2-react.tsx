@@ -73,7 +73,7 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         }
     }
     shouldComponentUpdate(nextProps: IProps, nextState: IState) {
-        for (const key in this.props) {
+        for (const key of Object.keys(this.props)) {
             if (key === 'children') continue;
 
             if (this.props[key] !== nextProps[key]) {
@@ -81,7 +81,7 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             }
         }
 
-        for (const key in this.state) {
+        for (const key of Object.keys(this.state)) {
             if (this.state[key] !== nextState[key]) {
                 return true;
             }
