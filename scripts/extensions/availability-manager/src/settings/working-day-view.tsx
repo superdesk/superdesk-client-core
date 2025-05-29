@@ -73,6 +73,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                         paddingInlineEnd: 'calc(var(--base-increment) * 5)',
                         paddingBlockStart: 'var(--base-increment) * 0.5',
                     }}
+                    noWrap
                 >
                     <Spacer h gap="8" justifyContent="start" noWrap>
                         <Tooltip text={getLabelForStatus(day.status)}>
