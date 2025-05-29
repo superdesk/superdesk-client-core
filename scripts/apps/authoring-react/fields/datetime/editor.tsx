@@ -21,6 +21,7 @@ export class Editor extends React.PureComponent<IProps> {
                     onChange={this.props.onChange}
                     value={this.props.value ?? null}
                     disabled={this.props.config.readOnly}
+                    valueType="date"
                     fullWidth
                 />
             </Container>

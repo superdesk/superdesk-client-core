@@ -16,6 +16,7 @@ export class Preview extends React.PureComponent<IProps> {
                 preview={true}
                 value={this.props.value}
                 disabled={this.props.config.readOnly}
+                valueType="date"
                 fullWidth
             />
         );
