@@ -73,7 +73,10 @@ test('creating a related content field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('image').click();
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=related content field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'related content field 2', fieldType: 'related content'}]);
+    await addFieldsToContentProfile(
+        page,
+        [{tabName: 'Content', fieldId: 'related content field 2', fieldType: 'related content'}],
+    );
     await expectFieldToBeVisibleInAuthoring(page, 'related content field 2');
 });
 
@@ -87,7 +90,10 @@ test('creating a custom URL field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom url field 2');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom url field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom url field 2', fieldType: 'custom vocabulary'}]);
+    await addFieldsToContentProfile(
+        page,
+        [{tabName: 'Content', fieldId: 'custom url field 2', fieldType: 'custom vocabulary'}],
+    );
     await expectFieldToBeVisibleInAuthoring(page, 'custom url field 2');
 });
 
