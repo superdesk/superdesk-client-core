@@ -3499,6 +3499,8 @@ declare module 'superdesk-api' {
             autorefreshContent?: boolean;
 
             elasticHighlight?: any;
+            searchShortcut?: boolean;
+            hideLiveSuggestions?: boolean;
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
