@@ -57,7 +57,10 @@ export class ContentProfileSettings {
             await this.page
                 .locator(s('content-profile-editing-modal'))
                 .getByRole('button', {name: 'Add new field'}).first().click();
-            await this.page.locator(s('tree-menu-popover')).getByRole('button', {name: field.fieldId}).click();
+            await this.page
+                .locator(s('tree-menu-popover'))
+                .getByRole('treeitem', {name: field.fieldId, exact: true})
+                .click();
 
             await this.page.locator(s('item-view-edit', 'gform-input--sdWidth')).selectOption('full');
             await this.page.locator(s('item-view-edit')).getByRole('button', {name: 'apply'}).click();
