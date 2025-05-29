@@ -2928,8 +2928,8 @@ declare module 'superdesk-api' {
         bool(params: IElasticBoolQueryParams): IElasticBoolQuery;
     }
 
-    export type DatePickerLocaleSettings = import('superdesk-ui-framework').DatePickerISO['props']['locale'];
-
+    export type DatePickerLocaleSettings =
+        React.ComponentProps<typeof import('superdesk-ui-framework').DatePickerISO>['locale'];
     // APPLICATION API
 
     export interface IAttachmentsApi {
