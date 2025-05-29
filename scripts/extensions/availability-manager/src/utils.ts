@@ -13,7 +13,7 @@ import {
 import {superdesk} from './superdesk';
 
 const {httpRequestJsonLocal} = superdesk;
-const {gettext} = superdesk.localization;
+const {gettext, formatDateTime} = superdesk.localization;
 const {assertNever} = superdesk.helpers;
 const {omitBaseApiResponse, filterFlatTree} = superdesk.utilities;
 
@@ -80,6 +80,26 @@ export function validateWorkingHours(workingHours: Array<IWorkingHours>, localeC
     return null;
 }
 
+export function validateAvailabilityRecord(record: IScheduleRecord, localeCode: string): string | null {
+    if (record.status == null) {
+        return gettext('{{field}} cannot be empty', {field: gettext('status')});
+    }
+
+    if (record.status === 'partial' && (record.working_hours ?? []).length < 1) {
+        return gettext('working hours are not set');
+    }
+
+    if (record.status === 'partial') {
+        const result = validateWorkingHours((record.working_hours ?? []), localeCode);
+
+        if (result != null) {
+            return result;
+        }
+    }
+
+    return null;
+}
+
 export function validateSchedule(
     schedule: {[weekDayIndex: string]: IScheduleRecord},
     localeCode: string,
@@ -87,28 +107,36 @@ export function validateSchedule(
     const errors: ReturnType<typeof validateSchedule> = {};
 
     for (const [key, value] of Object.entries(schedule)) {
-        const setError = (error: string) => errors[key] = error;
+        const validationResult = validateAvailabilityRecord(value, localeCode);
 
-        if (value.status == null) {
-            setError(
-                gettext('{{field}} cannot be empty', {field: gettext('status')}),
-            );
-        }
-
-        if (value.status === 'partial' && (value.working_hours ?? []).length < 1) {
-            setError(gettext('working hours are not set'));
-        }
-
-        if (value.status === 'partial') {
-            const result = validateWorkingHours((value.working_hours ?? []), localeCode);
-
-            if (result != null) {
-                setError(result);
-            }
+        if (validationResult != null) {
+            errors[key] = validationResult;
         }
     }
 
     return errors;
+}
+
+export function getModifiedBySomeoneElseWarning(
+    workingDay: IAvailabilityRecord | null,
+): string | null {
+    const allUsers = superdesk.entities.users.getAllUsers();
+
+    if (
+        workingDay != null
+        && workingDay.last_updated_by != null
+        && workingDay.last_updated_by !== workingDay.user
+    ) {
+        return gettext(
+            'Modified by {{user}} at {{date}}',
+            {
+                user: allUsers[workingDay.last_updated_by].display_name,
+                date: formatDateTime(new Date(workingDay._updated)),
+            },
+        );
+    } else {
+        return null;
+    }
 }
 
 export function setUserAvailability(
@@ -117,6 +145,7 @@ export function setUserAvailability(
     patch: Partial<IDefaultAvailability>,
 ): Promise<IDefaultAvailability> {
     const initialDefaultAvailability: Omit<IDefaultAvailability, keyof IBaseRestApiResponse> = {
+        user: userId,
         working_days: {},
         language: [],
         tags: [],

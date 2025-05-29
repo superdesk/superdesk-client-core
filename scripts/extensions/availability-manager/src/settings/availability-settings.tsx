@@ -1,18 +1,23 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {ReactNode} from 'react';
 import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
 import {MonthCalendar, nameof, showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {Button, Card, Checkbox, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
-import {ISuperdeskQuery, IUser, IUserProfileSection} from 'superdesk-api';
+import {ISuperdeskQuery, IUser} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, IDefaultAvailability} from '../interfaces';
 import {WorkingDayView} from './working-day-view';
 import {EditWorkdayModal} from './edit-workday-modal';
-import {fullWidthNoGrow, getStatusColor, setUserAvailability, formatDateIso} from '../utils';
+import {
+    fullWidthNoGrow,
+    getStatusColor,
+    setUserAvailability,
+    formatDateIso,
+    getModifiedBySomeoneElseWarning,
+} from '../utils';
 import {ManageScheduleModal} from './manage-schedule';
 import {LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 import {monthNamesByIndex} from '../test-utils';
@@ -26,22 +31,9 @@ const WithAvailabilityRecordsQuery = superdesk.components.getLiveQueryHOC<IAvail
 
 const verticalSpacing = '1.6rem';
 
-interface IPropsPage {
-    children: ReactNode;
-    'data-test-id'?: string;
+interface IProps {
+    user: IUser;
 }
-
-const Page: React.ComponentType<{children: React.ReactNode}> = (props: IPropsPage) => (
-    <div style={{display: 'flex', justifyContent: 'center'}} data-test-id={props['data-test-id']}>
-        <div style={{margin: '2rem'}}>
-            <Card paddingBase="3">
-                {props.children}
-            </Card>
-        </div>
-    </div>
-);
-
-type IProps = React.ComponentProps<IUserProfileSection['component']>;
 
 interface IState {
     defaultAvailability: IDefaultAvailability | null;
@@ -135,7 +127,11 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
         return (
             <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
                 {(res) => {
-                    const grouped = keyBy(res._items, (item) => item.date);
+                    if (res.loading) {
+                        return null;
+                    }
+
+                    const grouped = keyBy(res.data._items, (item) => item.date);
 
                     const dayTemplate: React.ComponentProps<typeof MonthCalendar>['dayTemplate'] = (props) => {
                         const {day, dayFromOtherMonth} = props.day;
@@ -174,6 +170,9 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     background: background,
                                     borderRadius: 20,
                                     cursor: 'pointer',
+                                    border: getModifiedBySomeoneElseWarning(workingDay) == null
+                                        ? undefined
+                                        : '2px solid var(--color-primary-highlight)',
                                 }}
 
                                 onClick={() => {
@@ -194,7 +193,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                     };
 
                     return (
-                        <Page data-test-id="availability-settings">
+                        <>
                             <div>
                                 <Checkbox
                                     checked={this.state.defaultAvailability?.enabled ?? false}
@@ -446,6 +445,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                                 ReactDOM.createPortal(
                                                     (
                                                         <EditWorkdayModal
+                                                            user={this.props.user}
                                                             workingDay={(() => {
                                                                 if (overlay.kind === 'edit') {
                                                                     return {kind: 'saved', value: workingDay};
@@ -484,7 +484,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                     })()}
                                 </>
                             )}
-                        </Page>
+                        </>
                     );
                 }}
             </WithAvailabilityRecordsQuery>

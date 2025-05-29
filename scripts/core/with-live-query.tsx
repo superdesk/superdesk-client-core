@@ -156,9 +156,9 @@ class WithLiveQueryComponent
         const {data} = this.state;
 
         if (data == null) {
-            return null;
+            return this.props.children({loading: true});
         } else {
-            return this.props.children(data);
+            return this.props.children({loading: false, data});
         }
     }
 }

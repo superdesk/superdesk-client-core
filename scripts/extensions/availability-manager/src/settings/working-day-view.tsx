@@ -3,10 +3,15 @@
 import * as React from 'react';
 
 import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
-import {Icon, IconButton, Tooltip} from 'superdesk-ui-framework/react';
+import {Icon, IconButton, Tooltip, Text} from 'superdesk-ui-framework/react';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {getLabelForStatus, getLocalizedDateString, getStylesForStatusDot} from '../utils';
+import {
+    getLabelForStatus,
+    getLocalizedDateString,
+    getModifiedBySomeoneElseWarning,
+    getStylesForStatusDot,
+} from '../utils';
 import {TagsPreview} from '../components/tags-preview';
 
 const {locale, gettext} = superdesk.localization;
@@ -21,6 +26,7 @@ interface IProps {
 export class WorkingDayView extends React.PureComponent<IProps> {
     render() {
         const {day} = this.props;
+        const modifiedBySomeoneElseWarning = getModifiedBySomeoneElseWarning(day);
 
         return (
             <div data-test-id="working-day-view">
@@ -57,14 +63,19 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                     />
                 </Spacer>
 
-                <div
+                <SpacerBlock v gap="8" />
+
+                <Spacer
+                    v
+                    gap="8"
                     style={{
                         padding: 'calc(var(--base-increment) * 2)',
                         paddingInlineEnd: 'calc(var(--base-increment) * 5)',
                         paddingBlockStart: 'var(--base-increment) * 0.5',
                     }}
+                    noWrap
                 >
-                    <Spacer h gap="8" justifyContent="start" noWrap style={{paddingBlock: 'var(--base-increment)'}}>
+                    <Spacer h gap="8" justifyContent="start" noWrap>
                         <Tooltip text={getLabelForStatus(day.status)}>
                             <div
                                 style={{
@@ -125,7 +136,15 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                             }
                         })()
                     }
-                </div>
+
+                    {
+                        modifiedBySomeoneElseWarning != null && (
+                            <Text color="lighter" size="x-small" noMargin>
+                                {modifiedBySomeoneElseWarning}
+                            </Text>
+                        )
+                    }
+                </Spacer>
             </div>
         );
     }

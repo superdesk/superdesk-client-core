@@ -2440,10 +2440,12 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
+    type ILiveQueryChildrenOptions<T> = {loading: true} | {loading: false; data: IRestApiResponse<T>};
+
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
         resource: string;
         query: ISuperdeskQuery;
-        children: (result: IRestApiResponse<T>) => React.ReactNode;
+        children: (options: ILiveQueryChildrenOptions<T>) => React.ReactNode;
     }
 
     export interface ILiveResourcesProps {
@@ -3147,7 +3149,7 @@ declare module 'superdesk-api' {
             };
             attachment: IAttachmentsApi;
             users: {
-                getAllUsers(): Dictionary<IUser['_id'], User>;
+                getAllUsers(): {[id: IUser['_id']]: IUser};
             };
             templates: {
                 getUserTemplates(
