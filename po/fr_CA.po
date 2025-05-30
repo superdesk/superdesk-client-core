@@ -39,7 +39,7 @@ msgstr "Traduction \"{{language}}\" requise"
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:240
 msgid "\"{{x}}\" field is required"
-msgstr ""
+msgstr "Le champ \"{{x}}\" est obligatoire"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:74
 msgid ""
@@ -133,7 +133,7 @@ msgstr "(désactivé)"
 #: scripts/extensions/broadcasting/dist/src/rundowns/manage-rundown-items.js:97
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:176
 msgid "(empty)"
-msgstr ""
+msgstr "(vide)"
 
 #: scripts/apps/search/MultiImageEdit.ts:290
 #: scripts/apps/search/MultiImageEdit.ts:311
@@ -576,7 +576,7 @@ msgstr "Un endroit correspondant à celui-ci existe déjà"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:108
 msgid "A new template will be created"
-msgstr ""
+msgstr "Un nouveau gabarit sera créé"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:226
 msgid "A user is required"
@@ -8738,7 +8738,7 @@ msgstr ""
 
 #: scripts/apps/authoring-react/fields/tag-input/editor.tsx:23
 msgid "Input tags here"
-msgstr ""
+msgstr "Entrez des étiquettes ici"
 
 #: scripts/core/editor3/components/links/LinkInput.tsx:220
 #: scripts/core/editor3/components/links/LinkInput.tsx:252
@@ -9903,7 +9903,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:44
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:174
 msgid "Maximum length"
-msgstr ""
+msgstr "Longueur maximale"
 
 #: scripts/apps/publish/views/subscribers.html:111
 #: scripts/apps/workspace/content/constants.ts:35
@@ -9941,7 +9941,7 @@ msgstr "Gris moyen"
 
 #: scripts/apps/users/views/edit-form.html:58
 msgid "Member since"
-msgstr ""
+msgstr "Membre depuis"
 
 #: scripts/core/editor3/highlightsConfig.ts:106
 msgid "Merge paragraphs"
@@ -10010,7 +10010,7 @@ msgstr "La hauteur et la largeur minimales doivent être supérieures ou égales
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:32
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:164
 msgid "Minimum length"
-msgstr ""
+msgstr "Longueur minimale"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:127
 msgid "Minus Sign"
@@ -11157,7 +11157,7 @@ msgstr "Seuls les types d'élément de contenu suivants sont autorisés:"
 
 #: scripts/apps/archive/controllers/UploadController.ts:350
 msgid "Only the following files are allowed: {{fileTypes}}"
-msgstr ""
+msgstr "Seuls les types de fichiers suivants sont autorisés: {{fileTypes}}"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:89
 msgid "Only the following media item types are allowed:"
@@ -11165,7 +11165,7 @@ msgstr "Seuls les types d'éléments multimédias suivants sont autorisés:"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:157
 msgid "Only the following media types are allowed: {{types}}"
-msgstr ""
+msgstr "Seuls les types d'éléments multimédias suivants sont autorisés: {{types}}"
 
 #: scripts/core/auth/secure-login.html:28
 msgid "Oops! Authentication has been denied."
@@ -11493,7 +11493,7 @@ msgstr "PROFIL"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:714
 msgid "PUBLISH"
-msgstr ""
+msgstr "PUBLIER"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
 msgid "Pacific/Auckland"
@@ -11656,7 +11656,7 @@ msgstr "En attente"
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:14
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:21
 msgid "People"
-msgstr "Communauté"
+msgstr "Personnes"
 
 #: scripts/apps/products/views/products-config-modal.html:70
 msgid "Permitting"
@@ -12233,7 +12233,7 @@ msgstr "Priorité modifiée pour"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:280
 msgid "Priority:"
-msgstr ""
+msgstr "Priorité:"
 
 #: ../superdesk-planning/client/components/PriorityLabel/index.tsx:50
 msgid "Priority: {{ name }}"
@@ -15845,7 +15845,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:171
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:196
 msgid "Tags"
-msgstr "Mots clés"
+msgstr "Étiquettes"
 
 #: scripts/apps/authoring-react/field-adapters/anpa_take_key.ts:18
 #: scripts/apps/workspace/content/constants.ts:10
@@ -15952,7 +15952,7 @@ msgstr ""
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:149
 msgid "Target types"
-msgstr ""
+msgstr "Types de cibles"
 
 #: scripts/apps/publish/views/subscribers.html:127
 msgid "Targetable by users"
@@ -16580,7 +16580,7 @@ msgstr ""
 
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:70
 msgid "There was an error when trying to generate a translation."
-msgstr ""
+msgstr "Une erreur est survenue lors de la création de la traduction."
 
 #: scripts/extensions/ai-widget/dist/src/headlines/headlines.js:22
 #: scripts/extensions/ai-widget/src/headlines/headlines.tsx:49
@@ -16735,7 +16735,7 @@ msgstr "Ceci est un gabarit par défaut du(des) pupitre(s) suivant(s): {{deskNam
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:351
 msgid "This is a recurring event."
-msgstr ""
+msgstr "Ceci est un événement récurrent."
 
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89

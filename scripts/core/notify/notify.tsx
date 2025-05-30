@@ -118,6 +118,7 @@ class NotifyComponent extends React.Component<{}, IState> {
                             className={`alert alert-${msg.type} space-between`}
                             onClick={() => this.removeMessage(i)}
                             data-test-id={`notification--${msg.type}`}
+                            data-test-value={msg.msg}
                         >
                             <div>{msg.msg}</div>
 

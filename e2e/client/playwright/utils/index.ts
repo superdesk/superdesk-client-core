@@ -51,6 +51,14 @@ export function sleep(ms: number): Promise<void> {
     });
 }
 
+export async function waitForToastMessage(page: Page, type: string, text: string): Promise<void> {
+    const selector = s(`notification--${type}=${text}`);
+
+    await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator(selector)).toHaveText(`${text}`);
+    await expect(page.locator(selector)).not.toBeVisible();
+}
+
 export async function getCellValueByColumTitle(
     table: Locator,
     row: Locator,
