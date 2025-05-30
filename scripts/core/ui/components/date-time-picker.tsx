@@ -64,7 +64,7 @@ export class DateTimePicker extends React.PureComponent<IProps> {
                     label=""
                     inlineLabel
                     labelHidden
-                    value={this.applyTimePickerHack ? '' : getTimeISO(value)}
+                    value={this.applyTimePickerHack ? null : value != null ? getTimeISO(value) : null}
                     onChange={(timeNext) => {
                         if (timeNext === '') {
                             this.applyTimePickerHack = true;
