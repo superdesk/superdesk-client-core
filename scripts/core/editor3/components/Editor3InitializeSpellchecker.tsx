@@ -13,6 +13,8 @@ interface IState {
 }
 
 export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, IState> {
+    private statusWasLoaded: boolean;
+
     constructor(props: IProps) {
         super(props);
 
@@ -21,13 +23,29 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
         };
 
         this.load = this.load.bind(this);
+
+        this.statusWasLoaded = false;
+    }
+
+    private getSpellcheckerStatus(language: string): Promise<boolean> {
+        const spellcheck = ng.get('spellcheck');
+
+        if (this.statusWasLoaded) {
+            return Promise.resolve(this.props.spellchecking.enabled);
+        } else {
+            return spellcheck.getInitialSpellcheckerStatus(language).then((status) => {
+                this.statusWasLoaded = true;
+
+                return status;
+            });
+        }
     }
 
     private load() {
         const spellcheck = ng.get('spellcheck');
         const language = this.props.spellchecking.language;
 
-        spellcheck.getInitialSpellcheckerStatus(language).then((enabled) => {
+        this.getSpellcheckerStatus(language).then((enabled) => {
             spellcheck.isAutoSpellchecker = enabled;
 
             if (enabled) {
@@ -55,7 +73,10 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
     }
 
     componentDidUpdate(prevProps: Readonly<IProps>): void {
-        if (this.props.spellchecking.language !== prevProps.spellchecking.language) {
+        if (
+            this.props.spellchecking.language !== prevProps.spellchecking.language
+            || this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
+        ) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({loading: true}, this.load);
         }
