@@ -360,6 +360,14 @@ declare module 'superdesk-api' {
     export type IDateTimeValueStorage = IDateTimeValueOperational;
     export interface IDateTimeFieldConfig extends ICommonFieldConfig {
         allowSeconds?: boolean;
+        getTimeHeaderTemplate?: (
+            value: Date | null,
+            onChange: (nextValue: Date | null) => void,
+        ) => React.ReactNode;
+        getTimeFooterTemplate?: (
+            value: Date | null,
+            onChange: (nextValue: Date | null) => void,
+        ) => React.ReactNode;
     };
     export type IDateTimeUserPreferences = never;
 
