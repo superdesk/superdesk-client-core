@@ -590,6 +590,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         }
     });
 
+    // ANGULAR-ONLY
     function setupSpellchecker() {
         spellcheck.getDictionary($scope.item.language).then((dict) => {
             spellcheck.isActiveDictionary = !!dict.length;
@@ -612,8 +613,10 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
     }
 
     // There may be multiple instances of editors so we are trying to wait for all
+    // ANGULAR-ONLY
     const initializeSpellchecker = debounce(once(setupSpellchecker), 500);
 
+    // ANGULAR-ONLY
     window.addEventListener('editorInitialized', initializeSpellchecker);
 
     $scope.$on('$destroy', () => {
