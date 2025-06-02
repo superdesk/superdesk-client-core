@@ -3490,7 +3490,10 @@ declare module 'superdesk-api' {
             editorAttachments?: boolean;
             editorInlineComments?: boolean;
             editorSuggestions?: boolean;
+
+            // Use tansa spellchecker. If enabled, other spellcheckers will not be available.
             useTansaProofing?: boolean;
+
             editFeaturedImage?: any;
             validatePointOfInterestForImages?: any;
             autopopulateByline?: any;
@@ -3507,6 +3510,8 @@ declare module 'superdesk-api' {
             autorefreshContent?: boolean;
 
             elasticHighlight?: any;
+            searchShortcut?: boolean;
+            hideLiveSuggestions?: boolean;
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
@@ -3682,10 +3687,20 @@ declare module 'superdesk-api' {
 
         userOnlineMinutes: number;
 
-        // e.g. {nl: 'leuven_dutch'}
-        spellcheckers?: {
-            [languageCode: string]: string;
-        };
+        spellchecking?: {
+            // defaults to 'remember-user-preference'
+            defaultRunningMode?: 'remember-user-preference' | 'initially-disabled';
+
+            spellcheckersByLanguage?: {
+                [languageCode: string]: {
+                    // e.g. 'leuven_dutch'
+                    spellcheckerId: string;
+
+                    // defaults to 'remember-user-preference'
+                    runningMode?: 'remember-user-preference' | 'initially-disabled';
+                };
+            };
+        }
 
         iMatricsFields: {
             entities: {

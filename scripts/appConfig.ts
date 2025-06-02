@@ -1,4 +1,3 @@
-import {merge} from 'lodash';
 import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
 
 /* globals __SUPERDESK_CONFIG__: true */
