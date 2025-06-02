@@ -62,7 +62,7 @@ class DataStore {
                 sort: [{[sortKey]: 'asc'}],
             };
 
-            new DataProvider<IContentProfile>(
+            new DataProvider<IUser>(
                 () => {
                     const {path, urlParams} = prepareSuperdeskQuery('users', query);
 
