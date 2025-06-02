@@ -88,7 +88,7 @@ export class Editor extends React.PureComponent<IProps> {
                             });
                         }}
                         dateFormat={appConfig.view.dateformat}
-                        locale={getLocaleForDatePicker(this.props.language)}
+                        locale={{type: 'full', payload: getLocaleForDatePicker(this.props.language)}}
                         disabled={this.props.value?.located?.city == null}
                     />
                 </Spacer>
