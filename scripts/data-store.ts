@@ -9,7 +9,7 @@ import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
  */
 class DataStore {
     public contentProfiles: OrderedMap<IContentProfile['_id'], IContentProfile>;
-    public users: OrderedMap<IContentProfile['_id'], IContentProfile>;
+    public users: OrderedMap<IUser['_id'], IUser>;
 
     constructor() {
         this.contentProfiles = OrderedMap();

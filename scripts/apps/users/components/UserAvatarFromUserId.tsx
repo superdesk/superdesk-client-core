@@ -1,33 +1,16 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IUser} from 'superdesk-api';
-import {dataApi} from 'core/helpers/CrudManager';
 import {UserAvatar} from './UserAvatar';
+import {dataStore} from 'data-store';
 
 interface IProps {
     userId: string;
 }
 
-interface IState {
-    user?: IUser;
-}
-
-class UserAvatarFromUserIdComponent extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-
-        this.state = {};
-    }
-    componentDidMount() {
-        if (this.state.user == null) {
-            dataApi.findOne<IUser>('users', this.props.userId).then((user) => {
-                this.setState({user});
-            });
-        }
-    }
+class UserAvatarFromUserIdComponent extends React.PureComponent<IProps> {
     render() {
-        const {user} = this.state;
+        const user = dataStore.users.get(this.props.userId);
 
         if (user == null) {
             return null;
