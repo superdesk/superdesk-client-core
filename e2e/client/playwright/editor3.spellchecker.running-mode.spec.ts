@@ -20,6 +20,13 @@ test('configuring spellchecker to be disabled until user enables it manually', a
         s('monitoring-group=Sports / Working Stage', 'article-item=spellchecker test'),
     ).dblclick();
 
+    /**
+     * Wait for dictionary to load.
+     * Using a timeout is not ideal, but there are no UI elements that indicate it.
+     * It doesn't make sense at the moment to build it either before angular based authoring is removed.
+     */
+    await page.waitForTimeout(3000);
+
     // ensure body_html has loaded before asserting 0 spellchecker warnings count
     await expect(page.locator(s('authoring', 'authoring-field=body_html', 'editor3'))).toBeVisible();
 
