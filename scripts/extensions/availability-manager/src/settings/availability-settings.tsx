@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import {addMonths, format, startOfMonth, endOfMonth} from 'date-fns';
 import {keyBy, range} from 'lodash';
 import {MonthCalendar, nameof, showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
-import {Button, Card, Checkbox, getTextColor, IconButton, PopupPositioner} from 'superdesk-ui-framework/react';
+import {Button, Card, Checkbox, getTextColor, IconButton, Loader, PopupPositioner} from 'superdesk-ui-framework/react';
 import {ISuperdeskQuery, IUser} from 'superdesk-api';
 import {superdesk} from '../superdesk';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, IDefaultAvailability} from '../interfaces';
@@ -128,7 +128,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
             <WithAvailabilityRecordsQuery resource="user_availability" query={query}>
                 {(res) => {
                     if (res.loading) {
-                        return null;
+                        return <Loader />;
                     }
 
                     const grouped = keyBy(res.data._items, (item) => item.date);
