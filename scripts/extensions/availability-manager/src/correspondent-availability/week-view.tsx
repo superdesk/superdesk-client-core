@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
+import {Spacer, SpacerBlock} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
 import {range} from 'lodash';
 import {
@@ -7,7 +7,6 @@ import {
     Text,
     WeeklyCalendarGrid,
     WeeklyCalendarGridItem,
-    Modal,
 } from 'superdesk-ui-framework/react';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -17,7 +16,7 @@ import {WeekViewHeaderDay} from './week-view-header-day';
 import {IUser} from 'superdesk-api';
 import {WithAvailabilityRecords} from './with-availability-records';
 import {fetchParticipants, filterParticipants} from './participants';
-import {AvailabilitySettings} from '../settings/availability-settings';
+import {showEditAvailabilityModal} from './show-edit-availability-modal';
 
 const {UserAvatar} = superdesk.components;
 const {assertNever} = superdesk.helpers;
@@ -88,21 +87,21 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                                         <React.Fragment key={user._id}>
                                             <WeeklyCalendarGridItem> {/** avatar cell */}
                                                 <CalendarWeekDayItem coloredBg={true}>
-                                                    <UserAvatar userId={user._id} />
+                                                    <button
+                                                        style={{padding: 0, cursor: 'pointer'}}
+                                                        onClick={() => {
+                                                            showEditAvailabilityModal(user);
+                                                        }}
+                                                    >
+                                                        <UserAvatar userId={user._id} />
+                                                    </button>
+
                                                     <SpacerBlock v gap="8" />
 
                                                     <button
                                                         className={getClass('username-weekly-view')}
                                                         onClick={() => {
-                                                            showModal(({closeModal}) => (
-                                                                <Modal
-                                                                    visible
-                                                                    onHide={closeModal}
-                                                                    headerTemplate={user.display_name}
-                                                                >
-                                                                    <AvailabilitySettings user={user} />
-                                                                </Modal>
-                                                            ));
+                                                            showEditAvailabilityModal(user);
                                                         }}
                                                     >
                                                         {user.display_name}

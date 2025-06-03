@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {difference, keyBy} from 'lodash';
-import {BoxedList, BoxedListItem, Label, Modal} from 'superdesk-ui-framework/react';
-import {showModal, Spacer} from '@sourcefabric/common';
+import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
+import {Spacer} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -9,7 +9,7 @@ import {superdesk} from '../superdesk';
 import {fetchParticipants, filterParticipants} from './participants';
 import {compareUsersByName, sortAvailabilityRecords} from './sort-availability-records';
 import {WithAvailabilityRecords} from './with-availability-records';
-import {AvailabilitySettings} from '../settings/availability-settings';
+import {showEditAvailabilityModal} from './show-edit-availability-modal';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
@@ -109,20 +109,19 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                         <Spacer gap="32" alignItems="center" justifyContent="space-between" noGrow>
                                             <div>
                                                 <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
-                                                    <UserAvatar userId={user._id} />
+                                                    <button
+                                                        onClick={() => {
+                                                            showEditAvailabilityModal(user);
+                                                        }}
+                                                        style={{padding: 0, cursor: 'pointer'}}
+                                                    >
+                                                        <UserAvatar userId={user._id} />
+                                                    </button>
 
                                                     <button
                                                         className={getClass('username-day-view')}
                                                         onClick={() => {
-                                                            showModal(({closeModal}) => (
-                                                                <Modal
-                                                                    visible
-                                                                    onHide={closeModal}
-                                                                    headerTemplate={user.display_name}
-                                                                >
-                                                                    <AvailabilitySettings user={user} />
-                                                                </Modal>
-                                                            ));
+                                                            showEditAvailabilityModal(user);
                                                         }}
                                                     >
                                                         {user.display_name}
