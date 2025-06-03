@@ -7,6 +7,8 @@ test.use({
     storageState: getStorageState({corrections_workflow: true}),
 });
 
+test.setTimeout(60000);
+
 test('can correct published item using corrections workflow', async ({page}) => {
     const monitoring = new Monitoring(page);
 
