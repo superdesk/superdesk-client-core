@@ -34,7 +34,7 @@ export class Editor extends React.PureComponent<IProps> {
                         );
                     }}
                     dateFormat={appConfig.view.dateformat}
-                    locale={getLocaleForDatePicker(this.props.language)}
+                    locale={{type: 'full', payload: getLocaleForDatePicker(this.props.language)}}
                     headerButtonBar={this.props.config?.shortcuts?.map(({label, value, term}) => {
                         return {
                             label,

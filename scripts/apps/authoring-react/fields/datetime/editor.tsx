@@ -17,11 +17,18 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DateTimePicker
+                    valueType="date"
                     dateFormat={appConfig.view.dateformat}
                     onChange={this.props.onChange}
                     value={this.props.value ?? null}
                     disabled={this.props.config.readOnly}
                     fullWidth
+                    timeHeaderTemplate={
+                        this.props.config.getTimeHeaderTemplate?.(this.props.value, this.props.onChange)
+                    }
+                    timeFooterTemplate={
+                        this.props.config.getTimeFooterTemplate?.(this.props.value, this.props.onChange)
+                    }
                 />
             </Container>
         );
