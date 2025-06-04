@@ -4,15 +4,11 @@
     color: var(--sd-colour-interactive--darken-20);
 }
 
-.username-day-view:hover {
-    text-decoration: underline;
-}
-
 .username-weekly-view {
     padding: 0;
     font-size: 1.6rem;
 }
 
-.username-weekly-view:hover {
+.link:hover {
     text-decoration: underline;
 }

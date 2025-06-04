@@ -4,6 +4,9 @@ import {showModal} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {AvailabilitySettings} from '../settings/availability-settings';
 
+/**
+ * Requires a privilege `user_availability_manage`
+ */
 export function showEditAvailabilityModal(user: IUser) {
     showModal(({closeModal}) => (
         <Modal
