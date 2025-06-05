@@ -3,6 +3,7 @@ import {LANGUAGES_VOCABULARY, privileges, TAGS_VOCABULARY_ID} from './constants'
 import {AvailabilitySettingsPage} from './settings/availability-settings-page';
 import {superdesk} from './superdesk';
 import {CorrespondentAvailability} from './correspondent-availability';
+import {configuration} from './configuration';
 
 const {gettext} = superdesk.localization;
 
@@ -69,6 +70,7 @@ const extension: IExtension = {
                     url: '/availability-management',
                     priority: 160,
                     component: CorrespondentAvailability,
+                    addToSideMenu: configuration.addPageToSideMenu,
                 });
             }
         }
@@ -76,5 +78,7 @@ const extension: IExtension = {
         return Promise.resolve({contributions} satisfies IExtensionActivationResult);
     },
 };
+
+export {configure} from './configuration';
 
 export default extension;
