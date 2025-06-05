@@ -26,10 +26,9 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
     constructor(props: IPropsSelectUser) {
         super(props);
-        const users = store.getState().entities.users;
 
         this.state = {
-            selectedUser: props.selectedUserId == null ? null : users[props.selectedUserId] ?? null,
+            selectedUser: null,
         };
     }
 
@@ -45,52 +44,50 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
         }
 
         return (
-            options.length && (
-                <TreeSelect
-                    kind="synchronous"
-                    label={gettext('Select a user')}
-                    inlineLabel={true}
-                    labelHidden={true}
-                    value={this.state.selectedUser ? [this.state.selectedUser] : []}
-                    getOptions={() => options.map((user) => ({value: user}))}
-                    onChange={(users) => {
-                        const user = users[0] ?? null;
+            <TreeSelect
+                kind="synchronous"
+                label={gettext('Select a user')}
+                inlineLabel={true}
+                labelHidden={true}
+                value={this.state.selectedUser ? [this.state.selectedUser] : []}
+                getOptions={() => options.map((user) => ({value: user}))}
+                onChange={(users) => {
+                    const user = users[0] ?? null;
 
-                        this.setState({selectedUser: user});
-                        this.props.onSelect(user);
-                    }}
-                    getLabel={(user) => user.display_name}
-                    getId={(user) => user._id}
-                    optionTemplate={(user) => (
-                        <Spacer h gap="8" noWrap justifyContent="start">
-                            <div>
-                                <UserAvatar user={user} displayStatus={true} />
-                            </div>
+                    this.setState({selectedUser: user});
+                    this.props.onSelect(user);
+                }}
+                getLabel={(user) => user.display_name}
+                getId={(user) => user._id}
+                optionTemplate={(user) => (
+                    <Spacer h gap="8" noWrap justifyContent="start">
+                        <div>
+                            <UserAvatar user={user} displayStatus={true} />
+                        </div>
 
-                            <Spacer v gap="4" noWrap>
-                                <div>{user.display_name}</div>
-                                <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
-                            </Spacer>
+                        <Spacer v gap="4" noWrap>
+                            <div>{user.display_name}</div>
+                            <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
                         </Spacer>
-                    )}
-                    valueTemplate={(user, Wrapper) => (
-                        this.props.valueTemplate != null
-                            ? this.props.valueTemplate(user, Wrapper)
-                            : (
-                                <Wrapper>
-                                    <Spacer h gap="8" justifyContent="start" noGrow>
-                                        <UserAvatar user={user} displayStatus={true} />
-                                        {user.display_name}
-                                    </Spacer>
-                                </Wrapper>
-                            )
-                    )}
-                    placeholder={gettext('Select a user')}
-                    searchPlaceholder={gettext('Search...')}
-                    noResultsFoundMessage={gettext('No results found.')}
-                    data-test-id="select-user-dropdown"
-                />
-            )
+                    </Spacer>
+                )}
+                valueTemplate={(user, Wrapper) => (
+                    this.props.valueTemplate != null
+                        ? this.props.valueTemplate(user, Wrapper)
+                        : (
+                            <Wrapper>
+                                <Spacer h gap="8" justifyContent="start" noGrow>
+                                    <UserAvatar user={user} displayStatus={true} />
+                                    {user.display_name}
+                                </Spacer>
+                            </Wrapper>
+                        )
+                )}
+                placeholder={gettext('Select a user')}
+                searchPlaceholder={gettext('Search...')}
+                noResultsFoundMessage={gettext('No results found.')}
+                data-test-id="select-user-dropdown"
+            />
         );
     }
 }
