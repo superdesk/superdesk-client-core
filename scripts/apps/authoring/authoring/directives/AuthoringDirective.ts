@@ -458,7 +458,7 @@ export function AuthoringDirective(
             };
 
             $scope.openExport = function() {
-                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), true).then(() => {
+                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), () => null).then(() => {
                     $scope.export = true;
                 });
             };

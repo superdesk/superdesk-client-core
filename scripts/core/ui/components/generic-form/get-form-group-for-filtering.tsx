@@ -5,35 +5,35 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 // different components must be used for filtering than for entering/updating items
 function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     switch (type) {
-    case FormFieldType.plainText:
-        return FormFieldType.plainText;
-    case FormFieldType.textEditor3:
+        case FormFieldType.plainText:
+            return FormFieldType.plainText;
+        case FormFieldType.textEditor3:
         // even though textEditor3 outputs HTML, plaintext has to be used for filtering
-        return FormFieldType.plainText;
-    case FormFieldType.number: // should be a range
-        return FormFieldType.number;
-    case FormFieldType.duration: // should be a range
-        return FormFieldType.duration;
-    case FormFieldType.vocabularySingleValue:
-        return FormFieldType.vocabularySingleValue;
-    case FormFieldType.checkbox:
-        return FormFieldType.yesNo;
-    case FormFieldType.contentFilterSingleValue:
-        return FormFieldType.contentFilterSingleValue;
-    case FormFieldType.deskSingleValue:
-        return FormFieldType.deskSingleValue;
-    case FormFieldType.stageSingleValue:
-        return FormFieldType.stageSingleValue;
-    case FormFieldType.macroSingleValue:
-        return FormFieldType.macroSingleValue;
-    case FormFieldType.yesNo:
-        return FormFieldType.yesNo;
-    case FormFieldType.select:
-        return FormFieldType.select;
-    case FormFieldType.selectMultiple:
-        return FormFieldType.selectMultiple;
-    default:
-        assertNever(type);
+            return FormFieldType.plainText;
+        case FormFieldType.number: // should be a range
+            return FormFieldType.number;
+        case FormFieldType.duration: // should be a range
+            return FormFieldType.duration;
+        case FormFieldType.vocabularySingleValue:
+            return FormFieldType.vocabularySingleValue;
+        case FormFieldType.checkbox:
+            return FormFieldType.yesNo;
+        case FormFieldType.contentFilterSingleValue:
+            return FormFieldType.contentFilterSingleValue;
+        case FormFieldType.deskSingleValue:
+            return FormFieldType.deskSingleValue;
+        case FormFieldType.stageSingleValue:
+            return FormFieldType.stageSingleValue;
+        case FormFieldType.macroSingleValue:
+            return FormFieldType.macroSingleValue;
+        case FormFieldType.yesNo:
+            return FormFieldType.yesNo;
+        case FormFieldType.select:
+            return FormFieldType.select;
+        case FormFieldType.selectMultiple:
+            return FormFieldType.selectMultiple;
+        default:
+            assertNever(type);
     }
 }
 

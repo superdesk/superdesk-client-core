@@ -95,70 +95,70 @@ export function CardsService(search, session, desks, $location) {
         }
 
         switch (card.type) {
-        case 'search':
-            break;
+            case 'search':
+                break;
 
-        case 'spike-personal':
-        case 'personal':
-            query.filter({bool: {
-                must_not: {exists: {field: 'task.desk'}},
-                should: [
-                    {term: {'task.user': session.identity._id}}, // sent to personal
-                    {bool: { // just created in personal
-                        must: {term: {original_creator: session.identity._id}},
-                        must_not: {exists: {field: 'task.user'}},
-                    }},
-                ],
-                minimum_should_match: 1,
-            }});
-            break;
+            case 'spike-personal':
+            case 'personal':
+                query.filter({bool: {
+                    must_not: {exists: {field: 'task.desk'}},
+                    should: [
+                        {term: {'task.user': session.identity._id}}, // sent to personal
+                        {bool: { // just created in personal
+                            must: {term: {original_creator: session.identity._id}},
+                            must_not: {exists: {field: 'task.user'}},
+                        }},
+                    ],
+                    minimum_should_match: 1,
+                }});
+                break;
 
-        case 'sent':
-            query.filter({bool: {
-                must: [
-                    {term: {original_creator: session.identity._id}},
-                    {exists: {field: 'task.desk'}},
-                ],
-            }});
-            break;
+            case 'sent':
+                query.filter({bool: {
+                    must: [
+                        {term: {original_creator: session.identity._id}},
+                        {exists: {field: 'task.desk'}},
+                    ],
+                }});
+                break;
 
-        case 'spike':
-            query.filter({term: {'task.desk': card._id}});
-            break;
+            case 'spike':
+                query.filter({term: {'task.desk': card._id}});
+                break;
 
-        case 'highlights':
-            query.filter({and: [
-                {term: {highlights: queryParam.highlight}},
-            ]});
-            break;
+            case 'highlights':
+                query.filter({and: [
+                    {term: {highlights: queryParam.highlight}},
+                ]});
+                break;
 
-        case DESK_OUTPUT:
-            filterQueryByDeskType(query, card);
-            break;
+            case DESK_OUTPUT:
+                filterQueryByDeskType(query, card);
+                break;
 
-        case SENT_OUTPUT:
-            deskId = card._id.substring(0, card._id.indexOf(':'));
-            query.filter({bool: {
-                filter: {term: {'task.desk_history': deskId}},
-                must_not: {term: {'task.desk': deskId}},
-            }});
-            break;
+            case SENT_OUTPUT:
+                deskId = card._id.substring(0, card._id.indexOf(':'));
+                query.filter({bool: {
+                    filter: {term: {'task.desk_history': deskId}},
+                    must_not: {term: {'task.desk': deskId}},
+                }});
+                break;
 
-        case SCHEDULED_OUTPUT:
-            deskId = card._id.substring(0, card._id.indexOf(':'));
-            query.filter({and: [
-                {term: {'task.desk': deskId}},
-                {term: {state: 'scheduled'}},
-            ]});
-            break;
+            case SCHEDULED_OUTPUT:
+                deskId = card._id.substring(0, card._id.indexOf(':'));
+                query.filter({and: [
+                    {term: {'task.desk': deskId}},
+                    {term: {state: 'scheduled'}},
+                ]});
+                break;
 
-        default:
-            if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
-                query.filter({term: {'task.desk': card.deskId}});
-            } else if (card._id) {
-                query.filter({term: {'task.stage': card._id}});
-            }
-            break;
+            default:
+                if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
+                    query.filter({term: {'task.desk': card.deskId}});
+                } else if (card._id) {
+                    query.filter({term: {'task.stage': card._id}});
+                }
+                break;
         }
     }
 
@@ -282,28 +282,28 @@ export function CardsService(search, session, desks, $location) {
 
     function shouldUpdate(card: ICard, data) {
         switch (card.type) {
-        case 'stage':
+            case 'stage':
             // refresh stage if it matches updated stage
-            return data.stages && !!data.stages[card._id];
-        case 'personal':
-            return data.user === session.identity._id;
-        case DESK_OUTPUT:
-        case SENT_OUTPUT:
-        case SCHEDULED_OUTPUT:
-            var deskId = card._id.substring(0, card._id.indexOf(':'));
+                return data.stages && !!data.stages[card._id];
+            case 'personal':
+                return data.user === session.identity._id;
+            case DESK_OUTPUT:
+            case SENT_OUTPUT:
+            case SCHEDULED_OUTPUT:
+                var deskId = card._id.substring(0, card._id.indexOf(':'));
 
-            if (deskId) {
-                return (
-                    data.desks && !!data.desks[deskId]
-                ) || (
-                    data.from_desk && data.from_desk === deskId
-                );
-            }
+                if (deskId) {
+                    return (
+                        data.desks && !!data.desks[deskId]
+                    ) || (
+                        data.from_desk && data.from_desk === deskId
+                    );
+                }
 
-            return false;
-        default:
+                return false;
+            default:
             // no way to determine if item should be visible, refresh
-            return true;
+                return true;
         }
     }
 }

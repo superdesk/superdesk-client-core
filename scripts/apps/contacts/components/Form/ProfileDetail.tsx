@@ -144,11 +144,11 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         if (text) {
             contacts.queryField(field, text).then((items) => {
                 switch (field) {
-                case 'organisation':
-                    this.setState({
-                        organisations: map(items._items, field),
-                        orgValue: text,
-                    });
+                    case 'organisation':
+                        this.setState({
+                            organisations: map(items._items, field),
+                            orgValue: text,
+                        });
                 }
             });
         }

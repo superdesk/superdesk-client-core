@@ -98,79 +98,79 @@ class InputField extends React.PureComponent<IPropsInputField> {
         }
 
         switch (field.type) {
-        case 'bool':
-            return (
-                <input
-                    type="checkbox"
-                    checked={!!value}
-                    disabled={disabled}
-                    onChange={() => this.props.update(item, field.key, !value)}
-                />
-            );
-
-        case 'color':
-            return (
-                <input
-                    type="color"
-                    value={value}
-                    disabled={disabled}
-                    onChange={(event) => this.props.update(item, field.key, event.target.value)}
-                />
-            );
-
-        case 'short':
-            return (
-                <input
-                    type="text"
-                    value={value}
-                    disabled={disabled}
-                    onChange={(event) => {
-                        this.props.update(item, field.key, event.target.value);
-                    }}
-                />
-            );
-
-        case 'object': {
-            return (
-                <ObjectEditor
-                    value={valueObj}
-                    disabled={disabled}
-                    onChange={(_value) => this.props.update(item, field.key, _value)}
-                />
-            );
-        }
-
-        case 'integer':
-            return (
-                <div className={className}>
+            case 'bool':
+                return (
                     <input
-                        type="number"
+                        type="checkbox"
+                        checked={!!value}
+                        disabled={disabled}
+                        onChange={() => this.props.update(item, field.key, !value)}
+                    />
+                );
+
+            case 'color':
+                return (
+                    <input
+                        type="color"
                         value={value}
                         disabled={disabled}
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
-                        onChange={(event) => {
-                            this.props.update(item, field.key, parseInt(event.target.value, 10));
-                        }}
+                        onChange={(event) => this.props.update(item, field.key, event.target.value)}
                     />
-                </div>
-            );
+                );
 
-        default:
-            return (
-                <div className={className}>
+            case 'short':
+                return (
                     <input
                         type="text"
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         value={value}
                         disabled={disabled}
                         onChange={(event) => {
                             this.props.update(item, field.key, event.target.value);
                         }}
-                        data-test-id="vocabulary-item-field"
-                        data-test-value={field.key}
                     />
-                </div>
-            );
+                );
+
+            case 'object': {
+                return (
+                    <ObjectEditor
+                        value={valueObj}
+                        disabled={disabled}
+                        onChange={(_value) => this.props.update(item, field.key, _value)}
+                    />
+                );
+            }
+
+            case 'integer':
+                return (
+                    <div className={className}>
+                        <input
+                            type="number"
+                            value={value}
+                            disabled={disabled}
+                            className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                            onChange={(event) => {
+                                this.props.update(item, field.key, parseInt(event.target.value, 10));
+                            }}
+                        />
+                    </div>
+                );
+
+            default:
+                return (
+                    <div className={className}>
+                        <input
+                            type="text"
+                            className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                            value={value}
+                            disabled={disabled}
+                            onChange={(event) => {
+                                this.props.update(item, field.key, event.target.value);
+                            }}
+                            data-test-id="vocabulary-item-field"
+                            data-test-value={field.key}
+                        />
+                    </div>
+                );
         }
     }
 }

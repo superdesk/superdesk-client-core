@@ -10,13 +10,14 @@ export class Preview extends React.PureComponent<IProps> {
     render() {
         return (
             <DateTimePicker
+                valueType="date"
                 dateFormat="MM/DD/YYYY"
                 label={gettext('Date time (AUTHORING-REACT)')}
                 onChange={noop}
                 preview={true}
                 value={this.props.value}
                 disabled={this.props.config.readOnly}
-                width={this.props.config.width}
+                fullWidth
             />
         );
     }

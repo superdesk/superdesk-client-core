@@ -49,7 +49,9 @@ angular.module('superdesk.mocks', [])
 
         $httpBackend.whenGET('http://localhost:5000/preferences/sess').respond({});
     }])
-    .run(['$injector', ng.register])
+    .run(['$injector', ($injector) => {
+        ng.register($injector);
+    }])
     .constant('config', {
         server: {url: 'http://localhost:5000'},
         editor: {},

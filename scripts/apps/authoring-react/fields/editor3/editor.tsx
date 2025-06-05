@@ -57,8 +57,6 @@ interface IState {
     ready: boolean;
 
     autocompleteSuggestions: Array<string>;
-
-    spellcheckerEnabled: boolean;
 }
 
 export class Editor extends React.PureComponent<IProps, IState> {
@@ -71,7 +69,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.state = {
             ready: false,
             autocompleteSuggestions: [],
-            spellcheckerEnabled: false,
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
@@ -95,7 +92,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
     syncPropsWithReduxStore() {
         const store = this.props.value.store;
-        const spellcheck = this.state.spellcheckerEnabled ? ng.get('spellcheck') : null;
+        const spellcheck = ng.get('spellcheck').isAutoSpellchecker === true ? ng.get('spellcheck') : null;
 
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
@@ -458,6 +455,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
                         <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
                             <Editor3
+                                expandable={this.props.config.expandable}
                                 uiTheme={this.props.uiTheme}
                                 scrollContainer=".sd-editor-content__main-container"
                                 singleLine={config.singleLine ?? false}

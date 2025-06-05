@@ -1,7 +1,7 @@
 import 'vendor';
 import 'angular-mocks';
-import 'core';
 import 'core/tests/mocks';
+import 'core';
 import 'apps';
 
 import Enzyme from 'enzyme';

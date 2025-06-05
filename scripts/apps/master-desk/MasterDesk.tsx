@@ -32,14 +32,14 @@ export const USER_PREFERENCE_SETTINGS = 'masterdesk:desks';
 
 export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     switch (tab) {
-    case IMasterDeskTab.overview:
-        return gettext('Overview');
-    case IMasterDeskTab.users:
-        return gettext('Users');
-    case IMasterDeskTab.assignments:
-        return gettext('Assignments');
-    default:
-        return assertNever(tab);
+        case IMasterDeskTab.overview:
+            return gettext('Overview');
+        case IMasterDeskTab.users:
+            return gettext('Users');
+        case IMasterDeskTab.assignments:
+            return gettext('Assignments');
+        default:
+            return assertNever(tab);
     }
 }
 
@@ -159,34 +159,34 @@ export class MasterDesk extends React.Component<{}, IState> {
                     <div className="sd-main-content-grid__content-inner">
                         {(() => {
                             switch (this.state.currentTab) {
-                            case IMasterDeskTab.overview:
-                                return (
-                                    <OverviewComponent
-                                        desks={this.state.desks}
-                                        stages={this.state.stages}
-                                        deskFilter={this.state.deskFilter}
-                                        selectedDesk={this.state.selectedDesk}
-                                        filters={this.state.filters}
-                                        onFilterChange={(filters) => this.setState({filters: filters})}
-                                        onDeskChange={(desk) => this.setState({selectedDesk: desk})}
-                                    />
-                                );
-                            case IMasterDeskTab.users:
-                                return (
-                                    <UsersComponent
-                                        desks={this.state.desks}
-                                        onUserSelect={(user) => this.setState({activeUser: user})}
-                                    />
-                                );
-                            case IMasterDeskTab.assignments:
-                                return (
-                                    <AssignmentsComponent
-                                        desks={this.state.desks}
-                                        stages={this.state.stages}
-                                    />
-                                );
-                            default:
-                                return assertNever(this.state.currentTab);
+                                case IMasterDeskTab.overview:
+                                    return (
+                                        <OverviewComponent
+                                            desks={this.state.desks}
+                                            stages={this.state.stages}
+                                            deskFilter={this.state.deskFilter}
+                                            selectedDesk={this.state.selectedDesk}
+                                            filters={this.state.filters}
+                                            onFilterChange={(filters) => this.setState({filters: filters})}
+                                            onDeskChange={(desk) => this.setState({selectedDesk: desk})}
+                                        />
+                                    );
+                                case IMasterDeskTab.users:
+                                    return (
+                                        <UsersComponent
+                                            desks={this.state.desks}
+                                            onUserSelect={(user) => this.setState({activeUser: user})}
+                                        />
+                                    );
+                                case IMasterDeskTab.assignments:
+                                    return (
+                                        <AssignmentsComponent
+                                            desks={this.state.desks}
+                                            stages={this.state.stages}
+                                        />
+                                    );
+                                default:
+                                    return assertNever(this.state.currentTab);
                             }
                         })()}
                     </div>

@@ -107,6 +107,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
                 <div style={{paddingBlockStart: 5}}>
                     <TreeSelect
+                        data-test-id="target-subscribers"
                         label=""
                         inlineLabel
                         labelHidden

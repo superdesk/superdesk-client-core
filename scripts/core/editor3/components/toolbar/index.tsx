@@ -212,29 +212,29 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     tableKind={activeCell.additional.tableKind}
                     editorFormat={(() => {
                         switch (activeCell.additional.tableKind) {
-                        case 'table':
-                            return editorFormat;
-                        case 'multi-line-quote':
-                            return editorFormat.filter((option) => option !== 'quote');
-                        case 'custom-block': {
-                            const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
+                            case 'table':
+                                return editorFormat;
+                            case 'multi-line-quote':
+                                return editorFormat.filter((option) => option !== 'quote');
+                            case 'custom-block': {
+                                const vocabulary = sdApi.vocabularies.getAll().get(activeCell.additional.vocabularyId);
 
-                            if (vocabulary.field_type !== 'editor-block') {
-                                throw new Error();
-                            }
+                                if (vocabulary.field_type !== 'editor-block') {
+                                    throw new Error();
+                                }
 
-                            const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
+                                const availableOptions = new Set(getFormattingOptionsForTableLikeBlocks());
 
-                            const vocabularyValues = (
+                                const vocabularyValues = (
                                 vocabulary.field_options.formatting_options ?? []
                             ) as Array<RICH_FORMATTING_OPTION>;
 
-                            return vocabularyValues.filter(
-                                (option) => availableOptions.has(option as RICH_FORMATTING_OPTION),
-                            );
-                        }
-                        default:
-                            assertNever(activeCell.additional);
+                                return vocabularyValues.filter(
+                                    (option) => availableOptions.has(option as RICH_FORMATTING_OPTION),
+                                );
+                            }
+                            default:
+                                assertNever(activeCell.additional);
                         }
                     })()}
                 />

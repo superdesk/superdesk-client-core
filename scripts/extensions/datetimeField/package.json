@@ -7,6 +7,7 @@
     "watch": "tsc -watch -p src"
   },
   "devDependencies": {
+    "@types/react": "16.8.23",
     "superdesk-code-style": "1.3.0",
     "typescript": "~4.9.5"
   },
@@ -14,6 +15,6 @@
     "date-fns": "2.7.0"
   },
   "peerDependencies": {
-    "superdesk-ui-framework": "3.0.16"
+    "superdesk-ui-framework": "4.0.47"
   }
 }

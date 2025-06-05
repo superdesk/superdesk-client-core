@@ -25,7 +25,7 @@ export default new class ProviderService {
      * up for it, it returns that instead.
      */
     get(name) {
-        if ($injector === null) {
+        if ($injector == null) {
             throw new Error('ng: $injector not registered for core/services/ng');
         }
 

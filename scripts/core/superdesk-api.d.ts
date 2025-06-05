@@ -74,7 +74,7 @@ declare module 'superdesk-api' {
         /**
          * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
          */
-        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>): unknown;
+        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>, config: unknown): unknown;
 
         /**
          * Must return a value in operational format.
@@ -86,7 +86,7 @@ declare module 'superdesk-api' {
 
     export interface IStorageAdapter<T> {
         storeValue(value: unknown, fieldId: string, entity: T, config: unknown, fieldType: string): T;
-        retrieveStoredValue(item: T, fieldId: string, fieldType: string): unknown;
+        retrieveStoredValue(item: T, fieldId: string, fieldType: string, config: unknown): unknown;
     }
 
     export interface IAuthoringAutoSave<T> {
@@ -360,6 +360,14 @@ declare module 'superdesk-api' {
     export type IDateTimeValueStorage = IDateTimeValueOperational;
     export interface IDateTimeFieldConfig extends ICommonFieldConfig {
         allowSeconds?: boolean;
+        getTimeHeaderTemplate?: (
+            value: Date | null,
+            onChange: (nextValue: Date | null) => void,
+        ) => React.ReactNode;
+        getTimeFooterTemplate?: (
+            value: Date | null,
+            onChange: (nextValue: Date | null) => void,
+        ) => React.ReactNode;
     };
     export type IDateTimeUserPreferences = never;
 
@@ -468,6 +476,12 @@ declare module 'superdesk-api' {
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
         disallowedCharacters?: Array<string>;
+
+        expandable?: {
+            enabled: true;
+            defaultValue: boolean;
+            numberOfRowsWhenCollapsed: number;
+        };
 
         // Users may configure predefined text
         // snippets to append to the field
@@ -856,6 +870,16 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IUserProfileSection {
+        id: string;
+        label: string;
+        priority: IDisplayPriority;
+        component: React.ComponentType<{
+            user: IUser;
+            onSave(user: IUser): Promise<IUser>;
+        }>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -891,6 +915,12 @@ declare module 'superdesk-api' {
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+
+            /**
+             * Sections for editing user profile.
+             */
+            getUserProfileSections?: (user: IUser) => Array<IUserProfileSection>;
+
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
@@ -1546,6 +1576,7 @@ declare module 'superdesk-api' {
         avatar_renditions: {};
         role?: IUserRole['_id'];
         privileges: IUserPrivileges;
+        dateline_source?: string;
         user_type: 'user' | 'administrator';
         is_support: boolean;
         is_author: boolean;
@@ -3133,6 +3164,7 @@ declare module 'superdesk-api' {
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
                 language: string,
+                plainTextInMultiLineMode?: boolean,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
 
@@ -3458,7 +3490,10 @@ declare module 'superdesk-api' {
             editorAttachments?: boolean;
             editorInlineComments?: boolean;
             editorSuggestions?: boolean;
+
+            // Use tansa spellchecker. If enabled, other spellcheckers will not be available.
             useTansaProofing?: boolean;
+
             editFeaturedImage?: any;
             validatePointOfInterestForImages?: any;
             autopopulateByline?: any;
@@ -3475,6 +3510,8 @@ declare module 'superdesk-api' {
             autorefreshContent?: boolean;
 
             elasticHighlight?: any;
+            searchShortcut?: boolean;
+            hideLiveSuggestions?: boolean;
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
@@ -3650,10 +3687,20 @@ declare module 'superdesk-api' {
 
         userOnlineMinutes: number;
 
-        // e.g. {nl: 'leuven_dutch'}
-        spellcheckers?: {
-            [languageCode: string]: string;
-        };
+        spellchecking?: {
+            // defaults to 'remember-user-preference'
+            defaultRunningMode?: 'remember-user-preference' | 'initially-disabled';
+
+            spellcheckersByLanguage?: {
+                [languageCode: string]: {
+                    // e.g. 'leuven_dutch'
+                    spellcheckerId: string;
+
+                    // defaults to 'remember-user-preference'
+                    runningMode?: 'remember-user-preference' | 'initially-disabled';
+                };
+            };
+        }
 
         iMatricsFields: {
             entities: {

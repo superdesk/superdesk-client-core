@@ -21,6 +21,7 @@ export default angular.module('superdesk.core.services.asset', [])
             if (!/^(https?:\/\/|\/\/|\/|.\/|..\/)/.test(path)) {
                 ret = 'scripts/' + ret;
             }
+
             if (!/^(https?:\/\/|\/\/)/.test(path) && appConfig.paths != null && appConfig.paths.superdesk) {
                 ret = appConfig.paths.superdesk + ret;
             }

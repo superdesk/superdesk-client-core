@@ -6,7 +6,6 @@ import {
     IDateTimeValueOperational,
     IDateTimeUserPreferences,
 } from 'superdesk-api';
-import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 type IProps = IEditorComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig, IDateTimeUserPreferences>;
@@ -18,15 +17,18 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DateTimePicker
+                    valueType="date"
                     dateFormat={appConfig.view.dateformat}
-                    label={{
-                        text: gettext('Date time'),
-                        hidden: true,
-                    }}
                     onChange={this.props.onChange}
                     value={this.props.value ?? null}
                     disabled={this.props.config.readOnly}
-                    width={`${this.props.config.width}%`}
+                    fullWidth
+                    timeHeaderTemplate={
+                        this.props.config.getTimeHeaderTemplate?.(this.props.value, this.props.onChange)
+                    }
+                    timeFooterTemplate={
+                        this.props.config.getTimeFooterTemplate?.(this.props.value, this.props.onChange)
+                    }
                 />
             </Container>
         );
