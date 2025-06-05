@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {difference, keyBy} from 'lodash';
-import {BoxedList, BoxedListItem, Label, Modal} from 'superdesk-ui-framework/react';
-import {showModal, Spacer} from '@sourcefabric/common';
+import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
+import {classnames, Spacer} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -9,10 +9,13 @@ import {superdesk} from '../superdesk';
 import {fetchParticipants, filterParticipants} from './participants';
 import {compareUsersByName, sortAvailabilityRecords} from './sort-availability-records';
 import {WithAvailabilityRecords} from './with-availability-records';
-import {AvailabilitySettings} from '../settings/availability-settings';
+import {showEditAvailabilityModal} from './show-edit-availability-modal';
+import {privileges} from '../constants';
+import {MaybeButton} from '../components/maybe-button';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
+const {hasPrivilege} = superdesk.privileges;
 const {getClass} = superdesk.utilities.CSS;
 
 interface IProps {
@@ -78,6 +81,8 @@ export class DayView extends React.PureComponent<IProps, IState> {
                         byUserByDateFiltered,
                     });
 
+                    const canManageAvailability = hasPrivilege(privileges.user_availability_manage);
+
                     return (
                         <BoxedList style={{padding: 'var(--space--2)'}}>
                             {participantsIds.map((participantId) => {
@@ -109,24 +114,34 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                         <Spacer gap="32" alignItems="center" justifyContent="space-between" noGrow>
                                             <div>
                                                 <Spacer gap="8" alignItems="center" justifyContent="start" noGrow>
-                                                    <UserAvatar userId={user._id} />
-
-                                                    <button
-                                                        className={getClass('username-day-view')}
-                                                        onClick={() => {
-                                                            showModal(({closeModal}) => (
-                                                                <Modal
-                                                                    visible
-                                                                    onHide={closeModal}
-                                                                    headerTemplate={user.display_name}
-                                                                >
-                                                                    <AvailabilitySettings user={user} />
-                                                                </Modal>
-                                                            ));
-                                                        }}
+                                                    <MaybeButton
+                                                        onClick={
+                                                            canManageAvailability ?
+                                                                () => showEditAvailabilityModal(user)
+                                                                : undefined
+                                                        }
                                                     >
-                                                        {user.display_name}
-                                                    </button>
+                                                        <UserAvatar userId={user._id} />
+                                                    </MaybeButton>
+
+                                                    <MaybeButton
+                                                        onClick={
+                                                            canManageAvailability ?
+                                                                () => showEditAvailabilityModal(user)
+                                                                : undefined
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={classnames(
+                                                                getClass('username-day-view'),
+                                                                {
+                                                                    [getClass('link')]: canManageAvailability,
+                                                                },
+                                                            )}
+                                                        >
+                                                            {user.display_name}
+                                                        </span>
+                                                    </MaybeButton>
 
                                                     <span style={{color: 'var(--color-text-light)'}}>
                                                         @{user.sign_off}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {showModal, Spacer, SpacerBlock} from '@sourcefabric/common';
+import {classnames, Spacer, SpacerBlock} from '@sourcefabric/common';
 import {addDays} from 'date-fns';
 import {range} from 'lodash';
 import {
@@ -7,7 +7,6 @@ import {
     Text,
     WeeklyCalendarGrid,
     WeeklyCalendarGridItem,
-    Modal,
 } from 'superdesk-ui-framework/react';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
@@ -17,10 +16,13 @@ import {WeekViewHeaderDay} from './week-view-header-day';
 import {IUser} from 'superdesk-api';
 import {WithAvailabilityRecords} from './with-availability-records';
 import {fetchParticipants, filterParticipants} from './participants';
-import {AvailabilitySettings} from '../settings/availability-settings';
+import {showEditAvailabilityModal} from './show-edit-availability-modal';
+import {MaybeButton} from '../components/maybe-button';
+import {privileges} from '../constants';
 
 const {UserAvatar} = superdesk.components;
 const {assertNever} = superdesk.helpers;
+const {hasPrivilege} = superdesk.privileges;
 const {getClass} = superdesk.utilities.CSS;
 
 interface IProps {
@@ -83,30 +85,42 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                             })
                                 .map((userId) => {
                                     const user = users[userId];
+                                    const canManageAvailability = hasPrivilege(privileges.user_availability_manage);
 
                                     return (
                                         <React.Fragment key={user._id}>
                                             <WeeklyCalendarGridItem> {/** avatar cell */}
                                                 <CalendarWeekDayItem coloredBg={true}>
-                                                    <UserAvatar userId={user._id} />
+                                                    <MaybeButton
+                                                        onClick={
+                                                            canManageAvailability
+                                                                ? () => showEditAvailabilityModal(user)
+                                                                : undefined
+                                                        }
+                                                    >
+                                                        <UserAvatar userId={user._id} />
+                                                    </MaybeButton>
+
                                                     <SpacerBlock v gap="8" />
 
-                                                    <button
-                                                        className={getClass('username-weekly-view')}
-                                                        onClick={() => {
-                                                            showModal(({closeModal}) => (
-                                                                <Modal
-                                                                    visible
-                                                                    onHide={closeModal}
-                                                                    headerTemplate={user.display_name}
-                                                                >
-                                                                    <AvailabilitySettings user={user} />
-                                                                </Modal>
-                                                            ));
-                                                        }}
+                                                    <MaybeButton
+                                                        onClick={
+                                                            canManageAvailability
+                                                                ? () => showEditAvailabilityModal(user)
+                                                                : undefined
+                                                        }
                                                     >
-                                                        {user.display_name}
-                                                    </button>
+                                                        <span
+                                                            className={classnames(
+                                                                getClass('username-weekly-view'),
+                                                                {
+                                                                    [getClass('link')]: canManageAvailability,
+                                                                },
+                                                            )}
+                                                        >
+                                                            {user.display_name}
+                                                        </span>
+                                                    </MaybeButton>
 
                                                     <SpacerBlock v gap="4" />
                                                     <Text size="small" color="light" noMargin>
