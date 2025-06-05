@@ -47,7 +47,6 @@ test('can edit my profile', async ({page}) => {
     }
 
     await page.locator(s('action-bar', 'save')).click();
-    await page.locator(s('confirmation-modal')).getByRole('button', {name: 'Confirm'}).click();
 
     for (const value of values) {
         const field = await page.locator(s('user-details-form')).getByLabel(value.label);
