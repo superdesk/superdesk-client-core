@@ -3,7 +3,9 @@ import {showModal} from '@superdesk/common';
 import {Button, Modal, Spacer} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
-export function showConfirmationPrompt({title, message}: {title: string; message: string}): Promise<boolean> {
+export function showConfirmationPrompt(
+    {title, message}: {title: string; message: string;},
+): Promise<boolean> {
     return new Promise((resolve) => {
         showModal(({closeModal}) => (
             <Modal
@@ -14,6 +16,7 @@ export function showConfirmationPrompt({title, message}: {title: string; message
                     closeModal();
                     resolve(false);
                 }}
+                data-test-id="confirmation-modal"
                 headerTemplate={title}
                 footerTemplate={(
                     <Spacer h gap="4" justifyContent="end" noGrow>
