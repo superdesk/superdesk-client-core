@@ -17,6 +17,7 @@ export class Editor extends React.PureComponent<IProps> {
         return (
             <Container>
                 <DateTimePicker
+                    valueType="date"
                     dateFormat={appConfig.view.dateformat}
                     onChange={this.props.onChange}
                     value={this.props.value ?? null}
