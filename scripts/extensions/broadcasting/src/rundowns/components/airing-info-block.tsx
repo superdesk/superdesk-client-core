@@ -43,7 +43,7 @@ export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown>
                 <Form.FormItem>
                     <TimePicker
                         label={gettext('Air time')}
-                        value={fields.airtime_time ?? ''}
+                        value={fields.airtime_time ?? null}
                         onChange={(val) => {
                             this.props.onChange({
                                 ...fields,

@@ -106,7 +106,7 @@ test('setting embargo', async ({page}) => {
     await page.locator(s('authoring', 'open-send-publish-pane')).click();
 
     const embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
-    const embargoTime = '04:00';
+    const embargoTime = '4:00';
 
     await page.locator(
         s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),

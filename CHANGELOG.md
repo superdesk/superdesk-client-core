@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+
+## 2025-05
+
+Spellchecker configuration format was updated.
+`ISuperdeskGlobalConfig['spellchecking']` replaces `ISuperdeskGlobalConfig['spellchecker']`
+
 ## [2.4.3] 2022-10-19
 
 [Changes](https://github.com/superdesk/superdesk-client-core/milestone/105?closed=1)

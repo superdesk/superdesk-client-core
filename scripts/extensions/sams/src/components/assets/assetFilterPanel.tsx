@@ -353,7 +353,6 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         onChange={this.onChange.dateFrom}
                                         dateFormat={config.view.dateformat}
                                         locale={{type: 'full', payload: this.datePickerLocale}}
-
                                     />
                                 </FormItem>
                                 <FormItem>

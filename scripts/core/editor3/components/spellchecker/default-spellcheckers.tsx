@@ -41,13 +41,24 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
         });
 }
 
+export function getSpellcheckerConfig(): typeof appConfig.spellchecking.spellcheckersByLanguage {
+    return {
+        ...{
+            fr: {
+                spellcheckerId: 'grammalecte',
+            },
+            nl: {
+                spellcheckerId: 'leuven_dutch',
+            },
+        },
+        ...(appConfig.spellchecking?.spellcheckersByLanguage ?? {}),
+    } satisfies typeof appConfig.spellchecking.spellcheckersByLanguage;
+}
+
 export function getSpellchecker(language: string): ISpellchecker {
     const spellcheck = ng.get('spellcheck');
-    const spellcheckerName = ({
-        fr: 'grammalecte',
-        nl: 'leuven_dutch',
-        ...(appConfig.spellcheckers ?? {}),
-    })[language];
+    const spellcheckerName = getSpellcheckerConfig()[language]?.spellcheckerId ?? null;
+
     const ignore = spellcheck.getIgnoredWords();
 
     const actions: {[key: string]: ISpellcheckerAction} = {
