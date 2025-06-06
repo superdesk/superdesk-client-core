@@ -11,7 +11,7 @@ import {
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {formatDateIso, getLabelForStatus, getTextColorForStatus} from '../utils';
+import {formatDateIso, getDashboardLabelForStatus, getTextColorForStatus} from '../utils';
 import {WeekViewHeaderDay} from './week-view-header-day';
 import {IUser} from 'superdesk-api';
 import {WithAvailabilityRecords} from './with-availability-records';
@@ -182,7 +182,7 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                     coloredBg={true}
                 >
                     <Text size="small">
-                        {getLabelForStatus(item.status)}
+                        {getDashboardLabelForStatus(item.status)}
                     </Text>
 
                     <Spacer h gap="0" justifyContent="end" noWrap>
@@ -206,7 +206,7 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                             key={i}
                         >
                             <Text size="small">
-                                {getLabelForStatus(item.status)}
+                                {getDashboardLabelForStatus(item.status)}
                             </Text>
 
                             <Spacer key={i} gap="16" justifyContent="end" noWrap>

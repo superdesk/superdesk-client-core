@@ -12,7 +12,7 @@ import {WithAvailabilityRecords} from './with-availability-records';
 import {showEditAvailabilityModal} from './show-edit-availability-modal';
 import {privileges} from '../constants';
 import {MaybeButton} from '../components/maybe-button';
-import {getLabelForStatus, getTextColorForStatus} from '../utils';
+import {getDashboardLabelForStatus, getTextColorForStatus} from '../utils';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
@@ -179,7 +179,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                                             color: getTextColorForStatus(record.status),
                                                                         }}
                                                                     >
-                                                                        {getLabelForStatus(record.status)}
+                                                                        {getDashboardLabelForStatus(record.status)}
                                                                         {' '}
                                                                         {hours.start_time} - {hours.end_time}
                                                                     </span>
@@ -197,7 +197,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                             />
 
                                                             <span style={{color: getTextColorForStatus(record.status)}}>
-                                                                {getLabelForStatus(record.status)}
+                                                                {getDashboardLabelForStatus(record.status)}
                                                             </span>
                                                         </Spacer>
                                                     );

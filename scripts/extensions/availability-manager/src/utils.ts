@@ -63,6 +63,22 @@ export function getLabelForStatus(status: IAvailabilityRecord['status']) {
     }
 }
 
+/**
+ * In daily/weekly dashboard views status labels are different
+ */
+export function getDashboardLabelForStatus(status: IAvailabilityRecord['status']) {
+    switch (status) {
+        case 'available':
+            return gettext('Available all day');
+        case 'unavailable':
+            return gettext('Unavailable');
+        case 'partial':
+            return gettext('Available');
+        default:
+            return assertNever(status);
+    }
+}
+
 export function getStylesForStatusDot(status: IAvailabilityRecord['status']): React.CSSProperties {
     return {
         width: '1.6rem',
