@@ -70,7 +70,7 @@ const extension: IExtension = {
                     url: '/availability-management',
                     priority: 160,
                     component: CorrespondentAvailability,
-                    addToSideMenu: configuration.addPageToSideMenu,
+                    addToSideMenu: configuration?.dashboard?.addLinkToSideMenu ?? undefined,
                 });
             }
         }

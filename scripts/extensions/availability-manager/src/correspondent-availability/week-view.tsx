@@ -192,6 +192,7 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                             tags={item.working_hours?.[0]?.tags ?? []}
                             justifyContent="end"
                             status={item.status}
+                            origin="dashboard"
                         />
                     </Spacer>
                 </CalendarWeekDayItem>
@@ -210,7 +211,12 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                             </Text>
 
                             <Spacer key={i} gap="16" justifyContent="end" noWrap>
-                                <TagsPreview tags={hours.tags} justifyContent="start" status={item.status} />
+                                <TagsPreview
+                                    tags={hours.tags}
+                                    justifyContent="start"
+                                    status={item.status}
+                                    origin="dashboard"
+                                />
 
                                 <span
                                     style={{

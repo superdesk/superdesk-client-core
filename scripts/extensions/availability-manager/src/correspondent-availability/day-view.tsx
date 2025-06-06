@@ -171,6 +171,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                                         tags={hours.tags}
                                                                         justifyContent="end"
                                                                         status={record.status}
+                                                                        origin="dashboard"
                                                                     />
 
                                                                     <span
@@ -194,6 +195,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                                 tags={record.working_hours?.[0]?.tags ?? []}
                                                                 justifyContent="end"
                                                                 status={record.status}
+                                                                origin="dashboard"
                                                             />
 
                                                             <span style={{color: getTextColorForStatus(record.status)}}>
