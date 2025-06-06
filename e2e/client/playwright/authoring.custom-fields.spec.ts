@@ -12,7 +12,7 @@ async function expectFieldToBeVisibleInAuthoring(page: Page, field: string): Pro
     await expect(page.locator(s('authoring', `authoring-field=${field}`))).toBeVisible();
 }
 
-async function addFieldsToContentProfile(page: Page, fields: Array<{tabName: string; fieldId: string}>): Promise<void> {
+async function addFieldsToContentProfile(page: Page, fields: Array<{tabName: string; fieldId: string, fieldType?: string}>): Promise<void> {
     const contentProfileSettings = new ContentProfileSettings(page);
 
     await page.goto('/#/settings/content-profiles');
