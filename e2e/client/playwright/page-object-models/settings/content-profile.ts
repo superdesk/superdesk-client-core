@@ -45,7 +45,7 @@ export class ContentProfileSettings {
 
     async addFieldsToContentProfile(
         contentProfile: string,
-        fields: Array<{tabName: string; fieldId: string}>,
+        fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
     ): Promise<void> {
         await this.page.locator(s(`content-profile=${contentProfile}`, 'content-profile-actions')).click();
         await this.page.locator(s('content-profile-actions--options')).getByRole('button', {name: 'Edit'}).click();
@@ -57,7 +57,13 @@ export class ContentProfileSettings {
             await this.page
                 .locator(s('content-profile-editing-modal'))
                 .getByRole('button', {name: 'Add new field'}).first().click();
-            await this.page.locator(s('tree-menu-popover')).getByRole('treeitem', {name: field.fieldId}).click();
+            await this.page
+                .locator(s('tree-menu-popover'))
+                .getByRole(
+                    'treeitem',
+                    {name: field.fieldType ? `${field.fieldId} (${field.fieldType})` : field.fieldId, exact: true},
+                )
+                .click();
 
             await this.page.locator(s('item-view-edit', 'gform-input--sdWidth')).selectOption('full');
             await this.page.locator(s('item-view-edit')).getByRole('button', {name: 'apply'}).click();
