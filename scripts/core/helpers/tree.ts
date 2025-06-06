@@ -66,6 +66,22 @@ export function treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T> {
     return items;
 }
 
+export function getTreeLeafs<T>(tree: Array<ITreeNode<T>>): Array<ITreeNode<T>> {
+    const leafs: Array<ITreeNode<T>> = [];
+
+    for (const node of tree) {
+        const children = (node.children ?? []);
+
+        if (children.length > 0) {
+            leafs.push(...getTreeLeafs(children));
+        } else {
+            leafs.push(node);
+        }
+    }
+
+    return leafs;
+}
+
 export function buildTreeDictionary<T>(
     tree: Array<ITreeNode<T>>,
     getId: (node: ITreeNode<T>) => string,
