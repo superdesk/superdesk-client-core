@@ -18,6 +18,8 @@ export class Editor extends React.PureComponent<IProps> {
             <Container>
                 <DateTimePicker
                     valueType="date"
+                    labelHidden
+                    inlineLabel
                     dateFormat={appConfig.view.dateformat}
                     onChange={this.props.onChange}
                     value={this.props.value ?? null}
