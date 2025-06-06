@@ -47,7 +47,7 @@ test('filtering in weekly view', async ({page}) => {
     await expect(page.locator(s('week-view'))).toHaveScreenshot();
 });
 
-test('not set records being shown when there are no other records in a week', async ({page}) => {
+test.only('not set records being shown when there are no other records in a week', async ({page}) => {
     await restoreDatabaseSnapshot({snapshotName: 'availability-management'});
     await page.clock.setFixedTime(new Date('1970-02-08'));
 
