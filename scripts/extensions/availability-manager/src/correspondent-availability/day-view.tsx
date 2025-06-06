@@ -12,6 +12,7 @@ import {WithAvailabilityRecords} from './with-availability-records';
 import {showEditAvailabilityModal} from './show-edit-availability-modal';
 import {privileges} from '../constants';
 import {MaybeButton} from '../components/maybe-button';
+import {getLabelForStatus, getTextColorForStatus} from '../utils';
 
 const {assertNever} = superdesk.helpers;
 const {UserAvatar} = superdesk.components;
@@ -108,7 +109,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                     return assertNever(record);
                                             }
                                         })()}
-                                        coloredBg={record != null && record.status !== 'available'}
+                                        coloredBg={record != null}
                                         density="compact"
                                     >
                                         <Spacer gap="32" alignItems="center" justifyContent="space-between" noGrow>
@@ -169,14 +170,17 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                                     <TagsPreview
                                                                         tags={hours.tags}
                                                                         justifyContent="end"
+                                                                        status={record.status}
                                                                     />
 
                                                                     <span
                                                                         style={{
                                                                             whiteSpace: 'nowrap',
-                                                                            color: 'var(--color-text-light)',
+                                                                            color: getTextColorForStatus(record.status),
                                                                         }}
                                                                     >
+                                                                        {getLabelForStatus(record.status)}
+                                                                        {' '}
                                                                         {hours.start_time} - {hours.end_time}
                                                                     </span>
                                                                 </Spacer>
@@ -185,12 +189,16 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                     );
                                                 } else {
                                                     return (
-                                                        <Spacer h gap="0" justifyContent="end" noWrap>
-                                                            <span />
+                                                        <Spacer h gap="16" justifyContent="end" noWrap>
                                                             <TagsPreview
                                                                 tags={record.working_hours?.[0]?.tags ?? []}
                                                                 justifyContent="end"
+                                                                status={record.status}
                                                             />
+
+                                                            <span style={{color: getTextColorForStatus(record.status)}}>
+                                                                {getLabelForStatus(record.status)}
+                                                            </span>
                                                         </Spacer>
                                                     );
                                                 }

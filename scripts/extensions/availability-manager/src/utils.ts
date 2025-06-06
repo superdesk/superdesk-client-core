@@ -38,6 +38,18 @@ export function getStatusColor(status: IAvailabilityRecord['status']) {
     }
 }
 
+export function getTextColorForStatus(status: IAvailabilityRecord['status']) {
+    if (status === 'available') {
+        return 'var(--sd-colour-success--text)';
+    } else if (status === 'unavailable') {
+        return 'var(--sd-colour-alert--text)';
+    } else if (status === 'partial') {
+        return 'var(--sd-colour-warning--text)';
+    } else {
+        return assertNever(status);
+    }
+}
+
 export function getLabelForStatus(status: IAvailabilityRecord['status']) {
     switch (status) {
         case 'available':

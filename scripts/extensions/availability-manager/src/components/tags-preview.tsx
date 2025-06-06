@@ -4,12 +4,15 @@ import {TAGS_VOCABULARY_ID} from '../constants';
 import {superdesk} from '../superdesk';
 import {Label} from 'superdesk-ui-framework/react';
 import {IPropsSpacer, Spacer} from '@sourcefabric/common';
+import {IAvailabilityRecord} from '../interfaces';
 
 const {getVocabularyItemNameTranslated} = superdesk.entities.vocabulary;
+const {assertNever} = superdesk.helpers;
 
 interface IProps {
     tags?: Array<{code: string}>;
     justifyContent?: IPropsSpacer['justifyContent']; // defaults to start
+    status: IAvailabilityRecord['status'];
 }
 
 export function TagsPreview(props: IProps) {
@@ -51,6 +54,18 @@ export function TagsPreview(props: IProps) {
                         }
                         size="small"
                         data-test-id="tag"
+                        type={(() => {
+                            switch (props.status) {
+                                case 'available':
+                                    return 'success';
+                                case 'partial':
+                                    return 'warning';
+                                case 'unavailable':
+                                    return 'alert';
+                                default:
+                                    return assertNever(props.status);
+                            }
+                        })()}
                     />
                 );
             })}
