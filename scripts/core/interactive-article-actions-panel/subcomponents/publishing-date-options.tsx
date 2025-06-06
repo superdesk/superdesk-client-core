@@ -6,6 +6,7 @@ import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
+import {isValid} from 'date-fns';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -87,11 +88,15 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             valueType="date"
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
-                                this.props.onChange({
-                                    embargo: val,
-                                    timeZone: timeZone ?? appConfig.default_timezone,
-                                    publishSchedule: publishSchedule,
-                                });
+                                const isValidDate = isValid(val);
+
+                                if (isValidDate) {
+                                    this.props.onChange({
+                                        embargo: val,
+                                        timeZone: timeZone ?? appConfig.default_timezone,
+                                        publishSchedule: publishSchedule,
+                                    });
+                                }
                             }}
                             data-test-id="embargo"
                         />
@@ -105,11 +110,15 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             valueType="date"
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
-                                this.props.onChange({
-                                    publishSchedule: val,
-                                    timeZone: timeZone ?? appConfig.default_timezone,
-                                    embargo: embargo,
-                                });
+                                const isValidDate = isValid(val);
+
+                                if (isValidDate) {
+                                    this.props.onChange({
+                                        publishSchedule: val,
+                                        timeZone: timeZone ?? appConfig.default_timezone,
+                                        embargo: embargo,
+                                    });
+                                }
                             }}
                             data-test-id="publish-schedule"
                         />
