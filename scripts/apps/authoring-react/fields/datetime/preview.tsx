@@ -1,3 +1,4 @@
+import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {noop} from 'lodash';
 import React from 'react';
@@ -11,7 +12,7 @@ export class Preview extends React.PureComponent<IProps> {
         return (
             <DateTimePicker
                 valueType="date"
-                dateFormat="MM/DD/YYYY"
+                dateFormat={appConfig.view.dateformat}
                 label={gettext('Date time (AUTHORING-REACT)')}
                 onChange={noop}
                 preview={true}

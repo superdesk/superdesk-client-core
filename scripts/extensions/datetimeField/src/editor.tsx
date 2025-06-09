@@ -50,7 +50,6 @@ export class Editor extends React.PureComponent<IProps> {
 
             // Get the DatePicker locale using the language of this item
             const language = this.props.language ?? superdesk.instance.config.default_language;
-            const datePickerLocale = getLocaleForDatePicker(language);
 
             return (
                 <Container>
@@ -64,7 +63,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 inlineLabel
                                 label={gettext('Date')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
-                                locale={{type: 'full', payload: datePickerLocale}}
+                                locale={{type: 'full', payload: getLocaleForDatePicker(language)}}
                                 value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {

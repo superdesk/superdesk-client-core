@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot, s, sleep} from './utils';
+import {restoreDatabaseSnapshot, s} from './utils';
 
 test('can correct published item', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -33,5 +33,5 @@ test('can correct published item', async ({page}) => {
     ).toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible();
 });

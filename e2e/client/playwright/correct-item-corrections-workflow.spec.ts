@@ -64,5 +64,5 @@ test('can correct published item using corrections workflow', async ({page}) => 
     ).not.toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=Story 5.1'))).toBeVisible();
 });

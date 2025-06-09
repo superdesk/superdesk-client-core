@@ -24,6 +24,8 @@ declare module 'superdesk-api' {
 
     export type ICallable = (...args: Array<any>) => any;
 
+    export type Dictionary<K, V> = {[key: string]: V};
+
     // FORMATS
 
 
@@ -920,6 +922,12 @@ declare module 'superdesk-api' {
              * Sections for editing user profile.
              */
             getUserProfileSections?: (user: IUser) => Array<IUserProfileSection>;
+
+
+            /**
+             * Use it to warn instance administrators about missing/incorrect configuration
+             */
+            getInstanceConfigurationIssues?(): Promise<Array<{message: string}>>;
 
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
@@ -2317,6 +2325,23 @@ declare module 'superdesk-api' {
         disabled?: boolean;
     }
 
+    export interface IPropsVocabularySelect {
+        label: {
+            text: string;
+            hidden?: boolean;
+            position?: 'top' | 'left'; // defaults to top
+        },
+        getOptions(): Array<IVocabularyItem>;
+        value: Array<IVocabularyItem['qcode']>;
+        onChange(value: Array<IVocabularyItem['qcode']>): void;
+        multiple?: boolean; // defaults to false
+        selectBranchWithChildren?: boolean;
+        disabled?: boolean;
+        fullWidth: boolean;
+        inputWrapper?: React.ComponentProps<typeof import('superdesk-ui-framework').InputWrapper>['inputWrapper'];
+        'data-test-id'?: string;
+    }
+
     export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -2422,10 +2447,12 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
+    type ILiveQueryChildrenOptions<T> = {loading: true} | {loading: false; data: IRestApiResponse<T>};
+
     export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
         resource: string;
         query: ISuperdeskQuery;
-        children: (result: IRestApiResponse<T>) => React.ReactNode;
+        children: (options: ILiveQueryChildrenOptions<T>) => React.ReactNode;
     }
 
     export interface ILiveResourcesProps {
@@ -3115,6 +3142,11 @@ declare module 'superdesk-api' {
                 getCustomFieldVocabularies(): Array<IVocabulary>;
                 getLanguageVocabulary(): IVocabulary;
                 isCustomVocabulary(vocabulary: IVocabulary): boolean;
+
+                /**
+                 * If language is not passed, it will default to user interface language
+                 */
+                getVocabularyItemNameTranslated(item: IVocabularyItem, language?: string): string;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -3124,7 +3156,7 @@ declare module 'superdesk-api' {
             };
             attachment: IAttachmentsApi;
             users: {
-                getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+                getAllUsers(): {[id: IUser['_id']]: IUser};
             };
             templates: {
                 getUserTemplates(
@@ -3179,6 +3211,7 @@ declare module 'superdesk-api' {
             prepareSuperdeskQuery(endpoint: string, query: ISuperdeskQuery): IHttpRequestOptionsLocal & {method: 'GET'};
         },
         components: {
+            VocabularySelect: React.ComponentType<IPropsVocabularySelect>;
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
@@ -3284,6 +3317,10 @@ declare module 'superdesk-api' {
                 relativeDuration?: number, // = 1
                 relativeUnit?: string, // = 'days'
             ): string;
+            locale: {
+                code: string;
+                firstDayOfWeek: number; // 0 - sunday
+            };
         };
         privileges: {
             getOwnPrivileges(): Promise<IUserPrivileges>;
@@ -3372,6 +3409,23 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+            getTreeParents<T>(nodes: Array<ITreeNode<T>>): Array<ITreeNode<T>>;
+            filterFlatTree<T>(
+                options: {
+                    itemsFlat: Array<T>;
+                    filterFn: (item: T) => boolean;
+                    getId: (item: T) => string;
+                    getParentId: (item: T) => string | undefined | null;
+                    includeParents: boolean;
+                },
+            ): Array<T>;
+
+            buildTreeDictionary<T>(
+                tree: Array<ITreeNode<T>>,
+                getId: (node: ITreeNode<T>) => string,
+            ): Dictionary<string, ITreeNode<T>>;
+
+            getTreeLeafs<T>(tree: Array<ITreeNode<T>>): Array<ITreeNode<T>>;
 
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
@@ -3380,6 +3434,8 @@ declare module 'superdesk-api' {
             getTextColor(
                 background: string, // HEX color
             ): 'black' | 'white';
+
+            omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Omit<T, keyof IBaseRestApiResponse>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

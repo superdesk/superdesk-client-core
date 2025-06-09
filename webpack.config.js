@@ -126,13 +126,13 @@ module.exports = function makeConfig(grunt) {
 
                 'superdesk-ui-framework': uiFrameworkPath,
             },
-            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx'],
         },
 
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx)$/,
+                    test: /\.(ts|tsx|js|jsx|mjs)$/,
                     exclude: function(absolutePath) {
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {

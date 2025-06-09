@@ -1,6 +1,6 @@
 import {OrderedMap} from 'immutable';
 import {once} from 'lodash';
-import {IContentProfile, ISuperdeskQuery} from 'superdesk-api';
+import {IContentProfile, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {DataProvider} from 'core/helpers/data-provider';
 import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 
@@ -9,6 +9,7 @@ import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
  */
 class DataStore {
     public contentProfiles: OrderedMap<IContentProfile['_id'], IContentProfile>;
+    public users: OrderedMap<IUser['_id'], IUser>;
 
     constructor() {
         this.contentProfiles = OrderedMap();
@@ -49,8 +50,44 @@ class DataStore {
         });
     }
 
+    private loadUsers(): Promise<void> {
+        return new Promise((resolve) => {
+            const resolveOnce = once(resolve);
+            const sortKey: keyof IUser = 'display_name';
+
+            const query: ISuperdeskQuery = {
+                filter: {},
+                page: 1,
+                max_results: 500,
+                sort: [{[sortKey]: 'asc'}],
+            };
+
+            new DataProvider<IUser>(
+                () => {
+                    const {path, urlParams} = prepareSuperdeskQuery('users', query);
+
+                    return {
+                        method: 'GET',
+                        endpoint: path,
+                        params: urlParams,
+                    };
+                },
+                (response) => {
+                    this.users = OrderedMap();
+
+                    for (const item of response._items) {
+                        this.users = this.users.set(item._id, item);
+                    }
+
+                    resolveOnce();
+                },
+                {'users': true},
+            );
+        });
+    }
+
     initialize() {
-        return this.loadContentProfiles();
+        return Promise.all([this.loadContentProfiles(), this.loadUsers()]);
     }
 }
 

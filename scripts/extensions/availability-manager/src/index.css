@@ -1,0 +1,14 @@
+.username-day-view {
+    padding: 0;
+    font-weight: bold;
+    color: var(--sd-colour-interactive--darken-20);
+}
+
+.username-weekly-view {
+    padding: 0;
+    font-size: 1.6rem;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

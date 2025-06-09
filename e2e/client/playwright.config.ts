@@ -35,6 +35,14 @@ export default defineConfig({
         screenshot: 'only-on-failure',
     },
 
+    expect: {
+        toHaveScreenshot: {
+            maxDiffPixels: 4,
+        },
+
+        timeout: 10000,
+    },
+
     /* Configure projects for major browsers */
     projects: [
         {

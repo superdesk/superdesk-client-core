@@ -21,11 +21,11 @@ test.skip('item appearing in publish queue after publishing', async ({page}) => 
 
     await expect(page.locator(
         s('monitoring-group=Sports', 'article-item=test sports story'),
-    )).toBeAttached({timeout: 10000});
+    )).toBeAttached();
 
     await page.goto('/#/publish_queue');
 
-    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeAttached({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeAttached();
 });
 
 test('item appearing in publish queue after publishing with subscriber', async ({page}) => {
@@ -47,7 +47,7 @@ test('item appearing in publish queue after publishing with subscriber', async (
     )).toBeVisible();
 
     await page.goto('/#/publish_queue');
-    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeVisible({timeout: 10000});
+    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeVisible();
 
     await page.locator(s('publish-queue-item=test sports story')).click();
 

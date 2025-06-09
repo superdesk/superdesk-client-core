@@ -34,7 +34,7 @@ export class Authoring {
             await new TreeSelectDriver(
                 page,
                 page.locator(s('target-subscribers')),
-            ).setValue(options.subscribers);
+            ).setValues(options.subscribers);
         }
 
         await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
@@ -54,7 +54,7 @@ export class Authoring {
         await new TreeSelectDriver(
             page,
             page.locator(s('destination-select')),
-        ).setValue(destination.desk);
+        ).setValues(destination.desk);
 
         // select stage
         await page

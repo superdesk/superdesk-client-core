@@ -17,7 +17,7 @@ test('switching system language', async ({page}) => {
     await page.getByRole('dialog').getByRole('button', {name: 'Confirm'}).click();
 
     // timeout needed due to page reload
-    await expect(page.locator(s('page-title'))).toHaveText('Mein Profil', {timeout: 10000});
+    await expect(page.locator(s('page-title'))).toHaveText('Mein Profil');
 });
 
 test('can edit my profile', async ({page}) => {

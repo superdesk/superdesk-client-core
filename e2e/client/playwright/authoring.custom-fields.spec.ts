@@ -1,9 +1,9 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
+async function expectFieldToBeVisibleInAuthoring(page: Page, field: string): Promise<void> {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -12,11 +12,14 @@ async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
     await expect(page.locator(s('authoring', `authoring-field=${field}`))).toBeVisible();
 }
 
-async function addFieldsToContentProfile(page, field): Promise<void> {
+async function addFieldsToContentProfile(
+    page: Page,
+    fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
+): Promise<void> {
     const contentProfileSettings = new ContentProfileSettings(page);
 
     await page.goto('/#/settings/content-profiles');
-    await contentProfileSettings.addFieldsToContentProfile('Story', field);
+    await contentProfileSettings.addFieldsToContentProfile('Story', fields);
 }
 
 test('creating a custom text field', async ({page}) => {
