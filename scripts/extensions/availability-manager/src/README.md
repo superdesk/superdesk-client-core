@@ -7,6 +7,14 @@ newsroom managers to see combined availability calendar of all correspondents by
 
 Correspondents can set availability as available all day, unavailable all day or partially available for certain time ranges.
 
+# Terminology
+
+The feature is composed of 2 major parts - settings and dashboard.
+
+Settings part is available to all users where they can set their individual availability.
+
+Dashboard is where admins or other users with a privilege can see availability of all users.
+
 # Technical details on filtering
 
 As mentioned above there are 3 availability statuses - available, unavailable and partially available. It is also possible

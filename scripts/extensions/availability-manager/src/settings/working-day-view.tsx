@@ -101,7 +101,11 @@ export class WorkingDayView extends React.PureComponent<IProps> {
 
                             if (day.status !== 'partial') {
                                 return (
-                                    <TagsPreview tags={(day.working_hours ?? [])[0]?.tags} />
+                                    <TagsPreview
+                                        tags={(day.working_hours ?? [])[0]?.tags}
+                                        status={day.status}
+                                        origin="settings"
+                                    />
                                 );
                             } else {
                                 return (
@@ -127,7 +131,7 @@ export class WorkingDayView extends React.PureComponent<IProps> {
                                                         </div>
                                                     </Spacer>
 
-                                                    <TagsPreview tags={tags} />
+                                                    <TagsPreview tags={tags} status={day.status} origin="settings" />
                                                 </Spacer>
                                             );
                                         })}

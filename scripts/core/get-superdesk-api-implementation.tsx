@@ -84,7 +84,14 @@ import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
-import {arrayToTree, buildTreeDictionary, filterFlatTree, getTreeParents, treeToArray} from './helpers/tree';
+import {
+    arrayToTree,
+    buildTreeDictionary,
+    filterFlatTree,
+    getTreeLeafs,
+    getTreeParents,
+    treeToArray,
+} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {patchArticle} from 'api/article-patch';
@@ -569,6 +576,7 @@ export function getSuperdeskApiImplementation(
             querySelectorParent,
             arrayToTree,
             getTreeParents,
+            getTreeLeafs,
             treeToArray,
             filterFlatTree,
             buildTreeDictionary,

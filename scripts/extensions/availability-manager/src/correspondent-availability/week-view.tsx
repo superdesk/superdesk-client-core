@@ -11,7 +11,7 @@ import {
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {formatDateIso, getLabelForStatus} from '../utils';
+import {formatDateIso, getDashboardLabelForStatus, getTextColorForStatus} from '../utils';
 import {WeekViewHeaderDay} from './week-view-header-day';
 import {IUser} from 'superdesk-api';
 import {WithAvailabilityRecords} from './with-availability-records';
@@ -182,7 +182,7 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                     coloredBg={true}
                 >
                     <Text size="small">
-                        {getLabelForStatus(item.status)}
+                        {getDashboardLabelForStatus(item.status)}
                     </Text>
 
                     <Spacer h gap="0" justifyContent="end" noWrap>
@@ -191,6 +191,8 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                         <TagsPreview
                             tags={item.working_hours?.[0]?.tags ?? []}
                             justifyContent="end"
+                            status={item.status}
+                            origin="dashboard"
                         />
                     </Spacer>
                 </CalendarWeekDayItem>
@@ -204,13 +206,22 @@ const Weekday: React.FunctionComponent<{item: IAvailabilityRecord}> = ({item}) =
                             coloredBg={true}
                             key={i}
                         >
+                            <Text size="small">
+                                {getDashboardLabelForStatus(item.status)}
+                            </Text>
+
                             <Spacer key={i} gap="16" justifyContent="end" noWrap>
-                                <TagsPreview tags={hours.tags} justifyContent="start" />
+                                <TagsPreview
+                                    tags={hours.tags}
+                                    justifyContent="start"
+                                    status={item.status}
+                                    origin="dashboard"
+                                />
 
                                 <span
                                     style={{
                                         whiteSpace: 'nowrap',
-                                        color: 'var(--color-text-light)',
+                                        color: getTextColorForStatus(item.status),
                                     }}
                                 >
                                     {hours.start_time} - {hours.end_time}

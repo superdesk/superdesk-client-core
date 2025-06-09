@@ -3426,6 +3426,8 @@ declare module 'superdesk-api' {
                 getId: (node: ITreeNode<T>) => string,
             ): Dictionary<string, ITreeNode<T>>;
 
+            getTreeLeafs<T>(tree: Array<ITreeNode<T>>): Array<ITreeNode<T>>;
+
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
             isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
