@@ -268,7 +268,7 @@ describe('search', () => {
 
     it('can search scheduled', () => {
         globalSearch.waitForItemCount(16);
-        globalSearch.actionOnItem('Edit', 'item9');
+        globalSearch.actionOnItem('Edit', 'item9', true);
         authoring.schedule(false);
 
         browser.wait(ECE.stalenessOf(el(['notification--success'])));
