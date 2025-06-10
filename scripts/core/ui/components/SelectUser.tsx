@@ -43,6 +43,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
             options = options.filter((user) => deskMembers.some((member) => member._id === user._id));
         }
 
+        const ValueTemplateComponent = this.props.valueTemplate;
+
         return (
             <TreeSelect
                 kind="synchronous"
@@ -73,7 +75,11 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 )}
                 valueTemplate={(user, Wrapper) => (
                     this.props.valueTemplate != null
-                        ? this.props.valueTemplate(user, Wrapper)
+                        ? (
+                            <Wrapper>
+                                <ValueTemplateComponent option={user} />
+                            </Wrapper>
+                        )
                         : (
                             <Wrapper>
                                 <Spacer h gap="8" justifyContent="start" noGrow>
