@@ -198,7 +198,12 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                                 origin="dashboard"
                                                             />
 
-                                                            <span style={{color: getTextColorForStatus(record.status)}}>
+                                                            <span
+                                                                style={{
+                                                                    color: getTextColorForStatus(record.status),
+                                                                    whiteSpace: 'nowrap',
+                                                                }}
+                                                            >
                                                                 {getDashboardLabelForStatus(record.status)}
                                                             </span>
                                                         </Spacer>
