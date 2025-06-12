@@ -65,12 +65,16 @@ const extension: IExtension = {
                     contributions.pages = [];
                 }
 
+                const addToSideMenu = configuration?.dashboard?.addLinkToSideMenu ?? undefined;
+
                 contributions.pages.push({
                     title: gettext('Availability Management'),
                     url: '/availability-management',
                     priority: 160,
                     component: CorrespondentAvailability,
-                    addToSideMenu: configuration?.dashboard?.addLinkToSideMenu ?? undefined,
+                    addToSideMenu: addToSideMenu,
+                    addToMainMenu: addToSideMenu == null,
+                    showSideMenu: true,
                 });
             }
         }
