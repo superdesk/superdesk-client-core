@@ -131,6 +131,16 @@ body {
     background-color: $sd-background;
 }
 
+/**
+    Prevent top nav from rendering on top of an extension page.
+    Only needed when sidebar is shown (flags.workspace is true)
+*/
+#workspace-container > sd-extension-page {
+    display: block;
+    padding-block-start: $nav-height;
+    height: 100%;
+}
+
 #authoring-container {
     position: absolute;
     inset-block-start: 0;
