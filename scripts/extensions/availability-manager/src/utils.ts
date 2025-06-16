@@ -1,4 +1,5 @@
-import {formatTime, mergeSets} from '@sourcefabric/common';
+import {formatTime, mergeSets, omit} from '@sourcefabric/common';
+import type {OmitStrict} from '@sourcefabric/common';
 import {format} from 'date-fns';
 import {IBaseRestApiResponse, IVocabularyItem} from 'superdesk-api';
 import {TAGS_VOCABULARY_ID} from './constants';
@@ -172,8 +173,7 @@ export function setUserAvailability(
     currentAvailability: IDefaultAvailability | null,
     patch: Partial<IDefaultAvailability>,
 ): Promise<IDefaultAvailability> {
-    const initialDefaultAvailability: Omit<IDefaultAvailability, keyof IBaseRestApiResponse> = {
-        user: userId,
+    const initialDefaultAvailability: OmitStrict<IDefaultAvailability, 'user' | keyof IBaseRestApiResponse> = {
         working_days: {},
         language: [],
         tags: [],
@@ -184,10 +184,11 @@ export function setUserAvailability(
         method: 'PUT',
         path: `/default_user_availability/${userId}`,
         payload: {
+            // "user" property needs to be omitted because it's already in the path
             ...(
                 currentAvailability == null
                     ? initialDefaultAvailability
-                    : omitBaseApiResponse(currentAvailability)
+                    : omit(omitBaseApiResponse(currentAvailability), 'user')
             ),
             ...patch,
         } satisfies Partial<IDefaultAvailability>,
