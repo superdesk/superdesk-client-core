@@ -132,7 +132,7 @@ module.exports = function makeConfig(grunt) {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx|mjs)$/,
+                    test: /\.(ts|tsx|js|jsx)$/,
                     exclude: function(absolutePath) {
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
