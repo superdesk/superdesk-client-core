@@ -295,7 +295,7 @@ export class AvailabilitySettings extends React.PureComponent<IProps, IState> {
                                         justifyContent="space-between"
                                         style={{paddingBlock: verticalSpacing}}
                                     >
-                                        <Spacer h gap="0" noGrow>
+                                        <Spacer h gap="0" noGrow data-test-id="toolbar">
                                             <IconButton
                                                 icon="chevron-left-thin"
                                                 ariaValue={gettext('Previous')}
