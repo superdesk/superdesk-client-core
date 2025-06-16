@@ -63,12 +63,14 @@ export function getSpellchecker(language: string): ISpellchecker {
 
     const actions: {[key: string]: ISpellcheckerAction} = {
         addToDictionary: {
+            icon: 'plus-sign',
             label: gettext('Add to dictionary'),
             perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
                 return _spellcheck.addWord(warning.text, false);
             }),
         },
         ignoreWord: {
+            icon: 'remove-sign',
             label: gettext('Ignore word'),
             perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
                 return _spellcheck.addWord(warning.text, true);

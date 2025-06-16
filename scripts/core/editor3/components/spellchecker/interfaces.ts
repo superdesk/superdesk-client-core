@@ -21,6 +21,7 @@ export interface ISpellcheckWarning {
 }
 
 export interface ISpellcheckerAction {
+    icon?: string;
     label: string;
     perform: (warning: ISpellcheckWarning) => Promise<void>;
 }
