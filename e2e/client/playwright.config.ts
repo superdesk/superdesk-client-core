@@ -50,6 +50,12 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: path.join(__dirname, './playwright/.auth/user.json'),
+
+                launchOptions: {
+                    args: [
+                        '--disable-font-subpixel-positioning',
+                    ],
+                },
             },
         },
 
