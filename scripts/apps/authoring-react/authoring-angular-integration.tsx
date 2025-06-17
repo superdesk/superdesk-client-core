@@ -645,7 +645,7 @@ function getInlineToolbarActions(
 
         case ITEM_STATE.SPIKED:
             return {
-                readOnly: false,
+                readOnly: true,
                 actions: [
                     {
                         group: 'end',
@@ -669,7 +669,7 @@ function getInlineToolbarActions(
 
         case ITEM_STATE.SCHEDULED:
             return {
-                readOnly: false,
+                readOnly: true,
                 actions: [
                     {
                         group: 'end',

@@ -8,6 +8,7 @@ const elasticEndpoints = [
     '/rundown_items',
     '/events',
     '/planning',
+    '/assignments',
 ];
 
 export function prepareSuperdeskQuery(

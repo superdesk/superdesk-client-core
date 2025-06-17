@@ -561,7 +561,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
      * check if tansa is activated
      */
     function useTansaProofing() {
-        return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
+        return appConfig.features?.useTansaProofing === true;
     }
 
     function dispatchAbbreviation(abbreviation) {
