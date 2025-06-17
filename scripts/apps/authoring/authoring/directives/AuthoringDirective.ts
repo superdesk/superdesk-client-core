@@ -704,8 +704,8 @@ export function AuthoringDirective(
                 $scope.sending = true;
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
-                        .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () => // cancel
-                            $q.reject());
+                        .then(() => $scope.save())
+                        .catch(() => $q.reject());
                 }
 
                 return lock.unlock($scope.origItem)
