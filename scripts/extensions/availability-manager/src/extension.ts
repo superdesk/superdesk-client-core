@@ -74,7 +74,7 @@ const extension: IExtension = {
                     component: CorrespondentAvailability,
                     addToSideMenu: addToSideMenu,
                     addToMainMenu: addToSideMenu == null,
-                    showSideMenu: true,
+                    showSideMenu: addToSideMenu != null,
                 });
             }
         }
