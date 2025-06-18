@@ -169,13 +169,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         const rundownsListVisible = rundownAction?.fullWidth !== true && !rundownItemOpen;
 
         return (
-            <div
-                style={{
-                    marginBlockStart: 'var(--top-navigation-height)',
-                    width: '100%',
-                    height: 'calc(100% - var(--top-navigation-height))',
-                }}
-            >
+            <div style={{width: '100%', height: '100%'}}>
                 <div
                     className={classnames(
                         'sd-content sd-content-wrapper',
