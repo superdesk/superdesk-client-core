@@ -31,7 +31,7 @@ test('fetching an article to selected desk', async ({page}) => {
     await new TreeSelectDriver(
         page,
         page.locator(s('destination-select')),
-    ).setValue('Education');
+    ).setValues('Education');
 
     // select stage
     await page

@@ -3,10 +3,8 @@ import {
     ISuperdesk,
     IExtensions,
     IArticle,
-    IContentProfile,
     IEvents,
     IStage,
-    IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
     IOpenSideWidget,
@@ -19,6 +17,8 @@ import {
     stripLockingFields,
     getProjectedFieldsArticle,
     getArticleLabel,
+    getVocabularyItemNameTranslated,
+    omitBaseApiResponse,
 } from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -70,7 +70,7 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
-import {appConfig, authoringReactViewEnabled} from 'appConfig';
+import {appConfig, authoringReactViewEnabled, getUserInterfaceLanguage} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -84,7 +84,14 @@ import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
-import {arrayToTree, treeToArray} from './helpers/tree';
+import {
+    arrayToTree,
+    buildTreeDictionary,
+    filterFlatTree,
+    getTreeLeafs,
+    getTreeParents,
+    treeToArray,
+} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {patchArticle} from 'api/article-patch';
@@ -120,6 +127,8 @@ import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 import {showPopup} from 'superdesk-ui-framework/react';
 import {ui} from './ui-utils';
+import {VocabularySelect} from './ui/components/vocabulary-select';
+import {dataStore} from 'data-store';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -360,19 +369,11 @@ export function getSuperdeskApiImplementation(
                 getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
                 getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
                 isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
+                getVocabularyItemNameTranslated: getVocabularyItemNameTranslated,
             },
             attachment: attachmentsApi,
             users: {
-                getUsersByIds: (ids) => (
-                    dataApi.query<IUser>(
-                        'users',
-                        1,
-                        {field: 'display_name', direction: 'ascending'},
-                        {_id: {$in: ids}},
-                        200,
-                    )
-                        .then((response) => response._items)
-                ),
+                getAllUsers: () => dataStore.users.toJS(),
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,
@@ -427,6 +428,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         components: {
+            VocabularySelect,
             UserHtmlSingleLine,
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
@@ -518,6 +520,10 @@ export function getSuperdeskApiImplementation(
                 }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
+            locale: {
+                code: getUserInterfaceLanguage().replace('_', '-'),
+                firstDayOfWeek: appConfig.startingDay,
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
@@ -569,10 +575,15 @@ export function getSuperdeskApiImplementation(
             throttleAndCombineArray,
             querySelectorParent,
             arrayToTree,
+            getTreeParents,
+            getTreeLeafs,
             treeToArray,
+            filterFlatTree,
+            buildTreeDictionary,
             isLockedInOtherSession,
             isLockedInCurrentSession,
             getTextColor,
+            omitBaseApiResponse,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

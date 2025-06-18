@@ -144,6 +144,15 @@
             <span class="btn__text--short" translate>K</span>
       </button>
 
+      <button
+        ng-if="item.state === 'spiked'"
+        class="btn btn--primary"
+        ng-click="openAction('unspike')"
+      >
+            <span class="btn__text" translate>Unspike</span>
+            <span class="btn__text--short" translate>Unspike</span>
+      </button>
+
         <button class="btn btn--hollow"
                 id="closeAuthoringBtn"
                 ng-click="close()"

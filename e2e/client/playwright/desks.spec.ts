@@ -33,7 +33,7 @@ test('desk notifications', async ({page}) => {
         page.locator(
             s('monitoring-group=Sports / Incoming Stage', 'desk-notifications'),
         ),
-    ).toContainText('1', {timeout: 10000});
+    ).toContainText('1');
 });
 
 test('can mark/unmark for desk', async ({page}) => {

@@ -814,6 +814,10 @@ export function AuthoringDirective(
                     authoring.rewrite($scope.item);
                 } else if (action === 'unpublish') {
                     authoring.unpublish($scope.item);
+                } else if (action === 'unspike') {
+                    sdApi.article.doUnspike($scope.item, $scope.item.task.desk, $scope.item.task.stage).then(() => {
+                        $scope.close();
+                    });
                 }
             };
 

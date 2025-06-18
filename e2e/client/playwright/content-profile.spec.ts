@@ -45,5 +45,5 @@ test('content profile icon', async ({page}) => {
             'article-item=test sports story',
             'type-icon',
         )),
-    ).toHaveAttribute('data-test-value', 'map-marker', {timeout: 10000});
+    ).toHaveAttribute('data-test-value', 'map-marker');
 });

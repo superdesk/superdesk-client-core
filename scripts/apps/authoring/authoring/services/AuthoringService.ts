@@ -163,7 +163,7 @@ export function AuthoringService(
      * Open an item for editing
      *
      * @param {string} _id Item _id.
-     * @param {boolean} readOnly
+     * @param {boolean} readOnly - whether it should open in read-only mode.
      * @param {string} repo - repository where an item whose identifier is _id can be found.
      * @param {string} action - action performed to open the story: edit, correct or kill
      */
@@ -185,8 +185,8 @@ export function AuthoringService(
         }
 
         return api.find(endpoint, _id, {embedded: {lock_user: 1}})
-            .then(function _lock(item) {
-                if (readOnly) {
+            .then(function _lock(item: IArticle) {
+                if (readOnly || READONLY_STATES.includes(item.state)) {
                     item._locked = lock.isLockedInCurrentSession(item);
                     item._editable = false;
                     return $q.when(item);

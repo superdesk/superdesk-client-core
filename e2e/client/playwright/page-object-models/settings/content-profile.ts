@@ -28,7 +28,7 @@ export class ContentProfileSettings {
         await new TreeSelectDriver(
             this.page,
             this.page.locator(s('formatting-options-input')),
-        ).setValue(options.formattingOptionsToAdd);
+        ).setValues(options.formattingOptionsToAdd);
 
         // this is required for validation. TODO: update DB snapshot to make current items already valid
         await this.page.locator(s('generic-list-page', 'item-view-edit', 'gform-input--sdWidth')).selectOption('Full');

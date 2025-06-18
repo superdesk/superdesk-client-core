@@ -63,6 +63,11 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
                     });
                 });
             } else {
+                // update redux store to mark spellchecker as disabled
+                this.props.dispatch(setExternalOptions({
+                    spellchecking: getInitialSpellcheckerData(null, language),
+                }));
+
                 this.setState({loading: false});
             }
         });

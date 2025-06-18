@@ -126,7 +126,7 @@ module.exports = function makeConfig(grunt) {
 
                 'superdesk-ui-framework': uiFrameworkPath,
             },
-            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+            extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx'],
         },
 
         module: {

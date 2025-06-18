@@ -351,9 +351,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                 });
                                                             }}
 
-                                                            // firstDayOfWeek starts from Monday
-                                                            // - config.startingDay from Sunday
-                                                            firstDayOfWeek={superdesk.instance.config.startingDay - 1}
+                                                            firstDayOfWeek={superdesk.instance.config.startingDay}
                                                             readOnly={this.props.readOnly}
                                                         />
 

@@ -1,0 +1,9 @@
+{
+    "extends": "superdesk-code-style/tsconfig-strict",
+    "include": [
+        "./playwright"
+    ],
+    "compilerOptions": {
+        "esModuleInterop": true,
+    },
+}

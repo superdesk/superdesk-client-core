@@ -6,7 +6,6 @@ import {IDateFieldConfig, IDateUserPreferences, IDateValueOperational, IEditorCo
 import {appConfig} from 'appConfig';
 import {dateToServerString} from 'core/get-superdesk-api-implementation';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
-import {gettext} from 'core/utils';
 
 type IProps = IEditorComponentProps<IDateValueOperational, IDateFieldConfig, IDateUserPreferences>;
 

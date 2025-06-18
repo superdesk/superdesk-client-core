@@ -5,9 +5,7 @@ import {
     IEditor3Config,
 } from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
-import {
-    getInitialSpellcheckerData,
-} from 'core/editor3/store';
+import {getInitialSpellcheckerData} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
 import {Editor3} from 'core/editor3/components';
@@ -92,13 +90,12 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
     syncPropsWithReduxStore() {
         const store = this.props.value.store;
-        const spellcheck = ng.get('spellcheck').isAutoSpellchecker === true ? ng.get('spellcheck') : null;
 
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
             singleLine: this.props.config.singleLine ?? false,
             readOnly: this.props.readOnly || this.props.config.readOnly,
-            spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
+            spellchecking: getInitialSpellcheckerData(ng.get('spellcheck'), this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
             item: {
                 language: this.props.language, // required for annotations to work
