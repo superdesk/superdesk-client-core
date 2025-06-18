@@ -1,7 +1,19 @@
 import {startApp} from 'superdesk-core/scripts/index';
 
 setTimeout(() => {
-    const styles = 'body {font-family: Arial!important}';
+    const styles = `
+    *:not([class^="icon-"]) {
+        font-family: Arial!important;
+    }
+
+    * {
+        -webkit-font-smoothing: none !important;
+        font-variant-ligatures: none !important;
+        font-feature-settings: 'liga' 0 !important;
+        font-kerning: none !important;
+        text-rendering: optimizespeed !important;
+    }
+  `;
 
     const styleSheet = document.createElement("style");
     styleSheet.textContent = styles;
