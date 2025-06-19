@@ -157,7 +157,7 @@ export default angular.module('superdesk.apps.dashboard.closed-desk', [])
             sizey: 1,
             template: 'scripts/apps/dashboard/closed-desk/views/close-desk-widget.html',
             description: gettext('Close desk widget'),
-            thumbnail: require('./thumbnail.svg'),
+            thumbnail: require('./thumbnail.svg').default,
         });
     }])
 ;
