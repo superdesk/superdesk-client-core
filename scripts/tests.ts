@@ -5,7 +5,7 @@ import 'core';
 import 'apps';
 
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
