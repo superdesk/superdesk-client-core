@@ -132,7 +132,7 @@ class UsersComponent extends React.Component<IProps, IState> {
                                         this.state.roles.map((role) => {
                                             const users = this.getUsers(desk, role);
 
-                                            return users.length && (
+                                            return users.length > 0 && (
                                                 <UserListComponent
                                                     key={role._id}
                                                     desk={desk}
@@ -144,7 +144,7 @@ class UsersComponent extends React.Component<IProps, IState> {
                                         })
                                     }
                                     {
-                                        !this.state.deskMembers[desk._id].length && (
+                                        (this.state.deskMembers[desk._id]?.length ?? 0) < 1 && (
                                             <div className="sd-board__subheader">
                                                 <h5 className="sd-board__subheader-title">
                                                     {gettext('There are no users assigned to this desk')}
