@@ -13,10 +13,10 @@ export interface ISpellcheckWarning {
 
     // list of text fragments suggested to replace offending text fragment.
     // Can consist of multiple words. Can NOT span multiple paragraphs.
-    // Can be omited if `ISpellchecker['getSuggestions']` method is defined.
+    // Can be omitted if `ISpellchecker['getSuggestions']` method is defined.
     suggestions?: Array<ISpellcheckerSuggestion>;
 
-    // Description of the suggestion, to display language style suggestions
+    // Could be used to add context on why text fragment was marked as offending.
     explanation?: string;
 }
 
