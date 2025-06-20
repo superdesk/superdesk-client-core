@@ -86,14 +86,14 @@ export const ContactInfo: React.FunctionComponent<IProps> = ({
                 </ContactDetail>
 
                 <ContactDetail>
-                    <Icon name="globe" size="small" />
+                    <Icon name="phone" size="small" />
                     {!isEmpty(item.contact_phone) && findKey(item.contact_phone, 'number') &&
                         (<ItemContainer item={item} field="contact_phone" />)
                     }
                 </ContactDetail>
 
                 <ContactDetail>
-                    <Icon name="phone" size="small" />
+                    <Icon name="globe" size="small" />
                     {item.website && (<ItemContainer item={item} field="website" />)}
                 </ContactDetail>
 
