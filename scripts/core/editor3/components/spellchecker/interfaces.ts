@@ -17,7 +17,7 @@ export interface ISpellcheckWarning {
     suggestions?: Array<ISpellcheckerSuggestion>;
 
     // Description of the suggestion, to display language style suggestions
-    message?: string;
+    explanation?: string;
 }
 
 export interface ISpellcheckerAction {
