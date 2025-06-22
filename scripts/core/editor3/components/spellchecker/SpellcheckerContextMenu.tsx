@@ -47,14 +47,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     }
 
     render() {
-        const {suggestions, message} = this.props.warning;
+        const {suggestions, explanation} = this.props.warning;
         const {spellchecker} = this.props;
-
-        // If the message exists, and suggestion is whitespace suggestion
-        // use message as the button text instead of the suggestion
-        const messageExists = Boolean(message);
-        const whitespaceSuggestionExists = suggestions.filter(
-            (suggestion) => suggestion.text.trim().length === 0).length > 0;
 
         return (
             <Card
@@ -64,7 +58,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 style={{display: 'flex', flexDirection: 'column', maxWidth: 300, maxHeight: 500, zIndex: 9999}}
                 data-test-id="spellchecker-menu"
             >
-                {messageExists && !whitespaceSuggestionExists && (
+                {explanation != null && (
                     <React.Fragment>
                         <div className="form-label" style={{margin: '0 var(--space--1)'}}>
                             {gettext('Explanation')}
@@ -74,13 +68,15 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                             style={{
                                 padding: '0 var(--space--1)',
                                 maxHeight: '5lh',
+                                flexShrink: 0,
                                 overflowY: 'auto',
+                                marginBottom: 'var(--space--0-5)',
                             }}
                         >
-                            {message}
+                            {explanation}
                         </div>
 
-                        <div className="dropdown__menu-divider" />
+                        <div className="divider" style={{marginBlockStart: 0}} />
                     </React.Fragment>
                 )}
 
@@ -91,7 +87,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 {
                     suggestions.length === 0
                         ? (
-                            <div style={{margin: '0 var(--space--1)'}}>
+                            <div style={{margin: '0 var(--space--1)', marginBottom: 'var(--space--0-5)'}}>
                                 {gettext('No suggestions available')}
                             </div>
                         )
@@ -107,8 +103,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                             className="sd-dropdown-item"
                                             key={index}
                                         >
-                                            {suggestion.text.trim().length === 0 && messageExists
-                                                ? message : suggestion.text}
+                                            {suggestion.text}
                                         </button>
                                     ))
                                 }
