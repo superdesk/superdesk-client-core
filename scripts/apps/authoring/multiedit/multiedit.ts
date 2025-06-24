@@ -211,6 +211,10 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
         link: function(scope, elem) {
             scope.requestEditor3DirectivesToGenerateHtml = [];
 
+            scope.generateHtml = () => {
+                scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
+            };
+
             scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
                     openItem();
