@@ -262,15 +262,23 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 }
             }, true);
 
-            scope.save = function() {
+            scope.save = function({generateHtml = true} = {}) {
                 return authoring.save(
                     scope.origItem,
                     scope.item,
-                    scope.requestEditor3DirectivesToGenerateHtml,
+
+                    /**
+                     * HTML must not be generated when applying changes from media editor
+                     * or old values would overwrite the new ones since media editor doesn't have editor3 fields
+                     */
+                    generateHtml ? scope.requestEditor3DirectivesToGenerateHtml : [],
+
                     true,
                 ).then((res) => {
                     scope.dirty = false;
-                    InitializeMedia.initMedia(scope);
+
+                    // reload item after saving in order to prevent etag issues
+                    openItem();
 
                     notify.success(gettext('Item updated.'));
 
