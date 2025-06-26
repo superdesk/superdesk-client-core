@@ -1,6 +1,16 @@
 import {
-    isNull, isUndefined, find, filter, keys, findIndex,
-    sortBy, map, forEach, startsWith, flatMap} from 'lodash';
+    isNull,
+    isUndefined,
+    find,
+    filter,
+    keys,
+    findIndex,
+    sortBy,
+    map,
+    forEach,
+    startsWith,
+    flatMap,
+} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
@@ -10,6 +20,7 @@ import {translateArticleType, gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {slideUpDown} from 'core/ui/slide-up-down';
 import {runBeforeUpdateMiddlware} from '../services/authoring-helpers';
+import {sdApi} from 'api';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -43,6 +54,13 @@ export function AuthoringHeaderDirective(
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
         link: function(scope, elem, attrs, WidgetsManagerCtrl) {
+            if (scope.item.type === 'composite') {
+                const packageProfile = sdApi.contentProfiles.getAll().find((x) => x.type === 'composite' as string);
+
+                scope.schema = packageProfile.schema;
+                scope.editor = packageProfile.editor;
+            }
+
             scope.contentType = null;
             scope.displayCompanyCodes = null;
             scope.features = features;
@@ -107,8 +125,7 @@ export function AuthoringHeaderDirective(
                     Array.isArray(scope.item.anpa_category) &&
                     scope.item.anpa_category.length &&
                     scope.item.anpa_category[0].qcode &&
-                    scope.editor.urgency.service[scope.item.anpa_category[0].qcode]
-                ;
+                    scope.editor.urgency.service[scope.item.anpa_category[0].qcode];
             };
 
             /**
