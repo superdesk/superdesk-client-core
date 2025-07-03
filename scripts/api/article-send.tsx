@@ -20,7 +20,7 @@ import {UnorderedList} from 'core/ui/components/UnorderedList';
 function getPublishedPackageItems(_package: IArticle): Promise<Array<IArticle>> {
     const query: ISuperdeskQuery = {
         filter: {$and: [{'guid': {$in: sdApi.article.getPackageItemIds(_package)}}]},
-        page: 0,
+        page: 1,
         max_results: 200,
         sort: [{'versioncreated': 'asc'}],
     };
