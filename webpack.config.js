@@ -139,6 +139,15 @@ module.exports = function makeConfig(grunt) {
                             return false;
                         }
 
+                        // date-fns uses optional chaining and nullish coalescing
+                        // that crashes the build unless passed though the loader
+                        if (
+                            absolutePath.includes('/node_modules/date-fns/')
+                            || absolutePath.includes('/node_modules/@date-fns/tz/')
+                        ) {
+                            return false;
+                        }
+
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
