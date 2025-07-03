@@ -2,7 +2,7 @@ import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState, Autocomplete, Modal} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 
 import {IArticle, IArticleSideWidget, ISuperdesk} from 'superdesk-api';
 

@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {MultiEditModal} from '../multi-edit-modal';
 import {Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getArticleLabel, gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';

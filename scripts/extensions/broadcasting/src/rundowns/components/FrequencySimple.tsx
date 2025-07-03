@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {CheckboxButton, CheckButtonGroup} from 'superdesk-ui-framework/react';
 import {IRRule} from '../../interfaces';
-import {getWeekdayNames} from '@superdesk/common';
+import {getWeekdayNames} from '@sourcefabric/common';
+import {superdesk} from '../../superdesk';
 
 interface IProps {
     value: IRRule | undefined | null;
@@ -38,11 +39,14 @@ export class FrequencySimple extends React.PureComponent<IProps> {
         return (
             <CheckButtonGroup>
                 {
-                    getWeekdayNames('short', this.props.firstDayOfWeek).map(({label, index}) => (
+                    getWeekdayNames(
+                        this.props.firstDayOfWeek,
+                        superdesk.localization.locale.code,
+                    ).map(({nameShort, index}) => (
                         <CheckboxButton
                             key={index}
                             checked={daysObj[index] === true}
-                            label={{text: label}}
+                            label={{text: nameShort}}
                             onChange={(val) => {
                                 if (val === true) {
                                     this.props.onChange({
