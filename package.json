@@ -29,10 +29,10 @@
   "main": "scripts/index.js",
   "types": "scripts/core/superdesk-api.d.ts",
   "dependencies": {
-    "@date-fns/tz": "^1.2.0",
     "@metadata/exif": "github:superdesk/exif#431066d",
     "@popperjs/core": "2.10.2",
     "@sourcefabric/common": "0.0.66",
+    "@sourcefabric/date-fns-tz": "^1.2.1",
     "@sourcefabric/draft-js": "^0.11.5",
     "@types/angular": "~1.6.0",
     "@types/draft-js": "0.11.5",
