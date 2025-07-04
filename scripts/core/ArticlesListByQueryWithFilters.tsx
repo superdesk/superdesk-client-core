@@ -253,7 +253,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                     // Use the same query except only for selected items.
                     const queryForSpecificItems: ISuperdeskQuery = {
                         ...query,
-                        page: 0,
+                        page: 1,
                         max_results: 200,
                         filter: {
                             $and: [
