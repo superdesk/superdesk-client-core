@@ -274,6 +274,8 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     generateHtml ? scope.requestEditor3DirectivesToGenerateHtml : [],
 
                     true,
+
+                    {resetFieldsMeta: true},
                 ).then((res) => {
                     scope.dirty = false;
 
