@@ -14,6 +14,7 @@ import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {sdApi} from 'api';
+import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -550,6 +551,16 @@ export function AuthoringService(
         __item: IArticle,
         requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
         cloneAfterGeneratingHtml?: boolean,
+
+        options?: {
+            /**
+             * Use when you want to edit a field but can't update fields_meta
+             * e.g. in media editor there's no editor3
+             * it may be possible to generate fields_meta using a pure function and without editor3 itself
+             * but resetting it is also an option - editor3 supports initializing from a string value
+             */
+            resetFieldsMeta?: boolean;
+        },
     ) {
         for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
             fn();
@@ -580,12 +591,11 @@ export function AuthoringService(
                 delete diff._etag;
             }
 
-            // if current document is image and it has been changed on 'media edit' we have to update the etag
-            if (origItem.type === 'picture' && item._etag != null) {
-                diff._etag = item._etag;
-            }
-
             helpers.filterDefaultValues(diff, origItem);
+
+            if (options?.resetFieldsMeta === true) {
+                resetFieldMetadata(diff);
+            }
 
             if (_.size(diff) > 0) {
                 return api.save(
