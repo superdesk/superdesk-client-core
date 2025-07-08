@@ -1,3 +1,4 @@
+import {get} from 'lodash';
 import {IArticle} from 'superdesk-api';
 
 export const fieldsMetaKeys = {
@@ -51,10 +52,20 @@ export function setFieldMetadata(item: IArticle, fieldKey: string, contentKey: s
     };
 }
 
+/**
+ * NOTE: function mutates the argument
+ */
 export function resetFieldMetadata(item) {
-    if (item[META_FIELD_NAME]) {
-        Object.keys(item[META_FIELD_NAME]).forEach((key) => {
+    if (item[META_FIELD_NAME] == null) {
+        return;
+    }
+
+    for (const key of Object.keys(item[META_FIELD_NAME])) {
+        // keys can be strings containing dots thus lodash.get is needed
+        const hasKey = get(item, key) != null;
+
+        if (hasKey) {
             setFieldMetadata(item, key, fieldsMetaKeys.draftjsState, null);
-        });
+        }
     }
 }
