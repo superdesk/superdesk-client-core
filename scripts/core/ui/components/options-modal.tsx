@@ -1,5 +1,5 @@
 import React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import classNames from 'classnames';
 import {Loader} from './Loader';
 import {Spacer} from './Spacer';

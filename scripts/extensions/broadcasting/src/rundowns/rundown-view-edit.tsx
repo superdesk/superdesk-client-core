@@ -37,7 +37,7 @@ interface IState {
 import {superdesk} from '../superdesk';
 
 import {ManageRundownItems} from './manage-rundown-items';
-import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@sourcefabric/common';
 import {stringNotEmpty} from '../form-validation';
 import {isEqual, noop} from 'lodash';
 import {rundownItemStorageAdapter} from '../rundown-templates/rundown-template-item-storage-adapter';

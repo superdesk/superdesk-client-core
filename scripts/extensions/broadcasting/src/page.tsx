@@ -16,7 +16,7 @@ import {
 import {ManageRundownTemplates} from './rundown-templates/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';
 
-import {classnames, showModal} from '@superdesk/common';
+import {classnames, showModal} from '@sourcefabric/common';
 
 import {CreateRundownFromTemplate} from './rundowns/create-rundown-from-template';
 import {RundownsList} from './rundowns/rundowns-list';

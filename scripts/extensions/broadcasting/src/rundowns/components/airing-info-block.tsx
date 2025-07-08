@@ -1,4 +1,4 @@
-import {IValidationResults} from '@superdesk/common';
+import {IValidationResults} from '@sourcefabric/common';
 import * as React from 'react';
 import {DurationInput, TimePicker, DatePickerISO} from 'superdesk-ui-framework/react';
 

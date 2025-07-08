@@ -15,7 +15,7 @@ function getModuleDir(moduleName) {
     );
 }
 
-function countOccurences(_string, substring) {
+function countOccurrences(_string, substring) {
     return _string.split(substring).length - 1;
 }
 
@@ -139,12 +139,22 @@ module.exports = function makeConfig(grunt) {
                             return false;
                         }
 
+                        if (
+                            // date-fns uses optional chaining and nullish coalescing
+                            absolutePath.includes('/node_modules/date-fns/')
+
+                            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
+                            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+                        ) {
+                            return false;
+                        }
+
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
                         const exclude = !validModules.some(
                             (app) =>
-                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
+                                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
                         );
 
                         return exclude;

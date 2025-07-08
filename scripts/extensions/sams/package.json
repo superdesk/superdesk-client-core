@@ -7,7 +7,7 @@
     "watch": "tsc -watch -p src"
   },
   "dependencies": {
-    "@sourcefabric/common": "0.0.33",
+    "@sourcefabric/common": "0.0.66",
     "reselect": "~4.0.0"
   },
   "devDependencies": {

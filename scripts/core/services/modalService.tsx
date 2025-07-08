@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {Button, Modal} from 'superdesk-ui-framework/react';
 
 function prepareAndPrint() {
