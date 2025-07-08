@@ -1,5 +1,5 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {updateMarkedUser, markForUserAndSendToNextStage} from './common';
 

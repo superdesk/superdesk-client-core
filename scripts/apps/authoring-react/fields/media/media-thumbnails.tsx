@@ -1,5 +1,5 @@
 /* eslint-disable react/no-multi-comp */
-import {arrayMove} from '@superdesk/common';
+import {arrayMove} from '@sourcefabric/common';
 import React from 'react';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import {IArticle} from 'superdesk-api';

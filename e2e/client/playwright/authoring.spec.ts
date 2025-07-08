@@ -110,6 +110,10 @@ test('setting embargo', async ({page}) => {
 
     await page.locator(
         s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),
+    ).clear();
+
+    await page.locator(
+        s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),
     ).pressSequentially(embargoDate);
 
     await page.locator(

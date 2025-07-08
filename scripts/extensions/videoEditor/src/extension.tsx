@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IExtension, IExtensionActivationResult, ISuperdesk, IArticle} from 'superdesk-api';
 import {getVideoEditModal} from './get-video-editor-modal';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 
 function getEditVideoAction(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;

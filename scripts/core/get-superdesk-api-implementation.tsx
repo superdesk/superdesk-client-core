@@ -117,7 +117,7 @@ import {
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';

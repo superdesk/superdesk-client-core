@@ -11,7 +11,7 @@ import {
 } from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
-import formatISO from 'date-fns/formatISO';
+import {formatISO} from 'date-fns';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
 import {trimStartExact} from './helpers/utils';
 

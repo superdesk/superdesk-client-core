@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import {differenceInCalendarDays} from 'date-fns/differenceInCalendarDays';
 import {DatePickerISO} from 'superdesk-ui-framework/react';
 import {IDateFieldConfig, IDateUserPreferences, IDateValueOperational, IEditorComponentProps} from 'superdesk-api';
 import {appConfig} from 'appConfig';

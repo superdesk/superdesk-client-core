@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IIgnoreCancelSaveProps, IIgnoreCancelSaveResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps extends IIgnoreCancelSaveProps {

@@ -433,6 +433,7 @@ class Authoring {
             var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var scheduleTime = '04:00';
 
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).clear();
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).sendKeys(scheduleDate);
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).sendKeys(scheduleTime);
 

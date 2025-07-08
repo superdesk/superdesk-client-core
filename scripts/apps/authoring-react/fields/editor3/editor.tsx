@@ -30,7 +30,7 @@ import {
     CharacterLimitUiBehavior,
     CharacterCountConfigModal,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {EditorState} from 'draft-js';

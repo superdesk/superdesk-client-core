@@ -15,7 +15,7 @@ function getModuleDir(moduleName) {
     );
 }
 
-function countOccurences(_string, substring) {
+function countOccurrences(_string, substring) {
     return _string.split(substring).length - 1;
 }
 
@@ -146,6 +146,7 @@ module.exports = function makeConfig(grunt) {
 
                             // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
                             || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+
                             || absolutePath.includes('/@sourcefabric/common/')
                         ) {
                             return false;
@@ -156,7 +157,7 @@ module.exports = function makeConfig(grunt) {
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
                         const exclude = !validModules.some(
                             (app) =>
-                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
+                                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
                         );
 
                         return exclude;

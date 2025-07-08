@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Button, ButtonGroup, Icon, Modal, Text} from 'superdesk-ui-framework/react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {IShow} from '../interfaces';
 
 import {superdesk} from '../superdesk';

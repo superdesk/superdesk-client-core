@@ -11,6 +11,6 @@
     "typescript": "~4.9.5"
   },
   "dependencies": {
-    "@superdesk/common": "^0.0.8"
+    "@sourcefabric/common": "0.0.66"
   }
 }

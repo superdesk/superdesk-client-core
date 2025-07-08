@@ -1,4 +1,5 @@
 import React from 'react';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 import {IArticle} from 'superdesk-api';
 import {fromServerDateFormat, gettext, toServerDateFormat} from 'core/utils';
 import {appConfig} from 'appConfig';
@@ -18,10 +19,10 @@ export interface IPublishingDateOptions {
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
     return {
         embargo: items.length === 1 && items[0].embargo != null
-            ? fromServerDateFormat(items[0].embargo, true) ?? null
+            ? fromServerDateFormat(items[0].embargo, false) ?? null
             : null,
         publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? fromServerDateFormat(items[0].publish_schedule, true) ?? null
+            ? fromServerDateFormat(items[0].publish_schedule, false) ?? null
             : null,
         timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
     };
@@ -80,12 +81,14 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             return null;
         }
 
+        const timezoneApplied = timeZone ?? appConfig.default_timezone;
+
         return (
             <div>
                 {canSetEmbargo && (
                     <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
                         <DateTimePicker
-                            value={embargo}
+                            value={new TZDate(embargo, timezoneApplied)}
                             valueType="date"
                             locale={{
                                 type: 'full',
@@ -112,7 +115,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetPublishSchedule && (
                     <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
                         <DateTimePicker
-                            value={publishSchedule}
+                            value={new TZDate(publishSchedule, timezoneApplied)}
                             valueType="date"
                             locale={{
                                 type: 'full',
