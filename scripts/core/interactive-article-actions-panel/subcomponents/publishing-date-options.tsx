@@ -1,7 +1,7 @@
 import React from 'react';
 import {TZDate} from '@sourcefabric/date-fns-tz';
 import {IArticle} from 'superdesk-api';
-import {fromServerDateFormat, gettext, toServerDateFormat} from 'core/utils';
+import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
@@ -9,6 +9,7 @@ import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
 import {isValid} from 'date-fns';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
+import {dateToServerString} from 'core/get-superdesk-api-implementation';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -19,15 +20,23 @@ export interface IPublishingDateOptions {
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
     return {
         embargo: items.length === 1 && items[0].embargo != null
-            ? fromServerDateFormat(items[0].embargo, false) ?? null
+            ? new Date(items[0].embargo) ?? null
             : null,
         publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? fromServerDateFormat(items[0].publish_schedule, false) ?? null
+            ? new Date(items[0].publish_schedule)
             : null,
         timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
     };
 }
 
+/**
+ * It's tricky with timezones here.
+ * UI widget to pick datetime doesn't support timezones,
+ * thus before displaying in the picker - we convert it to users' local time.
+ *
+ * In order to generate the patch - we need to apply the timezone
+ * AND convert to UTC because the server doesn't support offsets.
+ */
 export function getPublishingDatePatch(item: IArticle, options: IPublishingDateOptions): Partial<IArticle> {
     const {
         embargo,
@@ -44,10 +53,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toServerDateFormat(embargo, timeZone),
+            : dateToServerString(new TZDate(new TZDate(embargo, timeZone), 'UTC')),
         publish_schedule: publishSchedule == null
             ? null
-            : toServerDateFormat(publishSchedule, timeZone),
+            : dateToServerString(new TZDate(new TZDate(publishSchedule, timeZone), 'UTC')),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,

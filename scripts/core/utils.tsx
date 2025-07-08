@@ -415,28 +415,6 @@ export function toQueryString(
     ).join('&');
 }
 
-/**
- * Output example: "1970-01-19T22:57:38"
- */
-export function toServerDateFormat(
-    date: Date,
-    timezone?: string,
-): string {
-    let dateStr = formatISO(date).slice(0, 19);
-
-    if (timezone != null) {
-        dateStr += getUTCOffset(timezone).replace(':', '');
-    }
-
-    return dateStr;
-}
-
-export function fromServerDateFormat(date: string, ignoreTimezone: boolean): Date {
-    return new Date(
-        ignoreTimezone ? date.slice(0, 19) : date,
-    );
-}
-
 export function getArticleLabel(item: IArticle): string {
     const headlineTrimmed = item.headline?.trim();
     const sluglineTrimmed = item.slugline?.trim();
