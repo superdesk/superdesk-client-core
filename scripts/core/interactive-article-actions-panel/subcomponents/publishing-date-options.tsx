@@ -89,8 +89,9 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         embargo: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,
@@ -111,8 +112,9 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         publishSchedule: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,
