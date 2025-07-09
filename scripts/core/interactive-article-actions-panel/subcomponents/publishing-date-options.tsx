@@ -95,13 +95,14 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetEmbargo && (
                     <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
                         <DateTimePicker
-                            value={new TZDate(embargo, timezoneApplied)}
+                            value={embargo === null ? null : new TZDate(embargo, timezoneApplied)}
                             valueType="date"
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         embargo: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,
@@ -117,13 +118,14 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetPublishSchedule && (
                     <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
                         <DateTimePicker
-                            value={new TZDate(publishSchedule, timezoneApplied)}
+                            value={publishSchedule === null ? null : new TZDate(publishSchedule, timezoneApplied)}
                             valueType="date"
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         publishSchedule: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,
