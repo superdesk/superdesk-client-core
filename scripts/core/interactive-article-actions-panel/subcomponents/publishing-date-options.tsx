@@ -96,7 +96,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetEmbargo && (
                     <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
                         <DateTimePicker
-                            value={new TZDate(embargo, timezoneApplied)}
+                            value={embargo === null ? null : new TZDate(embargo, timezoneApplied)}
                             valueType="date"
                             locale={{
                                 type: 'full',
@@ -123,7 +123,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetPublishSchedule && (
                     <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
                         <DateTimePicker
-                            value={new TZDate(publishSchedule, timezoneApplied)}
+                            value={publishSchedule === null ? null : new TZDate(publishSchedule, timezoneApplied)}
                             valueType="date"
                             locale={{
                                 type: 'full',
