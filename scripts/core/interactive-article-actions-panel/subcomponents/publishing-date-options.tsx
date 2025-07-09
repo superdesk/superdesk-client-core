@@ -34,8 +34,7 @@ export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublis
  * UI widget to pick datetime doesn't support timezones,
  * thus before displaying in the picker - we convert it to users' local time.
  *
- * In order to generate the patch - we need to apply the timezone
- * AND convert to UTC because the server doesn't support offsets.
+ * In order to generate the patch - we need to convert it back to selected timezone.
  */
 export function getPublishingDatePatch(item: IArticle, options: IPublishingDateOptions): Partial<IArticle> {
     const {
@@ -53,10 +52,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : dateToServerString(new TZDate(new TZDate(embargo, timeZone), 'UTC')),
+            : dateToServerString(new TZDate(embargo, timeZone)),
         publish_schedule: publishSchedule == null
             ? null
-            : dateToServerString(new TZDate(new TZDate(publishSchedule, timeZone), 'UTC')),
+            : dateToServerString(new TZDate(publishSchedule, timeZone)),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
