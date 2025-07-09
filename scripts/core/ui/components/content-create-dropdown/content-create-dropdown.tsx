@@ -8,6 +8,7 @@ import {gettext} from 'core/utils';
 import {InitialView} from './initial-view';
 import {DropZone3} from '../drop-zone-3';
 import {getSuperdeskType} from 'utils/dragging';
+import {Placement} from '@popperjs/core';
 
 const defaultButton = ({onClick}: IPropsAddContentCustomButton) => (
     <Button
@@ -28,6 +29,7 @@ export interface IPropsAddContentCustomButton {
 
 interface IProps {
     customButton?: React.ComponentType<{}>;
+    placement?: Placement;
     onCreate?(items: Array<IArticle>): void;
 
     /**
@@ -42,6 +44,7 @@ interface IProps {
 export class ContentCreateDropdown extends React.PureComponent<IProps> {
     render() {
         const DropdownButton = this.props.customButton ?? defaultButton;
+        const placement = this.props.placement ?? 'bottom-end';
 
         return (
             <DropZone3
@@ -69,7 +72,7 @@ export class ContentCreateDropdown extends React.PureComponent<IProps> {
                     onClick={(event) => {
                         showPopup(
                             event.target as HTMLElement,
-                            'bottom-end',
+                            placement,
                             ({closePopup}) => (
                                 <InitialView
                                     closePopup={closePopup}
