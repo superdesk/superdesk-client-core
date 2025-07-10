@@ -52,10 +52,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : dateToServerString(new TZDate(embargo, timeZone)),
+            : new TZDate(embargo, timeZone).toISOString(),
         publish_schedule: publishSchedule == null
             ? null
-            : dateToServerString(new TZDate(publishSchedule, timeZone)),
+            : new TZDate(publishSchedule, timeZone).toISOString(),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
