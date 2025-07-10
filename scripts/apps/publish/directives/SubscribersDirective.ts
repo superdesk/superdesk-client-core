@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import moment from 'moment';
 
 /**
  * @ngdoc directive
@@ -35,6 +36,8 @@ export function SubscribersDirective(
         },
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
         link: function($scope) {
+            const SCHEDULE_DATE_FORMAT = 'DD-MM-YYYY';
+
             $scope.subscriber = null;
             $scope.origSubscriber = null;
             $scope.subscribers = $scope.subscribersList || null;
@@ -44,6 +47,10 @@ export function SubscribersDirective(
             $scope.directProducts = null;
             $scope.search = {};
             $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
+            $scope.scheduleError = {
+                activeBeforeStartErrorMessage: null,
+                activeAfterEndErrorMessage: null,
+            };
 
             api.query('output_formats').then((result) => {
                 $scope.formats = result._items.map((format) => ({
@@ -169,6 +176,7 @@ export function SubscribersDirective(
              */
             $scope.save = function() {
                 $scope.subscriber.destinations = $scope.destinations;
+                $scope.verifyScheduleBeforeSave();
 
                 let diff = {};
 
@@ -179,6 +187,17 @@ export function SubscribersDirective(
                     }
                     diff[key] = value;
                 });
+
+                if ($scope.subscriber.schedule) {
+                    diff.schedule = {
+                        startDate: $scope.subscriber.schedule.startDate
+                            ? moment.utc($scope.subscriber.schedule.startDate, SCHEDULE_DATE_FORMAT).startOf('day').toISOString()
+                            : null,
+                        endDate: $scope.subscriber.schedule.endDate
+                            ? moment.utc($scope.subscriber.schedule.endDate, SCHEDULE_DATE_FORMAT).startOf('day').toISOString()
+                            : null,
+                    };
+                }
 
                 api.subscribers.save($scope.origSubscriber, diff)
                     .then(
@@ -232,6 +251,22 @@ export function SubscribersDirective(
 
                     $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
 
+                    if (!$scope.subscriber.schedule) {
+                        $scope.subscriber.schedule = {
+                            startDate: null,
+                            endDate: null,
+                        };
+                    } else {
+                        $scope.subscriber.schedule = {
+                            startDate: $scope.subscriber.schedule.startDate
+                                ? moment.utc($scope.subscriber.schedule.startDate).format(SCHEDULE_DATE_FORMAT)
+                                : null,
+                            endDate: $scope.subscriber.schedule.endDate
+                                ? moment.utc($scope.subscriber.schedule.endDate).format(SCHEDULE_DATE_FORMAT)
+                                : null,
+                        };
+                    }
+
                     $scope.destinations = [];
                     if (angular.isDefined($scope.subscriber.destinations)
                         && !_.isNull($scope.subscriber.destinations) &&
@@ -284,6 +319,73 @@ export function SubscribersDirective(
             if (!$scope.subscribersList) {
                 fetchSubscribers();
             }
+
+            $scope.$watchGroup([
+                'subscriber.schedule.startDate',
+                'subscriber.schedule.endDate',
+                'subscriber.is_active',
+            ], () => {
+                $scope.updateScheduleErrors();
+            });
+
+            /**
+            * Checks if the subscriber is active outside the scheduled start and end dates.
+            * Sets error flags and messages if needed.
+            */
+            $scope.updateScheduleErrors = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                const s = $scope.subscriber.schedule;
+                const now = moment.utc();
+                const startDate = s.startDate ? moment.utc(s.startDate, SCHEDULE_DATE_FORMAT).startOf('day') : null;
+                const endDate = s.endDate ? moment.utc(s.endDate, SCHEDULE_DATE_FORMAT).startOf('day') : null;
+
+                $scope.scheduleError = {
+                    activeBeforeStart: false,
+                    activeAfterEnd: false,
+                    activeBeforeStartErrorMessage: '',
+                    activeAfterEndErrorMessage: '',
+                };
+                
+                if ($scope.subscriber.is_active) {
+                    if (startDate && now.isBefore(startDate)) {
+                        $scope.scheduleError.activeBeforeStartErrorMessage =
+                            `This subscriber is active now but will be deactivated until ${startDate.format('LL')}`;
+                    }
+
+                    if (endDate && now.isAfter(endDate)) {
+                        $scope.scheduleError.activeAfterEndErrorMessage =
+                            `This subscriber is active but was scheduled to deactivate after ${endDate.format('LL')}`;
+                    }
+                }
+            };
+
+            /**
+            * Function called before saving to check if user sets a future 
+            * start date and schedule is active even with warning, so we deactivate it
+            */
+            $scope.verifyScheduleBeforeSave = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                const s = $scope.subscriber.schedule;
+                const startDate = s.startDate ? moment.utc(s.startDate).startOf('day').toDate() : null;
+                const now = moment.utc();
+
+                if (startDate && now.isBefore(startDate) && $scope.subscriber.is_active) {
+                    $scope.subscriber.is_active = false;
+                }
+            };
+
+            /**
+            * Function to clear both start and end dates from the subscriber's schedule.
+            */
+            $scope.clearScheduleDates = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                $scope.subscriber.schedule.startDate = null;
+                $scope.subscriber.schedule.endDate = null;
+                $scope.saveEnabled = true;
+            };
         },
     };
 }
