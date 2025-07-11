@@ -180,55 +180,32 @@
                         <div class="form__row">
                             <label class="form-label" translate>Subscriber Schedule Settings</label>
 
-                            <div class="form__row form__row--flex form__row--no-padding sd-margin-t--2">
-                                <div class="form__row-item form__row-item">
-                                    <span ng-class="{
-                                        'form-label form-label--required': subscriber.schedule.startDate || subscriber.schedule.endDate,
-                                        'form-label': !(subscriber.schedule.startDate || subscriber.schedule.endDate)
-                                    }" translate>Start Date</span>
-                                </div>
-                                <div class="form__row-item form__row-item">
-                                    <div
-                                        sd-datepicker
-                                        data-format="DD-MM-YYYY"
-                                        ng-model="subscriber.schedule.startDate"
-                                        ng-required="!!subscriber.schedule.endDate"
-                                    ></div>
-                                </div>
-                                <div class="form__row-item form__row-item">
-                                    <span ng-class="{
-                                        'form-label form-label--required': subscriber.schedule.startDate || subscriber.schedule.endDate,
-                                        'form-label': !(subscriber.schedule.startDate || subscriber.schedule.endDate)
-                                    }" translate>End Date</span>
-                                </div>
-                                <div class="form__row-item form__row-item">
-                                    <div
-                                        sd-datepicker
-                                        data-format="DD-MM-YYYY"
-                                        ng-model="subscriber.schedule.endDate"
-                                        ng-required="!!subscriber.schedule.startDate"
-                                    ></div>
-                                </div>
+                            <div class="form__row-item sd-margin-t--2">
+                                <sd-subscriber-schedule-date-picker
+                                    model="subscriber.schedule.startDate"
+                                    on-change="updateStartDate"
+                                    label="'Start Date'"
+                                    required="!!subscriber.schedule.endDate">
+                                </sd-subscriber-schedule-date-picker>
+                            </div>
+                            
+                            <div class="form__row-item sd-margin-t--2">
+                                <sd-subscriber-schedule-date-picker
+                                    model="subscriber.schedule.endDate"
+                                    on-change="updateEndDate"
+                                    label="'End Date'"
+                                    required="!!subscriber.schedule.startDate">
+                                </sd-subscriber-schedule-date-picker>
                             </div>
 
-                            <!-- Warning -->
                             <div class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2"
                                 ng-if="scheduleError.activeBeforeStartErrorMessage || scheduleError.activeAfterEndErrorMessage">
-                                <span ng-if="scheduleError.activeBeforeStartErrorMessage" translate>
+                                <span ng-if="scheduleError.activeBeforeStartErrorMessage">
                                     {{ scheduleError.activeBeforeStartErrorMessage }}
                                 </span>
-                                <span ng-if="scheduleError.activeAfterEndErrorMessage" translate>
+                                <span ng-if="scheduleError.activeAfterEndErrorMessage">
                                     {{ scheduleError.activeAfterEndErrorMessage }}
                                 </span>
-                            </div>
-
-                            <div class="form__row sd-margin-t--2">
-                                <button type="button"
-                                        class="btn btn--hollow btn--small"
-                                        ng-click="clearScheduleDates()"
-                                        ng-disabled="!subscriber.schedule.startDate && !subscriber.schedule.endDate">
-                                    <i class="icon-trash"></i> <span translate>Clear Schedule</span>
-                                </button>
                             </div>
                         </div>
 

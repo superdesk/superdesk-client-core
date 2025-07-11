@@ -36,8 +36,6 @@ export function SubscribersDirective(
         },
         templateUrl: 'scripts/apps/publish/views/subscribers.html',
         link: function($scope) {
-            const SCHEDULE_DATE_FORMAT = 'DD-MM-YYYY';
-
             $scope.subscriber = null;
             $scope.origSubscriber = null;
             $scope.subscribers = $scope.subscribersList || null;
@@ -175,8 +173,8 @@ export function SubscribersDirective(
              * Upserts the selected subscriber.
              */
             $scope.save = function() {
+                $scope.verifyScheduleSettings();
                 $scope.subscriber.destinations = $scope.destinations;
-                $scope.verifyScheduleBeforeSave();
 
                 let diff = {};
 
@@ -187,17 +185,6 @@ export function SubscribersDirective(
                     }
                     diff[key] = value;
                 });
-
-                if ($scope.subscriber.schedule) {
-                    diff.schedule = {
-                        startDate: $scope.subscriber.schedule.startDate
-                            ? moment.utc($scope.subscriber.schedule.startDate, SCHEDULE_DATE_FORMAT).startOf('day').toISOString()
-                            : null,
-                        endDate: $scope.subscriber.schedule.endDate
-                            ? moment.utc($scope.subscriber.schedule.endDate, SCHEDULE_DATE_FORMAT).startOf('day').toISOString()
-                            : null,
-                    };
-                }
 
                 api.subscribers.save($scope.origSubscriber, diff)
                     .then(
@@ -238,7 +225,7 @@ export function SubscribersDirective(
 
                 $q.all(promises).then(() => {
                     $scope.origSubscriber = subscriber || {};
-                    $scope.subscriber = _.create($scope.origSubscriber);
+                    $scope.subscriber = _.cloneDeep($scope.origSubscriber);
                     $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
                     $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
 
@@ -257,14 +244,10 @@ export function SubscribersDirective(
                             endDate: null,
                         };
                     } else {
-                        $scope.subscriber.schedule = {
-                            startDate: $scope.subscriber.schedule.startDate
-                                ? moment.utc($scope.subscriber.schedule.startDate).format(SCHEDULE_DATE_FORMAT)
-                                : null,
-                            endDate: $scope.subscriber.schedule.endDate
-                                ? moment.utc($scope.subscriber.schedule.endDate).format(SCHEDULE_DATE_FORMAT)
-                                : null,
-                        };
+                        const {startDate, endDate} = $scope.subscriber.schedule;
+
+                        $scope.subscriber.schedule.startDate = startDate ? moment(startDate).toDate() : null;
+                        $scope.subscriber.schedule.endDate = endDate ? moment(endDate).toDate() : null;
                     }
 
                     $scope.destinations = [];
@@ -321,70 +304,100 @@ export function SubscribersDirective(
             }
 
             $scope.$watchGroup([
+                'subscriber.is_active',
                 'subscriber.schedule.startDate',
                 'subscriber.schedule.endDate',
-                'subscriber.is_active',
             ], () => {
-                $scope.updateScheduleErrors();
+                $scope.validateScheduleDates();
             });
 
-            /**
-            * Checks if the subscriber is active outside the scheduled start and end dates.
-            * Sets error flags and messages if needed.
-            */
-            $scope.updateScheduleErrors = function() {
-                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
 
-                const s = $scope.subscriber.schedule;
-                const now = moment.utc();
-                const startDate = s.startDate ? moment.utc(s.startDate, SCHEDULE_DATE_FORMAT).startOf('day') : null;
-                const endDate = s.endDate ? moment.utc(s.endDate, SCHEDULE_DATE_FORMAT).startOf('day') : null;
-
-                $scope.scheduleError = {
-                    activeBeforeStart: false,
-                    activeAfterEnd: false,
-                    activeBeforeStartErrorMessage: '',
-                    activeAfterEndErrorMessage: '',
-                };
-                
-                if ($scope.subscriber.is_active) {
-                    if (startDate && now.isBefore(startDate)) {
-                        $scope.scheduleError.activeBeforeStartErrorMessage =
-                            `This subscriber is active now but will be deactivated until ${startDate.format('LL')}`;
-                    }
-
-                    if (endDate && now.isAfter(endDate)) {
-                        $scope.scheduleError.activeAfterEndErrorMessage =
-                            `This subscriber is active but was scheduled to deactivate after ${endDate.format('LL')}`;
-                    }
-                }
-            };
+            $scope.updateStartDate = (date) => $scope.updateScheduleDate('startDate', date);
+            $scope.updateEndDate = (date) => $scope.updateScheduleDate('endDate', date);
 
             /**
-            * Function called before saving to check if user sets a future 
-            * start date and schedule is active even with warning, so we deactivate it
+            * Updates schedule dates and triggers validation
             */
-            $scope.verifyScheduleBeforeSave = function() {
+            $scope.updateScheduleDate = function(key, value) {
                 if (!$scope.subscriber || !$scope.subscriber.schedule) return;
 
-                const s = $scope.subscriber.schedule;
-                const startDate = s.startDate ? moment.utc(s.startDate).startOf('day').toDate() : null;
-                const now = moment.utc();
-
-                if (startDate && now.isBefore(startDate) && $scope.subscriber.is_active) {
-                    $scope.subscriber.is_active = false;
-                }
-            };
-
-            /**
-            * Function to clear both start and end dates from the subscriber's schedule.
-            */
-            $scope.clearScheduleDates = function() {
-                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
-
-                $scope.subscriber.schedule.startDate = null;
-                $scope.subscriber.schedule.endDate = null;
+                $scope.subscriber.schedule[key] = value;
                 $scope.saveEnabled = true;
+
+                $scope.$applyAsync(() => {
+                    $scope.validateScheduleDates();
+                });
+            };
+
+            /**
+            * Validates schedule dates against status of subscriber and inform the user
+            */
+            $scope.validateScheduleDates = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                const {startDate, endDate} = $scope.subscriber.schedule;
+                const now = moment();
+
+                $scope.scheduleError.activeBeforeStartErrorMessage = null;
+                $scope.scheduleError.activeAfterEndErrorMessage = null;
+
+                const mStart = startDate ? moment(startDate) : null;
+                const mEnd = endDate ? moment(endDate) : null;
+
+                if ($scope.subscriber.is_active) {
+                    if (mStart && now.isBefore(mStart)) {
+                        $scope.scheduleError.activeBeforeStartErrorMessage = gettext(
+                            `Subscriber is currently active but will be deactivated until
+                            ${mStart.format('LLL')} when you save.`,
+                        );
+                    }
+
+                    if (mEnd && now.isAfter(mEnd)) {
+                        $scope.scheduleError.activeAfterEndErrorMessage = gettext(
+                            `Subscriber is currently active but the end date ${mEnd.format('LLL')} has passed. 
+                            It will be deactivated when you save.`,
+                        );
+                    }
+                } else if (
+                    mStart && mEnd &&
+                    now.isSameOrAfter(mStart) &&
+                    now.isSameOrBefore(mEnd)
+                ) {
+                    $scope.scheduleError.activeBeforeStartErrorMessage = gettext(
+                        `Subscriber is inactive but the current time is within the active schedule 
+                        (${mStart.format('LLL')} to ${mEnd.format('LLL')}). It will be activated when you save.`,
+                    );
+                }
+            };
+
+            /**
+            * Adjusts the `is_active` flag before saving depending on the values of the schedule settings
+            */
+            $scope.verifyScheduleSettings = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                const {startDate, endDate} = $scope.subscriber.schedule;
+                const now = moment();
+
+                const mStart = startDate ? moment(startDate) : null;
+                const mEnd = endDate ? moment(endDate) : null;
+
+                // Deactivate if not in active schedule range
+                if ($scope.subscriber.is_active) {
+                    if ((mStart && now.isBefore(mStart)) || (mEnd && now.isAfter(mEnd))) {
+                        $scope.subscriber.is_active = false;
+                    }
+                } else {
+                    // Activate if now falls within schedule range
+                    // eslint-disable-next-line no-lonely-if
+                    if (
+                        mStart && mEnd &&
+                        now.isSameOrAfter(mStart) &&
+                        now.isSameOrBefore(mEnd)
+                    ) {
+                        $scope.subscriber.is_active = true;
+                    }
+                }
             };
         },
     };
