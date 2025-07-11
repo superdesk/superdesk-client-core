@@ -4,6 +4,7 @@ var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const fs = require('fs');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 function getModuleDir(moduleName) {
     return path.join(
@@ -78,6 +79,14 @@ module.exports = function makeConfig(grunt) {
             new MiniCssExtractPlugin({
                 filename: '[name].bundle.css',
                 chunkFilename: '[id].bundle.css',
+            }),
+            new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: path.resolve(__dirname, 'workers'),
+                        to: 'workers',
+                    },
+                ],
             }),
         ],
 

@@ -141,6 +141,7 @@
     "@types/webrtc": "0.0.33",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "angular-mocks": "1.6.9",
+    "copy-webpack-plugin": "6.4.1",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^4.0.2",
