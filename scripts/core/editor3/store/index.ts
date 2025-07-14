@@ -65,6 +65,7 @@ interface IProps {
     value?: any;
     limitBehavior?: CharacterLimitUiBehavior;
     limit?: number;
+    softLimit?: number;
 }
 
 export interface IEditorStore {
@@ -94,6 +95,7 @@ export interface IEditorStore {
     abbreviations: any;
     loading: boolean;
     limitConfig?: EditorLimit;
+    softLimitConfig?: EditorLimit;
 }
 
 let editor3Stores = [];
@@ -106,10 +108,12 @@ interface IOptions {
         warnings?: ISpellcheckWarningsByBlock,
     };
     limitConfig?: EditorLimit,
+    softLimitConfig?: EditorLimit,
 }
 
 export const getDecorators = (options: IOptions) => {
     const {limitConfig} = options;
+    const {softLimitConfig} = options;
     const {spellchecker} = options;
 
     // improve performance by not replacing decorators when possible.
@@ -125,11 +129,17 @@ export const getDecorators = (options: IOptions) => {
         );
     }
 
-    if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+    const isHardHighlight = limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number';
+    const isSoftHighlight = softLimitConfig?.ui === 'highlight' && typeof softLimitConfig?.chars === 'number';
+
+    if (isHardHighlight) {
         mustReApplyDecorators = true;
 
         decorators.push(
-            getTextLimitHighlightDecorator(limitConfig.chars),
+            getTextLimitHighlightDecorator(
+                limitConfig.chars,
+                isSoftHighlight ? softLimitConfig.chars : undefined,
+            ),
         );
     }
 
@@ -208,6 +218,13 @@ export default function createEditorStore(
             chars: props.limit,
         };
 
+    const softLimitConfig: EditorLimit | null = !props.limit
+        ? null
+        : {
+            ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
+            chars: props.softLimit,
+        };
+
     let editorState = EditorState.createWithContent(
         content,
         getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
@@ -237,6 +254,7 @@ export default function createEditorStore(
             abbreviations: {},
             loading: false,
             limitConfig,
+            softLimitConfig,
         },
         getMiddlewares(),
     );

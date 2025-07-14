@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {ContentBlock, ContentState} from 'draft-js';
+import {CompositeDecorator, ContentBlock, ContentState} from 'draft-js';
 
 interface IProps {
     contentState: ContentState;
     entityKey: string;
+    color?: string;
 }
 
 type IResult = {[blockKey: string]: {from: number; to: number}};
@@ -11,7 +12,7 @@ type IResult = {[blockKey: string]: {from: number; to: number}};
 class Component extends React.Component<IProps> {
     render() {
         return (
-            <span style={{color: '#ff0000'}}>{this.props.children}</span>
+            <span style={{color: this.props.color}}>{this.props.children}</span>
         );
     }
 }
@@ -63,20 +64,35 @@ function getRangesExceedingLimit(
     return decorations;
 }
 
-export function getTextLimitHighlightDecorator(limit: number) {
-    function strategy(contentBlock: ContentBlock, callback, contentState: ContentState) {
+export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: number): any {
+    function strategyForHardLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
         const blockKey = contentBlock.getKey();
-        const decoration = getRangesExceedingLimit(contentState, limit)[blockKey];
+        const decoration = getRangesExceedingLimit(contentState, hardLimit)[blockKey];
 
         if (decoration != null) {
             callback(decoration.from, decoration.to);
         }
     }
 
-    const decorator = {
-        strategy: strategy,
-        component: Component,
-    };
+    function strategyForSoftLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
+        const blockKey = contentBlock.getKey();
+        const decoration = getRangesExceedingLimit(contentState, softLimit)[blockKey];
+
+        if (decoration != null) {
+            callback(decoration.from, hardLimit);
+        }
+    }
+
+    const decorator = new CompositeDecorator([
+        {
+            strategy: strategyForHardLimit,
+            component: (props) => <Component {...props} color="#ff0000" />,
+        },
+        {
+            strategy: strategyForSoftLimit,
+            component: (props) => <Component {...props} color="#E6731A" />,
+        },
+    ]);
 
     return decorator;
 }

@@ -141,6 +141,7 @@ export function updateDecorators(
             warnings: spellcheckWarnings,
         },
         limitConfig: stateCurrent.limitConfig,
+        softLimitConfig: stateCurrent.softLimitConfig,
     });
 
     if (result.mustReApplyDecorators !== true) {

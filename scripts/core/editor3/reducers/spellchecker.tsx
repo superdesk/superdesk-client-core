@@ -137,6 +137,7 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
                         warnings: enabled ? spellcheckWarningsByBlock : null,
                     },
                     limitConfig: state.limitConfig,
+                    softLimitConfig: state.softLimitConfig,
                 },
             ).decorator,
         },

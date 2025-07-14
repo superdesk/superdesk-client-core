@@ -180,10 +180,21 @@ export function getContentProfileFormConfig(
             },
         };
 
+        const maximumSoftLengthField: IFormField = {
+            label: gettext('Maximum Soft length'),
+            type: FormFieldType.number,
+            field: 'maxSoftLength',
+            required: false,
+            dependsOn: 'maxlength',
+            component_parameters: {
+                style: {boxed: true},
+            },
+        };
+
         const minMax: IFormGroup = {
-            direction: 'horizontal',
+            direction: 'vertical',
             type: 'inline',
-            form: [minimumLengthField, maximumLengthField],
+            form: [minimumLengthField, maximumLengthField, maximumSoftLengthField],
         };
 
         fields.push(minMax);

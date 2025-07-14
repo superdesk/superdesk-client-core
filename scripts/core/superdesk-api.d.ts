@@ -474,6 +474,7 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
         minLength?: number;
         maxLength?: number;
+        maxSoftLength?: number;
         compact?: boolean; // smaller UI element
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
@@ -2145,6 +2146,9 @@ declare module 'superdesk-api' {
         label?: string;
 
         field: string;
+
+        // field dependency: if specified, this field will be disabled when the dependsOn field has no value
+        dependsOn?: string;
 
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
