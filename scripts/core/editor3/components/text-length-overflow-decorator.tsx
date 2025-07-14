@@ -18,18 +18,21 @@ class Component extends React.Component<IProps> {
 }
 
 // max 1 result is cached
-const cache = new Map<ContentState, IResult>();
+const hardCache = new Map<ContentState, IResult>();
+const softCache = new Map<ContentState, IResult>();
 
 function getRangesExceedingLimit(
     contentState: ContentState,
     limit: number,
+    type: 'hard' | 'soft',
 ): IResult {
-    const cached = cache.get(contentState);
+    const currentCache = type === 'soft' ? softCache : hardCache;
+    const cached = currentCache.get(contentState);
 
     if (cached != null) {
         return cached;
     } else {
-        cache.clear();
+        currentCache.clear();
     }
 
     const decorations = {};
@@ -59,7 +62,7 @@ function getRangesExceedingLimit(
         charactersCounted += blockLength;
     }
 
-    cache.set(contentState, decorations);
+    currentCache.set(contentState, decorations);
 
     return decorations;
 }
@@ -67,7 +70,7 @@ function getRangesExceedingLimit(
 export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: number): any {
     function strategyForHardLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
         const blockKey = contentBlock.getKey();
-        const decoration = getRangesExceedingLimit(contentState, hardLimit)[blockKey];
+        const decoration = getRangesExceedingLimit(contentState, hardLimit, 'hard')[blockKey];
 
         if (decoration != null) {
             callback(decoration.from, decoration.to);
@@ -76,7 +79,7 @@ export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: nu
 
     function strategyForSoftLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
         const blockKey = contentBlock.getKey();
-        const decoration = getRangesExceedingLimit(contentState, softLimit)[blockKey];
+        const decoration = getRangesExceedingLimit(contentState, softLimit, 'soft')[blockKey];
 
         if (decoration != null) {
             callback(decoration.from, hardLimit);
