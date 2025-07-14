@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/display-name */
 import * as React from 'react';
 import {CompositeDecorator, ContentBlock, ContentState} from 'draft-js';
 
