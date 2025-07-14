@@ -41,12 +41,16 @@ export class EmbedBlockComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
+    globalKeys: Array<string>;
+
     constructor(props) {
         super(props);
 
         this.onClickDelete = this.onClickDelete.bind(this);
         this.editEmbedHtml = this.editEmbedHtml.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
+
+        this.globalKeys = [];
     }
 
     /**
@@ -59,14 +63,22 @@ export class EmbedBlockComponent extends React.Component<IProps> {
 
         tree.find('script').each((i, s) => {
             if (s.hasAttribute('src')) {
-                let url = s.getAttribute('src');
-                const async = s.hasAttribute('async');
+                const newScript = document.createElement('script');
+                const oldKeys = Object.keys(window);
 
-                if (url.startsWith('http')) {
-                    url = url.substring(url.indexOf(':') + 1);
-                }
+                newScript.setAttribute('src', s.getAttribute('src'));
+                newScript.setAttribute('async', s.hasAttribute('async') ? 'async' : '');
+                document.body.appendChild(newScript);
+                newScript.onload = () => {
+                    const newKeys = Object.keys(window);
 
-                return $.ajax({url: url, async: async, dataType: 'script'});
+                    // keep track of new global objects created after the script was loaded
+                    this.globalKeys = newKeys.filter((k) => !oldKeys.includes(k) && isNaN(parseInt(k, 10)));
+
+                    document.body.removeChild(newScript);
+                };
+
+                return;
             }
 
             try {
@@ -147,10 +159,19 @@ export class EmbedBlockComponent extends React.Component<IProps> {
 
     componentDidMount() {
         const embed = this.data();
+        const html = embed.data.html;
+        const isQumu = isQumuWidget(html);
 
         if (embed.data.html.includes('iframe.ly')) {
             loadIframely();
+        } else if (isQumu !== true) {
+            this.runScripts(html);
         }
+    }
+
+    componentWillUnmount(): void {
+        this.globalKeys.forEach((k) => delete window[k]);
+        this.globalKeys = [];
     }
 
     render() {
@@ -158,10 +179,6 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         const html = embed.data.html;
         const isQumu = isQumuWidget(html);
         const {readOnly} = this.props;
-
-        if (isQumu !== true) {
-            this.runScripts(html);
-        }
 
         const setLocked = () => {
             this.props.dispatch(actions.setLocked(true));

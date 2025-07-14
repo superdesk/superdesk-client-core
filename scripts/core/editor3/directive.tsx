@@ -148,7 +148,10 @@ class Editor3Directive {
     headerStyles?: boolean;
     helperText: string;
 
+    reactRoot: any;
+
     $onInit: () => void;
+    $onDestroy: () => void;
 
     constructor() {
         this.scope = {};
@@ -348,6 +351,8 @@ class Editor3Directive {
 
                     const renderEditor3 = () => {
                         const element = $element.get(0);
+
+                        this.reactRoot = element;
 
                         ReactDOM.unmountComponentAtNode(element);
 
@@ -638,6 +643,13 @@ class Editor3Directive {
                         () => generateHtml(store, this.item, this.pathToValue),
                     );
                 });
+        };
+
+        this.$onDestroy = () => {
+            if (this.reactRoot) {
+                ReactDOM.unmountComponentAtNode(this.reactRoot);
+                this.reactRoot = null;
+            }
         };
     }
 }
