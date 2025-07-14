@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
 import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {appConfig} from 'appConfig';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
@@ -12,25 +13,32 @@ interface IPropsStyleButton {
     label?: string;
 }
 
-const StyleIcons = {
-    bold: 'icon-bold',
-    italic: 'icon-italic',
-    underline: 'icon-underline',
-    strikethrough: 'icon-strikethrough',
-    h1: 'icon-heading-1',
-    h2: 'icon-heading-2',
-    h3: 'icon-heading-3',
-    h4: 'icon-heading-4',
-    h5: 'icon-heading-5',
-    h6: 'icon-heading-6',
-    quote: 'icon-quote',
-    'unordered list': 'icon-unordered-list',
-    'ordered list': 'icon-ordered-list',
-    suggestions: 'icon-suggestion',
-    invisibles: 'icon-paragraph',
-    pre: 'icon-preformatted',
-    subscript: 'icon-subscript',
-    superscript: 'icon-superscript',
+const getStyleIcons = () => {
+    const customTags = Object.fromEntries(
+        appConfig.authoring.customEditorTags.map(({id, icon}) => [id, `icon-${icon}`]),
+    );
+
+    return {
+        ...customTags,
+        bold: 'icon-bold',
+        italic: 'icon-italic',
+        underline: 'icon-underline',
+        strikethrough: 'icon-strikethrough',
+        h1: 'icon-heading-1',
+        h2: 'icon-heading-2',
+        h3: 'icon-heading-3',
+        h4: 'icon-heading-4',
+        h5: 'icon-heading-5',
+        h6: 'icon-heading-6',
+        quote: 'icon-quote',
+        'unordered list': 'icon-unordered-list',
+        'ordered list': 'icon-ordered-list',
+        suggestions: 'icon-suggestion',
+        invisibles: 'icon-paragraph',
+        pre: 'icon-preformatted',
+        subscript: 'icon-subscript',
+        superscript: 'icon-superscript',
+    };
 };
 
 /**
@@ -55,14 +63,23 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
 
     render() {
         const {active, label} = this.props;
-        const iconClass = StyleIcons[label];
+        const iconClass = getStyleIcons()[label];
 
         const cx = classNames({
             'Editor3-styleButton': true,
             'Editor3-activeButton': active,
         });
 
+        const customTags = appConfig.authoring.customEditorTags
+            .reduce((acc, {id, name}) => {
+                acc[id] = name;
+
+                return acc;
+            }, {} satisfies Record<string, string>);
+
+
         const styleTooltips = {
+            ...customTags,
             bold: gettext('Bold (Ctrl+B)'),
             italic: gettext('Italic (Ctrl+I)'),
             underline: gettext('Underline (Ctrl+U)'),

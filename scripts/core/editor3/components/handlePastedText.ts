@@ -4,7 +4,7 @@ import {EditorState, ContentState, Modifier, genKey, CharacterMetadata, ContentB
 import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
-import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
+import {sanitizeContent, getInlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
@@ -123,10 +123,11 @@ export function insertContentInState(
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
+    const inlineStyles = getInlineStyles();
     const acceptedInlineStyles =
-            Object.keys(inlineStyles)
-                .filter((style) => editorFormat.includes(style))
-                .map((style) => inlineStyles[style]);
+        Object.keys(inlineStyles)
+            .filter((style) => editorFormat.includes(style))
+            .map((style) => inlineStyles[style]);
 
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();

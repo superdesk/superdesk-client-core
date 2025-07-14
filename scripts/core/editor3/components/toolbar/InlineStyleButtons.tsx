@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
 import {connect} from 'react-redux';
-import {inlineStyles} from '../../helpers/inlineStyles';
+import {getInlineStyles} from '../../helpers/inlineStyles';
 import * as Suggestions from '../../helpers/suggestions';
 import {getCurrentAuthor} from '../../helpers/author';
 
@@ -43,6 +43,7 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
     render() {
         const {editorFormat, editorState} = this.props;
         const currentStyle = editorState.getCurrentInlineStyle();
+        const inlineStyles = getInlineStyles();
 
         return (
             <span>

@@ -1,47 +1,77 @@
-export const customStyleMap: {[key: string]: React.CSSProperties} = {
-    HIGHLIGHT: {
-        display: 'inline-block',
-        padding: '1px 3px',
-        backgroundColor: 'rgba(255, 235, 59, 0.2)',
-    },
+import {appConfig} from 'appConfig';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {memoize} from 'lodash';
 
-    HIGHLIGHT_STRONG: {
-        display: 'inline-block',
-        padding: '1px 3px',
-        backgroundColor: 'rgba(255, 235, 59, 0.8)',
-    },
+type ObjectOfStyles = Record<string, React.CSSProperties>;
 
-    COMMENT: {
-        backgroundColor: 'rgba(255, 235, 59, 0.2)',
-    },
-
-    COMMENT_SELECTED: {
-        backgroundColor: 'rgba(255, 235, 59, 0.6)',
-    },
-
-    ANNOTATION: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 0.6)',
-    },
-
-    ANNOTATION_SELECTED: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 1.0)',
-    },
-
-    STRIKETHROUGH: {
-        textDecoration: 'line-through',
-    },
-
-    CODE: {
-        backgroundColor: '#e6ffe6',
-    },
-
-    SUBSCRIPT: {
-        verticalAlign: 'sub',
-        fontSize: 'smaller',
-    },
-
-    SUPERSCRIPT: {
-        verticalAlign: 'super',
-        fontSize: 'smaller',
-    },
+const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
+    if (borderColor === 'blue') {
+        return '#12345';
+    } else if (borderColor === 'orange') {
+        return '#12345';
+    } else if (borderColor === 'purple') {
+        return '#12345';
+    } else {
+        assertNever(borderColor);
+    }
 };
+
+export const getCustomStyleMap: () => ObjectOfStyles = memoize(
+    () => {
+        const customTags: ObjectOfStyles = Object.fromEntries(
+            appConfig.authoring.customEditorTags.map(({id, borderColor}) => [
+                id, {display: 'inline-block', borderBlockEnd: `2px double ${getUiFrameworkColor(borderColor)}`},
+            ]),
+        );
+
+        return {
+            ...customTags,
+
+            HIGHLIGHT: {
+                display: 'inline-block',
+                padding: '1px 3px',
+                backgroundColor: 'rgba(255, 235, 59, 0.2)',
+            },
+
+            HIGHLIGHT_STRONG: {
+                display: 'inline-block',
+                padding: '1px 3px',
+                backgroundColor: 'rgba(255, 235, 59, 0.8)',
+            },
+
+            COMMENT: {
+                backgroundColor: 'rgba(255, 235, 59, 0.2)',
+            },
+
+            COMMENT_SELECTED: {
+                backgroundColor: 'rgba(255, 235, 59, 0.6)',
+            },
+
+            ANNOTATION: {
+                borderBlockEnd: '4px solid rgba(100, 205, 0, 0.6)',
+            },
+
+            ANNOTATION_SELECTED: {
+                borderBlockEnd: '4px solid rgba(100, 205, 0, 1.0)',
+            },
+
+            STRIKETHROUGH: {
+                textDecoration: 'line-through',
+            },
+
+            CODE: {
+                backgroundColor: '#e6ffe6',
+            },
+
+            SUBSCRIPT: {
+                verticalAlign: 'sub',
+                fontSize: 'smaller',
+            },
+
+            SUPERSCRIPT: {
+                verticalAlign: 'super',
+                fontSize: 'smaller',
+            },
+        };
+    },
+);
