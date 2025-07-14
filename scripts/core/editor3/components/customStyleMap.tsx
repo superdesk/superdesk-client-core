@@ -17,7 +17,7 @@ const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEdito
 export const customStyleMap = {
     ...Object.fromEntries(
         (appConfig.authoring?.customEditorTags ?? []).map(({id, borderColor}) => [
-            id, {display: 'inline-block', borderBlockEnd: `2px double ${getUiFrameworkColor(borderColor)}`},
+            id, {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
         ]),
     ),
 
