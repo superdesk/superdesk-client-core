@@ -2,18 +2,19 @@ import {appConfig} from 'appConfig';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
+    // TODO: Fix the conversion so it returns UI framework color variables, that work in dark and light themes
     if (borderColor === 'blue') {
-        return '#12345';
+        return 'blue';
     } else if (borderColor === 'orange') {
-        return '#12345';
+        return 'orange';
     } else if (borderColor === 'purple') {
-        return '#12345';
+        return 'purple';
     } else {
         assertNever(borderColor);
     }
 };
 
-export const getCustomStyleMap = {
+export const customStyleMap = {
     ...Object.fromEntries(
         (appConfig.authoring.customEditorTags ?? []).map(({id, borderColor}) => [
             id, {display: 'inline-block', borderBlockEnd: `2px double ${getUiFrameworkColor(borderColor)}`},

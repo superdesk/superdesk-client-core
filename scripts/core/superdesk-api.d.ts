@@ -3621,7 +3621,7 @@ declare module 'superdesk-api' {
         infoRemovedFields: {};
         previewSubjectFilterKey: any;
         authoring?: {
-            customEditorTags: Array<{
+            customEditorTags?: Array<{
                 id: string;
                 icon: string;
                 label: string;

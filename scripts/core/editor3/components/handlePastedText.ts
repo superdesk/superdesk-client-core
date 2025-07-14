@@ -123,7 +123,6 @@ export function insertContentInState(
     let _pastedContent = pastedContent;
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
-    const inlineStyles = inlineStyles();
     const acceptedInlineStyles =
         Object.keys(inlineStyles)
             .filter((style) => editorFormat.includes(style))

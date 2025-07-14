@@ -9,7 +9,7 @@ import {
     convertToRaw,
 } from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
-import {getCustomStyleMap} from '../customStyleMap';
+import {customStyleMap} from '../customStyleMap';
 import {getSpellchecker} from '../spellchecker/default-spellcheckers';
 import {getSpellcheckWarningsByBlock} from '../spellchecker/SpellcheckerDecorator';
 import {isEqual, throttle} from 'lodash';
@@ -300,7 +300,7 @@ export class TableCell extends React.Component<IProps, IState> {
                 <Editor
                     onFocus={this.onFocus}
                     editorState={editorState}
-                    customStyleMap={getCustomStyleMap()}
+                    customStyleMap={customStyleMap}
                     handleKeyCommand={this.handleKeyCommand}
                     readOnly={readOnly}
                     onChange={this.onChange}

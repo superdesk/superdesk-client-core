@@ -17,7 +17,7 @@ import {getVisibleSelectionRect} from 'draft-js';
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
 import {getBlockRenderer} from './blockRenderer';
-import {getCustomStyleMap} from './customStyleMap';
+import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
 import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entityUtils';
@@ -749,7 +749,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                             blockRenderMap={blockRenderMap}
                             blockRendererFn={getBlockRenderer(this.props.spellchecking)}
                             blockStyleFn={blockStyle}
-                            customStyleMap={{...getCustomStyleMap(), ...this.props.highlightsManager.styleMap}}
+                            customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                             onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
