@@ -31,10 +31,8 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
 });
 
 export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
-    const customTags = Object.fromEntries(appConfig.authoring.customEditorTags.map(({id, name}) => [id, name]));
-
     return {
-        ...customTags,
+        ...Object.fromEntries((appConfig.authoring?.customEditorTags ?? []).map(({id, label}) => [id, label])),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),

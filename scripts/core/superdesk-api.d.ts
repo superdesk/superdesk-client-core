@@ -3624,7 +3624,7 @@ declare module 'superdesk-api' {
             customEditorTags: Array<{
                 id: string;
                 icon: string;
-                name: string;
+                label: string;
                 borderColor: 'orange' | 'blue' | 'purple';
             }>;
             timeToRead?: any;

@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import StyleButton from './StyleButton';
 import * as actions from '../../actions';
-import {getInlineStyles} from '../../helpers/inlineStyles';
+import {inlineStyles} from '../../helpers/inlineStyles';
 import {getData, getCell} from '../../helpers/table';
 import {ITableKind} from '../tables/TableBlock';
 import {RICH_FORMATTING_OPTION} from 'superdesk-api';
@@ -67,7 +67,6 @@ const TableControlsComponent: React.FunctionComponent<IProps> = (props) => {
         .getCurrentContent()
         .getBlockForKey(cellEditorState.getSelection().getStartKey())
         .getType();
-    const inlineStyles = getInlineStyles();
 
     return (
         <div className={'table-controls ' + className} data-test-id="toolbar">

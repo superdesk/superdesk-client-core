@@ -13,32 +13,28 @@ interface IPropsStyleButton {
     label?: string;
 }
 
-const getStyleIcons = () => {
-    const customTags = Object.fromEntries(
-        appConfig.authoring.customEditorTags.map(({id, icon}) => [id, `icon-${icon}`]),
-    );
-
-    return {
-        ...customTags,
-        bold: 'icon-bold',
-        italic: 'icon-italic',
-        underline: 'icon-underline',
-        strikethrough: 'icon-strikethrough',
-        h1: 'icon-heading-1',
-        h2: 'icon-heading-2',
-        h3: 'icon-heading-3',
-        h4: 'icon-heading-4',
-        h5: 'icon-heading-5',
-        h6: 'icon-heading-6',
-        quote: 'icon-quote',
-        'unordered list': 'icon-unordered-list',
-        'ordered list': 'icon-ordered-list',
-        suggestions: 'icon-suggestion',
-        invisibles: 'icon-paragraph',
-        pre: 'icon-preformatted',
-        subscript: 'icon-subscript',
-        superscript: 'icon-superscript',
-    };
+const styleIcons = {
+    ...Object.fromEntries(
+        (appConfig.authoring?.customEditorTags ?? []).map(({id, icon}) => [id, `icon-${icon}`]),
+    ),
+    bold: 'icon-bold',
+    italic: 'icon-italic',
+    underline: 'icon-underline',
+    strikethrough: 'icon-strikethrough',
+    h1: 'icon-heading-1',
+    h2: 'icon-heading-2',
+    h3: 'icon-heading-3',
+    h4: 'icon-heading-4',
+    h5: 'icon-heading-5',
+    h6: 'icon-heading-6',
+    quote: 'icon-quote',
+    'unordered list': 'icon-unordered-list',
+    'ordered list': 'icon-ordered-list',
+    suggestions: 'icon-suggestion',
+    invisibles: 'icon-paragraph',
+    pre: 'icon-preformatted',
+    subscript: 'icon-subscript',
+    superscript: 'icon-superscript',
 };
 
 /**
@@ -63,20 +59,16 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
 
     render() {
         const {active, label} = this.props;
-        const iconClass = getStyleIcons()[label];
+        const iconClass = styleIcons[label];
 
         const cx = classNames({
             'Editor3-styleButton': true,
             'Editor3-activeButton': active,
         });
 
-        const customTags = appConfig.authoring.customEditorTags
-            .reduce((acc, {id, name}) => {
-                acc[id] = name;
-
-                return acc;
-            }, {} satisfies Record<string, string>);
-
+        const customTags = Object.fromEntries(
+            (appConfig.authoring?.customEditorTags ?? []).map(({id, label}) => [id, label]),
+        );
 
         const styleTooltips = {
             ...customTags,

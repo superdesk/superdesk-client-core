@@ -1,28 +1,23 @@
 import {appConfig} from 'appConfig';
 import {EditorState, SelectionState, Modifier} from 'draft-js';
-import memoizeOne from 'memoize-one';
 
 /**
  * @type {Object}
  * @description Maps server 'editorFormat' options to Draft inline styles.
  */
-export const getInlineStyles = memoizeOne(() => {
-    const customTags = Object.fromEntries(
-        appConfig.authoring.customEditorTags.map(({id}) => [id, id]),
-    );
+export const inlineStyles = {
+    ...Object.fromEntries(
+        (appConfig.authoring?.customEditorTags ?? []).map(({id}) => [id, id]),
+    ),
+    bold: 'BOLD',
+    italic: 'ITALIC',
+    underline: 'UNDERLINE',
+    subscript: 'SUBSCRIPT',
+    superscript: 'SUPERSCRIPT',
+    strikethrough: 'STRIKETHROUGH',
+};
 
-    return {
-        ...customTags,
-        bold: 'BOLD',
-        italic: 'ITALIC',
-        underline: 'UNDERLINE',
-        subscript: 'SUBSCRIPT',
-        superscript: 'SUPERSCRIPT',
-        strikethrough: 'STRIKETHROUGH',
-    };
-});
-
-export const acceptedInlineStyles = Object.values(getInlineStyles());
+export const acceptedInlineStyles = Object.values(inlineStyles);
 
 /**
  * Sanitize given content state on paste

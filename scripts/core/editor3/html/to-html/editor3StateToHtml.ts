@@ -11,7 +11,7 @@ export const editor3StateToHtml = (
 ): string => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
         .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
-    const tagStyles = new Set(appConfig.authoring.customEditorTags.map((tag) => tag.id));
+    const tagStyles = new Set((appConfig.authoring?.customEditorTags ?? []).map((tag) => tag.id));
 
     let options = {
         inlineStyles: {
