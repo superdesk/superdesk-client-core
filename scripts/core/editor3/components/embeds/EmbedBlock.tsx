@@ -41,53 +41,12 @@ export class EmbedBlockComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
-    globalKeys: Array<string>;
-
     constructor(props) {
         super(props);
 
         this.onClickDelete = this.onClickDelete.bind(this);
         this.editEmbedHtml = this.editEmbedHtml.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
-
-        this.globalKeys = [];
-    }
-
-    /**
-     * @name EmbedBlockComponent#runScripts
-     * @param {string} html
-     * @description Runs and imports all the scripts in the given HTML.
-     */
-    runScripts(html) {
-        const tree = $('<div />').html(html);
-
-        tree.find('script').each((i, s) => {
-            if (s.hasAttribute('src')) {
-                const newScript = document.createElement('script');
-                const oldKeys = Object.keys(window);
-
-                newScript.setAttribute('src', s.getAttribute('src'));
-                newScript.setAttribute('async', s.hasAttribute('async') ? 'async' : '');
-                document.body.appendChild(newScript);
-                newScript.onload = () => {
-                    const newKeys = Object.keys(window);
-
-                    // keep track of new global objects created after the script was loaded
-                    this.globalKeys = newKeys.filter((k) => !oldKeys.includes(k) && isNaN(parseInt(k, 10)));
-
-                    document.body.removeChild(newScript);
-                };
-
-                return;
-            }
-
-            try {
-                // eslint-disable-next-line no-eval
-                eval(s.innerHTML);
-            } catch (e) {
-                /* carry on */
-            }
-        });
     }
 
     getEntityKey() {
@@ -159,19 +118,10 @@ export class EmbedBlockComponent extends React.Component<IProps> {
 
     componentDidMount() {
         const embed = this.data();
-        const html = embed.data.html;
-        const isQumu = isQumuWidget(html);
 
         if (embed.data.html.includes('iframe.ly')) {
             loadIframely();
-        } else if (isQumu !== true) {
-            this.runScripts(html);
         }
-    }
-
-    componentWillUnmount(): void {
-        this.globalKeys.forEach((k) => delete window[k]);
-        this.globalKeys = [];
     }
 
     render() {
@@ -204,7 +154,20 @@ export class EmbedBlockComponent extends React.Component<IProps> {
                 {
                     isQumu
                         ? <QumuWidget html={html} />
-                        : <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+                        : (
+                            <div className="embed-block__wrapper">
+                                <iframe
+                                    srcDoc={html}
+                                    style={{border: 0}}
+                                    onLoad={(event) => {
+                                        const iframe = event.currentTarget;
+
+                                        // set the height of the iframe to the content height
+                                        iframe.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+                                    }}
+                                />
+                            </div>
+                        )
                 }
 
                 <Textarea
