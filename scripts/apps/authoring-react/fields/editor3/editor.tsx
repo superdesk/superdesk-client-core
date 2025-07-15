@@ -77,7 +77,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.initializeEditor = this.initializeEditor.bind(this);
     }
 
-    getCharacterLimitPreference(limitType: string): EditorLimit | null {
+    getCharacterLimitPreference(limitType: 'maxLength' | 'maxSoftLength'): EditorLimit | null {
         if (typeof this.props.config[limitType] !== 'number') {
             return null;
         }
@@ -317,7 +317,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         const store = this.props.value.store;
         const {config} = this.props;
-        const characterLimitConfig = this.getCharacterLimitPreference();
+        const characterLimitConfig = this.getCharacterLimitPreference('maxLength');
         const plainText = this.props.value.contentState.getPlainText();
         const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
         const showStatistics = config.showStatistics ?? true;
