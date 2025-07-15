@@ -40,35 +40,6 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         this.onChangeDescription = this.onChangeDescription.bind(this);
     }
 
-    /**
-     * @name EmbedBlockComponent#runScripts
-     * @param {string} html
-     * @description Runs and imports all the scripts in the given HTML.
-     */
-    runScripts(html) {
-        const tree = $('<div />').html(html);
-
-        tree.find('script').each((i, s) => {
-            if (s.hasAttribute('src')) {
-                let url = s.getAttribute('src');
-                const async = s.hasAttribute('async');
-
-                if (url.startsWith('http')) {
-                    url = url.substring(url.indexOf(':') + 1);
-                }
-
-                return $.ajax({url: url, async: async, dataType: 'script'});
-            }
-
-            try {
-                // eslint-disable-next-line no-eval
-                eval(s.innerHTML);
-            } catch (e) {
-                /* carry on */
-            }
-        });
-    }
-
     getEntityKey() {
         const {block} = this.props;
 
@@ -150,10 +121,6 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         const isQumu = isQumuWidget(html);
         const {readOnly} = this.props;
 
-        if (isQumu !== true) {
-            this.runScripts(html);
-        }
-
         const setLocked = () => {
             this.props.dispatch(actions.setLocked(true));
         };
@@ -178,7 +145,20 @@ export class EmbedBlockComponent extends React.Component<IProps> {
                 {
                     isQumu
                         ? <QumuWidget html={html} />
-                        : <div className="embed-block__wrapper" dangerouslySetInnerHTML={{__html: html}} />
+                        : (
+                            <div className="embed-block__wrapper">
+                                <iframe
+                                    srcDoc={html}
+                                    style={{border: 0}}
+                                    onLoad={(event) => {
+                                        const iframe = event.currentTarget;
+
+                                        // set the height of the iframe to the content height
+                                        iframe.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+                                    }}
+                                />
+                            </div>
+                        )
                 }
 
                 <Textarea
