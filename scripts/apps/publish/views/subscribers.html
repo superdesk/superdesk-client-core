@@ -34,7 +34,7 @@
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
                         <span class="sd-overflow-ellipsis sd-list-item--element-grow" id="subscriberName">{{ subscriber.name }}</span>
-                        <span class="label label--hollow label--primary" ng-if="subscriber.schedule.startDate && subscriber.schedule.endDate" translate>Scheduled</span>
+                        <span class="label label--hollow label--primary" ng-if="subscriber.schedule.start_date && subscriber.schedule.end_date" translate>Scheduled</span>
                         <span class="label label--hollow label--alert" ng-if="!subscriber.is_active" translate>Not Active</span>
                     </div>
                 </div>
@@ -182,19 +182,19 @@
 
                             <div class="form__row-item sd-margin-t--2">
                                 <sd-date-picker
-                                    value="subscriber.schedule.startDate"
+                                    value="subscriber.schedule.start_date"
                                     on-change="updateStartDate"
                                     label="'Start Date' | translate"
-                                    required="!!subscriber.schedule.endDate">
+                                    required="!!subscriber.schedule.end_date">
                                 </sd-date-picker>
                             </div>
                             
                             <div class="form__row-item sd-margin-t--2">
                                 <sd-date-picker
-                                    value="subscriber.schedule.endDate"
+                                    value="subscriber.schedule.end_date"
                                     on-change="updateEndDate"
                                     label="'End Date' | translate"
-                                    required="!!subscriber.schedule.startDate">
+                                    required="!!subscriber.schedule.start_date">
                                 </sd-date-picker>
                             </div>
 

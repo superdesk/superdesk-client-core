@@ -189,10 +189,10 @@ export function SubscribersDirective(
                     diff[key] = value;
                 });
 
-                if ($scope.subscriber.schedule?.startDate != null && $scope.subscriber.schedule?.endDate != null) {
+                if ($scope.subscriber.schedule?.start_date != null && $scope.subscriber.schedule?.end_date != null) {
                     diff['schedule'] = {
-                        startDate: format($scope.subscriber.schedule.startDate, 'yyyy-MM-dd'),
-                        endDate: format($scope.subscriber.schedule.endDate, 'yyyy-MM-dd'),
+                        start_date: format($scope.subscriber.schedule.start_date, 'yyyy-MM-dd'),
+                        end_date: format($scope.subscriber.schedule.end_date, 'yyyy-MM-dd'),
                     };
                 }
 
@@ -250,14 +250,14 @@ export function SubscribersDirective(
 
                     if (!$scope.subscriber.schedule) {
                         $scope.subscriber.schedule = {
-                            startDate: null,
-                            endDate: null,
+                            start_date: null,
+                            end_date: null,
                         };
                     } else {
-                        const {startDate, endDate} = $scope.subscriber.schedule;
+                        const {start_date, end_date} = $scope.subscriber.schedule;
 
-                        $scope.subscriber.schedule.startDate = startDate ? startOfDay(parseISO(startDate)) : null;
-                        $scope.subscriber.schedule.endDate = endDate ? startOfDay(parseISO(endDate)) : null;
+                        $scope.subscriber.schedule.start_date = start_date ? startOfDay(parseISO(start_date)) : null;
+                        $scope.subscriber.schedule.end_date = end_date ? startOfDay(parseISO(end_date)) : null;
                     }
 
                     $scope.destinations = [];
@@ -315,15 +315,15 @@ export function SubscribersDirective(
 
             $scope.$watchGroup([
                 'subscriber.is_active',
-                'subscriber.schedule.startDate',
-                'subscriber.schedule.endDate',
+                'subscriber.schedule.start_date',
+                'subscriber.schedule.end_date',
             ], () => {
                 $scope.validateScheduleDates();
             });
 
 
-            $scope.updateStartDate = (date) => $scope.updateScheduleDate('startDate', date);
-            $scope.updateEndDate = (date) => $scope.updateScheduleDate('endDate', date);
+            $scope.updateStartDate = (date) => $scope.updateScheduleDate('start_date', date);
+            $scope.updateEndDate = (date) => $scope.updateScheduleDate('end_date', date);
 
             /**
             * Updates schedule dates and triggers validation
@@ -347,10 +347,10 @@ export function SubscribersDirective(
 
                 $scope.scheduleErrors = [];
 
-                const {startDate, endDate} = $scope.subscriber.schedule;
+                const {start_date, end_date} = $scope.subscriber.schedule;
                 const now = startOfDay(new Date());
-                const mStart = startDate ? startOfDay(new Date(startDate)) : null;
-                const mEnd = endDate ? startOfDay(new Date(endDate)) : null;
+                const mStart = start_date ? startOfDay(new Date(start_date)) : null;
+                const mEnd = end_date ? startOfDay(new Date(end_date)) : null;
 
                 if ($scope.subscriber.is_active) {
                     if (mStart != null && isAfter(mStart, now)) {
