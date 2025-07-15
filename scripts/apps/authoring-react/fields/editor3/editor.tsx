@@ -77,14 +77,14 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.initializeEditor = this.initializeEditor.bind(this);
     }
 
-    getCharacterLimitPreference(): EditorLimit | null {
-        if (typeof this.props.config.maxLength !== 'number') {
+    getCharacterLimitPreference(limitType: string): EditorLimit | null {
+        if (typeof this.props.config[limitType] !== 'number') {
             return null;
         }
 
         return {
             ui: this.props.editorPreferences.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT,
-            chars: this.props.config.maxLength,
+            chars: this.props.config[limitType],
         };
     }
 
@@ -96,7 +96,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
             singleLine: this.props.config.singleLine ?? false,
             readOnly: this.props.readOnly || this.props.config.readOnly,
             spellchecking: getInitialSpellcheckerData(ng.get('spellcheck'), this.props.language),
-            limitConfig: this.getCharacterLimitPreference(),
+            limitConfig: this.getCharacterLimitPreference('maxLength'),
+            softLimitConfig: this.getCharacterLimitPreference('maxSoftLength'),
             item: {
                 language: this.props.language, // required for annotations to work
             },
