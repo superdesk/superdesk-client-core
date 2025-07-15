@@ -6,6 +6,8 @@ import {
     isAfter,
     isEqual,
     format,
+    startOfDay,
+    parseISO,
 } from 'date-fns';
 
 /**
@@ -187,6 +189,13 @@ export function SubscribersDirective(
                     diff[key] = value;
                 });
 
+                if ($scope.subscriber.schedule?.startDate != null && $scope.subscriber.schedule?.endDate != null) {
+                    diff['schedule'] = {
+                        startDate: format($scope.subscriber.schedule.startDate, 'yyyy-MM-dd'),
+                        endDate: format($scope.subscriber.schedule.endDate, 'yyyy-MM-dd'),
+                    };
+                }
+
                 api.subscribers.save($scope.origSubscriber, diff)
                     .then(
                         () => {
@@ -247,8 +256,8 @@ export function SubscribersDirective(
                     } else {
                         const {startDate, endDate} = $scope.subscriber.schedule;
 
-                        $scope.subscriber.schedule.startDate = startDate ? new Date(startDate) : null;
-                        $scope.subscriber.schedule.endDate = endDate ? new Date(endDate) : null;
+                        $scope.subscriber.schedule.startDate = startDate ? startOfDay(parseISO(startDate)) : null;
+                        $scope.subscriber.schedule.endDate = endDate ? startOfDay(parseISO(endDate)) : null;
                     }
 
                     $scope.destinations = [];
@@ -339,24 +348,22 @@ export function SubscribersDirective(
                 $scope.scheduleErrors = [];
 
                 const {startDate, endDate} = $scope.subscriber.schedule;
-                const now = new Date();
-                const mStart = startDate ? new Date(startDate) : null;
-                const mEnd = endDate ? new Date(endDate) : null;
+                const now = startOfDay(new Date());
+                const mStart = startDate ? startOfDay(new Date(startDate)) : null;
+                const mEnd = endDate ? startOfDay(new Date(endDate)) : null;
 
                 if ($scope.subscriber.is_active) {
-                    if (mStart != null && isBefore(now, mStart)) {
+                    if (mStart != null && isAfter(mStart, now)) {
                         $scope.scheduleErrors.push(gettext(
-                            'Subscriber is currently active but will be deactivated until ' +
-                            format(mStart, 'PPpp') +
-                            ' when you save.',
+                            'Schedule starts on {{date}}. Manual activation will override it.',
+                            {date: format(mStart, 'PPP')},
                         ));
                     }
 
-                    if (mEnd != null && isAfter(now, mEnd)) {
+                    if (mEnd != null && isBefore(mEnd, now)) {
                         $scope.scheduleErrors.push(gettext(
-                            'Subscriber is currently active but the end date ' +
-                            format(mEnd, 'PPpp') +
-                            ' has passed. It will be deactivated when you save.',
+                            'Schedule ended on {{date}}. Manual activation will override it.',
+                            {date: format(mEnd, 'PPP')},
                         ));
                     }
                 } else if (
@@ -365,9 +372,9 @@ export function SubscribersDirective(
                     (isBefore(now, mEnd) || isEqual(now, mEnd))
                 ) {
                     $scope.scheduleErrors.push(gettext(
-                        'Subscriber is inactive but the current time is within the active schedule (' +
-                        format(mStart, 'PPpp') + ' to ' + format(mEnd, 'PPpp') +
-                        '). It will be activated when you save.',
+                        'Subscriber is inactive but within {{start}} to {{end}} schedule. ' +
+                        'It will be activated when you save.',
+                        {start: format(mStart, 'PPP'), end: format(mEnd, 'PPP')},
                     ));
                 }
             };

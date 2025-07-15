@@ -1,5 +1,5 @@
 import React from 'react';
-import {DateTimePicker} from 'superdesk-ui-framework/react';
+import {DatePicker} from 'superdesk-ui-framework/react';
 import {isValid} from 'date-fns';
 import {appConfig} from 'appConfig';
 
@@ -10,19 +10,18 @@ interface IProps {
   required?: boolean;
 }
 
-export class DateTimePickerWrapper extends React.PureComponent<IProps> {
+export class DatePickerWrapper extends React.PureComponent<IProps> {
     render() {
         const {value, onChange, label, required = false} = this.props;
 
         return (
-            <DateTimePicker
+            <DatePicker
                 label={label}
                 value={value}
                 onChange={(val) => {
                     if (!isValid(val) && val !== null) return;
                     onChange(val);
                 }}
-                valueType="date"
                 dateFormat={appConfig.view.dateformat}
                 required={required}
             />

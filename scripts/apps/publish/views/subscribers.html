@@ -181,21 +181,21 @@
                             <label class="form-label" translate>Subscriber Schedule Settings</label>
 
                             <div class="form__row-item sd-margin-t--2">
-                                <sd-date-time-picker
+                                <sd-date-picker
                                     value="subscriber.schedule.startDate"
                                     on-change="updateStartDate"
                                     label="'Start Date' | translate"
                                     required="!!subscriber.schedule.endDate">
-                                </sd-date-time-picker>
+                                </sd-date-picker>
                             </div>
                             
                             <div class="form__row-item sd-margin-t--2">
-                                <sd-date-time-picker
+                                <sd-date-picker
                                     value="subscriber.schedule.endDate"
                                     on-change="updateEndDate"
                                     label="'End Date' | translate"
                                     required="!!subscriber.schedule.startDate">
-                                </sd-date-time-picker>
+                                </sd-date-picker>
                             </div>
 
                             <div ng-repeat="error in scheduleErrors" class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2">
