@@ -15,8 +15,6 @@ import * as directive from './directives';
 import * as filter from './filters';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
-import {reactToAngular1} from 'superdesk-ui-framework';
-import {SubscriberScheduleDatePicker} from './SubscriberScheduleDatePicker';
 
 /**
  * @ngdoc module
@@ -36,13 +34,6 @@ export default angular.module('superdesk.apps.publish', ['superdesk.apps.users',
     .filter('subscribersBy', filter.SubscribersFilter)
     .controller('publishQueueCtrl', ctrl.PublishQueueController)
     .controller('SubscriberTokenCtrl', ctrl.SubscriberTokenController)
-
-    .component('sdSubscriberScheduleDatePicker',
-        reactToAngular1(
-            SubscriberScheduleDatePicker,
-            ['model', 'onChange', 'label', 'required'],
-        ),
-    )
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk

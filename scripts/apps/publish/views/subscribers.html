@@ -181,31 +181,25 @@
                             <label class="form-label" translate>Subscriber Schedule Settings</label>
 
                             <div class="form__row-item sd-margin-t--2">
-                                <sd-subscriber-schedule-date-picker
-                                    model="subscriber.schedule.startDate"
+                                <sd-date-time-picker
+                                    value="subscriber.schedule.startDate"
                                     on-change="updateStartDate"
-                                    label="'Start Date'"
+                                    label="'Start Date' | translate"
                                     required="!!subscriber.schedule.endDate">
-                                </sd-subscriber-schedule-date-picker>
+                                </sd-date-time-picker>
                             </div>
                             
                             <div class="form__row-item sd-margin-t--2">
-                                <sd-subscriber-schedule-date-picker
-                                    model="subscriber.schedule.endDate"
+                                <sd-date-time-picker
+                                    value="subscriber.schedule.endDate"
                                     on-change="updateEndDate"
-                                    label="'End Date'"
+                                    label="'End Date' | translate"
                                     required="!!subscriber.schedule.startDate">
-                                </sd-subscriber-schedule-date-picker>
+                                </sd-date-time-picker>
                             </div>
 
-                            <div class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2"
-                                ng-if="scheduleError.activeBeforeStartErrorMessage || scheduleError.activeAfterEndErrorMessage">
-                                <span ng-if="scheduleError.activeBeforeStartErrorMessage">
-                                    {{ scheduleError.activeBeforeStartErrorMessage }}
-                                </span>
-                                <span ng-if="scheduleError.activeAfterEndErrorMessage">
-                                    {{ scheduleError.activeAfterEndErrorMessage }}
-                                </span>
+                            <div ng-repeat="error in scheduleErrors" class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2">
+                                {{ error }}
                             </div>
                         </div>
 

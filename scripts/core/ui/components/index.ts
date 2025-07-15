@@ -25,6 +25,7 @@ import {NavTabs} from './nav-tabs';
 import {DropZone} from './drop-zone';
 import {PlainTextEditor} from './PlainTextEditor/PlainTextEditor';
 import UserPopup from './UserPopup';
+import {DateTimePickerWrapper} from './DateTimePickerWrapper';
 
 export {
     List,
@@ -54,4 +55,5 @@ export {
     DropZone,
     PlainTextEditor,
     UserPopup,
+    DateTimePickerWrapper,
 };

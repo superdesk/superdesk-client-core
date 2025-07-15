@@ -8,6 +8,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {Spinner, IconPicker} from 'superdesk-ui-framework/react';
+import {DateTimePickerWrapper} from './components/DateTimePickerWrapper';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
@@ -1359,6 +1360,12 @@ export default angular.module('superdesk.core.ui', [
                 'boxed',
                 'required',
             ],
+        ),
+    )
+    .component('sdDateTimePicker',
+        reactToAngular1(
+            DateTimePickerWrapper,
+            ['value', 'onChange', 'label', 'required'],
         ),
     )
 ;
