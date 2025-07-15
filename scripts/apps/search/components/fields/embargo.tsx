@@ -21,10 +21,9 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
                 }
 
                 return gettext(
-                    'Embargo until {{date}} ({{timeZone}})',
+                    'Embargo until {{date}}',
                     {
-                        date: formatDate(embargoDate, {longFormat: true, timezoneId: item.schedule_settings.time_zone}),
-                        timeZone: item.schedule_settings.time_zone,
+                        date: formatDate(embargoDate, {longFormat: true}),
                     },
                 );
             } else if (item.embargoed_text != null) {
