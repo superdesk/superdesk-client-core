@@ -26,9 +26,9 @@ const softCache = new Map<ContentState, IResult>();
 function getRangesExceedingLimit(
     contentState: ContentState,
     limit: number,
-    type: 'hard' | 'soft',
+    cacheKey: string,
 ): IResult {
-    const currentCache = type === 'soft' ? softCache : hardCache;
+    const currentCache = cacheKey === 'soft' ? softCache : hardCache;
     const cached = currentCache.get(contentState);
 
     if (cached != null) {
@@ -84,7 +84,7 @@ export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: nu
         const decoration = getRangesExceedingLimit(contentState, softLimit, 'soft')[blockKey];
 
         if (decoration != null) {
-            callback(decoration.from, hardLimit);
+            callback(decoration.from, hardLimit ? hardLimit : decoration.to);
         }
     }
 

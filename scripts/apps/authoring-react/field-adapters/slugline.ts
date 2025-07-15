@@ -9,6 +9,7 @@ export const slugline: IFieldAdapter<IArticle> = {
             editorFormat: [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
+            maxSoftLength: fieldSchema?.maxSoftLength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: true,
             disallowedCharacters: appConfig.disallowed_characters ?? [],

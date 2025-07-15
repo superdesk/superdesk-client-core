@@ -59,10 +59,3 @@ export const isNotForPublication = (item) => get(item, 'flags.marked_for_not_pub
  * @description Converts first case of a string to upper case
  */
 export const firstCharUpperCase = (string) => string && string.replace(/\b\w/g, (l) => l.toUpperCase());
-
-// Helper function to check if a field has no value
-export const fieldHasNoValue = (formValues: any, fieldName: string): boolean => {
-    const value = formValues[fieldName];
-
-    return !value || value === '';
-};

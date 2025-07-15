@@ -185,7 +185,6 @@ export function getContentProfileFormConfig(
             type: FormFieldType.number,
             field: 'maxSoftLength',
             required: false,
-            dependsOn: 'maxlength',
             component_parameters: {
                 style: {boxed: true},
             },

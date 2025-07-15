@@ -132,13 +132,13 @@ export const getDecorators = (options: IOptions) => {
     const isHardHighlight = limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number';
     const isSoftHighlight = softLimitConfig?.ui === 'highlight' && typeof softLimitConfig?.chars === 'number';
 
-    if (isHardHighlight) {
+    if (isHardHighlight || isSoftHighlight) {
         mustReApplyDecorators = true;
 
         decorators.push(
             getTextLimitHighlightDecorator(
-                limitConfig.chars,
-                isSoftHighlight ? softLimitConfig.chars : undefined,
+                limitConfig?.chars,
+                softLimitConfig?.chars,
             ),
         );
     }
@@ -218,7 +218,7 @@ export default function createEditorStore(
             chars: props.limit,
         };
 
-    const softLimitConfig: EditorLimit | null = !props.limit
+    const softLimitConfig: EditorLimit | null = !props.softLimit
         ? null
         : {
             ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,

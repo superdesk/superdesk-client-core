@@ -5,7 +5,6 @@ import {getFormFieldComponent} from './form-field';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {FormGroupWrapper} from './form-group-wrapper';
 import {IFormGroup} from 'superdesk-api';
-import {fieldHasNoValue} from '../utils';
 
 interface IProps<T> {
     formConfig: IFormGroup;
@@ -38,17 +37,13 @@ export class FormViewEdit<T> extends React.Component<IProps<T>> {
                         } else if (isIFormField(item)) {
                             const FieldComponent = getFormFieldComponent(item.type);
 
-                            const editMode = item.dependsOn
-                                ? this.props.editMode && !fieldHasNoValue(this.props.item, item.dependsOn)
-                                : this.props.editMode;
-
                             return (
                                 <FieldComponent
                                     key={i}
                                     formValues={this.props.item}
                                     formField={item}
                                     value={this.props.item[item.field]}
-                                    disabled={!editMode}
+                                    disabled={!this.props.editMode}
                                     issues={this.props.issues[item.field] || []}
                                     previewOutput={false}
                                     onChange={
