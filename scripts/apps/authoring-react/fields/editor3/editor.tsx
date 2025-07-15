@@ -77,14 +77,14 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.initializeEditor = this.initializeEditor.bind(this);
     }
 
-    getCharacterLimitPreference(limitType: 'maxLength' | 'maxSoftLength'): EditorLimit | null {
-        if (typeof this.props.config[limitType] !== 'number') {
+    getCharacterLimitPreference(): EditorLimit | null {
+        if (typeof this.props.config.maxLength !== 'number') {
             return null;
         }
 
         return {
             ui: this.props.editorPreferences.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT,
-            chars: this.props.config[limitType],
+            chars: this.props.config.maxLength,
         };
     }
 
@@ -96,8 +96,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
             singleLine: this.props.config.singleLine ?? false,
             readOnly: this.props.readOnly || this.props.config.readOnly,
             spellchecking: getInitialSpellcheckerData(ng.get('spellcheck'), this.props.language),
-            limitConfig: this.getCharacterLimitPreference('maxLength'),
-            softLimitConfig: this.getCharacterLimitPreference('maxSoftLength'),
+            limitConfig: this.getCharacterLimitPreference(),
+            softLimitConfig: this.props.config.maxSoftLength,
             item: {
                 language: this.props.language, // required for annotations to work
             },
@@ -317,7 +317,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
         const store = this.props.value.store;
         const {config} = this.props;
-        const characterLimitConfig = this.getCharacterLimitPreference('maxLength');
+        const characterLimitConfig = this.getCharacterLimitPreference();
         const plainText = this.props.value.contentState.getPlainText();
         const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
         const showStatistics = config.showStatistics ?? true;

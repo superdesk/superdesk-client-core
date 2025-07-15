@@ -95,7 +95,7 @@ export interface IEditorStore {
     abbreviations: any;
     loading: boolean;
     limitConfig?: EditorLimit;
-    softLimitConfig?: EditorLimit;
+    softLimitConfig?: number;
 }
 
 let editor3Stores = [];
@@ -108,7 +108,7 @@ interface IOptions {
         warnings?: ISpellcheckWarningsByBlock,
     };
     limitConfig?: EditorLimit,
-    softLimitConfig?: EditorLimit,
+    softLimitConfig?: number,
 }
 
 export const getDecorators = (options: IOptions) => {
@@ -130,7 +130,7 @@ export const getDecorators = (options: IOptions) => {
     }
 
     const isHardHighlight = limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number';
-    const isSoftHighlight = softLimitConfig?.ui === 'highlight' && typeof softLimitConfig?.chars === 'number';
+    const isSoftHighlight = typeof softLimitConfig === 'number';
 
     if (isHardHighlight || isSoftHighlight) {
         mustReApplyDecorators = true;
@@ -138,7 +138,7 @@ export const getDecorators = (options: IOptions) => {
         decorators.push(
             getTextLimitHighlightDecorator(
                 limitConfig?.chars,
-                softLimitConfig?.chars,
+                softLimitConfig,
             ),
         );
     }
@@ -218,12 +218,9 @@ export default function createEditorStore(
             chars: props.limit,
         };
 
-    const softLimitConfig: EditorLimit | null = !props.softLimit
+    const softLimitConfig: number | null = !props.softLimit
         ? null
-        : {
-            ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
-            chars: props.softLimit,
-        };
+        : props.softLimit;
 
     let editorState = EditorState.createWithContent(
         content,
