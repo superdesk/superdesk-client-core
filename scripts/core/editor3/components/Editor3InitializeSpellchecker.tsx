@@ -45,6 +45,11 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
         const spellcheck = ng.get('spellcheck');
         const language = this.props.spellchecking.language;
 
+        if (language == null) {
+            this.setState({loading: false});
+            return;
+        }
+
         this.getSpellcheckerStatus(language).then((enabled) => {
             spellcheck.isAutoSpellchecker = enabled;
 
