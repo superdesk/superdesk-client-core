@@ -30,9 +30,12 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
+export const getCustomEditorTagId = (id: string) => `EDITOR_TAG_${id}`;
+
 export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
-        ...Object.fromEntries((appConfig.authoring?.customEditorTags ?? []).map(({id, label}) => [id, label])),
+        ...Object.fromEntries((appConfig.authoring?.customEditorTags ?? [])
+            .map(({id, label}) => [getCustomEditorTagId(id), label])),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),

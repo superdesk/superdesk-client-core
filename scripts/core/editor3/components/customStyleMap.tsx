@@ -1,4 +1,5 @@
 import {appConfig} from 'appConfig';
+import {getCustomEditorTagId} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
@@ -17,7 +18,8 @@ const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEdito
 export const customStyleMap = {
     ...Object.fromEntries(
         (appConfig.authoring?.customEditorTags ?? []).map(({id, borderColor}) => [
-            id, {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
+            getCustomEditorTagId(id),
+            {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
         ]),
     ),
 

@@ -1,4 +1,5 @@
 import {appConfig} from 'appConfig';
+import {getCustomEditorTagId} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {EditorState, SelectionState, Modifier} from 'draft-js';
 
 /**
@@ -7,7 +8,11 @@ import {EditorState, SelectionState, Modifier} from 'draft-js';
  */
 export const inlineStyles = {
     ...Object.fromEntries(
-        (appConfig.authoring?.customEditorTags ?? []).map(({id}) => [id, id]),
+        (appConfig.authoring?.customEditorTags ?? []).map(({id}) => {
+            const customTagId = getCustomEditorTagId(id);
+
+            return [customTagId, customTagId];
+        }),
     ),
     bold: 'BOLD',
     italic: 'ITALIC',

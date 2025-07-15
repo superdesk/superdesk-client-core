@@ -2,7 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
-import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {
+    getCustomEditorTagId,
+    getEditor3RichTextFormattingOptions,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {appConfig} from 'appConfig';
 
 interface IPropsStyleButton {
@@ -15,7 +18,7 @@ interface IPropsStyleButton {
 
 const styleIcons = {
     ...Object.fromEntries(
-        (appConfig.authoring?.customEditorTags ?? []).map(({id, icon}) => [id, `icon-${icon}`]),
+        (appConfig.authoring?.customEditorTags ?? []).map(({id, icon}) => [getCustomEditorTagId(id), `icon-${icon}`]),
     ),
     bold: 'icon-bold',
     italic: 'icon-italic',
@@ -67,7 +70,7 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
         });
 
         const customTags = Object.fromEntries(
-            (appConfig.authoring?.customEditorTags ?? []).map(({id, label}) => [id, label]),
+            (appConfig.authoring?.customEditorTags ?? []).map(({id, label}) => [getCustomEditorTagId(id), label]),
         );
 
         const styleTooltips = {
