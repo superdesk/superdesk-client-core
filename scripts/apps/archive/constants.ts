@@ -114,3 +114,33 @@ export const CANCELED_STATES = KILLED_STATES.concat([ITEM_STATE.SPIKED]);
  * KILLED | RECALLED | UNPUBLISHED | SPIKED | SCHEDULED
  */
 export const READONLY_STATES = CANCELED_STATES.concat([ITEM_STATE.SCHEDULED]);
+
+// TODO: add more tags
+export const XMP_IPTC_TAGS = {
+    Creator: 'By-line',
+    Headline: 'Headline',
+    Description: 'Caption-Abstract',
+    Rights: 'CopyrightNotice',
+    Language: 'LanguageIdentifier',
+    Credit: 'Credit',
+    Title: 'ObjectName',
+    CaptionWriter: 'Writer-Editor',
+    BylineTitle: 'By-lineTitle',
+    Source: 'Source',
+    CreateDate: 'DateCreated',
+    TimeCreated: 'TimeCreated',
+    City: 'City',
+    State: 'Province-State',
+    Country: 'Country-PrimaryLocationName',
+    Keywords: 'Keywords',
+    Category: 'Category',
+    SupplementalCategories: 'SupplementalCategories',
+    TransmissionReference: 'OriginalTransmissionReference',
+    Urgency: 'Urgency',
+    Instructions: 'Instructions',
+    SpecialInstructions: 'SpecialInstructions',
+    SubjectReference: 'SubjectReference',
+    CountryPrimaryLocationCode: 'Country-PrimaryLocationCode',
+    ReleaseDate: 'ReleaseDate',
+    ReleaseTime: 'ReleaseTime',
+} as const;

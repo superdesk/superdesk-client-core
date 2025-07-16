@@ -2,37 +2,20 @@ import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
-import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
+import {parseMetadata} from '@uswriting/exiftool/cjs';
+import {XMP_IPTC_TAGS} from 'apps/archive/constants';
+
+type ExiftoolReturn= Awaited<ReturnType<typeof parseMetadata<Array<Record<string, any>>>>>;
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
 /* eslint-disable complexity */
-
-function getExifData(file: File): Promise<IPTCMetadata> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            try {
-                const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
-
-                resolve(exif.iptcdata);
-            } catch (error) {
-                console.error(error);
-                reject(error);
-            }
-        };
-
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-    });
-}
 
 function mapIPTCExtensions(
     metadata: Partial<IPTCMetadata>,
@@ -364,15 +347,16 @@ export function UploadController(
                 ? Promise.resolve()
                 : Promise.all(acceptedFiles.map(
                     ({file, getThumbnail}) =>
-                        (file.type.startsWith('video') ?
-                            processXMP(file) :
-                            getExifData(file)
-                        )
+                        parseMetadata<ExiftoolReturn['data']>(file, {
+                            args: ['-j', '-iptc:all', '-xmp:all'],
+                            transform: (d) => JSON.parse(d),
+                        })
+                            .then(processMetadata, (): Partial<IPTCMetadata> => ({}))
                             .then(
                                 (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
-                                () => ({}), // proceed with upload on exif parsing error
+                                (): Partial<IArticle> => ({}), // proceed with upload on exif parsing error
                             )
-                            .then((meta) => {
+                            .then(async (meta) => {
                                 const item = initFile(file, meta, getPseudoId());
 
                                 return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
@@ -441,43 +425,21 @@ export function UploadController(
         }
     }
 
-    const exiftoolWorker = new Worker('workers/exiftool.worker.js', {'type': 'module'});
-
-    $scope.$on('$destroy', () => {
-        if (exiftoolWorker) exiftoolWorker.terminate();
-    });
-
-    function processXMP(file: File): Promise<Partial<IPTCMetadata>> {
-        return new Promise((resolve) => {
-            const handler = (event: MessageEvent) => {
-                exiftoolWorker.removeEventListener('message', handler);
-                resolve(mapXMPtoIPTC(event.data));
-            };
-
-            exiftoolWorker.addEventListener('message', handler);
-            exiftoolWorker.postMessage(file);
-        });
+    function processMetadata(exif: ExiftoolReturn): Partial<IPTCMetadata> {
+        if (exif.success) return mapXMPtoIPTC(exif.data[0]);
+        return {};
     }
 
-    function mapXMPtoIPTC(exif: Record<string, any>): Partial<IPTCMetadata> {
-        // TODO: add more tags
-        const xmpToIptcTags = {
-            Creator: 'By-line',
-            Headline: 'Headline',
-            Description: 'Caption-Abstract',
-            Rights: 'CopyrightNotice',
-            Language: 'LanguageIdentifier',
-            Credit: 'Credit',
-        } as const,
-            tags = Object.entries(exif).reduce<Partial<IPTCMetadata>>((acc, [k, v]) => {
-                const validTag = xmpToIptcTags[k];
+    function mapXMPtoIPTC(metadata: ExiftoolReturn['data'][number]): Partial<IPTCMetadata> {
+        const tags = Object.entries(metadata).reduce<Partial<IPTCMetadata>>((acc, [k, v]) => {
+            const validTag = XMP_IPTC_TAGS[k];
 
-                if (!validTag) return acc;
+            if (!validTag) return acc;
 
-                acc[validTag] = v;
-                return acc;
-            }, {});
+            acc[validTag] = v;
+            return acc;
+        }, {});
 
-        return {...exif, ...tags};
+        return {...metadata, ...tags};
     }
 }
