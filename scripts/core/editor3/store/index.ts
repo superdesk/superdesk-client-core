@@ -112,9 +112,7 @@ interface IOptions {
 }
 
 export const getDecorators = (options: IOptions) => {
-    const {limitConfig} = options;
-    const {softLimitConfig} = options;
-    const {spellchecker} = options;
+    const {limitConfig, softLimitConfig, spellchecker} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;

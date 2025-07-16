@@ -19,22 +19,23 @@ class Component extends React.Component<IProps> {
     }
 }
 
-// max 1 result is cached
-const hardCache = new Map<ContentState, IResult>();
-const softCache = new Map<ContentState, IResult>();
+const caches: {[key: string]: Map<ContentState, IResult>} = {};
 
 function getRangesExceedingLimit(
     contentState: ContentState,
     limit: number,
     cacheKey: string,
 ): IResult {
-    const currentCache = cacheKey === 'soft' ? softCache : hardCache;
-    const cached = currentCache.get(contentState);
+    if (caches[cacheKey] == null) {
+        caches[cacheKey] = new Map<ContentState, IResult>();
+    }
+
+    const cached = caches[cacheKey].get(contentState);
 
     if (cached != null) {
         return cached;
     } else {
-        currentCache.clear();
+        caches[cacheKey].clear();
     }
 
     const decorations = {};
@@ -64,7 +65,7 @@ function getRangesExceedingLimit(
         charactersCounted += blockLength;
     }
 
-    currentCache.set(contentState, decorations);
+    caches[cacheKey].set(contentState, decorations);
 
     return decorations;
 }
@@ -84,7 +85,15 @@ export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: nu
         const decoration = getRangesExceedingLimit(contentState, softLimit, 'soft')[blockKey];
 
         if (decoration != null) {
-            callback(decoration.from, hardLimit ? hardLimit : decoration.to);
+            let decorationTo = decoration.to;
+
+            if (hardLimit && hardLimit < decoration.to) {
+                decorationTo = hardLimit;
+            }
+
+            if (decoration.from < decorationTo) {
+                callback(decoration.from, decorationTo);
+            }
         }
     }
 

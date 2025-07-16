@@ -181,7 +181,7 @@ export function getContentProfileFormConfig(
         };
 
         const maximumSoftLengthField: IFormField = {
-            label: gettext('Maximum Soft length'),
+            label: gettext('Maximum soft length'),
             type: FormFieldType.number,
             field: 'maxSoftLength',
             required: false,

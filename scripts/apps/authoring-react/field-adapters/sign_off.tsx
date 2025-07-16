@@ -98,6 +98,7 @@ export const sign_off: IFieldAdapter<IArticle> = {
         const fieldConfig: IEditor3Config = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
+            maxSoftLength: fieldSchema?.maxSoftLength,
             singleLine: true,
             helperComponent: allowUserDropdown
                 ? ({onChange, language, readOnly}) => {

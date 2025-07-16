@@ -8,6 +8,7 @@ export const ednote: IFieldAdapter<IArticle> = {
             editorFormat: [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
+            maxSoftLength: fieldSchema?.maxSoftLength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: false,
             disallowedCharacters: [],
