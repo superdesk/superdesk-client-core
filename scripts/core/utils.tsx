@@ -398,8 +398,8 @@ export function getUTCOffset(timezoneId: string) {
     return trimStartExact(offsetStr, 'GMT');
 }
 
-export function toIsoStringWithoutTimezoneOffset(date: TZDate) {
-    return date.toISOString().slice(0, 16);
+export function toIsoStringWithoutTimezoneOffset(date: Date) {
+    return date.toISOString().slice(0, 19);
 }
 
 export function correctTimezone(

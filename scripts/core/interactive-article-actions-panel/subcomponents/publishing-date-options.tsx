@@ -1,5 +1,4 @@
 import React from 'react';
-import {TZDate} from '@sourcefabric/date-fns-tz';
 import {IArticle} from 'superdesk-api';
 import {correctTimezone, gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
@@ -72,10 +71,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toIsoStringWithoutTimezoneOffset(new TZDate(embargo, timeZone)),
+            : toIsoStringWithoutTimezoneOffset(embargo),
         publish_schedule: publishSchedule == null
             ? null
-            : toIsoStringWithoutTimezoneOffset(new TZDate(publishSchedule, timeZone)),
+            : toIsoStringWithoutTimezoneOffset(publishSchedule),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
