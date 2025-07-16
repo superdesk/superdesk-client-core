@@ -9,6 +9,7 @@ import {
     startOfDay,
     parseISO,
 } from 'date-fns';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 /**
  * @ngdoc directive
@@ -356,14 +357,14 @@ export function SubscribersDirective(
                     if (mStart != null && isAfter(mStart, now)) {
                         $scope.scheduleErrors.push(gettext(
                             'Schedule starts on {{date}}. Manual activation will override it.',
-                            {date: format(mStart, 'PPP')},
+                            {date: formatDate(mStart)},
                         ));
                     }
 
                     if (mEnd != null && isBefore(mEnd, now)) {
                         $scope.scheduleErrors.push(gettext(
                             'Schedule ended on {{date}}. Manual activation will override it.',
-                            {date: format(mEnd, 'PPP')},
+                            {date: formatDate(mEnd)},
                         ));
                     }
                 } else if (
@@ -374,7 +375,7 @@ export function SubscribersDirective(
                     $scope.scheduleErrors.push(gettext(
                         'Subscriber is inactive but within {{start}} to {{end}} schedule. ' +
                         'It will be activated when you save.',
-                        {start: format(mStart, 'PPP'), end: format(mEnd, 'PPP')},
+                        {start: formatDate(mStart), end: formatDate(mEnd)},
                     ));
                 }
             };
