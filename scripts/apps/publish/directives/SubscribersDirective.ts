@@ -402,10 +402,8 @@ export function SubscribersDirective(
                             end: formatDate(mEnd),
                         });
                     }
-                } else {
-                    if (!subscriber.is_active) {
-                        return gettext('Not Active');
-                    }
+                } else if (!subscriber.is_active) {
+                    return gettext('Not Active');
                 }
 
                 return '';
