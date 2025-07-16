@@ -1,4 +1,28 @@
-export const customStyleMap: {[key: string]: React.CSSProperties} = {
+import {appConfig} from 'appConfig';
+import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {assertNever} from 'core/helpers/typescript-helpers';
+
+const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
+    // TODO: Fix the conversion so it returns UI framework color variables, that work in dark and light themes
+    if (borderColor === 'blue') {
+        return 'blue';
+    } else if (borderColor === 'orange') {
+        return 'orange';
+    } else if (borderColor === 'purple') {
+        return 'purple';
+    } else {
+        assertNever(borderColor);
+    }
+};
+
+export const customStyleMap = {
+    ...Object.fromEntries(
+        customEditorTags.map(({editor3Style, borderColor}) => [
+            editor3Style,
+            {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
+        ]),
+    ),
+
     HIGHLIGHT: {
         display: 'inline-block',
         padding: '1px 3px',

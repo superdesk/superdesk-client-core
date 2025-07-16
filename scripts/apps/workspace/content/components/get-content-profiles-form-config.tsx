@@ -6,6 +6,7 @@ import {
     FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
     ICommonFieldConfig,
+    ISuperdeskGlobalConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
@@ -30,8 +31,18 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
+type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {editor3Style: string}
+
+export const customEditorTags: Array<IEnhancedTag> = (appConfig.authoring?.customEditorTags ?? []).map((item) => {
+    return {
+        ...item,
+        editor3Style: `EDITOR_TAG_${item.id}`,
+    };
+});
+
 export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
+        ...Object.fromEntries((customEditorTags ?? []).map(({editor3Style, label}) => [editor3Style, label])),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),
