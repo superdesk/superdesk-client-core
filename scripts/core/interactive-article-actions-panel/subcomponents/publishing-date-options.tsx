@@ -1,7 +1,7 @@
 import React from 'react';
 import {TZDate} from '@sourcefabric/date-fns-tz';
 import {IArticle} from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {correctTimezone, gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
@@ -9,7 +9,6 @@ import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
 import {isValid} from 'date-fns';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
-import {dateToServerString} from 'core/get-superdesk-api-implementation';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -18,14 +17,36 @@ export interface IPublishingDateOptions {
 }
 
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
+    const timeZone = items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null;
+
     return {
-        embargo: items.length === 1 && items[0].embargo != null
-            ? new Date(items[0].embargo) ?? null
-            : null,
-        publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? new Date(items[0].publish_schedule)
-            : null,
-        timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
+        embargo: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const embargo = items[0]?.embargo;
+
+            if (embargo == null) {
+                return null;
+            }
+
+            return correctTimezone(embargo, timeZone);
+        })(),
+        publishSchedule: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const publishSchedule = items[0]?.publish_schedule;
+
+            if (publishSchedule == null) {
+                return null;
+            }
+
+            return correctTimezone(publishSchedule, timeZone);
+        })(),
+        timeZone: timeZone,
     };
 }
 
@@ -52,10 +73,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : new TZDate(embargo, timeZone).toISOString(),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(embargo, timeZone)),
         publish_schedule: publishSchedule == null
             ? null
-            : new TZDate(publishSchedule, timeZone).toISOString(),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(publishSchedule, timeZone)),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
@@ -89,14 +110,12 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             return null;
         }
 
-        const timezoneApplied = timeZone ?? appConfig.default_timezone;
-
         return (
             <div>
                 {canSetEmbargo && (
                     <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
                         <DateTimePicker
-                            value={embargo === null ? null : new TZDate(embargo, timezoneApplied)}
+                            value={embargo}
                             valueType="date"
                             locale={{
                                 type: 'full',
@@ -123,7 +142,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                 {canSetPublishSchedule && (
                     <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
                         <DateTimePicker
-                            value={publishSchedule === null ? null : new TZDate(publishSchedule, timezoneApplied)}
+                            value={publishSchedule}
                             valueType="date"
                             locale={{
                                 type: 'full',

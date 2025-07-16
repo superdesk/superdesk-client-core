@@ -435,6 +435,7 @@ class Authoring {
 
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).clear();
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).sendKeys(scheduleDate);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).clear();
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).sendKeys(scheduleTime);
 
             el(['authoring', 'interactive-actions-panel', 'publish']).click();
