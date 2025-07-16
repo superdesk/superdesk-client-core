@@ -1,6 +1,6 @@
 import React from 'react';
 import {DatePicker} from 'superdesk-ui-framework/react';
-import {isValid} from 'date-fns';
+import {isValid, startOfDay} from 'date-fns';
 import {appConfig} from 'appConfig';
 
 interface IProps {
@@ -8,11 +8,12 @@ interface IProps {
   onChange: (date: Date | null) => void;
   label?: string;
   required?: boolean;
+  minDate?: Date | null;
 }
 
 export class DatePickerWrapper extends React.PureComponent<IProps> {
     render() {
-        const {value, onChange, label, required = false} = this.props;
+        const {value, onChange, label, minDate, required = false} = this.props;
 
         return (
             <DatePicker
@@ -24,6 +25,7 @@ export class DatePickerWrapper extends React.PureComponent<IProps> {
                 }}
                 dateFormat={appConfig.view.dateformat}
                 required={required}
+                minDate={minDate ?? startOfDay(new Date())}
             />
         );
     }

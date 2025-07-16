@@ -379,6 +379,37 @@ export function SubscribersDirective(
                     ));
                 }
             };
+
+            /**
+             * Function to generate and set appropriate schedule/label messages
+            */
+            $scope.getScheduleOrStatusLabel = function(subscriber) {
+                if (!subscriber) return '';
+
+                const hasSchedule = subscriber.schedule?.start_date && subscriber.schedule?.end_date;
+
+                if (hasSchedule) {
+                    const {start_date, end_date} = subscriber.schedule;
+                    const now = startOfDay(new Date());
+                    const mStart = startOfDay(new Date(start_date));
+                    const mEnd = startOfDay(new Date(end_date));
+
+                    if (subscriber.is_active) {
+                        return gettext('Active until {{end}}', {end: formatDate(mEnd)});
+                    } else {
+                        return gettext('Scheduled from {{start}} to {{end}}', {
+                            start: formatDate(mStart),
+                            end: formatDate(mEnd),
+                        });
+                    }
+                } else {
+                    if (!subscriber.is_active) {
+                        return gettext('Not Active');
+                    }
+                }
+
+                return '';
+            };
         },
     };
 }

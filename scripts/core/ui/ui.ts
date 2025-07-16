@@ -1365,7 +1365,7 @@ export default angular.module('superdesk.core.ui', [
     .component('sdDatePicker',
         reactToAngular1(
             DatePickerWrapper,
-            ['value', 'onChange', 'label', 'required'],
+            ['value', 'onChange', 'label', 'required', 'minDate'],
         ),
     )
 ;
