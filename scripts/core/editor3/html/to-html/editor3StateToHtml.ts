@@ -3,8 +3,7 @@ import {AtomicBlockParser} from '.';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {stateToHTML} from 'draft-js-export-html';
 import {trimStartExact, trimEndExact} from 'core/helpers/utils';
-import {appConfig} from 'appConfig';
-import {getCustomEditorTagId} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 export const editor3StateToHtml = (
     contentState: ContentState,
@@ -12,9 +11,7 @@ export const editor3StateToHtml = (
 ): string => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
         .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
-    const tagStyles = new Set((appConfig.authoring?.customEditorTags ?? []).map((tag) =>
-        getCustomEditorTagId(tag.id),
-    ));
+    const tagStyles = new Set(customEditorTags.map(({editor3Style}) => editor3Style));
 
     let options = {
         inlineStyles: {
