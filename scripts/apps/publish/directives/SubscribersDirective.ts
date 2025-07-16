@@ -350,32 +350,32 @@ export function SubscribersDirective(
 
                 const {start_date, end_date} = $scope.subscriber.schedule;
                 const now = startOfDay(new Date());
-                const mStart = start_date ? startOfDay(new Date(start_date)) : null;
-                const mEnd = end_date ? startOfDay(new Date(end_date)) : null;
+                const start = start_date ? startOfDay(new Date(start_date)) : null;
+                const end = end_date ? startOfDay(new Date(end_date)) : null;
 
                 if ($scope.subscriber.is_active) {
-                    if (mStart != null && isAfter(mStart, now)) {
+                    if (start != null && isAfter(start, now)) {
                         $scope.scheduleErrors.push(gettext(
                             'Schedule starts on {{date}}. Manual activation will override it.',
-                            {date: formatDate(mStart)},
+                            {date: formatDate(start)},
                         ));
                     }
 
-                    if (mEnd != null && isBefore(mEnd, now)) {
+                    if (end != null && isBefore(end, now)) {
                         $scope.scheduleErrors.push(gettext(
                             'Schedule ended on {{date}}. Manual activation will override it.',
-                            {date: formatDate(mEnd)},
+                            {date: formatDate(end)},
                         ));
                     }
                 } else if (
-                    mStart != null && mEnd != null &&
-                    (isAfter(now, mStart) || isEqual(now, mStart)) &&
-                    (isBefore(now, mEnd) || isEqual(now, mEnd))
+                    start != null && end != null &&
+                    (isAfter(now, start) || isEqual(now, start)) &&
+                    (isBefore(now, end) || isEqual(now, end))
                 ) {
                     $scope.scheduleErrors.push(gettext(
                         'Subscriber is inactive but within {{start}} to {{end}} schedule. ' +
                         'It will be activated when you save.',
-                        {start: formatDate(mStart), end: formatDate(mEnd)},
+                        {start: formatDate(start), end: formatDate(end)},
                     ));
                 }
             };
@@ -386,20 +386,20 @@ export function SubscribersDirective(
             $scope.getScheduleOrStatusLabel = function(subscriber) {
                 if (!subscriber) return '';
 
-                const hasSchedule = subscriber.schedule?.start_date && subscriber.schedule?.end_date;
+                const hasSchedule = subscriber.schedule?.start_date != null && subscriber.schedule?.end_date != null;
 
                 if (hasSchedule) {
                     const {start_date, end_date} = subscriber.schedule;
                     const now = startOfDay(new Date());
-                    const mStart = startOfDay(new Date(start_date));
-                    const mEnd = startOfDay(new Date(end_date));
+                    const start = startOfDay(new Date(start_date));
+                    const end = startOfDay(new Date(end_date));
 
                     if (subscriber.is_active) {
-                        return gettext('Active until {{end}}', {end: formatDate(mEnd)});
+                        return gettext('Active until {{end}}', {end: formatDate(end)});
                     } else {
                         return gettext('Scheduled from {{start}} to {{end}}', {
-                            start: formatDate(mStart),
-                            end: formatDate(mEnd),
+                            start: formatDate(start),
+                            end: formatDate(end),
                         });
                     }
                 } else if (!subscriber.is_active) {
