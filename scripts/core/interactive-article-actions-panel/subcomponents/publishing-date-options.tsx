@@ -7,6 +7,7 @@ import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
 import {isValid} from 'date-fns';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -71,10 +72,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toIsoStringWithoutTimezoneOffset(embargo),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(embargo)),
         publish_schedule: publishSchedule == null
             ? null
-            : toIsoStringWithoutTimezoneOffset(publishSchedule),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(publishSchedule)),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
