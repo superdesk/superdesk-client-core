@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {correctTimezone, gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
+import {gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
@@ -13,6 +13,16 @@ export interface IPublishingDateOptions {
     embargo: Date | null;
     publishSchedule: Date | null;
     timeZone: string | null;
+}
+
+function ignoreTimezone(
+    /**
+     * Server adds +0000 to embargo/publish_schedule no matter what timezone it is,
+     * so ignore that and treat it as local time for editing to avoid further conversion.
+     */
+    date: string,
+): TZDate {
+    return new TZDate(date.replace('+0000', ''));
 }
 
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
@@ -30,7 +40,7 @@ export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublis
                 return null;
             }
 
-            return correctTimezone(embargo, timeZone);
+            return ignoreTimezone(embargo);
         })(),
         publishSchedule: (() => {
             if (items.length != 1) {
@@ -43,7 +53,7 @@ export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublis
                 return null;
             }
 
-            return correctTimezone(publishSchedule, timeZone);
+            return ignoreTimezone(publishSchedule);
         })(),
         timeZone: timeZone,
     };
