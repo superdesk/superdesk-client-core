@@ -1,6 +1,15 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {
+    isBefore,
+    isAfter,
+    isEqual,
+    format,
+    startOfDay,
+    parseISO,
+} from 'date-fns';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 /**
  * @ngdoc directive
@@ -44,6 +53,7 @@ export function SubscribersDirective(
             $scope.directProducts = null;
             $scope.search = {};
             $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
+            $scope.scheduleErrors = [];
 
             api.query('output_formats').then((result) => {
                 $scope.formats = result._items.map((format) => ({
@@ -180,6 +190,13 @@ export function SubscribersDirective(
                     diff[key] = value;
                 });
 
+                if ($scope.subscriber.schedule?.start_date != null && $scope.subscriber.schedule?.end_date != null) {
+                    diff['schedule'] = {
+                        start_date: format($scope.subscriber.schedule.start_date, 'yyyy-MM-dd'),
+                        end_date: format($scope.subscriber.schedule.end_date, 'yyyy-MM-dd'),
+                    };
+                }
+
                 api.subscribers.save($scope.origSubscriber, diff)
                     .then(
                         () => {
@@ -219,7 +236,7 @@ export function SubscribersDirective(
 
                 $q.all(promises).then(() => {
                     $scope.origSubscriber = subscriber || {};
-                    $scope.subscriber = _.create($scope.origSubscriber);
+                    $scope.subscriber = _.cloneDeep($scope.origSubscriber);
                     $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
                     $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
 
@@ -231,6 +248,18 @@ export function SubscribersDirective(
                     initSubscriberProducts('api_products');
 
                     $scope.subscriber.global_filters = $scope.origSubscriber.global_filters || {};
+
+                    if (!$scope.subscriber.schedule) {
+                        $scope.subscriber.schedule = {
+                            start_date: null,
+                            end_date: null,
+                        };
+                    } else {
+                        const {start_date, end_date} = $scope.subscriber.schedule;
+
+                        $scope.subscriber.schedule.start_date = start_date ? startOfDay(parseISO(start_date)) : null;
+                        $scope.subscriber.schedule.end_date = end_date ? startOfDay(parseISO(end_date)) : null;
+                    }
 
                     $scope.destinations = [];
                     if (angular.isDefined($scope.subscriber.destinations)
@@ -284,6 +313,101 @@ export function SubscribersDirective(
             if (!$scope.subscribersList) {
                 fetchSubscribers();
             }
+
+            $scope.$watchGroup([
+                'subscriber.is_active',
+                'subscriber.schedule.start_date',
+                'subscriber.schedule.end_date',
+            ], () => {
+                $scope.validateScheduleDates();
+            });
+
+
+            $scope.updateStartDate = (date) => $scope.updateScheduleDate('start_date', date);
+            $scope.updateEndDate = (date) => $scope.updateScheduleDate('end_date', date);
+
+            /**
+            * Updates schedule dates and triggers validation
+            */
+            $scope.updateScheduleDate = function(key, value) {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                $scope.subscriber.schedule[key] = value;
+                $scope.saveEnabled = true;
+
+                $scope.$applyAsync(() => {
+                    $scope.validateScheduleDates();
+                });
+            };
+
+            /**
+            * Validates schedule dates against status of subscriber and inform the user
+            */
+            $scope.validateScheduleDates = function() {
+                if (!$scope.subscriber || !$scope.subscriber.schedule) return;
+
+                $scope.scheduleErrors = [];
+
+                const {start_date, end_date} = $scope.subscriber.schedule;
+                const now = startOfDay(new Date());
+                const start = start_date ? startOfDay(new Date(start_date)) : null;
+                const end = end_date ? startOfDay(new Date(end_date)) : null;
+
+                if ($scope.subscriber.is_active) {
+                    if (start != null && isAfter(start, now)) {
+                        $scope.scheduleErrors.push(gettext(
+                            'Schedule starts on {{date}}. Manual activation will override it.',
+                            {date: formatDate(start)},
+                        ));
+                    }
+
+                    if (end != null && isBefore(end, now)) {
+                        $scope.scheduleErrors.push(gettext(
+                            'Schedule ended on {{date}}. Manual activation will override it.',
+                            {date: formatDate(end)},
+                        ));
+                    }
+                } else if (
+                    start != null && end != null &&
+                    (isAfter(now, start) || isEqual(now, start)) &&
+                    (isBefore(now, end) || isEqual(now, end))
+                ) {
+                    $scope.scheduleErrors.push(gettext(
+                        'Subscriber is inactive but within {{start}} to {{end}} schedule. ' +
+                        'It will be activated when you save.',
+                        {start: formatDate(start), end: formatDate(end)},
+                    ));
+                }
+            };
+
+            /**
+             * Function to generate and set appropriate schedule/label messages
+            */
+            $scope.getScheduleOrStatusLabel = function(subscriber) {
+                if (!subscriber) return '';
+
+                const hasSchedule = subscriber.schedule?.start_date != null && subscriber.schedule?.end_date != null;
+
+                if (hasSchedule) {
+                    const {start_date, end_date} = subscriber.schedule;
+                    const now = startOfDay(new Date());
+                    const start = startOfDay(new Date(start_date));
+                    const end = startOfDay(new Date(end_date));
+
+                    if (subscriber.is_active) {
+                        return gettext('Active until {{end}}', {end: formatDate(end)});
+                    } else {
+                        return gettext('Scheduled from {{start}} to {{end}}', {
+                            start: formatDate(start),
+                            end: formatDate(end),
+                        });
+                    }
+                } else if (!subscriber.is_active) {
+                    return gettext('Not Active');
+                }
+
+                return '';
+            };
         },
     };
 }
