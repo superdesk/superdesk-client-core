@@ -398,8 +398,11 @@ export function getUTCOffset(timezoneId: string) {
     return trimStartExact(offsetStr, 'GMT');
 }
 
+/**
+ * Enforce TZDate because Date is inconsistent, sometimes it returns the time in UTC and sometimes in local timezone.
+ */
 export function toIsoStringWithoutTimezoneOffset(date: TZDate) {
-    return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 19);
 }
 
 export function correctTimezone(
