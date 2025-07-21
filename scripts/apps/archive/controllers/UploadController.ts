@@ -9,9 +9,9 @@ import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
 import {parseMetadata} from '@uswriting/exiftool/cjs';
-import {XMP_IPTC_TAGS} from 'apps/archive/constants';
-
-type ExiftoolReturn= Awaited<ReturnType<typeof parseMetadata<Array<Record<string, any>>>>>;
+import {IContentProfileType} from 'apps/workspace/content/controllers/ContentProfilesController';
+import {IPTC_XMP_TAGS, XMP_IPTC_TAGS} from 'apps/archive/constants';
+import {getObjectEntries} from 'utils/object';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
@@ -51,6 +51,60 @@ function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<
         return promise;
     }));
 }
+
+
+type IPTCTag = keyof typeof IPTC_XMP_TAGS;
+type IPTCCustomTag = `IPTC:${string}`;
+type IPTCExifData = Partial<Record<IPTCTag, unknown> & Record<IPTCCustomTag, unknown>>;
+type ParsedIPTCExifData = ParsedExif<Array<IPTCExifData>>
+
+type XMPTag = keyof typeof XMP_IPTC_TAGS;
+type XMPCustomTag = `XMP:${string}`;
+type XMPExifData = Partial<Record<XMPTag, unknown> & Record<XMPCustomTag, unknown>>;
+type ParsedXMPExifData = ParsedExif<Array<XMPExifData>>
+
+type ParsedExif<T> = Awaited<ReturnType<typeof parseMetadata<T>>>;
+type ParsedExifData<T extends IContentProfileType> =
+    T extends IContentProfileType.video
+    ? ParsedXMPExifData & {contentType: IContentProfileType.video;}
+    : ParsedIPTCExifData & {contentType: IContentProfileType.picture;};
+
+const getMetadata = (f: File) => (f.type.startsWith('video/') ?
+    getVideoMetadata(f) : getPictureMetadata(f))
+    .then(processMetadata, (): Partial<IPTCMetadata> => ({}));
+
+const getVideoMetadata = (f: File): Promise<
+    ParsedExifData<IContentProfileType.video>
+> => parseMetadata<Array<XMPExifData>>(f, {
+    args: ['-j', '-G', '-xmp:all'],
+    transform: (d) => JSON.parse(d),
+}).then((r) => ({...r, contentType: IContentProfileType.video}));
+
+const getPictureMetadata = (f: File): Promise<
+    ParsedExifData<IContentProfileType.picture>
+> => parseMetadata<Array<IPTCExifData>>(f, {
+    args: ['-j', '-G', '-iptc:all'],
+    transform: (d) => JSON.parse(d),
+}).then((r) => ({...r, contentType: IContentProfileType.picture}));
+
+const processMetadata = <CT extends IContentProfileType>(exif: ParsedExifData<CT>) => {
+    if (!exif.success) return {};
+    if (exif.contentType === IContentProfileType.video) return stripGroupNames(mapXMPtoIPTC(exif.data[0]));
+    return stripGroupNames(exif.data[0]);
+};
+
+const mapXMPtoIPTC = (metadata: XMPExifData) =>
+    getObjectEntries(metadata).reduce<IPTCExifData & XMPExifData>((acc, [k, v]) => {
+        acc[XMP_IPTC_TAGS[k] ?? k] = v;
+        return acc;
+    }, {});
+
+const stripGroupNames = (metadata: IPTCExifData & XMPExifData) =>
+    getObjectEntries(metadata).reduce<Partial<IPTCMetadata>>((a, [k, v]) => {
+        a[k.slice(k.indexOf(':') + 1)] = v;
+        return a;
+    }, {});
+
 
 UploadController.$inject = [
     '$scope',
@@ -347,16 +401,12 @@ export function UploadController(
                 ? Promise.resolve()
                 : Promise.all(acceptedFiles.map(
                     ({file, getThumbnail}) =>
-                        parseMetadata<ExiftoolReturn['data']>(file, {
-                            args: ['-j', '-iptc:all', '-xmp:all'],
-                            transform: (d) => JSON.parse(d),
-                        })
-                            .then(processMetadata, (): Partial<IPTCMetadata> => ({}))
+                        getMetadata(file)
                             .then(
                                 (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
                                 (): Partial<IArticle> => ({}), // proceed with upload on exif parsing error
                             )
-                            .then(async (meta) => {
+                            .then((meta) => {
                                 const item = initFile(file, meta, getPseudoId());
 
                                 return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
@@ -423,23 +473,5 @@ export function UploadController(
         } else {
             $scope.addFiles($scope.locals.data);
         }
-    }
-
-    function processMetadata(exif: ExiftoolReturn): Partial<IPTCMetadata> {
-        if (exif.success) return mapXMPtoIPTC(exif.data[0]);
-        return {};
-    }
-
-    function mapXMPtoIPTC(metadata: ExiftoolReturn['data'][number]): Partial<IPTCMetadata> {
-        const tags = Object.entries(metadata).reduce<Partial<IPTCMetadata>>((acc, [k, v]) => {
-            const validTag = XMP_IPTC_TAGS[k];
-
-            if (!validTag) return acc;
-
-            acc[validTag] = v;
-            return acc;
-        }, {});
-
-        return {...metadata, ...tags};
     }
 }

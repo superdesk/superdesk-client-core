@@ -4037,6 +4037,44 @@ declare module 'superdesk-api' {
         LanguageIdentifier: string;
     }
 
+    export type XMPMetadata =
+        | 'Destination'
+        | 'ServiceIdentifier'
+        | 'ProductID'
+        | 'DateSent'
+        | 'TimeSent'
+        | 'Title'
+        | 'EditStatus'
+        | 'Urgency'
+        | 'SubjectCode'
+        | 'Category'
+        | 'SupplementalCategories'
+        | 'Subject'
+        | 'LocationCode'
+        | 'LocationName'
+        | 'ReleaseDate'
+        | 'ReleaseTime'
+        | 'ExpirationDate'
+        | 'ExpirationTime'
+        | 'Instructions'
+        | 'DateCreated'
+        | 'Creator'
+        | 'AuthorsPosition'
+        | 'City'
+        | 'Location'
+        | 'State'
+        | 'CountryCode'
+        | 'Country'
+        | 'TransmissionReference'
+        | 'Headline'
+        | 'Credit'
+        | 'Source'
+        | 'Rights'
+        | 'CreatorContactInfo'
+        | 'Description'
+        | 'CaptionWriter'
+        | 'Language';
+
     export interface ISubject {
         name: string;
         description?: string;

@@ -1,3 +1,6 @@
+import {IPTCMetadata, XMPMetadata} from 'superdesk-api';
+import {getInvertObject} from 'utils/object';
+
 export enum ITEM_STATE {
     /**
      * Item created in user workspace.
@@ -115,32 +118,43 @@ export const CANCELED_STATES = KILLED_STATES.concat([ITEM_STATE.SPIKED]);
  */
 export const READONLY_STATES = CANCELED_STATES.concat([ITEM_STATE.SCHEDULED]);
 
-// TODO: add more tags
-export const XMP_IPTC_TAGS = {
-    Creator: 'By-line',
-    Headline: 'Headline',
-    Description: 'Caption-Abstract',
-    Rights: 'CopyrightNotice',
-    Language: 'LanguageIdentifier',
-    Credit: 'Credit',
-    Title: 'ObjectName',
-    CaptionWriter: 'Writer-Editor',
-    BylineTitle: 'By-lineTitle',
-    Source: 'Source',
-    CreateDate: 'DateCreated',
-    TimeCreated: 'TimeCreated',
-    City: 'City',
-    State: 'Province-State',
-    Country: 'Country-PrimaryLocationName',
-    Keywords: 'Keywords',
-    Category: 'Category',
-    SupplementalCategories: 'SupplementalCategories',
-    TransmissionReference: 'OriginalTransmissionReference',
-    Urgency: 'Urgency',
-    Instructions: 'Instructions',
-    SpecialInstructions: 'SpecialInstructions',
-    SubjectReference: 'SubjectReference',
-    CountryPrimaryLocationCode: 'Country-PrimaryLocationCode',
-    ReleaseDate: 'ReleaseDate',
-    ReleaseTime: 'ReleaseTime',
-} as const;
+export const IPTC_XMP_TAGS = {
+    'IPTC:Destination': 'XMP:Destination',
+    'IPTC:ServiceIdentifier': 'XMP:ServiceIdentifier',
+    'IPTC:ProductID': 'XMP:ProductID',
+    'IPTC:DateSent': 'XMP:DateSent',
+    'IPTC:TimeSent': 'XMP:TimeSent',
+    'IPTC:ObjectName': 'XMP:Title',
+    'IPTC:EditStatus': 'XMP:EditStatus',
+    'IPTC:Urgency': 'XMP:Urgency',
+    'IPTC:SubjectReference': 'XMP:SubjectCode',
+    'IPTC:Category': 'XMP:Category',
+    'IPTC:SupplementalCategories': 'XMP:SupplementalCategories',
+    'IPTC:Keywords': 'XMP:Subject',
+    'IPTC:ContentLocationCode': 'XMP:LocationCode',
+    'IPTC:ContentLocationName': 'XMP:LocationName',
+    'IPTC:ReleaseDate': 'XMP:ReleaseDate',
+    'IPTC:ReleaseTime': 'XMP:ReleaseTime',
+    'IPTC:ExpirationDate': 'XMP:ExpirationDate',
+    'IPTC:ExpirationTime': 'XMP:ExpirationTime',
+    'IPTC:SpecialInstructions': 'XMP:Instructions',
+    'IPTC:DateCreated': 'XMP:DateCreated',
+    'IPTC:TimeCreated': 'XMP:DateCreated',
+    'IPTC:By-line': 'XMP:Creator',
+    'IPTC:By-lineTitle': 'XMP:AuthorsPosition',
+    'IPTC:City': 'XMP:City',
+    'IPTC:Sub-location': 'XMP:Location',
+    'IPTC:Province-State': 'XMP:State',
+    'IPTC:Country-PrimaryLocationCode': 'XMP:CountryCode',
+    'IPTC:Country-PrimaryLocationName': 'XMP:Country',
+    'IPTC:OriginalTransmissionReference': 'XMP:TransmissionReference',
+    'IPTC:Headline': 'XMP:Headline',
+    'IPTC:Credit': 'XMP:Credit',
+    'IPTC:Source': 'XMP:Source',
+    'IPTC:CopyrightNotice': 'XMP:Rights',
+    'IPTC:Contact': 'XMP:CreatorContactInfo',
+    'IPTC:Caption-Abstract': 'XMP:Description',
+    'IPTC:Writer-Editor': 'XMP:CaptionWriter',
+    'IPTC:LanguageIdentifier': 'XMP:Language',
+} as const satisfies Record<`IPTC:${keyof IPTCMetadata}`, `XMP:${XMPMetadata}`>;
+export const XMP_IPTC_TAGS = getInvertObject(IPTC_XMP_TAGS);
