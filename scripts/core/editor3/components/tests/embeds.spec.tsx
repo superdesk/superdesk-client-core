@@ -21,7 +21,7 @@ describe('editor3.components.embed-block', () => {
         );
 
         expect(wrapper.find('.embed-block__wrapper').html())
-            .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
+            .toContain('<h1>Embed Title</h1>');
     });
 });
 

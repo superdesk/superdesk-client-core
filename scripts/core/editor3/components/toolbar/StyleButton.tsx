@@ -2,7 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
-import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {
+    customEditorTags,
+    getEditor3RichTextFormattingOptions,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
@@ -12,7 +15,8 @@ interface IPropsStyleButton {
     label?: string;
 }
 
-const StyleIcons = {
+const styleIcons = {
+    ...Object.fromEntries(customEditorTags.map(({editor3Style, icon}) => [editor3Style, `icon-${icon}`])),
     bold: 'icon-bold',
     italic: 'icon-italic',
     underline: 'icon-underline',
@@ -55,14 +59,17 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
 
     render() {
         const {active, label} = this.props;
-        const iconClass = StyleIcons[label];
+        const iconClass = styleIcons[label];
 
         const cx = classNames({
             'Editor3-styleButton': true,
             'Editor3-activeButton': active,
         });
 
+        const customTags = Object.fromEntries(customEditorTags.map(({editor3Style, label}) => [editor3Style, label]));
+
         const styleTooltips = {
+            ...customTags,
             bold: gettext('Bold (Ctrl+B)'),
             italic: gettext('Italic (Ctrl+I)'),
             underline: gettext('Underline (Ctrl+U)'),

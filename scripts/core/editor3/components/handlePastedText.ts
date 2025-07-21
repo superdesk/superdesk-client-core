@@ -124,9 +124,9 @@ export function insertContentInState(
     const blockMap = _pastedContent.getBlockMap();
     const hasAtomicBlocks = blockMap.some((block) => block.getType() === 'atomic');
     const acceptedInlineStyles =
-            Object.keys(inlineStyles)
-                .filter((style) => editorFormat.includes(style))
-                .map((style) => inlineStyles[style]);
+        Object.keys(inlineStyles)
+            .filter((style) => editorFormat.includes(style))
+            .map((style) => inlineStyles[style]);
 
     let contentState = editorState.getCurrentContent();
     let selection = editorState.getSelection();
