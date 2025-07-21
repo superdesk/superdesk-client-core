@@ -36,10 +36,11 @@
                         <span class="sd-overflow-ellipsis sd-list-item--element-grow" id="subscriberName">{{ subscriber.name }}</span>
                         <span
                         ng-if="getScheduleOrStatusLabel(subscriber)"
-                            ng-class="{
-                                'label label--hollow label--primary': subscriber.schedule && subscriber.is_active,
-                                'label label--hollow label--alert': (subscriber.schedule && !subscriber.is_active) || (!subscriber.schedule && !subscriber.is_active)
-                            }"
+                        ng-class="{
+                            'label label--hollow label--success': subscriber.is_active && !subscriber.schedule.start_date && !subscriber.schedule.end_date,
+                            'label label--hollow label--alert': subscriber.is_active && subscriber.schedule.start_date && subscriber.schedule.end_date,
+                            'label label--hollow label': !subscriber.is_active,
+                        }"
                         >
                             {{ getScheduleOrStatusLabel(subscriber) }}
                         </span>
@@ -77,6 +78,33 @@
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate' | translate }}">
                                     <span sd-switch ng-model="subscriber.is_active"></span><label>{{:: 'Status' | translate }}</label>
                                 </span>                        
+                        </div>
+                        
+                        <div class="form__row">
+                            <label class="form-label" translate>Subscriber Schedule Settings</label>
+
+                            <div class="form__row-item sd-margin-t--2">
+                                <sd-date-picker
+                                    value="subscriber.schedule.start_date"
+                                    on-change="updateStartDate"
+                                    label="'Start Date' | translate"
+                                    required="!!subscriber.schedule.end_date">
+                                </sd-date-picker>
+                            </div>
+                            
+                            <div class="form__row-item sd-margin-t--2">
+                                <sd-date-picker
+                                    value="subscriber.schedule.end_date"
+                                    on-change="updateEndDate"
+                                    label="'End Date' | translate"
+                                    min-date="minEndDate"
+                                    required="!!subscriber.schedule.start_date">
+                                </sd-date-picker>
+                            </div>
+
+                            <div ng-repeat="error in scheduleErrors" class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2">
+                                {{ error }}
+                            </div>
                         </div>
 
                         <div class="form__row">
@@ -181,33 +209,6 @@
                                     <span sd-switch ng-model="subscriber.priority"></span><label translate>High priority</label>
                                     <span class="sd-line-input__hint" translate>Use priority queue for transmission.</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="form__row">
-                            <label class="form-label" translate>Subscriber Schedule Settings</label>
-
-                            <div class="form__row-item sd-margin-t--2">
-                                <sd-date-picker
-                                    value="subscriber.schedule.start_date"
-                                    on-change="updateStartDate"
-                                    label="'Start Date' | translate"
-                                    required="!!subscriber.schedule.end_date">
-                                </sd-date-picker>
-                            </div>
-                            
-                            <div class="form__row-item sd-margin-t--2">
-                                <sd-date-picker
-                                    value="subscriber.schedule.end_date"
-                                    on-change="updateEndDate"
-                                    label="'End Date' | translate"
-                                    min-date="subscriber.schedule.start_date"
-                                    required="!!subscriber.schedule.start_date">
-                                </sd-date-picker>
-                            </div>
-
-                            <div ng-repeat="error in scheduleErrors" class="sd-alert sd-alert--hollow sd-alert--warning sd-alert--small sd-margin-t--2">
-                                {{ error }}
                             </div>
                         </div>
 
