@@ -2,12 +2,10 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {
-    isBefore,
-    isAfter,
-    isEqual,
     format,
     startOfDay,
     parseISO,
+    addDays,
 } from 'date-fns';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 
@@ -54,6 +52,7 @@ export function SubscribersDirective(
             $scope.search = {};
             $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
             $scope.scheduleErrors = [];
+            $scope.minEndDate = null;
 
             api.query('output_formats').then((result) => {
                 $scope.formats = result._items.map((format) => ({
@@ -335,6 +334,22 @@ export function SubscribersDirective(
                 $scope.subscriber.schedule[key] = value;
                 $scope.saveEnabled = true;
 
+                if (key === 'start_date') {
+                    if (value) {
+                        const start = new Date(value);
+                        const endDate = $scope.subscriber.schedule.end_date;
+
+                        $scope.minEndDate = addDays(new Date(value), 1);
+
+                        // Reset end_date if it's now invalid i.e before start date
+                        if (endDate && new Date(endDate) < start) {
+                            $scope.subscriber.schedule.end_date = null;
+                        }
+                    } else {
+                        $scope.minEndDate = null;
+                    }
+                }
+
                 $scope.$applyAsync(() => {
                     $scope.validateScheduleDates();
                 });
@@ -354,27 +369,28 @@ export function SubscribersDirective(
                 const end = end_date ? startOfDay(new Date(end_date)) : null;
 
                 if ($scope.subscriber.is_active) {
-                    if (start != null && isAfter(start, now)) {
+                    if (start != null && start > now) {
                         $scope.scheduleErrors.push(gettext(
-                            'Schedule starts on {{date}}. Manual activation will override it.',
+                            'The subscriber is set to start on {{date}}, ' +
+                            'but the Active switch will override this and activate them on save.',
                             {date: formatDate(start)},
                         ));
                     }
 
-                    if (end != null && isBefore(end, now)) {
+                    if (end != null && end < now) {
                         $scope.scheduleErrors.push(gettext(
-                            'Schedule ended on {{date}}. Manual activation will override it.',
+                            'The subscriber schedule ended on {{date}}, ' +
+                            'but the Active switch will keep the subscriber active on save.',
                             {date: formatDate(end)},
                         ));
                     }
                 } else if (
                     start != null && end != null &&
-                    (isAfter(now, start) || isEqual(now, start)) &&
-                    (isBefore(now, end) || isEqual(now, end))
+                    start <= now && end >= now
                 ) {
                     $scope.scheduleErrors.push(gettext(
-                        'Subscriber is inactive but within {{start}} to {{end}} schedule. ' +
-                        'It will be activated when you save.',
+                        'The subscriber is currently inactive, ' +
+                        'but the schedule from {{start}} to {{end}} is valid. They will be activated on save.',
                         {start: formatDate(start), end: formatDate(end)},
                     ));
                 }
@@ -406,7 +422,7 @@ export function SubscribersDirective(
                     return gettext('Not Active');
                 }
 
-                return '';
+                return gettext('Active');
             };
         },
     };
