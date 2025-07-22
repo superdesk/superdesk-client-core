@@ -189,11 +189,22 @@ export function SubscribersDirective(
                     diff[key] = value;
                 });
 
-                if ($scope.subscriber.schedule?.start_date != null && $scope.subscriber.schedule?.end_date != null) {
+                const {start_date, end_date} = $scope.subscriber.schedule || {};
+
+                if (start_date != null && end_date != null) {
                     diff['schedule'] = {
-                        start_date: format($scope.subscriber.schedule.start_date, 'yyyy-MM-dd'),
-                        end_date: format($scope.subscriber.schedule.end_date, 'yyyy-MM-dd'),
+                        start_date: format(start_date, 'yyyy-MM-dd'),
+                        end_date: format(end_date, 'yyyy-MM-dd'),
                     };
+                } else if ((start_date != null && end_date == null) || (start_date == null && end_date != null)) {
+                    let msg = gettext(
+                        'Both start and end date need to be filled in (or cleared) to save the subscriber.',
+                    );
+
+                    $scope.scheduleErrors = [msg];
+                    notify.error(msg);
+                    $scope.saveEnabled = false;
+                    return;
                 }
 
                 api.subscribers.save($scope.origSubscriber, diff)
@@ -332,7 +343,6 @@ export function SubscribersDirective(
                 if (!$scope.subscriber || !$scope.subscriber.schedule) return;
 
                 $scope.subscriber.schedule[key] = value;
-                $scope.saveEnabled = true;
 
                 if (key === 'start_date') {
                     if (value) {
@@ -372,7 +382,7 @@ export function SubscribersDirective(
                     if (start != null && start > now) {
                         $scope.scheduleErrors.push(gettext(
                             'The subscriber is set to start on {{date}}, ' +
-                            'but the Active switch will override this and activate them on save.',
+                            'but the Active switch will override this and activate the subscriber on save.',
                             {date: formatDate(start)},
                         ));
                     }
@@ -389,8 +399,8 @@ export function SubscribersDirective(
                     start <= now && end >= now
                 ) {
                     $scope.scheduleErrors.push(gettext(
-                        'The subscriber is currently inactive, ' +
-                        'but the schedule from {{start}} to {{end}} is valid. They will be activated on save.',
+                        'The subscriber is currently inactive, but the schedule from ' +
+                        '{{start}} to {{end}} is valid. The subscriber will be activated on save.',
                         {start: formatDate(start), end: formatDate(end)},
                     ));
                 }
