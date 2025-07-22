@@ -474,6 +474,7 @@ declare module 'superdesk-api' {
         editorFormat?: Array<RICH_FORMATTING_OPTION>;
         minLength?: number;
         maxLength?: number;
+        maxSoftLength?: number;
         compact?: boolean; // smaller UI element
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;

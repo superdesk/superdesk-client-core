@@ -97,6 +97,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
             readOnly: this.props.readOnly || this.props.config.readOnly,
             spellchecking: getInitialSpellcheckerData(ng.get('spellcheck'), this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
+            softLimitConfig: this.props.config.maxSoftLength,
             item: {
                 language: this.props.language, // required for annotations to work
             },
