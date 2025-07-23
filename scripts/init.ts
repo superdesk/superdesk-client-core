@@ -4,13 +4,19 @@
  */
 
 import {merge} from 'lodash';
-import {applyConfigurationDefaults} from 'apply-configuration-defaults';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {IDENTITY_KEY} from 'appConfig';
+import {applyConfigurationDefaults} from './apply-configuration-defaults';
+import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
+import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
 
 function fetchSync(url: string, callback: (responseText: string) => void): void {
     const request = new XMLHttpRequest();
 
     request.addEventListener('load', function onLoad() {
+        if (this.status !== 200) {
+            throw new Error(`Failed to GET ${url}`);
+        }
+
         callback(this.responseText);
     });
 
@@ -22,6 +28,10 @@ function fetchSync(url: string, callback: (responseText: string) => void): void 
 
     request.send();
 }
+
+//
+// LOADING APP CONFIGURATION
+//
 
 fetchSync(
     __SUPERDESK_CONFIG__.server.url + '/client_config',
@@ -41,3 +51,50 @@ fetchSync(
         window['appConfigLoaded'] = appConfig;
     },
 );
+
+const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
+
+//
+// SETTING UI LANGUAGE
+//
+
+const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
+const languageFromLocalStorage = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
+const language = appConfig.profileLanguages?.includes(languageFromLocalStorage) ? languageFromLocalStorage : 'en';
+
+window['user-interface-language'] = language;
+
+//
+// LOADING TRANSLATIONS
+//
+
+const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
+
+function applyTranslations(translations) {
+    const langOverride = appConfig.langOverride ?? {};
+
+    if (langOverride[language] != null) {
+        Object.assign(translations, langOverride[language]);
+    }
+
+    window.translations = translations;
+}
+
+
+if (language === 'en') {
+    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+} else {
+    fetchSync(translationsUrl, (responseText) => {
+        const translations = JSON.parse(responseText);
+
+        if (
+            translations[''] == null
+            || translations['']['language'] == null
+            || translations['']['plural-forms'] == null
+        ) {
+            throw new Error(`Language metadata not found in "${translationsUrl}"`);
+        }
+
+        applyTranslations(translations);
+    });
+}

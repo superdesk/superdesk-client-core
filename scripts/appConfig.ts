@@ -1,4 +1,4 @@
-import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
+import {ISuperdeskGlobalConfig, IExtensions} from 'superdesk-api';
 
 export const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 
@@ -6,15 +6,14 @@ export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
 export const extensions: IExtensions = {};
 
-export function getUserInterfaceLanguage() {
-    const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
-    const language = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
+export const userInterfaceLanguage: string = window['user-interface-language'];
 
-    if (appConfig.profileLanguages?.includes(language)) {
-        return language;
-    } else {
-        return 'en';
-    }
+/**
+ * @deprecated
+ * only needed for compatibility with planning
+ */
+export function getUserInterfaceLanguage() {
+    return userInterfaceLanguage;
 }
 
 export const debugInfo = {
