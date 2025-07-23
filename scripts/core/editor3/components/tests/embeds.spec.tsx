@@ -20,8 +20,11 @@ describe('editor3.components.embed-block', () => {
             </Provider>,
         );
 
-        expect(wrapper.find('.embed-block__wrapper').html())
-            .toContain('<h1>Embed Title</h1>');
+        expect(wrapper.find('.embed-block__wrapper iframe').html())
+            .toContain(
+                // it would be better to extract `srcdoc` attribute only, but couldn't get `wrapper.prop` to work
+                '<iframe srcdoc="&lt;h1&gt;Embed Title&lt;/h1&gt;" style="border: 0px;"></iframe>',
+            );
     });
 });
 
