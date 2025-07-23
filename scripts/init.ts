@@ -5,7 +5,6 @@
 
 import {merge} from 'lodash';
 import {IDENTITY_KEY} from 'appConfig';
-import {applyConfigurationDefaults} from './apply-configuration-defaults';
 import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
 
@@ -42,8 +41,6 @@ fetchSync(
 
         // apply config from server
         merge(appConfig, res.config);
-
-        applyConfigurationDefaults(appConfig);
 
         // allow e2e tests to overwrite appConfig via local storage
         merge(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));

@@ -1,12 +1,14 @@
 import {ISuperdeskGlobalConfig, IExtensions} from 'superdesk-api';
 
-export const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
+const appConfigForUnitTests = __SUPERDESK_CONFIG__;
+const userInterfaceLanguageForUnitTests = 'en';
+
+export const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'] ?? appConfigForUnitTests;
+export const userInterfaceLanguage: string = window['user-interface-language'] ?? userInterfaceLanguageForUnitTests;
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
 export const extensions: IExtensions = {};
-
-export const userInterfaceLanguage: string = window['user-interface-language'];
 
 /**
  * @deprecated
