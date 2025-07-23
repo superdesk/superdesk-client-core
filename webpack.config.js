@@ -55,6 +55,7 @@ module.exports = function makeConfig(grunt) {
 
     return {
         entry: {
+            init: [path.join(__dirname, 'scripts', 'init')],
             app: [path.join(__dirname, 'scripts', 'index')],
         },
 
