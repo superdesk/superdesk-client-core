@@ -94,14 +94,20 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                             labelHidden
                                             value={item.start_time}
                                             onChange={(nextTime) => {
-                                                this.props.onChange(setValueAtIndex(
-                                                    workingHours,
-                                                    rowIndex,
-                                                    {
-                                                        ...item,
-                                                        start_time: nextTime,
-                                                    },
-                                                ));
+                                                if (nextTime === null) {
+                                                    superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                                } else {
+                                                    this.props.onChange(
+                                                        setValueAtIndex(
+                                                            workingHours,
+                                                            rowIndex,
+                                                            {
+                                                                ...item,
+                                                                start_time: nextTime,
+                                                            },
+                                                        ),
+                                                    );
+                                                }
                                             }}
                                             disabled={disabled}
                                         />
@@ -121,14 +127,18 @@ export class WithWorkingHoursEditor extends React.PureComponent<IProps> {
                                             labelHidden
                                             value={item.end_time}
                                             onChange={(nextTime) => {
-                                                this.props.onChange(setValueAtIndex(
-                                                    workingHours,
-                                                    rowIndex,
-                                                    {
-                                                        ...item,
-                                                        end_time: nextTime,
-                                                    },
-                                                ));
+                                                if (nextTime === null) {
+                                                    superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                                } else {
+                                                    this.props.onChange(setValueAtIndex(
+                                                        workingHours,
+                                                        rowIndex,
+                                                        {
+                                                            ...item,
+                                                            end_time: nextTime,
+                                                        },
+                                                    ));
+                                                }
                                             }}
                                             disabled={disabled}
                                         />
