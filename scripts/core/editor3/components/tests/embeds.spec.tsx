@@ -7,7 +7,7 @@ import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {createStore} from 'redux';
-import {decodeHtml} from '../../../../core/utils';
+import {decodeHtmlEntities} from '../../../../core/decode-html-entities';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -23,7 +23,7 @@ describe('editor3.components.embed-block', () => {
 
         const iframeContent = wrapper.find('.embed-block__wrapper iframe').html();
 
-        const srcDocAttribute = decodeHtml(iframeContent.match(/srcdoc="(.+?)"/)[1]);
+        const srcDocAttribute = decodeHtmlEntities(iframeContent.match(/srcdoc="(.+?)"/)[1]);
 
         expect(srcDocAttribute).toBe('<h1>Embed Title</h1>');
     });

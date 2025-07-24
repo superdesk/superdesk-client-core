@@ -479,7 +479,3 @@ export function omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Om
 
     return omit(item, Object.keys(keys)) as Omit<T, keyof IBaseRestApiResponse>;
 }
-
-export const decodeHtml = (input: string): string => {
-    return new DOMParser().parseFromString(input, 'text/html').documentElement.textContent;
-};
