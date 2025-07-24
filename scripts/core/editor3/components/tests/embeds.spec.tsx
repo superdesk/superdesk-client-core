@@ -7,6 +7,7 @@ import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {createStore} from 'redux';
+import {decodeHtml} from '../../../../core/utils';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -20,11 +21,11 @@ describe('editor3.components.embed-block', () => {
             </Provider>,
         );
 
-        expect(wrapper.find('.embed-block__wrapper iframe').html())
-            .toContain(
-                // it would be better to extract `srcdoc` attribute only, but couldn't get `wrapper.prop` to work
-                '<iframe srcdoc="&lt;h1&gt;Embed Title&lt;/h1&gt;" style="border: 0px;"></iframe>',
-            );
+        const iframeContent = wrapper.find('.embed-block__wrapper iframe').html();
+
+        const srcDocAttribute = decodeHtml(iframeContent.match(/srcdoc="(.+?)"/)[1]);
+
+        expect(srcDocAttribute).toBe('<h1>Embed Title</h1>');
     });
 });
 

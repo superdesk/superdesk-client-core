@@ -430,7 +430,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
 }
 
 export function stripBaseRestApiFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
+    type IKeys = {[P in keyof Required<IBaseRestApiResponse>]: 1};
 
     const keysObject: IKeys = {
         _updated: 1,
@@ -449,7 +449,7 @@ export function stripBaseRestApiFields<T extends {}>(entity: T): T {
 }
 
 export function stripLockingFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
+    type IKeys = {[P in keyof Required<ILockInfo>]: 1};
 
     const keysObject: IKeys = {
         _lock: 1,
@@ -479,3 +479,7 @@ export function omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Om
 
     return omit(item, Object.keys(keys)) as Omit<T, keyof IBaseRestApiResponse>;
 }
+
+export const decodeHtml = (input: string): string => {
+    return new DOMParser().parseFromString(input, 'text/html').documentElement.textContent;
+};
