@@ -32,6 +32,7 @@ interface IOwnProps {
 interface IReduxStateProps {
     readOnly: boolean;
     showTitle: boolean;
+    mediaEntities?: {[guid: string]: any};
 }
 
 interface IDispatchProps {
@@ -74,12 +75,17 @@ export class MediaBlockComponent extends React.Component<IProps> {
      * @description Returns the image data.
      */
     data() {
-        const {block, contentState} = this.props;
+        const {block, contentState, mediaEntities} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
-        const {media} = entity.getData();
+        const entityData = entity.getData();
+        const guid = entityData.media?.guid;
 
-        return media;
+        if (guid && mediaEntities?.[guid]) {
+            return mediaEntities[guid]; // Live metadata from Redux
+        }
+
+        return entityData.media;
     }
 
     /**
@@ -342,6 +348,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
 const mapStateToProps = (state) => ({
     readOnly: state.readOnly,
     showTitle: state.showTitle,
+    mediaEntities: state.forms?.image?.mediaByGuid || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({
