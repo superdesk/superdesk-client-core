@@ -22,7 +22,7 @@ interface IProps {
     itemsById: any;
     relatedEntities: IRelatedEntities;
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
+    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable';
     selected: string;
     swimlane: any;
     profilesById: any;
@@ -491,6 +491,20 @@ export class ItemList extends React.Component<IProps, IState> {
         const {storage} = this.angularservices;
         const isEmpty = !this.props.itemsList.length;
 
+        let classes = '';
+
+        if (this.props.view === 'photogrid') {
+            classes = 'sd-grid-list sd-grid-list--no-margin';
+        } else {
+            let view = this.props.view;
+
+            if (!view || view === 'compact-configurable') {
+                view = 'compact';
+            }
+
+            classes = `${view}-view list-view`;
+        }
+
         if (this.props.loading) {
             return (
                 <ul
@@ -520,11 +534,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
         return (
             <ul
-                className={classNames(
-                    this.props.view === 'photogrid' ?
-                        'sd-grid-list sd-grid-list--no-margin' :
-                        (this.props.view || 'compact') + '-view list-view',
-                )}
+                className={classes}
                 onClick={closeActionsMenu}
                 onKeyDown={(event) => {
                     this.handleKey(event);

@@ -200,6 +200,9 @@ export function MonitoringView(
                         case 'list':
                             scope.switchView('compact');
                             break;
+                        case 'compact':
+                            scope.switchView('compact-configurable');
+                            break;
                         case 'swimlane':
                             scope.switchView('compact', true);
                             break;

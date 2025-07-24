@@ -1533,7 +1533,7 @@ declare module 'superdesk-api' {
         desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
         desk_language?: string;
-        monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
+        monitoring_default_view?: 'list' | 'compact' | 'swimlane' | 'photogrid';
         default_content_profile: string;
         default_content_template: string;
         slack_channel_name?: string;
@@ -3678,6 +3678,10 @@ declare module 'superdesk-api' {
             priority?: Array<string>;
             firstLine?: Array<string | IListViewFieldWithOptions>,
             secondLine?: Array<string | IListViewFieldWithOptions>,
+            compactView?: {
+                firstLine?: Array<string | IListViewFieldWithOptions>,
+                secondLine?: Array<string | IListViewFieldWithOptions>,
+            };
             relatedItems?: {
                 firstLine: Array<string | IListViewFieldWithOptions>,
                 secondLine: Array<string | IListViewFieldWithOptions>,

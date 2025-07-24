@@ -388,6 +388,7 @@ export class Item extends React.Component<IProps, IState> {
                             toggleNested={this.toggleNested}
                             singleLine={this.props.singleLine}
                             customRender={this.props.customRender}
+                            view={this.props.view}
                         />
                     );
             }
