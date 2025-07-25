@@ -97,16 +97,21 @@ export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: nu
         }
     }
 
-    const decorator = new CompositeDecorator([
+    const decorators = [
         {
             strategy: strategyForHardLimit,
             component: (props) => <Component {...props} color="#ff0000" />,
         },
-        {
+    ];
+
+    if (typeof softLimit === 'number') {
+        decorators.push({
             strategy: strategyForSoftLimit,
             component: (props) => <Component {...props} color="#E6731A" />,
-        },
-    ]);
+        });
+    }
+
+    const decorator = new CompositeDecorator(decorators);
 
     return decorator;
 }
