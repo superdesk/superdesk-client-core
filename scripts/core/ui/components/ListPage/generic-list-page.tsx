@@ -39,7 +39,7 @@ import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
-interface IState<T> {
+interface IState<T extends object> {
     previewItem: T | null;
     editItem: T | null;
     newItem: Partial<T> | null;
@@ -83,7 +83,7 @@ const subNavWrapper: React.ComponentType = (props) => (
     </div>
 );
 
-export class GenericListPageComponent<T, P>
+export class GenericListPageComponent<T extends object, P>
     extends React.Component<IPropsGenericForm<T, P> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {
@@ -776,7 +776,7 @@ export class GenericListPageComponent<T, P>
 
 export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResponse, P>(
     resource: string,
-    formConfig: IFormGroup,
+    formConfig: IFormGroup<T>,
     defaultSortOption?: ISortOption,
     additionalProps?: P,
 ) => {
@@ -785,7 +785,7 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
         'crudManager',
         resource,
         defaultSortOption,
-        (filters: IFormGroup) => {
+        (filters: IFormGroup<T>) => {
             const formConfigForFilters = getFormGroupForFiltering(formConfig);
             const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
                 .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});

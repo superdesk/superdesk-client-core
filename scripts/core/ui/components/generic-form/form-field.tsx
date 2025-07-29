@@ -53,7 +53,7 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
 
 export function getFormFieldPreviewComponent(
     item: {readonly [key: string]: any},
-    formFieldConfig: IFormField,
+    formFieldConfig: IFormField<typeof item>,
     options: { showAsPlainText?: boolean } = {},
 ): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
@@ -72,8 +72,10 @@ export function getFormFieldPreviewComponent(
     );
 }
 
-export function getFormFieldsRecursive(form: Array<IFormField | IFormGroup>): Array<IFormField> {
-    let result: Array<IFormField> = [];
+export function getFormFieldsRecursive<T extends object>(
+    form: Array<IFormField<T> | IFormGroup<T>>,
+): Array<IFormField<T>> {
+    let result: Array<IFormField<T>> = [];
 
     form.forEach((item) => {
         if (isIFormGroup(item)) {

@@ -18,11 +18,11 @@ import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 
-interface IProps<T> {
+interface IProps<T extends object> {
     operation: 'editing' | 'creation';
     editMode: boolean;
     hiddenFields: Array<string>;
-    getFormConfig(item?: Partial<T>): IFormGroup;
+    getFormConfig(item?: Partial<T>): IFormGroup<T>;
     item: Partial<T>;
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
@@ -40,19 +40,19 @@ interface IIssues {
     [field: string]: Array<string>;
 }
 
-interface IState<T> {
+interface IState<T extends object> {
     nextItem: IProps<T>['item'];
     issues: IIssues;
 }
 
-function getInitialState<T>(props: IProps<T>) {
+function getInitialState<T extends object>(props: IProps<T>) {
     return {
         nextItem: props.item,
         issues: {},
     };
 }
 
-export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, IState<T>> {
+export class GenericListPageItemViewEdit<T extends object> extends React.Component<IProps<T>, IState<T>> {
     private _mounted: boolean;
     private modal: any;
 
@@ -147,7 +147,6 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             return acc;
         }, {});
 
-        debugger;
         const requiredValidationErrors = currentFields
             .filter(
                 (fieldConfig) =>

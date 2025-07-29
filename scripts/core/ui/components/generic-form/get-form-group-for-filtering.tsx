@@ -37,7 +37,9 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     }
 }
 
-function getFormForFiltering(form: Array<IFormField | IFormGroup>): Array<IFormField | IFormGroup> {
+function getFormForFiltering<T extends object>(
+    form: Array<IFormField<T> | IFormGroup<T>>,
+): Array<IFormField<T> | IFormGroup<T>> {
     return form.map((item) => {
         if (isIFormGroup(item)) {
             return getFormGroupForFiltering(item);
@@ -49,7 +51,7 @@ function getFormForFiltering(form: Array<IFormField | IFormGroup>): Array<IFormF
     });
 }
 
-export function getFormGroupForFiltering(group: IFormGroup): IFormGroup {
+export function getFormGroupForFiltering<T extends object>(group: IFormGroup<T>): IFormGroup<T> {
     return {
         ...group,
         form: getFormForFiltering(group.form),

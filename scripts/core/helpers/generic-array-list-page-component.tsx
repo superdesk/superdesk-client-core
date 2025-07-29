@@ -32,7 +32,7 @@ function getItemsWithMeta(_items) {
     };
 }
 
-export class GenericArrayListPageComponent<T, P>
+export class GenericArrayListPageComponent<T extends object, P>
     extends React.Component<IPropsGenericArrayListPage<T, P>, IState>
     implements ICrudManagerMethods<T> {
     constructor(props: IPropsGenericArrayListPage<T, P>) {

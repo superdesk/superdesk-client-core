@@ -11,7 +11,7 @@ function getAllInputTypes(): Array<FormFieldType> {
     return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
 }
 
-function getTestFieldConfig(type: FormFieldType): IFormField {
+function getTestFieldConfig(type: FormFieldType): IFormField<any> {
     switch (type) {
         case FormFieldType.plainText:
         case FormFieldType.textEditor3:

@@ -9,7 +9,7 @@ import {IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {gettext} from 'core/utils';
 
-function getNameField(): IFormField {
+function getNameField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Destination name'),
         type: FormFieldType.plainText,
@@ -18,7 +18,7 @@ function getNameField(): IFormField {
     };
 }
 
-function getIsActiveField(): IFormField {
+function getIsActiveField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Active'),
         type: FormFieldType.checkbox,
@@ -26,7 +26,7 @@ function getIsActiveField(): IFormField {
     };
 }
 
-function getContentFilterField(): IFormField {
+function getContentFilterField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Content filter'),
         type: FormFieldType.contentFilterSingleValue,
@@ -34,7 +34,7 @@ function getContentFilterField(): IFormField {
     };
 }
 
-function getDeskField(): IFormField {
+function getDeskField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Desk'),
         type: FormFieldType.deskSingleValue,
@@ -43,7 +43,7 @@ function getDeskField(): IFormField {
     };
 }
 
-function getStageField(): IFormField {
+function getStageField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Stage'),
         type: FormFieldType.stageSingleValue,
@@ -54,7 +54,7 @@ function getStageField(): IFormField {
     };
 }
 
-function getMacroField(): IFormField {
+function getMacroField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Macro'),
         type: FormFieldType.macroSingleValue,
@@ -65,7 +65,7 @@ function getMacroField(): IFormField {
     };
 }
 
-function getSendAfterScheduleField(): IFormField {
+function getSendAfterScheduleField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Send only after publish schedule'),
         type: FormFieldType.checkbox,
@@ -126,7 +126,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
 
 export class InternalDestinations extends React.Component {
     render() {
-        const formConfig: IFormGroup = {
+        const formConfig: IFormGroup<IInternalDestination> = {
             direction: 'vertical',
             type: 'inline',
             form: [

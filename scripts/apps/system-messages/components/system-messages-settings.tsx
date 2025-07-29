@@ -34,8 +34,8 @@ const getTypeLabel = (type: ISystemMessage['type']) => {
 /**
  * It needs to be a function because calling gettext in the top level doesn't work
  */
-function getFormConfig(): IFormGroup {
-    const formConfig: IFormGroup = {
+function getFormConfig(): IFormGroup<ISystemMessage> {
+    return {
         type: 'inline',
         direction: 'vertical',
         form: [
@@ -72,8 +72,6 @@ function getFormConfig(): IFormGroup {
             },
         ],
     };
-
-    return formConfig;
 }
 
 class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<ISystemMessage>> {
@@ -93,7 +91,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
                             {
                                 getFormFieldPreviewComponent(
                                     item,
-                                    formConfig.form[3] as IFormField,
+                                    formConfig.form[3] as IFormField<ISystemMessage>,
                                     {showAsPlainText: true},
                                 )
                             }

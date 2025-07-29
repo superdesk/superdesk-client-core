@@ -4,11 +4,11 @@ import {FormGroupDisplayWrapper} from './form-group-display-wrapper';
 import {FormGroupDirectionWrapper} from './form-direction-wrapper';
 import {IFormGroup} from 'superdesk-api';
 
-interface IProps {
-    group: IFormGroup;
+interface IProps<T extends object> {
+    group: IFormGroup<T>;
 }
 
-export class FormGroupWrapper extends React.Component<IProps> {
+export class FormGroupWrapper<T extends object> extends React.Component<IProps<T>> {
     render() {
         return (
             <FormGroupDisplayWrapper group={this.props.group}>

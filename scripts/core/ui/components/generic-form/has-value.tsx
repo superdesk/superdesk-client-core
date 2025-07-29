@@ -1,9 +1,9 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {FormFieldType} from './interfaces/form';
+import {IFormField} from 'superdesk-api';
 import {stripHtmlTags} from 'core/utils';
 
-export function hasValue(fieldConfig: IFormField, value: any): boolean {
+export function hasValue<T extends object>(fieldConfig: IFormField<T>, value: any): boolean {
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
