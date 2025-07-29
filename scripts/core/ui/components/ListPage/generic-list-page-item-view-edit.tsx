@@ -16,6 +16,7 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
+import {get, set} from 'lodash';
 
 interface IProps<T> {
     operation: 'editing' | 'creation';
@@ -87,13 +88,17 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
 
     handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
-        this.setState((prevState) => ({
-            ...prevState,
-            nextItem: {
-                ...prevState.nextItem,
-                [field]: nextValue,
-            },
-        }));
+
+        this.setState((prevState) => {
+            const nextItem = {...prevState.nextItem};
+
+            set(nextItem, field, nextValue);
+
+            return {
+                ...prevState,
+                nextItem: nextItem,
+            };
+        });
     }
 
     handleCancel() {
@@ -133,22 +138,24 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             Only fields in form config at the time of saving will be sent.
         */
         const nextItemCleaned: Partial<T> = currentFieldsIds.reduce<Partial<T>>((acc, field) => {
-            const value = this.state.nextItem[field];
+            const value = get(this.state.nextItem, field);
 
             if (value != null) {
-                acc[field] = value;
+                set(acc, field, value);
             }
 
             return acc;
         }, {});
 
+        debugger;
         const requiredValidationErrors = currentFields
             .filter(
                 (fieldConfig) =>
-                    fieldConfig.required === true && hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
+                    fieldConfig.required === true
+                    && hasValue(fieldConfig, get(nextItemCleaned, fieldConfig.field)) !== true,
             )
             .reduce<IIssues>((acc, fieldConfig) => {
-                acc[fieldConfig.field] = [gettext('Field is required')];
+                set(acc, fieldConfig.field, [gettext('Field is required')]);
 
                 return acc;
             }, {});

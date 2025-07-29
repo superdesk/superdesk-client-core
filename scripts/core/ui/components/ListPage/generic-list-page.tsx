@@ -2,9 +2,8 @@
 /* eslint-disable brace-style */
 
 import React from 'react';
-import {noop} from 'lodash';
+import {get, noop, set} from 'lodash';
 import ReactPaginate from 'react-paginate';
-import classNames from 'classnames';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
@@ -590,7 +589,6 @@ export class GenericListPageComponent<T, P>
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
-
                                             </form>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
@@ -795,9 +793,13 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
             let filtersFormatted = {};
 
             for (let fieldName in filters) {
-                filtersFormatted[fieldName] = generateFilterForServer(
-                    fieldTypesLookup[fieldName],
-                    filters[fieldName],
+                set(
+                    filtersFormatted,
+                    fieldName,
+                    generateFilterForServer(
+                        get(fieldTypesLookup, fieldName),
+                        get(filters, fieldName),
+                    ),
                 );
             }
 
