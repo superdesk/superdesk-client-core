@@ -185,6 +185,7 @@ export default angular.module('superdesk.core.services.modal', [
             return new Promise((resolve, reject) => {
                 showModal(({closeModal}) => (
                     <Modal
+                        data-test-id="modal-confirm"
                         visible
                         size="small"
                         position="top"
