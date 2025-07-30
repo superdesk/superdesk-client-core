@@ -90,8 +90,8 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
     handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
         this.setState((prevState) => {
-            const nextItem = produce(prevState.nextItem, (item) => {
-                set(item, field, nextValue);
+            const nextItem = produce(prevState.nextItem, (draft) => {
+                set(draft, field, nextValue);
             });
 
             return {
