@@ -3706,8 +3706,14 @@ declare module 'superdesk-api' {
                 secondLine: Array<string | IListViewFieldWithOptions>;
             };
 
-
-
+            /**
+             * Used for choosing whether `priority` or `urgency` would be displayed next to item type.
+             *
+             * TO-REFACTOR: Replace with a more generic configuration option.
+             * Technically it renders an element over both lines. It's not doing anything priority specific.
+             * List config should be improved to allow any number of elements spanning both lines and also
+             * setting rendering location e.g. start/end and and order of fields.
+             */
             priority?: Array<string>;
         };
         gridViewFields: Array<string>;
