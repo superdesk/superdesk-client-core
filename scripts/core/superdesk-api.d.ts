@@ -3672,16 +3672,40 @@ declare module 'superdesk-api' {
             };
         };
         list: {
-            narrowView?: any;
-            singleLineView?: any;
-            singleLine?: any;
-            priority?: Array<string>;
-            firstLine?: Array<string | IListViewFieldWithOptions>,
-            secondLine?: Array<string | IListViewFieldWithOptions>,
+            /** Fields to show in first/second lines of lists of articles in monitoring/search */
+            firstLine?: Array<string | IListViewFieldWithOptions>;
+            secondLine?: Array<string | IListViewFieldWithOptions>;
+
+
+            /**
+             * If a more compact view is desired, the instance may be configured to only show one line.
+             * `list.firstLine`, `list.secondLine` would then not be used.
+             *
+             * TO-REFACTOR: remove singleLine, singleLineView
+             * use `list.firstLine` instead and set `list.secondLine` to be empty.
+             */
+            singleLine?: Array<string | IListViewFieldWithOptions>;
+            singleLineView?: boolean;
+
+            /**
+             * Set fields to be displayed when there is limited horizontal space available.
+             * e.g when all - monitoring, item preview and authoring are visible.
+             *
+             * NOTE: might no longer be relevant since preview now floats when all 3 are open.
+             */
+            narrowView?: Array<string | IListViewFieldWithOptions>;
+
+            /**
+             * Fields to show for related items.
+             */
             relatedItems?: {
-                firstLine: Array<string | IListViewFieldWithOptions>,
-                secondLine: Array<string | IListViewFieldWithOptions>,
+                firstLine: Array<string | IListViewFieldWithOptions>;
+                secondLine: Array<string | IListViewFieldWithOptions>;
             };
+
+
+
+            priority?: Array<string>;
         };
         gridViewFields: Array<string>;
         gridViewFooterFields: {
