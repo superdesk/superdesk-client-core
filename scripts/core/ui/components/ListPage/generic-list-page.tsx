@@ -777,6 +777,9 @@ export class GenericListPageComponent<T extends object, P>
 export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResponse, P>(
     resource: string,
     formConfig: IFormGroup<T>,
+
+    // If field path for a sorting option is nested,
+    // an index in elastic has to be created beforehand for sorting to work
     defaultSortOption?: ISortOption,
     additionalProps?: P,
 ) => {

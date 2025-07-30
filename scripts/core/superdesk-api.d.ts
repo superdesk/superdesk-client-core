@@ -4,8 +4,8 @@ declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
-    type FormFieldType = import('../core/ui/components/generic-form/interfaces/form').FormFieldType;
-    type Paths = import('@sourcefabric/common/dist/src/utils/index').Paths;
+    type GenericFormFieldType = import('../core/ui/components/generic-form/interfaces/form').GenericFormFieldType;
+    type Paths<T> = import('@sourcefabric/common/dist/src/utils/index').Paths<T>;
 
     export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
@@ -2124,7 +2124,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IFormField<T extends object> { // don't forget to update runtime type checks
-        type: FormFieldType;
+        type: GenericFormFieldType;
 
         required?: boolean;
 
@@ -3203,6 +3203,9 @@ declare module 'superdesk-api' {
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
                 formConfig: IFormGroup,
+
+                // If field path for a sorting option is nested,
+                // an index in elastic has to be created beforehand for sorting to work
                 defaultSortOption?: ISortOption,
                 additionalProps?: P,
             ): React.ComponentType<IPropsGenericForm<T, P>>;
@@ -3280,8 +3283,8 @@ declare module 'superdesk-api' {
             };
         };
         forms: {
-            FormFieldType: typeof FormFieldType;
-            generateFilterForServer(type: FormFieldType, value: any): any;
+            GenericFormFieldType: typeof GenericFormFieldType;
+            generateFilterForServer(type: GenericFormFieldType, value: any): any;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
             isIFormGroup<T>(x: IFormGroup<T> | IFormField<T>): x is IFormGroup<T>;
             isIFormField<T>(x: IFormGroup<T> | IFormField<T>): x is IFormField<T>;

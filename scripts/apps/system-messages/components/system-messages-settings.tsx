@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import {gettext} from 'core/utils';
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
@@ -42,12 +42,12 @@ function getFormConfig(): IFormGroup<ISystemMessage> {
             {
                 field: 'is_active',
                 label: gettext('Active'),
-                type: FormFieldType.checkbox,
+                type: GenericFormFieldType.checkbox,
             },
             {
                 field: 'type',
                 label: gettext('Style'),
-                type: FormFieldType.select,
+                type: GenericFormFieldType.select,
                 required: true,
                 component_parameters: {
                     options: [
@@ -61,13 +61,13 @@ function getFormConfig(): IFormGroup<ISystemMessage> {
             {
                 field: 'message_title',
                 label: gettext('Title'),
-                type: FormFieldType.plainText,
+                type: GenericFormFieldType.plainText,
                 required: true,
             },
             {
                 field: 'message',
                 label: gettext('Message'),
-                type: FormFieldType.textEditor3,
+                type: GenericFormFieldType.textEditor3,
                 required: true,
             },
         ],

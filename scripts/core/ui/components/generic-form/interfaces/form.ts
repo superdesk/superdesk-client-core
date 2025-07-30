@@ -1,6 +1,6 @@
 import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
-export enum FormFieldType {
+export enum GenericFormFieldType {
     plainText = 'plainText',
     duration = 'duration',
     textEditor3 = 'textEditor3',
@@ -17,7 +17,7 @@ export enum FormFieldType {
 }
 
 export function isIFormField<T extends object>(x: IFormGroup<T>['form'][0]): x is IFormField<T> {
-    return x['direction'] == null;
+    return (x as IFormGroup<T>).direction == null;
 }
 
 export function isIFormGroupCollapsible<T extends object>(x: IFormGroup<T>['type']): x is IFormGroupCollapsible {

@@ -6,13 +6,13 @@ import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/Lis
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
 import {IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {gettext} from 'core/utils';
 
 function getNameField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Destination name'),
-        type: FormFieldType.plainText,
+        type: GenericFormFieldType.plainText,
         field: 'name',
         required: true,
     };
@@ -21,7 +21,7 @@ function getNameField(): IFormField<IInternalDestination> {
 function getIsActiveField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Active'),
-        type: FormFieldType.checkbox,
+        type: GenericFormFieldType.checkbox,
         field: 'is_active',
     };
 }
@@ -29,7 +29,7 @@ function getIsActiveField(): IFormField<IInternalDestination> {
 function getContentFilterField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Content filter'),
-        type: FormFieldType.contentFilterSingleValue,
+        type: GenericFormFieldType.contentFilterSingleValue,
         field: 'filter',
     };
 }
@@ -37,7 +37,7 @@ function getContentFilterField(): IFormField<IInternalDestination> {
 function getDeskField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Desk'),
-        type: FormFieldType.deskSingleValue,
+        type: GenericFormFieldType.deskSingleValue,
         field: 'desk',
         required: true,
     };
@@ -46,7 +46,7 @@ function getDeskField(): IFormField<IInternalDestination> {
 function getStageField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Stage'),
-        type: FormFieldType.stageSingleValue,
+        type: GenericFormFieldType.stageSingleValue,
         field: 'stage',
         component_parameters: {
             deskField: 'desk',
@@ -57,7 +57,7 @@ function getStageField(): IFormField<IInternalDestination> {
 function getMacroField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Macro'),
-        type: FormFieldType.macroSingleValue,
+        type: GenericFormFieldType.macroSingleValue,
         field: 'macro',
         component_parameters: {
             deskField: 'desk',
@@ -68,7 +68,7 @@ function getMacroField(): IFormField<IInternalDestination> {
 function getSendAfterScheduleField(): IFormField<IInternalDestination> {
     return {
         label: gettext('Send only after publish schedule'),
-        type: FormFieldType.checkbox,
+        type: GenericFormFieldType.checkbox,
         field: 'send_after_schedule',
     };
 }
@@ -137,6 +137,11 @@ export class InternalDestinations extends React.Component {
                 getDeskField(),
                 getStageField(),
                 getMacroField(),
+                {
+                    field: 'test.body_html',
+                    label: 'Test field',
+                    type: GenericFormFieldType.plainText,
+                },
             ],
         };
 
