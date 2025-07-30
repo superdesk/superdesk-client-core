@@ -17,6 +17,7 @@ import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
+import {produce} from 'immer';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -88,11 +89,10 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
 
     handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
-
         this.setState((prevState) => {
-            const nextItem = {...prevState.nextItem};
-
-            set(nextItem, field, nextValue);
+            const nextItem = produce(prevState.nextItem, (item) => {
+                set(item, field, nextValue);
+            });
 
             return {
                 ...prevState,
