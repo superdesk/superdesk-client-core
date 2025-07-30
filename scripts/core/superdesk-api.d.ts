@@ -3691,7 +3691,10 @@ declare module 'superdesk-api' {
              * Set fields to be displayed when there is limited horizontal space available.
              * e.g when all - monitoring, item preview and authoring are visible.
              *
-             * NOTE: might no longer be relevant since preview now floats when all 3 are open.
+             * NOTE: will only work if `singleLineView` is enabled.
+             *
+             * TO-REFACTOR: consider removing the requirement that `singleLine` be enabled for `narrowView` to work.
+             * TO-REFACTOR: might no longer be relevant since preview now floats when all 3 are open.
              */
             narrowView?: Array<string | IListViewFieldWithOptions>;
 
