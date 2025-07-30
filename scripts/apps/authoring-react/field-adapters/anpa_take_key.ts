@@ -8,7 +8,7 @@ export const anpa_take_key: IFieldAdapter<IArticle> = {
             editorFormat: [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
-            maxSoftLength: fieldSchema?.maxSoftLength,
+            maxSoftLength: fieldEditor?.maxSoftLength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: true,
             disallowedCharacters: [],
