@@ -273,11 +273,10 @@ class Authoring {
         };
 
         this.confirmSendTo = function() {
-            element.all(by.className('modal__content')).count().then((closeModal) => {
-                if (closeModal) {
-                    element(by.className('modal__content')).all(by.css('[ng-click="ok()"]')).click();
-                }
-            });
+            const modalEl = el(['modal-confirm']);
+            const okButton = modalEl.css('[role="button"]').textContent.match('ok');
+
+            okButton.click();
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
