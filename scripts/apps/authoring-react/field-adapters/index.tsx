@@ -195,7 +195,7 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
                         editorFormat: fieldEditor.formatOptions ?? [],
                         minLength: fieldSchema?.minlength,
                         maxLength: fieldSchema?.maxlength,
-                        maxSoftLength: fieldSchema?.maxSoftLength,
+                        maxSoftLength: fieldEditor?.maxSoftLength,
                         cleanPastedHtml: fieldEditor?.cleanPastedHTML,
                         singleLine: vocabulary.field_options?.single,
                         disallowedCharacters: [],

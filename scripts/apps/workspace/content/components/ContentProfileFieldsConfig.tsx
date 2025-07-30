@@ -32,7 +32,6 @@ enum ISchemaFields {
     required = 'required',
     minlength = 'minlength',
     maxlength = 'maxlength',
-    maxSoftLength = 'maxSoftLength',
 }
 
 const allSchemaFieldKeys: Array<keyof typeof ISchemaFields> =
