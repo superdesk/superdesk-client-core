@@ -137,11 +137,6 @@ export class InternalDestinations extends React.Component {
                 getDeskField(),
                 getStageField(),
                 getMacroField(),
-                {
-                    field: 'test.body_html',
-                    label: 'Test field',
-                    type: GenericFormFieldType.plainText,
-                },
             ],
         };
 
