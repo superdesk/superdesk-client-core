@@ -127,7 +127,11 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
-        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id').concat(this.props.hiddenFields);
+        const currentFieldsIds = [
+            ...currentFields.map(({field}) => field),
+            '_id',
+            ...this.props.hiddenFields,
+        ];
 
         /*
             Form config is dynamic and can change during editing.
