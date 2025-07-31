@@ -14,17 +14,17 @@
             </button>
             <ul class="dropdown__menu">
                 <li>
-                    <button ng-click="setview('compact')" aria-label="List View">
+                    <button ng-click="setview('compact')" aria-label="{{ :: 'List View' | translate }}">
                         <i class="icon-list-view"></i>{{ 'List View' | translate }}
                     </button>
                 </li>
                 <li ng-if="compactViewEnabled">
-                    <button ng-click="setview('compact-configurable')" aria-label="Compact View">
+                    <button ng-click="setview('compact-configurable')" aria-label="{{ :: 'Compact View' | translate }}">
                         <i class="icon-unordered-list"></i>{{ 'Compact View' | translate }}
                     </button>
                 </li>
                 <li>
-                    <button ng-click="setview('photogrid')" aria-label="Photo Grid View">
+                    <button ng-click="setview('photogrid')" aria-label="{{ :: 'Photo Grid View' | translate }}">
                         <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
                     </button>
                 </li>
