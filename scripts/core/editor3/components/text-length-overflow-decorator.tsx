@@ -100,14 +100,14 @@ export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: nu
     const decorators = [
         {
             strategy: strategyForHardLimit,
-            component: (props) => <Component {...props} color="#ff0000" />,
+            component: (props) => <Component {...props} color="var(--sd-editor-colour__hard-limit)" />,
         },
     ];
 
     if (typeof softLimit === 'number') {
         decorators.push({
             strategy: strategyForSoftLimit,
-            component: (props) => <Component {...props} color="#E6731A" />,
+            component: (props) => <Component {...props} color="var(--sd-editor-colour__soft-limit)" />,
         });
     }
 

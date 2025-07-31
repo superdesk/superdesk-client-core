@@ -3626,7 +3626,7 @@ declare module 'superdesk-api' {
                 id: string;
                 icon: string;
                 label: string;
-                borderColor: 'orange' | 'blue' | 'purple';
+                borderColor: 'tag-color-1' | 'tag-color-2';
             }>;
             timeToRead?: any;
             lineLength?: number;
