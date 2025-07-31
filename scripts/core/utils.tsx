@@ -1,6 +1,6 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, userInterfaceLanguage} from 'appConfig';
 import {
     IVocabularyItem,
     IArticle,
@@ -17,19 +17,6 @@ import {TZDate} from '@sourcefabric/date-fns-tz';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 
-const language = getUserInterfaceLanguage();
-const filename = `/languages/${language}.json?nocache=${Date.now()}`;
-
-function applyTranslations(translations) {
-    const langOverride = appConfig.langOverride ?? {};
-
-    if (langOverride[language] != null) {
-        Object.assign(translations, langOverride[language]);
-    }
-
-    window.translations = translations;
-}
-
 export function isMacOS() {
     if (
         navigator.userAgent.toLowerCase().includes('macintosh')
@@ -39,26 +26,6 @@ export function isMacOS() {
     }
 
     return false;
-}
-
-function requestListener() {
-    const translations = JSON.parse(this.responseText);
-
-    if (translations[''] == null || translations['']['language'] == null || translations['']['plural-forms'] == null) {
-        throw new Error(`Language metadata not found in "${filename}"`);
-    }
-
-    applyTranslations(translations);
-}
-
-if (language === 'en') {
-    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-} else {
-    const req = new XMLHttpRequest();
-
-    req.addEventListener('load', requestListener);
-    req.open('GET', filename, false);
-    req.send();
 }
 
 export const i18n = gettextjs();
@@ -261,7 +228,7 @@ export function escapeRegExp(string) {
 }
 
 export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string): string {
-    const _language = _lang ?? getUserInterfaceLanguage();
+    const _language = _lang ?? userInterfaceLanguage;
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 
@@ -463,7 +430,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
 }
 
 export function stripBaseRestApiFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
+    type IKeys = {[P in keyof Required<IBaseRestApiResponse>]: 1};
 
     const keysObject: IKeys = {
         _updated: 1,
@@ -482,7 +449,7 @@ export function stripBaseRestApiFields<T extends {}>(entity: T): T {
 }
 
 export function stripLockingFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
+    type IKeys = {[P in keyof Required<ILockInfo>]: 1};
 
     const keysObject: IKeys = {
         _lock: 1,
