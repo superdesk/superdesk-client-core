@@ -204,7 +204,7 @@
                                         <i class="icon-list-view"></i>{{ 'List View' | translate }}
                                     </button>
                                 </li>
-                                <li>
+                                <li ng-if="compactViewEnabled">
                                     <button ng-click="switchView('compact-configurable')">
                                         <i class="icon-unordered-list"></i>{{ 'Compact View' | translate }}
                                     </button>

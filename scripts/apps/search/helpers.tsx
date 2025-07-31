@@ -172,9 +172,9 @@ export function renderArea(
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = itemProps.view === 'compact-configurable'
+    const listConfig = itemProps.listConfig || (itemProps.view === 'compact-configurable'
         ? appConfig.list.compactView
-        : itemProps.listConfig || appConfig.list || DEFAULT_LIST_CONFIG;
+        : appConfig.list || DEFAULT_LIST_CONFIG);
 
     let specs = listConfig[area] || [];
 

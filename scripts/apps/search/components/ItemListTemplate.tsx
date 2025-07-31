@@ -10,7 +10,7 @@ interface IPropsItemsListTemplate extends IPropsItemListInfo {
     getActionsMenu: () => any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
     loading?: boolean;
-    view?: string;
+    view?: 'compact' | 'compact-configurable';
 }
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {

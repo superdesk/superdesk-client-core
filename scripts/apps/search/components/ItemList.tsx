@@ -491,19 +491,12 @@ export class ItemList extends React.Component<IProps, IState> {
         const {storage} = this.angularservices;
         const isEmpty = !this.props.itemsList.length;
 
-        let classes = '';
-
-        if (this.props.view === 'photogrid') {
-            classes = 'sd-grid-list sd-grid-list--no-margin';
-        } else {
-            let view = this.props.view;
-
-            if (!view || view === 'compact-configurable') {
-                view = 'compact';
-            }
-
-            classes = `${view}-view list-view`;
-        }
+        let classes = {
+            compact: 'compact-view list-view',
+            'compact-configurable': 'compact-view list-view',
+            swimlane2: 'list-view',
+            photogrid: 'sd-grid-list sd-grid-list--no-margin',
+        };
 
         if (this.props.loading) {
             return (
@@ -534,7 +527,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
         return (
             <ul
-                className={classes}
+                className={classes[this.props.view]}
                 onClick={closeActionsMenu}
                 onKeyDown={(event) => {
                     this.handleKey(event);
