@@ -274,9 +274,12 @@ class Authoring {
 
         this.confirmSendTo = function() {
             const modalEl = el(['modal-confirm']);
-            const okButton = modalEl.element(by.buttonText('ok'));
 
-            okButton.click();
+            if (modalEl != null) {
+                const okButton = modalEl.element(by.buttonText('OK'));
+
+                okButton.click();
+            }
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
