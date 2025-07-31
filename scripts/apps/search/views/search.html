@@ -4,7 +4,7 @@
         <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap;"></div>
         <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
         <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
-        <div class="dropdown dropdown--align-right" dropdown>
+        <div class="dropdown dropdown--align-right" dropdown data-test-id="view-select">
             <button
                 aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : !monitoring.viewColumn && view === 'compact-configurable' ? ('Compact View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
                 dropdown__toggle
@@ -14,17 +14,17 @@
             </button>
             <ul class="dropdown__menu">
                 <li>
-                    <button ng-click="setview('compact')">
+                    <button ng-click="setview('compact')" aria-label="List View">
                         <i class="icon-list-view"></i>{{ 'List View' | translate }}
                     </button>
                 </li>
                 <li ng-if="compactViewEnabled">
-                    <button ng-click="setview('compact-configurable')">
+                    <button ng-click="setview('compact-configurable')" aria-label="Compact View">
                         <i class="icon-unordered-list"></i>{{ 'Compact View' | translate }}
                     </button>
                 </li>
                 <li>
-                    <button ng-click="setview('photogrid')">
+                    <button ng-click="setview('photogrid')" aria-label="Photo Grid View">
                         <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
                     </button>
                 </li>

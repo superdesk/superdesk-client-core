@@ -82,16 +82,23 @@ class GlobalSearch {
          *
          * @return {promise}
          */
-        this.setListView = function() {
-            var list = element(by.css('i.icon-list-view'));
+        this.setListView = async function() {
+            const dropdownToggle = element(by.css('[data-test-id="view-select"]'));
+            const className = await dropdownToggle.getAttribute('class');
 
-            return list.isDisplayed()
-                .then((isVisible) => {
-                    if (isVisible) {
-                        list.click();
-                        browser.sleep(1000);
-                    }
-                });
+            const isListViewActive = className.includes('icon-list-view');
+
+            if (isListViewActive) return;
+
+            const toggleButton = element(by.css('[data-test-id="view-select"]'));
+
+            await toggleButton.click();
+
+            const listViewOption = element(by.css('[aria-label="List View"]'));
+
+            await listViewOption.click();
+
+            await browser.sleep(1000);
         };
 
         /**
