@@ -274,7 +274,7 @@ class Authoring {
 
         this.confirmSendTo = function() {
             const modalEl = el(['modal-confirm']);
-            const okButton = modalEl.css('[role="button"]').textContent.match('ok');
+            const okButton = modalEl.element(by.buttonText('ok'));
 
             okButton.click();
         };
