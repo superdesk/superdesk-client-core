@@ -491,7 +491,7 @@ export class ItemList extends React.Component<IProps, IState> {
         const {storage} = this.angularservices;
         const isEmpty = !this.props.itemsList.length;
 
-        let classes = {
+        let classes: {[key in IProps['view']]: string} = {
             compact: 'compact-view list-view',
             'compact-configurable': 'compact-view list-view',
             swimlane2: 'list-view',
