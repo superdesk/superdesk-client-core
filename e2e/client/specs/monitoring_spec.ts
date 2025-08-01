@@ -59,7 +59,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         monitoring.actionOnItem('Edit', 2, 0);
-        authoring.sendTo('Politic Desk', 'two', true);
+        authoring.sendTo('Politic Desk', 'two', false);
         expect(monitoring.getTextItem(5, 0)).toBe('item3');
     });
 

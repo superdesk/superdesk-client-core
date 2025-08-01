@@ -248,6 +248,7 @@ class Authoring {
         this.sendTo = function(desk, stage, skipConfirm) {
             this.sendToButton.click();
             this.sendToSidebarOpened(desk, stage);
+
             if (skipConfirm) {
                 this.confirmSendTo();
             }
@@ -438,13 +439,15 @@ class Authoring {
             el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
-                var modal = element(by.className('modal__dialog'));
+                const saveAndSend = el(['modal-confirm'], by.buttonText('Save and send'));
 
-                modal.isPresent().then((isPresent) => {
-                    if (isPresent) {
-                        modal.element(by.className('btn--primary')).click();
-                    }
-                });
+                saveAndSend
+                    .isPresent()
+                    .then((isPresent) => {
+                        if (isPresent) {
+                            saveAndSend.click();
+                        }
+                    });
             }
         };
 
