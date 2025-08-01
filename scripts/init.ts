@@ -28,24 +28,29 @@ function fetchSync(url: string, callback: (responseText: string) => void): void 
     request.send();
 }
 
+const _appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
+
+// update config via config.js (production config)
+if (window.superdeskConfig) {
+    merge(_appConfig, window.superdeskConfig);
+}
+
 //
 // LOADING APP CONFIGURATION
 //
 
 fetchSync(
-    __SUPERDESK_CONFIG__.server.url + '/client_config',
+    _appConfig.server.url + '/client_config',
     (responseText) => {
         const res = JSON.parse(responseText);
 
-        let appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
-
         // apply config from server
-        merge(appConfig, res.config);
+        merge(_appConfig, res.config);
 
         // allow e2e tests to overwrite appConfig via local storage
-        merge(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
+        merge(_appConfig, merge(_appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
 
-        window['appConfigLoaded'] = appConfig;
+        window['appConfigLoaded'] = _appConfig;
     },
 );
 
