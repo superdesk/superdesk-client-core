@@ -112,7 +112,7 @@ describe('send', () => {
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
 
         authoring.writeText('Text, that not saved yet');
-        authoring.sendTo('Sports Desk', null);
+        authoring.sendTo('Sports Desk', null, true);
 
         workspace.switchToDesk('SPORTS DESK');
         waitForItems(3);

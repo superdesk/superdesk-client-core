@@ -277,7 +277,9 @@ class Authoring {
             const modalEl = el(['modal-confirm']);
 
             if (modalEl != null) {
-                const okButton = modalEl.element(by.buttonText('OK'));
+                const okButton = modalEl.element(by.buttonText('Save and send'));
+
+                ECE.elementToBeClickable(okButton);
 
                 okButton.click();
             }
