@@ -157,7 +157,7 @@ interface IItemProps {
     listConfig?: any;
     singleLine?: any;
     narrow?: any;
-    view?: string;
+    view?: 'compact' | 'compact-configurable';
 }
 
 export function renderArea(
