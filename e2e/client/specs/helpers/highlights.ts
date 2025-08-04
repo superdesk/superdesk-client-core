@@ -197,7 +197,11 @@ class Highlights {
         };
 
         this.selectHighlight = function(elem, name) {
-            elem.all(by.repeater('h in highlights')).all(by.partialButtonText(name)).click();
+            const highlightButton = elem.element(by.css(`button[option="${name}"]`));
+
+            ECE.elementToBeClickable(highlightButton);
+
+            highlightButton.click();
         };
 
         this.selectDesk = function(elem, name) {
