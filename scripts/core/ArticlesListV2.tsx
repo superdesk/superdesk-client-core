@@ -311,7 +311,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                             preview={noop}
                             multiSelect={this.props.getMultiSelect(items)}
                             narrow={false}
-                            view={undefined}
+                            view="compact"
                             selected={this.state.selected}
                             swimlane={false}
                             scopeApply={(fn) => {

@@ -2,10 +2,12 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 const PAGE_SIZE = 50;
 
 interface IScope extends ng.IScope {
+    compactViewEnabled: boolean;
     contentStyle: {};
     monitoringItemsLoading: boolean;
     activeDeskId: IDesk['_id'] | null;
@@ -90,6 +92,8 @@ export function MonitoringView(
             let containerElem = elem.find('.sd-column-box__main-column');
 
             scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
+
+            scope.compactViewEnabled = appConfig?.list?.compactView != null;
 
             scope.gettext = gettext;
 
@@ -199,6 +203,9 @@ export function MonitoringView(
                     switch (currentDesk.monitoring_default_view) {
                         case 'list':
                             scope.switchView('compact');
+                            break;
+                        case 'list-compact':
+                            scope.switchView('compact-configurable');
                             break;
                         case 'swimlane':
                             scope.switchView('compact', true);

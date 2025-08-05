@@ -26,6 +26,7 @@ export interface IPropsItemListInfo {
     toggleNested: (event) => void;
     singleLine: boolean;
     customRender: any;
+    view?: 'compact' | 'compact-configurable';
     options?: IListViewFieldWithOptions['options'];
 }
 
@@ -50,6 +51,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
@@ -59,9 +61,11 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line'}, this.props.customRender),
                 renderArea('secondLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line'}, this.props.customRender),
             );
         }
