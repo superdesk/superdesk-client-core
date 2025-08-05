@@ -270,7 +270,13 @@ const updateImage = (state, {entityKey, media}) => {
     const {editorState} = state;
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
-    const newContentState = contentState.replaceEntityData(entityKey, {media});
+
+    /**
+     * using `.asMutable().asImmutable()` to update object reference
+     * `replaceEntityData` should return a new reference itself, but it doesn't. I couldn't find why.
+     */
+    const newContentState = contentState.replaceEntityData(entityKey, {media}).asMutable().asImmutable();
+
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     // focus the editor and softly force a refresh
     const newState = EditorState.forceSelection(newEditorState, selection);
