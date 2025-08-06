@@ -224,16 +224,17 @@ class Highlights {
         };
 
         this.exportHighlightsConfirm = function() {
-            var btn = element(by.className('modal__footer')).element(by.buttonText('OK'));
+            const btn = el(['modal-confirm'], by.xpath('.//button[text()="OK"]'));
 
-            waitFor(btn, 500);
+            ECE.elementToBeClickable(btn);
+
             btn.click();
         };
 
         this.saveTextHighlightsConfirm = function() {
-            var btn = element(by.className('modal__footer')).element(by.buttonText('Save'));
+            const btn = el(['modal-confirm'], by.xpath('.//button[text()="Save"]'));
 
-            waitFor(btn, 500);
+            ECE.elementToBeClickable(btn);
             btn.click();
         };
 
