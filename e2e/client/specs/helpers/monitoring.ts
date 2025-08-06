@@ -481,7 +481,9 @@ class Monitoring {
              * It appears chaining doesn't work with text based selectors (by.buttonText, by.partialButtonText).
              * To workaround this, xpath selector is used.
              */
-            const btn = menu.element(by.xpath(`.//button[contains(text(), "${submenu}")]`));
+            const btn = action === 'Mark for highlight'
+                ? menu.element(by.xpath(`.//button[contains(text(), "${submenu}")]`))
+                : menu.element(by.partialButtonText(submenu));
 
             hover(header);
 
