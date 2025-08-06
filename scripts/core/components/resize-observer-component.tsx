@@ -33,11 +33,15 @@ export class ResizeObserverComponent extends React.PureComponent<IPropsResizeObs
 
     componentDidMount() {
         this.observerInstance = new ResizeObserver((entries) => {
-            this.setState({
-                dimensions: {
-                    width: Math.floor(entries[0].contentRect.width),
-                    height: Math.floor(entries[0].contentRect.height),
-                },
+            // requestAnimationFrame is used, otherwise on mount of this component
+            // there's undelivered notifications error
+            requestAnimationFrame(() => {
+                this.setState({
+                    dimensions: {
+                        width: Math.floor(entries[0].contentRect.width),
+                        height: Math.floor(entries[0].contentRect.height),
+                    },
+                });
             });
         });
 
