@@ -2,9 +2,8 @@
 /* eslint-disable brace-style */
 
 import React from 'react';
-import {noop} from 'lodash';
+import {get, noop, set} from 'lodash';
 import ReactPaginate from 'react-paginate';
-import classNames from 'classnames';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
@@ -40,7 +39,7 @@ import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
-interface IState<T> {
+interface IState<T extends object> {
     previewItem: T | null;
     editItem: T | null;
     newItem: Partial<T> | null;
@@ -84,7 +83,7 @@ const subNavWrapper: React.ComponentType = (props) => (
     </div>
 );
 
-export class GenericListPageComponent<T, P>
+export class GenericListPageComponent<T extends object, P>
     extends React.Component<IPropsGenericForm<T, P> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {
@@ -590,7 +589,6 @@ export class GenericListPageComponent<T, P>
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
-
                                             </form>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
@@ -778,7 +776,10 @@ export class GenericListPageComponent<T, P>
 
 export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResponse, P>(
     resource: string,
-    formConfig: IFormGroup,
+    formConfig: IFormGroup<T>,
+
+    // If field path for a sorting option is nested,
+    // an index in elastic has to be created beforehand for sorting to work
     defaultSortOption?: ISortOption,
     additionalProps?: P,
 ) => {
@@ -787,7 +788,7 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
         'crudManager',
         resource,
         defaultSortOption,
-        (filters: IFormGroup) => {
+        (filters: IFormGroup<T>) => {
             const formConfigForFilters = getFormGroupForFiltering(formConfig);
             const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
                 .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
@@ -795,9 +796,13 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
             let filtersFormatted = {};
 
             for (let fieldName in filters) {
-                filtersFormatted[fieldName] = generateFilterForServer(
-                    fieldTypesLookup[fieldName],
-                    filters[fieldName],
+                set(
+                    filtersFormatted,
+                    fieldName,
+                    generateFilterForServer(
+                        get(fieldTypesLookup, fieldName),
+                        get(filters, fieldName),
+                    ),
                 );
             }
 

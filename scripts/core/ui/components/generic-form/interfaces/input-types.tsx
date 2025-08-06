@@ -4,7 +4,7 @@ export interface IInputType<T> {
     // required for composite inputs operating on more than one field
     readonly formValues: {readonly [key: string]: any};
 
-    readonly formField: IFormField;
+    readonly formField: IFormField<any>;
     readonly disabled: boolean;
     readonly value: T;
 

@@ -1,35 +1,37 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {isIFormGroup, isIFormField, GenericFormFieldType} from './interfaces/form';
 import {IFormField, IFormGroup} from 'superdesk-api';
 
-function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
+function getInitialValueForFieldType<T extends object>(fieldConfig: IFormField<T>): {readonly [field: string]: any} {
     const {field} = fieldConfig;
 
-    const type: FormFieldType = fieldConfig.type;
+    const type: GenericFormFieldType = fieldConfig.type;
 
     switch (type) {
-        case FormFieldType.plainText:
-        case FormFieldType.textEditor3:
+        case GenericFormFieldType.plainText:
+        case GenericFormFieldType.textEditor3:
             return {[field]: ''};
-        case FormFieldType.vocabularySingleValue:
-        case FormFieldType.contentFilterSingleValue:
-        case FormFieldType.deskSingleValue:
-        case FormFieldType.stageSingleValue:
-        case FormFieldType.macroSingleValue:
-        case FormFieldType.yesNo:
-        case FormFieldType.select:
-        case FormFieldType.selectMultiple:
-        case FormFieldType.number:
-        case FormFieldType.duration:
+        case GenericFormFieldType.vocabularySingleValue:
+        case GenericFormFieldType.contentFilterSingleValue:
+        case GenericFormFieldType.deskSingleValue:
+        case GenericFormFieldType.stageSingleValue:
+        case GenericFormFieldType.macroSingleValue:
+        case GenericFormFieldType.yesNo:
+        case GenericFormFieldType.select:
+        case GenericFormFieldType.selectMultiple:
+        case GenericFormFieldType.number:
+        case GenericFormFieldType.duration:
             return {[field]: undefined};
-        case FormFieldType.checkbox:
+        case GenericFormFieldType.checkbox:
             return {[field]: false};
         default:
             assertNever(type);
     }
 }
 
-function getInitialValuesForForm(form: Array<IFormField | IFormGroup>): {readonly [field: string]: any} {
+function getInitialValuesForForm<T extends object>(
+    form: Array<IFormField<T> | IFormGroup<T>>,
+): {readonly [field: string]: any} {
     return form.map((item) => {
         if (isIFormGroup(item)) {
             return getInitialValues(item);
@@ -45,6 +47,6 @@ function getInitialValuesForForm(form: Array<IFormField | IFormGroup>): {readonl
 // Some fields need to be initialized automatically.
 // For example `false` needs to be sent to the server by default in case of checkbox
 // and not `undefined` which might be sent without initialization.
-export function getInitialValues(group: IFormGroup): {readonly [key: string]: any} {
+export function getInitialValues<T extends object>(group: IFormGroup<T>): {readonly [key: string]: any} {
     return getInitialValuesForForm(group.form);
 }

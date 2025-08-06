@@ -2,8 +2,8 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {isIFormGroup, isIFormField} from './interfaces/form';
 import {IFormField, IFormGroup} from 'superdesk-api';
 
-function getFormFieldsFromGroup(form: Array<IFormField | IFormGroup>): Array<IFormField> {
-    let fields: Array<IFormField> = [];
+function getFormFieldsFromGroup<T extends object>(form: Array<IFormField<T> | IFormGroup<T>>): Array<IFormField<T>> {
+    let fields: Array<IFormField<T>> = [];
 
     form.forEach((item) => {
         if (isIFormGroup(item)) {
@@ -18,6 +18,6 @@ function getFormFieldsFromGroup(form: Array<IFormField | IFormGroup>): Array<IFo
     return fields;
 }
 
-export function getFormFieldsFlat(group: IFormGroup): Array<IFormField> {
+export function getFormFieldsFlat<T extends object>(group: IFormGroup<T>): Array<IFormField<T>> {
     return getFormFieldsFromGroup(group.form);
 }

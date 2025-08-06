@@ -1,27 +1,28 @@
 import {ISuperdesk, IFormField} from 'superdesk-api';
+import {IKnowledgeBaseItem} from './interfaces';
 
 export function getFields(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {FormFieldType} = superdesk.forms;
+    const {GenericFormFieldType} = superdesk.forms;
 
-    const nameField: IFormField = {
+    const nameField: IFormField<IKnowledgeBaseItem> = {
         label: gettext('Name'),
-        type: FormFieldType.plainText,
+        type: GenericFormFieldType.plainText,
         field: 'name',
         required: true,
     };
-    const languageField: IFormField = {
+    const languageField: IFormField<IKnowledgeBaseItem> = {
         label: gettext('Language'),
-        type: FormFieldType.vocabularySingleValue,
+        type: GenericFormFieldType.vocabularySingleValue,
         field: 'language',
         component_parameters: {
             vocabulary_id: 'languages',
         },
         required: true,
     };
-    const definitionField: IFormField = {
+    const definitionField: IFormField<IKnowledgeBaseItem> = {
         label: gettext('Definition'),
-        type: FormFieldType.textEditor3,
+        type: GenericFormFieldType.textEditor3,
         field: 'definition_html',
         required: true,
     };
