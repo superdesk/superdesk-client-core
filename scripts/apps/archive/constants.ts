@@ -158,3 +158,12 @@ export const IPTC_XMP_TAGS = {
     'IPTC:LanguageIdentifier': 'XMP:Language',
 } as const satisfies Record<`IPTC:${keyof IPTCMetadata}`, `XMP:${XMPMetadata}`>;
 export const XMP_IPTC_TAGS = getInvertObject(IPTC_XMP_TAGS);
+
+export const EXIFTOOL_ARGS = {
+    COMPOSITE: '-use MWG',
+    IPTC: '-iptc:all',
+    JSON: '-j',
+    showDuplicates: '-a',
+    showGroupNames: '-G',
+    XMP: '-xmp:all',
+} as const

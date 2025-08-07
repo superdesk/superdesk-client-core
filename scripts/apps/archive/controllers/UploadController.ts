@@ -10,7 +10,7 @@ import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
 import {parseMetadata} from '@uswriting/exiftool/cjs';
 import {IContentProfileType} from 'apps/workspace/content/controllers/ContentProfilesController';
-import {IPTC_XMP_TAGS, XMP_IPTC_TAGS} from 'apps/archive/constants';
+import {EXIFTOOL_ARGS, IPTC_XMP_TAGS, XMP_IPTC_TAGS} from 'apps/archive/constants';
 import {getObjectEntries} from 'utils/object';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
@@ -52,59 +52,93 @@ function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<
     }));
 }
 
-
 type IPTCTag = keyof typeof IPTC_XMP_TAGS;
 type IPTCCustomTag = `IPTC:${string}`;
-type IPTCExifData = Partial<Record<IPTCTag, unknown> & Record<IPTCCustomTag, unknown>>;
-type ParsedIPTCExifData = ParsedExif<Array<IPTCExifData>>
+type IPTCData = Partial<Record<IPTCTag, unknown> & Record<IPTCCustomTag, unknown>>;
+type ParsedIPTCData = ParsedMetadataReturn<Array<IPTCData>>
 
 type XMPTag = keyof typeof XMP_IPTC_TAGS;
 type XMPCustomTag = `XMP:${string}`;
-type XMPExifData = Partial<Record<XMPTag, unknown> & Record<XMPCustomTag, unknown>>;
-type ParsedXMPExifData = ParsedExif<Array<XMPExifData>>
+type XMPData = Partial<Record<XMPTag, unknown> & Record<XMPCustomTag, unknown>>;
+type ParsedXMPData = ParsedMetadataReturn<Array<XMPData>>
 
-type ParsedExif<T> = Awaited<ReturnType<typeof parseMetadata<T>>>;
-type ParsedExifData<T extends IContentProfileType> =
+type CompositeTag = `Composite:${IPTCTag | XMPTag extends `${string}:${infer T}` ? T : never}`;
+type CompositeData = Partial<Record<CompositeTag, unknown>>;
+type ParsedCompositeData = ParsedMetadataReturn<Array<CompositeData>>
+
+type ParsedMetadataReturn<T> = Awaited<ReturnType<typeof parseMetadata<T>>>;
+type ParsedMetadata<T extends IContentProfileType> =
     T extends IContentProfileType.video
-    ? ParsedXMPExifData & {contentType: IContentProfileType.video;}
-    : ParsedIPTCExifData & {contentType: IContentProfileType.picture;};
+    ? ParsedXMPData & {contentType: IContentProfileType.video;}
+    : ParsedIPTCData & ParsedCompositeData & {contentType: IContentProfileType.picture;};
+
+type Metadata = IPTCData & XMPData & CompositeData;
+type Tag = (IPTCTag | XMPTag | CompositeTag) extends `${infer G}:${infer T}`
+  ? {group: G, tag: T, value: string}
+  : never;
 
 const getMetadata = (f: File) => (f.type.startsWith('video/') ?
     getVideoMetadata(f) : getPictureMetadata(f))
     .then(processMetadata, (): Partial<IPTCMetadata> => ({}));
 
 const getVideoMetadata = (f: File): Promise<
-    ParsedExifData<IContentProfileType.video>
-> => parseMetadata<Array<XMPExifData>>(f, {
-    args: ['-j', '-G', '-xmp:all'],
+    ParsedMetadata<IContentProfileType.video>
+> => parseMetadata<Array<XMPData>>(f, {
+    args: [
+        EXIFTOOL_ARGS.showGroupNames,
+        EXIFTOOL_ARGS.JSON,
+        EXIFTOOL_ARGS.XMP,
+    ],
     transform: (d) => JSON.parse(d),
 }).then((r) => ({...r, contentType: IContentProfileType.video}));
 
 const getPictureMetadata = (f: File): Promise<
-    ParsedExifData<IContentProfileType.picture>
-> => parseMetadata<Array<IPTCExifData>>(f, {
-    args: ['-j', '-G', '-iptc:all'],
+    ParsedMetadata<IContentProfileType.picture>
+> => parseMetadata<Array<IPTCData & CompositeData>>(f, {
+    args: [
+        EXIFTOOL_ARGS.showGroupNames,
+        EXIFTOOL_ARGS.JSON,
+        EXIFTOOL_ARGS.XMP,
+        EXIFTOOL_ARGS.showDuplicates,
+        EXIFTOOL_ARGS.IPTC,
+        EXIFTOOL_ARGS.COMPOSITE,
+    ],
     transform: (d) => JSON.parse(d),
 }).then((r) => ({...r, contentType: IContentProfileType.picture}));
 
-const processMetadata = <CT extends IContentProfileType>(exif: ParsedExifData<CT>) => {
-    if (!exif.success) return {};
-    if (exif.contentType === IContentProfileType.video) return stripGroupNames(mapXMPtoIPTC(exif.data[0]));
-    return stripGroupNames(exif.data[0]);
+const processMetadata = <CT extends IContentProfileType>(metadata: ParsedMetadata<CT>) => {
+    if (!metadata.success) return {};
+    if (metadata.contentType === IContentProfileType.video) return stripGroupNames(mapXMPtoIPTC(metadata.data[0]));
+    return stripGroupNames(metadata.data[0]);
 };
 
-const mapXMPtoIPTC = (metadata: XMPExifData) =>
-    getObjectEntries(metadata).reduce<IPTCExifData & XMPExifData>((acc, [k, v]) => {
+const mapXMPtoIPTC = (metadata: XMPData) =>
+    getObjectEntries(metadata).reduce<IPTCData & XMPData>((acc, [k, v]) => {
         acc[XMP_IPTC_TAGS[k] ?? k] = v;
         return acc;
     }, {});
 
-const stripGroupNames = (metadata: IPTCExifData & XMPExifData) =>
-    getObjectEntries(metadata).reduce<Partial<IPTCMetadata>>((a, [k, v]) => {
-        a[k.slice(k.indexOf(':') + 1)] = v;
-        return a;
-    }, {});
+const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
+    (({IPTC, XMP, Composite}) => ({...IPTC, ...XMP, ...Composite}))(
+        getObjectEntries(metadata).reduce<
+            Record<Tag['group'], Partial<Record<Tag['tag'], Tag['value']>>>
+        >(
+            (a, [k, v]) => {
+                const [group, tag] = getGroupTag(k);
 
+                if(!group || !tag) return a
+                a[group][tag] = v;
+                return a;
+            },
+            {IPTC: {}, XMP: {}, Composite: {}},
+        ),
+    );
+
+const getGroupTag = <
+  T extends `${string}:${string}`,
+  GG = T extends `${infer G}:${string}` ? G : never,
+  TT = T extends `${string}:${infer K}` ? K : never
+>(tag: T) => tag.split(':') as [GG, TT];
 
 UploadController.$inject = [
     '$scope',
