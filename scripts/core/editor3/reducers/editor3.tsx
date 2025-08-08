@@ -186,8 +186,9 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
-
+    // Force update text decorators, since onChange is triggered on item publish.
+    // Otherwise text decorators disappear.
+    const editorStateNext = updateDecorators(state, newEditorState, 'store-based', true);
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
