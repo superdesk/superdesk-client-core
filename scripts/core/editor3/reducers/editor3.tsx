@@ -186,9 +186,7 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    // Force update text decorators, since onChange is triggered on item publish.
-    // Otherwise text decorators disappear.
-    const editorStateNext = updateDecorators(state, newEditorState, 'store-based', true);
+    const editorStateNext = updateDecorators(state, newEditorState, 'store-based');
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
@@ -614,7 +612,7 @@ const setExternalOptions = (
     state: IEditorStore,
     payload: IActionPayloadSetExternalOptions,
 ) => {
-    let result: IEditorStore = {
+    const result: IEditorStore = {
         ...state,
         ...payload,
     };
