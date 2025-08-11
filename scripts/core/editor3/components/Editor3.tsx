@@ -18,7 +18,12 @@ export class Editor3Base extends React.Component<any, any> {
 
     render() {
         return (
-            <Editor3InitializeSpellchecker spellchecking={this.props.spellchecking} dispatch={this.props.dispatch}>
+            <Editor3InitializeSpellchecker
+                limitConfig={this.props.limitConfig}
+                softLimitConfig={this.props.softLimitConfig}
+                spellchecking={this.props.spellchecking}
+                dispatch={this.props.dispatch}
+            >
                 <MultipleHighlights {...this.props}>
                     <Editor3Component />
                 </MultipleHighlights>
@@ -41,6 +46,8 @@ const mapStateToProps = (state) => ({
     loading: state.loading,
     limitBehavior: state.limitConfig?.ui,
     limit: state.limitConfig?.chars,
+    limitConfig: state.limitConfig,
+    softLimitConfig: state.softLimitConfig,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

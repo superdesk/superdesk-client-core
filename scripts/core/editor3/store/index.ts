@@ -101,7 +101,7 @@ export interface IEditorStore {
 let editor3Stores = [];
 
 interface IOptions {
-    spellchecker: {
+    spellchecker?: {
         acceptSuggestion: IAcceptSuggestion,
         enabled?: boolean,
         language?: string,
@@ -119,7 +119,12 @@ export const getDecorators = (options: IOptions) => {
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
+    if (
+        spellchecker != null
+        && spellchecker.enabled === true
+        && spellchecker.warnings != null
+        && spellchecker.language != null
+    ) {
         mustReApplyDecorators = true;
 
         decorators.push(
@@ -222,7 +227,11 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
+        getDecorators({
+            spellchecker: {acceptSuggestion: 'store-based'},
+            limitConfig,
+            softLimitConfig,
+        }).decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
