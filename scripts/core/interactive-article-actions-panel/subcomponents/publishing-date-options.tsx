@@ -8,6 +8,7 @@ import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
 import {isValid} from 'date-fns';
 import {TZDate} from '@sourcefabric/date-fns-tz';
+import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -126,6 +127,10 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={embargo}
                             valueType="date"
+                            locale={{
+                                type: 'full',
+                                payload: getLocaleForDatePicker(),
+                            }}
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
@@ -149,6 +154,10 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={publishSchedule}
                             valueType="date"
+                            locale={{
+                                type: 'full',
+                                payload: getLocaleForDatePicker(),
+                            }}
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
