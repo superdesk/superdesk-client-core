@@ -426,6 +426,8 @@ function MetaDropdownDirective($filter, metadata) {
                         scope.places = _.groupBy(scope.list, 'group');
                     } else if (scope.field === 'genre') {
                         scope.list = $filter('sortByName')(scope.list);
+                    } else if (scope.field === 'priority' || scope.field === 'urgency') {
+                        scope.list.sort((a, b) => a.qcode - b.qcode);
                     }
                 }
             });
