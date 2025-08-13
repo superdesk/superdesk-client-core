@@ -367,7 +367,7 @@ function MetaDropdownDirective($filter, metadata) {
                     if (!isMultiInputField) {
                         // single input field
                         // we use 'name' attribute for string fields and the whole object for other fields
-                        fieldObject[scope.field] = scope.key ? item[scope.key] : (item.name || item);
+                        fieldObject[scope.field] = item;
                     } else if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
@@ -398,7 +398,7 @@ function MetaDropdownDirective($filter, metadata) {
                 });
 
                 if (scope.values) {
-                    scope.selected = scope.values[fieldObject[scope.field]] || null;
+                    scope.selected = item;
                 }
 
                 // is needed when `select` is called from react component e.g. MetaDataDropdownSingleSelectReact
@@ -426,6 +426,10 @@ function MetaDropdownDirective($filter, metadata) {
                         scope.places = _.groupBy(scope.list, 'group');
                     } else if (scope.field === 'genre') {
                         scope.list = $filter('sortByName')(scope.list);
+                    } else if (scope.field === 'priority' || scope.field === 'urgency') {
+                        scope.list.sort((a, b) => {
+                            return String(a.qcode).localeCompare(String(b.qcode));
+                        });
                     }
                 }
             });
