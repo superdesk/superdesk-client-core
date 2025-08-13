@@ -428,8 +428,8 @@ function MetaDropdownDirective($filter, metadata) {
                         scope.list = $filter('sortByName')(scope.list);
                     } else if (scope.field === 'priority' || scope.field === 'urgency') {
                         scope.list.sort((a, b) => {
-                            const valA = a?.qcode ?? '';
-                            const valB = b?.qcode ?? '';
+                            const valA = a.qcode;
+                            const valB = b.qcode;
 
                             return String(valA).localeCompare(String(valB));
                         });
