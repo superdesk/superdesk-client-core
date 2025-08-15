@@ -33,8 +33,8 @@ export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Arra
 }
 
 export function compareUsersByName(a: IUser, b: IUser) {
-    const nameA: string = a.display_name ?? a.username;
-    const nameB: string = b.display_name ?? b.username;
+    const nameA: string = a.username ?? a.display_name;
+    const nameB: string = b.username ?? b.display_name;
 
     return nameA.localeCompare(nameB);
 }
