@@ -3140,6 +3140,7 @@ declare module 'superdesk-api' {
                 getActiveDeskId(): IDesk['_id'] | null;
                 waitTilReady(): Promise<void>;
                 getDeskById(id: IDesk['_id']): IDesk;
+                getStageById(id: IStage['_id']): IStage;
             };
             attachment: IAttachmentsApi;
             users: {
