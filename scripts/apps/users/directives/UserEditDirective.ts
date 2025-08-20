@@ -52,6 +52,7 @@ interface IScope {
     $parent: any;
     $on: (...args: any) => any;
     $watchCollection: (...args: any) => any;
+    currentSessionUser: IUser;
 }
 
 const notAllowedToChangeYourself = ['is_active', 'is_enabled'] satisfies Array<keyof IUser>;
