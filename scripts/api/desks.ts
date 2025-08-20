@@ -53,6 +53,10 @@ function getDeskMembers(deskId: IDesk['_id']): Array<IUser> {
     return ng.get('desks').deskMembers[deskId] ?? [];
 }
 
+function getStageById(id: IStage['_id']): IStage {
+    return ng.get('desks').stageLookup[id];
+}
+
 interface IDesksApi {
     /** Desk is considered active if it is being viewed in monitoring at the moment */
     getActiveDeskId(): IDesk['_id'] | null;
@@ -63,6 +67,7 @@ interface IDesksApi {
     getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
     getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
     getDeskMembers(deskId: IDesk['_id']): Array<IUser>; // members of the desk
+    getStageById(id: IStage['_id']): IStage;
 }
 
 export const desks: IDesksApi = {
@@ -74,4 +79,5 @@ export const desks: IDesksApi = {
     getDeskStages,
     getCurrentUserDesks,
     getDeskMembers,
+    getStageById,
 };

@@ -358,6 +358,7 @@ export function getSuperdeskApiImplementation(
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
                 getDeskById: sdApi.desks.getDeskById,
+                getStageById: sdApi.desks.getStageById,
             },
             contentProfile: {
                 get: (id) => sdApi.contentProfiles.get(id),
