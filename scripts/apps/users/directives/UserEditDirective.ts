@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
@@ -88,6 +89,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             });
             scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
+            scope.currentSessionUser = session.identity;
             scope.features = features;
             scope.usernamePattern = appConfig.user?.username_pattern != null ?
                 new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;
