@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
