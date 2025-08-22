@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as momentAlias from 'moment';
+import moment from 'moment';
 import {LineInput, Label, Input} from '../';
 import {IconButton} from '../../';
 import {DateInputPopup} from './DateInputPopup';
 import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
 import './style.scss';
-
-const moment: any = momentAlias;
+import { DateInputProps } from 'superdesk-api';
 
 /**
  * @ngdoc react
  * @name DateInput
  * @description Component to pick dates in calendar view
  */
-export class DateInput extends React.Component<any, any> {
+export class DateInput extends React.Component<DateInputProps, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -182,7 +181,7 @@ DateInput.propTypes = {
     label: PropTypes.string,
     value: PropTypes.oneOfType([
         PropTypes.string,
-        PropTypes.instanceOf(moment),
+        PropTypes.instanceOf(moment as any),
     ]),
     onChange: PropTypes.func.isRequired,
     placeholder: PropTypes.string,

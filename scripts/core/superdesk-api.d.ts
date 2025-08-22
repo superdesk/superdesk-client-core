@@ -2356,6 +2356,26 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
+    export type DateInputProps = {
+        field: string;
+        label: string;
+        value: string | moment.Moment;
+        onChange: (f: string, v: moment.Moment) => void;
+        placeholder?: string;
+        className?: string;
+        dateFormat: string;
+        hint?: string;
+        message?: string;
+        required?: boolean;
+        invalid?: boolean;
+        readOnly?: boolean;
+        boxed?: boolean;
+        noMargin?: boolean;
+        popupContainer?: () => HTMLElement;
+        onFocus?: () => void;
+        ref?: any
+    }
+
     export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -3300,6 +3320,7 @@ declare module 'superdesk-api' {
             authoring: {
                 PreviewFieldType: React.ComponentType<IPreviewFieldTypeProps>;
             };
+            DateInput: React.ComponentType<DateInputProps>
         };
         authoringGeneric: {
             sideWidgets: {

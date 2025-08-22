@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as momentAlias from 'moment';
+import moment from 'moment';
 import {Popup, Content, Header, Footer} from '../../Popup/index';
 import {Button} from '../../';
 import {DayPicker} from './DayPicker';
 import {MonthPicker} from './MonthPicker';
 import {YearPicker} from './YearPicker';
-
-const moment: any = momentAlias;
 
 import {gettext} from 'core/utils';
 
@@ -260,7 +258,7 @@ export class DateInputPopup extends React.Component<any, any> {
 DateInputPopup.propTypes = {
     value: PropTypes.oneOfType([
         PropTypes.string,
-        PropTypes.instanceOf(moment),
+        PropTypes.instanceOf(moment as any),
     ]),
     onChange: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
