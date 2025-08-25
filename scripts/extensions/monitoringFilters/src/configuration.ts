@@ -1,3 +1,3 @@
-import {IMonitoringListFiltersConfig} from 'superdesk-api';
+import {IMonitoringListFilter} from 'superdesk-api';
 
-export const configuration: IMonitoringListFiltersConfig = {};
+export const configuration: Array<IMonitoringListFilter> = [];

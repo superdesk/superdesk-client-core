@@ -969,6 +969,7 @@ declare module 'superdesk-api' {
                 onCloseAfter?(item: IArticle): void;
             };
             monitoring?: {
+                listFiltersConfig?: Array<IMonitoringListFilter>;
                 getFilteringButtons?(deskId: string): Array<IMonitoringFilter>;
             };
             personalSpace?: {
@@ -981,6 +982,25 @@ declare module 'superdesk-api' {
             publishingSections?: Array<{component: React.ComponentType<{item: IArticle}>}>;
         }
     }
+
+    export type IMonitoringListOperator = 'AND' | 'OR';
+
+    export interface IMonitoringListFilterBase {
+        fieldId: string;
+        label: string;
+        getOptions: () => Array<{id: string; label: string;}>;
+    }
+
+    interface IMonitoringListSingle extends IMonitoringListFilterBase {
+        selectMultiple: false;
+    }
+
+    interface IMonitoringListMultiple extends IMonitoringListFilterBase {
+        selectMultiple: true;
+        operator: IMonitoringListOperator;
+    }
+
+    export type IMonitoringListFilter = IMonitoringListSingle | IMonitoringListMultiple;
 
     export type ISearchPanelWidgetProps<T> = {
         provider: string;
@@ -1517,7 +1537,14 @@ declare module 'superdesk-api' {
 
     export interface IMonitoringGroup {
         _id: string;
-        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        type: 'search'
+            | 'stage'
+            | 'scheduledDeskOutput'
+            | 'deskOutput'
+            | 'personal'
+            | 'sentDeskOutput'
+            | 'spike'
+            | 'spike-personal';
         max_items?: number;
         header?: string;
     }

@@ -1,4 +1,4 @@
-import {IExtension, IExtensionActivationResult, IMonitoringListFiltersConfig, ISuperdesk} from 'superdesk-api';
+import {IExtension, IExtensionActivationResult, IMonitoringListFilter, ISuperdesk} from 'superdesk-api';
 import {configuration} from './configuration';
 import {superdesk} from './superdesk';
 
@@ -7,7 +7,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 monitoring: {
-                    customListFiltersConfig: configuration,
+                    listFiltersConfig: configuration,
                 },
             },
         };
@@ -16,7 +16,7 @@ const extension: IExtension = {
     },
 };
 
-export function configure(fn: (superdesk: ISuperdesk) => IMonitoringListFiltersConfig) {
+export function configure(fn: (superdesk: ISuperdesk) => Array<IMonitoringListFilter>) {
     const _configuration = fn(superdesk);
 
     Object.assign(configuration, _configuration);

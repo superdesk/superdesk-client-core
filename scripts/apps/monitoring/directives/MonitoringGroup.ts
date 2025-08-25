@@ -556,7 +556,7 @@ export function MonitoringGroup(
                             (filter) => filter?.displayOptions?.ignoreMatchesInSavedSearchMonitoringGroups,
                         )
                     ) {
-                        var emptyResponse: IRestApiResponse<IArticle> = {
+                        const emptyResponse: IRestApiResponse<IArticle> = {
                             _items: [],
                             _meta: {
                                 max_results: 0,
