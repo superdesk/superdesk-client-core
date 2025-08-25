@@ -24,7 +24,7 @@ export const listFiltersConfig: Array<IMonitoringListFilter> =
                 .getAll().find((x) => x._id === 'categories').items
                 .map((x) => ({id: x.qcode, label: x.name})),
             selectMultiple: true,
-            operator: 'AND',
+            operator: 'OR',
         },
     ];
 
