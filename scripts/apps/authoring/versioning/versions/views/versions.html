@@ -7,7 +7,7 @@
                     <span class="ml-auto"><span translate>by</span> {{ version.creator }}</span>
                 </div>
                 <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
-                    <span class="sd-text__strong sd-overflow-ellipsis">{{ :: version.headline || ('Untitled' | translate) }}</span>
+                    <span class="sd-text__strong sd-overflow-ellipsis">{{ :: (version.headline | stripHtmlTags) || ('Untitled' | translate) }}</span>
                 </div>
                 <div class="boxed-list__item-content-row">
                     <span ng-show='version.desk'><span class="sd-text__italic" translate>desk:</span> {{version.desk}}</span>
