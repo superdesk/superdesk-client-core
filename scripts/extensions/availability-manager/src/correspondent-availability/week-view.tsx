@@ -19,7 +19,7 @@ import {fetchParticipants, filterParticipants} from './participants';
 import {showEditAvailabilityModal} from './show-edit-availability-modal';
 import {MaybeButton} from '../components/maybe-button';
 import {privileges} from '../constants';
-import {compareUsersByName} from './sort-availability-records';
+import {compareUsers} from './sort-availability-records';
 
 const {UserAvatar} = superdesk.components;
 const {assertNever} = superdesk.helpers;
@@ -72,7 +72,7 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                         days: days,
                         filters: filters,
                         byUserByDateFiltered,
-                    }).sort((a, b) => compareUsersByName(users[a], users[b]));
+                    }).sort((a, b) => compareUsers(users[a], users[b]));
 
                     return (
                         <WeeklyCalendarGrid style={{padding: 'var(--space--2)'}}>
