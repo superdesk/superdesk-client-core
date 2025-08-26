@@ -3,6 +3,7 @@
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
+    data-test-value="{{ user.display_name }}"
 >
     <div style="height: auto">
         <sd-user-avatar data-user="user" data-display-status="true" display-administrator-indicator="true" scroll-container="'.content'"></sd-user-avatar>
@@ -15,7 +16,7 @@
             <span class="disabled-label" ng-if="user.is_enabled && !user.is_active" translate>inactive</span>
             <span class="disabled-label" ng-if="user.is_enabled && user.is_active && user.needs_activation" translate>pending</span>
         </div>
-        <div class="username" data-test-id="username" data-test-value="{{ user.username }}">{{ user.username }}</div>
+        <div class="username" data-test-id="username">{{ user.username }}</div>
         <div class="role">{{ roles[user.role].name }}</div>
         <div class="email">{{ user.email }}</div>
         <div class="created">{{ user._created | reldate}}</div>

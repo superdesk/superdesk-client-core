@@ -64,7 +64,7 @@ test('can disable a user', async ({page}) => {
     await page.goto('/#/users');
 
     const userList = page.locator(s('users-list'));
-    const user = userList.locator(s('username=janedoe'));
+    const user = userList.locator(s('users-list-item=Jane Doe'));
     const userFilter = page.locator(s('user-filter'));
 
     await userFilter.selectOption('Active');
