@@ -643,6 +643,7 @@ function getInlineToolbarActions(
                     component: () => (
                         <Button
                             tooltip={gettext('Send and duplicate')}
+                            ariaLabel={gettext('Send and duplicate')}
                             text={gettext('S & D')}
                             style="filled"
                             onClick={() => {
@@ -871,7 +872,7 @@ export interface IProps {
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
-            <div className="sd-authoring-react">
+            <div className="sd-authoring-react" data-test-id="authoring">
                 <AuthoringIntegrationWrapper
                     sidebarMode={true}
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
