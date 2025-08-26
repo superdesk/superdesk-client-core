@@ -5,7 +5,7 @@ setTimeout(() => {
     // `.pi` allows prime react icon font
 
     const styles = `
-    *:not([class^="icon-"], .pi) {
+    *:not([class^="icon-"], [class*="big-icon--"], [class*="filetype-icon-"], .pi) {
         font-family: Arial!important;
     }
 
