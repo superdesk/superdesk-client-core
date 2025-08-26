@@ -2,7 +2,9 @@
  * TODO: delete this file and update usages to use sdApi instead
  */
 
-import {IArticle} from 'superdesk-api';
+import {sdApi} from 'api';
+import {appConfig} from 'appConfig';
+import {IArticle, IDesk, IStage} from 'superdesk-api';
 import {PUBLISHED_STATES, KILLED_STATES, ITEM_STATE} from './constants';
 
 /**
@@ -19,3 +21,26 @@ export const isIngested = (item: IArticle) =>
  * Test if an item was published, but is not published anymore.
  */
 export const isKilled = (item: IArticle) => KILLED_STATES.includes(item.state);
+
+export function getSendAndDuplicateTarget(): null | {deskId: IDesk['_id']; stageId: IStage['_id']} {
+    const desk = sdApi.desks.getAllDesks().find(
+        (desk) => desk.name === appConfig.features.customAuthoringTopbar.sendAndDuplicate.deskName,
+    );
+
+    if (desk == null) {
+        return null;
+    }
+
+    const stage = sdApi.desks.getDeskStages(desk._id).find(
+        (desk) => desk.name === appConfig.features.customAuthoringTopbar.sendAndDuplicate.stageName,
+    );
+
+    if (stage == null) {
+        return null;
+    }
+
+    return {
+        deskId: desk._id,
+        stageId: stage._id,
+    };
+}

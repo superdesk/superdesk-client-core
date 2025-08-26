@@ -17,7 +17,7 @@ export interface IAuthoringApiCommon {
         unlock: () => Promise<void>,
         cancelAutoSave: () => Promise<void>,
         doClose: () => void,
-    ): Promise<void>;
+    ): Promise<{cancelled: boolean}>;
 
     /**
      * Is only meant to be used when there are no unsaved changes
@@ -76,30 +76,39 @@ export const authoringApiCommon: IAuthoringApiCommon = {
             },
         );
     },
-    closeAuthoring: (original: IArticle, hasUnsavedChanges, save, unlock, cancelAutoSave, doClose) => {
+    closeAuthoring: (
+        original: IArticle,
+        hasUnsavedChanges,
+        save,
+        unlock,
+        cancelAutoSave,
+        doClose,
+    ): Promise<{cancelled: boolean}> => {
         if (!isArticleLockedInCurrentSession(original)) {
-            return Promise.resolve().then(() => doClose());
+            return Promise.resolve().then(() => doClose()).then(() => ({cancelled: false}));
         }
 
         if (hasUnsavedChanges && (original.state !== ITEM_STATE.PUBLISHED && original.state !== ITEM_STATE.CORRECTED)) {
             return showUnsavedChangesPrompt(hasUnsavedChanges).then(({action, closePromptFn}) => {
-                const unlockAndClose = () => unlock().then(() => {
+                const unlockAndClose: () => Promise<void> = () => unlock().then(() => {
                     closePromptFn();
                     doClose();
                 });
 
                 if (action === IUnsavedChangesActionWithSaving.cancelAction) {
-                    return closePromptFn();
+                    closePromptFn();
+
+                    return {cancelled: true};
                 } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
-                    return cancelAutoSave().then(() => unlockAndClose());
+                    return cancelAutoSave().then(() => unlockAndClose()).then(() => ({cancelled: false}));
                 } else if (action === IUnsavedChangesActionWithSaving.save) {
-                    return save().then(() => unlockAndClose());
+                    return save().then(() => unlockAndClose()).then(() => ({cancelled: false}));
                 } else {
                     assertNever(action);
                 }
             });
         } else {
-            return unlock().then(() => doClose());
+            return unlock().then(() => doClose()).then(() => ({cancelled: false}));
         }
     },
     closeAuthoringForce: () => {
