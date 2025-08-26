@@ -26,7 +26,7 @@ import {
     isIFormGroupCollapsible,
     isIFormGroup,
     isIFormField,
-    FormFieldType,
+    GenericFormFieldType,
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
@@ -70,7 +70,7 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
-import {appConfig, authoringReactViewEnabled, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, authoringReactViewEnabled, userInterfaceLanguage} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -117,7 +117,7 @@ import {
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
@@ -358,6 +358,7 @@ export function getSuperdeskApiImplementation(
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
                 getDeskById: sdApi.desks.getDeskById,
+                getStageById: sdApi.desks.getStageById,
             },
             contentProfile: {
                 get: (id) => sdApi.contentProfiles.get(id),
@@ -483,7 +484,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         forms: {
-            FormFieldType,
+            GenericFormFieldType,
             generateFilterForServer,
             isIFormGroupCollapsible,
             isIFormGroup,
@@ -521,7 +522,7 @@ export function getSuperdeskApiImplementation(
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
             locale: {
-                code: getUserInterfaceLanguage().replace('_', '-'),
+                code: userInterfaceLanguage.replace('_', '-'),
                 firstDayOfWeek: appConfig.startingDay,
             },
         },

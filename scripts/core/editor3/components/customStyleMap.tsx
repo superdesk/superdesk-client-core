@@ -1,4 +1,25 @@
-export const customStyleMap: {[key: string]: React.CSSProperties} = {
+import {appConfig} from 'appConfig';
+import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {assertNever} from 'core/helpers/typescript-helpers';
+
+const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
+    if (borderColor === 'tag-color-1') {
+        return 'var(--sd-editor-colour__mark-people, blue)';
+    } else if (borderColor === 'tag-color-2') {
+        return 'var(--sd-editor-colour__mark-company, purple)';
+    } else {
+        assertNever(borderColor);
+    }
+};
+
+export const customStyleMap = {
+    ...Object.fromEntries(
+        customEditorTags.map(({editor3Style, borderColor}) => [
+            editor3Style,
+            {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
+        ]),
+    ),
+
     HIGHLIGHT: {
         display: 'inline-block',
         padding: '1px 3px',
@@ -12,15 +33,15 @@ export const customStyleMap: {[key: string]: React.CSSProperties} = {
     },
 
     COMMENT: {
-        backgroundColor: 'rgba(255, 235, 59, 0.2)',
+        backgroundColor: 'var(--sd-editor-colour__comment-bg)',
     },
 
     COMMENT_SELECTED: {
-        backgroundColor: 'rgba(255, 235, 59, 0.6)',
+        backgroundColor: 'var(--sd-editor-colour__comment-bg)',
     },
 
     ANNOTATION: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 0.6)',
+        borderBlockEnd: '4px solid var(--sd-editor-colour__annotation)',
     },
 
     ANNOTATION_SELECTED: {

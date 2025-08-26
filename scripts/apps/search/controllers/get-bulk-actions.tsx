@@ -8,7 +8,7 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {IMultiActions} from './get-multi-actions';
 import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {isOpenItemType} from '../directives/MultiActionBar';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {dataApi} from 'core/helpers/CrudManager';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';

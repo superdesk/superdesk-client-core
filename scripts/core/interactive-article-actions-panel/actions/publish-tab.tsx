@@ -24,7 +24,7 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';

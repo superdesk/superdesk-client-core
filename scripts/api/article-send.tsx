@@ -13,7 +13,7 @@ import {notify} from 'core/notify/notify';
 import {gettext, getArticleLabel} from 'core/utils';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {toElasticQuery} from 'core/query-formatting';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {ModalSimple, IModalSimpleAction} from 'core/ui/components/modal-simple';
 import {UnorderedList} from 'core/ui/components/UnorderedList';
 

@@ -132,6 +132,7 @@ class Editor3Directive {
     svc: any;
     pathToValue: any;
     limit?: number;
+    softLimit?: number;
     limitBehavior?: CharacterLimitUiBehavior;
     scrollContainer: any;
     refreshTrigger: any;
@@ -148,7 +149,10 @@ class Editor3Directive {
     headerStyles?: boolean;
     helperText: string;
 
+    reactRoot: any;
+
     $onInit: () => void;
+    $onDestroy: () => void;
 
     constructor() {
         this.scope = {};
@@ -273,6 +277,8 @@ class Editor3Directive {
 
             limit: '=?',
 
+            softLimit: '=?',
+
             /**
              * @type {String}
              * @description Force the output to be plain text and not contain any html.
@@ -329,6 +335,7 @@ class Editor3Directive {
                     this.$scope = $scope;
                     this.svc = {};
                     this.limit = this.limit || null;
+                    this.softLimit = this.softLimit || null;
                     this.limitBehavior =
                         userPreferences[AUTHORING_FIELD_PREFERENCES]?.[
                             pathValue || this.pathToValue
@@ -348,6 +355,8 @@ class Editor3Directive {
 
                     const renderEditor3 = () => {
                         const element = $element.get(0);
+
+                        this.reactRoot = element;
 
                         ReactDOM.unmountComponentAtNode(element);
 
@@ -638,6 +647,13 @@ class Editor3Directive {
                         () => generateHtml(store, this.item, this.pathToValue),
                     );
                 });
+        };
+
+        this.$onDestroy = () => {
+            if (this.reactRoot) {
+                ReactDOM.unmountComponentAtNode(this.reactRoot);
+                this.reactRoot = null;
+            }
         };
     }
 }

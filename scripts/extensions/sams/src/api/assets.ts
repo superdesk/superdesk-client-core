@@ -40,7 +40,7 @@ const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
 const LOCK_ASSET = `${RESOURCE}/lock`;
 const UNLOCK_ASSET = `${RESOURCE}/unlock`;
 
-import {downloadBlob} from '@superdesk/common';
+import {downloadBlob} from '@sourcefabric/common';
 
 export function uploadAsset(
     data: FormData,

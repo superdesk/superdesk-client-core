@@ -411,6 +411,8 @@ export function AuthoringDirective(
             $scope.onError = (error: IPanelError) => {
                 $scope.error = {};
                 Object.assign($scope.error, error.fields);
+
+                // Triggers a component remount so errors get applied inside the editor
                 $scope.$applyAsync();
             };
 

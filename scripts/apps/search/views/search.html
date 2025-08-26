@@ -4,9 +4,31 @@
         <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap;"></div>
         <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
         <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
-        <div class="view-select">
-            <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setview('photogrid')"><i class="icon-grid-view"></i></button>
-            <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>
+        <div class="dropdown dropdown--align-right" dropdown data-test-id="view-select">
+            <button
+                aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : !monitoring.viewColumn && view === 'compact-configurable' ? ('Compact View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
+                dropdown__toggle
+                class="navbtn dropdown__toggle"
+            >
+                <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact' || view === 'compact-configurable'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i>
+            </button>
+            <ul class="dropdown__menu">
+                <li>
+                    <button ng-click="setview('compact')" aria-label="{{ :: 'List View' | translate }}">
+                        <i class="icon-list-view"></i>{{ 'List View' | translate }}
+                    </button>
+                </li>
+                <li ng-if="compactViewEnabled">
+                    <button ng-click="setview('compact-configurable')" aria-label="{{ :: 'Compact View' | translate }}">
+                        <i class="icon-unordered-list"></i>{{ 'Compact View' | translate }}
+                    </button>
+                </li>
+                <li>
+                    <button ng-click="setview('photogrid')" aria-label="{{ :: 'Photo Grid View' | translate }}">
+                        <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
+                    </button>
+                </li>
+            </ul>
         </div>
         <div sd-multi-action-bar></div>
     </header>

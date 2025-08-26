@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {Button, Modal} from 'superdesk-ui-framework/react';
 
 function prepareAndPrint() {
@@ -176,44 +176,59 @@ export default angular.module('superdesk.core.services.modal', [
         }
 
         function confirmBase(
-            bodyText,
-            headerText,
-            okText,
-            cancelText,
-            additionalCancelText,
+            bodyText: string,
+            headerText: string,
+            okText: string,
+            cancelText: string,
+            additionalCancelText: string,
         ) {
-            var delay = $q.defer();
-
-            $modal.open({
-                templateUrl: asset.templateUrl('core/views/confirmation-modal.html'),
-                controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
-                    $scope.headerText = $sce.trustAsHtml(headerText);
-                    $scope.bodyText = $sce.trustAsHtml(bodyText);
-                    $scope.okText = okText;
-                    $scope.cancelText = cancelText;
-                    $scope.additionalCancelText = additionalCancelText;
-
-                    $scope.ok = function() {
-                        delay.resolve(true);
-                        $modalInstance.close();
-                    };
-
-                    $scope.cancel = function() {
-                        delay.reject();
-                        $modalInstance.dismiss();
-                    };
-
-                    $scope.additionalCancel = function() {
-                        $modalInstance.dismiss();
-                    };
-
-                    $scope.close = function() {
-                        $modalInstance.dismiss();
-                    };
-                }],
+            return new Promise((resolve, reject) => {
+                showModal(({closeModal}) => (
+                    <Modal
+                        data-test-id="modal-confirm"
+                        visible
+                        size="small"
+                        position="top"
+                        onHide={() => {
+                            reject();
+                            closeModal();
+                        }}
+                        closeOnEscape
+                        headerTemplate={headerText}
+                        footerTemplate={(
+                            <>
+                                <Button
+                                    type="primary"
+                                    text={okText}
+                                    onClick={() => {
+                                        closeModal();
+                                        resolve(true);
+                                    }}
+                                />
+                                {cancelText && (
+                                    <Button
+                                        type="default"
+                                        text={cancelText}
+                                        onClick={() => {
+                                            reject();
+                                            closeModal();
+                                        }}
+                                    />
+                                )}
+                                {additionalCancelText && (
+                                    <Button
+                                        type="default"
+                                        text={additionalCancelText}
+                                        onClick={closeModal}
+                                    />
+                                )}
+                            </>
+                        )}
+                    >
+                        {bodyText}
+                    </Modal>
+                ));
             });
-
-            return delay.promise;
         }
 
         this.confirm = function() {

@@ -22,7 +22,7 @@ import {getEditorConfig} from './get-editor-config';
 import {WidgetsConfig} from './WidgetsConfig';
 import {NewFieldSelect} from './new-field-select';
 import {GenericArrayListPageComponent} from 'core/helpers/generic-array-list-page-component';
-import {arrayMove} from '@superdesk/common';
+import {arrayMove} from '@sourcefabric/common';
 import {getTypeForFieldId} from 'apps/workspace/helpers/getTypeForFieldId';
 
 // should be stored in schema rather than editor section of the content profile

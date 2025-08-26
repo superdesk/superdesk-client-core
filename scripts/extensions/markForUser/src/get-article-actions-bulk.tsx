@@ -1,6 +1,6 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import {uniq} from 'lodash';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {updateMarkedUser, markForUserAndSendToNextStage, canChangeMarkedUser} from './common';
 

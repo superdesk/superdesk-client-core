@@ -5,6 +5,8 @@ import {setExternalOptions} from '../actions';
 
 interface IProps {
     spellchecking: IEditorStore['spellchecking'];
+    limitConfig: IEditorStore['limitConfig'];
+    softLimitConfig: IEditorStore['softLimitConfig'];
     dispatch(action: any): void;
 }
 
@@ -23,6 +25,7 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
         };
 
         this.load = this.load.bind(this);
+        this.handleDecoratorUpdate = this.handleDecoratorUpdate.bind(this);
 
         this.statusWasLoaded = false;
     }
@@ -41,9 +44,26 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
         }
     }
 
+    private handleDecoratorUpdate(options: {enable: boolean, language: string}): void {
+        const {enable, language} = options;
+
+        this.props.dispatch(setExternalOptions({
+            spellchecking: getInitialSpellcheckerData(enable ? ng.get('spellcheck') : null, language),
+            limitConfig: this.props.limitConfig,
+            softLimitConfig: this.props.softLimitConfig,
+        }));
+
+        this.setState({loading: false});
+    }
+
     private load() {
         const spellcheck = ng.get('spellcheck');
         const language = this.props.spellchecking.language;
+
+        if (language == null) {
+            this.setState({loading: false});
+            return;
+        }
 
         this.getSpellcheckerStatus(language).then((enabled) => {
             spellcheck.isAutoSpellchecker = enabled;
@@ -55,20 +75,12 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
                     spellcheck.setSpellcheckerStatus(true);
 
                     initializeSpellchecker(this.props.dispatch, spellcheck).then(() => {
-                        this.props.dispatch(setExternalOptions({
-                            spellchecking: getInitialSpellcheckerData(spellcheck, language),
-                        }));
-
-                        this.setState({loading: false});
+                        this.handleDecoratorUpdate({enable: true, language});
                     });
                 });
             } else {
                 // update redux store to mark spellchecker as disabled
-                this.props.dispatch(setExternalOptions({
-                    spellchecking: getInitialSpellcheckerData(null, language),
-                }));
-
-                this.setState({loading: false});
+                this.handleDecoratorUpdate({enable: false, language});
             }
         });
     }

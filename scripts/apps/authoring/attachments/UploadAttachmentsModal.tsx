@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
 import {gettext} from 'core/utils';

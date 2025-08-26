@@ -3,7 +3,7 @@ import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext, downloadFile} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {UploadConfig} from '../components/UploadConfigModal';
 import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
 

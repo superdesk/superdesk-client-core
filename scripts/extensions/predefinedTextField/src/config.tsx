@@ -17,19 +17,19 @@ const {
 } = superdesk.components;
 const {getFormFieldPreviewComponent} = superdesk.forms;
 
-const {FormFieldType} = superdesk.forms;
+const {GenericFormFieldType} = superdesk.forms;
 
-const nameField: IFormField = {
+const nameField: IFormField<IPredefinedFieldOption> = {
     label: gettext('Title'),
-    type: FormFieldType.plainText,
-    field: nameof<IPredefinedFieldOption>('title'),
+    type: GenericFormFieldType.plainText,
+    field: 'title',
     required: true,
 };
 
-const definitionField: IFormField = {
+const definitionField: IFormField<IPredefinedFieldOption> = {
     label: gettext('Definition'),
-    type: FormFieldType.textEditor3,
-    field: nameof<IPredefinedFieldOption>('definition'),
+    type: GenericFormFieldType.textEditor3,
+    field: 'definition',
     required: true,
 };
 
@@ -77,7 +77,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
 
 export class Config extends React.PureComponent<IConfigComponentProps<IConfig>> {
     render() {
-        const formConfig: IFormGroup = {
+        const formConfig: IFormGroup<IPredefinedFieldOption> = {
             direction: 'vertical',
             type: 'inline',
             form: [

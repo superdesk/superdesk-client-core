@@ -1,6 +1,6 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, userInterfaceLanguage} from 'appConfig';
 import {
     IVocabularyItem,
     IArticle,
@@ -11,24 +11,11 @@ import {
 } from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
-import formatISO from 'date-fns/formatISO';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
-import {trimStartExact} from './helpers/utils';
+import {trimEndExact, trimStartExact} from './helpers/utils';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
-
-const language = getUserInterfaceLanguage();
-const filename = `/languages/${language}.json?nocache=${Date.now()}`;
-
-function applyTranslations(translations) {
-    const langOverride = appConfig.langOverride ?? {};
-
-    if (langOverride[language] != null) {
-        Object.assign(translations, langOverride[language]);
-    }
-
-    window.translations = translations;
-}
 
 export function isMacOS() {
     if (
@@ -39,26 +26,6 @@ export function isMacOS() {
     }
 
     return false;
-}
-
-function requestListener() {
-    const translations = JSON.parse(this.responseText);
-
-    if (translations[''] == null || translations['']['language'] == null || translations['']['plural-forms'] == null) {
-        throw new Error(`Language metadata not found in "${filename}"`);
-    }
-
-    applyTranslations(translations);
-}
-
-if (language === 'en') {
-    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-} else {
-    const req = new XMLHttpRequest();
-
-    req.addEventListener('load', requestListener);
-    req.open('GET', filename, false);
-    req.send();
 }
 
 export const i18n = gettextjs();
@@ -261,7 +228,7 @@ export function escapeRegExp(string) {
 }
 
 export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string): string {
-    const _language = _lang ?? getUserInterfaceLanguage();
+    const _language = _lang ?? userInterfaceLanguage;
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 
@@ -399,6 +366,26 @@ export function getUTCOffset(timezoneId: string) {
 }
 
 /**
+ * Enforce TZDate because Date is inconsistent, sometimes it returns the time in UTC and sometimes in local timezone.
+ */
+export function toIsoStringWithoutTimezoneOffset(date: TZDate) {
+    return date.toISOString().slice(0, 19);
+}
+
+export function correctTimezone(
+    /**
+     * Date string from superdesk server is sometimes(embargo, publish schedule) formatted as UTC, ends with '+0000'
+     * but is not actually UTC. It's local time in a timezone specified elsewhere.
+     */
+    date: string,
+
+    timeZone: string,
+): TZDate {
+    return new TZDate(trimEndExact(date, '+0000') + getUTCOffset(timeZone), timeZone);
+}
+
+
+/**
  * Note: `{a: false}` will be converted to '?a=false'.
  * If you need to exclude keys when value is `false`,
  * do so before passing the object to this function.
@@ -413,28 +400,6 @@ export function toQueryString(
     return '?' + Object.keys(params).map((key) =>
         `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
     ).join('&');
-}
-
-/**
- * Output example: "1970-01-19T22:57:38"
- */
-export function toServerDateFormat(
-    date: Date,
-    timezone?: string,
-): string {
-    let dateStr = formatISO(date).slice(0, 19);
-
-    if (timezone != null) {
-        dateStr += getUTCOffset(timezone).replace(':', '');
-    }
-
-    return dateStr;
-}
-
-export function fromServerDateFormat(date: string, ignoreTimezone: boolean): Date {
-    return new Date(
-        ignoreTimezone ? date.slice(0, 19) : date,
-    );
 }
 
 export function getArticleLabel(item: IArticle): string {
@@ -465,7 +430,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
 }
 
 export function stripBaseRestApiFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
+    type IKeys = {[P in keyof Required<IBaseRestApiResponse>]: 1};
 
     const keysObject: IKeys = {
         _updated: 1,
@@ -484,7 +449,7 @@ export function stripBaseRestApiFields<T extends {}>(entity: T): T {
 }
 
 export function stripLockingFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
+    type IKeys = {[P in keyof Required<ILockInfo>]: 1};
 
     const keysObject: IKeys = {
         _lock: 1,

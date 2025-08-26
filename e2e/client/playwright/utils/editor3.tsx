@@ -26,3 +26,16 @@ export async function getEditor3FormattingOptions(field: Locator): Promise<Array
 
     return result;
 }
+
+export async function setEditor3FieldValue(locator: Locator, value: string) {
+    for (let i = 0; i < 10; i++) {
+        await locator.clear();
+        await locator.fill(value);
+
+        const currentInputValue = await locator.innerText();
+
+        if (currentInputValue === value) return;
+    }
+
+    throw new Error(`Failed to fill input with "${value}" after 10 attempts.`);
+}

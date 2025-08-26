@@ -248,6 +248,7 @@ class Authoring {
         this.sendTo = function(desk, stage, skipConfirm) {
             this.sendToButton.click();
             this.sendToSidebarOpened(desk, stage);
+
             if (skipConfirm) {
                 this.confirmSendTo();
             }
@@ -273,11 +274,15 @@ class Authoring {
         };
 
         this.confirmSendTo = function() {
-            element.all(by.className('modal__content')).count().then((closeModal) => {
-                if (closeModal) {
-                    element(by.className('modal__content')).all(by.css('[ng-click="ok()"]')).click();
-                }
-            });
+            const modalEl = el(['modal-confirm']);
+
+            if (modalEl != null) {
+                const okButton = modalEl.element(by.buttonText('Save and send'));
+
+                ECE.elementToBeClickable(okButton);
+
+                okButton.click();
+            }
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
@@ -428,19 +433,23 @@ class Authoring {
             var scheduleDate = '09/09/' + ((new Date()).getFullYear() + 1);
             var scheduleTime = '04:00';
 
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).clear();
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'date-input']).sendKeys(scheduleDate);
+            el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).clear();
             el(['authoring', 'interactive-actions-panel', 'publish-schedule', 'time-input']).sendKeys(scheduleTime);
 
             el(['authoring', 'interactive-actions-panel', 'publish']).click();
 
             if (!skipConfirm) {
-                var modal = element(by.className('modal__dialog'));
+                const saveAndSend = el(['modal-confirm'], by.buttonText('Save and send'));
 
-                modal.isPresent().then((isPresent) => {
-                    if (isPresent) {
-                        modal.element(by.className('btn--primary')).click();
-                    }
-                });
+                saveAndSend
+                    .isPresent()
+                    .then((isPresent) => {
+                        if (isPresent) {
+                            saveAndSend.click();
+                        }
+                    });
             }
         };
 

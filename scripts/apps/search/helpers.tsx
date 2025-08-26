@@ -157,6 +157,7 @@ interface IItemProps {
     listConfig?: any;
     singleLine?: any;
     narrow?: any;
+    view?: 'compact' | 'compact-configurable';
 }
 
 export function renderArea(
@@ -171,7 +172,9 @@ export function renderArea(
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = itemProps.listConfig || appConfig.list || DEFAULT_LIST_CONFIG;
+    const listConfig = itemProps.listConfig || (itemProps.view === 'compact-configurable'
+        ? appConfig.list.compactView
+        : appConfig.list || DEFAULT_LIST_CONFIG);
 
     let specs = listConfig[area] || [];
 

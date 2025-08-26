@@ -109,7 +109,7 @@ class ContentProfiles {
                 rows[0].click();
                 rows[0].element(by.className('icon-dots-vertical')).click();
                 rows[0].element(by.className('icon-trash')).click();
-                element(by.css('[ng-click="ok()"]')).click();
+                element(by.buttonText('OK')).click();
             });
         };
 

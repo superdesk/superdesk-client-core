@@ -4,7 +4,7 @@ import {IConfigComponentProps, IDropdownOption, IDropdownConfigManualSource} fro
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
-import {arrayMove} from '@superdesk/common';
+import {arrayMove} from '@sourcefabric/common';
 
 const newItemTemplate: IDropdownOption = {
     id: null,

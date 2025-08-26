@@ -1,5 +1,5 @@
 import React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {Button, Modal, Spacer} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 

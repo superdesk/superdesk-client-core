@@ -1,4 +1,4 @@
-import {IValidationResult} from '@superdesk/common';
+import {IValidationResult} from '@sourcefabric/common';
 import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;

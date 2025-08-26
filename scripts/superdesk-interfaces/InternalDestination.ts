@@ -7,4 +7,5 @@ export interface IInternalDestination extends IBaseRestApiResponse {
     desk: string;
     stage?: string;
     macro?: string;
+    send_after_schedule?: boolean;
 }

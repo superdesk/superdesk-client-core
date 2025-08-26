@@ -373,10 +373,6 @@ export function ArticleEditDirective(
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
-                            // draftjs editor state will be
-                            // outdated after editing in modal
-                            resetFieldMetadata(scope.item);
-
                             // On multiedit mode, there is no refresh function
                             if (typeof scope.refresh === 'function') {
                                 scope.refresh();

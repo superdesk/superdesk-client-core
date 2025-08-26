@@ -167,7 +167,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                 edit={noop}
                 preview={noop}
                 narrow={false}
-                view={undefined}
+                view="compact"
                 selected={undefined}
                 swimlane={false}
                 scopeApply={(fn) => fn()}

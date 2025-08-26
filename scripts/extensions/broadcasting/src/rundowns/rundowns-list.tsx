@@ -6,7 +6,7 @@ import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '
 import {superdesk} from '../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
-import {addSeconds} from '@superdesk/common';
+import {addSeconds} from '@sourcefabric/common';
 import {IAndOperator, ILogicalOperator} from 'superdesk-api';
 import {RundownItems} from './components/rundown-items';
 import {IRundownItemActionNext, prepareForEditing, prepareForPreview} from './prepare-create-edit-rundown-item';

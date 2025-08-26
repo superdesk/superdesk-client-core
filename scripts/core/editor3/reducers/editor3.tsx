@@ -141,6 +141,7 @@ export function updateDecorators(
             warnings: spellcheckWarnings,
         },
         limitConfig: stateCurrent.limitConfig,
+        softLimitConfig: stateCurrent.softLimitConfig,
     });
 
     if (result.mustReApplyDecorators !== true) {
@@ -185,8 +186,7 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
-
+    const editorStateNext = updateDecorators(state, newEditorState, 'store-based');
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
@@ -612,7 +612,7 @@ const setExternalOptions = (
     state: IEditorStore,
     payload: IActionPayloadSetExternalOptions,
 ) => {
-    let result: IEditorStore = {
+    const result: IEditorStore = {
         ...state,
         ...payload,
     };

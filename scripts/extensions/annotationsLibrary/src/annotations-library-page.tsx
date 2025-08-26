@@ -30,7 +30,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk): React.Componen
                 definitionField,
             } = getFields(superdesk);
 
-            const formConfig: IFormGroup = {
+            const formConfig: IFormGroup<IKnowledgeBaseItem> = {
                 direction: 'vertical',
                 type: 'inline',
                 form: [

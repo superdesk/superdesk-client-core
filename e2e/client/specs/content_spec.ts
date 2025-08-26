@@ -27,18 +27,6 @@ describe('content', () => {
         browser.actions().sendKeys(key).perform();
     }
 
-    function setEmbargo() {
-        var now = new Date();
-        // choose time with date not in a valid month number.
-        // default view time format in config
-        var embargoDate = '09/09/' + (now.getFullYear() + 1);
-        var embargoTime = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' +
-                        (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
-
-        el(['authoring', 'interactive-actions-panel', 'embargo', 'date-input']).sendKeys(embargoDate);
-        el(['authoring', 'interactive-actions-panel', 'embargo', 'time-input']).sendKeys(embargoTime);
-    }
-
     it('can navigate with keyboard', () => {
         content.getItems().first().click();
         browser.wait(
