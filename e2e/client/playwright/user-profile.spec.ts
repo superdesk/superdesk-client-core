@@ -58,3 +58,21 @@ test('can edit my profile', async ({page}) => {
         }
     }
 });
+
+test('can disable a user', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/users');
+
+    const userList = page.locator(s('users-list'));
+    const user = userList.locator(s('username=janedoe'));
+    const userFilter = page.locator(s('user-filter'));
+
+    await userFilter.selectOption('Active');
+    await user.hover();
+    await userList.getByRole('button', {name: 'Disable user'}).click();
+    await page.locator(s('modal-confirm')).getByRole('button', {name: 'Ok'}).click();
+    await expect(user).not.toBeVisible();
+
+    await userFilter.selectOption('Disabled');
+    await expect(user).toBeVisible();
+});
