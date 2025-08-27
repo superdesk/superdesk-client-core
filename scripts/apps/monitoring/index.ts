@@ -64,7 +64,6 @@ angular.module('superdesk.apps.monitoring', [
             [
                 'selectedValues',
                 'onChange',
-                'dataTestId',
             ],
             [],
         ),
@@ -75,7 +74,6 @@ angular.module('superdesk.apps.monitoring', [
             [
                 'activeFilters',
                 'removeFilter',
-                'dataTestId',
             ],
             [],
         ),

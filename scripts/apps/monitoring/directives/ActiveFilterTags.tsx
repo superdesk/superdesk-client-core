@@ -6,8 +6,7 @@ import {getTagsConfig, getTagsWithValues} from './utils';
 
 interface IProps {
     activeFilters?: IActiveFilters;
-    removeFilter: (id: string | null, type?: string) => void;
-    dataTestId?: string;
+    removeFilter: (id: string | null, fieldId?: string) => void;
 }
 
 export class ActiveFilterTags extends React.PureComponent<IProps> {
@@ -26,6 +25,7 @@ export class ActiveFilterTags extends React.PureComponent<IProps> {
 
         return (
             <Spacer
+                data-test-id="active-filter-tags"
                 justifyContent="stretch"
                 noWrap
                 h

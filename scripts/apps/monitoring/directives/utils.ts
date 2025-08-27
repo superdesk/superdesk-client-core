@@ -1,15 +1,21 @@
 import {sdApi} from 'api';
 import {extensions} from 'appConfig';
 import {gettext} from 'core/utils';
+import {flatMap} from 'lodash';
 import {IMonitoringListFilter, IMonitoringListOperator} from 'superdesk-api';
 import {IActiveFilters} from '../controllers/types';
+
+const configFromExtensions = flatMap(
+    Object.values(extensions),
+    (extension) => extension.activationResult?.contributions?.monitoring?.listFiltersConfig,
+);
 
 /**
  * Instance config or fall back to default one
  */
-export const listFiltersConfig: Array<IMonitoringListFilter> =
-    extensions?.['monitoring-filters']?.activationResult?.contributions?.monitoring?.listFiltersConfig
-    ?? [
+export const listFiltersConfig: Array<IMonitoringListFilter> = configFromExtensions.length > 0
+    ? configFromExtensions
+    : [
         {
             label: gettext('Content Profile'),
             fieldId: 'contentProfile',
@@ -28,6 +34,10 @@ export const listFiltersConfig: Array<IMonitoringListFilter> =
         },
     ];
 
+/**
+ * Filters that have their own components for display and must be ignored
+ * in list of active filters rendered in scripts/apps/monitoring/directives/ActiveFilterTags.tsx
+ */
 const filtersToIgnore = ['fileType', 'customFilters'];
 
 export const getTagsWithValues = (filters?: IActiveFilters) => {

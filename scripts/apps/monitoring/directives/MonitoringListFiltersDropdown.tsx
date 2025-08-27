@@ -4,7 +4,6 @@ import {ITreeNode, Dictionary, IMonitoringListFilter} from 'superdesk-api';
 import {listFiltersConfig} from './utils';
 
 interface IProps {
-    dataTestId?: string;
     selectedValues: Dictionary<string, Array<string>>;
     onChange(fieldId: string, value: Array<{id: string; label: string}>, label: string): void;
 }
@@ -39,7 +38,7 @@ export class MonitoringCustomFiltersDropdown extends React.PureComponent<IProps>
                 shouldCloseOnClick={(e) => {
                     const target = e.target as HTMLElement;
 
-                    return target.closest('[data-test-id="tree-select-popover"]') == null;
+                    return target.closest('.autocomplete') == null;
                 }}
                 component={() => (
                     <div>
@@ -99,7 +98,7 @@ export class MonitoringCustomFiltersDropdown extends React.PureComponent<IProps>
                         onClick={(e) => {
                             toggle(e.target as HTMLDivElement);
                         }}
-                        data-test-id={this.props.dataTestId}
+                        data-test-id="content-profile-dropdown"
                     />
                 )}
             </WithPopover>
