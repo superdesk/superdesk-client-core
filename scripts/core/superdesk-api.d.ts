@@ -3148,6 +3148,7 @@ declare module 'superdesk-api' {
             };
             contentProfile: {
                 get(id: string): IContentProfile;
+                getAll(): Array<IContentProfile>;
             };
             vocabulary: {
                 getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;

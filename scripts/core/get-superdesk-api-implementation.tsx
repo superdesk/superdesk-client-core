@@ -362,6 +362,7 @@ export function getSuperdeskApiImplementation(
             },
             contentProfile: {
                 get: (id) => sdApi.contentProfiles.get(id),
+                getAll: () => sdApi.contentProfiles.getAll(),
             },
             vocabulary: {
                 getAll: () => sdApi.vocabularies.getAll(),
