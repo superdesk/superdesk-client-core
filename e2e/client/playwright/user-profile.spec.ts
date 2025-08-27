@@ -77,7 +77,7 @@ test('can disable a user', async ({page}) => {
     await expect(user).toBeVisible();
 });
 
-test('can restart password', async ({page}) => {
+test('can reset password', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/profile');
 
@@ -96,7 +96,7 @@ test('can restart password', async ({page}) => {
         .locator('p:has-text("Please use this link") a')
         .getAttribute('href');
 
-    if (!resetPasswordLink) throw new Error('Reset link nije pronađen u iFrame-u');
+    if (!resetPasswordLink) throw new Error('Reset link was not found in the iFrame');
 
     await page.goto(resetPasswordLink);
 
