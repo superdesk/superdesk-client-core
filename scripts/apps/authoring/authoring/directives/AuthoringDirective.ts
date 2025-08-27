@@ -229,8 +229,6 @@ export function AuthoringDirective(
 
                     $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
-                    // $scope.sendAndDuplicateEnabled =
-
                     $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType)
                         && authoringApiCommon.checkShortcutButtonAvailability(
