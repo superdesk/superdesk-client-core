@@ -31,16 +31,12 @@ export function getSendAndDuplicateTarget(): null | {deskId: IDesk['_id']; stage
         return null;
     }
 
-    const stage = sdApi.desks.getDeskStages(desk._id).find(
+    const stageFromConfig = sdApi.desks.getDeskStages(desk._id).find(
         (desk) => desk.name === appConfig.features.customAuthoringTopbar.sendAndDuplicate.stageName,
     );
 
-    if (stage == null) {
-        return null;
-    }
-
     return {
         deskId: desk._id,
-        stageId: stage._id,
+        stageId: stageFromConfig != null ? stageFromConfig._id : desk.incoming_stage,
     };
 }
