@@ -93,7 +93,13 @@ export class ItemContainer extends React.Component<any, any> {
                 _class = _link;
                 break;
             case 'website':
-                value = (<a href={item.website} target="_blank" rel="noopener noreferrer">{item.website}</a>);
+                value = (
+                    <a
+                        href={(item.website.startsWith('http') ? '' : 'https://') + item.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >{item.website}</a>
+                );
                 title = value && item.website;
                 _class = _link;
                 break;
