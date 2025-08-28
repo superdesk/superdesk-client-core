@@ -5,6 +5,8 @@ import {flatMap} from 'lodash';
 import {IMonitoringListFilter, IMonitoringListOperator} from 'superdesk-api';
 import {IActiveFilters} from '../controllers/types';
 
+export const FILTER_PREFIX = 'sd-filter';
+
 const configFromExtensions = flatMap(
     Object.values(extensions),
     (extension) => extension.activationResult?.contributions?.monitoring?.listFiltersConfig,

@@ -6,7 +6,7 @@ import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup, IContentProfile} fro
 import {getLabelForStage} from 'apps/workspace/content/constants';
 import {getExtensionSections} from '../services/CardsService';
 import {IAggregateCtrl} from './types';
-import {listFiltersConfig} from '../directives/utils';
+import {FILTER_PREFIX, listFiltersConfig} from '../directives/utils';
 
 AggregateCtrl.$inject = [
     '$scope',
@@ -66,13 +66,13 @@ export function AggregateCtrl(
             ...prev,
             [curr.fieldId]: isInMonitoring === false
                 ? []
-                : JSON.parse(localStorage.getItem(curr.fieldId) ?? '[]'),
+                : JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-${curr.fieldId}`) ?? '[]'),
         }), {});
 
     this.activeFilters = isInMonitoring ? {
         ...configsWithValues,
-        fileType: JSON.parse(localStorage.getItem('fileType') ?? '[]'),
-        customFilters: JSON.parse(localStorage.getItem('customFilters') ?? '{}'),
+        fileType: JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-fileType`) ?? '[]'),
+        customFilters: JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-customFilters`) ?? '{}'),
     } : {
         ...configsWithValues,
         fileType: [],
@@ -528,7 +528,7 @@ export function AggregateCtrl(
     function persistFiltersInLocalStorage() {
         if (isInMonitoring) {
             Object.keys(self.activeFilters).forEach((key) => {
-                localStorage.setItem(key, JSON.stringify(self.activeFilters[key]));
+                localStorage.setItem(`${FILTER_PREFIX}-${key}`, JSON.stringify(self.activeFilters[key]));
             });
         }
     }
