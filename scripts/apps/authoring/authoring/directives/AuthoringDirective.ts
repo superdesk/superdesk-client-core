@@ -1,7 +1,7 @@
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
-import {getSendAndDuplicateTarget, isPublished} from 'apps/archive/utils';
+import {isPublished} from 'apps/archive/utils';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
@@ -24,6 +24,7 @@ import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
 import {openArticle} from 'core/get-superdesk-api-implementation';
+import {getSendAndDuplicateTarget} from '../get-send-and-duplicate-target';
 
 /**
  * @ngdoc directive

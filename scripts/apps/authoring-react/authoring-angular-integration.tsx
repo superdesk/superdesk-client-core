@@ -44,7 +44,7 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@sourcefabric/common';
 import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
-import {getSendAndDuplicateTarget} from 'apps/archive/utils';
+import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
