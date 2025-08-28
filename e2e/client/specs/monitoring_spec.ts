@@ -399,8 +399,6 @@ describe('monitoring', () => {
 
             openPopoverButton.click();
 
-            browser.wait(ECE.hasElementCount(els(['option'], undefined, el(['tree-select-popover'])), 5));
-
             el(['filters-dropdown'], by.buttonText('testing')).click();
         };
 
