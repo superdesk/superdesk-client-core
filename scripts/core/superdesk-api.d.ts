@@ -134,7 +134,7 @@ declare module 'superdesk-api' {
             hasUnsavedChanges: boolean,
             cancelAutosave: () => Promise<void>,
             doClose: () => void,
-        ): Promise<void>;
+        ): Promise<{cancelled: boolean}>;
         getContentProfile(item: T, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2>;
         getUserPreferences(): Promise<any>;
         autosave: IAuthoringAutoSave<T>;
@@ -3595,8 +3595,18 @@ declare module 'superdesk-api' {
             customAuthoringTopbar?: {
                 toDesk?: boolean;
                 publish?: boolean;
+
+                // Create an update of the item and close the item
                 closeAndContinue?: boolean;
+
+                // Publish the item and create an update
                 publishAndContinue?: boolean;
+
+                // Duplicate the item to specified desk and stage and continue working on the original
+                sendAndDuplicate?: {
+                    deskName: string;
+                    stageName: string;
+                };
             },
             showPublishSchedule?: boolean
             hideCreatePackage?: boolean;

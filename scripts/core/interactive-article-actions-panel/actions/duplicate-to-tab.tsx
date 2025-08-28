@@ -42,7 +42,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
         const {selectedDestination} = this.state;
         const {closeDuplicateToView, items} = this.props;
 
-        sdApi.article.duplicateItems(items, selectedDestination).then((res) => {
+        sdApi.article.duplicateItems(items.map(({_id}) => _id), selectedDestination).then((res) => {
             closeDuplicateToView();
 
             if (openAfterDuplicating) {

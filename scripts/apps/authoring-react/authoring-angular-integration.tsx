@@ -44,6 +44,7 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
 import {showModal} from '@sourcefabric/common';
 import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
+import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
@@ -610,8 +611,8 @@ function getInlineToolbarActions(
 
             if (
                 sdApi.article.isLockedInCurrentSession(item)
-            && appConfig.features.customAuthoringTopbar?.toDesk === true
-            && sdApi.article.isPersonal(item) !== true
+                && appConfig.features.customAuthoringTopbar?.toDesk === true
+                && sdApi.article.isPersonal(item) !== true
             ) {
                 actions.push({
                     group: 'middle',
@@ -625,6 +626,43 @@ function getInlineToolbarActions(
                                 handleUnsavedChanges()
                                     .then(() => sdApi.article.sendItemToNextStage(item))
                                     .then(() => initiateClosing());
+                            }}
+                        />
+                    ),
+                    availableOffline: false,
+                });
+            }
+
+            if (
+                appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                && getSendAndDuplicateTarget() != null
+            ) {
+                actions.push({
+                    group: 'middle',
+                    priority: 0.2,
+                    component: () => (
+                        <Button
+                            tooltip={gettext('Send and duplicate')}
+                            ariaLabel={gettext('Send and duplicate')}
+                            text={gettext('S & D')}
+                            style="filled"
+                            onClick={() => {
+                                handleUnsavedChanges()
+                                    .then(() => {
+                                        const {deskId, stageId} = getSendAndDuplicateTarget();
+
+                                        sdApi.article.duplicateItems(
+                                            [item._id],
+                                            {
+                                                type: 'desk',
+                                                desk: deskId,
+                                                stage: stageId,
+                                            },
+                                        );
+                                    })
+                                    .catch(() => {
+                                        // noop - user cancelled the operation
+                                    });
                             }}
                         />
                     ),
@@ -834,7 +872,7 @@ export interface IProps {
 export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     render(): React.ReactNode {
         return (
-            <div className="sd-authoring-react">
+            <div className="sd-authoring-react" data-test-id="authoring">
                 <AuthoringIntegrationWrapper
                     sidebarMode={true}
                     getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}

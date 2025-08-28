@@ -30,7 +30,11 @@ export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
         ];
 
         return (
-            <div className="authoring-toolbar-1" style={{backgroundColor: this.props.backgroundColor}}>
+            <div
+                className="authoring-toolbar-1"
+                style={{backgroundColor: this.props.backgroundColor}}
+                data-test-id="authoring-toolbar-1"
+            >
                 {
                     toolbarGroups.map((items, i) => (
                         <div
