@@ -1,4 +1,4 @@
-import {flatMap, flattenDeep, includes, isNil} from 'lodash';
+import {flatMap, includes, isNil} from 'lodash';
 import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -8,7 +8,9 @@ import {
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
-import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
+import {IMonitoringFilter} from 'superdesk-api';
+import {listFiltersConfig} from '../directives/utils';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 export function getExtensionSections() {
     return flatMap(
@@ -54,7 +56,7 @@ export interface ICard {
 }
 
 CardsService.$inject = ['search', 'session', 'desks', '$location'];
-export function CardsService(search, session, desks, $location) {
+export function CardsService(search, session, desks) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
@@ -85,7 +87,7 @@ export function CardsService(search, session, desks, $location) {
         return params;
     }
 
-    function filterQueryByCardType(query, queryParam, card: ICard) {
+    function setQueryFilterForCardType(query, queryParam, card: ICard) {
         let deskId;
         const extensionSection = getExtensionSections();
         const section = extensionSection.find((response) => response.id === card.type);
@@ -188,7 +190,7 @@ export function CardsService(search, session, desks, $location) {
         }
     }
 
-    function filterQueryByCardFileType(query, card: ICard) {
+    function setQueryFiltersForFileType(query, card: ICard) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
@@ -216,24 +218,64 @@ export function CardsService(search, session, desks, $location) {
         }
     }
 
-    function filterQueryByContentProfile(query, card: ICard) {
+    function setFilterForContentProfile(query, card: ICard) {
         if (card.contentProfile) {
             query.filter({terms: {profile: JSON.parse(card.contentProfile)}});
         }
     }
 
-    function filterQueryByCustomQuery(query, card: ICard) {
+    function setQueryFiltersForCustomFilters(query, card: ICard) {
         if (card.customFilters == null) {
             return;
         }
 
-        var items: {[key: string]: IMonitoringFilter} = JSON.parse(card.customFilters);
+        const items: {[key: string]: IMonitoringFilter} = JSON.parse(card.customFilters);
 
         const terms = Object.values(items)
             .reduce((obj1, obj2) => Object.assign(obj1, obj2.query), {});
 
         Object.keys(terms).forEach((key) => {
             query.filter({terms: {[key]: terms[key]}});
+        });
+    }
+
+    function setQueryFiltersForMonitoringConfig(query, card: ICard) {
+        const filterIdsFromConfig = listFiltersConfig.map((x) => x.fieldId);
+
+        /**
+         * Remove `contentProfiles` because of legacy coupling.
+         * It is handled in setFilterForContentProfile
+         */
+        const filtersFromConfig = Object.fromEntries(
+            Object.entries(card).filter(([id]) => filterIdsFromConfig.includes(id) && id !== 'contentProfile'),
+        );
+
+        Object.entries(filtersFromConfig).forEach(([fieldId, selectedValues]) => {
+            const parsedValues = JSON.parse(selectedValues);
+
+            if ((parsedValues ?? []).length === 0) {
+                return;
+            }
+
+            const filterConfig = listFiltersConfig.find((filter) => filter.fieldId === fieldId);
+
+            if (!filterConfig) {
+                return;
+            }
+
+            if (filterConfig.selectMultiple) {
+                if (filterConfig.operator === 'AND') {
+                    query.filter({
+                        and: parsedValues.map((val) => ({term: {[fieldId]: val}})),
+                    });
+                } else if (filterConfig.operator === 'OR') {
+                    query.filter({terms: {[fieldId]: parsedValues}});
+                } else {
+                    assertNever(filterConfig.operator);
+                }
+            } else {
+                query.filter({term: {[fieldId]: parsedValues[0]}});
+            }
         });
     }
 
@@ -251,10 +293,11 @@ export function CardsService(search, session, desks, $location) {
         var query = search.query(setFilters(params));
         var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
 
-        filterQueryByCardType(query, queryParam, card);
-        filterQueryByContentProfile(query, card);
-        filterQueryByCardFileType(query, card);
-        filterQueryByCustomQuery(query, card);
+        setQueryFilterForCardType(query, queryParam, card);
+        setFilterForContentProfile(query, card);
+        setQueryFiltersForFileType(query, card);
+        setQueryFiltersForCustomFilters(query, card);
+        setQueryFiltersForMonitoringConfig(query, card);
 
         if (queryString) {
             query.filter({query: {query_string: {query: queryString, lenient: true}}});
