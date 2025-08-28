@@ -399,7 +399,7 @@ describe('monitoring', () => {
 
             openPopoverButton.click();
 
-            el(['filters-dropdown'], by.buttonText('testing')).click();
+            el(['tree-select-popover'], by.buttonText('testing')).click();
         };
 
         monitoring.openMonitoring();
@@ -424,8 +424,6 @@ describe('monitoring', () => {
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['remove-all-filters'])));
-
         el(['remove-all-filters']).click();
 
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
@@ -440,7 +438,6 @@ describe('monitoring', () => {
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['remove-all-filters'])));
         el(['remove-all-filters']).click();
 
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
