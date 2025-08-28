@@ -35,7 +35,7 @@ export class MonitoringCustomFiltersDropdown extends React.PureComponent<IProps>
     render() {
         return (
             <WithPopover
-                shouldCloseOnClick={(e) => {
+                shouldClose={(e) => {
                     const target = e.target as HTMLElement;
 
                     return target.closest('.autocomplete.autocomplete--multi-select') == null;
