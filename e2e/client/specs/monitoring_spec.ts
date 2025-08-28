@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor, ElementFinder} from 'protractor';
+import {element, browser, by, protractor, ElementFinder, $} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
@@ -390,6 +390,20 @@ describe('monitoring', () => {
     });
 
     it('can filter content by content profile', () => {
+        const filterByTestingContentProfile = () => {
+            el(['filters-dropdown']).click();
+
+            const openPopoverButton = el(['open-popover'], undefined, el(['filter-contentProfile']));
+
+            browser.wait(ECE.elementToBeClickable(openPopoverButton));
+
+            openPopoverButton.click();
+
+            browser.wait(ECE.hasElementCount(els(['option'], undefined, el(['tree-select-popover'])), 5));
+
+            el(['filters-dropdown'], by.buttonText('testing')).click();
+        };
+
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('testing');
@@ -404,32 +418,35 @@ describe('monitoring', () => {
         authoring.save();
         authoring.close();
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
-        el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
-        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+
+        filterByTestingContentProfile();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
-        el(['remove-filter']).click();
+        browser.wait(ECE.elementToBeClickable(el(['remove-all-filters'])));
+
+        el(['remove-all-filters']).click();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
-        el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
-        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+        filterByTestingContentProfile();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
-        el(['clear-filters']).click();
+        browser.wait(ECE.elementToBeClickable(el(['remove-all-filters'])));
+        el(['remove-all-filters']).click();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
+
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');

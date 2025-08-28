@@ -108,6 +108,7 @@ export class ActiveFilterTags extends React.PureComponent<IProps> {
                     text={gettext('Clear filters')}
                     size="small"
                     style="hollow"
+                    data-test-id="remove-all-filters"
                 />
             </Spacer>
         );

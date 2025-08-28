@@ -98,7 +98,7 @@ export class MonitoringCustomFiltersDropdown extends React.PureComponent<IProps>
                         onClick={(e) => {
                             toggle(e.target as HTMLDivElement);
                         }}
-                        data-test-id="content-profile-dropdown"
+                        data-test-id="filters-dropdown"
                     />
                 )}
             </WithPopover>
