@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor, ElementFinder, $} from 'protractor';
+import {element, browser, by, protractor, ElementFinder} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
