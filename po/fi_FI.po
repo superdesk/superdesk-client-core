@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
 "PO-Revision-Date: 2015-05-07 07:31+0000\n"
-"Last-Translator: Salla Salmela, 2024-2025\n"
+"Last-Translator: Maija Paikkala, 2024-2025\n"
 "Language-Team: Finnish (Finland) (http://app.transifex.com/sourcefabric/superdesk/language/fi_FI/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +45,7 @@ msgstr "Tiivistelmä on pakollinen kenttä"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'ANPA_CATEGORY is a required field'"
-msgstr "ANPA_CATEGORY on pakollinen kenttä"
+msgstr "Osasto on pakollinen kenttä"
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'BYLINE is a required field'"
@@ -594,11 +594,11 @@ msgstr "AMP"
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:72
 msgid "ANPA Category"
-msgstr "ANPA Category"
+msgstr "Osasto"
 
 #: ../superdesk-planning/client/components/fields/list/Categories.tsx:19
 msgid "ANPA Category:"
-msgstr "ANPA Category:"
+msgstr "Osasto:"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "ANPA Take Key"
