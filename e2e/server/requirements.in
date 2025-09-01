@@ -1,3 +1,3 @@
 honcho
 gunicorn
-git+https://github.com/superdesk/superdesk-core.git@async#egg=Superdesk-Core
+git+https://github.com/superdesk/superdesk-core.git@release/3.0#egg=Superdesk-Core
