@@ -17,10 +17,10 @@ export interface IPublishingDateOptions {
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
     return {
         embargo: items.length === 1 && items[0].embargo != null
-            ? fromServerDateFormat(items[0].embargo) ?? null
+            ? fromServerDateFormat(items[0].embargo, true) ?? null
             : null,
         publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? fromServerDateFormat(items[0].publish_schedule) ?? null
+            ? fromServerDateFormat(items[0].publish_schedule, true) ?? null
             : null,
         timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
     };
@@ -42,10 +42,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toServerDateFormat(embargo),
+            : toServerDateFormat(embargo, timeZone),
         publish_schedule: publishSchedule == null
             ? null
-            : toServerDateFormat(publishSchedule),
+            : toServerDateFormat(publishSchedule, timeZone),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
@@ -89,8 +89,9 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         embargo: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,
@@ -111,8 +112,9 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             dateFormat={appConfig.view.dateformat}
                             onChange={(val) => {
                                 const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                if (isValidDate) {
+                                if (isValidDate || isDateBeingReset) {
                                     this.props.onChange({
                                         publishSchedule: val,
                                         timeZone: timeZone ?? appConfig.default_timezone,

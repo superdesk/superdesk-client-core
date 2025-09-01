@@ -13,6 +13,7 @@ import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
 import formatISO from 'date-fns/formatISO';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
+import {trimStartExact} from './helpers/utils';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
 
@@ -386,6 +387,17 @@ export function isScrolledIntoViewVertically(element: HTMLElement, container: HT
     return topVisible && bottomVisible;
 }
 
+export function getUTCOffset(timezoneId: string) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezoneId,
+        timeZoneName: 'longOffset',
+    });
+
+    const offsetStr = formatter.formatToParts(new Date()).find((part) => part.type === 'timeZoneName').value;
+
+    return trimStartExact(offsetStr, 'GMT');
+}
+
 /**
  * Note: `{a: false}` will be converted to '?a=false'.
  * If you need to exclude keys when value is `false`,
@@ -406,15 +418,23 @@ export function toQueryString(
 /**
  * Output example: "1970-01-19T22:57:38"
  */
-export function toServerDateFormat(date: Date): string {
-    return formatISO(date).slice(0, 19);
+export function toServerDateFormat(
+    date: Date,
+    timezone?: string,
+): string {
+    let dateStr = formatISO(date).slice(0, 19);
+
+    if (timezone != null) {
+        dateStr += getUTCOffset(timezone).replace(':', '');
+    }
+
+    return dateStr;
 }
 
-/**
- * Parse server date without timezone so it won't convert it to local timezone.
- */
-export function fromServerDateFormat(date: string): Date {
-    return new Date(date.slice(0, 19));
+export function fromServerDateFormat(date: string, ignoreTimezone: boolean): Date {
+    return new Date(
+        ignoreTimezone ? date.slice(0, 19) : date,
+    );
 }
 
 export function getArticleLabel(item: IArticle): string {

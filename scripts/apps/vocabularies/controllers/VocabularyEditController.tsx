@@ -92,8 +92,8 @@ export function VocabularyEditController(
 
         // Insert default allowed workflows
         vocab.field_options = {
-            ...(vocab.field_options ?? {}),
             allowed_workflows: defaultAllowedWorkflows,
+            ...(vocab.field_options ?? {}),
         };
     }
 

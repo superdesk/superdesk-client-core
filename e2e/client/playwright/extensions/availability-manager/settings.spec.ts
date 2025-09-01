@@ -3,7 +3,7 @@ import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from '../../utils';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
-async function openAvailabilitySettings(page: Page) {
+export async function openAvailabilitySettings(page: Page) {
     await page.clock.setFixedTime(new Date('1970-02-15'));
 
     await restoreDatabaseSnapshot({snapshotName: 'availability-management'});
@@ -137,5 +137,59 @@ test.describe('availability manager settings', async () => {
         ).toHaveText(['Austria']);
 
         await expect(page.locator(s('working-day-view'))).toHaveScreenshot();
+    });
+});
+
+test.describe('first use', async () => {
+    /** Andy is a newly created user who hasn't enabled availability settings previously */
+    test.use({storageState: path.join(__dirname, './user-andy.json')});
+
+    test('enabling settings page for the first time and setting availability', async ({page}) => {
+        await openAvailabilitySettings(page);
+
+        const checkboxLocator = await page.locator(s('availability-settings')).getByText('Enabled');
+
+        await expect(checkboxLocator).toBeVisible();
+        await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
+
+        await checkboxLocator.click();
+
+        const feb15 = page.locator(s('month=feb')).getByRole('button', {name: '15'});
+        const oct15 = page.locator(s('month=oct')).getByRole('button', {name: '15'});
+
+        await expect(feb15).toBeVisible();
+        await expect(feb15).not.toHaveAttribute('data-test-status', 'available');
+
+        await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
+
+        // click to create
+        await feb15.click();
+
+        // choose status
+        await page.locator(s('edit-workday', 'status', 'item=Available')).click();
+
+        // save and close
+        await page.getByRole('button', {name: 'Save'}).click();
+
+        // should be visible, and marked as available
+        await expect(feb15).toHaveAttribute('data-test-status', 'available');
+
+        // going to previous month and back to test that changes were persisted and reloaded from API correctly
+
+        await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
+
+        await page.locator(s('availability-settings', 'toolbar')).getByRole('button', {name: 'Previous'}).click();
+
+        await expect(oct15).toBeVisible();
+        await expect(feb15).not.toBeVisible();
+
+        await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
+
+        await page.locator(s('availability-settings', 'toolbar')).getByRole('button', {name: 'Next'}).click();
+
+        await expect(feb15).toBeVisible();
+        await expect(oct15).not.toBeVisible();
+
+        await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
     });
 });

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
 "PO-Revision-Date: 2015-05-07 07:31+0000\n"
-"Last-Translator: Salla Salmela, 2024-2025\n"
+"Last-Translator: Maija Paikkala, 2024-2025\n"
 "Language-Team: Finnish (Finland) (http://app.transifex.com/sourcefabric/superdesk/language/fi_FI/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,7 +45,7 @@ msgstr "Tiivistelmä on pakollinen kenttä"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'ANPA_CATEGORY is a required field'"
-msgstr "ANPA_CATEGORY on pakollinen kenttä"
+msgstr "Osasto on pakollinen kenttä"
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'BYLINE is a required field'"
@@ -594,11 +594,11 @@ msgstr "AMP"
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:72
 msgid "ANPA Category"
-msgstr "ANPA Category"
+msgstr "Osasto"
 
 #: ../superdesk-planning/client/components/fields/list/Categories.tsx:19
 msgid "ANPA Category:"
-msgstr "ANPA Category:"
+msgstr "Osasto:"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "ANPA Take Key"
@@ -743,7 +743,7 @@ msgstr "Toimintovalikko"
 #: scripts/apps/workspace/content/views/profile-settings.html:167
 #: scripts/apps/workspace/content/views/profile-settings.html:61
 msgid "Active"
-msgstr "Aktiivinen"
+msgstr "Käytössä"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:22
 msgid "Active only"
@@ -3661,7 +3661,7 @@ msgstr ""
 #: scripts/core/ui/views/sd-timepicker-popup.html:28
 #: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:38
 msgid "Confirm"
-msgstr "Vahvista"
+msgstr "OK"
 
 #: ../superdesk-planning/client/constants/assignments.ts:161
 msgid "Confirm Availability"
@@ -8036,7 +8036,7 @@ msgstr "Mene kohteisiin"
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:130
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:91
 msgid "Go-To"
-msgstr ""
+msgstr "Avaa"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:96
 #: ../superdesk-planning/client/utils/index.ts:600
@@ -8287,11 +8287,11 @@ msgstr ""
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:2
 #: scripts/apps/templates/services/TemplatesService.ts:71
 msgid "Highlights"
-msgstr "Kohokohdat"
+msgstr "Kooste"
 
 #: scripts/apps/highlights/index.ts:70
 msgid "Highlights View"
-msgstr ""
+msgstr "Koostenäkymä"
 
 #: scripts/apps/highlights/views/settings.html:4
 msgid "Highlights configurations"
@@ -10078,11 +10078,11 @@ msgstr ""
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:163
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:83
 msgid "Month"
-msgstr ""
+msgstr "Kuukausi"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:34
 msgid "Month(s)"
-msgstr ""
+msgstr "Kuukausi / kuukaudet"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:40
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:26
@@ -11001,7 +11001,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:84
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:60
 msgid "Number"
-msgstr "Määrä"
+msgstr "Numero"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.tsx:295
 msgid "Number of Assignments:"
@@ -12400,7 +12400,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:312
 #: scripts/extensions/sams/src/utils/ui.tsx:94
 msgid "Public"
-msgstr "Julkinen"
+msgstr "Julki"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:441
 #: ../superdesk-analytics/client/utils.js:154
@@ -19234,7 +19234,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:254
 msgid "honorific"
-msgstr ""
+msgstr "titteli"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:5
 #: scripts/apps/highlights/views/highlights_config_modal.html:45
