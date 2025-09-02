@@ -232,6 +232,7 @@ module.exports = function makeConfig(grunt) {
 
                             // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
                             || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+                            || absolutePath.includes('/@sourcefabric/common/')
                         ) {
                             return false;
                         }
