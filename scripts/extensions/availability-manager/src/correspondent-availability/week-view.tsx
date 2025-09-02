@@ -126,7 +126,7 @@ export class WeekView extends React.PureComponent<IProps, IState> {
 
                                                     <SpacerBlock v gap="4" />
                                                     <Text size="small" color="light" noMargin>
-                                                        @{user.sign_off}
+                                                        @{user.username}
                                                     </Text>
                                                 </CalendarWeekDayItem>
                                             </WeeklyCalendarGridItem>

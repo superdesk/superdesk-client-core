@@ -145,7 +145,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                     </MaybeButton>
 
                                                     <span style={{color: 'var(--color-text-light)'}}>
-                                                        @{user.sign_off}
+                                                        @{user.username}
                                                     </span>
 
                                                     {
