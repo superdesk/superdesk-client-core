@@ -249,6 +249,9 @@ export default angular.module('superdesk.core.auth', [
                             .finally(() => {
                                 $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
                                 localStorage.clear();
+
+                                localStorage.setItem('LOGGED_OUT_LANGUAGE', session.identity.language);
+
                                 $window.location.replace('/'); // reset page for new user
                             });
                     });

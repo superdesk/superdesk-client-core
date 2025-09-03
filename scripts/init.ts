@@ -61,7 +61,14 @@ const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 //
 
 const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
-const languageFromLocalStorage = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
+
+const languageFromLocalStorage =
+    user?.language
+    ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
+    ?? appConfig.default_language
+    ?? window.navigator.language
+    ?? 'en';
+
 const language = appConfig.profileLanguages?.includes(languageFromLocalStorage) ? languageFromLocalStorage : 'en';
 
 window['user-interface-language'] = language;
