@@ -139,6 +139,17 @@ module.exports = function makeConfig(grunt) {
                             return false;
                         }
 
+                        if (
+                            // date-fns uses optional chaining and nullish coalescing
+                            absolutePath.includes('/node_modules/date-fns/')
+
+                            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
+                            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+                            || absolutePath.includes('/@sourcefabric/common/')
+                        ) {
+                            return false;
+                        }
+
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
