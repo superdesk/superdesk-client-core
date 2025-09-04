@@ -32,8 +32,7 @@ export function fetchParticipants(): Promise<Set<IUser['_id']>> {
                     .filter(({_id}) => allUsers[_id] != null) // filter out disabled users
                     .map(({_id}) => _id),
             );
-        })
-
+        });
 }
 
 export function filterParticipants(
