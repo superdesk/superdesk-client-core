@@ -74,7 +74,7 @@ export class DateInput extends React.Component<DateInputProps, any> {
     * @description validateDateText sets validate-state after text-input of dates
     */
     validateDateText(field, val) {
-        const regex = new RegExp('[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]', 'i');
+        const regex = new RegExp('[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]', 'i');
         const valMoment = moment(val, this.props.dateFormat);
 
         if (val.match(regex) && valMoment.isValid()) {
