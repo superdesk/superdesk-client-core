@@ -23,7 +23,16 @@ export function fetchParticipants(): Promise<Set<IUser['_id']>> {
     return httpRequestJsonLocal<IRestApiResponse<IDefaultAvailability>>({
         ...prepareSuperdeskQuery('/default_user_availability', query),
         abortSignal: new AbortController().signal,
-    }).then((res) => new Set(res._items.map(({_id}) => _id)));
+    })
+        .then((res) => {
+            const allUsers = superdesk.entities.users.getAllUsers();
+
+            return new Set(
+                res._items
+                    .filter(({_id}) => allUsers[_id] != null) // filter out disabled users
+                    .map(({_id}) => _id),
+            );
+        });
 }
 
 export function filterParticipants(
