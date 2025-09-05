@@ -3,6 +3,8 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {sdApi} from 'api';
+import {getMonitoringViewOptions} from './utils';
 
 const PAGE_SIZE = 50;
 
@@ -35,6 +37,7 @@ interface IScope extends ng.IScope {
     afterWorkspaceRename: () => void;
     initWorkspaceRename: (workspace) => void;
     workspaceToRename: any;
+    availableViews: Array<{id: string; label: string; icon: string}>;
 }
 
 /**
@@ -130,7 +133,21 @@ export function MonitoringView(
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.shouldRefresh = true;
-            scope.view = 'compact'; // default view
+
+            scope.availableViews = getMonitoringViewOptions({
+                swimlaneViewEnabled:
+                    !scope.monitoring.singleGroup
+                    && scope.type === 'monitoring'
+                    && scope.monitoring.hasSwimlaneView,
+                compactViewEnabled: scope.compactViewEnabled,
+            });
+
+            scope.view = (() => {
+                const available = new Set(scope.availableViews.map(({id}) => id));
+                const preference: string = sdApi.preferences.get('monitoring:view')?.view;
+
+                return available.has(preference) ? preference : 'compact';
+            })();
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
@@ -227,8 +244,8 @@ export function MonitoringView(
              * @param {Boolean} value
              * @param {Boolean} swimlane
              */
-            scope.switchView = function(value, swimlane) {
-                scope.monitoring.switchViewColumn(swimlane, true);
+            scope.switchView = function(value, swimlane: boolean) {
+                scope.monitoring.switchViewColumn(value === 'swimlane2' || swimlane, true);
                 scope.view = value;
                 scope.swimlane = swimlane;
             };
