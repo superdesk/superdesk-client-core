@@ -176,7 +176,7 @@ export default angular.module('superdesk.core.services.modal', [
         }
 
         function confirmBase(
-            bodyText: string,
+            bodyText: string, // may contain HTML
             headerText: string,
             okText: string,
             cancelText: string,
@@ -225,7 +225,7 @@ export default angular.module('superdesk.core.services.modal', [
                             </>
                         )}
                     >
-                        {bodyText}
+                        <div dangerouslySetInnerHTML={{__html: bodyText}} />
                     </Modal>
                 ));
             });
