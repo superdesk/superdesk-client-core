@@ -1,6 +1,6 @@
 import React from 'react';
 import {groupBy} from 'lodash';
-import {Menu} from 'superdesk-ui-framework/react';
+import {Menu} from 'superdesk-ui-framework';
 import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';

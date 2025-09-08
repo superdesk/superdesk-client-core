@@ -14,7 +14,7 @@ import {IApplicationState} from '../../store';
 import {getSets} from '../../store/sets/selectors';
 
 // UI
-import {Icon, Label, FormLabel} from 'superdesk-ui-framework/react';
+import {Icon, Label, FormLabel} from 'superdesk-ui-framework';
 import {
     FormRow,
     Modal,

@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import {DurationInput, getDurationString} from 'superdesk-ui-framework/react';
+import {DurationInput, getDurationString} from 'superdesk-ui-framework';
 import {IInputType} from '../interfaces/input-types';
 
 export class DurationComponent extends React.Component<IInputType<number>> {

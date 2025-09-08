@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import {Spacer, SpacerBlock, Divider} from '@sourcefabric/common';
-import {Icon, IconButton, Tooltip, Text} from 'superdesk-ui-framework/react';
+import {Icon, IconButton, Tooltip, Text} from 'superdesk-ui-framework';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {

@@ -1,7 +1,7 @@
 import {Placement} from '@popperjs/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {PopupPositioner} from 'superdesk-ui-framework/react';
+import {PopupPositioner} from 'superdesk-ui-framework';
 
 interface IProps {
     delayed?: boolean;

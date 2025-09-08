@@ -1,5 +1,5 @@
 import React from 'react';
-import {TimePicker} from 'superdesk-ui-framework/react';
+import {TimePicker} from 'superdesk-ui-framework';
 import {
     ITimeValueOperational,
     ITimeFieldConfig,

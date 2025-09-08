@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {IWidgetIntegrationComponentProps, widgetReactIntegration} from 'apps/authoring/widgets/widgets';
-import {IconButton, Rotate} from 'superdesk-ui-framework/react';
+import {IconButton, Rotate} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {

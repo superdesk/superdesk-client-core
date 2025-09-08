@@ -1,6 +1,6 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
-import {Modal} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {gettext} from './utils';
 import {PromptModal} from './prompt-modal';

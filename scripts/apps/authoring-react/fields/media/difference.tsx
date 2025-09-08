@@ -3,7 +3,7 @@ import {IDifferenceComponentProps, IMediaConfig, IMediaValueOperational} from 's
 import {generatePatch} from 'core/patch';
 import {getDifferenceStatistics} from '../difference-statistics';
 import {gettext} from 'core/utils';
-import {Alert} from 'superdesk-ui-framework/react';
+import {Alert} from 'superdesk-ui-framework';
 
 type IProps = IDifferenceComponentProps<IMediaValueOperational, IMediaConfig>;
 

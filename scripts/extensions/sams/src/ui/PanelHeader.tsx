@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import {Icon} from 'superdesk-ui-framework/react';
+import {Icon} from 'superdesk-ui-framework';
 
 interface IProps {
     children?: React.ReactNode;

@@ -4,7 +4,7 @@ import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDesk, IArticle} from 'superdesk-api';
 import {getHighlightsLabel, IHighlight} from '../services/HighlightsService';
 import {Modal} from 'superdesk-ui-framework/react/components/Modal';
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework';
 import {notify} from 'core/notify/notify';
 
 interface IProps {

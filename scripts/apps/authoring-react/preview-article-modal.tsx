@@ -2,7 +2,7 @@ import React from 'react';
 import {IContentProfileV2} from 'superdesk-api';
 import {showPrintableModal} from 'core/services/modalService';
 import {PreviewAuthoringItem} from './preview-authoring-item';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 export function previewAuthoringEntity(

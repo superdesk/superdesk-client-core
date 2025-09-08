@@ -1,5 +1,5 @@
 import React from 'react';
-import {CheckGroup, Checkbox} from 'superdesk-ui-framework/react';
+import {CheckGroup, Checkbox} from 'superdesk-ui-framework';
 import {IUser} from 'superdesk-api';
 import {gettext} from 'core/utils';
 

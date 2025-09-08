@@ -4,7 +4,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IArticle, IExtensionActivationResult, IRestApiResponse, ITranslation} from 'superdesk-api';
-import {Button, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {Button, Modal, Option, Select} from 'superdesk-ui-framework';
 import {notify} from 'core/notify/notify';
 import {extensions} from 'appConfig';
 import {flatMap} from 'lodash';

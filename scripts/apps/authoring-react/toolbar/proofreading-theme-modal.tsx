@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {PREFERENCES_KEY} from 'apps/authoring/authoring/services/AuthoringThemesService';

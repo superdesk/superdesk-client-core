@@ -9,7 +9,7 @@ import {
     IRundownItemBase,
     IRundownTemplateBase,
 } from '../interfaces';
-import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
+import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 

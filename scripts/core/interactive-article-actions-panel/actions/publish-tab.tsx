@@ -1,6 +1,6 @@
 import React, {CSSProperties} from 'react';
 import {IArticle, IRestApiResponse} from 'superdesk-api';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ToggleBox} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';

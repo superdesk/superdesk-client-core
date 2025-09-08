@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {difference, keyBy} from 'lodash';
-import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework/react';
+import {BoxedList, BoxedListItem, Label} from 'superdesk-ui-framework';
 import {classnames, Spacer} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {TagsPreview} from '../components/tags-preview';

@@ -34,7 +34,7 @@ import {showModal} from '@sourcefabric/common';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {EditorState} from 'draft-js';
-import {Select, Option} from 'superdesk-ui-framework/react';
+import {Select, Option} from 'superdesk-ui-framework';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';

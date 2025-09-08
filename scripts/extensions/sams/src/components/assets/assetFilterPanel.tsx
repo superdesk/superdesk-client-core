@@ -16,7 +16,7 @@ import {
     Option,
     Select,
     Tag,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 
 import {
     FormGroup,

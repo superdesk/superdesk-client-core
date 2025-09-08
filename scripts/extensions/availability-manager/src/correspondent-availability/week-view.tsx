@@ -7,7 +7,7 @@ import {
     Text,
     WeeklyCalendarGrid,
     WeeklyCalendarGridItem,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';

@@ -11,7 +11,7 @@ import {
     EmptyState,
     Checkbox,
     BoxedList,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {store} from 'core/data';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {Spacer} from 'core/ui/components/Spacer';

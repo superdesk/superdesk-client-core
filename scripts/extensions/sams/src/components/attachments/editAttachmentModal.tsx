@@ -7,7 +7,7 @@ import {IAssetItem} from '../../interfaces';
 import {superdeskApi, samsApi} from '../../apis';
 
 // UI
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {Modal, ModalBody, ModalFooter, ModalHeader} from '../../ui/modal';
 import {PageLayout} from '../../containers/PageLayout';
 import {AssetEditor} from '../assets/assetEditor';

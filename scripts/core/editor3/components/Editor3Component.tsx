@@ -43,7 +43,7 @@ import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 import {gettext, isMacOS} from 'core/utils';
 import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
-import {IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {IconButton, Spacer} from 'superdesk-ui-framework';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,

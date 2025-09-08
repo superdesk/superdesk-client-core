@@ -5,7 +5,7 @@ import {UploadComplete} from './UploadComplete';
 import {UploadConfigModalInformation} from './UploadConfigModalInformation';
 import {DropZone} from './drop-zone';
 import {notify} from '../../../core/notify/notify';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

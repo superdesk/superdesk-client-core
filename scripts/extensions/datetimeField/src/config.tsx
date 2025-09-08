@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/react';
+import {Button, FormLabel, IconButton} from 'superdesk-ui-framework';
 import {IConfigComponentProps} from 'superdesk-api';
 import {superdesk} from './superdesk';
 import {IConfig} from './interfaces';

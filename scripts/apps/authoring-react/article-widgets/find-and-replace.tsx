@@ -3,7 +3,7 @@ import {IArticleSideWidget, IArticleSideWidgetComponentType} from 'superdesk-api
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {Input, Button, IconButton, Switch} from 'superdesk-ui-framework/react';
+import {Input, Button, IconButton, Switch} from 'superdesk-ui-framework';
 import {dispatchEditorEvent} from '../authoring-react-editor-events';
 import {Spacer} from 'core/ui/components/Spacer';
 import {throttle} from 'lodash';

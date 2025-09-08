@@ -6,7 +6,7 @@ import {
     IUrlsFieldUserPreferences,
     IUrlObject,
 } from 'superdesk-api';
-import {Button, IconButton, Input} from 'superdesk-ui-framework/react';
+import {Button, IconButton, Input} from 'superdesk-ui-framework';
 import {SpacerBlock, Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {IllustrationButton, SvgIconIllustration} from 'superdesk-ui-framework/react';
+import {IllustrationButton, SvgIconIllustration} from 'superdesk-ui-framework';
 import {configuration} from './configuration';
 import {superdesk} from './superdesk';
 import {IAiAssistantSection} from './ai-assistant';

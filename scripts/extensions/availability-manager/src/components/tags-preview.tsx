@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {superdesk} from '../superdesk';
-import {Label} from 'superdesk-ui-framework/react';
+import {Label} from 'superdesk-ui-framework';
 import {IPropsSpacer, Spacer} from '@sourcefabric/common';
 import {IAvailabilityRecord} from '../interfaces';
 import {ITreeNode, IVocabularyItem} from 'superdesk-api';

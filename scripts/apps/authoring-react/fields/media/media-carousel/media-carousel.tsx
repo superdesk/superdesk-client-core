@@ -1,5 +1,5 @@
 import React from 'react';
-import {IconButton, Input} from 'superdesk-ui-framework/react';
+import {IconButton, Input} from 'superdesk-ui-framework';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';

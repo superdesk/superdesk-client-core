@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Input, Select, Option, IconButton} from 'superdesk-ui-framework/react';
+import {Button, Input, Select, Option, IconButton} from 'superdesk-ui-framework';
 import {IConfigComponentProps, IDateFieldConfig, IDateShortcut} from 'superdesk-api';
 import {gettext} from 'core/utils';
 

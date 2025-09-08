@@ -4,7 +4,7 @@ import {IArticle} from 'superdesk-api';
 import {ITagUi} from '../types';
 import {OrderedMap} from 'immutable';
 import {IServerResponse, ITagBase, toServerFormat} from '../adapter';
-import {ToggleBox, IconButton, Popover} from 'superdesk-ui-framework/react';
+import {ToggleBox, IconButton, Popover} from 'superdesk-ui-framework';
 import {debounce, noop} from 'lodash';
 
 interface ITagInput {

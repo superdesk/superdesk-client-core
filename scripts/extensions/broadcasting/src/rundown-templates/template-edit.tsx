@@ -11,7 +11,7 @@ import {
     ButtonGroup,
     Checkbox,
     DurationInput,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@sourcefabric/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../interfaces';
 import {superdesk} from '../superdesk';

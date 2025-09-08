@@ -7,7 +7,7 @@ import {superdeskApi} from '../../apis';
 import {IDesk} from 'superdesk-api';
 
 // UI
-import {Autocomplete, Label, Tag} from 'superdesk-ui-framework/react';
+import {Autocomplete, Label, Tag} from 'superdesk-ui-framework';
 import {FormGroup, FormRow} from '../../ui';
 
 interface IProps {

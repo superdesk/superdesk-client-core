@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IEditorComponentProps, IFieldsData} from 'superdesk-api';
 import {IConfig, IExtensionConfigurationOptions, IValueOperational} from './interfaces';
-import {Select, Option, Icon} from 'superdesk-ui-framework/react';
+import {Select, Option, Icon} from 'superdesk-ui-framework';
 
 import {superdesk} from './superdesk';
 

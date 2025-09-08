@@ -1,5 +1,5 @@
 import React from 'react';
-import {DurationInput} from 'superdesk-ui-framework/react';
+import {DurationInput} from 'superdesk-ui-framework';
 import {
     IDurationValueOperational,
     IDurationFieldConfig,

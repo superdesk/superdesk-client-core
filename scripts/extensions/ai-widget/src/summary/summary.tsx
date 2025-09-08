@@ -11,7 +11,7 @@ import {
     Loader,
     Heading,
     Spacer,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {superdesk} from '../superdesk';
 
 interface IProps {

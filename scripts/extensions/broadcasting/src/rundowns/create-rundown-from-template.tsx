@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
+import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework';
 import {CreateValidators, WithValidation} from '@sourcefabric/common';
 import {fieldNotNull, stringNotEmpty} from '../form-validation';
 import {IRundownTemplate, IShow} from '../interfaces';

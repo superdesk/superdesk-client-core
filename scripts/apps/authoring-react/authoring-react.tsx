@@ -21,7 +21,7 @@ import {
     IEditor3Config,
     IAuthoringReact,
 } from 'superdesk-api';
-import {Loader, SubNav} from 'superdesk-ui-framework/react';
+import {Loader, SubNav} from 'superdesk-ui-framework';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';

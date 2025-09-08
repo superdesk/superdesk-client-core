@@ -17,7 +17,7 @@ import {pushAssetSearchParams, popAssetSearchParams} from '../store/assets/actio
 import {getSetsById, getAvailableSetsForDesk} from '../store/sets/selectors';
 
 // UI
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {SamsApp} from './samsApp';
 import {SamsAttachmentsList} from '../components/attachments/samsAttachmentsList';
 import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';

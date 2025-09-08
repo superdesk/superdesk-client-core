@@ -2,7 +2,7 @@ import React from 'react';
 import {IUser} from 'superdesk-api';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {gettext} from 'core/utils';
-import {showPopup} from 'superdesk-ui-framework/react';
+import {showPopup} from 'superdesk-ui-framework';
 
 interface IProps {
     user: IUser;

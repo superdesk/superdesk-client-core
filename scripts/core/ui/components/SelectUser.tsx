@@ -3,7 +3,7 @@ import React from 'react';
 import {IPropsSelectUser, IUser} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import {Spacer, TreeSelect} from 'superdesk-ui-framework/react';
+import {Spacer, TreeSelect} from 'superdesk-ui-framework';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {store} from 'core/data';
 import ng from 'core/services/ng';

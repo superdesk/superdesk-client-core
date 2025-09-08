@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
 import {addDays, startOfWeek} from 'date-fns';
-import {Button, DatePicker, FormLabel, IconButton, RadioButtonGroup, InputWrapper} from 'superdesk-ui-framework/react';
+import {Button, DatePicker, FormLabel, IconButton, RadioButtonGroup, InputWrapper} from 'superdesk-ui-framework';
 import {StatusSelect} from '../components/status-select';
 import {filterPeriods, LANGUAGES_VOCABULARY, TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord, IFilters, IWeekday} from '../interfaces';

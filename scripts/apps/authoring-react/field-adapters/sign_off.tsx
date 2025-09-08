@@ -20,7 +20,7 @@ import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWit
 import {convertToRaw, ContentState} from 'draft-js';
 import {editor3ToOperationalFormat} from '../fields/editor3';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 
 interface IProps {
     onChange: (value: IEditor3ValueOperational) => void;

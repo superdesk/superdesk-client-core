@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Checkbox} from 'superdesk-ui-framework/react';
+import {Checkbox} from 'superdesk-ui-framework';
 import {ICommonFieldConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {SpacerBlock} from 'core/ui/components/Spacer';

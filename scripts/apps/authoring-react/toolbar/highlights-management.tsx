@@ -1,7 +1,7 @@
 import React from 'react';
 import {IArticle, IHighlight} from 'superdesk-api';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {Button, Heading, IconButton, Text} from 'superdesk-ui-framework/react';
+import {Button, Heading, IconButton, Text} from 'superdesk-ui-framework';
 import {Card} from 'core/ui/components/Card';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';

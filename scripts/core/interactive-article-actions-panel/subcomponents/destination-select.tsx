@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
-import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework/react';
+import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework';
 import {ISendToDestination} from '../interfaces';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 

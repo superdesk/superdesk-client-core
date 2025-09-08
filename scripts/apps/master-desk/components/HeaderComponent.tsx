@@ -7,7 +7,7 @@ import {
     Switch,
     ButtonGroup,
     Button,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {IMenuItem} from 'superdesk-ui-framework/app-typescript/components/Dropdown';
 import {IMasterDeskTab, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
 import {gettext} from 'core/utils';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {IconButton} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework';
 
 export interface IPanelTools {
     icon: string;

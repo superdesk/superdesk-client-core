@@ -7,7 +7,7 @@ import {
     Menu,
     EmptyState,
     WithSizeObserver,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {BoxedListItem, BoxedListContentRow} from 'superdesk-ui-framework/react/components/Lists';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {superdesk} from '../superdesk';

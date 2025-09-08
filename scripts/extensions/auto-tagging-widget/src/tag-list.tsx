@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Set, OrderedMap} from 'immutable';
 import {ISuperdesk, ITreeNode} from 'superdesk-api';
 import {ITagUi} from './types';
-import {Tag} from 'superdesk-ui-framework/react';
+import {Tag} from 'superdesk-ui-framework';
 import {noop} from 'lodash';
 import {TagPopover} from './tag-popover';
 

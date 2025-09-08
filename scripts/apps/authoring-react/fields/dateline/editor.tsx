@@ -1,6 +1,6 @@
 import React from 'react';
 import ng from 'core/services/ng';
-import {DatePickerISO} from 'superdesk-ui-framework/react';
+import {DatePickerISO} from 'superdesk-ui-framework';
 import {
     ICommonFieldConfig,
     IDatelineUserPreferences,

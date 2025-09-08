@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Spacer} from '@sourcefabric/common';
-import {Alert, Label} from 'superdesk-ui-framework/react';
+import {Alert, Label} from 'superdesk-ui-framework';
 import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;

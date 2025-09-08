@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {dataApi} from 'core/helpers/CrudManager';
-import {toasted} from 'superdesk-ui-framework/react';
+import {toasted} from 'superdesk-ui-framework';
 import {ISystemMessage, RESOURCE} from '..';
 import {addWebsocketEventListener} from 'core/notification/notification';
 import {IWebsocketMessage, IResourceUpdateEvent, IResourceCreatedEvent, IResourceDeletedEvent} from 'superdesk-api';

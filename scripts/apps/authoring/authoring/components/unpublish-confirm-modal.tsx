@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Checkbox} from 'core/ui/components/Form';
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

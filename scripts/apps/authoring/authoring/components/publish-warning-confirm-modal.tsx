@@ -2,7 +2,7 @@ import React from 'react';
 import {gettext} from 'core/utils';
 import Button from 'core/ui/components/Button';
 import {showModal} from '@sourcefabric/common';
-import {ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

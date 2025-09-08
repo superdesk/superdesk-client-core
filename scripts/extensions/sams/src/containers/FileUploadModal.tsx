@@ -5,7 +5,7 @@ import * as React from 'react';
 import {superdeskApi} from '../apis';
 
 // UI
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
 import {IModalSize, Modal, ModalHeader, ModalFooter} from '../ui/modal';
 import {GridList} from '../ui/grid/GridList';

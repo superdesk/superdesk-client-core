@@ -15,7 +15,7 @@ import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import React from 'react';
 import {MultiEditModal} from 'apps/authoring-react/multi-edit-modal';
-import {Modal} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework';
 
 export function getBulkActions(
     articles: Array<IArticle>,

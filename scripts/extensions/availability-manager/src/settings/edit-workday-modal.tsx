@@ -6,7 +6,7 @@ import {
     Modal,
     RadioButtonGroup,
     Spacer,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {availabilityStatuses, TAGS_VOCABULARY_ID} from '../constants';
 import {IAvailabilityRecord, IAvailabilityRecordTemplate, ITagsWhiteList} from '../interfaces';
 import {superdesk} from '../superdesk';

@@ -47,7 +47,7 @@ import {
     NavButton,
     SubNav,
     Tooltip,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {ContentBar, SearchBar, SubNavSpacer} from '../ui';
 import {showManageSetsModal} from './sets/manageSetsModal';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {DateTimePicker} from 'superdesk-ui-framework/react';
+import {DateTimePicker} from 'superdesk-ui-framework';
 import {
     IEditorComponentProps,
     IDateTimeFieldConfig,

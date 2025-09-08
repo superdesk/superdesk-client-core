@@ -1,7 +1,7 @@
 import React from 'react';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {ToggleBox, FormLabel, TreeSelect} from 'superdesk-ui-framework/react';
+import {ToggleBox, FormLabel, TreeSelect} from 'superdesk-ui-framework';
 import {ControlledVocabulariesSelect} from './controlled-vocabulary-select';
 import {IArticle} from 'superdesk-api';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {IArticle} from 'superdesk-api';
 import {mediaDetailsPadding} from '../constants';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {editMetadata} from '../edit-metadata';
 import {filterObject} from 'core/helpers/utils';

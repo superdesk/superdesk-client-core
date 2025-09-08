@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Switch} from 'superdesk-ui-framework/react';
+import {Switch} from 'superdesk-ui-framework';
 import {ITemplateEditorComponentProps} from 'superdesk-api';
 import {superdesk} from './superdesk';
 import {IConfig, IValueOperational} from './interfaces';

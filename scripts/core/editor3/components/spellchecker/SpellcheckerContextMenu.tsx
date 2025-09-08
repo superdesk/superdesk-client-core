@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Card, Icon, Spacer} from 'superdesk-ui-framework/react';
+import {Card, Icon, Spacer} from 'superdesk-ui-framework';
 import * as actions from '../../actions';
 import {
     ISpellcheckWarning,

@@ -16,7 +16,7 @@ import {getAssets} from '../../store/assets/selectors';
 import {loadAssetsByIds} from '../../store/assets/actions';
 
 // UI
-import {Icon, Label, IconButton} from 'superdesk-ui-framework/react';
+import {Icon, Label, IconButton} from 'superdesk-ui-framework';
 import {
     ListItem,
     ListItemColumn,

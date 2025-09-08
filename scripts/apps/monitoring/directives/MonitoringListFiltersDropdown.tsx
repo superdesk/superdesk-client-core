@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {NavButton, Spacer, TreeSelect, WithPopover} from 'superdesk-ui-framework/react';
+import {NavButton, Spacer, TreeSelect, WithPopover} from 'superdesk-ui-framework';
 import {ITreeNode, Dictionary, IMonitoringListFilter} from 'superdesk-api';
 import {listFiltersConfig} from './utils';
 

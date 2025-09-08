@@ -3,7 +3,7 @@ import {LineInput} from './';
 import {KEYCODES} from '../../../contacts/constants';
 import {set, get, isEmpty} from 'lodash';
 import {gettext} from 'core/utils';
-import {IconButton, Input, Option, Select, Spacer, Switch} from 'superdesk-ui-framework/react';
+import {IconButton, Input, Option, Select, Spacer, Switch} from 'superdesk-ui-framework';
 
 interface IProps {
     remove: () => void,

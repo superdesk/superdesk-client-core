@@ -1,7 +1,7 @@
 import React from 'react';
 import {IAlertComponentProps} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 
 function getTypeClassName(alertType: IAlertComponentProps['type']) {
     switch (alertType) {

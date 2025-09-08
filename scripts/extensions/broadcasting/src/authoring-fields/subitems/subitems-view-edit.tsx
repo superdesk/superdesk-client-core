@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IVocabularyItem} from 'superdesk-api';
-import {IconButton, Input, FormLabel, Alert} from 'superdesk-ui-framework/react';
+import {IconButton, Input, FormLabel, Alert} from 'superdesk-ui-framework';
 import {Map} from 'immutable';
 import {ISubitem} from '.';
 import {RUNDOWN_SUBITEM_TYPES} from '../../constants';

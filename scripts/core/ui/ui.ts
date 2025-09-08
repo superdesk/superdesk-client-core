@@ -7,7 +7,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {Spinner, IconPicker} from 'superdesk-ui-framework/react';
+import {Spinner, IconPicker} from 'superdesk-ui-framework';
 import {DatePickerWrapper} from './components/DatePickerWrapper';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';

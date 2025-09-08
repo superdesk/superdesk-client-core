@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Checkbox, Select, Option} from 'superdesk-ui-framework/react';
+import {Checkbox, Select, Option} from 'superdesk-ui-framework';
 import {IConfigComponentProps, IEditor3Config, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';

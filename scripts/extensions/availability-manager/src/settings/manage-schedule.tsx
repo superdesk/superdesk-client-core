@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {getWeekdayNames, Spacer} from '@sourcefabric/common';
 import {keyBy, noop, range} from 'lodash';
-import {Button, CheckboxButton, CheckButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, CheckboxButton, CheckButtonGroup, Modal} from 'superdesk-ui-framework';
 import {
     availabilityStatuses,
     dayCodes,

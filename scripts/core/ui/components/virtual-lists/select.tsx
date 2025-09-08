@@ -5,7 +5,7 @@ import {VirtualListFromQuery} from './virtual-list-from-query';
 import {gettext} from 'core/utils';
 import {InputLabel} from '../input-label';
 import {SpacerBlock} from '../Spacer';
-import {IconButton, showPopup} from 'superdesk-ui-framework/react';
+import {IconButton, showPopup} from 'superdesk-ui-framework';
 
 interface IState<T> {
     selected: 'loading' | T | null;

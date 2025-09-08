@@ -2,7 +2,7 @@ import * as React from 'react';
 import {INewItem, entityGroups} from './auto-tagging';
 import {ISuperdesk} from 'superdesk-api';
 
-import {Select, Option, Alert} from 'superdesk-ui-framework/react';
+import {Select, Option, Alert} from 'superdesk-ui-framework';
 
 import {ITagUi} from './types';
 import {getGroups} from './groups';

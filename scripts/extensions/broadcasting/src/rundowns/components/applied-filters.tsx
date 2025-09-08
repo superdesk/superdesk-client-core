@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {getDurationString, Tag} from 'superdesk-ui-framework/react';
+import {getDurationString, Tag} from 'superdesk-ui-framework';
 import {IRundownFilters, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';

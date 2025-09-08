@@ -1,5 +1,5 @@
 import React from 'react';
-import {Select, Option, RadioButtonGroup} from 'superdesk-ui-framework/react';
+import {Select, Option, RadioButtonGroup} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getTextColor} from 'core/helpers/utils';

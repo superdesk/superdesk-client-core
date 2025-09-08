@@ -1,5 +1,5 @@
 import React from 'react';
-import {IconButton, Input, WithPagination} from 'superdesk-ui-framework/react';
+import {IconButton, Input, WithPagination} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from '../Spacer';
 import {

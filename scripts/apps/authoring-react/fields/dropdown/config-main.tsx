@@ -11,7 +11,7 @@ import {TabList} from 'core/ui/components/tabs';
 import {ConfigManualEntry} from './dropdown-manual-entry/config';
 import {ConfigFromVocabulary} from './dropdown-vocabulary/config';
 import {SpacerBlock} from 'core/ui/components/Spacer';
-import {Checkbox} from 'superdesk-ui-framework/react';
+import {Checkbox} from 'superdesk-ui-framework';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 type IProps = IConfigComponentProps<IDropdownConfig>;

@@ -10,7 +10,7 @@ import {
 } from 'superdesk-api';
 import {getFieldsData} from '../authoring-react';
 import {Map} from 'immutable';
-import {Modal} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework';
 import {ViewDifference} from '../compare-articles/view-difference';
 import {VersionHeader} from './version-header';
 import {PreviewAuthoringItem} from '../preview-authoring-item';

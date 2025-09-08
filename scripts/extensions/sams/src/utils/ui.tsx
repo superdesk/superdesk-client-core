@@ -12,7 +12,7 @@ import {superdeskApi} from '../apis';
 import {getStore} from '../store';
 
 // UI
-import {Label} from 'superdesk-ui-framework/react';
+import {Label} from 'superdesk-ui-framework';
 
 export function showModalConnectedToStore<T = any>(
     Component: React.ComponentType<{closeModal(): void} & any>,

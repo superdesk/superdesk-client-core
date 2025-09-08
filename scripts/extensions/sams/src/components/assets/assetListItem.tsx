@@ -8,7 +8,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Checkbox, Icon, IconButton, Menu} from 'superdesk-ui-framework/react';
+import {Checkbox, Icon, IconButton, Menu} from 'superdesk-ui-framework';
 import {
     ListItem,
     ListItemBorder,

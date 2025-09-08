@@ -5,7 +5,7 @@ import {onSpikeMiddlewareResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 export function showSpikeDialog<T>(
     modal: any,

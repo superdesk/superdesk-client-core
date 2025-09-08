@@ -15,7 +15,7 @@ import {TimeElem} from 'apps/search/components';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {store} from 'core/data';
 import {StateComponent} from 'apps/search/components/fields/state';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ToggleBox} from 'superdesk-ui-framework';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {Map} from 'immutable';
 import {sdApi} from 'api';

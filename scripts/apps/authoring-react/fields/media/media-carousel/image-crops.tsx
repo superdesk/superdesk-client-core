@@ -1,5 +1,5 @@
 import React from 'react';
-import {ToggleBox} from 'superdesk-ui-framework/react';
+import {ToggleBox} from 'superdesk-ui-framework';
 import {IArticle, IVocabularyItem} from 'superdesk-api';
 import {Card} from 'core/ui/components/Card';
 import {SpacerBlock} from 'core/ui/components/Spacer';

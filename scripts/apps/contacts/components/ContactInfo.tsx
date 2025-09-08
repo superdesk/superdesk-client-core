@@ -5,7 +5,7 @@ import {ContactName, Notes, JobTitle} from 'apps/contacts/components/fields';
 import {isEmpty, findKey} from 'lodash';
 import {gettext} from 'core/utils';
 import {IContact} from 'superdesk-api';
-import {ContentDivider, Icon, Spacer, SpacerBlock} from 'superdesk-ui-framework/react';
+import {ContentDivider, Icon, Spacer, SpacerBlock} from 'superdesk-ui-framework';
 import {WithDivider} from '@sourcefabric/common';
 
 interface IProps {

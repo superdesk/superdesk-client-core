@@ -17,7 +17,7 @@ import {getStorageDestinations} from '../../store/storageDestinations/selectors'
 import {getDesksAllowedSets} from '../../store/workspace/selectors';
 
 // UI
-import {Button, ButtonGroup, Input, Option, Select, Switch, FormLabel} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Input, Option, Select, Switch, FormLabel} from 'superdesk-ui-framework';
 import {
     FormGroup,
     FormRow,

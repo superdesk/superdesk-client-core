@@ -13,7 +13,7 @@ import {superdeskApi, samsApi} from '../../apis';
 import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
-import {FormLabel, Input, Option, Select, Autocomplete, Tag, Label} from 'superdesk-ui-framework/react';
+import {FormLabel, Input, Option, Select, Autocomplete, Tag, Label} from 'superdesk-ui-framework';
 import {FormGroup, FormRow} from '../../ui';
 
 // Utils

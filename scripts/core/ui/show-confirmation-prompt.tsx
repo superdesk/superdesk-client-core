@@ -1,6 +1,6 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
-import {Button, Modal, Spacer} from 'superdesk-ui-framework/react';
+import {Button, Modal, Spacer} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 export function showConfirmationPrompt(

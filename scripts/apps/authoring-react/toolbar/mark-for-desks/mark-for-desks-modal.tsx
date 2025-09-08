@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {IArticle, IDesk} from 'superdesk-api';
-import {Alert, Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Alert, Button, Modal, TreeSelect} from 'superdesk-ui-framework';
 import {sdApi} from 'api';
 import {nameof} from 'core/helpers/typescript-helpers';
 import {Spacer} from 'core/ui/components/Spacer';

@@ -3,7 +3,7 @@ import {showModal} from '@sourcefabric/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
 import {gettext} from 'core/utils';
-import {Button, ButtonGroup, Input, Modal, Spacer, Switch} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Input, Modal, Spacer, Switch} from 'superdesk-ui-framework';
 import {noop} from 'lodash';
 
 interface IProps {

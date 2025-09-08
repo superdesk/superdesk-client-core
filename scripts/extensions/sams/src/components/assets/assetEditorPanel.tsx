@@ -14,7 +14,7 @@ import {previewAsset, updateAsset, unlockAsset} from '../../store/assets/actions
 import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework';
 import {
     PanelHeader,
     PanelHeaderSlidingToolbar,

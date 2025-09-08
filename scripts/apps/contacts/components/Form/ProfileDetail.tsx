@@ -17,7 +17,7 @@ import {
     LineInput,
     SelectInput,
 } from 'core/ui/components/Form';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 
 interface IProps {
     svc: {

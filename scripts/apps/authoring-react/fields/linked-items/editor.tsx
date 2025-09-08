@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework';
 import {
     IArticle,
     IEditorComponentProps,

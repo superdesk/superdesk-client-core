@@ -1,6 +1,6 @@
 import React from 'react';
 import {IconButton} from 'superdesk-ui-framework/react/components/IconButton';
-import {Button, Icon, Label, Text, Container} from 'superdesk-ui-framework/react';
+import {Button, Icon, Label, Text, Container} from 'superdesk-ui-framework';
 import {ContentDivider} from 'superdesk-ui-framework/react/components/ContentDivider';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';

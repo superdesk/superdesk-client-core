@@ -25,7 +25,7 @@ import {isFilterPanelOpen} from '../../store/workspace/selectors';
 import {toggleFilterPanelState} from '../../store/workspace/actions';
 
 // UI
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework';
 import {Modal, ModalBody, ModalHeader} from '../../ui';
 import {PageLayout} from '../../containers/PageLayout';
 import {WorkspaceSubnav} from '../workspaceSubnav';

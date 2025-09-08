@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext, gettextPlural} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

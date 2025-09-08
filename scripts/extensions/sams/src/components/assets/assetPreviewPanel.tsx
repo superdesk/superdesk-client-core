@@ -20,7 +20,7 @@ import {
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {FormLabel, IconButton, Label, Menu} from 'superdesk-ui-framework/react';
+import {FormLabel, IconButton, Label, Menu} from 'superdesk-ui-framework';
 import {
     FormRow,
     PanelContent,

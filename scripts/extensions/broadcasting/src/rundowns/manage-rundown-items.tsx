@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework/react';
+import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework';
 import {IRundown, IRundownItem, IRundownItemBase} from '../interfaces';
 
 import {superdesk} from '../superdesk';

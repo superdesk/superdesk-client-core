@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {Button, ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework';
 import {superdesk} from '../superdesk';
 import HeadlinesBody from './headlines';
 import {configuration} from '../configuration';

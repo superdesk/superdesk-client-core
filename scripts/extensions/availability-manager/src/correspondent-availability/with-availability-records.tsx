@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Alert} from 'superdesk-ui-framework/react';
+import {Alert} from 'superdesk-ui-framework';
 import {groupBy} from 'lodash';
 import {IUser} from 'superdesk-api';
 import {IAvailabilityRecord, IFilters} from '../interfaces';

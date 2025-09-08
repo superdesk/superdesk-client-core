@@ -2,7 +2,7 @@ import React from 'react';
 import {
     BoxedListItem,
     BoxedListContentRow,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {IComment, IUser} from 'superdesk-api';
 import {TimeElem} from 'apps/search/components';
 import {UserPopup} from 'core/ui/components';

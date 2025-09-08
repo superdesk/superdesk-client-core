@@ -2,7 +2,7 @@ import React from 'react';
 import {ContentBlock} from 'draft-js';
 import {EDITOR_BLOCK_TYPE} from 'core/editor3/constants';
 import {connect} from 'react-redux';
-import {DragHandle} from 'superdesk-ui-framework/react';
+import {DragHandle} from 'superdesk-ui-framework';
 
 interface IProps {
     block: ContentBlock;

@@ -1,6 +1,6 @@
 import {Spacer} from 'core/ui/components/Spacer';
 import React from 'react';
-import {ContentDivider, Heading} from 'superdesk-ui-framework/react';
+import {ContentDivider, Heading} from 'superdesk-ui-framework';
 
 interface IProps {
     label: string;
