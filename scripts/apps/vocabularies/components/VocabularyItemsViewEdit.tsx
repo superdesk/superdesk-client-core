@@ -16,6 +16,7 @@ import {ManageVocabularyItemTranslations} from '../ManageVocabularyItemTranslati
 interface ISchemaField {
     key: string;
     label?: string;
+    maxlength?: number;
     type?: 'object' | string;
     required?: boolean;
 }
@@ -124,6 +125,7 @@ class InputField extends React.PureComponent<IPropsInputField> {
                         type="text"
                         value={value}
                         disabled={disabled}
+                        maxLength={field.maxlength}
                         onChange={(event) => {
                             this.props.update(item, field.key, event.target.value);
                         }}
