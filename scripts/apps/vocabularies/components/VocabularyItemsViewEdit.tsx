@@ -121,15 +121,18 @@ class InputField extends React.PureComponent<IPropsInputField> {
 
             case 'short':
                 return (
-                    <input
-                        type="text"
-                        value={value}
-                        disabled={disabled}
-                        maxLength={field.maxlength}
-                        onChange={(event) => {
-                            this.props.update(item, field.key, event.target.value);
-                        }}
-                    />
+                    <div className={className}>
+                        <input
+                            type="text"
+                            className="sd-line-input__input"
+                            value={value}
+                            disabled={disabled}
+                            maxLength={field.maxlength}
+                            onChange={(event) => {
+                                this.props.update(item, field.key, event.target.value);
+                            }}
+                        />
+                    </div>
                 );
 
             case 'object': {
