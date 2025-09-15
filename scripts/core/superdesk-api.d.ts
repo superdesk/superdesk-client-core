@@ -4009,7 +4009,7 @@ declare module 'superdesk-api' {
         SubjectReference: string;
         Category: string;
         SupplementalCategories: string;
-        Keywords: string;
+        Keywords: string | string[];
         ContentLocationCode: string;
         ContentLocationName: string;
         ReleaseDate: string;

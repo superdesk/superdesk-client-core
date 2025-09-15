@@ -81,7 +81,7 @@ const getMetadata = (f: File) => (f.type.startsWith('video/') ?
     getVideoMetadata(f) : getPictureMetadata(f))
     .then(processMetadata, (): Partial<IPTCMetadata> => ({}));
 
-const getVideoMetadata = (f: File): Promise<
+export const getVideoMetadata = (f: File): Promise<
     ParsedMetadata<IContentProfileType.video>
 > => parseMetadata<Array<XMPData>>(f, {
     args: [
@@ -92,7 +92,7 @@ const getVideoMetadata = (f: File): Promise<
     transform: (d) => JSON.parse(d),
 }).then((r) => ({...r, contentType: IContentProfileType.video}));
 
-const getPictureMetadata = (f: File): Promise<
+export const getPictureMetadata = (f: File): Promise<
     ParsedMetadata<IContentProfileType.picture>
 > => parseMetadata<Array<IPTCData & CompositeData>>(f, {
     args: [
@@ -118,7 +118,7 @@ const mapXMPtoIPTC = (metadata: XMPData) =>
         return acc;
     }, {});
 
-const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
+export const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
     (({IPTC, XMP, Composite}) => ({...IPTC, ...XMP, ...Composite}))(
         getObjectEntries(metadata).reduce<
             Record<Tag['group'], Partial<Record<Tag['tag'], Tag['value']>>>
