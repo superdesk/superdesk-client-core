@@ -25,7 +25,7 @@ interface IScope extends ng.IScope {
     group: any;
     refreshGroup(group?: any, triggeredByScrolling?: boolean);
     isActiveGroup: (group: any) => boolean;
-    switchView: (value: any, swimlane?: any) => void;
+    switchView: (value: any, options?: {programmatic?: boolean}) => void;
     gettext: (text: any, params?: any) => any;
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
@@ -142,12 +142,8 @@ export function MonitoringView(
                 compactViewEnabled: scope.compactViewEnabled,
             });
 
-            scope.view = (() => {
-                const available = new Set(scope.availableViews.map(({id}) => id));
-                const preference: string = sdApi.preferences.get('monitoring:view')?.view;
-
-                return available.has(preference) ? preference : 'compact';
-            })();
+            // will be initialized by programmatic call to `scope.switchView `
+            scope.view = undefined;
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
@@ -216,38 +212,30 @@ export function MonitoringView(
                     });
                 }
 
-                if (currentDesk && currentDesk.monitoring_default_view) {
-                    switch (currentDesk.monitoring_default_view) {
-                        case 'list':
-                            scope.switchView('compact');
-                            break;
-                        case 'list-compact':
-                            scope.switchView('compact-configurable');
-                            break;
-                        case 'swimlane':
-                            scope.switchView('compact', true);
-                            break;
-                        case 'photogrid':
-                            scope.switchView('photogrid');
-                            break;
-                        default:
-                            scope.switchView('compact'); // list by default
-                            break;
-                    }
-                }
+                const availableViewIds = new Set(scope.availableViews.map(({id}) => id));
+                const deskPreference =
+                    scope.availableViews.find(({id}) => id === currentDesk?.monitoring_default_view)?.id;
+                const userPreference: string = sdApi.preferences.get('monitoring:view')?.view;
+                const appliedPreference = deskPreference ?? userPreference;
+
+                scope.switchView(
+                    availableViewIds.has(appliedPreference) ? appliedPreference : 'compact',
+                    {programmatic: true},
+                );
             });
 
             scope.numberOfColumns = 1;
 
-            /**
-             * Toggle viewColumn to switch views between swimlane and list
-             * @param {Boolean} value
-             * @param {Boolean} swimlane
-             */
-            scope.switchView = function(value, swimlane: boolean) {
-                scope.monitoring.switchViewColumn(value === 'swimlane2' || swimlane, true);
+            scope.switchView = function(value: string, options?: {programmatic?: boolean}) {
+                const isSwimlane = value === 'swimlane2';
+
+                scope.monitoring.switchViewColumn(isSwimlane, true);
                 scope.view = value;
-                scope.swimlane = swimlane;
+                scope.swimlane = isSwimlane;
+
+                if (options?.programmatic !== true) {
+                    sdApi.preferences.update('monitoring:view', {view: value});
+                }
             };
 
             /**
