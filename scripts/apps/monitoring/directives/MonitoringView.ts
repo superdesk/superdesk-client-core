@@ -229,11 +229,13 @@ export function MonitoringView(
             scope.switchView = function(value: string, options?: {programmatic?: boolean}) {
                 const isSwimlane = value === 'swimlane2';
 
-                scope.monitoring.switchViewColumn(isSwimlane, true);
+                const programmatic = options?.programmatic === true;
+
+                scope.monitoring.switchViewColumn(isSwimlane, !programmatic);
                 scope.view = value;
                 scope.swimlane = isSwimlane;
 
-                if (options?.programmatic !== true) {
+                if (!programmatic) {
                     sdApi.preferences.update('monitoring:view', {view: value});
                 }
             };
