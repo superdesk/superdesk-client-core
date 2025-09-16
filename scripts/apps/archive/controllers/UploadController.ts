@@ -77,7 +77,7 @@ type Tag = (IPTCTag | XMPTag | CompositeTag) extends `${infer G}:${infer T}`
   ? {group: G, tag: T, value: string}
   : never;
 
-const getMetadata = (f: File) => (f.type.startsWith('video/') ?
+export const getMetadata = (f: File) => (f.type.startsWith('video/') ?
     getVideoMetadata(f) : getPictureMetadata(f))
     .then(processMetadata, (): Partial<IPTCMetadata> => ({}));
 
@@ -118,7 +118,7 @@ const mapXMPtoIPTC = (metadata: XMPData) =>
         return acc;
     }, {});
 
-export const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
+const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
     (({IPTC, XMP, Composite}) => ({...IPTC, ...XMP, ...Composite}))(
         getObjectEntries(metadata).reduce<
             Record<Tag['group'], Partial<Record<Tag['tag'], Tag['value']>>>
