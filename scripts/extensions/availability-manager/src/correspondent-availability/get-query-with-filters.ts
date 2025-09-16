@@ -71,7 +71,7 @@ export function getQueryWithFilters(
             $and: where,
         },
         page: 1,
-        max_results: 200,
+        max_results: 500,
         sort: [{'versioncreated': 'asc'}], // sorting isn't relevant
     };
 
