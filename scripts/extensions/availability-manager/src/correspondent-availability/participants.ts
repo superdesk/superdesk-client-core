@@ -16,7 +16,7 @@ export function fetchParticipants(): Promise<Set<IUser['_id']>> {
             ],
         },
         page: 1,
-        max_results: 500,
+        max_results: 1000,
         sort: [{[nameof<IDefaultAvailability>('_created')]: 'asc'}],
     };
 
