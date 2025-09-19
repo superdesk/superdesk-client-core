@@ -9,8 +9,12 @@ describe('monitoring', () => {
     beforeEach(window.module('superdesk.core.services.pageTitle'));
     beforeEach(window.module('superdesk.templates-cache'));
 
-    beforeEach(inject((session, $rootScope) => {
+    beforeEach(inject((session, $rootScope, preferencesService) => {
         session.start({token: 's1', _id: 'foo', href: ''}, {_id: 'foo'});
+
+        // prevent crash; actual implementation crashes since preferences aren't loaded when unit test runs
+        spyOn(preferencesService, 'getSync').and.returnValue(undefined);
+
         $rootScope.$digest();
     }));
 
