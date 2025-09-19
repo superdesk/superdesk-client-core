@@ -13,12 +13,12 @@ import {notify} from 'core/notify/notify';
 import {gettext} from 'core/utils';
 
 export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiResponse>(
-    // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update
-    WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
+    WrappedComponent: React.ComponentType<Props>,
     name: string,
     endpoint: string,
     defaultSortOption: ISortOption,
     formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+    onItemsUpdate?: (items: Array<Entity>) => void,
 ): React.ComponentType<Props> {
     return class CrudManagerHttp extends React.Component<Props, ICrudManagerState<Entity>>
         implements ICrudManagerMethods<Entity> {
@@ -74,6 +74,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                         activeSortOption: sortOption,
                         activeFilters: filterValues,
                     }, () => {
+                        onItemsUpdate?.(res._items);
                         resolve(res);
                     });
                 }));
@@ -127,10 +128,6 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
         }
 
         render() {
-            // workaround for typescript bug
-            // https://github.com/Microsoft/TypeScript/issues/28748#issuecomment-450497274
-            const fixedProps = this.props as any;
-
             return (
                 <WrappedComponent
                     {
@@ -147,7 +144,7 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
                         },
                     }
                     }
-                    {...fixedProps}
+                    {...this.props}
                 />
             );
         }

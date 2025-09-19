@@ -3237,6 +3237,7 @@ declare module 'superdesk-api' {
                 // an index in elastic has to be created beforehand for sorting to work
                 defaultSortOption?: ISortOption,
                 additionalProps?: P,
+                onItemsUpdate?: (items: Array<T>) => void,
             ): React.ComponentType<IPropsGenericForm<T, P>>;
             getGenericArrayListPageComponent<T extends object, P>():
                 React.ComponentType<IPropsGenericArrayListPage<T, P>>;

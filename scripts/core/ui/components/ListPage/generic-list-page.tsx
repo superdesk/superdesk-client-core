@@ -782,8 +782,11 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
     // an index in elastic has to be created beforehand for sorting to work
     defaultSortOption?: ISortOption,
     additionalProps?: P,
+
+    // Called after items get updated, can be used to update an outside source keeping track of data
+    onItemsUpdate?: (items: Array<T>) => void,
 ) => {
-    var Component = connectCrudManagerHttp<IPropsGenericForm<T, P>, T>(
+    const Component = connectCrudManagerHttp<IPropsGenericForm<T, P>, T>(
         GenericListPageComponent,
         'crudManager',
         resource,
@@ -808,6 +811,7 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
 
             return filtersFormatted;
         },
+        onItemsUpdate,
     );
 
     return class WithAdditionalSortOptions extends React.PureComponent<IPropsGenericForm<T, P>> {
