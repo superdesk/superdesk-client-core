@@ -71,3 +71,42 @@ export const getTagsConfig = (filterIds: Array<string>): ITagConfig => {
             },
         }), {});
 };
+
+export function getMonitoringViewOptions(
+    options: {
+        compactViewEnabled: boolean;
+        swimlaneViewEnabled: boolean;
+    },
+): Array<{id: string; label: string; icon: string}> {
+    const availableViews: Array<{id: string; label: string; icon: string}> = [];
+
+    availableViews.push({
+        id: 'compact',
+        label: gettext('List view'),
+        icon: 'list-view',
+    });
+
+    if (options.compactViewEnabled) {
+        availableViews.push({
+            id: 'compact-configurable',
+            label: gettext('Compact View'),
+            icon: 'unordered-list',
+        });
+    }
+
+    if (options.swimlaneViewEnabled) {
+        availableViews.push({
+            id: 'swimlane2',
+            label: gettext('Swimlane View'),
+            icon: 'kanban-view',
+        });
+    }
+
+    availableViews.push({
+        id: 'photogrid',
+        label: gettext('Photo Grid View'),
+        icon: 'grid-view',
+    });
+
+    return availableViews;
+}

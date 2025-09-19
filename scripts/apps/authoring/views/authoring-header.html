@@ -291,7 +291,10 @@
                          ng-disabled="!_editable || schema.priority.readonly === true"
                          data-key="qcode"
                          data-change="autosavePriority()"
-                         tabindex="{{editor.priority.order}}">
+                         tabindex="{{editor.priority.order}}"
+                         data-test-id="authoring-field"
+                         data-test-value="priority"
+                    >
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>
                 </div>
@@ -317,7 +320,10 @@
                          ng-disabled="!_editable || schema.urgency.readonly === true"
                          data-key="qcode"
                          data-change="autosave(item)"
-                         tabindex="{{editor.urgency.order}}">
+                         tabindex="{{editor.urgency.order}}"
+                         data-test-id="authoring-field"
+                         data-test-value="urgency"
+                    >
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.urgency">{{helper_text.urgency}}</div>
                 </div>
