@@ -3,6 +3,8 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {sdApi} from 'api';
+import {getMonitoringViewOptions} from './utils';
 
 const PAGE_SIZE = 50;
 
@@ -23,7 +25,7 @@ interface IScope extends ng.IScope {
     group: any;
     refreshGroup(group?: any, triggeredByScrolling?: boolean);
     isActiveGroup: (group: any) => boolean;
-    switchView: (value: any, swimlane?: any) => void;
+    switchView: (value: any, options?: {programmatic?: boolean}) => void;
     gettext: (text: any, params?: any) => any;
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
@@ -35,6 +37,7 @@ interface IScope extends ng.IScope {
     afterWorkspaceRename: () => void;
     initWorkspaceRename: (workspace) => void;
     workspaceToRename: any;
+    availableViews: Array<{id: string; label: string; icon: string}>;
 }
 
 /**
@@ -130,7 +133,17 @@ export function MonitoringView(
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
             scope.shouldRefresh = true;
-            scope.view = 'compact'; // default view
+
+            scope.availableViews = getMonitoringViewOptions({
+                swimlaneViewEnabled:
+                    !scope.monitoring.singleGroup
+                    && scope.type === 'monitoring'
+                    && scope.monitoring.hasSwimlaneView,
+                compactViewEnabled: scope.compactViewEnabled,
+            });
+
+            // will be initialized by programmatic call to `scope.switchView `
+            scope.view = undefined;
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
@@ -199,38 +212,32 @@ export function MonitoringView(
                     });
                 }
 
-                if (currentDesk && currentDesk.monitoring_default_view) {
-                    switch (currentDesk.monitoring_default_view) {
-                        case 'list':
-                            scope.switchView('compact');
-                            break;
-                        case 'list-compact':
-                            scope.switchView('compact-configurable');
-                            break;
-                        case 'swimlane':
-                            scope.switchView('compact', true);
-                            break;
-                        case 'photogrid':
-                            scope.switchView('photogrid');
-                            break;
-                        default:
-                            scope.switchView('compact'); // list by default
-                            break;
-                    }
-                }
+                const availableViewIds = new Set(scope.availableViews.map(({id}) => id));
+                const deskPreference =
+                    scope.availableViews.find(({id}) => id === currentDesk?.monitoring_default_view)?.id;
+                const userPreference: string = sdApi.preferences.get('monitoring:view')?.view;
+                const appliedPreference = deskPreference ?? userPreference;
+
+                scope.switchView(
+                    availableViewIds.has(appliedPreference) ? appliedPreference : 'compact',
+                    {programmatic: true},
+                );
             });
 
             scope.numberOfColumns = 1;
 
-            /**
-             * Toggle viewColumn to switch views between swimlane and list
-             * @param {Boolean} value
-             * @param {Boolean} swimlane
-             */
-            scope.switchView = function(value, swimlane) {
-                scope.monitoring.switchViewColumn(swimlane, true);
+            scope.switchView = function(value: string, options?: {programmatic?: boolean}) {
+                const isSwimlane = value === 'swimlane2';
+
+                const programmatic = options?.programmatic === true;
+
+                scope.monitoring.switchViewColumn(isSwimlane, !programmatic);
                 scope.view = value;
-                scope.swimlane = swimlane;
+                scope.swimlane = isSwimlane;
+
+                if (!programmatic) {
+                    sdApi.preferences.update('monitoring:view', {view: value});
+                }
             };
 
             /**
