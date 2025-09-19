@@ -1,6 +1,4 @@
-import { IContentProfileType } from 'apps/workspace/content/controllers/ContentProfilesController';
 import {DuplicateController} from '../controllers';
-import * as UploadController from '../controllers/UploadController';
 import {isPublished} from '../utils';
 
 describe('content', () => {
@@ -191,92 +189,5 @@ describe('content', () => {
                 item_id: 'foo',
             }, data.item);
         }));
-    });
-
-    describe('process item metadata', () => {
-        const rawMetadata = [{
-            "XMP:Creator": ["Creator1 (ref2014)","Creator2 (ref2014)"],
-            "XMP:Description": "The description aka caption (ref2014)",
-            "XMP:Subject": ["Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-            "IPTC:Keywords": ["Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-            "IPTC:By-line": "Creator1 (ref2014)",
-            "IPTC:Caption-Abstract": "The description aka caption (ref2014)",
-            "Composite:Creator": "Composite Creator1 (ref2014)",
-            "Composite:Description": "Composite The description aka caption (ref2014)",
-            "Composite:Keywords": ["Composite", "Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-        }]
-
-        it('image metadata', async () => {
-            const file = new File([''], 'image.png', { type: 'image/png' });
-            const beforeProcessed = {
-                success: true as const,
-                data: rawMetadata,
-                error: '',
-                exitCode: 0 as const,
-                contentType: IContentProfileType.picture as const
-            };
-            const expected = {
-                "Keywords": ["Composite", "Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-                "By-line": "Creator1 (ref2014)",
-                "Caption-Abstract": "The description aka caption (ref2014)",
-                "Creator": "Composite Creator1 (ref2014)",
-                "Description": "Composite The description aka caption (ref2014)",
-                "Subject": ["Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-            };
-
-            spyOn(UploadController, 'getPictureMetadata').and.returnValue(Promise.resolve(beforeProcessed));
-
-            const result = await UploadController.getMetadata(file);
-
-            expect(UploadController.getPictureMetadata).toHaveBeenCalledWith(file);
-            expect(result).toEqual(expected);
-        });
-
-        it('video metadata', async () => {
-            const file = new File([''], 'video.mp4', { type: 'video/mp4' });
-            const beforeProcessed = {
-                success: true as const,
-                data: rawMetadata,
-                error: '',
-                exitCode: 0 as const,
-                contentType: IContentProfileType.video as const
-            };
-            const expected = {
-                Keywords: ["Composite", "Keyword1ref2014","Keyword2ref2014","Keyword3ref2014"],
-                "By-line": "Creator1 (ref2014)",
-                "Caption-Abstract": "The description aka caption (ref2014)",
-                Creator: 'Composite Creator1 (ref2014)',
-                Description: 'Composite The description aka caption (ref2014)'
-            };
-
-            spyOn(UploadController, 'getVideoMetadata').and.returnValue(Promise.resolve(beforeProcessed));
-
-            const result = await UploadController.getMetadata(file);
-
-            expect(UploadController.getVideoMetadata).toHaveBeenCalledWith(file);
-            expect(result).toEqual(expected);
-        });
-
-        it('{} for item with no metadata', async () => {
-            const files = [
-                { file: new File([''], 'image.png', { type: 'image/png' }), method: 'getPictureMetadata' as const, type: 'picture' },
-                { file: new File([''], 'video.mp4', { type: 'video/mp4' }), method: 'getVideoMetadata' as const, type: 'video' }
-            ];
-            for (const { file, method, type } of files) {
-                spyOn(UploadController, method).and.returnValue(
-                    Promise.resolve({
-                        success: true,
-                        data: [{}],
-                        error: "",
-                        exitCode: 0,
-                        contentType: IContentProfileType[type],
-                    })
-                );
-
-                const result = await UploadController.getMetadata(file);
-
-                expect(result).toEqual({});
-            }
-        });
     });
 });

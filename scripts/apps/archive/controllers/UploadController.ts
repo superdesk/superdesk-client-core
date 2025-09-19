@@ -8,10 +8,7 @@ import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
-import {parseMetadata} from '@uswriting/exiftool/cjs';
-import {IContentProfileType} from 'apps/workspace/content/controllers/ContentProfilesController';
-import {EXIFTOOL_ARGS, IPTC_XMP_TAGS, XMP_IPTC_TAGS} from 'apps/archive/constants';
-import {getObjectEntries} from 'utils/object';
+import {getMetadata} from 'apps/archive/parse-metadata';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
@@ -51,94 +48,6 @@ function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<
         return promise;
     }));
 }
-
-type IPTCTag = keyof typeof IPTC_XMP_TAGS;
-type IPTCCustomTag = `IPTC:${string}`;
-type IPTCData = Partial<Record<IPTCTag, unknown> & Record<IPTCCustomTag, unknown>>;
-type ParsedIPTCData = ParsedMetadataReturn<Array<IPTCData>>
-
-type XMPTag = keyof typeof XMP_IPTC_TAGS;
-type XMPCustomTag = `XMP:${string}`;
-type XMPData = Partial<Record<XMPTag, unknown> & Record<XMPCustomTag, unknown>>;
-type ParsedXMPData = ParsedMetadataReturn<Array<XMPData>>
-
-type CompositeTag = `Composite:${IPTCTag | XMPTag extends `${string}:${infer T}` ? T : never}`;
-type CompositeData = Partial<Record<CompositeTag, unknown>>;
-type ParsedCompositeData = ParsedMetadataReturn<Array<CompositeData>>
-
-type ParsedMetadataReturn<T> = Awaited<ReturnType<typeof parseMetadata<T>>>;
-type ParsedMetadata<T extends IContentProfileType> =
-    T extends IContentProfileType.video
-    ? ParsedXMPData & {contentType: IContentProfileType.video;}
-    : ParsedIPTCData & ParsedCompositeData & {contentType: IContentProfileType.picture;};
-
-type Metadata = IPTCData & XMPData & CompositeData;
-type Tag = (IPTCTag | XMPTag | CompositeTag) extends `${infer G}:${infer T}`
-  ? {group: G, tag: T, value: string}
-  : never;
-
-export const getMetadata = (f: File) => (f.type.startsWith('video/') ?
-    getVideoMetadata(f) : getPictureMetadata(f))
-    .then(processMetadata, (): Partial<IPTCMetadata> => ({}));
-
-export const getVideoMetadata = (f: File): Promise<
-    ParsedMetadata<IContentProfileType.video>
-> => parseMetadata<Array<XMPData>>(f, {
-    args: [
-        EXIFTOOL_ARGS.showGroupNames,
-        EXIFTOOL_ARGS.JSON,
-        EXIFTOOL_ARGS.XMP,
-    ],
-    transform: (d) => JSON.parse(d),
-}).then((r) => ({...r, contentType: IContentProfileType.video}));
-
-export const getPictureMetadata = (f: File): Promise<
-    ParsedMetadata<IContentProfileType.picture>
-> => parseMetadata<Array<IPTCData & CompositeData>>(f, {
-    args: [
-        EXIFTOOL_ARGS.showGroupNames,
-        EXIFTOOL_ARGS.JSON,
-        EXIFTOOL_ARGS.XMP,
-        EXIFTOOL_ARGS.showDuplicates,
-        EXIFTOOL_ARGS.IPTC,
-        EXIFTOOL_ARGS.COMPOSITE,
-    ],
-    transform: (d) => JSON.parse(d),
-}).then((r) => ({...r, contentType: IContentProfileType.picture}));
-
-const processMetadata = <CT extends IContentProfileType>(metadata: ParsedMetadata<CT>) => {
-    if (!metadata.success) return {};
-    if (metadata.contentType === IContentProfileType.video) return stripGroupNames(mapXMPtoIPTC(metadata.data[0]));
-    return stripGroupNames(metadata.data[0]);
-};
-
-const mapXMPtoIPTC = (metadata: XMPData) =>
-    getObjectEntries(metadata).reduce<IPTCData & XMPData>((acc, [k, v]) => {
-        acc[XMP_IPTC_TAGS[k] ?? k] = v;
-        return acc;
-    }, {});
-
-const stripGroupNames = (metadata: Metadata): Partial<IPTCMetadata> =>
-    (({IPTC, XMP, Composite}) => ({...IPTC, ...XMP, ...Composite}))(
-        getObjectEntries(metadata).reduce<
-            Record<Tag['group'], Partial<Record<Tag['tag'], Tag['value']>>>
-        >(
-            (a, [k, v]) => {
-                const [group, tag] = getGroupTag(k);
-
-                if(!group || !tag) return a
-                a[group][tag] = v;
-                return a;
-            },
-            {IPTC: {}, XMP: {}, Composite: {}},
-        ),
-    );
-
-const getGroupTag = <
-  T extends `${string}:${string}`,
-  GG = T extends `${infer G}:${string}` ? G : never,
-  TT = T extends `${string}:${infer K}` ? K : never
->(tag: T) => tag.split(':') as [GG, TT];
 
 UploadController.$inject = [
     '$scope',

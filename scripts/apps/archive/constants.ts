@@ -160,10 +160,10 @@ export const IPTC_XMP_TAGS = {
 export const XMP_IPTC_TAGS = getInvertObject(IPTC_XMP_TAGS);
 
 export const EXIFTOOL_ARGS = {
-    COMPOSITE: '-use MWG',
+    COMPOSITE: ['-use MWG', '-mwg:all'],
     IPTC: '-iptc:all',
     JSON: '-j',
     showDuplicates: '-a',
     showGroupNames: '-G',
     XMP: '-xmp:all',
-} as const
+} as const;
