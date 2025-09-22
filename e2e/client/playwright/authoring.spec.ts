@@ -2,6 +2,9 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
+const defaultPriorityValue = '6';
+const defaultUrgencyValue = '3';
+
 test('applying "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
 
@@ -149,12 +152,12 @@ test('edit urgency and priority', async ({page}) => {
 
     const priority = page.locator(s('authoring-field=priority'));
 
-    await priority.getByRole('button', {name: 'None'}).click();
+    await priority.getByRole('button', {name: defaultPriorityValue}).click();
     await priority.getByRole('button', {name: '3'}).click();
 
     const urgency = page.locator(s('authoring-field=urgency'));
 
-    await urgency.getByRole('button', {name: 'None'}).click();
+    await urgency.getByRole('button', {name: defaultUrgencyValue}).click();
     await urgency.getByRole('button', {name: '5'}).click();
 
     await page.locator(s('save')).click();
