@@ -28,7 +28,7 @@ test.describe('login', () => {
 
         // Check current user
         await page.locator(s('my-profile')).click();
-        await expect(page.locator('.current-user__username')).toHaveText('admin');
+        await expect(page.locator(s('current-user__username'))).toHaveText('admin');
 
         // Logout
         await page.getByRole('button', {name: 'Sign out'}).click();
@@ -49,6 +49,6 @@ test.describe('login', () => {
         await expect(page).not.toHaveURL(/.*\/#\/workspace/);
 
         // Check for error message
-        await expect(page.getByRole('link', {name: 'Forgot password?'})).toBeVisible();
+        await expect(page.locator(s('login-error-401'))).toBeVisible();
     });
 });
