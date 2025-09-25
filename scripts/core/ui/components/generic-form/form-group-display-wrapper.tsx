@@ -6,12 +6,12 @@ import {isIFormGroupCollapsible} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormGroup} from 'superdesk-api';
 
-interface IProps {
-    group: IFormGroup;
+interface IProps<T extends object> {
+    group: IFormGroup<T>;
 }
 
 // allows wrapping the form group into a custom display component, for example a toggle box
-export class FormGroupDisplayWrapper extends React.Component<IProps> {
+export class FormGroupDisplayWrapper<T extends object> extends React.Component<IProps<T>> {
     render() {
         const {group} = this.props;
 

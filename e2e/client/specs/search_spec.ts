@@ -124,7 +124,6 @@ describe('search', () => {
         authoring.writeTextToAbstract('This is Abstract');
         authoring.save();
         authoring.sendTo('Politic Desk');
-        authoring.confirmSendTo();
         monitoring.switchToDesk('POLITIC DESK');
         expect(monitoring.getTextItem(0, 0)).toBe('From-Sports-To-Politics');
 
@@ -269,7 +268,7 @@ describe('search', () => {
     it('can search scheduled', () => {
         globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9', true);
-        authoring.schedule(false);
+        authoring.schedule();
 
         browser.wait(ECE.stalenessOf(el(['notification--success'])));
 

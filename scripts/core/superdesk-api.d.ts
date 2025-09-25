@@ -4,6 +4,8 @@ declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
+    type GenericFormFieldType = import('../core/ui/components/generic-form/interfaces/form').GenericFormFieldType;
+    type Paths<T> = import('@sourcefabric/common/dist/src/utils/index').Paths<T>;
 
     export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
@@ -2101,7 +2103,7 @@ declare module 'superdesk-api' {
 
         refreshOnEvents?: Array<string>;
 
-        fieldForSearch?: IFormField; // must be present in formConfig
+        fieldForSearch?: IFormField<T>; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
         disallowSorting?: true;
@@ -2120,31 +2122,15 @@ declare module 'superdesk-api' {
         contentMargin?: number;
     }
 
-    export enum FormFieldType {
-        plainText = 'plainText',
-        duration = 'duration',
-        textEditor3 = 'textEditor3',
-        number = 'number',
-        vocabularySingleValue = 'vocabularySingleValue',
-        checkbox = 'checkbox',
-        contentFilterSingleValue = 'contentFilterSingleValue',
-        deskSingleValue = 'deskSingleValue',
-        stageSingleValue = 'stageSingleValue',
-        macroSingleValue = 'macroSingleValue',
-        yesNo = 'yesNo',
-        select = 'select',
-        selectMultiple = 'selectMultiple',
-    }
-
-    export interface IFormField { // don't forget to update runtime type checks
-        type: FormFieldType;
+    export interface IFormField<T extends object> { // don't forget to update runtime type checks
+        type: GenericFormFieldType;
 
         required?: boolean;
 
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
 
-        field: string;
+        field: Paths<T>;
 
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
@@ -2156,13 +2142,13 @@ declare module 'superdesk-api' {
         openByDefault: boolean;
     }
 
-    export interface IFormGroup { // don't forget to update runtime type checks
+    export interface IFormGroup<T extends object> { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
-        form: Array<IFormField | IFormGroup>;
+        form: Array<IFormField<T> | IFormGroup<T>>;
     }
 
-    export interface IPropsGenericArrayListPage<T, P> extends IPropsGenericForm<T, P> {
+    export interface IPropsGenericArrayListPage<T extends object, P> extends IPropsGenericForm<T, P> {
         value: Array<T>;
         onChange(value: Array<T>): void;
 
@@ -2178,7 +2164,7 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
-    export interface ICrudManagerData<T> {
+    export interface ICrudManagerData<T extends object> {
         _items: Array<T>;
         _meta: {
             max_results: number;
@@ -2192,7 +2178,7 @@ declare module 'superdesk-api' {
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity> {
+    export interface ICrudManagerMethods<Entity extends object> {
         read(
             page: number,
             sort: ISortOption,
@@ -3216,10 +3202,14 @@ declare module 'superdesk-api' {
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
                 formConfig: IFormGroup,
+
+                // If field path for a sorting option is nested,
+                // an index in elastic has to be created beforehand for sorting to work
                 defaultSortOption?: ISortOption,
                 additionalProps?: P,
             ): React.ComponentType<IPropsGenericForm<T, P>>;
-            getGenericArrayListPageComponent<T, P>(): React.ComponentType<IPropsGenericArrayListPage<T, P>>;
+            getGenericArrayListPageComponent<T extends object, P>():
+                React.ComponentType<IPropsGenericArrayListPage<T, P>>;
             connectCrudManagerHttp<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
@@ -3292,11 +3282,11 @@ declare module 'superdesk-api' {
             };
         };
         forms: {
-            FormFieldType: typeof FormFieldType;
-            generateFilterForServer(type: FormFieldType, value: any): any;
+            GenericFormFieldType: typeof GenericFormFieldType;
+            generateFilterForServer(type: GenericFormFieldType, value: any): any;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
-            isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
-            isIFormField(x: IFormGroup | IFormField): x is IFormField;
+            isIFormGroup<T>(x: IFormGroup<T> | IFormField<T>): x is IFormGroup<T>;
+            isIFormField<T>(x: IFormGroup<T> | IFormField<T>): x is IFormField<T>;
             getFormFieldPreviewComponent(
                 item: {
                     readonly [key: string]: any;

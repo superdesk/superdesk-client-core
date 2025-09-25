@@ -11,7 +11,7 @@ import {superdesk} from '../superdesk';
 import {IShow} from '../interfaces';
 
 const {gettext} = superdesk.localization;
-const {FormFieldType} = superdesk.forms;
+const {GenericFormFieldType} = superdesk.forms;
 const {
     getGenericHttpEntityListPageComponent,
     ListItem,
@@ -21,35 +21,35 @@ const {
 const {getFormFieldPreviewComponent} = superdesk.forms;
 const {nameof} = superdesk.helpers;
 
-const nameField: IFormField = {
+const nameField: IFormField<IShow> = {
     label: gettext('Show name'),
-    type: FormFieldType.plainText,
-    field: nameof<IShow>('title'),
+    type: GenericFormFieldType.plainText,
+    field: 'title',
     required: true,
 };
-const shortCode: IFormField = {
+const shortCode: IFormField<IShow> = {
     label: gettext('Show code'),
-    type: FormFieldType.plainText,
-    field: nameof<IShow>('shortcode'),
+    type: GenericFormFieldType.plainText,
+    field: 'shortcode',
     required: false,
 };
-const descriptionField: IFormField = {
+const descriptionField: IFormField<IShow> = {
     label: gettext('Description'),
-    type: FormFieldType.plainText,
-    field: nameof<IShow>('description'),
+    type: GenericFormFieldType.plainText,
+    field: 'description',
     component_parameters: {
         multiline: true,
     },
     required: false,
 };
-const plannedDurationField: IFormField = {
+const plannedDurationField: IFormField<IShow> = {
     label: gettext('Planned duration'),
-    type: FormFieldType.duration,
-    field: nameof<IShow>('planned_duration'),
+    type: GenericFormFieldType.duration,
+    field: 'planned_duration',
     required: true,
 };
 
-const formConfig: IFormGroup = {
+const formConfig: IFormGroup<IShow> = {
     direction: 'vertical',
     type: 'inline',
     form: [

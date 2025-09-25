@@ -5,9 +5,10 @@ import {getFormFieldComponent} from './form-field';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {FormGroupWrapper} from './form-group-wrapper';
 import {IFormGroup} from 'superdesk-api';
+import {get} from 'lodash';
 
-interface IProps<T> {
-    formConfig: IFormGroup;
+interface IProps<T extends object> {
+    formConfig: IFormGroup<T>;
     item: Partial<T>;
     editMode: boolean;
     issues: {[field: string]: Array<string>};
@@ -15,9 +16,9 @@ interface IProps<T> {
 }
 
 // The component is recursive!
-export class FormViewEdit<T> extends React.Component<IProps<T>> {
+export class FormViewEdit<T extends object> extends React.Component<IProps<T>> {
     render() {
-        const group: IFormGroup = this.props.formConfig;
+        const group: IFormGroup<T> = this.props.formConfig;
 
         return (
             <FormGroupWrapper group={group}>
@@ -27,7 +28,7 @@ export class FormViewEdit<T> extends React.Component<IProps<T>> {
                             return (
                                 <FormViewEdit
                                     key={i}
-                                    formConfig={item}
+                                    formConfig={item as IFormGroup<T>}
                                     item={this.props.item}
                                     editMode={this.props.editMode}
                                     issues={this.props.issues}
@@ -42,9 +43,9 @@ export class FormViewEdit<T> extends React.Component<IProps<T>> {
                                     key={i}
                                     formValues={this.props.item}
                                     formField={item}
-                                    value={this.props.item[item.field]}
+                                    value={get(this.props.item, item.field)}
                                     disabled={!this.props.editMode}
-                                    issues={this.props.issues[item.field] || []}
+                                    issues={get(this.props.issues, item.field) || []}
                                     previewOutput={false}
                                     onChange={
                                         (nextValue, fieldName?) =>
