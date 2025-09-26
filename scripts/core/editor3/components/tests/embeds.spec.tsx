@@ -22,7 +22,6 @@ describe('editor3.components.embed-block', () => {
         );
 
         const iframeContent = wrapper.find('.embed-block__wrapper iframe').html();
-
         const srcDocAttribute = decodeHtmlEntities(iframeContent.match(/srcdoc="(.+?)"/)[1]);
 
         expect(srcDocAttribute).toBe('<h1>Embed Title</h1>');
