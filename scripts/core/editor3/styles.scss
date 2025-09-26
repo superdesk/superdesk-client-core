@@ -545,7 +545,7 @@ $editor-styleButton-size: 			3rem;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
-		background-color: #fff;
+		background-color: var(--sd-editor-colour__main-bg);;
 		width: 100%;
 		border: 1px solid #dedede;
 		margin: -1px 0px;

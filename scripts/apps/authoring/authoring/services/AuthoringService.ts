@@ -297,7 +297,7 @@ export function AuthoringService(
         orig: Readonly<IArticle>,
         isDirty: boolean,
         doClose: () => void,
-    ): Promise<void> {
+    ): Promise<{cancelled: boolean}> {
         return authoringApiCommon.closeAuthoring(
             orig,
             isDirty,
@@ -308,8 +308,10 @@ export function AuthoringService(
                 resolve();
             }),
             doClose,
-        ).then(() => {
+        ).then((value) => {
             $rootScope.$applyAsync(); // update angular UI
+
+            return value;
         });
     };
 

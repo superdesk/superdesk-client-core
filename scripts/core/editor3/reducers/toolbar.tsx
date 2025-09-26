@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, ContentState, SelectionState, convertToRaw, EntityInstance} from 'draft-js';
+import {RichUtils, EditorState, ContentState, SelectionState, EntityInstance} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import * as Links from '../helpers/links';
@@ -10,7 +10,7 @@ import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITextCase} from '../actions';
 import {PopupTypes} from '../actions/popups';
-import {getCell, getData, IEditor3TableData, setData} from '../helpers/table';
+import {getCell, setCell, getData, IEditor3TableData, setData} from '../helpers/table';
 import {processCells} from './table';
 import {ILink} from '../components/links/LinkInput';
 import {CustomEditor3Entity} from '../constants';
@@ -141,49 +141,34 @@ function applyChangesToTableCell(
     const data = getData(contentState, block.getKey());
     const cellEditorState = getCell(data, i, j, currentStyle, selection);
 
-    const editorStateNext = operation(cellEditorState);
+    const result = setCell(data, i, j, operation(cellEditorState));
 
-    const dataNew: IEditor3TableData = {
-        ...data,
-        cells: [[convertToRaw(editorStateNext.getCurrentContent())]],
-    };
+    const dataNew: IEditor3TableData = result.data;
 
     const newMainState = setData(mainEditorState, block, dataNew, 'change-block-data');
 
     return onChange(state, newMainState, true);
 }
 
-const applyLinkOnTableCell = (state, {link, entity}: {link: ILink, entity: EntityInstance}) =>
-    applyChangesToTableCell(state, (editorState) =>
-        entity
+const applyLinkOnTableCell = (state, {link, entity}: {link: ILink, entity: EntityInstance}): IEditorStore => {
+    return applyChangesToTableCell(state, (editorState) => {
+        return entity != null
             ? entityUtils.replaceSelectedEntityData(editorState, {link})
-            : Links.createLink(editorState, link),
-    );
+            : Links.createLink(editorState, link);
+    });
+};
 
 /**
  * Removes the link on the entire entity under the cursor in table cell.
  */
-const removeLinkInTableCell = (state) => {
-    const {activeCell, editorState: mainEditorState} = state;
-
-    if (activeCell === null) {
+const removeLinkInTableCell = (state: IEditorStore): IEditorStore => {
+    if (state.activeCell === null) {
         return state;
     }
 
-    const {i, j, key, currentStyle, selection} = activeCell;
-    const contentState = mainEditorState.getCurrentContent();
-    const block = contentState.getBlockForKey(key);
-    const data = getData(contentState, block.getKey());
-    const cellEditorStateWithRemovedLink =
-        Links.removeLink(getCell(data, i, j, currentStyle, selection));
-
-    const newData: IEditor3TableData = {
-        ...data.data,
-        cells: [[convertToRaw(cellEditorStateWithRemovedLink.getCurrentContent())]],
-    };
-    const editorState = setData(mainEditorState, block, newData, 'change-block-data');
-
-    return onChange(state, editorState);
+    return applyChangesToTableCell(state, (editorState) => {
+        return Links.removeLink(editorState);
+    });
 };
 
 /**
@@ -270,7 +255,13 @@ const updateImage = (state, {entityKey, media}) => {
     const {editorState} = state;
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
-    const newContentState = contentState.replaceEntityData(entityKey, {media});
+
+    /**
+     * using `.asMutable().asImmutable()` to update object reference
+     * `replaceEntityData` should return a new reference itself, but it doesn't. I couldn't find why.
+     */
+    const newContentState = contentState.replaceEntityData(entityKey, {media}).asMutable().asImmutable();
+
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
     // focus the editor and softly force a refresh
     const newState = EditorState.forceSelection(newEditorState, selection);

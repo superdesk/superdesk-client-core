@@ -580,7 +580,7 @@ interface IArticleApi {
 
     sendItemToNextStage(item: IArticle): Promise<void>;
 
-    duplicateItems(items: Array<IArticle>, destination: ISendToDestination): Promise<Array<IArticle>>;
+    duplicateItems(items: Array<IArticle['_id']>, destination: ISendToDestination): Promise<Array<IArticle>>;
 
     canPublish(item: IArticle): boolean;
 

@@ -1,8 +1,11 @@
 import {startApp} from 'superdesk-core/scripts/index';
 
 setTimeout(() => {
+    // `icon-` allows superdesk icon font
+    // `.pi` allows prime react icon font
+
     const styles = `
-    *:not([class^="icon-"]) {
+    *:not([class^="icon-"], [class*="big-icon--"], [class*="filetype-icon-"], .pi) {
         font-family: Arial!important;
     }
 

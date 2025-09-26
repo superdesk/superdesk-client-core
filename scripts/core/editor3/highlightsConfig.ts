@@ -1,7 +1,8 @@
 import {gettext} from 'core/utils';
 
-const ENTITY_STYLE_MAP = {
-    backgroundColor: 'rgba(100, 235, 59, 0.2)',
+const REMOVE_SUGGESTION_STYLE_MAP = {
+    backgroundColor: 'var(--sd-editor-colour__removing-bg)',
+    color: 'var(--sd-editor-colour__removing)',
 };
 
 export function getHighlightsConfig() {
@@ -10,87 +11,72 @@ export function getHighlightsConfig() {
             type: 'COMMENT',
             description: gettext('Comment'),
             draftStyleMap: {
-                backgroundColor: 'rgba(255, 235, 59, 0.2)',
+                backgroundColor: 'var(--sd-editor-colour__comment-bg)',
             },
         },
         ANNOTATION: {
             type: 'ANNOTATION',
             description: gettext('Annotation'),
             draftStyleMap: {
-                borderBottom: '4px solid rgba(100, 205, 0, 0.6)',
+                borderBottom: '4px solid var(--sd-editor-colour__adding)',
             },
         },
         ADD_SUGGESTION: {
             type: 'CHANGE',
             description: gettext('Add'),
             draftStyleMap: {
-                color: 'rgba(101, 156, 8, 1.0)',
-                backgroundColor: 'rgba(101, 156, 8, 0.2))',
+                color: 'var(--sd-editor-colour__adding)',
+                backgroundColor: 'var(--sd-editor-colour__adding-bg)',
             },
         },
         DELETE_SUGGESTION: {
             type: 'CHANGE',
             description: gettext('Remove'),
             draftStyleMap: {
-                color: 'rgba(143, 43, 196, 1.0)',
                 textDecoration: 'line-through',
-                backgroundColor: 'rgba(143, 43, 196, 0.1)',
+                ...REMOVE_SUGGESTION_STYLE_MAP,
             },
         },
         TOGGLE_BOLD_SUGGESTION: {
             type: 'STYLE',
             style: 'BOLD',
             description: gettext('Toggle bold'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         TOGGLE_ITALIC_SUGGESTION: {
             type: 'STYLE',
             style: 'ITALIC',
             description: gettext('Toggle italic'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         TOGGLE_UNDERLINE_SUGGESTION: {
             type: 'STYLE',
             style: 'UNDERLINE',
             description: gettext('Toggle underline'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         TOGGLE_SUBSCRIPT_SUGGESTION: {
             type: 'STYLE',
             style: 'SUBSCRIPT',
             description: gettext('Toggle subscript'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         TOGGLE_SUPERSCRIPT_SUGGESTION: {
             type: 'STYLE',
             style: 'SUPERSCRIPT',
             description: gettext('Toggle superscript'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         TOGGLE_STRIKETHROUGH_SUGGESTION: {
             type: 'STYLE',
             style: 'STRIKETHROUGH',
             description: gettext('Toggle strikethrough'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         BLOCK_STYLE_SUGGESTION: {
             type: 'BLOCK',
             description: gettext('Toggle'),
-            draftStyleMap: {
-                backgroundColor: 'rgba(100, 235, 59, 0.2)',
-            },
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         SPLIT_PARAGRAPH_SUGGESTION: {
             type: 'SPLIT',
@@ -124,17 +110,19 @@ export function getHighlightsConfig() {
         ADD_LINK_SUGGESTION: {
             type: 'ENTITY',
             description: gettext('Add link'),
-            draftStyleMap: ENTITY_STYLE_MAP,
+            draftStyleMap: {
+                backgroundColor: 'var(--sd-editor-colour__adding-bg)',
+            },
         },
         REMOVE_LINK_SUGGESTION: {
             type: 'ENTITY',
             description: gettext('Remove link'),
-            draftStyleMap: ENTITY_STYLE_MAP,
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
         CHANGE_LINK_SUGGESTION: {
             type: 'ENTITY',
             description: gettext('Edit link'),
-            draftStyleMap: ENTITY_STYLE_MAP,
+            draftStyleMap: REMOVE_SUGGESTION_STYLE_MAP,
         },
     };
 }

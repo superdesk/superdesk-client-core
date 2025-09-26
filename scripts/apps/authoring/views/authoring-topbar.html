@@ -45,7 +45,7 @@
     <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons()" style="min-width: 150px;">
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
-        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || sendAndDuplicateEnabled)"
         ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
@@ -57,6 +57,7 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
+
         <button
                 ng-if="closeAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom"
@@ -66,6 +67,7 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
         </button>
+
         <button
                 ng-if="publishEnabled"
                 class="btn btn--custom btn--publish"
@@ -76,6 +78,18 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
+
+        <button
+          ng-if="sendAndDuplicateEnabled"
+          class="btn sd-overflow-ellipsis btn--custom"
+          ng-click="sendAndDuplicate()"
+          aria-label="{{ :: 'Send and duplicate' | translate }}"
+          title="{{ 'Send and duplicate' | translate }}"
+        >
+          <span class="btn__text sd-overflow-ellipsis">{{ :: 'Send & duplicate' | translate }}</span>
+          <span class="btn__text--short">{{ :: 'S & D' | translate }}</span>
+        </button>
+
         <button
                 ng-if="publishAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"

@@ -3,13 +3,10 @@ import {customEditorTags} from 'apps/workspace/content/components/get-content-pr
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEditorTags[0]['borderColor']) => {
-    // TODO: Fix the conversion so it returns UI framework color variables, that work in dark and light themes
-    if (borderColor === 'blue') {
-        return 'blue';
-    } else if (borderColor === 'orange') {
-        return 'orange';
-    } else if (borderColor === 'purple') {
-        return 'purple';
+    if (borderColor === 'tag-color-1') {
+        return 'var(--sd-editor-colour__mark-people, blue)';
+    } else if (borderColor === 'tag-color-2') {
+        return 'var(--sd-editor-colour__mark-company, purple)';
     } else {
         assertNever(borderColor);
     }
@@ -36,15 +33,15 @@ export const customStyleMap = {
     },
 
     COMMENT: {
-        backgroundColor: 'rgba(255, 235, 59, 0.2)',
+        backgroundColor: 'var(--sd-editor-colour__comment-bg)',
     },
 
     COMMENT_SELECTED: {
-        backgroundColor: 'rgba(255, 235, 59, 0.6)',
+        backgroundColor: 'var(--sd-editor-colour__comment-bg)',
     },
 
     ANNOTATION: {
-        borderBlockEnd: '4px solid rgba(100, 205, 0, 0.6)',
+        borderBlockEnd: '4px solid var(--sd-editor-colour__annotation)',
     },
 
     ANNOTATION_SELECTED: {

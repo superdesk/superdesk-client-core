@@ -19,6 +19,7 @@ import {fetchParticipants, filterParticipants} from './participants';
 import {showEditAvailabilityModal} from './show-edit-availability-modal';
 import {MaybeButton} from '../components/maybe-button';
 import {privileges} from '../constants';
+import {compareUsers} from './sort-availability-records';
 
 const {UserAvatar} = superdesk.components;
 const {assertNever} = superdesk.helpers;
@@ -66,6 +67,12 @@ export class WeekView extends React.PureComponent<IProps, IState> {
             <WithAvailabilityRecords dateFrom={dateFrom} dateTo={dateTo} filters={this.props.filters}>
                 {({byUserByDateAll, byUserByDateFiltered}) => {
                     const users = superdesk.entities.users.getAllUsers();
+                    const participants = filterParticipants({
+                        participantIds: Array.from(participantIds),
+                        days: days,
+                        filters: filters,
+                        byUserByDateFiltered,
+                    }).sort((a, b) => compareUsers(users[a], users[b]));
 
                     return (
                         <WeeklyCalendarGrid style={{padding: 'var(--space--2)'}}>
@@ -77,12 +84,7 @@ export class WeekView extends React.PureComponent<IProps, IState> {
                                 </WeeklyCalendarGridItem>
                             ))}
 
-                            {filterParticipants({
-                                participantIds: Array.from(participantIds),
-                                days: days,
-                                filters: filters,
-                                byUserByDateFiltered,
-                            })
+                            {participants
                                 .map((userId) => {
                                     const user = users[userId];
                                     const canManageAvailability = hasPrivilege(privileges.user_availability_manage);
@@ -124,7 +126,7 @@ export class WeekView extends React.PureComponent<IProps, IState> {
 
                                                     <SpacerBlock v gap="4" />
                                                     <Text size="small" color="light" noMargin>
-                                                        @{user.sign_off}
+                                                        @{user.username}
                                                     </Text>
                                                 </CalendarWeekDayItem>
                                             </WeeklyCalendarGridItem>

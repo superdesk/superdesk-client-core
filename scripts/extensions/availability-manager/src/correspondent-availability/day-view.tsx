@@ -7,7 +7,7 @@ import {TagsPreview} from '../components/tags-preview';
 import {IAvailabilityRecord, IFilters} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {fetchParticipants, filterParticipants} from './participants';
-import {compareUsersByName, sortAvailabilityRecords} from './sort-availability-records';
+import {compareUsers, sortAvailabilityRecords} from './sort-availability-records';
 import {WithAvailabilityRecords} from './with-availability-records';
 import {showEditAvailabilityModal} from './show-edit-availability-modal';
 import {privileges} from '../constants';
@@ -70,7 +70,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                     const usersWithoutRecord = difference(
                         Array.from(participantIds),
                         usersWithRecord,
-                    ).sort((a, b) => compareUsersByName(users[a], users[b]));
+                    ).sort((a, b) => compareUsers(users[a], users[b]));
 
                     const participantsIds = filterParticipants({
                         participantIds: [
@@ -145,7 +145,7 @@ export class DayView extends React.PureComponent<IProps, IState> {
                                                     </MaybeButton>
 
                                                     <span style={{color: 'var(--color-text-light)'}}>
-                                                        @{user.sign_off}
+                                                        @{user.username}
                                                     </span>
 
                                                     {

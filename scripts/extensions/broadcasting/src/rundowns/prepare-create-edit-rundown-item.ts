@@ -113,12 +113,14 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
                     if (confirmed) {
                         doClose();
                     }
+
+                    return {cancelled: false};
                 });
             } else {
                 doClose();
-            }
 
-            return Promise.resolve();
+                return Promise.resolve({cancelled: false});
+            }
         },
         getUserPreferences: () => Promise.resolve({'spellchecker:status': {enabled: true}}), // FINISH: remove test data
     };
@@ -199,6 +201,8 @@ function getRundownItemCreationAuthoringStorage(
                 if (confirmed) {
                     doClose();
                 }
+
+                return {cancelled: false};
             });
         },
         getUserPreferences: () => Promise.resolve({'spellchecker:status': {enabled: true}}), // FINISH: remove test data

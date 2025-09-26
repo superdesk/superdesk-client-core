@@ -4,6 +4,8 @@ declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
     type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
+    type GenericFormFieldType = import('../core/ui/components/generic-form/interfaces/form').GenericFormFieldType;
+    type Paths<T> = import('@sourcefabric/common/dist/src/utils/index').Paths<T>;
 
     export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> { };
 
@@ -132,7 +134,7 @@ declare module 'superdesk-api' {
             hasUnsavedChanges: boolean,
             cancelAutosave: () => Promise<void>,
             doClose: () => void,
-        ): Promise<void>;
+        ): Promise<{cancelled: boolean}>;
         getContentProfile(item: T, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2>;
         getUserPreferences(): Promise<any>;
         autosave: IAuthoringAutoSave<T>;
@@ -967,6 +969,7 @@ declare module 'superdesk-api' {
                 onCloseAfter?(item: IArticle): void;
             };
             monitoring?: {
+                listFiltersConfig?: Array<IMonitoringListFilter>;
                 getFilteringButtons?(deskId: string): Array<IMonitoringFilter>;
             };
             personalSpace?: {
@@ -979,6 +982,25 @@ declare module 'superdesk-api' {
             publishingSections?: Array<{component: React.ComponentType<{item: IArticle}>}>;
         }
     }
+
+    export type IMonitoringListOperator = 'AND' | 'OR';
+
+    export interface IMonitoringListFilterBase {
+        fieldId: string;
+        label: string;
+        getOptions: () => Array<{id: string; label: string;}>;
+    }
+
+    interface IMonitoringListSingle extends IMonitoringListFilterBase {
+        selectMultiple: false;
+    }
+
+    interface IMonitoringListMultiple extends IMonitoringListFilterBase {
+        selectMultiple: true;
+        operator: IMonitoringListOperator;
+    }
+
+    export type IMonitoringListFilter = IMonitoringListSingle | IMonitoringListMultiple;
 
     export type ISearchPanelWidgetProps<T> = {
         provider: string;
@@ -1515,7 +1537,14 @@ declare module 'superdesk-api' {
 
     export interface IMonitoringGroup {
         _id: string;
-        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        type: 'search'
+            | 'stage'
+            | 'scheduledDeskOutput'
+            | 'deskOutput'
+            | 'personal'
+            | 'sentDeskOutput'
+            | 'spike'
+            | 'spike-personal';
         max_items?: number;
         header?: string;
     }
@@ -1533,7 +1562,7 @@ declare module 'superdesk-api' {
         desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
         desk_language?: string;
-        monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
+        monitoring_default_view?: string;
         default_content_profile: string;
         default_content_template: string;
         slack_channel_name?: string;
@@ -2102,7 +2131,7 @@ declare module 'superdesk-api' {
 
         refreshOnEvents?: Array<string>;
 
-        fieldForSearch?: IFormField; // must be present in formConfig
+        fieldForSearch?: IFormField<T>; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
         disallowSorting?: true;
@@ -2121,31 +2150,15 @@ declare module 'superdesk-api' {
         contentMargin?: number;
     }
 
-    export enum FormFieldType {
-        plainText = 'plainText',
-        duration = 'duration',
-        textEditor3 = 'textEditor3',
-        number = 'number',
-        vocabularySingleValue = 'vocabularySingleValue',
-        checkbox = 'checkbox',
-        contentFilterSingleValue = 'contentFilterSingleValue',
-        deskSingleValue = 'deskSingleValue',
-        stageSingleValue = 'stageSingleValue',
-        macroSingleValue = 'macroSingleValue',
-        yesNo = 'yesNo',
-        select = 'select',
-        selectMultiple = 'selectMultiple',
-    }
-
-    export interface IFormField { // don't forget to update runtime type checks
-        type: FormFieldType;
+    export interface IFormField<T extends object> { // don't forget to update runtime type checks
+        type: GenericFormFieldType;
 
         required?: boolean;
 
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
 
-        field: string;
+        field: Paths<T>;
 
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
@@ -2157,13 +2170,13 @@ declare module 'superdesk-api' {
         openByDefault: boolean;
     }
 
-    export interface IFormGroup { // don't forget to update runtime type checks
+    export interface IFormGroup<T extends object> { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
-        form: Array<IFormField | IFormGroup>;
+        form: Array<IFormField<T> | IFormGroup<T>>;
     }
 
-    export interface IPropsGenericArrayListPage<T, P> extends IPropsGenericForm<T, P> {
+    export interface IPropsGenericArrayListPage<T extends object, P> extends IPropsGenericForm<T, P> {
         value: Array<T>;
         onChange(value: Array<T>): void;
 
@@ -2179,7 +2192,7 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
-    export interface ICrudManagerData<T> {
+    export interface ICrudManagerData<T extends object> {
         _items: Array<T>;
         _meta: {
             max_results: number;
@@ -2193,7 +2206,7 @@ declare module 'superdesk-api' {
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity> {
+    export interface ICrudManagerMethods<Entity extends object> {
         read(
             page: number,
             sort: ISortOption,
@@ -3135,6 +3148,7 @@ declare module 'superdesk-api' {
             };
             contentProfile: {
                 get(id: string): IContentProfile;
+                getAll(): Array<IContentProfile>;
             };
             vocabulary: {
                 getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
@@ -3154,6 +3168,7 @@ declare module 'superdesk-api' {
                 getActiveDeskId(): IDesk['_id'] | null;
                 waitTilReady(): Promise<void>;
                 getDeskById(id: IDesk['_id']): IDesk;
+                getStageById(id: IStage['_id']): IStage;
             };
             attachment: IAttachmentsApi;
             users: {
@@ -3217,10 +3232,14 @@ declare module 'superdesk-api' {
             getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
                 formConfig: IFormGroup,
+
+                // If field path for a sorting option is nested,
+                // an index in elastic has to be created beforehand for sorting to work
                 defaultSortOption?: ISortOption,
                 additionalProps?: P,
             ): React.ComponentType<IPropsGenericForm<T, P>>;
-            getGenericArrayListPageComponent<T, P>(): React.ComponentType<IPropsGenericArrayListPage<T, P>>;
+            getGenericArrayListPageComponent<T extends object, P>():
+                React.ComponentType<IPropsGenericArrayListPage<T, P>>;
             connectCrudManagerHttp<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
@@ -3293,11 +3312,11 @@ declare module 'superdesk-api' {
             };
         };
         forms: {
-            FormFieldType: typeof FormFieldType;
-            generateFilterForServer(type: FormFieldType, value: any): any;
+            GenericFormFieldType: typeof GenericFormFieldType;
+            generateFilterForServer(type: GenericFormFieldType, value: any): any;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
-            isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
-            isIFormField(x: IFormGroup | IFormField): x is IFormField;
+            isIFormGroup<T>(x: IFormGroup<T> | IFormField<T>): x is IFormGroup<T>;
+            isIFormField<T>(x: IFormGroup<T> | IFormField<T>): x is IFormField<T>;
             getFormFieldPreviewComponent(
                 item: {
                     readonly [key: string]: any;
@@ -3576,8 +3595,18 @@ declare module 'superdesk-api' {
             customAuthoringTopbar?: {
                 toDesk?: boolean;
                 publish?: boolean;
+
+                // Create an update of the item and close the item
                 closeAndContinue?: boolean;
+
+                // Publish the item and create an update
                 publishAndContinue?: boolean;
+
+                // Duplicate the item to specified desk and stage and continue working on the original
+                sendAndDuplicate?: {
+                    deskName: string;
+                    stageName: string;
+                };
             },
             showPublishSchedule?: boolean
             hideCreatePackage?: boolean;
@@ -3626,7 +3655,7 @@ declare module 'superdesk-api' {
                 id: string;
                 icon: string;
                 label: string;
-                borderColor: 'orange' | 'blue' | 'purple';
+                borderColor: 'tag-color-1' | 'tag-color-2';
             }>;
             timeToRead?: any;
             lineLength?: number;
@@ -3672,16 +3701,53 @@ declare module 'superdesk-api' {
             };
         };
         list: {
-            narrowView?: any;
-            singleLineView?: any;
-            singleLine?: any;
-            priority?: Array<string>;
-            firstLine?: Array<string | IListViewFieldWithOptions>,
-            secondLine?: Array<string | IListViewFieldWithOptions>,
-            relatedItems?: {
-                firstLine: Array<string | IListViewFieldWithOptions>,
-                secondLine: Array<string | IListViewFieldWithOptions>,
+            /** Fields to show in first/second lines of lists of articles in monitoring/search */
+            firstLine?: Array<string | IListViewFieldWithOptions>;
+            secondLine?: Array<string | IListViewFieldWithOptions>;
+
+            compactView?: {
+                firstLine?: Array<string | IListViewFieldWithOptions>,
+                secondLine?: Array<string | IListViewFieldWithOptions>,
             };
+
+            /**
+             * If a more compact view is desired, the instance may be configured to only show one line.
+             * `list.firstLine`, `list.secondLine` would then not be used.
+             *
+             * TO-REFACTOR: remove singleLine, singleLineView
+             * use `list.firstLine` instead and set `list.secondLine` to be empty.
+             */
+            singleLine?: Array<string | IListViewFieldWithOptions>;
+            singleLineView?: boolean;
+
+            /**
+             * Set fields to be displayed when there is limited horizontal space available.
+             * e.g when all - monitoring, item preview and authoring are visible.
+             *
+             * NOTE: will only work if `singleLineView` is enabled.
+             *
+             * TO-REFACTOR: consider removing the requirement that `singleLine` be enabled for `narrowView` to work.
+             * TO-REFACTOR: might no longer be relevant since preview now floats when all 3 are open.
+             */
+            narrowView?: Array<string | IListViewFieldWithOptions>;
+
+            /**
+             * Fields to show for related items.
+             */
+            relatedItems?: {
+                firstLine: Array<string | IListViewFieldWithOptions>;
+                secondLine: Array<string | IListViewFieldWithOptions>;
+            };
+
+            /**
+             * Used for choosing whether `priority` or `urgency` would be displayed next to item type.
+             *
+             * TO-REFACTOR: Replace with a more generic configuration option.
+             * Technically it renders an element over both lines. It's not doing anything priority specific.
+             * List config should be improved to allow any number of elements spanning both lines and also
+             * setting rendering location e.g. start/end and and order of fields.
+             */
+            priority?: Array<string>;
         };
         gridViewFields: Array<string>;
         gridViewFooterFields: {

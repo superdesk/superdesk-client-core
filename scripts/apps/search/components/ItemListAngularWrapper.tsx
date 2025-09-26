@@ -27,7 +27,7 @@ interface IProps {
 
 interface IState {
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
+    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable';
     itemsList: Array<string>;
     itemsById: {[key: string]: IArticle};
     relatedEntities: IRelatedEntities;

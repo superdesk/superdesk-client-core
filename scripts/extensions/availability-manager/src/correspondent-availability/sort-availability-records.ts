@@ -1,5 +1,6 @@
 import {sortByMultipleCriteria} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
+import {configuration} from '../configuration';
 import {IAvailabilityRecord} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {getTimeNumber} from '../utils';
@@ -27,12 +28,22 @@ export function sortAvailabilityRecords(items: Array<IAvailabilityRecord>): Arra
             }
         },
         (a, b) => {
-            return compareUsersByName(users[a.user], users[b.user]);
+            return compareUsers(users[a.user], users[b.user]);
         },
     );
 }
 
-export function compareUsersByName(a: IUser, b: IUser) {
+/**
+ * Will be used to determine the order that users are shown in.
+ * Returns a number using same rules as callback function that is passed to `Array.sort`
+ */
+export function compareUsers(a: IUser, b: IUser) {
+    if (configuration.compareUsers != null) {
+        return configuration.compareUsers(a, b);
+    }
+
+    // default implementation below:
+
     const nameA: string = a.display_name ?? a.username;
     const nameB: string = b.display_name ?? b.username;
 

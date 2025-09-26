@@ -15,6 +15,7 @@ module.exports = function buildIndex(o) {
           <body ng-class="config.bodyClass">
             <div sd-superdesk-view></div>
             <script src="config.js"></script>
+            <script src="init.bundle.js"></script>
             <script src="app.bundle.js"></script>
           </body>
         </html>

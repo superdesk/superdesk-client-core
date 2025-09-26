@@ -186,8 +186,7 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
-
+    const editorStateNext = updateDecorators(state, newEditorState, 'store-based');
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
@@ -613,7 +612,7 @@ const setExternalOptions = (
     state: IEditorStore,
     payload: IActionPayloadSetExternalOptions,
 ) => {
-    let result: IEditorStore = {
+    const result: IEditorStore = {
         ...state,
         ...payload,
     };

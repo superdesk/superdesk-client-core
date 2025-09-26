@@ -22,6 +22,8 @@ import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {MonitoringFilteringButtons} from './directives/MonitoringFilteringButtons';
 import {ArticlesList} from './directives/ArticlesListReact';
+import {MonitoringCustomFiltersDropdown} from './directives/MonitoringListFiltersDropdown';
+import {ActiveFilterTags} from './directives/ActiveFilterTags';
 
 /**
  * @ngdoc module
@@ -54,6 +56,26 @@ angular.module('superdesk.apps.monitoring', [
             ],
             [],
             'height: 100%',
+        ),
+    )
+    .component('sdMonitoringListFiltersDropdown',
+        reactToAngular1(
+            MonitoringCustomFiltersDropdown,
+            [
+                'selectedValues',
+                'onChange',
+            ],
+            [],
+        ),
+    )
+    .component('sdActiveFilterTags',
+        reactToAngular1(
+            ActiveFilterTags,
+            [
+                'activeFilters',
+                'removeFilter',
+            ],
+            [],
         ),
     )
     .component('sdMonitoringFilteringButtons',

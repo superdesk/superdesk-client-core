@@ -1,4 +1,4 @@
-import {IPage} from 'superdesk-api';
+import {IPage, IUser} from 'superdesk-api';
 
 export interface IConfiguration {
     dashboard?: {
@@ -10,7 +10,13 @@ export interface IConfiguration {
              */
             leafsOnly?: boolean;
         };
-    }
+    };
+
+    /**
+     * Will be used to determine the order that users are shown in.
+     * Returns a number using same rules as callback function that is passed to `Array.sort`
+     */
+    compareUsers?(a: IUser, b: IUser): number;
 }
 
 export const configuration: IConfiguration = {};

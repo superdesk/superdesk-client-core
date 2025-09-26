@@ -2,6 +2,9 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
+const defaultPriorityValue = '6';
+const defaultUrgencyValue = '3';
+
 test('applying "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
 
@@ -134,4 +137,33 @@ test('setting embargo', async ({page}) => {
     await expect(page.locator(
         s('authoring-widget-panel=Info'),
     )).toContainText('embargo');
+});
+
+test('edit urgency and priority', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    // create article without saving
+    await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
+
+    const priority = page.locator(s('authoring-field=priority'));
+
+    await priority.getByRole('button', {name: defaultPriorityValue}).click();
+    await priority.getByRole('button', {name: '3'}).click();
+
+    const urgency = page.locator(s('authoring-field=urgency'));
+
+    await urgency.getByRole('button', {name: defaultUrgencyValue}).click();
+    await urgency.getByRole('button', {name: '5'}).click();
+
+    await page.locator(s('save')).click();
+
+    const article = page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=new article'));
+
+    await expect(article.getByTitle('Priority: 3')).toBeVisible();
+    await expect(article.getByTitle('Urgency: 5')).toBeVisible();
 });

@@ -5,15 +5,32 @@ import {appConfig} from 'appConfig';
 import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup, IContentProfile} from 'superdesk-api';
 import {getLabelForStage} from 'apps/workspace/content/constants';
 import {getExtensionSections} from '../services/CardsService';
+import {IAggregateCtrl} from './types';
+import {FILTER_PREFIX, listFiltersConfig} from '../directives/utils';
 
-AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'savedSearch', 'content'];
-export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
-    savedSearch, content) {
-    const CONTENT_PROLFILE = gettext('Content profile');
-    var PREFERENCES_KEY = 'agg:view';
-    var defaultMaxItems = 10;
-    var self = this;
+AggregateCtrl.$inject = [
+    '$scope',
+    'desks',
+    'workspaces',
+    'preferencesService',
+    'savedSearch',
+    'storage',
+    'content',
+];
+
+export function AggregateCtrl(
+    $scope: any,
+    desks: any,
+    workspaces: any,
+    preferencesService: any,
+    savedSearch: any,
+    storage: any,
+    content: any,
+) {
+    const PREFERENCES_KEY = 'agg:view';
+    const defaultMaxItems = 10;
+    const self: IAggregateCtrl = this;
+    const isInMonitoring = $scope.type === 'monitoring';
 
     this.loading = true;
     this.selected = null;
@@ -31,18 +48,56 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
+
+    /**
+     * All available content types
+     */
     this.fileTypes = getItemTypes();
     this.monitoringSearch = false;
     this.searchQuery = null;
     this.isOutputType = desks.isOutputType;
-
     this.activeProfiles = [];
-    this.activeFilters = {
-        contentProfile: $scope.type === 'monitoring' ? storage.getItem('contentProfile') || [] : [],
-        fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
-        customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || {} : {},
+
+    /**
+     * All active filters currently set
+     */
+    const configsWithValues: Dictionary<string, Array<string>> = listFiltersConfig
+        .reduce((prev, curr) => ({
+            ...prev,
+            [curr.fieldId]: isInMonitoring === false
+                ? []
+                : JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-${curr.fieldId}`) ?? '[]'),
+        }), {});
+
+    this.activeFilters = isInMonitoring ? {
+        ...configsWithValues,
+        fileType: JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-fileType`) ?? '[]'),
+        customFilters: JSON.parse(localStorage.getItem(`${FILTER_PREFIX}-customFilters`) ?? '{}'),
+    } : {
+        ...configsWithValues,
+        fileType: [],
+        customFilters: [],
     };
-    this.activeFilterTags = {};
+
+    /**
+     * Initialize desks and stages
+     */
+    desks.initialize()
+        .then(() => initializeDesksAndStages())
+        .then(angular.bind(this, () => {
+            return savedSearch.getAllSavedSearches().then(angular.bind(this, (searchesList) => {
+                this.searches = searchesList;
+                each(this.searches, (item) => {
+                    self.searchLookup[item._id] = item;
+                });
+            }));
+        }))
+        .then(() => Promise.all([this.readSettings(), getActiveProfiles()]))
+        .then(([settings]) => {
+            initGroups(settings);
+            setupCards();
+            this.settings = settings;
+        });
 
     const extensionSection = getExtensionSections();
 
@@ -69,29 +124,10 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         });
     };
 
-    desks.initialize()
-        .then(() => initializeDesksAndStages())
-        .then(angular.bind(this, function() {
-            return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
-                this.searches = searchesList;
-                each(this.searches, (item) => {
-                    self.searchLookup[item._id] = item;
-                });
-            }));
-        }))
-        .then(() => Promise.all([this.readSettings(), getActiveProfiles()]))
-        .then(([settings, _]) => {
-            initGroups(settings);
-            setupCards();
-            this.settings = settings;
-        });
-
     /**
      * If view showed as widget set the current widget
-     *
-     *@param {object} widget
      */
-    this.setWidget = function(widget) {
+    this.setWidget = (widget) => {
         this.widget = widget;
     };
 
@@ -104,7 +140,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * no user preference found then settings read from desk's monitoring settings.
      * @returns {Object} promise - when resolved return the list of settings
      */
-    this.readSettings = function() {
+    this.readSettings = () => {
         if (self.widget) {
             // when reading from monitoring widget
             return widgetMonitoringConfig(self.widget);
@@ -231,7 +267,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             Object.values(self.stageLookup)
                 .filter((stage: IStage) => stage.desk === desk._id) as any as Array<IStage>;
 
-        let defaultGroups: Array<IMonitoringGroup> = deskStages.map((stage) => ({
+        const defaultGroups: Array<IMonitoringGroup> = deskStages.map((stage) => ({
             _id: stage._id,
             type: 'stage',
             header: stage.name,
@@ -282,18 +318,19 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * @param {boolean} isDesk
      */
     function initSpikeGroups(isDesk) {
-        var spikeDesks: any = {};
+        const spikeDesks: any = {};
 
         if (self.spikeGroups.length > 0) {
             self.spikeGroups.length = 0;
         }
 
         if (isDesk) {
-            var desk = desks.getCurrentDesk();
+            const desk = desks.getCurrentDesk();
 
             if (desk) {
                 self.spikeGroups = [{_id: desk._id, type: 'spike'}];
             }
+
             return;
         }
 
@@ -303,7 +340,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
         each(self.groups, (item, index) => {
             if (item.type === 'stage') {
-                var stage = self.stageLookup[item._id];
+                const stage = self.stageLookup[item._id];
 
                 spikeDesks[stage.desk] = self.deskLookup[stage.desk];
             } else if (item.type === 'personal') {
@@ -355,34 +392,30 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * param {string} fileType
      * @return boolean
      */
-    this.hasFileType = function(fileType) {
+    this.hasFileType = (fileType) => {
         if (fileType === 'all') {
             return this.activeFilters.fileType.length === 0;
         }
         return this.activeFilters.fileType.includes(fileType);
     };
 
-    this.getSelectedFileTypes = function(): string {
-        return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
-    };
-
-    this.getSelectedContentProfiles = function(): string {
-        return this.activeFilters.contentProfile.length === 0 ? null
-            : JSON.stringify(this.activeFilters.contentProfile);
-    };
-
     function updateFilteringCriteria() {
-        forEach(self.activeFilters, (filterValue, filterType) => {
-            var value = filterValue.length === 0 ? null : JSON.stringify(filterValue);
+        forEach(self.activeFilters, (filterValue, filterId) => {
+            const value = filterValue.length === 0
+                ? null
+                : JSON.stringify(filterValue);
 
+            // Variable is watched for changes, watcher schedules a query search
+            // with currently set filters
             each(self.groups, (item) => {
-                item[filterType] = value;
-            });
-            each(self.spikeGroups, (item) => {
-                item[filterType] = value;
+                item[filterId] = value;
             });
 
-            self.defaultPersonalGroup[filterType] = value;
+            each(self.spikeGroups, (item) => {
+                item[filterId] = value;
+            });
+
+            self.defaultPersonalGroup[filterId] = value;
         });
     }
 
@@ -401,30 +434,25 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             this.activeFilters.customFilters[filter.label] = filter;
         }
 
-        updateFilterInStore();
+        persistFiltersInLocalStorage();
         updateFilteringCriteria();
+
         $scope.$apply();
     };
 
     this.toggleContentProfileFilter = (profile: IContentProfile) => {
         if (this.isContentProfileFilterActive(profile._id)) {
-            this.activeFilterTags[CONTENT_PROLFILE] =
-                this.activeFilterTags[CONTENT_PROLFILE].filter(({key}) => key !== profile._id);
+            this.activeFilters.contentProfile = this.activeFilters.contentProfile.filter((id) => id !== profile._id);
         } else {
-            this.activeFilterTags[CONTENT_PROLFILE] = (this.activeFilterTags[CONTENT_PROLFILE] ?? []).concat({
-                key: profile._id,
-                label: profile.label,
-            });
+            this.activeFilters.contentProfile = this.activeFilters.contentProfile.concat(profile._id);
         }
 
-        this.activeFilters.contentProfile = this.activeFilterTags[CONTENT_PROLFILE].map(({key}) => key);
-
-        updateFilterInStore();
+        persistFiltersInLocalStorage();
         updateFilteringCriteria();
     };
 
-    this.isContentProfileFilterActive = (id: IContentProfile['_id']): boolean => {
-        return (this.activeFilterTags[CONTENT_PROLFILE] ?? []).find(({key}) => key === id) != null;
+    this.isContentProfileFilterActive = (profileId: IContentProfile['_id']): boolean => {
+        return this.activeFilters.contentProfile.find((id) => id === profileId) != null;
     };
 
     this.setCustomFilter = (filter: IMonitoringFilter) => {
@@ -434,38 +462,40 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
         this.activeFilters.customFilters[filter.label] = filter;
 
-        updateFilterInStore();
+        persistFiltersInLocalStorage();
         updateFilteringCriteria();
         $scope.$apply();
     };
 
-    this.setFilterType = function(filterType, filterValue, $event?) {
-        if (filterType === 'contentProfile') {
-            if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
-                this.activeFilters.contentProfile.push(filterValue._id);
-                const tag = {'key': filterValue._id, 'label': gettext(filterValue.label)};
+    this.handleFilterChange = (
+        fieldId: string,
+        values: Array<{id: string; label: string}>,
+    ) => {
+        this.activeFilters[fieldId] = values.map((x) => x.id);
 
-                if (Array.isArray(this.activeFilterTags[CONTENT_PROLFILE])) {
-                    this.activeFilterTags[CONTENT_PROLFILE].push(tag);
-                } else {
-                    this.activeFilterTags[CONTENT_PROLFILE] = [tag];
-                }
-            }
-        } else if (filterType === 'file') {
-            if (filterValue === 'all') {
-                this.activeFilters.fileType = [];
+        persistFiltersInLocalStorage();
+        updateFilteringCriteria();
+
+        $scope.$apply();
+    };
+
+    this.setFileFilter = (
+        filterValue: string,
+        $event?,
+    ) => {
+        if (filterValue === 'all') {
+            this.activeFilters.fileType = [];
+        } else {
+            const filterIndex = this.activeFilters.fileType.indexOf(filterValue);
+
+            if (filterIndex > -1) {
+                this.activeFilters.fileType.splice(filterIndex, 1);
             } else {
-                let filterIndex = this.activeFilters.fileType.indexOf(filterValue);
-
-                if (filterIndex > -1) {
-                    this.activeFilters.fileType.splice(filterIndex, 1);
-                } else {
-                    this.activeFilters.fileType.push(filterValue);
-                }
+                this.activeFilters.fileType.push(filterValue);
             }
         }
 
-        updateFilterInStore();
+        persistFiltersInLocalStorage();
         updateFilteringCriteria();
 
         if ($event?.ctrlKey) {
@@ -474,26 +504,32 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         }
     };
 
-    this.removeFilter = (filter, type?) => {
-        if (filter == null) {
-            this.activeFilters.contentProfile = [];
-            this.activeFilterTags = {};
+    this.removeFilter = (value: string | null, fieldId?: string) => {
+        if (value == null) {
+            // Loop through all keys otherwise localStorage persistence
+            // won't work below.
+            Object.keys(this.activeFilters).forEach((key) => {
+                if (key === 'customFilters') {
+                    this.activeFilters[key] = {};
+                } else {
+                    this.activeFilters[key] = [];
+                }
+            });
         } else {
-            this.activeFilters.contentProfile = this.activeFilters.contentProfile
-                .filter((profile) => profile !== filter);
-            this.activeFilterTags[type] = this.activeFilterTags[type].filter((tags) => tags.key !== filter);
+            this.activeFilters[fieldId] = this.activeFilters[fieldId].filter((option) => option !== value);
         }
 
-        updateFilterInStore();
+        persistFiltersInLocalStorage();
         updateFilteringCriteria();
+
+        $scope.$apply();
     };
 
-    // Save filters in the store
-    function updateFilterInStore() {
-        if ($scope.type === 'monitoring') {
-            storage.setItem('fileType', self.activeFilters.fileType);
-            storage.setItem('contentProfile', self.activeFilters.contentProfile);
-            storage.setItem('customFilters', self.activeFilters.customFilters);
+    function persistFiltersInLocalStorage() {
+        if (isInMonitoring) {
+            Object.keys(self.activeFilters).forEach((key) => {
+                localStorage.setItem(`${FILTER_PREFIX}-${key}`, JSON.stringify(self.activeFilters[key]));
+            });
         }
     }
 
@@ -501,7 +537,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * Add card metadata into current groups
      */
     function setupCards() {
-        var cards = self.groups;
+        const cards = self.groups;
 
         angular.forEach(cards, setupCard);
         self.cards = cards;
@@ -511,14 +547,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
          */
         function setupCard(card) {
             if (card.type === 'stage') {
-                var stage = self.stageLookup[card._id];
-                var desk = self.deskLookup[stage.desk];
+                const stage = self.stageLookup[card._id];
+                const desk = self.deskLookup[stage.desk];
 
                 card.deskId = stage.desk;
                 card.header = desk.name;
                 card.subheader = getLabelForStage(stage);
             } else if (desks.isOutputType(card.type)) {
-                var deskId = card._id.substring(0, card._id.indexOf(':'));
+                const deskId = card._id.substring(0, card._id.indexOf(':'));
 
                 card.header = self.deskLookup[deskId].name;
             } else if (card.type === 'search') {
@@ -530,18 +566,18 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         }
     }
 
-    this.preview = function(item) {
+    this.preview = (item) => {
         this.selected = item;
     };
 
     /**
      * For edit monitoring settings add desk groups to the list
      */
-    this.edit = function(currentStep, displayOnlyCurrentStep) {
+    this.edit = (currentStep, displayOnlyCurrentStep) => {
         this.editGroups = {};
 
         this.refreshGroups().then(() => {
-            var _groups = this.groups;
+            const _groups = this.groups;
 
             each(_groups, (item, index) => {
                 self.editGroups[item._id] = {
@@ -549,10 +585,11 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                     selected: true,
                     type: item.type,
                     max_items: item.max_items || defaultMaxItems,
-                    order: index,
+                    order: parseInt(index, 10),
                 };
+
                 if (item.type === 'stage') {
-                    var stage = self.stageLookup[item._id];
+                    const stage = self.stageLookup[item._id];
 
                     self.editGroups[stage.desk] = {
                         _id: stage._id,
@@ -561,7 +598,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                         order: 0,
                     };
                 } else if (desks.isOutputType(item.type)) {
-                    var deskId = item._id.substring(0, item._id.indexOf(':'));
+                    const deskId = item._id.substring(0, item._id.indexOf(':'));
 
                     self.editGroups[deskId] = {
                         _id: item._id,
@@ -579,8 +616,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         this.displayOnlyCurrentStep = displayOnlyCurrentStep;
     };
 
-    this.searchOnEnter = function($event, query) {
-        var ENTER = 13;
+    this.searchOnEnter = ($event, query) => {
+        const ENTER = 13;
 
         if ($event.keyCode === ENTER) {
             this.search(query);
@@ -591,7 +628,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     /**
      * Set the search set by user on all groups
      */
-    this.search = function(query) {
+    this.search = (query) => {
         this.searchQuery = query;
         each(this.groups, (item) => {
             item.query = query;
@@ -605,22 +642,22 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.state = storage.getItem('agg:state') || {};
     this.state.expanded = this.state.expanded || {};
 
-    this.switchExpandedState = function(key) {
+    this.switchExpandedState = (key) => {
         this.state.expanded[key] = !this.getExpandedState(key);
         storage.setItem('agg:state', this.state);
     };
 
-    this.getExpandedState = function(key) {
+    this.getExpandedState = (key) => {
         return this.state.expanded[key] === undefined ? true : this.state.expanded[key];
     };
 
-    this.setSoloGroup = function(group) {
+    this.setSoloGroup = (group) => {
         this.state.solo = group;
         storage.setItem('agg:state', this.state);
     };
 
-    this.getMaxHeightStyle = function(maxItems) {
-        var maxHeight = 32 * (maxItems || defaultMaxItems);
+    this.getMaxHeightStyle = (maxItems) => {
+        const maxHeight = 32 * (maxItems || defaultMaxItems);
 
         return {'max-height': maxHeight.toString() + 'px'};
     };
@@ -634,19 +671,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         $scope.resend = item;
     });
 
+    /**
+     * Loads inline content profiles UI used for `fileType` activeFilters,
+     * self.loading controls state of UI in monitoring
+     */
     function getActiveProfiles() {
         content.getTypes('text', false).then((profiles) => {
             self.loading = false;
             self.activeProfiles = profiles;
-
-            // initialize the activeFilterTags once the activeProfiles are available
-            if (self.activeFilters.contentProfile.length > 0) {
-                self.activeFilterTags[CONTENT_PROLFILE] = self.activeFilters.contentProfile.map((filter) => {
-                    const profile = profiles.find((p) => p._id === filter);
-
-                    return {key: profile._id, label: profile.label};
-                });
-            }
         });
     }
 }

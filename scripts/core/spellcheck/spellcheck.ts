@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
 import {getStores, unsetStore} from '../editor3/store';
 import {setAbbreviations} from 'core/editor3/actions';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, userInterfaceLanguage} from 'appConfig';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
@@ -13,7 +13,7 @@ import {ISuperdeskGlobalConfig} from 'superdesk-api';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang = getUserInterfaceLanguage(),
+        lang = userInterfaceLanguage,
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
@@ -581,7 +581,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
                 if (Object.keys(abbreviation).length !== 0) {
                     dispatchAbbreviation(abbreviation);
                 } else {
-                    spellcheck.setLanguage(getUserInterfaceLanguage());
+                    spellcheck.setLanguage(userInterfaceLanguage);
                     spellcheck.getAbbreviationsDict(true).then((abbreviations) => {
                         dispatchAbbreviation(abbreviations);
                     });

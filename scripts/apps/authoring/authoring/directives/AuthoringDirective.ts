@@ -23,6 +23,8 @@ import {InitializeMedia} from '../services/InitializeMediaService';
 import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
+import {openArticle} from 'core/get-superdesk-api-implementation';
+import {getSendAndDuplicateTarget} from '../get-send-and-duplicate-target';
 
 /**
  * @ngdoc directive
@@ -102,6 +104,9 @@ export function AuthoringDirective(
             $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
+            $scope.sendAndDuplicateEnabled = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                && getSendAndDuplicateTarget() != null;
+
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
 
@@ -411,6 +416,8 @@ export function AuthoringDirective(
             $scope.onError = (error: IPanelError) => {
                 $scope.error = {};
                 Object.assign($scope.error, error.fields);
+
+                // Triggers a component remount so errors get applied inside the editor
                 $scope.$applyAsync();
             };
 
@@ -622,7 +629,7 @@ export function AuthoringDirective(
 
             $scope.showCustomButtons = () => {
                 return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
-                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
+                    || $scope.publishAndContinueEnabled || $scope.publishEnabled || $scope.sendAndDuplicateEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
@@ -675,6 +682,29 @@ export function AuthoringDirective(
 
                 // returned promise used by superdesk-fi
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
+            };
+
+            $scope.sendAndDuplicate = () => {
+                // closing an item first to ensure there are no unsaved changes
+                // user will be prompted to save/discard changes or cancel the operation
+                $scope.close().then(({cancelled}: Awaited<ReturnType<typeof authoringApiCommon['closeAuthoring']>>) => {
+                    if (cancelled) {
+                        return;
+                    }
+
+                    const {deskId, stageId} = getSendAndDuplicateTarget();
+
+                    sdApi.article.duplicateItems(
+                        [$scope.item._id],
+                        {
+                            type: 'desk',
+                            desk: deskId,
+                            stage: stageId,
+                        },
+                    ).then(() => {
+                        openArticle($scope.item._id, 'edit');
+                    });
+                });
             };
 
             /**

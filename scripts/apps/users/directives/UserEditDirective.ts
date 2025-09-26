@@ -52,6 +52,7 @@ interface IScope {
     $parent: any;
     $on: (...args: any) => any;
     $watchCollection: (...args: any) => any;
+    currentSessionUser: IUser;
 }
 
 const notAllowedToChangeYourself = ['is_active', 'is_enabled'] satisfies Array<keyof IUser>;
@@ -88,6 +89,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             });
             scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
+            scope.currentSessionUser = session.identity;
             scope.features = features;
             scope.usernamePattern = appConfig.user?.username_pattern != null ?
                 new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;

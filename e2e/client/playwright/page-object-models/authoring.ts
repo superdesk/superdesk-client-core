@@ -65,6 +65,14 @@ export class Authoring {
         await page.locator(s('interactive-actions-panel', 'send')).click();
     }
 
+    /**
+     * editor3 field takes quite some time to initialize in authoring-react.
+     * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
+     */
+    public async waitForAuthoringReactToInitialize() {
+        await this.page.waitForTimeout(2000);
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }

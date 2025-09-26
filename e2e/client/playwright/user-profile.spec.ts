@@ -58,3 +58,57 @@ test('can edit my profile', async ({page}) => {
         }
     }
 });
+
+test('can disable a user', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/users');
+
+    const userList = page.locator(s('users-list'));
+    const user = userList.locator(s('users-list-item=Jane Doe'));
+    const userFilter = page.locator(s('user-filter'));
+
+    await userFilter.selectOption('Active');
+    await user.hover();
+    await userList.getByRole('button', {name: 'Disable user'}).click();
+    await page.locator(s('modal-confirm')).getByRole('button', {name: 'Ok'}).click();
+    await expect(user).not.toBeVisible();
+
+    await userFilter.selectOption('Disabled');
+    await expect(user).toBeVisible();
+});
+
+test('can reset password', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/profile');
+
+    await page.locator(s('my-profile')).click();
+    await page.locator(s('my-profile-dropdown')).getByRole('button', {name: 'Sign Out'}).click();
+    await page.locator(s('login-page')).getByRole('link', {name: 'Forgot password?'}).click();
+    await page.getByPlaceholder('Email').fill('admin@example.com');
+    await page.getByRole('button', {name: 'Get token'}).click();
+
+    // Navigate to MailCrab to get the reset email
+    await page.goto('http://localhost:1080');
+    await page.locator('.list li').last().click();
+
+    // Extract the password reset link from the iFrame email content
+    const resetPasswordLink = await page.frameLocator('iFrame')
+        .locator('p:has-text("Please use this link") a')
+        .getAttribute('href');
+
+    if (!resetPasswordLink) throw new Error('Reset link was not found in the iFrame');
+
+    await page.goto(resetPasswordLink);
+
+    // Reset password
+    await page.locator('form[name="resetForm"] input[name="password"]').fill('admin123.');
+    await page.locator('form[name="resetForm"] input[name="passwordConfirm"]').fill('admin123.');
+    await page.getByRole('button', {name: 'Reset password'}).click();
+
+    // Login with new password
+    await page.locator('form[name="loginForm"]').getByPlaceholder('username').fill('admin');
+    await page.locator('form[name="loginForm"]').getByPlaceholder('password').fill('admin123.');
+    await page.getByRole('button', {name: 'Log in'}).click();
+
+    await expect(page).toHaveURL('http://localhost:9000/#/workspace');
+});

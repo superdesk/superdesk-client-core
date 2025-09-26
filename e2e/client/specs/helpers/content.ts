@@ -73,14 +73,16 @@ class Content {
         };
 
         this.actionOnItem = function(action, item, useFullLinkText, confirm) {
-            var menu = this.openItemMenu(item);
+            const menu = this.openItemMenu(item);
 
             if (useFullLinkText) {
                 menu.element(by.buttonText(action)).click();
             } else {
-                menu.all(by.partialButtonText(action))
-                    .first()
-                    .click();
+                const actionButton = menu.element(by.css(`[title="${action}"]`));
+
+                ECE.elementToBeClickable(actionButton);
+
+                actionButton.click();
             }
 
             if (confirm) {

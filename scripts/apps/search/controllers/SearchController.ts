@@ -1,8 +1,8 @@
 import {intersection} from 'lodash';
 import {appConfig} from 'appConfig';
 
-SearchController.$inject = ['$location', 'searchProviderService'];
-export function SearchController($location, searchProviderService) {
+SearchController.$inject = ['$scope', '$location', 'searchProviderService'];
+export function SearchController($scope, $location, searchProviderService) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
     const DEFAULT_CONFIG = Object.assign({}, {
@@ -14,6 +14,8 @@ export function SearchController($location, searchProviderService) {
     }, appConfig.defaultSearch);
 
     this.hideNested = appConfig.features.nestedItemsInOutputStage;
+
+    $scope.compactViewEnabled = appConfig?.list?.compactView != null;
 
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);

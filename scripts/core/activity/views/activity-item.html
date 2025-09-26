@@ -1,4 +1,5 @@
 <button title="{{ :: activity.label | translate }}"
+    aria-label="{{ :: activity.label | translate }}"
     ng-if=":: !activity.dropdown"
     class="icn-btn"
     ng-click="run(activity, $event)">
