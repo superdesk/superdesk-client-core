@@ -21,7 +21,7 @@ const getVideoMetadata = (
     f: File,
     options?: ExiftoolOptions,
 ): Promise<RawMetadata> =>
-    parseMetadata(f, {
+    parseMetadata<any>(f, {
         args: [EXIFTOOL_ARGS.showGroupNames, EXIFTOOL_ARGS.JSON, EXIFTOOL_ARGS.XMP],
         transform: (d) => JSON.parse(d),
         ...options,
@@ -31,7 +31,7 @@ const getPictureMetadata = (
     f: File,
     options?: ExiftoolOptions,
 ): Promise<RawMetadata> =>
-    parseMetadata(f, {
+    parseMetadata<any>(f, {
         args: [
             EXIFTOOL_ARGS.showGroupNames,
             EXIFTOOL_ARGS.JSON,
@@ -45,7 +45,7 @@ const getPictureMetadata = (
     }).then((r) => ({...r, contentType: IContentProfileType.picture}));
 
 const processMetadata = (metadata: RawMetadata): Partial<IPTCMetadata> => {
-    const data = metadata.data[0] ?? {};
+    const data = metadata.data?.[0] ?? {};
 
     if (metadata.contentType === IContentProfileType.video)
         return stripGroupNames(mapXMPtoIPTC(data));

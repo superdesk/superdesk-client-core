@@ -1,6 +1,18 @@
 import * as metadataFns from 'apps/archive/parse-metadata';
 
 describe('process item metadata', () => {
+    // first test needs a longer timeout to set up exiftool otherwise first test always fails
+    let originalTimeout;
+
+    beforeEach(() => {
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    });
+
+    afterEach(() => {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+    });
+
     const fetchFile = (filename: string): Promise<File> =>
         new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
