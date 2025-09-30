@@ -26,7 +26,7 @@ import {
     isIFormGroupCollapsible,
     isIFormGroup,
     isIFormField,
-    FormFieldType,
+    GenericFormFieldType,
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
@@ -483,7 +483,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         forms: {
-            FormFieldType,
+            GenericFormFieldType,
             generateFilterForServer,
             isIFormGroupCollapsible,
             isIFormGroup,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {PlainText} from './input-types/plain-text';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {isIFormGroup, isIFormField, GenericFormFieldType} from './interfaces/form';
 import {VocabularySingleValue} from './input-types/vocabulary_single_value';
 import {TextEditor3} from './input-types/text-editor3';
 import {noop} from 'lodash';
@@ -18,33 +18,33 @@ import {NumberComponent} from './input-types/number';
 import {Select} from './input-types/select';
 import {DurationComponent} from './input-types/duration';
 
-export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
+export function getFormFieldComponent(type: GenericFormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
-        case FormFieldType.plainText:
+        case GenericFormFieldType.plainText:
             return PlainText;
-        case FormFieldType.textEditor3:
+        case GenericFormFieldType.textEditor3:
             return TextEditor3;
-        case FormFieldType.number:
+        case GenericFormFieldType.number:
             return NumberComponent;
-        case FormFieldType.duration:
+        case GenericFormFieldType.duration:
             return DurationComponent;
-        case FormFieldType.vocabularySingleValue:
+        case GenericFormFieldType.vocabularySingleValue:
             return VocabularySingleValue;
-        case FormFieldType.checkbox:
+        case GenericFormFieldType.checkbox:
             return CheckboxInput;
-        case FormFieldType.contentFilterSingleValue:
+        case GenericFormFieldType.contentFilterSingleValue:
             return ContentFilterSingleValue;
-        case FormFieldType.deskSingleValue:
+        case GenericFormFieldType.deskSingleValue:
             return DeskSingleValue;
-        case FormFieldType.stageSingleValue:
+        case GenericFormFieldType.stageSingleValue:
             return StageSingleValue;
-        case FormFieldType.macroSingleValue:
+        case GenericFormFieldType.macroSingleValue:
             return getMacroSingleValue();
-        case FormFieldType.yesNo:
+        case GenericFormFieldType.yesNo:
             return YesNo;
-        case FormFieldType.select:
+        case GenericFormFieldType.select:
             return Select;
-        case FormFieldType.selectMultiple:
+        case GenericFormFieldType.selectMultiple:
             return SelectMultipleValues;
         default:
             assertNever(type);
@@ -53,7 +53,7 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
 
 export function getFormFieldPreviewComponent(
     item: {readonly [key: string]: any},
-    formFieldConfig: IFormField,
+    formFieldConfig: IFormField<typeof item>,
     options: { showAsPlainText?: boolean } = {},
 ): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
@@ -72,8 +72,10 @@ export function getFormFieldPreviewComponent(
     );
 }
 
-export function getFormFieldsRecursive(form: Array<IFormField | IFormGroup>): Array<IFormField> {
-    let result: Array<IFormField> = [];
+export function getFormFieldsRecursive<T extends object>(
+    form: Array<IFormField<T> | IFormGroup<T>>,
+): Array<IFormField<T>> {
+    let result: Array<IFormField<T>> = [];
 
     form.forEach((item) => {
         if (isIFormGroup(item)) {

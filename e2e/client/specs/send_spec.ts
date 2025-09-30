@@ -27,8 +27,7 @@ describe('send', () => {
     it('can submit item to a desk', () => {
         workspace.editItem(1);
         authoring.sendTo('Sports Desk');
-        // modal for the incorrect spelling.
-        authoring.confirmSendTo();
+
         workspace.switchToDesk('SPORTS DESK');
         waitForItems(3);
         expect(getItemState(0)).toBe('SUBMITTED');
@@ -115,12 +114,6 @@ describe('send', () => {
         authoring.writeText('Text, that not saved yet');
         authoring.sendTo('Sports Desk', null, true);
 
-        // Spell check confirmation modal save action
-        authoring.confirmSendTo();
-
-        // Unsaved item confirmation modal save action
-        authoring.confirmSendTo();
-
         workspace.switchToDesk('SPORTS DESK');
         waitForItems(3);
         expect(getItemState(0)).toBe('SUBMITTED');
@@ -134,9 +127,6 @@ describe('send', () => {
         monitoring.showHideList();
 
         authoring.sendTo('Politic Desk');
-
-        // Spell check confirmation modal save action
-        authoring.confirmSendTo();
 
         expect(monitoring.getGroups().count()).toBe(6);
 

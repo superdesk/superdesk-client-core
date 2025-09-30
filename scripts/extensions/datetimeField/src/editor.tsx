@@ -97,19 +97,23 @@ export class Editor extends React.PureComponent<IProps> {
                                     required // because it's a part of the date-time
                                     value={hour}
                                     onChange={(value) => {
-                                        const [hours, minutes] = value.split(':');
+                                        if (value === null) {
+                                            superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                        } else {
+                                            const [hours, minutes] = value.split(':');
 
-                                        this.props.onChange(
-                                            dateToServerString(
-                                                set(
-                                                    date,
-                                                    {
-                                                        hours: parseInt(hours, 10),
-                                                        minutes: parseInt(minutes, 10),
-                                                    },
+                                            this.props.onChange(
+                                                dateToServerString(
+                                                    set(
+                                                        date,
+                                                        {
+                                                            hours: parseInt(hours, 10),
+                                                            minutes: parseInt(minutes, 10),
+                                                        },
+                                                    ),
                                                 ),
-                                            ),
-                                        );
+                                            );
+                                        }
                                     }}
                                 />
                             </div>
