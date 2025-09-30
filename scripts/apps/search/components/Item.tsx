@@ -331,7 +331,7 @@ export class Item extends React.Component<IProps, IState> {
 
         const getTemplate = () => {
             switch (this.props.view) {
-                case 'swimlane2':
+                case 'swimlane':
                     return (
                         <ItemSwimlane
                             item={item}
@@ -396,7 +396,7 @@ export class Item extends React.Component<IProps, IState> {
 
         const getNested = () => {
             switch (this.props.view) {
-                case 'swimlane2':
+                case 'swimlane':
                 case 'mgrid':
                 case 'photogrid':
                     return null;

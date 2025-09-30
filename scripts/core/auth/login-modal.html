@@ -40,10 +40,10 @@
             <a href="/#/secure-login/" class="text" ng-show="methods.xmpp" translate>Secure login</a>
 
             <div class="error-handler" ng-switch on="loginError">
-                <p class="error" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
-                <p class="error" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
-                <p class="error" ng-switch-when="404" translate>Sorry, user not found.</p>
-                <p class="error" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
+                <p class="error" data-test-id="login-error-401" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
+                <p class="error" data-test-id="login-error-403" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
+                <p class="error" data-test-id="login-error-404" ng-switch-when="404" translate>Sorry, user not found.</p>
+                <p class="error" data-test-id="login-error-default" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
 
                 <div class="network-error red" ng-show="serverStatus == 1">
                     <span class="icon-unplug"></span>

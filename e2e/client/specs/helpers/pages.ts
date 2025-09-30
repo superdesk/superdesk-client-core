@@ -268,5 +268,5 @@ export function logout() {
 export const searchProvider = new SearchProvider();
 export const ingestDashboard = new IngestDashboard();
 export const ingestSettings = new IngestSettings();
-export const currentUserButton = element(by.className('current-user__button'));
-export const signOutButton = element(by.buttonText('Sign out'));
+const currentUserButton = element(by.className('current-user__button'));
+const signOutButton = element(by.buttonText('Sign out'));

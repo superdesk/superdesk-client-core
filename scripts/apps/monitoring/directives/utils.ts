@@ -96,7 +96,7 @@ export function getMonitoringViewOptions(
 
     if (options.swimlaneViewEnabled) {
         availableViews.push({
-            id: 'swimlane2',
+            id: 'swimlane',
             label: gettext('Swimlane View'),
             icon: 'kanban-view',
         });
