@@ -19749,7 +19749,7 @@ msgstr "Zitat"
 
 #: ../superdesk-planning/client/utils/history.tsx:105
 msgid "re-posted"
-msgstr "Senden wiederholt"
+msgstr "Re-posted"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:67
 msgid "redo"

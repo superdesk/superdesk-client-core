@@ -141,7 +141,7 @@ msgstr "(inga matchningar)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:210
 msgid "({{ count }}) {{ action }} planning item(s)"
-msgstr "({{ count }}) {{ action }} planerad(e)"
+msgstr "({{ count }}) {{ action }} planerad(e) artikel(lar)"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:17
 msgid "* choose article version from dropdown menu"
@@ -8232,7 +8232,7 @@ msgstr "Dolda mottagare (blind karbonkopia)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:212
 msgid "Hide"
-msgstr "Dölj"
+msgstr "Göm"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:194
 msgid "Hide Date"
@@ -18515,7 +18515,7 @@ msgstr "Ej tillåtet att skapa artikel i fas med endast läsrättigheter."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:268
 msgid "You can associate only one XMP file"
-msgstr "Endast en XMP-fil kan anslutas"
+msgstr "Du kan länka bara en XMP-fil"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ""
@@ -19744,7 +19744,7 @@ msgstr "citat"
 
 #: ../superdesk-planning/client/utils/history.tsx:105
 msgid "re-posted"
-msgstr "ompublicerad"
+msgstr "återskickad"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:67
 msgid "redo"

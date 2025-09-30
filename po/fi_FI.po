@@ -1,6 +1,7 @@
 # 
 # Translators:
 # Maija Paikkala, 2024-2025
+# maiju.ylipiessa, 2025
 # Salla Salmela, 2024-2025
 msgid ""
 msgstr ""
@@ -172,7 +173,7 @@ msgstr[1] "{{number}} valittuna"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:222
 msgid "1 item was not included in the export."
-msgstr ""
+msgstr "1 item was not included in the export."
 
 #: ../superdesk-analytics/client/utils.js:205
 msgid "1 minute"
@@ -190,8 +191,8 @@ msgstr "1 sekunti"
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:446
 msgid "1 tag can not be displayed"
 msgid_plural "{{n}} tags can not be displayed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 tag can not be displayed"
+msgstr[1] "{{n}} tags can not be displayed"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 week"
@@ -532,7 +533,7 @@ msgstr ":00"
 msgid ""
 "<button class=\"sd-alert__close\" ng-click=\"showInfoLabel = false\"></button>\n"
 "                    Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached."
-msgstr ""
+msgstr "<button class=\"sd-alert__close\" ng-click=\"showInfoLabel = false\"></button>\n                    Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached."
 
 #: ../superdesk-analytics/client/planning_usage_report/views/planning-usage-report-parameters.html:1
 msgid ""
@@ -685,7 +686,7 @@ msgstr "Ilmoittautumistiedot"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:28
 msgid "Acknowledge"
-msgstr ""
+msgstr "Acknowledge"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:16
 #: scripts/apps/publish/views/publish-queue.html:117
@@ -865,7 +866,7 @@ msgstr "Lisää uusi"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid "Add New Abbreviations Dictionary"
-msgstr ""
+msgstr "Add New Abbreviations Dictionary"
 
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:93
 msgid "Add New Agenda"
@@ -913,12 +914,12 @@ msgstr "Lisää uusi säännöstö"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:31
 msgid "Add New Scheme"
-msgstr ""
+msgstr "Add New Scheme"
 
 #: scripts/apps/search-providers/directive.ts:24
 #: scripts/apps/search-providers/views/search-provider-config.html:28
 msgid "Add New Search Provider"
-msgstr ""
+msgstr "Add New Search Provider"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:58
 msgid "Add New Source"
@@ -1113,11 +1114,11 @@ msgstr "Lisää sanastoon"
 
 #: ../superdesk-planning/client/constants/planning.ts:150
 msgid "Add to featured stories"
-msgstr ""
+msgstr "Add to featured stories"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:284
 msgid "Add to highlight"
-msgstr "Lisää kohokohtiin"
+msgstr "Lisää koostenäkymään"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:153
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:175
@@ -1149,7 +1150,7 @@ msgstr "Lisätty työnkulkuu"
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr ""
+msgstr "Adding ingested items as related is not allowed due to configuration options"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
@@ -1281,19 +1282,19 @@ msgstr "Jälkeen"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.tsx:46
 msgid "Agenda"
-msgstr ""
+msgstr "Agenda"
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.tsx:67
 msgid "Agenda '{{ name }}' has planning items associated with it. Continue ?"
-msgstr ""
+msgstr "Agenda '{{ name }}' has planning items associated with it. Continue ?"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:192
 msgid "Agenda assigned to the planning item."
-msgstr ""
+msgstr "Agenda assigned to the planning item."
 
 #: ../superdesk-planning/client/components/RelatedPlannings/PlanningMetaData/RelatedPlanningListItem.tsx:104
 msgid "Agenda:"
-msgstr ""
+msgstr "Agenda:"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:201
 #: ../superdesk-planning/client/components/fields/editor/Agendas.tsx:42
@@ -1304,7 +1305,7 @@ msgstr ""
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:62
 #: ../superdesk-planning/client/utils/contentProfiles.ts:197
 msgid "Agendas"
-msgstr ""
+msgstr "Osastot"
 
 #: scripts/extensions/ai-widget/dist/src/ai-assistant.js:110
 #: scripts/extensions/ai-widget/dist/src/extension.js:20
@@ -1317,12 +1318,12 @@ msgstr "Tekoälyapuri"
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:24
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:63
 msgid "Air date"
-msgstr ""
+msgstr "Air date"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:20
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:45
 msgid "Air time"
-msgstr ""
+msgstr "Air time"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:89
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:97
@@ -1331,35 +1332,35 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:218
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:69
 msgid "Airtime"
-msgstr ""
+msgstr "Airtime"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:38
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:37
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:86
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:76
 msgid "Airtime date from"
-msgstr ""
+msgstr "Airtime date from"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:46
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:42
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:104
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:91
 msgid "Airtime date to"
-msgstr ""
+msgstr "Airtime date to"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:22
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:24
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:50
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:43
 msgid "Airtime time from"
-msgstr ""
+msgstr "Airtime time from"
 
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/applied-filters.js:30
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/filtering-inputs.js:29
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:68
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:56
 msgid "Airtime time to"
-msgstr ""
+msgstr "Airtime time to"
 
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:18
 msgid "Alert"
@@ -1376,7 +1377,7 @@ msgstr "Tasaa keskelle"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:30
 msgid "Align Justify"
-msgstr ""
+msgstr "Align Justify"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:31
 msgid "Align Left"
@@ -1399,7 +1400,7 @@ msgstr "Kaikki"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:32
 msgid "All Calendars"
-msgstr ""
+msgstr "All Calendars"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:254
 msgid "All Coverage has been cancelled"
@@ -1505,7 +1506,7 @@ msgstr "Salli useita kohteita"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:189
 msgid "Allow Remove Ingested Items"
-msgstr ""
+msgstr "Allow Remove Ingested Items"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:78
 msgid "Allow adding items that are in progress"
@@ -1937,11 +1938,11 @@ msgstr "Haluatko varmasti poistaa kohteet?"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:65
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
-msgstr ""
+msgstr "Oletko varma, että haluat peruuttaa julkaisun? \"{{headline}}\""
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:336
 msgid "Are you sure you want to unpublish item \"{{label}}\"?"
-msgstr ""
+msgstr "Oletko varma, että haluat peruuttaa julkaisun? \"{{label}}\""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:96
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:236
@@ -2628,7 +2629,7 @@ msgstr "Leipäteksti"
 #: scripts/apps/workspace/content/constants.ts:15
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
-msgstr ""
+msgstr "Leipäteksti"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:35
 #: scripts/apps/workspace/content/constants.ts:14
@@ -2772,7 +2773,7 @@ msgstr "Kustomoidut työtilat"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:51
 msgid "Calendar"
-msgstr ""
+msgstr "Kalenteri"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:52
 msgid "Calendar List"
@@ -3160,7 +3161,7 @@ msgstr "Liian suuri merkkimäärä. Sanakirjaa ei voida luoda/muuttaa."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:14
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr "Liian suuri merkkimäärä. Kohokohtaa ei voida luoda/muuttaa."
+msgstr "Liian suuri merkkimäärä. Koostetta ei voida luoda/muuttaa."
 
 #: scripts/apps/desks/views/desk-config-modal.html:290
 msgid "Character limit exceeded, stage can not be created/updated."
@@ -3245,7 +3246,7 @@ msgstr "Valitse olemassa olevista nimikkeistä tai luo uusia\n                  
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
-msgstr ""
+msgstr "Valitse kooste"
 
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:87
 msgid "Choose the language and click the translate button at the bottom"
@@ -3642,7 +3643,7 @@ msgstr "Konfiguroi ennaltamääriteltyjä arvoja"
 
 #: scripts/apps/authoring-react/authoring-react.tsx:1453
 msgid "Configure themes"
-msgstr ""
+msgstr "Configure themes"
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/TimeInputPopup.tsx:154
 #: scripts/apps/archive/index.tsx:472
@@ -3759,7 +3760,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:436
 msgid "Content Fields"
-msgstr ""
+msgstr "Sisällön kentät"
 
 #: scripts/apps/content-filters/views/manage-filters.html:107
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:2
@@ -3880,7 +3881,7 @@ msgstr "Sisältötyypit"
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:95
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:77
 msgid "Content unlinked"
-msgstr ""
+msgstr "Sisältö irrotettu"
 
 #: scripts/api/article-send.tsx:93
 #: scripts/apps/desks/views/desk-config-modal.html:421
@@ -3970,7 +3971,7 @@ msgstr "Tekijänoikeushuomautus"
 #: scripts/core/editor3/components/media/MediaBlock.tsx:265
 #: scripts/core/editor3/components/media/MediaBlock.tsx:305
 msgid "Copyright notice:"
-msgstr ""
+msgstr "Tekijänoikeushuomautus:"
 
 #: scripts/apps/search/views/multi-image-edit.html:69
 msgid "Copyright:"
@@ -3986,7 +3987,7 @@ msgstr "Korjaus"
 
 #: scripts/apps/authoring/authoring/index.ts:348
 msgid "Correct item"
-msgstr "Korjattu"
+msgstr "Korjaa"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:38
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:87
@@ -4089,13 +4090,13 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:272
 msgid "Coverage Provider"
-msgstr ""
+msgstr "Muu tekijä tai lähde"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:125
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:154
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:60
 msgid "Coverage Provider:"
-msgstr ""
+msgstr "Muu tekijä tai lähde:"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:128
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:264
@@ -4223,7 +4224,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:175
 msgid "Create Highlight"
-msgstr "Luo kohokohta"
+msgstr "Luo kooste"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:179
 msgid "Create Location"
@@ -4284,7 +4285,7 @@ msgstr "Luo yhteystieto"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:3
 msgid "Create highlight configuration"
-msgstr ""
+msgstr "Create highlight configuration"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:45
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:55
@@ -4852,7 +4853,7 @@ msgstr "Oletusryhmä"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
-msgstr ""
+msgstr "Oletusmalli"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:178
 msgid "Default language"
@@ -5427,7 +5428,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:270
 msgid "Do you want to link it to that assignment ?"
-msgstr ""
+msgstr "Haluatko liittää tähän tehtävään?"
 
 #: scripts/apps/authoring/authoring/services/quick-publish-modal.tsx:51
 msgid "Do you want to publish the article?"
@@ -5644,7 +5645,7 @@ msgstr "Kopio olemassa"
 #: scripts/apps/archive/index.tsx:168
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:226
 msgid "Duplicate To"
-msgstr "Minne kopioidaan?"
+msgstr "Ryhmään"
 
 #: scripts/apps/monitoring/index.ts:103
 msgid "Duplicate an item"
@@ -5666,7 +5667,7 @@ msgstr "Kopion luonut"
 
 #: scripts/apps/archive/index.tsx:147
 msgid "Duplicate in place"
-msgstr ""
+msgstr "Tähän ryhmään"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:29
 msgid "Duplicate to"
@@ -5674,7 +5675,7 @@ msgstr "Kopioi kohteeseen"
 
 #: scripts/apps/archive/index.tsx:196
 msgid "Duplicate to personal"
-msgstr ""
+msgstr "Omaan varastoon"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:100
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:72
@@ -6270,7 +6271,7 @@ msgstr "Virhe"
 
 #: scripts/api/highlights.ts:44 scripts/api/highlights.ts:48
 msgid "Error creating highlight."
-msgstr "Virhe luotaessa kohokohtaa."
+msgstr "Virhe luotaessa koostetta."
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:340
 #: scripts/apps/search/controllers/get-multi-actions.tsx:382
@@ -6867,7 +6868,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:174
 msgid "Export Highlight"
-msgstr ""
+msgstr "Lataa kooste"
 
 #: ../superdesk-planning/client/components/fields/editor/ExportTemplate.tsx:48
 msgid "Export Template"
@@ -6938,7 +6939,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/api/planning.ts:264
 msgid "Failed to add coverage to workflow"
-msgstr ""
+msgstr "Failed to add coverage to workflow"
 
 #: ../superdesk-planning/client/api/planning.ts:233
 msgid "Failed to add coverages to workflow"
@@ -7046,7 +7047,7 @@ msgstr "Aiheen hakeminen ei onnistunut."
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:124
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:74
 msgid "Failed to find an Assignment to link to!"
-msgstr ""
+msgstr "Järjestelmä ei löytänyt tehtävää, johon linkittää"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:407
 msgid "Failed to generate picture crops."
@@ -7104,7 +7105,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:260
 msgid "Failed to link to requested assignment!"
-msgstr ""
+msgstr "Tehtävään linkittäminen ei onnistunut"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:23
 #: scripts/extensions/sams/src/api/sets.ts:30
@@ -7118,7 +7119,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:208
 msgid "Failed to load content profile."
-msgstr ""
+msgstr "Failed to load content profile."
 
 #: ../superdesk-planning/client/actions/events/ui.ts:352
 msgid "Failed to load duplicated Event."
@@ -7612,7 +7613,7 @@ msgstr "Suodattimen testauksen tulokset"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:92
 msgid "Filter by day:"
-msgstr ""
+msgstr "Suodata päivällä:"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:99
 msgid "Filter condition saved."
@@ -8265,11 +8266,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:107
 msgid "Highlight Package"
-msgstr ""
+msgstr "Koostepaketti"
 
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
-msgstr "Korosta esikatselu"
+msgstr "Koosteen esikatselu"
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:160
 msgid "Highlight characters"
@@ -8277,7 +8278,7 @@ msgstr "Korosta merkit"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Highlight with name"
-msgstr ""
+msgstr "Koosteen nimellä"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:180
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:167
@@ -8295,11 +8296,11 @@ msgstr "Koostenäkymä"
 
 #: scripts/apps/highlights/views/settings.html:4
 msgid "Highlights configurations"
-msgstr ""
+msgstr "Highlights configurations"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Highlights/Summary List Management"
-msgstr ""
+msgstr "Highlights/Summary List Management"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.tsx:54
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.tsx:51
@@ -8499,11 +8500,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DateInputPopup.tsx:197
 #: scripts/core/ui/components/Form/DateInput/DateInputPopup.tsx:199
 msgid "In 2 days"
-msgstr ""
+msgstr "Ylihuomenna"
 
 #: scripts/apps/vocabularies/services/VocabularyService.ts:136
 msgid "In 3 days"
-msgstr ""
+msgstr "3 päivän päästä"
 
 #: ../superdesk-planning/client/constants/assignments.ts:167
 #: ../superdesk-planning/client/utils/index.ts:397
@@ -8742,7 +8743,7 @@ msgstr ""
 
 #: scripts/validate-instance-configuration.tsx:11
 msgid "Instance configuration is missing!"
-msgstr ""
+msgstr "Instance configuration is missing!"
 
 #: scripts/apps/authoring/authoring/index.ts:465
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
@@ -9759,7 +9760,7 @@ msgstr "Merkitse ryhmälle"
 
 #: scripts/apps/highlights/index.ts:46 scripts/apps/monitoring/index.ts:107
 msgid "Mark for highlight"
-msgstr "Merkitse kohokohdaksi"
+msgstr "Merkitse koostenäkymään"
 
 #: scripts/extensions/markForUser/dist/get-article-actions.js:32
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
@@ -9783,7 +9784,7 @@ msgstr "Merkitse käyttäjälle"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Mark items for Highlights/Summary Lists"
-msgstr ""
+msgstr "Merkitse koostenäkymään"
 
 #: scripts/apps/search/constants.ts:17
 #: scripts/apps/search/views/search-parameters.html:71
@@ -9821,7 +9822,7 @@ msgstr ""
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:285
 msgid "Marked for highlight {{x}} by {{user}}"
-msgstr ""
+msgstr "Merkitty koostenäkymään {{x}} {{user}}"
 
 #: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
 #: scripts/extensions/markForUser/dist/src/extension.js:19
@@ -9905,7 +9906,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:36
 msgid "Media Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #: scripts/apps/publish/views/subscribers.html:107
 msgid "Media Type"
@@ -10029,7 +10030,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:30
 #: scripts/apps/authoring/authoring/modified-info.tsx:20
 msgid "Modified"
-msgstr ""
+msgstr "Muokattu"
 
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:96
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:182
@@ -10066,7 +10067,7 @@ msgstr ""
 #: scripts/apps/monitoring/views/monitoring-view.html:37
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Monitoring"
-msgstr ""
+msgstr "Työpöytä"
 
 #: scripts/apps/desks/views/settings.html:43
 #: scripts/apps/desks/views/settings.html:47
@@ -10087,7 +10088,7 @@ msgstr "Kuukausi / kuukaudet"
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:40
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:26
 msgid "Monthly"
-msgstr ""
+msgstr "Kuukausittain"
 
 #: ../superdesk-planning/client/utils/filters.ts:34
 msgid "Monthly on the {{ day }} day @ {{ time }} to {{ desk }}"
@@ -10113,7 +10114,7 @@ msgstr "Lisää malleja"
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:82
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:181
 msgid "More templates..."
-msgstr "Lisää templateja..."
+msgstr "Lisää malleja..."
 
 #: ../superdesk-analytics/client/utils.js:166
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:130
@@ -10270,7 +10271,7 @@ msgstr "Tallennetut hakuni"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:92
 msgid "My Templates"
-msgstr "Omat templatet"
+msgstr "Omat mallit"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:17
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:10
@@ -10546,7 +10547,7 @@ msgstr "Ryhmiä ei saatavilla"
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:26
 #: scripts/apps/search/components/actions-menu/Item.tsx:167
 msgid "No available highlights"
-msgstr "Kohokohtia ei saatavilla"
+msgstr "Ei versioita koostetta varten"
 
 #: scripts/apps/archive/views/package_item_labels_dropdown_directive.html:13
 msgid "No available labels"
@@ -10639,7 +10640,7 @@ msgstr ""
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:154
 msgid "No highlights have been created yet."
-msgstr ""
+msgstr "Koosteeseen ei ole vielä valittu versioita."
 
 #: scripts/apps/users/views/change-avatar.html:15
 msgid "No image"
@@ -11128,7 +11129,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:282
 msgid "Only one XMP files are accepted"
-msgstr ""
+msgstr "Only one XMP files are accepted"
 
 #: scripts/apps/archive/controllers/UploadController.ts:246
 msgid "Only one file can be uploaded"
@@ -11185,7 +11186,7 @@ msgstr "Avaa hakupaneeli oletuksena"
 
 #: scripts/apps/workspace/index.ts:34
 msgid "Open highlights"
-msgstr "Avoimet kohokohdat"
+msgstr "Avaa koostenäkymä"
 
 #: scripts/apps/authoring/authoring/index.ts:392
 msgid "Open in new Window"
@@ -11221,7 +11222,7 @@ msgstr ""
 
 #: scripts/apps/workspace/index.ts:37
 msgid "Open personal"
-msgstr ""
+msgstr "Avaa oma varasto"
 
 #: scripts/apps/workspace/index.ts:38
 msgid "Open search"
@@ -11282,7 +11283,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/OrderBar/OrderFieldInput.tsx:21
 msgid "Order By: {{ name }}"
-msgstr ""
+msgstr "Suodata: {{ name }}"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:44
 msgid "Order Data In:"
@@ -11472,7 +11473,7 @@ msgstr "PNG kuva"
 #: scripts/apps/authoring/views/authoring-header.html:24
 #: scripts/apps/authoring/views/authoring-header.html:28
 msgid "PROFILE"
-msgstr "PROFIILI"
+msgstr "VERSIO"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:714
 msgid "PUBLISH"
@@ -11666,7 +11667,7 @@ msgstr "Henkilön yhteystiedot"
 #: scripts/apps/monitoring/views/aggregate-settings.html:55
 #: scripts/apps/templates/constants.ts:10
 msgid "Personal"
-msgstr "Henkilökohtainen"
+msgstr "Oma varasto"
 
 #: scripts/apps/dictionaries/views/settings.html:28
 msgid "Personal Dictionary"
@@ -11674,15 +11675,15 @@ msgstr ""
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:23
 msgid "Personal Items"
-msgstr ""
+msgstr "Omat"
 
 #: scripts/apps/monitoring/config.ts:54
 msgid "Personal Space"
-msgstr "Henkilökohtainen tila"
+msgstr "Oma varasto"
 
 #: ../superdesk-planning/client/components/fields/editor/DeskId.tsx:33
 msgid "Personal Workspace"
-msgstr "Oma työtila"
+msgstr "Oma varasto"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:33
 msgid ""
@@ -11692,12 +11693,12 @@ msgstr ""
 
 #: scripts/apps/users/views/edit.html:22
 msgid "Personal preferences"
-msgstr "Henkilökohtaiset mieltymykset"
+msgstr "Omat mieltymykset"
 
 #: scripts/apps/monitoring/config.ts:64
 #: scripts/core/interactive-article-actions-panel/subcomponents/destination-select.tsx:28
 msgid "Personal space"
-msgstr "Henkilökohtainen tila"
+msgstr "Oma varasto"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:143
 msgid "Phone"
@@ -11712,7 +11713,7 @@ msgstr "Valokuva"
 #: scripts/apps/search-providers/directive.ts:17
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:30
 msgid "Photo Grid View"
-msgstr ""
+msgstr "Kuvaruudukko"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:110
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:92
@@ -12329,7 +12330,7 @@ msgstr "Tuotteiden hallinta"
 
 #: scripts/apps/profiling/views/profiling.html:6
 msgid "Profile:"
-msgstr "Profiili:"
+msgstr "Versio:"
 
 #: scripts/apps/profiling/index.ts:26
 msgid "Profiling Data"
@@ -12729,7 +12730,7 @@ msgstr ""
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:151
 msgid "Recent templates"
-msgstr "Viimeksi käytetyt templatet"
+msgstr "Viimeksi käytetyt mallit"
 
 #: scripts/apps/users/views/list.html:42
 msgid "Recently added"
@@ -13123,7 +13124,7 @@ msgstr "Poistettu"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:545
 msgid "Removed assignment from coverage."
-msgstr ""
+msgstr "Poista tehtävä sisältösuunnitelmasta."
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:76
 msgid "Removed from featured stories"
@@ -13995,7 +13996,7 @@ msgstr "Ajastuksen päivämäärä"
 
 #: scripts/apps/workspace/content/constants.ts:71
 msgid "Scheduled Desk Output"
-msgstr ""
+msgstr "Ajastetut"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:131
 msgid "Scheduled Export"
@@ -14580,7 +14581,7 @@ msgstr "Lähetetty/julkaistu"
 
 #: scripts/apps/authoring/authoring/index.ts:283
 msgid "Send to Personal Space"
-msgstr "Lähetä henkilökohtaiseen tilaan"
+msgstr "Siirrä omaan varastoon"
 
 #: scripts/apps/users/components/EmailNotificationPreferences.tsx:24
 msgid "Send {{name}} notifications"
@@ -14600,7 +14601,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:24
 msgid "Sent Items"
-msgstr ""
+msgstr "Lähetetyt"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:436
 msgid "Sent To"
@@ -14681,7 +14682,7 @@ msgstr ""
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:83
 msgid "Set highlights"
-msgstr ""
+msgstr "Valitse koosteeseen"
 
 #: scripts/apps/archive/index.tsx:215
 msgid "Set label in current package"
@@ -16494,7 +16495,7 @@ msgstr ""
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:60
 msgid "There was a problem while saving highlights configuration"
-msgstr ""
+msgstr "There was a problem while saving highlights configuration"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:51
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:63
@@ -16823,7 +16824,7 @@ msgstr ""
 msgid ""
 "This will unlink the text item associated with the assignment. Are you sure "
 "?"
-msgstr ""
+msgstr "Tämä irrottaa version aiheesta. Oletko varma? "
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:111
 msgid "Thu"
@@ -16879,7 +16880,7 @@ msgstr ""
 msgid ""
 "Time offset is configured to be {{x}} minutes for this field. When an article is created\n"
 "                based on this template, it's value will initialize to creation time + {{x}} minutes"
-msgstr ""
+msgstr "Time offset is configured to be {{x}} minutes for this field. When an article is created\n                based on this template, it's value will initialize to creation time + {{x}} minutes"
 
 #: scripts/extensions/datetimeField/dist/src/template-editor.js:20
 #: scripts/extensions/datetimeField/src/template-editor.tsx:26
@@ -17175,7 +17176,7 @@ msgstr "Käännä"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:323
 msgid "Translate item to"
-msgstr ""
+msgstr "Käännä kielelle"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:196
 #: scripts/apps/authoring/versioning/history/views/history.html:41
@@ -17346,7 +17347,7 @@ msgstr ""
 #: scripts/apps/dashboard/workspace-tasks/views/assignee-view.html:8
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:50
 msgid "Unassigned"
-msgstr ""
+msgstr "Tekijää ei määritelty"
 
 #: scripts/core/views/sdselect.html:14
 msgid "Uncheck all"
@@ -17428,7 +17429,7 @@ msgstr "Poista linkitys"
 
 #: ../superdesk-planning/index.ts:107
 msgid "Unlink as Coverage"
-msgstr ""
+msgstr "Irrota aiheesta"
 
 #: scripts/apps/archive/index.tsx:306
 msgid "Unlink update"
@@ -17436,11 +17437,11 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:148
 msgid "Unlinked by"
-msgstr ""
+msgstr "Irrottanut"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:456
 msgid "Unlinked by {{user}}"
-msgstr ""
+msgstr "Irrottanut {{user}}"
 
 #: ../superdesk-analytics/client/utils.js:171
 #: ../superdesk-planning/client/components/LockContainer/LockContainerPopup.tsx:42
@@ -17489,7 +17490,7 @@ msgstr ""
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:302
 msgid "Unmarked from highlight({{x}}) by {{user}}"
-msgstr ""
+msgstr "Poistettu koostenäkymästä ({{x}}) {{user}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:201
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:27
@@ -17567,7 +17568,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:8
 msgid "Unspike event"
-msgstr ""
+msgstr "Palauta tapahtuma"
 
 #: ../superdesk-planning/client/constants/planning.ts:141
 msgid "Unspike planning"
@@ -17575,7 +17576,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:6
 msgid "Unspike planning item"
-msgstr ""
+msgstr "Palauta aihe"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:78
 msgid "Unspike {{event}}"
@@ -17857,7 +17858,7 @@ msgstr ""
 #: scripts/apps/search/tests/search.spec.ts:365
 #: scripts/apps/workspace/content/constants.ts:49
 msgid "Urgency"
-msgstr ""
+msgstr "Prio"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
@@ -18247,7 +18248,7 @@ msgstr "Sanasto poistettiin."
 
 #: scripts/validate-instance-configuration.tsx:25
 msgid "Vocabulary with ID \"categories\" is required."
-msgstr ""
+msgstr "Vocabulary with ID \"categories\" is required."
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:56
 msgid "W"
@@ -18492,7 +18493,7 @@ msgstr "Eilinen"
 msgid ""
 "You are changing you personal preferences. If you would like to set the "
 "default order for the desk, you can do so from the settings page."
-msgstr "Olet muuttamassa henkilökohtaisia mieltymyksiäsi. Jos haluat asettaa oletusjärjestyksen ryhmällesi, voit tehdä sen asetukset-sivulla."
+msgstr "Olet muuttamassa omia mieltymyksiäsi. Jos haluat asettaa oletusjärjestyksen ryhmällesi, voit tehdä sen asetukset-sivulla."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
@@ -18512,7 +18513,7 @@ msgstr "Et voi luoda versiota vain lukutilaan."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:268
 msgid "You can associate only one XMP file"
-msgstr ""
+msgstr "You can associate only one XMP file"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ""
@@ -18760,11 +18761,11 @@ msgstr "joukkomuokkaus"
 #: scripts/apps/authoring/versioning/versions/views/versions.html:7
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "by"
-msgstr ""
+msgstr " "
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:208
 msgid "by {{user}}"
-msgstr ""
+msgstr "{{user}}"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:223
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:284
@@ -19031,7 +19032,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:139
 msgid "ends"
-msgstr ""
+msgstr "päättyy"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "error"
@@ -19133,7 +19134,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:94
 msgid "for highlight"
-msgstr ""
+msgstr "koosteeseen"
 
 #: ../superdesk-planning/client/utils/events.ts:1186
 msgid "for {{ repeatCount }} repeats"
@@ -19159,11 +19160,11 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:122
 msgid "from highlight"
-msgstr ""
+msgstr "koosteesta"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:361
 msgid "from highlight: {{x}}"
-msgstr ""
+msgstr "koosteesta: {{x}}"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:237
 msgid "from {{from}} to {{to}}"
@@ -19226,7 +19227,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "highlights"
-msgstr ""
+msgstr "kooste"
 
 #: scripts/core/utils.tsx:306
 msgid "highlights package"
@@ -19766,7 +19767,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:108
 msgid "removed highlight"
-msgstr "poistettu kohokohta"
+msgstr "poistettu kooste"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "removed item {{type}} about {{subject}}"

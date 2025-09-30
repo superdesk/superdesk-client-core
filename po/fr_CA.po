@@ -146,7 +146,7 @@ msgstr "(aucun résultat)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:210
 msgid "({{ count }}) {{ action }} planning item(s)"
-msgstr "({{ count }}) {{ action }} couverture(s)"
+msgstr "({{ count }}) {{ action }} élément(s) de planification"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:17
 msgid "* choose article version from dropdown menu"
@@ -2766,7 +2766,7 @@ msgstr "DATE DE COUVERTURE PRÉVUE requise"
 
 #: ../superdesk-planning/client/validators/planning.ts:104
 msgid "COVERAGE SCHEDULED TIME is required"
-msgstr "HEURE DE COUVERTURE PRÉVUE requise"
+msgstr "COUVERTURE TEMPS PRÉVUE est nécessaire"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:32
 msgid "CREATE NEW WORKSPACE"
@@ -4322,7 +4322,7 @@ msgstr "Créer un nouvel espace de travail"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddButton/index.tsx:70
 msgid "Create new coverage"
-msgstr "Créer une couverture"
+msgstr "Créer une nouvelle couverture"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:110
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:114
@@ -7212,7 +7212,7 @@ msgstr "Échec du retrait de la couverture du registre des articles à la une."
 
 #: ../superdesk-planning/client/actions/events/api.ts:632
 msgid "Failed to remove the file from event."
-msgstr "Le fichier n'a pas pu être retiré de l'événement."
+msgstr "Échec de la suppression du fichier de l'événement."
 
 #: ../superdesk-planning/client/actions/planning/api.ts:615
 msgid "Failed to remove the file from planning."
@@ -7275,7 +7275,7 @@ msgstr "L'affectation n'a pas pu être enregistrée."
 
 #: ../superdesk-planning/client/actions/events/api.ts:703
 msgid "Failed to save the event template"
-msgstr "Le gabarit d'événement n'a pas pu être enregistré"
+msgstr "Échec de l'enregistrement du gabarit d'événement"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:267
 msgid "Failed to save the profile!"
@@ -7872,7 +7872,7 @@ msgstr "De:"
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.tsx:173
 #: ../superdesk-planning/index.ts:80
 msgid "Fulfil Assignment"
-msgstr "Compléter l'affectation"
+msgstr "Remplir la mission"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:333
 msgid "Fulfil Assignment with this item?"
@@ -8243,7 +8243,7 @@ msgstr "Destinataires cachés (copie carbone invisible)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:212
 msgid "Hide"
-msgstr "Cacher"
+msgstr "Masquer"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:194
 msgid "Hide Date"
@@ -9749,7 +9749,7 @@ msgstr "Signaler"
 
 #: ../superdesk-planning/client/utils/planning.ts:477
 msgid "Mark Event as Postponed"
-msgstr "Signaler l'événement comme reporté"
+msgstr "Marquer l'événement comme reporté"
 
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:38
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:112
@@ -13140,7 +13140,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:545
 msgid "Removed assignment from coverage."
-msgstr "Affectation retirée de la couverture."
+msgstr "Assignation retirée de la couverture."
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:76
 msgid "Removed from featured stories"
@@ -14429,7 +14429,7 @@ msgstr "Sélectionnez uniquement les catégories par défaut "
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:269
 msgid "Select desk"
-msgstr "Sélectionnez le pupitre"
+msgstr "Sélectionnez le bureau"
 
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:54
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:226
@@ -15243,7 +15243,7 @@ msgstr "Souhaitez-vous placer dans la corbeille tous les événements récurrent
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:7
 msgid "Spike event"
-msgstr "Placer l'événement dans la corbeille"
+msgstr "Retenir l'événement"
 
 #: scripts/apps/monitoring/index.ts:105
 msgid "Spike item(s)"
@@ -17587,7 +17587,7 @@ msgstr "Sortir de la corbeille tous les événements récurrents ou seulement ce
 
 #: ../superdesk-planning/client/components/Tooltips.tsx:8
 msgid "Unspike event"
-msgstr "Sortir l'événement de la corbeille"
+msgstr "Libérer l'événement"
 
 #: ../superdesk-planning/client/constants/planning.ts:141
 msgid "Unspike planning"
@@ -19764,7 +19764,7 @@ msgstr "citation"
 
 #: ../superdesk-planning/client/utils/history.tsx:105
 msgid "re-posted"
-msgstr "republié"
+msgstr "re-posté"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:67
 msgid "redo"
