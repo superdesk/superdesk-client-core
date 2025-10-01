@@ -7,7 +7,7 @@ import {DateInputPopup} from './DateInputPopup';
 import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
 import './style.scss';
-import { DateInputProps } from 'superdesk-api';
+import {DateInputProps} from 'superdesk-api';
 
 /**
  * @ngdoc react
@@ -78,9 +78,11 @@ export class DateInput extends React.Component<DateInputProps, any> {
         const valMoment = moment(val, this.props.dateFormat);
 
         if (val.match(regex) && valMoment.isValid()) {
+            const formatted = valMoment.format(this.props.dateFormat);
+
             this.setState({
                 invalid: false,
-                viewValue: valMoment,
+                viewValue: formatted,
                 previousValidValue: valMoment,
             });
             this.onChange(valMoment);
@@ -101,7 +103,9 @@ export class DateInput extends React.Component<DateInputProps, any> {
     handleInputBlur() {
         if (this.state.invalid) {
             this.setState({
-                viewValue: this.state.previousValidValue.format(this.props.dateFormat),
+                viewValue: this.state.previousValidValue
+                    ? this.state.previousValidValue.format(this.props.dateFormat)
+                    : '',
                 invalid: false,
             });
         }
