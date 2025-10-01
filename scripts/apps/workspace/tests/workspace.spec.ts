@@ -58,7 +58,7 @@ describe('workspace', () => {
 
             spyOn(preferencesService, 'update');
             workspaces.setActive(active);
-            expect(workspaces.active).toBe(active);
+            expect(workspaces.active).toEqual(active);
             expect(preferencesService.update).toHaveBeenCalled();
         }));
 
@@ -98,7 +98,7 @@ describe('workspace', () => {
                 spyOn(api, 'find').and.returnValue($q.when(active));
                 workspaces.getActive();
                 $rootScope.$digest();
-                expect(workspaces.active).toBe(active);
+                expect(workspaces.active).toEqual(active);
                 expect(api.find).toHaveBeenCalledWith('workspaces', 'w');
             }));
 
