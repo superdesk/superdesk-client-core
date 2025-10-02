@@ -374,8 +374,14 @@ class GlobalSearch {
          * @param {string} type
          */
         this.toggleByType = function(type) {
-            browser.actions().mouseMove(element(by.className('filetype-icon-' + type))).perform();
-            element(by.id('filetype-icon-' + type)).click();
+            const icon = element(by.className('filetype-icon-' + type));
+            const checkbox = element(by.id('filetype-icon-' + type));
+
+            browser.wait(ECE.presenceOf(icon), 1000);
+            browser.actions().mouseMove(icon).perform();
+
+            browser.wait(ECE.elementToBeClickable(checkbox), 1000);
+            checkbox.click();
         };
 
         /**
