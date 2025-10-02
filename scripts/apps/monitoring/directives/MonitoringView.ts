@@ -227,7 +227,7 @@ export function MonitoringView(
             scope.numberOfColumns = 1;
 
             scope.switchView = function(value: string, options?: {programmatic?: boolean}) {
-                const isSwimlane = value === 'swimlane2';
+                const isSwimlane = value === 'swimlane';
 
                 const programmatic = options?.programmatic === true;
 

@@ -25,9 +25,9 @@
             <b class="dropdown__caret"></b>
         </button>
         <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
-            <span class="{{icon}}-{{selected.qcode}}"
-                ng-style="{backgroundColor: selected.color}">{{ selected.short || selected.name || 0 }}</span>
-            {{ getLocaleName(selected, item) }} <b class="dropdown__caret"></b>
+            <span class="{{icon}}-{{item[field]}}"
+                ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
+            {{ getLocaleName(values[item[field]], item) }} <b class="dropdown__caret"></b>
         </button>
         <ul class="dropdown__menu">
             <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
