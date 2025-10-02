@@ -46,6 +46,12 @@ const filterPeriodsObject: {[key in IFilterPeriod]: {label: string}} = {
 export const filterPeriods = Object.entries(filterPeriodsObject).map(([id, {label}]) => ({id, label}));
 
 export enum privileges {
-    user_availability = 'user_availability', // allows viewing availability for all users
-    user_availability_manage = 'user_availability_manage', // allows overwriting availability for others
+    // allows viewing availability for all users
+    user_availability = 'user_availability',
+
+    // allows overwriting availability of other users
+    user_availability_manage = 'user_availability_manage',
+
+    // setting own availability is allowed
+    user_availability_manage_own = 'user_availability_manage_own',
 }

@@ -18,7 +18,12 @@
         <div class="content-list-holder">
             <div sd-shadow>
                 <div class="content-list" ng-if="!agg.state.solo">
-                    <div class="desk" ng-repeat="group in agg.cards track by group._id">
+                    <div
+                        class="desk"
+                        ng-repeat="group in agg.cards track by group._id"
+                        data-test-id="group"
+                        data-test-value="{{agg.getGroupLabel(group)}}"
+                    >
                         <div class="stage" ng-show="total">
                             <div sd-stage-header></div>
                             <div class="stage-content" ng-style="agg.getMaxHeightStyle(group.max_items)"

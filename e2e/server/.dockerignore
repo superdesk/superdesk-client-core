@@ -1,3 +1,4 @@
 env
+.env
 dump
 __pycache__
