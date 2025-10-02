@@ -90,7 +90,16 @@ export function WorkspaceService(api, desks, session, preferences, $q, modal) {
      * @return {object}
      */
     function updateActive(workspace) {
-        self.active = workspace || null;
+        if (workspace == null) {
+            self.active = null;
+        } else {
+            /**
+             * Spreading in order to force change the reference.
+             * Otherwise angular's watchers won't pick up the change.
+             */
+            self.active = {...workspace};
+        }
+
         return workspace;
     }
 
