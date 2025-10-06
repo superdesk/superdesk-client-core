@@ -11,12 +11,7 @@
 
 """Superdesk Manager"""
 
-import superdesk
-from flask_script import Manager
-from app import get_app
+from quart.cli import main
 
-app = get_app()
-manager = Manager(app)
-
-if __name__ == '__main__':
-    manager.run(superdesk.COMMANDS)
+if __name__ == "__main__":
+    main()

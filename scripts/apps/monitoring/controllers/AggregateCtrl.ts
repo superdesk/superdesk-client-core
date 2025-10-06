@@ -49,6 +49,10 @@ export function AggregateCtrl(
     this.deskLookup = {};
     this.stageLookup = {};
 
+    this.getGroupLabel = (group) => {
+        return `${group.header ?? group.name} / ${group.subheader ?? group.type}`;
+    };
+
     /**
      * All available content types
      */

@@ -45,7 +45,6 @@ services:
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
             - CELERY_ALWAYS_EAGER=true
-            - MAIL_SERVER=mail
             - MAIL_PORT=1025
         volumes:
           - ./dump:/opt/superdesk/dump:rw
