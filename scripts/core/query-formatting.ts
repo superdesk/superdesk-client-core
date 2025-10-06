@@ -92,7 +92,7 @@ function toPyEveFilter(q: ILogicalOperator | IComparison) {
                 case '$stringContains':
                     return {[field]: {
                         $regex: value.val,
-                        $options: '-i',
+                        $options: 'i',
                     }};
             }
 
