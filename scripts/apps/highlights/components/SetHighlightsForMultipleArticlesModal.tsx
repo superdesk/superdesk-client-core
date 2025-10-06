@@ -82,58 +82,56 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
             }
 
             return (
-                <div data-test-id="multiple-highlights-select">
-
-                    <Modal
-                        visible
-                        size="small"
-                        position="top"
-                        onHide={this.props.closeModal}
-                        headerTemplate={gettext('Set highlights')}
-                        footerTemplate={
-                            (
-                                <ButtonGroup align="end">
-                                    <Button
-                                        type="default"
-                                        text={gettext('Cancel')}
-                                        onClick={this.props.closeModal}
-                                    />
-                                    <Button
-                                        type="primary"
-                                        text={gettext('Confirm')}
-                                        disabled={this.state.selectedHighlights.length < 1}
-                                        onClick={this.markHighlights}
-                                        data-test-id="confirm"
-                                    />
-                                </ButtonGroup>
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    onHide={this.props.closeModal}
+                    headerTemplate={gettext('Set highlights')}
+                    footerTemplate={
+                        (
+                            <ButtonGroup align="end">
+                                <Button
+                                    type="default"
+                                    text={gettext('Cancel')}
+                                    onClick={this.props.closeModal}
+                                />
+                                <Button
+                                    type="primary"
+                                    text={gettext('Confirm')}
+                                    disabled={this.state.selectedHighlights.length < 1}
+                                    onClick={this.markHighlights}
+                                    data-test-id="confirm"
+                                />
+                            </ButtonGroup>
+                        )
+                    }
+                    data-test-id="multiple-highlights-select"
+                >
+                    {
+                        this.state.highlightsForDesk.length < 1
+                            ? <div>{gettext('No available highlights')}</div>
+                            : (
+                                <select
+                                    multiple
+                                    value={this.state.selectedHighlights}
+                                    onChange={this.handleChange}
+                                    data-test-id="input-select-multiple"
+                                >
+                                    {
+                                        this.state.highlightsForDesk.map((highlight, i) => (
+                                            <option
+                                                key={i}
+                                                value={highlight._id}
+                                            >
+                                                {getHighlightsLabel(highlight)}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
                             )
-                        }
-                    >
-                        {
-                            this.state.highlightsForDesk.length < 1
-                                ? <div>{gettext('No available highlights')}</div>
-                                : (
-                                    <select
-                                        multiple
-                                        value={this.state.selectedHighlights}
-                                        onChange={this.handleChange}
-                                        data-test-id="input-select-multiple"
-                                    >
-                                        {
-                                            this.state.highlightsForDesk.map((highlight, i) => (
-                                                <option
-                                                    key={i}
-                                                    value={highlight._id}
-                                                >
-                                                    {getHighlightsLabel(highlight)}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                )
-                        }
-                    </Modal>
-                </div>
+                    }
+                </Modal>
             );
         }
     }
