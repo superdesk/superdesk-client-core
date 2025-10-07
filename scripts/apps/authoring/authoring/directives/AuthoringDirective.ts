@@ -61,7 +61,6 @@ AuthoringDirective.$inject = [
     'embedService',
     '$injector',
     'autosave',
-    'storage',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -89,7 +88,6 @@ export function AuthoringDirective(
     embedService,
     $injector,
     autosave,
-    storage,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -104,18 +102,12 @@ export function AuthoringDirective(
             $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
-            $scope.sendAndDuplicateEnabled = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
-                && getSendAndDuplicateTarget() != null;
 
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
+            $scope.sendAndDuplicateEnabled = false; // setting initial value, true value will be set asynchronously
 
             $scope.requestEditor3DirectivesToGenerateHtml = [];
-
-            desks.fetchCurrentUserDesks().then((desksList) => {
-                userDesks = desksList;
-                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
-            });
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -157,10 +149,6 @@ export function AuthoringDirective(
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
-
-            content.getTypes().then((result) => {
-                $scope.content_types = result;
-            });
 
             /**
              * Get the Desk and Stage for the item.
@@ -220,9 +208,31 @@ export function AuthoringDirective(
                 }
             }
 
-            desks.initialize().then(() => {
+            let getLabelForFieldId = (id) => id; // placeholder value; will be replaced after true value is loaded.
+
+            // finalize to put all init code here
+            Promise.all([
+                content.getTypes(),
+                desks.fetchCurrentUserDesks(),
+                getLabelNameResolver(),
+                desks.initialize(),
+            ]).then(([contentTypes, currentUserDesks, _getLabelForFieldId]) => {
+                $scope.content_types = contentTypes;
+
+                // initialize desks
                 getDeskStage();
                 getCurrentTemplate();
+
+                // setup current user desks
+                userDesks = currentUserDesks;
+                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
+
+                // (depends on desks being initialized)
+                $scope.sendAndDuplicateEnabled = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                    && getSendAndDuplicateTarget() != null;
+
+                getLabelForFieldId = _getLabelForFieldId;
+
                 $scope.$watch('item', () => {
                     $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
                         && !sdApi.navigation.isPersonalSpace()
@@ -437,12 +447,6 @@ export function AuthoringDirective(
                 $scope._editable = false;
                 $scope.dirty = false;
             }
-
-            let getLabelForFieldId = (id) => id;
-
-            getLabelNameResolver().then((_getLabelForFieldId) => {
-                getLabelForFieldId = _getLabelForFieldId;
-            });
 
             function validateForPublish(item) {
                 var validator = appConfig.validator_media_metadata;
