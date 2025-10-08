@@ -70,10 +70,10 @@
             </div>
             <form name="changePasswordForm" ng-submit="changeUserPassword()">
                 <fieldset class="inputs">
-                    <input type="password" sd-password-strength name="password" ng-model="password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
+                    <input type="password" sd-password-strength name="password" ng-model="form.password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
                 </fieldset>
                 <fieldset class="inputs">
-                    <input type="password" name="passwordConfirm" ng-model="passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
+                    <input type="password" name="passwordConfirm" ng-model="form.passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
                     <i ng-show="changePasswordForm.passwordConfirm.$error.required" class="required-asteriks">*</i>
                     <div ng-show="changePasswordForm.passwordConfirm.$error.confirm" sd-valid-info>
                         <span translate>passwords must be same</span>

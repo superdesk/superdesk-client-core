@@ -36,7 +36,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     keycloak.keycloakAuth();
                 }
 
-                scope.form = {username: '', password: ''};
+                scope.form = {username: '', password: '', passwordConfirm: ''};
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
@@ -51,14 +51,14 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
 
                             if (rejection.data._issues.password_is_expired) {
                                 scope.changePassword = true;
-                                scope.oldPassword = scope.password;
-                                scope.password = null;
-                                scope.passwordConfirm = null;
+                                scope.oldPassword = scope.form.password;
+                                scope.form.password = null;
+                                scope.form.passwordConfirm = null;
                             }
 
                             scope.loginError = rejection.status;
                             if (scope.loginError === 401) {
-                                scope.password = null;
+                                scope.form.password = null;
                             }
                         });
                 };
@@ -70,13 +70,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                         .then(() => {
                             scope.isLoading = false;
                             scope.changePassword = false;
-                            scope.password = null;
+                            scope.form.password = null;
                             scope.loginError = null;
                             notify.success(gettext('The password has been changed.'), 3000);
                         }, (response) => {
                             scope.isLoading = false;
                             scope.changePassword = null;
-                            scope.passwordConfirm = null;
+                            scope.form.passwordConfirm = null;
                             notify.success(gettext('Failed to change the password.'), 3000);
                         });
                 };
