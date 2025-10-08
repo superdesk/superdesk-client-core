@@ -89,7 +89,7 @@ Playwright VSCode extension seems not to respect viewport size that is set in `e
 
 #### Current desk
 
-There is an issue with Superdesk that does not reproduce locally where upon opening monitoring view, a workspace is selected instead of a default "Sports" desk. If that happens, use the following helper in your test to ensure a correct desk is selected.
+There is an issue with Superdesk that does not reproduce locally where upon opening monitoring view, a workspace is selected instead of a default "Sports" desk. If that happens, use the `selectDeskOrWorkspace` helper in your test to ensure a correct desk is selected.
 
 ### Utilities
 
