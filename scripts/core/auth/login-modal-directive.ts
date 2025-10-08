@@ -36,27 +36,29 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     keycloak.keycloakAuth();
                 }
 
+                scope.form = {username: '', password: '', passwordConfirm: ''};
+
                 scope.authenticate = function() {
                     scope.isLoading = true;
                     scope.loginError = null;
-                    auth.login(scope.username || '', scope.password || '')
+                    auth.login(scope.form.username || '', scope.form.password || '')
                         .then(() => {
                             scope.isLoading = false;
-                            scope.password = null;
+                            scope.form.password = null;
                             reloadRoute();
                         }, (rejection) => {
                             scope.isLoading = false;
 
                             if (rejection.data._issues.password_is_expired) {
                                 scope.changePassword = true;
-                                scope.oldPassword = scope.password;
-                                scope.password = null;
-                                scope.passwordConfirm = null;
+                                scope.oldPassword = scope.form.password;
+                                scope.form.password = null;
+                                scope.form.passwordConfirm = null;
                             }
 
                             scope.loginError = rejection.status;
                             if (scope.loginError === 401) {
-                                scope.password = null;
+                                scope.form.password = null;
                             }
                         });
                 };
@@ -64,17 +66,17 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 scope.changeUserPassword = function() {
                     scope.isLoading = true;
 
-                    usersService.changePassword(scope.username, scope.oldPassword, scope.password)
+                    usersService.changePassword(scope.form.username, scope.oldPassword, scope.form.password)
                         .then(() => {
                             scope.isLoading = false;
                             scope.changePassword = false;
-                            scope.password = null;
+                            scope.form.password = null;
                             scope.loginError = null;
                             notify.success(gettext('The password has been changed.'), 3000);
                         }, (response) => {
                             scope.isLoading = false;
                             scope.changePassword = null;
-                            scope.passwordConfirm = null;
+                            scope.form.passwordConfirm = null;
                             notify.success(gettext('Failed to change the password.'), 3000);
                         });
                 };
@@ -120,13 +122,13 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     scope.isLoading = false;
                     scope.identity = session.identity;
                     scope.sessionId = session.sessionId;
-                    scope.username = session.identity ? session.identity.UserName : null;
-                    scope.password = null;
+                    scope.form.username = session.identity ? session.identity.UserName : null;
+                    scope.form.password = null;
                     // when OIDC is enabled, user will always be redirected to Keycloak server to log in
                     // showing login screen before redirect may cause flashing
                     if (!triggerLogin[0] && triggerLogin[1] === true && !appConfig.oidc_auth) {
                         scope.active = true;
-                        var focusElem = scope.username ? 'password' : 'username';
+                        var focusElem = scope.form.username ? 'password' : 'username';
 
                         element.find('#login-' + focusElem).focus();
                     } else {
