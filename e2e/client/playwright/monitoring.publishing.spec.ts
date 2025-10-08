@@ -27,7 +27,7 @@ test('publishing an article from a different desk', async ({page}) => {
     await new TreeSelectDriver(
         page,
         page.locator(s('destination-select')),
-    ).setValue(['Education']);
+    ).setValues(['Education']);
 
     await page.locator(s('interactive-actions-panel')).getByRole('button', {name: 'Publish from'}).click();
 
