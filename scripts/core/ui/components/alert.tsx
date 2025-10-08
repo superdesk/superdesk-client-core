@@ -5,23 +5,23 @@ import {Button} from 'superdesk-ui-framework/react';
 
 function getTypeClassName(alertType: IAlertComponentProps['type']) {
     switch (alertType) {
-    case 'info':
-        return 'sd-alert--primary';
-    case 'error':
-        return 'sd-alert--alert';
-    case 'warning':
-        return 'sd-alert--warning';
-    default:
-        assertNever(alertType);
+        case 'info':
+            return 'sd-alert--primary';
+        case 'error':
+            return 'sd-alert--alert';
+        case 'warning':
+            return 'sd-alert--warning';
+        default:
+            assertNever(alertType);
     }
 }
 
 function getSizeClassName(alertType: IAlertComponentProps['size']) {
     switch (alertType) {
-    case 'small':
-        return 'sd-alert--small';
-    default:
-        assertNever(alertType);
+        case 'small':
+            return 'sd-alert--small';
+        default:
+            assertNever(alertType);
     }
 }
 

@@ -30,19 +30,9 @@ import {store} from 'core/data';
 import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
 import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance-configuration';
 import {registerLegacyExtensionCompatibilityLayer} from 'register-legacy-extension-compatibility-layer';
+import {dataStore} from 'data-store';
 
 let body = angular.element('body');
-
-function loadConfigs() {
-    return fetch(appConfig.server.url + '/client_config', {
-        method: 'GET',
-        mode: 'cors',
-    })
-        .then((res) => res.ok ? res.json() : Promise.reject())
-        .then((json) => {
-            merge(appConfig, json.config);
-        });
-}
 
 let started = false;
 
@@ -136,6 +126,7 @@ export function startApp(
                     // preload vocabularies
                     vocabularies.getAllActiveVocabularies(),
                     preferencesService.getPrivileges(),
+                    dataStore.initialize(),
                 ]).then(() => {
                     registerExtensions(
                         extensions,
@@ -156,55 +147,55 @@ export function startApp(
                         }
 
                         registerLegacyExtensionCompatibilityLayer();
+
+                        if (
+                            ng.get('session').sessionId != null // user logged in
+                            && ng.get('session').identity.user_type === 'administrator'
+                        ) {
+                            maybeDisplayInvalidInstanceConfigurationMessage();
+                        }
                     });
                 });
             },
         ]);
 
-    loadConfigs()
-        .then(() => {
-            if (isDateFormatValid() !== true) {
-                document.write('Invalid date format specified in config.view.dateFormat');
-                return;
+    if (isDateFormatValid() !== true) {
+        document.write('Invalid date format specified in config.view.dateFormat');
+        return;
+    }
+
+    /**
+     * @ngdoc module
+     * @name superdesk-client
+     * @packageName superdesk-client
+     * @description The root superdesk module.
+     */
+    angular.bootstrap(body, [
+        'superdesk.config',
+        'superdesk.core',
+        'superdesk.apps',
+        'superdesk.register_extensions',
+    ].concat(appConfig.apps || []), {strictDi: true});
+
+    window['superdeskIsReady'] = true;
+
+    body.attr('data-theme', 'dark-ui');
+
+    ng.waitForServicesToBeAvailable().then(() => {
+        if (sdApi.user.isLoggedIn()) {
+            if (appConfig.features.useTansaProofing) {
+                setupTansa();
             }
 
-            /**
-             * @ngdoc module
-             * @name superdesk-client
-             * @packageName superdesk-client
-             * @description The root superdesk module.
-             */
-            angular.bootstrap(body, [
-                'superdesk.config',
-                'superdesk.core',
-                'superdesk.apps',
-                'superdesk.register_extensions',
-            ].concat(appConfig.apps || []), {strictDi: true});
-
-            setTimeout(() => { // required to avoid protractor timing out and failing tests
-                if (ng.get('session').sessionId != null) { // user logged in
-                    maybeDisplayInvalidInstanceConfigurationMessage();
-                }
-            });
-
-            window['superdeskIsReady'] = true;
-
-            body.attr('data-theme', 'dark-ui');
-
-            if (sdApi.user.isLoggedIn()) {
-                if (appConfig.features.useTansaProofing) {
-                    setupTansa();
-                }
-
-                httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'})
-                    .then(({_items}) => {
-                        store.dispatch({
-                            type: 'LOAD_SUBJECT_CODES',
-                            payload: keyBy(_items, ({qcode}) => qcode),
-                        });
+            httpRequestJsonLocal<IRestApiResponse<ISubjectCode>>({method: 'GET', path: '/subjectcodes'})
+                .then(({_items}) => {
+                    store.dispatch({
+                        type: 'LOAD_SUBJECT_CODES',
+                        payload: keyBy(_items, ({qcode}) => qcode),
                     });
+                });
 
-                registerGlobalKeybindings();
-            }
-        });
+            registerGlobalKeybindings();
+        }
+    });
 }

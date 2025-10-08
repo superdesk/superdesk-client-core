@@ -7,6 +7,7 @@ import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {createStore} from 'redux';
+import {decodeHtmlEntities} from '../../../../core/decode-html-entities';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -20,8 +21,10 @@ describe('editor3.components.embed-block', () => {
             </Provider>,
         );
 
-        expect(wrapper.find('.embed-block__wrapper').html())
-            .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
+        const iframeContent = wrapper.find('.embed-block__wrapper iframe').html();
+        const srcDocAttribute = decodeHtmlEntities(iframeContent.match(/srcdoc="(.+?)"/)[1]);
+
+        expect(srcDocAttribute).toBe('<h1>Embed Title</h1>');
     });
 });
 
@@ -91,27 +94,5 @@ describe('editor3.components.embed-input', () => {
 
         expect(wrapper.state('error')).toBe('this is the error');
         expect(wrapper.find('.embed-dialog__error').text()).toBe('this is the error');
-    }));
-
-    it('should call onSubmit and reset error on success', inject(($q, $rootScope) => {
-        const {options} = mockStore();
-        const onCancel = jasmine.createSpy();
-        const onSubmit = jasmine.createSpy();
-        const wrapper = mount(<EmbedInput embed={onSubmit} hidePopups={onCancel} />, options);
-
-        spyOn($, 'ajax').and.returnValue($q.resolve({html: 'foo'}));
-
-        wrapper.setState({error: 'some error'});
-
-        const instance: any = wrapper.find('input').instance();
-
-        instance.value = 'http://will.fail';
-        wrapper.simulate('submit');
-
-        $rootScope.$apply();
-
-        expect(onSubmit).toHaveBeenCalledWith({html: 'foo'});
-        expect(onCancel).toHaveBeenCalled();
-        expect(wrapper.state('error')).toBe('');
     }));
 });

@@ -475,13 +475,13 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     */
     $scope.rotateImage = (direction) => {
         switch (direction) {
-        case 'left':
-            $scope.controls.rotate = $scope.controls.rotate - 90;
-            break;
+            case 'left':
+                $scope.controls.rotate = $scope.controls.rotate - 90;
+                break;
 
-        case 'right':
-            $scope.controls.rotate = $scope.controls.rotate + 90;
-            break;
+            case 'right':
+                $scope.controls.rotate = $scope.controls.rotate + 90;
+                break;
         }
 
         return $scope.controls.isDirty = true;
@@ -495,13 +495,13 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     */
     $scope.flipImage = (direction) => {
         switch (direction) {
-        case 'horizontal':
-            $scope.controls.fliph = $scope.controls.fliph + 180;
-            break;
+            case 'horizontal':
+                $scope.controls.fliph = $scope.controls.fliph + 180;
+                break;
 
-        case 'vertical':
-            $scope.controls.flipv = $scope.controls.flipv + 180;
-            break;
+            case 'vertical':
+                $scope.controls.flipv = $scope.controls.flipv + 180;
+                break;
         }
 
         return $scope.controls.isDirty = true;
@@ -558,23 +558,23 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
         let sizeW, sizeH;
 
         switch (ratio) {
-        case '16:9':
-            sizeW = originalImage.width - (originalImage.height * 16 / 9);
-            sizeH = originalImage.height - (originalImage.width * 9 / 16);
-            break;
+            case '16:9':
+                sizeW = originalImage.width - (originalImage.height * 16 / 9);
+                sizeH = originalImage.height - (originalImage.width * 9 / 16);
+                break;
 
-        case '4:3':
-            sizeW = originalImage.width - (originalImage.height * 4 / 3);
-            sizeH = originalImage.height - (originalImage.width * 3 / 4);
-            break;
+            case '4:3':
+                sizeW = originalImage.width - (originalImage.height * 4 / 3);
+                sizeH = originalImage.height - (originalImage.width * 3 / 4);
+                break;
 
-        case '3:2':
-            sizeW = originalImage.width - (originalImage.height * 3 / 2);
-            sizeH = originalImage.height - (originalImage.width * 2 / 3);
-            break;
+            case '3:2':
+                sizeW = originalImage.width - (originalImage.height * 3 / 2);
+                sizeH = originalImage.height - (originalImage.width * 2 / 3);
+                break;
 
-        default:
-            sizeW = 0; sizeH = 0;
+            default:
+                sizeW = 0; sizeH = 0;
         }
 
         $scope.areaOfInterestData.CropTop = sizeH > 0 ? Math.round(sizeH / 2) : 0;

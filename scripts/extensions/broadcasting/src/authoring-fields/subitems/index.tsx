@@ -31,7 +31,7 @@ export function getSubItemsField(): ISubItemsFieldType {
         editorComponent: Editor,
         previewComponent: Preview,
 
-        private: true,
+        generic: false,
         hasValue: (valueOperational) => valueOperational != null && Object.keys(valueOperational).length > 0,
         getEmptyValue: () => [],
 

@@ -35,7 +35,6 @@ export function getUnpublishConfirmModal(
             return (
                 <Modal
                     visible
-                    zIndex={1050}
                     position="top"
                     size="small"
                     onHide={this.props.closeModal}

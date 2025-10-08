@@ -5,10 +5,7 @@ import {
     IEditor3Config,
 } from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
-import {
-    initializeSpellchecker,
-    getInitialSpellcheckerData,
-} from 'core/editor3/store';
+import {getInitialSpellcheckerData} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
 import {Editor3} from 'core/editor3/components';
@@ -33,15 +30,16 @@ import {
     CharacterLimitUiBehavior,
     CharacterCountConfigModal,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {EditorState} from 'draft-js';
 import {Select, Option} from 'superdesk-ui-framework/react';
 import {appendText} from 'core/editor3/helpers/draftInsertEntity';
-import {SpacerBlock} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {canAddArticleEmbed} from 'core/editor3/components/article-embed/can-add-article-embed';
 import {TextStatistics} from '../../../authoring/authoring/components/text-statistics';
+import {isSpacerTreeEmpty} from '@sourcefabric/common';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -57,8 +55,6 @@ interface IState {
     ready: boolean;
 
     autocompleteSuggestions: Array<string>;
-
-    spellcheckerEnabled: boolean;
 }
 
 export class Editor extends React.PureComponent<IProps, IState> {
@@ -71,7 +67,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
         this.state = {
             ready: false,
             autocompleteSuggestions: [],
-            spellcheckerEnabled: false,
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
@@ -95,14 +90,14 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
     syncPropsWithReduxStore() {
         const store = this.props.value.store;
-        const spellcheck = this.state.spellcheckerEnabled ? ng.get('spellcheck') : null;
 
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
             singleLine: this.props.config.singleLine ?? false,
             readOnly: this.props.readOnly || this.props.config.readOnly,
-            spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
+            spellchecking: getInitialSpellcheckerData(ng.get('spellcheck'), this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
+            softLimitConfig: this.props.config.maxSoftLength,
             item: {
                 language: this.props.language, // required for annotations to work
             },
@@ -124,12 +119,15 @@ export class Editor extends React.PureComponent<IProps, IState> {
         getAutocompleteSuggestions(this.props.editorId, this.props.language).then((autocompleteSuggestions) => {
             this.setState({ready: true, autocompleteSuggestions});
 
-            /**
-             * If `spellchecker__set_status` is dispatched on `componentDidMount` in AuthoringReact,
-             * the event is fired before this component mounts and starts listening to the event.
-             * Because of this, requesting status explicitly is needed.
-             */
-            dispatchEditorEvent('spellchecker__request_status', null);
+            // setting initial spellchecker status (and marking spelling issues)
+            dispatchEditorEvent('spellchecker__request_status', (status) => {
+                this.props.value.store.dispatch(
+                    setSpellcheckerStatus(
+                        status,
+                        this.unmountAbortController.signal,
+                    ),
+                );
+            });
 
             /**
              * Avoid triggering `onChange` when nothing has actually changed.
@@ -325,8 +323,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const showStatistics = config.showStatistics ?? true;
 
         const miniToolbar = (
-            <div>
-                <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+            <Spacer v gap="0" noWrap>
+                <Spacer h gap="8" noWrap>
                     {
                         showStatistics && (
                             <TextStatistics
@@ -369,7 +367,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             </div>
                         )
                     }
-                </div>
+                </Spacer>
 
                 {
                     invalidCharsDetected.length > 0 && (
@@ -392,7 +390,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         </div>
                     )
                 }
-            </div>
+            </Spacer>
         );
 
         const options = this.props.config.vocabularyId != null
@@ -402,7 +400,13 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const HelperComponent = this.props.config.helperComponent;
 
         return (
-            <Container miniToolbar={miniToolbar} sectionClassNames={{header: 'sd-input-style'}}>
+            <Container
+                /**
+                 * if spacer is empty, pass undefined
+                 * to allow consumers apply conditional logic based on presence of mini toolbar
+                 */
+                miniToolbar={isSpacerTreeEmpty(miniToolbar) ? undefined : miniToolbar}
+            >
                 {
                     HelperComponent != null && (
                         <HelperComponent
@@ -414,6 +418,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         />
                     )
                 }
+
                 <Provider store={store}>
                     <ReactContextForEditor3.Provider value={store}>
                         {
@@ -445,14 +450,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                 </>
                             )
                         }
-                        <Editor3
-                            uiTheme={this.props.uiTheme}
-                            scrollContainer=".sd-editor-content__main-container"
-                            singleLine={config.singleLine ?? false}
-                            cleanPastedHtml={config.cleanPastedHtml ?? false}
-                            autocompleteSuggestions={this.state.autocompleteSuggestions}
-                            canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
-                        />
+
+                        <div className={this.props.config.compact ?? false ? 'sd-input-style' : undefined}>
+                            <Editor3
+                                expandable={this.props.config.expandable}
+                                uiTheme={this.props.uiTheme}
+                                scrollContainer=".sd-editor-content__main-container"
+                                singleLine={config.singleLine ?? false}
+                                cleanPastedHtml={config.cleanPastedHtml ?? false}
+                                autocompleteSuggestions={this.state.autocompleteSuggestions}
+                                canAddArticleEmbed={(srcId: string) => canAddArticleEmbed(srcId, this.props.item._id)}
+                            />
+                        </div>
                     </ReactContextForEditor3.Provider>
                 </Provider>
             </Container>

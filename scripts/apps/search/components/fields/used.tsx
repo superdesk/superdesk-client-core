@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {longFormat} from 'core/datetime/datetime';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 export class Used extends React.PureComponent<IPropsItemListInfo> {
     label: boolean = false;
@@ -9,7 +9,7 @@ export class Used extends React.PureComponent<IPropsItemListInfo> {
         const item = this.props.item;
 
         if (item.used) {
-            const title = item.used_updated ? longFormat(item.used_updated) : null;
+            const title = item.used_updated ? formatDate(item.used_updated, {longFormat: true}) : null;
 
             return (
                 <div className="label label--red2" key="used" title={title}>

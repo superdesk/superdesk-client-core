@@ -97,7 +97,6 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                 visible
                 onHide={() => this.props.closeModal()}
                 size="small"
-                zIndex={1050}
                 headerTemplate={gettext('Translate')}
             >
                 <Spacer v gap="16">

@@ -1,34 +1,18 @@
-import * as helper from 'apps/workspace/helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('media metadata editor', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {
-                url: '',
-                ws: undefined,
-            },
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
-    beforeEach(window.module(($provide) => {
-        $provide.service('metadata', ($q) => ({
-            initialize: () => $q.when({}),
-            cvs: [],
-        }));
-    }));
-
     beforeEach(window.module('superdesk.config'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.authoring.media'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
-    beforeEach(inject(($q, metadata) => {
-        spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
+    beforeEach(inject(($q, metadata, vocabularies, api) => {
         spyOn(metadata, 'initialize').and.returnValue($q.when({}));
+        spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
     }));
 
-    it('displays all fields', inject(($rootScope, $controller) => {
+    it('displays all fields', inject(($controller, $rootScope) => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
             editor: {
                 picture: {
@@ -65,7 +49,7 @@ describe('media metadata editor', () => {
 
         const ctrl = $controller('MediaFieldsController');
 
-        $rootScope.$digest();
+        $rootScope.$apply();
 
         expect(ctrl.fields).not.toBeUndefined();
         expect(ctrl.fields.length).toBe(4);
@@ -112,7 +96,7 @@ describe('media metadata editor', () => {
 
         const ctrl = $controller('MediaFieldsController');
 
-        $rootScope.$digest();
+        $rootScope.$apply();
 
         expect(ctrl.fields.length).toBe(2);
         expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline']);

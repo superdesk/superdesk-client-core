@@ -41,6 +41,7 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
 
 const customField: ICustomFieldType<string, string, string, never> = {
     id: 'test-custom-authoring-field',
+    generic: true,
     label: 'Test Field',
     editorComponent: TestEditorComponent,
     previewComponent: () => null,
@@ -49,6 +50,7 @@ const customField: ICustomFieldType<string, string, string, never> = {
 };
 
 describe('custom authoring field', () => {
+    beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(inject(($injector) => {
         ng.register($injector);
 

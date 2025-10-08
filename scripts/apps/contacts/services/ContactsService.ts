@@ -4,7 +4,8 @@ import {FILTER_FIELDS, getUrlParameters} from '../constants';
 import {gettext} from 'core/utils';
 
 import {replaceUrls} from '../helpers';
-import {IContact, IContactsService} from '../Contacts';
+import {IContactsService} from '../Contacts';
+import {IContact} from 'superdesk-api';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -139,14 +140,14 @@ export class ContactsService implements IContactsService {
       */
     queryField(field, text) {
         switch (field) {
-        case 'organisation':
-            return this.metadata.initialize()
-                .then(() => this.api.get(`contacts/organisations?q=${text}`))
-                .then((data) => {
-                    get(data, '_items', []).forEach(this.convertForClient);
+            case 'organisation':
+                return this.metadata.initialize()
+                    .then(() => this.api.get(`contacts/organisations?q=${text}`))
+                    .then((data) => {
+                        get(data, '_items', []).forEach(this.convertForClient);
 
-                    return data;
-                });
+                        return data;
+                    });
         }
     }
 

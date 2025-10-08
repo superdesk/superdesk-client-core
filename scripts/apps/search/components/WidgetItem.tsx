@@ -23,7 +23,7 @@ interface IProps {
  * @description This component is a row in monitoring widget item list.
  */
 export class WidgetItem extends React.Component<IProps, any> {
-    item: any;
+    item: IArticle;
 
     constructor(props) {
         super(props);
@@ -70,6 +70,7 @@ export class WidgetItem extends React.Component<IProps, any> {
                 <div className="content-item__type">
                     <TypeIcon
                         type={this.item.type}
+                        contentProfileId={this.item.profile}
                         highlight={this.item.highlight}
                     />
                 </div>

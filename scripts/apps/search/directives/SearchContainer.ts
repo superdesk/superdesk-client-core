@@ -25,12 +25,12 @@ export function SearchContainer() {
                         }
                         if (activeProvider.config?.default_list_view) {
                             switch (activeProvider.config.default_list_view) {
-                            case 'list':
-                                $scope.view = 'compact';
-                                break;
-                            case 'grid':
-                                $scope.view = 'photogrid';
-                                break;
+                                case 'list':
+                                    $scope.view = 'compact';
+                                    break;
+                                case 'grid':
+                                    $scope.view = 'photogrid';
+                                    break;
                             }
                         }
                     }

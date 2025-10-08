@@ -1,9 +1,11 @@
-import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {getSpellchecker, getSpellcheckerConfig} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
 import {getStores, unsetStore} from '../editor3/store';
 import {setAbbreviations} from 'core/editor3/actions';
-import {getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, userInterfaceLanguage} from 'appConfig';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 /**
  * Spellcheck module
@@ -11,7 +13,7 @@ import {getUserInterfaceLanguage} from 'appConfig';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang = getUserInterfaceLanguage(),
+        lang = userInterfaceLanguage,
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
@@ -459,18 +461,33 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         }
     });
 
-    /**
-     * Get the spell checker status
-     */
-    this.getSpellcheckerStatus = function getSpellcheckerStatus() {
-        var status = true;
+    this.getInitialSpellcheckerStatus = function getInitialSpellcheckerStatus(language: string): Promise<boolean> {
+        if (appConfig.features?.useTansaProofing === true) {
+            return Promise.resolve(false);
+        }
 
-        return preferencesService.get(PREFERENCES_KEY).then((result) => {
-            if (angular.isDefined(result)) {
-                status = result.enabled;
-            }
-            return status;
-        }, (error) => status);
+        const spellcheckerConfig = getSpellcheckerConfig()[language];
+
+        const getStatusFromPreferences = (): Promise<boolean> => {
+            return preferencesService.get(PREFERENCES_KEY)
+                .then((result) => result?.enabled ?? true)
+                .catch(() => true);
+        };
+
+        const runningMode: ISuperdeskGlobalConfig['spellchecking']['defaultRunningMode'] =
+            spellcheckerConfig?.runningMode
+            ?? appConfig.spellchecking?.defaultRunningMode
+            ?? null;
+
+        if (runningMode == null) {
+            return getStatusFromPreferences();
+        } else if (runningMode === 'remember-user-preference') {
+            return getStatusFromPreferences();
+        } else if (runningMode === 'initially-disabled') {
+            return Promise.resolve(false);
+        } else {
+            return assertNever(runningMode);
+        }
     };
 
     /**
@@ -490,7 +507,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         preferencesService.update(updates, PREFERENCES_KEY);
     };
 
-    this.getSpellcheckerStatus().then((status) => {
+    this.getInitialSpellcheckerStatus(lang).then((status) => {
         self.isAutoSpellchecker = status;
     });
 }
@@ -544,7 +561,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
      * check if tansa is activated
      */
     function useTansaProofing() {
-        return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
+        return appConfig.features?.useTansaProofing === true;
     }
 
     function dispatchAbbreviation(abbreviation) {
@@ -564,7 +581,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
                 if (Object.keys(abbreviation).length !== 0) {
                     dispatchAbbreviation(abbreviation);
                 } else {
-                    spellcheck.setLanguage(getUserInterfaceLanguage());
+                    spellcheck.setLanguage(userInterfaceLanguage);
                     spellcheck.getAbbreviationsDict(true).then((abbreviations) => {
                         dispatchAbbreviation(abbreviations);
                     });
@@ -573,6 +590,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         }
     });
 
+    // ANGULAR-ONLY
     function setupSpellchecker() {
         spellcheck.getDictionary($scope.item.language).then((dict) => {
             spellcheck.isActiveDictionary = !!dict.length;
@@ -581,7 +599,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
                 self.isAuto = false;
                 render();
             } else {
-                spellcheck.getSpellcheckerStatus().then((status) => {
+                spellcheck.getInitialSpellcheckerStatus($scope.item.language).then((status) => {
                     self.isAuto = status && !useTansaProofing()
                         && (spellcheck.isActiveDictionary || getSpellchecker($scope.item.language) != null);
                     if (self.isAuto) {
@@ -595,8 +613,10 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
     }
 
     // There may be multiple instances of editors so we are trying to wait for all
+    // ANGULAR-ONLY
     const initializeSpellchecker = debounce(once(setupSpellchecker), 500);
 
+    // ANGULAR-ONLY
     window.addEventListener('editorInitialized', initializeSpellchecker);
 
     $scope.$on('$destroy', () => {

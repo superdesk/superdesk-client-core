@@ -9,6 +9,8 @@ interface IPropsItemsListTemplate extends IPropsItemListInfo {
     selectingDisabled: boolean;
     getActionsMenu: () => any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
+    loading?: boolean;
+    view?: 'compact' | 'compact-configurable';
 }
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
@@ -29,6 +31,7 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                         : null
                 }
                 <ListItemInfo
+                    loading={this.props.loading}
                     item={item}
                     relatedEntities={this.props.relatedEntities}
                     openAuthoringView={this.props.openAuthoringView}
@@ -45,6 +48,7 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                     toggleNested={this.props.toggleNested}
                     singleLine={this.props.singleLine}
                     customRender={this.props.customRender}
+                    view={this.props.view}
                 />
                 {this.props.getActionsMenu()}
             </div>

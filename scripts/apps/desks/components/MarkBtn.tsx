@@ -27,7 +27,12 @@ export class MarkForDeskButton extends React.Component<IProps> {
         const isMarked = item.marked_desks?.find((_desk) => _desk?.desk_id === desk._id) != null;
 
         return (
-            <button disabled={isMarked} onClick={this.markForDesk} data-test-id="mark-for-desk--desk">
+            <button
+                data-test-id="mark-for-desk--desk"
+                aria-label={desk.name}
+                disabled={isMarked}
+                onClick={this.markForDesk}
+            >
                 <i className="icon-bell" />{desk.name}
             </button>
         );

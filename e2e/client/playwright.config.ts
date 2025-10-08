@@ -13,7 +13,7 @@ import path from 'path';
 export default defineConfig({
     testDir: './playwright',
     /* Run tests in files in parallel */
-    fullyParallel: true,
+    fullyParallel: false,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
@@ -30,9 +30,17 @@ export default defineConfig({
         viewport: {width: 1280, height: 800},
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry',
+        trace: 'retain-on-failure',
 
         screenshot: 'only-on-failure',
+    },
+
+    expect: {
+        toHaveScreenshot: {
+            maxDiffPixels: 4,
+        },
+
+        timeout: 10000,
     },
 
     /* Configure projects for major browsers */
@@ -42,6 +50,12 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: path.join(__dirname, './playwright/.auth/user.json'),
+
+                launchOptions: {
+                    args: [
+                        '--disable-font-subpixel-positioning',
+                    ],
+                },
             },
         },
 

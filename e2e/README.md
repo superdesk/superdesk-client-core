@@ -3,7 +3,7 @@
 ### Starting server and client
 
 * open a terminal in `./server`
-* run `docker-compose up`
+* run `docker compose up`
 * open a terminal in `./client`
 * run `npm install` if needed
 * run `npx grunt server`
@@ -83,8 +83,6 @@ await page.locator(s('authoring', 'comments-widget', 'submit')).click();
 * Do use multiple selectors for tests to be more stable - `[data-test-id="comments-widget"] [data-test-id="submit"]` instead of `[data-test-id="submit"]`
 * `data-test-id` attributes are not meant to be globally unique. They only have to be unique in their "scope". For example, if we have a comments widget marked with `[data-test-id="comments-widget"]` attribute - test IDs inside comments widget must be locally unique, but we can use test IDs that were already used in other parts of the application.
 
-### Known issues
-
 #### Viewport
 
 Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
@@ -93,4 +91,16 @@ Playwright VSCode extension seems not to respect viewport size that is set in `e
 
 There is an issue with Superdesk that does not reproduce locally where upon openiing monitoring view, a workspace is selected instead of a default "Sports" desk. If that happens, use the following helper in your test to ensure a correct desk is selected.
 
+### Utilities
+
+#### Quickly replacing generated locators to use our `s` or `cs` helpers
+
+Find regex: `locator\('\[data-test-id="(.+)?"\]'`
+Replace regex: `locator(cs('$1')`
+
+Will replace `locator('[data-test-id="abc"]')` with `locator(cs('abc'))`
+
+### Known issues
+
 `await monitoring.selectDeskOrWorkspace('Sports');`
+* Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.

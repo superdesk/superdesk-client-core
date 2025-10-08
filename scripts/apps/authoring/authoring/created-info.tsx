@@ -5,7 +5,7 @@ import {TimeElem} from 'apps/search/components/TimeElem';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
-    article: IArticle;
+    entity: IArticle;
 }
 
 interface IState {
@@ -27,7 +27,7 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
     componentDidMount() {
         this._mounted = true;
 
-        dataApi.findOne<IUser>('users', this.props.article.original_creator).then((user) => {
+        dataApi.findOne<IUser>('users', this.props.entity.original_creator).then((user) => {
             if (this._mounted) {
                 this.setState({user});
             }
@@ -37,7 +37,7 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
         this._mounted = false;
     }
     render() {
-        const {article} = this.props;
+        const {entity} = this.props;
         const {user} = this.state;
 
         if (user == null) {
@@ -48,7 +48,7 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
             <dl>
                 <dt>{gettext('Created')}</dt>
                 {' '}
-                <dd><TimeElem date={article.firstcreated} /></dd>
+                <dd><TimeElem date={entity.firstcreated} /></dd>
                 {' '}
                 <dt>{gettext('by')}</dt>
                 {' '}

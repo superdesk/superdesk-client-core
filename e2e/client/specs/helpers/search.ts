@@ -83,15 +83,23 @@ class GlobalSearch {
          * @return {promise}
          */
         this.setListView = function() {
-            var list = element(by.css('i.icon-list-view'));
+            const toggleButton = element(by.css('[data-test-id="view-select"]'));
 
-            return list.isDisplayed()
-                .then((isVisible) => {
-                    if (isVisible) {
-                        list.click();
-                        browser.sleep(1000);
-                    }
+            return toggleButton.getAttribute('class').then((className) => {
+                const isListViewActive = className.includes('icon-list-view');
+
+                if (isListViewActive) {
+                    return;
+                }
+
+                return toggleButton.click().then(() => {
+                    const listViewOption = element(by.css('[aria-label="List View"]'));
+
+                    return listViewOption.click().then(() => {
+                        return browser.sleep(1000);
+                    });
                 });
+            });
         };
 
         /**
@@ -146,6 +154,8 @@ class GlobalSearch {
 
         this.itemClick = function(index) {
             var itemElem = this.getItem(index);
+
+            browser.wait(ECE.elementToBeClickable(itemElem), 1000);
 
             itemElem.click();
 
@@ -364,8 +374,14 @@ class GlobalSearch {
          * @param {string} type
          */
         this.toggleByType = function(type) {
-            browser.actions().mouseMove(element(by.className('filetype-icon-' + type))).perform();
-            element(by.id('filetype-icon-' + type)).click();
+            const icon = element(by.className('filetype-icon-' + type));
+            const checkbox = element(by.id('filetype-icon-' + type));
+
+            browser.wait(ECE.presenceOf(icon), 1000);
+            browser.actions().mouseMove(icon).perform();
+
+            browser.wait(ECE.elementToBeClickable(checkbox), 1000);
+            checkbox.click();
         };
 
         /**

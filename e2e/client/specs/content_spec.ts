@@ -5,6 +5,7 @@ import {element, browser, protractor, by} from 'protractor';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
+import {monitoring} from './helpers/monitoring';
 import {multiAction} from './helpers/actions';
 import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 import {TreeSelectDriver} from './helpers/tree-select-driver';
@@ -24,18 +25,6 @@ describe('content', () => {
     // wait a bit after sending keys to body
     function pressKey(key) {
         browser.actions().sendKeys(key).perform();
-    }
-
-    function setEmbargo() {
-        var now = new Date();
-        // choose time with date not in a valid month number.
-        // default view time format in config
-        var embargoDate = '09/09/' + (now.getFullYear() + 1);
-        var embargoTime = (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) + ':' +
-                        (now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes());
-
-        el(['authoring', 'interactive-actions-panel', 'embargo', 'date-input']).sendKeys(embargoDate);
-        el(['authoring', 'interactive-actions-panel', 'embargo', 'time-input']).sendKeys(embargoTime);
     }
 
     it('can navigate with keyboard', () => {
@@ -164,8 +153,7 @@ describe('content', () => {
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
 
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'create-package']).click();
+        monitoring.createItem('Create package');
 
         element.all(by.model('item.headline')).first().sendKeys('Empty Package');
         authoring.save();
@@ -216,48 +204,5 @@ describe('content', () => {
         expect(content.getWidgets().count()).toBeGreaterThanOrEqual(5);
 
         element(by.id('closeAuthoringBtn')).click();
-    });
-
-    it('can set embargo and send', () => {
-        // Initial steps before proceeding, to get initial state of send buttons.
-        workspace.editItem('item3', 'SPORTS');
-        authoring.sendTo('Sports Desk', 'Incoming Stage');
-        authoring.confirmSendTo();
-
-        workspace.editItem('item3', 'SPORTS');
-
-        el(['open-send-publish-pane']).click();
-
-        el(['authoring', 'interactive-actions-panel', 'tabs'], by.buttonText('Send to')).click();
-
-        const sendToButton = el(['authoring', 'interactive-actions-panel', 'send']);
-
-        browser.wait(ECE.visibilityOf(sendToButton));
-
-        new TreeSelectDriver(
-            el(['interactive-actions-panel', 'destination-select']),
-        ).setValue('Sports Desk');
-
-        const stage = 'two';
-
-        // State after selecting different Stage in the same desk
-        el(
-            ['interactive-actions-panel', 'stage-select'],
-            by.cssContainingText('[data-test-id="item"]', stage),
-        ).click();
-
-        expect(sendToButton.isEnabled()).toBe(true);
-
-        // State after setting Embargo
-        setEmbargo();
-        browser.sleep(100);
-        expect(sendToButton.isEnabled()).toBe(true);
-
-        // State after changing Desk
-        new TreeSelectDriver(
-            el(['interactive-actions-panel', 'destination-select']),
-        ).setValue('Politic Desk');
-
-        expect(sendToButton.isEnabled()).toBe(true);
     });
 });

@@ -114,6 +114,16 @@ export class Config extends React.PureComponent<IProps> {
                         }}
                     />
                 </div>
+
+                <div>
+                    <Checkbox
+                        label={{text: gettext('Show input for editing description')}}
+                        checked={config.showDescriptionEditingInput ?? false}
+                        onChange={(val) => {
+                            this.props.onChange({...config, showDescriptionEditingInput: val});
+                        }}
+                    />
+                </div>
             </Spacer>
         );
     }

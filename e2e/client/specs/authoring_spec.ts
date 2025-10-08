@@ -58,8 +58,7 @@ describe('authoring', () => {
 
     it('authoring operations', () => {
         // allows to create a new empty package
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'create-package']).click();
+        monitoring.createItem('Create package');
 
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
         authoring.close();
@@ -161,7 +160,6 @@ describe('authoring', () => {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
         authoring.sendTo('Politic Desk', 'two');
-        authoring.confirmSendTo();
 
         expect(monitoring.getTextItem(3, 0)).toBe('item8');
         monitoring.actionOnItem('Edit', 3, 0);
@@ -615,8 +613,8 @@ describe('authoring', () => {
 
     it('Not modifying crops will not trigger an article change', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        monitoring.createItem('editor3 template');
+
         browser.wait(ECE.visibilityOf(
             element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),
         ));
@@ -645,15 +643,16 @@ describe('authoring', () => {
 
     it('Can add an image with default crops to media gallery', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
-        el(['content-create']).click();
-        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        monitoring.createItem('editor3 template');
+
         browser.wait(ECE.visibilityOf(
             element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),
         ));
-        expect(ECE.hasElementCount(
+
+        browser.wait(ECE.hasElementCount(
             element.all(by.css(s('authoring-field=Image gallery 33', 'media-gallery-image'))),
             0,
-        )()).toBe(true);
+        ));
 
         uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
@@ -666,13 +665,7 @@ describe('authoring', () => {
     it('Can remove an image from media gallery', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
 
-        el(['content-create']).click();
-
-        const templateBtn = el(['content-create-dropdown']).element(by.buttonText('editor3 template'));
-
-        browser.wait(ECE.elementToBeClickable(templateBtn));
-
-        templateBtn.click();
+        monitoring.createItem('editor3 template');
 
         browser.wait(ECE.visibilityOf(
             element(by.css(s('authoring-field=Image gallery 33', 'media-gallery--upload-placeholder'))),

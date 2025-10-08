@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
-import {CreateValidators, WithValidation} from '@superdesk/common';
+import {CreateValidators, WithValidation} from '@sourcefabric/common';
 import {fieldNotNull, stringNotEmpty} from '../form-validation';
 import {IRundownTemplate, IShow} from '../interfaces';
 
@@ -105,7 +105,6 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                             onHide={this.props.onClose}
                             footerTemplate={footerTemplate}
                             visible
-                            zIndex={1051}
                         >
                             <Spacer v gap="16">
                                 <SelectShow

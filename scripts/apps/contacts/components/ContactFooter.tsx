@@ -1,31 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {VersionCreated, SocialInfo} from 'apps/contacts/components/fields';
-import {getContactType} from '../../contacts/helpers';
-import classNames from 'classnames';
+import {SocialInfo} from 'apps/contacts/components/fields';
 import {gettext} from 'core/utils';
+import {IContact} from 'superdesk-api';
+import {DateTime} from 'core/ui/components/DateTime';
+import {Spacer} from 'superdesk-ui-framework/react';
 
+interface IProps {
+    item: IContact;
+}
 /**
  * Contact footer - renders footer for contact card used in grid view
  */
-export const ContactFooter: React.StatelessComponent<any> = ({item, svc}) => {
-    const cssClass = classNames(
-        'sd-grid-item__footer sd-grid-item__footer--padded',
-        {padded: getContactType(item) === 'organisation' || !item.organisation},
-    );
-
+export const ContactFooter: React.FunctionComponent<IProps> = ({item}) => {
     return (
-        <div key="contact-footer" className={cssClass}>
-            <span className="update-info">
+        <Spacer style={{padding: 8}} h gap="16" justifyContent="start" alignItems="center" noGrow>
+            <Spacer h gap="4" justifyContent="start" alignItems="center" noWrap>
                 <span className="sd-grid-item__text-label">{gettext('Updated:')}</span>
-                <VersionCreated item={item} svc={svc} />
-            </span>
+                <DateTime dateTime={item._updated} />
+            </Spacer>
             <SocialInfo item={item} />
-        </div>
+        </Spacer>
     );
-};
-
-ContactFooter.propTypes = {
-    item: PropTypes.object,
-    svc: PropTypes.object.isRequired,
 };

@@ -22,9 +22,10 @@ export const setupAuthoringReact = (url: string) => {
     const isNavigatingToAnExtensionPage = extensionUrls.find(
         (extensionUrl) => extensionUrl.startsWith(trimStartExact(parsedPath.hash, '#')),
     ) != null;
+    const isNavigatingToPlanning = parsedPath.hash.startsWith('#/planning');
 
     const action: 'register' | 'deregister' = (() => {
-        if (isNavigatingToAnExtensionPage) {
+        if (isNavigatingToAnExtensionPage || isNavigatingToPlanning) {
             // regardless of user setting, authoring-react
             // must be enabled in extensions
             return 'register';

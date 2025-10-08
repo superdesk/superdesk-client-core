@@ -1,20 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {renderContents} from 'apps/contacts/helpers';
-
 import {
     ListItemInfo,
     ListTypeIcon,
-    ContactHeader,
     ContactInfo,
     ContactFooter,
 } from 'apps/contacts/components';
+import {Spacer} from 'superdesk-ui-framework/react';
+import {IContact} from 'superdesk-api';
 
-/**
- * Contact Item component
- */
-export class Item extends React.Component<any, any> {
+interface IProps {
+    svc: Record<string, any>;
+    scope: Record<string, any>;
+    item: IContact;
+    flags: Record<string, any>;
+    view: string;
+    onSelect: (item: any, event: React.MouseEvent<HTMLLIElement>) => void;
+}
+
+interface IState {
+    hover: boolean;
+}
+
+export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -51,61 +59,44 @@ export class Item extends React.Component<any, any> {
     render() {
         const {item, svc, flags, view, scope} = this.props;
 
-        const contents: any = [
-            'div',
-            {
-                className: classNames(
-                    this.props.view === 'photogrid' ?
-                        'sd-grid-item sd-grid-item--with-click' :
-                        'media-box contacts',
-                    {
-                        selected: flags.selected,
-                    },
-                ),
-            },
-        ];
-
-        if (view === 'photogrid') {
-            contents.push(
-                <ContactHeader item={item} svc={svc} />,
-                <ContactInfo item={item} />,
-                <ContactFooter item={item} svc={svc} />,
-            );
-        } else {
-            contents.push(
-                <ListTypeIcon item={item} svc={svc} />,
-                <ListItemInfo item={item} svc={svc} scope={scope} />,
-            );
-        }
-
-        const cssClass = classNames(
-            'list-item-view',
-            {
-                active: flags.selected,
-                inactive: !item.is_active,
-            },
-        );
-
         return (
             <li
                 id={item._id}
                 key={item._id}
-                className={cssClass}
+                className={classNames(
+                    'list-item-view',
+                    {
+                        active: flags.selected,
+                        inactive: !item.is_active,
+                    },
+                )}
                 onMouseEnter={this.setHoverState}
                 onMouseLeave={this.unsetHoverState}
                 onClick={this.select}
             >
-                {renderContents(contents)}
+                <div
+                    className={classNames(
+                        this.props.view === 'photogrid'
+                            ? 'sd-grid-item sd-grid-item--with-click'
+                            : 'media-box contacts',
+                        {
+                            selected: flags.selected,
+                        },
+                    )}
+                >
+                    {view === 'photogrid' ? (
+                        <Spacer gap="0" v justifyContent="start" alignItems="center">
+                            <ContactInfo item={item} />
+                            <ContactFooter item={item} />
+                        </Spacer>
+                    ) : (
+                        <Spacer gap="4" v justifyContent="start" alignItems="center">
+                            <ListTypeIcon item={item} svc={svc} />
+                            <ListItemInfo item={item} svc={svc} scope={scope} />
+                        </Spacer>
+                    )}
+                </div>
             </li>
         );
     }
 }
-
-Item.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.object.isRequired,
-    item: PropTypes.object,
-    flags: PropTypes.object,
-    view: PropTypes.string,
-    onSelect: PropTypes.func,
-};

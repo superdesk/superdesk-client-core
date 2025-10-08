@@ -19,8 +19,7 @@ type IExtensionNotifications = Required<Required<IExtensionActivationResult>['co
 
 export const notifications: IExtensionNotifications = {
     'rundown-item-comment': {
-        label: gettext('Open item'),
-        type: 'desktop',
+        name: gettext('Open item'),
         handler: (notification: IRundownItemCommentNotification) => ({
             body: notification.message,
             actions: [{

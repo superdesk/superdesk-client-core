@@ -34,6 +34,7 @@ import {TextWithMentions} from 'apps/users/components';
 import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
+import {EditUserReact} from 'apps/users/views/edit-user-react';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -136,7 +137,6 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
-    .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
     .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
     .component('sdLineCount',
@@ -180,6 +180,15 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             ValidateCharacters,
             ['item', 'field'],
+        ),
+    )
+
+    .component('sdEditUserReact',
+        reactToAngular1(
+            EditUserReact,
+            ['user', 'onSave', 'component'],
+            [],
+            'display: contents',
         ),
     )
 

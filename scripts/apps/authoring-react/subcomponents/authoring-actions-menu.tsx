@@ -14,6 +14,12 @@ interface IState {
     actions: Array<IAuthoringAction> | null;
 }
 
+/**
+ * Menu component requires providing actions up-front
+ * while here we don't want to compute them unless user initiates opening of the menu.
+ * To work around this, we render a button, when it is clicked we fetch the items
+ * and replace the button with an actual Menu component.
+ */
 export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -59,18 +65,18 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
 
             return (
                 <div>
-                    <Menu items={menuItems}>
+                    <Menu items={menuItems} data-test-id="actions-list">
                         {(toggle) => (
                             <MoreActionsButton
                                 aria-label={gettext('Actions menu')}
-                                ref={(el) => {
+                                onClick={toggle}
+                                buttonRef={(el) => {
                                     if (el != null) {
                                         setTimeout(() => {
                                             el.click();
                                         });
                                     }
                                 }}
-                                onClick={toggle}
                             />
                         )}
                     </Menu>

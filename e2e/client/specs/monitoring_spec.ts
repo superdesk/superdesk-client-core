@@ -59,7 +59,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         monitoring.actionOnItem('Edit', 2, 0);
-        authoring.sendTo('Politic Desk', 'two', true);
+        authoring.sendTo('Politic Desk', 'two', false);
         expect(monitoring.getTextItem(5, 0)).toBe('item3');
     });
 
@@ -390,6 +390,18 @@ describe('monitoring', () => {
     });
 
     it('can filter content by content profile', () => {
+        const filterByTestingContentProfile = () => {
+            el(['filters-dropdown']).click();
+
+            const openPopoverButton = el(['open-popover'], undefined, el(['filter-contentProfile']));
+
+            browser.wait(ECE.elementToBeClickable(openPopoverButton));
+
+            openPopoverButton.click();
+
+            el(['tree-select-popover'], by.buttonText('testing')).click();
+        };
+
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('testing');
@@ -404,32 +416,32 @@ describe('monitoring', () => {
         authoring.save();
         authoring.close();
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
-        el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
-        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+
+        filterByTestingContentProfile();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
-        el(['remove-filter']).click();
+        el(['remove-all-filters']).click();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
-        el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(els(['content-profiles']), 3));
-        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+        filterByTestingContentProfile();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
-        browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
-        el(['clear-filters']).click();
+        el(['remove-all-filters']).click();
+
         browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
+
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
@@ -473,8 +485,7 @@ describe('monitoring', () => {
     it('can start content upload', () => {
         monitoring.openMonitoring();
 
-        el(['content-create']).click();
-        el(['content-create-dropdown', 'upload-media']).click();
+        monitoring.createItem('Upload media');
 
         expect(monitoring.uploadModal.isDisplayed()).toBeTruthy();
     });

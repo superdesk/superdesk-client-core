@@ -15,9 +15,12 @@ export class Preview extends React.PureComponent<IProps> {
             <MediaCarousel
                 mediaItems={this.props.value}
                 readOnly={true}
+                canRemoveItems={false}
                 showPictureCrops={this.props.config.showPictureCrops}
                 showTitleInput={this.props.config.showTitleEditingInput}
+                showDescriptionInput={this.props.config.showDescriptionEditingInput}
                 maxItemsAllowed={this.props.config.maxItems ?? maxItemsDefault}
+                prepareForExternalEditing={(item) => item}
             />
         );
     }

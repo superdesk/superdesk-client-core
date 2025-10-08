@@ -18,7 +18,7 @@ import {Button} from 'superdesk-ui-framework/react/components/Button';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {generatePatch} from 'core/patch';
-import {ToggleBox} from 'superdesk-ui-framework/react';
+import {Label, ToggleBox} from 'superdesk-ui-framework/react';
 import {Switch} from 'superdesk-ui-framework/react/components/Switch';
 import {omitFields} from '../data-layer';
 import {assertNever, nameof} from 'core/helpers/typescript-helpers';
@@ -304,7 +304,20 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
     render() {
         if (this.state.macros == null) {
-            return null;
+            return (
+                <AuthoringWidgetLayout
+                    header={(
+                        <AuthoringWidgetHeading
+                            widgetId={MACROS_WIDGET_ID}
+                            widgetName={getLabel()}
+                            editMode={false}
+                        />
+                    )}
+                    body={(
+                        <Label text={gettext('No macros configured.')} />
+                    )}
+                />
+            );
         }
 
         const RunMacroButton: React.ComponentType<{macro: IMacro}> = ({macro}) => {

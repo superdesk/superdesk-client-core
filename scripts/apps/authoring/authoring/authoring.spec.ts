@@ -90,8 +90,8 @@ describe('authoring', () => {
     });
 
     it('synchronizes associations field from editor state', inject(() => {
-        const entity1 = {guid: 'entity1', renditions: {original: {href: 'foo'}}};
-        const entity2 = {guid: 'entity2', renditions: {original: {href: 'bar'}}};
+        const entity1 = {guid: 'entity1', renditions: {original: {href: 'foo'}}} as IArticle;
+        const entity2 = {guid: 'entity2', renditions: {original: {href: 'bar'}}} as IArticle;
 
         const contentStateRaw: RawDraftContentState = {
             blocks: [

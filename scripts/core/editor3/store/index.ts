@@ -65,6 +65,7 @@ interface IProps {
     value?: any;
     limitBehavior?: CharacterLimitUiBehavior;
     limit?: number;
+    softLimit?: number;
 }
 
 export interface IEditorStore {
@@ -94,30 +95,36 @@ export interface IEditorStore {
     abbreviations: any;
     loading: boolean;
     limitConfig?: EditorLimit;
+    softLimitConfig?: number;
 }
 
 let editor3Stores = [];
 
 interface IOptions {
-    spellchecker: {
+    spellchecker?: {
         acceptSuggestion: IAcceptSuggestion,
         enabled?: boolean,
         language?: string,
         warnings?: ISpellcheckWarningsByBlock,
     };
     limitConfig?: EditorLimit,
+    softLimitConfig?: number,
 }
 
 export const getDecorators = (options: IOptions) => {
-    const {limitConfig} = options;
-    const {spellchecker} = options;
+    const {limitConfig, softLimitConfig, spellchecker} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    if (spellchecker.enabled === true && spellchecker.warnings != null && spellchecker.language != null) {
+    if (
+        spellchecker != null
+        && spellchecker.enabled === true
+        && spellchecker.warnings != null
+        && spellchecker.language != null
+    ) {
         mustReApplyDecorators = true;
 
         decorators.push(
@@ -125,11 +132,17 @@ export const getDecorators = (options: IOptions) => {
         );
     }
 
-    if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+    const isHardHighlight = limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number';
+    const isSoftHighlight = typeof softLimitConfig === 'number';
+
+    if (isHardHighlight || isSoftHighlight) {
         mustReApplyDecorators = true;
 
         decorators.push(
-            getTextLimitHighlightDecorator(limitConfig.chars),
+            getTextLimitHighlightDecorator(
+                limitConfig?.chars,
+                softLimitConfig,
+            ),
         );
     }
 
@@ -155,8 +168,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
         language: language,
         enabled:
             !spellcheckerDisabledInConfig &&
-            spellcheck &&
-            spellcheck.isAutoSpellchecker,
+            spellcheck != null,
         inProgress: false,
         warningsByBlock: {},
     };
@@ -209,9 +221,17 @@ export default function createEditorStore(
             chars: props.limit,
         };
 
+    const softLimitConfig: number | null = !props.softLimit
+        ? null
+        : props.softLimit;
+
     let editorState = EditorState.createWithContent(
         content,
-        getDecorators({spellchecker: {acceptSuggestion: 'store-based'}}).decorator,
+        getDecorators({
+            spellchecker: {acceptSuggestion: 'store-based'},
+            limitConfig,
+            softLimitConfig,
+        }).decorator,
     );
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
@@ -238,6 +258,7 @@ export default function createEditorStore(
             abbreviations: {},
             loading: false,
             limitConfig,
+            softLimitConfig,
         },
         getMiddlewares(),
     );

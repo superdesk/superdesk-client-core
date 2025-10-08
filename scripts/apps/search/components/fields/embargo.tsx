@@ -1,20 +1,39 @@
 import React from 'react';
-import moment from 'moment';
-import {gettext} from 'core/utils';
-import {longFormat} from 'core/datetime/datetime';
+import {correctTimezone, gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {formatDate} from 'core/get-superdesk-api-implementation';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 
 class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
     render() {
         const item = this.props.item;
-        const embargoed = item.embargo || item.embargoed;
-        const embargoedText = item.embargoed_text;
+        const embargoDateString = item.embargo || item.embargoed;
 
-        if (embargoed == null && embargoedText == null) { // no embargo
-            return null;
-        }
+        const tooltip: string | null = (() => {
+            if (embargoDateString != null && item.schedule_settings?.time_zone != null) {
+                const embargoDate: TZDate = correctTimezone(
+                    item.embargo || item.embargoed,
+                    item.schedule_settings.time_zone,
+                );
 
-        if (embargoed != null && moment().isAfter(embargoed)) { // expired
+                if (new Date() > embargoDate) { // expired
+                    return null;
+                }
+
+                return gettext(
+                    'Embargo until {{date}}',
+                    {
+                        date: formatDate(embargoDate, {longFormat: true}),
+                    },
+                );
+            } else if (item.embargoed_text != null) {
+                return gettext('Embargo: {{text}}', {text: item.embargoed_text});
+            } else {
+                return null;
+            }
+        })();
+
+        if (tooltip == null) {
             return null;
         }
 
@@ -22,12 +41,10 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
             <span
                 key="embargo"
                 className="state-label state_embargo"
-                title={embargoed != null ? (
-                    gettext('Embargo until {{date}}', {date: longFormat(embargoed)})
-                ) : (
-                    gettext('Embargo: {{text}}', {text: embargoedText})
-                )}
-            >{gettext('Embargo')}</span>
+                title={tooltip}
+            >
+                {gettext('Embargo')}
+            </span>
         );
     }
 }

@@ -41,27 +41,35 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                         <Spacer h gap="4" justifyContent="space-between">
                             <TimePicker
                                 label={gettext('Airtime time from')}
-                                value={filters.airtime_time?.gte ?? ''}
+                                value={filters.airtime_time?.gte ?? null}
                                 onChange={(val) => {
-                                    this.props.onChange({
-                                        airtime_time: {
-                                            ...filters.airtime_time,
-                                            gte: val,
-                                        },
-                                    });
+                                    if (val === null) {
+                                        superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                    } else {
+                                        this.props.onChange({
+                                            airtime_time: {
+                                                ...filters.airtime_time,
+                                                gte: val,
+                                            },
+                                        });
+                                    }
                                 }}
                             />
 
                             <TimePicker
                                 label={gettext('Airtime time to')}
-                                value={filters.airtime_time?.lte ?? ''}
+                                value={filters.airtime_time?.lte ?? null}
                                 onChange={(val) => {
-                                    this.props.onChange({
-                                        airtime_time: {
-                                            ...filters.airtime_time,
-                                            lte: val,
-                                        },
-                                    });
+                                    if (val === null) {
+                                        superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                    } else {
+                                        this.props.onChange({
+                                            airtime_time: {
+                                                ...filters.airtime_time,
+                                                lte: val,
+                                            },
+                                        });
+                                    }
                                 }}
                             />
                         </Spacer>

@@ -1,8 +1,8 @@
 import React from 'react';
-import {showPopup} from 'core/ui/components/popupNew';
 import {IUser} from 'superdesk-api';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {gettext} from 'core/utils';
+import {showPopup} from 'superdesk-ui-framework/react';
 
 interface IProps {
     user: IUser;
@@ -28,7 +28,6 @@ const UserPopup = ({mentionName, user}: IProps) => {
                     </div>
                 </div>
             ),
-            100,
             true,
         );
     };

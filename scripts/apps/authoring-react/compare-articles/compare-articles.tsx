@@ -1,7 +1,7 @@
 import React from 'react';
 import {Map} from 'immutable';
 import {IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
@@ -116,7 +116,6 @@ export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="x-large"
                 position="center"
                 maximized

@@ -1,12 +1,33 @@
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/display-name */
 import React from 'react';
-import {IArticle, IAuthoringActionType} from 'superdesk-api';
+import {IArticle, IAuthoringActionType, ITopBarWidget} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {CreatedInfo} from './created-info';
 import {ModifiedInfo} from './modified-info';
+import {AuthoringToolbar} from 'apps/authoring-react/subcomponents/authoring-toolbar';
 
-const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedInfo, ModifiedInfo];
+const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [{
+    availableOffline: true,
+    component: () => (
+        <CreatedInfo
+            entity={item}
+        />
+    ),
+    group: 'start',
+    priority: 1,
+}, {
+    availableOffline: true,
+    component: () => (
+        <ModifiedInfo
+            entity={item}
+        />
+    ),
+    group: 'start',
+    priority: 2,
+}];
 
 interface IProps {
     article: IArticle;
@@ -51,12 +72,29 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             this.fetchArticleFromServer();
         }
     }
+    shouldComponentUpdate(nextProps: IProps, nextState: IState) {
+        for (const key of Object.keys(this.props)) {
+            if (key === 'children') continue;
+
+            if (this.props[key] !== nextProps[key]) {
+                return true;
+            }
+        }
+
+        for (const key of Object.keys(this.state)) {
+            if (this.state[key] !== nextState[key]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
             return null; // fetching article from the server
         }
 
-        const articleDisplayWidgets = defaultToolbarItems.concat(
+        const articleDisplayWidgets = getDefaultToolbarItems(this.props.article).concat(
             flatMap(
                 Object.values(extensions),
                 (extension) => extension.activationResult?.contributions?.authoringTopbar2Widgets ?? [],
@@ -67,19 +105,10 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         const articleUpdatedReference = {...this.props.article};
 
         return (
-            <div className="authoring-sticky__detailed-wrapper">
-                {articleDisplayWidgets.map(
-                    (Component, i) => (
-                        <div key={i} className="authoring-sticky__from-extensions">
-                            <Component
-                                article={
-                                    this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
-                                }
-                            />
-                        </div>
-                    ),
-                )}
-            </div>
+            <AuthoringToolbar
+                entity={articleUpdatedReference}
+                widgets={articleDisplayWidgets}
+            />
         );
     }
 }

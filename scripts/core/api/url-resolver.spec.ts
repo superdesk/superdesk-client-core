@@ -1,18 +1,9 @@
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
-
 describe('url resolver', () => {
-    var SERVER_URL = 'http://localhost:5000/api',
+    var SERVER_URL = 'http://localhost:5000',
         USERS_URL = '/users',
         RESOURCES = {_links: {child: [{title: 'users', href: USERS_URL}]}};
 
     beforeEach(window.module('superdesk.core.api'));
-
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: SERVER_URL, ws: undefined}};
-
-        Object.assign(appConfig, testConfig);
-    });
 
     it('can resolve resource urls', (done) => inject((urls, $httpBackend, $rootScope) => {
         $httpBackend.expectGET(SERVER_URL).respond(RESOURCES);

@@ -34,7 +34,6 @@ export class FormattingOptionsTreeSelect extends React.Component<IProps> {
                 label={gettext('Formatting options')}
                 labelHidden
                 inlineLabel
-                zIndex={1051}
             />
         );
     }

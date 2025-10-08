@@ -1,6 +1,6 @@
 import React from 'react';
 import {gettext, gettextPlural} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {IArticle} from 'superdesk-api';
 import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
 import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
@@ -19,7 +19,6 @@ export function confirmPublish(items: Array<IArticle>): Promise<void> {
                 return (
                     <Modal
                         visible
-                        zIndex={1050}
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}

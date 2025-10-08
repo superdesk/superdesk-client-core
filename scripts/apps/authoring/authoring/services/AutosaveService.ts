@@ -1,7 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {IArticle} from 'superdesk-api';
-import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from './authoring-helpers';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 const RESOURCE = 'archive_autosave';
 
@@ -60,33 +60,44 @@ export class AutosaveService {
     /**
      * Auto-saves an item
      */
-    save(item: IArticle, orig: IArticle, timeout: number = AUTOSAVE_TIMEOUT, callback) {
+    save(
+        item: IArticle,
+        orig: IArticle,
+        timeout: number = AUTOSAVE_TIMEOUT,
+        callback, applyAsync?: () => Promise<void>,
+    ) {
         if (!item._editable || !item._locked) {
             return $q.reject('item not ' + item._editable ? 'locked' : 'editable');
         }
 
         this.stop(item);
 
-        let id = item._id;
+        const id = item._id;
 
         this.timeouts[id] = $timeout(() => {
-            runBeforeUpdateMiddlware(item, orig)
+            authoringApiCommon.saveBefore(item, orig)
                 .then((itemLatest: IArticle) => {
-                    var diff = helpers.extendItem({_id: id}, itemLatest);
+                    const diff = helpers.extendItem({_id: id}, itemLatest);
 
                     helpers.filterDefaultValues(diff, orig);
+                    helpers.extendItem(item, diff); // update item for changes to get picked up by the editor
 
-                    return api.save(RESOURCE, {}, diff).then((_autosave: IArticle) => {
-                        runAfterUpdateEvent(orig, _autosave);
+                    const saveAndRunMiddleware = () => {
+                        return api.save(RESOURCE, {}, diff).then((_autosave: IArticle) => {
+                            authoringApiCommon.saveAfter(item, orig);
+                            orig._autosave = _autosave;
+                            callback?.();
 
-                        orig._autosave = _autosave;
+                            return _autosave;
+                        });
+                    };
 
-                        if (typeof callback === 'function') {
-                            callback();
-                        }
+                    if (applyAsync) {
+                        // update authoring view
+                        return applyAsync().then(() => saveAndRunMiddleware());
+                    }
 
-                        return _autosave;
-                    });
+                    return saveAndRunMiddleware();
                 });
         }, timeout, false);
 

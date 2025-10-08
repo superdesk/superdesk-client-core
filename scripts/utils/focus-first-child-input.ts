@@ -3,6 +3,16 @@ export function focusFirstChildInput(parent: HTMLElement) {
     let lastElementCount = null;
 
     /**
+     * Abort operation if user focuses any element first.
+     */
+    function handleManualFocus() {
+        clearInterval(interval);
+        parent.removeEventListener('focus', handleManualFocus, true);
+    }
+
+    parent.addEventListener('focus', handleManualFocus, true);
+
+    /**
      * Use interval to approximately determine when fields have loaded.
      */
     const interval = setInterval(() => {
@@ -24,6 +34,7 @@ export function focusFirstChildInput(parent: HTMLElement) {
             } else if (lastElementCount !== elements.length) {
                 lastElementCount = elements.length;
             } else {
+                parent.removeEventListener('focus', handleManualFocus, true);
                 clearInterval(interval);
 
                 if (elements.length > 0) {

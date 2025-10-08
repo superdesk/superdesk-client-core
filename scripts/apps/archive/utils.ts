@@ -19,3 +19,4 @@ export const isIngested = (item: IArticle) =>
  * Test if an item was published, but is not published anymore.
  */
 export const isKilled = (item: IArticle) => KILLED_STATES.includes(item.state);
+

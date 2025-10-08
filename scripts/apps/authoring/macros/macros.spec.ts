@@ -32,7 +32,6 @@ describe('macros', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.core.auth'));
     beforeEach(window.module('superdesk.apps.workspace.content'));
-    beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.core.privileges'));
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -55,8 +54,6 @@ describe('macros', () => {
     var $controller;
 
     beforeEach(inject((_$controller_, macros, $q, $httpBackend) => {
-        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
-
         $controller = _$controller_;
         spyOn(macros, 'get').and.returnValue($q.when([]));
     }));
@@ -79,6 +76,7 @@ describe('macros', () => {
                 action: action,
             });
             $compile(angular.element('<div sd-authoring-workspace><div sd-authoring></div></div>'))($scope);
+            $rootScope.$apply();
         });
 
         return $scope;
@@ -107,7 +105,7 @@ describe('macros', () => {
         $controller('Macros', {$scope: $scope});
         $scope.call('test');
         expect(macros.call).toHaveBeenCalled();
-        $scope.$digest();
+        $scope.$apply();
         expect($rootScope.$broadcast).toHaveBeenCalledWith('macro:diff', diff);
     }));
 

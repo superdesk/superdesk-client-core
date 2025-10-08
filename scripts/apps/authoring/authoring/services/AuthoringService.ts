@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {showErrorsModal} from 'core/services/modalService';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
@@ -13,6 +13,8 @@ import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {sdApi} from 'api';
+import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -162,7 +164,7 @@ export function AuthoringService(
      * Open an item for editing
      *
      * @param {string} _id Item _id.
-     * @param {boolean} readOnly
+     * @param {boolean} readOnly - whether it should open in read-only mode.
      * @param {string} repo - repository where an item whose identifier is _id can be found.
      * @param {string} action - action performed to open the story: edit, correct or kill
      */
@@ -184,8 +186,8 @@ export function AuthoringService(
         }
 
         return api.find(endpoint, _id, {embedded: {lock_user: 1}})
-            .then(function _lock(item) {
-                if (readOnly) {
+            .then(function _lock(item: IArticle) {
+                if (readOnly || READONLY_STATES.includes(item.state)) {
                     item._locked = lock.isLockedInCurrentSession(item);
                     item._editable = false;
                     return $q.when(item);
@@ -295,7 +297,7 @@ export function AuthoringService(
         orig: Readonly<IArticle>,
         isDirty: boolean,
         doClose: () => void,
-    ): Promise<void> {
+    ): Promise<{cancelled: boolean}> {
         return authoringApiCommon.closeAuthoring(
             orig,
             isDirty,
@@ -306,8 +308,10 @@ export function AuthoringService(
                 resolve();
             }),
             doClose,
-        ).then(() => {
+        ).then((value) => {
             $rootScope.$applyAsync(); // update angular UI
+
+            return value;
         });
     };
 
@@ -377,7 +381,7 @@ export function AuthoringService(
     ) {
         let extDiff = helpers.extendItem({}, diff);
 
-        if (extDiff['task'] && $location.path() !== '/workspace/personal') {
+        if (extDiff['task'] && !sdApi.navigation.isPersonalSpace()) {
             delete extDiff['task'];
         }
 
@@ -549,6 +553,16 @@ export function AuthoringService(
         __item: IArticle,
         requestEditor3DirectivesToGenerateHtml?: Array<()=> void>,
         cloneAfterGeneratingHtml?: boolean,
+
+        options?: {
+            /**
+             * Use when you want to edit a field but can't update fields_meta
+             * e.g. in media editor there's no editor3
+             * it may be possible to generate fields_meta using a pure function and without editor3 itself
+             * but resetting it is also an option - editor3 supports initializing from a string value
+             */
+            resetFieldsMeta?: boolean;
+        },
     ) {
         for (const fn of (requestEditor3DirectivesToGenerateHtml ?? [])) {
             fn();
@@ -579,12 +593,11 @@ export function AuthoringService(
                 delete diff._etag;
             }
 
-            // if current document is image and it has been changed on 'media edit' we have to update the etag
-            if (origItem.type === 'picture' && item._etag != null) {
-                diff._etag = item._etag;
-            }
-
             helpers.filterDefaultValues(diff, origItem);
+
+            if (options?.resetFieldsMeta === true) {
+                resetFieldMetadata(diff);
+            }
 
             if (_.size(diff) > 0) {
                 return api.save(
@@ -815,7 +828,7 @@ export function AuthoringService(
     this._updateGeneralActions = function(currentItem, action) {
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
-        let isPersonalSpace = $location.path() === '/workspace/personal';
+        const isPersonalSpace = sdApi.navigation.isPersonalSpace();
 
         action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem)
             && !isCorrection(currentItem);

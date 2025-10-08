@@ -24,26 +24,26 @@ function toElasticFilter(q: ILogicalOperator | IComparison) {
             const value = comparisonOptions[operator];
 
             switch (operator) {
-            case '$eq':
-                return {term: {[field]: value}};
-            case '$ne':
-                return {not: {term: {[field]: value}}};
-            case '$gt':
-                return {range: {[field]: {'gt': value}}};
-            case '$gte':
-                return {range: {[field]: {'gte': value}}};
-            case '$lt':
-                return {range: {[field]: {'lt': value}}};
-            case '$lte':
-                return {range: {[field]: {'lte': value}}};
-            case '$in':
-                return {terms: {[field]: value}};
-            case '$exists':
-                return {query: {exists: {field: field}}};
-            case '$notExists':
-                return {query: {bool: {must_not: [{exists: {field: field}}]}}};
-            case '$stringContains':
-                return {query: {simple_query_string: {query: value.val, fields: [field]}}};
+                case '$eq':
+                    return {term: {[field]: value}};
+                case '$ne':
+                    return {not: {term: {[field]: value}}};
+                case '$gt':
+                    return {range: {[field]: {'gt': value}}};
+                case '$gte':
+                    return {range: {[field]: {'gte': value}}};
+                case '$lt':
+                    return {range: {[field]: {'lt': value}}};
+                case '$lte':
+                    return {range: {[field]: {'lte': value}}};
+                case '$in':
+                    return {terms: {[field]: value}};
+                case '$exists':
+                    return {query: {exists: {field: field}}};
+                case '$notExists':
+                    return {query: {bool: {must_not: [{exists: {field: field}}]}}};
+                case '$stringContains':
+                    return {query: {simple_query_string: {query: value.val, fields: [field]}}};
             }
 
             throw new Error(`Conversion for operator ${operator} is not defined.`);
@@ -71,29 +71,29 @@ function toPyEveFilter(q: ILogicalOperator | IComparison) {
             const value = comparisonOptions[operator];
 
             switch (operator) {
-            case '$eq':
-                return {[field]: value};
-            case '$ne':
-                return {[field]: {$ne: value}};
-            case '$gt':
-                return {[field]: {$gt: value}};
-            case '$gte':
-                return {[field]: {$gte: value}};
-            case '$lt':
-                return {[field]: {$lt: value}};
-            case '$lte':
-                return {[field]: {$lte: value}};
-            case '$in':
-                return {[field]: {$in: value}};
-            case '$exists':
-                return {[field]: {$exists: true}};
-            case '$notExists':
-                return {[field]: {$exists: false}};
-            case '$stringContains':
-                return {[field]: {
-                    $regex: value.val,
-                    $options: '-i',
-                }};
+                case '$eq':
+                    return {[field]: value};
+                case '$ne':
+                    return {[field]: {$ne: value}};
+                case '$gt':
+                    return {[field]: {$gt: value}};
+                case '$gte':
+                    return {[field]: {$gte: value}};
+                case '$lt':
+                    return {[field]: {$lt: value}};
+                case '$lte':
+                    return {[field]: {$lte: value}};
+                case '$in':
+                    return {[field]: {$in: value}};
+                case '$exists':
+                    return {[field]: {$exists: true}};
+                case '$notExists':
+                    return {[field]: {$exists: false}};
+                case '$stringContains':
+                    return {[field]: {
+                        $regex: value.val,
+                        $options: 'i',
+                    }};
             }
 
             throw new Error(`Conversion for operator ${operator} is not defined.`);
@@ -143,7 +143,7 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
     const query: IQuery = {
         sort: q.sort,
         size: q.max_results,
-        from: (q.page - 1) * q.max_results,
+        from: (q.page > 0 ? q.page - 1 : 0) * q.max_results,
     };
 
     const filtered = {};

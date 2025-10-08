@@ -28,6 +28,16 @@ export const ATTACHMENTS_WIDGET_ID = 'attachments';
 export function getAttachmentsField(): IAttachmentsField {
     const field: IAttachmentsField = {
         id: ATTACHMENTS_FIELD_ID,
+
+        /**
+         * Not generic due to:
+         * - having a hardcoded fieldId in a side-widget
+         *
+         * Could be made generic by getting rid of side-widget
+         * or changing side-widget to support multiple fields.
+         */
+        generic: false,
+
         label: gettext('Attachments (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

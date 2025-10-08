@@ -7,6 +7,7 @@ import {addWebsocketEventListener} from './notification/notification';
 import {getQueryFieldsRecursive, toElasticQuery} from './query-formatting';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 interface IState<T extends IBaseRestApiResponse> {
     data?: IRestApiResponse<T>; // undefined until initialized
@@ -16,7 +17,7 @@ class WithLiveQueryComponent
     <T extends IBaseRestApiResponse>
     extends SuperdeskReactComponent<ILiveQueryProps<T> & {onInitialized(): void}, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
-    private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private handleContentChangesThrottled: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveQueryProps<T> & {onInitialized(): void}) {
@@ -37,6 +38,10 @@ class WithLiveQueryComponent
             },
             1000,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChangesThrottled.cancel();
+        });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener(
@@ -87,15 +92,10 @@ class WithLiveQueryComponent
         const {resource, query} = this.props;
 
         return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>(
-            {
-                method: 'GET',
-                path: '/' + resource,
-                urlParams: {
-                    aggregations: 0,
-                    es_highlight: 1,
-                    ...toElasticQuery(query),
-                },
-            },
+            prepareSuperdeskQuery(
+                '/' + resource,
+                query,
+            ),
         ).then((data) => {
             this.setState({data: data});
         });
@@ -156,9 +156,9 @@ class WithLiveQueryComponent
         const {data} = this.state;
 
         if (data == null) {
-            return null;
+            return this.props.children({loading: true});
         } else {
-            return this.props.children(data);
+            return this.props.children({loading: false, data});
         }
     }
 }

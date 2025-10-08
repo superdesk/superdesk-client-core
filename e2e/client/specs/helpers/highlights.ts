@@ -197,7 +197,11 @@ class Highlights {
         };
 
         this.selectHighlight = function(elem, name) {
-            elem.all(by.repeater('h in highlights')).all(by.partialButtonText(name)).click();
+            const highlightButton = elem.element(by.css(`button[option="${name}"]`));
+
+            ECE.elementToBeClickable(highlightButton);
+
+            highlightButton.click();
         };
 
         this.selectDesk = function(elem, name) {
@@ -220,16 +224,17 @@ class Highlights {
         };
 
         this.exportHighlightsConfirm = function() {
-            var btn = element(by.className('modal__footer')).element(by.buttonText('OK'));
+            const btn = el(['modal-confirm'], by.xpath('.//button[text()="OK"]'));
 
-            waitFor(btn, 500);
+            ECE.elementToBeClickable(btn);
+
             btn.click();
         };
 
         this.saveTextHighlightsConfirm = function() {
-            var btn = element(by.className('modal__footer')).element(by.buttonText('Save'));
+            const btn = el(['modal-confirm'], by.xpath('.//button[text()="Save"]'));
 
-            waitFor(btn, 500);
+            ECE.elementToBeClickable(btn);
             btn.click();
         };
 

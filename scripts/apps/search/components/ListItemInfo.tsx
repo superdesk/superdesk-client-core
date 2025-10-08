@@ -6,6 +6,7 @@ import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {IRelatedEntities} from 'core/getRelatedEntities';
+import {Loader} from 'superdesk-ui-framework/react';
 
 export interface IPropsItemListInfo {
     item: IArticle;
@@ -14,6 +15,7 @@ export interface IPropsItemListInfo {
     ingestProvider: any;
     profilesById: any;
     highlightsById: any;
+    loading?: boolean;
     markedDesksById: any;
     openAuthoringView: (rewrittenBy?: string) => void;
     narrow: any;
@@ -24,6 +26,7 @@ export interface IPropsItemListInfo {
     toggleNested: (event) => void;
     singleLine: boolean;
     customRender: any;
+    view?: 'compact' | 'compact-configurable';
     options?: IListViewFieldWithOptions['options'];
 }
 
@@ -48,6 +51,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
@@ -57,9 +61,11 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line'}, this.props.customRender),
                 renderArea('secondLine', angular.extend({
                     singleLine: this.props.singleLine,
+                    view: this.props.view,
                 }, this.props), {className: 'line'}, this.props.customRender),
             );
         }
@@ -69,15 +75,14 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 className={className}
                 style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}
             >
+                {this.props.loading && <Loader overlay />}
                 {listItems}
                 {
                     articleDisplayWidgets.length < 1 ? null : (
                         <div style={{marginInlineStart: 10, display: 'flex'}} className="sibling-spacer-10">
-                            {
-                                articleDisplayWidgets.map((Component, i) =>
-                                    <Component key={i} article={this.props.item} />,
-                                )
-                            }
+                            {articleDisplayWidgets.map((Component, i) =>
+                                <Component key={i} entity={this.props.item} />,
+                            )}
                         </div>
                     )
                 }

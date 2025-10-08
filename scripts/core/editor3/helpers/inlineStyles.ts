@@ -1,3 +1,4 @@
+import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {EditorState, SelectionState, Modifier} from 'draft-js';
 
 /**
@@ -5,6 +6,7 @@ import {EditorState, SelectionState, Modifier} from 'draft-js';
  * @description Maps server 'editorFormat' options to Draft inline styles.
  */
 export const inlineStyles = {
+    ...Object.fromEntries(customEditorTags.map(({editor3Style}) => [editor3Style, editor3Style])),
     bold: 'BOLD',
     italic: 'ITALIC',
     underline: 'UNDERLINE',

@@ -12,26 +12,10 @@
                             </button>
                         </div>
 
-                        <!-- Filter content using content profile -->
-                        <div data-test-id="content-profile-dropdown" class="dropdown sd-flex-no-shrink" dropdown >
-                            <button class="filter-trigger dropdown__toggle navbtn navbtn--left" dropdown-toggle title="{{ 'Apply Filters' | translate }}" aria-label="{{ 'Apply Filters' | translate }}">
-                                <i class="icon-filter-large"></i>
-                            </button>
-                            <ul class="dropdown__menu dropdown__menu--scrollable">
-                                <li>
-                                    <div class="dropdown__menu-label" translate>Content Profiles</div>
-                                </li>
-                                <li data-test-id="content-profiles" ng-repeat="profile in aggregate.activeProfiles | orderBy:'label'">
-                                    <button class="label-group"
-                                        ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
-                                        ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
-                                    >
-                                        <span translate>{{ profile.label }}</span>
-                                        <i ng-show="aggregate.activeFilters.contentProfile.includes(profile._id)" class="icon-ok"></i>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+                        <sd-monitoring-list-filters-dropdown
+                            on-change="aggregate.handleFilterChange"
+                            selected-values="aggregate.activeFilters"
+                        ></sd-monitoring-list-filters-dropdown>
 
                         <div class="dropdown sd-flex-no-shrink" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
                             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
@@ -147,13 +131,27 @@
                         </div>
                     </div>
 
+                    <!-- hide-monitoring-toolbar-2 is used for spike and highlights view -->
                     <div ng-hide="hideMonitoringToolbar2 === true" sd-media-query min-width="700" class="subnav">
 
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
-                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
+                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileFilter(fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
                                 <span ng-if="fileType.type === 'all'" class="toggle-button__text toggle-button__text--all">{{ fileType.label }}</span>
-                                <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" title="{{ fileType.label }}"></i>
+                                <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" aria-hidden="true"></i>
+                            </a>
+
+                            <a
+                                href=""
+                                ng-repeat="profile in aggregate.activeProfiles"
+                                ng-if="profile.icon != null"
+                                ng-click="aggregate.toggleContentProfileFilter(profile)"
+                                class="toggle-button"
+                                ng-class="{'toggle-button--active': aggregate.isContentProfileFilterActive(profile._id)}"
+                                title="{{ profile.label }}"
+                                aria-label="{{ profile.label }}"
+                            >
+                                <i class="toggle-button__icon icon-{{profile.icon}}" aria-hidden="true"></i>
                             </a>
                         </div>
 
@@ -162,7 +160,7 @@
                                 <ul class="dropdown__menu">
                                     <li><span class="dropdown__menu-label" translate>File types</span></li>
                                     <li ng-repeat="fileType in aggregate.fileTypes"
-                                        ng-click="aggregate.setFilterType('file', fileType.type)"
+                                        ng-click="aggregate.setFileFilter(fileType.type)"
                                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType.type)}"
                                         title="{{ fileType.label }}">
                                         <button>
@@ -179,26 +177,16 @@
 
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
                             <button
-                                aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
+                                aria-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'compact-configurable' ? ('Compact View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}"
                                 dropdown__toggle
                                 class="navbtn dropdown__toggle"
                             >
-                                <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i>
+                                <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn, 'icon-unordered-list': view === 'compact-configurable'}"></i>
                             </button>
                             <ul class="dropdown__menu">
-                                <li>
-                                    <button ng-click="switchView('compact')">
-                                        <i class="icon-list-view"></i>{{ 'List View' | translate }}
-                                    </button>
-                                </li>
-                                <li ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView">
-                                    <button ng-click="switchView('swimlane2', true)">
-                                        <i class="icon-kanban-view"></i>{{ 'Swimlane View' | translate }}
-                                    </button>
-                                </li>
-                                <li>
-                                    <button ng-click="switchView('photogrid')">
-                                        <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
+                                <li ng-repeat="availableView in availableViews">
+                                    <button ng-click="switchView(availableView.id)">
+                                        <i class="icon-{{availableView.icon}}"></i>{{availableView.label}}
                                     </button>
                                 </li>
                             </ul>
@@ -235,23 +223,11 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- Active filter tags -->
-                    <div class="search-tags" ng-if="aggregate.activeFilters.contentProfile.length > 0">
-                        <ul class="search-tags__list">
-                            <li ng-repeat="(type, keys) in aggregate.activeFilterTags">
-                                <span>{{ type }}:</span>
-                                <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
-                                    <span>{{ key.label }}</span>
-                                    <button data-test-id='remove-filter' class="tag-label__remove" ng-click="aggregate.removeFilter(key.key, type)">
-                                        <i class="icon-close-small"></i>
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
-                                <button data-test-id='clear-filters' class="label--active" ng-click="aggregate.removeFilter(null)" translate>Clear filters</button>
-                            </li>
-                        </ul>
-                    </div>
+
+                    <sd-active-filter-tags
+                        active-filters="aggregate.activeFilters"
+                        remove-filter="aggregate.removeFilter"
+                    ></sd-active-filter-tags>
                 </div>
 
                 <div class="monitoring__main-content" ng-if="!aggregate.loading">

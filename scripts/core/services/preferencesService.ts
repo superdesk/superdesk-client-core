@@ -23,6 +23,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 userPreferences = {
                     'feature:preview': 1,
                     'archive:view': 1,
+                    'notifications': 1,
                     'email:notification': 1,
                     'desktop:notification': 1,
                     'slack:notification': 1,
@@ -42,7 +43,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'editor:pinned_widget': 1,
                     [AUTHORING_FIELD_PREFERENCES]: 1,
                 },
-                preferences,
+                preferences: {[key: string]: any} = null,
                 preferencesPromise;
 
             $rootScope.$watch(() => session.token, resetPreferences);
@@ -90,7 +91,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 },
                 // ask for permission and send a desktop notification
                 send: (msg) => {
-                    if (_.get(preferences, 'user_preferences.desktop:notification.enabled')) {
+                    if (preferences.user_preferences['desktop:notification'].enabled) {
                         if ('Notification' in window && Notification.permission !== 'denied') {
                             Notification.requestPermission((permission) => {
                                 if (permission === 'granted') {
@@ -157,7 +158,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              */
             function getValue(key) {
                 if (!key) {
-                    return preferences[USER_PREFERENCES];
+                    return preferences != null ? preferences[USER_PREFERENCES] : null;
                 } else if (userPreferences[key]) {
                     return preferences[USER_PREFERENCES][key];
                 }
@@ -297,4 +298,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     }
                 });
             }
+
+            this.reset = () => {
+                preferencesPromise = null;
+            };
         }]);

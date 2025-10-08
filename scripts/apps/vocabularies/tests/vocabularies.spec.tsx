@@ -38,7 +38,7 @@ describe('vocabularies', () => {
 
     it('convert values for qcode having integer type', () => {
         const items = [{name: 'foo', qcode: '1', is_active: true}];
-        const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
+        const schemaFields = [{key: 'name', required: true}, {key: 'priority', type: 'integer'}];
 
         const wrapper = mount(
             (
@@ -61,7 +61,8 @@ describe('vocabularies', () => {
         const fakeEvent = {target: {value: '2'}};
 
         wrapper.find('input[type="number"]').simulate('change', fakeEvent);
-        expect(instance.getItemsForSaving()[0].qcode).toBe(2);
+
+        expect((instance.getItemsForSaving()[0].priority) as any).toBe(2);
     });
 
     describe('config controller', () => {

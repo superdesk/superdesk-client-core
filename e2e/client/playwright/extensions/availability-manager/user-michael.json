@@ -1,0 +1,47 @@
+{
+  "cookies": [
+    {
+      "name": "i18next",
+      "value": "en",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "session",
+      "value": "eyJzZXNzaW9uX3Rva2VuIjoiN2Q5NzUwYmUtM2Q5Zi00NmM0LTllOTEtZTQwZDJhZTBkMzZkIn0.aCscQw.dGNq11mM4eiSPs06TrX3sALdvuY",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:9000",
+      "localStorage": [
+        {
+          "name": "sess:id",
+          "value": "682b1c4380c01706e9f427e4"
+        },
+        {
+          "name": "sess:href",
+          "value": "auth_db/682b1c4380c01706e9f427e4"
+        },
+        {
+          "name": "sess:user",
+          "value": "{\"_id\":\"655494d8dfb36babb9663383\",\"username\":\"admin\",\"email\":\"michael@dunder-mifflin.com\",\"user_type\":\"administrator\",\"is_active\":true,\"is_support\":false,\"needs_activation\":false,\"is_author\":true,\"private\":false,\"is_enabled\":true,\"password_changed_on\":\"2023-11-15T09:52:24+0000\",\"display_name\":\"Michael Scott\",\"sign_off\":\"ADM\",\"role\":null,\"_created\":\"2023-11-15T09:52:24+0000\",\"_updated\":\"2025-05-19T11:55:47+0000\",\"_etag\":\"ba09458fc48a056facc52fe6a75adfd78ca9faef\",\"invisible_stages\":[],\"last_activity_at\":\"2025-05-19T11:55:47+0000\",\"first_name\":\"Michael\",\"last_name\":\"Scott\",\"desk\":\"6554951a71839faddb615a2a\",\"_links\":{\"self\":{\"title\":\"User\",\"href\":\"users/655494d8dfb36babb9663383\"},\"related\":{\"desk\":{\"title\":\"Desk\",\"href\":\"desks/6554951a71839faddb615a2a\"}},\"parent\":{\"title\":\"home\",\"href\":\"/\"},\"collection\":{\"title\":\"users\",\"href\":\"users\"}},\"dateline_source\":\"Short name for your organisation\"}"
+        },
+        {
+          "name": "sess:token",
+          "value": "Basic N2Q5NzUwYmUtM2Q5Zi00NmM0LTllOTEtZTQwZDJhZTBkMzZkOg=="
+        }
+      ]
+    }
+  ]
+}

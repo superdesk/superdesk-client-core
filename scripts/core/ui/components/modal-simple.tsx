@@ -18,7 +18,6 @@ export class ModalSimple extends React.PureComponent<IProps> {
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="medium"
                 position="top"
                 onHide={() => this.props.closeModal()}

@@ -25,16 +25,16 @@ export function FilterTemplatesFilter(session, desks) {
     return function(all, f) {
         let template_list = (all || []).filter((item) => {
             switch (f.value) {
-            case TEMPLATEFILTERS.All.value:
-                return item.is_public || (session.identity._id === item.user);
-            case TEMPLATEFILTERS.NoDesk.value:
-                return item.is_public && !(item.template_desks && item.template_desks.length);
-            case TEMPLATEFILTERS.Personal.value:
-                return !item.is_public && (session.identity._id === item.user);
-            case TEMPLATEFILTERS.Private.value:
-                return !item.is_public && (session.identity._id !== item.user);
-            default:
-                return _.find(item.template_desks, (desk) => desk === f.value);
+                case TEMPLATEFILTERS.All.value:
+                    return item.is_public || (session.identity._id === item.user);
+                case TEMPLATEFILTERS.NoDesk.value:
+                    return item.is_public && !(item.template_desks && item.template_desks.length);
+                case TEMPLATEFILTERS.Personal.value:
+                    return !item.is_public && (session.identity._id === item.user);
+                case TEMPLATEFILTERS.Private.value:
+                    return !item.is_public && (session.identity._id !== item.user);
+                default:
+                    return _.find(item.template_desks, (desk) => desk === f.value);
             }
         });
 

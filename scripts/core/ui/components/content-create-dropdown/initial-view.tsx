@@ -194,7 +194,7 @@ export class InitialView extends React.PureComponent<IProps, IState> {
 
                                 <div>
                                     {
-                                        sdApi.navigation.getPath() !== '/workspace/personal' && (
+                                        !sdApi.navigation.isPersonalSpace() && (
                                             <DropdownOption
                                                 label={gettext('Create package')}
                                                 icon={{name: 'package-plus'}}

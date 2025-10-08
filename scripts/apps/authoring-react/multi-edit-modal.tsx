@@ -68,7 +68,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             priority: 0.1,
             component: () => (
                 <Menu
-                    zIndex={1050}
                     items={
                         availableArticles.map((article) => {
                             const leaf: IMenuItem = {
@@ -205,7 +204,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         return (
             <Modal
                 contentPadding="none"
-                zIndex={1050}
                 maximized
                 onHide={this.props.onClose}
                 visible
@@ -249,36 +247,33 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                             })
                         }
                     </Spacer>
-                    {
-                        availableArticles.length > 0 && (
-                            <div className="multi-edit-add-button">
-                                <Menu
-                                    zIndex={1050}
-                                    items={availableArticles.map((a) => {
-                                        const leaf: IMenuItem = {
-                                            onClick: () => this.add(a._id),
-                                            label: getArticleLabel(a),
-                                        };
+                    {availableArticles.length > 0 && (
+                        <div className="multi-edit-add-button">
+                            <Menu
+                                items={availableArticles.map((a) => {
+                                    const leaf: IMenuItem = {
+                                        onClick: () => this.add(a._id),
+                                        label: getArticleLabel(a),
+                                    };
 
-                                        return leaf;
-                                    })}
-                                >
-                                    {(toggle) => (
-                                        <Button
-                                            type="primary"
-                                            icon="plus-large"
-                                            text={gettext('Add article')}
-                                            style="filled"
-                                            size="small"
-                                            shape="round"
-                                            iconOnly={true}
-                                            onClick={(event) => toggle(event)}
-                                        />
-                                    )}
-                                </Menu>
-                            </div>
-                        )
-                    }
+                                    return leaf;
+                                })}
+                            >
+                                {(toggle) => (
+                                    <Button
+                                        type="primary"
+                                        icon="plus-large"
+                                        text={gettext('Add article')}
+                                        style="filled"
+                                        size="small"
+                                        shape="round"
+                                        iconOnly={true}
+                                        onClick={(event) => toggle(event)}
+                                    />
+                                )}
+                            </Menu>
+                        </div>
+                    )}
                 </Spacer>
             </Modal>
         );

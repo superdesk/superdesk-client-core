@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
 import {IArticle} from 'superdesk-api';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -20,9 +21,6 @@ const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 *
 * @param {String} d iso format datetime
 */
-export function longFormat(d: string | moment.Moment): string {
-    return moment(d).format(LONG_FORMAT);
-}
 
 export function serverFormat(d: string | moment.Moment): string {
     return moment(d).utc().format(SERVER_FORMAT);
@@ -106,50 +104,67 @@ export function scheduledFormat(__item: IArticle): {short: string, long: string}
 
     const item = __item.archive_item ?? __item;
 
-    const datetime = item?.schedule_settings?.time_zone == null
-        ? moment(item.publish_schedule).tz(browserTimezone)
-        : moment.tz(
-            item.publish_schedule.replace('+0000', ''),
-            item.schedule_settings.time_zone,
-        ).tz(browserTimezone);
+    const datetime: {moment: moment.Moment, str: string} = (() => {
+        if (item?.schedule_settings?.time_zone == null) {
+            const momentObj = moment(item.publish_schedule).tz(browserTimezone);
+
+            return {
+                moment: momentObj,
+                str: formatDate(momentObj),
+            };
+        } else {
+            const momentObj = moment
+                .tz(item.publish_schedule.replace('+0000', ''), item.schedule_settings.time_zone)
+                .tz(browserTimezone);
+
+            return {
+                moment: momentObj,
+                str: formatDate(momentObj),
+            };
+        }
+    })();
 
     var now = moment();
 
-    const _date = datetime.format(appConfig.view.dateformat || 'MM/DD'),
-        _time = datetime.format(appConfig.view.timeformat || 'hh:mm');
+    const _date = datetime.str,
+        _time = datetime.moment.format(appConfig.view.timeformat);
 
-    let short = isSameDay(datetime, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
+    let short = isSameDay(datetime.moment, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
 
     return {
         short: short,
-        long: longFormat(datetime),
+        long: formatDate(datetime.moment, {longFormat: true}),
     };
 }
 
+/**
+ * Get short representation of given datetime
+ *
+ * It returns time for current day, day + time for current week, date otherwise.
+ *
+ * @param {String} d iso format datetime
+ * @return {String}
+ */
+export function shortFormat(d) {
+    var m = moment(d);
+    var now = moment();
+
+    if (isSameDay(m, now)) {
+        return m.format(TIME_FORMAT);
+    } else if (isSameWeek(m, now)) {
+        return m.format(WEEK_FORMAT);
+    } else if (isArchiveYear(m, now)) {
+        return m.format(ARCHIVE_FORMAT);
+    }
+
+    return m.format(DATE_FORMAT);
+}
+
+export const longFormat = (date) => formatDate(date, {longFormat: true});
+
 DateTimeService.$inject = [];
 function DateTimeService() {
-    /**
-     * Get short representation of given datetime
-     *
-     * It returns time for current day, day + time for current week, date otherwise.
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.shortFormat = function(d) {
-        var m = moment(d);
-        var now = moment();
-
-        if (isSameDay(m, now)) {
-            return m.format(TIME_FORMAT);
-        } else if (isSameWeek(m, now)) {
-            return m.format(WEEK_FORMAT);
-        } else if (isArchiveYear(m, now)) {
-            return m.format(ARCHIVE_FORMAT);
-        }
-
-        return m.format(DATE_FORMAT);
-    };
+    this.shortFormat = shortFormat;
 
     this.longFormat = longFormat;
 }

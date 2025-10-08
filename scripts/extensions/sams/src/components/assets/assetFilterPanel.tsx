@@ -352,7 +352,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={this.state.localSearchParams.dateFrom ?? null}
                                         onChange={this.onChange.dateFrom}
                                         dateFormat={config.view.dateformat}
-                                        locale={this.datePickerLocale}
+                                        locale={{type: 'full', payload: this.datePickerLocale}}
                                     />
                                 </FormItem>
                                 <FormItem>
@@ -362,7 +362,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={this.state.localSearchParams.dateTo ?? null}
                                         onChange={this.onChange.dateTo}
                                         dateFormat={config.view.dateformat}
-                                        locale={this.datePickerLocale}
+                                        locale={{type: 'full', payload: this.datePickerLocale}}
                                     />
                                 </FormItem>
                             </FormGroup>

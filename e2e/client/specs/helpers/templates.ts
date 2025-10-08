@@ -1,8 +1,9 @@
 /* eslint-disable newline-per-chained-call */
 
 import {nav} from './utils';
-import {element, by, browser} from 'protractor';
+import {element, by, browser, ElementFinder} from 'protractor';
 import {el} from '@superdesk/end-to-end-testing-helpers';
+import {waitAndClick} from '../utils';
 
 class Templates {
     list: any;
@@ -11,7 +12,7 @@ class Templates {
     openTemplatesSettings: () => void;
     add: () => void;
     getTemplateNameElement: any;
-    getLegalSwitch: any;
+    legalSwitch: ElementFinder;
     getTemplateType: any;
     setTemplateType: (templateType: any) => void;
     getContentProfile: any;
@@ -75,7 +76,7 @@ class Templates {
          * Get the legal switch element
          * @returns {ElementFinder} legal switch element
          **/
-        this.getLegalSwitch = () => element(by.model('item.flags.marked_for_legal'));
+        this.legalSwitch = element(by.model('item.flags.marked_for_legal'));
 
         /**
          * Get the template type element
@@ -137,7 +138,7 @@ class Templates {
         /**
          * Toggles legal switch
          **/
-        this.toggleLegal = () => this.getLegalSwitch().click();
+        this.toggleLegal = () => waitAndClick(this.legalSwitch);
 
         /**
          * Toggle automatic item creation

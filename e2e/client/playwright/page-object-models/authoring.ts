@@ -1,5 +1,6 @@
 import {Locator, Page} from '@playwright/test';
 import {s} from '../utils';
+import {TreeSelectDriver} from '../utils/tree-select-driver';
 
 export class Authoring {
     protected page: Page;
@@ -9,17 +10,67 @@ export class Authoring {
     }
 
     async executeActionInEditor(...actionPath: Array<string>): Promise<void> {
-        await this.page.locator(s('authoring-topbar', 'actions-button')).click();
+        const {page} = this;
+
+        await page.locator(s('authoring-topbar', 'actions-button')).click();
 
         const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
 
         for (const action of actionsWithoutLast) {
-            await this.page.locator(s('actions-list')).getByRole('button', {name: action}).hover();
+            await page.locator(s('actions-list')).getByRole('button', {name: action}).hover();
         }
 
-        await this.page.locator(s('actions-list'))
+        await page.locator(s('actions-list'))
             .getByRole('button', {name: actionPath[actionPath.length - 1]})
             .click();
+    }
+
+    async publish(options: {subscribers: Array<string>}): Promise<void> {
+        const {page} = this;
+
+        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+
+        if (options.subscribers.length > 0) {
+            await new TreeSelectDriver(
+                page,
+                page.locator(s('target-subscribers')),
+            ).setValues(options.subscribers);
+        }
+
+        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+
+        if (options.subscribers.length > 0) {
+            await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+        }
+    }
+
+    async sendTo(destination: {desk: string; stage: string}): Promise<void> {
+        const {page} = this;
+
+        await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+        await page.locator(s('interactive-actions-panel', 'tabs')).getByRole('tab', {name: 'Send to'}).click();
+
+        // select desk
+        await new TreeSelectDriver(
+            page,
+            page.locator(s('destination-select')),
+        ).setValues(destination.desk);
+
+        // select stage
+        await page
+            .locator(s('interactive-actions-panel', 'stage-select'))
+            .getByRole('radio', {name: destination.stage})
+            .check();
+
+        await page.locator(s('interactive-actions-panel', 'send')).click();
+    }
+
+    /**
+     * editor3 field takes quite some time to initialize in authoring-react.
+     * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
+     */
+    public async waitForAuthoringReactToInitialize() {
+        await this.page.waitForTimeout(2000);
     }
 
     field(field: string): Locator {

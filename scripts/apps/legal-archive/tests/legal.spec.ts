@@ -12,16 +12,7 @@ describe('legal archive service', () => {
      */
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
             default_timezone: 'UTC',
-            server: {url: undefined, ws: undefined},
         };
 
         Object.assign(appConfig, testConfig);

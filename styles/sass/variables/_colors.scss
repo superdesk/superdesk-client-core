@@ -78,6 +78,10 @@ $tableBackgroundAccent:         var(--sd-item__main-Bg--alternate); // for strip
 $tableBackgroundHover:          var(--sd-item__main-Bg--hover); // for hover
 $tableBorder:                   var(--sd-colour-line--medium); // table and cell border
 
+// Icon circle
+// -------------------------
+$iconBackground: hsl(168, 33%, 55%);
+
 // Forms
 // -------------------------
 $inputBackground:               $white;

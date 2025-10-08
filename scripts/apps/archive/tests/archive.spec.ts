@@ -1,9 +1,5 @@
 import {DuplicateController} from '../controllers';
-import {registerExtensions} from 'core/register-extensions';
 import {isPublished} from '../utils';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
 
 describe('content', () => {
     var item: any = {_id: 1};
@@ -15,23 +11,6 @@ describe('content', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.authoring'));
-
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            default_timezone: 'Europe/London',
-            server: {url: undefined, ws: undefined},
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
 
     describe('archive service', () => {
         beforeEach(inject((desks, session, preferencesService) => {

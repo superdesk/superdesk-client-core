@@ -82,11 +82,11 @@ class LinkFunction {
         let querySearch = false;
 
         switch (field) {
-        case 'organisation':
-            fieldElement = this.orgField;
-            fieldLabel = gettext('Organisation');
-            querySearch = true;
-            break;
+            case 'organisation':
+                fieldElement = this.orgField;
+                fieldLabel = gettext('Organisation');
+                querySearch = true;
+                break;
         }
 
         ReactDOM.render(

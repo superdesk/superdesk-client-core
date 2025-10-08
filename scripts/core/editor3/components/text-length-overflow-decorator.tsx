@@ -1,9 +1,12 @@
+/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/display-name */
 import * as React from 'react';
-import {ContentBlock, ContentState} from 'draft-js';
+import {CompositeDecorator, ContentBlock, ContentState} from 'draft-js';
 
 interface IProps {
     contentState: ContentState;
     entityKey: string;
+    color?: string;
 }
 
 type IResult = {[blockKey: string]: {from: number; to: number}};
@@ -11,24 +14,28 @@ type IResult = {[blockKey: string]: {from: number; to: number}};
 class Component extends React.Component<IProps> {
     render() {
         return (
-            <span style={{color: '#ff0000'}}>{this.props.children}</span>
+            <span style={{color: this.props.color}}>{this.props.children}</span>
         );
     }
 }
 
-// max 1 result is cached
-const cache = new Map<ContentState, IResult>();
+const caches: {[key: string]: Map<ContentState, IResult>} = {};
 
 function getRangesExceedingLimit(
     contentState: ContentState,
     limit: number,
+    cacheKey: string,
 ): IResult {
-    const cached = cache.get(contentState);
+    if (caches[cacheKey] == null) {
+        caches[cacheKey] = new Map<ContentState, IResult>();
+    }
+
+    const cached = caches[cacheKey].get(contentState);
 
     if (cached != null) {
         return cached;
     } else {
-        cache.clear();
+        caches[cacheKey].clear();
     }
 
     const decorations = {};
@@ -58,25 +65,53 @@ function getRangesExceedingLimit(
         charactersCounted += blockLength;
     }
 
-    cache.set(contentState, decorations);
+    caches[cacheKey].set(contentState, decorations);
 
     return decorations;
 }
 
-export function getTextLimitHighlightDecorator(limit: number) {
-    function strategy(contentBlock: ContentBlock, callback, contentState: ContentState) {
+export function getTextLimitHighlightDecorator(hardLimit: number, softLimit?: number): any {
+    function strategyForHardLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
         const blockKey = contentBlock.getKey();
-        const decoration = getRangesExceedingLimit(contentState, limit)[blockKey];
+        const decoration = getRangesExceedingLimit(contentState, hardLimit, 'hard')[blockKey];
 
         if (decoration != null) {
             callback(decoration.from, decoration.to);
         }
     }
 
-    const decorator = {
-        strategy: strategy,
-        component: Component,
-    };
+    function strategyForSoftLimit(contentBlock: ContentBlock, callback, contentState: ContentState) {
+        const blockKey = contentBlock.getKey();
+        const decoration = getRangesExceedingLimit(contentState, softLimit, 'soft')[blockKey];
+
+        if (decoration != null) {
+            let decorationTo = decoration.to;
+
+            if (hardLimit && hardLimit < decoration.to) {
+                decorationTo = hardLimit;
+            }
+
+            if (decoration.from < decorationTo) {
+                callback(decoration.from, decorationTo);
+            }
+        }
+    }
+
+    const decorators = [
+        {
+            strategy: strategyForHardLimit,
+            component: (props) => <Component {...props} color="var(--sd-editor-colour__hard-limit)" />,
+        },
+    ];
+
+    if (typeof softLimit === 'number') {
+        decorators.push({
+            strategy: strategyForSoftLimit,
+            component: (props) => <Component {...props} color="var(--sd-editor-colour__soft-limit)" />,
+        });
+    }
+
+    const decorator = new CompositeDecorator(decorators);
 
     return decorator;
 }

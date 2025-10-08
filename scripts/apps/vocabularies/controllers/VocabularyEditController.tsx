@@ -92,8 +92,8 @@ export function VocabularyEditController(
 
         // Insert default allowed workflows
         vocab.field_options = {
-            ...(vocab.field_options ?? {}),
             allowed_workflows: defaultAllowedWorkflows,
+            ...(vocab.field_options ?? {}),
         };
     }
 
@@ -311,7 +311,7 @@ export function VocabularyEditController(
 
     const fields = getFields();
 
-    $scope.customFieldTypes = Object.keys(fields).filter((id) => fields[id].private !== true).map((id) => ({
+    $scope.customFieldTypes = Object.keys(fields).filter((id) => fields[id].generic === true).map((id) => ({
         id: id,
         label: fields[id].label,
     }));

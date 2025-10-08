@@ -210,81 +210,81 @@ export function SearchService($location, session, multi,
             }
 
             switch (key) {
-            case 'from_desk':
-                addFromDeskFilter(key);
-                break;
-            case 'to_desk':
-                addToDeskFilter(key);
-                break;
-            case 'spike':
+                case 'from_desk':
+                    addFromDeskFilter(key);
+                    break;
+                case 'to_desk':
+                    addToDeskFilter(key);
+                    break;
+                case 'spike':
                 // Will get set in the base filters
-                break;
-            case 'featuremedia':
-                filters.push({exists: {field: 'associations.featuremedia'}});
-                break;
-            case 'subject':
-                filters.push({or: [
-                    {terms: {'subject.qcode': JSON.parse(params[key])}},
-                    {terms: {'subject.parent': JSON.parse(params[key])}},
-                ]});
-                break;
-            case 'company_codes':
-                filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
-                break;
-            case 'marked_desks':
-                filters.push({terms: {'marked_desks.desk_id': JSON.parse(params[key])}});
-                break;
-            case 'firstpublished':
-            case 'firstpublishedfrom':
-            case 'firstpublishedto':
-                var zeroHourSuffix = 'T00:00:00';
-                var midnightSuffix = 'T23:59:59';
+                    break;
+                case 'featuremedia':
+                    filters.push({exists: {field: 'associations.featuremedia'}});
+                    break;
+                case 'subject':
+                    filters.push({or: [
+                        {terms: {'subject.qcode': JSON.parse(params[key])}},
+                        {terms: {'subject.parent': JSON.parse(params[key])}},
+                    ]});
+                    break;
+                case 'company_codes':
+                    filters.push({terms: {'company_codes.qcode': JSON.parse(params[key])}});
+                    break;
+                case 'marked_desks':
+                    filters.push({terms: {'marked_desks.desk_id': JSON.parse(params[key])}});
+                    break;
+                case 'firstpublished':
+                case 'firstpublishedfrom':
+                case 'firstpublishedto':
+                    var zeroHourSuffix = 'T00:00:00';
+                    var midnightSuffix = 'T23:59:59';
 
-                getDateFilters().forEach((dateFilter) => {
-                    const fieldname = dateFilter.fieldname;
-                    const dateRangeKey = params[key];
+                    getDateFilters().forEach((dateFilter) => {
+                        const fieldname = dateFilter.fieldname;
+                        const dateRangeKey = params[key];
 
-                    if (params[key] != null && dateRangesByKey[dateRangeKey] != null) {
+                        if (params[key] != null && dateRangesByKey[dateRangeKey] != null) {
                         // handle predefined ranges
-                        facetrange[key] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
-                    } else {
+                            facetrange[key] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
+                        } else {
                         // handle manual ranges
 
-                        const value = params[key];
+                            const value = params[key];
 
-                        if (params[key] != null && key === fieldname + 'to') {
-                            if (facetrange[key] == null) {
-                                facetrange[key] = {};
+                            if (params[key] != null && key === fieldname + 'to') {
+                                if (facetrange[key] == null) {
+                                    facetrange[key] = {};
+                                }
+
+                                if (isElasticDateFormat(value)) {
+                                    facetrange[key].lte = value;
+                                } else {
+                                    facetrange[key].lte = formatDate(value, midnightSuffix);
+                                }
                             }
+                            if (params[key] != null && key === fieldname + 'from') {
+                                if (facetrange[key] == null) {
+                                    facetrange[key] = {};
+                                }
 
-                            if (isElasticDateFormat(value)) {
-                                facetrange[key].lte = value;
-                            } else {
-                                facetrange[key].lte = formatDate(value, midnightSuffix);
+                                if (isElasticDateFormat(value)) {
+                                    facetrange[key].gte = value;
+                                } else {
+                                    facetrange[key].gte = formatDate(value, zeroHourSuffix);
+                                }
                             }
                         }
-                        if (params[key] != null && key === fieldname + 'from') {
-                            if (facetrange[key] == null) {
-                                facetrange[key] = {};
-                            }
-
-                            if (isElasticDateFormat(value)) {
-                                facetrange[key].gte = value;
-                            } else {
-                                facetrange[key].gte = formatDate(value, zeroHourSuffix);
-                            }
-                        }
+                    });
+                    if (key) {
+                        filters.push({range: {'firstpublished': facetrange[key]}});
                     }
-                });
-                if (key) {
-                    filters.push({range: {'firstpublished': facetrange[key]}});
-                }
-                break;
-            default:
-                var filter = {term: {}};
+                    break;
+                default:
+                    var filter = {term: {}};
 
-                filter.term[key] = params[key];
-                filters.push(filter);
+                    filter.term[key] = params[key];
+                    filters.push(filter);
             }
         });
 
@@ -702,7 +702,13 @@ export function SearchService($location, session, multi,
     this.getTrackByIdentifier = getTrackByIdentifier;
 
     this.extractIdFromTrackByIndentifier = function(identifier: string) {
-        return identifier.slice(0, identifier.lastIndexOf(':'));
+        const lastIndex = identifier.lastIndexOf(':');
+
+        if (lastIndex === -1) {
+            return identifier;
+        }
+
+        return identifier.slice(0, lastIndex);
     };
 
     /*

@@ -1,14 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable no-case-declarations */
+/* eslint-disable react/display-name */
 import React from 'react';
-import {Map} from 'immutable';
-import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
     IAuthoringAction,
     IArticleSideWidget,
-    IContentProfileV2,
-    IExtensionActivationResult,
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringStorage,
@@ -20,9 +17,8 @@ import {
 import {AuthoringReact} from './authoring-react';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
-import {extensions} from 'appConfig';
-import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {flatMap} from 'lodash';
+import {appConfig, extensions} from 'appConfig';
+import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {
@@ -31,10 +27,9 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
-import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {ExportModal} from './toolbar/export-modal';
 import {TranslateModal} from './toolbar/translate-modal';
 import {HighlightsModal} from './toolbar/highlights-modal';
@@ -47,29 +42,78 @@ import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
+import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
+import {IconButton} from 'superdesk-ui-framework';
 
-function getAuthoringActionsFromExtensions(
-    item: IArticle,
-    contentProfile: IContentProfileV2,
-    fieldsData: Map<string, unknown>,
-): Array<IAuthoringAction> {
-    const actionGetters
-        : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
-    = flatMap(
-        Object.values(extensions),
-        (extension) => extension.activationResult.contributions?.getAuthoringActions ?? [],
-    );
-
-    return flatMap(
-        actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)),
-    );
+export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
+    return Object.values(extensions)
+        .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
+        .filter((widget) => widget.isAllowed?.(article) ?? true)
+        .sort((a, b) => a.order - b.order);
 }
-
-const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
 
 interface IProps {
     itemId: IArticle['_id'];
 }
+
+const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> => [{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="preview-mode"
+            ariaValue={gettext('Print preview')}
+            onClick={() => {
+                exposed.printPreview();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 1,
+    keyBindings: {'ctrl+shift+i': () => {
+        exposed.printPreview();
+    }},
+},
+{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="adjust"
+            ariaValue={gettext('Toggle theme')}
+            onClick={() => {
+                exposed.toggleTheme();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 2,
+    keyBindings: {'ctrl+shift+t': () => {
+        exposed.toggleTheme();
+    }},
+},
+{
+    availableOffline: true,
+    component: () => (
+        <IconButton
+            icon="switches"
+            ariaValue={gettext('Configure themes')}
+            onClick={() => {
+                exposed.configureTheme();
+            }}
+        />
+    ),
+    group: 'end',
+    priority: 3,
+    keyBindings: {'ctrl+shift+c': () => {
+        exposed.configureTheme();
+    }},
+}];
+
+export type ISideWidget = {
+    activeId?: string;
+    pinnedId?: string;
+};
 
 const getCompareVersionsModal = (
     getLatestItem: IExposedFromAuthoring<IArticle>['getLatestItem'],
@@ -225,9 +269,6 @@ interface IPropsWrapper extends IProps {
         actions: Array<ITopBarWidget<IArticle>>;
     };
 
-    // Hides the toolbar which includes the "Print Preview" button.
-    hideSecondaryToolbar?: boolean;
-
     // If it's not passed then the sidebar is shown expanded and can't be collapsed.
     // If hidden is passed then it can't be expanded.
     // If it's set to true or false then it can be collapsed/expanded back.
@@ -249,10 +290,7 @@ interface IPropsWrapper extends IProps {
 
 interface IState {
     sidebarMode: boolean | 'hidden';
-    sideWidget: null | {
-        id: string;
-        pinned?: boolean;
-    };
+    sideWidget: ISideWidget;
 }
 
 export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper, IState> {
@@ -262,10 +300,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         super(props);
 
         const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
+        const widgetId = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
 
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
-            sideWidget: localStorageWidget != null ? JSON.parse(localStorageWidget) : null,
+            sideWidget: {
+                pinnedId: widgetId,
+                activeId: widgetId,
+            },
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
@@ -279,7 +321,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     componentDidUpdate(_prevProps: IPropsWrapper, prevState: IState): void {
-        if (this.state.sideWidget?.id != null && this.state.sideWidget?.id != prevState.sideWidget?.id) {
+        if (
+            this.state.sideWidget?.pinnedId != null
+            && this.state.sideWidget?.pinnedId != prevState.sideWidget?.pinnedId
+        ) {
             this.loadWidgetFromPreferences();
         }
     }
@@ -290,8 +335,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         if (pinnedWidgetPreference?._id != null) {
             this.setState({
                 sideWidget: {
-                    id: pinnedWidgetPreference._id,
-                    pinned: true,
+                    pinnedId: pinnedWidgetPreference._id,
+                    activeId: pinnedWidgetPreference._id,
                 },
             });
         }
@@ -326,246 +371,280 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     render() {
-        function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
-            return Object.values(extensions)
-                .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-                .filter((widget) => widget.isAllowed?.(article) ?? true)
-                .sort((a, b) => a.order - b.order);
-        }
-
-        const getSidebar = (options: IExposedFromAuthoring<IArticle>) => {
-            const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(options.item)
-                .map((widget) => {
-                    const tab: ISideBarTab = {
-                        icon: widget.icon,
-                        size: 'big',
-                        tooltip: widget.label,
-                        id: widget._id,
-                    };
-
-                    return tab;
-                });
-
-            const {sideWidget} = this.state;
-
-            return (
-                <Nav.SideBarTabs
-                    disabled={sideWidget?.pinned}
-                    activeTab={sideWidget?.id}
-                    onActiveTabChange={(nextWidgetId) => {
-                        if (nextWidgetId == null && closedIntentionally.value == true) {
-                            closedIntentionally.value = false;
-                        }
-
-                        const isWidgetPinned = (() => {
-                            if (sideWidget?.id != null && sideWidget.id === nextWidgetId) {
-                                return sideWidget.pinned;
-                            }
-
-                            return false;
-                        })();
-
-                        this.setState({
-                            sideWidget: nextWidgetId == null ? null : {
-                                id: nextWidgetId,
-                                pinned: isWidgetPinned,
-                            },
-                        });
-                    }}
-                    items={sidebarTabs}
-                />
-            );
-        };
-
         const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
 
-        const secondaryToolbarWidgetsReady: Array<React.ComponentType<{item: IArticle}>> =
-            defaultToolbarItems.concat(secondaryToolbarWidgetsFromExtensions).map(
-                (Component) => (props: {item: IArticle}) => <Component article={props.item} />,
-            );
-
         return (
             <WithInteractiveArticleActionsPanel location="authoring">
-                {(panelState, panelActions) => {
-                    return (
-                        <AuthoringReact
-                            themingEnabled
-                            onFieldChange={this.props.onFieldChange}
-                            hideSecondaryToolbar={this.props.hideSecondaryToolbar}
-                            ref={(component) => {
-                                this.authoringReactRef = component;
-                            }}
-                            itemId={this.props.itemId}
-                            resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
-                            onClose={() => this.props.onClose()}
-                            authoringStorage={this.props.authoringStorage}
-                            fieldsAdapter={getFieldsAdapter(this.props.authoringStorage)}
-                            storageAdapter={{
-                                storeValue: (value, fieldId, article) => {
-                                    return {
-                                        ...article,
-                                        extra: {
-                                            ...(article.extra ?? {}),
-                                            [fieldId]: value,
-                                        },
-                                    };
-                                },
-                                retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
-                            }}
-                            getLanguage={(article) => article.language ?? 'en'}
-                            onEditingStart={(article) => {
-                                dispatchCustomEvent('articleEditStart', article);
-                            }}
-                            onEditingEnd={(article) => {
-                                dispatchCustomEvent('articleEditEnd', article);
-                            }}
-                            getActions={({
-                                item,
-                                contentProfile,
-                                fieldsData,
-                                getLatestItem,
-                                handleUnsavedChanges,
-                                hasUnsavedChanges,
-                                authoringStorage,
-                                fieldsAdapter,
-                                storageAdapter,
-                            }) => {
-                                const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
+                {(panelState, panelActions) => (
+                    <AuthoringReact
+                        onFieldChange={this.props.onFieldChange}
+                        ref={(component) => {
+                            this.authoringReactRef = component;
+                        }}
+                        itemId={this.props.itemId}
+                        resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
+                        onClose={() => this.props.onClose()}
+                        authoringStorage={this.props.authoringStorage}
+                        fieldsAdapter={getFieldsAdapter(this.props.authoringStorage)}
+                        storageAdapter={{
+                            storeValue: (value, fieldId, article) => {
+                                return {
+                                    ...article,
+                                    extra: {
+                                        ...(article.extra ?? {}),
+                                        [fieldId]: value,
+                                    },
+                                };
+                            },
+                            retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
+                        }}
+                        headerToolbar={((exposed) => {
+                            const getProfileAndReinitialize = (item: IArticle) =>
+                                this.props.authoringStorage.getContentProfile(
                                     item,
-                                    contentProfile,
-                                    fieldsData,
-                                );
-                                const articleActionsFromExtensions = getArticleActionsFromExtensions(item);
+                                    exposed.fieldsAdapter,
+                                ).then((profile) => {
+                                    exposed.reinitialize(item, profile);
+                                });
 
-                                return [
-                                    getSaveAsTemplate(getLatestItem),
-                                    getCompareVersionsModal(
-                                        getLatestItem,
-                                        authoringStorage,
-                                        fieldsAdapter,
-                                        storageAdapter,
-                                    ),
-                                    getMultiEditModal(getLatestItem),
-                                    getHighlightsAction(getLatestItem),
-                                    getMarkedForDesksModal(getLatestItem),
-                                    getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
-                                    getTranslateModal(getLatestItem),
-                                    ...authoringActionsFromExtensions,
-                                    ...articleActionsFromExtensions,
-                                ];
-                            }}
-                            getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
-                            sideWidget={this.state.sideWidget}
-                            onSideWidgetChange={(sideWidget) => {
-                                this.setState({sideWidget});
-                            }}
-                            getInlineToolbarActions={this.props.getInlineToolbarActions}
-                            getAuthoringPrimaryToolbarWidgets={
-                                this.props.getAuthoringPrimaryToolbarWidgets != null
-                                    ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
-                                    : undefined
-                            }
-                            getSidePanel={({
+                            return [{
+                                component: ({entity}) => (
+                                    <div className="authoring-header__general-info">
+                                        <ContentProfileDropdown
+                                            item={entity}
+                                            reinitialize={(item) => {
+                                                const handledChanges = exposed.hasUnsavedChanges()
+                                                    ? exposed.handleUnsavedChanges()
+                                                    : Promise.resolve();
+
+                                                handledChanges.then(() => {
+                                                    getProfileAndReinitialize(item);
+                                                });
+                                            }}
+                                        />
+                                    </div>
+                                ),
+                                availableOffline: false,
+                                group: 'start',
+                                priority: 1,
+                            }];
+                        })}
+                        getLanguage={(article) => article.language ?? 'en'}
+                        onEditingStart={(article) => {
+                            dispatchCustomEvent('articleEditStart', article);
+                        }}
+                        onEditingEnd={(article) => {
+                            dispatchCustomEvent('articleEditEnd', article);
+                        }}
+                        getActions={({
+                            item,
+                            contentProfile,
+                            fieldsData,
+                            getLatestItem,
+                            handleUnsavedChanges,
+                            hasUnsavedChanges,
+                            authoringStorage,
+                            fieldsAdapter,
+                            storageAdapter,
+                            spellchecker,
+                        }) => {
+                            const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
-                                getLatestItem,
                                 contentProfile,
                                 fieldsData,
-                                handleFieldsDataChange,
-                                fieldsAdapter,
-                                storageAdapter,
-                                authoringStorage,
-                                handleUnsavedChanges,
-                                sideWidget,
-                                onItemChange,
-                            }, readOnly) => {
-                                if (panelState.active === true) {
-                                    return (
-                                        <InteractiveArticleActionsPanel
-                                            items={panelState.items}
-                                            tabs={panelState.tabs}
-                                            activeTab={panelState.activeTab}
-                                            handleUnsavedChanges={
-                                                () => handleUnsavedChanges().then((res) => [res])
-                                            }
-                                            onClose={panelActions.closePanel}
-                                            markupV2
-                                        />
-                                    );
+                            );
+
+                            const actions = [
+                                getSaveAsTemplate(getLatestItem),
+                                getCompareVersionsModal(
+                                    getLatestItem,
+                                    authoringStorage,
+                                    fieldsAdapter,
+                                    storageAdapter,
+                                ),
+                                getMultiEditModal(getLatestItem),
+                                getHighlightsAction(getLatestItem),
+                                getMarkedForDesksModal(getLatestItem),
+                                getExportModal(getLatestItem, handleUnsavedChanges, hasUnsavedChanges),
+                                getTranslateModal(getLatestItem),
+                                ...authoringActionsFromExtensions,
+                            ];
+
+                            const getSpellcheckerAction = (): IAuthoringAction | null => {
+                                if (appConfig.features.useTansaProofing !== true) {
+                                    return {
+                                        label: spellchecker.enabled
+                                            ? gettext('Disable spellchecker')
+                                            : gettext('Enable spellchecker'),
+                                        onTrigger: () => {
+                                            spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
+                                        },
+                                        keyBindings: {
+                                            'ctrl+shift+y': () => {
+                                                spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
+                                            },
+                                        },
+                                    } satisfies IAuthoringAction;
                                 }
 
-                                if (sideWidget == null) {
-                                    return null;
-                                }
+                                return null;
+                            };
 
-                                const WidgetComponent = getWidgetsFromExtensions(item)
-                                    .find((widget) => sideWidget === widget._id)?.component;
+                            const spellcheckerAction = getSpellcheckerAction();
 
+                            if (spellcheckerAction != null) {
+                                actions.push(spellcheckerAction);
+                            }
+
+                            return actions;
+                        }}
+                        getSidebarWidgetsCount={({item}) => getWidgetsFromExtensions(item).length}
+                        sideWidget={this.state.sideWidget}
+                        onSideWidgetChange={(sideWidget) => {
+                            this.setState({sideWidget});
+                            closedIntentionally.value = false;
+                        }}
+                        getInlineToolbarActions={this.props.getInlineToolbarActions}
+                        getAuthoringPrimaryToolbarWidgets={
+                            this.props.getAuthoringPrimaryToolbarWidgets != null
+                                ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
+                                : undefined
+                        }
+                        getSidePanel={({
+                            item,
+                            getLatestItem,
+                            contentProfile,
+                            fieldsData,
+                            handleFieldsDataChange,
+                            fieldsAdapter,
+                            storageAdapter,
+                            authoringStorage,
+                            handleUnsavedChanges,
+                            sideWidget,
+                            onItemChange,
+                            getValidationErrors,
+                            setValidationErrors,
+                        }, readOnly) => {
+                            if (panelState.active === true) {
                                 return (
-                                    <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
-                                        {(widgetRef) => (
-                                            <WidgetComponent
-                                                ref={widgetRef}
-                                                initialState={(() => {
-                                                    const localStorageWidgetState =
-                                                        JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
-
-                                                    if (localStorageWidgetState?.id != null) {
-                                                        const initialState = localStorageWidgetState?.initialState;
-
-                                                        sdApi.preferences.update(
-                                                            PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
-                                                            {type: 'string', _id: localStorageWidgetState?.id},
-                                                        );
-
-                                                        // Once a user switches the widget, authoring gets
-                                                        // re-rendered 3-4 times, causing this logic to run more
-                                                        // than once. To prevent wrong widget state its
-                                                        // deleted after 5 seconds.
-                                                        setTimeout(() => {
-                                                            localStorage.removeItem('SIDE_WIDGET');
-                                                        }, 5000);
-
-                                                        closedIntentionally.value = false;
-                                                        return initialState;
-                                                    }
-
-                                                    if (
-                                                        localStorageWidgetState == null
-                                                        && closedIntentionally.value === true
-                                                        && widgetState[this.state.sideWidget.id] != null
-                                                    ) {
-                                                        return widgetState[this.state.sideWidget.id];
-                                                    }
-
-                                                    return undefined;
-                                                })()}
-                                                article={item}
-                                                getLatestArticle={getLatestItem}
-                                                contentProfile={contentProfile}
-                                                fieldsData={fieldsData}
-                                                authoringStorage={authoringStorage}
-                                                fieldsAdapter={fieldsAdapter}
-                                                storageAdapter={storageAdapter}
-                                                onFieldsDataChange={handleFieldsDataChange}
-                                                readOnly={readOnly}
-                                                handleUnsavedChanges={() => handleUnsavedChanges()}
-                                                onItemChange={onItemChange}
-                                            />
-                                        )}
-                                    </WidgetStatePersistenceHOC>
+                                    <InteractiveArticleActionsPanel
+                                        items={panelState.items}
+                                        tabs={panelState.tabs}
+                                        activeTab={panelState.activeTab}
+                                        handleUnsavedChanges={
+                                            () => handleUnsavedChanges().then((res) => [res])
+                                        }
+                                        onClose={panelActions.closePanel}
+                                        onError={(error) => {
+                                            if (error.kind === 'publishing-error') {
+                                                setValidationErrors({
+                                                    ...getValidationErrors(),
+                                                    ...error.fields,
+                                                });
+                                            } else {
+                                                assertNever(error.kind);
+                                            }
+                                        }}
+                                        onDataChange={(item) => {
+                                            onItemChange(item);
+                                        }}
+                                        markupV2
+                                    />
                                 );
-                            }}
-                            getSidebar={this.state.sidebarMode !== true ? null : getSidebar}
-                            secondaryToolbarWidgets={secondaryToolbarWidgetsReady}
-                            validateBeforeSaving={false}
-                            getSideWidgetIdAtIndex={(article, index) => {
-                                return getWidgetsFromExtensions(article)[index]._id;
-                            }}
-                            autoFocus={this.props.autoFocus}
-                        />
-                    );
-                }}
+                            }
+
+                            if (sideWidget == null) {
+                                return null;
+                            }
+
+                            const WidgetComponent = getWidgetsFromExtensions(item)
+                                .find((widget) => sideWidget === widget._id)?.component;
+
+                            return (
+                                <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
+                                    {(widgetRef) => (
+                                        <WidgetComponent
+                                            ref={widgetRef}
+                                            initialState={(() => {
+                                                const localStorageWidgetState =
+                                                    JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+
+                                                if (localStorageWidgetState?.id != null) {
+                                                    const initialState = localStorageWidgetState?.initialState;
+
+                                                    sdApi.preferences.update(
+                                                        PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
+                                                        {type: 'string', _id: localStorageWidgetState?.id},
+                                                    );
+
+                                                    // Once a user switches the widget, authoring gets
+                                                    // re-rendered 3-4 times, causing this logic to run more
+                                                    // than once. To prevent wrong widget state its
+                                                    // deleted after 5 seconds.
+                                                    setTimeout(() => {
+                                                        localStorage.removeItem('SIDE_WIDGET');
+                                                    }, 5000);
+
+                                                    closedIntentionally.value = false;
+                                                    return initialState;
+                                                }
+
+                                                if (
+                                                    localStorageWidgetState == null
+                                                    && closedIntentionally.value === true
+                                                    && widgetState[this.state.sideWidget?.activeId] != null
+                                                ) {
+                                                    return widgetState[this.state.sideWidget?.activeId];
+                                                }
+
+                                                return undefined;
+                                            })()}
+                                            article={item}
+                                            getLatestArticle={getLatestItem}
+                                            contentProfile={contentProfile}
+                                            fieldsData={fieldsData}
+                                            authoringStorage={authoringStorage}
+                                            fieldsAdapter={fieldsAdapter}
+                                            storageAdapter={storageAdapter}
+                                            onFieldsDataChange={handleFieldsDataChange}
+                                            readOnly={readOnly}
+                                            handleUnsavedChanges={() => handleUnsavedChanges()}
+                                            onItemChange={onItemChange}
+                                        />
+                                    )}
+                                </WidgetStatePersistenceHOC>
+                            );
+                        }}
+                        getSidebar={this.state.sidebarMode !== true ? null : (options) => (
+                            <AuthoringIntegrationWrapperSidebar
+                                options={options}
+                                sideWidget={this.state.sideWidget}
+                                setSideWidget={(sideWidget) => {
+                                    this.setState({sideWidget});
+                                    closedIntentionally.value = false;
+                                }}
+                            />
+                        )}
+                        getSecondaryToolbarWidgets={(exposed) => [
+                            {
+                                availableOffline: true,
+                                component: () => (
+                                    <CreatedModifiedInfo article={exposed.item} />
+                                ),
+                                group: 'start',
+                                priority: 1,
+                            },
+                            ...secondaryToolbarWidgetsFromExtensions,
+                            ...getAuthoringCosmeticActions(exposed),
+                        ]}
+                        validateBeforeSaving={false}
+                        getSideWidgetIdAtIndex={(article, index) => {
+                            return getWidgetsFromExtensions(article)[index]._id;
+                        }}
+                        autoFocus={this.props.autoFocus}
+                    />
+                )}
             </WithInteractiveArticleActionsPanel>
         );
     }

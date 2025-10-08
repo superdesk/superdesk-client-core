@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from 'apps/contacts/components';
 import {gettext} from 'core/utils';
-
-import {IContact} from '../Contacts';
+import {IContact} from 'superdesk-api';
 
 interface IProps {
     svc: {
@@ -87,15 +86,15 @@ export class ItemList extends React.Component<IProps, IState> {
         let diff;
 
         switch (event.keyCode) {
-        case Keys.right:
-        case Keys.down:
-            diff = 1;
-            break;
+            case Keys.right:
+            case Keys.down:
+                diff = 1;
+                break;
 
-        case Keys.left:
-        case Keys.up:
-            diff = -1;
-            break;
+            case Keys.left:
+            case Keys.up:
+                diff = -1;
+                break;
         }
 
         const highlightSelected = () => {

@@ -126,7 +126,6 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                 onHide={this.props.closeModal}
                 visible
                 maximized
-                zIndex={1050}
                 headerTemplate={gettext('Compare article versions')}
                 contentPadding="none"
             >

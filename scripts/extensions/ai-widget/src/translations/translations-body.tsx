@@ -118,32 +118,31 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                         ariaValue={gettext('Copy')}
                         icon="copy"
                         onClick={() => {
-                            navigator.clipboard.writeText(translation);
+                            const clipboardItem = new ClipboardItem(
+                                {'text/html': new Blob([translation], {type: 'text/html'})},
+                            );
+
+                            navigator.clipboard.write([clipboardItem]);
                         }}
                     />
                     {this.props.mode === 'current' && (
                         <Button
                             onClick={() => {
-                                const currentDeskId = superdesk.entities.desk.getActiveDeskId();
-                                const taskData = (() => {
-                                    if (currentDeskId != null) {
-                                        const currentDesk = superdesk.entities.desk.getDeskById(currentDeskId);
+                                const {article: articleApi} = superdesk.entities;
 
-                                        return {
-                                            user: article.task.user,
-                                            desk: currentDesk._id,
-                                            stage: currentDesk.working_stage,
-                                        };
-                                    }
-
-                                    return {user: article.task.user};
-                                })();
-
-                                superdesk.entities.article.createNewWithData({
-                                    body_html: translation,
-                                    task: taskData,
-                                    language: this.props.activeLanguageId,
-                                }, article.profile);
+                                articleApi.translate(
+                                    article,
+                                    this.props.activeLanguageId,
+                                ).then((translatedItem) =>
+                                    articleApi.get(translatedItem._id).then((fullTranslatedItem) => {
+                                        return articleApi.patch(
+                                            fullTranslatedItem,
+                                            {body_html: translation, fields_meta: {}},
+                                        ).then(() => {
+                                            superdesk.ui.article.edit(fullTranslatedItem._id);
+                                        });
+                                    }),
+                                );
                             }}
                             size="small"
                             text={gettext('Create article')}
@@ -160,7 +159,7 @@ export default class TranslationsBody extends React.Component<IProps, IState> {
                                         'body_html',
                                         superdesk.helpers.editor3ToOperationalFormat(
                                             {rawContentState: rawState},
-                                            this.props.article.language,
+                                            article.language,
                                         ),
                                     ));
                             } else {

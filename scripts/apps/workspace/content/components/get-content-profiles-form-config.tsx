@@ -1,4 +1,4 @@
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {
     IFormField,
     IFormGroup,
@@ -6,6 +6,7 @@ import {
     FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
     ICommonFieldConfig,
+    ISuperdeskGlobalConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
@@ -30,8 +31,18 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
+type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {editor3Style: string}
+
+export const customEditorTags: Array<IEnhancedTag> = (appConfig.authoring?.customEditorTags ?? []).map((item) => {
+    return {
+        ...item,
+        editor3Style: `EDITOR_TAG_${item.id}`,
+    };
+});
+
 export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
     return {
+        ...Object.fromEntries((customEditorTags ?? []).map(({editor3Style, label}) => [editor3Style, label])),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),
@@ -110,17 +121,20 @@ function getEditor3FormattingOptions(
     }
 }
 
+type IContentProfileFormField =
+    IFormGroup<IContentProfileFieldWithSystemId> | IFormField<IContentProfileFieldWithSystemId>;
+
 export function getContentProfileFormConfig(
     editor: IContentProfileEditorConfig,
     schema: any,
     customFields: Array<any>,
     field?: Partial<IContentProfileFieldWithSystemId> | undefined,
-): IFormGroup {
+): IFormGroup<IContentProfileFieldWithSystemId> {
     const customField = field?.id != null ? customFields.find(({_id}) => field.id === _id) : null;
 
-    const sdWidthField: IFormField = {
+    const sdWidthField: IContentProfileFormField = {
         label: gettext('Width'),
-        type: FormFieldType.select,
+        type: GenericFormFieldType.select,
         component_parameters: {
             options: [
                 {id: 'full', label: gettext('Full')},
@@ -133,21 +147,21 @@ export function getContentProfileFormConfig(
         required: true,
     };
 
-    const requiredField: IFormField = {
+    const requiredField: IContentProfileFormField = {
         label: gettext('Required'),
-        type: FormFieldType.checkbox,
+        type: GenericFormFieldType.checkbox,
         field: 'required',
         required: false,
     };
 
-    const readonlyField: IFormField = {
+    const readonlyField: IContentProfileFormField = {
         label: gettext('Read-only'),
-        type: FormFieldType.checkbox,
+        type: GenericFormFieldType.checkbox,
         field: 'readonly',
         required: false,
     };
 
-    const fields: Array<IFormField | IFormGroup> = [
+    const fields: Array<IContentProfileFormField> = [
         requiredField,
         readonlyField,
         sdWidthField,
@@ -160,9 +174,9 @@ export function getContentProfileFormConfig(
             || customField?.field_type === 'text'
         )
     ) {
-        const minimumLengthField: IFormField = {
+        const minimumLengthField: IContentProfileFormField = {
             label: gettext('Minimum length'),
-            type: FormFieldType.number,
+            type: GenericFormFieldType.number,
             field: 'minlength',
             required: false,
             component_parameters: {
@@ -170,9 +184,9 @@ export function getContentProfileFormConfig(
             },
         };
 
-        const maximumLengthField: IFormField = {
+        const maximumLengthField: IContentProfileFormField = {
             label: gettext('Maximum length'),
-            type: FormFieldType.number,
+            type: GenericFormFieldType.number,
             field: 'maxlength',
             required: false,
             component_parameters: {
@@ -180,19 +194,29 @@ export function getContentProfileFormConfig(
             },
         };
 
-        const minMax: IFormGroup = {
-            direction: 'horizontal',
+        const maximumSoftLengthField: IContentProfileFormField = {
+            label: gettext('Maximum soft length'),
+            type: GenericFormFieldType.number,
+            field: 'maxSoftLength',
+            required: false,
+            component_parameters: {
+                style: {boxed: true},
+            },
+        };
+
+        const minMax: IContentProfileFormField = {
+            direction: 'vertical',
             type: 'inline',
-            form: [minimumLengthField, maximumLengthField],
+            form: [minimumLengthField, maximumLengthField, maximumSoftLengthField],
         };
 
         fields.push(minMax);
     }
 
     if (field?.id === 'dateline') {
-        const hideDateField: IFormField = {
+        const hideDateField: IContentProfileFormField = {
             label: gettext('Hide Date'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'hideDate',
             required: false,
         };
@@ -203,9 +227,9 @@ export function getContentProfileFormConfig(
     // enable preview config for CVs
     // we display other fields by default already
     if (field?.id != null && customField != null && customField.field_type == null) {
-        const showInPreviewField: IFormField = {
+        const showInPreviewField: IContentProfileFormField = {
             label: gettext('Show in preview'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'preview',
             required: false,
         };
@@ -214,9 +238,9 @@ export function getContentProfileFormConfig(
     }
 
     if (field?.id != null && schema[field.id]?.type === 'string') {
-        const cleanPastedHtmlField: IFormField = {
+        const cleanPastedHtmlField: IContentProfileFormField = {
             label: gettext('Clean Pasted HTML'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'cleanPastedHTML',
             required: false,
         };
@@ -226,17 +250,22 @@ export function getContentProfileFormConfig(
 
     const characterValidationEnabled = appConfig?.disallowed_characters != null;
 
+    /**
+     * validate_characters switch doesn't make sense in authoring-react
+     * because there is a dedicated config per field which chars are disallowed.
+     */
     if (
-        field?.id != null
+        authoringReactViewEnabled
+        && field?.id != null
         && characterValidationEnabled
         && (
             schema[field.id]?.type === 'string'
             || customField?.field_type === 'text'
         )
     ) {
-        const validateCharactersField: IFormField = {
+        const validateCharactersField: IContentProfileFormField = {
             label: gettext('Validate Characters'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'validate_characters',
             required: false,
         };
@@ -244,16 +273,16 @@ export function getContentProfileFormConfig(
         fields.push(validateCharactersField);
     }
 
-    const formConfig: IFormGroup = {
+    const formConfig: IContentProfileFormField = {
         direction: 'vertical',
         type: 'inline',
         form: fields,
     };
 
     if (field?.id != null && hasFormattingOptions(field.id, editor, customFields)) {
-        const formattingOptionsEditor3Field: IFormField = {
+        const formattingOptionsEditor3Field: IContentProfileFormField = {
             label: gettext('Formatting options'),
-            type: FormFieldType.selectMultiple,
+            type: GenericFormFieldType.selectMultiple,
             field: 'formatOptions',
             required: false,
             component_parameters: {
@@ -267,9 +296,9 @@ export function getContentProfileFormConfig(
     }
 
     if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {
-        const showCropsField: IFormField = {
+        const showCropsField: IContentProfileFormField = {
             label: gettext('Show Crops'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'showCrops',
             required: false,
         };
@@ -287,9 +316,9 @@ export function getContentProfileFormConfig(
             )
         )
     ) {
-        const showImageTitleField: IFormField = {
+        const showImageTitleField: IContentProfileFormField = {
             label: gettext('Show Image Title'),
-            type: FormFieldType.checkbox,
+            type: GenericFormFieldType.checkbox,
             field: 'imageTitle',
             required: false,
         };
@@ -297,9 +326,9 @@ export function getContentProfileFormConfig(
         fields.push(showImageTitleField);
     }
 
-    const showToggle: IFormField = {
+    const showToggle: IContentProfileFormField = {
         label: gettext('Allow field to be toggled'),
-        type: FormFieldType.checkbox,
+        type: GenericFormFieldType.checkbox,
         field: nameof<ICommonFieldConfig>('allow_toggling'),
         required: false,
     };
@@ -309,9 +338,9 @@ export function getContentProfileFormConfig(
     }
 
     if (field?.id === 'sms') {
-        const prefillSmsField: IFormField = {
+        const prefillSmsField: IContentProfileFormField = {
             label: gettext('Prefill the field with text from:'),
-            type: FormFieldType.select,
+            type: GenericFormFieldType.select,
             component_parameters: {
                 options: [
                     {id: '', label: gettext('Abstract')},

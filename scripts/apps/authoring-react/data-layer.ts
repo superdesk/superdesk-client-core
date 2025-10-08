@@ -25,7 +25,7 @@ import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
-import moment from 'moment';
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 export function getArticleContentProfile<T>(
     item: IArticle,
@@ -46,12 +46,12 @@ export function getArticleContentProfile<T>(
      */
     function adjustId(fieldId: string): string {
         switch (fieldId) {
-        case 'sms':
+            case 'sms':
             // in content profile the field ID is "sms"
             // but value is written to `IArticle['sms_message']`
-            return 'sms_message';
-        default:
-            return fieldId;
+                return 'sms_message';
+            default:
+                return fieldId;
         }
     }
 
@@ -64,12 +64,33 @@ export function getArticleContentProfile<T>(
         const {editor, fields, schema} = fakeScope;
         const fieldExists = (fieldId) => fakeScope.editor[fieldId] != null;
 
-        // Avoid having unnecessary adapters for fields
-        // to which we do not write data e.g. 'footer'.
-        // Authoring react doesn't support companion
-        // fields like 'footer' that don't have data on
-        // their own but simply modify the data of other fields.
-        const fieldsToOmit = ['footer'];
+        /**
+         * Insert a field which alongside the adapter will use the media field type
+         * to enable viewing and editing of the original media item.
+         */
+        if (['picture', 'audio', 'video', 'graphic'].includes(item.type)) {
+            editor['_media_self'] = {
+                'order': 0,
+                'sdWidth': 'full',
+                'section': 'content',
+                'enabled': true,
+            };
+        }
+
+        const fieldsToOmit = [
+            /**
+             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
+             * authoring-react doesn't support companion fields like 'footer' that don't have data on
+             * their own but simply modify the data of other fields.
+             */
+            'footer',
+
+            /**
+             * `media_description` isn't used anywhere. It might still be present in content profiles, so
+             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
+             */
+            'media_description',
+        ];
 
         const fieldsOrdered =
             Object.keys(editor)
@@ -250,27 +271,9 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
     getEntity: (id) => {
         // TODO: take published items into account
 
-        return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
-            const adapter = getArticleAdapter();
+        const adapter = getArticleAdapter();
 
-            const saved = adapter.toAuthoringReact(_saved);
-
-            if (sdApi.article.isLockedInOtherSession(saved)) {
-                return {saved, autosaved: null};
-            } else if (sdApi.article.isLockedInCurrentSession(saved)) {
-                return new Promise<IArticle>((resolve) => {
-                    authoringStorageIArticle.autosave.get(id)
-                        .then((_autosaved) => {
-                            resolve(adapter.toAuthoringReact(_autosaved));
-                        })
-                        .catch(() => {
-                            resolve(null);
-                        });
-                }).then((autosaved) => ({saved, autosaved}));
-            } else {
-                return {saved, autosaved: null};
-            }
-        });
+        return dataApi.findOne<IArticle>('archive', id).then((saved) => adapter.toAuthoringReact(saved));
     },
     isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
     forceLock(entity) {
@@ -342,10 +345,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             return getArticleContentProfile(item, fieldsAdapter);
         }
     },
-    closeAuthoring: (current, original, cancelAutosave, doClose) => {
-        const diff = generatePatch(original, current);
-        const hasUnsavedChanges = Object.keys(diff).length > 0;
-
+    closeAuthoring: (current, original, hasUnsavedChanges, cancelAutosave, doClose) => {
         const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',
             payload: {},
@@ -395,14 +395,11 @@ export const getAuthoringStorageIArticleKillOrTakedown = (
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {
-        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
-            return sdApi.article.getItemPatchWithKillOrTakedownTemplate(saved, action).then((updated) => {
+        return authoringStorageIArticle.getEntity(id).then((saved) => {
+            return sdApi.article.getItemPatchWithKillOrTakedownTemplate(saved, action).then((patch) => {
                 return {
-                    saved: {
-                        ...updated,
-                        ...saved, // updated is missing original_creator property so we get it from the saved article
-                    },
-                    autosaved: autosaved,
+                    ...saved,
+                    ...patch,
                 };
             });
         });
@@ -414,15 +411,15 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
     ...authoringStorageIArticle,
     autosave: new AutoSaveKill(),
     getEntity: (id) => {
-        return authoringStorageIArticle.getEntity(id).then(({saved, autosaved}) => {
+        return authoringStorageIArticle.getEntity(id).then((saved) => {
             const newItem = {...saved};
 
             newItem.flags.marked_for_sms = false;
             newItem.sms_message = '';
 
             const {override_ednote_for_corrections, override_ednote_template} = appConfig;
-            const date = moment(newItem.versioncreated)
-                .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+
+            const date = formatDateTime(newItem.versioncreated);
 
             if (override_ednote_for_corrections && override_ednote_template == null) {
                 const lineBreak = '\r\n\r\n';
@@ -440,10 +437,7 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
 
             delete newItem.fields_meta['ednote'];
 
-            return {
-                saved: newItem,
-                autosaved: newItem,
-            };
+            return saved;
         });
     },
     saveEntity: () => new Promise(noop),

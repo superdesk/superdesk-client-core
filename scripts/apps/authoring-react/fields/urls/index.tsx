@@ -16,6 +16,7 @@ export function getUrlsField()
 : ICustomFieldType<IUrlsFieldValueOperational, IUrlsFieldValueStorage, IUrlsFieldConfig, IUrlsFieldUserPreferences> {
     const field: ReturnType<typeof getUrlsField> = {
         id: URL_FIELD_ID,
+        generic: true,
         label: gettext('Urls (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

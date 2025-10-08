@@ -26,44 +26,50 @@ import {IActiveCell} from '../components/tables/TableBlock';
  */
 const editor3 = (state: IEditorStore, action) => {
     switch (action.type) {
-    case 'EDITOR_CHANGE_STATE':
-        return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
-    case 'EDITOR_PUSH_STATE':
-        return pushState(state, action.payload.contentState);
-    case 'EDITOR_SET_LOCKED':
-        return setLocked(state, action.payload);
-    case 'EDITOR_SET_READONLY':
-        return setReadOnly(state, action.payload);
-    case 'EDITOR_TAB':
-        return onTab(state, action.payload);
-    case 'EDITOR_FORCE_UPDATE':
-        return forceUpdate(state);
-    case 'EDITOR_SET_ABBREVIATIONS':
-        return setAbbreviations(state, action.payload);
-    case 'EDITOR_DRAG_DROP':
-        return dragDrop(state, action.payload);
-    case 'EDITOR_SET_CELL':
-        return setCell(state, action.payload);
-    case 'MERGE_ENTITY_DATA_BY_KEY':
-        return mergeEntityDataByKey(state, action.payload);
-    case 'EDITOR_CHANGE_IMAGE_CAPTION':
-        return changeImageCaption(state, action.payload);
-    case 'EDITOR_SET_HTML_FROM_TANSA':
-        return setHtmlFromTansa(state, action.payload);
-    case 'EDITOR_MOVE_BLOCK':
-        return moveBlock(state, action.payload);
-    case 'EDITOR_APPLY_EMBED':
-        return applyEmbed(state, action.payload);
-    case 'EDITOR_LOADING':
-        return setLoading(state, action.payload);
-    case 'EDITOR_CHANGE_LIMIT_CONFIG':
-        return changeLimitConfig(state, action.payload);
-    case 'EDITOR_AUTOCOMPLETE':
-        return autocomplete(state, action.payload);
-    case 'SET_EXTERNAL_OPTIONS':
-        return setExternalOptions(state, action.payload);
-    default:
-        return state;
+        case 'EDITOR_CHANGE_STATE':
+            return onChange(
+                state,
+                action.payload.editorState,
+                action.payload.force,
+                false,
+                action.payload.skipOnChange,
+            );
+        case 'EDITOR_PUSH_STATE':
+            return pushState(state, action.payload.contentState);
+        case 'EDITOR_SET_LOCKED':
+            return setLocked(state, action.payload);
+        case 'EDITOR_SET_READONLY':
+            return setReadOnly(state, action.payload);
+        case 'EDITOR_TAB':
+            return onTab(state, action.payload);
+        case 'EDITOR_FORCE_UPDATE':
+            return forceUpdate(state);
+        case 'EDITOR_SET_ABBREVIATIONS':
+            return setAbbreviations(state, action.payload);
+        case 'EDITOR_DRAG_DROP':
+            return dragDrop(state, action.payload);
+        case 'EDITOR_SET_CELL':
+            return setCell(state, action.payload);
+        case 'MERGE_ENTITY_DATA_BY_KEY':
+            return mergeEntityDataByKey(state, action.payload);
+        case 'EDITOR_CHANGE_IMAGE_CAPTION':
+            return changeImageCaption(state, action.payload);
+        case 'EDITOR_SET_HTML_FROM_TANSA':
+            return setHtmlFromTansa(state, action.payload);
+        case 'EDITOR_MOVE_BLOCK':
+            return moveBlock(state, action.payload);
+        case 'EDITOR_APPLY_EMBED':
+            return applyEmbed(state, action.payload);
+        case 'EDITOR_LOADING':
+            return setLoading(state, action.payload);
+        case 'EDITOR_CHANGE_LIMIT_CONFIG':
+            return changeLimitConfig(state, action.payload);
+        case 'EDITOR_AUTOCOMPLETE':
+            return autocomplete(state, action.payload);
+        case 'SET_EXTERNAL_OPTIONS':
+            return setExternalOptions(state, action.payload);
+        default:
+            return state;
     }
 };
 
@@ -135,6 +141,7 @@ export function updateDecorators(
             warnings: spellcheckWarnings,
         },
         limitConfig: stateCurrent.limitConfig,
+        softLimitConfig: stateCurrent.softLimitConfig,
     });
 
     if (result.mustReApplyDecorators !== true) {
@@ -179,8 +186,7 @@ export const onChange = (
     keepSelection = false,
     skipOnChange = false,
 ): IEditorStore => {
-    let editorStateNext = updateDecorators(state, newEditorState, 'store-based');
-
+    const editorStateNext = updateDecorators(state, newEditorState, 'store-based');
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
@@ -606,7 +612,7 @@ const setExternalOptions = (
     state: IEditorStore,
     payload: IActionPayloadSetExternalOptions,
 ) => {
-    let result: IEditorStore = {
+    const result: IEditorStore = {
         ...state,
         ...payload,
     };

@@ -348,6 +348,7 @@ angular.module('superdesk.apps.archive', [
                         return lockCond && authoring.itemActions(item).export;
                     }],
                 modal: true,
+                zIndex: '1050',
                 cssClass: 'modal-responsive',
                 controller: ['$scope', function($scope) {
                     $scope.export = true;
@@ -468,7 +469,7 @@ function spikeActivity(data, modal, $location, multi,
     });
 
     function _spike() {
-        if ($location.path() === '/workspace/personal') {
+        if (sdApi.navigation.isPersonalSpace()) {
             return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
                 .then(() => sdApi.article.doSpike(data.item));
         }
@@ -489,7 +490,6 @@ function spikeActivity(data, modal, $location, multi,
         const item: IArticle = data.item;
 
         showSpikeDialog(
-            modal,
             () => sdApi.article.doSpike(data.item),
             gettext('Are you sure you want to spike the item?'),
             onSpikeMiddlewares,

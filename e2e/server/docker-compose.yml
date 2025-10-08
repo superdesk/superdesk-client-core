@@ -2,17 +2,11 @@ name: superdesk-client-core_e2e
 services:
     redis:
         image: redis:alpine
-        ports:
-            - "6379:6379"
-        networks:
-            - e2e
+        network_mode: "host"
 
     mongo:
-        image: mongo:4.4
-        ports:
-            - "27017:27017"
-        networks:
-            - e2e
+        image: mongo:6
+        network_mode: "host"
         environment:
             - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:
@@ -23,39 +17,34 @@ services:
 
     elastic:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
-        ports:
-            - "9200:9200"
-        networks:
-            - e2e
+        network_mode: "host"
         environment:
             - discovery.type=single-node
             - action.auto_create_index=false
+            - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
         tmpfs:
             - /usr/share/elasticsearch/data
 
+    mail:
+        image: marlonb/mailcrab:latest
+        network_mode: "host"
+
     server:
         build: .
-        ports:
-            - "5000:5000"
-            - "5100:5100"
-        networks:
-            - e2e
+        network_mode: "host"
         environment:
-            - REDIS_URL=redis://redis:6379/1
-            - ELASTICSEARCH_URL=http://elastic:9200
-            - MONGO_URI=mongodb://mongo/superdesk_e2e
-            - ARCHIVED_URI=mongodb://mongo/superdesk_e2e_archived
-            - LEGAL_ARCHIVE_URI=mongodb://mongo/superdesk_e2e_legal_archive
-            - PUBLICAPI_MONGO_URI=mongodb://mongo/publicapi_e2e
-            - CONTENTAPI_MONGO_URI=mongodb://mongo/contentapi_e2e
+            - REDIS_URL=redis://localhost:6379/1
+            - ELASTICSEARCH_URL=http://localhost:9200
+            - MONGO_URI=mongodb://localhost/superdesk_e2e
+            - ARCHIVED_URI=mongodb://localhost/superdesk_e2e_archived
+            - LEGAL_ARCHIVE_URI=mongodb://localhost/superdesk_e2e_legal_archive
+            - PUBLICAPI_MONGO_URI=mongodb://localhost/publicapi_e2e
+            - CONTENTAPI_MONGO_URI=mongodb://localhost/contentapi_e2e
             - WEB_WORKERS=2
             - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
             - CELERY_ALWAYS_EAGER=true
+            - MAIL_PORT=1025
         volumes:
           - ./dump:/opt/superdesk/dump:rw
         user: 1000:1000
-
-networks:
-    e2e:
-        driver: bridge

@@ -1,4 +1,4 @@
-import {IValidationResults} from '@superdesk/common';
+import {IValidationResults} from '@sourcefabric/common';
 import * as React from 'react';
 import {DurationInput, TimePicker, DatePickerISO} from 'superdesk-ui-framework/react';
 
@@ -43,7 +43,7 @@ export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown>
                 <Form.FormItem>
                     <TimePicker
                         label={gettext('Air time')}
-                        value={fields.airtime_time ?? ''}
+                        value={fields.airtime_time ?? null}
                         onChange={(val) => {
                             this.props.onChange({
                                 ...fields,

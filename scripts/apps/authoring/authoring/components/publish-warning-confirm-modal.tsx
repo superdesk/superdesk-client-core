@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import Button from 'core/ui/components/Button';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 
 interface IProps {
@@ -18,7 +18,6 @@ export function getPublishWarningConfirmModal(
                 return (
                     <Modal
                         visible
-                        zIndex={1050}
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}

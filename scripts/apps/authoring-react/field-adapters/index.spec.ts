@@ -24,10 +24,36 @@ describe('field adapters', () => {
 
                 const ids = [
                     'categories',
+                    'default_categories',
+                    'languages',
                     'genre',
-                    'locators',
-                    'priority',
                     'urgency',
+                    'priority',
+                    'signal',
+                    'rightsinfo',
+                    'crop_sizes',
+                    'desk_types',
+                    'replace_words',
+                    'locators',
+                    'product_types',
+                    'annotation_types',
+                    'author_roles',
+                    'job_titles',
+                    'package-story-labels',
+                    'usageterms',
+                    'contact_mobile_usage',
+                    'contact_phone_usage',
+                    'countries',
+                    'regions',
+                    'type',
+                    'subscriber_types',
+                    'g2_content_type',
+                    'eventoccurstatus',
+                    'newscoveragestatus',
+                    'event_calendars',
+                    'assignment_priority',
+                    'camera',
+                    'custom-sorting',
                 ];
 
                 for (const id of ids) {
@@ -36,6 +62,7 @@ describe('field adapters', () => {
 
                 return testVocabularies;
             },
+            getCustomFieldVocabularies: () => [],
             getVocabularyItemLabel: (term) => term.name,
         };
 

@@ -110,26 +110,26 @@ angular.module('superdesk.apps.dashboard.grid', [])
 
             scope.resizeWidget = function(widget, direction) {
                 switch (direction) {
-                case 'left':
-                    if (widget.sizex !== 1) {
-                        widget.sizex--;
-                    }
-                    break;
-                case 'right':
-                    if (widget.sizex !== widget.max_sizex) {
-                        widget.sizex++;
-                    }
-                    break;
-                case 'up':
-                    if (widget.sizey !== 1) {
-                        widget.sizey--;
-                    }
-                    break;
-                case 'down':
-                    if (widget.sizey !== widget.max_sizey) {
-                        widget.sizey++;
-                    }
-                    break;
+                    case 'left':
+                        if (widget.sizex !== 1) {
+                            widget.sizex--;
+                        }
+                        break;
+                    case 'right':
+                        if (widget.sizex !== widget.max_sizex) {
+                            widget.sizex++;
+                        }
+                        break;
+                    case 'up':
+                        if (widget.sizey !== 1) {
+                            widget.sizey--;
+                        }
+                        break;
+                    case 'down':
+                        if (widget.sizey !== widget.max_sizey) {
+                            widget.sizey++;
+                        }
+                        break;
                 }
 
                 sdGrid.resizeWidget(element, widget.sizex, widget.sizey);
