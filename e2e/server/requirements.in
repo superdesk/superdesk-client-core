@@ -1,2 +1,2 @@
 honcho
-git+https://github.com/MarkLark86/superdesk-core.git@develop#egg=superdesk-core
+git+https://github.com/superdesk/superdesk-core.git@develop#egg=superdesk-core
