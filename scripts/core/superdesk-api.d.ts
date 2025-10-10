@@ -3992,7 +3992,7 @@ declare module 'superdesk-api' {
         SubjectReference: string;
         Category: string;
         SupplementalCategories: string;
-        Keywords: string;
+        Keywords: string | Array<string>;
         ContentLocationCode: string;
         ContentLocationName: string;
         ReleaseDate: string;
@@ -4019,6 +4019,44 @@ declare module 'superdesk-api' {
         'Writer-Editor': string;
         LanguageIdentifier: string;
     }
+
+    export type XMPMetadata =
+        | 'Destination'
+        | 'ServiceIdentifier'
+        | 'ProductID'
+        | 'DateSent'
+        | 'TimeSent'
+        | 'Title'
+        | 'EditStatus'
+        | 'Urgency'
+        | 'SubjectCode'
+        | 'Category'
+        | 'SupplementalCategories'
+        | 'Subject'
+        | 'LocationCode'
+        | 'LocationName'
+        | 'ReleaseDate'
+        | 'ReleaseTime'
+        | 'ExpirationDate'
+        | 'ExpirationTime'
+        | 'Instructions'
+        | 'DateCreated'
+        | 'Creator'
+        | 'AuthorsPosition'
+        | 'City'
+        | 'Location'
+        | 'State'
+        | 'CountryCode'
+        | 'Country'
+        | 'TransmissionReference'
+        | 'Headline'
+        | 'Credit'
+        | 'Source'
+        | 'Rights'
+        | 'CreatorContactInfo'
+        | 'Description'
+        | 'CaptionWriter'
+        | 'Language';
 
     export interface ISubject {
         name: string;

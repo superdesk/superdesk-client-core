@@ -2,39 +2,22 @@ import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
-import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@superdesk/common';
 import {sdApi} from 'api';
+import {getMetadata} from 'apps/archive/parse-metadata';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
 /* eslint-disable complexity */
 
-function getExifData(file: File): Promise<IPTCMetadata> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            try {
-                const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
-
-                resolve(exif.iptcdata);
-            } catch (error) {
-                console.error(error);
-                reject(error);
-            }
-        };
-
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-    });
-}
-
-function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticle): Promise<Partial<IArticle>> {
+function mapIPTCExtensions(
+    metadata: Partial<IPTCMetadata>,
+    user: IUser, parent?: IArticle,
+): Promise<Partial<IArticle>> {
     const meta: Partial<IPTCMetadata> = Object.assign({
         'By-line': user.byline,
     }, pickBy(metadata, isNotEmptyString));
@@ -361,10 +344,10 @@ export function UploadController(
                 ? Promise.resolve()
                 : Promise.all(acceptedFiles.map(
                     ({file, getThumbnail}) =>
-                        getExifData(file)
+                        getMetadata(file)
                             .then(
                                 (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
-                                () => ({}), // proceed with upload on exif parsing error
+                                (): Partial<IArticle> => ({}), // proceed with upload on exif parsing error
                             )
                             .then((meta) => {
                                 const item = initFile(file, meta, getPseudoId());
