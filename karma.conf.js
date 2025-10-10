@@ -19,6 +19,7 @@ module.exports = function(config) {
         path.join(__dirname, 'scripts'),
         path.join(__dirname, 'node_modules', 'htmlparser2'),
         path.join(__dirname, 'node_modules', 'parse5'),
+        /date-fns/,
     ];
 
     config.set({
