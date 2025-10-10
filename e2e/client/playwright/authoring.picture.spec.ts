@@ -5,8 +5,6 @@ import {MediaEditor} from './page-object-models/media-editor';
 import {PictureAuthoring} from './page-object-models/authoring';
 import {MediaUpload} from './page-object-models/upload';
 
-test.setTimeout(30000);
-
 /**
  * upload a picture
  * edit metadata
@@ -29,6 +27,8 @@ test('media metadata editor', async ({page}) => {
 
     await expect(mediaEditor.field('field--headline')).toContainText('The Headline');
 
+    // workaround for flaky fill with plain text editor, it sometimes keeps previous text
+    await mediaEditor.field('field--headline').fill('');
     await mediaEditor.field('field--headline').fill('');
     await mediaEditor.field('field--headline').fill('picture');
 
