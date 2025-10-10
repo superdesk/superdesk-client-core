@@ -56,7 +56,7 @@
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
     "bootstrap": "3.3.7",
-    "classnames": "2.2.5",
+    "classnames": "2.5.1",
     "css-loader": "^5.2.7",
     "csstype": "2.6.17",
     "d3": "3.5.17",
@@ -137,7 +137,6 @@
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
     "@types/angular-mocks": "~1.6.0",
-    "@types/classnames": "^2.2.10",
     "@types/jasmine": "^4.0.0",
     "@types/webpack-env": "^1.18.3",
     "@types/webrtc": "0.0.33",

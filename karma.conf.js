@@ -12,6 +12,15 @@ module.exports = function(config) {
     webpackConfig.devtool = 'eval';
     webpackConfig.mode = 'development';
 
+    // override typescript include to match scripts
+    var typescriptRule = webpackConfig.module.rules.find((rule) => rule.loader === 'ts-loader');
+    typescriptRule.exclude = [];
+    typescriptRule.include = [
+        path.join(__dirname, 'scripts'),
+        path.join(__dirname, 'node_modules', 'htmlparser2'),
+        path.join(__dirname, 'node_modules', 'parse5'),
+    ];
+
     config.set({
         frameworks: [
             'jasmine',
