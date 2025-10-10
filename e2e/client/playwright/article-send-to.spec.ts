@@ -53,3 +53,23 @@ test.describe('sending an article', async () => {
         ).toBeVisible();
     });
 });
+
+test('only members can switch to a desk', async ({page}) => {
+    await restoreDatabaseSnapshot();
+
+    const deskName = 'Without members';
+
+    await page.goto('/#/settings/desks');
+    await expect(page.locator(s(`desk--${deskName}`))).toBeVisible();
+
+    await page.goto('/#/workspace/monitoring');
+    await page.locator(s('monitoring--selected-desk')).click();
+
+    await expect(
+        page.locator(`${s('monitoring--select-desk-options')} button`, {hasText: 'Sport'}),
+    ).toBeVisible();
+
+    await expect(
+        page.locator(`${s('monitoring--select-desk-options')} button`, {hasText: deskName}),
+    ).not.toBeVisible();
+});
