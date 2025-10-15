@@ -318,8 +318,8 @@ function DatepickerDirective($document) {
     };
 }
 
-DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
-function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
+DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', '$timeout'];
+function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, $timeout) {
     var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
         '<div datepicker format-day="d" starting-day="' + appConfig.startingDay + '" show-weeks="false"></div>' +
     '</div>';
@@ -410,8 +410,19 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             scope.$watch('open', (value) => {
                 if (value) {
-                    $popupWrapper.offset(popupService.position(260, 270, element));
-                    scope.$broadcast('datepicker.focus');
+                    $timeout(() => {
+                        $popupWrapper.css({top: '', left: '', right: '', bottom: ''});
+                        $popupWrapper.removeClass('datepicker-wrapper--centered');
+
+                        // Use popupService to position dynamically with centering
+                        const width = $popupWrapper.outerWidth?.() || 280;
+                        const height = $popupWrapper.outerHeight?.() || 320;
+
+                        const position = popupService.position(width, height, element, {center: true});
+
+                        $popupWrapper.offset(position);
+                        scope.$broadcast('datepicker.focus');
+                    }, 0, true);
                 }
             });
 

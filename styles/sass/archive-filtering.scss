@@ -15,6 +15,7 @@
     box-shadow: inset -1px 0px 6px 0px rgba(0,0,0,.1);
     transition: left 0.2s ease;
     border-inline-end: 2px solid var(--sd-colour__side-panel-border);
+
     .header {
         height: $nav-height;
         box-shadow: 0 1px 0 var(--sd-colour-line--light), 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -73,7 +74,7 @@
         inset-inline-end: 0px;
         padding: 20px;
         overflow: auto;
-        padding-block-end: $bottom-view-padding + 11.2rem;
+        padding-block-end: $bottom-view-padding + 3.2rem;
         &.pull { 
             inset-block-end: 60px; 
         }
