@@ -556,6 +556,7 @@ export function getSuperdeskApiImplementation(
             getCurrentUser: () => session.getIdentity(),
             getSessionId: () => session.sessionId,
             getCurrentUserId: () => sdApi.user.getCurrentUserId(),
+            getUniqueClientId: () => sdApi.user.getUniqueClientId(),
         },
         browser: {
             location: {

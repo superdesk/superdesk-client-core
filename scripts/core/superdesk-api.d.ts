@@ -3358,6 +3358,7 @@ declare module 'superdesk-api' {
             getCurrentUser(): Promise<IUser>;
             getSessionId(): String;
             getCurrentUserId(): String;
+            getUniqueClientId(): string;
         };
         browser: {
             location: {
