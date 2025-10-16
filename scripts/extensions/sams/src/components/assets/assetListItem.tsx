@@ -1,6 +1,8 @@
 // External Modules
 import * as React from 'react';
 
+import {getHumanReadableFileSize} from '@sourcefabric/common';
+
 // Types
 import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
@@ -15,7 +17,7 @@ import {
 } from '../../ui/list';
 
 // Utils
-import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
+import {getIconTypeFromMimetype, getAssetStateLabel} from '../../utils/ui';
 import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {

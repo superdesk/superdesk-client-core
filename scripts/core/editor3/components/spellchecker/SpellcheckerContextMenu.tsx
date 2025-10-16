@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Card, Icon, Spacer} from 'superdesk-ui-framework/react';
 import * as actions from '../../actions';
-import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
 import {
     ISpellcheckWarning,
     ISpellchecker,
@@ -22,23 +22,10 @@ interface IProps {
 }
 
 export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
-    stickyElementTracker: any;
-    dropdownElement: any;
-
-    private reloadSpellcheckerAbortController: AbortController;
-
     constructor(props: IProps) {
         super(props);
 
-        this.reloadSpellcheckerAbortController = new AbortController();
-    }
-
-    componentDidMount() {
-        this.stickyElementTracker = new StickElementsWithTracking(this.props.targetElement, this.dropdownElement);
-    }
-    componentWillUnmount() {
-        this.stickyElementTracker.destroy();
-        this.reloadSpellcheckerAbortController.abort();
+        this.onSuggestionClick = this.onSuggestionClick.bind(this);
     }
 
     onSuggestionClick(suggestion: ISpellcheckerSuggestion) {
@@ -60,81 +47,114 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     }
 
     render() {
-        const {suggestions, message} = this.props.warning;
+        const {suggestions, explanation} = this.props.warning;
         const {spellchecker} = this.props;
 
-        // If the message exists, and suggestion is whitespace suggestion
-        // use message as the button text instead of the suggestion
-        const messageExists = Boolean(message);
-        const whitespaceSuggestionExists = suggestions.filter(
-            (suggestion) => suggestion.text.trim().length === 0).length > 0;
-
         return (
-            <div
-                className={'dropdown open suggestions-dropdown'}
-                ref={(el) => this.dropdownElement = el}
-                style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
+            <Card
+                paddingBase="0"
+                paddingBlockStart="var(--space--1)"
+                paddingBlockEnd="var(--space--0-5)"
+                style={{display: 'flex', flexDirection: 'column', maxWidth: 300, maxHeight: 500, zIndex: 9999}}
                 data-test-id="spellchecker-menu"
             >
-                <ul className={'dropdown__menu'} style={{position: 'static'}}>
-                    {messageExists && !whitespaceSuggestionExists && (
-                        <React.Fragment>
-                            <li style={{margin: '0 16px'}}>{message}</li>
-                            <li className="dropdown__menu-divider" />
-                        </React.Fragment>
-                    )}
-                    <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
-                    {
-                        suggestions.length === 0
-                            ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
-                            : suggestions.map((suggestion, index) => (
-                                <li key={index}>
-                                    <button
-                                        onMouseDown={() =>
-                                            this.onSuggestionClick(suggestion)
-                                        }
-                                        data-test-id="spellchecker-menu--suggestion"
-                                    >
-                                        {suggestion.text.trim().length === 0 && messageExists
-                                            ? message : suggestion.text}
-                                    </button>
-                                </li>
-                            ),
-                            )
-                    }
-                    {
-                        Object.keys(spellchecker.actions).length < 1 ? null : (
-                            <div>
-                                <li className="divider" />
-                                <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
-                                {
-                                    Object.keys(spellchecker.actions).map((key, i) => {
-                                        const action = spellchecker.actions[key];
+                {explanation != null && (
+                    <React.Fragment>
+                        <div className="form-label" style={{margin: '0 var(--space--1)'}}>
+                            {gettext('Explanation')}
+                        </div>
 
-                                        return (
-                                            <li key={i}>
-                                                <button
-                                                    onMouseDown={() => {
-                                                        action.perform(this.props.warning).then(() => {
-                                                            dispatchInternalEvent(
-                                                                'editor3SpellcheckerActionWasExecuted',
-                                                                null,
-                                                            );
-                                                        });
-                                                    }}
-                                                    data-test-id="spellchecker-menu--action"
-                                                >
-                                                    {action.label}
-                                                </button>
-                                            </li>
-                                        );
-                                    })
+                        <div
+                            style={{
+                                padding: '0 var(--space--1)',
+                                maxHeight: '5lh',
+                                flexShrink: 0,
+                                overflowY: 'auto',
+                                marginBottom: 'var(--space--0-5)',
+                            }}
+                        >
+                            {explanation}
+                        </div>
+
+                        <div className="divider" style={{marginBlockStart: 0}} />
+                    </React.Fragment>
+                )}
+
+                <div className="form-label" style={{margin: '0 var(--space--1)'}}>
+                    {gettext('Suggestions')}
+                </div>
+
+                {
+                    suggestions.length === 0
+                        ? (
+                            <div style={{margin: '0 var(--space--1)', marginBottom: 'var(--space--0-5)'}}>
+                                {gettext('No suggestions available')}
+                            </div>
+                        )
+                        : (
+                            <div style={{flexShrink: 1, overflow: 'auto'}}>
+                                {
+                                    suggestions.map((suggestion, index) => (
+                                        <button
+                                            onMouseDown={() =>
+                                                this.onSuggestionClick(suggestion)
+                                            }
+                                            data-test-id="spellchecker-menu--suggestion"
+                                            className="sd-dropdown-item"
+                                            key={index}
+                                        >
+                                            {suggestion.text}
+                                        </button>
+                                    ))
                                 }
                             </div>
                         )
-                    }
-                </ul>
-            </div>
+                }
+
+                {
+                    Object.keys(spellchecker.actions).length < 1 ? null : (
+                        <div style={{flexGrow: 1}}>
+                            <div className="divider" style={{marginBlockStart: 0}} />
+
+                            <div className="form-label" style={{margin: '0 var(--space--1)'}}>
+                                {gettext('Actions')}
+                            </div>
+
+                            {
+                                Object.keys(spellchecker.actions).map((key, i) => {
+                                    const action = spellchecker.actions[key];
+
+                                    return (
+                                        <button
+                                            onMouseDown={() => {
+                                                action.perform(this.props.warning).then(() => {
+                                                    dispatchInternalEvent(
+                                                        'editor3SpellcheckerActionWasExecuted',
+                                                        null,
+                                                    );
+                                                });
+                                            }}
+                                            data-test-id="spellchecker-menu--action"
+                                            className="sd-dropdown-item"
+                                            key={i}
+                                        >
+                                            <Spacer h gap="8" justifyContent="start" noWrap key={i}>
+                                                {
+                                                    action.icon != null && (
+                                                        <Icon name={action.icon} />
+                                                    )
+                                                }
+
+                                                <span>{action.label}</span>
+                                            </Spacer>
+                                        </button>
+                                    );
+                                })
+                            }
+                        </div>
+                    )
+                }
+            </Card>
         );
     }
 }

@@ -33,7 +33,7 @@ angular.module('superdesk.apps.workspace.content', [
     )
     .component(
         'sdContentCreate',
-        reactToAngular1(ContentCreateDropdown, ['customButton', 'onCreate', 'initializeAsUpdated']),
+        reactToAngular1(ContentCreateDropdown, ['customButton', 'onCreate', 'initializeAsUpdated', 'placement']),
     )
     .controller('ContentProfilesController', ContentProfilesController)
 

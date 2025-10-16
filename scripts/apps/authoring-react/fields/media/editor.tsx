@@ -115,7 +115,9 @@ export class Editor extends React.PureComponent<IProps> {
 
                 this.props.onChange(nextItems);
 
-                this.mediaCarouselRef.goToPage(nextItems.length - 1);
+                if (this.mediaCarouselRef != null) {
+                    this.mediaCarouselRef.goToPage(nextItems.length - 1);
+                }
             });
     }
 
@@ -192,7 +194,9 @@ export class Editor extends React.PureComponent<IProps> {
 
             this.props.onChange(nextItems);
 
-            this.mediaCarouselRef.goToPage(nextItems.length - 1);
+            if (this.mediaCarouselRef != null) {
+                this.mediaCarouselRef.goToPage(nextItems.length - 1);
+            }
         }
     }
 
@@ -214,16 +218,36 @@ export class Editor extends React.PureComponent<IProps> {
                             onFileSelect={this.upload}
                             multiple={canAddMultipleItems}
                             fileAccept={allowedMimeTypesForUpload}
+                            disabled={this.props.readOnly}
                         >
                             <MediaCarousel
                                 mediaItems={mediaItems}
-                                onChange={this.props.onChange}
+                                onChange={(val) => {
+                                    if (config.__editingOriginal) {
+                                        const item = val[0];
+
+                                        item.fields_meta = {};
+
+                                        this.props.reinitialize(item);
+                                    } else {
+                                        this.props.onChange(val);
+                                    }
+                                }}
                                 showPictureCrops={config.showPictureCrops === true}
-                                showTitleInput={config.showTitleEditingInput === true}
+                                showTitleInput={config.showTitleEditingInput ?? false}
+                                showDescriptionInput={config.showDescriptionEditingInput ?? true}
                                 readOnly={readOnly}
                                 maxItemsAllowed={config.maxItems ?? maxItemsDefault}
                                 ref={(component) => {
                                     this.mediaCarouselRef = component;
+                                }}
+                                canRemoveItems={config.canRemoveItems ?? true}
+                                prepareForExternalEditing={(item) => {
+                                    if (config.__editingOriginal) {
+                                        return this.props.computeLatestEntity();
+                                    } else {
+                                        return item;
+                                    }
                                 }}
                             />
                         </DropZone3>
@@ -257,6 +281,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 onFileSelect={this.upload}
                                 multiple={canAddMultipleItems}
                                 fileAccept={allowedMimeTypesForUpload}
+                                disabled={this.props.readOnly}
                             />
                         </div>
                     )

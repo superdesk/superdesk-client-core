@@ -89,7 +89,7 @@ export function addInternalWebsocketEventListener<T extends keyof IInternalWebso
 WebSocketProxy.$inject = ['$rootScope', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
     var ws = null;
-    var connectTimer = -1;
+    var connectTimer = null;
     var TIMEOUT = 5000;
 
     var ReloadEvents = [
@@ -172,14 +172,21 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
         };
 
         ws.onopen = function(event) {
-            $interval.cancel(connectTimer);
+            if (connectTimer) {
+                $interval.cancel(connectTimer);
+                connectTimer = null;
+            }
+
             $rootScope.$broadcast('connected');
         };
 
         ws.onclose = function(event) {
             $rootScope.$broadcast('disconnected');
 
-            $interval.cancel(connectTimer);
+            if (connectTimer != null) {
+                $interval.cancel(connectTimer);
+            }
+
             connectTimer = $interval(() => {
                 if (ws && session.sessionId) {
                     connect(); // Retry to connect for every TIMEOUT interval.

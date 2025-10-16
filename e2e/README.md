@@ -3,7 +3,7 @@
 ### Starting server and client
 
 * open a terminal in `./server`
-* run `docker-compose up`
+* run `docker compose up`
 * open a terminal in `./client`
 * run `npm install` if needed
 * run `npx grunt server`
@@ -29,7 +29,7 @@ Most tests run against `main` database snapshot (`e2e/server/dump/full/main`). T
 5. install python dependencies - `pip install -Ur requirements.txt`
 
 6. restore main dump `python manage.py storage:restore main`
-7. remove the dump you just restored `rm -r server/dump/full/main`
+7. remove the dump you just restored `rm -r dump/full/main`
 8. open superdesk in the browser and do the changes you need(best not to remove/rename things because it might break other tests)
 9. regenerate `main` dump from your existing database state `python manage.py storage:dump --name main`
 10. in case you make a mistake, undo the removal of the main dump and continue from step 6.
@@ -83,6 +83,24 @@ await page.locator(s('authoring', 'comments-widget', 'submit')).click();
 * Do use multiple selectors for tests to be more stable - `[data-test-id="comments-widget"] [data-test-id="submit"]` instead of `[data-test-id="submit"]`
 * `data-test-id` attributes are not meant to be globally unique. They only have to be unique in their "scope". For example, if we have a comments widget marked with `[data-test-id="comments-widget"]` attribute - test IDs inside comments widget must be locally unique, but we can use test IDs that were already used in other parts of the application.
 
+#### Viewport
+
+Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.
+
+#### Current desk
+
+There is an issue with Superdesk that does not reproduce locally where upon opening monitoring view, a workspace is selected instead of a default "Sports" desk. If that happens, use the `selectDeskOrWorkspace` helper in your test to ensure a correct desk is selected.
+
+### Utilities
+
+#### Quickly replacing generated locators to use our `s` or `cs` helpers
+
+Find regex: `locator\('\[data-test-id="(.+)?"\]'`
+Replace regex: `locator(cs('$1')`
+
+Will replace `locator('[data-test-id="abc"]')` with `locator(cs('abc'))`
+
 ### Known issues
 
+`await monitoring.selectDeskOrWorkspace('Sports');`
 * Playwright VSCode extension seems not to respect viewport size that is set in `e2e/client/playwright.config.ts`. An easy workaround is adjusting browser size manually in development. It will work in CI.

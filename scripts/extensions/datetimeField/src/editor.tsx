@@ -50,7 +50,6 @@ export class Editor extends React.PureComponent<IProps> {
 
             // Get the DatePicker locale using the language of this item
             const language = this.props.language ?? superdesk.instance.config.default_language;
-            const datePickerLocale = getLocaleForDatePicker(language);
 
             return (
                 <Container>
@@ -64,7 +63,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 inlineLabel
                                 label={gettext('Date')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
-                                locale={datePickerLocale}
+                                locale={{type: 'full', payload: getLocaleForDatePicker(language)}}
                                 value={this.props.value} // must be full datetime here to avoid timezone conversion
                                 onChange={(dateString) => {
                                     if (dateString === '') {
@@ -98,19 +97,23 @@ export class Editor extends React.PureComponent<IProps> {
                                     required // because it's a part of the date-time
                                     value={hour}
                                     onChange={(value) => {
-                                        const [hours, minutes] = value.split(':');
+                                        if (value === null) {
+                                            superdesk.ui.notify.error(gettext('Time cannot be empty'));
+                                        } else {
+                                            const [hours, minutes] = value.split(':');
 
-                                        this.props.onChange(
-                                            dateToServerString(
-                                                set(
-                                                    date,
-                                                    {
-                                                        hours: parseInt(hours, 10),
-                                                        minutes: parseInt(minutes, 10),
-                                                    },
+                                            this.props.onChange(
+                                                dateToServerString(
+                                                    set(
+                                                        date,
+                                                        {
+                                                            hours: parseInt(hours, 10),
+                                                            minutes: parseInt(minutes, 10),
+                                                        },
+                                                    ),
                                                 ),
-                                            ),
-                                        );
+                                            );
+                                        }
                                     }}
                                 />
                             </div>

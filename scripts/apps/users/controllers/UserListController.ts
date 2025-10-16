@@ -96,37 +96,37 @@ export function UserListController($scope, $location, api, _, session, usersServ
         }
 
         switch (filter) {
-        case 'online': {
-            const lastActivity = moment()
-                .subtract(appConfig.userOnlineMinutes, 'minutes')
-                .second(0); // reset seconds to avoid re-triggering watch all the time
+            case 'online': {
+                const lastActivity = moment()
+                    .subtract(appConfig.userOnlineMinutes, 'minutes')
+                    .second(0); // reset seconds to avoid re-triggering watch all the time
 
-            query.last_activity_at = {$gte: serverFormat(lastActivity)};
-            break;
-        }
-        case 'pending':
-            query.is_enabled = true;
-            query.is_active = true;
-            query.needs_activation = true;
-            break;
+                query.last_activity_at = {$gte: serverFormat(lastActivity)};
+                break;
+            }
+            case 'pending':
+                query.is_enabled = true;
+                query.is_active = true;
+                query.needs_activation = true;
+                break;
 
-        case 'inactive':
-            query.is_enabled = true;
-            query.is_active = false;
-            break;
+            case 'inactive':
+                query.is_enabled = true;
+                query.is_active = false;
+                break;
 
-        case 'disabled':
-            query.is_enabled = false;
-            break;
+            case 'disabled':
+                query.is_enabled = false;
+                break;
 
-        case 'all':
-            break;
+            case 'all':
+                break;
 
-        default:
-            query.is_active = true;
-            query.is_enabled = true;
-            query.needs_activation = false;
-            break;
+            default:
+                query.is_active = true;
+                query.is_enabled = true;
+                query.needs_activation = false;
+                break;
         }
 
         return JSON.stringify(query);
@@ -144,10 +144,10 @@ export function UserListController($scope, $location, api, _, session, usersServ
         var val = dir === 'asc' ? 1 : -1;
 
         switch (key) {
-        case 'full_name':
-            return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
-        default:
-            return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
+            case 'full_name':
+                return '[("first_name", ' + val + '), ("last_name", ' + val + ')]';
+            default:
+                return '[("' + encodeURIComponent(key) + '", ' + val + ')]';
         }
     }
 

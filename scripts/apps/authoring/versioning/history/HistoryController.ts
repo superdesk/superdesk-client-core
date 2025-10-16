@@ -176,20 +176,20 @@ export function getHistoryItems(item: IArticle): Promise<Array<IHistoryItem>> {
 
 export function getOperationLabel(operation: PublishType, state: string): string {
     switch (operation) {
-    case 'publish':
-        return state === 'scheduled' ? gettext('Scheduled by') : gettext('Published by');
-    case 'correct':
-        return gettext('Corrected by');
-    case 'kill':
-        return gettext('Killed by');
-    case 'takedown':
-        return gettext('Recalled by');
-    case 'resend':
-        return gettext('Resent by');
-    case 'unpublish':
-        return gettext('Unpublished by');
-    default:
-        assertNever(operation);
+        case 'publish':
+            return state === 'scheduled' ? gettext('Scheduled by') : gettext('Published by');
+        case 'correct':
+            return gettext('Corrected by');
+        case 'kill':
+            return gettext('Killed by');
+        case 'takedown':
+            return gettext('Recalled by');
+        case 'resend':
+            return gettext('Resent by');
+        case 'unpublish':
+            return gettext('Unpublished by');
+        default:
+            assertNever(operation);
     }
 }
 

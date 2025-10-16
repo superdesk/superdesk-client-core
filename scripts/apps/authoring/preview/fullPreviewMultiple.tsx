@@ -92,7 +92,7 @@ class FullPreviewMultiple extends React.PureComponent<IProps, IState> {
 }
 
 /**
- * #ANGULAR_AUTHORING This is used from angular based authoring - leave it as it is for compatibility
+ * TAG: AUTHORING-ANGULAR This is used from angular based authoring - leave it as it is for compatibility
  * and build a new one for authoring-react
  */
 export function previewItems(articles: Array<IArticle>) {

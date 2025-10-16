@@ -1,3 +1,4 @@
+import {notify} from 'core/notify/notify';
 import {gettext} from 'core/utils';
 import {each} from 'lodash';
 
@@ -22,7 +23,11 @@ function CommentsService(api) {
     };
 
     this.save = function(comment) {
-        return api.item_comments.save(comment);
+        return api.item_comments.save(comment).catch((error) => {
+            if (error.data._issues?.text != null) {
+                notify.error(error.data._issues.text);
+            }
+        });
     };
 }
 

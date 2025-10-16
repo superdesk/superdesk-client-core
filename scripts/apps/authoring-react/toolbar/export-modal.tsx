@@ -79,7 +79,6 @@ export class ExportModal extends React.PureComponent<IProps, IState> {
                 size="medium"
                 onHide={this.props.closeModal}
                 visible
-                zIndex={1050}
                 headerTemplate={gettext('Export')}
             >
                 <Spacer v gap="32">

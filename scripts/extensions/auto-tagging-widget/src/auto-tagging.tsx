@@ -2,7 +2,7 @@ import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState, Autocomplete, Modal} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 
 import {IArticle, IArticleSideWidget, ISuperdesk} from 'superdesk-api';
 
@@ -18,6 +18,7 @@ import {noop} from 'lodash';
 
 import {ImageTagging} from './ImageTaggingComponent/ImageTaggingComponent';
 import {AUTO_TAGGING_WIDGET_ID} from './extension';
+import memoizeOne from 'memoize-one';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -103,7 +104,6 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
     showModal(({closeModal}) => (
         <Modal
             visible
-            zIndex={1050}
             size="small"
             position="top"
             onHide={closeModal}
@@ -160,7 +160,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
     const {httpRequestJsonLocal} = superdesk;
     const {gettext, gettextPlural} = superdesk.localization;
-    const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
+    const {generatePatch, arrayToTree} = superdesk.utilities;
     const {AuthoringWidgetLayout, AuthoringWidgetHeading, Alert} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
@@ -191,7 +191,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.insertTagFromSearch = this.insertTagFromSearch.bind(this);
             this.reload = this.reload.bind(this);
             this.save = this.save.bind(this);
-            this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
+            this.isDirty = memoizeOne((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
             const dataBeforeLoading = this.state.data;

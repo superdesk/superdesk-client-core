@@ -24,7 +24,7 @@ function resize(width, height) {
 export function setup(params) {
     // runs before every spec
     beforeEach((done) => {
-        resize(1280, 800)
+        resize(1280, 900)
             .then(() => {
                 resetApp(params.fixture_profile, () => {
                     openBaseUrl()

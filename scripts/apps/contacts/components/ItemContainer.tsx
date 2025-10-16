@@ -80,57 +80,63 @@ export class ItemContainer extends React.Component<any, any> {
         const contactAddress = addressInfo.join(', ');
 
         switch (key) {
-        case 'contact_phone':
-            value = this.getContactNumber(item, key);
-            title = value && gettext(this.getContactNumberTitle(item, key));
-            break;
-        case 'mobile':
-            value = this.getContactNumber(item, key);
-            title = value && gettext(this.getContactNumberTitle(item, key));
-            break;
-        case 'contact_email':
-            value = item.contact_email ? this.getEmailValue(item) : null;
-            _class = _link;
-            break;
-        case 'website':
-            value = (<a href={item.website} target="_blank" rel="noopener noreferrer">{item.website}</a>);
-            title = value && item.website;
-            _class = _link;
-            break;
-        case 'twitter':
-            value = (
-                <a
-                    href={`${TWITTER_URL}${item.twitter}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <i className="icon-twitter" />
-                </a>
-            );
-            title = value && `${TWITTER_URL}${item.twitter}`;
-            _class = _link;
-            break;
-        case 'facebook':
-        case 'instagram':
-            value = (
-                <a href={item[key]} target="_blank" rel="noopener noreferrer"><i className={`icon-${key}`} /></a>
-            );
-            title = value && item[key];
-            _class = _link;
-            break;
-        case 'location':
-            value = contactAddress ? (
-                <a
-                    href={`${MAP_URL}${contactAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    {contactAddress}
-                </a>
-            ) : null;
-            title = value && contactAddress;
-            _class = _link;
-            break;
+            case 'contact_phone':
+                value = this.getContactNumber(item, key);
+                title = value && gettext(this.getContactNumberTitle(item, key));
+                break;
+            case 'mobile':
+                value = this.getContactNumber(item, key);
+                title = value && gettext(this.getContactNumberTitle(item, key));
+                break;
+            case 'contact_email':
+                value = item.contact_email ? this.getEmailValue(item) : null;
+                _class = _link;
+                break;
+            case 'website':
+                value = (
+                    <a
+                        href={(item.website.startsWith('http') ? '' : 'https://') + item.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >{item.website}</a>
+                );
+                title = value && item.website;
+                _class = _link;
+                break;
+            case 'twitter':
+                value = (
+                    <a
+                        href={`${TWITTER_URL}${item.twitter}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <i className="icon-twitter" />
+                    </a>
+                );
+                title = value && `${TWITTER_URL}${item.twitter}`;
+                _class = _link;
+                break;
+            case 'facebook':
+            case 'instagram':
+                value = (
+                    <a href={item[key]} target="_blank" rel="noopener noreferrer"><i className={`icon-${key}`} /></a>
+                );
+                title = value && item[key];
+                _class = _link;
+                break;
+            case 'location':
+                value = contactAddress ? (
+                    <a
+                        href={`${MAP_URL}${contactAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {contactAddress}
+                    </a>
+                ) : null;
+                title = value && contactAddress;
+                _class = _link;
+                break;
         }
 
         altTitle = value ? value : null;

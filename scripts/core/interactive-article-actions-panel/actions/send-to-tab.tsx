@@ -146,7 +146,8 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState({publishingDateOptions: val});
                                 }}
-                                allowSettingEmbargo={appConfig.ui.sendEmbargo !== false}
+                                allowSettingEmbargo={appConfig.ui.sendEmbargo}
+                                allowSettingPublishSchedule={appConfig.authoring.panels.sendTo.publishSchedule}
                             />
                         )
                     }

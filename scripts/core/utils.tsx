@@ -1,26 +1,21 @@
 import React from 'react';
 import gettextjs from 'gettext.js';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle, IBaseRestApiResponse, ILockInfo, IListViewFieldWithOptions} from 'superdesk-api';
+import {appConfig, userInterfaceLanguage} from 'appConfig';
+import {
+    IVocabularyItem,
+    IArticle,
+    IBaseRestApiResponse,
+    ILockInfo,
+    IListViewFieldWithOptions,
+    IUser,
+} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {isObject, omit} from 'lodash';
-import formatISO from 'date-fns/formatISO';
 import {DEFAULT_LIST_CONFIG, CORE_PROJECTED_FIELDS, UI_PROJECTED_FIELD_MAPPINGS} from 'apps/search/constants';
+import {trimEndExact, trimStartExact} from './helpers/utils';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 
 export const DEFAULT_ENGLISH_TRANSLATIONS = {'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}};
-
-const language = getUserInterfaceLanguage();
-const filename = `/languages/${language}.json?nocache=${Date.now()}`;
-
-function applyTranslations(translations) {
-    const langOverride = appConfig.langOverride ?? {};
-
-    if (langOverride[language] != null) {
-        Object.assign(translations, langOverride[language]);
-    }
-
-    window.translations = translations;
-}
 
 export function isMacOS() {
     if (
@@ -31,26 +26,6 @@ export function isMacOS() {
     }
 
     return false;
-}
-
-function requestListener() {
-    const translations = JSON.parse(this.responseText);
-
-    if (translations[''] == null || translations['']['language'] == null || translations['']['plural-forms'] == null) {
-        throw new Error(`Language metadata not found in "${filename}"`);
-    }
-
-    applyTranslations(translations);
-}
-
-if (language === 'en') {
-    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-} else {
-    const req = new XMLHttpRequest();
-
-    req.addEventListener('load', requestListener);
-    req.open('GET', filename, false);
-    req.send();
 }
 
 export const i18n = gettextjs();
@@ -252,8 +227,8 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string) {
-    const _language = _lang ?? getUserInterfaceLanguage();
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: string): string {
+    const _language = _lang ?? userInterfaceLanguage;
 
     // FIXME: Remove replacing _/- when language codes are normalized on the server.
 
@@ -264,26 +239,34 @@ export function getVocabularyItemNameTranslated(term: IVocabularyItem, _lang?: s
 
 export function translateArticleType(type: IArticle['type']) {
     switch (type) {
-    case 'audio':
-        return gettext('audio');
-    case 'composite':
-        return gettext('composite');
-    case 'graphic':
-        return gettext('graphic');
-    case 'picture':
-        return gettext('picture');
-    case 'preformatted':
-        return gettext('preformatted');
-    case 'text':
-        return gettext('text');
-    case 'video':
-        return gettext('video');
-    default:
-        assertNever(type);
+        case 'audio':
+            return gettext('audio');
+        case 'composite':
+            return gettext('composite');
+        case 'graphic':
+            return gettext('graphic');
+        case 'picture':
+            return gettext('picture');
+        case 'preformatted':
+            return gettext('preformatted');
+        case 'text':
+            return gettext('text');
+        case 'video':
+            return gettext('video');
+        default:
+            assertNever(type);
     }
 }
 
-export function getUserSearchMongoQuery(searchString: string) {
+type IUserFieldQuery = {
+    [field in keyof IUser]?: {$regex: string, $options: string};
+};
+
+interface IMongoQuery {
+    $or: Array<IUserFieldQuery>;
+}
+
+export function getUserSearchMongoQuery(searchString: string): IMongoQuery {
     return {
         $or: [
             {username: {$regex: searchString, $options: 'i'}},
@@ -294,6 +277,26 @@ export function getUserSearchMongoQuery(searchString: string) {
             {sign_off: {$regex: searchString, $options: 'i'}},
         ],
     };
+}
+
+/**
+ * Should match the logic of `getUserSearchMongoQuery`
+ */
+export function searchUsers(users: Array<IUser>, searchString: string): Array<IUser> {
+    if (!searchString) {
+        return users;
+    }
+
+    const query = getUserSearchMongoQuery(searchString);
+    const regex = new RegExp(escapeRegExp(searchString), 'i');
+
+    return users.filter((user) => {
+        return query['$or'].some((orQuery) => {
+            return Object.keys(orQuery).every((key) => {
+                return user[key] ? regex.test(user[key]) : false;
+            });
+        });
+    });
 }
 
 export function getItemTypes() {
@@ -351,6 +354,37 @@ export function isScrolledIntoViewVertically(element: HTMLElement, container: HT
     return topVisible && bottomVisible;
 }
 
+export function getUTCOffset(timezoneId: string) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezoneId,
+        timeZoneName: 'longOffset',
+    });
+
+    const offsetStr = formatter.formatToParts(new Date()).find((part) => part.type === 'timeZoneName').value;
+
+    return trimStartExact(offsetStr, 'GMT');
+}
+
+/**
+ * Enforce TZDate because Date is inconsistent, sometimes it returns the time in UTC and sometimes in local timezone.
+ */
+export function toIsoStringWithoutTimezoneOffset(date: TZDate) {
+    return date.toISOString().slice(0, 19);
+}
+
+export function correctTimezone(
+    /**
+     * Date string from superdesk server is sometimes(embargo, publish schedule) formatted as UTC, ends with '+0000'
+     * but is not actually UTC. It's local time in a timezone specified elsewhere.
+     */
+    date: string,
+
+    timeZone: string,
+): TZDate {
+    return new TZDate(trimEndExact(date, '+0000') + getUTCOffset(timeZone), timeZone);
+}
+
+
 /**
  * Note: `{a: false}` will be converted to '?a=false'.
  * If you need to exclude keys when value is `false`,
@@ -366,20 +400,6 @@ export function toQueryString(
     return '?' + Object.keys(params).map((key) =>
         `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
     ).join('&');
-}
-
-/**
- * Output example: "1970-01-19T22:57:38"
- */
-export function toServerDateFormat(date: Date): string {
-    return formatISO(date).slice(0, 19);
-}
-
-/**
- * Parse server date without timezone so it won't convert it to local timezone.
- */
-export function fromServerDateFormat(date: string): Date {
-    return new Date(date.slice(0, 19));
 }
 
 export function getArticleLabel(item: IArticle): string {
@@ -410,7 +430,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
 }
 
 export function stripBaseRestApiFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
+    type IKeys = {[P in keyof Required<IBaseRestApiResponse>]: 1};
 
     const keysObject: IKeys = {
         _updated: 1,
@@ -429,7 +449,7 @@ export function stripBaseRestApiFields<T extends {}>(entity: T): T {
 }
 
 export function stripLockingFields<T extends {}>(entity: T): T {
-    type IKeys = { [P in keyof Required<ILockInfo>]: 1 };
+    type IKeys = {[P in keyof Required<ILockInfo>]: 1};
 
     const keysObject: IKeys = {
         _lock: 1,
@@ -443,4 +463,19 @@ export function stripLockingFields<T extends {}>(entity: T): T {
     const keysArray = Object.keys(keysObject);
 
     return omit(entity, keysArray) as T;
+}
+
+export function omitBaseApiResponse<T extends IBaseRestApiResponse>(item: T): Omit<T, keyof IBaseRestApiResponse> {
+    const keys: {[key in keyof IBaseRestApiResponse]: 1} = {
+        _id: 1,
+        _etag: 1,
+        _status: 1,
+        _links: 1,
+        _created: 1,
+        _updated: 1,
+        _current_version: 1,
+        _latest_version: 1,
+    };
+
+    return omit(item, Object.keys(keys)) as Omit<T, keyof IBaseRestApiResponse>;
 }

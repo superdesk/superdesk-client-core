@@ -1,7 +1,6 @@
 
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
-    beforeEach(window.module('superdesk.core.api'));
 
     var preferencesService,
         testPreferences = {
@@ -64,6 +63,9 @@ describe('Preferences Service', () => {
         preferencesService = $injector.get('preferencesService');
         spyOn(session, 'getIdentity').and.returnValue($q.when({sessionId: 1}));
         session.sessionId = 1;
+
+        // preferences.get could be called already due to other services using it
+        preferencesService.reset();
     }));
 
     it('can get user preferences', (done) => inject((api, $rootScope) => {
@@ -139,14 +141,14 @@ describe('Preferences Service', () => {
 
 describe('preferences error handling', () => {
     beforeEach(window.module('superdesk.core.preferences'));
-    beforeEach(window.module('superdesk.core.api'));
 
-    beforeEach(inject((session, urls, $q, $httpBackend) => {
+    beforeEach(inject((session, urls, $q, $httpBackend, preferencesService) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when());
         session.sessionId = 'sess1';
-        spyOn(urls, 'resource').and.returnValue($q.when('/preferences'));
-        $httpBackend.expectGET('/preferences/sess1').respond(404, {});
-        $httpBackend.expectGET('/preferences/sess2').respond({});
+        $httpBackend.expectGET('http://localhost:5000/preferences/sess1').respond(404, {});
+        $httpBackend.expectGET('http://localhost:5000/preferences/sess2').respond({});
+
+        preferencesService.reset();
     }));
 
     it('can reload on session expiry', (done) => inject((preferencesService, session, $rootScope, $httpBackend) => {
@@ -160,5 +162,9 @@ describe('preferences error handling', () => {
         $rootScope.$digest();
         session.sessionId = 'sess2';
         $httpBackend.flush();
+    }));
+
+    afterEach(inject(($httpBackend) => {
+        $httpBackend.verifyNoOutstandingExpectation();
     }));
 });

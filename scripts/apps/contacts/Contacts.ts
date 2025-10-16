@@ -1,48 +1,4 @@
-
-export interface IContactPhoneNumber {
-    number?: string;
-    usage?: string;
-    public?: boolean;
-}
-
-export interface IContactType {
-    qcode?: string;
-    name?: string;
-    assignable?: boolean;
-}
-
-export interface IContact {
-    _id: string;
-    is_active?: boolean;
-    public?: boolean;
-    organisation?: string;
-    first_name?: string;
-    last_name?: string;
-    honorific?: string;
-    job_title?: string;
-    mobile?: Array<IContactPhoneNumber>;
-    contact_phone?: Array<IContactPhoneNumber>;
-    fax?: Array<string>;
-    contact_email?: Array<string>;
-    twitter?: string;
-    facebook?: string;
-    instagram?: string;
-    website?: string;
-    contact_address?: Array<string>;
-    locality?: string;
-    city?: string;
-    contact_state?: {
-        name?: string,
-        qcode?: string,
-    };
-    postcode?: string;
-    country?: {
-        name?: string,
-        qcode?: string,
-    };
-    notes?: string;
-    contact_type?: string;
-}
+import {IContact} from 'superdesk-api';
 
 export interface IContactsService {
     getCriteria(param: any): {

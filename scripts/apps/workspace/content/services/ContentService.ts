@@ -2,12 +2,11 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {appConfig} from 'appConfig';
+import {authoringReactViewEnabled} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IVocabulary, IContentProfile} from 'superdesk-api';
 import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
 import {IPackagesService} from 'types/Services/Packages';
-import {isMediaType} from 'core/helpers/item';
 import {sdApi} from 'api';
 
 /**
@@ -377,6 +376,40 @@ export function ContentService(api, templates, desks, packages: IPackagesService
                 scope.editor = this.editor(profile, item.type);
                 scope.fields = this.fields(profile);
 
+                if (authoringReactViewEnabled !== true) {
+                    const authoringAngularEditor3Fields = new Set([
+                        'headline',
+                        'abstract',
+                        'body_html',
+                        'description_text',
+                        'body_footer',
+
+                        /**
+                         * slugline is not included in the list, because while it would use editor3
+                         * when configured to be placed in "content" section of a content profile
+                         * it would not use editor3 when configured to be placed in header section.
+                         */
+                    ]);
+
+                    /**
+                     * SDESK-7025
+                     * The purpose of this code is to avoid editor initializing with old values for text fields
+                     * after switching between authoring-angular and authoring-react.
+                     * It might happen because when initializing authoring-react always
+                     * prioritizes data in fields_meta over plain text value.
+                     * There are fields that use editor3 in authoring-react not in authoring-angular.
+                     * TAG: AUTHORING-ANGULAR
+                     */
+                    for (const metaFieldId of Object.keys(item.fields_meta ?? {})) {
+                        const keepFieldMeta =
+                            metaFieldId.startsWith('extra>') || authoringAngularEditor3Fields.has(metaFieldId);
+
+                        if (!keepFieldMeta) {
+                            delete item.fields_meta[metaFieldId];
+                        }
+                    }
+                }
+
                 /**
                  * order is used for tabindex in angular based authoring
                  * since every field has a tabindex there
@@ -388,7 +421,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
                  *
                  * this would no longer be needed in react based authoring because tabindex is not used there
                  *
-                 * #ANGULAR_AUTHORING
+                 * TAG: AUTHORING-ANGULAR
                  */
                 for (const key of Object.keys(scope.editor)) {
                     if (scope.editor[key]?.order != null) {

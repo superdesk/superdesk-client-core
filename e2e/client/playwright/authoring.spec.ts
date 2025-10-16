@@ -2,6 +2,9 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
+const defaultPriorityValue = '6';
+const defaultUrgencyValue = '3';
+
 test('applying "populate abstract" macro', async ({page}) => {
     await restoreDatabaseSnapshot();
 
@@ -52,7 +55,7 @@ test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
 
     // check unsaved changes modal is visible
     await page.locator(s('authoring-topbar', 'close')).click();
-    await expect(page.locator(s('unsaved-changes-dialog')).getByRole('dialog')).toBeVisible();
+    await expect(page.locator(s('unsaved-changes-dialog'))).toBeVisible();
 
     // button - cancel
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'cancel'}).click();
@@ -106,7 +109,11 @@ test('setting embargo', async ({page}) => {
     await page.locator(s('authoring', 'open-send-publish-pane')).click();
 
     const embargoDate = '09/09/' + ((new Date()).getFullYear() + 1);
-    const embargoTime = '04:00';
+    const embargoTime = '4:00';
+
+    await page.locator(
+        s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),
+    ).clear();
 
     await page.locator(
         s('authoring', 'interactive-actions-panel', 'embargo', 'date-input'),
@@ -130,4 +137,33 @@ test('setting embargo', async ({page}) => {
     await expect(page.locator(
         s('authoring-widget-panel=Info'),
     )).toContainText('embargo');
+});
+
+test('edit urgency and priority', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    // create article without saving
+    await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
+
+    const priority = page.locator(s('authoring-field=priority'));
+
+    await priority.getByRole('button', {name: defaultPriorityValue}).click();
+    await priority.getByRole('button', {name: '3'}).click();
+
+    const urgency = page.locator(s('authoring-field=urgency'));
+
+    await urgency.getByRole('button', {name: defaultUrgencyValue}).click();
+    await urgency.getByRole('button', {name: '5'}).click();
+
+    await page.locator(s('save')).click();
+
+    const article = page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=new article'));
+
+    await expect(article.getByTitle('Priority: 3')).toBeVisible();
+    await expect(article.getByTitle('Urgency: 5')).toBeVisible();
 });

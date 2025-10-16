@@ -1,6 +1,6 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
 import {ContentBlock, EditorState} from 'draft-js';
+import {PopupPositioner} from 'superdesk-ui-framework/react';
 import {IAcceptSuggestion, SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
@@ -63,25 +63,16 @@ export function getSpellcheckWarningsByBlock(
     });
 }
 
-function getElementForPortal() {
-    const existingElement = document.querySelector('.spellchecker-suggestions');
-
-    if (existingElement != null) {
-        return existingElement;
-    } else {
-        const newElement = document.createElement('div');
-
-        newElement.classList.add('spellchecker-suggestions');
-        document.body.appendChild(newElement);
-
-        return newElement;
-    }
-}
-
 interface IState {
     menuShowing: boolean;
     warning: ISpellcheckWarning;
 }
+
+/**
+ * Close currently open spellchecking context menu before opening a new one
+ * to prevent multiple from being visible at te same time.
+ */
+const CLOSE_SPELLCHECKER_CONTEXT_MENU = 'CLOSE_SPELLCHECKER_CONTEXT_MENU';
 
 export function getSpellcheckingDecorator(
     language: string,
@@ -119,23 +110,17 @@ export function getSpellcheckingDecorator(
             }
 
             closeContextMenu() {
-                this.setState({menuShowing: false});
-            }
-
-            componentDidUpdate(prevProps, prevState) {
-                const {menuShowing} = this.state;
-
-                if (prevState.menuShowing === menuShowing) {
-                    return;
+                if (this.state.menuShowing === true) {
+                    this.setState({menuShowing: false});
                 }
-
-                const fn = menuShowing ? 'on' : 'off';
-
-                $(window)[fn]('mousedown', this.closeContextMenu);
             }
 
-            componentWillUnmount() {
-                $(window).off('mousedown', this.closeContextMenu);
+            componentDidMount(): void {
+                window.addEventListener(CLOSE_SPELLCHECKER_CONTEXT_MENU, this.closeContextMenu);
+            }
+
+            componentWillUnmount(): void {
+                window.removeEventListener(CLOSE_SPELLCHECKER_CONTEXT_MENU, this.closeContextMenu);
             }
 
             render() {
@@ -177,6 +162,8 @@ export function getSpellcheckingDecorator(
 
                             e.preventDefault();
 
+                            window.dispatchEvent(new CustomEvent(CLOSE_SPELLCHECKER_CONTEXT_MENU));
+
                             if (Array.isArray(warningForDecoration.suggestions)) {
                                 this.setState({
                                     menuShowing: true,
@@ -206,17 +193,25 @@ export function getSpellcheckingDecorator(
                         data-test-id="spellchecker-warning"
                         data-test-value={warningForDecoration.text}
                     >
-                        {menuShowing ?
-                            ReactDOM.createPortal(
-                                <SpellcheckerContextMenu
-                                    targetElement={this.wordTypoElement}
-                                    warning={this.state.warning}
-                                    spellchecker={spellchecker}
-                                    acceptSuggestion={acceptSuggestion}
-                                />,
-                                getElementForPortal(),
+                        {
+                            menuShowing && (
+                                <PopupPositioner
+                                    getReferenceElement={() => this.wordTypoElement}
+                                    placement="bottom-end"
+                                    onClose={() => {
+                                        this.closeContextMenu();
+                                    }}
+                                >
+                                    <SpellcheckerContextMenu
+                                        targetElement={this.wordTypoElement}
+                                        warning={this.state.warning}
+                                        spellchecker={spellchecker}
+                                        acceptSuggestion={acceptSuggestion}
+                                    />
+                                </PopupPositioner>
                             )
-                            : null}
+                        }
+
                         {this.props.children}
                     </span>
                 );

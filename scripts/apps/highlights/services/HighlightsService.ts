@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IPackagesService} from 'types/Services/Packages';
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
+import {trackArticleActionProgress} from 'core/helpers/network';
 
 export interface IHighlight extends IBaseRestApiResponse {
     name: string;
@@ -54,11 +55,13 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
         var criteria = {};
 
         if (desk) {
-            criteria = {where: {$or: [
-                {desks: desk},
-                {desks: {$size: 0}},
-            ],
-            },
+            criteria = {
+                where: {
+                    $or: [
+                        {desks: desk},
+                        {desks: {$size: 0}},
+                    ],
+                },
             };
         }
 
@@ -108,10 +111,20 @@ export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesSer
     };
 
     /**
-     * Mark an item for a highlight
+     * Mark/Unmark an item for a highlight
      */
-    service.markItem = function(highlight, markedItem) {
-        return api.save('marked_for_highlights', {highlights: [highlight], marked_item: markedItem._id});
+    service.markItem = function(highlight: string, markedItem: IArticle) {
+        const addToHighlight = (markedItem.highlights ?? []).includes(highlight) === false;
+
+        return trackArticleActionProgress(
+            () => api.save(
+                'marked_for_highlights',
+                {highlights: [highlight], marked_item: markedItem._id},
+            ),
+            markedItem._id,
+            addToHighlight ? gettext('Item marked') : gettext('Item unmarked'),
+            addToHighlight ? gettext('Couldn\'t mark item') : gettext('Couldn\'t unmark item'),
+        );
     };
 
     /**

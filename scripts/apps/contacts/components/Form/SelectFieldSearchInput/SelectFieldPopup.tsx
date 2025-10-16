@@ -27,18 +27,18 @@ export class SelectFieldPopup extends React.Component<any, any> {
     onKeyDown(event) {
         if (event) {
             switch (event.keyCode) {
-            case KEYCODES.ENTER:
-                onEventCapture(event);
-                this.handleEnterKey(event);
-                break;
-            case KEYCODES.DOWN:
-                onEventCapture(event);
-                this.handleDownArrowKey(event);
-                break;
-            case KEYCODES.UP:
-                onEventCapture(event);
-                this.handleUpArrowKey(event);
-                break;
+                case KEYCODES.ENTER:
+                    onEventCapture(event);
+                    this.handleEnterKey(event);
+                    break;
+                case KEYCODES.DOWN:
+                    onEventCapture(event);
+                    this.handleDownArrowKey(event);
+                    break;
+                case KEYCODES.UP:
+                    onEventCapture(event);
+                    this.handleUpArrowKey(event);
+                    break;
             }
         }
     }

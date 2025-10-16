@@ -24,44 +24,44 @@ export function setsReducer(
     action: ISetActionTypes,
 ): ISetState {
     switch (action.type) {
-    case RECEIVE_SETS:
-        return {
-            ...state,
-            sets: action.payload,
-        };
-    case REMOVE_SET_IN_STORE:
-        return removeSetFromStore(state, action.payload);
-    case MANAGE_SETS_EDIT:
-        return {
-            ...state,
-            contentPanelState: CONTENT_PANEL_STATE.EDIT,
-            selectedSetId: action.payload,
-        };
-    case MANAGE_SETS_PREVIEW:
-        return {
-            ...state,
-            contentPanelState: CONTENT_PANEL_STATE.PREVIEW,
-            selectedSetId: action.payload,
-        };
-    case MANAGE_SETS_CLOSE_CONTENT_PANEL:
-        return {
-            ...state,
-            contentPanelState: CONTENT_PANEL_STATE.CLOSED,
-            selectedSetId: undefined,
-        };
-    case MANAGE_SETS_RESET:
-        return {
-            ...state,
-            contentPanelState: CONTENT_PANEL_STATE.CLOSED,
-            selectedSetId: undefined,
-        };
-    case RECEIVE_ASSETS_COUNT:
-        return {
-            ...state,
-            counts: action.payload,
-        };
-    default:
-        return state;
+        case RECEIVE_SETS:
+            return {
+                ...state,
+                sets: action.payload,
+            };
+        case REMOVE_SET_IN_STORE:
+            return removeSetFromStore(state, action.payload);
+        case MANAGE_SETS_EDIT:
+            return {
+                ...state,
+                contentPanelState: CONTENT_PANEL_STATE.EDIT,
+                selectedSetId: action.payload,
+            };
+        case MANAGE_SETS_PREVIEW:
+            return {
+                ...state,
+                contentPanelState: CONTENT_PANEL_STATE.PREVIEW,
+                selectedSetId: action.payload,
+            };
+        case MANAGE_SETS_CLOSE_CONTENT_PANEL:
+            return {
+                ...state,
+                contentPanelState: CONTENT_PANEL_STATE.CLOSED,
+                selectedSetId: undefined,
+            };
+        case MANAGE_SETS_RESET:
+            return {
+                ...state,
+                contentPanelState: CONTENT_PANEL_STATE.CLOSED,
+                selectedSetId: undefined,
+            };
+        case RECEIVE_ASSETS_COUNT:
+            return {
+                ...state,
+                counts: action.payload,
+            };
+        default:
+            return state;
     }
 }
 

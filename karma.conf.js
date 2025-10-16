@@ -10,6 +10,7 @@ module.exports = function(config) {
     // in karma, entry is read from files prop
     webpackConfig.entry = null;
     webpackConfig.devtool = 'eval';
+    webpackConfig.mode = 'development';
 
     config.set({
         frameworks: [
@@ -47,6 +48,11 @@ module.exports = function(config) {
         files: [
             'scripts/tests.ts',
             'scripts/**/*.html',
+            { 
+                pattern: 'fixtures/**/*',
+                watched: false,
+                included: false,
+            }
         ],
 
         ngHtml2JsPreprocessor: {

@@ -2,6 +2,7 @@ import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
@@ -40,22 +41,36 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
         });
 }
 
+export function getSpellcheckerConfig(): typeof appConfig.spellchecking.spellcheckersByLanguage {
+    return {
+        ...{
+            fr: {
+                spellcheckerId: 'grammalecte',
+            },
+            nl: {
+                spellcheckerId: 'leuven_dutch',
+            },
+        },
+        ...(appConfig.spellchecking?.spellcheckersByLanguage ?? {}),
+    } satisfies typeof appConfig.spellchecking.spellcheckersByLanguage;
+}
+
 export function getSpellchecker(language: string): ISpellchecker {
     const spellcheck = ng.get('spellcheck');
-    const spellcheckerName = ({
-        fr: 'grammalecte',
-        nl: 'leuven_dutch',
-    })[language];
+    const spellcheckerName = getSpellcheckerConfig()[language]?.spellcheckerId ?? null;
+
     const ignore = spellcheck.getIgnoredWords();
 
     const actions: {[key: string]: ISpellcheckerAction} = {
         addToDictionary: {
+            icon: 'plus-sign',
             label: gettext('Add to dictionary'),
             perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
                 return _spellcheck.addWord(warning.text, false);
             }),
         },
         ignoreWord: {
+            icon: 'remove-sign',
             label: gettext('Ignore word'),
             perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
                 return _spellcheck.addWord(warning.text, true);

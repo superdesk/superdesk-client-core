@@ -13,6 +13,7 @@ export function getDateField()
 : ICustomFieldType<IDateValueOperational, IDateValueStorage, IDateFieldConfig, IDateUserPreferences> {
     const field: ICustomFieldType<IDateValueOperational, IDateValueStorage, IDateFieldConfig, IDateUserPreferences> = {
         id: DATE_FIELD_ID,
+        generic: true,
         label: gettext('Date (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

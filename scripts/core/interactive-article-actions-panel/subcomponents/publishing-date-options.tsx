@@ -1,12 +1,14 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {fromServerDateFormat, gettext, toServerDateFormat} from 'core/utils';
-import {DateTimePicker} from 'core/ui/components/date-time-picker';
+import {gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {ToggleBox} from 'superdesk-ui-framework/react';
+import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
+import {isValid} from 'date-fns';
+import {TZDate} from '@sourcefabric/date-fns-tz';
+import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -14,18 +16,57 @@ export interface IPublishingDateOptions {
     timeZone: string | null;
 }
 
+function ignoreTimezone(
+    /**
+     * Server adds +0000 to embargo/publish_schedule no matter what timezone it is,
+     * so ignore that and treat it as local time for editing to avoid further conversion.
+     */
+    date: string,
+): TZDate {
+    return new TZDate(date.replace('+0000', ''));
+}
+
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
+    const timeZone = items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null;
+
     return {
-        embargo: items.length === 1 && items[0].embargo != null
-            ? fromServerDateFormat(items[0].embargo) ?? null
-            : null,
-        publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? fromServerDateFormat(items[0].publish_schedule) ?? null
-            : null,
-        timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
+        embargo: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const embargo = items[0]?.embargo;
+
+            if (embargo == null) {
+                return null;
+            }
+
+            return ignoreTimezone(embargo);
+        })(),
+        publishSchedule: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const publishSchedule = items[0]?.publish_schedule;
+
+            if (publishSchedule == null) {
+                return null;
+            }
+
+            return ignoreTimezone(publishSchedule);
+        })(),
+        timeZone: timeZone,
     };
 }
 
+/**
+ * It's tricky with timezones here.
+ * UI widget to pick datetime doesn't support timezones,
+ * thus before displaying in the picker - we convert it to users' local time.
+ *
+ * In order to generate the patch - we need to convert it back to selected timezone.
+ */
 export function getPublishingDatePatch(item: IArticle, options: IPublishingDateOptions): Partial<IArticle> {
     const {
         embargo,
@@ -42,10 +83,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toServerDateFormat(embargo),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(embargo)),
         publish_schedule: publishSchedule == null
             ? null
-            : toServerDateFormat(publishSchedule),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(publishSchedule)),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,
@@ -60,6 +101,7 @@ interface IProps {
     value: IPublishingDateOptions;
     onChange(value: IPublishingDateOptions): void;
     allowSettingEmbargo: boolean;
+    allowSettingPublishSchedule?: boolean;
 }
 
 export class PublishingDateOptions extends React.PureComponent<IProps> {
@@ -71,80 +113,90 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             timeZone,
         } = this.props.value;
 
-        const canSetEmbargo =
-            publishSchedule == null
-            && this.props.allowSettingEmbargo
-            && sdApi.user.hasPrivilege('embargo');
+        const canSetEmbargo = this.props.allowSettingEmbargo && sdApi.user.hasPrivilege('embargo');
+        const canSetPublishSchedule = this.props.allowSettingPublishSchedule;
 
-        const canSetPublishSchedule = embargo == null;
+        if (items.length !== 1) {
+            return null;
+        }
 
         return (
             <div>
-                {
-                    items.length === 1 && (
-                        <div>
-                            {
-                                canSetEmbargo && (
-                                    <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
-                                        <DateTimePicker
-                                            value={embargo}
-                                            onChange={(val) => {
-                                                this.props.onChange({
-                                                    embargo: val,
-                                                    timeZone: timeZone ?? appConfig.default_timezone,
-                                                    publishSchedule: null,
-                                                });
-                                            }}
-                                            data-test-id="embargo"
-                                        />
-                                    </ToggleBox>
-                                )
-                            }
+                {canSetEmbargo && (
+                    <ToggleBox variant="simple" title={gettext('Embargo')} initiallyOpen>
+                        <DateTimePicker
+                            value={embargo}
+                            valueType="date"
+                            locale={{
+                                type: 'full',
+                                payload: getLocaleForDatePicker(),
+                            }}
+                            dateFormat={appConfig.view.dateformat}
+                            onChange={(val) => {
+                                const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                            {
-                                canSetPublishSchedule && (
-                                    <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
-                                        <DateTimePicker
-                                            value={publishSchedule}
-                                            onChange={(val) => {
-                                                this.props.onChange({
-                                                    publishSchedule: val,
-                                                    timeZone: timeZone ?? appConfig.default_timezone,
-                                                    embargo: null,
-                                                });
-                                            }}
-                                            data-test-id="publish-schedule"
-                                        />
-                                    </ToggleBox>
-                                )
-                            }
+                                if (isValidDate || isDateBeingReset) {
+                                    this.props.onChange({
+                                        embargo: val,
+                                        timeZone: timeZone ?? appConfig.default_timezone,
+                                        publishSchedule: publishSchedule,
+                                    });
+                                }
+                            }}
+                            data-test-id="embargo"
+                        />
+                    </ToggleBox>
+                )}
 
-                            {
-                                (embargo != null || publishSchedule != null) && (
-                                    <ToggleBox variant="simple" title={gettext('Time zone')} initiallyOpen>
-                                        <TimeZonePicker
-                                            value={timeZone}
-                                            onChange={(val) => {
-                                                this.props.onChange({
-                                                    ...this.props.value,
-                                                    timeZone: val,
-                                                });
-                                            }}
-                                        />
+                {canSetPublishSchedule && (
+                    <ToggleBox variant="simple" title={gettext('Publish schedule')} initiallyOpen>
+                        <DateTimePicker
+                            value={publishSchedule}
+                            valueType="date"
+                            locale={{
+                                type: 'full',
+                                payload: getLocaleForDatePicker(),
+                            }}
+                            dateFormat={appConfig.view.dateformat}
+                            onChange={(val) => {
+                                const isValidDate = isValid(val);
+                                const isDateBeingReset = val === null;
 
-                                        {
-                                            timeZone == null && (
-                                                <div style={{paddingBlockStart: 5}}>
-                                                    {gettext('If not set, the UTC+0 time zone is assumed.')}
-                                                </div>
-                                            )
-                                        }
-                                    </ToggleBox>
-                                )
-                            }
-                        </div>
-                    )
-                }
+                                if (isValidDate || isDateBeingReset) {
+                                    this.props.onChange({
+                                        publishSchedule: val,
+                                        timeZone: timeZone ?? appConfig.default_timezone,
+                                        embargo: embargo,
+                                    });
+                                }
+                            }}
+                            data-test-id="publish-schedule"
+                        />
+                    </ToggleBox>
+                )}
+
+                {(embargo != null || publishSchedule != null) && (
+                    <ToggleBox variant="simple" title={gettext('Time zone')} initiallyOpen>
+                        <TimeZonePicker
+                            value={timeZone}
+                            onChange={(val) => {
+                                this.props.onChange({
+                                    ...this.props.value,
+                                    timeZone: val,
+                                });
+                            }}
+                        />
+
+                        {
+                            timeZone == null && (
+                                <div style={{paddingBlockStart: 5}}>
+                                    {gettext('If not set, the UTC+0 time zone is assumed.')}
+                                </div>
+                            )
+                        }
+                    </ToggleBox>
+                )}
             </div>
         );
     }

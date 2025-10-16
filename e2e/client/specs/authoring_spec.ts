@@ -160,7 +160,6 @@ describe('authoring', () => {
         authoring.showHistory();
         expect(authoring.getHistoryItems().count()).toBe(2);
         authoring.sendTo('Politic Desk', 'two');
-        authoring.confirmSendTo();
 
         expect(monitoring.getTextItem(3, 0)).toBe('item8');
         monitoring.actionOnItem('Edit', 3, 0);

@@ -272,7 +272,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 {(this.props.selectedAssetIds?.length !== 0) ? (
-                    <SubNav zIndex={2}>
+                    <SubNav>
                         <div className="multi-action-bar">
                             <button className="toggle" onClick={this.props.closeMultiActionBar}>
                                 <i className="icon-chevron-up-thin" />
@@ -315,7 +315,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                         </div>
                     </SubNav>
                 ) : (
-                    <SubNav zIndex={2}>
+                    <SubNav>
                         <ButtonGroup align="inline">
                             <Dropdown items={items}>
                                 <button
@@ -370,7 +370,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                         </ButtonGroup>
                     </SubNav>
                 )}
-                <SubNav zIndex={1}>
+                <SubNav>
                     <ButtonGroup align="inline">
                         <Tooltip
                             text={gettext('Toggle filters')}

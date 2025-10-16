@@ -5,7 +5,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IPublishQueueItem} from 'superdesk-interfaces/PublishQueueItem';
 import {gettext} from 'core/utils';
 import {IconButton, Modal} from 'superdesk-ui-framework/react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {TimeElem} from 'apps/search/components/TimeElem';
 import {Spacer} from 'core/ui/components/Spacer';
 
@@ -117,7 +117,6 @@ export class TransmissionDetails extends React.PureComponent<IProps, IState> {
                                     showModal(({closeModal}) => (
                                         <Modal
                                             visible
-                                            zIndex={1050}
                                             size="large"
                                             position="center"
                                             onHide={closeModal}

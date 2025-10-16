@@ -1,9 +1,9 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
+async function expectFieldToBeVisibleInAuthoring(page: Page, field: string): Promise<void> {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -12,11 +12,14 @@ async function expectFieldToBeVisibleInAuthoring(page, field): Promise<void> {
     await expect(page.locator(s('authoring', `authoring-field=${field}`))).toBeVisible();
 }
 
-async function addFieldsToContentProfile(page, field): Promise<void> {
+async function addFieldsToContentProfile(
+    page: Page,
+    fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
+): Promise<void> {
     const contentProfileSettings = new ContentProfileSettings(page);
 
     await page.goto('/#/settings/content-profiles');
-    await contentProfileSettings.addFieldsToContentProfile('Story', field);
+    await contentProfileSettings.addFieldsToContentProfile('Story', fields);
 }
 
 test('creating a custom text field', async ({page}) => {
@@ -29,7 +32,7 @@ test('creating a custom text field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom text field 2');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom text field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom text field 2'}]);
+    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom text field 2', fieldType: 'text'}]);
     await expectFieldToBeVisibleInAuthoring(page, 'custom text field 2');
 });
 
@@ -43,7 +46,7 @@ test('creating a custom date field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom date field 2');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom date field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom date field 2'}]);
+    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom date field 2', fieldType: 'date'}]);
     await expectFieldToBeVisibleInAuthoring(page, 'custom date field 2');
 });
 
@@ -57,7 +60,7 @@ test('creating a custom embed field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom embed field 2');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom embed field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom embed field 2'}]);
+    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom embed field 2', fieldType: 'embed'}]);
     await expectFieldToBeVisibleInAuthoring(page, 'custom embed field 2');
 });
 
@@ -73,7 +76,10 @@ test('creating a related content field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('image').click();
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=related content field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'related content field 2'}]);
+    await addFieldsToContentProfile(
+        page,
+        [{tabName: 'Content', fieldId: 'related content field 2', fieldType: 'related content'}],
+    );
     await expectFieldToBeVisibleInAuthoring(page, 'related content field 2');
 });
 
@@ -87,7 +93,10 @@ test('creating a custom URL field', async ({page}) => {
     await page.locator(s('vocabulary-modal')).getByLabel('name').fill('custom url field 2');
     await page.locator(s('vocabulary-modal')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('metadata-content', 'vocabulary-item=custom url field 2'))).toBeVisible();
-    await addFieldsToContentProfile(page, [{tabName: 'Content', fieldId: 'custom url field 2'}]);
+    await addFieldsToContentProfile(
+        page,
+        [{tabName: 'Content', fieldId: 'custom url field 2', fieldType: 'custom vocabulary'}],
+    );
     await expectFieldToBeVisibleInAuthoring(page, 'custom url field 2');
 });
 

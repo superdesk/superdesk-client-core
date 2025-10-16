@@ -27,7 +27,7 @@ interface IProps {
 
 interface IState {
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
+    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable';
     itemsList: Array<string>;
     itemsById: {[key: string]: IArticle};
     relatedEntities: IRelatedEntities;
@@ -41,7 +41,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     componentRef: ItemList;
     private abortController: AbortController;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
-    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private handleContentChanges: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private _mounted: boolean;
 
     constructor(props: IProps) {
@@ -85,6 +85,10 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             },
             300,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChanges.cancel();
+        });
     }
 
     focus() {

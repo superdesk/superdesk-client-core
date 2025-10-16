@@ -303,7 +303,15 @@ export function autocomplete(value: string) {
 }
 
 export type IActionPayloadSetExternalOptions =
-    Partial<Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig' | 'item'>>;
+    Partial<Pick<IEditorStore,
+        'readOnly'
+        | 'singleLine'
+        | 'editorFormat'
+        | 'spellchecking'
+        | 'limitConfig'
+        | 'softLimitConfig'
+        | 'item'
+    >>;
 
 export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
     return {

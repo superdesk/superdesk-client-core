@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {gettext} from 'core/utils';
 import {RadioGroup, CheckGroup, Modal, ButtonGroup, Button} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
@@ -119,7 +119,6 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="medium"
                 position="top"
                 headerTemplate={gettext('Character limit settings')}

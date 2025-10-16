@@ -70,32 +70,13 @@ describe('users', () => {
                     });
                 });
 
-            element(by.css('.modal__dialog')).waitReady().then((elem) => {
-                browser.wait(() => elem.element(by.binding('bodyText'))
-                    .getText()
-                    .then((text) => {
-                        if (text === 'Please confirm that you want to disable a user.') {
-                            return true;
-                        }
-                    }), 5000);
-                return elem;
-            }).then((elem) => {
-                browser.wait(() => {
-                    try {
-                        return elem.element(by.partialButtonText('OK'))
-                            .click()
-                            .then(() => true);
-                    } catch (err) {
-                        console.error(err);
-                    }
-                }, 5000);
-            }).then(() => {
-                browser.wait(() => {
-                    var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+            el(['modal-confirm'], by.partialButtonText('OK')).click();
 
-                    return elem.isDisplayed();
-                }, 5000);
-            });
+            browser.wait(() => {
+                var elem = element.all(by.repeater('users')).first().element(by.className('disabled-label'));
+
+                return elem.isDisplayed();
+            }, 5000);
         });
     });
 
@@ -188,7 +169,7 @@ describe('users', () => {
         });
 
         it('should filter categories in the Authoring metadata head menu ' +
-           'based on the user\'s preferred categories settings',
+            'based on the user\'s preferred categories settings',
         () => {
             userPreferences.btnCheckNone.click(); // uncheck all categories
 
@@ -216,7 +197,7 @@ describe('users', () => {
         );
 
         it('should filter and navigate filtered list via keyboard action in the ' +
-           'Authoring metadata based on the user\'s preferred categories settings',
+            'Authoring metadata based on the user\'s preferred categories settings',
         () => {
             userPreferences.btnCheckNone.click(); // uncheck all categories
             browser.sleep(100);

@@ -164,6 +164,7 @@ angular.module('superdesk.core.menu', [
         'lodash',
         'workspaceMenu',
         '$location',
+        'preferencesService',
         function(
             $route,
             superdesk,
@@ -174,6 +175,7 @@ angular.module('superdesk.core.menu', [
             _,
             workspaceMenu,
             $location,
+            preferencesService,
         ) {
             return {
                 require: '^sdSuperdeskView',
@@ -184,13 +186,19 @@ angular.module('superdesk.core.menu', [
                     scope.currentRoute = null;
                     scope.flags = ctrl.flags;
                     scope.menu = [];
-                    scope.theme = localStorage.getItem('theme') || '';
+                    scope.theme = 'light-ui';
                     scope.isTestEnvironment = appConfig.isTestEnvironment;
                     scope.environmentName = appConfig.environmentName;
                     scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
 
-                    // set theme
-                    body.attr('data-theme', scope.theme);
+                    preferencesService.get().then((result) => {
+                        scope.theme = result['application:theme']?.['theme'] != null
+                            ? result['application:theme']['theme']
+                            : 'light-ui';
+
+                        // set theme
+                        body.attr('data-theme', scope.theme);
+                    });
 
                     // menu items and groups - start
                     let group = null;

@@ -1,17 +1,14 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IWidgetIntegrationComponentProps} from './widgets';
+import {gettext} from 'core/utils';
 
 /**
  * Uses markup/styles from angular-based authoring and is intended to be rendered there.
  */
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
     render() {
-        const {
-            widget,
-            pinWidget,
-            pinned,
-        } = this.props;
+        const {pinWidget, pinned} = this.props;
 
         return (
             <div className="widget-header">
@@ -19,19 +16,12 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                     <span>{this.props.widgetName}</span>
                     <span>
                         <button
-                            className={
-                                classNames(
-                                    'sd-widget-pin icn-btn',
-                                    {
-                                        'sd-widget-pinned': widget.pinned,
-                                        'active': widget.pinned,
-                                    },
-                                )
-                            }
+                            className="sd-widget-pin icn-btn"
                             disabled={pinned}
                             onClick={() => {
-                                pinWidget(widget);
+                                pinWidget();
                             }}
+                            aria-label={gettext('Pin/Unpin')}
                         >
                             <i className="icon-pin" />
                         </button>

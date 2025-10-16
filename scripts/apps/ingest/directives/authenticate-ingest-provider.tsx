@@ -1,6 +1,6 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {Button, Modal} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 
@@ -14,7 +14,6 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
             return (
                 <Modal
                     visible
-                    zIndex={1050}
                     size="small"
                     position="top"
                     onHide={this.props.closeModal}

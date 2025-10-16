@@ -4,8 +4,7 @@ import {restoreDatabaseSnapshot} from './utils';
 import {MediaEditor} from './page-object-models/media-editor';
 import {PictureAuthoring} from './page-object-models/authoring';
 import {MediaUpload} from './page-object-models/upload';
-
-test.setTimeout(30000);
+import {setEditor3FieldValue} from './utils/editor3';
 
 /**
  * upload a picture
@@ -29,8 +28,9 @@ test('media metadata editor', async ({page}) => {
 
     await expect(mediaEditor.field('field--headline')).toContainText('The Headline');
 
-    await mediaEditor.field('field--headline').clear();
-    await mediaEditor.field('field--headline').fill('picture');
+    await setEditor3FieldValue(mediaEditor.field('field--headline'), 'picture');
+
+    await expect(mediaEditor.field('field--headline')).toHaveText('picture');
 
     await upload.startUpload();
 
@@ -38,12 +38,13 @@ test('media metadata editor', async ({page}) => {
 
     await pictureAuthoring.openMetadataEditor();
 
-    await mediaEditor.field('field--description_text').fill('test description');
+    await setEditor3FieldValue(mediaEditor.field('field--description_text'), 'test description');
+
     await mediaEditor.saveMetadata();
 
     await expect(pictureAuthoring.field('field--description_text')).toContainText('test description');
 
-    await pictureAuthoring.field('field--description_text').fill('new description');
+    await setEditor3FieldValue(pictureAuthoring.field('field--description_text'), 'new description');
 
     await pictureAuthoring.openMetadataEditor();
 

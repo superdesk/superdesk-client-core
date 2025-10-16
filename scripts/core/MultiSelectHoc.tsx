@@ -40,7 +40,7 @@ interface IState<T> {
 export class MultiSelectHoc<T> extends React.PureComponent<IProps<T>, IState<T>> {
     private removeContentUpdateListener: () => void;
     private removeResourceDeletedListener: () => void;
-    private maybeUnselectItems: (ids: globalThis.Set<string>) => void;
+    private maybeUnselectItems: ReturnType<typeof throttleAndCombineSet<string>>;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -126,6 +126,7 @@ export class MultiSelectHoc<T> extends React.PureComponent<IProps<T>, IState<T>>
     componentWillUnmount() {
         this.removeContentUpdateListener();
         this.removeResourceDeletedListener();
+        this.maybeUnselectItems.cancel();
     }
     render() {
         return this.props.children({

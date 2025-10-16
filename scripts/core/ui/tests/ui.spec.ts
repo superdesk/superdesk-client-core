@@ -1,24 +1,6 @@
 import {appConfig} from 'appConfig';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('superdesk ui', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            model: {
-                timeformat: 'HH:mm:ss',
-                dateformat: 'DD/MM/YYYY',
-            },
-            view: {
-                timeformat: 'HH:mm',
-                dateformat: 'MM/DD/YYYY',
-            },
-            default_timezone: 'Europe/London',
-            server: {url: undefined, ws: undefined},
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
-
     beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));

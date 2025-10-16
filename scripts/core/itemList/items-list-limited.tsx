@@ -35,7 +35,7 @@ interface IState {
 class ItemsListLimitedComponent extends React.Component<IProps, IState> {
     monitoringState: any;
     private abortController: AbortController;
-    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private handleContentChanges: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
     constructor(props: any) {
@@ -63,6 +63,10 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
             },
             300,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChanges.cancel();
+        });
     }
     componentDidMount() {
         const {ids} = this.props;
@@ -163,7 +167,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                 edit={noop}
                 preview={noop}
                 narrow={false}
-                view={undefined}
+                view="compact"
                 selected={undefined}
                 swimlane={false}
                 scopeApply={(fn) => fn()}

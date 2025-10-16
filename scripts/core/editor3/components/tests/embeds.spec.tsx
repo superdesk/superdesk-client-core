@@ -7,6 +7,7 @@ import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {createStore} from 'redux';
+import {decodeHtmlEntities} from '../../../../core/decode-html-entities';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -20,8 +21,10 @@ describe('editor3.components.embed-block', () => {
             </Provider>,
         );
 
-        expect(wrapper.find('.embed-block__wrapper').html())
-            .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
+        const iframeContent = wrapper.find('.embed-block__wrapper iframe').html();
+        const srcDocAttribute = decodeHtmlEntities(iframeContent.match(/srcdoc="(.+?)"/)[1]);
+
+        expect(srcDocAttribute).toBe('<h1>Embed Title</h1>');
     });
 });
 

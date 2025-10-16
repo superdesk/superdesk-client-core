@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, $, $$, promise as wdpromise} from 'protractor';
+import {element, by, browser, $, $$, promise as wdpromise, ElementFinder} from 'protractor';
 import './waitReady';
 export {authoring} from './authoring';
 export {content} from './content';
 import {click} from './utils';
+import {s} from '../../playwright/utils';
 
 export class LoginModal {
     username: any;
@@ -15,8 +16,8 @@ export class LoginModal {
     login: (username: any, password: any) => any;
 
     constructor() {
-        this.username = element(by.model('username'));
-        this.password = element(by.id('login-password'));
+        this.username = element(by.css(s('username')));
+        this.password = element(by.css(s('password')));
         this.btn = element(by.id('login-btn'));
         this.error = element(by.css('p.error'));
 
@@ -102,14 +103,14 @@ class SearchProvider {
 
 class IngestDashboard {
     dropDown: any;
-    ingestDashboard: any;
+    ingestDashboard: ElementFinder;
     openDropDown: () => any;
     getProviderList: () => any;
     getProvider: (index: any) => any;
     getProviderButton: (provider: any) => any;
     getDashboardList: () => any;
     getDashboard: (index: any) => any;
-    getDashboardSettings: (dashboard: any) => any;
+    getDashboardSettingsButton: (dashboard: any) => any;
     getDashboardSettingsStatusButton: (settings: any) => any;
     getDashboardStatus: (dashboard: any) => any;
     getDashboardSettingsIngestCountButton: (settings: any) => any;
@@ -140,14 +141,14 @@ class IngestDashboard {
         };
 
         this.getDashboardList = function() {
-            return self.ingestDashboard.all(by.repeater('item in items'));
+            return self.ingestDashboard.all(by.repeater('item in items track by item._id'));
         };
 
         this.getDashboard = function(index) {
             return self.getDashboardList().get(index);
         };
 
-        this.getDashboardSettings = function(dashboard) {
+        this.getDashboardSettingsButton = function(dashboard) {
             return dashboard.element(by.css('.dropdown'));
         };
 
@@ -156,7 +157,7 @@ class IngestDashboard {
         };
 
         this.getDashboardStatus = function(dashboard) {
-            return dashboard.element(by.css('.status'));
+            return dashboard.element(by.className('status'));
         };
 
         this.getDashboardSettingsIngestCountButton = function(settings) {
@@ -164,7 +165,7 @@ class IngestDashboard {
         };
 
         this.getDashboardIngestCount = function(dashboard) {
-            return dashboard.element(by.css('.ingested-count'));
+            return dashboard.element(by.className('ingested-count'));
         };
     }
 }
@@ -268,5 +269,5 @@ export function logout() {
 export const searchProvider = new SearchProvider();
 export const ingestDashboard = new IngestDashboard();
 export const ingestSettings = new IngestSettings();
-export const currentUserButton = element(by.className('current-user__button'));
-export const signOutButton = element(by.buttonText('Sign out'));
+const currentUserButton = element(by.className('current-user__button'));
+const signOutButton = element(by.buttonText('Sign out'));

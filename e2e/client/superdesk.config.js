@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         features: {
             swimlane: {defaultNumberOfColumns: 4},
             editor3: true,
-            qumu: true,
+            qumu: false, // disable in order to prevent loading 3rd party libraries
             savedSearch: {
                 subscriptions: true,
             },
@@ -27,5 +27,6 @@ module.exports = function(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
+        isTestEnvironment: true,
     };
 };

@@ -45,7 +45,7 @@ export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
                     <div style={{marginBlockStart: 12, display: 'flex'}} className="sibling-spacer-10">
                         {
                             articleDisplayWidgets.map((Component, i) =>
-                                <Component key={i} article={item} />,
+                                <Component key={i} entity={item} />,
                             )
                         }
                     </div>

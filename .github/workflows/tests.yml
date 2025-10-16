@@ -4,41 +4,58 @@ on:
   [push, pull_request]
 
 jobs:
-
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['14', '22']
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
-        node-version: '14.x'
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-    # avoid file watch limit error
-    - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+    - run: npm install # needed while we support v14
 
-    - run: npm ci
-    - run: npm run test || npm run test || npm run test
+    - run: npm run test
+
       env:
         TZ: "Europe/Prague"
 
   e2e:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
+        node-version: ['14', '22']
         suite: [a, b]
-
+    defaults:
+      run:
+        working-directory: e2e/client
     steps:
     - uses: actions/checkout@v4
-
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
-        node-version: '14.x'
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
+    - run: npm install  # npm ci on different version won't work
+      working-directory: ./
+
+    - run: npm install
+      working-directory: ./build-tools
+
+    - run: npm install
+      working-directory: ./end-to-end-testing-helpers
+
+    - run: npm install
+    - run: npm run build
+    - run: npm run specs--compile
+    - run: npm run start-client-server
 
     - name: Start e2e server
       run: |
@@ -47,43 +64,40 @@ jobs:
         docker compose up -d
       working-directory: e2e/server
 
-    - name: Build client
-      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
-      working-directory: e2e/client
-
     # playwright start
-
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-      working-directory: e2e/client
-
     - name: Run Playwright tests
       run: npx playwright test
-      working-directory: e2e/client
-
-    - uses: actions/upload-artifact@v3
-      if: always()
+    - uses: actions/upload-artifact@v4
+      if: ${{ failure() }}
       with:
-        name: playwright-report
-        path: e2e/client/playwright-report/
-        retention-days: 30
-
+        name: playwright-report-${{ matrix.node-version }}-${{ matrix.suite }}
+        path: e2e/client/test-results
     # playwright end
 
     # protractor start
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v1
+      id: setup-chrome
+      with:
+        chrome-version: 127.0.6533.99
+        install-dependencies: true
+        install-chromedriver: true
 
-    - name: Protractor
-      run: npx protractor-flake --parser standard  --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
+    - name: Run Protractor
+      run: npx protractor-flake --parser standard --max-attempts=3 -- protractor.conf.js --suite=${{ matrix.suite }}
       env:
+        CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+        CHROMEWEBDRIVER: ${{ steps.setup-chrome.outputs.chromedriver-path }}
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
-      working-directory: e2e/client
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: screenshots-e2e-${{ matrix.suite }}
+        name: screenshots-e2e-node-${{ matrix.node-version }}-${{ matrix.suite }}
         path: /tmp/*.png
 
     # protractor end

@@ -2,9 +2,62 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {CC} from 'core/ui/configurable-ui-components';
-import {generate} from 'json-merge-patch';
-import {noop} from 'lodash';
+import {noop, omit} from 'lodash';
 import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
+import {IUser} from 'superdesk-api';
+import {generate} from 'json-merge-patch';
+
+interface IScope {
+    origUser: IUser & {Id: string};
+    onsave(params: {user: IUser}): void;
+    oncancel(): void;
+    onupdate(params: {user: IUser}): void;
+    dirty: boolean;
+    errorMessage: string | null;
+    loading: boolean;
+    xmppEnabled: boolean;
+    roles: {[key: string]: any};
+    languages: Array<{code: string; nativeName: string}>;
+    error: any;
+    userForm?: any;
+    user?: IUser;
+    _active: boolean;
+    _pending: boolean;
+    profile: boolean;
+    userDesks: Array<any>;
+    confirm: {password: string | null};
+    show: {password: boolean};
+    userImmutable: Partial<IUser>;
+    profileConfig: any;
+    cancel(): void;
+    focused(): void;
+    editPicture(): void;
+    goTo(id: string): void;
+    checkNavigation(id: string): boolean;
+    save(): void;
+    toggleStatus(active: boolean): void;
+    metadata: any;
+    activeNavigation: any;
+    privileges: any;
+    features: any;
+    usernamePattern: any;
+    twitterPattern: any;
+    phonePattern: any;
+    signOffPattern: any;
+    hideSignOff: any;
+    isSaving: any;
+    $watch: any;
+    canChangeAvatar: any;
+    isNetworkSubscription: any;
+    $parent: any;
+    $on: (...args: any) => any;
+    $watchCollection: (...args: any) => any;
+    currentSessionUser: IUser;
+}
+
+const notAllowedToChangeYourself = ['is_active', 'is_enabled'] satisfies Array<keyof IUser>;
+
+export const readOnlyUserFields = ['dateline_source', 'last_activity_at'] satisfies Array<keyof IUser>;
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -20,7 +73,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             oncancel: '&',
             onupdate: '&',
         },
-        link: function(scope, elem) {
+        link: function(scope: IScope, elem) {
             // origUser is set by parent scope when selecting users from GUI
             // but it also needs to be updated before editing so dirtiness can be computed correctly
             // according to the latest data on the server
@@ -36,6 +89,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             });
             scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
+            scope.currentSessionUser = session.identity;
             scope.features = features;
             scope.usernamePattern = appConfig.user?.username_pattern != null ?
                 new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;
@@ -43,6 +97,11 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
             scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
+            scope.isSaving = false;
+
+            scope.$watch('$parent.$parent.savingInProgress', (newVal) => {
+                scope.isSaving = newVal;
+            });
 
             // disallow changing an avatar if custom avatars are configured for the instance
             scope.canChangeAvatar = CC.UserAvatar == null;
@@ -157,15 +216,35 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 })
                     .then((reloadPage) => {
                         scope.error = null;
-                        notify.info(gettext('Saving...'));
-                        return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
+
+                        /**
+                         * onSave from parent scope(UserEditController) needs to be used when editing a user
+                         * (because UserEditController stores latest user with latest etag
+                         * which will be used my extension point)
+                         * usersService.save is only intended to be used when creating a new user
+                         */
+                        const fieldsToOmit: Array<keyof IUser> = readOnlyUserFields;
+
+                        if (session.identity._id === scope.user._id) {
+                            fieldsToOmit.push(...notAllowedToChangeYourself);
+                        }
+
+                        const cleanedUser = omit(scope.user, fieldsToOmit);
+                        const save = scope.$parent?.$parent?.onSave?.(cleanedUser) ?? usersService.save(
+                            scope.origUser,
+                            generate(omit(scope.origUser, fieldsToOmit), cleanedUser),
+                        );
+
+                        return save
                             .then((response) => {
+                                notify.success(gettext('Saved'));
+
                                 scope.origUser = response;
                                 resetUser();
-                                notify.pop();
-                                notify.success(gettext('user saved.'));
+
                                 scope.onsave({user: scope.origUser});
                                 metadata.fetchAuthors(self);
+
                                 if (scope.user._id === session.identity._id) {
                                     session.updateIdentity(scope.origUser);
                                 }
@@ -175,17 +254,18 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                 if (reloadPage === true) {
                                     window.location.reload();
                                 }
-                            }, (response) => {
-                                notify.pop();
+                            })
+                            .catch((response) => {
                                 if (response.status === 404) {
                                     if ($location.path() === '/users/') {
                                         $route.reload();
                                     } else {
                                         $location.path('/users/');
                                     }
+
                                     notify.error(gettext('User was not found. The account might have been deleted.'));
                                 } else {
-                                    var errorMessage = gettext('There was an error when saving the user account. ');
+                                    let errorMessage = gettext('There was an error when saving the user account. ');
 
                                     if (response.data && response.data._issues) {
                                         if (angular.isDefined(response.data._issues['validator exception'])) {
@@ -250,7 +330,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                     }
                                 });
                         } else {
-                            scope.user = {};
+                            scope.user = {} as IUser;
 
                             return $q.when();
                         }

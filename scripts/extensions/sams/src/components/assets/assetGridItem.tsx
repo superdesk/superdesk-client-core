@@ -1,6 +1,8 @@
 // External modules
 import * as React from 'react';
 
+import {getHumanReadableFileSize} from '@sourcefabric/common';
+
 // Types
 import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
@@ -17,7 +19,6 @@ import {getThumbnailComponent} from './list';
 
 // Utils
 import {
-    getHumanReadableFileSize,
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';

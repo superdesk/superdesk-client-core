@@ -40,9 +40,10 @@ import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/Char
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
-import {isMacOS} from 'core/utils';
+import {gettext, isMacOS} from 'core/utils';
 import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
+import {IconButton, Spacer} from 'superdesk-ui-framework/react';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -139,10 +140,17 @@ export interface IPropsEditor3Component {
     canAddArticleEmbed?: (srcId: string) => Promise<typeof canAddArticleEmbed>;
     uiTheme?: IEditorComponentProps<unknown, unknown, unknown>['uiTheme'];
     showPopup?(type: any, data: any): void;
+    expandable?: {
+        enabled: true;
+        defaultValue: boolean;
+        numberOfRowsWhenCollapsed: number;
+    };
 }
 
 interface IState {
     draggingInProgress: boolean;
+    expanded?: boolean;
+    showExpandButton?: boolean;
 
     /**
      * Only content changes are tracked (addition/removal of chars, whitespace).
@@ -150,6 +158,8 @@ interface IState {
      */
     contentChangesAfterLastFocus: number;
 }
+
+type IEditor3 = Editor & {_editorKey?: string;};
 
 /**
  * @ngdoc React
@@ -173,9 +183,12 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     // to use this reference in a render property to a component.
     editorNode: React.MutableRefObject<HTMLDivElement>;
 
-    div: any;
-    editor: any;
+    div: HTMLDivElement;
+    editor: IEditor3;
     onDragEnd: () => void;
+    collapsedHeight: number;
+    resizeObserver: ResizeObserver;
+
     private removeListeners: Array<() => void> = [];
 
     private spellcheckAbortController: AbortController;
@@ -194,9 +207,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
+        this.shouldShowFieldToggle = this.shouldShowFieldToggle.bind(this);
         this.scheduleSpellchecking = debounce(this.spellcheck.bind(this), 1000);
 
         this.spellcheckAbortController = new AbortController();
+        this.collapsedHeight = 0;
 
         this.onDragEnd = () => {
             if (this.state.draggingInProgress !== false) {
@@ -205,11 +220,24 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         };
 
         this.state = {
+            showExpandButton: true,
+            expanded: this.props.expandable?.defaultValue ?? false,
             draggingInProgress: false,
             contentChangesAfterLastFocus: 0,
         };
 
         this.removeListeners = [];
+    }
+
+    shouldShowFieldToggle() {
+        const textInputArea = this.div?.querySelector?.('.focus-screen');
+        const shouldShowExpand = textInputArea?.scrollHeight > this?.collapsedHeight;
+
+        if (this.state.showExpandButton != shouldShowExpand) {
+            this.setState({
+                showExpandButton: shouldShowExpand,
+            });
+        }
     }
 
     /**
@@ -269,7 +297,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, shiftKey, ctrlKey, metaKey} = e;
+        const {key, ctrlKey, shiftKey, metaKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -347,88 +375,88 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         let newState;
 
         switch (command) {
-        case 'bold':
-        case 'italic':
-        case 'underline':
-            if (suggestingMode) {
+            case 'bold':
+            case 'italic':
+            case 'underline':
+                if (suggestingMode) {
                 // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
                     && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    const style = command.toUpperCase();
+                    const inlineStyles = editorState.getCurrentInlineStyle();
+                    const active = inlineStyles.has(style);
+
+                    onCreateChangeStyleSuggestion(style, active);
                     return 'handled';
                 }
 
-                const style = command.toUpperCase();
-                const inlineStyles = editorState.getCurrentInlineStyle();
-                const active = inlineStyles.has(style);
-
-                onCreateChangeStyleSuggestion(style, active);
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'soft-newline':
-            newState = RichUtils.insertSoftNewline(editorState);
-            break;
-        case 'split-block':
-            if (suggestingMode) {
-                // prevent to change other user suggestion
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateSplitParagraphSuggestion();
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'delete':
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is after current position
-                if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('delete');
-                return 'handled';
-            }
-
-            newState = RichUtils.handleKeyCommand(editorState, command);
-            break;
-        case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
-            newState = EditorState.redo(editorState);
-            break;
-        case 'backspace': {
-            this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
-
-            if (suggestingMode) {
-                // prevent to change other user suggestion that is before current position
-                if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
-                    return 'handled';
-                }
-
-                onCreateDeleteSuggestion('backspace');
-                return 'handled';
-            }
-
-            // This is a workaround for un/ordered-list-item, when it is deleted an empty
-            // ordered list(just 1. is shown) it will delete the previous block if it exists
-            // (for example a table and then imediately after the ordered list)
-            const selection = editorState.getSelection();
-            const key = selection.getAnchorKey();
-            const content = editorState.getCurrentContent();
-            const block = content.getBlockForKey(key);
-            const commands = ['unordered-list-item', 'ordered-list-item'];
-
-            if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
-                newState = RichUtils.toggleBlockType(editorState, block.getType());
+                newState = RichUtils.handleKeyCommand(editorState, command);
                 break;
-            }
-        } // fall through
-        default:
-            newState = RichUtils.handleKeyCommand(editorState, command);
+            case 'soft-newline':
+                newState = RichUtils.insertSoftNewline(editorState);
+                break;
+            case 'split-block':
+                if (suggestingMode) {
+                // prevent to change other user suggestion
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateSplitParagraphSuggestion();
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'delete':
+                if (suggestingMode) {
+                // prevent to change other user suggestion that is after current position
+                    if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('delete');
+                    return 'handled';
+                }
+
+                newState = RichUtils.handleKeyCommand(editorState, command);
+                break;
+            case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
+                newState = EditorState.redo(editorState);
+                break;
+            case 'backspace': {
+                this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
+                if (suggestingMode) {
+                // prevent to change other user suggestion that is before current position
+                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
+                        return 'handled';
+                    }
+
+                    onCreateDeleteSuggestion('backspace');
+                    return 'handled';
+                }
+
+                // This is a workaround for un/ordered-list-item, when it is deleted an empty
+                // ordered list(just 1. is shown) it will delete the previous block if it exists
+                // (for example a table and then imediately after the ordered list)
+                const selection = editorState.getSelection();
+                const key = selection.getAnchorKey();
+                const content = editorState.getCurrentContent();
+                const block = content.getBlockForKey(key);
+                const commands = ['unordered-list-item', 'ordered-list-item'];
+
+                if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                    newState = RichUtils.toggleBlockType(editorState, block.getType());
+                    break;
+                }
+            } // fall through
+            default:
+                newState = RichUtils.handleKeyCommand(editorState, command);
         }
 
         if (newState) {
@@ -496,8 +524,24 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         return 'not-handled';
     }
 
+    setRowHeight() {
+        const hiddenDiv = document.createElement('div');
+
+        hiddenDiv.style.visibility = 'hidden';
+        hiddenDiv.textContent = 'a';
+        this.div?.querySelector?.('.focus-screen').appendChild?.(hiddenDiv);
+        const rowHeight = hiddenDiv?.clientHeight ?? 0;
+
+        this.collapsedHeight = rowHeight * (this.props.expandable?.numberOfRowsWhenCollapsed ?? 1);
+
+        hiddenDiv.remove();
+    }
+
     componentDidMount() {
         $(this.div).on('dragover', this.onDragOver);
+
+        this.setRowHeight();
+        this.shouldShowFieldToggle();
 
         if (!window[EDITOR_GLOBAL_REFS]) {
             window[EDITOR_GLOBAL_REFS] = {};
@@ -519,7 +563,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         );
     }
 
-    handleRefs(editor) {
+    handleRefs(editor: IEditor3) {
         this.editor = editor;
 
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
@@ -541,10 +585,12 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
         }
+
+        this.shouldShowFieldToggle();
 
         if (
             this.props.spellchecking.enabled &&
@@ -603,39 +649,76 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         };
 
+        const inputStyle: React.CSSProperties = (() => {
+            const style: React.CSSProperties = {};
+
+            if (this.props.uiTheme != null) {
+                style.fontSize = this.props.uiTheme.fontSize;
+                style.color = this.props.uiTheme.textColor;
+                style.fontFamily = this.props.uiTheme.fontFamily;
+            }
+
+            if (this.state.expanded) {
+                return {...style, height: 'auto'};
+            } else if (this.props.expandable?.enabled) {
+                return {...style, overflowY: 'auto', maxHeight: this.collapsedHeight};
+            }
+
+            return {...style};
+        })();
+
         return (
-            <div
-                className={cx}
-                ref={(div) => this.div = div}
-                onDragStart={() => {
-                    if (this.state.draggingInProgress !== true) {
-                        setTimeout(() => {
+            <Spacer v gap="0" justifyContent="center" alignItems="center" noWrap>
+                <div
+                    className={cx}
+                    ref={(div) => {
+                        this.div = div;
+
+                        // if element gets resized from somewhere we should
+                        // check if the expand button should still show
+                        if (div) {
+                            // this function may run more than once,
+                            // thus make sure there is always one observer per instance of this class
+                            if (this.resizeObserver != null) {
+                                this.resizeObserver.disconnect();
+                            }
+
+                            this.resizeObserver = new ResizeObserver(() => {
+                                requestAnimationFrame(() => {
+                                    this.shouldShowFieldToggle();
+                                });
+                            });
+
+                            this.resizeObserver.observe(div);
+                            this.removeListeners.push(() => this.resizeObserver.disconnect());
+                        }
+                    }}
+                    onDragStart={() => {
+                        if (this.state.draggingInProgress !== true) {
+                            setTimeout(() => {
                             // known issue: dragging text doesn't work when the top of the editor is in the viewport
                             // https://github.com/facebook/draft-js/issues/2218
                             // it's not clear why, but using setTimeout seems to work around the issue
-
-                            this.setState({draggingInProgress: true});
-                        });
-                    }
-                }}
-                data-test-id="editor3"
-
-                // "dragend" event won't fire if an item is dropped inside draft-js field
-                // it's handled there separately
-                onDragEnd={this.onDragEnd}
-                onFocus={() => {
-                    this.setState({contentChangesAfterLastFocus: 0});
-                }}
-                style={
-                    this.props.uiTheme == null
-                        ? undefined
-                        : {
-                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                                this.setState({draggingInProgress: true});
+                            });
                         }
-                }
-            >
-                {
-                    showToolbar && (
+                    }}
+                    data-test-id="editor3"
+
+                    // "dragend" event won't fire if an item is dropped inside draft-js field
+                    // it's handled there separately
+                    onDragEnd={this.onDragEnd}
+                    onFocus={() => {
+                        this.setState({contentChangesAfterLastFocus: 0});
+                    }}
+                    style={this.props.uiTheme == null
+                        ? {width: '100%'}
+                        : {
+                            width: '100%',
+                            borderColor: this.props.uiTheme.backgroundColorSecondary,
+                        }}
+                >
+                    {showToolbar && (
                         <Toolbar
                             uiTheme={this.props.uiTheme}
                             disabled={locked || readOnly}
@@ -645,72 +728,58 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                             editorWrapperElement={this.div}
                             draggingInProgress={this.state.draggingInProgress}
                         />
-                    )
-                }
-
-                <HighlightsPopup
-                    editorNode={this.editorNode}
-                    editorState={editorState}
-                    highlightsManager={this.props.highlightsManager}
-                    onChange={this.props.onChange}
-                />
-                <div
-                    className="focus-screen"
-                    onMouseDown={this.focus}
-                    style={
-                        this.props.uiTheme == null
-                            ? {}
-                            : {
-                                fontSize: this.props.uiTheme.fontSize,
-                                color: this.props.uiTheme.textColor,
-                                fontFamily: this.props.uiTheme.fontFamily,
-                            }
-                    }
-                >
-                    <Editor
+                    )}
+                    <HighlightsPopup
+                        editorNode={this.editorNode}
                         editorState={editorState}
-                        handleDrop={this.handleDropOnEditor}
-                        handleKeyCommand={this.handleKeyCommand}
-                        keyBindingFn={this.keyBindingFn}
-                        handleBeforeInput={this.handleBeforeInput}
-                        blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer(this.props.spellchecking)}
-                        blockStyleFn={blockStyle}
-                        customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(editorStateNext: EditorState) => {
+                        highlightsManager={this.props.highlightsManager}
+                        onChange={this.props.onChange}
+                    />
+                    <div
+                        className="focus-screen"
+                        onMouseDown={this.focus}
+                        style={inputStyle}
+                    >
+                        <Editor
+                            editorState={editorState}
+                            handleDrop={this.handleDropOnEditor}
+                            handleKeyCommand={this.handleKeyCommand}
+                            keyBindingFn={this.keyBindingFn}
+                            handleBeforeInput={this.handleBeforeInput}
+                            blockRenderMap={blockRenderMap}
+                            blockRendererFn={getBlockRenderer(this.props.spellchecking)}
+                            blockStyleFn={blockStyle}
+                            customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
+                            onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
+                                const selectionRect = getVisibleSelectionRect(window);
 
-                            const selectionRect = getVisibleSelectionRect(window);
+                                if (this.editorNode?.current != null && selectionRect != null) {
+                                    this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                                }
 
-                            if (this.editorNode?.current != null && selectionRect != null) {
-                                this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
-                            }
-
-                            onChange(editorStateNext);
-                        }}
-                        tabIndex={tabindex}
-                        handlePastedText={handlePastedText.bind(this)}
-                        readOnly={locked || readOnly}
-                        ref={(editor) => this.handleRefs(editor)}
-                        spellCheck={appConfig.editor3.browserSpellCheck}
-                        stripPastedStyles={cleanPastedHtml}
-                        onBlur={(event: any) => {
-                            if (
-                                event?.relatedTarget == null
+                                onChange(editorStateNext);
+                            }}
+                            tabIndex={tabindex}
+                            handlePastedText={handlePastedText.bind(this)}
+                            readOnly={locked || readOnly}
+                            ref={(editor) => this.handleRefs(editor)}
+                            spellCheck={appConfig.editor3.browserSpellCheck}
+                            stripPastedStyles={cleanPastedHtml}
+                            onBlur={(event: any) => {
+                                if (event?.relatedTarget == null
                                 || querySelectorParent(
                                     event.relatedTarget,
                                     `.${editor3AutocompleteClassName}`,
                                     {self: true},
-                                ) == null
-                            ) { // check whether focus went to autocomplete or to an item inside it
-                                this.setState({contentChangesAfterLastFocus: 0});
-                            }
-                        }}
-                    />
+                                ) == null) { // check whether focus went to autocomplete or to an item inside it
+                                    this.setState({contentChangesAfterLastFocus: 0});
+                                }
+                            }}
+                        />
 
-                    {
-                        this.state.contentChangesAfterLastFocus > 0 && (
+                        {this.state.contentChangesAfterLastFocus > 0 && (
                             <Editor3Autocomplete
                                 editorState={editorState}
                                 editorNode={this.editorNode.current}
@@ -718,12 +787,24 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                                 autocompleteSuggestions={this.props.autocompleteSuggestions}
                                 className={editor3AutocompleteClassName}
                             />
-                        )
-                    }
+                        )}
 
-                    {this.props.loading && <div className="loading-overlay active" />}
+                        {this.props.loading && <div className="loading-overlay active" />}
+                    </div>
                 </div>
-            </div>
+                {this.state.showExpandButton && this.props.expandable?.enabled && (
+                    <IconButton
+                        size="small"
+                        ariaValue={this.state.expanded ? gettext('Collapse') : gettext('Expand')}
+                        icon={this.state.expanded ? 'chevron-up-thin' : 'chevron-down-thin'}
+                        onClick={() => {
+                            this.setState({
+                                expanded: !this.state.expanded,
+                            });
+                        }}
+                    />
+                )}
+            </Spacer>
         );
     }
 }

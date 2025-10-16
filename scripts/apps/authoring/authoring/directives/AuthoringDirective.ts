@@ -23,6 +23,8 @@ import {InitializeMedia} from '../services/InitializeMediaService';
 import {IArticle, IAuthoringActionType} from 'superdesk-api';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {IPanelError} from 'core/interactive-article-actions-panel/interfaces';
+import {openArticle} from 'core/get-superdesk-api-implementation';
+import {getSendAndDuplicateTarget} from '../get-send-and-duplicate-target';
 
 /**
  * @ngdoc directive
@@ -59,7 +61,6 @@ AuthoringDirective.$inject = [
     'embedService',
     '$injector',
     'autosave',
-    'storage',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -87,7 +88,6 @@ export function AuthoringDirective(
     embedService,
     $injector,
     autosave,
-    storage,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -102,15 +102,12 @@ export function AuthoringDirective(
             $scope.eventListenersToRemoveOnUnmount = [];
             $scope.toDeskEnabled = false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
+
             $scope.publishEnabled = false; // publish an item
             $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
+            $scope.sendAndDuplicateEnabled = false; // setting initial value, true value will be set asynchronously
 
             $scope.requestEditor3DirectivesToGenerateHtml = [];
-
-            desks.fetchCurrentUserDesks().then((desksList) => {
-                userDesks = desksList;
-                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
-            });
 
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
@@ -152,10 +149,6 @@ export function AuthoringDirective(
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
-
-            content.getTypes().then((result) => {
-                $scope.content_types = result;
-            });
 
             /**
              * Get the Desk and Stage for the item.
@@ -215,9 +208,31 @@ export function AuthoringDirective(
                 }
             }
 
-            desks.initialize().then(() => {
+            let getLabelForFieldId = (id) => id; // placeholder value; will be replaced after true value is loaded.
+
+            // finalize to put all init code here
+            Promise.all([
+                content.getTypes(),
+                desks.fetchCurrentUserDesks(),
+                getLabelNameResolver(),
+                desks.initialize(),
+            ]).then(([contentTypes, currentUserDesks, _getLabelForFieldId]) => {
+                $scope.content_types = contentTypes;
+
+                // initialize desks
                 getDeskStage();
                 getCurrentTemplate();
+
+                // setup current user desks
+                userDesks = currentUserDesks;
+                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
+
+                // (depends on desks being initialized)
+                $scope.sendAndDuplicateEnabled = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                    && getSendAndDuplicateTarget() != null;
+
+                getLabelForFieldId = _getLabelForFieldId;
+
                 $scope.$watch('item', () => {
                     $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
                         && !sdApi.navigation.isPersonalSpace()
@@ -233,7 +248,7 @@ export function AuthoringDirective(
                             sdApi.navigation.isPersonalSpace(),
                         );
 
-                    $scope.publishAndContinue = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
+                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
@@ -411,6 +426,8 @@ export function AuthoringDirective(
             $scope.onError = (error: IPanelError) => {
                 $scope.error = {};
                 Object.assign($scope.error, error.fields);
+
+                // Triggers a component remount so errors get applied inside the editor
                 $scope.$applyAsync();
             };
 
@@ -430,12 +447,6 @@ export function AuthoringDirective(
                 $scope._editable = false;
                 $scope.dirty = false;
             }
-
-            let getLabelForFieldId = (id) => id;
-
-            getLabelNameResolver().then((_getLabelForFieldId) => {
-                getLabelForFieldId = _getLabelForFieldId;
-            });
 
             function validateForPublish(item) {
                 var validator = appConfig.validator_media_metadata;
@@ -458,7 +469,7 @@ export function AuthoringDirective(
             };
 
             $scope.openExport = function() {
-                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), true).then(() => {
+                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), () => null).then(() => {
                     $scope.export = true;
                 });
             };
@@ -622,7 +633,7 @@ export function AuthoringDirective(
 
             $scope.showCustomButtons = () => {
                 return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
-                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
+                    || $scope.publishAndContinueEnabled || $scope.publishEnabled || $scope.sendAndDuplicateEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
@@ -677,6 +688,29 @@ export function AuthoringDirective(
                 return authoringApiCommon.closeAuthoringStep2($scope, $rootScope);
             };
 
+            $scope.sendAndDuplicate = () => {
+                // closing an item first to ensure there are no unsaved changes
+                // user will be prompted to save/discard changes or cancel the operation
+                $scope.close().then(({cancelled}: Awaited<ReturnType<typeof authoringApiCommon['closeAuthoring']>>) => {
+                    if (cancelled) {
+                        return;
+                    }
+
+                    const {deskId, stageId} = getSendAndDuplicateTarget();
+
+                    sdApi.article.duplicateItems(
+                        [$scope.item._id],
+                        {
+                            type: 'desk',
+                            desk: deskId,
+                            stage: stageId,
+                        },
+                    ).then(() => {
+                        openArticle($scope.item._id, 'edit');
+                    });
+                });
+            };
+
             /**
              * Cancel an action, i.e. go back to view mode.
              * This is used in the 'EDIT AND CORRECT' and 'EDIT AND KILL' actions.
@@ -704,8 +738,8 @@ export function AuthoringDirective(
                 $scope.sending = true;
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
-                        .then(() => $scope.save().then(() => lock.unlock($scope.origItem)), () => // cancel
-                            $q.reject());
+                        .then(() => $scope.save())
+                        .catch(() => $q.reject());
                 }
 
                 return lock.unlock($scope.origItem)
@@ -814,6 +848,10 @@ export function AuthoringDirective(
                     authoring.rewrite($scope.item);
                 } else if (action === 'unpublish') {
                     authoring.unpublish($scope.item);
+                } else if (action === 'unspike') {
+                    sdApi.article.doUnspike($scope.item, $scope.item.task.desk, $scope.item.task.stage).then(() => {
+                        $scope.close();
+                    });
                 }
             };
 
@@ -843,7 +881,7 @@ export function AuthoringDirective(
                     }
                 });
 
-                $scope.autosave(item);
+                $scope.autosave(item, 0);
             };
 
             $scope.firstLineConfig = appConfig?.ui?.authoring?.firstLine ?? {};
@@ -858,6 +896,7 @@ export function AuthoringDirective(
                     $scope.item,
                     $scope.origItem,
                     timeout,
+                    $scope.$applyAsync,
                 ).then(
                     () => {
                         $scope.$applyAsync(() => {

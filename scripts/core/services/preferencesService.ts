@@ -43,7 +43,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'editor:pinned_widget': 1,
                     [AUTHORING_FIELD_PREFERENCES]: 1,
                 },
-                preferences,
+                preferences: {[key: string]: any} = null,
                 preferencesPromise;
 
             $rootScope.$watch(() => session.token, resetPreferences);
@@ -158,7 +158,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              */
             function getValue(key) {
                 if (!key) {
-                    return preferences[USER_PREFERENCES];
+                    return preferences != null ? preferences[USER_PREFERENCES] : null;
                 } else if (userPreferences[key]) {
                     return preferences[USER_PREFERENCES][key];
                 }
@@ -298,4 +298,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     }
                 });
             }
+
+            this.reset = () => {
+                preferencesPromise = null;
+            };
         }]);

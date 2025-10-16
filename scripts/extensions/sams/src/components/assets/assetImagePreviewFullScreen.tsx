@@ -3,6 +3,7 @@
 // External Modules
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {getHumanReadableFileSize} from '@sourcefabric/common';
 
 // Types
 import {IAssetItem, ISetItem, RENDITION} from '../../interfaces';
@@ -33,7 +34,6 @@ import {PageLayout} from '../../containers/PageLayout';
 import {
     getAssetStateLabel,
     getIconTypeFromMimetype,
-    getHumanReadableFileSize,
     showModalConnectedToStore,
     getAssetRenditionDimension,
 } from '../../utils/ui';

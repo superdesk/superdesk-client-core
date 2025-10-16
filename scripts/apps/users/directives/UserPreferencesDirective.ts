@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
-import {appConfig, extensions, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig, extensions, userInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {DEFAULT_EDITOR_THEME} from 'apps/authoring/authoring/services/AuthoringThemesService';
 import {cloneDeep, pick} from 'lodash';
@@ -43,12 +43,12 @@ export function UserPreferencesDirective(
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
-            const userLang = getUserInterfaceLanguage().replace('_', '-');
+            const userLang = userInterfaceLanguage.replace('_', '-');
             const body = angular.element('body');
             const NOTIFICATIONS_KEY = 'notifications';
 
             scope.activeNavigation = null;
-            scope.activeTheme = localStorage.getItem('theme');
+            scope.activeTheme = '';
             const registeredNotifications: IExtensionActivationResult['contributions']['notifications'] = (() => {
                 const result = {};
 
@@ -79,6 +79,14 @@ export function UserPreferencesDirective(
 
                 scope.userPrefs.$setDirty();
                 scope.$applyAsync();
+            };
+
+            scope.toggleUiTheme = function(theme) {
+                scope.activeTheme = theme;
+                if (orig['application:theme'] == null) {
+                    orig['application:theme'] = {};
+                }
+                orig['application:theme']['theme'] = theme;
             };
 
             scope.toggleEmailNotification = function(notificationId: string) {
@@ -149,7 +157,6 @@ export function UserPreferencesDirective(
                             preferencesService.desktopNotification.requestPermission();
                         }
 
-                        localStorage.setItem('theme', scope.activeTheme);
                         body.attr('data-theme', scope.activeTheme);
                         notify.success(gettext('User preferences saved'));
                         scope.cancel();
@@ -281,6 +288,7 @@ export function UserPreferencesDirective(
                     }
                 });
 
+                scope.activeTheme = data['application:theme']?.['theme'] ?? 'light-ui';
                 // metadata service initialization is needed if its
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
@@ -474,7 +482,7 @@ export function UserPreferencesDirective(
                         });
                     }
 
-                    patchObject[key] = Object.assign(val, scope.preferences[key]);
+                    patchObject[key] = _.merge(val, scope.preferences[key]);
                 });
 
                 if (orig['editor:theme'] != null) {

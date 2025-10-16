@@ -16,6 +16,7 @@ export function geDurationField()
 : ICustomFieldType<IDurationValueOperational, IDurationValueStorage, IDurationFieldConfig, IDurationUserPreferences> {
     const field: ReturnType<typeof geDurationField> = {
         id: DURATION_FIELD_ID,
+        generic: true,
         label: gettext('Duration (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

@@ -1,5 +1,5 @@
 import * as request from 'request';
-import {expect, Page} from '@playwright/test';
+import {expect, Locator, Page} from '@playwright/test';
 
 export function restoreDatabaseSnapshot(options?: {snapshotName?: string}): Promise<void> {
     return new Promise((resolve) => {
@@ -49,4 +49,72 @@ export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
+}
+
+/**
+ * A helper to make code shorter, but maintain selector scoping.
+ *
+ * Without this helper:
+ *
+ * ```
+ * await page.locator(s('desk-config-modal', 'field--name')).fill('desk 7');
+ * await page.locator(s('desk-config-modal', 'field--source')).fill('desk 7');
+ * await page.locator(s('desk-config-modal')).getByRole('button', {name: 'test'}).click();
+ * ```
+ *
+ * With this helper:
+ * ```
+ * await withTestContext('desk-config-modal', async ({cs}) => {
+ *      await page.locator(cs('field--name')).fill('desk 7');
+ *      await page.locator(cs('field--source')).fill('from desk 7');
+ *      await page.locator(cs()).getByRole('button', {name: 'test'}).click();
+ * });
+ */
+export function withTestContext(
+    selector: string,
+    callback: (
+        options: {
+            // cs - contextualized selector
+            cs: (...testIds: Array<string>) => string;
+        }
+    ) => Promise<void>,
+): Promise<void> {
+    const getTestSelectorWithContext = (...testIds: Array<string>) => getTestSelector(selector, ...testIds);
+
+    return callback({cs: getTestSelectorWithContext});
+}
+
+export async function waitForToastMessage(page: Page, type: string, text: string): Promise<void> {
+    const selector = s(`notification--${type}=${text}`);
+
+    await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator(selector)).toHaveText(`${text}`);
+    await expect(page.locator(selector)).not.toBeVisible();
+}
+
+export async function getCellValueByColumTitle(
+    table: Locator,
+    row: Locator,
+    tableHeading: string,
+): Promise<String> {
+    const headers = table.locator('thead tr th');
+    const count = await headers.count();
+    let columnIndex = -1;
+
+    for (let i = 0; i < count; i++) {
+        const text = await headers.nth(i).innerText();
+
+        if (text === tableHeading) {
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if (columnIndex === -1) {
+        throw new Error(`Column heading "${tableHeading}" not found in table`);
+    }
+
+    const item = row.locator(`td:nth-child(${columnIndex + 1})`);
+
+    return item.innerText();
 }

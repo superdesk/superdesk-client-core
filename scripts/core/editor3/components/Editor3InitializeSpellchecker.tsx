@@ -1,10 +1,13 @@
 import React from 'react';
-import {IEditorStore, initializeSpellchecker} from '../store';
+import {getInitialSpellcheckerData, IEditorStore, initializeSpellchecker} from '../store';
 import ng from 'core/services/ng';
+import {setExternalOptions} from '../actions';
 
 interface IProps {
     spellchecking: IEditorStore['spellchecking'];
-    dispatch(): void;
+    limitConfig: IEditorStore['limitConfig'];
+    softLimitConfig: IEditorStore['softLimitConfig'];
+    dispatch(action: any): void;
 }
 
 interface IState {
@@ -12,33 +15,74 @@ interface IState {
 }
 
 export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, IState> {
+    private statusWasLoaded: boolean;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            loading: props.spellchecking.enabled === true,
+            loading: true,
         };
 
         this.load = this.load.bind(this);
+        this.handleDecoratorUpdate = this.handleDecoratorUpdate.bind(this);
+
+        this.statusWasLoaded = false;
+    }
+
+    private getSpellcheckerStatus(language: string): Promise<boolean> {
+        const spellcheck = ng.get('spellcheck');
+
+        if (this.statusWasLoaded) {
+            return Promise.resolve(this.props.spellchecking.enabled);
+        } else {
+            return spellcheck.getInitialSpellcheckerStatus(language).then((status) => {
+                this.statusWasLoaded = true;
+
+                return status;
+            });
+        }
+    }
+
+    private handleDecoratorUpdate(options: {enable: boolean, language: string}): void {
+        const {enable, language} = options;
+
+        this.props.dispatch(setExternalOptions({
+            spellchecking: getInitialSpellcheckerData(enable ? ng.get('spellcheck') : null, language),
+            limitConfig: this.props.limitConfig,
+            softLimitConfig: this.props.softLimitConfig,
+        }));
+
+        this.setState({loading: false});
     }
 
     private load() {
-        if (this.props.spellchecking.enabled === true) {
-            const spellcheck = ng.get('spellcheck');
-            const language = this.props.spellchecking.language;
+        const spellcheck = ng.get('spellcheck');
+        const language = this.props.spellchecking.language;
 
-            spellcheck.getDictionary(language).then((dict) => {
-                spellcheck.isActiveDictionary = !!dict.length;
-                spellcheck.setLanguage(language);
-                spellcheck.setSpellcheckerStatus(true);
-
-                initializeSpellchecker(this.props.dispatch, spellcheck).then(() => {
-                    this.setState({loading: false});
-                });
-            });
-        } else if (this.state.loading === true) {
+        if (language == null) {
             this.setState({loading: false});
+            return;
         }
+
+        this.getSpellcheckerStatus(language).then((enabled) => {
+            spellcheck.isAutoSpellchecker = enabled;
+
+            if (enabled) {
+                spellcheck.getDictionary(language).then((dict) => {
+                    spellcheck.isActiveDictionary = !!dict.length;
+                    spellcheck.setLanguage(language);
+                    spellcheck.setSpellcheckerStatus(true);
+
+                    initializeSpellchecker(this.props.dispatch, spellcheck).then(() => {
+                        this.handleDecoratorUpdate({enable: true, language});
+                    });
+                });
+            } else {
+                // update redux store to mark spellchecker as disabled
+                this.handleDecoratorUpdate({enable: false, language});
+            }
+        });
     }
 
     componentDidMount(): void {
@@ -47,8 +91,8 @@ export class Editor3InitializeSpellchecker extends React.PureComponent<IProps, I
 
     componentDidUpdate(prevProps: Readonly<IProps>): void {
         if (
-            this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
-            || this.props.spellchecking.language !== prevProps.spellchecking.language
+            this.props.spellchecking.language !== prevProps.spellchecking.language
+            || this.props.spellchecking.enabled !== prevProps.spellchecking.enabled
         ) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({loading: true}, this.load);

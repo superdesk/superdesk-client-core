@@ -1,10 +1,16 @@
-import {Page, Locator} from '@playwright/test';
+import {Locator} from '@playwright/test';
 
 /**
- * .clear method from playwright doesn't work in a stable manner for editor3 inputs
+ * calling playwright's .clear method once doesn't always work for editor3 inputs
  */
-export async function clearInput(page: Page, textInputLocator: Locator): Promise<void> {
-    await textInputLocator.focus();
-    await page.keyboard.press('Meta+A');
-    await page.keyboard.press('Backspace');
+export async function clearInput(textInputLocator: Locator): Promise<void> {
+    for (let i = 0; i < 10; i++) {
+        await textInputLocator.clear();
+
+        const currentValue = (await textInputLocator.innerText()).trim();
+
+        if (currentValue === '') {
+            return;
+        }
+    }
 }

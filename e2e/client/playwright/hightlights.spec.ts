@@ -20,7 +20,7 @@ test.describe('highlights', async () => {
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
 
-        await monitoring.selectDeskOrWorkspace('Educations');
+        await monitoring.selectDeskOrWorkspace('Education');
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
     });
@@ -42,7 +42,7 @@ test.describe('highlights', async () => {
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
 
-        await monitoring.selectDeskOrWorkspace('Educations');
+        await monitoring.selectDeskOrWorkspace('Education');
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await expect(
             page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'}),

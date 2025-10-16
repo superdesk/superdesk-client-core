@@ -1,4 +1,4 @@
-import {GenericEvents} from '@superdesk/common';
+import {GenericEvents} from '@sourcefabric/common';
 import {IRundown, IRundownItem} from './interfaces';
 
 export interface IBroadcastingEvents {

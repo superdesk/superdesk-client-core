@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import {gettext} from 'core/utils';
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
@@ -14,40 +14,40 @@ import {Page} from 'core/ui/components/Page';
 
 const getTypeLabel = (type: ISystemMessage['type']) => {
     switch (type) {
-    case 'alert':
-        return gettext('Alert');
+        case 'alert':
+            return gettext('Alert');
 
-    case 'primary':
-        return gettext('Info');
+        case 'primary':
+            return gettext('Info');
 
-    case 'warning':
-        return gettext('Warning');
+        case 'warning':
+            return gettext('Warning');
 
-    case 'success':
-        return gettext('Success');
+        case 'success':
+            return gettext('Success');
 
-    default:
-        assertNever(type);
+        default:
+            assertNever(type);
     }
 };
 
 /**
  * It needs to be a function because calling gettext in the top level doesn't work
  */
-function getFormConfig(): IFormGroup {
-    const formConfig: IFormGroup = {
+function getFormConfig(): IFormGroup<ISystemMessage> {
+    return {
         type: 'inline',
         direction: 'vertical',
         form: [
             {
                 field: 'is_active',
                 label: gettext('Active'),
-                type: FormFieldType.checkbox,
+                type: GenericFormFieldType.checkbox,
             },
             {
                 field: 'type',
                 label: gettext('Style'),
-                type: FormFieldType.select,
+                type: GenericFormFieldType.select,
                 required: true,
                 component_parameters: {
                     options: [
@@ -61,19 +61,17 @@ function getFormConfig(): IFormGroup {
             {
                 field: 'message_title',
                 label: gettext('Title'),
-                type: FormFieldType.plainText,
+                type: GenericFormFieldType.plainText,
                 required: true,
             },
             {
                 field: 'message',
                 label: gettext('Message'),
-                type: FormFieldType.textEditor3,
+                type: GenericFormFieldType.textEditor3,
                 required: true,
             },
         ],
     };
-
-    return formConfig;
 }
 
 class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<ISystemMessage>> {
@@ -93,7 +91,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
                             {
                                 getFormFieldPreviewComponent(
                                     item,
-                                    formConfig.form[3] as IFormField,
+                                    formConfig.form[3] as IFormField<ISystemMessage>,
                                     {showAsPlainText: true},
                                 )
                             }

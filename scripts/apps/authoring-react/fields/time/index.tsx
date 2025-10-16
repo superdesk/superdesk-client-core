@@ -16,6 +16,7 @@ export function getTimeField()
 : ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> {
     const field: ICustomFieldType<ITimeValueOperational, ITimeValueStorage, ITimeFieldConfig, ITimeUserPreferences> = {
         id: TIME_FIELD_ID,
+        generic: true,
         label: gettext('Time (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,

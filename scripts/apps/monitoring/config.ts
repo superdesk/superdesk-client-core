@@ -52,7 +52,7 @@ export function Personal(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/personal', {
             label: gettext('Personal Space'),
-            priority: 100,
+            priority: 150,
             adminTools: false,
             category: superdesk.MENU_MAIN,
             templateUrl: 'scripts/apps/monitoring/views/personal.html',

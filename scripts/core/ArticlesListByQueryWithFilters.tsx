@@ -230,7 +230,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         const sortFilterToolbar = (
             <ResizeObserverComponent position="relative">
                 {(dimensions) => (
-                    <SubNav zIndex={4}>
+                    <SubNav>
                         {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
 
                         <SortBar
@@ -253,7 +253,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                     // Use the same query except only for selected items.
                     const queryForSpecificItems: ISuperdeskQuery = {
                         ...query,
-                        page: 0,
+                        page: 1,
                         max_results: 200,
                         filter: {
                             $and: [
@@ -338,7 +338,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                     const header = (itemsCount: number): JSX.Element => {
                         return (
                             <div data-test-id="articles-list--toolbar">
-                                <SubNav zIndex={5}>
+                                <SubNav>
                                     <div className="space-between">
                                         <h3
                                             className="subnav__page-title sd-flex-no-grow"

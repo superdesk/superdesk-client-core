@@ -12,7 +12,7 @@ import {
     Checkbox,
     DurationInput,
 } from 'superdesk-ui-framework/react';
-import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@sourcefabric/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {stringNotEmpty} from '../form-validation';
@@ -99,8 +99,8 @@ type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
     sideWidget: null | {
-        id: string;
-        pinned?: boolean;
+        activeId?: string;
+        pinnedId?: string;
     };
 }
 
@@ -300,7 +300,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
-                                headerPadding="medium"
+                                headerPadding={{top: 8}}
                                 toolBar={this.props.toolbar}
                                 authoringHeader={(
                                     <React.Fragment>
@@ -351,9 +351,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                 });
                                                             }}
 
-                                                            // firstDayOfWeek starts from Monday
-                                                            // - config.startingDay from Sunday
-                                                            firstDayOfWeek={superdesk.instance.config.startingDay - 1}
+                                                            firstDayOfWeek={superdesk.instance.config.startingDay}
                                                             readOnly={this.props.readOnly}
                                                         />
 
@@ -600,7 +598,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 }}
                                                 getSideWidgetIdAtIndex={() => ''}
                                                 getAuthoringPrimaryToolbarWidgets={() => []}
-                                                secondaryToolbarWidgets={[]}
                                                 disableWidgetPinning
                                             />
                                         )

@@ -3,7 +3,7 @@
     z-index: 9;
     top: 2px;
     inset-inline-start: 10px;
-     inset-inline-end:: 10px;
+    inset-inline-end: 10px;
 }
 
 .autocomplete-item {

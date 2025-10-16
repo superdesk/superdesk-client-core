@@ -3,16 +3,17 @@
     <div class="login-form-container" data-test-id="login-page">
         <p ng-if="identity._id" class="session-error">{{ 'Your session has expired.'|translate }}<br />{{ 'Please log in again.'|translate }}</p>
 
-        <div class="logo-handler" ng-show="!identity.Avatar">
+        <div class="logo-handler" ng-if="!identity.Avatar">
             <img src="/images/superdesk-logo.svg" width="290" alt="Superdesk Logo">
         </div>
 
-        <div class="form-handler" ng-show="!changePassword">
-            <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
-            <form name="loginForm" ng-submit="authenticate()">
-                <fieldset class="inputs" ng-show="features.auth_db">
-                    <input type="text" id="login-username" ng-model="username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required data-test-id="username" />
-                    <input type="password" id="login-password" ng-model="password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required data-test-id="password" />
+        <div class="form-handler" ng-if="!changePassword">
+            <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-if="identity.Avatar"></figure>
+
+            <form name="loginForm" ng-submit="authenticate()" ng-if="features.auth_db">
+                <fieldset class="inputs">
+                    <input type="text" id="login-username" ng-model="form.username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required data-test-id="username" />
+                    <input type="password" id="login-password" ng-model="form.password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required data-test-id="password" />
                 </fieldset>
 
                 <fieldset class="buttons" ng-show="features.auth_db">
@@ -24,26 +25,25 @@
                         </div>
                     </button>
                 </fieldset>
-
-                <fieldset class="buttons" ng-if="methods.google">
-                    <button class="btn btn--large btn--hollow btn--sd-green"
-                        ng-click="openLoginPopup('google')" translate>Log In with Google</button>
-                </fieldset>
-
-                <fieldset class="buttons" ng-if="methods.saml">
-                    <button class="btn btn--large btn--sd-green"
-                        ng-click="openLoginPopup('saml')" translate>{{labels.saml}}</button>
-                </fieldset>
-
             </form>
+
+            <fieldset class="buttons" ng-if="methods.google">
+                <button class="btn btn--large btn--hollow btn--sd-green"
+                    ng-click="openLoginPopup('google')" translate>Log In with Google</button>
+            </fieldset>
+
+            <fieldset class="buttons" ng-if="methods.saml">
+                <button class="btn btn--large btn--sd-green"
+                    ng-click="openLoginPopup('saml')" translate>{{labels.saml}}</button>
+            </fieldset>
 
             <a href="/#/secure-login/" class="text" ng-show="methods.xmpp" translate>Secure login</a>
 
             <div class="error-handler" ng-switch on="loginError">
-                <p class="error" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
-                <p class="error" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
-                <p class="error" ng-switch-when="404" translate>Sorry, user not found.</p>
-                <p class="error" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
+                <p class="error" data-test-id="login-error-401" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
+                <p class="error" data-test-id="login-error-403" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
+                <p class="error" data-test-id="login-error-404" ng-switch-when="404" translate>Sorry, user not found.</p>
+                <p class="error" data-test-id="login-error-default" ng-show="loginError" ng-switch-default translate>Sorry, but can't reach the server now.<br />Please try again later.</p>
 
                 <div class="network-error red" ng-show="serverStatus == 1">
                     <span class="icon-unplug"></span>
@@ -63,20 +63,19 @@
             </div>
         </div>
 
-        <div class="form-handler" ng-show="changePassword">
+        <div class="form-handler" ng-if="changePassword">
             <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
             <div class="error-handler">
                 <p class="error" translate>Your password has expired. Please change your password.</p>
             </div>
             <form name="changePasswordForm" ng-submit="changeUserPassword()">
                 <fieldset class="inputs">
-                    <input type="password" sd-password-strength name="password" ng-model="password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
+                    <input type="password" sd-password-strength name="password" ng-model="form.password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
                 </fieldset>
                 <fieldset class="inputs">
-                    <input type="password" name="passwordConfirm" ng-model="passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
+                    <input type="password" name="passwordConfirm" ng-model="form.passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
                     <i ng-show="changePasswordForm.passwordConfirm.$error.required" class="required-asteriks">*</i>
                     <div ng-show="changePasswordForm.passwordConfirm.$error.confirm" sd-valid-info>
-                        <i class="icon-info-sign-warning"></i>
                         <span translate>passwords must be same</span>
                     </div>
                 </fieldset>

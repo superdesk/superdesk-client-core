@@ -3,6 +3,7 @@
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
+    data-test-value="{{ user.display_name }}"
 >
     <div style="height: auto">
         <sd-user-avatar data-user="user" data-display-status="true" display-administrator-indicator="true" scroll-container="'.content'"></sd-user-avatar>

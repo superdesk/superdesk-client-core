@@ -1,61 +1,21 @@
-import {merge} from 'lodash';
-import {ISuperdeskGlobalConfig, IExtensions, IUser} from 'superdesk-api';
+import {ISuperdeskGlobalConfig, IExtensions} from 'superdesk-api';
 
-/* globals __SUPERDESK_CONFIG__: true */
-export const appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
+const appConfigForUnitTests = __SUPERDESK_CONFIG__;
+const userInterfaceLanguageForUnitTests = 'en';
 
-if (appConfig.startingDay == null) {
-    appConfig.startingDay = '0'; // sunday
-}
-
-if (appConfig.shortTimeFormat == null) {
-    appConfig.shortTimeFormat = 'HH:mm'; // 24h format
-}
-
-if (appConfig.view.dateformat == null) {
-    appConfig.view.dateformat = 'MM/DD';
-}
-
-if (appConfig.view.timeformat == null) {
-    appConfig.view.timeformat = 'hh:mm';
-}
-
-if (appConfig.longDateFormat == null) {
-    appConfig.longDateFormat = 'LLL';
-}
-
-if (appConfig.ui == null) {
-    appConfig.ui = {};
-
-    if (appConfig.ui.italicAbstract == null) {
-        appConfig.ui.italicAbstract = true;
-    }
-}
-
-if (appConfig.features == null) {
-    appConfig.features = {};
-}
-
-if (appConfig.features.autorefreshContent == null) {
-    appConfig.features.autorefreshContent = true; // default to true
-}
-
-// allow e2e tests to overwrite appConfig via local storage
-Object.assign(appConfig, merge(appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
+export const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'] ?? appConfigForUnitTests;
+export const userInterfaceLanguage: string = window['user-interface-language'] ?? userInterfaceLanguageForUnitTests;
 
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
 export const extensions: IExtensions = {};
 
+/**
+ * @deprecated
+ * only needed for compatibility with planning
+ */
 export function getUserInterfaceLanguage() {
-    const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
-    const language = user?.language ?? appConfig.default_language ?? window.navigator.language ?? 'en';
-
-    if (appConfig.profileLanguages?.includes(language)) {
-        return language;
-    } else {
-        return 'en';
-    }
+    return userInterfaceLanguage;
 }
 
 export const debugInfo = {

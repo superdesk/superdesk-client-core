@@ -298,9 +298,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 ref={(component) => {
                     this.positionerRef = component;
                 }}
-                zIndex={90}
             >
-                <Card padding={10}>
+                <Card padding={10} background={'var(--color-modal-Bg)'}>
                     <div className="annotation-input" style={{width: 460}}>
                         {
                             this.annotationInputTabsFromExtensions.length > 0

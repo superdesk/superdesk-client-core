@@ -6,7 +6,7 @@ import {superdesk} from '../superdesk';
 import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID} from '../constants';
 import {IVocabularyItem} from 'superdesk-api';
-import {addSeconds, arrayMove} from '@superdesk/common';
+import {addSeconds, arrayMove} from '@sourcefabric/common';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {IMenuGroup, IMenuItem, ISubmenu} from 'superdesk-ui-framework/react/components/Dropdown';
@@ -135,7 +135,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         }
 
                         return (
-                            <Dropdown items={actions} append>
+                            <Dropdown items={actions}>
                                 <IconButton
                                     ariaValue={gettext('Actions')}
                                     icon="dots-vertical"

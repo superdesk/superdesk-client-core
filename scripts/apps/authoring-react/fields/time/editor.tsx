@@ -20,7 +20,7 @@ export class Editor extends React.PureComponent<IProps> {
                     label=""
                     labelHidden
                     inlineLabel
-                    value={this.props.value ?? ''}
+                    value={this.props.value ?? null}
                     onChange={(val) => {
                         this.props.onChange(val === '' ? null : val);
                     }}

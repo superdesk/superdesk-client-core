@@ -51,7 +51,7 @@ export const authors: IFieldAdapter<IArticle> = {
                 const metadata = ng.get('metadata');
 
                 const authorsTree = arrayToTree(
-                    metadata.values.authors as Array<IUserOption | IAuthorRole>,
+                    (metadata.values.authors ?? []) as Array<IUserOption | IAuthorRole>,
                     (item) => getId(item),
                     (item) => {
                         if (isAuthorRole(item)) {
@@ -67,7 +67,6 @@ export const authors: IFieldAdapter<IArticle> = {
                     lookup: {},
                 });
             },
-            canSelectBranchWithChildren: () => false,
             getLabel: (item: IUserOption | IAuthorRole) => item.name,
             valueTemplate: valueTemplate,
             optionTemplate: optionTemplate,

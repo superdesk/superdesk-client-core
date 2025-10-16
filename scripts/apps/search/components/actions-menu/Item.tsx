@@ -47,7 +47,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
     }
 
     updateActioningStatus(isActioning) {
-        if (this._mounted && !this.props.item.gone) {
+        if (this.props.item.gone !== true) {
             this.props.onActioning(isActioning);
         }
     }

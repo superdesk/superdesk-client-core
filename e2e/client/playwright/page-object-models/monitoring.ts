@@ -1,5 +1,4 @@
 import {Page, Locator} from '@playwright/test';
-import {nameof} from 'core/helpers/typescript-helpers';
 import {s} from '../utils';
 
 export class Monitoring {
@@ -13,6 +12,10 @@ export class Monitoring {
         const deskSelectDropdown = this.page.locator(s('monitoring--selected-desk'));
 
         const selectedDeskText = await deskSelectDropdown.textContent();
+
+        if (selectedDeskText == null) {
+            throw new Error();
+        }
 
         if (selectedDeskText.toLocaleLowerCase().includes(deskName.toLocaleLowerCase()) !== true) {
             await deskSelectDropdown.click();
@@ -55,18 +58,14 @@ export class Monitoring {
             .getByRole('button', {name: template, exact: true})
             .click();
 
-        if (options != null) {
-            let keys = Object.keys(options);
+        if (options?.slugline != null) {
+            await this.page.locator(s('authoring', 'field-slugline')).fill(options.slugline);
+        }
 
-            for (const key of keys) {
-                if (key === nameof<typeof options>('slugline')) {
-                    await this.page.locator(s('authoring', `field-${key}`)).fill(options[key]);
-                } else {
-                    await this.page.locator(
-                        s('authoring', `authoring-field=${key}`),
-                    ).getByRole('textbox').fill(options[key]);
-                }
-            }
+        if (options?.body_html != null) {
+            await this.page.locator(
+                s('authoring', 'authoring-field=body_html'),
+            ).getByRole('textbox').fill(options.body_html);
         }
     }
 

@@ -24,7 +24,7 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
@@ -51,7 +51,7 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
 
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
-            selectedDestination: getCurrentDeskDestination(),
+            selectedDestination: getCurrentDeskDestination(this.props.item.task.desk),
             publishingDateOptions: getInitialPublishingDateOptions([props.item]),
             publishingTarget: {
                 target_subscribers: this.props.item.target_subscribers ?? [],
@@ -223,26 +223,31 @@ export class WithPublishTab extends React.PureComponent<IProps, IState> {
                                             },
                                         );
                                     }}
-                                    allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
+                                    allowSettingEmbargo={appConfig.ui.publishEmbargo}
+                                    allowSettingPublishSchedule={
+                                        appConfig.authoring.panels.publish.publishSchedule
+                                    }
                                 />
 
-                                <PublishingTargetSelect
-                                    value={this.state.publishingTarget}
-                                    onChange={(val) => {
-                                        this.setState(
-                                            {publishingTarget: val},
-                                            () => {
-                                                this.props.onDataChange?.({
-                                                    ...this.props.item,
-                                                    ...getPublishingTargetPatch(
-                                                        this.props.item,
-                                                        this.state.publishingTarget,
-                                                    ),
-                                                });
-                                            },
-                                        );
-                                    }}
-                                />
+                                {appConfig.authoring.panels.publish.publishingTarget && (
+                                    <PublishingTargetSelect
+                                        value={this.state.publishingTarget}
+                                        onChange={(val) => {
+                                            this.setState(
+                                                {publishingTarget: val},
+                                                () => {
+                                                    this.props.onDataChange?.({
+                                                        ...this.props.item,
+                                                        ...getPublishingTargetPatch(
+                                                            this.props.item,
+                                                            this.state.publishingTarget,
+                                                        ),
+                                                    });
+                                                },
+                                            );
+                                        }}
+                                    />
+                                )}
                             </div>
 
                             {

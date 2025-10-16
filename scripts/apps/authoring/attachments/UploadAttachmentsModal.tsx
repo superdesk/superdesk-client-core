@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
 import {gettext} from 'core/utils';
@@ -117,7 +117,6 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
         return (
             <Modal
                 visible
-                zIndex={1050}
                 size="x-large"
                 position="center"
                 onHide={this.state.saving ? noop : this.props.closeModal}

@@ -8,6 +8,7 @@ export const sms_message: IFieldAdapter<IArticle> = {
             editorFormat: fieldEditor.formatOptions ?? [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
+            maxSoftLength: fieldEditor?.maxSoftLength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: true,
             disallowedCharacters: [],

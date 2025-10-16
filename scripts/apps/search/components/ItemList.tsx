@@ -22,7 +22,7 @@ interface IProps {
     itemsById: any;
     relatedEntities: IRelatedEntities;
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
+    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable' | 'swimlane';
     selected: string;
     swimlane: any;
     profilesById: any;
@@ -406,33 +406,33 @@ export class ItemList extends React.Component<IProps, IState> {
         };
 
         switch (event.keyCode) {
-        case Keys.right:
-        case Keys.down:
-            diff = 1;
-            closeActionsMenu();
-            break;
+            case Keys.right:
+            case Keys.down:
+                diff = 1;
+                closeActionsMenu();
+                break;
 
-        case Keys.left:
-        case Keys.up:
-            diff = -1;
-            closeActionsMenu();
-            break;
+            case Keys.left:
+            case Keys.up:
+                diff = -1;
+                closeActionsMenu();
+                break;
 
-        case Keys.enter:
-            openItem(event);
-            closeActionsMenu();
-            break;
+            case Keys.enter:
+                openItem(event);
+                closeActionsMenu();
+                break;
 
-        case Keys.pageup:
-        case Keys.pagedown:
-            moveActiveGroup(event);
-            closeActionsMenu();
-            break;
+            case Keys.pageup:
+            case Keys.pagedown:
+                moveActiveGroup(event);
+                closeActionsMenu();
+                break;
 
-        case KEY_CODES.X:
-            performMultiSelect();
-            closeActionsMenu();
-            break;
+            case KEY_CODES.X:
+                performMultiSelect();
+                closeActionsMenu();
+                break;
         }
 
         if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
@@ -491,6 +491,14 @@ export class ItemList extends React.Component<IProps, IState> {
         const {storage} = this.angularservices;
         const isEmpty = !this.props.itemsList.length;
 
+        let classes: {[key in IProps['view']]: string} = {
+            compact: 'compact-view list-view',
+            'compact-configurable': 'compact-view list-view',
+            swimlane: 'list-view',
+            mgrid: 'mgrid-view list-view',
+            photogrid: 'sd-grid-list sd-grid-list--no-margin',
+        };
+
         if (this.props.loading) {
             return (
                 <ul
@@ -520,11 +528,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
         return (
             <ul
-                className={classNames(
-                    this.props.view === 'photogrid' ?
-                        'sd-grid-list sd-grid-list--no-margin' :
-                        (this.props.view || 'compact') + '-view list-view',
-                )}
+                className={classes[this.props.view]}
                 onClick={closeActionsMenu}
                 onKeyDown={(event) => {
                     this.handleKey(event);

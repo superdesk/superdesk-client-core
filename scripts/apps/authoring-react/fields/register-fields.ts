@@ -16,6 +16,8 @@ import {geDurationField} from './duration';
 import {getArticlesInPackageField} from './package-items';
 import {getTagInputField} from './tag-input';
 import {getDatelineField} from './dateline';
+import {getDatetimeField} from './datetime';
+import {getBooleanField} from './boolean';
 
 export const AUTHORING_REACT_FIELDS = 'authoring-react--fields';
 
@@ -45,6 +47,7 @@ export function registerAuthoringReactFields() {
                 getEditor3Field(),
                 getDropdownField(),
                 getDateField(),
+                getDatetimeField(),
                 getTimeField(),
                 geDurationField(),
                 getUrlsField(),
@@ -55,6 +58,7 @@ export function registerAuthoringReactFields() {
                 getArticlesInPackageField(),
                 getTagInputField(),
                 getDatelineField(),
+                getBooleanField(),
             ],
         },
     };

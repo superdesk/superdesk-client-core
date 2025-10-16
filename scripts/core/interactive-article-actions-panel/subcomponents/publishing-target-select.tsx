@@ -107,7 +107,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
                 <div style={{paddingBlockStart: 5}}>
                     <TreeSelect
-                        zIndex={2000}
+                        data-test-id="target-subscribers"
                         label=""
                         inlineLabel
                         labelHidden
@@ -133,7 +133,6 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
                 <div style={{paddingBlockStart: 5}}>
                     <ControlledVocabulariesSelect
-                        zIndex={2000}
                         vocabularies={this.state.regions}
                         value={this.props.value.target_regions ?? []}
                         onChange={(val) => {
@@ -151,7 +150,6 @@ export class PublishingTargetSelect extends React.PureComponent<IProps, IState> 
 
                 <div style={{paddingBlockStart: 5}}>
                     <ControlledVocabulariesSelect
-                        zIndex={2000}
                         vocabularies={this.state.subscriberTypes}
                         value={this.props.value.target_types ?? []}
                         onChange={(val) => {

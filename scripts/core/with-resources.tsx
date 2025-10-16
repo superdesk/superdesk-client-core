@@ -11,20 +11,17 @@ import {fetchChangedResources} from './helpers/CrudManager';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
-import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
+import {SmoothLoaderForKey} from '../apps/search/components/SmoothLoaderForKey';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
-/**
- * Doesn't work with elastic search endpoints, only with mongo ones.
- */
 class WithLiveResourcesComponent
     extends SuperdeskReactComponent<ILiveResourcesProps & {onInitialized(): void}, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
-    private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private handleContentChangesThrottled: ReturnType<typeof throttleAndCombineArray<IResourceChange>>;
     private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveResourcesProps & {onInitialized(): void}) {
@@ -44,6 +41,10 @@ class WithLiveResourcesComponent
             },
             1000,
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(() => {
+            this.handleContentChangesThrottled.cancel();
+        });
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener(
@@ -110,9 +111,13 @@ class WithLiveResourcesComponent
                     max_results: 200,
                 };
 
-                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
-                    prepareSuperdeskQuery(`/${resource}`, query),
-                ).then((res) => {
+                const request = ids.length < 1
+                    ? Promise.resolve({_items: []})
+                    : this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
+                        prepareSuperdeskQuery(`/${resource}`, query),
+                    );
+
+                return request.then((res) => {
                     const itemsById = keyBy(res._items, (item) => item._id);
 
                     return toPair(
@@ -237,19 +242,17 @@ export class WithLiveResources
         const key = JSON.stringify(omit(this.props, 'children'));
 
         return (
-            <div>
-                <SmoothLoaderForKey
-                    key_={key}
-                    ref={(ref) => {
-                        this.smoothLoaderRef = ref;
-                    }}
-                >
-                    <WithLiveResourcesComponent
-                        {...this.props}
-                        onInitialized={this.setLoaded}
-                    />
-                </SmoothLoaderForKey>
-            </div>
+            <SmoothLoaderForKey
+                key_={key}
+                ref={(ref) => {
+                    this.smoothLoaderRef = ref;
+                }}
+            >
+                <WithLiveResourcesComponent
+                    {...this.props}
+                    onInitialized={this.setLoaded}
+                />
+            </SmoothLoaderForKey>
         );
     }
 }

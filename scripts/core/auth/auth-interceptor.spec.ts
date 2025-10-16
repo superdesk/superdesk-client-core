@@ -1,5 +1,3 @@
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import {appConfig} from 'appConfig';
 import _ from 'lodash';
 
 describe('auth interceptor', () => {
@@ -7,10 +5,6 @@ describe('auth interceptor', () => {
 
     beforeEach(window.module(($provide) => {
         $provide.constant('lodash', _);
-
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: 'http://localhost:5000', ws: undefined}};
-
-        Object.assign(appConfig, testConfig);
     }));
 
     it('should intercept 401 response, run auth and resend request',

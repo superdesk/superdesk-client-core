@@ -3,9 +3,12 @@ import {IHttpRequestOptionsLocal, ISuperdeskQuery} from 'superdesk-api';
 
 const elasticEndpoints = [
     '/archive',
+    '/search',
     '/rundowns',
     '/rundown_items',
     '/events',
+    '/planning',
+    '/assignments',
 ];
 
 export function prepareSuperdeskQuery(

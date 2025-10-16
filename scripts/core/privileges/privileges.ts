@@ -37,8 +37,12 @@ function PrivilegesService($rootScope, preferencesService) {
         return _privileges;
     };
 
-    // start loading when used for first time
-    this.loaded = preferencesService.getPrivileges().then(this.setUserPrivileges);
+    this.reload = () => {
+        this.loaded = preferencesService.getPrivileges().then(this.setUserPrivileges);
+    };
+
+    // start loading on init
+    this.reload();
 }
 
 /**

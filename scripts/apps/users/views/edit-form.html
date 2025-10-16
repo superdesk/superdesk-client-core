@@ -3,7 +3,10 @@
         <div class="action-bar" ng-class="{show:dirty}" data-test-id="action-bar">
             <div class="button-group button-group--end button-group--comfort">
                 <button id="cancel-edit-btn" type="button" class="btn" ng-click="cancel()" ng-disabled="!dirty" translate data-test-id="cancel">Cancel</button>
-                <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">Save</button>
+                <button id="save-edit-btn" type="submit" class="btn btn--primary" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate data-test-id="save">
+                    <sd-spinner ng-if="isSaving" data-test-id="loading-indicator" data-size="'mini'"></sd-spinner>
+                    Save
+                </button>
             </div>
         </div>
 
@@ -115,7 +118,6 @@
                                         <div class="sd-input__message" ng-show="userForm.username.$error.required" translate>This field is required.</div>
                                         <div class="sd-input__message" ng-show="userForm.username.$error.unique || error.username.conflict" sd-valid-error translate>sorry, this username is already taken.</div>
                                         <div class="sd-input__message" ng-show="userForm.username.$error.pattern" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores (_), apostrophes (') and periods (.)</span>
                                         </div>
                                     </div>
@@ -136,11 +138,9 @@
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.email.$error.required" translate>This field is required.</div>
                                         <div class="sd-input__message" ng-show="userForm.email.$error.email" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>please provide a valid email address</span>
                                         </div>
                                         <div class="sd-input__message" ng-show="error.email" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>{{error.email}}</span>
                                         </div>
                                         <div class="sd-input__message" ng-show="userForm.email.$error.unique || error.email.unique" sd-valid-error translate>sorry, a user with this email already exists</div>
@@ -166,7 +166,7 @@
                         </div>
 
                         <div sd-info-item class="user_type sd-check__group-new sd-check__group-new--vertical" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
-                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{ :: 'Administrator'|translate }}</sd-check>
+                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type" ng-if="currentSessionUser.user_type === 'administrator'">{{ :: 'Administrator'|translate }}</sd-check>
                             <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
                             <sd-check ng-if="user.is_author" ng-model="user.private" name="user_private" id="user_private">{{'Private' | translate }}</sd-check>
                         </div>
@@ -255,7 +255,6 @@
                                     <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>
                                         </div>
                                     </div>
@@ -338,7 +337,6 @@
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">{{ :: 'e.g. @superdeskman'|translate }}</div>
                                         <div class="sd-input__message" ng-show="userForm.twitter.$error.pattern" sd-valid-info>
-                                            <i class="icon-info-sign-warning"></i>
                                             <span translate>Please provide a valid twitter account</span>
                                         </div>
                                     </div>

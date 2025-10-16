@@ -45,42 +45,42 @@ function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
     const {assertNever} = superdeskApi.helpers;
 
     switch (action) {
-    case ASSET_ACTIONS.PREVIEW:
-        return {
-            id: ASSET_ACTIONS.PREVIEW,
-            label: gettext('Preview'),
-            icon: 'eye-open',
-        };
-    case ASSET_ACTIONS.DOWNLOAD:
-        return {
-            id: ASSET_ACTIONS.DOWNLOAD,
-            label: gettext('Download'),
-            icon: 'download',
-        };
-    case ASSET_ACTIONS.DELETE:
-        return {
-            id: ASSET_ACTIONS.DELETE,
-            label: gettext('Delete'),
-            icon: 'trash',
-        };
-    case ASSET_ACTIONS.EDIT:
-        return {
-            id: ASSET_ACTIONS.EDIT,
-            label: gettext('Edit'),
-            icon: 'pencil',
-        };
-    case ASSET_ACTIONS.FORCE_UNLOCK:
-        return {
-            id: ASSET_ACTIONS.FORCE_UNLOCK,
-            label: gettext('Force Unlock'),
-            icon: 'unlocked',
-        };
-    case ASSET_ACTIONS.VIEW_FULL_SCREEN:
-        return {
-            id: ASSET_ACTIONS.VIEW_FULL_SCREEN,
-            label: gettext('Full-screen preview'),
-            icon: 'fullscreen',
-        };
+        case ASSET_ACTIONS.PREVIEW:
+            return {
+                id: ASSET_ACTIONS.PREVIEW,
+                label: gettext('Preview'),
+                icon: 'eye-open',
+            };
+        case ASSET_ACTIONS.DOWNLOAD:
+            return {
+                id: ASSET_ACTIONS.DOWNLOAD,
+                label: gettext('Download'),
+                icon: 'download',
+            };
+        case ASSET_ACTIONS.DELETE:
+            return {
+                id: ASSET_ACTIONS.DELETE,
+                label: gettext('Delete'),
+                icon: 'trash',
+            };
+        case ASSET_ACTIONS.EDIT:
+            return {
+                id: ASSET_ACTIONS.EDIT,
+                label: gettext('Edit'),
+                icon: 'pencil',
+            };
+        case ASSET_ACTIONS.FORCE_UNLOCK:
+            return {
+                id: ASSET_ACTIONS.FORCE_UNLOCK,
+                label: gettext('Force Unlock'),
+                icon: 'unlocked',
+            };
+        case ASSET_ACTIONS.VIEW_FULL_SCREEN:
+            return {
+                id: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                label: gettext('Full-screen preview'),
+                icon: 'fullscreen',
+            };
     }
 
     assertNever(action);

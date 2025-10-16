@@ -3,24 +3,23 @@ import {ITopBarWidget} from 'superdesk-api';
 
 interface IProps<T> {
     entity: T;
-    coreWidgets?: Array<ITopBarWidget<T>>;
-    extraWidgets?: Array<ITopBarWidget<T>>;
+    widgets?: Array<ITopBarWidget<T>>;
     backgroundColor?: React.CSSProperties['backgroundColor'];
 }
 
 export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
     render() {
-        const topbarWidgets = (this.props.coreWidgets ?? []).concat(this.props.extraWidgets ?? []);
+        const {widgets} = this.props;
 
-        const topbarWidgetsStart = topbarWidgets
+        const topbarWidgetsStart = widgets
             .filter(({group}) => group === 'start')
             .sort((a, b) => a.priority - b.priority);
 
-        const topbarWidgetsMiddle = topbarWidgets
+        const topbarWidgetsMiddle = widgets
             .filter(({group}) => group === 'middle')
             .sort((a, b) => a.priority - b.priority);
 
-        const topbarWidgetsEnd = topbarWidgets
+        const topbarWidgetsEnd = widgets
             .filter(({group}) => group === 'end')
             .sort((a, b) => a.priority - b.priority);
 
@@ -31,7 +30,11 @@ export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
         ];
 
         return (
-            <div className="authoring-toolbar-1" style={{backgroundColor: this.props.backgroundColor}}>
+            <div
+                className="authoring-toolbar-1"
+                style={{backgroundColor: this.props.backgroundColor}}
+                data-test-id="authoring-toolbar-1"
+            >
                 {
                     toolbarGroups.map((items, i) => (
                         <div

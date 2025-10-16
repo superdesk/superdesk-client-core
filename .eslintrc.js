@@ -23,12 +23,12 @@ module.exports = Object.assign({}, sharedConfigs, {
 
         'no-sequences': 2,
 
-        'newline-per-chained-call': ['error', {'ignoreChainWithDepth': 3}],
+        'newline-per-chained-call': ['error', { 'ignoreChainWithDepth': 3 }],
 
         '@typescript-eslint/array-type': [
             'error',
             {
-              'default': 'generic'
+                'default': 'generic'
             }
         ],
 
@@ -66,6 +66,7 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'newline-per-chained-call': 0,
                 'quote-props': 0,
                 'arrow-body-style': 0,
+                "indent": ["error", 4, { "SwitchCase": 1 }],
 
                 "comma-dangle": ["error", {
                     "arrays": "always-multiline",

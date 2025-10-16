@@ -1,4 +1,3 @@
-import {isEqual} from 'lodash';
 import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
@@ -40,7 +39,7 @@ function getRundownItemTemplateAuthoringStorage(
     const authoringStorageRundownItem: IAuthoringStorage<IRundownItemTemplateInitial> = {
         autosave: new AutoSaveRundownItem(),
         getEntity: () => {
-            return Promise.resolve({saved: item, autosaved: null});
+            return Promise.resolve(item);
         },
         isLockedInCurrentSession: () => false,
 
@@ -56,21 +55,23 @@ function getRundownItemTemplateAuthoringStorage(
         getContentProfile: () => {
             return Promise.resolve(rundownItemContentProfile);
         },
-        closeAuthoring: (current, original, _cancelAutosave, doClose) => {
+        closeAuthoring: (_current, original, hasUnsavedChanges, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
-            const warnAboutLosingChanges = isCreationMode || !isEqual(current.data, original.data);
+            const warnAboutLosingChanges = isCreationMode || hasUnsavedChanges;
 
             if (warnAboutLosingChanges) {
                 return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
                     if (confirmed) {
                         doClose();
                     }
+
+                    return {cancelled: false};
                 });
             } else {
                 doClose();
-            }
 
-            return Promise.resolve();
+                return Promise.resolve({cancelled: false});
+            }
         },
         getUserPreferences: () => Promise.resolve({'spellchecker:status': {enabled: true}}), // FINISH: remove test data
     };

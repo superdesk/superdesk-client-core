@@ -7,7 +7,7 @@
     "watch": "tsc -watch -p src"
   },
   "dependencies": {
-    "@superdesk/common": "^0.0.13",
+    "@sourcefabric/common": "0.0.66",
     "reselect": "~4.0.0"
   },
   "devDependencies": {
@@ -21,7 +21,7 @@
   },
   "peerDependencies": {
     "react": "^16.9.0",
-    "superdesk-ui-framework": "3.0.29",
+    "superdesk-ui-framework": "4.0.47",
     "classnames": "^2.2.5",
     "lodash": "^4.17.5",
     "json-merge-patch": "0.2.3"

@@ -3,10 +3,8 @@ import {
     ISuperdesk,
     IExtensions,
     IArticle,
-    IContentProfile,
     IEvents,
     IStage,
-    IUser,
     IBaseRestApiResponse,
     IPatchResponseExtraFields,
     IOpenSideWidget,
@@ -19,6 +17,8 @@ import {
     stripLockingFields,
     getProjectedFieldsArticle,
     getArticleLabel,
+    getVocabularyItemNameTranslated,
+    omitBaseApiResponse,
 } from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -26,7 +26,7 @@ import {
     isIFormGroupCollapsible,
     isIFormGroup,
     isIFormField,
-    FormFieldType,
+    GenericFormFieldType,
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
@@ -70,9 +70,8 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
-import {appConfig, authoringReactViewEnabled} from 'appConfig';
+import {appConfig, authoringReactViewEnabled, userInterfaceLanguage} from 'appConfig';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal} from './helpers/network';
-import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
@@ -85,7 +84,14 @@ import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
-import {arrayToTree, treeToArray} from './helpers/tree';
+import {
+    arrayToTree,
+    buildTreeDictionary,
+    filterFlatTree,
+    getTreeLeafs,
+    getTreeParents,
+    treeToArray,
+} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {patchArticle} from 'api/article-patch';
@@ -109,10 +115,9 @@ import {
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
-import {showPopup} from './ui/components/popupNew';
 import {Card} from './ui/components/Card';
 import {getTextColor} from './helpers/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {showConfirmationPrompt} from './ui/show-confirmation-prompt';
 import {toElasticQuery} from './query-formatting';
 import {PreviewFieldType} from 'apps/authoring/preview/previewFieldByType';
@@ -120,6 +125,10 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
+import {showPopup} from 'superdesk-ui-framework/react';
+import {ui} from './ui-utils';
+import {VocabularySelect} from './ui/components/vocabulary-select';
+import {dataStore} from 'data-store';
 
 export function openArticle(
     id: IArticle['_id'],
@@ -219,18 +228,19 @@ export const formatDate = (
     options?: {timezoneId?: string; longFormat?:boolean},
 ): string => {
     const momentDate = moment.isMoment(date) === true ? date as moment.Moment : moment(date);
-    const dateFormat = options.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
+    const dateFormat = options?.longFormat === true ? appConfig.longDateFormat : appConfig.view.dateformat;
 
-    if (options.timezoneId != null) {
+    if (options?.timezoneId != null) {
         return momentDate
             .tz(options.timezoneId)
             .format(dateFormat);
     } else {
         const timezone: 'browser' | 'server' = appConfig.view.timezone ?? 'browser';
         const keepLocalTime = timezone === 'browser';
+        const defaultTimezone = appConfig.default_timezone || moment.tz.guess();
 
         return momentDate
-            .tz(appConfig.default_timezone, keepLocalTime)
+            .tz(defaultTimezone, keepLocalTime)
             .format(dateFormat);
     }
 };
@@ -325,6 +335,8 @@ export function getSuperdeskApiImplementation(
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
+                translate: sdApi.article.translate,
+                get: sdApi.article.get,
                 isPersonal: sdApi.article.isPersonal,
                 isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
@@ -346,9 +358,11 @@ export function getSuperdeskApiImplementation(
                 getActiveDeskId: sdApi.desks.getActiveDeskId,
                 waitTilReady: sdApi.desks.waitTilReady,
                 getDeskById: sdApi.desks.getDeskById,
+                getStageById: sdApi.desks.getStageById,
             },
             contentProfile: {
                 get: (id) => sdApi.contentProfiles.get(id),
+                getAll: () => sdApi.contentProfiles.getAll(),
             },
             vocabulary: {
                 getAll: () => sdApi.vocabularies.getAll(),
@@ -357,19 +371,11 @@ export function getSuperdeskApiImplementation(
                 getCustomFieldVocabularies: sdApi.vocabularies.getCustomFieldVocabularies,
                 getLanguageVocabulary: () => sdApi.vocabularies.getAll().get('languages'),
                 isCustomVocabulary: (vocabulary) => sdApi.vocabularies.isCustomVocabulary(vocabulary),
+                getVocabularyItemNameTranslated: getVocabularyItemNameTranslated,
             },
             attachment: attachmentsApi,
             users: {
-                getUsersByIds: (ids) => (
-                    dataApi.query<IUser>(
-                        'users',
-                        1,
-                        {field: 'display_name', direction: 'ascending'},
-                        {_id: {$in: ids}},
-                        200,
-                    )
-                        .then((response) => response._items)
-                ),
+                getAllUsers: () => dataStore.users.toJS(),
             },
             templates: {
                 getUserTemplates: sdApi.templates.getUserTemplates,
@@ -416,6 +422,7 @@ export function getSuperdeskApiImplementation(
                 title: title ?? gettext('Confirm'),
                 message,
             }),
+            prompt: ui.prompt,
             showIgnoreCancelSaveDialog,
             notify: notify,
             framework: {
@@ -423,6 +430,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         components: {
+            VocabularySelect,
             UserHtmlSingleLine,
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
@@ -477,7 +485,7 @@ export function getSuperdeskApiImplementation(
             },
         },
         forms: {
-            FormFieldType,
+            GenericFormFieldType,
             generateFilterForServer,
             isIFormGroupCollapsible,
             isIFormGroup,
@@ -514,6 +522,10 @@ export function getSuperdeskApiImplementation(
                 }
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
+            locale: {
+                code: userInterfaceLanguage.replace('_', '-'),
+                firstDayOfWeek: appConfig.startingDay,
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
@@ -559,17 +571,21 @@ export function getSuperdeskApiImplementation(
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
             dateToServerString,
-            memoize: memoizeLocal,
             generatePatch,
             stripHtmlTags,
             getLinesCount,
             throttleAndCombineArray,
             querySelectorParent,
             arrayToTree,
+            getTreeParents,
+            getTreeLeafs,
             treeToArray,
+            filterFlatTree,
+            buildTreeDictionary,
             isLockedInOtherSession,
             isLockedInCurrentSession,
             getTextColor,
+            omitBaseApiResponse,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

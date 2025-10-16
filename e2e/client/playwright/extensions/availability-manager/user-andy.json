@@ -1,0 +1,47 @@
+{
+  "cookies": [
+    {
+      "name": "i18next",
+      "value": "en",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "session",
+      "value": "eyJzZXNzaW9uX3Rva2VuIjoiZDdjNWNkNGItZTg2Yi00YjNkLTljOTktNjc3YWU5NTE5Njc2In0.aFBRLA.7NjLQcwTHB6O2JWGjLAAp4VIbZc",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:9000",
+      "localStorage": [
+        {
+          "name": "sess:id",
+          "value": "6850512c284795d3282d684e"
+        },
+        {
+          "name": "sess:href",
+          "value": "auth_db/6850512c284795d3282d684e"
+        },
+        {
+          "name": "sess:user",
+          "value": "{\"_id\":\"685050c0879f3c893c6c1649\",\"email\":\"andy@dunder-mifflin.com\",\"last_name\":\"Bernard\",\"first_name\":\"Andy\",\"username\":\"andy\",\"user_type\":\"user\",\"is_support\":false,\"is_author\":true,\"private\":false,\"is_active\":true,\"is_enabled\":true,\"needs_activation\":false,\"_updated\":\"2025-06-16T17:15:24+0000\",\"_created\":\"2025-06-16T17:13:36+0000\",\"password_changed_on\":\"2025-06-16T17:15:19+0000\",\"display_name\":\"Andy Bernard\",\"sign_off\":\"AB\",\"role\":null,\"_etag\":\"7bf0e1d2b2f69eee6a6e897c592556591672ad1d\",\"invisible_stages\":[],\"last_activity_at\":\"2025-06-16T17:15:24+0000\",\"_links\":{\"self\":{\"title\":\"User\",\"href\":\"users/685050c0879f3c893c6c1649\"},\"parent\":{\"title\":\"home\",\"href\":\"/\"},\"collection\":{\"title\":\"users\",\"href\":\"users\"}},\"dateline_source\":\"Short name for your organisation\"}"
+        },
+        {
+          "name": "sess:token",
+          "value": "Basic ZDdjNWNkNGItZTg2Yi00YjNkLTljOTktNjc3YWU5NTE5Njc2Og=="
+        }
+      ]
+    }
+  ]
+}

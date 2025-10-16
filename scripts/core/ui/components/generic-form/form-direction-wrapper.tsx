@@ -4,12 +4,12 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {omit} from 'lodash';
 import {IFormGroup} from 'superdesk-api';
 
-interface IProps {
+interface IProps<T extends object> {
     className?: string;
-    direction: IFormGroup['direction'];
+    direction: IFormGroup<T>['direction'];
 }
 
-export class FormGroupDirectionWrapper extends React.Component<IProps> {
+export class FormGroupDirectionWrapper<T extends object> extends React.Component<IProps<T>> {
     render() {
         const {direction} = this.props;
 

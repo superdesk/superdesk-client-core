@@ -156,7 +156,7 @@ export function ArticleEditDirective(
                     }
                 }
 
-                // Needed only for #ANGULAR_AUTHORING. In authoring react we have a generic
+                // Needed only for TAG: AUTHORING-ANGULAR. In authoring react we have a generic
                 // event ('resource:updated') which listens to all item changes.
                 scope.$on('author_approval:updated', (_event, extra) => {
                     if (extra.item_id === scope.item?._id) {
@@ -372,10 +372,6 @@ export function ArticleEditDirective(
                     )
                         .then((picture) => {
                             scope.item._etag = picture._etag;
-
-                            // draftjs editor state will be
-                            // outdated after editing in modal
-                            resetFieldMetadata(scope.item);
 
                             // On multiedit mode, there is no refresh function
                             if (typeof scope.refresh === 'function') {

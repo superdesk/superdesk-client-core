@@ -80,18 +80,18 @@ export class DateInputPopup extends React.Component<any, any> {
         let diffType = '';
 
         switch (this.state.mode) {
-        case 'day':
+            case 'day':
             // Have to change the month to previous value
-            diffType = 'months';
-            break;
-        case 'month':
+                diffType = 'months';
+                break;
+            case 'month':
             // Have to change the year to previous value
-            diffType = 'years';
-            break;
-        case 'year':
-            diff = 20;
-            diffType = 'years';
-            break;
+                diffType = 'years';
+                break;
+            case 'year':
+                diff = 20;
+                diffType = 'years';
+                break;
         }
 
         const newDate = direction ?
@@ -109,15 +109,15 @@ export class DateInputPopup extends React.Component<any, any> {
         const {currentDate} = this.state;
 
         switch (toolSelect) {
-        case 0:
-            onChange(currentDate);
-            break;
-        case 1:
-            onChange(currentDate.clone().add(1, 'days'));
-            break;
-        case 2:
-            onChange(currentDate.clone().add(2, 'days'));
-            break;
+            case 0:
+                onChange(currentDate);
+                break;
+            case 1:
+                onChange(currentDate.clone().add(1, 'days'));
+                break;
+            case 2:
+                onChange(currentDate.clone().add(2, 'days'));
+                break;
         }
 
         close();
@@ -138,10 +138,10 @@ export class DateInputPopup extends React.Component<any, any> {
         const yearRange = this.props.yearRange || 20;
 
         switch (mode) {
-        case 'day': return date.format('MMMM YYYY');
-        case 'month': return date.format('YYYY');
-        case 'year':
-            return this.getStartingYearForYearPicker(date) + '-' +
+            case 'day': return date.format('MMMM YYYY');
+            case 'month': return date.format('YYYY');
+            case 'year':
+                return this.getStartingYearForYearPicker(date) + '-' +
                 (this.getStartingYearForYearPicker(date) + yearRange - 1);
         }
     }
@@ -155,12 +155,12 @@ export class DateInputPopup extends React.Component<any, any> {
         let nextMode = '';
 
         switch (this.state.mode) {
-        case 'month':
-            nextMode = 'day';
-            break;
-        case 'year':
-            nextMode = 'month';
-            break;
+            case 'month':
+                nextMode = 'day';
+                break;
+            case 'year':
+                nextMode = 'month';
+                break;
         }
 
         if (this.state.mode === 'day') {

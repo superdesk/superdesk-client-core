@@ -45,7 +45,7 @@
     <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons()" style="min-width: 150px;">
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
-        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || sendAndDuplicateEnabled)"
         ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
@@ -57,6 +57,7 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
+
         <button
                 ng-if="closeAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom"
@@ -66,6 +67,7 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
         </button>
+
         <button
                 ng-if="publishEnabled"
                 class="btn btn--custom btn--publish"
@@ -76,6 +78,18 @@
                 <span class="btn__text sd-overflow-ellipsis" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
+
+        <button
+          ng-if="sendAndDuplicateEnabled"
+          class="btn sd-overflow-ellipsis btn--custom"
+          ng-click="sendAndDuplicate()"
+          aria-label="{{ :: 'Send and duplicate' | translate }}"
+          title="{{ 'Send and duplicate' | translate }}"
+        >
+          <span class="btn__text sd-overflow-ellipsis">{{ :: 'Send & duplicate' | translate }}</span>
+          <span class="btn__text--short">{{ :: 'S & D' | translate }}</span>
+        </button>
+
         <button
                 ng-if="publishAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
@@ -142,6 +156,15 @@
         title="{{ 'Kill' | translate }}">
             <span class="btn__text" translate>Kill</span>
             <span class="btn__text--short" translate>K</span>
+      </button>
+
+      <button
+        ng-if="item.state === 'spiked'"
+        class="btn btn--primary"
+        ng-click="openAction('unspike')"
+      >
+            <span class="btn__text" translate>Unspike</span>
+            <span class="btn__text--short" translate>Unspike</span>
       </button>
 
         <button class="btn btn--hollow"
@@ -282,14 +305,21 @@
                         ng-click="openExport()"
                         >{{ :: 'Export' | translate }}
                         <i class="icon-download-right-thin dropdown__submenu-icon"></i>
-                        <div sd-export ng-if="export"></div>
                       </button>
                   </li>
                 </ul>
 
-                <ul ng-if="articleActionsFromExtensions">
-                    <li ng-repeat="action in articleActionsFromExtensions" ng-if="action.groupId !== 'highlights'">
+                <ul ng-if="planningActions">
+                    <li class="dropdown__menu-divider"></li>
+                    <li><span class="dropdown__menu-label" translate>Planning</span></li>
+                    <li ng-repeat="action in planningActions" ng-if="action.groupId !== 'highlights'">
                         <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
+                    </li>
+                </ul>
+
+                <ul ng-if="nonPlanningActions">
+                    <li ng-repeat="action in nonPlanningActions" ng-if="action.groupId !== 'highlights'">
+                        <button ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
 
@@ -307,12 +337,10 @@
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
                     </div>
                   </li>
-                  <li ng-repeat="action in articleActionsFromExtensions">
+                  <li ng-repeat="action in nonPlanningActions">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>
-
-                <span sd-item-action-by-intent sd-intent-action="external-app"></span>
 
                 <ul ng-if="isTranslationAvailable()">
                   <li class="dropdown__menu-divider"></li>

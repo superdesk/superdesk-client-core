@@ -41,7 +41,6 @@ export class ConfigFromVocabulary extends React.PureComponent<IConfigComponentPr
                         });
                     }}
                     getLabel={(item) => item.display_name}
-                    zIndex={1050}
                 />
             </div>
         );

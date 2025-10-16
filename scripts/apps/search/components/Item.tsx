@@ -111,6 +111,7 @@ export class Item extends React.Component<IProps, IState> {
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
         this.toggleNested = this.toggleNested.bind(this);
+        this.handleActionLoading = this.handleActionLoading.bind(this);
     }
 
     componentWillMount() {
@@ -119,13 +120,21 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
+    handleActionLoading(e: CustomEvent) {
+        if (e.detail.itemId === this.props.item._id) {
+            this.setState({loading: e.detail.loading});
+        }
+    }
+
     componentDidMount() {
+        addEventListener('article-action-loading', this.handleActionLoading);
         this._mounted = true;
     }
 
     componentWillUnmount() {
         this._mounted = false;
         closeActionsMenu(this.props.item._id);
+        removeEventListener('article-action-loading', this.handleActionLoading);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -322,110 +331,112 @@ export class Item extends React.Component<IProps, IState> {
 
         const getTemplate = () => {
             switch (this.props.view) {
-            case 'swimlane2':
-                return (
-                    <ItemSwimlane
-                        item={item}
-                        itemSelected={itemSelected}
-                        isLocked={isLocked}
-                        getActionsMenu={getActionsMenu}
-                        multiSelect={this.props.multiSelect}
-                    />
-                );
-            case 'mgrid':
-                return (
-                    <ItemMgridTemplate
-                        item={item}
-                        itemSelected={itemSelected}
-                        desk={this.props.desk}
-                        swimlane={this.props.swimlane}
-                        ingestProvider={this.props.ingestProvider}
-                        getActionsMenu={getActionsMenu}
-                        multiSelect={this.props.multiSelect}
-                    />
-                );
-            case 'photogrid':
-                return (
-                    <ItemPhotoGrid
-                        item={item}
-                        itemSelected={itemSelected}
-                        desk={this.props.desk}
-                        swimlane={this.props.swimlane}
-                        multiSelect={this.props.multiSelect}
-                        getActionsMenu={getActionsMenu}
-                    />
-                );
-            default:
-                return (
-                    <ListItemTemplate
-                        item={item}
-                        relatedEntities={this.props.relatedEntities}
-                        itemSelected={itemSelected}
-                        desk={this.props.desk}
-                        openAuthoringView={this.openAuthoringView}
-                        ingestProvider={this.props.ingestProvider}
-                        highlightsById={this.props.highlightsById}
-                        markedDesksById={this.props.markedDesksById}
-                        profilesById={this.props.profilesById}
-                        swimlane={this.props.swimlane}
-                        versioncreator={this.props.versioncreator}
-                        narrow={this.props.narrow}
-                        multiSelect={this.props.multiSelect}
-                        getActionsMenu={getActionsMenu}
-                        selectingDisabled={this.props.multiSelectDisabled}
-                        isNested={this.props.isNested}
-                        showNested={this.state.showNested}
-                        toggleNested={this.toggleNested}
-                        singleLine={this.props.singleLine}
-                        customRender={this.props.customRender}
-                    />
-                );
+                case 'swimlane':
+                    return (
+                        <ItemSwimlane
+                            item={item}
+                            itemSelected={itemSelected}
+                            isLocked={isLocked}
+                            getActionsMenu={getActionsMenu}
+                            multiSelect={this.props.multiSelect}
+                        />
+                    );
+                case 'mgrid':
+                    return (
+                        <ItemMgridTemplate
+                            item={item}
+                            itemSelected={itemSelected}
+                            desk={this.props.desk}
+                            swimlane={this.props.swimlane}
+                            ingestProvider={this.props.ingestProvider}
+                            getActionsMenu={getActionsMenu}
+                            multiSelect={this.props.multiSelect}
+                        />
+                    );
+                case 'photogrid':
+                    return (
+                        <ItemPhotoGrid
+                            item={item}
+                            itemSelected={itemSelected}
+                            desk={this.props.desk}
+                            swimlane={this.props.swimlane}
+                            multiSelect={this.props.multiSelect}
+                            getActionsMenu={getActionsMenu}
+                        />
+                    );
+                default:
+                    return (
+                        <ListItemTemplate
+                            loading={this.state.loading}
+                            item={item}
+                            relatedEntities={this.props.relatedEntities}
+                            itemSelected={itemSelected}
+                            desk={this.props.desk}
+                            openAuthoringView={this.openAuthoringView}
+                            ingestProvider={this.props.ingestProvider}
+                            highlightsById={this.props.highlightsById}
+                            markedDesksById={this.props.markedDesksById}
+                            profilesById={this.props.profilesById}
+                            swimlane={this.props.swimlane}
+                            versioncreator={this.props.versioncreator}
+                            narrow={this.props.narrow}
+                            multiSelect={this.props.multiSelect}
+                            getActionsMenu={getActionsMenu}
+                            selectingDisabled={this.props.multiSelectDisabled}
+                            isNested={this.props.isNested}
+                            showNested={this.state.showNested}
+                            toggleNested={this.toggleNested}
+                            singleLine={this.props.singleLine}
+                            customRender={this.props.customRender}
+                            view={this.props.view}
+                        />
+                    );
             }
         };
 
         const getNested = () => {
             switch (this.props.view) {
-            case 'swimlane2':
-            case 'mgrid':
-            case 'photogrid':
-                return null;
-            default:
-                if (!this.state.nested.length) {
+                case 'swimlane':
+                case 'mgrid':
+                case 'photogrid':
                     return null;
-                }
+                default:
+                    if (!this.state.nested.length) {
+                        return null;
+                    }
 
-                return (
-                    <div className="sd-list-item-nested__childs sd-shadow--z1">
-                        {this.state.nested.map((childItem) => (
-                            <Item
-                                item={childItem}
-                                relatedEntities={this.props.relatedEntities}
-                                key={childItem._id + childItem._current_version}
-                                flags={{}}
-                                profilesById={this.props.profilesById}
-                                isNested={true}
-                                narrow={true}
-                                hideActions={true}
-                                onSelect={() => null}
-                                multiSelectDisabled={false}
-                                swimlane={this.props.swimlane}
-                                highlightsById={this.props.highlightsById}
-                                markedDesksById={this.props.markedDesksById}
-                                ingestProvider={this.props.ingestProvider}
-                                desk={this.props.desk}
-                                view={this.props.view}
-                                versioncreator={this.props.versioncreator}
-                                onEdit={this.props.onEdit}
-                                onDbClick={this.props.onDbClick}
-                                multiSelect={this.props.multiSelect}
-                                actioning={false}
-                                singleLine={this.props.singleLine}
-                                customRender={this.props.customRender}
-                                scopeApply={this.props.scopeApply}
-                            />
-                        ))}
-                    </div>
-                );
+                    return (
+                        <div className="sd-list-item-nested__childs sd-shadow--z1">
+                            {this.state.nested.map((childItem) => (
+                                <Item
+                                    item={childItem}
+                                    relatedEntities={this.props.relatedEntities}
+                                    key={childItem._id + childItem._current_version}
+                                    flags={{}}
+                                    profilesById={this.props.profilesById}
+                                    isNested={true}
+                                    narrow={true}
+                                    hideActions={true}
+                                    onSelect={() => null}
+                                    multiSelectDisabled={false}
+                                    swimlane={this.props.swimlane}
+                                    highlightsById={this.props.highlightsById}
+                                    markedDesksById={this.props.markedDesksById}
+                                    ingestProvider={this.props.ingestProvider}
+                                    desk={this.props.desk}
+                                    view={this.props.view}
+                                    versioncreator={this.props.versioncreator}
+                                    onEdit={this.props.onEdit}
+                                    onDbClick={this.props.onDbClick}
+                                    multiSelect={this.props.multiSelect}
+                                    actioning={false}
+                                    singleLine={this.props.singleLine}
+                                    customRender={this.props.customRender}
+                                    scopeApply={this.props.scopeApply}
+                                />
+                            ))}
+                        </div>
+                    );
             }
         };
 

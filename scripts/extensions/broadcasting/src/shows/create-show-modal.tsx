@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Button, Modal, Spinner} from 'superdesk-ui-framework/react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {superdesk} from '../superdesk';
 import {IShow, IShowBase} from '../interfaces';
@@ -78,7 +78,6 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                 {(form, save) => (
                     <Modal
                         visible
-                        zIndex={1050}
                         size="small"
                         position="top"
                         onHide={this.props.closeModal}

@@ -114,6 +114,9 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     }
 }
 
+/**
+ * @deprecated will be replaced by authoring-react/multi-edit-modal.tsx
+ */
 MultieditController.$inject = ['$scope', 'multiEdit'];
 function MultieditController($scope, multiEdit) {
     $scope.$watch(() => multiEdit.items, (items) => {
@@ -127,6 +130,12 @@ function MultieditController($scope, multiEdit) {
     };
 
     $scope.closeMulti = function() {
+        /**
+         * HACK: for some reason the watcher doesn't always fire and multi edit view remains open.
+         * Since authoring-react/multi-edit-modal.tsx will replace this code - I'm not doing a proper fix.
+         */
+        $scope.boards = [];
+
         multiEdit.exit();
     };
 }
@@ -202,6 +211,10 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
         link: function(scope, elem) {
             scope.requestEditor3DirectivesToGenerateHtml = [];
 
+            scope.generateHtml = () => {
+                scope.requestEditor3DirectivesToGenerateHtml.forEach((fn) => fn());
+            };
+
             scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
                     openItem();
@@ -249,15 +262,25 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 }
             }, true);
 
-            scope.save = function() {
+            scope.save = function({generateHtml = true} = {}) {
                 return authoring.save(
                     scope.origItem,
                     scope.item,
-                    scope.requestEditor3DirectivesToGenerateHtml,
+
+                    /**
+                     * HTML must not be generated when applying changes from media editor
+                     * or old values would overwrite the new ones since media editor doesn't have editor3 fields
+                     */
+                    generateHtml ? scope.requestEditor3DirectivesToGenerateHtml : [],
+
                     true,
+
+                    {resetFieldsMeta: true},
                 ).then((res) => {
                     scope.dirty = false;
-                    InitializeMedia.initMedia(scope);
+
+                    // reload item after saving in order to prevent etag issues
+                    openItem();
 
                     notify.success(gettext('Item updated.'));
 

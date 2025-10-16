@@ -4,55 +4,55 @@ import {noop} from 'lodash';
 import {getFormFieldComponent} from '../form-field';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormField} from 'superdesk-api';
-import {FormFieldType} from '../interfaces/form';
+import {GenericFormFieldType} from '../interfaces/form';
 import {mockDataApi} from 'core/tests/mockDataApi';
 
-function getAllInputTypes(): Array<FormFieldType> {
-    return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
+function getAllInputTypes(): Array<GenericFormFieldType> {
+    return Object.keys(GenericFormFieldType).map((key) => GenericFormFieldType[key]);
 }
 
-function getTestFieldConfig(type: FormFieldType): IFormField {
+function getTestFieldConfig(type: GenericFormFieldType): IFormField<any> {
     switch (type) {
-    case FormFieldType.plainText:
-    case FormFieldType.textEditor3:
-    case FormFieldType.number:
-    case FormFieldType.duration:
-    case FormFieldType.checkbox:
-    case FormFieldType.contentFilterSingleValue:
-    case FormFieldType.deskSingleValue:
-    case FormFieldType.yesNo:
-        return {
-            type: type,
-            field: 'test-field',
-        };
-    case FormFieldType.select:
-    case FormFieldType.selectMultiple:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                items: [],
-            },
-        };
-    case FormFieldType.vocabularySingleValue:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                vocabulary_id: 'test_vocabulary_id',
-            },
-        };
-    case FormFieldType.stageSingleValue:
-    case FormFieldType.macroSingleValue:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                deskField: 'test-desk-field',
-            },
-        };
-    default:
-        assertNever(type);
+        case GenericFormFieldType.plainText:
+        case GenericFormFieldType.textEditor3:
+        case GenericFormFieldType.number:
+        case GenericFormFieldType.duration:
+        case GenericFormFieldType.checkbox:
+        case GenericFormFieldType.contentFilterSingleValue:
+        case GenericFormFieldType.deskSingleValue:
+        case GenericFormFieldType.yesNo:
+            return {
+                type: type,
+                field: 'test-field',
+            };
+        case GenericFormFieldType.select:
+        case GenericFormFieldType.selectMultiple:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    items: [],
+                },
+            };
+        case GenericFormFieldType.vocabularySingleValue:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    vocabulary_id: 'test_vocabulary_id',
+                },
+            };
+        case GenericFormFieldType.stageSingleValue:
+        case GenericFormFieldType.macroSingleValue:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    deskField: 'test-desk-field',
+                },
+            };
+        default:
+            assertNever(type);
     }
 }
 
@@ -63,8 +63,8 @@ describe('generic form', () => {
     beforeEach(window.module('superdesk.apps.desks'));
 
     getAllInputTypes()
-        .filter((type) => type !== FormFieldType.checkbox) // checkbox doesn't have error messages
-        .forEach((type: FormFieldType) => {
+        .filter((type) => type !== GenericFormFieldType.checkbox) // checkbox doesn't have error messages
+        .forEach((type: GenericFormFieldType) => {
             it(`${type} should render error messages`, (done) => inject((desks) => {
                 desks.desks = {_items: []};
 
@@ -97,13 +97,13 @@ describe('generic form', () => {
         });
 
     const exceptionalClassNamesForRequiredFields = {
-        [FormFieldType.duration]: '.sd-input--required',
-        [FormFieldType.selectMultiple]: '.sd-input--required',
+        [GenericFormFieldType.duration]: '.sd-input--required',
+        [GenericFormFieldType.selectMultiple]: '.sd-input--required',
     };
 
     getAllInputTypes()
-        .filter((type) => type !== FormFieldType.checkbox) // checkbox can't be required
-        .forEach((type: FormFieldType) => {
+        .filter((type) => type !== GenericFormFieldType.checkbox) // checkbox can't be required
+        .forEach((type: GenericFormFieldType) => {
             it(`${type} should add a className for required fields`, (done) => inject((desks) => {
                 desks.desks = {_items: []};
 

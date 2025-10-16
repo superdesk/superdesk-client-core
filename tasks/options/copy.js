@@ -33,6 +33,7 @@ module.exports = {
                 cwd: '<%= coreDir %>',
                 dest: '<%= distDir %>',
                 src: ['images/**/*', 'scripts/**/*.{json,svg}'],
+                filter: (src) => !src.includes('extensions'),
             },
         ],
     },

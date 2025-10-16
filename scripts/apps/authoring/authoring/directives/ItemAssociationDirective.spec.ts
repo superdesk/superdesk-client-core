@@ -2,16 +2,6 @@ import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 describe('item association directive', () => {
-    beforeEach(() => {
-        const testConfig: Partial<ISuperdeskGlobalConfig> = {
-            server: {
-                url: '',
-                ws: undefined,
-            },
-        };
-
-        Object.assign(appConfig, testConfig);
-    });
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));

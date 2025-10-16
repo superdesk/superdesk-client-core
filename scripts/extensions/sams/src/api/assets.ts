@@ -40,7 +40,7 @@ const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
 const LOCK_ASSET = `${RESOURCE}/lock`;
 const UNLOCK_ASSET = `${RESOURCE}/unlock`;
 
-import {downloadBlob} from '@superdesk/common';
+import {downloadBlob} from '@sourcefabric/common';
 
 export function uploadAsset(
     data: FormData,
@@ -215,15 +215,15 @@ function queryMimetypes(source: IRootElasticQuery, params: IAssetSearchParams) {
         let typeString: string;
 
         switch (params.mimetypes) {
-        case ASSET_TYPE_FILTER.IMAGES:
-            typeString = 'image';
-            break;
-        case ASSET_TYPE_FILTER.VIDEOS:
-            typeString = 'video';
-            break;
-        case ASSET_TYPE_FILTER.AUDIO:
-            typeString = 'audio';
-            break;
+            case ASSET_TYPE_FILTER.IMAGES:
+                typeString = 'image';
+                break;
+            case ASSET_TYPE_FILTER.VIDEOS:
+                typeString = 'video';
+                break;
+            case ASSET_TYPE_FILTER.AUDIO:
+                typeString = 'audio';
+                break;
         }
 
         if (typeString != null) {

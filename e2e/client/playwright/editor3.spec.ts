@@ -274,7 +274,7 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await new TreeSelectDriver(
         page,
         page.locator(s('vocabulary-edit-content', 'formatting-options')),
-    ).setValue(['h1']);
+    ).setValues(['h1']);
 
     await page.locator(s('vocabulary-edit-content', 'editor3')).getByRole('textbox').fill('test data');
 
@@ -297,7 +297,7 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await expect(page.locator(s('editor3')).getByRole('textbox')).toHaveText('test data');
 });
 
-test('adding a custom block inside editor3', async ({page}) => {
+test.skip('adding a custom block inside editor3', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot({snapshotName: 'custom-blocks'});

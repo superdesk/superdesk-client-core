@@ -10,6 +10,7 @@ export const body_html: IFieldAdapter<IArticle> = {
             editorFormat: fieldEditor.formatOptions ?? [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
+            maxSoftLength: fieldEditor?.maxSoftLength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: false,
             disallowedCharacters: [],

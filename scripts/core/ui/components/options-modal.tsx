@@ -1,5 +1,5 @@
 import React from 'react';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import classNames from 'classnames';
 import {Loader} from './Loader';
 import {Spacer} from './Spacer';
@@ -33,7 +33,6 @@ export function showOptionsModal(title: string, message: string, options: Array<
             return (
                 <Modal
                     visible
-                    zIndex={1050}
                     size="small"
                     position="top"
                     data-test-id={dataTestId}

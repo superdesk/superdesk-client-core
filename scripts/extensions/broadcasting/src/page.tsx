@@ -16,7 +16,7 @@ import {
 import {ManageRundownTemplates} from './rundown-templates/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';
 
-import {classnames, showModal} from '@superdesk/common';
+import {classnames, showModal} from '@sourcefabric/common';
 
 import {CreateRundownFromTemplate} from './rundowns/create-rundown-from-template';
 import {RundownsList} from './rundowns/rundowns-list';
@@ -134,8 +134,8 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     : {
                         ...rundownItemActionNext,
                         sideWidget: {
-                            id: sidePanel,
-                            pinned: false,
+                            activeId: sidePanel,
+                            pinnedId: undefined,
                         },
                     };
 
@@ -169,13 +169,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         const rundownsListVisible = rundownAction?.fullWidth !== true && !rundownItemOpen;
 
         return (
-            <div
-                style={{
-                    marginBlockStart: 'var(--top-navigation-height)',
-                    width: '100%',
-                    height: 'calc(100% - var(--top-navigation-height))',
-                }}
-            >
+            <div style={{width: '100%', height: '100%'}}>
                 <div
                     className={classnames(
                         'sd-content sd-content-wrapper',
@@ -187,7 +181,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                             <React.Fragment>
                                 <Layout.LayoutContainer>
                                     <Layout.HeaderPanel>
-                                        <SubNav zIndex={2}>
+                                        <SubNav>
                                             <SearchBar
                                                 placeholder={gettext('Search')}
                                                 value={this.state.searchString}
@@ -238,7 +232,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                                                 onHide={() => {
                                                                                     closeModal();
                                                                                 }}
-                                                                                zIndex={1050}
                                                                             >
                                                                                 <ManageShows />
                                                                             </Modal>
@@ -296,7 +289,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                 </Dropdown>
                                             </ButtonGroup>
                                         </SubNav>
-                                        <SubNav zIndex={1}>
+                                        <SubNav>
                                             <ButtonGroup align="start">
                                                 <NavButton
                                                     icon="filter-large"

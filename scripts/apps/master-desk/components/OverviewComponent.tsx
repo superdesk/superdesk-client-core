@@ -189,73 +189,73 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         );
 
         switch (this.state.view) {
-        case IMasterDeskViews.detailed:
-            return (
-                <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
-                    {desks.map((desk, index) =>
-                        this.getDeskTotal(desk) > 0 ? (
-                            <div className="sd-board" key={desk._id}>
-                                <a
-                                    className="sd-board__header sd-board__header--clickable"
-                                    onClick={() => this.props.onDeskChange(desk)}
-                                >
-                                    <h3 className="sd-board__header-title">{desk.name}</h3>
-                                </a>
-                                <div className="sd-board__content sd-padding-t--1">
-                                    {(this.props.stages?.[desk._id] ?? []).map((stage) => (
-                                        <React.Fragment key={stage._id}>
-                                            <div className="sd-board__subheader">
-                                                <h5 className="sd-board__subheader-title">{stage.name}</h5>
-                                            </div>
-                                            <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
-                                                <ListItemsComponent
-                                                    items={this.getStageItems(stage)}
-                                                    total={this.getStageTotal(stage)}
-                                                />
-                                            </ul>
-                                        </React.Fragment>
-                                    ),
-                                    )}
+            case IMasterDeskViews.detailed:
+                return (
+                    <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
+                        {desks.map((desk, index) =>
+                            this.getDeskTotal(desk) > 0 ? (
+                                <div className="sd-board" key={desk._id}>
+                                    <a
+                                        className="sd-board__header sd-board__header--clickable"
+                                        onClick={() => this.props.onDeskChange(desk)}
+                                    >
+                                        <h3 className="sd-board__header-title">{desk.name}</h3>
+                                    </a>
+                                    <div className="sd-board__content sd-padding-t--1">
+                                        {(this.props.stages?.[desk._id] ?? []).map((stage) => (
+                                            <React.Fragment key={stage._id}>
+                                                <div className="sd-board__subheader">
+                                                    <h5 className="sd-board__subheader-title">{stage.name}</h5>
+                                                </div>
+                                                <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
+                                                    <ListItemsComponent
+                                                        items={this.getStageItems(stage)}
+                                                        total={this.getStageTotal(stage)}
+                                                    />
+                                                </ul>
+                                            </React.Fragment>
+                                        ),
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ) : null,
-                    )}
-                </div>
-            );
+                            ) : null,
+                        )}
+                    </div>
+                );
 
-        case IMasterDeskViews.card:
-            return (
-                <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
-                    {desks.map((desk, index) => (
-                        <CardComponent
-                            key={desk._id}
-                            desk={desk}
-                            total={this.getDeskTotal(desk)}
-                            donutData={this.getDonutData(desk)}
-                            label={gettext('items in production')}
-                            onDeskSelect={(singleDesk) => this.props.onDeskChange(singleDesk)}
-                        >
-                            {
-                                (this.props.stages?.[desk._id] ?? []).map((item, i) => (
-                                    <CardListComponent
-                                        key={i}
-                                        name={item.name}
-                                        color={this.hashColors[i]}
-                                        total={this.getStageTotal(item)}
-                                    />
-                                ))
-                            }
-                        </CardComponent>
-                    ))}
-                </div>
-            );
+            case IMasterDeskViews.card:
+                return (
+                    <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
+                        {desks.map((desk, index) => (
+                            <CardComponent
+                                key={desk._id}
+                                desk={desk}
+                                total={this.getDeskTotal(desk)}
+                                donutData={this.getDonutData(desk)}
+                                label={gettext('items in production')}
+                                onDeskSelect={(singleDesk) => this.props.onDeskChange(singleDesk)}
+                            >
+                                {
+                                    (this.props.stages?.[desk._id] ?? []).map((item, i) => (
+                                        <CardListComponent
+                                            key={i}
+                                            name={item.name}
+                                            color={this.hashColors[i]}
+                                            total={this.getStageTotal(item)}
+                                        />
+                                    ))
+                                }
+                            </CardComponent>
+                        ))}
+                    </div>
+                );
 
-        case IMasterDeskViews.singleView:
+            case IMasterDeskViews.singleView:
             // handled before, but required for assertNever
-            return null;
+                return null;
 
-        default:
-            return assertNever(this.state.view);
+            default:
+                return assertNever(this.state.view);
         }
     }
 }

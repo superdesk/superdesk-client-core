@@ -12,7 +12,7 @@ class TypeComponent extends React.Component<IPropsItemListInfo> {
 
         return (
             <span>
-                <TypeIcon type={item._type} highlight={item.highlight} contentProfileId={item.profile} />
+                <TypeIcon type={item.type} highlight={item.highlight} contentProfileId={item.profile} />
             </span>
         );
     }

@@ -150,31 +150,31 @@ export const sdStaticAutocompleteDirective = () => ({
 
         elem.on('keydown', (event: KeyboardEvent) => {
             switch (event.keyCode) {
-            case KEYS.up:
-                selectPrev();
-                break;
+                case KEYS.up:
+                    selectPrev();
+                    break;
 
-            case KEYS.down:
-                selectNext();
-                break;
+                case KEYS.down:
+                    selectNext();
+                    break;
             }
         });
 
         elem.on('keyup', (event: KeyboardEvent) => {
             switch (event.keyCode) {
-            case KEYS.enter:
-                if (scope.activeSuggestion != null) {
-                    scope.$applyAsync(() => {
-                        scope.select(scope.suggestions[scope.activeSuggestion]);
-                    });
-                } else {
-                    renderSuggestions();
-                }
-                break;
+                case KEYS.enter:
+                    if (scope.activeSuggestion != null) {
+                        scope.$applyAsync(() => {
+                            scope.select(scope.suggestions[scope.activeSuggestion]);
+                        });
+                    } else {
+                        renderSuggestions();
+                    }
+                    break;
 
-            case KEYS.escape:
-                scope.$applyAsync(resetSuggestions);
-                break;
+                case KEYS.escape:
+                    scope.$applyAsync(resetSuggestions);
+                    break;
             }
         });
 

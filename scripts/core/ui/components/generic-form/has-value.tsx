@@ -1,40 +1,40 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {GenericFormFieldType} from './interfaces/form';
+import {IFormField} from 'superdesk-api';
 import {stripHtmlTags} from 'core/utils';
 
-export function hasValue(fieldConfig: IFormField, value: any): boolean {
-    const type: FormFieldType = fieldConfig.type;
+export function hasValue<T extends object>(fieldConfig: IFormField<T>, value: any): boolean {
+    const type: GenericFormFieldType = fieldConfig.type;
 
     switch (type) {
-    case FormFieldType.plainText:
-        return typeof value === 'string' && value.trim().length > 0;
+        case GenericFormFieldType.plainText:
+            return typeof value === 'string' && value.trim().length > 0;
 
-    case FormFieldType.number:
-    case FormFieldType.duration:
-        return typeof value === 'number';
+        case GenericFormFieldType.number:
+        case GenericFormFieldType.duration:
+            return typeof value === 'number';
 
-    case FormFieldType.textEditor3:
-        return typeof value === 'string' && value.trim().length > 0 && stripHtmlTags(value).trim().length > 0;
+        case GenericFormFieldType.textEditor3:
+            return typeof value === 'string' && value.trim().length > 0 && stripHtmlTags(value).trim().length > 0;
 
-    case FormFieldType.vocabularySingleValue:
-    case FormFieldType.contentFilterSingleValue:
-    case FormFieldType.deskSingleValue:
-    case FormFieldType.stageSingleValue:
-    case FormFieldType.macroSingleValue:
-    case FormFieldType.select:
-        return typeof value === 'string' && value.trim().length > 0;
+        case GenericFormFieldType.vocabularySingleValue:
+        case GenericFormFieldType.contentFilterSingleValue:
+        case GenericFormFieldType.deskSingleValue:
+        case GenericFormFieldType.stageSingleValue:
+        case GenericFormFieldType.macroSingleValue:
+        case GenericFormFieldType.select:
+            return typeof value === 'string' && value.trim().length > 0;
 
-    case FormFieldType.selectMultiple:
-        return Array.isArray(value) && value.length > 0;
+        case GenericFormFieldType.selectMultiple:
+            return Array.isArray(value) && value.length > 0;
 
-    case FormFieldType.yesNo:
-        return value === 'true' || value === 'false';
+        case GenericFormFieldType.yesNo:
+            return value === 'true' || value === 'false';
 
-    case FormFieldType.checkbox:
-        return value === true || value === false;
+        case GenericFormFieldType.checkbox:
+            return value === true || value === false;
 
-    default:
-        assertNever(type);
+        default:
+            assertNever(type);
     }
 }

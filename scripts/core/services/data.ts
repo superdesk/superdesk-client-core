@@ -104,13 +104,13 @@ export default angular.module('superdesk.core.services.data', [])
                  */
                 this.page = function(page) {
                     switch (arguments.length) {
-                    case 0:
-                        return state.get('page') || defaultParams.page;
+                        case 0:
+                            return state.get('page') || defaultParams.page;
 
-                    case 1:
-                        if (this._items) {
-                            state.set('page', page !== defaultParams.page ? page : null);
-                        }
+                        case 1:
+                            if (this._items) {
+                                state.set('page', page !== defaultParams.page ? page : null);
+                            }
                     }
                 };
 
@@ -127,15 +127,15 @@ export default angular.module('superdesk.core.services.data', [])
                  */
                 this.search = function(q, df) {
                     switch (arguments.length) {
-                    case 0:
-                        return state.get('q');
+                        case 0:
+                            return state.get('q');
 
-                    case 1:
-                        if (this._items) {
-                            state.set('q', q);
-                            state.set('df', df);
-                            state.set('page', null);
-                        }
+                        case 1:
+                            if (this._items) {
+                                state.set('q', q);
+                                state.set('df', df);
+                                state.set('page', null);
+                            }
                     }
 
                     return this;
@@ -153,12 +153,12 @@ export default angular.module('superdesk.core.services.data', [])
                  */
                 this.where = function(key, val) {
                     switch (arguments.length) {
-                    case 1:
-                        return state.get(key) || null;
+                        case 1:
+                            return state.get(key) || null;
 
-                    case 2:
-                        state.set(key, val || null);
-                        state.set('page', null);
+                        case 2:
+                            state.set(key, val || null);
+                            state.set('page', null);
                     }
 
                     return this;

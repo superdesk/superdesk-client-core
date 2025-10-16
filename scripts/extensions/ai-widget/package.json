@@ -8,9 +8,9 @@
   },
   "devDependencies": {
     "superdesk-code-style": "1.3.0",
-    "typescript": "^4.5.2"
+    "typescript": "~4.9.5"
   },
   "dependencies": {
-    "@superdesk/common": "^0.0.8"
+    "@sourcefabric/common": "0.0.66"
   }
 }
