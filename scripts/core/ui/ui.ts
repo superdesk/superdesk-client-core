@@ -410,19 +410,41 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             scope.$watch('open', (value) => {
                 if (value) {
-                    $timeout(() => {
-                        $popupWrapper.css({top: '', left: '', right: '', bottom: ''});
-                        $popupWrapper.removeClass('datepicker-wrapper--centered');
+                    setTimeout(() => {
+                        const popupEl = $popupWrapper[0];
 
-                        // Use popupService to position dynamically with centering
-                        const width = $popupWrapper.outerWidth?.() || 280;
-                        const height = $popupWrapper.outerHeight?.() || 320;
+                        if (!popupEl) return;
 
-                        const position = popupService.position(width, height, element, {center: true});
+                        // Get position of the active input element
+                        const rect = element[0].getBoundingClientRect();
+                        const popupHeight = popupEl.offsetHeight || 320;
+                        const popupWidth = popupEl.offsetWidth || 280;
+                        const tolerance = 10;
 
-                        $popupWrapper.offset(position);
+                        const viewportHeight = window.innerHeight;
+                        const viewportWidth = window.innerWidth;
+
+                        let top = rect.bottom + window.scrollY;
+                        let left = rect.left + window.scrollX;
+
+                        // If not enough space below, open upward
+                        if (rect.bottom + popupHeight + tolerance > viewportHeight) {
+                            top = rect.top + window.scrollY - popupHeight;
+                        }
+
+                        // Prevent overflow
+                        if (rect.left + popupWidth + tolerance > viewportWidth) {
+                            left = viewportWidth - popupWidth - tolerance + window.scrollX;
+                        }
+
+                        Object.assign(popupEl.style, {
+                            top: `${top}px`,
+                            left: `${left}px`,
+                            position: 'absolute',
+                        });
+
                         scope.$broadcast('datepicker.focus');
-                    }, 0, true);
+                    }, 0);
                 }
             });
 
