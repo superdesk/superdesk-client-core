@@ -32,6 +32,7 @@ import {
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
 import {
+    customEditorTags,
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {RICH_FORMATTING_OPTION, IArticle} from 'superdesk-api';
@@ -342,8 +343,12 @@ export function getInitialContent(props): ContentState {
         ).getCurrentContent();
     }
 
+    const customTagStyles = new Set(customEditorTags.map(({editor3Style}) => editor3Style));
+
     const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
-        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
+        (option: RICH_FORMATTING_OPTION) => {
+            return formattingOptionsUnsafeToParseFromHTML.includes(option) || customTagStyles.has(option);
+        },
     );
 
     /**

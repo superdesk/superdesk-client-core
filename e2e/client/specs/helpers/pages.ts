@@ -6,6 +6,7 @@ import './waitReady';
 export {authoring} from './authoring';
 export {content} from './content';
 import {click} from './utils';
+import {s} from '../../playwright/utils';
 
 export class LoginModal {
     username: any;
@@ -15,8 +16,8 @@ export class LoginModal {
     login: (username: any, password: any) => any;
 
     constructor() {
-        this.username = element(by.model('username'));
-        this.password = element(by.id('login-password'));
+        this.username = element(by.css(s('username')));
+        this.password = element(by.css(s('password')));
         this.btn = element(by.id('login-btn'));
         this.error = element(by.css('p.error'));
 

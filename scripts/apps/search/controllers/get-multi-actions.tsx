@@ -184,7 +184,6 @@ export function getMultiActions(
         const items: Array<IArticle> = getSelectedItems();
 
         showSpikeDialog(
-            modal,
             () => spikeMultiple(),
             gettext('Are you sure you want to spike the items?'),
             onSpikeMultipleMiddlewares,

@@ -142,7 +142,7 @@ msgstr "(no hay coincidencias)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.tsx:210
 msgid "({{ count }}) {{ action }} planning item(s)"
-msgstr "({{ count }}) {{ action }} artículo(s) planificado(s)"
+msgstr "({{ count }}) {{ action }} articulo(s) planificado(s)"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:17
 msgid "* choose article version from dropdown menu"
@@ -14425,7 +14425,7 @@ msgstr "Seleccionar solamente categorías predeterminadas"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:269
 msgid "Select desk"
-msgstr "Seleccionar mesa"
+msgstr "Seleccione Mesa"
 
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:54
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:226

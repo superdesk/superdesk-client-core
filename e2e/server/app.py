@@ -9,3 +9,5 @@ def get_app(config=None):
         config = {}
     app = superdesk_app(config, config_object='settings')
     return app
+
+app = get_app()

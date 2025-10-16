@@ -21,7 +21,9 @@ export const listFiltersConfig: Array<IMonitoringListFilter> = configFromExtensi
         {
             label: gettext('Content Profile'),
             fieldId: 'contentProfile',
-            getOptions: () => sdApi.contentProfiles.getAll().map((x) => ({id: x._id, label: x.label})),
+            getOptions: () => sdApi.contentProfiles.getAll()
+                .filter(({enabled}) => enabled)
+                .map((x) => ({id: x._id, label: x.label})),
             selectMultiple: true,
             operator: 'OR',
         },

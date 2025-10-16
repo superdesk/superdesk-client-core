@@ -246,6 +246,9 @@ export default angular.module('superdesk.core.services.modal', [
             return confirmConfigurationObject.call(this, {...options, cancelText: null});
         };
 
+        /**
+         @deprecated - only used in planning. Should be replaced with `showModal`
+         */
         this.createCustomModal = function(dataTestId) {
             return new Promise((resolve) => {
                 $modal.open({
@@ -273,21 +276,18 @@ export default angular.module('superdesk.core.services.modal', [
         };
 
         this.prompt = function(title, initialValue) {
-            return new Promise((resolve, reject) => {
-                this.createCustomModal()
-                    .then(({openModal, closeModal}) => {
-                        openModal(
-                            <ModalPrompt
-                                title={title}
-                                initialValue={initialValue}
-                                onSubmit={(value) => {
-                                    closeModal();
-                                    resolve(value);
-                                }}
-                                close={closeModal}
-                            />,
-                        );
-                    });
+            return new Promise((resolve) => {
+                showModal(({closeModal}) => (
+                    <ModalPrompt
+                        title={title}
+                        initialValue={initialValue}
+                        onSubmit={(value) => {
+                            closeModal();
+                            resolve(value);
+                        }}
+                        close={closeModal}
+                    />
+                ));
             });
         };
     }]);

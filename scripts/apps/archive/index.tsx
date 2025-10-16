@@ -490,7 +490,6 @@ function spikeActivity(data, modal, $location, multi,
         const item: IArticle = data.item;
 
         showSpikeDialog(
-            modal,
             () => sdApi.article.doSpike(data.item),
             gettext('Are you sure you want to spike the item?'),
             onSpikeMiddlewares,

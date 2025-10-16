@@ -28,7 +28,7 @@ test('can edit my profile', async ({page}) => {
         {label: 'First Name', newValue: 'Richard', type: 'text'},
         {label: 'Last Name', newValue: 'Roe', type: 'text'},
         {label: 'Email', newValue: 'richard@example.com', type: 'text'},
-        {label: 'Default Desk', newValue: 'Finances', type: 'select'},
+        {label: 'Default Desk', newValue: 'Finance', type: 'select'},
         {label: 'Sign-Off', newValue: 'RichardRoe', type: 'text'},
         {label: 'Byline', newValue: 'Richard Roe, CEO', type: 'text'},
         {label: 'Job Title', newValue: 'CEO', type: 'select'},

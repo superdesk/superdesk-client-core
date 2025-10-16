@@ -702,7 +702,13 @@ export function SearchService($location, session, multi,
     this.getTrackByIdentifier = getTrackByIdentifier;
 
     this.extractIdFromTrackByIndentifier = function(identifier: string) {
-        return identifier.slice(0, identifier.lastIndexOf(':'));
+        const lastIndex = identifier.lastIndexOf(':');
+
+        if (lastIndex === -1) {
+            return identifier;
+        }
+
+        return identifier.slice(0, lastIndex);
     };
 
     /*

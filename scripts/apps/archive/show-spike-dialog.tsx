@@ -6,9 +6,9 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
+import {showModal} from '@sourcefabric/common';
 
 export function showSpikeDialog<T>(
-    modal: any,
     doSpike: () => void,
     promptForConfirmationMessage: string,
     middlewares: Array<(value: T) => Promise<onSpikeMiddlewareResult>>,
@@ -40,49 +40,47 @@ export function showSpikeDialog<T>(
         if (skipConfirmationPrompt && warnings.length < 1) {
             doSpike();
         } else {
-            modal.createCustomModal('spike-modal')
-                .then(({openModal, closeModal}) => {
-                    openModal(
-                        <Modal
-                            visible
-                            size="small"
-                            position="top"
-                            headerTemplate={
-                                gettext('Confirm')
-                            }
-                            footerTemplate={
-                                (
-                                    <ButtonGroup align="end">
-                                        <Button
-                                            type="default"
-                                            text={gettext('Cancel')}
-                                            onClick={closeModal}
-                                        />
-                                        <Button
-                                            type="primary"
-                                            text={gettext('Spike')}
-                                            onClick={() => {
-                                                doSpike();
-                                                closeModal();
-                                            }}
-                                        />
-                                    </ButtonGroup>
-                                )
-                            }
-                        >
-                            <div>{promptForConfirmationMessage}</div>
-                            {
-                                warnings.length < 1 ? null : (
-                                    <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
-                                        {
-                                            warnings.map(({text}, i) => <li key={i}>{text}</li>)
-                                        }
-                                    </ul>
-                                )
-                            }
-                        </Modal>,
-                    );
-                });
+            showModal(({closeModal}) => (
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    headerTemplate={
+                        gettext('Confirm')
+                    }
+                    footerTemplate={
+                        (
+                            <ButtonGroup align="end">
+                                <Button
+                                    type="default"
+                                    text={gettext('Cancel')}
+                                    onClick={closeModal}
+                                />
+                                <Button
+                                    type="primary"
+                                    text={gettext('Spike')}
+                                    onClick={() => {
+                                        doSpike();
+                                        closeModal();
+                                    }}
+                                />
+                            </ButtonGroup>
+                        )
+                    }
+                    data-test-id="spike-modal"
+                >
+                    <div>{promptForConfirmationMessage}</div>
+                    {
+                        warnings.length < 1 ? null : (
+                            <ul style={{listStyle: 'initial', paddingInlineStart: 40}}>
+                                {
+                                    warnings.map(({text}, i) => <li key={i}>{text}</li>)
+                                }
+                            </ul>
+                        )
+                    }
+                </Modal>
+            ));
         }
     });
 }
