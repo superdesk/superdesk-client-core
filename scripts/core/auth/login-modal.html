@@ -27,19 +27,12 @@
                 </fieldset>
             </form>
 
-            <fieldset class="buttons" ng-if="methods.google">
-                <button class="btn btn--large btn--hollow btn--sd-green"
-                    ng-click="openLoginPopup('google')" translate>Log In with Google</button>
-            </fieldset>
+            <div class="links" ng-if="features.auth_db">
+                <a href="" ng-click="logout()" class="text" ng-show="identity.Id" translate>Sign in as a different user.</a>
+                <a href="/#/reset-password/" class="text" ng-show="features.auth_db && features.reset_user_password" translate>Forgot password?</a>
+            </div>
 
-            <fieldset class="buttons" ng-if="methods.saml">
-                <button class="btn btn--large btn--sd-green"
-                    ng-click="openLoginPopup('saml')" translate>{{labels.saml}}</button>
-            </fieldset>
-
-            <a href="/#/secure-login/" class="text" ng-show="methods.xmpp" translate>Secure login</a>
-
-            <div class="error-handler" ng-switch on="loginError">
+            <div class="error-handler my-2" ng-switch on="loginError">
                 <p class="error" data-test-id="login-error-401" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
                 <p class="error" data-test-id="login-error-403" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
                 <p class="error" data-test-id="login-error-404" ng-switch-when="404" translate>Sorry, user not found.</p>
@@ -54,18 +47,27 @@
                     <span class="icon-unplug"></span>
                     <p translate>Trying to reconnect...<br />Please wait.</p>
                 </div>
-
             </div>
 
-            <div class="links">
-                <a href="" ng-click="logout()" class="text" ng-show="identity.Id" translate>Sign in as a different user.</a>
-                <a href="/#/reset-password/" class="text" ng-show="features.auth_db && features.reset_user_password" translate>Forgot password?</a>
+            <div class="sd-content-divider--with-text sd-content-divider sd-content-divider--horizontal sd-content-divider--margin-small" role="separator" ng-if="(methods.google || methods.saml) && features.auth_db">
+                <span class="sd-content-divider__inner-text" translate>or</span>
             </div>
+
+            <fieldset class="buttons my-2" ng-if="methods.google">
+                <button class="btn btn--sd-green btn--large btn--expanded"
+                    ng-click="openLoginPopup('google')" translate>Log In with Google</button>
+            </fieldset>
+
+            <fieldset class="buttons my-2" ng-if="methods.saml">
+                <button class="btn btn--sd-green btn--large btn--expanded"
+                    ng-click="openLoginPopup('saml')" translate>{{labels.saml}}</button>
+            </fieldset>
+
         </div>
 
         <div class="form-handler" ng-if="changePassword">
             <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
-            <div class="error-handler">
+            <div class="error-handler my-2">
                 <p class="error" translate>Your password has expired. Please change your password.</p>
             </div>
             <form name="changePasswordForm" ng-submit="changeUserPassword()">
