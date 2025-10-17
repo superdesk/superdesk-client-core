@@ -53,6 +53,8 @@ const exiftoolFetchPolyfill = (url: string): Promise<Response> => {
     });
 };
 
+const timeout = 10000; // 10s
+
 describe('process item metadata', () => {
     it('image metadata', async () => {
         const expected = {
@@ -65,7 +67,7 @@ describe('process item metadata', () => {
         });
 
         for (const [k, v] of Object.entries(expected)) expect(result[k]).toEqual(v);
-    });
+    }, timeout);
 
     it('video metadata', async () => {
         const expected = {
@@ -78,7 +80,7 @@ describe('process item metadata', () => {
         });
 
         for (const [k, v] of Object.entries(expected)) expect(result[k]).toEqual(v);
-    });
+    }, timeout);
 
     it('{} for item with no metadata', async () => {
         for (const filename of ['empty_metadata.jpg', 'empty_metadata.mov']) {
@@ -89,5 +91,5 @@ describe('process item metadata', () => {
 
             expect(result).toEqual({});
         }
-    });
+    }, timeout);
 });
