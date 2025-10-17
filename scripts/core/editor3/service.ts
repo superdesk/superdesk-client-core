@@ -86,7 +86,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectNext() {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.findNext());
         }
     }
@@ -98,7 +98,7 @@ export class EditorService {
      * criteria in the editor.
      */
     selectPrev() {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.findPrev());
         }
     }
@@ -110,7 +110,7 @@ export class EditorService {
      * @description Replaces the currently highlighted search criteria with the given text.
      */
     replace(txt) {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.replace(txt));
         }
     }
@@ -122,7 +122,7 @@ export class EditorService {
      * @description Replaces all the search criteria with the given text.
      */
     replaceAll(txt) {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.replaceAll(txt));
         }
     }
@@ -135,14 +135,6 @@ export class EditorService {
      * @description Updates the settings for editor3.
      */
     setSettings({findreplace, spellcheck, language}) {
-        if (!ok()) {
-            return;
-        }
-
-        if (typeof findreplace !== 'undefined') {
-            store.dispatch(action.setHighlightCriteria(findreplace || {}));
-        }
-
         if (typeof spellcheck !== 'undefined') {
             spellcheckerStores.forEach((_store) => {
                 _store.dispatch(action.setSpellcheckerLanguage(language));
@@ -162,6 +154,10 @@ export class EditorService {
                 );
             });
         }
+
+        if (storeSet() && typeof findreplace !== 'undefined') {
+            store.dispatch(action.setHighlightCriteria(findreplace || {}));
+        }
     }
 
     /**
@@ -170,7 +166,7 @@ export class EditorService {
      * @description Highlights the current search criteria in the editor.
      */
     render() {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.renderHighlights());
         }
     }
@@ -181,7 +177,7 @@ export class EditorService {
      * @description Gets the text under the current selection.
      */
     getActiveText() {
-        if (!ok()) {
+        if (!storeSet()) {
             return;
         }
 
@@ -214,7 +210,7 @@ export class EditorService {
      * @returns {string} HTML
      */
     getHTML() {
-        if (!ok()) {
+        if (!storeSet()) {
             return '';
         }
 
@@ -232,7 +228,7 @@ export class EditorService {
      * @returns {string} HTML
      */
     getHtmlForTansa() {
-        if (!ok()) {
+        if (!storeSet()) {
             return '';
         }
 
@@ -251,26 +247,28 @@ export class EditorService {
      * If the simpleReplace is true try to preserve the existing inline styles and entities
      */
     setHtmlFromTansa(html, simpleReplace = false) {
-        if (ok()) {
+        if (storeSet()) {
             store.dispatch(action.setHtmlFromTansa(html, simpleReplace));
         }
     }
 
     setEditorStateFromItem(item: IArticle, field: string) {
-        if (ok()) {
-            // store.dispatch(action.setEditorStateFromItem(item, field));
-            spellcheckerStores.forEach((_store) => {
-                if (_store.field === field) {
-                    _store.dispatch(action.setEditorStateFromItem(item, field));
-                }
-            });
-        }
+        spellcheckerStores.forEach((_store) => {
+            if (_store.field === field) {
+                _store.dispatch(action.setEditorStateFromItem(item, field));
+            }
+        });
     }
 }
 
-function ok() {
+/**
+ * Checks if editor is set before performing an action that requires it.
+ * It is relevant only for actions that only support one editor - mainly "find and replace".
+ * Some actions e.g. spellchecking were updated to support all editor3 fields.
+ */
+function storeSet() {
     if (store === null) {
-        console.error('No editor set as target in service.');
+        console.warn('No editor set as target in service.');
     }
 
     return store !== null;
