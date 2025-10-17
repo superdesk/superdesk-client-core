@@ -659,6 +659,9 @@ $authoring-toolbar-spacing: 10px;
     position: relative;
 }
 
+.legacyAngularDropdownOpen .authoring-header__toggle-container {
+    display: none;
+}
 
 .authoring-header__toggle {
     --toggleBG: var(--authoringHeaderBG);
