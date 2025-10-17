@@ -410,39 +410,61 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             scope.$watch('open', (value) => {
                 if (value) {
-                    setTimeout(() => {
-                        const popupEl = $popupWrapper[0];
+                    // Use native setTimeout (no Angular digest required here) to wait
+                    // for the popup DOM to be attached and rendered before measuring.
+                    // We also re-run the positioning on the next frame and after a small
+                    const MARGIN = 8;
+                    const RECHECK_DELAY = 50;
+
+                    const positionOnce = () => {
+                        const popupEl = $popupWrapper && $popupWrapper[0];
 
                         if (!popupEl) return;
 
                         // Get position of the active input element
                         const rect = element[0].getBoundingClientRect();
+
+                        // Measure popup size (use defaults if not available)
                         const popupHeight = popupEl.offsetHeight || 320;
                         const popupWidth = popupEl.offsetWidth || 280;
                         const tolerance = 10;
 
                         const viewportHeight = window.innerHeight;
                         const viewportWidth = window.innerWidth;
+                        const scrollX = window.scrollX || window.pageXOffset;
+                        const scrollY = window.scrollY || window.pageYOffset;
 
-                        let top = rect.bottom + window.scrollY;
-                        let left = rect.left + window.scrollX;
+                        // Prefer opening below, leave a small margin so input remains visible.
+                        let top = rect.bottom + scrollY + MARGIN;
+                        let left = rect.left + scrollX;
 
-                        // If not enough space below, open upward
+                        // If not enough space below, open upward (keep margin so input is not overlapped)
                         if (rect.bottom + popupHeight + tolerance > viewportHeight) {
-                            top = rect.top + window.scrollY - popupHeight;
+                            top = rect.top + scrollY - popupHeight - MARGIN;
                         }
 
-                        // Prevent overflow
+                        // Prevent overflow on right
                         if (rect.left + popupWidth + tolerance > viewportWidth) {
-                            left = viewportWidth - popupWidth - tolerance + window.scrollX;
+                            left = viewportWidth - popupWidth - tolerance + scrollX;
+                        }
+
+                        // Prevent overflow on left
+                        if (left < tolerance + scrollX) {
+                            left = tolerance + scrollX;
                         }
 
                         Object.assign(popupEl.style, {
-                            top: `${top}px`,
-                            left: `${left}px`,
+                            top: `${Math.round(top)}px`,
+                            left: `${Math.round(left)}px`,
                             position: 'absolute',
+                            zIndex: '2000',
                         });
+                    };
 
+                    setTimeout(() => {
+                        positionOnce();
+                        requestAnimationFrame(positionOnce);
+                        setTimeout(positionOnce, RECHECK_DELAY);
                         scope.$broadcast('datepicker.focus');
                     }, 0);
                 }
