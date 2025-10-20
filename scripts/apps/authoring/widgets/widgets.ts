@@ -330,6 +330,10 @@ function WidgetsManagerCtrl(
     };
 
     $scope.pinWidget = (widget: IWidget) => {
+        // Temporarily disable CSS transitions during pin/unpin to prevent sliding animations
+        // during remount for the react based widgets
+        angular.element('body').addClass('widget-pin-unpin-operation');
+
         if ($scope.pinnedWidget) {
             $scope.pinnedWidget.pinned = false;
         }
@@ -365,6 +369,11 @@ function WidgetsManagerCtrl(
         }
 
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
+
+        // Then remove the transition suppression class after the DOM updates
+        setTimeout(() => {
+            angular.element('body').removeClass('widget-pin-unpin-operation');
+        }, 50);
     };
 
     widgetReactIntegration.pinWidget = (sideWidget?: IWidget) => {
