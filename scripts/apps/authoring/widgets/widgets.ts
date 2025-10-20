@@ -367,7 +367,9 @@ function WidgetsManagerCtrl(
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
     };
 
-    widgetReactIntegration.pinWidget = $scope.pinWidget;
+    widgetReactIntegration.pinWidget = (sideWidget?: IWidget) => {
+        $scope.pinWidget(sideWidget || $scope.active);
+    };
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
         () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
