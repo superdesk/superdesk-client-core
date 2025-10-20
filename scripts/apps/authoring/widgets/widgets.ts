@@ -330,6 +330,9 @@ function WidgetsManagerCtrl(
     };
 
     $scope.pinWidget = (widget: IWidget) => {
+        // Add fallback for both angular/react widgets
+        const widgetToPin = widget || $scope.active;
+
         // Temporarily disable CSS transitions during pin/unpin to prevent sliding animations
         // during remount for the react based widgets
         angular.element('body').addClass('widget-pin-unpin-operation');
@@ -338,13 +341,13 @@ function WidgetsManagerCtrl(
             $scope.pinnedWidget.pinned = false;
         }
 
-        if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
+        if (!PINNED_WIDGET_RESIZED && widgetToPin && !$scope.pinnedWidget) {
             $rootScope.$broadcast('resize:monitoring', -SIDE_WIDGET_WIDTH);
 
             PINNED_WIDGET_RESIZED = true;
         }
 
-        if (!widget || $scope.pinnedWidget === widget) {
+        if (!widgetToPin || $scope.pinnedWidget === widgetToPin) {
             $rootScope.$broadcast('resize:monitoring', SIDE_WIDGET_WIDTH);
 
             angular.element('body').removeClass('main-section--pinned-tabs');
@@ -354,18 +357,18 @@ function WidgetsManagerCtrl(
 
             this.widgetFromPreferences = null;
 
-            if (widget) {
-                widget.pinned = false;
+            if (widgetToPin) {
+                widgetToPin.pinned = false;
             }
 
             this.updateUserPreferences();
         } else {
             angular.element('body').addClass('main-section--pinned-tabs');
-            $scope.pinnedWidget = widget;
-            $scope.active = widget;
-            widget.pinned = true;
+            $scope.pinnedWidget = widgetToPin;
+            $scope.active = widgetToPin;
+            widgetToPin.pinned = true;
 
-            this.updateUserPreferences(widget);
+            this.updateUserPreferences(widgetToPin);
         }
 
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
@@ -376,9 +379,7 @@ function WidgetsManagerCtrl(
         }, 50);
     };
 
-    widgetReactIntegration.pinWidget = (sideWidget?: IWidget) => {
-        $scope.pinWidget(sideWidget || $scope.active);
-    };
+    widgetReactIntegration.pinWidget = $scope.pinWidget;
     widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
     widgetReactIntegration.getPinnedWidget =
         () => $scope.widgets?.find(({pinned}) => pinned === true)?.name ?? null;
