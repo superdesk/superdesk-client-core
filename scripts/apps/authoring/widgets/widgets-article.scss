@@ -164,14 +164,6 @@
     }
 }
 
-/*
-    Disable CSS transitions during pin/unpin operations
-    to prevent sliding animations for the react widgets
-*/
-.widget-pin-unpin-operation .tabpane {
-    transition: none !important;
-}
-
 .tabpane .sd-widget .widget-content .content {
     grid-row: 2 / 3;
     overflow-y: auto;
