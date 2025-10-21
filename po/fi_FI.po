@@ -837,7 +837,7 @@ msgstr "Lisää sisäänluvun lähde"
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:431
 msgid "Add Item"
-msgstr "Lisää Item"
+msgstr "Lisää kohde"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:7
 #: scripts/apps/content-filters/views/manage-filters.html:6
@@ -1212,7 +1212,7 @@ msgstr "Laajempi"
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:215
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:233
 msgid "Advanced Search"
-msgstr "Tarkennettu haku"
+msgstr "Suodata"
 
 #: ../superdesk-planning/client/components/Main/SearchPanel.tsx:113
 #: ../superdesk-planning/client/components/Main/ToggleFiltersButton.tsx:14
@@ -1226,11 +1226,11 @@ msgstr "Advanced mode"
 
 #: scripts/apps/search/views/search-panel.html:58
 msgid "Advanced search"
-msgstr "Tarkennettu haku"
+msgstr "Suodatushaku"
 
 #: scripts/apps/search/views/search-panel.html:2
 msgid "Advanced search panel"
-msgstr "Tarkennetun haun paneeli"
+msgstr "Suodatushaun paneeli"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:10
 msgid "Africa/Abidjan"
@@ -2732,7 +2732,7 @@ msgstr "Tavua"
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:229
 #: scripts/apps/authoring/views/authoring-topbar.html:117
 msgid "C"
-msgstr "C"
+msgstr "K"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:564
 #: scripts/apps/authoring/views/authoring-topbar.html:67
@@ -4471,11 +4471,11 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
-msgstr ""
+msgstr "Luotu paikassa"
 
 #: scripts/apps/search/directives/DateFilters.ts:78
 msgid "Created to"
-msgstr ""
+msgstr "Luotu paikkaan"
 
 #: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:95
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:84
@@ -5005,12 +5005,12 @@ msgstr "Laskeva järjestys"
 #: scripts/apps/authoring/views/authoring-topbar.html:96
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:317
 msgid "Deschedule"
-msgstr ""
+msgstr "Poista ajastus"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:113
 #: scripts/apps/authoring/versioning/history/views/history.html:17
 msgid "Descheduled by"
-msgstr ""
+msgstr "Ajastuksen poistanut"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:48
 #: ../superdesk-planning/client/components/fields/preview/index.ts:224
@@ -5424,7 +5424,7 @@ msgstr "Haluatko poistaa paikan \"{{ name }}\"?"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:392
 msgid "Do you want to deschedule articles?"
-msgstr ""
+msgstr "Haluatko poistaa artikkelien ajastuksen? "
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:270
 msgid "Do you want to link it to that assignment ?"
@@ -5446,11 +5446,11 @@ msgstr "Haluatko resetoida käyttäjän {{user.full_name}} salasanan?"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:122
 msgid "Do you want to spike  item(s) ?"
-msgstr ""
+msgstr "Haluatko poistaa kohteen/kohteet?"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:141
 msgid "Do you want to unspike  item(s) ?"
-msgstr ""
+msgstr "Haluatko palauttaa kohteen/kohteet?"
 
 #: scripts/extensions/sams/dist/src/utils/assets.js:122
 #: scripts/extensions/sams/src/utils/assets.ts:152
@@ -7875,7 +7875,7 @@ msgstr "Koko nimi"
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Full width mode"
-msgstr ""
+msgstr "Laajenna"
 
 #: scripts/extensions/sams/dist/src/utils/assets.js:69
 #: scripts/extensions/sams/src/utils/assets.ts:81
@@ -9290,7 +9290,7 @@ msgstr "Lisätietoa Superdeskistä osoitteesta <a href=\"https://www.superdesk.o
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Leave full width mode"
-msgstr ""
+msgstr "Pienennä"
 
 #: scripts/apps/archive/views/item-preview.html:10
 #: scripts/apps/archive/views/metadata-view.html:193
@@ -9534,7 +9534,7 @@ msgstr "Sinulla lukittuna toisessa selainikkunassa"
 
 #: scripts/core/auth/login-modal.html:20
 msgid "Log In"
-msgstr "Kirjautunut sisään"
+msgstr "Kirjaudu sisään"
 
 #: scripts/core/auth/login-modal.html:29
 msgid "Log In with Google"
@@ -9548,7 +9548,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/index.ts:231
 #: ../superdesk-planning/client/components/fields/resources/events.ts:19
 msgid "Long Description"
-msgstr "Pitkä kuvaus"
+msgstr "Järjestäjän antamaa lisätietoa"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:310
 msgid "Longitude"
@@ -10152,7 +10152,7 @@ msgstr "Siirrä ylös"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:253
 #: scripts/apps/authoring/versioning/history/views/history.html:75
 msgid "Moved by"
-msgstr ""
+msgstr "Siirtänyt"
 
 #: scripts/apps/desks/views/desk-config-modal.html:397
 msgid "Moved onto stage Rule"
@@ -10164,7 +10164,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:154
 msgid "Moved to a working stage by this user"
-msgstr ""
+msgstr "Siirtänyt työn alle käyttäjä"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:132
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:212
@@ -11178,7 +11178,7 @@ msgstr "Avaa"
 
 #: ../superdesk-planning/client/constants/assignments.ts:160
 msgid "Open Coverage"
-msgstr ""
+msgstr "Avaa sisältö"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:47
 msgid "Open advanced search panel by default"
@@ -12654,11 +12654,11 @@ msgstr ""
 
 #: scripts/apps/search/views/search-panel.html:15
 msgid "Raw"
-msgstr ""
+msgstr "Lauseke"
 
 #: scripts/apps/search/views/raw-search.html:1
 msgid "Raw search"
-msgstr ""
+msgstr "Lausekehaku"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:31
 msgid "Read Only"
@@ -13894,7 +13894,7 @@ msgstr "Tallenna haku"
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:22
 #: scripts/apps/search/views/search-panel.html:9
 msgid "Saved"
-msgstr "Tallennettu"
+msgstr "Valmiit haut"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:346
 msgid "Saved Featured Stories record"
@@ -14038,7 +14038,7 @@ msgstr ""
 
 #: scripts/apps/search/components/fields/state.tsx:45
 msgid "Scheduled for {{date}}"
-msgstr ""
+msgstr "Ajastettu {{date}}"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:524
 msgid "Scheduled update added to workflow."
@@ -14577,7 +14577,7 @@ msgstr "Lähetä kohteeseen"
 #: scripts/apps/authoring/views/authoring-topbar.html:371
 #: scripts/apps/authoring/views/authoring-topbar.html:372
 msgid "Send to / Publish"
-msgstr "Lähetetty/julkaistu"
+msgstr "Lähetä/julkaise"
 
 #: scripts/apps/authoring/authoring/index.ts:283
 msgid "Send to Personal Space"
@@ -14597,7 +14597,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
-msgstr ""
+msgstr "Lähetetty kohteesta"
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:24
 msgid "Sent Items"
@@ -14682,7 +14682,7 @@ msgstr ""
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:83
 msgid "Set highlights"
-msgstr "Valitse koosteeseen"
+msgstr "Valitse kooste"
 
 #: scripts/apps/archive/index.tsx:215
 msgid "Set label in current package"
@@ -15206,7 +15206,7 @@ msgstr "Poista"
 
 #: scripts/apps/archive/index.tsx:116
 msgid "Spike Item"
-msgstr ""
+msgstr "Poista kohde"
 
 #: scripts/apps/monitoring/config.ts:29
 msgid "Spike Monitoring"
@@ -15230,7 +15230,7 @@ msgstr "Poista tapahtuma"
 
 #: scripts/apps/monitoring/index.ts:105
 msgid "Spike item(s)"
-msgstr ""
+msgstr "Poista kohde/kohteet"
 
 #: ../superdesk-planning/client/constants/planning.ts:140
 msgid "Spike planning"
@@ -15261,7 +15261,7 @@ msgstr "Poistettu sisältö"
 #: scripts/apps/monitoring/config.ts:40
 #: scripts/apps/monitoring/views/monitoring-view.html:294
 msgid "Spiked Items"
-msgstr ""
+msgstr "Poistetut kohteet"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:171
 msgid "Spiked Only"
@@ -15274,7 +15274,7 @@ msgstr "Poistanut"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
-msgstr ""
+msgstr "Poistetut kohteet"
 
 #: scripts/apps/search/views/search-parameters.html:153
 msgid "Spiked only content"
@@ -15470,7 +15470,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:78
 #: scripts/apps/search/views/search-parameters.html:31
 msgid "Story Text"
-msgstr ""
+msgstr "Hae tekstistä"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:183
 msgid "Story is associated as update."
@@ -16504,11 +16504,11 @@ msgstr "Latauksessasi oli ongelma"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:39
 msgid "There was a problem, Planning item not spiked!"
-msgstr ""
+msgstr "Ilmeni ongelma, aihetta ei poistettu."
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:60
 msgid "There was a problem, Planning item not unspiked!"
-msgstr ""
+msgstr "Ilmeni ongelma, aihetta ei palautettu."
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:61
 msgid "There was a problem, desk not created/updated."
@@ -17295,7 +17295,7 @@ msgstr "Tyyppi: {{type}}"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:107
 msgid "U"
-msgstr ""
+msgstr "P"
 
 #: scripts/apps/authoring-react/authoring-angular-integration.tsx:643
 msgid "UNSPIKE"
@@ -17556,11 +17556,11 @@ msgstr ""
 
 #: scripts/apps/archive/index.tsx:130
 msgid "Unspike Item"
-msgstr ""
+msgstr "Palauta kohde"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:143
 msgid "Unspike Planning Item"
-msgstr ""
+msgstr "Palauta aihe"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:99
 msgid "Unspike all recurring events or just this one?"
@@ -17626,7 +17626,7 @@ msgstr "Nimetön"
 #: scripts/apps/authoring/views/authoring-topbar.html:106
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:231
 msgid "Update"
-msgstr "Päivitä"
+msgstr "Päivitys"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:255
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:467
@@ -17730,7 +17730,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:104
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:178
 msgid "Updated at {{date}}"
-msgstr ""
+msgstr "Päivitetty {{date}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:129
 #: scripts/apps/authoring/versioning/history/views/history.html:18
@@ -17754,7 +17754,7 @@ msgstr "Päivitetty {{ datetime }}"
 #: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:99
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:105
 msgid "Updated {{ datetime }} by"
-msgstr ""
+msgstr "Päivittänyt {{ datetime }} käyttäjä"
 
 #: scripts/apps/contacts/components/ContactFooter.tsx:20
 msgid "Updated:"
@@ -18389,7 +18389,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/NoCoverage.tsx:15
 msgid "Without Coverage"
-msgstr ""
+msgstr "Ei sisältöjä"
 
 #: scripts/apps/archive/views/metadata-view.html:17
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:293
@@ -18427,7 +18427,7 @@ msgstr "Työnkulun tilat"
 #: scripts/apps/desks/views/desk-config-modal.html:358
 #: scripts/apps/workspace/content/constants.ts:56
 msgid "Working Stage"
-msgstr "Työnkulun vaihe"
+msgstr "Työn alla"
 
 #: scripts/apps/archive/index.tsx:90 scripts/apps/dashboard/index.ts:53
 #: scripts/apps/dashboard/views/workspace.html:24
@@ -18794,7 +18794,7 @@ msgstr ""
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:64
 #: scripts/apps/authoring/authoring/directives/CharacterCount.ts:13
 msgid "characters"
-msgstr "merkit"
+msgstr "merkkiä"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:584
 msgid "city"
@@ -18802,7 +18802,7 @@ msgstr "kaupunki"
 
 #: scripts/core/ui/components/virtual-lists/select.tsx:178
 msgid "clear"
-msgstr ""
+msgstr "tyhjennä"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:48
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:116
@@ -18831,7 +18831,7 @@ msgstr "kommentit"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "compact"
-msgstr ""
+msgstr "tiivis"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:270
@@ -19583,8 +19583,8 @@ msgstr "arkipäivinä"
 #: scripts/apps/authoring/authoring/components/text-statistics.tsx:22
 msgid "one word"
 msgid_plural "{{x}} words"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "yksi sana"
+msgstr[1] "{{x}} sanaa"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:32
 msgid "open in a new window"
@@ -19896,13 +19896,13 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "stage"
-msgstr ""
+msgstr "vaihe"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:10
 #: scripts/apps/authoring/versioning/versions/views/versions.html:14
 #: scripts/core/itemList/views/relatedItem-list-widget.html:39
 msgid "stage:"
-msgstr ""
+msgstr "vaihe:"
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:19
 msgid "state, region, ..."
@@ -20175,7 +20175,7 @@ msgstr "viikkoa"
 
 #: scripts/api/article-fetch.tsx:136
 msgid "width"
-msgstr ""
+msgstr "leveys"
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:110
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:95
@@ -20308,7 +20308,7 @@ msgstr "{{action}} {{type}}"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:371
 msgid "{{count}} articles have been descheduled"
-msgstr ""
+msgstr "{{count}} artikkelia on poistettu ajastuksesta"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:224
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:287
@@ -20460,8 +20460,8 @@ msgstr "{{width}} * {{height}}"
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:55
 msgid "{{wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{{wordsCount}} sana"
+msgstr[1] "{{ $count}} sanaa"
 
 #: scripts/extensions/datetimeField/dist/src/editor.js:77
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:75
