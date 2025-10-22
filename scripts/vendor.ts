@@ -15,7 +15,6 @@ import 'angular-contenteditable';
 import 'angular-vs-repeat';
 import 'angular-moment';
 import 'ng-file-upload';
-import 'raven-js';
 import 'rangy';
 import 'rangy-saverestore';
 import 'ment.io';
