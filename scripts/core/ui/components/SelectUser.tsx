@@ -63,10 +63,10 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 search={(users, _query) => users.filter((user) => {
                     const query = _query.toLocaleLowerCase();
 
-                    return user.display_name.toLocaleLowerCase().includes(query)
-                        || user.username.toLocaleLowerCase().includes(query)
-                        || user.sign_off.toLocaleLowerCase().includes(query)
-                        || user.email.toLocaleLowerCase().includes(query);
+                    return user.display_name?.toLocaleLowerCase().includes(query)
+                        || user.username?.toLocaleLowerCase().includes(query)
+                        || user.sign_off?.toLocaleLowerCase().includes(query)
+                        || user.email?.toLocaleLowerCase().includes(query);
                 })}
                 getId={(user) => user._id}
                 optionTemplate={(user) => (
