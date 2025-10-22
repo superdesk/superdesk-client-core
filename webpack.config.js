@@ -318,11 +318,6 @@ function getDefaults(grunt) {
         // application version
         version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')).version,
 
-        // raven settings
-        raven: {
-            dsn: process.env.SUPERDESK_RAVEN_DSN || '',
-        },
-
         // backend server URLs configuration
         server: {
             url: grunt.option('server') || process.env.SUPERDESK_URL || 'http://localhost:5000/api',
