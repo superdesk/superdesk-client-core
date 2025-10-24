@@ -170,7 +170,7 @@ export function getContentProfileFormConfig(
     if (
         field?.id != null
         && (
-            schema[field.id].type === 'string'
+            schema?.[field.id]?.type === 'string'
             || customField?.field_type === 'text'
         )
     ) {
@@ -237,7 +237,7 @@ export function getContentProfileFormConfig(
         fields.push(showInPreviewField);
     }
 
-    if (field?.id != null && schema[field.id]?.type === 'string') {
+    if (field?.id != null && schema?.[field.id]?.type === 'string') {
         const cleanPastedHtmlField: IContentProfileFormField = {
             label: gettext('Clean Pasted HTML'),
             type: GenericFormFieldType.checkbox,
@@ -295,7 +295,7 @@ export function getContentProfileFormConfig(
         fields.push(formattingOptionsEditor3Field);
     }
 
-    if (field?.id != null && field.id === 'feature_media' && schema[field.id].type === 'media') {
+    if (field?.id != null && field.id === 'feature_media' && schema?.[field.id]?.type === 'media') {
         const showCropsField: IContentProfileFormField = {
             label: gettext('Show Crops'),
             type: GenericFormFieldType.checkbox,
@@ -309,7 +309,7 @@ export function getContentProfileFormConfig(
     if (
         field?.id != null
         && (
-            schema[field.id].type === 'media'
+            schema?.[field.id]?.type === 'media'
             || (
                 hasFormattingOptions(field.id, editor, customFields)
                 && field.formatOptions?.includes('media') === true
