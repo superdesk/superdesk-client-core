@@ -69,7 +69,7 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: ${{ failure() }}
       with:
         name: playwright-report-${{ matrix.node-version }}-${{ matrix.suite }}
@@ -95,7 +95,7 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: screenshots-e2e-node-${{ matrix.node-version }}-${{ matrix.suite }}
         path: /tmp/*.png
