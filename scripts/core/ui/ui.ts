@@ -409,65 +409,78 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             });
 
             scope.$watch('open', (value) => {
-                if (value) {
-                    // Use native setTimeout (no Angular digest required here) to wait
-                    // for the popup DOM to be attached and rendered before measuring.
-                    // We also re-run the positioning on the next frame and after a small
-                    const MARGIN = 8;
-                    const RECHECK_DELAY = 50;
-
-                    const positionOnce = () => {
-                        const popupEl = $popupWrapper && $popupWrapper[0];
-
-                        if (!popupEl) return;
-
-                        // Get position of the active input element
-                        const rect = element[0].getBoundingClientRect();
-
-                        // Measure popup size (use defaults if not available)
-                        const popupHeight = popupEl.offsetHeight || 320;
-                        const popupWidth = popupEl.offsetWidth || 280;
-                        const tolerance = 10;
-
-                        const viewportHeight = window.innerHeight;
-                        const viewportWidth = window.innerWidth;
-                        const scrollX = window.scrollX || window.pageXOffset;
-                        const scrollY = window.scrollY || window.pageYOffset;
-
-                        // Prefer opening below, leave a small margin so input remains visible.
-                        let top = rect.bottom + scrollY + MARGIN;
-                        let left = rect.left + scrollX;
-
-                        // If not enough space below, open upward (keep margin so input is not overlapped)
-                        if (rect.bottom + popupHeight + tolerance > viewportHeight) {
-                            top = rect.top + scrollY - popupHeight - MARGIN;
-                        }
-
-                        // Prevent overflow on right
-                        if (rect.left + popupWidth + tolerance > viewportWidth) {
-                            left = viewportWidth - popupWidth - tolerance + scrollX;
-                        }
-
-                        // Prevent overflow on left
-                        if (left < tolerance + scrollX) {
-                            left = tolerance + scrollX;
-                        }
-
-                        Object.assign(popupEl.style, {
-                            top: `${Math.round(top)}px`,
-                            left: `${Math.round(left)}px`,
-                            position: 'absolute',
-                            zIndex: '2000',
-                        });
-                    };
-
-                    setTimeout(() => {
-                        positionOnce();
-                        requestAnimationFrame(positionOnce);
-                        setTimeout(positionOnce, RECHECK_DELAY);
-                        scope.$broadcast('datepicker.focus');
-                    }, 0);
+                if (!value) {
+                    return;
                 }
+
+                // Wait one tick for the popup DOM to be inserted, then position before next repaint.
+                // We also re-run positioning after a short delay to account for CSS/layout updates
+                // (fonts, async rendering of buttons, etc).
+                const RECHECK_DELAY = 50;
+                const TOLERANCE = 10;
+
+                // Use arrow fn to avoid function declaration inside block and ES5 strict-mode issues.
+                const positionPopup = () => {
+                    const popupEl = $popupWrapper && $popupWrapper[0];
+
+                    if (!popupEl) {
+                        // Popup may not be attached yet — re-check via scheduled calls below.
+                        return;
+                    }
+
+                    // Get position of the active input element
+                    const rect = element[0].getBoundingClientRect();
+
+                    // Measure popup size (use sensible defaults if not available)
+                    const popupHeight = popupEl.offsetHeight || 320;
+                    const popupWidth = popupEl.offsetWidth || 280;
+
+                    const viewportHeight = window.innerHeight;
+                    const viewportWidth = window.innerWidth;
+                    const scrollX = window.scrollX || window.pageXOffset;
+                    const scrollY = window.scrollY || window.pageYOffset;
+
+                    // Dynamic gap based on input height so popup doesn't cover the input.
+                    const inputHeight = rect.height || (element.outerHeight && element.outerHeight()) || 32;
+                    const GAP = Math.max(8, Math.round(inputHeight));
+
+                    // Prefer opening below the input, reserving GAP px so input remains visible.
+                    let top = rect.bottom + scrollY + GAP;
+                    let left = rect.left + scrollX;
+
+                    // If there isn't enough space below the input, position the popup above the input.
+                    if (rect.bottom + popupHeight + TOLERANCE > viewportHeight && rect.top >= popupHeight + GAP + TOLERANCE) {
+                        top = rect.top + scrollY - popupHeight - GAP;
+                    } else if (rect.bottom + popupHeight + TOLERANCE > viewportHeight) {
+                        // Neither side fits fully: clamp into viewport and prefer below.
+                        top = Math.min(Math.max(scrollY + TOLERANCE, rect.bottom + scrollY + GAP), scrollY + viewportHeight - popupHeight - TOLERANCE);
+                    }
+
+                    // Prevent overflow on right
+                    if (rect.left + popupWidth + TOLERANCE > viewportWidth) {
+                        left = Math.max(TOLERANCE + scrollX, scrollX + viewportWidth - popupWidth - TOLERANCE);
+                    }
+
+                    // Prevent overflow on left
+                    if (left < TOLERANCE + scrollX) {
+                        left = TOLERANCE + scrollX;
+                    }
+
+                    Object.assign(popupEl.style, {
+                        top: `${top}px`,
+                        left: `${left}px`,
+                        position: 'absolute',
+                        zIndex: '2000',
+                    });
+                };
+
+                setTimeout(() => {
+                    // Schedule positioning before the next repaint and re-check after a short delay.
+                    // requestAnimationFrame runs positionPopup immediately before the next paint.
+                    requestAnimationFrame(positionPopup);
+                    setTimeout(positionPopup, RECHECK_DELAY);
+                    scope.$broadcast('datepicker.focus');
+                }, 0);
             });
 
             scope.keydown = function(evt) {
