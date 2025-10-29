@@ -1324,7 +1324,6 @@ export default angular.module('superdesk.core.ui', [
             [
                 'value',
                 'onChange',
-                'dateFormat',
                 'filterId',
                 'label',
                 'extraId',

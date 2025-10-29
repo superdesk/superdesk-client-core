@@ -157,7 +157,6 @@
                     <div class="form__row-item" sd-date-param data-location="{{dateFilter.fieldname}}from">
                         <sd-datepicker-react
                             value="date"
-                            date-format="'YYYY/MM/DD'"
                             label="dateFilter.labelFrom"
                             extra-id="'from'"
                             filter-id="dateFilter.fieldname"
@@ -166,9 +165,8 @@
                     </div>
                     <div class="form__row-item" sd-date-param data-location="{{dateFilter.fieldname}}to">
                         <sd-datepicker-react
-                            date-format="'YYYY/MM/DD'"
-                            label="dateFilter.labelTo"
                             value="date"
+                            label="dateFilter.labelTo"
                             extra-id="'to'"
                             filter-id="dateFilter.fieldname"
                             on-change="togglePredefinedDateFilter"
