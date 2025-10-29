@@ -1,5 +1,5 @@
 <div class="preview-layout" ng-class="{closed: !selected.preview && !selected.fetch}" ng-init="extras={view: view, activity: {type: spike ? 'spike' : type, action: 'list'}, api: api}">
-    <div class="list-pane {{ view || 'mgrid' }}-view">
+    <div class="list-pane {{ view || 'photogrid' }}-view">
         <div id="content-list" class="content">
             <div class="loading-indicator" ng-show="loading" translate>loading</div>
             <div class="search-tags" ng-class="{'refresh': showRefresh}" sd-search-tags></div>

@@ -1,3 +1,4 @@
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 import {gettext} from 'core/utils';
 
 /**
@@ -35,17 +36,17 @@ export class ContentAPIController {
         this.$scope.preview = this.preview.bind(this);
         this.preferencesUpdate = {
             'archive:view': {
-                allowed: ['mgrid', 'compact'],
+                allowed: [GRID_VIEW, COMPACT_LIST_VIEW],
                 category: 'archive',
-                view: 'mgrid',
-                default: 'mgrid',
+                view: GRID_VIEW,
+                default: GRID_VIEW,
                 label: 'Users archive view format',
                 type: 'string',
             },
         };
 
         preferencesService.get('archive:view').then((result) => {
-            this.$scope.view = result.view ? result.view : 'mgrid';
+            this.$scope.view = result.view ? result.view : GRID_VIEW;
         });
     }
 
@@ -55,7 +56,7 @@ export class ContentAPIController {
      * @description Sets the view to be List or Grid
      */
     setView(view) {
-        this.$scope.view = view || 'mgrid';
+        this.$scope.view = view || GRID_VIEW;
         this.preferencesUpdate['archive:view'].view = this.$scope.view;
         this.preferencesService.update(this.preferencesUpdate, 'archive:view');
     }

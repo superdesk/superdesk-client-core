@@ -25,7 +25,6 @@ export function UserPreferencesDirective(
 ) {
     // human readable labels for server values
     const LABELS = {
-        mgrid: gettext('Grid View'),
         compact: gettext('List View'),
         photogrid: gettext('Photo Grid View'),
         list: gettext('List View'),
@@ -33,7 +32,6 @@ export function UserPreferencesDirective(
     };
 
     const ICONS = {
-        mgrid: 'grid-view',
         compact: 'list-view',
         photogrid: 'grid-view',
         list: 'list-view',

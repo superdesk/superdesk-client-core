@@ -1,3 +1,4 @@
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 
 describe('Preferences Service', () => {
     beforeEach(window.module('superdesk.core.preferences'));
@@ -7,15 +8,15 @@ describe('Preferences Service', () => {
             active_privileges: {privilege1: 1, privilege2: 0},
             user_preferences: {
                 'archive:view': {
-                    default: 'mgrid',
+                    default: GRID_VIEW,
                     label: 'Users archive view format',
                     type: 'string',
                     category: 'archive',
                     allowed: [
-                        'mgrid',
-                        'compact',
+                        GRID_VIEW,
+                        COMPACT_LIST_VIEW,
                     ],
-                    view: 'mgrid',
+                    view: GRID_VIEW,
                 },
                 'feature:preview': {
                     default: false,
@@ -74,7 +75,7 @@ describe('Preferences Service', () => {
 
         preferencesService.get().then((preferences) => {
             expect(preferences).not.toBe(null);
-            expect(preferences['archive:view'].view).toBe('mgrid');
+            expect(preferences['archive:view'].view).toBe(GRID_VIEW);
             expect(api.find).toHaveBeenCalledWith('preferences', 1, null, true);
 
             done();
@@ -89,7 +90,7 @@ describe('Preferences Service', () => {
 
 
         preferencesService.get('archive:view').then((preferences) => {
-            expect(preferences.view).toBe('mgrid');
+            expect(preferences.view).toBe(GRID_VIEW);
 
             done();
         });

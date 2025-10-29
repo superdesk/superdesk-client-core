@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {Item} from 'apps/contacts/components';
 import {gettext} from 'core/utils';
 import {IContact} from 'superdesk-api';
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 
 interface IProps {
     svc: {
@@ -169,9 +170,9 @@ export class ItemList extends React.Component<IProps, IState> {
         const isEmpty = !this.state.itemsList.length;
 
         const cssClass = classNames(
-            this.state.view === 'photogrid' ?
+            this.state.view === GRID_VIEW ?
                 'sd-grid-list sd-grid-list--large sd-grid-list--small-margin' :
-                (this.state.view || 'compact') + '-view list-view',
+                (this.state.view || COMPACT_LIST_VIEW) + '-view list-view',
             {'list-without-items': isEmpty},
         );
 

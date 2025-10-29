@@ -22,7 +22,7 @@ interface IProps {
     itemsById: any;
     relatedEntities: IRelatedEntities;
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable' | 'swimlane';
+    view: 'compact' | 'photogrid' | 'compact-configurable' | 'swimlane';
     selected: string;
     swimlane: any;
     profilesById: any;
@@ -495,7 +495,6 @@ export class ItemList extends React.Component<IProps, IState> {
             compact: 'compact-view list-view',
             'compact-configurable': 'compact-view list-view',
             swimlane: 'list-view',
-            mgrid: 'mgrid-view list-view',
             photogrid: 'sd-grid-list sd-grid-list--no-margin',
         };
 
