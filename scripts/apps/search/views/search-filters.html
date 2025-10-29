@@ -145,9 +145,9 @@
         <form class="date-filter">
             <div class="predefined-dates">
                 <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
-                        ng-click="togglePredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)" 
+                        ng-click="togglePredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)"
                         class="toggle-button"
-                        title="{{predefinedFilter.label}}" 
+                        title="{{predefinedFilter.label}}"
                         ng-class="{'toggle-button--active': hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key), 'toggle-button--active': hasPredefinedDateFilter(dateFilter.fieldname, predefinedFilter.key)}"
                         id="filter-{{dateFilter.fieldname}}-{{predefinedFilter.key}}">{{predefinedFilter.label}}</button>
             </div>
@@ -155,12 +155,25 @@
             <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
                 <div class="form__row form__row--no-padding form__row--flex">
                     <div class="form__row-item" sd-date-param data-location="{{dateFilter.fieldname}}from">
-                        <label class="form-label">{{dateFilter.labelFrom}}</label>
-                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="date"></div>
+                        <sd-datepicker-react
+                            value="date"
+                            date-format="'YYYY/MM/DD'"
+                            label="dateFilter.labelFrom"
+                            extra-id="'from'"
+                            filter-id="dateFilter.fieldname"
+                            on-change="togglePredefinedDateFilter"
+                        ></sd-datepicker-react>
                     </div>
                     <div class="form__row-item" sd-date-param data-location="{{dateFilter.fieldname}}to">
-                        <label class="form-label">{{dateFilter.labelTo}}</label>
-                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="date"></div>
+                        <sd-datepicker-react
+                            date-format="'YYYY/MM/DD'"
+                            label="dateFilter.labelTo"
+                            value="date"
+                            extra-id="'to'"
+                            filter-id="dateFilter.fieldname"
+                            on-change="togglePredefinedDateFilter"
+                        >
+                        </sd-datepicker-react>
                     </div>
                 </div>
             </fieldset>
