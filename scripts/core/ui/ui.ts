@@ -14,6 +14,7 @@ import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 import {FormattingOptionsTreeSelect} from 'apps/workspace/content/views/FormattingOptionsMultiSelect';
 import {IS_WIDGET_PINNED, SIDE_WIDGET_WIDTH} from 'apps/authoring/widgets/widgets';
+import {ReactDatePickerBridged} from './DatePickerBridged';
 
 /**
  * Gives top shadow for scroll elements
@@ -1314,6 +1315,21 @@ export default angular.module('superdesk.core.ui', [
             FormattingOptionsTreeSelect,
             ['value', 'onChange', 'options'],
         ),
+    )
+
+    .component(
+        'sdDatepickerReact',
+        reactToAngular1(
+            ReactDatePickerBridged,
+            [
+                'value',
+                'onChange',
+                'filterId',
+                'label',
+                'extraId',
+            ],
+        ),
+        [],
     )
 
     .component('sdSpinner',
