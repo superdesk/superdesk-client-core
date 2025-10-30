@@ -95,6 +95,7 @@ module.exports = function makeConfig(grunt) {
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
                 'shallow-equal': 'shallow-equal/dist/index',
+                '@uswriting/exiftool/cjs': require.resolve('@uswriting/exiftool/cjs'),
 
                 /**
                  * Ensure that react is loaded only once.
@@ -229,11 +230,6 @@ function getDefaults(grunt) {
     return {
         // application version
         version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')).version,
-
-        // raven settings
-        raven: {
-            dsn: process.env.SUPERDESK_RAVEN_DSN || '',
-        },
 
         // backend server URLs configuration
         server: {
