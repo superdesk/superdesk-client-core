@@ -1,12 +1,13 @@
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 import _ from 'lodash';
 
 LegalArchiveController.$inject = ['$scope', '$location', 'legal', 'preferencesService'];
 export function LegalArchiveController($scope, $location, legal, preferencesService) {
     var viewUpdate = {'archive:view': {
-        allowed: ['mgrid', 'compact'],
+        allowed: [GRID_VIEW, COMPACT_LIST_VIEW],
         category: 'archive',
-        view: 'mgrid',
-        default: 'mgrid',
+        view: GRID_VIEW,
+        default: GRID_VIEW,
         label: 'Users archive view format',
         type: 'string'}};
 
@@ -57,8 +58,8 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
      * Sets the item view to either grid or compact. Also, saves the same in loggedInUser's preference.
      */
     $scope.setview = function(view) {
-        $scope.view = view || 'mgrid';
-        viewUpdate['archive:view'].view = view || 'mgrid';
+        $scope.view = view || GRID_VIEW;
+        viewUpdate['archive:view'].view = view || GRID_VIEW;
         preferencesService.update(viewUpdate, 'archive:view');
     };
 
@@ -67,6 +68,6 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
     preferencesService.get('archive:view').then((result) => {
         var savedView = result.view;
 
-        $scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
+        $scope.view = !!savedView && savedView !== 'undefined' ? savedView : GRID_VIEW;
     });
 }

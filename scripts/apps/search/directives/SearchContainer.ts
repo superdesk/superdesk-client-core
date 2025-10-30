@@ -1,5 +1,6 @@
 import {isEmpty, omit} from 'lodash';
 import {gettext} from 'core/utils';
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 
 export function SearchContainer() {
     const FILTERS_PANEL_PREFERENCES_KEY = 'search:filters_panel_open';
@@ -26,10 +27,10 @@ export function SearchContainer() {
                         if (activeProvider.config?.default_list_view) {
                             switch (activeProvider.config.default_list_view) {
                                 case 'list':
-                                    $scope.view = 'compact';
+                                    $scope.view = COMPACT_LIST_VIEW;
                                     break;
                                 case 'grid':
-                                    $scope.view = 'photogrid';
+                                    $scope.view = GRID_VIEW;
                                     break;
                             }
                         }

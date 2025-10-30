@@ -19,6 +19,7 @@ import {addWebsocketEventListener} from 'core/notification/notification';
 import {throttleAndCombineArray} from 'core/itemList/throttleAndCombine';
 import {isCheckAllowed} from '../helpers';
 import {SmoothLoader} from './SmoothLoader';
+import {COMPACT_LIST_VIEW} from 'apps/archive/utils';
 
 interface IProps {
     scope: any;
@@ -27,7 +28,7 @@ interface IProps {
 
 interface IState {
     narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid' | 'compact-configurable';
+    view: 'compact' | 'photogrid' | 'compact-configurable';
     itemsList: Array<string>;
     itemsById: {[key: string]: IArticle};
     relatedEntities: IRelatedEntities;
@@ -52,7 +53,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             itemsById: {},
             relatedEntities: {},
             selected: null,
-            view: 'compact',
+            view: COMPACT_LIST_VIEW,
             narrow: false,
             swimlane: null,
             actioning: {},

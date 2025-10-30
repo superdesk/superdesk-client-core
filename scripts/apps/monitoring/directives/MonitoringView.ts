@@ -5,6 +5,7 @@ import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {getMonitoringViewOptions} from './utils';
+import {COMPACT_LIST_VIEW} from 'apps/archive/utils';
 
 const PAGE_SIZE = 50;
 
@@ -219,7 +220,7 @@ export function MonitoringView(
                 const appliedPreference = deskPreference ?? userPreference;
 
                 scope.switchView(
-                    availableViewIds.has(appliedPreference) ? appliedPreference : 'compact',
+                    availableViewIds.has(appliedPreference) ? appliedPreference : COMPACT_LIST_VIEW,
                     {programmatic: true},
                 );
             });

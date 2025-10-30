@@ -223,7 +223,7 @@ $sfbox_mediaMaxWidth : 172px;
     }
     .error-box {
         position: absolute;
-        inset-inline-start: 0; 
+        inset-inline-start: 0;
         inset-inline-end: 0;
         inset-block-start:0;
         inset-block-end: 0;
@@ -445,218 +445,9 @@ $sfbox_mediaMaxWidth : 172px;
     }
 }
 
-.mgrid-view {
-    .media-box {
-        .action {
-            display: none;
-            height:33px;
-            position: absolute;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            inset-block-end: 0;
-        }
-                &:hover .action {
-                    display: block;
-                }
-        @include media-box-generic;
-
-        &.contacts {
-            min-height: $sfbox_minHeight + 45; // 270px
-            min-width: $sfbox_minWidth * 2 + 73; // 425px
-
-            .media {
-                height: 25px;
-            }
-
-            dl {
-                dt:after {
-                    content : "";
-                }
-                dd {
-                    margin-inline-start: 6px;
-                    line-height:18px;
-                    &.dark {
-                        color:#444;
-                        font-weight:500;
-                    }
-                }
-            }
-
-            .media-info {
-                padding-inline-start: 0.5rem;
-                h5 {
-                    padding: 0rem 0.5rem 0;
-                }
-            }
-
-            .item-info {
-                .container {
-                    @include text-semibold();
-                    color: var(--color-text-light);
-                    margin-inline-end: 10px;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    &.link {
-                        color: var(--sd-colour-interactive);
-                        @include text-normal();
-                        text-overflow: ellipsis;
-                    }
-                }
-            }
-
-            .contact-footer {
-                border-block-start: 1px solid #e8e8e8;
-                margin-block-start: 25px;
-                margin-inline-start: -5px;
-                margin-inline-end: -5px;
-
-                &.padded {
-                    margin-block-start: 45px !important;
-                }
-
-                .update-info {
-                    position: absolute;
-                    inset-block-end: 0.6rem;
-                    padding-inline-start: 0.5rem;
-                }
-
-                .social-info {
-                    position: absolute;
-                    inset-block-end: 10px;
-                    inset-inline-end: 0px;
-                    margin-inline-end: 20px;
-                    span {
-                        padding-inline-start: 10px;
-                    }
-                }
-            }
-
-            .link {
-                color: $sd-blue-text;
-                @include text-normal();
-                font-size: small;
-            }
-
-            .notes {
-                display: flex;
-                background: none;
-            }
-
-            .item-notes {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin: 0 5px 0 5px;
-                max-width: 380px;
-                display: flex;
-            }
-        }
-
-        &.locked {
-            border-bottom-color: #e51c23 !important;
-        }
-
-        &.gone {
-            opacity: 0.5;
-        }
-
-        &.actioning {
-            @include actioning();
-        }
-
-        .highlights-title {
-            position: absolute;
-            inset-block-start: -2px;
-            inset-inline-start: 0;
-            display: block;
-        }
-
-        /* control buttons on the bottom */
-        .item-functions {
-            background: #fff;
-            position: absolute;
-            height: 32px;
-            border-block-start: 1px solid rgba(0,0,0,0.1);
-                        font-size: 0;
-            inset-block-end: 0;
-            inset-inline-start: 0;
-            inset-inline-end: 0;
-            .item-field {
-                width: 31px;
-                height: 32px;
-                border-inline-start: 0;
-                border-inline-end: 1px solid #f0f0f0;
-                @include box-sizing(border-box);
-                padding: 0;
-                a {
-                    display: inline-block;
-                    width: 100%;
-                    height: 32px;
-                    line-height: 32px;
-                    vertical-align: middle;
-                    text-align: center;
-                    .actioning {
-                        background-image: url("~images/loading-small.gif");
-                        background-repeat: no-repeat;
-                                                background-position: center;
-                        display: inline-block;
-                        width: 100%;
-                        height: 32px;
-                        line-height: 32px;
-                        vertical-align: middle;
-                        text-align: center;
-                    }
-                    i {
-                        vertical-align: middle;
-                    }
-                }
-                .more-activity-dropdown {
-                    li {
-                        border-inline-end: 0;
-                    }
-                }
-            }
-        }
-
-        .more-activity-toggle {
-            background: none;
-        }
-        .media-box__footer {
-            margin: 6px 0;
-            position: relative;
-            display: flex;
-            align-content: center;
-            .type-icon {
-                height:16px;
-                margin-inline-end: 6px;
-                flex-grow: 0;
-            }
-            .badge {
-                margin-inline-end: 6px;
-            }
-            .item-right {
-                inset-block-start: -2px;
-                height: 22px;
-                width: 32px;
-            }
-        }
-    }
-}
-
 .fetched-desk-tooltip {
     border:0;
     background: transparent;
-}
-
-.mgrid-view {
-    padding-block-end: 80px;
-    .draggable-item {
-        float: inline-start;
-    }
-
-    .list-item-view {
-        float: inline-start;
-    }
 }
 
 #last-item {
@@ -1142,14 +933,6 @@ $rightfield-width:60px;
     }
 }
 
-.mgrid-view {
-    .active:not(.selected) {
-        .media-box {
-            //border-color: #787878;
-            @include box-shadow-both(0 0px 6px 1px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.12));
-        }
-    }
-}
 .mlist-view, .compact-view.list-view  {
     .active:not(.selected) {
         .media-box {
