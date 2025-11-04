@@ -1,5 +1,6 @@
 import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 import {gettext} from 'core/utils';
+import {getViewPreference} from 'apps/archive/services/viewPreferences';
 
 /**
  * @ngdoc controller
@@ -45,8 +46,8 @@ export class ContentAPIController {
             },
         };
 
-        preferencesService.get('archive:view').then((result) => {
-            this.$scope.view = result.view ? result.view : GRID_VIEW;
+        getViewPreference(preferencesService).then((view) => {
+            this.$scope.view = view;
         });
     }
 

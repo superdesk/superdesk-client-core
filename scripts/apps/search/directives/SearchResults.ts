@@ -4,6 +4,7 @@ import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
 import {IPackagesService} from 'types/Services/Packages';
 import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
+import {getViewPreference} from 'apps/archive/services/viewPreferences';
 
 SearchResults.$inject = [
     '$location',
@@ -57,7 +58,7 @@ export function SearchResults(
     notify,
     $q,
 ) { // uff - should it use injector instead?
-    var preferencesUpdate = {
+    let preferencesUpdate = {
         'archive:view': {
             allowed: [
                 GRID_VIEW,
@@ -65,7 +66,7 @@ export function SearchResults(
             ],
             category: 'archive',
             view: GRID_VIEW,
-            default: GRID_VIEW,
+            default: COMPACT_LIST_VIEW,
             label: 'Users archive view format',
             type: 'string',
         },
@@ -549,11 +550,11 @@ export function SearchResults(
 
             scope.setview = setView;
 
-            var savedView;
+            let savedView;
 
-            preferencesService.get('archive:view').then((result) => {
-                savedView = result.view;
-                scope.view = !!savedView && savedView !== 'undefined' ? savedView : GRID_VIEW;
+            getViewPreference(preferencesService).then((view) => {
+                savedView = view;
+                scope.view = savedView;
             });
 
             scope.$on('key:v', toggleView);
