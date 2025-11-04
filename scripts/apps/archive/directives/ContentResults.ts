@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {IPackagesService} from 'types/Services/Packages';
 import {GRID_VIEW, COMPACT_LIST_VIEW} from '../utils';
+import {getViewPreference} from '../services/viewPreferences';
 
 ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags', 'asset', 'search'];
 
@@ -55,9 +56,9 @@ export function ContentResults($location, preferencesService, packages: IPackage
 
             var savedView;
 
-            preferencesService.get('archive:view').then((result) => {
-                savedView = result.view;
-                scope.view = !!savedView && savedView !== 'undefined' ? savedView : GRID_VIEW;
+            getViewPreference(preferencesService).then((view) => {
+                savedView = view;
+                scope.view = savedView;
             });
 
             scope.$on('key:v', toggleView);

@@ -1,4 +1,5 @@
 import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
+import {getViewPreference} from 'apps/archive/services/viewPreferences';
 import _ from 'lodash';
 
 LegalArchiveController.$inject = ['$scope', '$location', 'legal', 'preferencesService'];
@@ -65,9 +66,7 @@ export function LegalArchiveController($scope, $location, legal, preferencesServ
 
     $scope.search();
 
-    preferencesService.get('archive:view').then((result) => {
-        var savedView = result.view;
-
-        $scope.view = !!savedView && savedView !== 'undefined' ? savedView : GRID_VIEW;
+    getViewPreference(preferencesService).then((view) => {
+        $scope.view = view;
     });
 }
