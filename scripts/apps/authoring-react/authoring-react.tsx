@@ -52,7 +52,7 @@ import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-edi
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';

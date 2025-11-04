@@ -42,7 +42,7 @@ import {
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {notify} from 'core/notify/notify';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
 
 function onClose() {

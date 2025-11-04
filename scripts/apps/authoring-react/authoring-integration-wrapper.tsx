@@ -29,7 +29,7 @@ import {
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {ExportModal} from './toolbar/export-modal';
 import {TranslateModal} from './toolbar/translate-modal';
 import {HighlightsModal} from './toolbar/highlights-modal';

@@ -1,4 +1,4 @@
-import {IValidationResult} from '@superdesk/common';
+import {IValidationResult} from '@sourcefabric/common';
 import * as React from 'react';
 import {IShow} from '../../interfaces';
 

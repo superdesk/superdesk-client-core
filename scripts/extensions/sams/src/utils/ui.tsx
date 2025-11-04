@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {Provider} from 'react-redux';
 
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 
 // Types
 import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT, IAssetItem, RENDITION} from '../interfaces';

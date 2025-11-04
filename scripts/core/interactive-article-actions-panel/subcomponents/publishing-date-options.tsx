@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {fromServerDateFormat, gettext, toServerDateFormat} from 'core/utils';
+import {gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
@@ -8,6 +8,7 @@ import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';
 import {isValid} from 'date-fns';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';
+import {TZDate} from '@sourcefabric/date-fns-tz';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -15,18 +16,57 @@ export interface IPublishingDateOptions {
     timeZone: string | null;
 }
 
+function ignoreTimezone(
+    /**
+     * Server adds +0000 to embargo/publish_schedule no matter what timezone it is,
+     * so ignore that and treat it as local time for editing to avoid further conversion.
+     */
+    date: string,
+): TZDate {
+    return new TZDate(date.replace('+0000', ''));
+}
+
 export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublishingDateOptions {
+    const timeZone = items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null;
+
     return {
-        embargo: items.length === 1 && items[0].embargo != null
-            ? fromServerDateFormat(items[0].embargo, true) ?? null
-            : null,
-        publishSchedule: items.length === 1 && items[0].publish_schedule != null
-            ? fromServerDateFormat(items[0].publish_schedule, true) ?? null
-            : null,
-        timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
+        embargo: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const embargo = items[0]?.embargo;
+
+            if (embargo == null) {
+                return null;
+            }
+
+            return ignoreTimezone(embargo);
+        })(),
+        publishSchedule: (() => {
+            if (items.length != 1) {
+                return null;
+            }
+
+            const publishSchedule = items[0]?.publish_schedule;
+
+            if (publishSchedule == null) {
+                return null;
+            }
+
+            return ignoreTimezone(publishSchedule);
+        })(),
+        timeZone: timeZone,
     };
 }
 
+/**
+ * It's tricky with timezones here.
+ * UI widget to pick datetime doesn't support timezones,
+ * thus before displaying in the picker - we convert it to users' local time.
+ *
+ * In order to generate the patch - we need to convert it back to selected timezone.
+ */
 export function getPublishingDatePatch(item: IArticle, options: IPublishingDateOptions): Partial<IArticle> {
     const {
         embargo,
@@ -43,10 +83,10 @@ export function getPublishingDatePatch(item: IArticle, options: IPublishingDateO
     const nextOptions: Partial<IArticle> = {
         embargo: embargo == null
             ? null
-            : toServerDateFormat(embargo, timeZone),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(embargo)),
         publish_schedule: publishSchedule == null
             ? null
-            : toServerDateFormat(publishSchedule, timeZone),
+            : toIsoStringWithoutTimezoneOffset(new TZDate(publishSchedule)),
         schedule_settings: {
             ...item.schedule_settings,
             time_zone: timeZone,

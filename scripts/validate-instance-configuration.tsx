@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {gettext, gettextPlural} from 'core/utils';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {appConfig, authoringReactEnabledUserSelection, extensions} from 'appConfig';
 import {flatMap} from 'lodash';
 

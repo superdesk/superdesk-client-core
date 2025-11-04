@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {showErrorsModal} from 'core/services/modalService';
-import {showModal} from '@superdesk/common';
+import {showModal} from '@sourcefabric/common';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
