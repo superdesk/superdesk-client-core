@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import {IPackagesService} from 'types/Services/Packages';
+import {GRID_VIEW, COMPACT_LIST_VIEW} from '../utils';
+import {getViewPreference} from '../services/viewPreferences';
 
 ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags', 'asset', 'search'];
 
@@ -12,12 +14,12 @@ export function ContentResults($location, preferencesService, packages: IPackage
     var update = {
         'archive:view': {
             allowed: [
-                'mgrid',
-                'compact',
+                GRID_VIEW,
+                COMPACT_LIST_VIEW,
             ],
             category: 'archive',
-            view: 'mgrid',
-            default: 'mgrid',
+            view: GRID_VIEW,
+            default: GRID_VIEW,
             label: 'Users archive view format',
             type: 'string',
         },
@@ -27,10 +29,7 @@ export function ContentResults($location, preferencesService, packages: IPackage
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
         link: function(scope, elem, attr, controller) {
-            var GRID_VIEW = 'mgrid',
-                LIST_VIEW = 'compact';
-
-            var multiSelectable = attr.multiSelectable !== undefined;
+            const multiSelectable = attr.multiSelectable !== undefined;
 
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};
@@ -57,21 +56,21 @@ export function ContentResults($location, preferencesService, packages: IPackage
 
             var savedView;
 
-            preferencesService.get('archive:view').then((result) => {
-                savedView = result.view;
-                scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
+            getViewPreference(preferencesService).then((view) => {
+                savedView = view;
+                scope.view = savedView;
             });
 
             scope.$on('key:v', toggleView);
 
             function setView(view) {
-                scope.view = view || 'mgrid';
-                update['archive:view'].view = view || 'mgrid';
+                scope.view = view ?? GRID_VIEW;
+                update['archive:view'].view = view ?? GRID_VIEW;
                 preferencesService.update(update, 'archive:view');
             }
 
             function toggleView() {
-                var nextView = scope.view === LIST_VIEW ? GRID_VIEW : LIST_VIEW;
+                var nextView = scope.view === COMPACT_LIST_VIEW ? GRID_VIEW : COMPACT_LIST_VIEW;
 
                 return setView(nextView);
             }

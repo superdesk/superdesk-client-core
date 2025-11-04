@@ -1,7 +1,7 @@
 <div class="preview-layout" ng-class="{closed: !selected.preview && !selected.fetch}"  sd-media-query min-width="700" element-class="narrowList" ng-init="extras={view: view, activity: {type: spike ? 'spike' : type, action: 'list'}, api: api}">
-    <div class="list-pane {{ view || 'mgrid' }}-view">
+    <div class="list-pane {{ view || 'photogrid' }}-view">
         <div id="content-list" class="content search-content">
-            
+
             <div class="search-content__main">
                 <div class="loading-indicator" ng-show="autorefreshContent ? loading : manualRefreshInProgress" translate>loading</div>
                 <div ng-if="showtags || showRefresh" class="search-tags" ng-class="{'refresh': showRefresh}" sd-search-tags></div>

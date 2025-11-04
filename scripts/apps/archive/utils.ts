@@ -20,3 +20,5 @@ export const isIngested = (item: IArticle) =>
  */
 export const isKilled = (item: IArticle) => KILLED_STATES.includes(item.state);
 
+export const GRID_VIEW = 'photogrid';
+export const COMPACT_LIST_VIEW = 'compact';
