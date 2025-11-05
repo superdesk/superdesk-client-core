@@ -95,6 +95,7 @@ function applyTranslations(translations) {
 export function loadTranslations(language: string) {
     if (language === 'en') {
         applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+        return;
     }
 
     const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
