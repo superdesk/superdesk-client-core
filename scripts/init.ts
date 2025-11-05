@@ -8,7 +8,7 @@ import {IDENTITY_KEY} from 'appConfig';
 import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
 
-function fetchSync(url: string, callback: (responseText: string) => void): void {
+export function fetchSync(url: string, callback: (responseText: string) => void): void {
     const request = new XMLHttpRequest();
 
     request.addEventListener('load', function onLoad() {
@@ -60,16 +60,20 @@ const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 // SETTING UI LANGUAGE
 //
 
-const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
+export function getUserLanguage(): string {
+    const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
 
-const languageFromLocalStorage =
-    user?.language
-    ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
-    ?? appConfig.default_language
-    ?? window.navigator.language
-    ?? 'en';
+    const language =
+        user?.language
+        ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
+        ?? appConfig.default_language
+        ?? window.navigator.language
+        ?? 'en';
 
-const language = appConfig.profileLanguages?.includes(languageFromLocalStorage) ? languageFromLocalStorage : 'en';
+    return appConfig.profileLanguages?.includes(language) ? language : 'en';
+}
+
+const language = getUserLanguage();
 
 window['user-interface-language'] = language;
 
@@ -77,7 +81,6 @@ window['user-interface-language'] = language;
 // LOADING TRANSLATIONS
 //
 
-const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
 
 function applyTranslations(translations) {
     const langOverride = appConfig.langOverride ?? {};
@@ -89,10 +92,13 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
+export function loadTranslations(language: string) {
+    if (language === 'en') {
+        applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+    }
 
-if (language === 'en') {
-    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-} else {
+    const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
+
     fetchSync(translationsUrl, (responseText) => {
         const translations = JSON.parse(responseText);
 
@@ -106,4 +112,22 @@ if (language === 'en') {
 
         applyTranslations(translations);
     });
+}
+
+// Call this on module load, for login screen language setting
+loadTranslations(language);
+
+// Called after user session is loaded, so if user language has changed,
+// UI picks up the latest language from user session
+export function reloadLanguage(): Promise<void> {
+    const newLanguage = getUserLanguage();
+    const currentLanguage = window['user-interface-language'];
+
+    if (newLanguage === currentLanguage) {
+        return Promise.resolve();
+    }
+
+    window['user-interface-language'] = newLanguage;
+
+    loadTranslations(newLanguage);
 }
