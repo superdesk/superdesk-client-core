@@ -8,7 +8,7 @@ import {IDENTITY_KEY} from 'appConfig';
 import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
 
-export function fetchSync(url: string, callback: (responseText: string) => void): void {
+function fetchSync(url: string, callback: (responseText: string) => void): void {
     const request = new XMLHttpRequest();
 
     request.addEventListener('load', function onLoad() {
@@ -54,13 +54,13 @@ fetchSync(
     },
 );
 
-const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
+const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'] ?? _appConfig;
 
 //
 // SETTING UI LANGUAGE
 //
 
-export function getUserLanguage(): string {
+function getUserLanguage(): string {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
 
     const language =
@@ -81,7 +81,6 @@ window['user-interface-language'] = language;
 // LOADING TRANSLATIONS
 //
 
-
 function applyTranslations(translations) {
     const langOverride = appConfig.langOverride ?? {};
 
@@ -92,7 +91,7 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
-export function loadTranslations(language: string) {
+function loadTranslations(language: string) {
     if (language === 'en') {
         applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
         return;
@@ -117,18 +116,3 @@ export function loadTranslations(language: string) {
 
 // Call this on module load, for login screen language setting
 loadTranslations(language);
-
-// Called after user session is loaded, so if user language has changed,
-// UI picks up the latest language from user session
-export function reloadLanguage(): Promise<void> {
-    const newLanguage = getUserLanguage();
-    const currentLanguage = window['user-interface-language'];
-
-    if (newLanguage === currentLanguage) {
-        return Promise.resolve();
-    }
-
-    window['user-interface-language'] = newLanguage;
-
-    loadTranslations(newLanguage);
-}

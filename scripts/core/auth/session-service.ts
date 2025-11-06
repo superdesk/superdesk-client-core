@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {IDENTITY_KEY} from 'appConfig';
+import {reloadLanguage} from 'reload-language';
 
 /**
  * Session Service stores current user data
@@ -40,17 +41,20 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-     * Update identity
-     *
-     * @param {object} updates
-     * @returns {object} identity
-     */
+         * Update identity
+         *
+         * @param {object} updates
+         * @returns {object} identity
+         */
         this.updateIdentity = function(updates) {
             var identity = this.identity || {};
 
             _.extend(identity, updates);
             this.identity = _.omit(identity, IDENTITY_BLACKLIST);
             storage.setItem(IDENTITY_KEY, this.identity);
+
+            reloadLanguage();
+
             return this.identity;
         };
 

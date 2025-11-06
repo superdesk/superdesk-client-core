@@ -2,7 +2,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
-import {reloadLanguage} from 'init';
+import {reloadLanguage} from 'reload-language';
 
 export const SESSION_EVENTS = {
     LOGIN: 'login',
@@ -260,13 +260,14 @@ export default angular.module('superdesk.core.auth', [
             };
 
             // populate current user
-            $rootScope.$watch(function watchSessionIdentity() {
-                return session.identity;
-            }, () => {
-                reloadLanguage();
-                $rootScope.currentUser = session.identity;
-                $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
-            });
+            $rootScope.$watch(
+                () => session.identity,
+                () => {
+                    reloadLanguage();
+                    $rootScope.currentUser = session.identity;
+                    $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
+                },
+            );
 
             // set auth header
             $rootScope.$watch(function watchSessionToken() {
