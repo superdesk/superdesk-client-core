@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import moment from 'moment';
 import {connect} from 'react-redux';
 import {showPopup, PopupTypes} from '../../actions';
@@ -13,6 +13,7 @@ import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 import {gettext} from 'core/utils';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import {notify} from 'core/notify/notify';
+import {noop} from 'lodash';
 
 interface IAnnotationType {
     qcode: string;
@@ -58,49 +59,18 @@ const Annotation: React.FC<IAnnotationProps> = ({
     close,
     showPopup,
 }) => {
-    const hasNotified = useRef(false);
+    const {author, authorId, date, msg, annotationType} = annotation.data;
 
     useEffect(() => {
-        if (hasNotified.current) return;
-
-        const {annotationType} = annotation.data;
-
         if (!annotationTypes || annotationTypes.length === 0) {
             notify.warning(gettext('Annotation Types information is not available. ' +
                 'Please check your metadata configuration.'));
             console.warn('Annotation types not available or empty', {annotationType});
-            hasNotified.current = true;
-            return;
         }
+    }, []);
 
-        const foundType = annotationTypes.find((t) => t.qcode === annotationType);
-
-        if (!foundType) {
-            notify.warning(gettext('Annotation type "{{type}}" is not configured in the system metadata.',
-                {type: annotationType}));
-            console.warn('Annotation type not found in metadata', {
-                annotationType,
-                availableTypes: annotationTypes.map((t) => t.qcode),
-            });
-            hasNotified.current = true;
-        }
-    }, [annotationTypes, annotation.data]);
-
-    const {author, authorId, date, msg, annotationType} = annotation.data;
-    let type: string;
-
-    if (!annotationTypes || annotationTypes.length === 0) {
-        type = gettext('Unknown Type');
-    } else {
-        const foundType = annotationTypes.find((t) => t.qcode === annotationType);
-
-        if (foundType) {
-            type = foundType.name;
-        } else {
-            type = gettext('Unknown Type ({{qcode}})', {qcode: annotationType});
-        }
-    }
-
+    const foundType = annotationTypes.find((t) => t.qcode === annotationType);
+    const type = foundType?.name ?? gettext('Unknown Type ({{qcode}})', {qcode: annotationType});
     const relativeDateString = moment(date).calendar();
     const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
     const html = editor3StateToHtml(convertFromRaw(JSON.parse(msg)));
@@ -115,7 +85,7 @@ const Annotation: React.FC<IAnnotationProps> = ({
         .confirm(gettext('The annotation will be deleted. Are you sure?'))
         .then(() => {
             highlightsManager.removeHighlight(highlightId);
-        });
+        }).catch(noop);
 
     const availableActions = [
         {
@@ -170,7 +140,13 @@ const AnnotationWithDependenciesLoaded = connectPromiseResults<IPromiseResults>(
         .then(() => ng.get('metadata').values.annotation_types ?? []),
 }))(Annotation);
 
-export const AnnotationPopup = connect(
+interface IDispatchProps {
+    showPopup: (type: typeof PopupTypes.Annotation, data: {annotation: IAnnotation; highlightId: string}) => void;
+}
+
+type IConnectedProps = Omit<IAnnotationProps, keyof IDispatchProps | keyof IPromiseResults>;
+
+export const AnnotationPopup: React.ComponentType<IConnectedProps> = connect<{}, IDispatchProps, IConnectedProps>(
     () => ({}),
     {showPopup},
 )(AnnotationWithDependenciesLoaded);
