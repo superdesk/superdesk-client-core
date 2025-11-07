@@ -244,18 +244,17 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 if (canLogout) {
-                    api.auth.getById(session.sessionId).then((sessionData) => {
-                        api.auth
-                            .remove(sessionData)
-                            .finally(() => {
-                                $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
-                                localStorage.clear();
-
-                                localStorage.setItem('LOGGED_OUT_LANGUAGE', session.identity.language);
-
-                                $window.location.replace('/'); // reset page for new user
-                            });
-                    });
+                    api.auth.getById(session.sessionId)
+                        .then((sessionData) => {
+                            api.auth
+                                .remove(sessionData)
+                                .finally(() => {
+                                    $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+                                    localStorage.clear();
+                                    localStorage.setItem('LOGGED_OUT_LANGUAGE', session.identity.language);
+                                    $window.location.replace('/'); // reset page for new user
+                                });
+                        });
                 }
             };
 
@@ -263,22 +262,23 @@ export default angular.module('superdesk.core.auth', [
             $rootScope.$watch(
                 () => session.identity,
                 () => {
-                    reloadLanguage();
-                    $rootScope.currentUser = session.identity;
-                    $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
+                    reloadLanguage().then(() => {
+                        $rootScope.currentUser = session.identity;
+                        $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
+                    });
                 },
             );
 
             // set auth header
-            $rootScope.$watch(function watchSessionToken() {
-                return session.token;
-            }, (token) => {
-                if (token) {
-                    $http.defaults.headers.common.Authorization = token;
-                    $rootScope.sessionId = session.sessionId;
-                } else {
-                    delete $http.defaults.headers.common.Authorization;
-                    $rootScope.sessionId = null;
-                }
-            });
+            $rootScope.$watch(() => session.token,
+                (token) => {
+                    if (token) {
+                        $http.defaults.headers.common.Authorization = token;
+                        $rootScope.sessionId = session.sessionId;
+                    } else {
+                        delete $http.defaults.headers.common.Authorization;
+                        $rootScope.sessionId = null;
+                    }
+                },
+            );
         }]);

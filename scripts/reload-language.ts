@@ -30,16 +30,14 @@ function applyTranslations(translations) {
 function loadTranslations(language: string) {
     if (language === 'en') {
         applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-        return;
+        return Promise.resolve();
     }
 
     const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
 
-    fetch(translationsUrl)
+    return fetch(translationsUrl)
         .then((res) => res.json())
-        .then((responseText) => {
-            const translations = JSON.parse(responseText);
-
+        .then((translations) => {
             if (
                 translations[''] == null
                 || translations['']['language'] == null
@@ -49,7 +47,6 @@ function loadTranslations(language: string) {
             }
 
             applyTranslations(translations);
-            window.location.reload();
         });
 }
 
@@ -66,7 +63,5 @@ export function reloadLanguage(): Promise<void> {
 
     window['user-interface-language'] = newLanguage;
 
-    loadTranslations(newLanguage);
-
-    window.location.reload();
+    return loadTranslations(newLanguage);
 }

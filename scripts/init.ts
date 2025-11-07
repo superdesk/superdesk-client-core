@@ -54,7 +54,7 @@ fetchSync(
     },
 );
 
-const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'] ?? _appConfig;
+const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 
 //
 // SETTING UI LANGUAGE
@@ -91,12 +91,9 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
-function loadTranslations(language: string) {
-    if (language === 'en') {
-        applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
-        return;
-    }
-
+if (language === 'en') {
+    applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
+} else {
     const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
 
     fetchSync(translationsUrl, (responseText) => {
@@ -114,5 +111,3 @@ function loadTranslations(language: string) {
     });
 }
 
-// Call this on module load, for login screen language setting
-loadTranslations(language);
