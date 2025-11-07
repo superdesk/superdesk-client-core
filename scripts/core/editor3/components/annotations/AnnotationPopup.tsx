@@ -46,7 +46,7 @@ interface IAnnotationProps {
     showPopup: (type: typeof PopupTypes.Annotation, data: {annotation: IAnnotation; highlightId: string}) => void;
 }
 
-interface IPromiseResults {
+interface IPromiseAnnotationTypes {
     annotationTypes: Array<IAnnotationType>;
 }
 
@@ -135,7 +135,7 @@ const Annotation: React.FC<IAnnotationProps> = ({
     );
 };
 
-const AnnotationWithDependenciesLoaded = connectPromiseResults<IPromiseResults>(() => ({
+const AnnotationWithDependenciesLoaded = connectPromiseResults<IPromiseAnnotationTypes>(() => ({
     annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types ?? []),
 }))(Annotation);
@@ -144,7 +144,7 @@ interface IDispatchProps {
     showPopup: (type: typeof PopupTypes.Annotation, data: {annotation: IAnnotation; highlightId: string}) => void;
 }
 
-type IConnectedProps = Omit<IAnnotationProps, keyof IDispatchProps | keyof IPromiseResults>;
+type IConnectedProps = Omit<IAnnotationProps, keyof IDispatchProps | keyof IPromiseAnnotationTypes>;
 
 export const AnnotationPopup: React.ComponentType<IConnectedProps> = connect<{}, IDispatchProps, IConnectedProps>(
     () => ({}),
