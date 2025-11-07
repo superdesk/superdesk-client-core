@@ -2,7 +2,7 @@ import {IDENTITY_KEY, appConfig} from 'appConfig';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from 'core/utils';
 import {IUser} from 'superdesk-api';
 
-function getUserLanguage(): string {
+export function getUserLanguage(): string {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
 
     const language =
@@ -15,9 +15,8 @@ function getUserLanguage(): string {
     return appConfig.profileLanguages?.includes(language) ? language : 'en';
 }
 
-const language = getUserLanguage();
-
 function applyTranslations(translations) {
+    const language = getUserLanguage();
     const langOverride = appConfig.langOverride ?? {};
 
     if (langOverride[language] != null) {

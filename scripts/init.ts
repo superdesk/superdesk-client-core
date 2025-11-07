@@ -4,9 +4,9 @@
  */
 
 import {merge} from 'lodash';
-import {IDENTITY_KEY} from 'appConfig';
-import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
+import {getUserLanguage} from 'reload-language';
 
 function fetchSync(url: string, callback: (responseText: string) => void): void {
     const request = new XMLHttpRequest();
@@ -59,20 +59,6 @@ const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 //
 // SETTING UI LANGUAGE
 //
-
-function getUserLanguage(): string {
-    const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
-
-    const language =
-        user?.language
-        ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
-        ?? appConfig.default_language
-        ?? window.navigator.language
-        ?? 'en';
-
-    return appConfig.profileLanguages?.includes(language) ? language : 'en';
-}
-
 const language = getUserLanguage();
 
 window['user-interface-language'] = language;
