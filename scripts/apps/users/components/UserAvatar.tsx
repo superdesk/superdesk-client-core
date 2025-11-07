@@ -85,7 +85,7 @@ export class UserAvatar extends React.PureComponent<IProps> {
         return (
             <LazyOrNot {...this.props}>
                 <AvatarWrapper
-                    key={user._id}
+                    key={user?._id}
                     size={this.props.size}
                     administratorIndicator={
                         displayAdministratorIndicator && user.user_type === 'administrator'

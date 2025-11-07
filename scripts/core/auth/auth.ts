@@ -2,6 +2,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
+import {reloadLanguage} from 'reload-language';
 
 export const SESSION_EVENTS = {
     LOGIN: 'login',
@@ -243,39 +244,41 @@ export default angular.module('superdesk.core.auth', [
                 }
 
                 if (canLogout) {
-                    api.auth.getById(session.sessionId).then((sessionData) => {
-                        api.auth
-                            .remove(sessionData)
-                            .finally(() => {
-                                $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
-                                localStorage.clear();
-
-                                localStorage.setItem('LOGGED_OUT_LANGUAGE', session.identity.language);
-
-                                $window.location.replace('/'); // reset page for new user
-                            });
-                    });
+                    api.auth.getById(session.sessionId)
+                        .then((sessionData) => {
+                            api.auth
+                                .remove(sessionData)
+                                .finally(() => {
+                                    $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+                                    localStorage.clear();
+                                    localStorage.setItem('LOGGED_OUT_LANGUAGE', session.identity.language);
+                                    $window.location.replace('/'); // reset page for new user
+                                });
+                        });
                 }
             };
 
             // populate current user
-            $rootScope.$watch(function watchSessionIdentity() {
-                return session.identity;
-            }, (identity) => {
-                $rootScope.currentUser = session.identity;
-                $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
-            });
+            $rootScope.$watch(
+                () => session.identity,
+                () => {
+                    reloadLanguage().then(() => {
+                        $rootScope.currentUser = session.identity;
+                        $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
+                    });
+                },
+            );
 
             // set auth header
-            $rootScope.$watch(function watchSessionToken() {
-                return session.token;
-            }, (token) => {
-                if (token) {
-                    $http.defaults.headers.common.Authorization = token;
-                    $rootScope.sessionId = session.sessionId;
-                } else {
-                    delete $http.defaults.headers.common.Authorization;
-                    $rootScope.sessionId = null;
-                }
-            });
+            $rootScope.$watch(() => session.token,
+                (token) => {
+                    if (token) {
+                        $http.defaults.headers.common.Authorization = token;
+                        $rootScope.sessionId = session.sessionId;
+                    } else {
+                        delete $http.defaults.headers.common.Authorization;
+                        $rootScope.sessionId = null;
+                    }
+                },
+            );
         }]);
