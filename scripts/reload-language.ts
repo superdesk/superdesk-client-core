@@ -2,6 +2,8 @@ import {IDENTITY_KEY, appConfig} from 'appConfig';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from 'core/utils';
 import {IUser} from 'superdesk-api';
 
+const isTestEnvironment = typeof jasmine !== 'undefined';
+
 export function getUserLanguage(): string {
     const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
 
@@ -24,7 +26,10 @@ function applyTranslations(translations) {
     }
 
     window.translations = translations;
-    window.location.reload();
+
+    if (!isTestEnvironment) {
+        window.location.reload();
+    }
 }
 
 function loadTranslations(language: string) {
