@@ -262,10 +262,9 @@ export default angular.module('superdesk.core.auth', [
             $rootScope.$watch(
                 () => session.identity,
                 () => {
-                    reloadLanguage().then(() => {
-                        $rootScope.currentUser = session.identity;
-                        $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
-                    });
+                    reloadLanguage();
+                    $rootScope.currentUser = session.identity;
+                    $rootScope.$broadcast(SESSION_EVENTS.IDENTITY_LOADED);
                 },
             );
 
