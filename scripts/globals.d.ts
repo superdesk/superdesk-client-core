@@ -64,6 +64,7 @@ interface Window {
     translations: any;
     language: any;
     pluralForms: any;
+    __karma__: boolean;
 }
 
 // Allow importing json/html/svg files
