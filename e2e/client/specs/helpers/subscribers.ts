@@ -2,7 +2,7 @@
 
 import {element, browser, by} from 'protractor';
 import {nav} from './utils';
-import { el } from '@superdesk/end-to-end-testing-helpers';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 class Subscribers {
     cancelSubscriberButton: any;
