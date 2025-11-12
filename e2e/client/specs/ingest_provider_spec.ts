@@ -87,7 +87,7 @@ describe('ingest_provider', () => {
         var ingestProvider = element.all(by.repeater('provider in providers._items')).first();
 
         browser.actions().mouseMove(ingestProvider).perform();
-        ingestProvider.all(by.css('.icon-pencil')).first().click();
+        ingestProvider.element(by.css('button[title="Edit source"]')).click();
         expect(element(by.css('.modal__dialog')).element(by.id('provider-name')).isDisplayed()).toBe(true);
     });
 });

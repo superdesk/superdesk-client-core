@@ -908,7 +908,7 @@ class Authoring {
         this.actionOpenRelatedItem = function(item) {
             let relItem = element.all(by.repeater('item in processedItems')).get(item);
 
-            relItem.element(by.className('icon-dots-vertical')).click();
+            el(['context-menu-button'], null, relItem).click();
             let menu = element(by.css('.dropdown__menu.open'));
 
             menu.element(by.partialButtonText('Open')).click();
@@ -917,7 +917,7 @@ class Authoring {
         this.actionRelatedItem = function(item, actionId) {
             var relItem = element.all(by.repeater('item in processedItems')).get(item);
 
-            relItem.element(by.className('icon-dots-vertical')).click();
+            el(['context-menu-button'], null, relItem).click();
             relItem.element(by.css('[id="' + actionId + '"]')).click();
         };
 

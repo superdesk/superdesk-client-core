@@ -44,7 +44,7 @@
                     </div>
                     <div class="boxed-list__static-actions">
                         <div class="dropdown more-actions pull-right" ng-if="options.searchEnabled" ng-click="$event.preventDefault" dropdown>
-                            <button class="icn-btn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
+                            <button class="icn-btn dropdown__toggle" data-test-id="context-menu-button" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                             <div class="dropdown__menu pull-right">
                                 <ul>
                                     <li ng-repeat="action in actions">
