@@ -60,7 +60,7 @@ describe('users', () => {
         it('can disable user', () => {
             el(['user-filter'], by.cssContainingText('option', 'All')).click();
             var user = element.all(by.repeater('users')).first(),
-                activity = user.element(by.className('icon-trash'));
+                activity = user.element(by.css('button[title="Disable user"]'));
 
             user.waitReady()
                 .then((elem) => browser.actions().mouseMove(elem).perform())
