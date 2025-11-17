@@ -40,7 +40,7 @@ class Subscribers {
         this.edit = function(name) {
             this.getSubscriber(name).then((rows) => {
                 rows[0].click();
-                rows[0].element(by.className('icon-pencil')).click();
+                rows[0].element(by.css('[data-test-id="edit-subscriber-button"]')).click();
                 browser.sleep(500);
             });
         };
