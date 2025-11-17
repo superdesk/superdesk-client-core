@@ -33,11 +33,15 @@ import {
     IFormGroup,
     IBaseRestApiResponse,
     ISortOption,
+    Dictionary,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
+import {groupBy as _groupBy} from 'lodash';
+import {SpacerBlock} from 'core/ui/components/Spacer';
+import {Header} from 'core/ui/components/List/Header';
 
 interface IState<T extends object> {
     previewItem: T | null;
@@ -434,6 +438,45 @@ export class GenericListPageComponent<T extends object, P>
                     );
                 }
             } else {
+                const groupBy = additionalProps?.groupBy;
+
+                if (groupBy != null) {
+                    const groupedItems: Dictionary<string, Array<T>> = _groupBy(
+                        this.props.crudManager._items,
+                        groupBy.field,
+                    );
+
+                    return (
+                        <div>
+                            {Object.keys(groupedItems).map((groupKey, index) => (
+                                <React.Fragment key={groupKey}>
+                                    {index > 0 && <SpacerBlock v gap="32" />}
+                                    <Header title={groupBy.label} />
+                                    <SpacerBlock v gap="8" />
+                                    <ItemsContainerComponent page={page} additionalProps={additionalProps}>
+                                        {groupedItems[groupKey].map((item, i) => (
+                                            <ItemComponent
+                                                key={this.props.getId(item)}
+                                                item={item}
+                                                page={page}
+                                                inEditMode={
+                                                    this.state.editItem == null
+                                                        ? false
+                                                        : this.props.getId(this.state.editItem)
+                                                            === this.props.getId(item)
+                                                }
+                                                index={i}
+                                                getId={this.props.getId}
+                                                additionalProps={additionalProps}
+                                            />
+                                        ))}
+                                    </ItemsContainerComponent>
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    );
+                }
+
                 return (
                     <ItemsContainerComponent page={page} additionalProps={additionalProps}>
                         {
