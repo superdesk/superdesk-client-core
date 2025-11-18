@@ -82,7 +82,7 @@
                 </div>
                 <div ng-if="modalTab === 'subscribers'" class="nav-tabs__pane">
                     <div class="sd-grid-list sd-grid-list--no-margin">
-                        <div ng-repeat="subscriber in subscribers| orderBy:name" class="sd-card sd-card--auto-height" ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
+                        <div ng-repeat="subscriber in subscribers| orderBy:name" class="sd-card sd-card--auto-height" ng-if="subscriber.products.indexOf(product.edit._id) >= 0 || subscriber.api_products.indexOf(product.edit._id) >= 0">
                             <span class="sd-card__content  sd-card__content--padd-10">{{::subscriber.name}}</span>
                         </div>
                     </div>
