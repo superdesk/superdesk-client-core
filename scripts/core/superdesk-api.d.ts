@@ -2117,7 +2117,7 @@ declare module 'superdesk-api' {
         getFormConfig(item?: Partial<T>): IFormGroup;
         defaultSortOption: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
-        additionalProps?: P; // allows passing props which will be available in container and item components
+        additionalProps?: P & {groupBy?: {field: Paths<T>; label: string}}; // allows passing props which will be available in container and item components
         defaultFilters?: Partial<T>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
@@ -2163,6 +2163,9 @@ declare module 'superdesk-api' {
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
+
+        // default value for the field when creating new items
+        defaultValue?: any;
     }
 
     export interface IFormGroupCollapsible { // don't forget to update runtime type checks
