@@ -220,7 +220,10 @@
                             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                                 <label for="field-media-type" class="sd-line-input__label" translate>Content Type</label>
 
-                                <div class="form__row form__row--flex">
+                                <div
+                                    class="form__row form__row--flex"
+                                    ng-class="{'sd-padding--0': vocabulary.field_type !== mediaTypes.RELATED_CONTENT.id}"
+                                >
                                     <div class="form__row-item form__row-item--no-grow">
                                         <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
                                             <select id="field-media-type" class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
@@ -241,7 +244,8 @@
                                                 ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
                                                 {{'Audio' | translate}}</sd-check>
                                         </div>
-                                        <div class="form__row sd-padding--0"
+                                        <div
+                                            class="form__row sd-padding--0"
                                             ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
                                             <sd-check name="field_type"
                                                 ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">
