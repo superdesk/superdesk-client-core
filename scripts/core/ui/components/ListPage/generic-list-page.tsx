@@ -672,7 +672,7 @@ export class GenericListPageComponent<T extends object, P>
                                             }}
                                             disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
                                             text={gettext('Clear Filters')}
-                                            data-test-id="filters-submit"
+                                            data-test-id="filters-clear"
                                         />
                                         <UiFrameworkButton
                                             onClick={() => {
