@@ -215,68 +215,76 @@
                         </div>
 
                         <div class="form__row"
-                            ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
-                            <label for="field-media-type" class="form-label form__row-label" translate>Content
-                                Type</label>
+                            ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)"
+                        >
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                                <label for="field-media-type" class="sd-line-input__label" translate>Content Type</label>
 
-                            <div class="form__row form__row--inner form__row--flex">
-                                <div class="form__row-item form__row-item--no-grow">
-                                    <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
-                                        <select id="field-media-type" class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
-                                            <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
-                                            </option>
-                                        </select>
+                                <div class="form__row form__row--flex">
+                                    <div class="form__row-item form__row-item--no-grow">
+                                        <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
+                                            <select id="field-media-type" class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
+                                                <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form__row-item form__row-item--no-grow">
-                                    <div class="form__row">
-                                        <sd-check name="field_type" aria-label="{{'Image' | translate}}"
-                                            ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">
-                                            {{'Image' | translate}}</sd-check>
-                                        <sd-check name="field_type"
-                                            ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">
-                                            {{'Video' | translate}}</sd-check>
-                                        <sd-check name="field_type"  aria-label="{{'Audio' | translate}}"
-                                            ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
-                                            {{'Audio' | translate}}</sd-check>
-                                    </div>
-                                    <div class="form__row"
-                                        ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
-                                        <sd-check name="field_type"
-                                            ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">
-                                            {{'Text' | translate}}</sd-check>
-                                        <sd-check name="field_type"
-                                            ng-model="vocabulary.field_options.allowed_types.preformatted"
-                                            data-icon="text">{{'Preformatted' | translate}}</sd-check>
-                                        <sd-check name="field_type"
-                                            ng-model="vocabulary.field_options.allowed_types.graphic"
-                                            data-icon="graphic">{{'Graphic' | translate}}</sd-check>
-                                        <sd-check name="field_type"
-                                            ng-model="vocabulary.field_options.allowed_types.composite"
-                                            data-icon="composite">{{'Package' | translate}}</sd-check>
+                                    <div class="form__row-item form__row-item--no-grow form__row-item-content-type">
+                                        <div class="form__row sd-padding-b--1">
+                                            <sd-check name="field_type" aria-label="{{'Image' | translate}}"
+                                                ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">
+                                                {{'Image' | translate}}</sd-check>
+                                            <sd-check name="field_type"
+                                                ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">
+                                                {{'Video' | translate}}</sd-check>
+                                            <sd-check name="field_type"  aria-label="{{'Audio' | translate}}"
+                                                ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">
+                                                {{'Audio' | translate}}</sd-check>
+                                        </div>
+                                        <div class="form__row sd-padding--0"
+                                            ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
+                                            <sd-check name="field_type"
+                                                ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">
+                                                {{'Text' | translate}}
+                                            </sd-check>
+                                            <sd-check name="field_type"
+                                                ng-model="vocabulary.field_options.allowed_types.graphic"
+                                                data-icon="graphic">{{'Graphic' | translate}}
+                                            </sd-check>
+                                            <sd-check name="field_type"
+                                                ng-model="vocabulary.field_options.allowed_types.composite"
+                                                data-icon="composite">{{'Package' | translate}}
+                                            </sd-check>
+                                            <sd-check name="field_type"
+                                                ng-model="vocabulary.field_options.allowed_types.preformatted"
+                                                data-icon="text">{{'Preformatted' | translate}}
+                                            </sd-check>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form__row"
-                            ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
-                            <div class="form__row-item">
+                            ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)"
+                        >
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                                <label for="multiple_items" class="sd-line-input__label" translate>Allow Multiple Items</label>
                                 <span id="multiple_items" sd-switch
                                     ng-model="vocabulary.field_options.multiple_items.enabled"></span>
-                                <label for="multiple_items" translate>Allow Multiple Items</label>
                             </div>
-                            <div class="form__row form__row--inner form__row--flex"
-                                ng-if="vocabulary.field_options.multiple_items.enabled">
-                                <div class="form__row-item form__row-item--no-grow">
-                                    <span translate>Max. number of items</span>
-                                </div>
-                                <div class="form__row-item form__row-item--no-grow">
-                                    <input id="max_items" name="max_items" type="number" min="2" max="99"
-                                        class="input-small line-input"
-                                        ng-model="vocabulary.field_options.multiple_items.max_items"
-                                        style="width: 60px; text-align: center;">
-                                </div>
+                        </div>
+
+                        <div class="form__row" ng-if="vocabulary.field_options.multiple_items.enabled">
+                            <div
+                                class="sd-line-input sd-line-input--boxed sd-line-input--no-margin"
+                            >
+                                <label for="max_items" class="sd-line-input__label" translate>Max. number of items</label>
+                                <input id="max_items" name="max_items" type="number" min="2" max="99"
+                                    class="input-small line-input"
+                                    ng-model="vocabulary.field_options.multiple_items.max_items"
+                                >
+
                                 <div ng-if="vocabularyForm.max_items.$invalid"
                                     class="sd-line-input sd-line-input--invalid">
                                     <p ng-if="vocabularyForm.max_items.$error.min" class="sd-line-input__message"
@@ -287,20 +295,18 @@
                             </div>
                         </div>
 
-                        <div class="sd-line-input"
-                            ng-if="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
-                            <label class="form-label form__row-label" translate>Filters</label>
-                            <div class="sd-line-input__message sd-margin-b--1" translate>Only allow content with the
-                                following status:</div>
-                            <div class="form__row-item form__row-item--no-grow">
-                                <div class="form__row">
-                                    <sd-check ng-model="vocabulary.field_options.allowed_workflows.in_progress">
-                                        <span translate>In Progress</span>
-                                    </sd-check>
-                                    <sd-check ng-model="vocabulary.field_options.allowed_workflows.published">
-                                        <span translate>Published</span>
-                                    </sd-check>
-                                </div>
+                        <div class="form__row"
+                            ng-if="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)"
+                        >
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                                <label class="sd-line-input__label" translate>Filters</label>
+                                <sd-check class="sd-margin-r--1" ng-model="vocabulary.field_options.allowed_workflows.in_progress">
+                                    <span translate>In Progress</span>
+                                </sd-check>
+                                <sd-check ng-model="vocabulary.field_options.allowed_workflows.published">
+                                    <span translate>Published</span>
+                                </sd-check>
+                                <div class="sd-line-input__hint" translate>Only allow content with the selected statuses above.</div>
                             </div>
                         </div>
 
