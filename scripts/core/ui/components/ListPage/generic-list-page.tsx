@@ -33,19 +33,18 @@ import {
     IFormGroup,
     IBaseRestApiResponse,
     ISortOption,
-    Dictionary,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
-import {groupBy as _groupBy} from 'lodash';
-import {SpacerBlock} from 'core/ui/components/Spacer';
+import {Button as UiFrameworkButton} from 'superdesk-ui-framework/react';
 import {Header} from 'core/ui/components/List/Header';
 
 interface IState<T extends object> {
     previewItem: T | null;
     editItem: T | null;
+    originalEditItem: T | null;
     newItem: Partial<T> | null;
     filtersOpen: boolean;
     filterValues: Partial<T>;
@@ -92,6 +91,7 @@ export class GenericListPageComponent<T extends object, P>
     implements IGenericListPageComponent<T>
 {
     searchBarRef: SearchBar | null;
+    editFormRef: GenericListPageItemViewEdit<T> | null;
     modal: any;
     notify: any;
     $rootScope: any;
@@ -108,6 +108,7 @@ export class GenericListPageComponent<T extends object, P>
         this.state = {
             previewItem: null,
             editItem: null,
+            originalEditItem: null,
             newItem: null,
             filtersOpen: false,
             filterValues: props.defaultFilters ? props.defaultFilters : {},
@@ -128,6 +129,7 @@ export class GenericListPageComponent<T extends object, P>
         this.getItemsCount = this.getItemsCount.bind(this);
         this.itemIsBeingCreated = this.itemIsBeingCreated.bind(this);
         this.itemIsBeingEdited = this.itemIsBeingEdited.bind(this);
+        this.clearFilters = this.clearFilters.bind(this);
 
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
@@ -138,11 +140,11 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     openPreview(id: string) {
-        if (this.state.editItem != null) {
+        if (this.state.editItem != null && this.hasUnsavedChanges()) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Can\'t open a preview while in edit mode',
+                    'Can\'t open a preview while there are unsaved changes',
                 ),
             });
         } else if (this.state.newItem != null) {
@@ -194,11 +196,11 @@ export class GenericListPageComponent<T extends object, P>
 
         this.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
-                if (this.state.editItem != null) {
+                if (this.state.editItem != null && this.hasUnsavedChanges()) {
                     this.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
-                            'Edit mode must closed before you can delete an item.',
+                            'Item with unsaved changes must be closed before you can delete an item.',
                         ),
                     });
                 } else if (this.state.previewItem != null) {
@@ -212,11 +214,13 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     startEditing(id: string) {
-        if (this.state.editItem != null) {
+        const isDifferentItem = this.state.editItem != null && this.props.getId(this.state.editItem) !== id;
+
+        if (isDifferentItem && this.hasUnsavedChanges()) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Can\'t edit this item, because another item is in edit mode.',
+                    'Can\'t edit this item, because another item has unsaved changes.',
                 ),
             });
         } else {
@@ -228,18 +232,13 @@ export class GenericListPageComponent<T extends object, P>
                 return null;
             })();
 
-            const editItem = (() => {
-                if (this.state.editItem != null) {
-                    return this.state.editItem;
-                } else {
-                    return this.props.crudManager._items.find((item) => this.props.getId(item) === id);
-                }
-            })();
+            const editItem = this.props.crudManager._items.find((item) => this.props.getId(item) === id);
 
             this.setState({
                 // reset preview if item in preview mode is different from that editing is being initiated for
                 previewItem: previewItem,
                 editItem: editItem,
+                originalEditItem: editItem,
             });
         }
     }
@@ -296,11 +295,11 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     filter() {
-        if (this.state.editItem != null) {
+        if (this.state.editItem != null && this.hasUnsavedChanges()) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'The item in edit mode must be closed before you can filter.',
+                    'The item with unsaved changes must be closed before you can filter.',
                 ),
             });
         } else {
@@ -319,6 +318,14 @@ export class GenericListPageComponent<T extends object, P>
         );
     }
 
+    clearFilters() {
+        this.setState({
+            filterValues: {},
+        }, () => {
+            this.refetchDataUsingCurrentFilters();
+        });
+    }
+
     closeNewItemForm() {
         this.setState({newItem: null});
     }
@@ -328,11 +335,11 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     openNewItemForm(initialValues?: {[key: string]: any}) {
-        if (this.state.editItem != null || this.state.newItem != null) {
+        if ((this.state.editItem != null && this.hasUnsavedChanges()) || this.state.newItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Can\'t add a new item, because another item is in edit mode.',
+                    'Can\'t add a new item, because another item has unsaved changes.',
                 ),
             });
         } else {
@@ -370,6 +377,18 @@ export class GenericListPageComponent<T extends object, P>
         return this.state.newItem != null;
     }
 
+    hasUnsavedChanges() {
+        if (this.state.editItem == null) {
+            return false;
+        }
+
+        if (this.editFormRef != null && this.editFormRef.isFormDirty != null) {
+            return this.editFormRef.isFormDirty();
+        }
+
+        return false;
+    }
+
     componentDidUpdate() {
         if (this.state.refetchDataScheduled) {
             this.refetchDataUsingCurrentFilters();
@@ -400,7 +419,7 @@ export class GenericListPageComponent<T extends object, P>
             ...(this.props.additionalSortOptions ?? []),
         ];
 
-        var page: IGenericListPageComponent<T> = {
+        const page: IGenericListPageComponent<T> = {
             openPreview: this.openPreview,
             startEditing: this.startEditing,
             closePreview: this.closePreview,
@@ -438,66 +457,77 @@ export class GenericListPageComponent<T extends object, P>
                     );
                 }
             } else {
-                const groupBy = additionalProps?.groupBy;
+                const groupBy = this.props.groupBy;
 
-                if (groupBy != null) {
-                    const groupedItems: Dictionary<string, Array<T>> = _groupBy(
-                        this.props.crudManager._items,
-                        groupBy.field,
-                    );
-
+                if ((groupBy ?? []).length > 0) {
                     return (
                         <div>
-                            {Object.keys(groupedItems).map((groupKey, index) => (
-                                <React.Fragment key={groupKey}>
-                                    {index > 0 && <SpacerBlock v gap="32" />}
-                                    <Header title={groupBy.label} />
-                                    <SpacerBlock v gap="8" />
-                                    <ItemsContainerComponent page={page} additionalProps={additionalProps}>
-                                        {groupedItems[groupKey].map((item, i) => (
-                                            <ItemComponent
-                                                key={this.props.getId(item)}
-                                                item={item}
-                                                page={page}
-                                                inEditMode={
-                                                    this.state.editItem == null
-                                                        ? false
-                                                        : this.props.getId(this.state.editItem)
-                                                            === this.props.getId(item)
-                                                }
-                                                index={i}
-                                                getId={this.props.getId}
-                                                additionalProps={additionalProps}
-                                            />
-                                        ))}
-                                    </ItemsContainerComponent>
-                                </React.Fragment>
-                            ))}
+                            {groupBy.map((group, groupIndex) => {
+                                const groupItems = this.props.crudManager._items.filter(group.condition);
+                                const hasItems = groupItems.length > 0;
+
+                                return (
+                                    <React.Fragment key={groupIndex}>
+                                        <Header title={group.label} />
+                                        {hasItems ? (
+                                            <ItemsContainerComponent page={page} additionalProps={additionalProps}>
+                                                {groupItems.map((item, i) => {
+                                                    const itemId = this.props.getId(item);
+                                                    const isInEditMode = this.state.editItem != null
+                                                        && this.props.getId(this.state.editItem) === itemId;
+                                                    const isInPreviewMode = this.state.previewItem != null
+                                                        && this.props.getId(this.state.previewItem) === itemId;
+
+                                                    return (
+                                                        <ItemComponent
+                                                            key={itemId}
+                                                            item={item}
+                                                            page={page}
+                                                            inEditMode={isInEditMode}
+                                                            inPreviewMode={isInPreviewMode}
+                                                            index={i}
+                                                            getId={this.props.getId}
+                                                            additionalProps={additionalProps}
+                                                        />
+                                                    );
+                                                })}
+                                            </ItemsContainerComponent>
+                                        ) : group.emptyState != null ? (
+                                            <ListItem noHover>
+                                                <ListItemColumn>
+                                                    {group.emptyState}
+                                                </ListItemColumn>
+                                            </ListItem>
+                                        ) : null}
+                                    </React.Fragment>
+                                );
+                            })}
                         </div>
                     );
                 }
 
                 return (
                     <ItemsContainerComponent page={page} additionalProps={additionalProps}>
-                        {
-                            this.props.crudManager._items.map(
-                                (item, i) => (
-                                    <ItemComponent
-                                        key={this.props.getId(item)}
-                                        item={item}
-                                        page={page}
-                                        inEditMode={
-                                            this.state.editItem == null
-                                                ? false
-                                                : this.props.getId(this.state.editItem) === this.props.getId(item)
-                                        }
-                                        index={i}
-                                        getId={this.props.getId}
-                                        additionalProps={additionalProps}
-                                    />
-                                ),
-                            )
-                        }
+                        {this.props.crudManager._items.map((item, i) => {
+                            const itemId = this.props.getId(item);
+                            const isInEditMode = this.state.editItem != null
+                                && this.props.getId(this.state.editItem) === itemId;
+                            const isInPreviewMode = this.state.previewItem != null
+                                && this.props.getId(this.state.previewItem) === itemId;
+
+                            return (
+                                <ItemComponent
+                                    index={i}
+                                    key={itemId}
+                                    item={item}
+                                    page={page}
+                                    inEditMode={isInEditMode}
+                                    inPreviewMode={isInPreviewMode}
+                                    getId={this.props.getId}
+                                    additionalProps={additionalProps}
+                                />
+                            );
+                        })}
                     </ItemsContainerComponent>
                 );
             }
@@ -636,21 +666,23 @@ export class GenericListPageComponent<T extends object, P>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
                                     <SidePanelFooter>
-                                        <form
-                                            onSubmit={(event) => {
-                                                event.preventDefault();
+                                        <UiFrameworkButton
+                                            onClick={() => {
+                                                this.clearFilters();
+                                            }}
+                                            disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                            text={gettext('Clear Filters')}
+                                            data-test-id="filters-submit"
+                                        />
+                                        <UiFrameworkButton
+                                            onClick={() => {
                                                 this.filter();
                                             }}
-                                        >
-                                            <button
-                                                className="btn btn--primary btn--expanded"
-                                                type="submit"
-                                                data-test-id="filters-submit"
-                                            >
-                                                {gettext('Filter')}
-                                            </button>
-                                        </form>
-
+                                            disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                            text={gettext('Filter')}
+                                            type="primary"
+                                            data-test-id="filters-submit"
+                                        />
                                     </SidePanelFooter>
                                 </SidePanel>
                             </PageContainerItem>
@@ -683,7 +715,14 @@ export class GenericListPageComponent<T extends object, P>
                                 Object.keys(activeFilters).length < 1 ? null : (
                                     <div
                                         className="subnav"
-                                        style={{background: 'transparent', boxShadow: 'none', marginBlockStart: -20}}
+                                        style={{
+                                            background: 'transparent',
+                                            boxShadow: 'none',
+                                            marginBlockStart: -20,
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            gap: 'var(--space--0-5)',
+                                        }}
                                         data-test-id="list-page--filters-active"
                                     >
                                         {
@@ -717,100 +756,106 @@ export class GenericListPageComponent<T extends object, P>
                         </div>
                     </PageContainerItem>
 
-                    {
-                        this.state.newItem != null ? (
-                            <PageContainerItem data-test-id="list-page--new-item">
-                                <GenericListPageItemViewEdit
-                                    key="new-item"
-                                    operation="creation"
-                                    item={this.state.newItem}
-                                    getFormConfig={getFormConfig}
-                                    editMode={true}
-                                    hiddenFields={this.props.hiddenFields ?? []}
-                                    onEditModeChange={() => {
+                    {this.state.newItem != null ? (
+                        <PageContainerItem data-test-id="list-page--new-item">
+                            <GenericListPageItemViewEdit
+                                key="new-item"
+                                operation="creation"
+                                item={this.state.newItem}
+                                getFormConfig={getFormConfig}
+                                editMode={true}
+                                hiddenFields={this.props.hiddenFields ?? []}
+                                onEditModeChange={() => {
+                                    this.setState((prevState) => ({
+                                        ...prevState,
+                                        newItem: null,
+                                    }));
+                                }}
+                                onSave={(item: T) => {
+                                    return this.props.crudManager.create(item).then((res) => {
+                                        setTimeout(() => {
+                                            this.closeNewItemForm();
+                                            this.openPreview(this.props.getId(res));
+                                            this.refetchDataUsingCurrentFilters();
+                                        });
+                                    });
+                                }}
+                                onClose={this.closeNewItemForm}
+                                onCancel={this.closeNewItemForm}
+                                labelForSaveButton={labelForSaveButton}
+                            />
+                        </PageContainerItem>
+                    ) : this.state.editItem != null ? (
+                        <PageContainerItem data-test-id="list-page--view-edit">
+                            <GenericListPageItemViewEdit
+                                ref={(ref) => {
+                                    this.editFormRef = ref;
+                                }}
+                                key={'edit' + this.props.getId(this.state.editItem)}
+                                operation="editing"
+                                editMode={true}
+                                hiddenFields={this.props.hiddenFields ?? []}
+                                onEditModeChange={(nextValue) => {
+                                    if (nextValue === false) {
+                                        this.editFormRef = null;
                                         this.setState((prevState) => ({
                                             ...prevState,
-                                            newItem: null,
+                                            editItem: null,
+                                            originalEditItem: null,
                                         }));
-                                    }}
-                                    onSave={(item: T) => {
-                                        return this.props.crudManager.create(item).then((res) => {
-                                            setTimeout(() => {
-                                                this.closeNewItemForm();
-                                                this.openPreview(this.props.getId(res));
-                                                this.refetchDataUsingCurrentFilters();
-                                            });
-                                        });
-                                    }}
-                                    onClose={this.closeNewItemForm}
-                                    onCancel={this.closeNewItemForm}
-                                    labelForSaveButton={labelForSaveButton}
-                                />
-                            </PageContainerItem>
-                        ) : this.state.editItem != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    key={'edit' + this.props.getId(this.state.editItem)}
-                                    operation="editing"
-                                    editMode={true}
-                                    hiddenFields={this.props.hiddenFields ?? []}
-                                    onEditModeChange={(nextValue) => {
-                                        if (nextValue === false) {
-                                            this.setState((prevState) => ({
-                                                ...prevState,
-                                                editItem: null,
-                                            }));
-                                        }
-                                    }}
-                                    item={this.state.editItem}
-                                    getFormConfig={getFormConfig}
-                                    onSave={(nextItem) =>
-                                        this.props.crudManager.update(this.state.editItem, nextItem)
-                                            .then((updatedItem) => {
-                                                this.setState((prevState) => ({
-                                                    ...prevState,
-                                                    editItem: null,
-                                                    previewItem: updatedItem,
-                                                }));
-                                            })
                                     }
-                                    onClose={this.closePreview}
-                                    labelForSaveButton={labelForSaveButton}
-                                />
-                            </PageContainerItem>
-                        ) : this.state.previewItem != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    key={'preview' + this.props.getId(this.state.previewItem)}
-                                    operation="editing"
-                                    editMode={false}
-                                    hiddenFields={this.props.hiddenFields ?? []}
-                                    onEditModeChange={(nextValue) => {
-                                        if (nextValue === true) {
-                                            this.setState((prevState) => ({
-                                                ...prevState,
-                                                previewItem: null,
-                                                editItem: prevState.previewItem,
-                                            }));
-                                        } else {
+                                }}
+                                item={this.state.editItem}
+                                getFormConfig={getFormConfig}
+                                onSave={(nextItem) =>
+                                    this.props.crudManager.update(this.state.editItem, nextItem)
+                                        .then((updatedItem) => {
                                             this.setState((prevState) => ({
                                                 ...prevState,
                                                 editItem: null,
-                                                previewItem: prevState.editItem,
+                                                originalEditItem: null,
+                                                previewItem: updatedItem,
                                             }));
-                                        }
-                                    }}
-                                    item={this.state.previewItem}
-                                    getFormConfig={getFormConfig}
-                                    onSave={() => {
-                                        throw new Error('Can\'t edit in preview mode!');
-                                    }}
-                                    onClose={this.closePreview}
-                                    labelForSaveButton={labelForSaveButton}
-                                />
-                            </PageContainerItem>
-                        ) : null
-                    }
+                                        })
+                                }
+                                onClose={this.closePreview}
+                                labelForSaveButton={labelForSaveButton}
+                            />
+                        </PageContainerItem>
+                    ) : this.state.previewItem != null && (
+                        <PageContainerItem data-test-id="list-page--view-edit">
+                            <GenericListPageItemViewEdit
+                                key={'preview' + this.props.getId(this.state.previewItem)}
+                                operation="editing"
+                                editMode={false}
+                                hiddenFields={this.props.hiddenFields ?? []}
+                                onEditModeChange={(nextValue) => {
+                                    if (nextValue === true) {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            previewItem: null,
+                                            editItem: prevState.previewItem,
+                                            originalEditItem: prevState.previewItem,
+                                        }));
+                                    } else {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            editItem: null,
+                                            originalEditItem: null,
+                                            previewItem: prevState.editItem,
+                                        }));
+                                    }
+                                }}
+                                item={this.state.previewItem}
+                                getFormConfig={getFormConfig}
+                                onSave={() => {
+                                    throw new Error('Can\'t edit in preview mode!');
+                                }}
+                                onClose={this.closePreview}
+                                labelForSaveButton={labelForSaveButton}
+                            />
+                        </PageContainerItem>
+                    )}
                 </PageContainer>
             </div>
         );
@@ -826,7 +871,7 @@ export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResp
     defaultSortOption?: ISortOption,
     additionalProps?: P,
 ) => {
-    var Component = connectCrudManagerHttp<IPropsGenericForm<T, P>, T>(
+    const Component = connectCrudManagerHttp<IPropsGenericForm<T, P>, T>(
         GenericListPageComponent,
         'crudManager',
         resource,

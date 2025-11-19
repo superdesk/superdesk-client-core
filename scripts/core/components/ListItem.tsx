@@ -21,6 +21,7 @@ export class ListItem extends React.Component<IListItemProps> {
         return (
             <div
                 onClick={this.props.onClick}
+                onDoubleClick={this.props.onDoubleClick}
                 className={
                     classNames(
                         this.props.className,

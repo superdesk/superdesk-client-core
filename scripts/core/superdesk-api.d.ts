@@ -1538,13 +1538,13 @@ declare module 'superdesk-api' {
     export interface IMonitoringGroup {
         _id: string;
         type: 'search'
-            | 'stage'
-            | 'scheduledDeskOutput'
-            | 'deskOutput'
-            | 'personal'
-            | 'sentDeskOutput'
-            | 'spike'
-            | 'spike-personal';
+        | 'stage'
+        | 'scheduledDeskOutput'
+        | 'deskOutput'
+        | 'personal'
+        | 'sentDeskOutput'
+        | 'spike'
+        | 'spike-personal';
         max_items?: number;
         header?: string;
     }
@@ -2107,9 +2107,10 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericFormItemComponent<T> {
         item: T;
+        index: number;
         page: IGenericListPageComponent<T>;
         inEditMode: boolean;
-        index: number;
+        inPreviewMode: boolean;
         getId(item: T): string;
     }
 
@@ -2117,7 +2118,8 @@ declare module 'superdesk-api' {
         getFormConfig(item?: Partial<T>): IFormGroup;
         defaultSortOption: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
-        additionalProps?: P & {groupBy?: {field: Paths<T>; label: string}}; // allows passing props which will be available in container and item components
+        groupBy?: Array<{condition: (item: T) => boolean; label: string; emptyState?: string}>;
+        additionalProps?: P; // allows passing props which will be available in container and item components
         defaultFilters?: Partial<T>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
@@ -2257,6 +2259,7 @@ declare module 'superdesk-api' {
 
     export interface IListItemProps {
         onClick?(): void;
+        onDoubleClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
