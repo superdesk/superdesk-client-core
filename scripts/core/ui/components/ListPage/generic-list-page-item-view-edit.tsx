@@ -18,6 +18,7 @@ import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
+import {Button} from 'superdesk-ui-framework';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -228,21 +229,19 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
                                     data-test-id="toolbar"
                                 >
-                                    <button
-                                        className="btn"
+                                    <Button
+                                        text={gettext('Cancel')}
+                                        type="secondary"
                                         onClick={this.handleCancel}
                                         data-test-id="item-view-edit--cancel-save"
-                                    >
-                                        {gettext('Cancel')}
-                                    </button>
-                                    <button
+                                    />
+                                    <Button
+                                        type="primary"
                                         disabled={!this.isFormDirty()}
                                         onClick={this.handleSave}
-                                        className="btn btn--primary"
                                         data-test-id="item-view-edit--save"
-                                    >
-                                        {this.props.labelForSaveButton}
-                                    </button>
+                                        text={this.props.labelForSaveButton}
+                                    />
                                 </div>
                             )
                             : (

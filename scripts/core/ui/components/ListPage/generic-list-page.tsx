@@ -38,7 +38,7 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
-import {Button as UiFrameworkButton} from 'superdesk-ui-framework/react';
+import {Button as UiFrameworkButton, ButtonGroup} from 'superdesk-ui-framework/react';
 import {Header} from 'core/ui/components/List/Header';
 
 interface IState<T extends object> {
@@ -76,6 +76,7 @@ const subNavWrapper: React.ComponentType = (props) => (
                 style={{
                     display: 'flex',
                     width: '100%',
+                    height: '100%',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}
@@ -546,19 +547,17 @@ export class GenericListPageComponent<T extends object, P>
                 data-test-id="generic-list-page"
             >
                 <OnlyWithChildren wrapper={subNavWrapper}>
-                    {
-                        this.props.disallowFiltering ? null : (
-                            <div>
-                                <Button
-                                    icon="icon-filter-large"
-                                    onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                                    active={this.state.filtersOpen}
-                                    darker={true}
-                                    data-test-id="toggle-filters"
-                                />
-                            </div>
-                        )
-                    }
+                    {this.props.disallowFiltering ? null : (
+                        <div>
+                            <Button
+                                icon="icon-filter-large"
+                                onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                active={this.state.filtersOpen}
+                                darker={true}
+                                data-test-id="toggle-filters"
+                            />
+                        </div>
+                    )}
 
                     {
                         this.props.fieldForSearch == null ? null : (
@@ -589,44 +588,38 @@ export class GenericListPageComponent<T extends object, P>
                             paddingInline: 20,
                         }}
                     >
-                        {
-                            (this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null) && (
-                                <span style={{display: 'flex', alignItems: 'center'}}>
-                                    <span>{gettext('Total:')}</span>
-                                    &nbsp;
-                                    <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
-                                </span>
-                            )
-                        }
+                        {(this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null) && (
+                            <span style={{display: 'flex', alignItems: 'center'}}>
+                                <span>{gettext('Total:')}</span>
+                                &nbsp;
+                                <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
+                            </span>
+                        )}
 
-                        {
-                            this.props.disallowSorting !== true && (
-                                <SortBar
-                                    sortOptions={sortOptions}
-                                    selected={this.props.crudManager.activeSortOption}
-                                    itemsCount={this.props.crudManager._meta.total}
-                                    onSortOptionChange={this.props.crudManager.sort}
-                                />
-                            )
-                        }
+                        {this.props.disallowSorting !== true && (
+                            <SortBar
+                                sortOptions={sortOptions}
+                                selected={this.props.crudManager.activeSortOption}
+                                itemsCount={this.props.crudManager._meta.total}
+                                onSortOptionChange={this.props.crudManager.sort}
+                            />
+                        )}
                     </OnlyWithChildren>
 
-                    {
-                        this.props.disallowCreatingNewItem === true ? null : (
-                            <div>
-                                <Button
-                                    onClick={() => {
-                                        this.openNewItemForm();
-                                    }}
-                                    className="sd-create-btn dropdown-toggle"
-                                    icon="icon-plus-large"
-                                    data-test-id="list-page--add-item"
-                                >
-                                    <span className="circle" />
-                                </Button>
-                            </div>
-                        )
-                    }
+                    {this.props.disallowCreatingNewItem === true ? null : (
+                        <div>
+                            <Button
+                                onClick={() => {
+                                    this.openNewItemForm();
+                                }}
+                                className="sd-create-btn dropdown-toggle"
+                                icon="icon-plus-large"
+                                data-test-id="list-page--add-item"
+                            >
+                                <span className="circle" />
+                            </Button>
+                        </div>
+                    )}
                 </OnlyWithChildren>
 
                 <PageContainer>
@@ -666,23 +659,25 @@ export class GenericListPageComponent<T extends object, P>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
                                     <SidePanelFooter>
-                                        <UiFrameworkButton
-                                            onClick={() => {
-                                                this.clearFilters();
-                                            }}
-                                            disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
-                                            text={gettext('Clear Filters')}
-                                            data-test-id="filters-clear"
-                                        />
-                                        <UiFrameworkButton
-                                            onClick={() => {
-                                                this.filter();
-                                            }}
-                                            disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
-                                            text={gettext('Filter')}
-                                            type="primary"
-                                            data-test-id="filters-submit"
-                                        />
+                                        <ButtonGroup align="end">
+                                            <UiFrameworkButton
+                                                onClick={() => {
+                                                    this.clearFilters();
+                                                }}
+                                                disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                                text={gettext('Clear Filters')}
+                                                data-test-id="filters-clear"
+                                            />
+                                            <UiFrameworkButton
+                                                onClick={() => {
+                                                    this.filter();
+                                                }}
+                                                disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                                text={gettext('Filter')}
+                                                type="primary"
+                                                data-test-id="filters-submit"
+                                            />
+                                        </ButtonGroup>
                                     </SidePanelFooter>
                                 </SidePanel>
                             </PageContainerItem>

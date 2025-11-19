@@ -5,6 +5,58 @@ import classNames from 'classnames';
 import {IListItemProps, IPropsListItemColumn, IPropsListItemRow} from 'superdesk-api';
 
 export class ListItem extends React.Component<IListItemProps> {
+    private clickTimeout: number | null = null;
+    private readonly clickDelay = 250;
+
+    constructor(props: IListItemProps) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    }
+
+    componentWillUnmount() {
+        if (this.clickTimeout != null) {
+            window.clearTimeout(this.clickTimeout);
+        }
+    }
+
+    /**
+     * Wrapper for single click handler. Provides a longer delay,
+     * so if user double clicks we don't trigger the single click handler beforehand.
+     */
+    handleClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onDoubleClick != null && this.props.onClick != null) {
+            event.preventDefault();
+
+            if (this.clickTimeout != null) {
+                window.clearTimeout(this.clickTimeout);
+                this.clickTimeout = null;
+            }
+
+            this.clickTimeout = window.setTimeout(() => {
+                this.clickTimeout = null;
+
+                this.props.onClick?.();
+            }, this.clickDelay);
+        } else if (this.props.onClick != null) {
+            this.props.onClick();
+        }
+    }
+
+    handleDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onDoubleClick != null) {
+            event.preventDefault();
+
+            if (this.clickTimeout != null) {
+                window.clearTimeout(this.clickTimeout);
+                this.clickTimeout = null;
+            }
+
+            this.props.onDoubleClick();
+        }
+    }
+
     render() {
         const inlineStyles: React.CSSProperties = {
             cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'inherit',
@@ -20,8 +72,8 @@ export class ListItem extends React.Component<IListItemProps> {
 
         return (
             <div
-                onClick={this.props.onClick}
-                onDoubleClick={this.props.onDoubleClick}
+                onClick={this.handleClick}
+                onDoubleClick={this.handleDoubleClick}
                 className={
                     classNames(
                         this.props.className,
