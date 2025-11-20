@@ -155,7 +155,7 @@ export class GenericListPageComponent<T extends object, P>
                     });
                 }
             });
-        } else if ((this.state.newItem != null && this.hasUnsavedChangesInNewItem()) || this.state.newItem != null) {
+        } else if (this.state.newItem != null) {
             showUnsavedChangesModal({
                 onDiscard: () => {
                     const newPreviewItem = this.props.crudManager._items.find(
@@ -457,31 +457,31 @@ export class GenericListPageComponent<T extends object, P>
                 },
                 onSave: () => {
                     return this.newItemFormRef?.handleSave?.().then?.(() => {
-                        this.setState({
+                        this.setState((_, props) => ({
                             newItem: {
-                                ...getInitialValues(this.props.getFormConfig()),
-                                ...this.props.getNewItemTemplate == null
-                                    ? {} : this.props.getNewItemTemplate(this),
+                                ...getInitialValues(props.getFormConfig()),
+                                ...props.getNewItemTemplate == null
+                                    ? {} : props.getNewItemTemplate(this),
                                 ...(initialValues ?? {}),
                             },
                             editItem: null,
                             originalEditItem: null,
                             previewItem: null,
-                        });
+                        }));
                     });
                 },
             });
         } else {
-            this.setState({
+            this.setState((_, props) => ({
                 newItem: {
-                    ...getInitialValues(this.props.getFormConfig()),
-                    ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
+                    ...getInitialValues(props.getFormConfig()),
+                    ...props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                     ...(initialValues ?? {}),
                 },
                 editItem: null,
                 originalEditItem: null,
                 previewItem: null,
-            });
+            }));
         }
     }
 
@@ -802,7 +802,7 @@ export class GenericListPageComponent<T extends object, P>
                                                 onClick={() => {
                                                     this.clearFilters();
                                                 }}
-                                                disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                                disabled={Object.keys(this.state.filterValues ?? {}).length === 0}
                                                 text={gettext('Clear Filters')}
                                                 data-test-id="filters-clear"
                                             />
@@ -810,7 +810,7 @@ export class GenericListPageComponent<T extends object, P>
                                                 onClick={() => {
                                                     this.filter();
                                                 }}
-                                                disabled={Object.keys(this.state.filterValues ?? {}).length == 0}
+                                                disabled={Object.keys(this.state.filterValues ?? {}).length === 0}
                                                 text={gettext('Filter')}
                                                 type="primary"
                                                 data-test-id="filters-submit"
