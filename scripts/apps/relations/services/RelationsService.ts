@@ -5,6 +5,8 @@ import {gettext} from 'core/utils';
 
 const RELATED_LINK_KEYS = 3; // links only have _id, type keys and order (and some old ones only _id)
 
+type VocabularyField = IVocabularyRelatedContent | IVocabularyMedia;
+
 export const isLink = (association) =>
     association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
@@ -79,7 +81,16 @@ export function RelationsService(api, $q) {
         })).then((values) => zipObject(relatedItemsKeys, values));
     };
 
-    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabularyRelatedContent | IVocabularyMedia) {
+    this.itemHasAllowedStatus = function(item: IArticle, field: VocabularyField) {
         return validateWorkflow(item, field?.field_options?.allowed_workflows ?? {}).result;
+    };
+
+    this.isItemFromExternalProviderAllowed = function(item: IArticle, field: VocabularyField): boolean {
+        if (field.field_type !== 'related_content' || item?._type !== 'externalsource')
+            return true;
+
+        return (field as IVocabularyRelatedContent)
+            ?.field_options
+            ?.allowed_external_providers === true;
     };
 }

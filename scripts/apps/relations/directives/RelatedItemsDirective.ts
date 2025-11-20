@@ -145,6 +145,12 @@ export function RelatedItemsDirective(
                         return;
                     }
 
+                    const isExternalProviderAllowed = relationsService
+                        .isItemFromExternalProviderAllowed(item, scope.field);
+
+                    if (!isExternalProviderAllowed)
+                        return notify.error(gettext('Content from external providers is not allowed in this field.'));
+
                     if (scope.item._id === item._id) {
                         notify.error(gettext('Cannot add self as related item.'));
                         return;
