@@ -8,13 +8,6 @@ export class ListItem extends React.Component<IListItemProps> {
     private clickTimeout: number | null = null;
     private readonly clickDelay = 250;
 
-    constructor(props: IListItemProps) {
-        super(props);
-
-        this.handleClick = this.handleClick.bind(this);
-        this.handleDoubleClick = this.handleDoubleClick.bind(this);
-    }
-
     componentWillUnmount() {
         if (this.clickTimeout != null) {
             window.clearTimeout(this.clickTimeout);
@@ -25,7 +18,7 @@ export class ListItem extends React.Component<IListItemProps> {
      * Wrapper for single click handler. Provides a longer delay,
      * so if user double clicks we don't trigger the single click handler beforehand.
      */
-    handleClick(event: React.MouseEvent<HTMLDivElement>) {
+    handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (this.props.onDoubleClick != null && this.props.onClick != null) {
             event.preventDefault();
 
@@ -36,15 +29,14 @@ export class ListItem extends React.Component<IListItemProps> {
 
             this.clickTimeout = window.setTimeout(() => {
                 this.clickTimeout = null;
-
-                this.props.onClick?.();
+                this.props.onClick();
             }, this.clickDelay);
         } else if (this.props.onClick != null) {
             this.props.onClick();
         }
     }
 
-    handleDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
+    handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (this.props.onDoubleClick != null) {
             event.preventDefault();
 
