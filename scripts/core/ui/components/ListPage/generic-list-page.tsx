@@ -42,6 +42,7 @@ import {Button as UiFrameworkButton, ButtonGroup, Modal} from 'superdesk-ui-fram
 import {Header} from 'core/ui/components/List/Header';
 import {showModal} from '@sourcefabric/common';
 import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
+import {showUnsavedChangesModal} from './show-unsaved-changes-modal';
 
 interface IState<T extends object> {
     previewItem: T | null;
@@ -95,8 +96,7 @@ export class GenericListPageComponent<T extends object, P>
 {
     searchBarRef: SearchBar | null;
     editFormRef: GenericListPageItemViewEdit<T> | null;
-    modal: any;
-    notify: any;
+    newItemFormRef: GenericListPageItemViewEdit<T> | null;
     $rootScope: any;
     _mounted: boolean;
 
@@ -137,8 +137,6 @@ export class GenericListPageComponent<T extends object, P>
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
 
-        this.modal = ng.get('modal');
-        this.notify = ng.get('notify');
         this.$rootScope = ng.get('$rootScope');
     }
 
@@ -156,26 +154,38 @@ export class GenericListPageComponent<T extends object, P>
                         originalEditItem: null,
                     });
                 }
-            }).catch(noop);
-        } else if (this.state.newItem != null) {
-            showModal(({closeModal}) => (
-                <Modal
-                    visible
-                    size="small"
-                    position="top"
-                    onHide={closeModal}
-                    headerTemplate={gettext('Warning')}
-                    footerTemplate={(
-                        <UiFrameworkButton
-                            type="primary"
-                            text={gettext('OK')}
-                            onClick={closeModal}
-                        />
-                    )}
-                >
-                    {gettext('Can\'t open a preview while in create mode')}
-                </Modal>
-            ));
+            });
+        } else if ((this.state.newItem != null && this.hasUnsavedChangesInNewItem()) || this.state.newItem != null) {
+            showUnsavedChangesModal({
+                onDiscard: () => {
+                    const newPreviewItem = this.props.crudManager._items.find(
+                        (value) => this.props.getId(value) === id,
+                    );
+
+                    if (newPreviewItem != null) {
+                        this.setState({
+                            previewItem: newPreviewItem,
+                            newItem: null,
+                        });
+                    }
+                },
+                onSave: () => {
+                    if (this.newItemFormRef != null && typeof this.newItemFormRef.handleSave === 'function') {
+                        return this.newItemFormRef.handleSave().then(() => {
+                            const newPreviewItem = this.props.crudManager._items.find(
+                                (value) => this.props.getId(value) === id,
+                            );
+
+                            if (newPreviewItem != null) {
+                                this.setState({
+                                    previewItem: newPreviewItem,
+                                    newItem: null,
+                                });
+                            }
+                        });
+                    }
+                },
+            });
         } else if (this.props.crudManager._items.find((value) => this.props.getId(value) === id) != null) {
             const newPreviewItem = this.props.crudManager._items.find((value) => this.props.getId(value) === id);
             // set previewItem only if item with id is available in the props.items._items
@@ -216,98 +226,40 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     deleteItem(item: T) {
-        const doDelete = () => this.props.crudManager.delete(item);
+        const itemId = this.props.getId(item);
+        const isPreviewedItem = this.state.previewItem != null
+            && this.props.getId(this.state.previewItem) === itemId;
+        const isEditedItem = this.state.editItem != null
+            && this.props.getId(this.state.editItem) === itemId;
+
+        const doDelete = () => {
+            if (isPreviewedItem || isEditedItem) {
+                this.setState({
+                    previewItem: null,
+                    editItem: null,
+                    originalEditItem: null,
+                }, () => this.props.crudManager.delete(item));
+            } else {
+                this.props.crudManager.delete(item);
+            }
+        };
 
         showConfirmationPrompt({
             title: gettext('Confirm'),
             message: gettext('Are you sure you want to delete this item?'),
         }).then((confirmed) => {
             if (confirmed) {
-                if (this.state.editItem != null && this.hasUnsavedChanges()) {
-                    showModal(({closeModal}) => (
-                        <Modal
-                            visible
-                            size="small"
-                            position="top"
-                            onHide={closeModal}
-                            headerTemplate={gettext('Warning')}
-                            footerTemplate={(
-                                <UiFrameworkButton
-                                    type="primary"
-                                    text={gettext('OK')}
-                                    onClick={closeModal}
-                                />
-                            )}
-                        >
-                            {gettext('Item with unsaved changes must be closed before you can delete an item.')}
-                        </Modal>
-                    ));
-                } else if (this.state.previewItem != null) {
-                    this.setState({
-                        previewItem: null,
-                    }, doDelete);
-                } else {
-                    doDelete();
-                }
+                doDelete();
             }
         });
     }
 
     handleUnsavedChangesModal(onDiscard: () => void, onSave?: () => void) {
-        return new Promise<void>((resolve, reject) => {
-            showModal(({closeModal}) => (
-                <Modal
-                    visible
-                    size="small"
-                    position="top"
-                    onHide={() => {
-                        closeModal();
-                        reject();
-                    }}
-                    headerTemplate={gettext('Unsaved changes')}
-                    footerTemplate={(
-                        <>
-                            <UiFrameworkButton
-                                type="tertiary"
-                                text={gettext('Go back')}
-                                onClick={() => {
-                                    closeModal();
-                                    reject();
-                                }}
-                            />
-                            <UiFrameworkButton
-                                type="secondary"
-                                text={gettext('Don\'t save')}
-                                onClick={() => {
-                                    closeModal();
-                                    onDiscard();
-                                    resolve();
-                                }}
-                            />
-                            <UiFrameworkButton
-                                type="primary"
-                                text={gettext('Save')}
-                                onClick={() => {
-                                    closeModal();
-
-                                    const savePromise = onSave != null
-                                        ? Promise.resolve(onSave())
-                                        : typeof this.editFormRef.handleSave != null
-                                            ? this.editFormRef.handleSave()
-                                            : Promise.resolve();
-
-                                    savePromise.then(() => {
-                                        onDiscard();
-                                        resolve();
-                                    }).catch(reject);
-                                }}
-                            />
-                        </>
-                    )}
-                >
-                    {gettext('You have unsaved changes. What would you like to do?')}
-                </Modal>
-            ));
+        showUnsavedChangesModal({
+            onDiscard,
+            onSave: onSave ?? (() => {
+                return this.editFormRef?.handleSave?.();
+            }),
         });
     }
 
@@ -323,7 +275,34 @@ export class GenericListPageComponent<T extends object, P>
                     editItem: editItem,
                     originalEditItem: editItem,
                 });
-            }).catch(noop);
+            });
+        } else if (this.state.newItem != null) {
+            showUnsavedChangesModal({
+                onDiscard: () => {
+                    const editItem = this.props.crudManager._items.find((item) => this.props.getId(item) === id);
+
+                    this.setState({
+                        newItem: null,
+                        previewItem: null,
+                        editItem: editItem,
+                        originalEditItem: editItem,
+                    });
+                },
+                onSave: () => {
+                    return this.newItemFormRef?.handleSave?.().then?.(() => {
+                        const editItem = this.props.crudManager._items.find(
+                            (item) => this.props.getId(item) === id,
+                        );
+
+                        this.setState({
+                            newItem: null,
+                            previewItem: null,
+                            editItem: editItem,
+                            originalEditItem: editItem,
+                        });
+                    });
+                },
+            });
         } else {
             const previewItem = (() => {
                 if (this.state.previewItem != null && this.props.getId(this.state.previewItem) === id) {
@@ -340,6 +319,7 @@ export class GenericListPageComponent<T extends object, P>
                 previewItem: previewItem,
                 editItem: editItem,
                 originalEditItem: editItem,
+                newItem: null,
             });
         }
     }
@@ -460,26 +440,37 @@ export class GenericListPageComponent<T extends object, P>
                     originalEditItem: null,
                     previewItem: null,
                 });
-            }).catch(noop);
+            });
         } else if (this.state.newItem != null) {
-            showModal(({closeModal}) => (
-                <Modal
-                    visible
-                    size="small"
-                    position="top"
-                    onHide={closeModal}
-                    headerTemplate={gettext('Warning')}
-                    footerTemplate={(
-                        <UiFrameworkButton
-                            type="primary"
-                            text={gettext('OK')}
-                            onClick={closeModal}
-                        />
-                    )}
-                >
-                    {gettext('Can\'t add a new item, because another item is being created.')}
-                </Modal>
-            ));
+            showUnsavedChangesModal({
+                onDiscard: () => {
+                    this.setState({
+                        newItem: {
+                            ...getInitialValues(this.props.getFormConfig()),
+                            ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
+                            ...(initialValues ?? {}),
+                        },
+                        editItem: null,
+                        originalEditItem: null,
+                        previewItem: null,
+                    });
+                },
+                onSave: () => {
+                    return this.newItemFormRef?.handleSave?.().then?.(() => {
+                        this.setState({
+                            newItem: {
+                                ...getInitialValues(this.props.getFormConfig()),
+                                ...this.props.getNewItemTemplate == null
+                                    ? {} : this.props.getNewItemTemplate(this),
+                                ...(initialValues ?? {}),
+                            },
+                            editItem: null,
+                            originalEditItem: null,
+                            previewItem: null,
+                        });
+                    });
+                },
+            });
         } else {
             this.setState({
                 newItem: {
@@ -487,6 +478,8 @@ export class GenericListPageComponent<T extends object, P>
                     ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                     ...(initialValues ?? {}),
                 },
+                editItem: null,
+                originalEditItem: null,
                 previewItem: null,
             });
         }
@@ -525,6 +518,14 @@ export class GenericListPageComponent<T extends object, P>
         }
 
         return false;
+    }
+
+    hasUnsavedChangesInNewItem() {
+        if (this.state.newItem == null) {
+            return false;
+        }
+
+        return this.newItemFormRef?.isFormDirty?.() || false;
     }
 
     componentDidUpdate() {
@@ -891,6 +892,9 @@ export class GenericListPageComponent<T extends object, P>
                     {this.state.newItem != null ? (
                         <PageContainerItem data-test-id="list-page--new-item">
                             <GenericListPageItemViewEdit
+                                ref={(ref) => {
+                                    this.newItemFormRef = ref;
+                                }}
                                 key="new-item"
                                 operation="creation"
                                 item={this.state.newItem}
@@ -898,6 +902,7 @@ export class GenericListPageComponent<T extends object, P>
                                 editMode={true}
                                 hiddenFields={this.props.hiddenFields ?? []}
                                 onEditModeChange={() => {
+                                    this.newItemFormRef = null;
                                     this.setState((prevState) => ({
                                         ...prevState,
                                         newItem: null,

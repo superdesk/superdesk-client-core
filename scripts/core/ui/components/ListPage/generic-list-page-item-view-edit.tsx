@@ -14,7 +14,7 @@ import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
+import {showUnsavedChangesModal} from './show-unsaved-changes-modal';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
@@ -103,18 +103,14 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 });
             };
 
-        (
-            this.isFormDirty() === false
-                ? Promise.resolve(true)
-                : showConfirmationPrompt({
-                    title: gettext('Confirm'),
-                    message: gettext('There are unsaved changes which will be discarded. Continue?'),
-                })
-        ).then((confirmed) => {
-            if (confirmed) {
-                cancelFn();
-            }
-        });
+        if (this.isFormDirty() === false) {
+            cancelFn();
+        } else {
+            showUnsavedChangesModal({
+                onDiscard: cancelFn,
+                onSave: () => this.handleSave(),
+            });
+        }
     }
 
     isFormDirty() {
