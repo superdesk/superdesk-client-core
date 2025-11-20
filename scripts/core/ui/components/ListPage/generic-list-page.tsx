@@ -38,8 +38,10 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
-import {Button as UiFrameworkButton, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button as UiFrameworkButton, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 import {Header} from 'core/ui/components/List/Header';
+import {showModal} from '@sourcefabric/common';
+import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
 
 interface IState<T extends object> {
     previewItem: T | null;
@@ -142,25 +144,46 @@ export class GenericListPageComponent<T extends object, P>
 
     openPreview(id: string) {
         if (this.state.editItem != null && this.hasUnsavedChanges()) {
-            this.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'Can\'t open a preview while there are unsaved changes',
-                ),
-            });
+            this.handleUnsavedChangesModal(() => {
+                const newPreviewItem = this.props.crudManager._items.find(
+                    (value) => this.props.getId(value) === id,
+                );
+
+                if (newPreviewItem != null) {
+                    this.setState({
+                        previewItem: newPreviewItem,
+                        editItem: null,
+                        originalEditItem: null,
+                    });
+                }
+            }).catch(noop);
         } else if (this.state.newItem != null) {
-            this.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'Can\'t open a preview while in create mode',
-                ),
-            });
+            showModal(({closeModal}) => (
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    onHide={closeModal}
+                    headerTemplate={gettext('Warning')}
+                    footerTemplate={(
+                        <UiFrameworkButton
+                            type="primary"
+                            text={gettext('OK')}
+                            onClick={closeModal}
+                        />
+                    )}
+                >
+                    {gettext('Can\'t open a preview while in create mode')}
+                </Modal>
+            ));
         } else if (this.props.crudManager._items.find((value) => this.props.getId(value) === id) != null) {
             const newPreviewItem = this.props.crudManager._items.find((value) => this.props.getId(value) === id);
             // set previewItem only if item with id is available in the props.items._items
 
             this.setState({
                 previewItem: newPreviewItem,
+                editItem: null,
+                originalEditItem: null,
             });
         }
     }
@@ -195,15 +218,30 @@ export class GenericListPageComponent<T extends object, P>
     deleteItem(item: T) {
         const doDelete = () => this.props.crudManager.delete(item);
 
-        this.modal.confirm(gettext('Are you sure you want to delete this item?'))
-            .then(() => {
+        showConfirmationPrompt({
+            title: gettext('Confirm'),
+            message: gettext('Are you sure you want to delete this item?'),
+        }).then((confirmed) => {
+            if (confirmed) {
                 if (this.state.editItem != null && this.hasUnsavedChanges()) {
-                    this.modal.alert({
-                        headerText: gettext('Warning'),
-                        bodyText: gettext(
-                            'Item with unsaved changes must be closed before you can delete an item.',
-                        ),
-                    });
+                    showModal(({closeModal}) => (
+                        <Modal
+                            visible
+                            size="small"
+                            position="top"
+                            onHide={closeModal}
+                            headerTemplate={gettext('Warning')}
+                            footerTemplate={(
+                                <UiFrameworkButton
+                                    type="primary"
+                                    text={gettext('OK')}
+                                    onClick={closeModal}
+                                />
+                            )}
+                        >
+                            {gettext('Item with unsaved changes must be closed before you can delete an item.')}
+                        </Modal>
+                    ));
                 } else if (this.state.previewItem != null) {
                     this.setState({
                         previewItem: null,
@@ -211,19 +249,81 @@ export class GenericListPageComponent<T extends object, P>
                 } else {
                     doDelete();
                 }
-            });
+            }
+        });
+    }
+
+    handleUnsavedChangesModal(onDiscard: () => void, onSave?: () => void) {
+        return new Promise<void>((resolve, reject) => {
+            showModal(({closeModal}) => (
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    onHide={() => {
+                        closeModal();
+                        reject();
+                    }}
+                    headerTemplate={gettext('Unsaved changes')}
+                    footerTemplate={(
+                        <>
+                            <UiFrameworkButton
+                                type="tertiary"
+                                text={gettext('Go back')}
+                                onClick={() => {
+                                    closeModal();
+                                    reject();
+                                }}
+                            />
+                            <UiFrameworkButton
+                                type="secondary"
+                                text={gettext('Don\'t save')}
+                                onClick={() => {
+                                    closeModal();
+                                    onDiscard();
+                                    resolve();
+                                }}
+                            />
+                            <UiFrameworkButton
+                                type="primary"
+                                text={gettext('Save')}
+                                onClick={() => {
+                                    closeModal();
+
+                                    const savePromise = onSave != null
+                                        ? Promise.resolve(onSave())
+                                        : typeof this.editFormRef.handleSave != null
+                                            ? this.editFormRef.handleSave()
+                                            : Promise.resolve();
+
+                                    savePromise.then(() => {
+                                        onDiscard();
+                                        resolve();
+                                    }).catch(reject);
+                                }}
+                            />
+                        </>
+                    )}
+                >
+                    {gettext('You have unsaved changes. What would you like to do?')}
+                </Modal>
+            ));
+        });
     }
 
     startEditing(id: string) {
         const isDifferentItem = this.state.editItem != null && this.props.getId(this.state.editItem) !== id;
 
         if (isDifferentItem && this.hasUnsavedChanges()) {
-            this.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'Can\'t edit this item, because another item has unsaved changes.',
-                ),
-            });
+            this.handleUnsavedChangesModal(() => {
+                const editItem = this.props.crudManager._items.find((item) => this.props.getId(item) === id);
+
+                this.setState({
+                    previewItem: null,
+                    editItem: editItem,
+                    originalEditItem: editItem,
+                });
+            }).catch(noop);
         } else {
             const previewItem = (() => {
                 if (this.state.previewItem != null && this.props.getId(this.state.previewItem) === id) {
@@ -297,12 +397,24 @@ export class GenericListPageComponent<T extends object, P>
 
     filter() {
         if (this.state.editItem != null && this.hasUnsavedChanges()) {
-            this.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'The item with unsaved changes must be closed before you can filter.',
-                ),
-            });
+            showModal(({closeModal}) => (
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    onHide={closeModal}
+                    headerTemplate={gettext('Warning')}
+                    footerTemplate={(
+                        <UiFrameworkButton
+                            type="primary"
+                            text={gettext('OK')}
+                            onClick={closeModal}
+                        />
+                    )}
+                >
+                    {gettext('The item with unsaved changes must be closed before you can filter.')}
+                </Modal>
+            ));
         } else {
             this.refetchDataUsingCurrentFilters();
         }
@@ -336,13 +448,38 @@ export class GenericListPageComponent<T extends object, P>
     }
 
     openNewItemForm(initialValues?: {[key: string]: any}) {
-        if ((this.state.editItem != null && this.hasUnsavedChanges()) || this.state.newItem != null) {
-            this.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'Can\'t add a new item, because another item has unsaved changes.',
-                ),
-            });
+        if (this.state.editItem != null && this.hasUnsavedChanges()) {
+            this.handleUnsavedChangesModal(() => {
+                this.setState({
+                    newItem: {
+                        ...getInitialValues(this.props.getFormConfig()),
+                        ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
+                        ...(initialValues ?? {}),
+                    },
+                    editItem: null,
+                    originalEditItem: null,
+                    previewItem: null,
+                });
+            }).catch(noop);
+        } else if (this.state.newItem != null) {
+            showModal(({closeModal}) => (
+                <Modal
+                    visible
+                    size="small"
+                    position="top"
+                    onHide={closeModal}
+                    headerTemplate={gettext('Warning')}
+                    footerTemplate={(
+                        <UiFrameworkButton
+                            type="primary"
+                            text={gettext('OK')}
+                            onClick={closeModal}
+                        />
+                    )}
+                >
+                    {gettext('Can\'t add a new item, because another item is being created.')}
+                </Modal>
+            ));
         } else {
             this.setState({
                 newItem: {

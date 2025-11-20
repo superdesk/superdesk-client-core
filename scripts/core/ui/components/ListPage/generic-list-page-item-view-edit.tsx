@@ -13,12 +13,12 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
-import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
+import {showConfirmationPrompt} from 'core/ui/show-confirmation-prompt';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
-import {Button} from 'superdesk-ui-framework';
+import {Button} from 'superdesk-ui-framework/react';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -56,12 +56,9 @@ function getInitialState<T extends object>(props: IProps<T>) {
 
 export class GenericListPageItemViewEdit<T extends object> extends React.Component<IProps<T>, IState<T>> {
     private _mounted: boolean;
-    private modal: any;
 
     constructor(props) {
         super(props);
-
-        this.modal = ng.get('modal');
 
         this.state = getInitialState(props);
 
@@ -108,12 +105,16 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
 
         (
             this.isFormDirty() === false
-                ? Promise.resolve()
-                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
-        ).then(cancelFn)
-            .catch(() => {
-            // do nothing
-            });
+                ? Promise.resolve(true)
+                : showConfirmationPrompt({
+                    title: gettext('Confirm'),
+                    message: gettext('There are unsaved changes which will be discarded. Continue?'),
+                })
+        ).then((confirmed) => {
+            if (confirmed) {
+                cancelFn();
+            }
+        });
     }
 
     isFormDirty() {
@@ -164,10 +165,10 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 issues: requiredValidationErrors,
             });
 
-            return;
+            return Promise.reject('Validation errors');
         }
 
-        this.props.onSave(nextItemCleaned).then(() => {
+        return this.props.onSave(nextItemCleaned).then(() => {
             if (this._mounted) {
                 this.setState({
                     issues: {},
