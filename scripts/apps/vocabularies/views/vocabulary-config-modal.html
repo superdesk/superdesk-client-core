@@ -269,19 +269,6 @@
                             </div>
                         </div>
 
-                        <div
-                            class="form__row"
-                            ng-show="
-                                matchFieldTypeToTab('related-content-fields', vocabulary.field_type) &&
-                                vocabulary.field_type === mediaTypes.RELATED_CONTENT.id"
-                        >
-                            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
-                                <label for="allowed_external_providers" class="sd-line-input__label" translate>Allow External Providers</label>
-                                <span id="allowed_external_providers" sd-switch
-                                    ng-model="vocabulary.field_options.allowed_external_providers"></span>
-                            </div>
-                        </div>
-
                         <div class="form__row"
                             ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)"
                         >
@@ -312,10 +299,29 @@
                             </div>
                         </div>
 
+                        <div
+                            class="form__row"
+                            ng-show="
+                                matchFieldTypeToTab('related-content-fields', vocabulary.field_type) &&
+                                vocabulary.field_type === mediaTypes.RELATED_CONTENT.id"
+                        >
+                            <div class="sd-line-input">
+                                <label for="only_allow_external_providers" class="sd-line-input__label" translate>External Providers Only</label>
+                                <div>
+                                <span id="only_allow_external_providers" sd-switch
+                                    ng-model="vocabulary.field_options.only_allow_external_providers">
+                                </span>
+                                </div>
+                                <div class="sd-line-input__hint" translate>
+                                    Only allow content from external providers.
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form__row"
                             ng-if="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)"
                         >
-                            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                            <div class="sd-line-input sd-line-input--no-margin">
                                 <label class="sd-line-input__label" translate>Filters</label>
                                 <sd-check class="sd-margin-r--1" ng-model="vocabulary.field_options.allowed_workflows.in_progress">
                                     <span translate>In Progress</span>

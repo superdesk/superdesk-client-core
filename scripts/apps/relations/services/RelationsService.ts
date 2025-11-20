@@ -85,12 +85,21 @@ export function RelationsService(api, $q) {
         return validateWorkflow(item, field?.field_options?.allowed_workflows ?? {}).result;
     };
 
-    this.isItemFromExternalProviderAllowed = function(item: IArticle, field: VocabularyField): boolean {
-        if (field.field_type !== 'related_content' || item?._type !== 'externalsource')
+    /**
+     * Checks if an item can be added to a related content field.
+     * Returns false if the field requires external providers but the item is not from an external source.
+     */
+    this.isItemAllowedInField = (item: IArticle, field: VocabularyField): boolean => {
+        if (field.field_type !== 'related_content')
             return true;
 
-        return (field as IVocabularyRelatedContent)
+        const onlyExternalProvidersAllowed = (field as IVocabularyRelatedContent)
             ?.field_options
-            ?.allowed_external_providers === true;
+            ?.only_allow_external_providers === true;
+
+        if (item._type !== 'externalsource' && onlyExternalProvidersAllowed)
+            return false;
+
+        return true;
     };
 }

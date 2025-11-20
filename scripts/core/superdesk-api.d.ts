@@ -1660,7 +1660,7 @@ declare module 'superdesk-api' {
                 audio?: boolean;
                 video?: boolean;
             };
-            allowed_external_providers?: boolean;
+            only_allow_external_providers?: boolean;
             allowed_workflows?: {
                 in_progress?: boolean;
                 published?: boolean;
