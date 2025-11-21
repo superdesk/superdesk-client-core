@@ -1538,13 +1538,13 @@ declare module 'superdesk-api' {
     export interface IMonitoringGroup {
         _id: string;
         type: 'search'
-            | 'stage'
-            | 'scheduledDeskOutput'
-            | 'deskOutput'
-            | 'personal'
-            | 'sentDeskOutput'
-            | 'spike'
-            | 'spike-personal';
+        | 'stage'
+        | 'scheduledDeskOutput'
+        | 'deskOutput'
+        | 'personal'
+        | 'sentDeskOutput'
+        | 'spike'
+        | 'spike-personal';
         max_items?: number;
         header?: string;
     }
@@ -2107,9 +2107,10 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericFormItemComponent<T> {
         item: T;
+        index: number;
         page: IGenericListPageComponent<T>;
         inEditMode: boolean;
-        index: number;
+        inPreviewMode: boolean;
         getId(item: T): string;
     }
 
@@ -2117,6 +2118,7 @@ declare module 'superdesk-api' {
         getFormConfig(item?: Partial<T>): IFormGroup;
         defaultSortOption: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
+        groupBy?: Array<{condition: (item: T) => boolean; label: string; emptyState?: string}>;
         additionalProps?: P; // allows passing props which will be available in container and item components
         defaultFilters?: Partial<T>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
@@ -2163,6 +2165,9 @@ declare module 'superdesk-api' {
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
+
+        // default value for the field when creating new items
+        defaultValue?: any;
     }
 
     export interface IFormGroupCollapsible { // don't forget to update runtime type checks
@@ -2254,6 +2259,7 @@ declare module 'superdesk-api' {
 
     export interface IListItemProps {
         onClick?(): void;
+        onDoubleClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
