@@ -2384,7 +2384,7 @@ msgstr "Tehtävä poistettu"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:362
 msgid "Assignment reverted."
-msgstr ""
+msgstr "Tehtävä palautettu."
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:78
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:62
@@ -3268,7 +3268,7 @@ msgstr "Vaihda salasana"
 
 #: scripts/apps/users/views/user-preferences.html:258
 msgid "Change the appearance of Superdesk across the whole application."
-msgstr "Vaihda Superdeskin olemusta koko sovelluksessa."
+msgstr "Muuta Myllyn ulkoasua."
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
@@ -4283,7 +4283,7 @@ msgstr "Sisältöön liittyvät yhteystiedot"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:307
 msgid "Coverage Provider"
-msgstr "Muu tekijä tai lähde"
+msgstr "Muu tekijä tai lähde (vain kuvalle)"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:133
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:208
@@ -10906,7 +10906,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/InputArray/index.tsx:188
 msgid "No Coverages Yet"
-msgstr ""
+msgstr "Ei vielä sisältöjä"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:129
 msgid "No Coverge"
@@ -11358,7 +11358,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/LockState.tsx:21
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:148
 msgid "Not Locked"
-msgstr ""
+msgstr "Ei lukittu"
 
 #: scripts/apps/search/constants.ts:38
 msgid "Not Priority"
@@ -13900,11 +13900,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:167
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:272
 msgid "Revert"
-msgstr ""
+msgstr "Palauta"
 
 #: ../superdesk-planning/client/constants/assignments.ts:197
 msgid "Revert Availability"
-msgstr "Palauta to do -listalle"
+msgstr "Palauta työstettäväksi"
 
 #: scripts/apps/publish/views/subscribers.html:283
 msgid "Revoke"
@@ -16740,7 +16740,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:528
 msgid "The assignment has been reverted."
-msgstr ""
+msgstr "Tehtävä on palautettu työstettäväksi."
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:450
 msgid "The assignment was reassigned."
@@ -16918,7 +16918,7 @@ msgstr "{{ itemType }} on tallennettu"
 
 #: ../superdesk-planning/client/actions/main.ts:396
 msgid "The {{ itemType }} has been unposted"
-msgstr ""
+msgstr "{{ itemType }} on poistettu julkaisusta"
 
 #: scripts/apps/users/views/user-preferences.html:257
 msgid "Themes"
@@ -18070,7 +18070,7 @@ msgstr "Irrota aiheesta"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:75
 msgid "Unlink related event"
-msgstr ""
+msgstr "Pura liitos tapahtumaan"
 
 #: scripts/apps/archive/index.tsx:306
 msgid "Unlink update"
@@ -19001,7 +19001,7 @@ msgstr "Viikoittain {{days}}na klo {{hour}}"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
 msgid "Welcome to Superdesk"
-msgstr "Tervetuloa Superdeskiin!"
+msgstr "Tervetuloa Myllyyn!"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:2
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:9
@@ -20471,11 +20471,11 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:20
 msgid "revert"
-msgstr ""
+msgstr "palauta"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:72
 msgid "reverted"
-msgstr ""
+msgstr "palautettu"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:182
 msgid "rewrite id"
