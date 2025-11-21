@@ -24,10 +24,10 @@ export class SearchPanelWidgets extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 {widgets.map((Widget, index) => (
-                    <div 
-                        key={index} 
+                    <div
+                        key={index}
                         onKeyDown={(event) => {
-                            if (event.key === "Enter") this.props.searchParameters();
+                            if (event.key === 'Enter') this.props.searchParameters();
                         }}
                     >
                         <Widget

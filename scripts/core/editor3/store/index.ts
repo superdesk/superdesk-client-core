@@ -106,11 +106,16 @@ interface IOptions {
         warnings?: ISpellcheckWarningsByBlock,
     };
     limitConfig?: EditorLimit,
+    editorState?: {
+        current: EditorState,
+        next: EditorState
+    }
 }
 
 export const getDecorators = (options: IOptions) => {
     const {limitConfig} = options;
     const {spellchecker} = options;
+    const {editorState} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
@@ -131,6 +136,14 @@ export const getDecorators = (options: IOptions) => {
         decorators.push(
             getTextLimitHighlightDecorator(limitConfig.chars),
         );
+    }
+
+    if (editorState?.current && editorState?.next) {
+        const currentLinkCount = countLinks(editorState.current.getCurrentContent());
+        const nextLinkCount = countLinks(editorState.next.getCurrentContent());
+
+        if (currentLinkCount !== nextLinkCount)
+            mustReApplyDecorators = true;
     }
 
     return {
@@ -377,3 +390,22 @@ export function syncAssociations(item: IArticle, rawState: RawDraftContentState)
 
     item.associations = associations;
 }
+
+const countLinks = (contentState: ContentState) => {
+    let count = 0;
+
+    contentState.getBlockMap().forEach((block) => {
+        block.findEntityRanges(
+            (char) => {
+                const entityKey = char.getEntity();
+
+                return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+            },
+            () => {
+                count += 1;
+            },
+        );
+    });
+    return count;
+};
+
