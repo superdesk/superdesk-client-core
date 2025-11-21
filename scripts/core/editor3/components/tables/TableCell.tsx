@@ -232,6 +232,7 @@ export class TableCell extends React.Component<IProps, IState> {
                                 language: spellchecking.language,
                                 warnings: spellcheckWarningsByBlock,
                             },
+                            invisibles: false,
                         },
                     ).decorator,
                 },

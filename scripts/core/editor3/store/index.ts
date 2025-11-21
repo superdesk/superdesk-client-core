@@ -42,6 +42,7 @@ import {
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
+import {ThinSpaceDecorator} from '../components/thin-spaces/ThinSpaceDecorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
@@ -110,15 +111,22 @@ interface IOptions {
     };
     limitConfig?: EditorLimit,
     softLimitConfig?: number,
+    invisibles?: boolean;
 }
 
 export const getDecorators = (options: IOptions) => {
-    const {limitConfig, softLimitConfig, spellchecker} = options;
+    const {limitConfig, softLimitConfig, spellchecker, invisibles} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
+
+    // Add thin space decorator when invisibles are enabled
+    mustReApplyDecorators = true;
+    if (invisibles === true) {
+        decorators.push(ThinSpaceDecorator);
+    }
 
     if (
         spellchecker != null
@@ -232,6 +240,7 @@ export default function createEditorStore(
             spellchecker: {acceptSuggestion: 'store-based'},
             limitConfig,
             softLimitConfig,
+            invisibles: false,
         }).decorator,
     );
 

@@ -297,7 +297,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, ctrlKey, shiftKey, metaKey} = e;
+        const {key, ctrlKey, shiftKey, metaKey, altKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -349,6 +349,18 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                 e.preventDefault();
                 return '';
             }
+        }
+
+        // Alt + - for ndash
+        if (key === '-' && altKey && !ctrlKey && !shiftKey) {
+            e.preventDefault();
+            return 'custom-ndash';
+        }
+
+        // Alt + Space for thin space
+        if (key === ' ' && altKey && !ctrlKey && !shiftKey) {
+            e.preventDefault();
+            return 'custom-thin-space';
         }
 
         return getDefaultKeyBinding(e);
@@ -428,6 +440,34 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
                 newState = EditorState.redo(editorState);
                 break;
+            case 'custom-ndash': {
+                const ndashContentState = Modifier.replaceText(
+                    editorState.getCurrentContent(),
+                    editorState.getSelection(),
+                    '\u2013',
+                );
+
+                newState = EditorState.push(
+                    editorState,
+                    ndashContentState,
+                    'insert-characters',
+                );
+                break;
+            }
+            case 'custom-thin-space': {
+                const thinSpaceContentState = Modifier.replaceText(
+                    editorState.getCurrentContent(),
+                    editorState.getSelection(),
+                    '\u2009',
+                );
+
+                newState = EditorState.push(
+                    editorState,
+                    thinSpaceContentState,
+                    'insert-characters',
+                );
+                break;
+            }
             case 'backspace': {
                 this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
 
