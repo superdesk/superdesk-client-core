@@ -5,11 +5,6 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 function getInitialValueForFieldType<T extends object>(fieldConfig: IFormField<T>): {readonly [field: string]: any} {
     const {field} = fieldConfig;
 
-    // Fallback to default
-    if (fieldConfig.defaultValue !== undefined) {
-        return {[field]: fieldConfig.defaultValue};
-    }
-
     const type: GenericFormFieldType = fieldConfig.type;
 
     switch (type) {

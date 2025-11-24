@@ -13,12 +13,11 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {showUnsavedChangesModal} from './show-unsaved-changes-modal';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
-import {Button} from 'superdesk-ui-framework/react';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -56,9 +55,12 @@ function getInitialState<T extends object>(props: IProps<T>) {
 
 export class GenericListPageItemViewEdit<T extends object> extends React.Component<IProps<T>, IState<T>> {
     private _mounted: boolean;
+    private modal: any;
 
     constructor(props) {
         super(props);
+
+        this.modal = ng.get('modal');
 
         this.state = getInitialState(props);
 
@@ -103,14 +105,14 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 });
             };
 
-        if (this.isFormDirty() === false) {
-            cancelFn();
-        } else {
-            showUnsavedChangesModal({
-                onDiscard: cancelFn,
-                onSave: () => this.handleSave(),
+        (
+            this.isFormDirty() === false
+                ? Promise.resolve()
+                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+        ).then(cancelFn)
+            .catch(() => {
+            // do nothing
             });
-        }
     }
 
     isFormDirty() {
@@ -161,10 +163,10 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 issues: requiredValidationErrors,
             });
 
-            return Promise.reject('Validation errors');
+            return;
         }
 
-        return this.props.onSave(nextItemCleaned).then(() => {
+        this.props.onSave(nextItemCleaned).then(() => {
             if (this._mounted) {
                 this.setState({
                     issues: {},
@@ -226,19 +228,21 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
                                     data-test-id="toolbar"
                                 >
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        type="secondary"
+                                    <button
+                                        className="btn"
                                         onClick={this.handleCancel}
                                         data-test-id="item-view-edit--cancel-save"
-                                    />
-                                    <Button
-                                        type="primary"
+                                    >
+                                        {gettext('Cancel')}
+                                    </button>
+                                    <button
                                         disabled={!this.isFormDirty()}
                                         onClick={this.handleSave}
+                                        className="btn btn--primary"
                                         data-test-id="item-view-edit--save"
-                                        text={this.props.labelForSaveButton}
-                                    />
+                                    >
+                                        {this.props.labelForSaveButton}
+                                    </button>
                                 </div>
                             )
                             : (

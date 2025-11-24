@@ -11,7 +11,7 @@ export function showConfirmationPrompt(
             <Modal
                 visible
                 size="small"
-                position="top"
+                position="center"
                 onHide={() => {
                     closeModal();
                     resolve(false);
@@ -26,7 +26,8 @@ export function showConfirmationPrompt(
                                 resolve(false);
                             }}
                             text={gettext('Cancel')}
-                            type="tertiary"
+                            style="filled"
+                            type="default"
                         />
                         <Button
                             onClick={() => {
@@ -34,6 +35,7 @@ export function showConfirmationPrompt(
                                 resolve(true);
                             }}
                             text={gettext('Confirm')}
+                            style="filled"
                             type="primary"
                         />
                     </Spacer>

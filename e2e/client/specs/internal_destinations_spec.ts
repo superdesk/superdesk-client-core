@@ -91,7 +91,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['delete'], null, firstItem).click();
 
-        element(by.buttonText('Confirm')).click(); // confirm
+        element(by.buttonText('OK')).click(); // confirm
         browser.wait(ECE.hasElementCount(items, 2));
     });
 

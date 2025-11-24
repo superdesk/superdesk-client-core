@@ -25,7 +25,7 @@ class FilterConditions {
     constructor() {
         // Filter Condition Elements
         this.filterConditionMenuButton = element(by.css('[ng-click="ctrl.changeTab(\'filter_conditions\')"]'));
-        this.addNewFilterConditionButton = element(by.css('[data-test-id="add-new-filter-condition"]'));
+        this.addNewFilterConditionButton = element(by.css('[ng-click="edit()"]'));
         this.filterConditionNameField = element(by.id('filterCondition-name'));
         this.saveButton = element(by.css('[ng-click="save()"]'));
         this.cancelButton = element(by.css('[ng-click="cancel()"]'));
@@ -93,9 +93,8 @@ class FilterConditions {
          * Opens an exiting filter condition for edit
          **/
         this.edit = (name) => this.getRow(name).then((rows) => {
-            browser.actions().mouseMove(rows[0]).perform();
-            browser.sleep(200);
-            rows[0].element(by.css('[data-test-id="edit-filter-condition"]')).click();
+            rows[0].click();
+            rows[0].element(by.className('icon-pencil')).click();
             browser.sleep(500);
         });
 
@@ -103,9 +102,8 @@ class FilterConditions {
          * Deletes an exiting filter condition
          **/
         this.delete = (name) => this.getRow(name).then((rows) => {
-            browser.actions().mouseMove(rows[0]).perform();
-            browser.sleep(200);
-            rows[0].element(by.css('[data-test-id="delete-filter-condition"]')).click();
+            rows[0].click();
+            rows[0].element(by.className('icon-trash')).click();
             browser.sleep(500);
             element(by.buttonText('OK')).click();
         });
