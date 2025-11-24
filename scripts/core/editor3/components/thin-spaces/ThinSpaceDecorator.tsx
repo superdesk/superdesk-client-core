@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import {ContentBlock, ContentState} from 'draft-js';
 import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 
 class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
     render() {
-        const wrapperStyle: React.CSSProperties = {
+        const wrapperStyle: CSSProperties = {
             position: 'relative',
             color: 'var(--sd-colour-interactive)',
             fontSize: '14px',
@@ -14,7 +14,7 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
             padding: '0 2px',
         };
 
-        const indicatorStyle: React.CSSProperties = {
+        const indicatorStyle: CSSProperties = {
             position: 'absolute',
             left: '50%',
             top: '50%',
