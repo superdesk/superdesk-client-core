@@ -606,7 +606,7 @@ msgstr "AMP"
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:88
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:97
 msgid "AND"
-msgstr ""
+msgstr "OCH"
 
 #: ../superdesk-planning/client/components/fields/editor/Categories.tsx:26
 #: ../superdesk-planning/client/components/fields/preview/index.ts:65
@@ -779,7 +779,7 @@ msgstr "Aktiv endast "
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:424
 msgid "Active until {{end}}"
-msgstr ""
+msgstr "Aktiv till {{end}}"
 
 #: scripts/apps/users/views/activity-feed.html:4
 #: scripts/core/lang/missing-translations-strings.ts:44
@@ -821,8 +821,8 @@ msgstr "Lägg till"
 #: ../superdesk-planning/client/utils/confirmAddingRelatedItems.tsx:56
 msgid "Add 1 item"
 msgid_plural "Add {{n}} items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Lägg till 1 artikel"
+msgstr[1] "Lägg till {{n}} artiklar"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:96
 msgid "Add Abbreviation"
@@ -844,7 +844,7 @@ msgstr "Lägg till utlägg"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:323
 msgid "Add Coverage To Workflow"
-msgstr ""
+msgstr "Lägg till utlägg i arbetsflödet"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/AddNewCoverages.tsx:282
 msgid "Add Coverage(s)"
@@ -996,7 +996,7 @@ msgstr "Lägg till den här widgeten"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/TimeInputs.tsx:95
 msgid "Add Time"
-msgstr ""
+msgstr "Lägg till tid"
 
 #: scripts/apps/authoring/authoring/article-url-fields.tsx:103
 msgid "Add URL"
