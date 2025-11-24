@@ -145,7 +145,7 @@ export function updateDecorators(
         invisibles: stateCurrent?.invisibles,
     });
 
-    if (result.mustReApplyDecorators !== true) {
+    if (result.mustReApplyDecorators !== true && force !== true) {
         return editorStateNext;
     }
 

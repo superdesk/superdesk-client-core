@@ -122,9 +122,8 @@ export const getDecorators = (options: IOptions) => {
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
-    // Add thin space decorator when invisibles are enabled
-    mustReApplyDecorators = true;
     if (invisibles === true) {
+        mustReApplyDecorators = true;
         decorators.push(ThinSpaceDecorator);
     }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {ContentBlock, ContentState} from 'draft-js';
 import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 
 class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
@@ -10,19 +11,37 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
                     color: 'var(--sd-colour-interactive)',
                     fontSize: '14px',
                     fontWeight: 'bold',
-                    userSelect: 'none',
-                    pointerEvents: 'none',
+                    display: 'inline-block',
+                    whiteSpace: 'pre',
+                    padding: '0 2px',
                 }}
                 title="Thin space"
             >
-                <span style={{opacity: 0.8}}>¤</span>
                 {this.props.children}
+                <span
+                    aria-hidden={true}
+                    style={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        opacity: 0.8,
+                        pointerEvents: 'none',
+                        userSelect: 'none',
+                    }}
+                >
+                    ¤
+                </span>
             </span>
         );
     }
 }
 
-function ThinSpaceStrategy(contentBlock, callback, contentState) {
+function ThinSpaceStrategy(
+    contentBlock: ContentBlock,
+    callback: (start: number, end: number) => void,
+    contentState: ContentState,
+) {
     const text = contentBlock.getText();
     const thinSpaceChar = '\u2009';
     let index = text.indexOf(thinSpaceChar);

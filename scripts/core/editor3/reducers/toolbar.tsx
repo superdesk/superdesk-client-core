@@ -1,6 +1,6 @@
 import {RichUtils, EditorState, ContentState, SelectionState, EntityInstance} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
-import {onChange} from './editor3';
+import {onChange, updateDecorators} from './editor3';
 import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
@@ -290,12 +290,15 @@ const removeBlock = (state, {blockKey}) => {
  * @return {Object} returns new state
  * @description Enable/Disable the paragraph marks
  */
-const toggleInvisibles = (state) => {
-    const {invisibles} = state;
+const toggleInvisibles = (state: IEditorStore) => {
+    const resultState: IEditorStore = {
+        ...state,
+        invisibles: !state.invisibles,
+    };
 
     return {
-        ...state,
-        invisibles: !invisibles,
+        ...resultState,
+        editorState: updateDecorators(resultState, resultState.editorState, 'store-based', true),
     };
 };
 

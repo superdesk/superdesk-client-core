@@ -160,6 +160,81 @@ describe('editor3.component', () => {
 
         expect(getValidMediaType(event)).toBe('application/superdesk.item.picture');
     });
+
+    describe('keyboard shortcuts', () => {
+        const renderComponent = (extraProps = {}) => shallow(
+            <Editor3Component
+                {...editor3mandatoryProps}
+                editorState={EditorState.createEmpty()}
+                {...stubForHighlights}
+                {...extraProps}
+            />,
+        );
+
+        it('maps Alt + - to custom-ndash', () => {
+            const wrapper = renderComponent();
+            const instance = wrapper.instance() as any;
+            const preventDefault = jasmine.createSpy('preventDefault');
+
+            const command = instance.keyBindingFn({
+                key: '-',
+                altKey: true,
+                ctrlKey: false,
+                shiftKey: false,
+                metaKey: false,
+                preventDefault,
+            });
+
+            expect(command).toBe('custom-ndash');
+            expect(preventDefault).toHaveBeenCalled();
+        });
+
+        it('maps Alt + Space to custom-thin-space', () => {
+            const wrapper = renderComponent();
+            const instance = wrapper.instance() as any;
+            const preventDefault = jasmine.createSpy('preventDefault');
+
+            const command = instance.keyBindingFn({
+                key: ' ',
+                altKey: true,
+                ctrlKey: false,
+                shiftKey: false,
+                metaKey: false,
+                preventDefault,
+            });
+
+            expect(command).toBe('custom-thin-space');
+            expect(preventDefault).toHaveBeenCalled();
+        });
+
+        it('handleKeyCommand inserts ndash and calls onChange', () => {
+            const onChange = jasmine.createSpy('onChange');
+            const wrapper = renderComponent({onChange});
+            const instance = wrapper.instance() as any;
+
+            const result = instance.handleKeyCommand('custom-ndash');
+
+            expect(result).toBe('handled');
+            expect(onChange).toHaveBeenCalled();
+            const newState = onChange.calls.mostRecent().args[0];
+
+            expect(newState.getCurrentContent().getPlainText()).toBe('\u2013');
+        });
+
+        it('handleKeyCommand inserts thin space and calls onChange', () => {
+            const onChange = jasmine.createSpy('onChange');
+            const wrapper = renderComponent({onChange});
+            const instance = wrapper.instance() as any;
+
+            const result = instance.handleKeyCommand('custom-thin-space');
+
+            expect(result).toBe('handled');
+            expect(onChange).toHaveBeenCalled();
+            const newState = onChange.calls.mostRecent().args[0];
+
+            expect(newState.getCurrentContent().getPlainText()).toBe('\u2009');
+        });
+    });
 });
 
 describe('editor3.blockRenderer', () => {
