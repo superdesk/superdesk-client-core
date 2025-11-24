@@ -9,16 +9,19 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
             color: 'var(--sd-colour-interactive)',
             fontSize: '14px',
             fontWeight: 'bold',
-            display: 'inline-block',
+            display: 'inline-grid',
             whiteSpace: 'pre',
             padding: '0 2px',
+            placeItems: 'center',
+        };
+
+        const contentStyle: CSSProperties = {
+            gridArea: '1 / 1 / 2 / 2',
+            opacity: 0,
         };
 
         const indicatorStyle: CSSProperties = {
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
+            gridArea: '1 / 1 / 2 / 2',
             opacity: 0.8,
             pointerEvents: 'none',
             userSelect: 'none',
@@ -29,7 +32,7 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
                 style={wrapperStyle}
                 title="Thin space"
             >
-                {this.props.children}
+                <span style={contentStyle}>{this.props.children}</span>
                 <span
                     aria-hidden={true}
                     style={indicatorStyle}
