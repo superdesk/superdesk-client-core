@@ -4,31 +4,35 @@ import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 
 class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
     render() {
+        const wrapperStyle: React.CSSProperties = {
+            position: 'relative',
+            color: 'var(--sd-colour-interactive)',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            display: 'inline-block',
+            whiteSpace: 'pre',
+            padding: '0 2px',
+        };
+
+        const indicatorStyle: React.CSSProperties = {
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            opacity: 0.8,
+            pointerEvents: 'none',
+            userSelect: 'none',
+        };
+
         return (
             <span
-                style={{
-                    position: 'relative',
-                    color: 'var(--sd-colour-interactive)',
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    display: 'inline-block',
-                    whiteSpace: 'pre',
-                    padding: '0 2px',
-                }}
+                style={wrapperStyle}
                 title="Thin space"
             >
                 {this.props.children}
                 <span
                     aria-hidden={true}
-                    style={{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        opacity: 0.8,
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                    }}
+                    style={indicatorStyle}
                 >
                     ¤
                 </span>
