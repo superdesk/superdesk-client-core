@@ -8,6 +8,7 @@ import mockStore from './utils';
 import {CustomEditor3Entity} from 'core/editor3/constants';
 import {getBlockRenderer} from '../blockRenderer';
 import {IEditorStore} from 'core/editor3/store';
+import ng from 'core/services/ng';
 
 const spellchecking: IEditorStore['spellchecking'] = {
     enabled: false,
@@ -36,6 +37,17 @@ const stubForHighlights = {
 };
 
 describe('editor3.component', () => {
+    beforeAll(() => {
+        ng.register({
+            get: (serviceName: string) => {
+                if (serviceName === 'session') {
+                    return {identity: {_id: 'test-user'}};
+                }
+
+                throw new Error(`Unexpected service requested: ${serviceName}`);
+            },
+        } as any);
+    });
     it('should hide toolbar when disabled', () => {
         const wrapper = shallow(
             <Editor3Component
