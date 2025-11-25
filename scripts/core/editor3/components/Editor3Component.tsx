@@ -351,16 +351,28 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        // Alt + - for ndash
-        if (key === '-' && altKey && !ctrlKey && !shiftKey) {
-            e.preventDefault();
-            return 'custom-ndash';
+        // Cmd/Ctrl + Alt + - for ndash
+        if (key === '-' && altKey && !shiftKey) {
+            const isMac = isMacOS();
+            const macCombo = isMac && metaKey && !ctrlKey;
+            const winCombo = !isMac && !metaKey && ctrlKey;
+
+            if (macCombo || winCombo) {
+                e.preventDefault();
+                return 'custom-ndash';
+            }
         }
 
-        // Alt + Space for thin space
-        if (key === ' ' && altKey && !ctrlKey && !shiftKey) {
-            e.preventDefault();
-            return 'custom-thin-space';
+        // Cmd/Ctrl + Alt + Shift + Space for thin space
+        if (key === ' ' && altKey && shiftKey) {
+            const isMac = isMacOS();
+            const macCombo = isMac && metaKey && !ctrlKey;
+            const winCombo = !isMac && !metaKey && ctrlKey;
+
+            if (macCombo || winCombo) {
+                e.preventDefault();
+                return 'custom-thin-space';
+            }
         }
 
         return getDefaultKeyBinding(e);

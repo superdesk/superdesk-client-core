@@ -183,7 +183,7 @@ describe('editor3.component', () => {
             />,
         );
 
-        it('maps Alt + - to custom-ndash', () => {
+        it('maps Cmd/Ctrl + Alt + - to custom-ndash', () => {
             const wrapper = renderComponent();
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
@@ -191,7 +191,7 @@ describe('editor3.component', () => {
             const command = instance.keyBindingFn({
                 key: '-',
                 altKey: true,
-                ctrlKey: false,
+                ctrlKey: true,
                 shiftKey: false,
                 metaKey: false,
                 preventDefault,
@@ -201,7 +201,7 @@ describe('editor3.component', () => {
             expect(preventDefault).toHaveBeenCalled();
         });
 
-        it('maps Alt + Space to custom-thin-space', () => {
+        it('maps Cmd/Ctrl + Alt + Shift + Space to custom-thin-space', () => {
             const wrapper = renderComponent();
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
@@ -209,8 +209,8 @@ describe('editor3.component', () => {
             const command = instance.keyBindingFn({
                 key: ' ',
                 altKey: true,
-                ctrlKey: false,
-                shiftKey: false,
+                ctrlKey: true,
+                shiftKey: true,
                 metaKey: false,
                 preventDefault,
             });
