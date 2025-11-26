@@ -11,6 +11,8 @@ class DataStore {
     public contentProfiles: OrderedMap<IContentProfile['_id'], IContentProfile>;
     public users: OrderedMap<IUser['_id'], IUser>;
 
+    private initializePromise: Promise<any>;
+
     constructor() {
         this.contentProfiles = OrderedMap();
     }
@@ -81,13 +83,22 @@ class DataStore {
 
                     resolveOnce();
                 },
-                {'users': true},
+                {'users': {
+                    create: true,
+                    delete: true,
+                    update: ['display_name'],
+                }},
+                2000,
             );
         });
     }
 
     initialize() {
-        return Promise.all([this.loadContentProfiles(), this.loadUsers()]);
+        if (this.initializePromise == null) {
+            this.initializePromise = Promise.all([this.loadContentProfiles(), this.loadUsers()]);
+        }
+
+        return this.initializePromise;
     }
 }
 
