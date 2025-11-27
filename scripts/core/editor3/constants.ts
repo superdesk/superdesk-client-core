@@ -7,6 +7,9 @@ export const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
  */
 export const MIME_TYPE_SUPERDESK_TEXT_ITEM = 'application/superdesk.item.text';
 
+export const THIN_SPACE_CHAR = '\u2009';
+export const NDASH_CHAR = '\u2013';
+
 export enum CustomEditor3Entity {
     MEDIA = 'MEDIA',
     EMBED = 'EMBED',

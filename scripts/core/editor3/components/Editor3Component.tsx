@@ -32,7 +32,13 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE, formattingOptionsThatRequireDragAndDrop, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {
+    EDITOR_BLOCK_TYPE,
+    formattingOptionsThatRequireDragAndDrop,
+    MIME_TYPE_SUPERDESK_TEXT_ITEM,
+    NDASH_CHAR,
+    THIN_SPACE_CHAR,
+} from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
@@ -456,7 +462,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                 const ndashContentState = Modifier.replaceText(
                     editorState.getCurrentContent(),
                     editorState.getSelection(),
-                    '\u2013',
+                    NDASH_CHAR,
                 );
 
                 newState = EditorState.push(
@@ -470,7 +476,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                 const thinSpaceContentState = Modifier.replaceText(
                     editorState.getCurrentContent(),
                     editorState.getSelection(),
-                    '\u2009',
+                    THIN_SPACE_CHAR,
                 );
 
                 newState = EditorState.push(

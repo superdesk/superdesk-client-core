@@ -5,7 +5,7 @@ import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
-import {CustomEditor3Entity} from 'core/editor3/constants';
+import {CustomEditor3Entity, NDASH_CHAR, THIN_SPACE_CHAR} from 'core/editor3/constants';
 import {getBlockRenderer} from '../blockRenderer';
 import {IEditorStore} from 'core/editor3/store';
 import ng from 'core/services/ng';
@@ -230,7 +230,7 @@ describe('editor3.component', () => {
             expect(onChange).toHaveBeenCalled();
             const newState = onChange.calls.mostRecent().args[0];
 
-            expect(newState.getCurrentContent().getPlainText()).toBe('\u2013');
+            expect(newState.getCurrentContent().getPlainText()).toBe(NDASH_CHAR);
         });
 
         it('handleKeyCommand inserts thin space and calls onChange', () => {
@@ -244,7 +244,7 @@ describe('editor3.component', () => {
             expect(onChange).toHaveBeenCalled();
             const newState = onChange.calls.mostRecent().args[0];
 
-            expect(newState.getCurrentContent().getPlainText()).toBe('\u2009');
+            expect(newState.getCurrentContent().getPlainText()).toBe(THIN_SPACE_CHAR);
         });
     });
 });

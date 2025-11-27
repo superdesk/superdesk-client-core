@@ -1,18 +1,15 @@
 import React, {CSSProperties} from 'react';
 import {ContentBlock, ContentState} from 'draft-js';
 import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
+import {THIN_SPACE_CHAR} from 'core/editor3/constants';
 
 class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
     render() {
         const wrapperStyle: CSSProperties = {
             position: 'relative',
             color: 'var(--sd-colour-interactive)',
-            fontSize: '14px',
-            fontWeight: 'bold',
             display: 'inline-grid',
-            whiteSpace: 'pre',
-            padding: '0 2px',
-            placeItems: 'center',
+            padding: '0 var(--space--0-5)',
         };
 
         const contentStyle: CSSProperties = {
@@ -29,6 +26,7 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
 
         return (
             <span
+                className="whitespace-pre text-sm font-bold place-items-center"
                 style={wrapperStyle}
                 title="Thin space"
             >
@@ -50,12 +48,11 @@ function ThinSpaceStrategy(
     contentState: ContentState,
 ) {
     const text = contentBlock.getText();
-    const thinSpaceChar = '\u2009';
-    let index = text.indexOf(thinSpaceChar);
+    let index = text.indexOf(THIN_SPACE_CHAR);
 
     while (index !== -1) {
         callback(index, index + 1);
-        index = text.indexOf(thinSpaceChar, index + 1);
+        index = text.indexOf(THIN_SPACE_CHAR, index + 1);
     }
 }
 
