@@ -102,6 +102,18 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
+interface IDecoratorStateCache {
+    invisibles: boolean | undefined;
+}
+
+// Cache for tracking decorator state changes across calls.
+// This allows us to detect when configuration changes i.e invisibles toggle on/off
+// and trigger decorator reapplication only when actually needed.
+// Currently tracks invisibles, but can be extended for other decorator dependencies in the future
+let decoratorStateCache: IDecoratorStateCache = {
+    invisibles: undefined,
+};
+
 interface IOptions {
     spellchecker?: {
         acceptSuggestion: IAcceptSuggestion,
@@ -121,10 +133,16 @@ export const getDecorators = (options: IOptions) => {
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
+    const invisiblesChanged = decoratorStateCache.invisibles !== invisibles;
 
     if (invisibles === true) {
+        // When invisbile is toggled on, add ThinSpaceDecorator and force reapplication
         mustReApplyDecorators = true;
         decorators.push(ThinSpaceDecorator);
+    } else if (invisiblesChanged) {
+        // When invisibles is toggled off, we must reapply decorators
+        // to remove the ThinSpaceDecorator that was previously added in the editor
+        mustReApplyDecorators = true;
     }
 
     if (
@@ -153,6 +171,9 @@ export const getDecorators = (options: IOptions) => {
             ),
         );
     }
+
+    // Update cache with current invisibles state for next comparison
+    decoratorStateCache.invisibles = invisibles;
 
     return {
         decorator: new CompositeDecoratorCustom(decorators),
