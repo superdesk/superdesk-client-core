@@ -142,6 +142,7 @@ export function updateDecorators(
         },
         limitConfig: stateCurrent.limitConfig,
         softLimitConfig: stateCurrent.softLimitConfig,
+        invisibles: stateCurrent?.invisibles,
     });
 
     if (result.mustReApplyDecorators !== true) {
