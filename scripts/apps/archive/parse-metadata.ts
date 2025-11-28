@@ -45,7 +45,9 @@ const getPictureMetadata = (
     }).then((r) => ({...r, contentType: IContentProfileType.picture}));
 
 const processMetadata = (metadata: RawMetadata): Partial<IPTCMetadata> => {
-    const data = metadata.data?.[0] ?? {};
+    let data = metadata.data?.[0] ?? {};
+
+    data = extractLangAltValues(data);
 
     if (metadata.contentType === IContentProfileType.video)
         return stripGroupNames(mapXMPtoIPTC(data));
@@ -76,5 +78,23 @@ const stripGroupNames = (metadata: RawMetadata['data'][number]) =>
         {IPTC: {}, XMP: {}, Composite: {}},
     ),
     );
+
+const extractLangAltValues = (data: Record<string, unknown>) : Record<string, unknown> => {
+    const extracted = {};
+
+    for (const [key, value] of Object.entries(data)) {
+        if (typeof value !== 'string') {
+            extracted[key] = value;
+            continue;
+        }
+        const tempDiv = document.createElement('div');
+
+        tempDiv.innerHTML = value;
+        const text = tempDiv.textContent.trim();
+
+        extracted[key] = text;
+    }
+    return extracted;
+};
 
 export {getMetadata, getPictureMetadata, getVideoMetadata};
