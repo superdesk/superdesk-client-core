@@ -1,4 +1,3 @@
-import {parseMetadata} from '@uswriting/exiftool/cjs';
 import {IContentProfileType} from 'apps/workspace/content/controllers/ContentProfilesController';
 import {IPTCMetadata} from 'superdesk-api';
 import {getObjectEntries} from 'utils/object';
@@ -9,7 +8,7 @@ type RawMetadata = {
   contentType: IContentProfileType.picture | IContentProfileType.video;
 };
 
-type ExiftoolOptions = Parameters<typeof parseMetadata>[1];
+type ExiftoolOptions = Parameters<any>[1];
 
 const getMetadata = (f: File, options?: ExiftoolOptions) =>
     (f.type.startsWith('video/')
@@ -20,29 +19,18 @@ const getMetadata = (f: File, options?: ExiftoolOptions) =>
 const getVideoMetadata = (
     f: File,
     options?: ExiftoolOptions,
-): Promise<RawMetadata> =>
-    parseMetadata<any>(f, {
-        args: [EXIFTOOL_ARGS.showGroupNames, EXIFTOOL_ARGS.JSON, EXIFTOOL_ARGS.XMP],
-        transform: (d) => JSON.parse(d),
-        ...options,
-    }).then((r) => ({...r, contentType: IContentProfileType.video}));
+): Promise<RawMetadata> => {
+    // TODO:
+    return {} as any;
+};
 
 const getPictureMetadata = (
     f: File,
     options?: ExiftoolOptions,
-): Promise<RawMetadata> =>
-    parseMetadata<any>(f, {
-        args: [
-            EXIFTOOL_ARGS.showGroupNames,
-            EXIFTOOL_ARGS.JSON,
-            EXIFTOOL_ARGS.XMP,
-            EXIFTOOL_ARGS.showDuplicates,
-            EXIFTOOL_ARGS.IPTC,
-            ...EXIFTOOL_ARGS.COMPOSITE,
-        ],
-        transform: (d) => JSON.parse(d),
-        ...options,
-    }).then((r) => ({...r, contentType: IContentProfileType.picture}));
+): Promise<RawMetadata> => {
+    // TODO:
+    return {} as any;
+};
 
 const processMetadata = (metadata: RawMetadata): Partial<IPTCMetadata> => {
     const data = metadata.data?.[0] ?? {};
