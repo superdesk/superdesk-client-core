@@ -42,6 +42,7 @@ import {
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
+import {ThinSpaceDecorator} from '../components/thin-spaces/ThinSpaceDecorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
@@ -101,6 +102,18 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
+interface IDecoratorStateCache {
+    invisibles: boolean | undefined;
+}
+
+// Cache for tracking decorator state changes across calls.
+// This allows us to detect when configuration changes i.e invisibles toggle on/off
+// and trigger decorator reapplication only when actually needed.
+// Currently tracks invisibles, but can be extended for other decorator dependencies in the future
+let decoratorStateCache: IDecoratorStateCache = {
+    invisibles: undefined,
+};
+
 interface IOptions {
     spellchecker?: {
         acceptSuggestion: IAcceptSuggestion,
@@ -110,15 +123,27 @@ interface IOptions {
     };
     limitConfig?: EditorLimit,
     softLimitConfig?: number,
+    invisibles?: boolean;
 }
 
 export const getDecorators = (options: IOptions) => {
-    const {limitConfig, softLimitConfig, spellchecker} = options;
+    const {limitConfig, softLimitConfig, spellchecker, invisibles} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
 
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
+    const invisiblesChanged = decoratorStateCache.invisibles !== invisibles;
+
+    if (invisibles === true) {
+        // When invisbile is toggled on, add ThinSpaceDecorator and force reapplication
+        mustReApplyDecorators = true;
+        decorators.push(ThinSpaceDecorator);
+    } else if (invisiblesChanged) {
+        // When invisibles is toggled off, we must reapply decorators
+        // to remove the ThinSpaceDecorator that was previously added in the editor
+        mustReApplyDecorators = true;
+    }
 
     if (
         spellchecker != null
@@ -146,6 +171,9 @@ export const getDecorators = (options: IOptions) => {
             ),
         );
     }
+
+    // Update cache with current invisibles state for next comparison
+    decoratorStateCache.invisibles = invisibles;
 
     return {
         decorator: new CompositeDecoratorCustom(decorators),
@@ -232,6 +260,7 @@ export default function createEditorStore(
             spellchecker: {acceptSuggestion: 'store-based'},
             limitConfig,
             softLimitConfig,
+            invisibles: false,
         }).decorator,
     );
 

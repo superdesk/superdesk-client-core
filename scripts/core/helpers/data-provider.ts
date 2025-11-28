@@ -32,10 +32,16 @@ export class DataProvider<T extends IBaseRestApiResponse> implements IDataProvid
     private scheduleUpdate: () => void;
     private cache: IRestApiResponse<T>;
 
-    constructor(requestFactory: IRequestFactory, responseHandler: IResponseHandler<T>, listenTo: IListenTo) {
+    constructor(
+        requestFactory: IRequestFactory,
+        responseHandler: IResponseHandler<T>,
+        listenTo: IListenTo,
+        updateTimeout?: number,
+    ) {
         this.requestFactory = requestFactory;
         this.responseHandler = responseHandler;
         this.listenTo = listenTo || {};
+        this.updateTimeout = updateTimeout ?? this.updateTimeout;
         this.scheduleUpdate = debounce(() => this.fetch(), this.updateTimeout);
 
         // init
