@@ -5,10 +5,9 @@ import {gettext} from 'core/utils';
 
 interface IUnsavedChangesModalOptions {
     onDiscard: () => void;
-    onSave?: () => void | Promise<void>;
 }
 
-export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModalOptions): void {
+export function showUnsavedChangesModal({onDiscard}: IUnsavedChangesModalOptions): void {
     showModal(({closeModal}) => (
         <Modal
             visible
@@ -19,11 +18,6 @@ export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModa
             footerTemplate={(
                 <>
                     <Button
-                        type="tertiary"
-                        text={gettext('Go back')}
-                        onClick={closeModal}
-                    />
-                    <Button
                         type="secondary"
                         text={gettext('Don\'t save')}
                         onClick={() => {
@@ -33,19 +27,8 @@ export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModa
                     />
                     <Button
                         type="primary"
-                        text={gettext('Save')}
-                        onClick={() => {
-                            closeModal();
-                            const saveResult = onSave?.();
-
-                            if (saveResult instanceof Promise) {
-                                saveResult.then(() => {
-                                    onDiscard();
-                                });
-                            } else {
-                                onDiscard();
-                            }
-                        }}
+                        text={gettext('Go back')}
+                        onClick={closeModal}
                     />
                 </>
             )}

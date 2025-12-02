@@ -2124,6 +2124,7 @@ declare module 'superdesk-api' {
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
+        beforeClose?: () => Promise<boolean>;
         getId(item: T): string;
 
         // Allows initializing a new item with some fields already filled.
@@ -2152,7 +2153,7 @@ declare module 'superdesk-api' {
         contentMargin?: number;
     }
 
-    export interface IFormField<T extends object> { // don't forget to update runtime type checks
+    interface IFormFieldBase<T extends object> {
         type: GenericFormFieldType;
 
         required?: boolean;
@@ -2170,12 +2171,30 @@ declare module 'superdesk-api' {
         defaultValue?: any;
     }
 
-    export interface IFormGroupCollapsible { // don't forget to update runtime type checks
+    interface IFormFieldSelectMultiple<T extends object> extends IFormFieldBase<T> {
+        type: GenericFormFieldType.selectMultiple;
+        component_parameters: {
+            items: Array<{label: string; id: string}>;
+            dataTestId?: string;
+        };
+    }
+
+    interface IFormFieldAlert<T extends object> extends IFormFieldBase<T> {
+        type: GenericFormFieldType.alert;
+        component_parameters: {
+            style: 'info' | 'warning' | 'error';
+        };
+        value: string;
+    }
+
+    export type IFormField<T> = IFormFieldBase<T> | IFormFieldSelectMultiple<T> | IFormFieldAlert<T>;
+
+    export interface IFormGroupCollapsible {
         label: string;
         openByDefault: boolean;
     }
 
-    export interface IFormGroup<T extends object> { // don't forget to update runtime type checks
+    export interface IFormGroup<T extends object> {
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
         form: Array<IFormField<T> | IFormGroup<T>>;

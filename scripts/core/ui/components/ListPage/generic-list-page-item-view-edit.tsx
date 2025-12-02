@@ -30,6 +30,7 @@ interface IProps<T extends object> {
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
+    beforeClose?: () => Promise<boolean>;
 
     /**
      * label "save" doesn't work when data source is an array. The array
@@ -103,12 +104,23 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 });
             };
 
+        const executeCancelFn = () => {
+            if (this.props.beforeClose != null) {
+                this.props.beforeClose().then((result) => {
+                    if (result) {
+                        cancelFn();
+                    }
+                });
+            } else {
+                cancelFn();
+            }
+        };
+
         if (this.isFormDirty() === false) {
-            cancelFn();
+            executeCancelFn();
         } else {
             showUnsavedChangesModal({
-                onDiscard: cancelFn,
-                onSave: () => this.handleSave(),
+                onDiscard: executeCancelFn,
             });
         }
     }
@@ -161,7 +173,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 issues: requiredValidationErrors,
             });
 
-            return Promise.reject('Validation errors');
+            return;
         }
 
         return this.props.onSave(nextItemCleaned).then(() => {
@@ -251,7 +263,20 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                                 </button>
                                             ) : null
                                         }
-                                        <button className="icn-btn" onClick={this.props.onClose}>
+                                        <button
+                                            className="icn-btn"
+                                            onClick={() => {
+                                                if (this.props.beforeClose != null) {
+                                                    this.props.beforeClose().then((result) => {
+                                                        if (result) {
+                                                            this.props.onClose();
+                                                        }
+                                                    });
+                                                } else {
+                                                    this.props.onClose();
+                                                }
+                                            }}
+                                        >
                                             <i className="icon-close-small" />
                                         </button>
                                     </div>
