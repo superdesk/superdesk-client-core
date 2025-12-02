@@ -5,9 +5,10 @@ import {gettext} from 'core/utils';
 
 interface IUnsavedChangesModalOptions {
     onDiscard: () => void;
+    onSave?: () => void | Promise<void>;
 }
 
-export function showUnsavedChangesModal({onDiscard}: IUnsavedChangesModalOptions): void {
+export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModalOptions): void {
     showModal(({closeModal}) => (
         <Modal
             visible
@@ -15,7 +16,7 @@ export function showUnsavedChangesModal({onDiscard}: IUnsavedChangesModalOptions
             position="top"
             onHide={closeModal}
             headerTemplate={gettext('Unsaved changes')}
-            footerTemplate={(
+            footerTemplate={onSave == null ? (
                 <>
                     <Button
                         type="secondary"
@@ -29,6 +30,38 @@ export function showUnsavedChangesModal({onDiscard}: IUnsavedChangesModalOptions
                         type="primary"
                         text={gettext('Go back')}
                         onClick={closeModal}
+                    />
+                </>
+            ) : (
+                <>
+                    <Button
+                        type="tertiary"
+                        text={gettext('Go back')}
+                        onClick={closeModal}
+                    />
+                    <Button
+                        type="secondary"
+                        text={gettext('Don\'t save')}
+                        onClick={() => {
+                            closeModal();
+                            onDiscard();
+                        }}
+                    />
+                    <Button
+                        type="primary"
+                        text={gettext('Save')}
+                        onClick={() => {
+                            closeModal();
+                            const saveResult = onSave?.();
+
+                            if (saveResult instanceof Promise) {
+                                saveResult.then(() => {
+                                    onDiscard();
+                                });
+                            } else {
+                                onDiscard();
+                            }
+                        }}
                     />
                 </>
             )}
