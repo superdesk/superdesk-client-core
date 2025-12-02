@@ -181,7 +181,7 @@ angular.module('superdesk.core.menu', [
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
                 link: function(scope, elem, attrs, ctrl) {
-                    let body = angular.element('body');
+                    const body = angular.element(document.querySelector('body'));
 
                     scope.currentRoute = null;
                     scope.flags = ctrl.flags;

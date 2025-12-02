@@ -42,7 +42,6 @@
     "@types/react-dom": "16.8.0",
     "@types/react-redux": "7.1.9",
     "@typescript-eslint/parser": "5.57.0",
-    "@uswriting/exiftool": "1.0.5",
     "angular": "1.6.9",
     "angular-contenteditable": "0.3.9",
     "angular-dynamic-locale": "0.1.32",
@@ -68,7 +67,6 @@
     "file-loader": "^6.2.0",
     "gettext.js": "0.9.0",
     "git-rev-sync": "1.10.0",
-    "gridster": "github:superdesk/gridster.js#885d0c9",
     "grunt": "~1.5.0",
     "grunt-angular-gettext": "2.5.3",
     "grunt-angular-templates": "1.1.0",
@@ -76,15 +74,11 @@
     "grunt-contrib-copy": "1.0.0",
     "grunt-filerev": "2.3.1",
     "grunt-usemin": "3.1.1",
-    "grunt-webpack": "^5.0.0",
     "hls.js": "0.12.4",
     "html-loader": "^1.3.2",
     "htmldiff-js": "github:superdesk/htmldiff-js#master",
     "immer": "^10.1.1",
     "immutable": "3.8.2",
-    "jquery": "3.3.1",
-    "jquery-jcrop": "0.9.13",
-    "jquery-ui": "github:superdesk/jqueryui#1.11.4",
     "json-merge-patch": "0.2.3",
     "json5": "0.5.1",
     "keycloak-js": "10.0.2",
@@ -97,7 +91,6 @@
     "moment": "2.30.1",
     "moment-timezone": "0.5.41",
     "ng-file-upload": "12.2.13",
-    "owl.carousel": "2.2.0",
     "patch-package": "^7.0.0",
     "popper-max-size-modifier": "0.2.0",
     "postscribe": "2.0.8",
@@ -120,17 +113,16 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "sass": "~1.3.0",
-    "sass-loader": "^10.5.2",
+    "sass-loader": "^14.2.1",
+    "sass-embedded": "^1.83.0",
     "shallow-equal": "^3.1.0",
     "shortid": "2.2.8",
     "superdesk-ui-framework": "5.1.2",
-    "ts-loader": "^8.4.0",
     "typescript": "~4.9.5",
     "uuid": "8.3.1",
     "web-animations-js": "^2.3.2",
-    "webpack": "^4.47.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.15.2"
+    "@rspack/core": "^1.1.7",
+    "@rspack/cli": "^1.1.7"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
@@ -168,9 +160,10 @@
     "unit": "karma start --single-run",
     "lint": "python3 ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
-    "verify-client-api-changes": "node tasks/verify-client-api-changes.js"
-  },
-  "volta": {
-    "node": "14.21.3"
+    "verify-client-api-changes": "node tasks/verify-client-api-changes.js",
+    "prestart": "grunt clean ngtemplates:index copy:index copy:config copy:locales ngtemplates:gen-apps ngtemplates:dev",
+    "start": "rspack serve --config rspack.config.js --mode development",
+    "prebuild": "grunt clean ngtemplates:index copy:index copy:config copy:assets copy:locales ngtemplates:gen-apps ngtemplates:core nggettext_compile",
+    "build": "rspack build --config rspack.config.js --mode production"
   }
 }

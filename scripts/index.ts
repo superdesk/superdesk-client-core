@@ -3,10 +3,6 @@
 // if you need some styles to go at the top/bottom, import it here
 
 import 'app.scss'; // styles
-
-import 'jquery-jcrop/css/jquery.Jcrop.css';
-import 'jquery-ui/themes/smoothness/jquery-ui.css';
-import 'owl.carousel/dist/assets/owl.carousel.min.css';
 import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
 import 'vendor';
@@ -32,7 +28,7 @@ import {maybeDisplayInvalidInstanceConfigurationMessage} from 'validate-instance
 import {registerLegacyExtensionCompatibilityLayer} from 'register-legacy-extension-compatibility-layer';
 import {dataStore} from 'data-store';
 
-let body = angular.element('body');
+const body = angular.element(document.querySelector('body'));
 
 let started = false;
 
@@ -199,3 +195,8 @@ export function startApp(
         }
     });
 }
+
+// FIXME: Only so we start the app from client core
+setTimeout(() => {
+    startApp([], {});
+});

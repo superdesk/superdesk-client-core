@@ -1,8 +1,7 @@
-var path = require('path');
-var execSync = require('child_process').execSync;
+const path = require('path');
 
 module.exports = function(grunt) {
-    var config = {
+    const config = {
         pkg: grunt.file.readJSON(path.join(__dirname, 'package.json')),
         appDir: 'app',
         tmpDir: '.tmp',
@@ -46,7 +45,7 @@ module.exports = function(grunt) {
         'ngtemplates:dev',
         'ngtemplates:ui-guide',
         'copy:assets-ui-guide',
-        'webpack-dev-server:ui-guide',
+        'rspack-dev-server:ui-guide',
     ]);
 
     // Development server
@@ -58,7 +57,7 @@ module.exports = function(grunt) {
         'copy:locales',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
-        'webpack-dev-server:start',
+        'rspack-dev-server:start',
     ]);
 
     // gettext
@@ -90,7 +89,7 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'nggettext_compile',
-            'webpack:build',
+            'rspack:build',
             'filerev',
             'usemin',
         ]);

@@ -24,7 +24,8 @@ describe('item association directive', () => {
 
         Object.assign(appConfig, testConfig);
 
-        spyOn(renditions, 'ingest').and.returnValue($q.when({headline: 'foo',
+        spyOn(renditions, 'ingest').and.returnValue($q.when({
+            headline: 'foo',
             _type: 'externalsource',
             renditions: {
                 original: {
@@ -33,7 +34,8 @@ describe('item association directive', () => {
             },
         }));
 
-        spyOn(renditions, 'crop').and.returnValue($q.when({headline: 'foo',
+        spyOn(renditions, 'crop').and.returnValue($q.when({
+            headline: 'foo',
             _type: 'externalsource',
             renditions: {
                 original: {
@@ -56,19 +58,24 @@ describe('item association directive', () => {
     }));
 
     it('can trigger onsave handler on drop when content is not published', inject(($rootScope, renditions) => {
-        var event = new window.$.Event('drop');
+        const event = new Event('drop', {bubbles: true, cancelable: true});
 
-        scope.item.state = 'in_progress';
-        event.originalEvent = {dataTransfer: {
-            types: ['application/superdesk.item.video'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
-        }};
-
+        // Polyfill originalEvent and spies
+        Object.defineProperty(event, 'originalEvent', {
+            value: {
+                dataTransfer: {
+                    types: ['application/superdesk.item.video'],
+                    getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
+                },
+            },
+            writable: true,
+        });
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
+        scope.item.state = 'in_progress';
         scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
         scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
-        elem.triggerHandler(event);
+        elem[0].dispatchEvent(event);
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
         expect(renditions.crop).toHaveBeenCalled();
@@ -80,20 +87,23 @@ describe('item association directive', () => {
     }));
 
     it('can trigger onchange handler on drop when content is published', inject(($rootScope, renditions) => {
-        var event = new window.$.Event('drop');
+        const event = new Event('drop', {bubbles: true, cancelable: true});
 
-        scope.item.state = 'published';
-        event.originalEvent = {dataTransfer: {
-            types: ['application/superdesk.item.video'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
-        }};
-
+        Object.defineProperty(event, 'originalEvent', {
+            value: {
+                dataTransfer: {
+                    types: ['application/superdesk.item.video'],
+                    getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
+                },
+            },
+            writable: true,
+        });
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
+        scope.item.state = 'published';
         scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
         scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
-
-        elem.triggerHandler(event);
+        elem[0].dispatchEvent(event);
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
         expect(renditions.crop).toHaveBeenCalled();
@@ -106,8 +116,17 @@ describe('item association directive', () => {
 
     it('trigger onchange handler on drop when feature media is not editable',
         inject(($rootScope, renditions) => {
-            var event = new window.$.Event('drop');
+            const event = new Event('drop', {bubbles: true, cancelable: true});
 
+            Object.defineProperty(event, 'originalEvent', {
+                value: {
+                    dataTransfer: {
+                        types: ['application/superdesk.item.picture'],
+                        getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
+                    },
+                },
+                writable: true,
+            });
             const testConfig: Partial<ISuperdeskGlobalConfig> = {
                 features: {
                     ...appConfig.features,
@@ -116,18 +135,12 @@ describe('item association directive', () => {
             };
 
             Object.assign(appConfig, testConfig);
-
             scope.item.state = 'in_progress';
-            event.originalEvent = {dataTransfer: {
-                types: ['application/superdesk.item.picture'],
-                getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
-            }};
-
             event.preventDefault = jasmine.createSpy('preventDefault');
             event.stopPropagation = jasmine.createSpy('stopPropagation');
             scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
             scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
-            elem.triggerHandler(event);
+            elem[0].dispatchEvent(event);
             $rootScope.$digest();
             expect(renditions.ingest).not.toHaveBeenCalled();
             expect(renditions.crop).not.toHaveBeenCalled();
@@ -138,20 +151,23 @@ describe('item association directive', () => {
         }));
 
     it('cannot associated media if item is locked.', inject(($rootScope, renditions, notify, api, $q) => {
-        var event = new window.$.Event('drop');
+        const event = new Event('drop', {bubbles: true, cancelable: true});
 
+        Object.defineProperty(event, 'originalEvent', {
+            value: {
+                dataTransfer: {
+                    types: ['application/superdesk.item.picture'],
+                    getData: () => angular.toJson({_id: 'foo', _type: 'archive'}),
+                },
+            },
+            writable: true,
+        });
         spyOn(api, 'find').and.returnValue($q.when({lock_user: 'foo'}));
-
         scope.item.state = 'in_progress';
-        event.originalEvent = {dataTransfer: {
-            types: ['application/superdesk.item.picture'],
-            getData: () => angular.toJson({_id: 'foo', _type: 'archive'}),
-        }};
-
         notify.error = jasmine.createSpy('error');
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
-        elem.triggerHandler(event);
+        elem[0].dispatchEvent(event);
         $rootScope.$digest();
         expect(notify.error).toHaveBeenCalled();
     }));

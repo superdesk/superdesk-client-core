@@ -1,4 +1,4 @@
-import 'owl.carousel';
+// import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
@@ -91,61 +91,61 @@ export function ItemCarouselDirective(notify, relationsService) {
                 );
 
             scope.waitForMediaAndInitCarousel = (items) => {
-                previousItems = _.cloneDeep(items);
-                let field = _.find(items, (item) => !item[item.fieldId]);
+                // previousItems = _.cloneDeep(items);
+                // let field = _.find(items, (item) => !item[item.fieldId]);
 
-                scope.rel = field ? field.fieldId : null;
+                // scope.rel = field ? field.fieldId : null;
 
-                scope.carouselItems = _.sortBy(_.filter(items, (item: any) => item[item.fieldId]),
-                    [(item: any) => item[item.fieldId].order]);
+                // scope.carouselItems = _.sortBy(_.filter(items, (item: any) => item[item.fieldId]),
+                //     [(item: any) => item[item.fieldId].order]);
 
-                scope.$applyAsync(() => {
-                    // waiting for angular to render items
+                // scope.$applyAsync(() => {
+                //     // waiting for angular to render items
 
-                    if (carousel) {
-                        carousel.trigger('destroy.owl.carousel');
-                    }
+                //     if (carousel) {
+                //         carousel.trigger('destroy.owl.carousel');
+                //     }
 
-                    // React children won't load inmediately after angular
-                    // so elements like <video> from <sd-video> won't be available right away
-                    setTimeout(() => {
-                        const carouselImages: Array<HTMLImageElement> = Array.from(
-                            elem
-                                .get(0)
-                                .querySelectorAll(
-                                    `${carouselContainerSelector} img`,
-                                ),
-                        );
-                        const carouselAudiosAndVideos: Array<
-                            HTMLAudioElement | HTMLVideoElement
-                        > = Array.from(
-                            elem
-                                .get(0)
-                                .querySelectorAll(
-                                    `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
-                                ),
-                        );
+                //     // React children won't load inmediately after angular
+                //     // so elements like <video> from <sd-video> won't be available right away
+                //     setTimeout(() => {
+                //         const carouselImages: Array<HTMLImageElement> = Array.from(
+                //             elem
+                //                 .get(0)
+                //                 .querySelectorAll(
+                //                     `${carouselContainerSelector} img`,
+                //                 ),
+                //         );
+                //         const carouselAudiosAndVideos: Array<
+                //             HTMLAudioElement | HTMLVideoElement
+                //         > = Array.from(
+                //             elem
+                //                 .get(0)
+                //                 .querySelectorAll(
+                //                     `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
+                //                 ),
+                //         );
 
-                        if (
-                            items.length < 1 ||
-                            carouselImages.length +
-                                carouselAudiosAndVideos.length <
-                                1
-                        ) {
-                            return;
-                        }
+                //         if (
+                //             items.length < 1 ||
+                //             carouselImages.length +
+                //                 carouselAudiosAndVideos.length <
+                //                 1
+                //         ) {
+                //             return;
+                //         }
 
-                        const mediaItems: Array<
-                            | HTMLAudioElement
-                            | HTMLVideoElement
-                            | HTMLImageElement
-                        > = []
-                            .concat(carouselImages)
-                            .concat(carouselAudiosAndVideos);
+                //         const mediaItems: Array<
+                //             | HTMLAudioElement
+                //             | HTMLVideoElement
+                //             | HTMLImageElement
+                //         > = []
+                //             .concat(carouselImages)
+                //             .concat(carouselAudiosAndVideos);
 
-                        waitForMediaToLoad(mediaItems).then(initCarousel);
-                    }, 0);
-                });
+                //         waitForMediaToLoad(mediaItems).then(initCarousel);
+                //     }, 0);
+                // });
             };
 
             /*
@@ -154,123 +154,123 @@ export function ItemCarouselDirective(notify, relationsService) {
              */
             scope.$watchCollection('items', (items: Array<any>) => {
                 // Don't execute if there are no items or their length is same as before and their order is unchanged
-                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
-                    && !isOrderOrItemsChanged(items, previousItems)) {
-                    return false;
-                }
+                // if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
+                //     && !isOrderOrItemsChanged(items, previousItems)) {
+                //     return false;
+                // }
 
-                scope.waitForMediaAndInitCarousel(items);
+                // scope.waitForMediaAndInitCarousel(items);
             });
 
             /*
              * Initialize carousel navigation
              */
             scope.navNext = () => {
-                if (scope.currentIndex < scope.carouselItems.length - 1) {
-                    carousel.trigger('next.owl.carousel');
-                    scope.currentIndex++;
-                }
+                // if (scope.currentIndex < scope.carouselItems.length - 1) {
+                //     carousel.trigger('next.owl.carousel');
+                //     scope.currentIndex++;
+                // }
             };
 
             scope.navPrev = () => {
-                if (scope.currentIndex > 0) {
-                    carousel.trigger('prev.owl.carousel');
-                    scope.currentIndex--;
-                }
+                // if (scope.currentIndex > 0) {
+                //     carousel.trigger('prev.owl.carousel');
+                //     scope.currentIndex--;
+                // }
             };
 
             /*
              * Function for triggering thumbnail navigation
              */
             scope.goTo = (index) => {
-                scope.currentIndex = index;
-                carousel.trigger('to.owl.carousel', [index]);
+                // scope.currentIndex = index;
+                // carousel.trigger('to.owl.carousel', [index]);
             };
 
             const addDragOverClass = () => {
-                elem.find('figure').addClass('dragover');
-                elem.find('button.item-association').addClass('dragover');
+                // elem.find('figure').addClass('dragover');
+                // elem.find('button.item-association').addClass('dragover');
             };
 
             const removeDragOverClass = () => {
-                elem.find('figure').removeClass('dragover');
-                elem.find('button.item-association').removeClass('dragover');
+                // elem.find('figure').removeClass('dragover');
+                // elem.find('button.item-association').removeClass('dragover');
             };
 
             function canUploadItems(uploadsCount: number = 0): boolean {
-                const mediaItemsForCurrentField = getAssociationsByFieldId(scope.item.associations, scope.field._id);
-                const currentUploads = mediaItemsForCurrentField.length;
+                // const mediaItemsForCurrentField = getAssociationsByFieldId(scope.item.associations, scope.field._id);
+                // const currentUploads = mediaItemsForCurrentField.length;
 
-                // check files from external folder does not exceed the maxUploads limit
-                if (currentUploads + uploadsCount > scope.maxUploads) {
-                    notify.error(
-                        gettext(
-                            'Select at most {{maxUploads}} files to upload.',
-                            {maxUploads: scope.maxUploads - currentUploads},
-                        ),
-                    );
-                    return false;
-                }
+                // // check files from external folder does not exceed the maxUploads limit
+                // if (currentUploads + uploadsCount > scope.maxUploads) {
+                //     notify.error(
+                //         gettext(
+                //             'Select at most {{maxUploads}} files to upload.',
+                //             {maxUploads: scope.maxUploads - currentUploads},
+                //         ),
+                //     );
+                //     return false;
+                // }
 
-                return true;
+                // return true;
             }
 
             if (!elem.hasClass('no-drop-zone') && scope.editable) {
-                elem.on('dragover', (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    addDragOverClass();
-                });
+                // elem.on('dragover', (event) => {
+                //     event.preventDefault();
+                //     event.stopPropagation();
+                //     addDragOverClass();
+                // });
 
-                elem.on('dragleave', () => {
-                    removeDragOverClass();
-                });
+                // elem.on('dragleave', () => {
+                //     removeDragOverClass();
+                // });
 
-                elem.on('drop dragdrop', (event) => {
-                    if (!scope.editable) {
-                        return;
-                    }
+                // elem.on('drop dragdrop', (event) => {
+                //     if (!scope.editable) {
+                //         return;
+                //     }
 
-                    event.preventDefault();
-                    event.stopPropagation();
+                //     event.preventDefault();
+                //     event.stopPropagation();
 
-                    const type: string = getSuperdeskType(event, false);
+                //     const type: string = getSuperdeskType(event, false);
 
-                    const jsonData = event.originalEvent.dataTransfer.getData(type);
-                    const item: IArticle = angular.fromJson(jsonData !== '' ? jsonData : '{}');
+                //     const jsonData = event.originalEvent.dataTransfer.getData(type);
+                //     const item: IArticle = angular.fromJson(jsonData !== '' ? jsonData : '{}');
 
-                    const isWorkflowAllowed: boolean = relationsService.itemHasAllowedStatus(item, scope.field);
+                //     const isWorkflowAllowed: boolean = relationsService.itemHasAllowedStatus(item, scope.field);
 
-                    removeDragOverClass();
-                    if (!isWorkflowAllowed) {
-                        notify.error(gettext(
-                            'The following status is not allowed in this field: {{status}}',
-                            {status: item.state},
-                        ));
-                        return;
-                    }
+                //     removeDragOverClass();
+                //     if (!isWorkflowAllowed) {
+                //         notify.error(gettext(
+                //             'The following status is not allowed in this field: {{status}}',
+                //             {status: item.state},
+                //         ));
+                //         return;
+                //     }
 
-                    if (isAllowedMediaType(scope, event)) {
-                        const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
+                //     if (isAllowedMediaType(scope, event)) {
+                //         const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
-                        if (canUploadItems(uploadsCount)) {
-                            controller.initializeUploadOnDrop(scope, event).then((res: boolean) => {
-                                if (res === true) {
-                                    // add a new item at the last position in the carousel
+                //         if (canUploadItems(uploadsCount)) {
+                //             controller.initializeUploadOnDrop(scope, event).then((res: boolean) => {
+                //                 if (res === true) {
+                //                     // add a new item at the last position in the carousel
 
-                                    scope.currentIndex = scope.carouselItems != null
-                                        ? scope.carouselItems.length - 1
-                                        : 0;
-                                }
-                            });
-                        }
-                    } else {
-                        const allowedTypeNames = getAllowedTypeNames(scope);
-                        const message = gettext('Only the following content item types are allowed: ');
+                //                     scope.currentIndex = scope.carouselItems != null
+                //                         ? scope.carouselItems.length - 1
+                //                         : 0;
+                //                 }
+                //             });
+                //         }
+                //     } else {
+                //         const allowedTypeNames = getAllowedTypeNames(scope);
+                //         const message = gettext('Only the following content item types are allowed: ');
 
-                        notify.error(message + allowedTypeNames);
-                    }
-                });
+                //         notify.error(message + allowedTypeNames);
+                //     }
+                // });
             }
 
             /**
@@ -280,9 +280,9 @@ export function ItemCarouselDirective(notify, relationsService) {
              * @description Upload media.
              */
             scope.upload = function() {
-                if (scope.editable) {
-                    controller.uploadAndCropImages(scope);
-                }
+                // if (scope.editable) {
+                //     controller.uploadAndCropImages(scope);
+                // }
             };
 
             /**
@@ -293,37 +293,37 @@ export function ItemCarouselDirective(notify, relationsService) {
              * @param {Object} item Item object
              */
             scope.remove = function(item) {
-                controller.updateItemAssociation(scope, null, item.fieldId).then(() => reorderMediaItems());
-                // if we deleted the last item from the carousel then reduce the currentIndex by one so that
-                // gallery does not disappear
-                if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
-                    scope.currentIndex -= 1;
-                }
+                // controller.updateItemAssociation(scope, null, item.fieldId).then(() => reorderMediaItems());
+                // // if we deleted the last item from the carousel then reduce the currentIndex by one so that
+                // // gallery does not disappear
+                // if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
+                //     scope.currentIndex -= 1;
+                // }
             };
 
             function reorderMediaItems() {
-                scope.carouselItems.forEach((item, index) => {
-                    let data = {};
+                // scope.carouselItems.forEach((item, index) => {
+                //     let data = {};
 
-                    // assign index as new order since carouselItems are sorted by order
-                    item[item.fieldId].order = index;
-                    data[item.fieldId] = item[item.fieldId];
-                    scope.item.associations = angular.extend({}, scope.item.associations, data);
-                });
+                //     // assign index as new order since carouselItems are sorted by order
+                //     item[item.fieldId].order = index;
+                //     data[item.fieldId] = item[item.fieldId];
+                //     scope.item.associations = angular.extend({}, scope.item.associations, data);
+                // });
 
-                scope.onchange();
+                // scope.onchange();
             }
 
             scope.handleInputChange = (value: string, onChangeData) => {
-                const {association, field} = onChangeData;
+                // const {association, field} = onChangeData;
 
-                if (typeof scope.item.associations?.[association]?.[field] === 'string'
-                    || (scope.item.associations?.[association] !== null
-                        && field !== null && value !== null && typeof value === 'string')) {
-                    scope.item.associations[association][field] = value;
-                    scope.onchange();
-                    scope.$applyAsync();
-                }
+                // if (typeof scope.item.associations?.[association]?.[field] === 'string'
+                //     || (scope.item.associations?.[association] !== null
+                //         && field !== null && value !== null && typeof value === 'string')) {
+                //     scope.item.associations[association][field] = value;
+                //     scope.onchange();
+                //     scope.$applyAsync();
+                // }
             };
 
             /**
@@ -335,12 +335,12 @@ export function ItemCarouselDirective(notify, relationsService) {
             function initCarousel() {
                 let updated = false;
 
-                carousel = elem.find(carouselContainerSelector).owlCarousel({
-                    items: 1,
-                    autoHeight: true,
-                    mouseDrag: false, // disable mouse & touch drag to allow contenteditable
-                    touchDrag: false,
-                });
+                // carousel = elem.find(carouselContainerSelector).owlCarousel({
+                //     items: 1,
+                //     autoHeight: true,
+                //     mouseDrag: false, // disable mouse & touch drag to allow contenteditable
+                //     touchDrag: false,
+                // });
 
                 // Initialize sortable function for thumbnails
                 elem.find('.sd-media-carousel__thumb-strip').sortable({
@@ -374,22 +374,22 @@ export function ItemCarouselDirective(notify, relationsService) {
             }
 
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
-                const {field, image} = event.detail;
+                // const {field, image} = event.detail;
 
-                if (scope.field._id === field) {
-                    controller.addAssociation(scope, image);
-                }
+                // if (scope.field._id === field) {
+                //     controller.addAssociation(scope, image);
+                // }
             });
 
             scope.$watch('currentIndex', () => {
-                if (scope.currentIndex != null) {
-                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
-                }
+                // if (scope.currentIndex != null) {
+                //     carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
+                // }
             });
 
             scope.$on('$destroy', () => {
-                elem.off('drop dragdrop dragover');
-                removeAddImageEventListener();
+                // elem.off('drop dragdrop dragover');
+                // removeAddImageEventListener();
             });
         },
     };
