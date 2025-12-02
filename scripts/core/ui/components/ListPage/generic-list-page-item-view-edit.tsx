@@ -161,7 +161,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 issues: requiredValidationErrors,
             });
 
-            return Promise.reject('Validation errors');
+            return;
         }
 
         return this.props.onSave(nextItemCleaned).then(() => {
