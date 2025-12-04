@@ -167,9 +167,6 @@
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "verify-client-api-changes": "node tasks/verify-client-api-changes.js"
   },
-  "engines": {
-    "node": ">=22.0.0"
-  },
   "volta": {
     "node": "22.21.1"
   }
