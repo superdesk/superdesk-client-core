@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['14', '22']
+        node-version: ['22']
 
     runs-on: ubuntu-latest
 
@@ -19,7 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm install # needed while we support v14
+    - run: npm ci
 
     - run: npm run test
 
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['14', '22']
+        node-version: ['22']
         suite: [a, b]
     defaults:
       run:
@@ -43,16 +43,16 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm install  # npm ci on different version won't work
+    - run: npm ci
       working-directory: ./
 
-    - run: npm install
+    - run: npm ci
       working-directory: ./build-tools
 
-    - run: npm install
+    - run: npm ci
       working-directory: ./end-to-end-testing-helpers
 
-    - run: npm install
+    - run: npm ci
     - run: npm run build
     - run: npm run specs--compile
     - run: npm run start-client-server
