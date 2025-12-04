@@ -19,6 +19,7 @@ import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
 import {Button} from 'superdesk-ui-framework/react';
+import {GenericFormFieldType} from '../generic-form/interfaces/form';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -30,7 +31,7 @@ interface IProps<T extends object> {
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
-    beforeClose?: () => Promise<boolean>;
+    beforeClose?: (item: T) => Promise<boolean>;
 
     /**
      * label "save" doesn't work when data source is an array. The array
@@ -106,7 +107,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
 
         const executeCancelFn = () => {
             if (this.props.beforeClose != null) {
-                this.props.beforeClose().then((result) => {
+                this.props.beforeClose(this.props.item as T).then((result) => {
                     if (result) {
                         cancelFn();
                     }
@@ -132,8 +133,12 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
+
+        // Filter out alert fields - they're only cosmetic
+        const fieldsToSend = currentFields.filter((field) => field.type !== GenericFormFieldType.alert);
+
         const currentFieldsIds = [
-            ...currentFields.map(({field}) => field),
+            ...fieldsToSend.map(({field}) => field),
             '_id',
             ...this.props.hiddenFields,
         ];
@@ -267,7 +272,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                             className="icn-btn"
                                             onClick={() => {
                                                 if (this.props.beforeClose != null) {
-                                                    this.props.beforeClose().then((result) => {
+                                                    this.props.beforeClose(this.props.item as T).then((result) => {
                                                         if (result) {
                                                             this.props.onClose();
                                                         }

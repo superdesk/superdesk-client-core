@@ -31,10 +31,11 @@ export const ProductionApiKeys = () => {
             getFormConfig={getProductionApiKeysFormConfig}
             fieldForSearch={getNameField()}
             getId={(item) => item._id}
-            beforeClose={handleClose}
+            beforeClose={(item) => item.password ? handleClose() : Promise.resolve(true)}
+            defaultSortOption={{field: '_updated', direction: 'descending'}}
             disallowFiltering={true}
             disallowSorting={true}
-            defaultSortOption={{field: '_updated', direction: 'descending'}}
+            hideItemsCount={true}
         />
     );
 };

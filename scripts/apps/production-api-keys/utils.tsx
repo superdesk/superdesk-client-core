@@ -19,7 +19,7 @@ export function getProductionApiKeysFormConfig(): IFormGroup<IProductionApiKeyCo
             {
                 label: gettext('Scopes'),
                 type: GenericFormFieldType.selectMultiple,
-                field: 'scopes',
+                field: 'scope',
                 component_parameters: {
                     items: [
                         {id: 'ARCHIVE_READ', label: gettext('Archive')},
@@ -54,12 +54,12 @@ export function getProductionApiKeysFormConfig(): IFormGroup<IProductionApiKeyCo
                     {
                         label: gettext('Client ID'),
                         type: GenericFormFieldType.readonlyCopyableText,
-                        field: 'client_id',
+                        field: '_id',
                     },
                     {
                         label: gettext('Client Secret'),
                         type: GenericFormFieldType.readonlyCopyableText,
-                        field: 'client_secret',
+                        field: 'password',
                     },
                 ],
             },
@@ -109,8 +109,7 @@ export const handleClose = (): Promise<boolean> => {
 };
 
 export interface IProductionApiKeyConfig extends IBaseRestApiResponse {
-    client_id: string;
-    client_secret: string;
+    password: string;
     name: string;
-    scopes: Array<string>;
+    scope: Array<string>;
 }

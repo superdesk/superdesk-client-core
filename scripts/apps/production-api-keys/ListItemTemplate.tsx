@@ -21,9 +21,9 @@ export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProduct
 
     return (
         <ListItem
+            className={inEditMode || inPreviewMode ? 'sd-list-item--selected' : ''}
             onClick={handleClick}
             onDoubleClick={handleDoubleClick}
-            inactive={!inEditMode && !inPreviewMode}
             data-test-id="production-api-keys"
         >
             <ListItemColumn ellipsisAndGrow noBorder>

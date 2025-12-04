@@ -8,26 +8,7 @@ export class ReadonlyCopyableText extends React.Component<IInputType<string>> {
     handleCopy = () => {
         const value = this.props.value || '';
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(value);
-        } else {
-            const textArea = document.createElement('textarea');
-
-            textArea.value = value;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-
-            try {
-                document.execCommand('copy');
-            } catch (err) {
-                console.error('Failed to copy text:', err);
-            }
-
-            document.body.removeChild(textArea);
-        }
+        navigator.clipboard.writeText(value);
     }
 
     render() {

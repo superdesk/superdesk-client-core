@@ -2124,7 +2124,9 @@ declare module 'superdesk-api' {
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
-        beforeClose?: () => Promise<boolean>;
+        // Triggered everywhere before closing, in preview and create/edit forms
+        // Useful if you'd like to prevent accidental closing of the form.
+        beforeClose?: (item: T) => Promise<boolean>;
         getId(item: T): string;
 
         // Allows initializing a new item with some fields already filled.
