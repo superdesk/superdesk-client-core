@@ -34,7 +34,7 @@ export class ListItem extends React.Component<IListItemProps> {
         } else if (this.props.onClick != null) {
             this.props.onClick();
         }
-    }
+    };
 
     handleDoubleClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (this.props.onDoubleClick != null) {
@@ -47,7 +47,7 @@ export class ListItem extends React.Component<IListItemProps> {
 
             this.props.onDoubleClick();
         }
-    }
+    };
 
     render() {
         const inlineStyles: React.CSSProperties = {

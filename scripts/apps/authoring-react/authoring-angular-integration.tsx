@@ -847,7 +847,7 @@ export function getAuthoringPrimaryToolbarWidgets(
 ) {
     return Object.values(extensions)
         .flatMap(({activationResult}) =>
-                activationResult?.contributions?.authoringTopbarWidgets ?? [],
+            activationResult?.contributions?.authoringTopbarWidgets ?? [],
         )
         .map((item): ITopBarWidget<IArticle> => {
             const Component = item.component;

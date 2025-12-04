@@ -99,7 +99,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
                 resolve(deskSuggestions);
             });
         });
-    }
+    };
 
     loadUsers = (): Promise<IUserSuggestionData> => {
         return new Promise((resolve) => {
@@ -114,18 +114,18 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
 
             resolve({users: users, mentionInputDataUsers: mentionInputDataUsers});
         });
-    }
+    };
 
     loadComments = (): Promise<Array<IComment>> => {
         return this.props.getComments();
-    }
+    };
 
     reload = (): void => {
         this.loadComments()
             .then((comments) => {
                 this.setState({comments});
             });
-    }
+    };
 
     save = (): void => {
         if (!this.state.newCommentMessage.length) {
@@ -143,14 +143,14 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
             this.setState({newCommentMessage: ''});
             this.reload();
         });
-    }
+    };
 
     handleCommentInputKeyDown = (event): void => {
         if (!this.state.saveOnEnter || event.key !== 'Enter' || event.shiftKey) {
             return;
         }
         this.save();
-    }
+    };
 
     render() {
         const hasComments = this.state.comments?.length > 0;
