@@ -52,7 +52,7 @@ jobs:
     - run: npm ci
       working-directory: ./end-to-end-testing-helpers
 
-    - run: npm ci
+    - run: npm install
     - run: npm run build
     - run: npm run specs--compile
     - run: npm run start-client-server
