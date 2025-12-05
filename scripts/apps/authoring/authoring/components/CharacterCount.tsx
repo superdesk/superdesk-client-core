@@ -10,8 +10,9 @@ interface IProps {
     item: string;
 }
 
-export function getEditorFieldCharactersCount(text: string, html?: boolean) {
-    let input = text?.trim() ?? '';
+export function getEditorFieldCharactersCount(text: string | number, html?: boolean) {
+    const normalized = text == null ? '' : String(text);
+    let input = normalized.trim();
 
     input = html ? cleanHtml(input) : input;
     input = input.replace(/\r?\n|\r/g, '');
