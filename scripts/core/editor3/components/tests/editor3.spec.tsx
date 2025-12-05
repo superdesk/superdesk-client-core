@@ -9,6 +9,7 @@ import {CustomEditor3Entity, NDASH_CHAR, THIN_SPACE_CHAR} from 'core/editor3/con
 import {getBlockRenderer} from '../blockRenderer';
 import {IEditorStore} from 'core/editor3/store';
 import ng from 'core/services/ng';
+import {isMacOS} from 'core/utils';
 
 const spellchecking: IEditorStore['spellchecking'] = {
     enabled: false,
@@ -187,13 +188,14 @@ describe('editor3.component', () => {
             const wrapper = renderComponent();
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
+            const isMac = isMacOS();
 
             const command = instance.keyBindingFn({
                 key: '-',
                 altKey: true,
-                ctrlKey: true,
+                ctrlKey: !isMac,
                 shiftKey: false,
-                metaKey: false,
+                metaKey: !!isMac,
                 preventDefault,
             });
 
@@ -205,13 +207,14 @@ describe('editor3.component', () => {
             const wrapper = renderComponent();
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
+            const isMac = isMacOS();
 
             const command = instance.keyBindingFn({
                 key: ' ',
                 altKey: true,
-                ctrlKey: true,
+                ctrlKey: !isMac,
                 shiftKey: true,
-                metaKey: false,
+                metaKey: !!isMac,
                 preventDefault,
             });
 

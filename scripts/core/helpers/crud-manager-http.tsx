@@ -134,18 +134,18 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
             return (
                 <WrappedComponent
                     {
-                    ...{
-                        [name]: {
-                            ...this.state,
-                            create: this.create,
-                            read: this.read,
-                            update: this.update,
-                            delete: this.delete,
-                            sort: this.sort,
-                            removeFilter: this.removeFilter,
-                            goToPage: this.goToPage,
-                        },
-                    }
+                        ...{
+                            [name]: {
+                                ...this.state,
+                                create: this.create,
+                                read: this.read,
+                                update: this.update,
+                                delete: this.delete,
+                                sort: this.sort,
+                                removeFilter: this.removeFilter,
+                                goToPage: this.goToPage,
+                            },
+                        }
                     }
                     {...fixedProps}
                 />

@@ -8,18 +8,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['14', '22']
+        node-version: ['22']
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v5
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm install # needed while we support v14
+    - run: npm ci
 
     - run: npm run test
 
@@ -31,25 +31,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['14', '22']
+        node-version: ['22']
         suite: [a, b]
     defaults:
       run:
         working-directory: e2e/client
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v5
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm install  # npm ci on different version won't work
+    - run: npm ci
       working-directory: ./
 
-    - run: npm install
+    - run: npm ci
       working-directory: ./build-tools
 
-    - run: npm install
+    - run: npm ci
       working-directory: ./end-to-end-testing-helpers
 
     - run: npm install
