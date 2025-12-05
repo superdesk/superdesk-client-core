@@ -1,0 +1,41 @@
+name: 'Setup E2E Environment'
+description: 'Install dependencies and start e2e server'
+
+runs:
+  using: "composite"
+  steps:
+    - run: npm ci
+      working-directory: ./
+      shell: bash
+
+    - run: npm ci
+      working-directory: ./build-tools
+      shell: bash
+
+    - run: npm ci
+      working-directory: ./end-to-end-testing-helpers
+      shell: bash
+
+    - run: npm install
+      working-directory: ./e2e/client
+      shell: bash
+
+    - run: npm run build
+      working-directory: ./e2e/client
+      shell: bash
+
+    - run: npm run specs--compile
+      working-directory: ./e2e/client
+      shell: bash
+
+    - run: npm run start-client-server
+      working-directory: ./e2e/client
+      shell: bash
+
+    - name: Start e2e server
+      run: |
+        docker compose pull
+        docker compose build
+        docker compose up -d
+      working-directory: e2e/server
+      shell: bash

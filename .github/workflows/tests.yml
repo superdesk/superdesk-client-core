@@ -20,7 +20,6 @@ jobs:
         cache: 'npm'
 
     - run: npm ci
-
     - run: npm run test
 
       env:
@@ -32,8 +31,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version: ['22']
-        shardIndex: [1, 2, 3, 4]
-        shardTotal: [4]
+        shardIndex: [1, 2]
+        shardTotal: [2]
     defaults:
       run:
         working-directory: e2e/client
@@ -44,26 +43,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm ci
-      working-directory: ./
-
-    - run: npm ci
-      working-directory: ./build-tools
-
-    - run: npm ci
-      working-directory: ./end-to-end-testing-helpers
-
-    - run: npm install
-    - run: npm run build
-    - run: npm run specs--compile
-    - run: npm run start-client-server
-
-    - name: Start e2e server
-      run: |
-        docker compose pull
-        docker compose build
-        docker compose up -d
-      working-directory: e2e/server
+    - uses: ./.github/actions/setup-e2e
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
@@ -78,6 +58,14 @@ jobs:
         name: blob-report-${{ matrix.shardIndex }}
         path: e2e/client/blob-report
         retention-days: 1
+
+    - name: Upload Playwright test results (screenshots, videos, traces)
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-results-${{ matrix.shardIndex }}
+        path: e2e/client/test-results
+        retention-days: 7
 
     - name: Server Logs
       if: ${{ failure() }}
@@ -131,26 +119,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm ci
-      working-directory: ./
-
-    - run: npm ci
-      working-directory: ./build-tools
-
-    - run: npm ci
-      working-directory: ./end-to-end-testing-helpers
-
-    - run: npm install
-    - run: npm run build
-    - run: npm run specs--compile
-    - run: npm run start-client-server
-
-    - name: Start e2e server
-      run: |
-        docker compose pull
-        docker compose build
-        docker compose up -d
-      working-directory: e2e/server
+    - uses: ./.github/actions/setup-e2e
 
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1
