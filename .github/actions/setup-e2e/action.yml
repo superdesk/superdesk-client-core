@@ -16,7 +16,7 @@ runs:
       working-directory: ./end-to-end-testing-helpers
       shell: bash
 
-    - run: npm install
+    - run: npm ci
       working-directory: ./e2e/client
       shell: bash
 
@@ -32,10 +32,38 @@ runs:
       working-directory: ./e2e/client
       shell: bash
 
-    - name: Start e2e server
+    - name: Cache base Docker images
+      uses: actions/cache@v4
+      with:
+        path: /tmp/base-docker-images.tar
+        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml') }}
+        restore-keys: |
+          base-docker-images-
+
+    - name: Load or pull base Docker images
       run: |
-        docker compose pull
-        docker compose build
-        docker compose up -d
+        if [ -f /tmp/base-docker-images.tar ]; then
+          echo "Loading base images from cache"
+          docker load -i /tmp/base-docker-images.tar
+        else
+          echo "Pulling base images and saving to cache"
+          docker compose pull
+          docker save \
+            redis:alpine \
+            mongo:6 \
+            docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
+            marlonb/mailcrab:latest \
+            -o /tmp/base-docker-images.tar
+        fi
+      working-directory: e2e/server
+      shell: bash
+
+    - name: Build superdesk server
+      run: docker compose build
+      working-directory: e2e/server
+      shell: bash
+
+    - name: Start superdesk server
+      run: docker compose up -d
       working-directory: e2e/server
       shell: bash

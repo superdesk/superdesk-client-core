@@ -43,7 +43,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - uses: ./.github/actions/setup-e2e
+    - name: Setup E2E Environment
+      uses: ./.github/actions/setup-e2e
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
@@ -51,21 +52,13 @@ jobs:
     - name: Run Playwright tests
       run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-    - name: Upload blob report to GitHub Actions Artifacts
+    - name: Upload blob report to Artifacts
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@v4
       with:
         name: blob-report-${{ matrix.shardIndex }}
         path: e2e/client/blob-report
         retention-days: 1
-
-    - name: Upload Playwright test results (screenshots, videos, traces)
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-results-${{ matrix.shardIndex }}
-        path: e2e/client/test-results
-        retention-days: 7
 
     - name: Server Logs
       if: ${{ failure() }}
@@ -85,8 +78,8 @@ jobs:
       with:
         node-version: '22'
 
-    - name: Download blob reports from GitHub Actions Artifacts
-      uses: actions/download-artifact@v4
+    - name: Download blob reports from Artifacts
+      uses: actions/download-artifact@v5
       with:
         path: e2e/client/all-blob-reports
         pattern: blob-report-*
@@ -119,7 +112,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - uses: ./.github/actions/setup-e2e
+    - name: Setup E2E Environment
+      uses: ./.github/actions/setup-e2e
 
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1
