@@ -20,13 +20,82 @@ jobs:
         cache: 'npm'
 
     - run: npm ci
-
     - run: npm run test
 
       env:
         TZ: "Europe/Prague"
 
-  e2e:
+  playwright-e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['22']
+        shardIndex: [1, 2]
+        shardTotal: [2]
+    defaults:
+      run:
+        working-directory: e2e/client
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Setup E2E Environment
+      uses: ./.github/actions/setup-e2e
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run Playwright tests
+      run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+    - name: Upload blob report to Artifacts
+      if: ${{ !cancelled() }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: blob-report-${{ matrix.shardIndex }}
+        path: e2e/client/blob-report
+        retention-days: 1
+
+    - name: Server Logs
+      if: ${{ failure() }}
+      run: docker compose logs server
+      working-directory: e2e/server
+
+  merge-playwright-reports:
+    if: ${{ !cancelled() }}
+    needs: [playwright-e2e]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: e2e/client
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '22'
+
+    - name: Download blob reports from Artifacts
+      uses: actions/download-artifact@v5
+      with:
+        path: e2e/client/all-blob-reports
+        pattern: blob-report-*
+        merge-multiple: true
+
+    - name: Merge into HTML Report
+      run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-html-report
+        path: e2e/client/playwright-report
+        retention-days: 14
+
+  protractor-e2e:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -43,40 +112,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm ci
-      working-directory: ./
+    - name: Setup E2E Environment
+      uses: ./.github/actions/setup-e2e
 
-    - run: npm ci
-      working-directory: ./build-tools
-
-    - run: npm ci
-      working-directory: ./end-to-end-testing-helpers
-
-    - run: npm install
-    - run: npm run build
-    - run: npm run specs--compile
-    - run: npm run start-client-server
-
-    - name: Start e2e server
-      run: |
-        docker compose pull
-        docker compose build
-        docker compose up -d
-      working-directory: e2e/server
-
-    # playwright start
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ failure() }}
-      with:
-        name: playwright-report-${{ matrix.node-version }}-${{ matrix.suite }}
-        path: e2e/client/test-results
-    # playwright end
-
-    # protractor start
     - name: Setup Chrome
       uses: browser-actions/setup-chrome@v1
       id: setup-chrome
@@ -97,10 +135,8 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v4
       with:
-        name: screenshots-e2e-node-${{ matrix.node-version }}-${{ matrix.suite }}
+        name: screenshots-protractor-node-${{ matrix.node-version }}-${{ matrix.suite }}
         path: /tmp/*.png
-
-    # protractor end
 
     - name: Server Logs
       if: ${{ failure() }}
