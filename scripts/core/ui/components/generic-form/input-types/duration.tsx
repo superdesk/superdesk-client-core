@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {DurationInput, getDurationString} from 'superdesk-ui-framework/react';
 import {IInputType} from '../interfaces/input-types';
+import {GenericFormFieldType} from '../interfaces/form';
 
 export class DurationComponent extends React.Component<IInputType<number>> {
     render() {

@@ -2173,23 +2173,12 @@ declare module 'superdesk-api' {
         defaultValue?: any;
     }
 
-    interface IFormFieldSelectMultiple<T extends object> extends IFormFieldBase<T> {
-        type: GenericFormFieldType.selectMultiple;
-        component_parameters: {
-            items: Array<{label: string; id: string}>;
-            dataTestId?: string;
-        };
-    }
-
-    interface IFormFieldAlert<T extends object> extends IFormFieldBase<T> {
+    export interface IFormFieldAlert<T> extends IFormFieldBase<T> {
         type: GenericFormFieldType.alert;
-        component_parameters: {
-            style: 'info' | 'warning' | 'error';
-        };
         value: string;
     }
 
-    export type IFormField<T> = IFormFieldBase<T> | IFormFieldSelectMultiple<T> | IFormFieldAlert<T>;
+    export type IFormField<T> = IFormAlertFieldAlert<T> | IFormFieldBase<T>;
 
     export interface IFormGroupCollapsible {
         label: string;

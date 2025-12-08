@@ -19,8 +19,10 @@ export function generateFilterForServer(type: GenericFormFieldType, value: any):
         case GenericFormFieldType.selectMultiple:
         case GenericFormFieldType.number:
         case GenericFormFieldType.duration:
+        case GenericFormFieldType.readonlyCopyableText:
             return value;
 
+        case GenericFormFieldType.alert:
         case GenericFormFieldType.textEditor3:
             throw new Error(
                 'Operation not supported. Plaintext input has to be used to filter this component\'s output',
