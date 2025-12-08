@@ -4,7 +4,7 @@ import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IPublishQueueItem} from 'superdesk-interfaces/PublishQueueItem';
 import {gettext} from 'core/utils';
-import {IconButton, Modal} from 'superdesk-ui-framework/react';
+import {IconButton, Modal} from 'superdesk-ui-framework';
 import {showModal} from '@sourcefabric/common';
 import {TimeElem} from 'apps/search/components/TimeElem';
 import {Spacer} from 'core/ui/components/Spacer';

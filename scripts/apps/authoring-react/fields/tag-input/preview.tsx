@@ -1,7 +1,7 @@
 import {gettext} from 'core/utils';
 import React from 'react';
 import {ITagInputFieldConfig, ITagInputValueOperational, IPreviewComponentProps} from 'superdesk-api';
-import {TagInput} from 'superdesk-ui-framework/react';
+import {TagInput} from 'superdesk-ui-framework';
 
 type IProps = IPreviewComponentProps<ITagInputValueOperational, ITagInputFieldConfig>;
 

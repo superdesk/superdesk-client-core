@@ -4,7 +4,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button, Text} from 'superdesk-ui-framework/react';
+import {Button, Text} from 'superdesk-ui-framework';
 import {setMarkedDesks} from './helper';
 
 interface IProps {

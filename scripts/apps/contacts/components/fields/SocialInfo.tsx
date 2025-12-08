@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ItemContainer} from 'apps/contacts/components';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 
 /**
  * SocialInfo - to display facebook, twitter etc. information of a contact

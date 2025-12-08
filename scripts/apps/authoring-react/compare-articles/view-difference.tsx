@@ -3,7 +3,7 @@ import {Map} from 'immutable';
 import {IContentProfileV2, IPropsSpacer} from 'superdesk-api';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
-import {Alert} from 'superdesk-ui-framework/react';
+import {Alert} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 interface IProps {

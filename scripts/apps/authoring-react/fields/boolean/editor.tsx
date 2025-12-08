@@ -1,6 +1,6 @@
 import {IBooleanFieldValueOperational, ICommonFieldConfig, IEditorComponentProps} from 'superdesk-api';
 import * as React from 'react';
-import {Switch} from 'superdesk-ui-framework/react';
+import {Switch} from 'superdesk-ui-framework';
 
 type IProps = IEditorComponentProps<IBooleanFieldValueOperational, ICommonFieldConfig, never>;
 

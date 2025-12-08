@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {showModal} from '@sourcefabric/common';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework';
 import {Spacer} from 'core/ui/components/Spacer';
 
 export function authenticateIngestProvider(actions: Array<{label: string; onClick(): void}>) {

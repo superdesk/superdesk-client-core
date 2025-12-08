@@ -3,7 +3,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {SendToTab} from './actions/send-to-tab';
 import {IArticle} from 'superdesk-api';
 import {TabList} from 'core/ui/components/tabs';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';

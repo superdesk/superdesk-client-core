@@ -12,7 +12,7 @@ import {gettext} from 'core/utils';
 import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever, nameof} from 'core/helpers/typescript-helpers';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';

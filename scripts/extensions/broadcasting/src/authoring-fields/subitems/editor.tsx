@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     IEditorComponentProps, IVocabularyItem,
 } from 'superdesk-api';
-import {Alert, IconButton} from 'superdesk-ui-framework/react';
+import {Alert, IconButton} from 'superdesk-ui-framework';
 import {Map} from 'immutable';
 import {ISubitemsValueOperational, ISubitemsFieldConfig, ISubitemsUserPreferences} from '.';
 import {RUNDOWN_SUBITEM_TYPES} from '../../constants';

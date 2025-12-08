@@ -3,7 +3,7 @@ import {gettext, gettextPlural} from 'core/utils';
 import {showModal} from '@sourcefabric/common';
 import {IArticle} from 'superdesk-api';
 import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

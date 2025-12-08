@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {IArticleSideWidgetComponentType, ITranslation} from 'superdesk-api';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 import {superdesk} from './superdesk';
 import DefaultAiAssistantPanel from './main-panel';
 import SummaryWidget from './summary/summary-widget';

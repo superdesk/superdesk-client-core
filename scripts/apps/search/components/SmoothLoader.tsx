@@ -1,6 +1,6 @@
 import React, {CSSProperties} from 'react';
 import {Loader} from 'superdesk-ui-framework/react/components/Loader';
-import {ListItemLoader} from 'superdesk-ui-framework/react';
+import {ListItemLoader} from 'superdesk-ui-framework';
 
 interface IProps {
     loading: boolean;

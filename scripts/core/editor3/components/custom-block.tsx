@@ -3,7 +3,7 @@ import {ContentBlock, ContentState} from 'draft-js';
 import {TableBlock} from './tables/TableBlock';
 import {IEditorStore} from 'core/editor3/store';
 import {DraggableEditor3BlockWithInlineHandle} from './media/dragable-editor3-block-with-labels';
-import {DragHandleDots} from 'superdesk-ui-framework/react';
+import {DragHandleDots} from 'superdesk-ui-framework';
 import {IEditor3CustomBlockData} from '../helpers/table';
 
 export const MULTI_LINE_QUOTE_CLASS = 'multi-line-quote';

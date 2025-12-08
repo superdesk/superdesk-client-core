@@ -1,5 +1,5 @@
 import React from 'react';
-import {IconButton, Menu} from 'superdesk-ui-framework/react';
+import {IconButton, Menu} from 'superdesk-ui-framework';
 
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';

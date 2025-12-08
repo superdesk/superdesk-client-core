@@ -6,7 +6,7 @@ import {Label} from 'core/ui/components/Form/Label';
 import {Input} from 'core/ui/components/Form/Input';
 import {TextArea} from 'core/ui/components/Form/TextArea';
 import {IAttachment} from 'superdesk-api';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IProps {
     attachment: IAttachment;

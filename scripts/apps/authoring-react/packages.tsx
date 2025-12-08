@@ -10,7 +10,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {Label, Text, BoxedList, BoxedListItem, IconButton} from 'superdesk-ui-framework/react';
+import {Label, Text, BoxedList, BoxedListItem, IconButton} from 'superdesk-ui-framework';
 import {Spacer} from 'core/ui/components/Spacer';
 import Icon from 'core/ui/components/Icon';
 import {DateTime} from 'core/ui/components/DateTime';

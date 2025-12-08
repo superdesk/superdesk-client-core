@@ -2,7 +2,7 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
 import {gettext} from 'core/utils';
-import {RadioGroup, CheckGroup, Modal, ButtonGroup, Button} from 'superdesk-ui-framework/react';
+import {RadioGroup, CheckGroup, Modal, ButtonGroup, Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';

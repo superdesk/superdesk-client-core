@@ -1,6 +1,6 @@
 import React from 'react';
 import {ContentBlock, EditorState} from 'draft-js';
-import {PopupPositioner} from 'superdesk-ui-framework/react';
+import {PopupPositioner} from 'superdesk-ui-framework';
 import {IAcceptSuggestion, SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';

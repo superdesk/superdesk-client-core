@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FormLabel} from 'superdesk-ui-framework/react';
+import {FormLabel} from 'superdesk-ui-framework';
 import {TAGS_VOCABULARY_ID} from '../constants';
 import {superdesk} from '../superdesk';
 

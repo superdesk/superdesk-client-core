@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {IPropsAddContentCustomButton} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
 import {gettext} from 'core/utils';
 

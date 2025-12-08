@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {IconLabel} from 'superdesk-ui-framework/react';
-import {getDurationString} from 'superdesk-ui-framework/react';
+import {IconLabel} from 'superdesk-ui-framework';
+import {getDurationString} from 'superdesk-ui-framework';
 
 import {superdesk} from '../../superdesk';
 

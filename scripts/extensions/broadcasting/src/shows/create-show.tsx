@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Input, DurationInput} from 'superdesk-ui-framework/react';
+import {Input, DurationInput} from 'superdesk-ui-framework';
 import {CreateValidators, WithValidation} from '@sourcefabric/common';
 import {stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconLabel, getDurationString} from 'superdesk-ui-framework/react';
+import {IconLabel, getDurationString} from 'superdesk-ui-framework';
 
 import {superdesk} from '../../superdesk';
 

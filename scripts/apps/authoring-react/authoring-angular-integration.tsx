@@ -13,7 +13,7 @@ import {
     Popover,
     Spacer,
     WithPopover,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {
     IArticle,
     ITopBarWidget,

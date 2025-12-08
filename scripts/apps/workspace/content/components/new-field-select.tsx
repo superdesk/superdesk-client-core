@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, TreeMenu} from 'superdesk-ui-framework/react';
+import {Button, TreeMenu} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 interface IProps {

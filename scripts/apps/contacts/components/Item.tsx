@@ -6,7 +6,7 @@ import {
     ContactInfo,
     ContactFooter,
 } from 'apps/contacts/components';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 import {IContact} from 'superdesk-api';
 
 interface IProps {

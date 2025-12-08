@@ -1,5 +1,5 @@
 import React from 'react';
-import {Label} from 'superdesk-ui-framework/react';
+import {Label} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 
 interface IProps {

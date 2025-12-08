@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
+import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework';
 import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '../interfaces';
 
 import {superdesk} from '../superdesk';

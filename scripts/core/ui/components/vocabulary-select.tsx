@@ -4,7 +4,7 @@ import {arrayToTree} from 'core/helpers/tree';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 import {keyBy} from 'lodash';
 import {IPropsVocabularySelect} from 'superdesk-api';
-import {TreeSelect} from 'superdesk-ui-framework/react';
+import {TreeSelect} from 'superdesk-ui-framework';
 
 export class VocabularySelect extends React.PureComponent<IPropsVocabularySelect> {
     render() {

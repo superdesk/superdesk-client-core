@@ -3,7 +3,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {getArticleLabel, gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
-import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework/react';
+import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';

@@ -2,7 +2,7 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {gettext, toIsoStringWithoutTimezoneOffset} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework/react';
+import {DateTimePicker, ToggleBox} from 'superdesk-ui-framework';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {generatePatch} from 'core/patch';
 import {sdApi} from 'api';

@@ -13,7 +13,7 @@ import {editSet, onManageSetsModalClosed} from '../../store/sets/actions';
 import {getSetContentPanelState, getSelectedSetId} from '../../store/sets/selectors';
 
 // UI
-import {Button, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, SubNav} from 'superdesk-ui-framework';
 import {PageLayout} from '../../containers/PageLayout';
 import {
     Modal,

@@ -1,7 +1,7 @@
 import React from 'react';
 import Textarea from 'react-textarea-autosize';
 import {gettext} from 'core/utils';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 interface IPropsModalPrompt {
     title: string;

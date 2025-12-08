@@ -1,5 +1,5 @@
 import React from 'react';
-import {AvatarWrapper, AvatarContentImage} from 'superdesk-ui-framework/react';
+import {AvatarWrapper, AvatarContentImage} from 'superdesk-ui-framework';
 
 interface IProps {
     size: 'small' | 'medium' | 'large';

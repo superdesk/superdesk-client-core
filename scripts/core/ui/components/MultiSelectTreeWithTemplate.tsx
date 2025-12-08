@@ -1,7 +1,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import React from 'react';
 import {ITreeNode, ITreeWithLookup} from 'superdesk-api';
-import {TreeSelect} from 'superdesk-ui-framework/react';
+import {TreeSelect} from 'superdesk-ui-framework';
 
 interface IPropsBase<T> {
     values: Array<T>;

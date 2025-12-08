@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import {IRestApiResponse, ITranslation} from 'superdesk-api';
-import {Spacer, Button, TreeSelect, Text, SpacerBlock} from 'superdesk-ui-framework/react';
+import {Spacer, Button, TreeSelect, Text, SpacerBlock} from 'superdesk-ui-framework';
 import {IStateTranslationsTab, ITranslationLanguage} from '../ai-assistant';
 import {superdesk} from '../superdesk';
 

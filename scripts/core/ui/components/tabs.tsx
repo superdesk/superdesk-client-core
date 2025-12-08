@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tabs, TabLabel} from 'superdesk-ui-framework/react';
+import {Tabs, TabLabel} from 'superdesk-ui-framework';
 
 export interface ITabListTab {
     id: string;

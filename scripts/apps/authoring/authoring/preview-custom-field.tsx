@@ -4,7 +4,7 @@ import {get, isEmpty} from 'lodash';
 import {getField} from 'apps/fields';
 import {appConfig} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
-import {FormLabel} from 'superdesk-ui-framework/react';
+import {FormLabel} from 'superdesk-ui-framework';
 import {IArticle, IVocabulary} from 'superdesk-api';
 
 interface IProps {

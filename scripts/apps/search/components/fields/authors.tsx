@@ -6,7 +6,7 @@ import {IUser, IVocabulary, IVocabularyItem, IArticle} from 'superdesk-api';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
-import {Popover} from 'superdesk-ui-framework/react';
+import {Popover} from 'superdesk-ui-framework';
 import {IRelatedEntitiesToFetch} from '.';
 
 const endpointUsers = '/users';

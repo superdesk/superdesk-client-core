@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import {noop} from 'lodash';
 import React from 'react';
 import {IDateTimeFieldConfig, IDateTimeValueOperational, IPreviewComponentProps} from 'superdesk-api';
-import {DateTimePicker} from 'superdesk-ui-framework/react';
+import {DateTimePicker} from 'superdesk-ui-framework';
 
 type IProps = IPreviewComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig>;
 

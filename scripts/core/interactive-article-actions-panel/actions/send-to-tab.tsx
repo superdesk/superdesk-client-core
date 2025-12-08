@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IDesk, OrderedMap} from 'superdesk-api';
-import {Button, ButtonGroup, Text, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Text, ToggleBox} from 'superdesk-ui-framework';
 import {gettext, gettextPlural} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';

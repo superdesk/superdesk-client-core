@@ -2,7 +2,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
-import {Heading, Label, Select, Option} from 'superdesk-ui-framework/react';
+import {Heading, Label, Select, Option} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 
 interface IProps {

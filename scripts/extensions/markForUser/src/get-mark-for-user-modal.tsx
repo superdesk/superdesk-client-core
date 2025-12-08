@@ -6,7 +6,7 @@ import {
     Button,
     ButtonGroup,
     Modal,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 
 interface IProps {
     closeModal(): void;

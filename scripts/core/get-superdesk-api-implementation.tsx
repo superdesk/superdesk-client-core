@@ -125,7 +125,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getSortedFields, getSortedFieldsFiltered} from 'apps/authoring/preview/utils';
 import {editor3ToOperationalFormat} from 'apps/authoring-react/fields/editor3';
 import {prepareSuperdeskQuery} from './helpers/universal-query';
-import {showPopup} from 'superdesk-ui-framework/react';
+import {showPopup} from 'superdesk-ui-framework';
 import {ui} from './ui-utils';
 import {VocabularySelect} from './ui/components/vocabulary-select';
 import {dataStore} from 'data-store';

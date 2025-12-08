@@ -17,7 +17,7 @@ import {getSelectedSet, getSelectedSetStorageDestination, getSelectedSetCount} f
 import {getDesksAllowedSets} from '../../store/workspace/selectors';
 
 // UI
-import {FormLabel, Label} from 'superdesk-ui-framework/react';
+import {FormLabel, Label} from 'superdesk-ui-framework';
 import {
     FormRow,
     PanelContent,

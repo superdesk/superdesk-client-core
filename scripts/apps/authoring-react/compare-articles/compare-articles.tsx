@@ -5,7 +5,7 @@ import {showModal} from '@sourcefabric/common';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework';
 import {PreviewAuthoringItem} from '../preview-authoring-item';
 import {ViewDifference} from './view-difference';
 

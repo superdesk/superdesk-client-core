@@ -1,5 +1,5 @@
 import React from 'react';
-import {TreeSelect} from 'superdesk-ui-framework/react';
+import {TreeSelect} from 'superdesk-ui-framework';
 
 interface IProps<T> {
     items: Array<T>;

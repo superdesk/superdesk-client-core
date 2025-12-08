@@ -11,7 +11,7 @@ import {
     Button,
     SearchBar,
     Modal,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 
 import {ManageRundownTemplates} from './rundown-templates/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';

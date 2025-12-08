@@ -14,7 +14,7 @@ import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 import {IEditorStore} from 'core/editor3/store';
-import {TreeMenu} from 'superdesk-ui-framework/react';
+import {TreeMenu} from 'superdesk-ui-framework';
 import {IEditorComponentProps, IVocabularyEditorBlock, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 import {sdApi} from 'api';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {gettext} from 'core/utils';
-import {Button, Spacer, Tag, Text} from 'superdesk-ui-framework/react';
+import {Button, Spacer, Tag, Text} from 'superdesk-ui-framework';
 import {IActiveFilters} from '../controllers/types';
 import {getTagsConfig, getTagsWithValues} from './utils';
 

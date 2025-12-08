@@ -6,7 +6,7 @@ import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {IRelatedEntities} from 'core/getRelatedEntities';
-import {Loader} from 'superdesk-ui-framework/react';
+import {Loader} from 'superdesk-ui-framework';
 
 export interface IPropsItemListInfo {
     item: IArticle;

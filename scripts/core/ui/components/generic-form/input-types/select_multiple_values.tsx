@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
-import {TreeSelect} from 'superdesk-ui-framework/react';
+import {TreeSelect} from 'superdesk-ui-framework';
 
 type IProps = IInputType<Array<string>>;
 

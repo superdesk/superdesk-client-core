@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle, IHighlight, IHighlightResponse} from 'superdesk-api';
-import {Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Button, Modal, TreeSelect} from 'superdesk-ui-framework';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';

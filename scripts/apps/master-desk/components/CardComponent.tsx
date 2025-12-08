@@ -2,7 +2,7 @@ import React from 'react';
 
 import {IDesk} from 'superdesk-api';
 
-import {DonutChart} from 'superdesk-ui-framework/react';
+import {DonutChart} from 'superdesk-ui-framework';
 
 interface IProps {
     desk: IDesk;

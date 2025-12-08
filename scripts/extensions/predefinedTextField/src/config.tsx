@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {IConfigComponentProps, IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
 import {IConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
-import {Tag, Checkbox} from 'superdesk-ui-framework/react';
+import {Tag, Checkbox} from 'superdesk-ui-framework';
 
 import {superdesk} from './superdesk';
 import {noop} from 'lodash';

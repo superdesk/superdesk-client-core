@@ -2,7 +2,7 @@ import {authoringReactEnabledUserSelection, toggleAuthoringReact} from 'appConfi
 import {showOptionsModal} from 'core/ui/components/options-modal';
 import {gettext} from 'core/utils';
 import React from 'react';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 
 export class AuthoringSwitch extends React.Component {
     render(): React.ReactNode {

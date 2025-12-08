@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {Button, ContentDivider, Heading, IconButton, Spacer} from 'superdesk-ui-framework';
 import {superdesk} from '../superdesk';
 import SummaryBody from './summary';
 import {ICommonProps, IStateSummaryTab} from '../ai-assistant';

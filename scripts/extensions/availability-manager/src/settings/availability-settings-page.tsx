@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import * as React from 'react';
 import {ReactNode} from 'react';
-import {Card} from 'superdesk-ui-framework/react';
+import {Card} from 'superdesk-ui-framework';
 import {IUserProfileSection} from 'superdesk-api';
 import {AvailabilitySettings} from './availability-settings';
 

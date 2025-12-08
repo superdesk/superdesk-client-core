@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Modal, Spinner} from 'superdesk-ui-framework/react';
+import {Button, Modal, Spinner} from 'superdesk-ui-framework';
 import {showModal} from '@sourcefabric/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {superdesk} from '../superdesk';

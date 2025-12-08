@@ -5,7 +5,7 @@ import {IUser, IEditor3ValueOperational, IGenericSideWidget} from 'superdesk-api
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {Button, EmptyState} from 'superdesk-ui-framework/react';
+import {Button, EmptyState} from 'superdesk-ui-framework';
 import {getCustomEditor3Data, getCustomMetadataFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getHighlightsConfig} from 'core/editor3/highlightsConfig';
 import {store} from 'core/data';

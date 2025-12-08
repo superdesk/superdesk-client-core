@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IAuthoringFieldV2, IEditorComponentContainerProps, IPropsAuthoringFieldTemplate} from 'superdesk-api';
-import {Switch} from 'superdesk-ui-framework/react';
+import {Switch} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 

@@ -4,7 +4,7 @@ import {VideoComponent} from 'core/ui/components/video';
 import {IArticle} from 'superdesk-api';
 import {mediaDetailsPadding} from '../constants';
 import {VideoThumbnailEditor} from 'apps/authoring/authoring/components/video-thumbnail-editor';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {editMetadata} from '../edit-metadata';
 

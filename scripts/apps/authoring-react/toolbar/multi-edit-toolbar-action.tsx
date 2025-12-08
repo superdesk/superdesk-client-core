@@ -1,7 +1,7 @@
 import React, {ReactNode} from 'react';
 import {IArticle} from 'superdesk-api';
 import {MultiEditModal} from '../multi-edit-modal';
-import {Button, Modal, TreeSelect} from 'superdesk-ui-framework/react';
+import {Button, Modal, TreeSelect} from 'superdesk-ui-framework';
 import {Spacer} from 'core/ui/components/Spacer';
 import {showModal} from '@sourcefabric/common';
 import {getArticleLabel, gettext} from 'core/utils';

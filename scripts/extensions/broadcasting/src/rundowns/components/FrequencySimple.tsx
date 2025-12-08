@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CheckboxButton, CheckButtonGroup} from 'superdesk-ui-framework/react';
+import {CheckboxButton, CheckButtonGroup} from 'superdesk-ui-framework';
 import {IRRule} from '../../interfaces';
 import {getWeekdayNames} from '@sourcefabric/common';
 import {superdesk} from '../../superdesk';

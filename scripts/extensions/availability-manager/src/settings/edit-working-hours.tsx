@@ -3,7 +3,7 @@ import {
     IconButton,
     Spacer,
     TimePicker,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {tagsSelectWidth, TAGS_VOCABULARY_ID} from '../constants';
 import {ITagsWhiteList, IWorkingHours} from '../interfaces';
 import {superdesk} from '../superdesk';

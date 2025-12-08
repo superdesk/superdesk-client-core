@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button, showPopup} from 'superdesk-ui-framework/react';
+import {Button, showPopup} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {InitialView} from './initial-view';

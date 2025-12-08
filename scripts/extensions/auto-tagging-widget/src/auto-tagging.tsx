@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
-import {Switch, Button, ButtonGroup, EmptyState, Autocomplete, Modal} from 'superdesk-ui-framework/react';
+import {Switch, Button, ButtonGroup, EmptyState, Autocomplete, Modal} from 'superdesk-ui-framework';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {showModal} from '@sourcefabric/common';
 

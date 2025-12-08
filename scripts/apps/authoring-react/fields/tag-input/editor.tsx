@@ -6,7 +6,7 @@ import {
     ITagInputUserPreferences,
     ITagInputValueOperational,
 } from 'superdesk-api';
-import {TagInput} from 'superdesk-ui-framework/react';
+import {TagInput} from 'superdesk-ui-framework';
 
 type IProps = IEditorComponentProps<ITagInputValueOperational, ITagInputFieldConfig, ITagInputUserPreferences>;
 

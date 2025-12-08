@@ -5,7 +5,7 @@ import {IArticleSideWidget, IUser, IEditor3ValueOperational, IArticleSideWidgetC
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {EmptyState, Label} from 'superdesk-ui-framework/react';
+import {EmptyState, Label} from 'superdesk-ui-framework';
 import {getCustomEditor3Data} from 'core/editor3/helpers/editor3CustomData';
 import {store} from 'core/data';
 import {Card} from 'core/ui/components/Card';

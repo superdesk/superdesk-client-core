@@ -26,7 +26,7 @@ import {
     Switch,
     Text,
     Option,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {noop} from 'lodash';
 
 interface IProps {

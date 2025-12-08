@@ -1,6 +1,6 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework';
 
 interface IProps {
     open: boolean;

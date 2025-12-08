@@ -9,7 +9,7 @@ import {Card} from 'core/ui/components/Card';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {IHighlight} from 'apps/highlights/services/HighlightsService';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {Button, ToggleBox} from 'superdesk-ui-framework/react';
+import {Button, ToggleBox} from 'superdesk-ui-framework';
 import {TransmissionDetails} from './transmission-details';
 
 type IProps = React.ComponentProps<

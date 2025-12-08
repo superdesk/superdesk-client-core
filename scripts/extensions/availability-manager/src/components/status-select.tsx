@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Spacer, TreeSelect} from 'superdesk-ui-framework/react';
+import {Spacer, TreeSelect} from 'superdesk-ui-framework';
 import {availabilityStatuses} from '../constants';
 import {superdesk} from '../superdesk';
 import {getLabelForStatus, getStylesForStatusDot} from '../utils';

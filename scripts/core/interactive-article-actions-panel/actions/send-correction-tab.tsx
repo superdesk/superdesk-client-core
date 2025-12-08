@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {PanelContent} from '../panel/panel-content';
 import {PanelFooter} from '../panel/panel-footer';

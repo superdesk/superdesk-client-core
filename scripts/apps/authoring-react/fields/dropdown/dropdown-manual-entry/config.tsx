@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework/react';
+import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework';
 import {IConfigComponentProps, IDropdownOption, IDropdownConfigManualSource} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';

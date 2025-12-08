@@ -1,5 +1,5 @@
 import React from 'react';
-import {DatePicker} from 'superdesk-ui-framework/react';
+import {DatePicker} from 'superdesk-ui-framework';
 import {isValid, startOfDay} from 'date-fns';
 import {appConfig} from 'appConfig';
 import {getLocaleForDatePicker} from 'core/helpers/ui-framework';

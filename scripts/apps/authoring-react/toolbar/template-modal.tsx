@@ -3,7 +3,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, ITemplate} from 'superdesk-api';
-import {Alert, Button, Checkbox, Input, Modal, Option, Select} from 'superdesk-ui-framework/react';
+import {Alert, Button, Checkbox, Input, Modal, Option, Select} from 'superdesk-ui-framework';
 import {canEdit, wasRenamed} from './template-helpers';
 
 interface IProps {

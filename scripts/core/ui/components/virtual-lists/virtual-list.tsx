@@ -4,7 +4,7 @@ import {useVirtual} from 'react-virtual';
 import {Map} from 'immutable';
 
 import {gettext} from 'core/utils';
-import {Alert} from 'superdesk-ui-framework/react';
+import {Alert} from 'superdesk-ui-framework';
 
 /**
  * TERMS:

@@ -3,7 +3,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Label, ToggleBox} from 'superdesk-ui-framework/react';
+import {Label, ToggleBox} from 'superdesk-ui-framework';
 import './annotations-preview.scss';
 
 interface IProps {

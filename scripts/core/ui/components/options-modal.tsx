@@ -3,7 +3,7 @@ import {showModal} from '@sourcefabric/common';
 import classNames from 'classnames';
 import {Loader} from './Loader';
 import {Spacer} from './Spacer';
-import {Modal} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework';
 
 interface IOption {
     label: string;

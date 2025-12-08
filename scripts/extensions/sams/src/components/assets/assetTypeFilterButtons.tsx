@@ -13,7 +13,7 @@ import {updateAssetSearchParamsAndListItems} from '../../store/assets/actions';
 import {getAssetSearchParams} from '../../store/assets/selectors';
 
 // UI
-import {RadioButtonGroup} from 'superdesk-ui-framework/react';
+import {RadioButtonGroup} from 'superdesk-ui-framework';
 
 interface IProps {
     searchParams: IAssetSearchParams;

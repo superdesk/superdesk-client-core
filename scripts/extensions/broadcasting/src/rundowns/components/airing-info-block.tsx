@@ -1,6 +1,6 @@
 import {IValidationResults} from '@sourcefabric/common';
 import * as React from 'react';
-import {DurationInput, TimePicker, DatePickerISO} from 'superdesk-ui-framework/react';
+import {DurationInput, TimePicker, DatePickerISO} from 'superdesk-ui-framework';
 
 import * as Form from 'superdesk-ui-framework/react/components/Form';
 import {IRundown, IRundownTemplateBase} from '../../interfaces';

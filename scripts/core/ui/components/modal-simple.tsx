@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework';
 
 export interface IModalSimpleAction {
     label: string;

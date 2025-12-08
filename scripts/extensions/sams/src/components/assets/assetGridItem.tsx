@@ -8,7 +8,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon, IconButton, Menu} from 'superdesk-ui-framework/react';
+import {Icon, IconButton, Menu} from 'superdesk-ui-framework';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';

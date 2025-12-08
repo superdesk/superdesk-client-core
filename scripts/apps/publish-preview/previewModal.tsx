@@ -4,7 +4,7 @@ import ng from 'core/services/ng';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {IArticle} from 'superdesk-api';
 import {IDestination} from 'superdesk-interfaces/Destination';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework';
 
 const getFormattedDocument = (url) => fetch(
     url,

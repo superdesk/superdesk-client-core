@@ -7,7 +7,7 @@ import {superdeskApi} from '../../apis';
 import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 
 // UI
-import {Badge, IconButton} from 'superdesk-ui-framework/react';
+import {Badge, IconButton} from 'superdesk-ui-framework';
 import {ListItem, ListItemActionMenu, ListItemBorder, ListItemColumn, ListItemRow} from '../../ui/list';
 
 interface IProps {

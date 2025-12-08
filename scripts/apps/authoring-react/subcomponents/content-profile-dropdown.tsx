@@ -1,7 +1,7 @@
 import React from 'react';
 import {IArticle, IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 import {sdApi} from 'api';
 
 interface IProps<T> {

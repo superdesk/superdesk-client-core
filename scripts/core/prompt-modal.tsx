@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Input, Modal, Spacer} from 'superdesk-ui-framework/react';
+import {Button, Input, Modal, Spacer} from 'superdesk-ui-framework';
 import {gettext} from './utils';
 
 interface IProps {

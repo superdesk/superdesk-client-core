@@ -3,7 +3,7 @@ import {SocialInfo} from 'apps/contacts/components/fields';
 import {gettext} from 'core/utils';
 import {IContact} from 'superdesk-api';
 import {DateTime} from 'core/ui/components/DateTime';
-import {Spacer} from 'superdesk-ui-framework/react';
+import {Spacer} from 'superdesk-ui-framework';
 
 interface IProps {
     item: IContact;

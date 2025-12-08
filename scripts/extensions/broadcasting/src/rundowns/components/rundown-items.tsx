@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {TableList, Label} from 'superdesk-ui-framework/react';
+import {TableList, Label} from 'superdesk-ui-framework';
 import {IRundownItem, IRundownItemBase} from '../../interfaces';
 import {DurationLabel} from './duration-label';
 import {Map} from 'immutable';

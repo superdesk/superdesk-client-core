@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
 import {showModal} from '@sourcefabric/common';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, Modal} from 'superdesk-ui-framework';
 
 function prepareAndPrint() {
     document.body.classList.add('prepare-to-print');

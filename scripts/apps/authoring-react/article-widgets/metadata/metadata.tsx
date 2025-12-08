@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {Spacer} from 'core/ui/components/Spacer';
-import {Input, Select, Switch, Option, Heading, ContentDivider, Label} from 'superdesk-ui-framework/react';
+import {Input, Select, Switch, Option, Heading, ContentDivider, Label} from 'superdesk-ui-framework';
 import {MetadataItem} from './metadata-item';
 import {dataApi} from 'core/helpers/CrudManager';
 import {ILanguage} from 'superdesk-interfaces/Language';

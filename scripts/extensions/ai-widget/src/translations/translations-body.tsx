@@ -12,7 +12,7 @@ import {
     Spacer,
     Label,
     Icon,
-} from 'superdesk-ui-framework/react';
+} from 'superdesk-ui-framework';
 import {superdesk} from '../superdesk';
 import {IStateTranslationsTab, ITranslationLanguage} from '../ai-assistant';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Modal} from 'superdesk-ui-framework/react';
+import {Modal} from 'superdesk-ui-framework';
 import {showModal} from '@sourcefabric/common';
 import {IUser} from 'superdesk-api';
 import {AvailabilitySettings} from '../settings/availability-settings';

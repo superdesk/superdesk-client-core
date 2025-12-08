@@ -1,7 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
-import {EmptyState, ListItemLoader} from 'superdesk-ui-framework/react';
+import {EmptyState, ListItemLoader} from 'superdesk-ui-framework';
 
 interface IProps<T> {
     pageSize: number;

@@ -3,7 +3,7 @@ import {uniqueId} from 'lodash';
 import {gettext} from 'core/utils';
 import {ManualSearch} from './manual';
 import {DebounceInput} from 'react-debounce-input';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework';
 import './style.scss';
 
 interface IProps {
