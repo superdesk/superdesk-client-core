@@ -10,7 +10,7 @@ angular.module('superdesk.apps.production-api-keys', [])
     .config(['superdeskProvider', (superdeskProvider) => {
         superdeskProvider
             .activity('/settings/production-api-keys', {
-                label: gettext('Production API Keys'),
+                label: gettext('Production API'),
                 template: require('./views/settings.html'),
                 category: superdeskProvider.MENU_SETTINGS,
                 settings_menu_group: coreMenuGroups.WORKFLOW,

@@ -24,7 +24,7 @@ function getAlertClassName(style: AlertStyle): string {
 export class AlertInput extends React.Component<IInputType<string>> {
     render() {
         // Alert field uses value prop directly, not from item[field]
-        const message = this.props.value || '';
+        const message = this.props.formField.value || '';
         const style: AlertStyle = (this.props.formField?.component_parameters as IAlertConfig)?.style || 'info';
 
         if (!message) {

@@ -58,6 +58,9 @@ export function getProductionApiKeysFormConfig(): IFormGroup<IProductionApiKeyCo
                         label: gettext('Client Secret'),
                         type: GenericFormFieldType.readonlyCopyableText,
                         field: 'password',
+                        component_parameters: {
+                            defaultAfterCreation: '* * * * * * * *',
+                        },
                     },
                 ],
             },

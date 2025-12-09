@@ -2,12 +2,16 @@ import React from 'react';
 import {IInputType} from '../interfaces/input-types';
 import {CopyableTextBox} from 'superdesk-ui-framework/react';
 
-export class ReadonlyCopyableText extends React.Component<IInputType<string>> {
-    render() {
-        return (
-            <CopyableTextBox
-                value={this.props.value ?? '* * * * * * * *'}
-            />
-        );
-    }
-}
+export const ReadonlyCopyableText: React.FC<IInputType<string>> = (props) => {
+    const defaultValue = props.formField.component_parameters?.defaultAfterCreation;
+
+    return (
+        <CopyableTextBox
+            value={
+                props.formValues._id != null
+                    ? props.value ?? defaultValue
+                    : props.value
+            }
+        />
+    );
+};

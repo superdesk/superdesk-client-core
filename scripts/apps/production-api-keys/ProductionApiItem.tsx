@@ -5,7 +5,7 @@ import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/Lis
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {getNameField} from './ProductionApiKeys';
-import {IconButton} from 'superdesk-ui-framework';
+import {IconButton} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProductionApiKeyConfig>> = (props) => {
