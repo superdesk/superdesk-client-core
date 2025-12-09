@@ -20,6 +20,7 @@ import {get, set} from 'lodash';
 import {produce} from 'immer';
 import {Button} from 'superdesk-ui-framework/react';
 import {GenericFormFieldType} from '../generic-form/interfaces/form';
+import {notify} from 'core/notify/notify';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -63,12 +64,6 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         super(props);
 
         this.state = getInitialState(props);
-
-        this.enableEditMode = this.enableEditMode.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleFieldChange = this.handleFieldChange.bind(this);
-        this.isFormDirty = this.isFormDirty.bind(this);
-        this.handleSave = this.handleSave.bind(this);
     }
 
     componentDidMount() {
@@ -79,7 +74,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         this._mounted = false;
     }
 
-    enableEditMode() {
+    enableEditMode = () => {
         this.setState({
             nextItem: this.props.item,
         }, () => {
@@ -87,7 +82,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         });
     }
 
-    handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
+    handleFieldChange = (field: string, nextValue: valueof<IProps<T>['item']>) => {
         // using updater function to avoid race conditions
         this.setState((prevState) =>
             produce(prevState, (draft) => {
@@ -96,7 +91,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         );
     }
 
-    handleCancel() {
+    handleCancel = () => {
         const cancelFn = typeof this.props.onCancel === 'function'
             ? this.props.onCancel
             : () => {
@@ -111,6 +106,8 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                     if (result) {
                         cancelFn();
                     }
+                }).catch(() => {
+                    notify.error(gettext('Canceling failed'));
                 });
             } else {
                 cancelFn();
@@ -126,11 +123,11 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         }
     }
 
-    isFormDirty() {
+    isFormDirty = () => {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
 
-    handleSave() {
+    handleSave = () => {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
 
@@ -231,6 +228,24 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
             });
     }
 
+    handleClose = () => {
+        const {onClose, beforeClose, item} = this.props;
+
+        if (beforeClose != null) {
+            beforeClose(item as T)
+                .then((result) => {
+                    if (result) {
+                        onClose();
+                    }
+                })
+                .catch(() => {
+                    notify.error(gettext('Closing failed'));
+                });
+        } else {
+            onClose();
+        }
+    }
+
     render() {
         return (
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
@@ -270,17 +285,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                         }
                                         <button
                                             className="icn-btn"
-                                            onClick={() => {
-                                                if (this.props.beforeClose != null) {
-                                                    this.props.beforeClose(this.props.item as T).then((result) => {
-                                                        if (result) {
-                                                            this.props.onClose();
-                                                        }
-                                                    });
-                                                } else {
-                                                    this.props.onClose();
-                                                }
-                                            }}
+                                            onClick={this.handleClose}
                                         >
                                             <i className="icon-close-small" />
                                         </button>

@@ -1,12 +1,12 @@
+import React from 'react';
+import type {IPropsGenericFormItemComponent} from 'superdesk-api';
+import type {IProductionApiKeyConfig} from './utils';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {formatDate} from 'core/get-superdesk-api-implementation';
-import {IPropsGenericFormItemComponent} from 'superdesk-api';
-import {IProductionApiKeyConfig} from './utils';
 import {getNameField} from './ProductionApiKeys';
-import {gettext} from 'core/utils';
-import React from 'react';
 import {IconButton} from 'superdesk-ui-framework';
+import {gettext} from 'core/utils';
 
 export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProductionApiKeyConfig>> = (props) => {
     const {item, page, inEditMode, inPreviewMode} = props;

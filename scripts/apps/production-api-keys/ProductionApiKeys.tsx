@@ -1,10 +1,11 @@
 import React from 'react';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {IFormField} from 'superdesk-api';
+import type {IFormField} from 'superdesk-api';
 import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {gettext} from 'core/utils';
-import {ProductionApiItem} from './ListItemTemplate';
-import {handleClose, getProductionApiKeysFormConfig, IProductionApiKeyConfig} from './utils';
+import {ProductionApiItem} from './ProductionApiItem';
+import {getProductionApiKeysFormConfig} from './config';
+import {handleClose, type IProductionApiKeyConfig} from './utils';
 
 export function getNameField(): IFormField<IProductionApiKeyConfig> {
     return {
@@ -15,27 +16,26 @@ export function getNameField(): IFormField<IProductionApiKeyConfig> {
     };
 }
 
-export const ProductionApiKeys = () => {
-    const formConfig = getProductionApiKeysFormConfig();
+const getId = (item: IProductionApiKeyConfig) => item._id;
+const beforeClose = (item: IProductionApiKeyConfig) => item.password ? handleClose() : Promise.resolve(true);
 
-    const ProductionAPIKeysPageComponent =
-        getGenericHttpEntityListPageComponent<IProductionApiKeyConfig, never>(
-            'auth_server_clients',
-            formConfig,
-            {field: '_updated', direction: 'descending'},
-        );
-
-    return (
-        <ProductionAPIKeysPageComponent
-            ItemComponent={ProductionApiItem}
-            getFormConfig={getProductionApiKeysFormConfig}
-            fieldForSearch={getNameField()}
-            getId={(item) => item._id}
-            beforeClose={(item) => item.password ? handleClose() : Promise.resolve(true)}
-            defaultSortOption={{field: '_updated', direction: 'descending'}}
-            disallowFiltering={true}
-            disallowSorting={true}
-            hideItemsCount={true}
-        />
+const ProductionAPIKeysPageComponent =
+    getGenericHttpEntityListPageComponent<IProductionApiKeyConfig, never>(
+        'auth_server_clients',
+        getProductionApiKeysFormConfig(),
+        {field: '_updated', direction: 'descending'},
     );
-};
+
+export const ProductionApiKeys = () => (
+    <ProductionAPIKeysPageComponent
+        ItemComponent={ProductionApiItem}
+        getFormConfig={getProductionApiKeysFormConfig}
+        fieldForSearch={getNameField()}
+        getId={getId}
+        beforeClose={beforeClose}
+        defaultSortOption={{field: '_updated', direction: 'descending'}}
+        disallowFiltering={true}
+        disallowSorting={true}
+        hideItemsCount={true}
+    />
+);
