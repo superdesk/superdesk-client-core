@@ -278,7 +278,11 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     <div>
                                         {
                                             this.props.operation === 'editing' ? (
-                                                <button onClick={this.enableEditMode} className="icn-btn">
+                                                <button
+                                                    className="icn-btn"
+                                                    onClick={this.enableEditMode}
+                                                    data-test-id="list-page-edit"
+                                                >
                                                     <i className="icon-pencil" />
                                                 </button>
                                             ) : null
@@ -286,6 +290,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                         <button
                                             className="icn-btn"
                                             onClick={this.handleClose}
+                                            data-test-id="list-page-close"
                                         >
                                             <i className="icon-close-small" />
                                         </button>

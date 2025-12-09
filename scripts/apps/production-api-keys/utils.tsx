@@ -12,12 +12,14 @@ export const handleClose = (): Promise<boolean> => {
                     visible
                     size="small"
                     position="center"
+                    data-test-id="confirm-copy"
                     onHide={closeModal}
                     headerTemplate={gettext('Close this panel?')}
                     footerTemplate={(
                         <>
                             <Button
                                 type="secondary"
+                                data-test-id="confirm-close"
                                 text={gettext('Close anyway')}
                                 onClick={() => {
                                     resolve(true);

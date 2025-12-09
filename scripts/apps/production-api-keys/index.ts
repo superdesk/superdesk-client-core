@@ -16,7 +16,7 @@ angular.module('superdesk.apps.production-api-keys', [])
                 settings_menu_group: coreMenuGroups.WORKFLOW,
                 priority: -400,
                 privileges: {
-                    roles: 1,
+                    auth_server_clients: 1,
                 },
             });
     }]);
