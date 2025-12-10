@@ -21,6 +21,8 @@ function getTestFieldConfig(type: GenericFormFieldType): IFormField<any> {
         case GenericFormFieldType.contentFilterSingleValue:
         case GenericFormFieldType.deskSingleValue:
         case GenericFormFieldType.yesNo:
+        case GenericFormFieldType.alert:
+        case GenericFormFieldType.readonlyCopyableText:
             return {
                 type: type,
                 field: 'test-field',
@@ -63,7 +65,12 @@ describe('generic form', () => {
     beforeEach(window.module('superdesk.apps.desks'));
 
     getAllInputTypes()
-        .filter((type) => type !== GenericFormFieldType.checkbox) // checkbox doesn't have error messages
+        // These don't have error messages
+        .filter((type) =>
+            type !== GenericFormFieldType.checkbox
+            && type !== GenericFormFieldType.alert
+            && type !== GenericFormFieldType.readonlyCopyableText,
+        )
         .forEach((type: GenericFormFieldType) => {
             it(`${type} should render error messages`, (done) => inject((desks) => {
                 desks.desks = {_items: []};
@@ -102,7 +109,12 @@ describe('generic form', () => {
     };
 
     getAllInputTypes()
-        .filter((type) => type !== GenericFormFieldType.checkbox) // checkbox can't be required
+        // Those can't be required
+        .filter((type) =>
+            type !== GenericFormFieldType.checkbox
+            && type !== GenericFormFieldType.alert
+            && type !== GenericFormFieldType.readonlyCopyableText,
+        )
         .forEach((type: GenericFormFieldType) => {
             it(`${type} should add a className for required fields`, (done) => inject((desks) => {
                 desks.desks = {_items: []};

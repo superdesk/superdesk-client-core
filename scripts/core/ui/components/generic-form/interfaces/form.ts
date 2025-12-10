@@ -14,6 +14,8 @@ export enum GenericFormFieldType {
     yesNo = 'yesNo',
     select = 'select',
     selectMultiple = 'selectMultiple',
+    alert = 'alert',
+    readonlyCopyableText = 'readonlyCopyableText',
 }
 
 export function isIFormField<T extends object>(x: IFormGroup<T>['form'][0]): x is IFormField<T> {

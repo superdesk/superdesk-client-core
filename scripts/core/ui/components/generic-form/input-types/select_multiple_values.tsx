@@ -73,12 +73,6 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     labelHidden
                     data-test-id={this.props.formField.component_parameters?.dataTestId}
                 />
-
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
-                    ))
-                }
             </div>
         );
     }

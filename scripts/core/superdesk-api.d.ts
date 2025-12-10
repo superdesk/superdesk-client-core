@@ -2124,6 +2124,9 @@ declare module 'superdesk-api' {
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
+        // Triggered everywhere before closing, in preview and create/edit forms
+        // Useful if you'd like to prevent accidental closing of the form.
+        beforeClose?: (item: T) => Promise<boolean>;
         getId(item: T): string;
 
         // Allows initializing a new item with some fields already filled.
@@ -2152,7 +2155,7 @@ declare module 'superdesk-api' {
         contentMargin?: number;
     }
 
-    export interface IFormField<T extends object> { // don't forget to update runtime type checks
+    interface IFormFieldBase<T extends object> {
         type: GenericFormFieldType;
 
         required?: boolean;
@@ -2170,12 +2173,19 @@ declare module 'superdesk-api' {
         defaultValue?: any;
     }
 
-    export interface IFormGroupCollapsible { // don't forget to update runtime type checks
+    export interface IFormFieldAlert<T> extends IFormFieldBase<T> {
+        type: GenericFormFieldType.alert;
+        value: string;
+    }
+
+    export type IFormField<T> = IFormAlertFieldAlert<T> | IFormFieldBase<T>;
+
+    export interface IFormGroupCollapsible {
         label: string;
         openByDefault: boolean;
     }
 
-    export interface IFormGroup<T extends object> { // don't forget to update runtime type checks
+    export interface IFormGroup<T extends object> {
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
         form: Array<IFormField<T> | IFormGroup<T>>;

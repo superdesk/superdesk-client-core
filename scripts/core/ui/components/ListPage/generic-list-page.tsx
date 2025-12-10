@@ -908,11 +908,14 @@ export class GenericListPageComponent<T extends object, P>
                                         newItem: null,
                                     }));
                                 }}
+                                beforeClose={this.props.beforeClose}
                                 onSave={(item: T) => {
                                     return this.props.crudManager.create(item).then((res) => {
-                                        setTimeout(() => {
-                                            this.closeNewItemForm();
-                                            this.openPreview(this.props.getId(res));
+                                        // Close new item form and set preview with server response
+                                        this.setState({
+                                            newItem: null,
+                                            previewItem: res,
+                                        }, () => {
                                             this.refetchDataUsingCurrentFilters();
                                         });
                                     });
@@ -944,13 +947,14 @@ export class GenericListPageComponent<T extends object, P>
                                 }}
                                 item={this.state.editItem}
                                 getFormConfig={getFormConfig}
+                                beforeClose={this.props.beforeClose}
                                 onSave={(nextItem) =>
                                     this.props.crudManager.update(this.state.editItem, nextItem)
                                         .then((updatedItem) => {
                                             this.setState((prevState) => ({
                                                 ...prevState,
-                                                editItem: null,
-                                                originalEditItem: null,
+                                                editItem: updatedItem,
+                                                originalEditItem: updatedItem,
                                                 previewItem: updatedItem,
                                             }));
                                         })
@@ -985,6 +989,7 @@ export class GenericListPageComponent<T extends object, P>
                                 }}
                                 item={this.state.previewItem}
                                 getFormConfig={getFormConfig}
+                                beforeClose={this.props.beforeClose}
                                 onSave={() => {
                                     throw new Error('Can\'t edit in preview mode!');
                                 }}
