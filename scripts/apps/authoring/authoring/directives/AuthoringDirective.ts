@@ -694,7 +694,7 @@ export function AuthoringDirective(
             };
 
             /**
-             * Called by the sendItem directive before send.
+             * Called by the sendItem directive before send and makes sure to unlock the item.
              * If the $scope is dirty then upon confirmation save the item and then unlock the item.
              * If the $scope is not dirty then unlock the item.
              * @param {String} action - action to display in confirmation dialog
@@ -705,6 +705,7 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
                         .then(() => $scope.save())
+                        .then(() => lock.unlock($scope.origItem))
                         .catch(() => $q.reject());
                 }
 
