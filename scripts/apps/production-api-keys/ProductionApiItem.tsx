@@ -47,6 +47,7 @@ export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProduct
                         style="text-only"
                         icon="pencil"
                         size="small"
+                        ariaLabel={gettext('Edit')}
                         data-test-id="edit"
                     />
                     <Button
@@ -59,6 +60,7 @@ export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProduct
                         style="text-only"
                         icon="trash"
                         size="small"
+                        ariaLabel={gettext('Delete')}
                         data-test-id="delete"
                     />
                 </div>
