@@ -5,7 +5,7 @@ import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/Lis
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {getNameField} from './ProductionApiKeys';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {Button, IconButton} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProductionApiKeyConfig>> = (props) => {
@@ -37,24 +37,30 @@ export const ProductionApiItem: React.FC<IPropsGenericFormItemComponent<IProduct
             </ListItemColumn>
             <ListItemActionsMenu>
                 <div style={{display: 'flex'}}>
-                    <IconButton
+                    <Button
                         onClick={(e) => {
                             e.stopPropagation();
                             page.startEditing(item._id);
                         }}
-                        ariaValue={gettext('Edit')}
+                        iconOnly
+                        text=""
+                        style="text-only"
                         icon="pencil"
                         size="small"
+                        ariaLabel={gettext('Edit')}
                         data-test-id="edit"
                     />
-                    <IconButton
+                    <Button
                         onClick={(e) => {
                             e.stopPropagation();
                             page.deleteItem(item);
                         }}
-                        ariaValue={gettext('Remove')}
+                        iconOnly
+                        text=""
+                        style="text-only"
                         icon="trash"
                         size="small"
+                        ariaLabel={gettext('Delete')}
                         data-test-id="delete"
                     />
                 </div>
