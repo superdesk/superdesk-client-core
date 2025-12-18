@@ -18,7 +18,7 @@ import {showUnsavedChangesModal} from './show-unsaved-changes-modal';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {GenericFormFieldType} from '../generic-form/interfaces/form';
 import {notify} from 'core/notify/notify';
 
@@ -258,19 +258,24 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
                                     data-test-id="toolbar"
                                 >
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        type="secondary"
-                                        onClick={this.handleCancel}
-                                        data-test-id="item-view-edit--cancel-save"
-                                    />
-                                    <Button
-                                        type="primary"
-                                        disabled={!this.isFormDirty()}
-                                        onClick={this.handleSave}
-                                        data-test-id="item-view-edit--save"
-                                        text={this.props.labelForSaveButton}
-                                    />
+                                    <ButtonGroup
+                                        align="end"
+                                        orientation="horizontal"
+                                    >
+                                        <Button
+                                            text={gettext('Cancel')}
+                                            type="secondary"
+                                            onClick={this.handleCancel}
+                                            data-test-id="item-view-edit--cancel-save"
+                                        />
+                                        <Button
+                                            type="primary"
+                                            disabled={!this.isFormDirty()}
+                                            onClick={this.handleSave}
+                                            data-test-id="item-view-edit--save"
+                                            text={this.props.labelForSaveButton}
+                                        />
+                                    </ButtonGroup>
                                 </div>
                             )
                             : (
