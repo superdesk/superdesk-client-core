@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: actions/setup-node@v5
       with:
         node-version: ${{ matrix.node-version }}
@@ -37,7 +37,7 @@ jobs:
       run:
         working-directory: e2e/client
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - uses: actions/setup-node@v5
       with:
         node-version: ${{ matrix.node-version }}
