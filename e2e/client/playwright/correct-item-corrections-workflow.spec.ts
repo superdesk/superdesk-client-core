@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s, waitForToastMessage} from './utils';
+import {setEditor3FieldValue} from './utils/editor3';
 import {getStorageState} from './utils/storage-state';
 
 test.use({
@@ -40,8 +41,10 @@ test('can correct published item using corrections workflow', async ({page}) => 
     ).toBeVisible();
 
     // edit item
-    await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').clear();
-    await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').fill('Story 5.1');
+    await setEditor3FieldValue(
+        page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox'),
+        'Story 5.1',
+    );
     await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Save'}).click();
     await waitForToastMessage(page, 'success', 'Item updated.');
 
