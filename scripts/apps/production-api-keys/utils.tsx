@@ -21,6 +21,7 @@ export const handleClose = (): Promise<boolean> => {
                             orientation="horizontal"
                         >
                             <Button
+                                noMargin
                                 type="secondary"
                                 data-test-id="confirm-close"
                                 text={gettext('Close anyway')}
@@ -30,6 +31,7 @@ export const handleClose = (): Promise<boolean> => {
                                 }}
                             />
                             <Button
+                                noMargin
                                 type="primary"
                                 text={gettext('Go back')}
                                 onClick={() => {

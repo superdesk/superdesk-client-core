@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as Autocomplete from 'react-autocomplete';
 import {noop, throttle} from 'lodash';
 import {gettext} from 'core/utils';
+import {Button} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     items: {[key: string]: T};
@@ -175,8 +176,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={/* remove `any` when @types/react is fixed */
-                        (items, value, style: React.CSSProperties | any) => {
+                    renderMenu={
+                        (items, _, style: React.CSSProperties) => {
                         const hideOptions =
                             this.state.justInitialized
                             && typeof this.props.autoFocus === 'object'
@@ -196,7 +197,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             </div>
                         );
                     }}
-                    renderInput={(propsAutocomplete: any) => {
+                    renderInput={(propsAutocomplete) => {
                         let selectedItem = this.props.items[this.props.value];
 
                         // use valueObject when an object for selected `value` is not present in `this.props.items`
@@ -220,9 +221,9 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     }}
                                     value={this.state.search}
                                     style={{height: this.lastButtonHeight + 'px'}}
-                                    placeholder={'Search'}
+                                    placeholder={gettext('Search')}
                                     autoFocus
-                                    className="basic-input"
+                                    className="sd-input__input"
                                     data-test-id="filter-input"
                                 />
                             );
@@ -231,7 +232,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         const baseButtonStyle = {padding: 0};
 
                         return (
-                            <div style={{display: 'flex', alignItems: 'center'}}>
+                            <div className="d-flex items-center gap-0-5">
                                 <div style={{flexGrow: 1}}>
                                     <button
                                         {...propsAutocomplete}
@@ -292,23 +293,18 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         />
                                     </button>
                                 </div>
-
-                                {
-                                    this.props.disabled || this.props.required || this.props.value == null ? null : (
-                                        <div>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    this.props.onSelect(null);
-                                                }}
-                                                className="icn-btn icn-btn--small sd-line-input__custom-clear"
-                                                style={{marginInlineStart: 20}}
-                                            >
-                                                <i className="icon-remove-sign" />
-                                            </button>
-                                        </div>
-                                    )
-                                }
+                                <Button
+                                    iconOnly
+                                    icon="remove-sign"
+                                    size="small"
+                                    disabled={this.props.disabled || this.props.required || this.props.value == null}
+                                    ariaLabel={gettext('Remove')}
+                                    text={gettext('Remove')}
+                                    style="text-only"
+                                    onClick={() => {
+                                        this.props.onSelect(null);
+                                    }}
+                                />
                             </div>
                         );
                     }}
