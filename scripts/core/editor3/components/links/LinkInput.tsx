@@ -35,6 +35,7 @@ const linkTypes = {
 
 export interface ILink {
     href: string;
+    url?: string;
 }
 
 interface IProps extends Partial<IEditorStore> {
