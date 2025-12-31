@@ -3552,6 +3552,9 @@ declare module 'superdesk-api' {
 
         default_timezone: string;
 
+        /** allow setting default tab to open in authoring sidebar */
+        authoring_actions_default_tab?: 'publish' | 'send_to';
+
         // TANSA SERVER CONFIG
         tansa?: {
             base_url: string;
