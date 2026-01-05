@@ -92,27 +92,39 @@ export function getSelectSingleValue(
             };
 
             return (
-                <Select
-                    fullWidth
-                    value={this.props.value}
-                    onChange={this.props.onChange}
-                    labelHidden={!this.props.formField.label}
-                    label={this.props.formField.label}
-                    required={this.props.formField.required}
-                    invalid={(this.props.issues ?? []).length > 0}
-                    data-test-id={`gform-input--${this.props.formField.field}`}
-                    error={this.props.issues[0]}
-                    disabled={this.props.disabled}
+                <div
+                    className={classNames(
+                        'd-flex',
+                        'flex-col',
+                    )}
                 >
-                    <Option value="">{getFirstItemMessage()}</Option>
+                    <Select
+                        fullWidth
+                        value={this.props.value}
+                        onChange={this.props.onChange}
+                        labelHidden={!this.props.formField.label}
+                        label={this.props.formField.label}
+                        required={this.props.formField.required}
+                        invalid={(this.props.issues ?? []).length > 0}
+                        data-test-id={`gform-input--${this.props.formField.field}`}
+                        error={this.props.issues[0]}
+                        disabled={this.props.disabled}
+                    >
+                        <Option value="">{getFirstItemMessage()}</Option>
+                        {
+                            this.state.items == null
+                                ? null
+                                : this.state.items.map(({id, label}, i) => (
+                                    <Option key={i} value={id}>{label}</Option>
+                                ))
+                        }
+                    </Select>
                     {
-                        this.state.items == null
-                            ? null
-                            : this.state.items.map(({id, label}, i) => (
-                                <Option key={i} value={id}>{label}</Option>
-                            ))
+                        (this.props.issues ?? []).slice(1).map((str, i) => (
+                            <div key={i} className="sd-line-input__message">{str}</div>
+                        ))
                     }
-                </Select>
+                </div>
             );
         }
     };

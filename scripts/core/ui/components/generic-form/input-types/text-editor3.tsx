@@ -18,32 +18,28 @@ export class TextEditor3 extends React.PureComponent<IProps> {
         }
 
         return (
-            <div className="sd-input">
-                <div
-                    className={
-                        classNames(
-                            'sd-input__input',
-                            {
-                                'sd-input--invalid': this.props.issues.length > 0,
-                                'sd-input--required': this.props.formField.required === true,
-                            },
-                        )
-                    }
-                >
-                    <label className="sd-input__label">{this.props.formField.label}</label>
-                    <Editor3Html
-                        value={this.props.value}
-                        scrollContainer={'window'}
-                        onChange={this.props.onChange}
-                        editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
-                        readOnly={this.props.disabled}
-                    />
+            <div
+                className={classNames(
+                    'sd-input',
                     {
-                        this.props.issues.map((str, i) => (
-                            <div key={i} className="sd-input__message">{str}</div>
-                        ))
-                    }
-                </div>
+                        'sd-input--invalid': this.props.issues.length > 0,
+                        'sd-input--required': this.props.formField.required === true,
+                    },
+                )}
+            >
+                <label className="sd-input__label">{this.props.formField.label}</label>
+                <Editor3Html
+                    value={this.props.value}
+                    scrollContainer={'window'}
+                    onChange={this.props.onChange}
+                    editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
+                    readOnly={this.props.disabled}
+                />
+                {
+                    this.props.issues.map((str, i) => (
+                        <div key={i} className="sd-input__message">{str}</div>
+                    ))
+                }
             </div>
         );
     }

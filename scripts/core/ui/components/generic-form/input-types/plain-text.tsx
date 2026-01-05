@@ -52,6 +52,8 @@ export class PlainText extends React.Component<IInputType<string>> {
                 value={valueWithDefaultValue}
                 label={this.props.formField.label}
                 data-test-id={`gform-input--${this.props.formField.field}`}
+                error={this.props.issues[0]}
+                required={this.props.formField.required}
             />
         );
     }

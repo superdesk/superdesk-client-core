@@ -73,10 +73,18 @@ export function getSelectSingleValueAutoComplete(
             }
 
             return (
-                <div className="d-flex flex-col">
-                    <div className="sd-input">
-                        <label className="sd-input__label">{this.props.formField.label}</label>
-                    </div>
+                <div
+                    className={classNames(
+                        'sd-input',
+                        'd-flex',
+                        'flex-col',
+                        {
+                            'sd-input--invalid': this.props.issues.length > 0,
+                            'sd-input--required': this.props.formField.required === true,
+                        },
+                    )}
+                >
+                    <label className="sd-input__label">{this.props.formField.label}</label>
                     <AutoComplete
                         /**
                          * Re-render component so it fetches new options after dependentFields changes
@@ -98,6 +106,11 @@ export function getSelectSingleValueAutoComplete(
                         selected={this.props.value}
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     />
+                    {
+                        this.props.issues.map((str, i) => (
+                            <div key={i} className="sd-input__message">{str}</div>
+                        ))
+                    }
                 </div>
             );
         }

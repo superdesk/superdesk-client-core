@@ -39,25 +39,37 @@ export class SelectMultipleValues extends React.Component<IProps> {
         }
 
         return (
-            <TreeSelect
-                boxedStyle={this.props.formField.component_parameters?.style?.boxed}
-                error={this.props.issues[0]}
-                invalid={(this.props.issues ?? []).length > 0}
-                required={this.props.formField.required}
-                allowMultiple
-                fullWidth
-                kind="synchronous"
-                getId={(item) => item.id}
-                getLabel={(item) => item.label}
-                getOptions={() => items != null ? items.map((item) => ({value: item})) : []}
-                onChange={(item) => {
-                    this.props.onChange(item.map(({id}) => id));
-                }}
-                value={(this.props.value ?? []).map((id) => optionsLookup.get(id))}
-                disabled={this.props.disabled}
-                label={this.props.formField.label}
-                data-test-id={this.props.formField.component_parameters?.dataTestId}
-            />
+            <div
+                className={classNames(
+                    'd-flex',
+                    'flex-col',
+                )}
+            >
+                <TreeSelect
+                    boxedStyle={this.props.formField.component_parameters?.style?.boxed}
+                    error={this.props.issues[0]}
+                    invalid={(this.props.issues ?? []).length > 0}
+                    required={this.props.formField.required}
+                    allowMultiple
+                    fullWidth
+                    kind="synchronous"
+                    getId={(item) => item.id}
+                    getLabel={(item) => item.label}
+                    getOptions={() => items != null ? items.map((item) => ({value: item})) : []}
+                    onChange={(item) => {
+                        this.props.onChange(item.map(({id}) => id));
+                    }}
+                    value={(this.props.value ?? []).map((id) => optionsLookup.get(id))}
+                    disabled={this.props.disabled}
+                    label={this.props.formField.label}
+                    data-test-id={this.props.formField.component_parameters?.dataTestId}
+                />
+                {
+                    (this.props.issues ?? []).slice(1).map((str, i) => (
+                        <div key={i} className="sd-input__message">{str}</div>
+                    ))
+                }
+            </div>
         );
     }
 }

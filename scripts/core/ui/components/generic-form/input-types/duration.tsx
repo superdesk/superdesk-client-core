@@ -22,8 +22,6 @@ export class DurationComponent extends React.Component<IInputType<number>> {
                     classNames(
                         'sd-input',
                         {
-                            'sd-input--invalid': this.props.issues.length > 0,
-                            'sd-input--required': this.props.formField.required === true,
                             'sd-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                         },
                     )
