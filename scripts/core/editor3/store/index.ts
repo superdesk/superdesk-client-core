@@ -44,6 +44,7 @@ import {getTextLimitHighlightDecorator} from '../components/text-length-overflow
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
+import {is} from 'immutable';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -138,13 +139,7 @@ export const getDecorators = (options: IOptions) => {
         );
     }
 
-    if (editorState?.current && editorState?.next) {
-        const currentLinkCount = countLinks(editorState.current.getCurrentContent());
-        const nextLinkCount = countLinks(editorState.next.getCurrentContent());
-
-        if (currentLinkCount !== nextLinkCount)
-            mustReApplyDecorators = true;
-    }
+    if (isLinksChanged(editorState)) mustReApplyDecorators = true;
 
     return {
         decorator: new CompositeDecoratorCustom(decorators),
@@ -391,7 +386,7 @@ export function syncAssociations(item: IArticle, rawState: RawDraftContentState)
     item.associations = associations;
 }
 
-const countLinks = (contentState: ContentState) => {
+const getEditorLinkEntitiesCount = (contentState: ContentState) => {
     let count = 0;
 
     contentState.getBlockMap().forEach((block) => {
@@ -409,3 +404,15 @@ const countLinks = (contentState: ContentState) => {
     return count;
 };
 
+const isLinksChanged = (editorState: IOptions['editorState']) => {
+    const {current, next} = editorState || {};
+
+    if (!current || !next || is(current, next)) {
+        return false;
+    }
+
+    const currentLinkCount = getEditorLinkEntitiesCount(current.getCurrentContent());
+    const nextLinkCount = getEditorLinkEntitiesCount(next.getCurrentContent());
+
+    return currentLinkCount !== nextLinkCount;
+};
