@@ -203,7 +203,7 @@ class Workspace {
             browser.actions()
                 .mouseMove(itemElem)
                 .perform();
-            itemElem.element(by.className('icon-dots-vertical')).click();
+            itemElem.element(by.css('[data-test-id="context-menu-button"]')).click();
             return element(by.css('.dropdown__menu.open'));
         };
 
