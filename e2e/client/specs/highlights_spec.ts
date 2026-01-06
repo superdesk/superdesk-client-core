@@ -181,21 +181,21 @@ describe('highlights', () => {
             workspace.selectDesk('Politic Desk');
             monitoring.selectItem(1, 3);
             monitoring.selectItem(2, 2);
-            highlights.multiMarkHighlight('Highlight All Desks (Global)');
-            monitoring.checkMarkedForHighlight('Highlight All Desks (Global)', 1, 3);
-            monitoring.checkMarkedForHighlight('Highlight All Desks (Global)', 2, 2);
+            highlights.multiMarkHighlight('Highlight All Desks');
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 1, 3);
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
 
             // multi mark for highlights, in case of partial mark for selected items
             monitoring.selectItem(1, 0);
             monitoring.selectItem(2, 2);
-            highlights.multiMarkHighlight('Highlight All Desks (Global)');
-            monitoring.checkMarkedForHighlight('Highlight All Desks (Global)', 2, 2);
+            highlights.multiMarkHighlight('Highlight All Desks');
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
 
             // Highlighting two items out of which first is already highlighted should retain it's highlight mark
             monitoring.editItem(2, 2);
             authoring.markForHighlights();
             highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
-            monitoring.checkMarkedForHighlight('Highlight All Desks (Global)', 2, 2);
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
 
             // now remove from the first highlight
@@ -203,8 +203,8 @@ describe('highlights', () => {
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
 
             // create the highlight and add a item to it
-            monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight All Desks (Global)', 2, 2);
-            highlights.createHighlightsPackage('Highlight All Desks (Global)');
+            monitoring.actionOnItemSubmenu('Mark for highlight', 'Highlight All Desks', 2, 2);
+            highlights.createHighlightsPackage('Highlight All Desks');
             workspace.actionOnItemSubmenu('Add to current', 'main', 1);
             expect(authoring.getGroupItems('main').count()).toBe(1);
             expect(element(by.className('preview-container')).isPresent()).toBe(true);
@@ -238,8 +238,8 @@ describe('highlights', () => {
             desks.showMonitoringSettings('POLITIC DESK');
             monitoring.turnOffDeskWorkingStage(0);
             monitoring.openMonitoring();
-            expect(monitoring.getTextItem(5, 0)).toBe('Highlight All Desks (Global)');
-            expect(monitoring.getTextItem(5, 1)).toBe('Highlight All Desks (Global)');
+            expect(monitoring.getTextItem(5, 0)).toBe('Highlight All Desks');
+            expect(monitoring.getTextItem(5, 1)).toBe('Highlight All Desks');
         });
     });
 });

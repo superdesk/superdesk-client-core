@@ -240,7 +240,11 @@ class Highlights {
 
         this.multiMarkHighlight = function(name) {
             multiAction('Add to highlight');
-            el(['multiple-highlights-select', 'input-select-multiple'], by.cssContainingText('option', name)).click();
+            el(['multiple-highlights-select', 'input-select-multiple'])
+                .all(by.css('option'))
+                .filter((option) => option.getText().then((text) => text.includes(name)))
+                .first()
+                .click();
             el(['multiple-highlights-select', 'confirm']).click();
         };
     }
