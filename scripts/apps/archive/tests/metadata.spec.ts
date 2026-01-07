@@ -53,7 +53,7 @@ const exiftoolFetchPolyfill = (url: string): Promise<Response> => {
     });
 };
 
-xdescribe('process item metadata', () => {
+describe('process item metadata', () => {
     it('image metadata', async () => {
         const expected = {
             Keywords: ['Keyword1ref2014', 'Keyword2ref2014', 'Keyword3ref2014'],
