@@ -240,12 +240,18 @@ class Highlights {
 
         this.multiMarkHighlight = function(name) {
             multiAction('Add to highlight');
-            el(['multiple-highlights-select', 'input-select-multiple'])
+
+            const selectElement = element(by.css('[data-test-id="input-select-multiple"]'));
+
+            browser.wait(ECE.presenceOf(selectElement), 1000);
+
+            selectElement
                 .all(by.css('option'))
                 .filter((option) => option.getText().then((text) => text.includes(name)))
                 .first()
                 .click();
-            el(['multiple-highlights-select', 'confirm']).click();
+
+            element(by.css('button[data-test-id="confirm"]')).click();
         };
     }
 }
