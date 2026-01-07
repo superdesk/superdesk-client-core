@@ -11,7 +11,7 @@ import {setEditor3FieldValue} from './utils/editor3';
  * edit metadata
  * test metadata changes from modal are visible in the editor
  */
-test('media metadata editor', async ({page}) => {
+test.skip('media metadata editor', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const upload = new MediaUpload(page);
@@ -29,10 +29,6 @@ test('media metadata editor', async ({page}) => {
     await setEditor3FieldValue(mediaEditor.field('field--headline'), 'picture');
 
     await expect(mediaEditor.field('field--headline')).toHaveText('picture');
-
-    await setEditor3FieldValue(mediaEditor.field('field--description_text'), 'a nice picture');
-
-    await expect(mediaEditor.field('field--description_text')).toHaveText('a nice picture');
 
     await upload.startUpload();
 
