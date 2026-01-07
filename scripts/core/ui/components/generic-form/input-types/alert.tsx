@@ -33,6 +33,9 @@ export class AlertInput extends React.Component<IInputType<string>> {
 
         return (
             <div
+                style={{
+                    margin: 0,
+                }}
                 className={`alert ${getAlertClassName(style)}`}
                 data-test-id={`gform-alert--${this.props.formField.field}`}
             >

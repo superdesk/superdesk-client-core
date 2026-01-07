@@ -12,6 +12,10 @@ export const ReadonlyCopyableText: React.FC<IInputType<string>> = (props) => {
                     ? props.value ?? defaultValue
                     : props.value
             }
+            disableCopyButton={props.formValues._id == null}
+            label={props.formField.label}
+            toastMessagePosition="top-right"
+            info={props.formField.component_parameters?.infoText}
         />
     );
 };

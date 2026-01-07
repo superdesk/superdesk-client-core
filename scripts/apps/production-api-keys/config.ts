@@ -61,6 +61,7 @@ export function getProductionApiKeysFormConfig(): IFormGroup<IProductionApiKeyCo
                         field: 'password',
                         component_parameters: {
                             defaultAfterCreation: '* * * * * * * *',
+                            infoText: gettext('Copy this now, you won\'t be able to access it again.'),
                         },
                     },
                 ],

@@ -245,8 +245,9 @@ export class GenericListPageComponent<T extends object, P>
         };
 
         showConfirmationPrompt({
-            title: gettext('Confirm'),
-            message: gettext('Are you sure you want to delete this item?'),
+            title: gettext('Delete item?'),
+            message: gettext('This item will be permanently deleted.'),
+            primaryActionText: gettext('Delete'),
         }).then((confirmed) => {
             if (confirmed) {
                 doDelete();

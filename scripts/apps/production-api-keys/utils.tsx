@@ -1,7 +1,7 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
 import {gettext} from 'core/utils';
-import {Modal, Button} from 'superdesk-ui-framework/react';
+import {Modal, Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {IBaseRestApiResponse} from 'superdesk-api';
 
 export const handleClose = (): Promise<boolean> => {
@@ -16,8 +16,12 @@ export const handleClose = (): Promise<boolean> => {
                     onHide={closeModal}
                     headerTemplate={gettext('Close this panel?')}
                     footerTemplate={(
-                        <>
+                        <ButtonGroup
+                            align="end"
+                            orientation="horizontal"
+                        >
                             <Button
+                                noMargin
                                 type="secondary"
                                 data-test-id="confirm-close"
                                 text={gettext('Close anyway')}
@@ -27,6 +31,7 @@ export const handleClose = (): Promise<boolean> => {
                                 }}
                             />
                             <Button
+                                noMargin
                                 type="primary"
                                 text={gettext('Go back')}
                                 onClick={() => {
@@ -34,7 +39,7 @@ export const handleClose = (): Promise<boolean> => {
                                     closeModal();
                                 }}
                             />
-                        </>
+                        </ButtonGroup>
                     )}
                 >
                     {gettext(
