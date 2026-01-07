@@ -69,6 +69,7 @@ export function showSpikeDialog<T>(
                                     </ButtonGroup>
                                 )
                             }
+                            data-test-id="spike-modal"
                         >
                             <div>{promptForConfirmationMessage}</div>
                             {

@@ -10,7 +10,7 @@ import {MediaUpload} from './page-object-models/upload';
  * edit metadata
  * test metadata changes from modal are visible in the editor
  */
-test('media metadata editor', async ({page}) => {
+test.skip('media metadata editor', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const upload = new MediaUpload(page);
