@@ -35,6 +35,7 @@ const linkTypes = {
 
 export interface ILink {
     href: string;
+    url?: string;
 }
 
 interface IProps extends Partial<IEditorStore> {
@@ -90,7 +91,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
         const initialValue = '';
 
         this.state = {
-            url: this.props.data ? this.props.data.href || initialValue : initialValue,
+            url: this.props.data ? (this.props.data.href || this.props.data.url || initialValue) : initialValue,
             selected: selectedAttachment,
         };
 
