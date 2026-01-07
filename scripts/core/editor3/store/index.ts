@@ -139,7 +139,9 @@ export const getDecorators = (options: IOptions) => {
         );
     }
 
-    if (isLinksChanged(editorState)) mustReApplyDecorators = true;
+    if (hasLinkCountChanged(editorState)) {
+        mustReApplyDecorators = true;
+    }
 
     return {
         decorator: new CompositeDecoratorCustom(decorators),
@@ -404,8 +406,8 @@ const getEditorLinkEntitiesCount = (contentState: ContentState) => {
     return count;
 };
 
-const isLinksChanged = (editorState: IOptions['editorState']) => {
-    const {current, next} = editorState || {};
+const hasLinkCountChanged = (editorState: IOptions['editorState']) => {
+    const {current, next} = editorState ?? {};
 
     if (!current || !next || is(current, next)) {
         return false;
