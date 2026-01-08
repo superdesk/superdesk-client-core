@@ -45,7 +45,9 @@ const getPictureMetadata = (
     }).then((r) => ({...r, contentType: IContentProfileType.picture}));
 
 const processMetadata = (metadata: RawMetadata): Partial<IPTCMetadata> => {
-    const data = metadata.data?.[0] ?? {};
+    let data = metadata.data?.[0] ?? {};
+
+    data = extractLangAltValues(data);
 
     if (metadata.contentType === IContentProfileType.video)
         return stripGroupNames(mapXMPtoIPTC(data));
@@ -76,5 +78,27 @@ const stripGroupNames = (metadata: RawMetadata['data'][number]) =>
         {IPTC: {}, XMP: {}, Composite: {}},
     ),
     );
+
+
+/**
+ * -j arg should remove outer lang-alt tag but output still contains the outer tag
+ * so this function manually removes them by getting the inner text content
+ */
+const extractLangAltValues = (data: Record<string, unknown>) : Record<string, unknown> => {
+    const extracted = {};
+    const parser = new DOMParser();
+
+    for (const [key, value] of Object.entries(data)) {
+        if (typeof value !== 'string') {
+            extracted[key] = value;
+            continue;
+        }
+
+        const doc = parser.parseFromString(value, 'text/html');
+
+        extracted[key] = doc.body.textContent?.trim() ?? '';
+    }
+    return extracted;
+};
 
 export {getMetadata, getPictureMetadata, getVideoMetadata};
