@@ -3,6 +3,7 @@ import {IContentProfileType} from 'apps/workspace/content/controllers/ContentPro
 import {IPTCMetadata} from 'superdesk-api';
 import {getObjectEntries} from 'utils/object';
 import {EXIFTOOL_ARGS, XMP_IPTC_TAGS} from './constants';
+import zeroperl from '../../binaries/zeroperl-1.0.1.wasm';
 
 type RawMetadata = {
   data: Array<Record<string, unknown>>;
@@ -11,11 +12,21 @@ type RawMetadata = {
 
 type ExiftoolOptions = Parameters<typeof parseMetadata>[1];
 
-const getMetadata = (f: File, options?: ExiftoolOptions) =>
-    (f.type.startsWith('video/')
-        ? getVideoMetadata(f, options)
-        : getPictureMetadata(f, options)
-    ).then(processMetadata, (): Partial<IPTCMetadata> => ({}));
+/**
+ * used as a fail-safe if fetch from exiftool fails
+ */
+export const fetchZeroperl = () => fetch(zeroperl).then((res) => res);
+
+const getMetadata = (f: File, options?: ExiftoolOptions) => {
+    const getMetadataFn = f.type.startsWith('video/')
+        ? getVideoMetadata
+        : getPictureMetadata;
+
+    return getMetadataFn(f, options)
+        .catch(() => getMetadataFn(f, {...options, fetch: fetchZeroperl}))
+        .then((metadata) => processMetadata(metadata))
+        .catch((): Partial<IPTCMetadata> => ({}));
+};
 
 const getVideoMetadata = (
     f: File,

@@ -52,6 +52,11 @@ module.exports = function(config) {
                 pattern: 'fixtures/**/*',
                 watched: false,
                 included: false,
+            },
+            {
+                pattern: 'scripts/binaries/**/*',
+                watched: false,
+                included: false,
             }
         ],
 

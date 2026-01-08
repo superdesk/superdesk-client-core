@@ -22,6 +22,31 @@ const fetchFile = (filename: string): Promise<File> => {
     });
 };
 
+/**
+ * used as a fail-safe if fetch from exiftool fails
+ */
+const fetchZeroperl = (): Promise<Response> => {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/base/scripts/binaries/zeroperl-1.0.1.wasm');
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(new Response(xhr.response, {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    headers: {'Content-Type': 'application/wasm'},
+                }));
+            } else {
+                reject(new Error(`failed to load zeroperl fallback: ${xhr.status}`));
+            }
+        };
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.send();
+    });
+};
+
 const exiftoolFetchPolyfill = (url: string): Promise<Response> => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -47,8 +72,7 @@ const exiftoolFetchPolyfill = (url: string): Promise<Response> => {
             }
         };
 
-        xhr.onerror = () =>
-            reject(new Error(`Network error while fetching ${url}`));
+        xhr.onerror = () => fetchZeroperl().then(resolve).catch(reject);
         xhr.send();
     });
 };
