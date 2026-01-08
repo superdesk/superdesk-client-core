@@ -46,6 +46,7 @@ import {ThinSpaceDecorator} from '../components/thin-spaces/ThinSpaceDecorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
+import {is} from 'immutable';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -124,10 +125,14 @@ interface IOptions {
     limitConfig?: EditorLimit,
     softLimitConfig?: number,
     invisibles?: boolean;
+    editorState?: {
+        current: EditorState,
+        next: EditorState
+    }
 }
 
 export const getDecorators = (options: IOptions) => {
-    const {limitConfig, softLimitConfig, spellchecker, invisibles} = options;
+    const {limitConfig, softLimitConfig, spellchecker, editorState, invisibles} = options;
 
     // improve performance by not replacing decorators when possible.
     let mustReApplyDecorators = false;
@@ -174,6 +179,10 @@ export const getDecorators = (options: IOptions) => {
 
     // Update cache with current invisibles state for next comparison
     decoratorStateCache.invisibles = invisibles;
+
+    if (hasLinkCountChanged(editorState)) {
+        mustReApplyDecorators = true;
+    }
 
     return {
         decorator: new CompositeDecoratorCustom(decorators),
@@ -433,3 +442,34 @@ export function syncAssociations(item: IArticle, rawState: RawDraftContentState)
 
     item.associations = associations;
 }
+
+const getEditorLinkEntitiesCount = (contentState: ContentState) => {
+    let count = 0;
+
+    contentState.getBlockMap().forEach((block) => {
+        block.findEntityRanges(
+            (char) => {
+                const entityKey = char.getEntity();
+
+                return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
+            },
+            () => {
+                count += 1;
+            },
+        );
+    });
+    return count;
+};
+
+const hasLinkCountChanged = (editorState: IOptions['editorState']) => {
+    const {current, next} = editorState ?? {};
+
+    if (!current || !next || is(current, next)) {
+        return false;
+    }
+
+    const currentLinkCount = getEditorLinkEntitiesCount(current.getCurrentContent());
+    const nextLinkCount = getEditorLinkEntitiesCount(next.getCurrentContent());
+
+    return currentLinkCount !== nextLinkCount;
+};
