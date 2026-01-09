@@ -1,94 +1,38 @@
 import {getMetadata} from 'apps/archive/parse-metadata';
+import metadataImage from '../../../../fixtures/metadata.jpg';
+import emptyImage from '../../../../fixtures/empty_metadata.jpg';
+import metadataVideo from '../../../../fixtures/metadata.mov';
+import emptyVideo from '../../../../fixtures/empty_metadata.mov';
 
-const fetchFile = (filename: string): Promise<File> => {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `/base/fixtures/${filename}`);
-        xhr.responseType = 'blob';
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const file = new File([xhr.response], filename, {
-                    type: xhr.getResponseHeader('Content-Type'),
-                });
-
-                resolve(file);
-            } else {
-                reject(new Error(`Failed to load file: ${xhr.status}`));
-            }
-        };
-        xhr.onerror = () => reject(new Error('Network error'));
-        xhr.send();
-    });
-};
-
-/**
- * used as a fail-safe if fetch from exiftool fails
- */
-const fetchZeroperl = (): Promise<Response> => {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', '/base/scripts/binaries/zeroperl-1.0.1.wasm');
-        xhr.responseType = 'arraybuffer';
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(new Response(xhr.response, {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    headers: {'Content-Type': 'application/wasm'},
-                }));
-            } else {
-                reject(new Error(`failed to load zeroperl fallback: ${xhr.status}`));
-            }
-        };
-        xhr.onerror = () => reject(new Error('Network error'));
-        xhr.send();
-    });
-};
-
-const exiftoolFetchPolyfill = (url: string): Promise<Response> => {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('GET', url);
-        xhr.responseType = 'arraybuffer';
-
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = new Response(xhr.response, {
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    headers: {
-                        'Content-Type': 'application/wasm',
-                    },
-                });
-
-                resolve(response);
-            } else {
-                reject(
-                    new Error(`Failed to fetch ${url}: ${xhr.status} ${xhr.statusText}`),
-                );
-            }
-        };
-
-        xhr.onerror = () => fetchZeroperl().then(resolve).catch(reject);
-        xhr.send();
-    });
-};
+const fetchFile = (filename: string): Promise<File> =>
+    fetch(filename).then((res) =>
+        res.blob().then((blob) => new File([blob], filename, {type: blob.type})),
+    );
 
 const timeout = 10000; // 10s
 
 describe('process item metadata', () => {
+    beforeEach(() => {
+        const iframe = document.createElement('iframe');
+
+        document.body.appendChild(iframe);
+        const nativeFetch = iframe.contentWindow.fetch.bind(window);
+
+        document.body.removeChild(iframe);
+
+        spyOn(window, 'fetch').and.callFake((...args) => {
+            return nativeFetch(...args);
+        });
+    });
+
+
     it('image metadata', async () => {
         const expected = {
             Keywords: ['Keyword1ref2014', 'Keyword2ref2014', 'Keyword3ref2014'],
             'By-line': 'Creator1 (ref2014)',
         };
-        const file = await fetchFile('metadata.jpg');
-        const result = await getMetadata(file, {
-            fetch: exiftoolFetchPolyfill,
-        });
+        const file = await fetchFile(metadataImage);
+        const result = await getMetadata(file);
 
         for (const [k, v] of Object.entries(expected)) expect(result[k]).toEqual(v);
     }, timeout);
@@ -98,20 +42,16 @@ describe('process item metadata', () => {
             Headline: 'Your Headline 2',
             'By-line': ['Your Creator Name 6', 'Your Creator Name 6'],
         };
-        const file = await fetchFile('metadata.mov');
-        const result = await getMetadata(file, {
-            fetch: exiftoolFetchPolyfill,
-        });
+        const file = await fetchFile(metadataVideo);
+        const result = await getMetadata(file);
 
         for (const [k, v] of Object.entries(expected)) expect(result[k]).toEqual(v);
     }, timeout);
 
     it('{} for item with no metadata', async () => {
-        for (const filename of ['empty_metadata.jpg', 'empty_metadata.mov']) {
+        for (const filename of [emptyImage, emptyVideo]) {
             const file = await fetchFile(filename);
-            const result = await getMetadata(file, {
-                fetch: exiftoolFetchPolyfill,
-            });
+            const result = await getMetadata(file);
 
             expect(result).toEqual({});
         }

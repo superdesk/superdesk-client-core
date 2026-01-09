@@ -15,7 +15,7 @@ type ExiftoolOptions = Parameters<typeof parseMetadata>[1];
 /**
  * used as a fail-safe if fetch from exiftool fails
  */
-export const fetchZeroperl = () => fetch(zeroperl).then((res) => res);
+export const fetchZeroperl = () => fetch(zeroperl);
 
 const getMetadata = (f: File, options?: ExiftoolOptions) => {
     const getMetadataFn = f.type.startsWith('video/')

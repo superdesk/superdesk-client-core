@@ -48,16 +48,6 @@ module.exports = function(config) {
         files: [
             'scripts/tests.ts',
             'scripts/**/*.html',
-            { 
-                pattern: 'fixtures/**/*',
-                watched: false,
-                included: false,
-            },
-            {
-                pattern: 'scripts/binaries/**/*',
-                watched: false,
-                included: false,
-            }
         ],
 
         ngHtml2JsPreprocessor: {
