@@ -288,7 +288,7 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.wasm$/,
-                    type: "javascript/auto", 
+                    type: "javascript/auto",
                     loader: "file-loader",
                 }
             ],

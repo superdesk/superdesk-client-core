@@ -13,20 +13,33 @@ type RawMetadata = {
 type ExiftoolOptions = Parameters<typeof parseMetadata>[1];
 
 /**
- * used as a fail-safe if fetch from exiftool fails
+ * return bundled wasm binary if any issues occur in the exiftool lib fetching the wasm binary
  */
 export const fetchZeroperl = () => fetch(zeroperl);
 
-const getMetadata = (f: File, options?: ExiftoolOptions) => {
-    const getMetadataFn = f.type.startsWith('video/')
-        ? getVideoMetadata
-        : getPictureMetadata;
+const getMetadata = (() => {
+    let retryCount = 0;
+    const maxRetries = 3;
 
-    return getMetadataFn(f, options)
-        .catch(() => getMetadataFn(f, {...options, fetch: fetchZeroperl}))
-        .then((metadata) => processMetadata(metadata))
-        .catch((): Partial<IPTCMetadata> => ({}));
-};
+    return (f: File, options?: ExiftoolOptions) => {
+        const getMetadataFn = f.type.startsWith('video/')
+            ? getVideoMetadata
+            : getPictureMetadata;
+        const getMetadataFnOptions = retryCount >= maxRetries
+            ? {...options, fetch: fetchZeroperl}
+            : options;
+
+        return getMetadataFn(f, getMetadataFnOptions)
+            .catch((err) => {
+                console.error(err);
+                retryCount++;
+                return getMetadataFn(f, {...options, fetch: fetchZeroperl});
+            })
+            .then(processMetadata)
+            .catch((): Partial<IPTCMetadata> => ({}));
+    };
+})();
+
 
 const getVideoMetadata = (
     f: File,
