@@ -3,6 +3,7 @@ import {IContentProfileType} from 'apps/workspace/content/controllers/ContentPro
 import {IPTCMetadata} from 'superdesk-api';
 import {getObjectEntries} from 'utils/object';
 import {EXIFTOOL_ARGS, XMP_IPTC_TAGS} from './constants';
+import zeroperl from '../../binaries/zeroperl-1.0.1.wasm';
 
 type RawMetadata = {
   data: Array<Record<string, unknown>>;
@@ -11,11 +12,34 @@ type RawMetadata = {
 
 type ExiftoolOptions = Parameters<typeof parseMetadata>[1];
 
-const getMetadata = (f: File, options?: ExiftoolOptions) =>
-    (f.type.startsWith('video/')
-        ? getVideoMetadata(f, options)
-        : getPictureMetadata(f, options)
-    ).then(processMetadata, (): Partial<IPTCMetadata> => ({}));
+/**
+ * return bundled wasm binary if any issues occur in the exiftool lib fetching the wasm binary
+ */
+export const fetchZeroperl = () => fetch(zeroperl);
+
+const getMetadata = (() => {
+    let retryCount = 0;
+    const maxRetries = 3;
+
+    return (f: File, options?: ExiftoolOptions) => {
+        const getMetadataFn = f.type.startsWith('video/')
+            ? getVideoMetadata
+            : getPictureMetadata;
+        const getMetadataFnOptions = retryCount >= maxRetries
+            ? {...options, fetch: fetchZeroperl}
+            : options;
+
+        return getMetadataFn(f, getMetadataFnOptions)
+            .catch((err) => {
+                console.error(err);
+                retryCount++;
+                return getMetadataFn(f, {...options, fetch: fetchZeroperl});
+            })
+            .then(processMetadata)
+            .catch((): Partial<IPTCMetadata> => ({}));
+    };
+})();
+
 
 const getVideoMetadata = (
     f: File,
