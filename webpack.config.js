@@ -197,9 +197,14 @@ module.exports = function makeConfig(grunt) {
                     ],
                 },
                 {
-                    test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
+                    test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg|mov)(\?.*$|$)/,
                     loader: 'file-loader',
                 },
+                {
+                    test: /\.wasm$/,
+                    type: "javascript/auto",
+                    loader: "file-loader",
+                }
             ],
         },
         devServer: {
