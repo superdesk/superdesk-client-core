@@ -138,8 +138,8 @@ export class TableCell extends React.Component<IProps, IState> {
         }
 
         // eslint-disable-next-line no-alert
-        const url = prompt('Enter a URL');
-        const contentState = editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', {url});
+        const link = {href: prompt('Enter a URL')};
+        const contentState = editorState.getCurrentContent().createEntity('LINK', 'MUTABLE', {link});
 
         return RichUtils.toggleLink(
             editorState,
