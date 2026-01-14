@@ -173,8 +173,10 @@ module.exports = function makeConfig(grunt) {
                 __dirname,
                 path.join(__dirname, 'scripts'),
                 path.join(__dirname, 'styles', 'sass'),
+                path.join(__dirname, 'node_modules'),
                 'node_modules',
             ],
+            mainFields: ['module', 'browser', 'main'],
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-10-year-range',
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
@@ -191,6 +193,7 @@ module.exports = function makeConfig(grunt) {
                  */
                 react: getModuleDir('react'),
                 'react-dom': getModuleDir('react-dom'),
+                'react-resizable-panels': path.join(getModuleDir('react-resizable-panels'), 'dist/react-resizable-panels.js'),
 
                 /**
                  * Required for development mode only.
