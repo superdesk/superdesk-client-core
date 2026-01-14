@@ -40,22 +40,15 @@ export class SelectMultipleValues extends React.Component<IProps> {
 
         return (
             <div
-                className={
-                    classNames(
-                        'sd-line-input',
-                        {
-                            'sd-line-input--invalid': this.props.issues.length > 0,
-                            'sd-line-input--required': this.props.formField.required === true,
-                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
-                        },
-                    )
-                }
+                className={classNames(
+                    'd-flex',
+                    'flex-col',
+                )}
             >
-                <label className="sd-line-input__label">{this.props.formField.label}</label>
-
                 <TreeSelect
+                    boxedStyle={this.props.formField.component_parameters?.style?.boxed}
                     error={this.props.issues[0]}
-                    invalid={this.props.issues[0] != null}
+                    invalid={(this.props.issues ?? []).length > 0}
                     required={this.props.formField.required}
                     allowMultiple
                     fullWidth
@@ -69,14 +62,11 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     value={(this.props.value ?? []).map((id) => optionsLookup.get(id))}
                     disabled={this.props.disabled}
                     label={this.props.formField.label}
-                    inlineLabel
-                    labelHidden
                     data-test-id={this.props.formField.component_parameters?.dataTestId}
                 />
-
                 {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
+                    (this.props.issues ?? []).slice(1).map((str, i) => (
+                        <div key={i} className="sd-input__message">{str}</div>
                     ))
                 }
             </div>

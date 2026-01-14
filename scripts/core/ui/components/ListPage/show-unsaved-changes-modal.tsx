@@ -16,7 +16,23 @@ export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModa
             position="top"
             onHide={closeModal}
             headerTemplate={gettext('Unsaved changes')}
-            footerTemplate={(
+            footerTemplate={onSave == null ? (
+                <>
+                    <Button
+                        type="secondary"
+                        text={gettext('Don\'t save')}
+                        onClick={() => {
+                            closeModal();
+                            onDiscard();
+                        }}
+                    />
+                    <Button
+                        type="primary"
+                        text={gettext('Go back')}
+                        onClick={closeModal}
+                    />
+                </>
+            ) : (
                 <>
                     <Button
                         type="tertiary"

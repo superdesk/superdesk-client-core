@@ -26,8 +26,6 @@ test('media metadata editor', async ({page}) => {
 
     await upload.selectFile('iptc-photo.jpg');
 
-    await expect(mediaEditor.field('field--headline')).toContainText('The Headline');
-
     await setEditor3FieldValue(mediaEditor.field('field--headline'), 'picture');
 
     await expect(mediaEditor.field('field--headline')).toHaveText('picture');

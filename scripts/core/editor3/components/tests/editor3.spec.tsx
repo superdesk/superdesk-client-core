@@ -49,6 +49,7 @@ describe('editor3.component', () => {
             },
         } as any);
     });
+
     it('should hide toolbar when disabled', () => {
         const wrapper = shallow(
             <Editor3Component
