@@ -157,6 +157,9 @@
   "resolutions": {
     "moment": "2.30.1"
   },
+  "overrides": {
+    "cheerio": "0.22.0"
+  },
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
     "postinstall": "node ./tasks/patch-package.js && node tasks/generate-placeholder-file-for-extension-styles.js",
