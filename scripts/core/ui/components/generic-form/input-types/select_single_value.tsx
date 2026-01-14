@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {gettext} from 'core/utils';
+import {Option, Select} from 'superdesk-ui-framework';
 
 type ISelectSingleValueItems = Array<{id: string; label: string}>;
 
@@ -38,6 +39,7 @@ export function getSelectSingleValue(
 
             this.fetchData = this.fetchData.bind(this);
         }
+
         fetchData() {
             this.setState({loading: true});
 
@@ -48,14 +50,17 @@ export function getSelectSingleValue(
                     }
                 });
         }
+
         componentDidMount() {
             this._mounted = true;
 
             this.fetchData();
         }
+
         componentWillUnmount() {
             this._mounted = false;
         }
+
         componentDidUpdate(prevProps: IProps) {
             if (
                 this.dependentFields.some((field) => prevProps.formValues[field] !== this.props.formValues[field])
@@ -64,6 +69,7 @@ export function getSelectSingleValue(
                 this.fetchData();
             }
         }
+
         render() {
             if (this.state.loading) {
                 return null;
@@ -87,37 +93,34 @@ export function getSelectSingleValue(
 
             return (
                 <div
-                    className={
-                        classNames(
-                            'sd-line-input',
-                            {
-                                'sd-line-input--invalid': this.props.issues.length > 0,
-                                'sd-line-input--required': this.props.formField.required === true,
-                            },
-                        )
-                    }
+                    className={classNames(
+                        'd-flex',
+                        'flex-col',
+                    )}
                 >
-                    <label className="sd-line-input__label">{this.props.formField.label}</label>
-                    <select
-                        disabled={this.props.disabled || this.state.items == null || this.state.items.length < 1}
-                        value={this.props.value || ''}
-                        className="sd-line-input__select"
-                        onChange={(event) => {
-                            this.props.onChange(event.target.value);
-                        }}
+                    <Select
+                        fullWidth
+                        value={this.props.value}
+                        onChange={this.props.onChange}
+                        labelHidden={!this.props.formField.label}
+                        label={this.props.formField.label}
+                        required={this.props.formField.required}
+                        invalid={(this.props.issues ?? []).length > 0}
                         data-test-id={`gform-input--${this.props.formField.field}`}
+                        error={this.props.issues[0]}
+                        disabled={this.props.disabled}
                     >
-                        <option value="">{getFirstItemMessage()}</option>
+                        <Option value="">{getFirstItemMessage()}</Option>
                         {
                             this.state.items == null
                                 ? null
                                 : this.state.items.map(({id, label}, i) => (
-                                    <option key={i} value={id}>{label}</option>
+                                    <Option key={i} value={id}>{label}</Option>
                                 ))
                         }
-                    </select>
+                    </Select>
                     {
-                        this.props.issues.map((str, i) => (
+                        (this.props.issues ?? []).slice(1).map((str, i) => (
                             <div key={i} className="sd-line-input__message">{str}</div>
                         ))
                     }

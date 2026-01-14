@@ -14,7 +14,7 @@ export class FormGroupDirectionWrapper<T extends object> extends React.Component
         const {direction} = this.props;
 
         if (direction === 'vertical') {
-            return <div {...omit(this.props, ['direction'])} />;
+            return <div className="d-flex flex-col gap-2" {...omit(this.props, ['direction'])} />;
         } else if (direction === 'horizontal') {
             const currentClassname = (this.props.className || '');
             const nextClassname = currentClassname.length > 0

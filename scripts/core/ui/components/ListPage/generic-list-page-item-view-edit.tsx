@@ -18,7 +18,9 @@ import {showUnsavedChangesModal} from './show-unsaved-changes-modal';
 import {hasValue} from '../generic-form/has-value';
 import {get, set} from 'lodash';
 import {produce} from 'immer';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {GenericFormFieldType} from '../generic-form/interfaces/form';
+import {notify} from 'core/notify/notify';
 
 interface IProps<T extends object> {
     operation: 'editing' | 'creation';
@@ -30,6 +32,7 @@ interface IProps<T extends object> {
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
+    beforeClose?: (item: T) => Promise<boolean>;
 
     /**
      * label "save" doesn't work when data source is an array. The array
@@ -61,12 +64,6 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         super(props);
 
         this.state = getInitialState(props);
-
-        this.enableEditMode = this.enableEditMode.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-        this.handleFieldChange = this.handleFieldChange.bind(this);
-        this.isFormDirty = this.isFormDirty.bind(this);
-        this.handleSave = this.handleSave.bind(this);
     }
 
     componentDidMount() {
@@ -77,7 +74,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         this._mounted = false;
     }
 
-    enableEditMode() {
+    enableEditMode = () => {
         this.setState({
             nextItem: this.props.item,
         }, () => {
@@ -85,7 +82,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         });
     }
 
-    handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
+    handleFieldChange = (field: string, nextValue: valueof<IProps<T>['item']>) => {
         // using updater function to avoid race conditions
         this.setState((prevState) =>
             produce(prevState, (draft) => {
@@ -94,7 +91,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         );
     }
 
-    handleCancel() {
+    handleCancel = () => {
         const cancelFn = typeof this.props.onCancel === 'function'
             ? this.props.onCancel
             : () => {
@@ -103,25 +100,42 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 });
             };
 
+        const executeCancelFn = () => {
+            if (this.props.beforeClose != null) {
+                this.props.beforeClose(this.props.item as T).then((result) => {
+                    if (result) {
+                        cancelFn();
+                    }
+                }).catch(() => {
+                    notify.error(gettext('Canceling failed'));
+                });
+            } else {
+                cancelFn();
+            }
+        };
+
         if (this.isFormDirty() === false) {
-            cancelFn();
+            executeCancelFn();
         } else {
             showUnsavedChangesModal({
-                onDiscard: cancelFn,
-                onSave: () => this.handleSave(),
+                onDiscard: executeCancelFn,
             });
         }
     }
 
-    isFormDirty() {
+    isFormDirty = () => {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
 
-    handleSave() {
+    handleSave = () => {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
+
+        // Filter out alert fields - they're only cosmetic
+        const fieldsToSend = currentFields.filter((field) => field.type !== GenericFormFieldType.alert);
+
         const currentFieldsIds = [
-            ...currentFields.map(({field}) => field),
+            ...fieldsToSend.map(({field}) => field),
             '_id',
             ...this.props.hiddenFields,
         ];
@@ -214,6 +228,24 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
             });
     }
 
+    handleClose = () => {
+        const {onClose, beforeClose, item} = this.props;
+
+        if (beforeClose != null) {
+            beforeClose(item as T)
+                .then((result) => {
+                    if (result) {
+                        onClose();
+                    }
+                })
+                .catch(() => {
+                    notify.error(gettext('Closing failed'));
+                });
+        } else {
+            onClose();
+        }
+    }
+
     render() {
         return (
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
@@ -226,19 +258,24 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right"
                                     data-test-id="toolbar"
                                 >
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        type="secondary"
-                                        onClick={this.handleCancel}
-                                        data-test-id="item-view-edit--cancel-save"
-                                    />
-                                    <Button
-                                        type="primary"
-                                        disabled={!this.isFormDirty()}
-                                        onClick={this.handleSave}
-                                        data-test-id="item-view-edit--save"
-                                        text={this.props.labelForSaveButton}
-                                    />
+                                    <ButtonGroup
+                                        align="end"
+                                        orientation="horizontal"
+                                    >
+                                        <Button
+                                            text={gettext('Cancel')}
+                                            type="secondary"
+                                            onClick={this.handleCancel}
+                                            data-test-id="item-view-edit--cancel-save"
+                                        />
+                                        <Button
+                                            type="primary"
+                                            disabled={!this.isFormDirty()}
+                                            onClick={this.handleSave}
+                                            data-test-id="item-view-edit--save"
+                                            text={this.props.labelForSaveButton}
+                                        />
+                                    </ButtonGroup>
                                 </div>
                             )
                             : (
@@ -246,12 +283,20 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                                     <div>
                                         {
                                             this.props.operation === 'editing' ? (
-                                                <button onClick={this.enableEditMode} className="icn-btn">
+                                                <button
+                                                    className="icn-btn"
+                                                    onClick={this.enableEditMode}
+                                                    data-test-id="list-page-edit"
+                                                >
                                                     <i className="icon-pencil" />
                                                 </button>
                                             ) : null
                                         }
-                                        <button className="icn-btn" onClick={this.props.onClose}>
+                                        <button
+                                            className="icn-btn"
+                                            onClick={this.handleClose}
+                                            data-test-id="list-page-close"
+                                        >
                                             <i className="icon-close-small" />
                                         </button>
                                     </div>

@@ -116,7 +116,7 @@ jobs:
       uses: ./.github/actions/setup-e2e
 
     - name: Setup Chrome
-      uses: browser-actions/setup-chrome@v1
+      uses: browser-actions/setup-chrome@v2
       id: setup-chrome
       with:
         chrome-version: 127.0.6533.99
@@ -133,7 +133,7 @@ jobs:
 
     - name: Upload screenshots
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: screenshots-protractor-node-${{ matrix.node-version }}-${{ matrix.suite }}
         path: /tmp/*.png

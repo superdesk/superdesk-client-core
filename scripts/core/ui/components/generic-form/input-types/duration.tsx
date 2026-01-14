@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {DurationInput, getDurationString} from 'superdesk-ui-framework/react';
 import {IInputType} from '../interfaces/input-types';
+import {GenericFormFieldType} from '../interfaces/form';
 
 export class DurationComponent extends React.Component<IInputType<number>> {
     render() {
@@ -19,16 +20,14 @@ export class DurationComponent extends React.Component<IInputType<number>> {
             <div
                 className={
                     classNames(
-                        'sd-line-input',
+                        'sd-input',
                         {
-                            'sd-line-input--invalid': this.props.issues.length > 0,
-                            'sd-line-input--required': this.props.formField.required === true,
-                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                            'sd-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                         },
                     )
                 }
             >
-                <label className="sd-line-input__label">{this.props.formField.label}</label>
+                <label className="sd-input__label">{this.props.formField.label}</label>
 
                 <DurationInput
                     label=""
@@ -45,7 +44,7 @@ export class DurationComponent extends React.Component<IInputType<number>> {
 
                 {
                     this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
+                        <div key={i} className="sd-input__message">{str}</div>
                     ))
                 }
             </div>
