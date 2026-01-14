@@ -14,7 +14,7 @@ aiofiles==24.1.0
     #   quart
 aiohappyeyeballs==2.6.1
     # via aiohttp
-aiohttp==3.12.15
+aiohttp==3.13.3
     # via
     #   aiobotocore
     #   elasticsearch
@@ -370,7 +370,7 @@ wcwidth==0.2.14
     # via prompt-toolkit
 websockets==15.0.1
     # via superdesk-core
-werkzeug==3.1.3
+werkzeug==3.1.5
     # via
     #   flask
     #   quart

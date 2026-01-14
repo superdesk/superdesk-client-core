@@ -4,7 +4,7 @@ import {Button, Modal, Spacer} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export function showConfirmationPrompt(
-    {title, message}: {title: string; message: string;},
+    {title, message, primaryActionText}: {title: string; message: string;primaryActionText?: string;},
 ): Promise<boolean> {
     return new Promise((resolve) => {
         showModal(({closeModal}) => (
@@ -33,7 +33,7 @@ export function showConfirmationPrompt(
                                 closeModal();
                                 resolve(true);
                             }}
-                            text={gettext('Confirm')}
+                            text={primaryActionText ?? gettext('Confirm')}
                             type="primary"
                         />
                     </Spacer>

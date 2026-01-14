@@ -1,6 +1,6 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {isIFormGroup, isIFormField, GenericFormFieldType} from './interfaces/form';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {IFormField, IFormFieldAlert, IFormGroup} from 'superdesk-api';
 
 function getInitialValueForFieldType<T extends object>(fieldConfig: IFormField<T>): {readonly [field: string]: any} {
     const {field} = fieldConfig;
@@ -24,11 +24,14 @@ function getInitialValueForFieldType<T extends object>(fieldConfig: IFormField<T
         case GenericFormFieldType.yesNo:
         case GenericFormFieldType.select:
         case GenericFormFieldType.selectMultiple:
+        case GenericFormFieldType.readonlyCopyableText:
         case GenericFormFieldType.number:
         case GenericFormFieldType.duration:
             return {[field]: undefined};
         case GenericFormFieldType.checkbox:
             return {[field]: false};
+        case GenericFormFieldType.alert:
+            return {[field]: (fieldConfig as IFormFieldAlert<T>).value};
         default:
             assertNever(type);
     }

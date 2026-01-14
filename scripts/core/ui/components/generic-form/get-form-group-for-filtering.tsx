@@ -32,6 +32,10 @@ function getFieldTypeForFiltering(type: GenericFormFieldType): GenericFormFieldT
             return GenericFormFieldType.select;
         case GenericFormFieldType.selectMultiple:
             return GenericFormFieldType.selectMultiple;
+        case GenericFormFieldType.alert:
+            return GenericFormFieldType.alert;
+        case GenericFormFieldType.readonlyCopyableText:
+            return GenericFormFieldType.readonlyCopyableText;
         default:
             assertNever(type);
     }

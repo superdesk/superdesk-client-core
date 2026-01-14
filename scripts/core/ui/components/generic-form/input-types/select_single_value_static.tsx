@@ -23,17 +23,17 @@ export class SelectSingleValue extends React.Component<IProps> {
         return (
             <div
                 className={classNames(
-                    'sd-line-input',
+                    'sd-input',
                     {
-                        'sd-line-input--invalid': this.props.issues.length > 0,
-                        'sd-line-input--required': this.props.formField.required === true,
-                        'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
+                        'sd-input--invalid': this.props.issues.length > 0,
+                        'sd-input--required': this.props.formField.required === true,
+                        'sd-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                     },
                 )}
             >
-                <label className="sd-line-input__label">{this.props.formField.label}</label>
+                <label className="sd-input__label">{this.props.formField.label}</label>
                 <select
-                    className="sd-line-input__select"
+                    className="sd-input__select"
                     disabled={this.props.disabled || items == null || items.length < 1}
                     value={this.props.value ?? ''}
                     onChange={(event) => {
@@ -52,7 +52,7 @@ export class SelectSingleValue extends React.Component<IProps> {
                 </select>
                 {
                     this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-line-input__message">{str}</div>
+                        <div key={i} className="sd-input__message">{str}</div>
                     ))
                 }
             </div>

@@ -7,6 +7,8 @@ export function hasValue<T extends object>(fieldConfig: IFormField<T>, value: an
     const type: GenericFormFieldType = fieldConfig.type;
 
     switch (type) {
+        case GenericFormFieldType.alert:
+        case GenericFormFieldType.readonlyCopyableText:
         case GenericFormFieldType.plainText:
             return typeof value === 'string' && value.trim().length > 0;
 

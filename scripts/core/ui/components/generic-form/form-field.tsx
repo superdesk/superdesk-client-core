@@ -17,6 +17,8 @@ import {SelectMultipleValues} from './input-types/select_multiple_values';
 import {NumberComponent} from './input-types/number';
 import {Select} from './input-types/select';
 import {DurationComponent} from './input-types/duration';
+import {AlertInput} from './input-types/alert';
+import {ReadonlyCopyableText} from './input-types/readonly-copiable-text';
 
 export function getFormFieldComponent(type: GenericFormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -46,6 +48,10 @@ export function getFormFieldComponent(type: GenericFormFieldType): React.Compone
             return Select;
         case GenericFormFieldType.selectMultiple:
             return SelectMultipleValues;
+        case GenericFormFieldType.alert:
+            return AlertInput;
+        case GenericFormFieldType.readonlyCopyableText:
+            return ReadonlyCopyableText;
         default:
             assertNever(type);
     }
