@@ -1,6 +1,6 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
-import {Button, Modal} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IUnsavedChangesModalOptions {
@@ -13,57 +13,64 @@ export function showUnsavedChangesModal({onDiscard, onSave}: IUnsavedChangesModa
         <Modal
             visible
             size="small"
-            position="top"
+            position="center"
             onHide={closeModal}
             headerTemplate={gettext('Unsaved changes')}
-            footerTemplate={onSave == null ? (
-                <>
-                    <Button
-                        type="secondary"
-                        text={gettext('Don\'t save')}
-                        onClick={() => {
-                            closeModal();
-                            onDiscard();
-                        }}
-                    />
-                    <Button
-                        type="primary"
-                        text={gettext('Go back')}
-                        onClick={closeModal}
-                    />
-                </>
-            ) : (
-                <>
-                    <Button
-                        type="tertiary"
-                        text={gettext('Go back')}
-                        onClick={closeModal}
-                    />
-                    <Button
-                        type="secondary"
-                        text={gettext('Don\'t save')}
-                        onClick={() => {
-                            closeModal();
-                            onDiscard();
-                        }}
-                    />
-                    <Button
-                        type="primary"
-                        text={gettext('Save')}
-                        onClick={() => {
-                            closeModal();
-                            const saveResult = onSave?.();
-
-                            if (saveResult instanceof Promise) {
-                                saveResult.then(() => {
+            footerTemplate={(
+                <ButtonGroup
+                    align="end"
+                    orientation="horizontal"
+                >
+                    {onSave == null ? (
+                        <>
+                            <Button
+                                type="secondary"
+                                text={gettext('Don\'t save')}
+                                onClick={() => {
+                                    closeModal();
                                     onDiscard();
-                                });
-                            } else {
-                                onDiscard();
-                            }
-                        }}
-                    />
-                </>
+                                }}
+                            />
+                            <Button
+                                type="primary"
+                                text={gettext('Go back')}
+                                onClick={closeModal}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                type="tertiary"
+                                text={gettext('Go back')}
+                                onClick={closeModal}
+                            />
+                            <Button
+                                type="secondary"
+                                text={gettext('Don\'t save')}
+                                onClick={() => {
+                                    closeModal();
+                                    onDiscard();
+                                }}
+                            />
+                            <Button
+                                type="primary"
+                                text={gettext('Save')}
+                                onClick={() => {
+                                    closeModal();
+                                    const saveResult = onSave?.();
+
+                                    if (saveResult instanceof Promise) {
+                                        saveResult.then(() => {
+                                            onDiscard();
+                                        });
+                                    } else {
+                                        onDiscard();
+                                    }
+                                }}
+                            />
+                        </>
+                    )}
+                </ButtonGroup>
             )}
         >
             {gettext('You have unsaved changes. What would you like to do?')}
