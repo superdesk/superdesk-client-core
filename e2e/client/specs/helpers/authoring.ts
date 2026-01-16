@@ -952,11 +952,11 @@ class Authoring {
 
             browser.wait(ECE.presenceOf(duplicatedItem), 500);
 
-            return duplicatedItem.element(by.className('state-label')).getText();
+            return duplicatedItem.element(by.css('.label')).getText();
         };
 
         this.getItemState = function() {
-            return element(by.className('metadata')).element(by.className('state-label'));
+            return element(by.className('metadata')).element(by.css('.label'));
         };
 
         this.isPublishedState = function() {

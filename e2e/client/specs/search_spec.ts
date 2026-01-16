@@ -287,8 +287,8 @@ describe('search', () => {
         dateScheduled.click();
 
         globalSearch.waitForItemCount(1);
-        expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
-        expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
+        expect(globalSearch.getItem(0).element(by.css('.label')).isDisplayed()).toBe(true);
+        expect(globalSearch.getItem(0).element(by.css('.label')).getText()).toEqual('SCHEDULED');
         expect(element.all(by.repeater('key in keys')).count()).toBe(1);
         element(by.css('.tag-label__remove')).click();
         globalSearch.waitForItemCount(16);
