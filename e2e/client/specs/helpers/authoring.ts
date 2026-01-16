@@ -956,7 +956,7 @@ class Authoring {
         };
 
         this.getItemState = function() {
-            return element(by.className('metadata')).element(by.css('.label'));
+            return element(by.id('metadata')).all(by.css('.label, .state-label')).first();
         };
 
         this.isPublishedState = function() {

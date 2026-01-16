@@ -11,7 +11,7 @@ import {TreeSelectDriver} from './helpers/tree-select-driver';
 
 describe('send', () => {
     function getItemState(index) {
-        var label = content.getItem(index).element(by.css('.label'));
+        var label = content.getItem(index).element(by.css('.label, .state-label'));
 
         return label.getText();
     }
