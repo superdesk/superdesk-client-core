@@ -4,6 +4,7 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/search/interfaces';
 import {formatDate, openArticle} from 'core/get-superdesk-api-implementation';
+import {StateLabel} from 'superdesk-ui-framework';
 
 export function getStateLabel(itemState: ITEM_STATE) {
     switch (itemState) {
@@ -46,19 +47,16 @@ export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'it
                 }
             }
 
+            const handleClick = props.item.state === 'being_corrected'
+                ? () => openItem(new Event('click'))
+                : undefined;
+
             return (
-                <span
-                    title={title}
-                    className={props.item.state === 'correction'
-                        ? 'label pink--500'
-                        : (props.item.state === 'being_corrected'
-                            ? 'label label--hollow hollow-pink--500'
-                            : 'state-label state-' + props.item.state)}
-                    key="state"
-                    onClick={props.item.state === 'being_corrected' ? openItem : null}
-                >
-                    {text}
-                </span>
+                <StateLabel
+                    state={props.item.state}
+                    text={text}
+                    onClick={handleClick}
+                />
             );
         } else {
             return null;

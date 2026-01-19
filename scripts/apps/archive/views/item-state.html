@@ -1,5 +1,12 @@
-<span
-ng-class="state === 'correction' || state === 'being_corrected' && isCorrectionWorkflowEnabled
-? state === 'being_corrected' ? 'label label--hollow hollow-pink--500' : 'label pink--500'
-: 'state-label state-{{state}}'">{{state|translate|removeLodash}}</span>
-<span class="state-label" ng-if="embargo" ng-class="{state_embargo: embargo}" translate>embargo</span>
+<sd-state-label
+    class="pull-right"
+    state="state"
+    text="state | translate | removeLodash"
+></sd-state-label>
+<sd-state-label
+    ng-if="embargo"
+    class="pull-right"
+    state="'embargo'"
+    text="'embargo' | translate"
+    color="'hsl(337, 100%, 60%)'"
+></sd-state-label>
