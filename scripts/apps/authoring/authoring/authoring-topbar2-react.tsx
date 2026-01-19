@@ -7,9 +7,19 @@ import {extensions} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {CreatedInfo} from './created-info';
 import {ModifiedInfo} from './modified-info';
+import {StatusInfo} from './status-info';
 import {AuthoringToolbar} from 'apps/authoring-react/subcomponents/authoring-toolbar';
 
 const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [{
+    availableOffline: true,
+    component: () => (
+        <StatusInfo
+            entity={item}
+        />
+    ),
+    group: 'start',
+    priority: 0,
+}, {
     availableOffline: true,
     component: () => (
         <CreatedInfo
@@ -42,7 +52,7 @@ interface IState {
 /**
  * Only used from angular based authoring view
  */
-export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
+export class AuthoringTopbar2React extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -72,6 +82,7 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             this.fetchArticleFromServer();
         }
     }
+
     shouldComponentUpdate(nextProps: IProps, nextState: IState) {
         for (const key of Object.keys(this.props)) {
             if (key === 'children') continue;
@@ -81,7 +92,9 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             }
         }
 
-        for (const key of Object.keys(this.state)) {
+        const stateKeys = new Set([...Object.keys(this.state), ...Object.keys(nextState)]);
+
+        for (const key of Array.from(stateKeys)) {
             if (this.state[key] !== nextState[key]) {
                 return true;
             }
@@ -89,6 +102,7 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
 
         return false;
     }
+
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
             return null; // fetching article from the server
