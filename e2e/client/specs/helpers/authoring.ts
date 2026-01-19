@@ -956,7 +956,7 @@ class Authoring {
         };
 
         this.getItemState = function() {
-            return element(by.css('[data-test-id="authoring-toolbar-1"]')).all(by.css('.label')).first();
+            return element(by.css('.widget-content__main sd-state-label'));
         };
 
         this.isPublishedState = function() {
