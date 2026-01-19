@@ -42,7 +42,10 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdMediaPreviewWidget', directive.MediaPreviewWidget)
     .directive('sdMediaMetadata', directive.MediaMetadata)
     .component('sdRelatedView', reactToAngular1(RelatedView, ['relatedItems'], []))
-    .component('sdStateLabel', reactToAngular1(StateLabel, ['state', 'text', 'onClick', 'color', 'noTransform', 'size'], []))
+    .component(
+        'sdStateLabel',
+        reactToAngular1(StateLabel, ['state', 'text', 'onClick', 'color', 'noTransform', 'size'], []),
+    )
     .directive('sdFetchedDesks', directive.FetchedDesks)
     .directive('sdMetaIngest', directive.MetaIngest)
     .directive('sdDraggableItem', directive.DraggableItem)
