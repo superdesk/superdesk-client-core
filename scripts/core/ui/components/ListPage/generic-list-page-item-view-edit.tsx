@@ -80,7 +80,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         }, () => {
             this.props.onEditModeChange(true);
         });
-    }
+    };
 
     handleFieldChange = (field: string, nextValue: valueof<IProps<T>['item']>) => {
         // using updater function to avoid race conditions
@@ -89,7 +89,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 set(draft.nextItem, field, nextValue);
             }),
         );
-    }
+    };
 
     handleCancel = () => {
         const cancelFn = typeof this.props.onCancel === 'function'
@@ -121,11 +121,11 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                 onDiscard: executeCancelFn,
             });
         }
-    }
+    };
 
     isFormDirty = () => {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
-    }
+    };
 
     handleSave = () => {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
@@ -226,7 +226,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
                     throw new Error(res);
                 }
             });
-    }
+    };
 
     handleClose = () => {
         const {onClose, beforeClose, item} = this.props;
@@ -244,7 +244,7 @@ export class GenericListPageItemViewEdit<T extends object> extends React.Compone
         } else {
             onClose();
         }
-    }
+    };
 
     render() {
         return (

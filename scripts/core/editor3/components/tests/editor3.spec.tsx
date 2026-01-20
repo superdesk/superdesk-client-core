@@ -196,7 +196,7 @@ describe('editor3.component', () => {
                 altKey: true,
                 ctrlKey: !isMac,
                 shiftKey: false,
-                metaKey: isMac,
+                metaKey: !!isMac,
                 preventDefault,
             });
 
@@ -215,7 +215,7 @@ describe('editor3.component', () => {
                 altKey: true,
                 ctrlKey: !isMac,
                 shiftKey: true,
-                metaKey: isMac,
+                metaKey: !!isMac,
                 preventDefault,
             });
 

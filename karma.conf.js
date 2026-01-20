@@ -8,7 +8,7 @@ module.exports = function(config) {
     var webpackConfig = makeConfig(grunt);
 
     // in karma, entry is read from files prop
-    webpackConfig.entry = null;
+    webpackConfig.entry = {};
     webpackConfig.devtool = 'eval';
     webpackConfig.mode = 'development';
 
@@ -48,6 +48,9 @@ module.exports = function(config) {
         files: [
             'scripts/tests.ts',
             'scripts/**/*.html',
+            // Serve webpack-emitted assets (WASM, images, videos) from dist/
+            // karma-webpack 5 doesn't automatically serve physical files from disk
+            {pattern: 'dist/**/*', included: false, served: true, watched: false},
         ],
 
         ngHtml2JsPreprocessor: {
