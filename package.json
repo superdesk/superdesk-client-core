@@ -34,7 +34,7 @@
     "@sourcefabric/date-fns-tz": "^1.2.1",
     "@sourcefabric/draft-js": "^0.11.5",
     "@types/angular": "~1.6.0",
-    "@types/d3": "^7.4.3",
+    "@types/d3": "^7.4.0",
     "@types/draft-js": "0.11.5",
     "@types/enzyme": "3.9.1",
     "@types/lodash": "4.14.117",
