@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import './world-clock.scss';
-import d3 from 'd3';
+import * as d3 from 'd3';
 import {gettext} from 'core/utils';
 import {getTimezoneLabel} from './timezones-all-labels';
 
@@ -93,16 +93,13 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     .directive('sdClock', () => {
         var pi = Math.PI,
             scales = {
-                s: d3.scale
-                    .linear()
+                s: d3.scaleLinear()
                     .domain([0, 59 + 999 / 1000])
                     .range([0, 2 * pi]),
-                m: d3.scale
-                    .linear()
+                m: d3.scaleLinear()
                     .domain([0, 59 + 59 / 60])
                     .range([0, 2 * pi]),
-                h: d3.scale
-                    .linear()
+                h: d3.scaleLinear()
                     .domain([0, 11 + 59 / 60])
                     .range([0, 2 * pi]),
             };
@@ -149,13 +146,13 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                     .append('path')
                     .attr('d', (d) => {
                         var angle = scales.m(d);
-                        var arc = d3.svg.arc()
+                        var arc = d3.arc()
                             .innerRadius(r * 0.7)
                             .outerRadius(r * 0.9)
                             .startAngle(angle)
                             .endAngle(angle);
 
-                        return arc();
+                        return arc(null);
                     })
                     .attr('class', 'number-lines')
                     .style('stroke-width', 1.5);
@@ -192,13 +189,13 @@ angular.module('superdesk.apps.dashboard.world-clock', [
                         .append('path')
                         .attr('d', (d) => {
                             var angle = scales[d.unit](d.val);
-                            var arc = d3.svg.arc()
+                            var arc = d3.arc()
                                 .innerRadius(r * 0)
                                 .outerRadius(r * d.r)
                                 .startAngle(angle)
                                 .endAngle(angle);
 
-                            return arc();
+                            return arc(null);
                         })
                         .attr('class', 'clockhand')
                         .style('stroke-width', 2)

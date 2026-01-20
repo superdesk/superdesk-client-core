@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import * as d3 from 'd3';
 import _ from 'lodash';
 
 PieChartDashboard.$inject = ['colorSchemes'];
@@ -29,13 +29,13 @@ export function PieChartDashboard(colorSchemes) {
             colorSchemes.get((colorsData) => {
                 var colorScheme = colorsData.schemes[0];
 
-                var arc = d3.svg.arc()
+                var arc = d3.arc()
                     .outerRadius(radius)
                     .innerRadius(radius * 8 / 13 / 2);
 
                 var sort = attrs.sort || null;
-                var pie = d3.layout.pie()
-                    .value((d) => d.doc_count)
+                var pie = d3.pie()
+                    .value((d: any) => d.doc_count)
                     .sort(sort ? (a, b) => d3.ascending(a[sort], b[sort]) : null);
 
                 var svg = d3.select(appendTarget).append('svg')
@@ -50,7 +50,7 @@ export function PieChartDashboard(colorSchemes) {
                             colorScheme = colorsData.schemes[_.findKey(colorsData.schemes, {name: newData[1]})];
                         }
 
-                        var colorScale = d3.scale.ordinal()
+                        var colorScale = d3.scaleOrdinal()
                             .range(colorScheme.charts);
 
                         svg.selectAll('.arc').remove();
@@ -62,15 +62,15 @@ export function PieChartDashboard(colorSchemes) {
                             .attr('class', 'arc');
 
                         g.append('path')
-                            .attr('d', arc)
-                            .style('fill', (d) => colorScale(d.data.key));
+                            .attr('d', (d: any) => arc(d))
+                            .style('fill', (d: any) => colorScale(d.data.key) as string);
 
                         g.append('text')
                             .attr('class', 'place-label')
-                            .attr('transform', (d) => 'translate(' + arc.centroid(d) + ')')
+                            .attr('transform', (d: any) => 'translate(' + arc.centroid(d) + ')')
                             .style('text-anchor', 'middle')
                             .style('fill', colorScheme.text)
-                            .text((d) => d.data.key);
+                            .text((d: any) => d.data.key);
 
                         arrangeLabels();
                     }
@@ -91,23 +91,30 @@ export function PieChartDashboard(colorSchemes) {
                         svg.selectAll('.place-label')
                             .each(function() {
                                 if (this !== self) {
-                                    var b = this.getBoundingClientRect();
+                                    var b = (this as Element).getBoundingClientRect();
 
                                     if (Math.abs(a.left - b.left) * 2 < a.width + b.width &&
                                                 Math.abs(a.top - b.top) * 2 < a.height + b.height) {
                                         var dx = (Math.max(0, a.right - b.left) +
                                                     Math.min(0, a.left - b.right)) * 0.01,
                                             dy = (Math.max(0, a.bottom - b.top) +
-                                                            Math.min(0, a.top - b.bottom)) * 0.02,
-                                            tt = d3.transform(d3.select(this).attr('transform')),
-                                            to = d3.transform(d3.select(self).attr('transform'));
+                                                            Math.min(0, a.top - b.bottom)) * 0.02;
+
+                                        // Parse transform manually (d3.transform removed in v4+)
+                                        var parseTransform = (transformStr) => {
+                                            var match = /translate\(([^,]+),([^)]+)\)/.exec(transformStr);
+                                            return match ? [parseFloat(match[1]), parseFloat(match[2])] : [0, 0];
+                                        };
+
+                                        var tt = parseTransform(d3.select(this).attr('transform'));
+                                        var to = parseTransform(d3.select(self).attr('transform'));
 
                                         move += Math.abs(dx) + Math.abs(dy);
-                                        to.translate = [to.translate[0] + dx, to.translate[1] + dy];
-                                        tt.translate = [tt.translate[0] - dx, tt.translate[1] - dy];
-                                        d3.select(this).attr('transform', 'translate(' + tt.translate + ')');
-                                        d3.select(self).attr('transform', 'translate(' + to.translate + ')');
-                                        a = this.getBoundingClientRect();
+                                        to = [to[0] + dx, to[1] + dy];
+                                        tt = [tt[0] - dx, tt[1] - dy];
+                                        d3.select(this).attr('transform', 'translate(' + tt + ')');
+                                        d3.select(self).attr('transform', 'translate(' + to + ')');
+                                        a = (this as Element).getBoundingClientRect();
                                     }
                                 }
                             });
