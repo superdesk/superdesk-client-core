@@ -370,6 +370,34 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         }
     }
 
+    public hasUnsavedChanges(): boolean {
+        if (this.authoringReactRef == null) {
+            return false;
+        } else {
+            return this.authoringReactRef.hasUnsavedChanges();
+        }
+    }
+
+    public save(): Promise<void> {
+        if (this.authoringReactRef == null) {
+            return Promise.resolve();
+        } else if (this.authoringReactRef.state.initialized) {
+            return this.authoringReactRef.save(this.authoringReactRef.state);
+        } else {
+            return Promise.reject();
+        }
+    }
+
+    public discardUnsavedChanges(): Promise<void> {
+        if (this.authoringReactRef == null) {
+            return Promise.resolve();
+        } else if (this.authoringReactRef.state.initialized) {
+            return this.authoringReactRef.discardUnsavedChanges(this.authoringReactRef.state);
+        } else {
+            return Promise.reject();
+        }
+    }
+
     render() {
         const secondaryToolbarWidgetsFromExtensions = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
