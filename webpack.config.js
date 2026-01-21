@@ -200,7 +200,6 @@ module.exports = function makeConfig(grunt) {
                  */
                 react: getModuleDir('react'),
                 'react-dom': getModuleDir('react-dom'),
-                'react-resizable-panels': path.join(getModuleDir('react-resizable-panels'), 'dist/react-resizable-panels.js'),
 
                 /**
                  * Required for development mode only.
@@ -235,6 +234,14 @@ module.exports = function makeConfig(grunt) {
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
                             return false;
+                        }
+
+                        // Exclude these packages from ts-loader - they are pre-built ESM modules
+                        if (
+                            absolutePath.includes('/@babel/runtime/')
+                            || absolutePath.includes('/react-resizable-panels/')
+                        ) {
+                            return true;
                         }
 
                         if (
