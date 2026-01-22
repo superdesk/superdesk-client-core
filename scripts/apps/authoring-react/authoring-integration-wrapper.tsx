@@ -382,7 +382,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         if (this.authoringReactRef == null) {
             return Promise.resolve();
         } else if (this.authoringReactRef.state.initialized) {
-            return this.authoringReactRef.save(this.authoringReactRef.state);
+            return this.authoringReactRef.save(this.authoringReactRef.state).then(() => undefined);
         } else {
             return Promise.reject();
         }

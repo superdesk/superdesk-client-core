@@ -20,6 +20,13 @@ import {
     handleMultiItemUnsavedChanges,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 
+interface IArticleContext {
+    getOrigItem?(): any;
+    getItem?(): any;
+    isDirty?(): boolean;
+    save(): Promise<void>;
+}
+
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
     // 1. Service manages multiedit screen
@@ -117,7 +124,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         }
     };
 
-    this.registerArticleContext = function(articleId: string | null, context) {
+    this.registerArticleContext = function(articleId: string | null, context: IArticleContext) {
         if (articleId != null) {
             articleContexts[articleId] = context;
         }
@@ -129,7 +136,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         }
     };
 
-    this.getArticleContexts = function(articleIds: Array<string> | null) {
+    this.getArticleContexts = function(articleIds: Array<string> | null): Array<IArticleContext> {
         if (articleIds == null) {
             return Object.values(articleContexts);
         }
@@ -174,7 +181,7 @@ function MultieditController($scope, multiEdit, autosave) {
         handleMultiItemUnsavedChanges(
             articleContexts,
             {
-                hasUnsavedChanges: (context) => {
+                hasUnsavedChanges: (context: IArticleContext) => {
                     if (context.isDirty?.() === true) {
                         return true;
                     }
@@ -187,14 +194,15 @@ function MultieditController($scope, multiEdit, autosave) {
 
                     return autosave.hasUnsavedChanges(origItem);
                 },
-                discardChanges: (context) => {
+                discardChanges: (context: IArticleContext) => {
                     const origItem = context.getOrigItem?.();
+
                     if (origItem == null) {
                         return Promise.resolve();
                     }
                     return Promise.resolve(autosave.drop(origItem));
                 },
-                save: (context) => context.save(),
+                save: (context: IArticleContext) => context.save(),
                 onExit: () => {
                     $scope.$applyAsync(() => multiEdit.exit());
                 },
