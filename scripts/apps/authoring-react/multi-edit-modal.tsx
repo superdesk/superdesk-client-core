@@ -10,8 +10,7 @@ import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {authoringStorageIArticle} from './data-layer';
 import {getAuthoringPrimaryToolbarWidgets} from './authoring-angular-integration';
 import {
-    IUnsavedChangesActionWithSaving,
-    showUnsavedChangesPrompt,
+    handleMultiItemUnsavedChanges,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 
 interface IProps {
@@ -41,82 +40,31 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         this.componentRefs = {};
     }
 
-    private checkUnsavedChanges(): boolean {
-        const hasChanges = this.state.articleIds.map((articleId) => {
-            const ref = this.componentRefs[articleId];
-
-            if (ref == null) {
-                return false;
-            }
-
-            return ref.hasUnsavedChanges();
-        });
-
-        return hasChanges.some((val) => val === true);
-    }
-
     private handleModalClose = () => {
-        const hasChanges = this.checkUnsavedChanges();
-
-        if (!hasChanges) {
-            this.props.onClose();
-            return;
-        }
-
-        showUnsavedChangesPrompt(true).then(({action, closePromptFn}) => {
-            if (action === IUnsavedChangesActionWithSaving.cancelAction) {
-                closePromptFn();
-                return;
-            }
-
-            if (action === IUnsavedChangesActionWithSaving.discardChanges) {
-                const discardPromises = this.state.articleIds.map((articleId) => {
+        handleMultiItemUnsavedChanges(
+            this.state.articleIds,
+            {
+                hasUnsavedChanges: (articleId: string) => {
                     const ref = this.componentRefs[articleId];
 
-                    if (ref != null) {
-                        return ref.discardUnsavedChanges()
-                            .catch(() => {
-                                // Continue on error
-                            });
-                    }
-                    return Promise.resolve();
-                });
-
-                Promise.all(discardPromises)
-                    .then(() => {
-                        closePromptFn();
-                        this.props.onClose();
-                    })
-                    .catch(() => {
-                        closePromptFn();
-                    });
-                return;
-            }
-
-            if (action === IUnsavedChangesActionWithSaving.save) {
-                const savePromises = this.state.articleIds.map((articleId) => {
+                    return ref != null ? ref.hasUnsavedChanges() : false;
+                },
+                discardChanges: (articleId: string) => {
                     const ref = this.componentRefs[articleId];
 
-                    if (ref == null) {
-                        return Promise.resolve();
-                    }
+                    return ref != null ? ref.discardUnsavedChanges() : Promise.resolve();
+                },
+                save: (articleId: string) => {
+                    const ref = this.componentRefs[articleId];
 
-                    return ref.save?.()
-                        .catch(() => {
-                            // Continue on error
-                        });
-                });
-
-                Promise.all(savePromises)
-                    .then(() => {
-                        closePromptFn();
-                        this.props.onClose();
-                    })
-                    .catch(() => {
-                        closePromptFn();
-                    });
-            }
-        });
+                    return ref?.save?.() ?? Promise.resolve();
+                },
+                onExit: () => this.props.onClose(),
+                onError: (error) => {
+                    console.error('Error handling multi-edit unsaved changes:', error);
+                },
+            },
+        );
     };
 
     getInlineToolbarActions(
@@ -316,6 +264,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                     const ref = this.componentRefs[_id];
 
                                                     if (ref == null) {
+                                                        delete this.componentRefs[_id];
                                                         this.setState({
                                                             articleIds: this.state.articleIds
                                                                 .filter((id) => id !== _id),
@@ -324,12 +273,14 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                     }
 
                                                     ref.prepareForUnmounting().then(() => {
+                                                        delete this.componentRefs[_id];
                                                         this.setState({
                                                             articleIds: this.state.articleIds
                                                                 .filter((id) => id !== _id),
                                                         });
                                                     }).catch(() => {
                                                         // Remove anyway
+                                                        delete this.componentRefs[_id];
                                                         this.setState({
                                                             articleIds: this.state.articleIds
                                                                 .filter((id) => id !== _id),

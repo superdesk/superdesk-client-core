@@ -17,8 +17,7 @@ import {InitializeMedia} from '../authoring/services/InitializeMediaService';
 import {sdApi} from 'api';
 import {notify} from 'core/notify/notify';
 import {
-    IUnsavedChangesActionWithSaving,
-    showUnsavedChangesPrompt,
+    handleMultiItemUnsavedChanges,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
@@ -29,7 +28,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
 
     var MIN_BOARDS = 2;
     var STORAGE_KEY = 'multiedit';
-    var articleContexts = {};
+    let articleContexts = {};
 
     var saved = storage.getItem(STORAGE_KEY);
 
@@ -118,19 +117,19 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         }
     };
 
-    this.registerArticleContext = function(articleId, context) {
+    this.registerArticleContext = function(articleId: string | null, context) {
         if (articleId != null) {
             articleContexts[articleId] = context;
         }
     };
 
-    this.unregisterArticleContext = function(articleId) {
+    this.unregisterArticleContext = function(articleId: string | null) {
         if (articleId != null) {
             delete articleContexts[articleId];
         }
     };
 
-    this.getArticleContexts = function(articleIds) {
+    this.getArticleContexts = function(articleIds: Array<string> | null) {
         if (articleIds == null) {
             return Object.values(articleContexts);
         }
@@ -172,64 +171,40 @@ function MultieditController($scope, multiEdit, autosave) {
             return;
         }
 
-        Promise.all(
-            articleContexts.map((context) => {
-                if (context.isDirty?.() === true) {
-                    return Promise.resolve(true);
-                }
+        handleMultiItemUnsavedChanges(
+            articleContexts,
+            {
+                hasUnsavedChanges: (context) => {
+                    if (context.isDirty?.() === true) {
+                        return true;
+                    }
 
-                const origItem = context.getOrigItem?.();
+                    const origItem = context.getOrigItem?.();
 
-                if (origItem == null) {
-                    return Promise.resolve(false);
-                }
+                    if (origItem == null) {
+                        return false;
+                    }
 
-                return autosave.hasUnsavedChanges(origItem);
-            }),
-        ).then((results) => {
-            const contextsWithUnsaved = articleContexts.filter((_, index) => results[index] === true);
-
-            if (contextsWithUnsaved.length === 0) {
-                multiEdit.exit();
-                return;
-            }
-
-            return showUnsavedChangesPrompt(true).then(({action, closePromptFn}) => {
-                if (action === IUnsavedChangesActionWithSaving.cancelAction) {
-                    closePromptFn();
-                    return;
-                }
-
-                const finalizeExit = () => {
-                    closePromptFn();
-                    multiEdit.exit();
-                };
-
-                if (action === IUnsavedChangesActionWithSaving.discardChanges) {
-                    const dropPromises = contextsWithUnsaved.map((context) => {
-                        const origItem = context.getOrigItem?.();
-
-                        if (origItem == null) {
-                            return Promise.resolve();
-                        }
-
-                        return Promise.resolve(autosave.drop(origItem));
-                    });
-
-                    return Promise.all(dropPromises).then(finalizeExit);
-                }
-
-                if (action === IUnsavedChangesActionWithSaving.save) {
-                    const savePromises = contextsWithUnsaved.map((context) => context.save());
-
-                    return Promise.all(savePromises)
-                        .then(finalizeExit)
-                        .catch(() => undefined);
-                }
-
-                closePromptFn();
-            });
-        }).catch(() => undefined);
+                    return autosave.hasUnsavedChanges(origItem);
+                },
+                discardChanges: (context) => {
+                    const origItem = context.getOrigItem?.();
+                    if (origItem == null) {
+                        return Promise.resolve();
+                    }
+                    return Promise.resolve(autosave.drop(origItem));
+                },
+                save: (context) => context.save(),
+                onExit: () => {
+                    $scope.$applyAsync(() => multiEdit.exit());
+                },
+                onError: (error) => {
+                    console.error('Error handling multi-edit unsaved changes:', error);
+                },
+            },
+        ).catch((error) => {
+            console.error('Unhandled error in multi-edit unsaved changes handling:', error);
+        });
     };
 }
 
