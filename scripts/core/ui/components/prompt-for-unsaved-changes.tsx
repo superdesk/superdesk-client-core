@@ -2,6 +2,7 @@
 
 import {showOptionsModal} from './options-modal';
 import {gettext} from 'core/utils';
+import {notify} from 'core/notify/notify';
 
 export enum IUnsavedChangesAction {
     discardChanges = 'discardChanges',
@@ -103,3 +104,6 @@ export function showUnsavedChangesPrompt(
         }
     });
 }
+
+// Re-export from the dedicated multi-edit service for backward compatibility
+export {handleMultiItemUnsavedChanges} from 'apps/authoring/authoring/services/MultiEditUnsavedChangesService';

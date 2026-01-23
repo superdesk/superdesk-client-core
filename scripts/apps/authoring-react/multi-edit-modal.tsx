@@ -9,6 +9,9 @@ import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {authoringStorageIArticle} from './data-layer';
 import {getAuthoringPrimaryToolbarWidgets} from './authoring-angular-integration';
+import {
+    handleMultiItemUnsavedChanges,
+} from 'apps/authoring/authoring/services/MultiEditUnsavedChangesService';
 
 interface IProps {
     onClose(): void;
@@ -36,6 +39,33 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
 
         this.componentRefs = {};
     }
+
+    private handleModalClose = () => {
+        handleMultiItemUnsavedChanges(
+            this.state.articleIds,
+            {
+                hasUnsavedChanges: (articleId: string) => {
+                    const ref = this.componentRefs[articleId];
+
+                    return ref != null ? ref.hasUnsavedChanges() : false;
+                },
+                discardChanges: (articleId: string) => {
+                    const ref = this.componentRefs[articleId];
+
+                    return ref != null ? ref.discardUnsavedChanges() : Promise.resolve();
+                },
+                save: (articleId: string) => {
+                    const ref = this.componentRefs[articleId];
+
+                    return ref?.save?.() ?? Promise.resolve();
+                },
+                onExit: () => this.props.onClose(),
+                onError: (error) => {
+                    console.error('Error handling multi-edit unsaved changes:', error);
+                },
+            },
+        );
+    };
 
     getInlineToolbarActions(
         {
@@ -205,7 +235,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             <Modal
                 contentPadding="none"
                 maximized
-                onHide={this.props.onClose}
+                onHide={this.handleModalClose}
                 visible
                 headerTemplate={gettext('Multi Edit')}
             >
@@ -231,8 +261,30 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                     this.componentRefs[_id] = component;
                                                 }}
                                                 onClose={() => {
-                                                    this.setState({
-                                                        articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                                    const ref = this.componentRefs[_id];
+
+                                                    if (ref == null) {
+                                                        delete this.componentRefs[_id];
+                                                        this.setState({
+                                                            articleIds: this.state.articleIds
+                                                                .filter((id) => id !== _id),
+                                                        });
+                                                        return;
+                                                    }
+
+                                                    ref.prepareForUnmounting().then(() => {
+                                                        delete this.componentRefs[_id];
+                                                        this.setState({
+                                                            articleIds: this.state.articleIds
+                                                                .filter((id) => id !== _id),
+                                                        });
+                                                    }).catch(() => {
+                                                        // Remove anyway
+                                                        delete this.componentRefs[_id];
+                                                        this.setState({
+                                                            articleIds: this.state.articleIds
+                                                                .filter((id) => id !== _id),
+                                                        });
                                                     });
                                                 }}
                                                 itemId={_id}
