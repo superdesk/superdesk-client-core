@@ -18,7 +18,7 @@ import {sdApi} from 'api';
 import {notify} from 'core/notify/notify';
 import {
     handleMultiItemUnsavedChanges,
-} from 'core/ui/components/prompt-for-unsaved-changes';
+} from '../authoring/services/MultiEditUnsavedChangesService';
 
 interface IArticleContext {
     getOrigItem?(): any;
