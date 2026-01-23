@@ -11,7 +11,7 @@ import {authoringStorageIArticle} from './data-layer';
 import {getAuthoringPrimaryToolbarWidgets} from './authoring-angular-integration';
 import {
     handleMultiItemUnsavedChanges,
-} from '../authoring/services/MultiEditUnsavedChangesService';
+} from 'apps/authoring/authoring/services/MultiEditUnsavedChangesService';
 
 interface IProps {
     onClose(): void;
