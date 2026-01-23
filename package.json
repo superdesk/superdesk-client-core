@@ -90,7 +90,7 @@
     "keycloak-js": "10.0.2",
     "load-grunt-config": "4.0.1",
     "load-grunt-tasks": "5.1.0",
-    "lodash": "4.17.19",
+    "lodash": "4.17.23",
     "memoize-one": "^6.0.0",
     "ment.io": "0.9.23",
     "mini-css-extract-plugin": "^1.6.2",
