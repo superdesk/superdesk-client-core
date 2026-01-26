@@ -32,19 +32,18 @@ export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'it
         const props = this.props;
 
         if (props.item.state != null) {
-            let title = getStateLabel(props.item.state);
-            const text = title;
             const openItem = function(event) {
                 event.stopPropagation();
                 openArticle(props.item.archive_item._id, 'view');
             };
 
-            if (props.item.state === 'scheduled') {
-                const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
+            const hasScheduledPublishTime = props.item.schedule_settings?.utc_publish_schedule;
 
-                if (scheduled != null) {
-                    title = gettext('Scheduled for {{date}}', {date: formatDate(scheduled, {longFormat: true})});
-                }
+            let title = getStateLabel(hasScheduledPublishTime != null ? ITEM_STATE.SCHEDULED : props.item.state);
+            const text = title;
+
+            if (hasScheduledPublishTime != null) {
+                title = gettext('Scheduled for {{date}}', {date: formatDate(hasScheduledPublishTime, {longFormat: true})});
             }
 
             const handleClick = props.item.state === 'being_corrected'
@@ -53,7 +52,7 @@ export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'it
 
             return (
                 <StateLabel
-                    state={props.item.state}
+                    state={hasScheduledPublishTime != null ? ITEM_STATE.SCHEDULED : props.item.state}
                     text={text}
                     onClick={handleClick}
                 />
