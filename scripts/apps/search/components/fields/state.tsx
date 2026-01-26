@@ -43,7 +43,12 @@ export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'it
             const text = title;
 
             if (hasScheduledPublishTime != null) {
-                title = gettext('Scheduled for {{date}}', {date: formatDate(hasScheduledPublishTime, {longFormat: true})});
+                title = gettext(
+                    'Scheduled for {{date}}',
+                    {
+                        date: formatDate(hasScheduledPublishTime, {longFormat: true}),
+                    },
+                );
             }
 
             const handleClick = props.item.state === 'being_corrected'
