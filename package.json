@@ -131,7 +131,8 @@
     "web-animations-js": "^2.3.2",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.0.4",
+    "node-polyfill-webpack-plugin": "^4.1.0"
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:build-tools",
@@ -152,7 +153,6 @@
     "karma-sourcemap-loader": "^0.4.0",
     "karma-spec-reporter": "0.0.36",
     "karma-webpack": "^5.0.1",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "request": "^2.88.2",
     "superdesk-code-style": "1.5.0"
   },

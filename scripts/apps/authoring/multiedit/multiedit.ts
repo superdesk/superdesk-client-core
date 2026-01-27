@@ -16,6 +16,16 @@ import {isMediaType} from 'core/helpers/item';
 import {InitializeMedia} from '../authoring/services/InitializeMediaService';
 import {sdApi} from 'api';
 import {notify} from 'core/notify/notify';
+import {
+    handleMultiItemUnsavedChanges,
+} from '../authoring/services/MultiEditUnsavedChangesService';
+
+interface IArticleContext {
+    getOrigItem?(): any;
+    getItem?(): any;
+    isDirty?(): boolean;
+    save(): Promise<void>;
+}
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -25,6 +35,7 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
 
     var MIN_BOARDS = 2;
     var STORAGE_KEY = 'multiedit';
+    let articleContexts = {};
 
     var saved = storage.getItem(STORAGE_KEY);
 
@@ -57,14 +68,18 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     this.exit = function(item) {
         let someFailed = false;
 
+        const articlesToUnlock = this.items
+            .filter((item) => item.article != null)
+            .map((item) => item.article);
+
         Promise.all(
-            this.items
-                .filter((item) => item.article != null)
-                .map((item) => sdApi.article.unlock(item.article)
-                    .catch(() => {
+            articlesToUnlock.map((articleId) => {
+                return sdApi.article.unlock(articleId)
+                    .catch((err) => {
                         someFailed = true;
                         return Promise.resolve();
-                    })),
+                    });
+            }),
         ).then(() => {
             if (someFailed) {
                 notify.error(gettext('Some articles failed to unlock'));
@@ -109,6 +124,28 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
         }
     };
 
+    this.registerArticleContext = function(articleId: string | null, context: IArticleContext) {
+        if (articleId != null) {
+            articleContexts[articleId] = context;
+        }
+    };
+
+    this.unregisterArticleContext = function(articleId: string | null) {
+        if (articleId != null) {
+            delete articleContexts[articleId];
+        }
+    };
+
+    this.getArticleContexts = function(articleIds: Array<string> | null): Array<IArticleContext> {
+        if (articleIds == null) {
+            return Object.values(articleContexts);
+        }
+
+        return articleIds
+            .map((id) => articleContexts[id])
+            .filter((context) => context != null);
+    };
+
     function createBoard(_id) {
         return {article: _id};
     }
@@ -117,8 +154,8 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
 /**
  * @deprecated will be replaced by authoring-react/multi-edit-modal.tsx
  */
-MultieditController.$inject = ['$scope', 'multiEdit'];
-function MultieditController($scope, multiEdit) {
+MultieditController.$inject = ['$scope', 'multiEdit', 'autosave'];
+function MultieditController($scope, multiEdit, autosave) {
     $scope.$watch(() => multiEdit.items, (items) => {
         $scope.boards = items;
     });
@@ -130,13 +167,52 @@ function MultieditController($scope, multiEdit) {
     };
 
     $scope.closeMulti = function() {
-        /**
-         * HACK: for some reason the watcher doesn't always fire and multi edit view remains open.
-         * Since authoring-react/multi-edit-modal.tsx will replace this code - I'm not doing a proper fix.
-         */
-        $scope.boards = [];
+        const articleIds = multiEdit.items
+            .filter((item) => item.article != null)
+            .map((item) => item.article);
 
-        multiEdit.exit();
+        const articleContexts = multiEdit.getArticleContexts(articleIds);
+
+        if (articleContexts.length === 0) {
+            multiEdit.exit();
+            return;
+        }
+
+        handleMultiItemUnsavedChanges(
+            articleContexts,
+            {
+                hasUnsavedChanges: (context: IArticleContext) => {
+                    if (context.isDirty?.() === true) {
+                        return true;
+                    }
+
+                    const origItem = context.getOrigItem?.();
+
+                    if (origItem == null) {
+                        return false;
+                    }
+
+                    return autosave.hasUnsavedChanges(origItem);
+                },
+                discardChanges: (context: IArticleContext) => {
+                    const origItem = context.getOrigItem?.();
+
+                    if (origItem == null) {
+                        return Promise.resolve();
+                    }
+                    return Promise.resolve(autosave.drop(origItem));
+                },
+                save: (context: IArticleContext) => context.save(),
+                onExit: () => {
+                    $scope.$applyAsync(() => multiEdit.exit());
+                },
+                onError: (error) => {
+                    console.error('Error handling multi-edit unsaved changes:', error);
+                },
+            },
+        ).catch((error) => {
+            console.error('Unhandled error in multi-edit unsaved changes handling:', error);
+        });
     };
 }
 
@@ -209,6 +285,8 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
+            let registeredArticleId = null;
+
             scope.requestEditor3DirectivesToGenerateHtml = [];
 
             scope.generateHtml = () => {
@@ -216,6 +294,10 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             };
 
             scope.$watch('article', (newVal, oldVal) => {
+                if (oldVal != null) {
+                    multiEdit.unregisterArticleContext(oldVal);
+                }
+
                 if (newVal && newVal !== oldVal) {
                     openItem();
                 }
@@ -238,6 +320,14 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     content.setupAuthoring(scope.item.profile, scope, scope.item).then((contentType) => {
                         scope.contentType = contentType;
                         InitializeMedia.initMedia(scope);
+                    });
+
+                    registeredArticleId = item._id;
+                    multiEdit.registerArticleContext(item._id, {
+                        getOrigItem: () => scope.origItem,
+                        getItem: () => scope.item,
+                        isDirty: () => scope.dirty === true,
+                        save: () => scope.save(),
                     });
                 });
             }
@@ -297,6 +387,13 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     return isPublished(item);
                 }
             };
+
+            scope.$on('$destroy', () => {
+                if (registeredArticleId != null) {
+                    multiEdit.unregisterArticleContext(registeredArticleId);
+                    registeredArticleId = null;
+                }
+            });
         },
     };
 }
