@@ -84,7 +84,7 @@
     "immutable": "3.8.2",
     "jquery": "3.3.1",
     "jquery-jcrop": "0.9.13",
-    "jquery-ui": "github:superdesk/jqueryui#1.11.4",
+    "jquery-ui": "github:superdesk/jqueryui#1.12.1",
     "json-merge-patch": "0.2.3",
     "json5": "0.5.1",
     "keycloak-js": "10.0.2",
