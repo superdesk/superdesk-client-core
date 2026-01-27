@@ -1,7 +1,9 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test.setTimeout(50000);
+test.setTimeout(10000);
+
+const MAILCRAB = 'http://localhost:1080';
 
 test('switching system language', async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -88,8 +90,11 @@ test('can reset password', async ({page}) => {
     await page.getByRole('button', {name: 'Get token'}).click();
 
     // Navigate to MailCrab to get the reset email
-    await page.goto('http://localhost:1080');
-    await page.locator('.list li').last().click();
+    await page.goto(MAILCRAB);
+    await page.getByRole('listitem')
+        .filter({hasText: 'Reset password'})
+        .first()
+        .click();
 
     // Extract the password reset link from the iFrame email content
     const resetPasswordLink = await page.frameLocator('iFrame')
