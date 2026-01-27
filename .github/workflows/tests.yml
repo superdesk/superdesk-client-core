@@ -57,7 +57,7 @@ jobs:
 
     - name: Upload blob report to Artifacts
       if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: blob-report-${{ matrix.shardIndex }}
         path: e2e/client/blob-report
@@ -92,7 +92,7 @@ jobs:
       run: npx playwright merge-reports --reporter html ./all-blob-reports
 
     - name: Upload HTML report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: playwright-html-report
         path: e2e/client/playwright-report
