@@ -17,11 +17,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
     }
     render() {
         const {item} = this.props;
-        const scheduledState = ['scheduled'];
-
-        if (appConfig?.features?.showPublishSchedule) {
-            scheduledState.push('in_progress', 'submitted', 'draft');
-        }
+        const scheduledState = ['scheduled', 'in_progress', 'submitted', 'draft'];
 
         if (this.props.item.state != null && scheduledState.includes(this.props.item.state) && isScheduled(item)) {
             const datetimeFormatted = scheduledFormat(item);
