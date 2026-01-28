@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
 
 MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
 
