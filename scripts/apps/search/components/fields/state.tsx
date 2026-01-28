@@ -70,6 +70,6 @@ export const StatusInfo = (props: IStateComponentProps) => {
             onClick={handleClick}
         />
     );
-}
+};
 
 export const state = StatusInfo;
