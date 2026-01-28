@@ -16,7 +16,7 @@ export interface IPublishingDateOptions {
     timeZone: string | null;
 }
 
-function ignoreTimezone(
+export function ignoreTimezone(
     /**
      * Server adds +0000 to embargo/publish_schedule no matter what timezone it is,
      * so ignore that and treat it as local time for editing to avoid further conversion.

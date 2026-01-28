@@ -174,6 +174,7 @@ export class InteractiveArticleActionsPanel
             return (
                 <PanelWithHeader>
                     <SendCorrectionTab
+                        onDataChange={onDataChange}
                         item={item}
                         closePublishView={onClose}
                         markupV2={markupV2}

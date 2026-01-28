@@ -1047,7 +1047,8 @@ declare module 'superdesk-api' {
         private?: boolean; //Author wants to be publicly visible or hidden [SDBELGA-605]
     }
 
-    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
+    // Keep in sync with `scripts/apps/search/interfaces.ts`
+    // To use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * ROOT STATE
@@ -1156,7 +1157,6 @@ declare module 'superdesk-api' {
          */
         UNPUBLISHED = 'unpublished',
     }
-
 
     export interface IRelatedArticle {
         _id: IArticle['_id'];

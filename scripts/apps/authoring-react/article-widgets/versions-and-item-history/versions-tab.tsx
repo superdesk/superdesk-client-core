@@ -14,7 +14,7 @@ import {Card} from 'core/ui/components/Card';
 import {TimeElem} from 'apps/search/components';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {store} from 'core/data';
-import {StateComponent} from 'apps/search/components/fields/state';
+import {StatusInfo} from 'apps/search/components/fields/state';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {Map} from 'immutable';
@@ -239,7 +239,7 @@ export class VersionsTab extends React.PureComponent<IArticleSideWidgetComponent
                                     </div>
 
                                     <div style={{display: 'flex'}}>
-                                        <StateComponent item={item} />
+                                        <StatusInfo item={item} clickable={false} />
                                     </div>
                                 </Spacer>
 
