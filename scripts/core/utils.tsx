@@ -162,6 +162,32 @@ const gettextReact = (
     return result;
 };
 
+/**
+ * Core translation logic that handles parameter replacement.
+ * Used by both `gettext` and `gettextPlural`.
+ */
+function gettextCore(
+    translated: string,
+    params?: {[key: string]: string | number | React.ComponentType | (() => JSX.Element)},
+): string | Array<JSX.Element> {
+    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
+
+    if (hasReactPlaceholders) {
+        return gettextReact(translated, params ?? {});
+    } else {
+        let result = translated;
+
+        Object.keys(params ?? {}).forEach((param) => {
+            /**
+             * Casting param to string because we can't do full type narrowing here based on params type
+             */
+            result = result.replace(new RegExp(`{{\s*${param}\s*}}`, 'g'), String(params[param]));
+        });
+
+        return result;
+    }
+}
+
 // example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
 export function gettext(text: string): string;
 export function gettext(
@@ -180,19 +206,9 @@ export function gettext(
         return '';
     }
 
-    let translated: string = i18n.gettext(text);
+    const translated: string = i18n.gettext(text);
 
-    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
-
-    if (hasReactPlaceholders) {
-        return gettextReact(translated, params ?? {});
-    } else {
-        Object.keys(params ?? {}).forEach((param) => {
-            translated = translated.replace(new RegExp(`{{\s*${param}\s*}}`, 'g'), params[param] as string);
-        });
-
-        return translated;
-    }
+    return gettextCore(translated, params);
 }
 
 /*
@@ -232,18 +248,9 @@ export function gettextPlural(
         return '';
     }
 
-    let translated: string = i18n.ngettext(text, pluralText, count);
-    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
+    const translated: string = i18n.ngettext(text, pluralText, count);
 
-    if (hasReactPlaceholders) {
-        return gettextReact(translated, params ?? {});
-    } else {
-        Object.keys(params ?? {}).forEach((param) => {
-            translated = translated.replace(new RegExp(`{{\s*${param}\s*}}`), params[param]);
-        });
-
-        return translated;
-    }
+    return gettextCore(translated, params);
 }
 
 /**
