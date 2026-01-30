@@ -100,7 +100,7 @@
                           sd-tooltip="{{:: vocabulary.field_type === undefined ? ('Can\'t delete system vocabularies' | translate) : ('Delete' | translate) }}"
                           data-test-id="vocabulary-item--start-removing"
                         >
-                            <i class="icon-trash"></i>
+                            <i class="icon-trash" ng-class="{'icon--disabled': vocabulary.field_type === undefined}"></i>
                         </button>
                     </div>
                 </div>
