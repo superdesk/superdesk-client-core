@@ -111,7 +111,7 @@ export function getProjectedFieldsArticle(): Array<string> {
  */
 const gettextReact = (
     text: string,
-    params: {[placeholder: string]: string | number | React.ComponentType},
+    params: {[placeholder: string]: string | number | React.ComponentType | (() => JSX.Element)},
 ): Array<JSX.Element> => {
     let matches: Array<{index: number, str: string, placeholder: string}> = [];
 
@@ -163,15 +163,24 @@ const gettextReact = (
 };
 
 // example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
-export const gettext = (
+export function gettext(text: string): string;
+export function gettext(
     text: string,
-    params: {[placeholder: string]: string | number | React.ComponentType} = {},
-) => {
+    params: {[placeholder: string]: string | number},
+): string;
+export function gettext(
+    text: string,
+    params: {[placeholder: string]: string | number | React.ComponentType | (() => JSX.Element)},
+): Array<JSX.Element>;
+export function gettext(
+    text: string,
+    params?: {[placeholder: string]: string | number | React.ComponentType | (() => JSX.Element)},
+): string | Array<JSX.Element> {
     if (!text) {
         return '';
     }
 
-    let translated = i18n.gettext(text);
+    let translated: string = i18n.gettext(text);
 
     const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
 
@@ -179,12 +188,12 @@ export const gettext = (
         return gettextReact(translated, params ?? {});
     } else {
         Object.keys(params ?? {}).forEach((param) => {
-            translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
+            translated = translated.replace(new RegExp(`{{\s*${param}\s*}}`, 'g'), params[param] as string);
         });
 
         return translated;
     }
-};
+}
 
 /*
     Example:
@@ -196,24 +205,46 @@ export const gettext = (
         {count: 6, user: 'John Doe'},
     );
 */
-export const gettextPlural = (
+export function gettextPlural(
     count: number,
     text: string,
     pluralText: string,
-    params: {[key: string]: string | number | React.ComponentType} = {},
-): string => {
+): string;
+export function gettextPlural(
+    count: number,
+    text: string,
+    pluralText: string,
+    params: {[key: string]: string | number},
+): string;
+export function gettextPlural(
+    count: number,
+    text: string,
+    pluralText: string,
+    params: {[key: string]: string | number | React.ComponentType | (() => JSX.Element)},
+): Array<JSX.Element>;
+export function gettextPlural(
+    count: number,
+    text: string,
+    pluralText: string,
+    params?: {[key: string]: string | number | React.ComponentType | (() => JSX.Element)},
+): string | Array<JSX.Element> {
     if (!text) {
         return '';
     }
 
-    let translated = i18n.ngettext(text, pluralText, count);
+    let translated: string = i18n.ngettext(text, pluralText, count);
+    const hasReactPlaceholders = Object.values(params ?? {}).some((val) => typeof val === 'function');
 
-    Object.keys(params ?? {}).forEach((param) => {
-        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
-    });
+    if (hasReactPlaceholders) {
+        return gettextReact(translated, params ?? {});
+    } else {
+        Object.keys(params ?? {}).forEach((param) => {
+            translated = translated.replace(new RegExp(`{{\s*${param}\s*}}`), params[param]);
+        });
 
-    return translated;
-};
+        return translated;
+    }
+}
 
 /**
  * Escape given string for reg exp

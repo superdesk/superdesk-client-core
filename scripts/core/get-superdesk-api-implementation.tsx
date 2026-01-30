@@ -503,8 +503,8 @@ export function getSuperdeskApiImplementation(
             },
         },
         localization: {
-            gettext: (message, params) => gettext(message, params),
-            gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
+            gettext,
+            gettextPlural,
             formatDate: formatDate,
             formatDateTime: formatDateTime,
             longFormatDateTime: (date: Date | string, timezoneId?: string) => {

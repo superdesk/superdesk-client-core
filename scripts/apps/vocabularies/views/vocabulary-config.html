@@ -89,12 +89,17 @@
                       </div>
                         <button
                           ng-click="openVocabulary(vocabulary)"
-                          sd-tooltip="{{:: 'Edit vocabulary' | translate }}"
+                          sd-tooltip="{{:: 'Edit' | translate }}"
                           data-test-id="vocabulary-item--start-editing"
                         >
                           <i class="icon-pencil"></i>
                         </button>
-                        <button ng-click="remove(vocabulary)" ng-if="tab !== 'vocabularies'" sd-tooltip="{{:: 'Remove vocabulary' | translate }}">
+                        <button
+                          ng-click="remove(vocabulary)"
+                          ng-disabled="vocabulary.field_type === undefined"
+                          sd-tooltip="{{:: vocabulary.field_type === undefined ? ('Can\'t delete system vocabularies' | translate) : ('Delete' | translate) }}"
+                          data-test-id="vocabulary-item--start-removing"
+                        >
                             <i class="icon-trash"></i>
                         </button>
                     </div>
