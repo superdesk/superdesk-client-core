@@ -10,7 +10,7 @@ export function getStateLabel(item: IArticle) {
     const hasScheduledPublishTime = item.schedule_settings?.utc_publish_schedule != null;
 
     // We treat items that have a set scheduled publish time as `scheduled`, regardless if they're published or not
-    if (hasScheduledPublishTime === true) {
+    if (hasScheduledPublishTime) {
         return ITEM_STATE.SCHEDULED;
     }
 
