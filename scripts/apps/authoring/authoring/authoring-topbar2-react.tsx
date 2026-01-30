@@ -7,15 +7,13 @@ import {extensions} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {CreatedInfo} from './created-info';
 import {ModifiedInfo} from './modified-info';
-import {StatusInfo} from './status-info';
 import {AuthoringToolbar} from 'apps/authoring-react/subcomponents/authoring-toolbar';
+import {StatusInfo} from 'apps/search/components/fields/state';
 
 const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [{
     availableOffline: true,
     component: () => (
-        <StatusInfo
-            entity={item}
-        />
+        <StatusInfo item={item} clickable={false} />
     ),
     group: 'start',
     priority: 0,

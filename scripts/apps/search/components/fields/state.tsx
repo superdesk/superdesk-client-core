@@ -1,12 +1,27 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IPropsItemListInfo} from '../ListItemInfo';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ITEM_STATE} from 'apps/search/interfaces';
-import {formatDate, openArticle} from 'core/get-superdesk-api-implementation';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 import {StateLabel} from 'superdesk-ui-framework';
+import {IArticle} from 'superdesk-api';
 
-export function getStateLabel(itemState: ITEM_STATE) {
+export function getStateLabel(item: IArticle) {
+    const hasScheduledPublishTime = item.schedule_settings?.utc_publish_schedule != null;
+
+    // We treat items that have a set scheduled publish time as `scheduled`, regardless if they're published or not
+    if (hasScheduledPublishTime) {
+        return ITEM_STATE.SCHEDULED;
+    }
+
+    /**
+     * We use an explicit type annotation here to ensure proper type narrowing is achieved in the switch statement.
+     * We do this because we can't have enum values imported from `superdesk-api.d.ts`,
+     * and we also can't import ITEM_STATE enum from `apps/archive/constants` in `superdesk-api.d.ts`
+     * because type checking breaks.
+     */
+    const itemState: ITEM_STATE = item.state;
+
     switch (itemState) {
         case ITEM_STATE.DRAFT: return gettext('Draft');
         case ITEM_STATE.INGESTED: return gettext('Ingested');
@@ -27,45 +42,34 @@ export function getStateLabel(itemState: ITEM_STATE) {
     }
 }
 
-export class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
-    render() {
-        const props = this.props;
-
-        if (props.item.state != null) {
-            const openItem = function(event) {
-                event.stopPropagation();
-                openArticle(props.item.archive_item._id, 'view');
-            };
-
-            const hasScheduledPublishTime = props.item.schedule_settings?.utc_publish_schedule;
-
-            let title = getStateLabel(hasScheduledPublishTime != null ? ITEM_STATE.SCHEDULED : props.item.state);
-            const text = title;
-
-            if (hasScheduledPublishTime != null) {
-                title = gettext(
-                    'Scheduled for {{date}}',
-                    {
-                        date: formatDate(hasScheduledPublishTime, {longFormat: true}),
-                    },
-                );
-            }
-
-            const handleClick = props.item.state === 'being_corrected'
-                ? () => openItem(new Event('click'))
-                : undefined;
-
-            return (
-                <StateLabel
-                    state={hasScheduledPublishTime != null ? ITEM_STATE.SCHEDULED : props.item.state}
-                    text={text}
-                    onClick={handleClick}
-                />
-            );
-        } else {
-            return null;
-        }
-    }
+interface IStateComponentProps {
+    item: IArticle;
+    clickable?: boolean;
 }
 
-export const state = StateComponent;
+export const StatusInfo = (props: IStateComponentProps) => {
+    const {item, clickable = true} = props;
+
+    if (item.state == null) {
+        return null;
+    }
+
+    const openItem = () => {
+        openArticle(item._id, 'view');
+    };
+
+    const scheduledPublishTime = item.schedule_settings?.utc_publish_schedule;
+    const handleClick = clickable && item.state === 'being_corrected'
+        ? openItem
+        : undefined;
+
+    return (
+        <StateLabel
+            state={scheduledPublishTime != null ? ITEM_STATE.SCHEDULED : item.state}
+            text={getStateLabel(item)}
+            onClick={handleClick}
+        />
+    );
+};
+
+export const state = StatusInfo;

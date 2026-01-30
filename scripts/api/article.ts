@@ -21,7 +21,6 @@ import {
     IAuthoringActionType,
     IDangerousArticlePatchingOptions,
     IDesk,
-    IExtensionActivationResult,
     IStage,
     onPublishMiddlewareResult,
 } from 'superdesk-api';

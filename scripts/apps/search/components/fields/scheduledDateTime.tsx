@@ -2,7 +2,6 @@ import React from 'react';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
-import {appConfig} from 'appConfig';
 import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
 
 type IProps = Pick<IPropsItemListInfo, 'item'>;
@@ -26,7 +25,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
             return (
                 <span
                     key="scheduledDateTime"
-                    style={{color: '#da7200', marginInlineEnd: 4}}
+                    style={{color: 'var(--color-warning-text)', marginInlineEnd: 4}}
                     title={title}
                 >
                     {datetimeFormatted.short}
