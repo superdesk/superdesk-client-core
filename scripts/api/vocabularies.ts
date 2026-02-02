@@ -2,6 +2,7 @@ import {OrderedMap} from 'immutable';
 import ng from 'core/services/ng';
 import {IArticle, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
+import {httpRequestVoidLocal} from 'core/helpers/network';
 
 function getAll(): OrderedMap<IVocabulary['_id'], IVocabulary> {
     return OrderedMap<string, IVocabulary>(
@@ -92,6 +93,13 @@ function getCustomFieldVocabularies(): Array<IVocabulary> {
     return getAll().filter((vocabulary) => isCustomFieldVocabulary(vocabulary)).toArray();
 }
 
+function deleteVocabulary(vocabulary: IVocabulary): Promise<void> {
+    return httpRequestVoidLocal({
+        method: 'DELETE',
+        path: `/vocabularies/${vocabulary._id}`,
+        headers: {'If-Match': vocabulary._etag},
+    });
+}
 
 interface IVocabulariesApi {
     getAll: () => OrderedMap<IVocabulary['_id'], IVocabulary>;
@@ -100,6 +108,7 @@ interface IVocabulariesApi {
     isSelectionVocabulary: (vocabulary: IVocabulary) => boolean;
     isCustomVocabulary: (vocabulary: IVocabulary) => boolean;
     getVocabularyItemLabel: (term: IVocabularyItem, item: IArticle) => string;
+    deleteVocabulary(vocabulary: IVocabulary): Promise<void>;
     getVocabularyItemsPreview: (
         array: Array<IVocabularyItem>,
         propertyName?: keyof IVocabularyItem,
@@ -122,4 +131,5 @@ export const vocabularies: IVocabulariesApi = {
     vocabularyItemsToString,
     isCustomVocabulary,
     getCustomFieldVocabularies,
+    deleteVocabulary,
 };
