@@ -624,8 +624,10 @@ export function AuthoringDirective(
                                 }
                             }, (response) => {
                                 notify.error(gettext('Error. Item not published.'));
-                                $scope.publishingInProgress = false;
                                 return $q.reject(false);
+                            })
+                            .finally(() => {
+                                $scope.publishingInProgress = false;
                             });
                     }
 
