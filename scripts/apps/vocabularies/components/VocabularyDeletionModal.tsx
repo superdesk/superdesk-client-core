@@ -16,7 +16,13 @@ export class VocabularyDeletionModal extends React.PureComponent<IProps> {
     render() {
         const {vocabulary, onDelete, onCancel, navigateToContentProfiles, closeModal} = this.props;
         const profiles = sdApi.contentProfiles.getAll();
-        const profilesWithVocabulary = profiles.filter((profile) => profile.editor[vocabulary._id] != null);
+        const profilesWithVocabulary = profiles.filter((profile) => {
+            if (profile?.editor == null) {
+                return false;
+            }
+
+            return profile.editor[vocabulary._id] != null;
+        });
 
         if (profilesWithVocabulary.length > 0) {
             return (
