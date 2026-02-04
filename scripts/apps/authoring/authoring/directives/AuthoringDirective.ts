@@ -127,6 +127,7 @@ export function AuthoringDirective(
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
             $scope.isCorrectionInProgress = false;
+            $scope.publishingInProgress = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -603,6 +604,8 @@ export function AuthoringDirective(
             };
 
             function performPublish(): Promise<any> {
+                $scope.publishingInProgress = true;
+
                 if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
 
@@ -622,12 +625,19 @@ export function AuthoringDirective(
                             }, (response) => {
                                 notify.error(gettext('Error. Item not published.'));
                                 return $q.reject(false);
+                            })
+                            .finally(() => {
+                                $scope.publishingInProgress = false;
                             });
                     }
 
-                    return publishItem($scope.origItem, $scope.item);
+                    return publishItem($scope.origItem, $scope.item)
+                        .finally(() => {
+                            $scope.publishingInProgress = false;
+                        });
                 }
 
+                $scope.publishingInProgress = false;
                 return $q.reject(false);
             }
 

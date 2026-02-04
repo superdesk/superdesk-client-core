@@ -312,7 +312,7 @@ module.exports = function makeConfig(grunt) {
                 {
                     test: /\.wasm$/,
                     type: 'asset/resource'
-                }
+                },
             ],
         },
         devServer: {
