@@ -32,8 +32,6 @@ import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/
 import {dispatchInternalEvent} from 'core/internal-events';
 import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
 import {
-    inlineToolbarContext,
-    updateInlineToolbarContext,
     SaveButtonComponent,
     CloseButtonComponent,
     CloseIconButtonComponent,
@@ -69,41 +67,7 @@ function onClose() {
     ng.get('$rootScope').$applyAsync();
 }
 
-// Stable widget definitions
-const saveButton: ITopBarWidget<IArticle> = {
-    group: 'end',
-    priority: 0.2,
-    component: SaveButtonComponent,
-    availableOffline: true,
-    keyBindings: {
-        'ctrl+shift+s': () => {
-            if (inlineToolbarContext.exposed?.hasUnsavedChanges()) {
-                inlineToolbarContext.exposed?.save();
-            }
-        },
-    },
-};
-
-const closeButton: ITopBarWidget<IArticle> = {
-    group: 'end',
-    priority: 0.1,
-    component: CloseButtonComponent,
-    availableOffline: true,
-    keyBindings: {
-        'ctrl+shift+e': () => inlineToolbarContext.exposed?.initiateClosing(),
-    },
-};
-
-const closeIconButton: ITopBarWidget<IArticle> = {
-    group: 'end',
-    priority: 0.1,
-    component: CloseIconButtonComponent,
-    availableOffline: true,
-    keyBindings: {
-        'ctrl+shift+e': () => inlineToolbarContext.exposed?.initiateClosing(),
-    },
-};
-
+// Widget definitions without keyBindings - these use React Context hooks internally
 const minimizeButton: ITopBarWidget<IArticle> = {
     group: 'end',
     priority: 0.3,
@@ -216,20 +180,6 @@ const deskAndStageWidget: ITopBarWidget<IArticle> = {
     availableOffline: false,
 };
 
-const lockInfoWidget: ITopBarWidget<IArticle> = {
-    group: 'start',
-    priority: 0.1,
-    component: LockInfoComponent,
-    keyBindings: {
-        'ctrl+shift+u': () => {
-            if (sdApi.article.isLockedInOtherSession(inlineToolbarContext.exposed?.item)) {
-                inlineToolbarContext.exposed?.stealLock();
-            }
-        },
-    },
-    availableOffline: false,
-};
-
 const exportHighlightWidget: ITopBarWidget<IArticle> = {
     group: 'end',
     priority: 0.4,
@@ -286,17 +236,95 @@ const publishCorrectionWidget: ITopBarWidget<IArticle> = {
     availableOffline: false,
 };
 
+/**
+ * Factory functions for widgets with keyBindings.
+ * These capture the `exposed` parameter to avoid using module-level mutable state,
+ * which prevents bugs when multiple authoring instances are rendered simultaneously.
+ */
+function getSaveButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.2,
+        component: SaveButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+s': () => {
+                if (exposed.hasUnsavedChanges()) {
+                    exposed.save();
+                }
+            },
+        },
+    };
+}
+
+function getCloseButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.1,
+        component: CloseButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => exposed.initiateClosing(),
+        },
+    };
+}
+
+function getCloseIconButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.1,
+        component: CloseIconButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => exposed.initiateClosing(),
+        },
+    };
+}
+
+function getLockInfoWidget(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'start',
+        priority: 0.1,
+        component: LockInfoComponent,
+        keyBindings: {
+            'ctrl+shift+u': () => {
+                if (sdApi.article.isLockedInOtherSession(exposed.item)) {
+                    exposed.stealLock();
+                }
+            },
+        },
+        availableOffline: false,
+    };
+}
+
 function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
     action?: IAuthoringActionType,
     setFullWidth?: () => void,
     fullWidth?: boolean,
 ): IAuthoringOptions<IArticle> {
-    // Update context for stable components
-    updateInlineToolbarContext(options, setFullWidth ?? null, fullWidth ?? false);
-
     const {item} = options;
     const itemState: ITEM_STATE = item.state;
+
+    // Create widgets with keyBindings that capture the current exposed instance
+    const saveButton = getSaveButton(options);
+    const closeButton = getCloseButton(options);
+    const closeIconButton = getCloseIconButton(options);
+    const lockInfoWidget = getLockInfoWidget(options);
+
+    // Context values for inline toolbar widgets using React Context
+    const inlineToolbarContext = {
+        setFullWidth: setFullWidth ?? null,
+        fullWidth: fullWidth ?? false,
+    };
+
+    // Helper to add context to all return values
+    const withContext = (
+        opts: Omit<IAuthoringOptions<IArticle>, 'inlineToolbarContext'>,
+    ): IAuthoringOptions<IArticle> => ({
+        ...opts,
+        inlineToolbarContext,
+    });
 
     const getReadOnlyAndArchivedFrom = (): Array<ITopBarWidget<IArticle>> => {
         const actions: Array<ITopBarWidget<IArticle>> = [];
@@ -316,17 +344,17 @@ function getInlineToolbarActions(
     };
 
     if (action === 'kill') {
-        return {
+        return withContext({
             readOnly: false,
             actions: [toggleFullWidthButton, sendKillAction, closeIconButton, minimizeButton],
-        };
+        });
     }
 
     if (action === 'correct') {
-        return {
+        return withContext({
             readOnly: false,
             actions: [toggleFullWidthButton, sendCorrectionAction, cancelAuthoringAction, minimizeButton],
-        };
+        });
     }
 
     const actions: Array<ITopBarWidget<IArticle>> = [
@@ -338,12 +366,12 @@ function getInlineToolbarActions(
 
     switch (itemState) {
         case ITEM_STATE.DRAFT:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [
                     toggleFullWidthButton, closeButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom(),
                 ],
-            };
+            });
 
         case ITEM_STATE.SUBMITTED:
         case ITEM_STATE.IN_PROGRESS:
@@ -399,32 +427,32 @@ function getInlineToolbarActions(
                 actions.push(sendAndDuplicateWidget);
             }
 
-            return {
+            return withContext({
                 readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
                 actions: actions,
-            };
+            });
 
         case ITEM_STATE.INGESTED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [],
-            };
+            });
 
         case ITEM_STATE.SPIKED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [unspikeWidget, toggleFullWidthButton, closeIconButton],
-            };
+            });
 
         case ITEM_STATE.SCHEDULED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [descheduleWidget, toggleFullWidthButton, closeIconButton],
-            };
+            });
 
         case ITEM_STATE.PUBLISHED:
         case ITEM_STATE.CORRECTED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [
                     toggleFullWidthButton,
@@ -435,16 +463,16 @@ function getInlineToolbarActions(
                     killAction,
                     closeIconButton,
                 ],
-            };
+            });
 
         case ITEM_STATE.BEING_CORRECTED:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [toggleFullWidthButton, closeIconButton, saveButton],
-            };
+            });
 
         case ITEM_STATE.CORRECTION:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [
                     toggleFullWidthButton,
@@ -452,19 +480,19 @@ function getInlineToolbarActions(
                     publishCorrectionWidget,
                     cancelAuthoringAction,
                 ],
-            };
+            });
 
         case ITEM_STATE.KILLED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [toggleFullWidthButton, closeIconButton],
-            };
+            });
 
         case ITEM_STATE.RECALLED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [toggleFullWidthButton, closeIconButton],
-            };
+            });
         default:
             assertNever(itemState);
     }

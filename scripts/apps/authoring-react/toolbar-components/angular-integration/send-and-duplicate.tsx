@@ -4,31 +4,35 @@ import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
-import {inlineToolbarContext} from './inline-toolbar-context';
+import {useInlineToolbarContext} from './inline-toolbar-context';
 
-export const SendAndDuplicateComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => (
-    <Button
-        tooltip={gettext('Send and duplicate')}
-        ariaLabel={gettext('Send and duplicate')}
-        text={gettext('S & D')}
-        style="filled"
-        onClick={() => {
-            inlineToolbarContext.exposed?.handleUnsavedChanges()
-                .then(() => {
-                    const {deskId, stageId} = getSendAndDuplicateTarget();
+export const SendAndDuplicateComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => {
+    const {exposed} = useInlineToolbarContext<IArticle>();
 
-                    sdApi.article.duplicateItems(
-                        [entity._id],
-                        {
-                            type: 'desk',
-                            desk: deskId,
-                            stage: stageId,
-                        },
-                    );
-                })
-                .catch(() => {
-                    // noop - user cancelled the operation
-                });
-        }}
-    />
-);
+    return (
+        <Button
+            tooltip={gettext('Send and duplicate')}
+            ariaLabel={gettext('Send and duplicate')}
+            text={gettext('S & D')}
+            style="filled"
+            onClick={() => {
+                exposed?.handleUnsavedChanges()
+                    .then(() => {
+                        const {deskId, stageId} = getSendAndDuplicateTarget();
+
+                        sdApi.article.duplicateItems(
+                            [entity._id],
+                            {
+                                type: 'desk',
+                                desk: deskId,
+                                stage: stageId,
+                            },
+                        );
+                    })
+                    .catch(() => {
+                        // noop - user cancelled the operation
+                    });
+            }}
+        />
+    );
+};

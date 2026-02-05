@@ -1,30 +1,34 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {ContentProfileDropdown} from '../../subcomponents/content-profile-dropdown';
-import {exposedRef, authoringStorageRef} from './toolbar-context';
+import {useToolbarContext} from './toolbar-context';
 
-export const ContentProfileDropdownWidget: React.ComponentType<{entity: IArticle}> = ({entity}) => (
-    <div className="authoring-header__general-info">
-        <ContentProfileDropdown
-            item={entity}
-            reinitialize={(item) => {
-                if (exposedRef == null || authoringStorageRef == null) {
-                    return;
-                }
+export const ContentProfileDropdownWidget: React.ComponentType<{entity: IArticle}> = ({entity}) => {
+    const {exposed, authoringStorage} = useToolbarContext();
 
-                const handledChanges = exposedRef.hasUnsavedChanges()
-                    ? exposedRef.handleUnsavedChanges()
-                    : Promise.resolve();
+    return (
+        <div className="authoring-header__general-info">
+            <ContentProfileDropdown
+                item={entity}
+                reinitialize={(item) => {
+                    if (exposed == null || authoringStorage == null) {
+                        return;
+                    }
 
-                handledChanges.then(() => {
-                    authoringStorageRef.getContentProfile(
-                        item,
-                        exposedRef.fieldsAdapter,
-                    ).then((profile) => {
-                        exposedRef?.reinitialize(item, profile);
+                    const handledChanges = exposed.hasUnsavedChanges()
+                        ? exposed.handleUnsavedChanges()
+                        : Promise.resolve();
+
+                    handledChanges.then(() => {
+                        authoringStorage.getContentProfile(
+                            item,
+                            exposed?.fieldsAdapter,
+                        ).then((profile) => {
+                            exposed?.reinitialize(item, profile);
+                        });
                     });
-                });
-            }}
-        />
-    </div>
-);
+                }}
+            />
+        </div>
+    );
+};

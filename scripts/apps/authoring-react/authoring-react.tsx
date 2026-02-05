@@ -57,6 +57,8 @@ import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
 import memoizeOne from 'memoize-one';
+import {InlineToolbarContextProvider} from './toolbar-components/angular-integration';
+import {ToolbarContextProvider} from './toolbar-components/integration-wrapper';
 
 export function getFieldsData<T>(
     item: T,
@@ -1417,116 +1419,136 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
         const isPinned = this.props.sideWidget?.pinnedId != null;
         const allWidgets = primaryToolbarWidgets.concat(extraPrimaryToolbarWidgets);
 
-        return (
-            <div style={{display: 'contents'}} ref={this.setRef}>
-                {
-                    state.loading && (
-                        <Loader overlay />
-                    )
-                }
+        const inlineToolbarContextValue = {
+            exposed: exposed,
+            setFullWidth: authoringOptions?.inlineToolbarContext?.setFullWidth ?? null,
+            fullWidth: authoringOptions?.inlineToolbarContext?.fullWidth ?? false,
+        };
 
-                <WithKeyBindings keyBindings={allKeyBindings}>
-                    <WithInteractiveArticleActionsPanel location="authoring">
-                        {() => (
-                            <Layout.AuthoringFrame
-                                header={allWidgets.length < 1 ? null : (
-                                    <AuthoringToolbar
-                                        entity={state.itemWithChanges}
-                                        widgets={allWidgets}
-                                        backgroundColor={authoringOptions?.toolbarBgColor}
-                                    />
-                                )
-                                }
-                                main={(
-                                    <Layout.AuthoringMain
-                                        noPaddingForContent
-                                        hideCollapseButton={state.profile.content.count() < 1}
-                                        headerCollapsed={this.props.headerCollapsed}
-                                        toolbarCustom
-                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
-                                            <SubNav className="px-2">
-                                                <AuthoringToolbar
-                                                    entity={state.itemWithChanges}
-                                                    widgets={secondaryToolbarWidgets}
-                                                    backgroundColor={authoringOptions?.toolbarBgColor}
-                                                />
-                                            </SubNav>
-                                        )}
-                                        headerPadding={{
-                                            top: 8,
-                                            bottom: state.profile.header.count() < 1 ? 8 : undefined,
-                                            inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
-                                            inlineStart: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
-                                        }}
-                                        authoringHeader={(
-                                            <div style={{width: '100%'}}>
-                                                {this.props.headerToolbar != null && (
-                                                    <AuthoringToolbar
-                                                        entity={state.itemWithChanges}
-                                                        widgets={this.props.headerToolbar(exposed) ?? []}
-                                                        backgroundColor={authoringOptions?.toolbarBgColor}
+        const toolbarContextValue = {
+            exposed: exposed,
+            authoringStorage: this.props.authoringStorage,
+        };
+
+        return (
+            <InlineToolbarContextProvider
+                exposed={inlineToolbarContextValue.exposed}
+                setFullWidth={inlineToolbarContextValue.setFullWidth}
+                fullWidth={inlineToolbarContextValue.fullWidth}
+            >
+                <ToolbarContextProvider
+                    exposed={toolbarContextValue.exposed}
+                    authoringStorage={toolbarContextValue.authoringStorage}
+                >
+                    <div style={{display: 'contents'}} ref={this.setRef}>
+                        {state.loading && (<Loader overlay />)}
+
+                        <WithKeyBindings keyBindings={allKeyBindings}>
+                            <WithInteractiveArticleActionsPanel location="authoring">
+                                {() => (
+                                    <Layout.AuthoringFrame
+                                        header={allWidgets.length < 1 ? null : (
+                                            <AuthoringToolbar
+                                                entity={state.itemWithChanges}
+                                                widgets={allWidgets}
+                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                            />
+                                        )
+                                        }
+                                        main={(
+                                            <Layout.AuthoringMain
+                                                noPaddingForContent
+                                                hideCollapseButton={state.profile.content.count() < 1}
+                                                headerCollapsed={this.props.headerCollapsed}
+                                                toolbarCustom
+                                                toolBar={secondaryToolbarWidgets.length === 0 ? null : (
+                                                    <SubNav className="px-2">
+                                                        <AuthoringToolbar
+                                                            entity={state.itemWithChanges}
+                                                            widgets={secondaryToolbarWidgets}
+                                                            backgroundColor={authoringOptions?.toolbarBgColor}
+                                                        />
+                                                    </SubNav>
+                                                )}
+                                                headerPadding={{
+                                                    top: 8,
+                                                    bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                                    inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
+                                                    inlineStart: allWidgets.length === 1
+                                                        ? MIN_HEADER_PADDING
+                                                        : undefined,
+                                                }}
+                                                authoringHeader={(
+                                                    <div style={{width: '100%'}}>
+                                                        {this.props.headerToolbar != null && (
+                                                            <AuthoringToolbar
+                                                                entity={state.itemWithChanges}
+                                                                widgets={this.props.headerToolbar(exposed) ?? []}
+                                                                backgroundColor={authoringOptions?.toolbarBgColor}
+                                                            />
+                                                        )}
+                                                        <AuthoringSection
+                                                            fieldRefs={this.fieldRefs}
+                                                            fields={this.prepareHeaderFields(state.profile.header)}
+                                                            fieldsData={state.fieldsDataWithChanges}
+                                                            onChange={this.handleFieldChange}
+                                                            reinitialize={(item) => {
+                                                                this.reinitialize(state, item);
+                                                            }}
+                                                            language={getLanguage(state.itemWithChanges)}
+                                                            userPreferencesForFields={state.userPreferencesForFields}
+                                                            useHeaderLayout
+                                                            setUserPreferencesForFields={this.setUserPreferences}
+                                                            getVocabularyItems={this.getVocabularyItems}
+                                                            toggledFields={state.toggledFields}
+                                                            toggleField={this.toggleField}
+                                                            readOnly={readOnly}
+                                                            validationErrors={state.validationErrors}
+                                                            item={state.itemWithChanges}
+                                                            computeLatestEntity={this.computeLatestEntity}
+                                                            fieldTemplate={this.props.fieldTemplate}
+                                                        />
+                                                    </div>
+                                                )}
+                                            >
+                                                {state.profile.content.count() < 1 ? null : (
+                                                    <AuthoringSection
+                                                        fieldRefs={this.fieldRefs}
+                                                        uiTheme={uiTheme}
+                                                        padding="3.2rem 4rem 5.2rem 4rem"
+                                                        fields={state.profile.content}
+                                                        fieldsData={state.fieldsDataWithChanges}
+                                                        onChange={this.handleFieldChange}
+                                                        reinitialize={(item) => {
+                                                            this.reinitialize(state, item);
+                                                        }}
+                                                        language={getLanguage(state.itemWithChanges)}
+                                                        userPreferencesForFields={state.userPreferencesForFields}
+                                                        setUserPreferencesForFields={this.setUserPreferences}
+                                                        getVocabularyItems={this.getVocabularyItems}
+                                                        toggledFields={state.toggledFields}
+                                                        toggleField={this.toggleField}
+                                                        readOnly={readOnly}
+                                                        validationErrors={state.validationErrors}
+                                                        item={state.itemWithChanges}
+                                                        computeLatestEntity={this.computeLatestEntity}
+                                                        fieldTemplate={this.props.fieldTemplate}
                                                     />
                                                 )}
-                                                <AuthoringSection
-                                                    fieldRefs={this.fieldRefs}
-                                                    fields={this.prepareHeaderFields(state.profile.header)}
-                                                    fieldsData={state.fieldsDataWithChanges}
-                                                    onChange={this.handleFieldChange}
-                                                    reinitialize={(item) => {
-                                                        this.reinitialize(state, item);
-                                                    }}
-                                                    language={getLanguage(state.itemWithChanges)}
-                                                    userPreferencesForFields={state.userPreferencesForFields}
-                                                    useHeaderLayout
-                                                    setUserPreferencesForFields={this.setUserPreferences}
-                                                    getVocabularyItems={this.getVocabularyItems}
-                                                    toggledFields={state.toggledFields}
-                                                    toggleField={this.toggleField}
-                                                    readOnly={readOnly}
-                                                    validationErrors={state.validationErrors}
-                                                    item={state.itemWithChanges}
-                                                    computeLatestEntity={this.computeLatestEntity}
-                                                    fieldTemplate={this.props.fieldTemplate}
-                                                />
-                                            </div>
+                                            </Layout.AuthoringMain>
                                         )}
-                                    >
-                                        {state.profile.content.count() < 1 ? null : (
-                                            <AuthoringSection
-                                                fieldRefs={this.fieldRefs}
-                                                uiTheme={uiTheme}
-                                                padding="3.2rem 4rem 5.2rem 4rem"
-                                                fields={state.profile.content}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                onChange={this.handleFieldChange}
-                                                reinitialize={(item) => {
-                                                    this.reinitialize(state, item);
-                                                }}
-                                                language={getLanguage(state.itemWithChanges)}
-                                                userPreferencesForFields={state.userPreferencesForFields}
-                                                setUserPreferencesForFields={this.setUserPreferences}
-                                                getVocabularyItems={this.getVocabularyItems}
-                                                toggledFields={state.toggledFields}
-                                                toggleField={this.toggleField}
-                                                readOnly={readOnly}
-                                                validationErrors={state.validationErrors}
-                                                item={state.itemWithChanges}
-                                                computeLatestEntity={this.computeLatestEntity}
-                                                fieldTemplate={this.props.fieldTemplate}
-                                            />
-                                        )}
-                                    </Layout.AuthoringMain>
+                                        sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                        sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
+                                        sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                        sidePanelOpen={isPinned && OpenWidgetComponent != null}
+                                        sideBar={this.props.getSidebar?.(exposed)}
+                                    />
                                 )}
-                                sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
-                                sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                sidePanelOpen={isPinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar?.(exposed)}
-                            />
-                        )}
-                    </WithInteractiveArticleActionsPanel>
-                </WithKeyBindings>
-            </div>
+                            </WithInteractiveArticleActionsPanel>
+                        </WithKeyBindings>
+                    </div>
+                </ToolbarContextProvider>
+            </InlineToolbarContextProvider>
         );
     }
 }

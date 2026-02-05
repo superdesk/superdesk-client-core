@@ -1,4 +1,9 @@
-export {inlineToolbarContext, updateInlineToolbarContext, IInlineToolbarContext} from './inline-toolbar-context';
+export {
+    IInlineToolbarContext,
+    InlineToolbarContext,
+    InlineToolbarContextProvider,
+    useInlineToolbarContext,
+} from './inline-toolbar-context';
 export {SaveButtonComponent} from './save-button';
 export {CloseButtonComponent} from './close-button';
 export {CloseIconButtonComponent} from './close-icon-button';

@@ -1,4 +1,9 @@
-export {exposedRef, authoringStorageRef, updateToolbarContext} from './toolbar-context';
+export {
+    IToolbarContext,
+    ToolbarContext,
+    ToolbarContextProvider,
+    useToolbarContext,
+} from './toolbar-context';
 export {PrintPreviewButton} from './print-preview-button';
 export {ToggleThemeButton} from './toggle-theme-button';
 export {ConfigureThemeButton} from './configure-theme-button';

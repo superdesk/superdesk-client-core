@@ -45,8 +45,6 @@ import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {
-    exposedRef,
-    updateToolbarContext,
     PrintPreviewButton,
     ToggleThemeButton,
     ConfigureThemeButton,
@@ -74,35 +72,42 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
-const authoringCosmeticActions: Array<ITopBarWidget<IArticle>> = [
-    {
-        availableOffline: true,
-        component: PrintPreviewButton,
-        group: 'end',
-        priority: 1,
-        keyBindings: {'ctrl+shift+i': () => {
-            exposedRef?.printPreview();
-        }},
-    },
-    {
-        availableOffline: true,
-        component: ToggleThemeButton,
-        group: 'end',
-        priority: 2,
-        keyBindings: {'ctrl+shift+t': () => {
-            exposedRef?.toggleTheme();
-        }},
-    },
-    {
-        availableOffline: true,
-        component: ConfigureThemeButton,
-        group: 'end',
-        priority: 3,
-        keyBindings: {'ctrl+shift+c': () => {
-            exposedRef?.configureTheme();
-        }},
-    },
-];
+/**
+ * Factory function for cosmetic action widgets with keyBindings.
+ * Captures the `exposed` parameter to avoid using module-level mutable state,
+ * which prevents bugs when multiple authoring instances are rendered simultaneously.
+ */
+function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> {
+    return [
+        {
+            availableOffline: true,
+            component: PrintPreviewButton,
+            group: 'end',
+            priority: 1,
+            keyBindings: {'ctrl+shift+i': () => {
+                exposed.printPreview();
+            }},
+        },
+        {
+            availableOffline: true,
+            component: ToggleThemeButton,
+            group: 'end',
+            priority: 2,
+            keyBindings: {'ctrl+shift+t': () => {
+                exposed.toggleTheme();
+            }},
+        },
+        {
+            availableOffline: true,
+            component: ConfigureThemeButton,
+            group: 'end',
+            priority: 3,
+            keyBindings: {'ctrl+shift+c': () => {
+                exposed.configureTheme();
+            }},
+        },
+    ];
+}
 
 const secondaryToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     {
@@ -430,10 +435,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             },
                             retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                         }}
-                        headerToolbar={(exposed) => {
-                            // Update refs so stable components can access current state
-                            updateToolbarContext(exposed, this.props.authoringStorage);
-
+                        headerToolbar={() => {
+                            // Context is provided by AuthoringReact, so no need to update refs here
                             return headerToolbarWidgetsStable;
                         }}
                         getLanguage={(article) => article.language ?? 'en'}
@@ -633,13 +636,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             />
                         )}
                         getSecondaryToolbarWidgets={(exposed) => {
-                            // Update exposedRef so stable components can access current state
-                            updateToolbarContext(exposed, this.props.authoringStorage);
-
+                            // Context is provided by AuthoringReact, so no need to update refs here
                             return [
                                 ...secondaryToolbarWidgetsStable,
                                 ...secondaryToolbarWidgetsFromExtensions,
-                                ...authoringCosmeticActions,
+                                ...getAuthoringCosmeticActions(exposed),
                             ];
                         }}
                         validateBeforeSaving={false}
