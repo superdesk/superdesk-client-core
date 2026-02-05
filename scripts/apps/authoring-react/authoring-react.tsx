@@ -1463,7 +1463,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                                 {this.props.headerToolbar != null && (
                                                     <AuthoringToolbar
                                                         entity={state.itemWithChanges}
-                                                        widgets={this.props.headerToolbar?.(exposed) ?? []}
+                                                        widgets={this.props.headerToolbar(exposed) ?? []}
                                                         backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 )}
