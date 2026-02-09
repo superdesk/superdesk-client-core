@@ -181,7 +181,7 @@ function gettextCore(
             /**
              * Casting param to string because we can't do full type narrowing here based on params type
              */
-            result = result.replace(new RegExp(`{{\s*${param}\s*}}`, 'g'), String(params[param]));
+            result = result.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), String(params[param]));
         });
 
         return result;
