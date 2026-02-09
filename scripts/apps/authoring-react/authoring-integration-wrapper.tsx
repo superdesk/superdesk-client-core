@@ -27,7 +27,7 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
-import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
+
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@sourcefabric/common';
 import {ExportModal} from './toolbar/export-modal';
@@ -44,8 +44,22 @@ import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ContentProfileDropdown} from './subcomponents/content-profile-dropdown';
-import {IconButton} from 'superdesk-ui-framework';
+import {
+    PrintPreviewButton,
+    ToggleThemeButton,
+    ConfigureThemeButton,
+    CreatedModifiedInfoWidget,
+    ContentProfileDropdownWidget,
+} from './toolbar-components/integration-wrapper';
+
+const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
+    {
+        component: ContentProfileDropdownWidget,
+        availableOffline: false,
+        group: 'start',
+        priority: 1,
+    },
+];
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -58,57 +72,51 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
-const getAuthoringCosmeticActions = (exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> => [{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="preview-mode"
-            ariaValue={gettext('Print preview')}
-            onClick={() => {
+/**
+ * Factory function for cosmetic action widgets with keyBindings.
+ * Captures the `exposed` parameter to avoid using module-level mutable state,
+ * which prevents bugs when multiple authoring instances are rendered simultaneously.
+ */
+function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): Array<ITopBarWidget<IArticle>> {
+    return [
+        {
+            availableOffline: true,
+            component: PrintPreviewButton,
+            group: 'end',
+            priority: 1,
+            keyBindings: {'ctrl+shift+i': () => {
                 exposed.printPreview();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 1,
-    keyBindings: {'ctrl+shift+i': () => {
-        exposed.printPreview();
-    }},
-},
-{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="adjust"
-            ariaValue={gettext('Toggle theme')}
-            onClick={() => {
+            }},
+        },
+        {
+            availableOffline: true,
+            component: ToggleThemeButton,
+            group: 'end',
+            priority: 2,
+            keyBindings: {'ctrl+shift+t': () => {
                 exposed.toggleTheme();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 2,
-    keyBindings: {'ctrl+shift+t': () => {
-        exposed.toggleTheme();
-    }},
-},
-{
-    availableOffline: true,
-    component: () => (
-        <IconButton
-            icon="switches"
-            ariaValue={gettext('Configure themes')}
-            onClick={() => {
+            }},
+        },
+        {
+            availableOffline: true,
+            component: ConfigureThemeButton,
+            group: 'end',
+            priority: 3,
+            keyBindings: {'ctrl+shift+c': () => {
                 exposed.configureTheme();
-            }}
-        />
-    ),
-    group: 'end',
-    priority: 3,
-    keyBindings: {'ctrl+shift+c': () => {
-        exposed.configureTheme();
-    }},
-}];
+            }},
+        },
+    ];
+}
+
+const secondaryToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
+    {
+        availableOffline: true,
+        component: CreatedModifiedInfoWidget,
+        group: 'start',
+        priority: 1,
+    },
+];
 
 export type ISideWidget = {
     activeId?: string;
@@ -427,37 +435,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             },
                             retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
                         }}
-                        headerToolbar={((exposed) => {
-                            const getProfileAndReinitialize = (item: IArticle) =>
-                                this.props.authoringStorage.getContentProfile(
-                                    item,
-                                    exposed.fieldsAdapter,
-                                ).then((profile) => {
-                                    exposed.reinitialize(item, profile);
-                                });
-
-                            return [{
-                                component: ({entity}) => (
-                                    <div className="authoring-header__general-info">
-                                        <ContentProfileDropdown
-                                            item={entity}
-                                            reinitialize={(item) => {
-                                                const handledChanges = exposed.hasUnsavedChanges()
-                                                    ? exposed.handleUnsavedChanges()
-                                                    : Promise.resolve();
-
-                                                handledChanges.then(() => {
-                                                    getProfileAndReinitialize(item);
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                ),
-                                availableOffline: false,
-                                group: 'start',
-                                priority: 1,
-                            }];
-                        })}
+                        headerToolbar={() => {
+                            // Context is provided by AuthoringReact, so no need to update refs here
+                            return headerToolbarWidgetsStable;
+                        }}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
                             dispatchCustomEvent('articleEditStart', article);
@@ -654,18 +635,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 }}
                             />
                         )}
-                        getSecondaryToolbarWidgets={(exposed) => [
-                            {
-                                availableOffline: true,
-                                component: () => (
-                                    <CreatedModifiedInfo article={exposed.item} />
-                                ),
-                                group: 'start',
-                                priority: 1,
-                            },
-                            ...secondaryToolbarWidgetsFromExtensions,
-                            ...getAuthoringCosmeticActions(exposed),
-                        ]}
+                        getSecondaryToolbarWidgets={(exposed) => {
+                            // Context is provided by AuthoringReact, so no need to update refs here
+                            return [
+                                ...secondaryToolbarWidgetsStable,
+                                ...secondaryToolbarWidgetsFromExtensions,
+                                ...getAuthoringCosmeticActions(exposed),
+                            ];
+                        }}
                         validateBeforeSaving={false}
                         getSideWidgetIdAtIndex={(article, index) => {
                             return getWidgetsFromExtensions(article)[index]._id;

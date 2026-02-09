@@ -189,6 +189,15 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         actions: Array<ITopBarWidget<T>>;
         toolbarBgColor?: React.CSSProperties['backgroundColor'];
+
+        /**
+         * Optional context values for inline toolbar widgets.
+         * Used by components that need access to setFullWidth and fullWidth state.
+         */
+        inlineToolbarContext?: {
+            setFullWidth?: (() => void) | null;
+            fullWidth?: boolean;
+        };
     }
 
     export interface ITopBarWidget<T> {
