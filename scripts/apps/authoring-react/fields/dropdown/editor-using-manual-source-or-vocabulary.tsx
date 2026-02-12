@@ -30,37 +30,35 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
     render() {
         const {config} = this.props;
         const Container = this.props.container;
-        const values: Array<string> | Array<number> = (() => {
-            if (this.props.value == null) {
-                return [];
-            } else if (Array.isArray(this.props.value)) {
-                return this.props.value;
-            } else {
-                return [this.props.value];
-            }
-        })();
+        let values: Array<string> | Array<number>;
 
-        const options: ITreeWithLookup<IDropdownOption> = (() => {
-            if (config.source === 'manual-entry') {
-                const _options: ITreeWithLookup<IDropdownOption> = {
-                    nodes: arrayToTree(
-                        config.options,
-                        ({id}) => id.toString(),
-                        ({parent}) => parent?.toString(),
-                    ).result,
-                    lookup: keyBy(
-                        config.options.map((opt) => ({value: opt})),
-                        (opt) => opt.value.id.toString(),
-                    ),
-                };
+        if (this.props.value == null) {
+            values = [];
+        } else if (Array.isArray(this.props.value)) {
+            values = this.props.value;
+        } else {
+            values = [this.props.value] as Array<string> | Array<number>;
+        }
 
-                return _options;
-            } else if (config.source === 'vocabulary') {
-                return getOptions(config, this.props.getVocabularyItems);
-            } else {
-                assertNever(config);
-            }
-        })();
+        let options: ITreeWithLookup<IDropdownOption>;
+
+        if (config.source === 'manual-entry') {
+            options = {
+                nodes: arrayToTree(
+                    config.options,
+                    ({id}) => id.toString(),
+                    ({parent}) => parent?.toString(),
+                ).result,
+                lookup: keyBy(
+                    config.options.map((opt) => ({value: opt})),
+                    (opt) => opt.value.id.toString(),
+                ),
+            };
+        } else if (config.source === 'vocabulary') {
+            options = getOptions(config, this.props.getVocabularyItems);
+        } else {
+            assertNever(config);
+        }
 
         const selected =
             values
