@@ -40,6 +40,7 @@ export function TransmissionDetailsDirective() {
                         scope.type === 'legal_archive',
                     ).then((queueItems) => {
                         scope.queuedItems = queueItems;
+                        scope.$apply(); // tell angular to re-render
                     });
                 }
             };
