@@ -17,9 +17,9 @@ export class PlainText extends React.Component<IInputType<string>> {
                 <div
                     className={
                         classNames(
-                            "sd-input",
-                            "d-flex",
-                            "flex-col",
+                            'sd-input',
+                            'd-flex',
+                            'flex-col',
                             {
                                 'sd-input--invalid': this.props.issues.length > 0,
                                 'sd-input--required': this.props.formField.required === true,
