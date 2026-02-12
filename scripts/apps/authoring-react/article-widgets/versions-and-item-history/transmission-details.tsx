@@ -1,8 +1,7 @@
 import React from 'react';
 import {IHistoryItem} from 'apps/authoring/versioning/history/HistoryController';
-import {IArticle, IRestApiResponse} from 'superdesk-api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {IPublishQueueItem} from 'superdesk-interfaces/PublishQueueItem';
+import {IArticle, IPublishQueueItem} from 'superdesk-api';
+import {sdApi} from 'api';
 import {gettext} from 'core/utils';
 import {IconButton, Modal} from 'superdesk-ui-framework/react';
 import {showModal} from '@sourcefabric/common';
@@ -40,20 +39,12 @@ export class TransmissionDetails extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        httpRequestJsonLocal<IRestApiResponse<IPublishQueueItem>>({
-            method: 'GET',
-            path: this.props.article._type === 'legal_archive' ? '/legal_publish_queue' : '/publish_queue',
-            urlParams: {
-                max_results: 20,
-                where: {
-                    $and: [
-                        {item_id: this.props.historyItem.item_id},
-                        {item_version: this.props.historyItem.version},
-                    ],
-                },
-            },
-        }).then((res) => {
-            this.setState({queueItems: res._items});
+        sdApi.article.getPublishQueueEntriesForItem(
+            this.props.historyItem.item_id,
+            this.props.historyItem.version,
+            this.props.article._type === 'legal_archive',
+        ).then((queueItems) => {
+            this.setState({queueItems});
         });
     }
 
