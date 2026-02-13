@@ -36,7 +36,8 @@ export class LinkToolbarComponent extends React.Component<IProps, any> {
 
     render() {
         const {editorState, onEdit} = this.props;
-        const {link} = getSelectedEntityData(editorState);
+        const entityData = getSelectedEntityData(editorState);
+        const link = entityData.link || (entityData.url ? {href: entityData.url} : undefined);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
             'dropdown': true,

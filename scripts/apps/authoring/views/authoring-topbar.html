@@ -214,27 +214,28 @@
         <button class="btn btn--primary" type="submit"
                 id="send-correction-btn"
                 ng-if="action === 'correct' && !isCorrection(item)"
-                ng-show="_editable"
+                ng-show="_editable && !publishingInProgress"
                 ng-click="publish()"
                 translate>Send Correction</button>
 
         <button class="btn btn--primary" type="submit"
                 id="send-kill-btn"
                 ng-if="action === 'kill'"
-                ng-show="_editable"
+                ng-show="_editable && !publishingInProgress"
                 ng-click="publish()"
                 translate>Send Kill</button>
 
         <button class="btn btn--primary" type="submit"
                 id="send-takedown-btn"
                 ng-if="action === 'takedown'"
-                ng-show="_editable"
+                ng-show="_editable && !publishingInProgress"
                 ng-click="publish()"
                 translate>Send Takedown</button>
 
         <button class="btn"
                 id="cancelAuthoringBtn"
                 ng-if="action === 'correct' && !isCorrection(item) || action === 'kill'"
+                ng-show="!publishingInProgress"
                 ng-click="close()"
                 translate>Cancel</button>
 

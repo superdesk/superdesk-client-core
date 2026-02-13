@@ -94,7 +94,7 @@ export class Comment extends React.PureComponent<{ comment: IComment, users: { [
         }
 
         return commentText;
-    }
+    };
 
     render() {
         const {comment} = this.props;

@@ -50,7 +50,12 @@ interface IReactFieldComponentClass<P> extends React.ComponentClass<P> {
     getRelatedEntities?(item: IArticle): IRelatedEntitiesToFetch;
 }
 
-export const fields: {[key: string]: IReactFieldComponentClass<IFieldProps>} = {
+type IReactFieldComponent<P> =
+    | IReactFieldComponentClass<P>
+    | React.FunctionComponent<P>
+    | ((props: P) => JSX.Element);
+
+export const fields: {[key: string]: IReactFieldComponent<IFieldProps>} = {
     type,
     headline,
     slugline,

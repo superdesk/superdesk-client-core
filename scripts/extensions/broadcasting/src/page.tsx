@@ -185,7 +185,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                             <SearchBar
                                                 placeholder={gettext('Search')}
                                                 value={this.state.searchString}
-                                                onSubmit={(val) => {
+                                                onSubmit={(val: string) => {
                                                     if (typeof val === 'number') {
                                                         throw new Error('invalid state');
                                                     }

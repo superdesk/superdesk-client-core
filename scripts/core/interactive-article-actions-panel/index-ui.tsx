@@ -7,7 +7,7 @@ import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
-import {authoringReactViewEnabled} from 'appConfig';
+import {authoringReactViewEnabled, appConfig} from 'appConfig';
 import {DuplicateToTab} from './actions/duplicate-to-tab';
 import {WithPublishTab} from './actions/publish-tab';
 import {logger} from 'core/services/logger';
@@ -63,8 +63,14 @@ export class InteractiveArticleActionsPanel
     constructor(props: IPropsInteractiveArticleActionsPanelStateless) {
         super(props);
 
+        const configuredDefaultTab = appConfig.authoring_actions_default_tab;
+        const initialActiveTab =
+            configuredDefaultTab != null && props.tabs.includes(configuredDefaultTab)
+                ? configuredDefaultTab
+                : props.activeTab;
+
         this.state = {
-            activeTab: props.activeTab,
+            activeTab: initialActiveTab,
         };
     }
 
@@ -168,6 +174,7 @@ export class InteractiveArticleActionsPanel
             return (
                 <PanelWithHeader>
                     <SendCorrectionTab
+                        onDataChange={onDataChange}
                         item={item}
                         closePublishView={onClose}
                         markupV2={markupV2}

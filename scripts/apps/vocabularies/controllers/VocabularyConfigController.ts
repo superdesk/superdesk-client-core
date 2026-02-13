@@ -6,6 +6,7 @@ import {gettext, downloadFile} from 'core/utils';
 import {showModal} from '@sourcefabric/common';
 import {UploadConfig} from '../components/UploadConfigModal';
 import {EDITOR_BLOCK_FIELD_TYPE} from 'apps/workspace/content/constants';
+import {showVocabularyDeletionModal} from './utils';
 
 function getOther() {
     return gettext('Other');
@@ -51,10 +52,26 @@ function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
     return wordList.map((word) => ({text: word}));
 }
 
-VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocabularies', '$rootScope',
-    'api', 'notify', 'modal', 'session'];
-export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
-    api, notify, modal, session) {
+VocabularyConfigController.$inject = [
+    '$scope',
+    '$route',
+    '$routeParams',
+    'vocabularies',
+    '$rootScope',
+    'notify',
+    'session',
+    '$location',
+];
+export function VocabularyConfigController(
+    $scope: IScope,
+    $route,
+    $routeParams,
+    vocabularies,
+    $rootScope,
+    notify,
+    session,
+    $location,
+) {
     $scope.loading = true;
     $scope.mediaTypes = getMediaTypes();
 
@@ -203,34 +220,27 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         $rootScope.$broadcast('vocabularies:updated', dataVocabulary);
     };
 
-    // remove is the UI callback for deleting a vocabulary entry
     $scope.remove = (vocabulary: IVocabulary) => {
-        modal.confirm(gettext('Please confirm you want to delete the vocabulary.'))
-            .then(() => api.remove(vocabulary, {}, 'vocabularies'))
-            .then(vocabularyRemoved(vocabulary), errorRemovingVocabulary);
+        showVocabularyDeletionModal(
+            vocabulary,
+            () => {
+                vocabularyRemoved(vocabulary);
+            },
+            (error) => {
+                notify.error(error._message);
+            },
+            () => {
+                $location.path('/settings/content-profiles');
+                $scope.$applyAsync();
+            },
+        );
     };
 
-    // vocabularyRemoved updates the UI after the given vocabulary has been removed via the API.
-    const vocabularyRemoved = (vocabulary) => () => {
+    // Update UI
+    const vocabularyRemoved = (vocabulary) => {
         remove($scope.vocabularies, (v) => v._id === vocabulary._id);
         $scope.reloadList();
         notify.success(gettext('Vocabulary was deleted.'));
-    };
-
-    // errorRemoving alerts the user of an error that occurred while attempting to remove a vocabulary.
-    const errorRemovingVocabulary = (response) => {
-        const issues = response.data._issues;
-
-        if (!issues) {
-            notify.error(gettext('Error removing the vocabulary.'));
-        } else if (issues._message) {
-            notify.error(issues._message);
-        } else if (issues.content_types) {
-            const contentTypes = reduce(issues.content_types,
-                (result, value) => result ? `${result}, ${value.label}` : value.label, null);
-
-            notify.error(gettext('The vocabulary is used in the following content types:') + ' ' + contentTypes);
-        }
     };
 
     $scope.$on('$routeUpdate', setupActiveVocabulary);

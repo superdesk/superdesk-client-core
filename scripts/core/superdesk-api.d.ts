@@ -189,6 +189,15 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         actions: Array<ITopBarWidget<T>>;
         toolbarBgColor?: React.CSSProperties['backgroundColor'];
+
+        /**
+         * Optional context values for inline toolbar widgets.
+         * Used by components that need access to setFullWidth and fullWidth state.
+         */
+        inlineToolbarContext?: {
+            setFullWidth?: (() => void) | null;
+            fullWidth?: boolean;
+        };
     }
 
     export interface ITopBarWidget<T> {
@@ -1047,7 +1056,8 @@ declare module 'superdesk-api' {
         private?: boolean; //Author wants to be publicly visible or hidden [SDBELGA-605]
     }
 
-    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
+    // Keep in sync with `scripts/apps/search/interfaces.ts`
+    // To use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * ROOT STATE
@@ -1156,7 +1166,6 @@ declare module 'superdesk-api' {
          */
         UNPUBLISHED = 'unpublished',
     }
-
 
     export interface IRelatedArticle {
         _id: IArticle['_id'];
@@ -1538,13 +1547,13 @@ declare module 'superdesk-api' {
     export interface IMonitoringGroup {
         _id: string;
         type: 'search'
-            | 'stage'
-            | 'scheduledDeskOutput'
-            | 'deskOutput'
-            | 'personal'
-            | 'sentDeskOutput'
-            | 'spike'
-            | 'spike-personal';
+        | 'stage'
+        | 'scheduledDeskOutput'
+        | 'deskOutput'
+        | 'personal'
+        | 'sentDeskOutput'
+        | 'spike'
+        | 'spike-personal';
         max_items?: number;
         header?: string;
     }
@@ -2107,9 +2116,10 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericFormItemComponent<T> {
         item: T;
+        index: number;
         page: IGenericListPageComponent<T>;
         inEditMode: boolean;
-        index: number;
+        inPreviewMode: boolean;
         getId(item: T): string;
     }
 
@@ -2117,11 +2127,15 @@ declare module 'superdesk-api' {
         getFormConfig(item?: Partial<T>): IFormGroup;
         defaultSortOption: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
+        groupBy?: Array<{condition: (item: T) => boolean; label: string; emptyState?: string}>;
         additionalProps?: P; // allows passing props which will be available in container and item components
         defaultFilters?: Partial<T>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
         ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
+        // Triggered everywhere before closing, in preview and create/edit forms
+        // Useful if you'd like to prevent accidental closing of the form.
+        beforeClose?: (item: T) => Promise<boolean>;
         getId(item: T): string;
 
         // Allows initializing a new item with some fields already filled.
@@ -2150,7 +2164,7 @@ declare module 'superdesk-api' {
         contentMargin?: number;
     }
 
-    export interface IFormField<T extends object> { // don't forget to update runtime type checks
+    interface IFormFieldBase<T extends object> {
         type: GenericFormFieldType;
 
         required?: boolean;
@@ -2163,14 +2177,24 @@ declare module 'superdesk-api' {
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
+
+        // default value for the field when creating new items
+        defaultValue?: any;
     }
 
-    export interface IFormGroupCollapsible { // don't forget to update runtime type checks
+    export interface IFormFieldAlert<T> extends IFormFieldBase<T> {
+        type: GenericFormFieldType.alert;
+        value: string;
+    }
+
+    export type IFormField<T> = IFormAlertFieldAlert<T> | IFormFieldBase<T>;
+
+    export interface IFormGroupCollapsible {
         label: string;
         openByDefault: boolean;
     }
 
-    export interface IFormGroup<T extends object> { // don't forget to update runtime type checks
+    export interface IFormGroup<T extends object> {
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
         form: Array<IFormField<T> | IFormGroup<T>>;
@@ -2254,6 +2278,7 @@ declare module 'superdesk-api' {
 
     export interface IListItemProps {
         onClick?(): void;
+        onDoubleClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
@@ -3326,8 +3351,14 @@ declare module 'superdesk-api' {
             ): JSX.Element;
         };
         localization: {
-            gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
-            gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
+            gettext(message: string): string;
+            gettext(message: string, params: {[placeholder: string]: string | number}): string;
+            gettext(message: string, params: {[placeholder: string]: string | number | React.ComponentType | (() => JSX.Element)}): Array<JSX.Element>;
+
+            gettextPlural(count: number, singular: string, plural: string): string;
+            gettextPlural(count: number, singular: string, plural: string, params: {[key: string]: string | number}): string;
+            gettextPlural(count: number, singular: string, plural: string, params: {[key: string]: string | number | React.ComponentType | (() => JSX.Element)}): Array<JSX.Element>;
+
             formatDate(date: Date | string | moment.Moment, options?: {timezoneId?: string; longFormat?: boolean}): string;
             formatDateTime(date: Date, timezoneId?: string): string;
             longFormatDateTime(date: Date | string, timezoneId?: string): string;
@@ -3358,6 +3389,7 @@ declare module 'superdesk-api' {
             getCurrentUser(): Promise<IUser>;
             getSessionId(): String;
             getCurrentUserId(): String;
+            getUniqueClientId(): string;
         };
         browser: {
             location: {
@@ -3534,6 +3566,9 @@ declare module 'superdesk-api' {
         corrections_workflow: boolean;
 
         default_timezone: string;
+
+        /** allow setting default tab to open in authoring sidebar */
+        authoring_actions_default_tab?: 'publish' | 'send_to';
 
         // TANSA SERVER CONFIG
         tansa?: {

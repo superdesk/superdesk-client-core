@@ -1,9 +1,6 @@
 import {
     getParameters,
     getExcludeFacets,
-    CORE_PROJECTED_FIELDS,
-    DEFAULT_LIST_CONFIG,
-    UI_PROJECTED_FIELD_MAPPINGS,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
@@ -12,7 +9,7 @@ import {getProjectedFieldsArticle, gettext, isElasticDateFormat} from 'core/util
 import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
-import {IListViewFieldWithOptions, IArticle} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 

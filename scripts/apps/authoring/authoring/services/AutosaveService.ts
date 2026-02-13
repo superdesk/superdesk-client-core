@@ -64,7 +64,8 @@ export class AutosaveService {
         item: IArticle,
         orig: IArticle,
         timeout: number = AUTOSAVE_TIMEOUT,
-        callback, applyAsync?: () => Promise<void>,
+        callback,
+        applyAsync?: () => Promise<void>,
     ) {
         if (!item._editable || !item._locked) {
             return $q.reject('item not ' + item._editable ? 'locked' : 'editable');

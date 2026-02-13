@@ -259,11 +259,11 @@ export class ImageTagging extends React.PureComponent<IProps, IState> {
             }
         }
         return res;
-    }
+    };
 
     handleClickImage = (image: IImage) => {
         this.setState({selectedImage: image});
-    }
+    };
 
     render() {
         const {style} = this.props;

@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
+MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
 
-export function MediaMetadata(userList, archiveService, metadata, $timeout) {
+export function MediaMetadata(userList, archiveService, metadata) {
     return {
         scope: {
             item: '=',

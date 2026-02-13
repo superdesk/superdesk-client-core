@@ -32,7 +32,13 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {EDITOR_BLOCK_TYPE, formattingOptionsThatRequireDragAndDrop, MIME_TYPE_SUPERDESK_TEXT_ITEM} from '../constants';
+import {
+    EDITOR_BLOCK_TYPE,
+    formattingOptionsThatRequireDragAndDrop,
+    MIME_TYPE_SUPERDESK_TEXT_ITEM,
+    NDASH_CHAR,
+    THIN_SPACE_CHAR,
+} from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
@@ -297,7 +303,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     }
 
     keyBindingFn(e) {
-        const {key, ctrlKey, shiftKey, metaKey} = e;
+        const {key, ctrlKey, shiftKey, metaKey, altKey} = e;
         const selectionState = this.props.editorState.getSelection();
         const modifierKey = isMacOS() ? metaKey : ctrlKey;
 
@@ -348,6 +354,30 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             if (notAllowBold || notAllowItalic || notAllowUnderline) {
                 e.preventDefault();
                 return '';
+            }
+        }
+
+        // Cmd/Ctrl + Alt + - for ndash
+        if (key === '-' && altKey && !shiftKey) {
+            const isMac = isMacOS();
+            const macCombo = isMac && metaKey && !ctrlKey;
+            const winCombo = !isMac && !metaKey && ctrlKey;
+
+            if (macCombo || winCombo) {
+                e.preventDefault();
+                return 'custom-ndash';
+            }
+        }
+
+        // Cmd/Ctrl + Alt + Shift + Space for thin space
+        if (key === ' ' && altKey && shiftKey) {
+            const isMac = isMacOS();
+            const macCombo = isMac && metaKey && !ctrlKey;
+            const winCombo = !isMac && !metaKey && ctrlKey;
+
+            if (macCombo || winCombo) {
+                e.preventDefault();
+                return 'custom-thin-space';
             }
         }
 
@@ -428,6 +458,34 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
                 newState = EditorState.redo(editorState);
                 break;
+            case 'custom-ndash': {
+                const ndashContentState = Modifier.replaceText(
+                    editorState.getCurrentContent(),
+                    editorState.getSelection(),
+                    NDASH_CHAR,
+                );
+
+                newState = EditorState.push(
+                    editorState,
+                    ndashContentState,
+                    'insert-characters',
+                );
+                break;
+            }
+            case 'custom-thin-space': {
+                const thinSpaceContentState = Modifier.replaceText(
+                    editorState.getCurrentContent(),
+                    editorState.getSelection(),
+                    THIN_SPACE_CHAR,
+                );
+
+                newState = EditorState.push(
+                    editorState,
+                    thinSpaceContentState,
+                    'insert-characters',
+                );
+                break;
+            }
             case 'backspace': {
                 this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
 

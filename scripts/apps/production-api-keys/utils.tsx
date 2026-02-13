@@ -1,0 +1,59 @@
+import React from 'react';
+import {showModal} from '@sourcefabric/common';
+import {gettext} from 'core/utils';
+import {Modal, Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {IBaseRestApiResponse} from 'superdesk-api';
+
+export const handleClose = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+        showModal(({closeModal}) => {
+            return (
+                <Modal
+                    visible
+                    size="small"
+                    position="center"
+                    data-test-id="confirm-copy"
+                    onHide={closeModal}
+                    headerTemplate={gettext('Close this panel?')}
+                    footerTemplate={(
+                        <ButtonGroup
+                            align="end"
+                            orientation="horizontal"
+                        >
+                            <Button
+                                noMargin
+                                type="secondary"
+                                data-test-id="confirm-close"
+                                text={gettext('Close anyway')}
+                                onClick={() => {
+                                    resolve(true);
+                                    closeModal();
+                                }}
+                            />
+                            <Button
+                                noMargin
+                                type="primary"
+                                text={gettext('Go back')}
+                                onClick={() => {
+                                    resolve(false);
+                                    closeModal();
+                                }}
+                            />
+                        </ButtonGroup>
+                    )}
+                >
+                    {gettext(
+                        'Make sure you\'ve saved your Client Secret.'
+                        + 'You won\'t be able to access it again after closing',
+                    )}
+                </Modal>
+            );
+        });
+    });
+};
+
+export interface IProductionApiKeyConfig extends IBaseRestApiResponse {
+    password: string;
+    name: string;
+    scope: Array<string>;
+}

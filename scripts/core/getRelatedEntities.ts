@@ -2,7 +2,7 @@ import {IArticle, IListViewFieldWithOptions, IRestApiResponse, IResourceChange, 
 import {appConfig} from 'appConfig';
 import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 import {flatMap} from 'lodash';
-import {fields} from 'apps/search/components/fields';
+import {fields, IRelatedEntitiesToFetch} from 'apps/search/components/fields';
 import {httpRequestJsonLocal} from './helpers/network';
 import {Set, Map} from 'immutable';
 import {notNullOrUndefined} from './helpers/typescript-helpers';
@@ -14,6 +14,14 @@ import {prepareSuperdeskQuery} from './helpers/universal-query';
  */
 export type IRelatedEntities = {[endpointName: string]: Map<string, any>};
 export type IEntitiesToFetch = {[endpointName: string]: Set<string>};
+
+interface IComponentWithRelatedEntities {
+    getRelatedEntities(item: IArticle): IRelatedEntitiesToFetch;
+}
+
+function hasGetRelatedEntities(component: unknown): component is IComponentWithRelatedEntities {
+    return component != null && typeof (component as any).getRelatedEntities === 'function';
+}
 
 function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
     const next: IRelatedEntities = {...a};
@@ -46,7 +54,11 @@ export function getAndMergeRelatedEntitiesForArticles(
 
         const component = fields[field];
 
-        return component?.getRelatedEntities;
+        if (hasGetRelatedEntities(component)) {
+            return component.getRelatedEntities;
+        }
+
+        return undefined;
     }).filter(notNullOrUndefined);
 
     // ids indexed by endpoint name

@@ -127,6 +127,7 @@ export function AuthoringDirective(
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
             $scope.isCorrectionInProgress = false;
+            $scope.publishingInProgress = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -603,6 +604,8 @@ export function AuthoringDirective(
             };
 
             function performPublish(): Promise<any> {
+                $scope.publishingInProgress = true;
+
                 if (validatePublishScheduleAndEmbargo($scope.item) && validateForPublish($scope.item)) {
                     var message = 'publish';
 
@@ -622,12 +625,19 @@ export function AuthoringDirective(
                             }, (response) => {
                                 notify.error(gettext('Error. Item not published.'));
                                 return $q.reject(false);
+                            })
+                            .finally(() => {
+                                $scope.publishingInProgress = false;
                             });
                     }
 
-                    return publishItem($scope.origItem, $scope.item);
+                    return publishItem($scope.origItem, $scope.item)
+                        .finally(() => {
+                            $scope.publishingInProgress = false;
+                        });
                 }
 
+                $scope.publishingInProgress = false;
                 return $q.reject(false);
             }
 
@@ -728,7 +738,7 @@ export function AuthoringDirective(
             };
 
             /**
-             * Called by the sendItem directive before send.
+             * Called by the sendItem directive before send and makes sure to unlock the item.
              * If the $scope is dirty then upon confirmation save the item and then unlock the item.
              * If the $scope is not dirty then unlock the item.
              * @param {String} action - action to display in confirmation dialog
@@ -739,6 +749,7 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
                         .then(() => $scope.save())
+                        .then(() => lock.unlock($scope.origItem))
                         .catch(() => $q.reject());
                 }
 

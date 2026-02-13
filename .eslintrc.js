@@ -46,6 +46,16 @@ module.exports = Object.assign({}, sharedConfigs, {
         '@typescript-eslint/no-this-alias': 'off',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
+
+        // TODO: evaluate if we should enable the following rules
+        // New rules in v8 - disabled for backward compatibility
+        '@typescript-eslint/no-require-imports': 'off',
+        '@typescript-eslint/no-wrapper-object-types': 'off',
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-unused-expressions': 'off',
+        'react/no-multi-comp': 'off',
+        'react/self-closing-comp': 'off',
+        'react/no-unknown-property': 'off',
     }),
     plugins: [...(sharedConfigs.plugins ?? []), '@typescript-eslint'],
 

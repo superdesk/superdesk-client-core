@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {FILTER_FIELDS} from '../constants';
 import {gettext} from 'core/utils';
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 
 /**
  * @ngdoc controller
@@ -41,22 +42,22 @@ export class ContactsController {
         this.$scope.preview = this.preview.bind(this);
         this.preferencesUpdate = {
             'contacts:view': {
-                allowed: ['photogrid', 'compact'],
+                allowed: [GRID_VIEW, COMPACT_LIST_VIEW],
                 category: 'contacts',
-                view: 'photogrid',
-                default: 'photogrid',
+                view: GRID_VIEW,
+                default: GRID_VIEW,
                 label: 'Users contacts view format',
                 type: 'string',
             },
         };
 
         preferencesService.get('contacts:view').then((result) => {
-            this.$scope.view = result.view ? result.view : 'photogrid';
+            this.$scope.view = result.view ? result.view : GRID_VIEW;
 
             // Contacts previously allowed mgrid view
             // Make sure the user preferences does not have this value
-            if (['photogrid', 'compact'].indexOf(this.$scope.view) < 0) {
-                this.$scope.view = 'photogrid';
+            if ([GRID_VIEW, COMPACT_LIST_VIEW].indexOf(this.$scope.view) < 0) {
+                this.$scope.view = GRID_VIEW;
                 this.updateViewPreferences();
             }
         });

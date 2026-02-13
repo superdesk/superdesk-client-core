@@ -3,6 +3,8 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
 import {IPackagesService} from 'types/Services/Packages';
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
+import {getViewPreference} from 'apps/archive/services/viewPreferences';
 
 SearchResults.$inject = [
     '$location',
@@ -56,15 +58,15 @@ export function SearchResults(
     notify,
     $q,
 ) { // uff - should it use injector instead?
-    var preferencesUpdate = {
+    let preferencesUpdate = {
         'archive:view': {
             allowed: [
-                'mgrid',
-                'compact',
+                GRID_VIEW,
+                COMPACT_LIST_VIEW,
             ],
             category: 'archive',
-            view: 'mgrid',
-            default: 'mgrid',
+            view: GRID_VIEW,
+            default: COMPACT_LIST_VIEW,
             label: 'Users archive view format',
             type: 'string',
         },
@@ -74,9 +76,7 @@ export function SearchResults(
         require: '^sdSearchContainer',
         templateUrl: asset.templateUrl('apps/search/views/search-results.html'),
         link: function(scope, elem, attr, controller) {
-            var containerElem = elem.find('.shadow-list-holder');
-            var GRID_VIEW = 'mgrid',
-                LIST_VIEW = 'compact';
+            const containerElem = elem.find('.shadow-list-holder');
 
             var projections = search.getProjectedFields();
             var multiSelectable = attr.multiSelectable !== undefined;
@@ -550,11 +550,11 @@ export function SearchResults(
 
             scope.setview = setView;
 
-            var savedView;
+            let savedView;
 
-            preferencesService.get('archive:view').then((result) => {
-                savedView = result.view;
-                scope.view = !!savedView && savedView !== 'undefined' ? savedView : 'mgrid';
+            getViewPreference(preferencesService).then((view) => {
+                savedView = view;
+                scope.view = savedView;
             });
 
             scope.$on('key:v', toggleView);
@@ -569,13 +569,13 @@ export function SearchResults(
             });
 
             function setView(view) {
-                scope.view = view || 'mgrid';
-                preferencesUpdate['archive:view'].view = view || 'mgrid';
+                scope.view = view || GRID_VIEW;
+                preferencesUpdate['archive:view'].view = view || GRID_VIEW;
                 preferencesService.update(preferencesUpdate, 'archive:view');
             }
 
             function toggleView() {
-                var nextView = scope.view === LIST_VIEW ? GRID_VIEW : LIST_VIEW;
+                var nextView = scope.view === COMPACT_LIST_VIEW ? GRID_VIEW : COMPACT_LIST_VIEW;
 
                 return setView(nextView);
             }

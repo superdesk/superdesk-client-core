@@ -12,6 +12,9 @@ export class CheckboxInput extends React.Component<IInputType<boolean>> {
 
         return (
             <div
+                style={{
+                    padding: 0,
+                }}
                 className={
                     classNames(
                         'form__row',

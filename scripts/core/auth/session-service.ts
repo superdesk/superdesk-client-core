@@ -26,10 +26,10 @@ angular.module('superdesk.core.auth.session').service('session', [
         this.sessionId = null;
 
         /**
-     * Get identity when available
-     *
-     * @returns {object} promise
-     */
+         * Get identity when available
+         *
+         * @returns {object} promise
+         */
         this.getIdentity = function() {
             if (this.identity && this.token) {
                 return $q.when(this.identity);
@@ -40,26 +40,27 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-     * Update identity
-     *
-     * @param {object} updates
-     * @returns {object} identity
-     */
+         * Update identity
+         *
+         * @param {object} updates
+         * @returns {object} identity
+         */
         this.updateIdentity = function(updates) {
             var identity = this.identity || {};
 
             _.extend(identity, updates);
             this.identity = _.omit(identity, IDENTITY_BLACKLIST);
             storage.setItem(IDENTITY_KEY, this.identity);
+
             return this.identity;
         };
 
         /**
-     * Start a new session
-     *
-     * @param {object} session
-     * @param {object} identity
-     */
+         * Start a new session
+         *
+         * @param {object} session
+         * @param {object} identity
+         */
         this.start = function(session, identity) {
             this.token = session.token;
             this.sessionId = session._id;
@@ -87,19 +88,19 @@ angular.module('superdesk.core.auth.session').service('session', [
         };
 
         /**
-     * Return session url for delete
-     *
-     * @returns {string}
-     */
+         * Return session url for delete
+         *
+         * @returns {string}
+         */
         this.getSessionHref = function() {
             return localStorage.getItem(TOKEN_HREF);
         };
 
         /**
-     * Setup test user with given id.
-     *
-     * @param {string} _id
-     */
+         * Setup test user with given id.
+         *
+         * @param {string} _id
+         */
         this.testUser = function(_id) {
             this.token = 1;
             this.identity = {_id: _id};

@@ -12,7 +12,7 @@ import {DateTime} from 'core/ui/components/DateTime';
 import {vocabularies} from 'api/vocabularies';
 import Datetime from 'core/datetime/datetime';
 import {sdApi} from 'api';
-import {StateComponent} from 'apps/search/components/fields/state';
+import {StatusInfo} from 'apps/search/components/fields/state';
 import {AnnotationsPreview} from './AnnotationsPreview';
 
 // Can't call `gettext` in the top level
@@ -217,7 +217,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
                                     {gettext('State').toUpperCase()}
                                 </Heading>
                                 <Spacer h gap="4" justifyContent="start" noWrap style={{flexWrap: 'wrap'}} >
-                                    <StateComponent item={article} />
+                                    <StatusInfo item={article} clickable={false} />
                                     {article.embargo && (
                                         <Label
                                             style="hollow"

@@ -4,9 +4,9 @@
  */
 
 import {merge} from 'lodash';
-import {IDENTITY_KEY} from 'appConfig';
-import {ISuperdeskGlobalConfig, IUser} from 'superdesk-api';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {DEFAULT_ENGLISH_TRANSLATIONS} from './core/utils';
+import {getUserLanguage} from 'reload-language';
 
 function fetchSync(url: string, callback: (responseText: string) => void): void {
     const request = new XMLHttpRequest();
@@ -59,25 +59,13 @@ const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 //
 // SETTING UI LANGUAGE
 //
-
-const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
-
-const languageFromLocalStorage =
-    user?.language
-    ?? localStorage.getItem('LOGGED_OUT_LANGUAGE')
-    ?? appConfig.default_language
-    ?? window.navigator.language
-    ?? 'en';
-
-const language = appConfig.profileLanguages?.includes(languageFromLocalStorage) ? languageFromLocalStorage : 'en';
+const language = getUserLanguage();
 
 window['user-interface-language'] = language;
 
 //
 // LOADING TRANSLATIONS
 //
-
-const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
 
 function applyTranslations(translations) {
     const langOverride = appConfig.langOverride ?? {};
@@ -89,10 +77,11 @@ function applyTranslations(translations) {
     window.translations = translations;
 }
 
-
 if (language === 'en') {
     applyTranslations(DEFAULT_ENGLISH_TRANSLATIONS);
 } else {
+    const translationsUrl = `/languages/${language}.json?nocache=${Date.now()}`;
+
     fetchSync(translationsUrl, (responseText) => {
         const translations = JSON.parse(responseText);
 
@@ -107,3 +96,4 @@ if (language === 'en') {
         applyTranslations(translations);
     });
 }
+

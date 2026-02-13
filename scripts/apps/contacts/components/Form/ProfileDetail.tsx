@@ -212,7 +212,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </div>
                 )}
 
-                <Row flex={true}>
+                <Row flex={true} data-test-id="form-row-contact-type">
                     {get(this.state, 'contactTypes.length', 0) > 0 && (
                         <RowItem>
                             <SelectInput
@@ -250,7 +250,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </RowItem>
                 </Row>
 
-                <Row>
+                <Row data-test-id="form-row-honorific">
                     <LineInput readOnly={readOnly} hint={gettext('e.g. professor, commissioner')}>
                         <Label text={gettext('honorific')} />
                         <Input
@@ -264,7 +264,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </LineInput>
                 </Row>
 
-                <Row>
+                <Row data-test-id="form-row-first-name">
                     <LineInput
                         required={contactType === 'person'}
                         invalid={contactType === 'person' && this.isFieldInvalid('first_name')}
@@ -285,7 +285,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </LineInput>
                 </Row>
 
-                <Row>
+                <Row data-test-id="form-row-last-name">
                     <LineInput
                         readOnly={readOnly}
                         required={contactType === 'person'}
@@ -306,7 +306,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 </Row>
 
                 {contactType === 'organisation' && (
-                    <Row>
+                    <Row data-test-id="form-row-organisation">
                         <LineInput
                             readOnly={readOnly}
                             required={contactType === 'organisation'}
@@ -331,7 +331,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 )}
 
                 {contactType === 'person' && (
-                    <Row>
+                    <Row data-test-id="form-row-organisation">
                         <SelectFieldSearchInput
                             field="organisation"
                             label={gettext('Organisation')}
@@ -346,7 +346,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </Row>
                 )}
 
-                <Row>
+                <Row data-test-id="form-row-job-title">
                     <LineInput readOnly={readOnly}>
                         <Label text={contactLabel} />
                         <Input
@@ -360,7 +360,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </LineInput>
                 </Row>
 
-                <Row>
+                <Row data-test-id="form-row-emails">
                     <LineInput
                         readOnly={readOnly}
                         required={isRequired || isAssignable}
@@ -390,7 +390,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </LineInput>
                 </Row>
 
-                <Spacer v gap="4" justifyContent="center">
+                <Spacer v gap="4" justifyContent="center" data-test-id="form-row-contact-phone">
                     <Label text={gettext('Phone')} />
                     {showMinFieldsWarning && (
                         <div className="sd-line-input__message">
@@ -410,7 +410,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
 
                 <ToggleBox title={gettext('MORE')} isOpen={false} style="toggle-box--circle" scrollInView={true}>
 
-                    <Row>
+                    <Row data-test-id="form-row-mobile">
                         <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
                             <Label text={getMinRequiredFieldLabel('mobile')} />
                             {showMinFieldsWarning && (
@@ -430,7 +430,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-fax">
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('fax')} />
                             <Input
@@ -443,7 +443,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-website">
                         <LineInput readOnly={readOnly} hint={gettext('e.g. http://www.website.com')}>
                             <Label text={gettext('website')} />
                             <Input
@@ -456,7 +456,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-twitter">
                         <LineInput
                             readOnly={readOnly}
                             required={isRequired}
@@ -481,7 +481,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-facebook">
                         <LineInput
                             readOnly={readOnly}
                             required={isRequired}
@@ -505,7 +505,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-instagram">
                         <LineInput
                             readOnly={readOnly}
                             required={isRequired}
@@ -529,7 +529,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row noPadding={true}>
+                    <Row noPadding={true} data-test-id="form-row-address-1">
                         <LineInput readOnly={readOnly} hint={gettext('Street Address, PO Box, Company Name')}>
                             <Label text={gettext('Street Address')} />
                             <Input
@@ -542,7 +542,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             />
                         </LineInput>
                     </Row>
-                    <Row>
+                    <Row data-test-id="form-row-address-2">
                         <LineInput readOnly={readOnly} hint={gettext('Building, Suite, Unit, Apartment, Floor, etc.')} >
                             <Input
                                 field="contact_address[1]"
@@ -555,7 +555,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row flex={true}>
+                    <Row flex={true} data-test-id="form-row-locality">
                         <LineInput readOnly={readOnly} hint={gettext('e.g. Rhodes, CBD')}>
                             <Label text={gettext('locality')} />
                             <Input
@@ -578,7 +578,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-city">
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('city')} />
                             <Input
@@ -591,7 +591,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row flex={true}>
+                    <Row flex={true} data-test-id="form-row-state">
                         {!this.state.displayOtherStateField && (
                             <SelectInput
                                 field="contact_state"
@@ -630,7 +630,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         </LineInput>
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-country">
                         <SelectInput
                             label={gettext('Country')}
                             field="country"
@@ -645,7 +645,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         />
                     </Row>
 
-                    <Row>
+                    <Row data-test-id="form-row-notes">
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('notes')} />
                             <textarea

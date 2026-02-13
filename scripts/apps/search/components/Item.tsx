@@ -10,7 +10,6 @@ import {getArticleLabel, gettext} from 'core/utils';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
-import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
@@ -341,18 +340,6 @@ export class Item extends React.Component<IProps, IState> {
                             multiSelect={this.props.multiSelect}
                         />
                     );
-                case 'mgrid':
-                    return (
-                        <ItemMgridTemplate
-                            item={item}
-                            itemSelected={itemSelected}
-                            desk={this.props.desk}
-                            swimlane={this.props.swimlane}
-                            ingestProvider={this.props.ingestProvider}
-                            getActionsMenu={getActionsMenu}
-                            multiSelect={this.props.multiSelect}
-                        />
-                    );
                 case 'photogrid':
                     return (
                         <ItemPhotoGrid
@@ -397,7 +384,6 @@ export class Item extends React.Component<IProps, IState> {
         const getNested = () => {
             switch (this.props.view) {
                 case 'swimlane':
-                case 'mgrid':
                 case 'photogrid':
                     return null;
                 default:

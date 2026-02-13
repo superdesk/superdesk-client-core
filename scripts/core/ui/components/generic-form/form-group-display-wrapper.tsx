@@ -1,7 +1,7 @@
 import React from 'react';
 import {omit} from 'lodash';
 
-import {ToggleBoxNext} from 'superdesk-ui-framework';
+import {ToggleBox} from 'superdesk-ui-framework';
 import {isIFormGroupCollapsible} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormGroup} from 'superdesk-api';
@@ -19,12 +19,13 @@ export class FormGroupDisplayWrapper<T extends object> extends React.Component<I
             return <div {...omit(this.props, ['group'])} />;
         } else if (isIFormGroupCollapsible(group.type)) {
             return (
-                <ToggleBoxNext
+                <ToggleBox
+                    variant="simple"
                     title={group.type.label}
-                    isOpen={group.type.openByDefault}
+                    initiallyOpen={group.type.openByDefault}
                 >
                     {this.props.children}
-                </ToggleBoxNext>
+                </ToggleBox>
             );
         } else {
             assertNever(group.type);

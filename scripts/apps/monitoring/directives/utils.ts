@@ -1,5 +1,6 @@
 import {sdApi} from 'api';
 import {extensions} from 'appConfig';
+import {COMPACT_LIST_VIEW, GRID_VIEW} from 'apps/archive/utils';
 import {gettext} from 'core/utils';
 import {flatMap} from 'lodash';
 import {IMonitoringListFilter, IMonitoringListOperator} from 'superdesk-api';
@@ -83,7 +84,7 @@ export function getMonitoringViewOptions(
     const availableViews: Array<{id: string; label: string; icon: string}> = [];
 
     availableViews.push({
-        id: 'compact',
+        id: COMPACT_LIST_VIEW,
         label: gettext('List view'),
         icon: 'list-view',
     });
@@ -105,7 +106,7 @@ export function getMonitoringViewOptions(
     }
 
     availableViews.push({
-        id: 'photogrid',
+        id: GRID_VIEW,
         label: gettext('Photo Grid View'),
         icon: 'grid-view',
     });

@@ -64,15 +64,19 @@ interface Window {
     translations: any;
     language: any;
     pluralForms: any;
+    __karma__: boolean;
 }
 
-// Allow importing json/html/svg files
+// Allow importing json/html/svg/wasm/jpg/mov files
 declare module "*.json";
 declare module "*.html";
 declare module "*.svg" {
     const content: string;
     export default content;
 }
+declare module "*.wasm"
+declare module "*.jpg"
+declare module "*.mov"
 
 // ------------------------------------------------------------------------------------------------
 // TYPES

@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const fs = require('fs');
 
 function getModuleDir(moduleName) {
@@ -141,8 +142,8 @@ module.exports = function makeConfig(grunt) {
 
     return {
         entry: {
-            init: [path.join(__dirname, 'scripts', 'init')],
-            app: [path.join(__dirname, 'scripts', 'index')],
+            init: path.join(__dirname, 'scripts', 'init'),
+            app: path.join(__dirname, 'scripts', 'index'),
         },
 
         output: {
@@ -166,6 +167,12 @@ module.exports = function makeConfig(grunt) {
                 filename: '[name].bundle.css',
                 chunkFilename: '[id].bundle.css',
             }),
+            // Webpack 5 removed automatic Node.js polyfills for browser builds
+            // This plugin restores them for legacy code that depends on Node APIs (e.g., Buffer, process, stream)
+            // Exclude 'console' since browsers provide their own implementation
+            new NodePolyfillPlugin({
+                excludeAliases: ['console'],
+            }),
         ],
 
         resolve: {
@@ -173,8 +180,10 @@ module.exports = function makeConfig(grunt) {
                 __dirname,
                 path.join(__dirname, 'scripts'),
                 path.join(__dirname, 'styles', 'sass'),
+                path.join(__dirname, 'node_modules'),
                 'node_modules',
             ],
+            mainFields: ['module', 'browser', 'main'],
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-10-year-range',
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
@@ -225,6 +234,14 @@ module.exports = function makeConfig(grunt) {
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
                             return false;
+                        }
+
+                        // Exclude these packages from ts-loader - they are pre-built ESM modules
+                        if (
+                            absolutePath.includes('/@babel/runtime/')
+                            || absolutePath.includes('/react-resizable-panels/')
+                        ) {
+                            return true;
                         }
 
                         if (
@@ -283,8 +300,18 @@ module.exports = function makeConfig(grunt) {
                     ],
                 },
                 {
-                    test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-                    loader: 'file-loader',
+                    test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg|mov)(\?.*$|$)/,
+                    type: 'asset/resource',
+                },
+                {
+                    // Required for @uswriting/exiftool which contains embedded Perl code in a .cjs file
+                    // Without this, webpack 5 tries to parse it as an ES module and fails
+                    test: /\.cjs$/,
+                    type: 'javascript/auto',
+                },
+                {
+                    test: /\.wasm$/,
+                    type: 'asset/resource'
                 },
             ],
         },
@@ -317,11 +344,6 @@ function getDefaults(grunt) {
     return {
         // application version
         version: version || grunt.file.readJSON(path.join(__dirname, 'package.json')).version,
-
-        // raven settings
-        raven: {
-            dsn: process.env.SUPERDESK_RAVEN_DSN || '',
-        },
 
         // backend server URLs configuration
         server: {

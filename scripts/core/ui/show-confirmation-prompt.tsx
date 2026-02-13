@@ -1,10 +1,10 @@
 import React from 'react';
 import {showModal} from '@sourcefabric/common';
-import {Button, Modal, Spacer} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Modal} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export function showConfirmationPrompt(
-    {title, message}: {title: string; message: string;},
+    {title, message, primaryActionText}: {title: string; message: string; primaryActionText?: string;},
 ): Promise<boolean> {
     return new Promise((resolve) => {
         showModal(({closeModal}) => (
@@ -19,26 +19,24 @@ export function showConfirmationPrompt(
                 data-test-id="confirmation-modal"
                 headerTemplate={title}
                 footerTemplate={(
-                    <Spacer h gap="4" justifyContent="end" noGrow>
+                    <ButtonGroup align="end" orientation="horizontal">
                         <Button
                             onClick={() => {
                                 closeModal();
                                 resolve(false);
                             }}
                             text={gettext('Cancel')}
-                            style="filled"
-                            type="default"
+                            type="tertiary"
                         />
                         <Button
                             onClick={() => {
                                 closeModal();
                                 resolve(true);
                             }}
-                            text={gettext('Confirm')}
-                            style="filled"
+                            text={primaryActionText ?? gettext('Confirm')}
                             type="primary"
                         />
-                    </Spacer>
+                    </ButtonGroup>
                 )}
             >
                 {message}

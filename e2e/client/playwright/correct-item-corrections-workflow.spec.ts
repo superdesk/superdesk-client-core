@@ -37,7 +37,7 @@ test('can correct published item using corrections workflow', async ({page}) => 
     await expect(
         page
             .locator(s('monitoring-group=Sports / Working Stage', 'article-item=Story 5'))
-            .getByTitle('Correction', {exact: true}),
+            .getByText('Correction', {exact: true}),
     ).toBeVisible();
 
     // edit item
@@ -58,12 +58,12 @@ test('can correct published item using corrections workflow', async ({page}) => 
         page.locator(s('monitoring-group=Sports desk output', 'article-item=Story 5.1')),
     ).toBeVisible();
     await expect(
-        page.locator(s('monitoring-group=Sports desk output', 'article-item=Story 5.1')).getByTitle('Corrected'),
+        page.locator(s('monitoring-group=Sports desk output', 'article-item=Story 5.1')).getByText('Corrected'),
     ).toBeVisible();
     await expect(
         page
             .locator(s('monitoring-group=Sports desk output', 'article-item=Story 5.1'))
-            .getByTitle('Correction', {exact: true}),
+            .getByText('Correction', {exact: true}),
     ).not.toBeVisible();
 
     await page.goto('/#/publish_queue');

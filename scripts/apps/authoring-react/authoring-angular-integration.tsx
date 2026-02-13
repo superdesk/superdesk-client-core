@@ -1,18 +1,9 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/no-multi-comp */
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {DeskAndStage} from './subcomponents/desk-and-stage';
-import {LockInfo} from './subcomponents/lock-info';
 import {
-    Button,
     ButtonGroup,
-    IconButton,
-    Label,
-    Modal,
     NavButton,
-    Popover,
-    Spacer,
-    WithPopover,
 } from 'superdesk-ui-framework/react';
 import {
     IArticle,
@@ -24,12 +15,10 @@ import {
 import {appConfig, extensions} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import React from 'react';
-import {gettext, getArticleLabel} from 'core/utils';
+import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
-import {MarkedDesks} from './toolbar/mark-for-desks/mark-for-desks-popover';
-import {HighlightsCardContent} from './toolbar/highlights-management';
 import {
     authoringStorageIArticle,
     authoringStorageIArticleCorrect,
@@ -41,14 +30,271 @@ import {
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {notify} from 'core/notify/notify';
-import {showModal} from '@sourcefabric/common';
-import {ToggleFullWidth} from 'apps/authoring/authoring/components/toggleFullWithEditor';
 import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
+import {
+    SaveButtonComponent,
+    CloseButtonComponent,
+    CloseIconButtonComponent,
+    MinimizeButtonComponent,
+    ToggleFullWidthComponent,
+    ManageHighlightsComponent,
+    ArchivedFromComponent,
+    ReadOnlyLabelComponent,
+    CorrectActionComponent,
+    SendCorrectionComponent,
+    KillActionComponent,
+    TakedownActionComponent,
+    UnpublishActionComponent,
+    CancelAuthoringComponent,
+    UpdateActionComponent,
+    SendKillActionComponent,
+    UnspikeComponent,
+    DescheduleComponent,
+    DeskAndStageComponent,
+    LockInfoComponent,
+    ExportHighlightComponent,
+    PublishAndContinueComponent,
+    EditButtonComponent,
+    CloseAndContinueComponent,
+    ToDeskComponent,
+    SendAndDuplicateComponent,
+    MarkedDesksComponent,
+    PublishCorrectionComponent,
+} from './toolbar-components/angular-integration';
 
 function onClose() {
     ng.get('authoringWorkspace').close();
     ng.get('$rootScope').$applyAsync();
+}
+
+// Widget definitions without keyBindings - these use React Context hooks internally
+const minimizeButton: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.3,
+    component: MinimizeButtonComponent,
+    availableOffline: true,
+};
+
+const toggleFullWidthButton: ITopBarWidget<IArticle> = {
+    group: 'start',
+    priority: 0.1,
+    component: ToggleFullWidthComponent,
+    availableOffline: true,
+};
+
+const manageHighlightsWidget: ITopBarWidget<IArticle> = {
+    group: 'start',
+    priority: 0.3,
+    component: ManageHighlightsComponent,
+    availableOffline: true,
+};
+
+const archivedFromWidget: ITopBarWidget<IArticle> = {
+    group: 'start',
+    availableOffline: false,
+    component: ArchivedFromComponent,
+    priority: 0.2,
+};
+
+const readOnlyWidget: ITopBarWidget<IArticle> = {
+    group: 'start',
+    availableOffline: false,
+    component: ReadOnlyLabelComponent,
+    priority: 0.3,
+};
+
+const correctAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: CorrectActionComponent,
+    availableOffline: false,
+};
+
+const sendCorrectionAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: SendCorrectionComponent,
+    availableOffline: false,
+};
+
+const killAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: KillActionComponent,
+    availableOffline: false,
+};
+
+const takedownAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: TakedownActionComponent,
+    availableOffline: false,
+};
+
+const unpublishAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: UnpublishActionComponent,
+    availableOffline: false,
+};
+
+const cancelAuthoringAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: CancelAuthoringComponent,
+    availableOffline: false,
+};
+
+const updateAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: UpdateActionComponent,
+    availableOffline: false,
+};
+
+const sendKillAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: SendKillActionComponent,
+    availableOffline: false,
+};
+
+const unspikeWidget: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: UnspikeComponent,
+    availableOffline: false,
+};
+
+const descheduleWidget: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: DescheduleComponent,
+    availableOffline: false,
+};
+
+const deskAndStageWidget: ITopBarWidget<IArticle> = {
+    group: 'start',
+    priority: 0.2,
+    component: DeskAndStageComponent,
+    availableOffline: false,
+};
+
+const exportHighlightWidget: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.4,
+    component: ExportHighlightComponent,
+    availableOffline: false,
+};
+
+const publishAndContinueWidget: ITopBarWidget<IArticle> = {
+    group: 'middle',
+    priority: 0.3,
+    component: PublishAndContinueComponent,
+    availableOffline: false,
+};
+
+const editButtonWidget: ITopBarWidget<IArticle> = {
+    group: 'middle',
+    priority: 0.4,
+    component: EditButtonComponent,
+    availableOffline: false,
+};
+
+const closeAndContinueWidget: ITopBarWidget<IArticle> = {
+    group: 'middle',
+    priority: 0.4,
+    component: CloseAndContinueComponent,
+    availableOffline: false,
+};
+
+const toDeskWidget: ITopBarWidget<IArticle> = {
+    group: 'middle',
+    priority: 0.2,
+    component: ToDeskComponent,
+    availableOffline: false,
+};
+
+const sendAndDuplicateWidget: ITopBarWidget<IArticle> = {
+    group: 'middle',
+    priority: 0.2,
+    component: SendAndDuplicateComponent,
+    availableOffline: false,
+};
+
+const markedDesksWidget: ITopBarWidget<IArticle> = {
+    group: 'start',
+    priority: 0.3,
+    component: MarkedDesksComponent,
+    availableOffline: true,
+};
+
+const publishCorrectionWidget: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: PublishCorrectionComponent,
+    availableOffline: false,
+};
+
+/**
+ * Factory functions for widgets with keyBindings.
+ * These capture the `exposed` parameter to avoid using module-level mutable state,
+ * which prevents bugs when multiple authoring instances are rendered simultaneously.
+ */
+function getSaveButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.2,
+        component: SaveButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+s': () => {
+                if (exposed.hasUnsavedChanges()) {
+                    exposed.save();
+                }
+            },
+        },
+    };
+}
+
+function getCloseButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.1,
+        component: CloseButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => exposed.initiateClosing(),
+        },
+    };
+}
+
+function getCloseIconButton(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'end',
+        priority: 0.1,
+        component: CloseIconButtonComponent,
+        availableOffline: true,
+        keyBindings: {
+            'ctrl+shift+e': () => exposed.initiateClosing(),
+        },
+    };
+}
+
+function getLockInfoWidget(exposed: IExposedFromAuthoring<IArticle>): ITopBarWidget<IArticle> {
+    return {
+        group: 'start',
+        priority: 0.1,
+        component: LockInfoComponent,
+        keyBindings: {
+            'ctrl+shift+u': () => {
+                if (sdApi.article.isLockedInOtherSession(exposed.item)) {
+                    exposed.stealLock();
+                }
+            },
+        },
+        availableOffline: false,
+    };
 }
 
 function getInlineToolbarActions(
@@ -57,553 +303,110 @@ function getInlineToolbarActions(
     setFullWidth?: () => void,
     fullWidth?: boolean,
 ): IAuthoringOptions<IArticle> {
-    const {
-        item,
-        hasUnsavedChanges,
-        handleUnsavedChanges,
-        save,
-        initiateClosing,
-        keepChangesAndClose,
-        stealLock,
-        getLatestItem,
-    } = options;
+    const {item} = options;
     const itemState: ITEM_STATE = item.state;
 
-    const saveButton: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.2,
-        component: () => (
-            <Button
-                text={gettext('Save')}
-                style="filled"
-                type="primary"
-                disabled={!hasUnsavedChanges()}
-                onClick={() => {
-                    save();
-                }}
-            />
-        ),
-        availableOffline: true,
-        keyBindings: {
-            'ctrl+shift+s': () => {
-                if (hasUnsavedChanges()) {
-                    save();
-                }
-            },
-        },
+    // Create widgets with keyBindings that capture the current exposed instance
+    const saveButton = getSaveButton(options);
+    const closeButton = getCloseButton(options);
+    const closeIconButton = getCloseIconButton(options);
+    const lockInfoWidget = getLockInfoWidget(options);
+
+    // Context values for inline toolbar widgets using React Context
+    const inlineToolbarContext = {
+        setFullWidth: setFullWidth ?? null,
+        fullWidth: fullWidth ?? false,
     };
 
-    const closeButton: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text={gettext('Close')}
-                style="hollow"
-                onClick={() => {
-                    initiateClosing();
-                }}
-            />
-        ),
-        availableOffline: true,
-        keyBindings: {
-            'ctrl+shift+e': () => {
-                initiateClosing();
-            },
-        },
-    };
-
-    const closeIconButton: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <IconButton
-                ariaValue="Close"
-                icon="close-small"
-                onClick={() => {
-                    initiateClosing();
-                }}
-                style="outline"
-            />
-        ),
-        availableOffline: true,
-        keyBindings: {
-            'ctrl+shift+e': () => {
-                initiateClosing();
-            },
-        },
-    };
-
-    const minimizeButton: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.3,
-        component: () => (
-            <NavButton
-                text={gettext('Minimize')}
-                onClick={() => {
-                    keepChangesAndClose();
-                }}
-                icon="minimize"
-                iconSize="big"
-            />
-        ),
-        availableOffline: true,
-    };
-
-    const toggleFullWidthButton: ITopBarWidget<IArticle> = {
-        group: 'start',
-        priority: 0.1,
-        component: () => (
-            <ToggleFullWidth
-                setFullWidth={() => {
-                    options.authoringStorage.autosave.flush().then(() => {
-                        setFullWidth();
-                    });
-                }}
-                fullWidth={fullWidth}
-            />
-        ),
-        availableOffline: true,
-    };
-
-    const getManageHighlights = (): ITopBarWidget<IArticle> => ({
-        group: 'start',
-        priority: 0.3,
-        component: () => (
-            <WithPopover
-                component={({closePopup}) => (
-                    <HighlightsCardContent
-                        close={closePopup}
-                        article={item}
-                    />
-                )}
-                placement="right-end"
-            >
-                {
-                    (togglePopup) => (
-                        <IconButton
-                            onClick={(event) =>
-                                togglePopup(event.target as HTMLElement)
-                            }
-                            icon={
-                                item.highlights.length > 1
-                                    ? 'multi-star'
-                                    : 'star'
-                            }
-                            ariaValue={gettext('Highlights')}
-                        />
-                    )
-                }
-            </WithPopover>
-        ),
-        availableOffline: true,
+    // Helper to add context to all return values
+    const withContext = (
+        opts: Omit<IAuthoringOptions<IArticle>, 'inlineToolbarContext'>,
+    ): IAuthoringOptions<IArticle> => ({
+        ...opts,
+        inlineToolbarContext,
     });
 
     const getReadOnlyAndArchivedFrom = (): Array<ITopBarWidget<IArticle>> => {
         const actions: Array<ITopBarWidget<IArticle>> = [];
 
         if (item._type === 'archived') {
-            actions.push({
-                group: 'start',
-                availableOffline: false,
-                component: () => (
-                    <span>
-                        <b>{gettext('Archived from')}</b>
-                        <DeskAndStage article={item} />
-                    </span>
-                ),
-                priority: 0.2,
-            });
+            actions.push(archivedFromWidget);
         }
 
         if (
             item._type !== 'archived'
             && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly
         ) {
-            actions.push({
-                group: 'start',
-                availableOffline: false,
-                component: () => (
-                    <Label text={gettext('Read-only')} style="filled" type="warning" />
-                ),
-                priority: 0.3,
-            });
+            actions.push(readOnlyWidget);
         }
 
         return actions;
     };
 
-    const correctAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                tooltip={gettext('Correct')}
-                text={gettext('C')}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    if (appConfig?.corrections_workflow) {
-                        ng.get('authoring').correction(item);
-                    } else {
-                        ng.get('authoringWorkspace').authoringOpen(item._id, 'correct');
-                    }
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const sendCorrectionAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text={gettext('Send Correction')}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    sdApi.article.publishItem(item, getLatestItem(), 'correct').then(() => {
-                        initiateClosing();
-                    });
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const killAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text={gettext('K')}
-                tooltip={gettext('Kill')}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    ng.get('authoringWorkspace').authoringOpen(item._id, 'kill');
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const takedownAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text="T"
-                tooltip={gettext('Takedown')}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    ng.get('authoringWorkspace').authoringOpen(item._id, 'takedown');
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const unpublishAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                tooltip={gettext('Unpublish')}
-                text={'UP'}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    showModal(({closeModal}) => (
-                        <Modal
-                            visible
-                            size="small"
-                            position="center"
-                            onHide={closeModal}
-                            headerTemplate={gettext('Confirm Unpublishing')}
-                            footerTemplate={(
-                                <Spacer h gap="4" justifyContent="end" noGrow>
-                                    <Button
-                                        onClick={() => {
-                                            closeModal();
-                                        }}
-                                        text={gettext('Cancel')}
-                                        style="filled"
-                                        type="default"
-                                    />
-                                    <Button
-                                        onClick={() => {
-                                            closeModal();
-                                            sdApi.article.publishItem(item, getLatestItem(), 'unpublish');
-                                        }}
-                                        text={gettext('Confirm')}
-                                        style="filled"
-                                        type="primary"
-                                    />
-                                </Spacer>
-                            )}
-                        >
-                            {gettext(
-                                'Are you sure you want to unpublish item "{{label}}"?',
-                                {label: getArticleLabel(item)},
-                            )}
-                        </Modal>
-                    ));
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const cancelAuthoringAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text={gettext('CANCEL')}
-                style="filled"
-                type="default"
-                onClick={() => {
-                    initiateClosing();
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const updateAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: () => (
-            <Button
-                text="U"
-                tooltip={gettext('UPDATE')}
-                style="filled"
-                type="primary"
-                onClick={() => {
-                    sdApi.article.rewrite(item);
-                }}
-            />
-        ),
-        availableOffline: false,
-    };
-
-    const sendKillAction: ITopBarWidget<IArticle> = {
-        group: 'end',
-        priority: 0.1,
-        component: ({entity}) => {
-            return (
-                <Button
-                    text={gettext('Send kill')}
-                    style="filled"
-                    type="primary"
-                    onClick={() => {
-                        handleUnsavedChanges()
-                            .then(() => {
-                                sdApi.article.publishItem(item, entity, 'kill');
-                            })
-                            .then(() => initiateClosing());
-                    }}
-                />
-            );
-        },
-        availableOffline: false,
-    };
-
     if (action === 'kill') {
-        return {
+        return withContext({
             readOnly: false,
             actions: [toggleFullWidthButton, sendKillAction, closeIconButton, minimizeButton],
-        };
+        });
     }
 
     if (action === 'correct') {
-        return {
+        return withContext({
             readOnly: false,
             actions: [toggleFullWidthButton, sendCorrectionAction, cancelAuthoringAction, minimizeButton],
-        };
+        });
     }
+
+    const actions: Array<ITopBarWidget<IArticle>> = [
+        toggleFullWidthButton,
+        minimizeButton,
+        closeButton,
+        ...getReadOnlyAndArchivedFrom(),
+    ];
 
     switch (itemState) {
         case ITEM_STATE.DRAFT:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [
                     toggleFullWidthButton, closeButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom(),
                 ],
-            };
+            });
 
         case ITEM_STATE.SUBMITTED:
         case ITEM_STATE.IN_PROGRESS:
         case ITEM_STATE.ROUTED:
         case ITEM_STATE.FETCHED:
         case ITEM_STATE.UNPUBLISHED:
-        // eslint-disable-next-line no-case-declarations
-            const actions: Array<ITopBarWidget<IArticle>> = [
-                toggleFullWidthButton,
-                minimizeButton,
-                closeButton,
-                ...getReadOnlyAndArchivedFrom(),
-            ];
-
             if (item.highlights != null) {
-                actions.push(getManageHighlights());
+                actions.push(manageHighlightsWidget);
             }
 
-            // eslint-disable-next-line no-case-declarations
-            const manageDesksButton: ITopBarWidget<IArticle> = ({
-                group: 'start',
-                priority: 0.3,
-                // eslint-disable-next-line react/display-name
-                component: () => (
-                    <>
-                        <Popover
-                            triggerSelector="#marked-for-desks"
-                            title={gettext('Marked for')}
-                            placement="bottom-end"
-                        >
-                            <MarkedDesks
-                                article={item}
-                            />
-                        </Popover>
-                        <NavButton
-                            onClick={() => null}
-                            id="marked-for-desks"
-                            icon="bell"
-                            iconSize="small"
-                        />
-                    </>
-                ),
-                availableOffline: true,
-            });
-
             if (item.marked_desks?.length > 0) {
-                actions.push(manageDesksButton);
+                actions.push(markedDesksWidget);
             }
 
             if (item._type !== 'archived') {
-                actions.push({
-                    group: 'start',
-                    priority: 0.2,
-                    component: ({entity}) => <DeskAndStage article={entity} />,
-                    availableOffline: false,
-                });
+                actions.push(deskAndStageWidget);
             }
 
             if (sdApi.highlights.showHighlightExportButton(item)) {
-                actions.push({
-                    group: 'end',
-                    priority: 0.4,
-                    component: () => (
-                        <Button
-                            type="default"
-                            onClick={() => {
-                                sdApi.highlights.exportHighlight(item._id, hasUnsavedChanges());
-                            }}
-                            text={gettext('Export')}
-                            style="filled"
-                        />
-                    ),
-                    availableOffline: false,
-                });
+                actions.push(exportHighlightWidget);
             }
 
-            if (sdApi.article.showPublishAndContinue(item, hasUnsavedChanges())) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.3,
-                    component: ({entity}) => (
-                        <Button
-                            type="highlight"
-                            onClick={() => {
-                                const getLatestArticle = hasUnsavedChanges()
-                                    ? handleUnsavedChanges()
-                                    : Promise.resolve(entity);
-
-                                getLatestArticle.then((article) => {
-                                    sdApi.article.publishItem(article, article).then((result) => {
-                                        typeof result !== 'boolean'
-                                            ? ng.get('authoring').rewrite(result)
-                                            : notify.error(gettext('Failed to publish and continue.'));
-                                    });
-                                });
-                            }}
-                            text={gettext('P & C')}
-                            style="filled"
-                        />
-                    ),
-                    availableOffline: false,
-                });
+            if (sdApi.article.showPublishAndContinue(item, options.hasUnsavedChanges())) {
+                actions.push(publishAndContinueWidget);
             }
 
             if (action === 'view' && item._editable !== true) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.4,
-                    component: ({entity}) => (
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state});
-                            }}
-                            text={gettext('Edit')}
-                            style="filled"
-                        />
-                    ),
-                    availableOffline: false,
-                });
+                actions.push(editButtonWidget);
             }
 
-            if (sdApi.article.showCloseAndContinue(item, hasUnsavedChanges())) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.4,
-                    component: ({entity}) => (
-                        <Button
-                            type="highlight"
-                            onClick={() => {
-                                const getLatestArticle = hasUnsavedChanges()
-                                    ? handleUnsavedChanges()
-                                    : Promise.resolve(entity);
-
-                                getLatestArticle.then((article) => {
-                                    ng.get('authoring').close().then(() => {
-                                        sdApi.article.rewrite(article);
-                                    });
-                                });
-                            }}
-                            text={gettext('C & C')}
-                            style="filled"
-                        />
-                    ),
-                    availableOffline: false,
-                });
+            if (sdApi.article.showCloseAndContinue(item, options.hasUnsavedChanges())) {
+                actions.push(closeAndContinueWidget);
             }
 
-            // FINISH: ensure locking is available in generic version of authoring
-            actions.push({
-                group: 'start',
-                priority: 0.1,
-                component: ({entity}) => (
-                    <LockInfo
-                        article={entity}
-                        unlock={() => {
-                            stealLock();
-                        }}
-                        isLockedInOtherSession={(article) => sdApi.article.isLockedInOtherSession(article)}
-                    />
-                ),
-                keyBindings: {
-                    'ctrl+shift+u': () => {
-                        if (sdApi.article.isLockedInOtherSession(item)) {
-                            stealLock();
-                        }
-                    },
-                },
-                availableOffline: false,
-            });
+            actions.push(lockInfoWidget);
 
             if (sdApi.article.isLockedInCurrentSession(item)) {
                 actions.push(saveButton);
@@ -614,124 +417,42 @@ function getInlineToolbarActions(
                 && appConfig.features.customAuthoringTopbar?.toDesk === true
                 && sdApi.article.isPersonal(item) !== true
             ) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.2,
-                    component: () => (
-                        <Button
-                            tooltip={gettext('To Desk')}
-                            text={gettext('T D')}
-                            style="filled"
-                            onClick={() => {
-                                handleUnsavedChanges()
-                                    .then(() => sdApi.article.sendItemToNextStage(item))
-                                    .then(() => initiateClosing());
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                });
+                actions.push(toDeskWidget);
             }
 
             if (
                 appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
                 && getSendAndDuplicateTarget() != null
             ) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.2,
-                    component: () => (
-                        <Button
-                            tooltip={gettext('Send and duplicate')}
-                            ariaLabel={gettext('Send and duplicate')}
-                            text={gettext('S & D')}
-                            style="filled"
-                            onClick={() => {
-                                handleUnsavedChanges()
-                                    .then(() => {
-                                        const {deskId, stageId} = getSendAndDuplicateTarget();
-
-                                        sdApi.article.duplicateItems(
-                                            [item._id],
-                                            {
-                                                type: 'desk',
-                                                desk: deskId,
-                                                stage: stageId,
-                                            },
-                                        );
-                                    })
-                                    .catch(() => {
-                                        // noop - user cancelled the operation
-                                    });
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                });
+                actions.push(sendAndDuplicateWidget);
             }
 
-            return {
+            return withContext({
                 readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
                 actions: actions,
-            };
+            });
 
         case ITEM_STATE.INGESTED:
-            return {
+            return withContext({
                 readOnly: true,
-                actions: [], // fetch
-            };
+                actions: [],
+            });
 
         case ITEM_STATE.SPIKED:
-            return {
+            return withContext({
                 readOnly: true,
-                actions: [
-                    {
-                        group: 'end',
-                        priority: 0.1,
-                        component: () => (
-                            <Button
-                                text={gettext('UNSPIKE')}
-                                style="filled"
-                                type="primary"
-                                onClick={() => {
-                                    sdApi.article.doUnspike(item, item.task.desk, item.task.stage);
-                                }}
-                            />
-                        ),
-                        availableOffline: false,
-                    },
-                    toggleFullWidthButton,
-                    closeIconButton,
-                ],
-            };
+                actions: [unspikeWidget, toggleFullWidthButton, closeIconButton],
+            });
 
         case ITEM_STATE.SCHEDULED:
-            return {
+            return withContext({
                 readOnly: true,
-                actions: [
-                    {
-                        group: 'end',
-                        priority: 0.1,
-                        component: () => (
-                            <Button
-                                text={gettext('Deschedule')}
-                                style="filled"
-                                type="primary"
-                                onClick={() => {
-                                    sdApi.article.deschedule(item);
-                                }}
-                            />
-                        ),
-                        availableOffline: false,
-                    },
-                    toggleFullWidthButton,
-                    closeIconButton,
-                ],
-            };
+                actions: [descheduleWidget, toggleFullWidthButton, closeIconButton],
+            });
 
         case ITEM_STATE.PUBLISHED:
         case ITEM_STATE.CORRECTED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [
                     toggleFullWidthButton,
@@ -742,52 +463,36 @@ function getInlineToolbarActions(
                     killAction,
                     closeIconButton,
                 ],
-            };
+            });
 
         case ITEM_STATE.BEING_CORRECTED:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [toggleFullWidthButton, closeIconButton, saveButton],
-            };
+            });
 
         case ITEM_STATE.CORRECTION:
-            return {
+            return withContext({
                 readOnly: false,
                 actions: [
                     toggleFullWidthButton,
                     saveButton,
-                    {
-                        group: 'end',
-                        priority: 0.1,
-                        component: () => (
-                            <Button
-                                text={gettext('PUBLISH')}
-                                style="filled"
-                                type="primary"
-                                onClick={() => {
-                                    handleUnsavedChanges()
-                                        .then(() => sdApi.article.publishItem(item, getLatestItem(), 'publish'))
-                                        .then(() => initiateClosing());
-                                }}
-                            />
-                        ),
-                        availableOffline: false,
-                    },
+                    publishCorrectionWidget,
                     cancelAuthoringAction,
                 ],
-            };
+            });
 
         case ITEM_STATE.KILLED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [toggleFullWidthButton, closeIconButton],
-            };
+            });
 
         case ITEM_STATE.RECALLED:
-            return {
+            return withContext({
                 readOnly: true,
                 actions: [toggleFullWidthButton, closeIconButton],
-            };
+            });
         default:
             assertNever(itemState);
     }
@@ -847,7 +552,7 @@ export function getAuthoringPrimaryToolbarWidgets(
 ) {
     return Object.values(extensions)
         .flatMap(({activationResult}) =>
-                activationResult?.contributions?.authoringTopbarWidgets ?? [],
+            activationResult?.contributions?.authoringTopbarWidgets ?? [],
         )
         .map((item): ITopBarWidget<IArticle> => {
             const Component = item.component;

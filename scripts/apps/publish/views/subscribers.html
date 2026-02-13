@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                    <button class="icn-btn" ng-click="edit(subscriber)" title="{{:: 'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="edit(subscriber)" data-test-id="edit-subscriber-button" title="{{:: 'Edit Subscriber' | translate }}"><i class="icon-pencil"></i></button>
                 </div>
             </li>
             <li ng-show="subscribers.length > 0 && !filtered_subscribers.length" class="sd-list-item sd-list-item--no-hover sd-shadow--z1">
@@ -74,12 +74,12 @@
             <fieldset>
                 <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
                     <div class="content">
-                        <div class="form__row">                      
+                        <div class="form__row">
                                 <span title="{{ subscriber.is_active ? 'Deactivate' : 'Activate' | translate }}">
                                     <span sd-switch ng-model="subscriber.is_active"></span><label>{{:: 'Status' | translate }}</label>
-                                </span>                        
+                                </span>
                         </div>
-                        
+
                         <div class="form__row">
                             <label class="form-label" translate>Subscriber Schedule Settings</label>
 
@@ -91,7 +91,7 @@
                                     required="!!subscriber.schedule.end_date">
                                 </sd-date-picker>
                             </div>
-                            
+
                             <div class="form__row-item sd-margin-t--2">
                                 <sd-date-picker
                                     value="subscriber.schedule.end_date"
@@ -128,7 +128,7 @@
                         <div class="form__row">
                             <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
                                 <label class="sd-line-input__label" for="subType" translate>Target Type</label>
-                                <select class="sd-line-input__select" 
+                                <select class="sd-line-input__select"
                                         id="subType"
                                         ng-model="subscriber.subscriber_type"
                                         ng-options="s.qcode as s.name for s in subTypes"
@@ -141,7 +141,7 @@
                         <div class="form__row">
                             <div class="sd-line-input sd-line-input--is-select">
                                 <label class="sd-line-input__label" for="media-type" translate>Media Type</label>
-                                <select class="sd-line-input__select" 
+                                <select class="sd-line-input__select"
                                         id="media-type"
                                         ng-model="subscriber.media_type">
                                     <option value="media" translate>Media</option>
@@ -158,7 +158,7 @@
                                 <span class="sd-line-input__hint" translate>Comma separated values</span>
                             </div>
                         </div>
-                        <div class="form__row form__row--l-padding">                            
+                        <div class="form__row form__row--l-padding">
                             <span title="{{ subscriber.is_targetable ? 'Deactivate' : 'Activate' | translate }}">
                                 <span sd-switch ng-model="subscriber.is_targetable"></span><label>{{:: 'Targetable by users' | translate }}</label>
                             </span>
@@ -187,7 +187,7 @@
                                     <div class="sd-line-input">
                                         <input type="number" class="sd-line-input__input sd-line-input__input--mini" ng-model="subscriber.sequence_num_settings.min" min ="1" id="subscriber-seq_num_settings.min" required>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="form__row-item form__row-item--no-grow">
                                     <span translate>Maximum</span>
@@ -234,7 +234,7 @@
                 <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critical-errors">
                     <div class="content">
                         <ul class="simple-list simple-list--dotted">
-                            <li ng-repeat="(key, val) in all_errors" class="simple-list__item">                            
+                            <li ng-repeat="(key, val) in all_errors" class="simple-list__item">
                                 <span sd-switch ng-model="subscriber.critical_errors[key]"></span><label>{{::key}}: {{::val}}</label>
                             </li>
                         </ul>
@@ -244,7 +244,7 @@
                 <div sd-wizard-step data-title="{{ 'Applied Global Block Filters' | translate }}" data-code="global-block-filters">
                     <div class="content privileges-settings">
                         <ul class="simple-list simple-list--dotted">
-                            <li ng-repeat="gf in globalFilters track by gf._id" class="simple-list__item">                                    
+                            <li ng-repeat="gf in globalFilters track by gf._id" class="simple-list__item">
                                 <span sd-switch ng-model="subscriber.global_filters[gf._id]"></span><label>{{:: gf.name}}</label>
                             </li>
                         </ul>
