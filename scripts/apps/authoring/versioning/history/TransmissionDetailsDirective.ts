@@ -1,7 +1,6 @@
-import _ from 'lodash';
+import {sdApi} from 'api';
 
-TransmissionDetailsDirective.$inject = ['api'];
-export function TransmissionDetailsDirective(api) {
+export function TransmissionDetailsDirective() {
     return {
         templateUrl: 'scripts/apps/authoring/versioning/history/views/publish_queue.html',
         scope: {
@@ -35,28 +34,13 @@ export function TransmissionDetailsDirective(api) {
                 scope.show_transmission_details = !scope.show_transmission_details;
 
                 if (scope.show_transmission_details) {
-                    var criteria: any = {max_results: 20};
-
-                    criteria.where = JSON.stringify({
-                        $and: [{item_id: scope.item.item_id}, {item_version: scope.item.version}],
-                    });
-
-                    var promise;
-
-                    if (scope.type === 'legal_archive') {
-                        promise = api.legal_publish_queue.query(criteria);
-                    } else {
-                        promise = api.publish_queue.query(criteria);
-                    }
-
-                    promise.then((response) => {
-                        _.each(response._items, (item) => {
-                            if (angular.isUndefined(item.completed_at)) {
-                                item.completed_at = item._updated;
-                            }
-                        });
-
-                        scope.queuedItems = response._items;
+                    sdApi.article.getPublishQueueEntriesForItem(
+                        scope.item.item_id,
+                        scope.item.version,
+                        scope.type === 'legal_archive',
+                    ).then((queueItems) => {
+                        scope.queuedItems = queueItems;
+                        scope.$apply(); // tell angular to re-render
                     });
                 }
             };

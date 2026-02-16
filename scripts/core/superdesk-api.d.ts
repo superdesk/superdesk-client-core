@@ -29,6 +29,7 @@ declare module 'superdesk-api' {
     export type Dictionary<K, V> = {[key: string]: V};
 
     // FORMATS
+    export type ObjectId = string;
 
 
     // AUTHORING-REACT
@@ -1530,6 +1531,63 @@ declare module 'superdesk-api' {
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
+    }
+
+    export enum PUBLISH_QUEUE_STATE {
+        ROUTING = "routing",
+        PENDING = "pending",
+        IN_PROGRESS = "in-progress",
+        RETRYING = "retrying",
+        SUCCESS = "success",
+        CANCELED = "canceled",
+        ERROR = "error",
+        FAILED = "failed",
+    }
+
+    export interface IPublishQueueItem extends IBaseRestApiResponse {
+        item_id: IArticle['_id'];
+        publishing_action: string;
+
+        item_version: IArticle['version'];
+        formatted_item: string;
+
+        state: PUBLISH_QUEUE_STATE;
+        item_encoding?: string;
+        encoded_item_id?: ObjectId | string;
+
+        subscriber_id: ObjectId;
+        codes?: Array<string>;
+
+        published_in_package?: string;
+        published_seq_num?: number;
+
+        publish_schedule?: string;
+        unique_name?: string;
+        content_type?: string;
+        headline?: string;
+
+        transmit_started_at?: string;
+        completed_at?: string;
+        error_message?: string;
+
+        moved_to_legal: boolean;
+        retry_attempt?: number;
+        next_retry_attempt_at?: string;
+        ingest_provider?: ObjectId;
+        associated_items?: Array<string>;
+        priority?: boolean;
+        is_content_api?: boolean
+
+        destination?: {
+            _id?: string;
+            name: string;
+            format: string;
+            delivery_type: string;
+            preview_endpoint_url?: string;
+            config?: {
+                resource_url?: string;
+            }
+        };
     }
 
     export interface IUserPrivileges {
