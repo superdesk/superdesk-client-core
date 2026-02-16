@@ -37,8 +37,8 @@ export class PlainText extends React.Component<IInputType<string>> {
                         style={{resize: 'vertical', height: 'auto'}}
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     />
-                    {this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-input__message">{str}</div>
+                    {this.props.issues.map((str) => (
+                        <div key={str} className="sd-input__message">{str}</div>
                     ))}
                 </div>
             );
