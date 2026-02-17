@@ -48,29 +48,26 @@ fetchSync(
         merge(_appConfig, res.config);
 
         // Normalize and sync week start with startingDay taking precedence.
-        const normalizeWeekStart = (value: any): number | null => {
+        const normalizeWeekStart = (value: string | number | null | undefined): number | null => {
             if (value == null) {
                 return null;
             }
 
             const normalized = typeof value === 'string' ? parseInt(value, 10) : value;
 
-            return Number.isNaN(normalized) ? null : normalized;
+            if (Number.isNaN(normalized) || normalized < 0 || normalized > 6) {
+                return null;
+            }
+
+            return normalized;
         };
 
         const normalizedStartingDay = normalizeWeekStart(_appConfig.startingDay);
         const normalizedStartOfWeek = normalizeWeekStart(_appConfig.start_of_week);
+        const weekStart = normalizedStartingDay ?? normalizedStartOfWeek ?? 0;
 
-        if (normalizedStartingDay != null) {
-            _appConfig.startingDay = normalizedStartingDay;
-            _appConfig.start_of_week = normalizedStartingDay;
-        } else if (normalizedStartOfWeek != null) {
-            _appConfig.start_of_week = normalizedStartOfWeek;
-            _appConfig.startingDay = normalizedStartOfWeek;
-        } else {
-            _appConfig.startingDay = 0;
-            _appConfig.start_of_week = 0;
-        }
+        _appConfig.startingDay = weekStart;
+        _appConfig.start_of_week = weekStart;
 
         // allow e2e tests to overwrite appConfig via local storage
         merge(_appConfig, merge(_appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
