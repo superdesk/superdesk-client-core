@@ -14,32 +14,32 @@ export class PlainText extends React.Component<IInputType<string>> {
 
         if (this.props.formField?.component_parameters?.multiline === true) {
             return (
-                <div className="sd-input">
-                    <div
-                        className={classNames(
-                            'sd-input__input',
+                <div
+                    className={
+                        classNames(
+                            'sd-input',
+                            'd-flex',
+                            'flex-col',
                             {
                                 'sd-input--invalid': this.props.issues.length > 0,
                                 'sd-input--required': this.props.formField.required === true,
                             },
-                        )}
-                    >
-                        <label className="sd-input__label">{this.props.formField.label}</label>
-                        <textarea
-                            disabled={this.props.disabled}
-                            value={valueWithDefaultValue}
-                            onChange={(event) => this.props.onChange(event.target.value)}
-                            rows={3}
-                            style={{resize: 'vertical', height: 'auto'}}
-                            className="sd-input"
-                            data-test-id={`gform-input--${this.props.formField.field}`}
-                        />
-                        {
-                            this.props.issues.map((str, i) => (
-                                <div key={i} className="sd-input__message">{str}</div>
-                            ))
-                        }
-                    </div>
+                        )
+                    }
+                >
+                    <label className="sd-input__label">{this.props.formField.label}</label>
+                    <textarea
+                        className="sd-input__input pt-1"
+                        disabled={this.props.disabled}
+                        value={valueWithDefaultValue}
+                        onChange={(event) => this.props.onChange(event.target.value)}
+                        rows={3}
+                        style={{resize: 'vertical', height: 'auto'}}
+                        data-test-id={`gform-input--${this.props.formField.field}`}
+                    />
+                    {this.props.issues.map((str) => (
+                        <div key={str} className="sd-input__message">{str}</div>
+                    ))}
                 </div>
             );
         }
