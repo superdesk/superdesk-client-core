@@ -134,6 +134,14 @@ export function MultiImageEditController(
         getLabelForFieldId = _getLabelForFieldId;
     });
 
+    let schema = {};
+
+    content.getType('picture').then((pictureSchema) => {
+        schema = pictureSchema;
+    }, (error) => {
+        logger.warn('Failed to load picture schema', error);
+    });
+
     $scope.save = (close) => {
         const imagesForSaving = angular.copy($scope.images);
 
@@ -146,7 +154,7 @@ export function MultiImageEditController(
                 validateMediaFieldsThrows(
                     $scope.validator,
                     metadata,
-                    content.schema({}, 'picture'),
+                    content.schema(schema, 'picture'),
                     getLabelForFieldId);
             });
         } catch (e) {
