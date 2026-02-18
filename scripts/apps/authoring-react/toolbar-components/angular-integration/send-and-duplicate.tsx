@@ -5,6 +5,7 @@ import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
 import {useInlineToolbarContext} from './inline-toolbar-context';
+import {appConfig} from 'appConfig';
 
 export const SendAndDuplicateComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => {
     const {exposed} = useInlineToolbarContext<IArticle>();
@@ -19,6 +20,8 @@ export const SendAndDuplicateComponent: React.ComponentType<{entity: IArticle}> 
                 exposed?.handleUnsavedChanges()
                     .then(() => {
                         const {deskId, stageId} = getSendAndDuplicateTarget();
+                        const preserveEmbargoAndSchedule = appConfig.features
+                            ?.customAuthoringTopbar?.sendAndDuplicate?.preserveEmbargoAndSchedule;
 
                         sdApi.article.duplicateItems(
                             [entity._id],
@@ -27,6 +30,7 @@ export const SendAndDuplicateComponent: React.ComponentType<{entity: IArticle}> 
                                 desk: deskId,
                                 stage: stageId,
                             },
+                            preserveEmbargoAndSchedule,
                         );
                     })
                     .catch(() => {
