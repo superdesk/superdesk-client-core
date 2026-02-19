@@ -17,6 +17,7 @@ interface IScope extends ng.IScope {
     metadata: any;
     save: any;
     close: any;
+    schemaLoading: boolean;
     getSelectedImages(): Array<any>;
     saveHandler(images): Promise<void>;
     successHandler?(): void;
@@ -135,11 +136,14 @@ export function MultiImageEditController(
     });
 
     let schema = {};
+    $scope.schemaLoading = true;
 
     content.getType('picture').then((pictureSchema) => {
         schema = pictureSchema;
     }, (error) => {
         logger.warn('Failed to load picture schema', error);
+    }).finally(() => {
+        $scope.schemaLoading = false;
     });
 
     $scope.save = (close) => {
