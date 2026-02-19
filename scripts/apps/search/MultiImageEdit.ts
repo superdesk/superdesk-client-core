@@ -136,6 +136,7 @@ export function MultiImageEditController(
     });
 
     let schema = {};
+
     $scope.schemaLoading = true;
 
     content.getType('picture').then((pictureSchema) => {
