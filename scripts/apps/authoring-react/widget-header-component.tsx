@@ -37,7 +37,11 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                         <ButtonGroup align="end" spaces="no-space" className="side-panel__btn-group">
                             {iconButtons != null && iconButtons}
                             {!pinned && (
-                                <IconButton icon="close-small" ariaValue="Close" onClick={() => this.props.closeWidget()} />
+                                <IconButton
+                                    icon="close-small"
+                                    ariaValue="Close"
+                                    onClick={() => this.props.closeWidget()}
+                                />
                             )}
                         </ButtonGroup>
                     </div>

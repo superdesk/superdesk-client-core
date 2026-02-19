@@ -272,7 +272,7 @@ export class PublishAction extends React.PureComponent<IProps, IState> {
         );
 
         const footer = (
-            <ButtonGroup align='center' spaces='loose'>
+            <ButtonGroup align="center" spaces="loose">
                 {canPreview && (
                     <Button
                         text={gettext('Preview')}
