@@ -707,6 +707,8 @@ export function AuthoringDirective(
                     }
 
                     const {deskId, stageId} = getSendAndDuplicateTarget();
+                    const preserveEmbargoAndSchedule = appConfig.features
+                        ?.customAuthoringTopbar?.sendAndDuplicate?.preserveEmbargoAndSchedule;
 
                     sdApi.article.duplicateItems(
                         [$scope.item._id],
@@ -715,6 +717,7 @@ export function AuthoringDirective(
                             desk: deskId,
                             stage: stageId,
                         },
+                        preserveEmbargoAndSchedule,
                     ).then(() => {
                         openArticle($scope.item._id, 'edit');
                     });
