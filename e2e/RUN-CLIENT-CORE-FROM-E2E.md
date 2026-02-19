@@ -10,7 +10,6 @@ server: {
     "ws": "ws://sd-develop.test.superdesk.org:5150/ws"
 },
 ```
-
 You can also use any other backend from the instances on https://test.superdesk.org/
 
 5. Open e2e/client/index.js
