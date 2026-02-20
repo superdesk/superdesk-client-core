@@ -36,6 +36,7 @@ import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateChar
 import {Spacer} from 'core/ui/components/Spacer';
 import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 import {findParentScope} from 'core/find-parent-scope';
+import {classnames} from '@sourcefabric/common';
 
 /**
  * @ngdoc directive
@@ -351,17 +352,12 @@ class Editor3Directive {
 
                         ReactDOM.unmountComponentAtNode(element);
 
-                        const textStatistics = (
+                        const textStatistics = this.limit != null ? (
                             <Spacer h gap="8" alignItems="center" noWrap noGrow>
                                 <TextStatisticsConnected />
-
-                                {
-                                    this.limit != null && (
-                                        <CharacterCountConfigButton field={this.fieldId} />
-                                    )
-                                }
+                                <CharacterCountConfigButton field={this.fieldId} />
                             </Spacer>
-                        );
+                        ) : null;
 
                         const validationErrors = (() => {
                             if (this.validationError != null) {
@@ -427,27 +423,19 @@ class Editor3Directive {
                         };
 
                         const getTemplateForHeader = () => {
-                            return (
-                                <div style={{display: 'flex'}} className="sd-input-style">
-                                    <div className="authoring-header__item-label">
-                                        {fieldName}
-                                        {this.required && (
-                                            <span>
-                                                &nbsp;
-                                                <span
-                                                    aria-label={gettext('required')}
-                                                    style={{color: 'red', fontSize: 12}}
-                                                >
-                                                    *
-                                                </span>
-                                            </span>
-                                        )}
-                                    </div>
+                            const itemClasses = classnames(
+                                'authoring-header__item',
+                                {'sd-validate': this.required},
+                            );
 
-                                    <div style={{flexGrow: 1}}>
-                                        <div>
-                                            {editor3}
-                                        </div>
+                            return (
+                                <div className={itemClasses}>
+                                    <label className="authoring-header__item-label">
+                                        {fieldName}
+                                    </label>
+
+                                    <div className="authoring-header__input-holder sd-input-style">
+                                        {editor3}
 
                                         <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
                                             {
