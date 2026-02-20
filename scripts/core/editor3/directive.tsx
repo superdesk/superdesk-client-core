@@ -355,12 +355,7 @@ class Editor3Directive {
                         const textStatistics = this.limit != null ? (
                             <Spacer h gap="8" alignItems="center" noWrap noGrow>
                                 <TextStatisticsConnected />
-
-                                {
-                                    this.limit != null && (
-                                        <CharacterCountConfigButton field={this.fieldId} />
-                                    )
-                                }
+                                <CharacterCountConfigButton field={this.fieldId} />
                             </Spacer>
                         ) : null;
 
