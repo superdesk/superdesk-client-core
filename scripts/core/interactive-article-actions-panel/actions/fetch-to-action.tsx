@@ -1,6 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {getInitialDestination} from '../utils/get-initial-destination';
@@ -9,7 +9,6 @@ import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
 import {noop} from 'lodash';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ToggleBox} from 'superdesk-ui-framework/react';
 
 export interface IFetchToConfig {
     items: Array<IArticle>;

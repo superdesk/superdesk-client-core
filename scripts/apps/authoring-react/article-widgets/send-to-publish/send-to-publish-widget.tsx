@@ -83,6 +83,37 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
         this.props.onItemChange?.(item);
     }
 
+    renderWithLayout(
+        body: JSX.Element,
+        footer: JSX.Element,
+        tabs: Array<IArticleActionInteractive>,
+        activeTab: IArticleActionInteractive,
+    ) {
+        return (
+            <AuthoringWidgetLayout
+                header={(
+                    <AuthoringWidgetHeading
+                        widgetId={INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID}
+                        widgetName={getLabel()}
+                        editMode={false}
+                        customContent={(
+                            <ActionTabs
+                                tabs={tabs}
+                                activeTab={activeTab}
+                                onChange={(tab) => {
+                                    this.setState({activeTab: tab});
+                                }}
+                            />
+                        )}
+                    />
+                )}
+                body={body}
+                footer={footer}
+                bodyPadding="small"
+            />
+        );
+    }
+
     renderActiveTabContent(): {body: JSX.Element; footer: JSX.Element} {
         const {activeTab} = this.state;
 
@@ -129,30 +160,6 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
         const handleUnsavedChangesArray = (items: Array<IArticle>) =>
             handleUnsavedChanges().then((res) => [res]);
 
-        const renderWithLayout = (body: JSX.Element, footer: JSX.Element) => (
-            <AuthoringWidgetLayout
-                header={(
-                    <AuthoringWidgetHeading
-                        widgetId={INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID}
-                        widgetName={getLabel()}
-                        editMode={false}
-                        customContent={(
-                            <ActionTabs
-                                tabs={tabs}
-                                activeTab={activeTab}
-                                onChange={(tab) => {
-                                    this.setState({activeTab: tab});
-                                }}
-                            />
-                        )}
-                    />
-                )}
-                body={body}
-                footer={footer}
-                bodyPadding="small"
-            />
-        );
-
         if (activeTab === 'send_to') {
             return (
                 <SendToAction
@@ -162,14 +169,16 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                 >
                     {({body, footer, noDestinationsAvailable}) => {
                         if (noDestinationsAvailable) {
-                            return renderWithLayout(
+                            return this.renderWithLayout(
                                 <Text size="medium" align="center" weight="medium">
                                     {gettext('No destinations are available.')}
                                 </Text>,
                                 null,
+                                tabs,
+                                activeTab,
                             );
                         }
-                        return renderWithLayout(body, footer);
+                        return this.renderWithLayout(body, footer, tabs, activeTab);
                     }}
                 </SendToAction>
             );
@@ -184,9 +193,9 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                 >
                     {({body, footer, loading}) => {
                         if (loading) {
-                            return renderWithLayout(null, null);
+                            return this.renderWithLayout(null, null, tabs, activeTab);
                         }
-                        return renderWithLayout(body, footer);
+                        return this.renderWithLayout(body, footer, tabs, activeTab);
                     }}
                 </PublishAction>
             );
@@ -198,7 +207,7 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     handleUnsavedChanges={handleUnsavedChanges}
                     onDataChange={this.handleDataChange}
                 >
-                    {({body, footer}) => renderWithLayout(body, footer)}
+                    {({body, footer}) => this.renderWithLayout(body, footer, tabs, activeTab)}
                 </SendCorrectionAction>
             );
         } else if (activeTab === 'duplicate_to') {
@@ -207,7 +216,7 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     items={[article]}
                     closeDuplicateToView={this.handleClose}
                 >
-                    {({body, footer}) => renderWithLayout(body, footer)}
+                    {({body, footer}) => this.renderWithLayout(body, footer, tabs, activeTab)}
                 </DuplicateToAction>
             );
         } else if (activeTab === 'unspike') {
@@ -216,7 +225,7 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     items={[article]}
                     closeUnspikeView={this.handleClose}
                 >
-                    {({body, footer}) => renderWithLayout(body, footer)}
+                    {({body, footer}) => this.renderWithLayout(body, footer, tabs, activeTab)}
                 </UnspikeAction>
             );
         } else if (activeTab === 'fetch_to') {
@@ -226,7 +235,7 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     closeFetchToView={this.handleClose}
                     handleUnsavedChanges={handleUnsavedChangesArray}
                 >
-                    {({body, footer}) => renderWithLayout(body, footer)}
+                    {({body, footer}) => this.renderWithLayout(body, footer, tabs, activeTab)}
                 </FetchToAction>
             );
         } else {

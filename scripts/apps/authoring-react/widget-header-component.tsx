@@ -5,6 +5,31 @@ import {IconButton, Rotate, ButtonGroup} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
+    getIconButtons(): Array<JSX.Element> | undefined {
+        const {pinned, pinWidget} = this.props;
+        const sidebarPinnedId = widgetReactIntegration.getPinnedWidget();
+
+        if (widgetReactIntegration.disableWidgetPinning == null) {
+            return undefined;
+        }
+
+        if (sidebarPinnedId != null && sidebarPinnedId !== widgetReactIntegration.getActiveWidget()) {
+            return [];
+        }
+
+        return [
+            <Rotate degrees={pinned ? 90 : 0} key="noop">
+                <IconButton
+                    icon="pin"
+                    ariaValue={gettext('Pin')}
+                    onClick={() => {
+                        pinWidget();
+                    }}
+                />
+            </Rotate>,
+        ];
+    }
+
     render() {
         const {
             pinned,
@@ -14,19 +39,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
         const sidebarPinnedId = widgetReactIntegration.getPinnedWidget();
 
         if (customContent != null) {
-            const iconButtons = widgetReactIntegration.disableWidgetPinning == null
-                ? undefined
-                : sidebarPinnedId != null && (sidebarPinnedId !== widgetReactIntegration.getActiveWidget()) ? [] : [
-                    <Rotate degrees={pinned ? 90 : 0} key="noop">
-                        <IconButton
-                            icon="pin"
-                            ariaValue={gettext('Pin')}
-                            onClick={() => {
-                                pinWidget();
-                            }}
-                        />
-                    </Rotate>,
-                ];
+            const iconButtons = this.getIconButtons();
 
             return (
                 <div className="side-panel__header side-panel__header--border-b side-panel__header--has-close">
@@ -60,20 +73,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
             <Layout.PanelHeader
                 title={this.props.widgetName}
                 onClose={pinned ? undefined : () => this.props.closeWidget()}
-                iconButtons={widgetReactIntegration.disableWidgetPinning == null
-                    ? undefined
-                    : sidebarPinnedId != null && (sidebarPinnedId !== widgetReactIntegration.getActiveWidget()) ? [] : [
-                        <Rotate degrees={pinned ? 90 : 0} key="noop">
-                            <IconButton
-                                icon="pin"
-                                ariaValue={gettext('Pin')}
-                                onClick={() => {
-                                    pinWidget();
-                                }}
-                            />
-                        </Rotate>,
-                    ]
-                }
+                iconButtons={this.getIconButtons()}
             >
                 {
                     this.props.editMode && (

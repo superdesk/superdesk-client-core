@@ -68,7 +68,7 @@ export class PublishAction extends React.PureComponent<IProps, IState> {
             publishingTarget: {
                 target_subscribers: this.props.item.target_subscribers ?? [],
                 target_regions: this.props.item.target_regions ?? [],
-                target_types: this.props.item.target_regions ?? [],
+                target_types: this.props.item.target_types ?? [],
             },
             subscribers: null,
         };
