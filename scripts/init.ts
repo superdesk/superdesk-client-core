@@ -47,6 +47,28 @@ fetchSync(
         // apply config from server
         merge(_appConfig, res.config);
 
+        // Normalize and sync week start with startingDay taking precedence.
+        const normalizeWeekStart = (value: string | number | null | undefined): number | null => {
+            if (value == null) {
+                return null;
+            }
+
+            const normalized = typeof value === 'string' ? parseInt(value, 10) : value;
+
+            if (Number.isNaN(normalized) || normalized < 0 || normalized > 6) {
+                return null;
+            }
+
+            return normalized;
+        };
+
+        const normalizedStartingDay = normalizeWeekStart(_appConfig.startingDay);
+        const normalizedStartOfWeek = normalizeWeekStart(_appConfig.start_of_week);
+        const weekStart = normalizedStartingDay ?? normalizedStartOfWeek ?? 0;
+
+        _appConfig.startingDay = weekStart;
+        _appConfig.start_of_week = weekStart;
+
         // allow e2e tests to overwrite appConfig via local storage
         merge(_appConfig, merge(_appConfig, JSON.parse(localStorage.getItem('TEST_APP_CONFIG') ?? '{}')));
 
@@ -96,4 +118,3 @@ if (language === 'en') {
         applyTranslations(translations);
     });
 }
-

@@ -23,6 +23,8 @@ import {
     IDesk,
     IStage,
     onPublishMiddlewareResult,
+    IPublishQueueItem,
+    IRestApiResponse,
 } from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
@@ -528,6 +530,35 @@ function rewrite(item: IArticle): void {
     return ng.get('authoring').rewrite(item);
 }
 
+function getPublishQueueEntriesForItem(
+    itemId: IArticle['_id'],
+    version: IArticle['version'],
+    useLegalArchive: boolean = false,
+    maxResults: number = 200,
+): Promise<Array<IPublishQueueItem>> {
+    return httpRequestJsonLocal<IRestApiResponse<IPublishQueueItem>>({
+        method: 'GET',
+        path: useLegalArchive ? '/legal_publish_queue' : '/publish_queue',
+        urlParams: {
+            max_results: maxResults,
+            where: {
+                $and: [
+                    {item_id: itemId},
+                    {item_version: version},
+                ],
+            },
+        },
+    }).then((result) => {
+        for (const entry of result._items) {
+            if (entry.completed_at == null) {
+                entry.completed_at = entry._updated;
+            }
+        }
+
+        return result._items;
+    });
+}
+
 interface IArticleApi {
     translate(item: IArticle, language: string): Promise<IArticle>;
     get(id: IArticle['_id']): Promise<IArticle>;
@@ -579,7 +610,11 @@ interface IArticleApi {
 
     sendItemToNextStage(item: IArticle): Promise<void>;
 
-    duplicateItems(items: Array<IArticle['_id']>, destination: ISendToDestination): Promise<Array<IArticle>>;
+    duplicateItems(
+        items: Array<IArticle['_id']>,
+        destination: ISendToDestination,
+        preserveEmbargoAndSchedule?: boolean,
+    ): Promise<Array<IArticle>>;
 
     canPublish(item: IArticle): boolean;
 
@@ -621,6 +656,22 @@ interface IArticleApi {
         // won't need to pass onError
         onError?: (error: IPublishingError) => void,
     ): Promise<boolean | IArticle>;
+
+    /**
+     * Retrieves a list of publish queue entries for a specific item, filtered by item ID and version.
+     *
+     * @param {IArticle['_id']} itemId - The unique identifier of the article.
+     * @param {IArticle['version']} version - The version of the article.
+     * @param {boolean} [useLegalArchive=false] - Indicates whether to retrieve entries from the legal publish queue.
+     * @param {number} [maxResults=200] - The maximum number of entries to retrieve.
+     * @return {Promise<Array<IPublishQueueItem>>} A promise that resolves to an array of publish queue items.
+     */
+    getPublishQueueEntriesForItem(
+        itemId: IArticle['_id'],
+        version: IArticle['version'],
+        useLegalArchive?: boolean,
+        maxResults?: number,
+    ): Promise<Array<IPublishQueueItem>>;
 }
 
 export const article: IArticleApi = {
@@ -662,4 +713,5 @@ export const article: IArticleApi = {
     edit,
     deschedule,
     getItemPatchWithKillOrTakedownTemplate,
+    getPublishQueueEntriesForItem,
 };

@@ -5,7 +5,7 @@ import {appConfig} from 'appConfig';
 export function getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings {
     function getLocale() {
         return {
-            firstDayOfWeek: appConfig.startingDay,
+            firstDayOfWeek: Number(appConfig.startingDay),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
             dayNamesMin: moment.weekdaysMin(),
