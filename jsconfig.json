@@ -16,6 +16,7 @@
     "exclude": [
         "node_modules",
         "bower_components",
-        "po"
+        "po",
+        "dist"
     ]
 }

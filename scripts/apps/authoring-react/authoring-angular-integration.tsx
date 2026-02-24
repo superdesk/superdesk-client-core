@@ -498,58 +498,7 @@ function getInlineToolbarActions(
     }
 }
 
-function getPublishToolbarWidget(
-    panelState: IStateInteractiveActionsPanelHOC,
-    panelActions: IActionsInteractiveActionsPanelHOC,
-): ITopBarWidget<IArticle> {
-    const publishWidgetButton: ITopBarWidget<IArticle> = {
-        priority: 99,
-        availableOffline: false,
-        group: 'end',
-        // eslint-disable-next-line react/display-name
-        component: (props: {entity: IArticle}) => (
-            <ButtonGroup align="end">
-                <ButtonGroup subgroup={true} spaces="no-space">
-                    <NavButton
-                        type="highlight"
-                        icon="send-to"
-                        iconSize="big"
-                        text={gettext('Send to / Publish')}
-                        onClick={() => {
-                            if (panelState.active) {
-                                panelActions.closePanel();
-                            } else {
-                                const availableTabs: Array<IArticleActionInteractive> = [
-                                    'send_to',
-                                ];
-
-                                const canPublish =
-                                    sdApi.article.canPublish(props.entity);
-
-                                if (canPublish) {
-                                    availableTabs.push('publish');
-                                }
-
-                                dispatchInternalEvent('interactiveArticleActionStart', {
-                                    items: [props.entity],
-                                    tabs: availableTabs,
-                                    activeTab: canPublish ? 'publish' : availableTabs[0],
-                                });
-                            }
-                        }}
-                    />
-                </ButtonGroup>
-            </ButtonGroup>
-        ),
-    };
-
-    return publishWidgetButton;
-}
-
-export function getAuthoringPrimaryToolbarWidgets(
-    panelState: IStateInteractiveActionsPanelHOC,
-    panelActions: IActionsInteractiveActionsPanelHOC,
-) {
+export function getAuthoringPrimaryToolbarWidgets() {
     return Object.values(extensions)
         .flatMap(({activationResult}) =>
             activationResult?.contributions?.authoringTopbarWidgets ?? [],
@@ -563,8 +512,7 @@ export function getAuthoringPrimaryToolbarWidgets(
                     <Component entity={props.entity} />
                 ),
             };
-        })
-        .concat([getPublishToolbarWidget(panelState, panelActions)]);
+        });
 }
 
 export interface IProps {

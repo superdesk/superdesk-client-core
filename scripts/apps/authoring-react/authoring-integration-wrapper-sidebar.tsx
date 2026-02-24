@@ -43,6 +43,7 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
                         tooltip: widget.label,
                         id: widget._id,
                         badgeValue: badge,
+                        type: widget.buttonType,
                     };
 
                     return tab;
@@ -76,6 +77,7 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
                         });
                     }
                 }}
+
                 items={this.state.sidebarTabs}
             />
         );
