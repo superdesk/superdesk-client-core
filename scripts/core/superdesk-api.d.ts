@@ -1765,7 +1765,7 @@ declare module 'superdesk-api' {
             editor3?: boolean; // only for body_html
             required?: boolean;
             readonly?: boolean;
-            sdWidth?: 'full' | 'half' | 'quarter';
+            sdWidth?: 'full' | 'half' | 'third' | 'quarter';
             minlength?: number;
             maxlength?: number;
             hideDate?: boolean;
