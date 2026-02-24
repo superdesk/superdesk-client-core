@@ -10,6 +10,7 @@ import ng from 'core/services/ng';
 export function duplicateItems(
     itemIds: Array<IArticle['_id']>,
     destination: ISendToDestination,
+    preserveEmbargoAndSchedule?: boolean,
 ): Promise<Array<IArticle>> {
     return Promise.all(
         itemIds.map((id) => {
@@ -24,6 +25,7 @@ export function duplicateItems(
                         type: 'archive',
                         desk: destination.desk,
                         stage: destination.stage,
+                        preserve_embargo_and_schedule: preserveEmbargoAndSchedule,
                     };
                 } else {
                     assertNever(destination);

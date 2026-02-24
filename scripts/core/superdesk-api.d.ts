@@ -3707,6 +3707,7 @@ declare module 'superdesk-api' {
                 sendAndDuplicate?: {
                     deskName: string;
                     stageName: string;
+                    preserveEmbargoAndSchedule?: boolean;
                 };
             },
             showPublishSchedule?: boolean
