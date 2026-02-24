@@ -121,7 +121,7 @@ export function getArticleContentProfile<T>(
                 } else if (width === 'half') {
                     return 50;
                 } else if (width === 'third') {
-                    return 33;
+                    return 100 / 3;
                 } else if (width === 'quarter') {
                     return 25;
                 } else {
