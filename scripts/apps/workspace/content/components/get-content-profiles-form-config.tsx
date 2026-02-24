@@ -128,6 +128,7 @@ export function getContentProfileFormConfig(
             options: [
                 {id: 'full', label: gettext('Full')},
                 {id: 'half', label: gettext('Half')},
+                {id: 'third', label: gettext('Third')},
                 {id: 'quarter', label: gettext('Quarter')},
             ],
             style: {boxed: true},

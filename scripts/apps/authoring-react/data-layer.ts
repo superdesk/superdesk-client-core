@@ -120,6 +120,8 @@ export function getArticleContentProfile<T>(
                     return 100;
                 } else if (width === 'half') {
                     return 50;
+                } else if (width === 'third') {
+                    return 33;
                 } else if (width === 'quarter') {
                     return 25;
                 } else {
