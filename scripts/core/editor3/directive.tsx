@@ -362,10 +362,10 @@ class Editor3Directive {
                         ReactDOM.unmountComponentAtNode(element);
 
                         const textStatistics = this.limit != null ? (
-                            <Spacer h gap="8" alignItems="center" noWrap noGrow>
+                            <div className="d-flex justify-end items-center gap-0-5 ms-auto">
                                 <TextStatisticsConnected />
                                 <CharacterCountConfigButton field={this.fieldId} />
-                            </Spacer>
+                            </div>
                         ) : null;
 
                         const validationErrors = (() => {
@@ -446,18 +446,17 @@ class Editor3Directive {
                                     <div className="authoring-header__input-holder sd-input-style">
                                         {editor3}
 
-                                        <Spacer h gap="32" justifyContent="space-between" alignItems="center" noWrap>
+                                        <div className="authoring-header__input-helper-content">
                                             {
                                                 validationErrors ?? (
                                                     <span
                                                         className="authoring-header__hint"
-                                                        style={{margin: 0}}
                                                     >
                                                         {this.helperText}
                                                     </span>
                                                 )}
                                             {textStatistics}
-                                        </Spacer>
+                                        </div>
                                     </div>
                                 </div>
                             );

@@ -716,22 +716,53 @@ $authoring-toolbar-spacing: 10px;
 }
 
 .char-count-config-button {
-    float: inline-end;
+    --size: 20px;
+    --icon-size: 14px;
+    display: inline-flex;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--b-radius--full);
     [class^="icon-"], [class*=" icon-"] {
+        --icon-base-size: var(--icon-size);
         color: inherit;
+
     }
 }
 
-.char-count-base {
-    font-size: 11px;
+.char-count__base {
+    font-size: 12px;
+    line-height: 1.1;
     font-style: italic;
     color: var(--sd-editor-colour__txt);
-    opacity: 0.6;
-
+    opacity: 0.74;
+    text-align: end;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     &.error {
         color: $red;
         opacity: 1;
     }
+}
+.char-count__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--gap-0-5);
+    row-gap: 0;
+}
+
+.authoring-header__input-helper-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--gap-1-5);
+    row-gap: 0;
 }
 
 .editor3-invalid-chars-error {
@@ -742,7 +773,7 @@ $authoring-toolbar-spacing: 10px;
 
 .authoring-header__item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-grow: 1;
     padding: 0 1rem 1.6rem;
     min-height: 40px;
@@ -766,10 +797,10 @@ $authoring-toolbar-spacing: 10px;
     }
 
     .char-count {
-        @extend .char-count-base;
-        float: inline-end;
+        @extend .char-count__base;
+        display: inline-flex;
         margin-block-end: -16px;
-        margin-inline-start: 5px;
+        margin-inline-start: var(--gap-0-5);
     }
 
     [sd-meta-terms] + .sd-invalid-text {
@@ -788,8 +819,9 @@ $authoring-toolbar-spacing: 10px;
 
 .authoring-header__item .authoring-header__hint {
     font-size: 12px;
-    color: #747474;
-    margin: 2px 0 -2px 0;
+    line-height: 1.1;
+    color: var(--color-text-muted);
+    margin: 2px 0 0 0;
     font-weight: 300;
 }
 
@@ -806,8 +838,12 @@ $authoring-toolbar-spacing: 10px;
     flex-shrink: 1;
     flex-grow: 1;
     overflow: hidden;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
     text-align: end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: var(--space--4);
 }
 
 .authoring-header__input-holder {

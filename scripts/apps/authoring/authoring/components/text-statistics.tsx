@@ -17,8 +17,8 @@ export class TextStatistics extends React.PureComponent<IProps> {
         const readingTime: string = getReadingTimeText(this.props.text, this.props.language);
 
         return (
-            <Spacer h gap="8" noWrap>
-                <span className="char-count-base">
+            <div className="char-count__wrapper">
+                <span className="char-count__base">
                     {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
                 </span>
 
@@ -28,8 +28,8 @@ export class TextStatistics extends React.PureComponent<IProps> {
                     item={this.props.text}
                 />
 
-                <span className="char-count-base">{readingTime}</span>
-            </Spacer>
+                <span className="char-count__base">{readingTime}</span>
+            </div>
         );
     }
 }
