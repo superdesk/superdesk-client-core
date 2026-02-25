@@ -1,7 +1,14 @@
 
-import {EditorState, ContentState, SelectionState, convertFromRaw} from 'draft-js';
+import {EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertFromRaw} from 'draft-js';
+import {List, OrderedSet} from 'immutable';
 import {cursorAtEndPosition, cursorAtPosition} from './utils';
-import {insertContentInState, createHtmlFromText} from '../handlePastedText';
+import {
+    insertContentInState,
+    createHtmlFromText,
+    pasteContentFromOpenEditor,
+} from '../handlePastedText';
+import {EDITOR_COPY_METADATA, EDITOR_GLOBAL_REFS} from '../Editor3Component';
+import {hashString} from 'core/editor3/helpers/hashString';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
@@ -129,5 +136,100 @@ describe('editor3.handlePastedText', () => {
         const tableData = entity.getData().data;
         expect(tableData.numRows).toBe(6);
         expect(tableData.numCols).toBe(4);
+    });
+});
+
+describe('pasteContentFromOpenEditor', () => {
+    const destEditorKey = 'dest-editor';
+    const srcEditorKey = 'src-editor';
+    const text = 'pasted text';
+    let editorState: EditorState;
+    let onChangeCalled: boolean;
+    let onChange: (e: EditorState) => void;
+
+    beforeEach(() => {
+        editorState = EditorState.createWithContent(ContentState.createFromText(''));
+        onChangeCalled = false;
+        onChange = () => {
+            onChangeCalled = true;
+        };
+    });
+
+    afterEach(() => {
+        delete window[EDITOR_COPY_METADATA];
+        delete window[EDITOR_GLOBAL_REFS];
+    });
+
+    it('returns not-handled when there is no copy metadata', () => {
+        expect(pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, [])).toBe('not-handled');
+    });
+
+    it('returns not-handled when the content hash does not match', () => {
+        window[EDITOR_COPY_METADATA] = {editorKey: srcEditorKey, contentHash: hashString('something else')};
+
+        expect(pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, [])).toBe('not-handled');
+    });
+
+    it('returns not-handled when source and destination are the same editor', () => {
+        window[EDITOR_COPY_METADATA] = {editorKey: destEditorKey, contentHash: hashString(text)};
+
+        expect(pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, [])).toBe('not-handled');
+    });
+
+    it('returns not-handled when the source editor is not registered in this window', () => {
+        window[EDITOR_COPY_METADATA] = {editorKey: srcEditorKey, contentHash: hashString(text)};
+        window[EDITOR_GLOBAL_REFS] = {};
+
+        expect(pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, [])).toBe('not-handled');
+    });
+
+    it('returns not-handled when the source editor has no internal clipboard', () => {
+        window[EDITOR_COPY_METADATA] = {editorKey: srcEditorKey, contentHash: hashString(text)};
+        window[EDITOR_GLOBAL_REFS] = {[srcEditorKey]: {getClipboard: () => null}};
+
+        expect(pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, [])).toBe('not-handled');
+    });
+
+    it('returns handled and calls onChange when source is a valid same-window editor', () => {
+        const block = new ContentBlock({key: 'b1', text: 'clipboard content', type: 'unstyled'});
+        const mockEditor = {getClipboard: () => List([block])};
+
+        window[EDITOR_COPY_METADATA] = {editorKey: srcEditorKey, contentHash: hashString(text)};
+        window[EDITOR_GLOBAL_REFS] = {[srcEditorKey]: mockEditor};
+
+        const result = pasteContentFromOpenEditor(text, editorState, destEditorKey, onChange, []);
+
+        expect(result).toBe('handled');
+        expect(onChangeCalled).toBe(true);
+    });
+
+    it('preserves custom tag inline styles from the source editor internal clipboard', () => {
+        // Simulates same-window paste where the source editor has a custom tag style applied.
+        // The internal clipboard path must preserve these styles intact; an HTML round-trip
+        // would lose them because the CSS fingerprint is not in the inlineStyleRanges.
+        let resultEditorState: EditorState | null = null;
+        const styledChar = CharacterMetadata.create({style: OrderedSet(['EDITOR_TAG_PEOPLE'])});
+        const block = new ContentBlock({
+            key: 'b1',
+            text: 'tagged text',
+            type: 'unstyled',
+            characterList: List(Array(11).fill(styledChar)),
+        });
+        const mockEditor = {getClipboard: () => List([block])};
+
+        window[EDITOR_COPY_METADATA] = {editorKey: srcEditorKey, contentHash: hashString(text)};
+        window[EDITOR_GLOBAL_REFS] = {[srcEditorKey]: mockEditor};
+
+        pasteContentFromOpenEditor(
+            text, editorState, destEditorKey,
+            (s) => { resultEditorState = s; },
+            ['EDITOR_TAG_PEOPLE'],
+        );
+
+        const pastedBlock = resultEditorState.getCurrentContent().getBlocksAsArray()
+            .find((b) => b.getText() === 'tagged text');
+
+        expect(pastedBlock).toBeDefined();
+        expect(pastedBlock.getInlineStyleAt(0).has('EDITOR_TAG_PEOPLE')).toBe(true);
     });
 });

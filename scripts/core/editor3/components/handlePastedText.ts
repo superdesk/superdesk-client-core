@@ -25,9 +25,22 @@ function removeMediaFromHtml(htmlString): string {
 }
 
 /**
+ * Returns true when the current clipboard text was copied from an editor in this
+ * window. Checks both the content hash (guards against stale metadata from a
+ * previous copy) and that the source editor is still mounted in EDITOR_GLOBAL_REFS.
+ */
+export function isCopySourceInThisWindow(text: string): boolean {
+    const copyMetadata = window[EDITOR_COPY_METADATA];
+
+    return copyMetadata != null
+        && copyMetadata.contentHash === hashString(text)
+        && window[EDITOR_GLOBAL_REFS]?.[copyMetadata.editorKey] != null;
+}
+
+/**
  * Handles paste when the source is another Editor3 instance in the same window.
  *
- * Uses the window-scoped EDITOR_COPY_SOURCE variable set by Editor3Component's
+ * Uses the window-scoped EDITOR_COPY_METADATA variable set by Editor3Component's
  * native copy listener to identify the source editor. The content hash is checked
  * first to ensure the clipboard was not replaced after the copy event fired.
  *
@@ -38,7 +51,7 @@ function removeMediaFromHtml(htmlString): string {
  * Returns 'not-handled' for cross-window pastes (source editor not in this
  * window's EDITOR_GLOBAL_REFS).
  */
-function pasteContentFromOpenEditor(
+export function pasteContentFromOpenEditor(
     text: string,
     editorState: EditorState,
     editorKey: string,
@@ -140,15 +153,8 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
     // use its internal clipboard, preserving all inline styles. For cross-window paste
     // we fall through to processPastedHtml. EDITOR_COPY_METADATA is used instead of
     // html.includes(editorKey) because Chrome omits data-editor from clipboard HTML.
-    if (htmlComesFromDraftjsEditor(html, false)) {
-        const copyMetadata = window[EDITOR_COPY_METADATA];
-        const isSourceInThisWindow = copyMetadata != null
-            && copyMetadata.contentHash === hashString(text)
-            && window[EDITOR_GLOBAL_REFS]?.[copyMetadata.editorKey] != null;
-
-        if (isSourceInThisWindow) {
-            return 'not-handled';
-        }
+    if (htmlComesFromDraftjsEditor(html, false) && isCopySourceInThisWindow(text)) {
+        return 'not-handled';
     }
 
     return processPastedHtml(html || text, editorState, onChange, editorFormat);

@@ -89,7 +89,7 @@ function getCssToEditorStyleMap(): Map<string, Map<string, string>> {
  * Marker positions are returned in original-text coordinates, sorted end-to-start
  * so they can be safely deleted without shifting earlier indices.
  */
-function extractCustomTagRanges(text: string): {
+export function extractCustomTagRanges(text: string): {
     styles: Array<IStyleRange>;
     markerRanges: Array<ITextRange>;
 } {
@@ -155,14 +155,16 @@ class HTMLParser {
     media: any;
     associations: any;
     tree: any;
+    private cssTagStyleMap: Map<string, Map<string, string>>;
 
-    constructor(html, associations = {}) {
+    constructor(html, associations = {}, cssTagStyleMap?: Map<string, Map<string, string>>) {
         this.iframes = {};
         this.scripts = {};
         this.figures = {};
         this.tables = {};
         this.media = {};
         this.associations = associations;
+        this.cssTagStyleMap = cssTagStyleMap ?? getCssToEditorStyleMap();
 
         this.tree = $('<div></div>');
 
@@ -174,16 +176,14 @@ class HTMLParser {
      * and normalises them to the custom-editor-tag-id attribute format.
      */
     private normalizeCssTagSpans() {
-        const cssMap = getCssToEditorStyleMap();
-
-        if (cssMap.size === 0) {
+        if (this.cssTagStyleMap.size === 0) {
             return;
         }
 
         this.tree.find('span[style]').each((_, node) => {
             const el = node as HTMLElement;
 
-            for (const [propName, valueMap] of cssMap) {
+            for (const [propName, valueMap] of this.cssTagStyleMap) {
                 const value = el.style[propName]?.toLowerCase().trim();
 
                 if (value && valueMap.has(value)) {
@@ -589,11 +589,15 @@ class HTMLParser {
     }
 }
 
-export function getContentStateFromHtml(html: string, associations: object = {}): ContentState {
+export function getContentStateFromHtml(
+    html: string,
+    associations: object = {},
+    cssTagStyleMap?: Map<string, Map<string, string>>,
+): ContentState {
     if (html.length < 1) {
         return ContentState.createFromText('');
     } else {
-        return new HTMLParser(html, associations).contentState();
+        return new HTMLParser(html, associations, cssTagStyleMap).contentState();
     }
 }
 

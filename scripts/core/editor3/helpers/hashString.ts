@@ -1,4 +1,4 @@
-/** Fast non-cryptographic djb2-style hash. Collisions are acceptable. */
+/** Fast non-cryptographic string hash. Collisions are acceptable. */
 export function hashString(str: string): number {
     let hash = 0;
 

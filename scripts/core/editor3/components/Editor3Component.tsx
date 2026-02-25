@@ -658,7 +658,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
      * can determine whether the paste originates from an editor in this window.
      *
      * We cannot rely on the editor key embedded in clipboard HTML because Chrome and Safari
-     * omits the `data-editor` attribute from copied HTML (Firefox keeps it). Instead
+     * omit the `data-editor` attribute from copied HTML (Firefox keeps it). Instead
      * we store a hash of the copied plain text alongside the editor key. On paste,
      * handlePastedText recomputes the hash from the text it receives and compares:
      * a match means the clipboard was not replaced by an external application after

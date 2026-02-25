@@ -9,10 +9,11 @@ import {CUSTOM_EDITOR_TAG_ATTR} from '../../components/customStyleMap';
 export const editor3StateToHtml = (
     contentState: ContentState,
     disabled: Array<string> = [], // A set of disabled elements (ie. ['table'] will ignore
+    tagStylesOverride?: Set<string>,
 ): string => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
         .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
-    const tagStyles = new Set(customEditorTags.map(({editor3Style}) => editor3Style));
+    const tagStyles = tagStylesOverride ?? new Set(customEditorTags.map(({editor3Style}) => editor3Style));
 
     let options = {
         inlineStyles: {
