@@ -4,6 +4,7 @@ import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3Custom
 import {stateToHTML} from 'draft-js-export-html';
 import {trimStartExact, trimEndExact} from 'core/helpers/utils';
 import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {CUSTOM_EDITOR_TAG_ATTR} from '../../components/customStyleMap';
 
 export const editor3StateToHtml = (
     contentState: ContentState,
@@ -75,7 +76,7 @@ export const editor3StateToHtml = (
                 return {
                     element: 'span',
                     attributes: {
-                        'custom-editor-tag-id': styleValue,
+                        [CUSTOM_EDITOR_TAG_ATTR]: styleValue,
                     },
                 };
             }

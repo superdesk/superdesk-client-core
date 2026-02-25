@@ -12,11 +12,26 @@ const getUiFrameworkColor = (borderColor: typeof appConfig.authoring.customEdito
     }
 };
 
+export const CUSTOM_EDITOR_TAG_ATTR = 'custom-editor-tag-id';
+
+/**
+ * CSS fingerprint properties for custom editor tag styles.
+ * These are the properties used to identify custom tag styles in clipboard HTML
+ * when pasting across editors or windows. Excludes presentational-only properties
+ * like `display` that are too generic to serve as unique identifiers.
+ */
+export const customEditorTagStyleMap: Record<string, React.CSSProperties> = Object.fromEntries(
+    customEditorTags.map(({editor3Style, borderColor}) => [
+        editor3Style,
+        {borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
+    ]),
+);
+
 export const customStyleMap = {
     ...Object.fromEntries(
-        customEditorTags.map(({editor3Style, borderColor}) => [
-            editor3Style,
-            {display: 'inline-block', borderBlockEnd: `4px double ${getUiFrameworkColor(borderColor)}`},
+        Object.entries(customEditorTagStyleMap).map(([style, props]) => [
+            style,
+            {display: 'inline-block', ...props},
         ]),
     ),
 
