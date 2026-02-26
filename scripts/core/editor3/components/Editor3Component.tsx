@@ -50,6 +50,7 @@ import {gettext, isMacOS} from 'core/utils';
 import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
 import {IconButton, Spacer} from 'superdesk-ui-framework/react';
+import {hashString} from '../helpers/hashString';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -68,6 +69,7 @@ const VALID_MEDIA_TYPES = [
 ];
 
 export const EDITOR_GLOBAL_REFS = 'editor3-refs';
+export const EDITOR_COPY_METADATA = '__editor3-copy-metadata';
 const editor3AutocompleteClassName = 'editor3-autocomplete';
 
 /**
@@ -619,6 +621,12 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.removeListeners.push(
             addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
         );
+
+        // Native DOM listener is required here. Using DraftJS's `onCopy` prop would
+        // replace its internal copy handler, preventing it from storing the selected
+        // blocks in its internal clipboard. The native listener fires
+        // after DraftJS's handler, so both run.
+        this.div?.addEventListener('copy', this.storeCopyOrigin);
     }
 
     handleRefs(editor: IEditor3) {
@@ -636,12 +644,38 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentWillUnmount() {
         $(this.div).off();
 
+        this.div?.removeEventListener('copy', this.storeCopyOrigin);
+
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
 
         for (const fn of this.removeListeners) {
             fn();
         }
     }
+
+    /**
+     * Stores the origin of the copy event in a window variable so that `handlePastedText`
+     * can determine whether the paste originates from an editor in this window.
+     *
+     * We cannot rely on the editor key embedded in clipboard HTML because Chrome and Safari
+     * omit the `data-editor` attribute from copied HTML (Firefox keeps it). Instead
+     * we store a hash of the copied plain text alongside the editor key. On paste,
+     * handlePastedText recomputes the hash from the text it receives and compares:
+     * a match means the clipboard was not replaced by an external application after
+     * the copy, so the source editor's internal DraftJS clipboard is still valid.
+     */
+    private storeCopyOrigin = () => {
+        if (this.editorKey == null) {
+            return;
+        }
+
+        const text = window.getSelection()?.toString() || '';
+
+        window[EDITOR_COPY_METADATA] = {
+            editorKey: this.editorKey,
+            contentHash: hashString(text),
+        };
+    };
 
     componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {

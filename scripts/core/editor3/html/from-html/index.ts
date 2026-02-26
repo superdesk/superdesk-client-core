@@ -8,8 +8,125 @@ import {
     ContentState,
     convertFromHTML,
     convertToRaw,
+    Modifier,
+    SelectionState,
 } from 'draft-js';
 import {CustomEditor3Entity} from 'core/editor3/constants';
+import {customEditorTagStyleMap, CUSTOM_EDITOR_TAG_ATTR} from '../../components/customStyleMap';
+
+interface IStyleRange {
+    styleName: string;
+    start: number;
+    end: number;
+}
+
+interface ITextRange {
+    start: number;
+    end: number;
+}
+
+// Private Use Unicode characters used as markers during HTML→ContentState conversion.
+// These survive DraftJS's convertFromHTML as plain text, letting us track inline style ranges.
+const TAG_OPEN = '\uE000'; // precedes style name
+const TAG_SEP = '\uE001'; // separates style name from content
+const TAG_CLOSE = '\uE002'; // follows content
+const TAG_REGEX = new RegExp(`${TAG_OPEN}([^${TAG_SEP}]+)${TAG_SEP}([^${TAG_OPEN}]*)${TAG_CLOSE}`, 'g');
+
+/**
+ * Builds a reverse map from CSS property+value → editor3 style name.
+ *
+ * Keyed by property name (camelCase), then by value (lowercased). Two entries
+ * are added per value: the raw string from customEditorTagStyleMap (Firefox
+ * clipboard preserves CSS variables) and the browser-computed value resolved
+ * via a temporary DOM element (Chrome resolves CSS variables, e.g. lch(...)).
+ *
+ * Iterates all properties in customEditorTagStyleMap so adding a new custom tag
+ * style with a different fingerprint property is handled automatically.
+ */
+let cssToEditorStyleMap: Map<string, Map<string, string>> | null = null;
+
+function getCssToEditorStyleMap(): Map<string, Map<string, string>> {
+    if (cssToEditorStyleMap != null) {
+        return cssToEditorStyleMap;
+    }
+
+    const map = new Map<string, Map<string, string>>();
+    const probe = document.createElement('span');
+
+    document.body.appendChild(probe);
+
+    for (const [styleName, cssProps] of Object.entries(customEditorTagStyleMap)) {
+        for (const [propName, rawValue] of Object.entries(cssProps)) {
+            if (!map.has(propName)) {
+                map.set(propName, new Map());
+            }
+
+            const valueMap = map.get(propName);
+            const rawLower = (rawValue as string).toLowerCase();
+
+            valueMap.set(rawLower, styleName);
+            probe.style[propName] = rawValue;
+
+            const computed = getComputedStyle(probe)[propName]?.toLowerCase().trim();
+
+            if (computed && computed !== rawLower) {
+                valueMap.set(computed, styleName);
+            }
+
+            probe.style[propName] = '';
+        }
+    }
+
+    document.body.removeChild(probe);
+    cssToEditorStyleMap = map;
+
+    return map;
+}
+
+/**
+ * Parses a block's text containing TAG markers into clean text + style ranges.
+ * Ranges are returned in clean-text coordinates.
+ * Marker positions are returned in original-text coordinates, sorted end-to-start
+ * so they can be safely deleted without shifting earlier indices.
+ */
+export function extractCustomTagRanges(text: string): {
+    styles: Array<IStyleRange>;
+    markerRanges: Array<ITextRange>;
+} {
+    const styles: Array<IStyleRange> = [];
+    const markerRanges: Array<ITextRange> = [];
+
+    let cleanOffset = 0;
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    TAG_REGEX.lastIndex = 0;
+
+    while ((match = TAG_REGEX.exec(text)) !== null) {
+        const before = text.slice(lastIndex, match.index);
+
+        cleanOffset += before.length;
+
+        const styleName = match[1];
+        const content = match[2];
+        const start = cleanOffset;
+
+        cleanOffset += content.length;
+        styles.push({styleName, start, end: cleanOffset});
+
+        const openEnd = match.index + 1 + styleName.length + 1; // TAG_OPEN + name + TAG_SEP
+        const closeStart = match.index + match[0].length - 1;
+
+        markerRanges.push({start: match.index, end: openEnd});
+        markerRanges.push({start: closeStart, end: closeStart + 1});
+
+        lastIndex = match.index + match[0].length;
+    }
+
+    markerRanges.sort((a, b) => b.start - a.start);
+
+    return {styles, markerRanges};
+}
 
 /**
  * @ngdoc class
@@ -38,18 +155,106 @@ class HTMLParser {
     media: any;
     associations: any;
     tree: any;
+    private cssTagStyleMap: Map<string, Map<string, string>>;
 
-    constructor(html, associations = {}) {
+    constructor(html, associations = {}, cssTagStyleMap?: Map<string, Map<string, string>>) {
         this.iframes = {};
         this.scripts = {};
         this.figures = {};
         this.tables = {};
         this.media = {};
         this.associations = associations;
+        this.cssTagStyleMap = cssTagStyleMap ?? getCssToEditorStyleMap();
 
         this.tree = $('<div></div>');
 
         this.createTree(html);
+    }
+
+    /**
+     * Finds spans styled with custom editor tag CSS (from browser clipboard)
+     * and normalises them to the custom-editor-tag-id attribute format.
+     */
+    private normalizeCssTagSpans() {
+        if (this.cssTagStyleMap.size === 0) {
+            return;
+        }
+
+        this.tree.find('span[style]').each((_, node) => {
+            const el = node as HTMLElement;
+
+            for (const [propName, valueMap] of this.cssTagStyleMap) {
+                const value = el.style[propName]?.toLowerCase().trim();
+
+                if (value && valueMap.has(value)) {
+                    el.setAttribute(CUSTOM_EDITOR_TAG_ATTR, valueMap.get(value));
+                    el.removeAttribute('style');
+                    break;
+                }
+            }
+        });
+    }
+
+    /**
+     * Replaces <span custom-editor-tag-id="X">content</span> with PUA marker
+     * text nodes so the style information survives convertFromHTML.
+     */
+    private markCustomTagSpans() {
+        this.tree.find(`[${CUSTOM_EDITOR_TAG_ATTR}]`).each((_, node) => {
+            const $node = $(node);
+            const styleName = $node.attr(CUSTOM_EDITOR_TAG_ATTR);
+
+            $node.prepend(document.createTextNode(TAG_OPEN + styleName + TAG_SEP));
+            $node.append(document.createTextNode(TAG_CLOSE));
+            $node.contents().unwrap();
+        });
+    }
+
+    /**
+     * Post-processes the ContentState to remove PUA markers and apply the
+     * corresponding inline styles to the covered character ranges.
+     */
+    private applyCustomTagStyles(initialState: ContentState): ContentState {
+        let contentState = initialState;
+
+        for (const block of contentState.getBlocksAsArray()) {
+            const text = block.getText();
+
+            if (!text.includes(TAG_OPEN)) {
+                continue;
+            }
+
+            const blockKey = block.getKey();
+            const {styles, markerRanges} = extractCustomTagRanges(text);
+
+            for (const {start, end} of markerRanges) {
+                const sel = new SelectionState({
+                    anchorKey: blockKey,
+                    anchorOffset: start,
+                    focusKey: blockKey,
+                    focusOffset: end,
+                    isBackward: false,
+                    hasFocus: false,
+                });
+
+                contentState = Modifier.removeRange(contentState, sel, 'forward');
+            }
+
+            for (const {styleName, start, end} of styles) {
+                const sel = new SelectionState({
+                    anchorKey: blockKey,
+                    anchorOffset: start,
+                    focusKey: blockKey,
+                    focusOffset: end,
+                    isBackward: false,
+                    hasFocus: false,
+                });
+
+                contentState = Modifier.applyInlineStyle(contentState, sel, styleName);
+            }
+        }
+
+        return contentState;
     }
 
     /**
@@ -178,14 +383,15 @@ class HTMLParser {
      */
     contentState(): ContentState {
         const processBlock = this.processBlock.bind(this);
-        const html = this.tree.html();
 
-        if (html.trim() === '') {
-            // if html is empty then create an empty content state
+        if (this.tree.html().trim() === '') {
             return ContentState.createFromText('');
         }
 
-        const conversionResult = convertFromHTML(html);
+        this.normalizeCssTagSpans();
+        this.markCustomTagSpans();
+
+        const conversionResult = convertFromHTML(this.tree.html());
 
         let contentState = ContentState.createFromBlockArray(
             conversionResult.contentBlocks,
@@ -193,6 +399,7 @@ class HTMLParser {
         );
 
         contentState = this.processLinks(contentState);
+        contentState = this.applyCustomTagStyles(contentState);
 
         return ContentState.createFromBlockArray(
             contentState.getBlocksAsArray().map(processBlock),
@@ -382,11 +589,15 @@ class HTMLParser {
     }
 }
 
-export function getContentStateFromHtml(html: string, associations: object = {}): ContentState {
+export function getContentStateFromHtml(
+    html: string,
+    associations: object = {},
+    cssTagStyleMap?: Map<string, Map<string, string>>,
+): ContentState {
     if (html.length < 1) {
         return ContentState.createFromText('');
     } else {
-        return new HTMLParser(html, associations).contentState();
+        return new HTMLParser(html, associations, cssTagStyleMap).contentState();
     }
 }
 

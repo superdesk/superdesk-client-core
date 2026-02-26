@@ -8,8 +8,9 @@ import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
-import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
+import {EDITOR_GLOBAL_REFS, EDITOR_COPY_METADATA} from 'core/editor3/components/Editor3Component';
 import {escape as escapeHtml} from 'lodash';
+import {hashString} from '../helpers/hashString';
 
 function removeMediaFromHtml(htmlString): string {
     const element = document.createElement('div');
@@ -23,41 +24,77 @@ function removeMediaFromHtml(htmlString): string {
     return element.innerHTML;
 }
 
-function pasteContentFromOpenEditor(
-    html: string,
+/**
+ * Returns true when the current clipboard text was copied from an editor in this
+ * window. Checks both the content hash (guards against stale metadata from a
+ * previous copy) and that the source editor is still mounted in EDITOR_GLOBAL_REFS.
+ */
+export function isCopySourceInThisWindow(text: string): boolean {
+    const copyMetadata = window[EDITOR_COPY_METADATA];
+
+    return copyMetadata != null
+        && copyMetadata.contentHash === hashString(text)
+        && window[EDITOR_GLOBAL_REFS]?.[copyMetadata.editorKey] != null;
+}
+
+/**
+ * Handles paste when the source is another Editor3 instance in the same window.
+ *
+ * Uses the window-scoped EDITOR_COPY_METADATA variable set by Editor3Component's
+ * native copy listener to identify the source editor. The content hash is checked
+ * first to ensure the clipboard was not replaced after the copy event fired.
+ *
+ * When the source editor is confirmed, its DraftJS internal clipboard is used
+ * directly, which preserves all inline styles (custom tags, subscript, superscript,
+ * etc.) that would otherwise survive only partially through an HTML round-trip.
+ *
+ * Returns 'not-handled' for cross-window pastes (source editor not in this
+ * window's EDITOR_GLOBAL_REFS).
+ */
+export function pasteContentFromOpenEditor(
+    text: string,
     editorState: EditorState,
     editorKey: string,
     onChange: (e: EditorState) => void,
     editorFormat: Array<string>,
 ): DraftHandleValue {
-    if (html.includes(editorKey)) { // comes from the same editor
+    const copyMetadata = window[EDITOR_COPY_METADATA];
+
+    if (copyMetadata == null) {
         return 'not-handled';
     }
 
-    for (const key in window[EDITOR_GLOBAL_REFS]) {
-        if (html.includes(key)) {
-            const editor = window[EDITOR_GLOBAL_REFS][key];
+    const currentHash = hashString(text);
 
-            if (editor) {
-                const internalClipboard = editor.getClipboard();
-
-                if (internalClipboard) {
-                    const blocksArray = [];
-
-                    internalClipboard.forEach((b) => blocksArray.push(b));
-
-                    const contentState = ContentState.createFromBlockArray(blocksArray);
-                    const editorWithContent = insertContentInState(editorState, contentState, editorFormat);
-
-                    onChange(editorWithContent);
-
-                    return 'handled';
-                }
-            }
-        }
+    if (copyMetadata.contentHash !== currentHash) {
+        return 'not-handled';
     }
 
-    return 'not-handled';
+    const sourceEditorKey = copyMetadata.editorKey;
+
+    if (sourceEditorKey === editorKey) {
+        return 'not-handled';
+    }
+
+    const editor = window[EDITOR_GLOBAL_REFS]?.[sourceEditorKey];
+
+    if (editor == null) {
+        return 'not-handled';
+    }
+
+    const internalClipboard = editor.getClipboard();
+
+    if (internalClipboard == null) {
+        return 'not-handled';
+    }
+
+    const blocksArray = Array.from<ContentBlock>(internalClipboard);
+    const contentState = ContentState.createFromBlockArray(blocksArray);
+    const editorWithContent = insertContentInState(editorState, contentState, editorFormat);
+
+    onChange(editorWithContent);
+
+    return 'handled';
 }
 
 // preserve line breaks when pasting or forcing plain text
@@ -105,11 +142,15 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
     }
 
     if (html &&
-        pasteContentFromOpenEditor(html, editorState, this.editorKey, onChange, editorFormat) === 'handled') {
+        pasteContentFromOpenEditor(text, editorState, this.editorKey, onChange, editorFormat) === 'handled') {
         return 'handled';
     }
 
-    if (htmlComesFromDraftjsEditor(html, false)) {
+    // Defer to DraftJS only when the source editor is in this window so it can then
+    // use its internal clipboard, preserving all inline styles. For cross-window paste
+    // we fall through to processPastedHtml. EDITOR_COPY_METADATA is used instead of
+    // html.includes(editorKey) because Chrome omits data-editor from clipboard HTML.
+    if (htmlComesFromDraftjsEditor(html, false) && isCopySourceInThisWindow(text)) {
         return 'not-handled';
     }
 

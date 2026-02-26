@@ -9,6 +9,7 @@ import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
 import {getInitialContent} from 'core/editor3/store';
 import {editor3StateToHtml} from '../to-html/editor3StateToHtml';
 import {CustomEditor3Entity} from 'core/editor3/constants';
+import {CUSTOM_EDITOR_TAG_ATTR} from '../../components/customStyleMap';
 
 describe('core.editor3.html.to-html snapshots', () => {
     beforeEach(window.module('superdesk.apps.spellcheck'));
@@ -450,5 +451,47 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         expect(html).toBe('<table><tbody><tr><td></td><td></td><td></td></tr>' +
             '<tr><td></td><td></td><td></td></tr></tbody></table>');
+    });
+});
+
+describe('editor3StateToHtml custom tag styles', () => {
+    it('emits a span with custom-editor-tag-id attribute for custom tag inline styles', () => {
+        // Uses tagStylesOverride to bypass appConfig.authoring.customEditorTags
+        // which is unavailable in the test environment.
+        const rawState: any = {
+            blocks: [{
+                key: 'b1',
+                text: 'tagged plain',
+                type: 'unstyled',
+                depth: 0,
+                inlineStyleRanges: [{offset: 0, length: 6, style: 'EDITOR_TAG_PEOPLE'}],
+                entityRanges: [],
+                data: {},
+            }],
+            entityMap: {},
+        };
+        const contentState = convertFromRaw(rawState);
+        const html = editor3StateToHtml(contentState, [], new Set(['EDITOR_TAG_PEOPLE']));
+
+        expect(html).toBe(`<p><span ${CUSTOM_EDITOR_TAG_ATTR}="EDITOR_TAG_PEOPLE">tagged</span> plain</p>`);
+    });
+
+    it('does not emit custom-editor-tag-id when the style is not in tagStyles', () => {
+        const rawState: any = {
+            blocks: [{
+                key: 'b1',
+                text: 'hello',
+                type: 'unstyled',
+                depth: 0,
+                inlineStyleRanges: [{offset: 0, length: 5, style: 'EDITOR_TAG_PEOPLE'}],
+                entityRanges: [],
+                data: {},
+            }],
+            entityMap: {},
+        };
+        const contentState = convertFromRaw(rawState);
+        const html = editor3StateToHtml(contentState, [], new Set());
+
+        expect(html).not.toContain(CUSTOM_EDITOR_TAG_ATTR);
     });
 });
