@@ -88,10 +88,7 @@ export function pasteContentFromOpenEditor(
         return 'not-handled';
     }
 
-    const blocksArray = [];
-
-    internalClipboard.forEach((b) => blocksArray.push(b));
-
+    const blocksArray = Array.from<ContentBlock>(internalClipboard);
     const contentState = ContentState.createFromBlockArray(blocksArray);
     const editorWithContent = insertContentInState(editorState, contentState, editorFormat);
 
