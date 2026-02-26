@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
@@ -85,10 +84,20 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     window.open(apiUrl + '/login/' + service);
                 };
 
+                function getUrlOrigin(url) {
+                    try {
+                        return new URL(url).origin;
+                    } catch (error) {
+                        return url.replace('/api', '');
+                    }
+                }
+
                 const apiUrl = appConfig.server.url
                     .replace('api/', 'api'); // make sure there is no trailing /
+                const apiOrigin = getUrlOrigin(apiUrl);
+                const allowedMessageOrigins = [apiOrigin, window.location.origin];
                 const handleAuthMessage = (event) => {
-                    if (event.data?.type === 'oauth') {
+                    if (allowedMessageOrigins.includes(event.origin) && event.data?.type === 'oauth') {
                         const message = event.data;
 
                         if (message.data.token) {
