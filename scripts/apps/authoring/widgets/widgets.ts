@@ -330,17 +330,24 @@ function WidgetsManagerCtrl(
     };
 
     $scope.pinWidget = (widget: IWidget) => {
+        // Add fallback for both angular/react widgets
+        const widgetToPin = widget || $scope.active;
+
+        // Temporarily disable CSS transitions during pin/unpin to prevent sliding animations
+        // during remount for the react based widgets
+        angular.element('.widget-wrapper .tabpane').css('transition', 'none');
+
         if ($scope.pinnedWidget) {
             $scope.pinnedWidget.pinned = false;
         }
 
-        if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
+        if (!PINNED_WIDGET_RESIZED && widgetToPin && !$scope.pinnedWidget) {
             $rootScope.$broadcast('resize:monitoring', -SIDE_WIDGET_WIDTH);
 
             PINNED_WIDGET_RESIZED = true;
         }
 
-        if (!widget || $scope.pinnedWidget === widget) {
+        if (!widgetToPin || $scope.pinnedWidget === widgetToPin) {
             $rootScope.$broadcast('resize:monitoring', SIDE_WIDGET_WIDTH);
 
             angular.element('body').removeClass('main-section--pinned-tabs');
@@ -350,21 +357,28 @@ function WidgetsManagerCtrl(
 
             this.widgetFromPreferences = null;
 
-            if (widget) {
-                widget.pinned = false;
+            if (widgetToPin) {
+                widgetToPin.pinned = false;
             }
 
             this.updateUserPreferences();
         } else {
             angular.element('body').addClass('main-section--pinned-tabs');
-            $scope.pinnedWidget = widget;
-            $scope.active = widget;
-            widget.pinned = true;
+            $scope.pinnedWidget = widgetToPin;
+            $scope.active = widgetToPin;
+            widgetToPin.pinned = true;
 
-            this.updateUserPreferences(widget);
+            this.updateUserPreferences(widgetToPin);
         }
 
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
+
+        // Then remove the transition suppression after the DOM updates
+        const enableTransitions = () => {
+            angular.element('.widget-wrapper .tabpane').css('transition', '');
+        };
+
+        window.requestAnimationFrame(enableTransitions);
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
