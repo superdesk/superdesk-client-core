@@ -374,9 +374,10 @@ function WidgetsManagerCtrl(
         IS_WIDGET_PINNED = $scope.pinnedWidget?.pinned ?? false;
 
         // Then remove the transition suppression after the DOM updates
-        setTimeout(() => {
+        const enableTransitions = () => {
             angular.element('.widget-wrapper .tabpane').css('transition', '');
-        }, 50);
+        };
+        window.requestAnimationFrame(enableTransitions);
     };
 
     widgetReactIntegration.pinWidget = $scope.pinWidget;
