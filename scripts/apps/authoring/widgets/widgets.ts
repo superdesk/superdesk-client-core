@@ -377,6 +377,7 @@ function WidgetsManagerCtrl(
         const enableTransitions = () => {
             angular.element('.widget-wrapper .tabpane').css('transition', '');
         };
+
         window.requestAnimationFrame(enableTransitions);
     };
 
