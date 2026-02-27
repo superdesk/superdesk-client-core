@@ -4,14 +4,16 @@ import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3Custom
 import {stateToHTML} from 'draft-js-export-html';
 import {trimStartExact, trimEndExact} from 'core/helpers/utils';
 import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {CUSTOM_EDITOR_TAG_ATTR} from '../../components/customStyleMap';
 
 export const editor3StateToHtml = (
     contentState: ContentState,
     disabled: Array<string> = [], // A set of disabled elements (ie. ['table'] will ignore
+    tagStylesOverride?: Set<string>,
 ): string => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
         .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
-    const tagStyles = new Set(customEditorTags.map(({editor3Style}) => editor3Style));
+    const tagStyles = tagStylesOverride ?? new Set(customEditorTags.map(({editor3Style}) => editor3Style));
 
     let options = {
         inlineStyles: {
@@ -75,7 +77,7 @@ export const editor3StateToHtml = (
                 return {
                     element: 'span',
                     attributes: {
-                        'custom-editor-tag-id': styleValue,
+                        [CUSTOM_EDITOR_TAG_ATTR]: styleValue,
                     },
                 };
             }
