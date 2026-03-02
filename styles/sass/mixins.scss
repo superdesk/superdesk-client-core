@@ -378,7 +378,7 @@
 // Defines the width of the items in the authoring header based on the custom 'sd-width' attribute
 [sd-width="full"] {flex-basis: 100%}
 [sd-width="half"] {flex-basis: 50%}
-[sd-width="third"] {flex-basis: 33%}
+[sd-width="third"] {flex-basis: 33.333333%}
 [sd-width="quarter"] {flex-basis: 25%}
 
 // Transitions

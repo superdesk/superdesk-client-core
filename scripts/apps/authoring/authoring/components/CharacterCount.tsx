@@ -53,7 +53,7 @@ export function CharacterCount2(props: IProps) {
     const highlightLimit = limit && numChars > limit;
 
     return (
-        <span className={classNames('char-count-base', {error: highlightLimit})}>
+        <span className={classNames('char-count__base', {error: highlightLimit})}>
             {numChars}
             {limit && (
                 <span className={classNames({error: highlightLimit})}>
