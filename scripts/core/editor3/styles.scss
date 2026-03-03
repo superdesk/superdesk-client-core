@@ -43,6 +43,32 @@ $editor-styleButton-size: 			3rem;
 	}
 }
 
+.Editor3-root .floating-char-count {
+	padding: 0 var(--space-1-5);
+	border-block-start: 1px solid $editor-neutral-border;
+	border-block-end: 1px solid var(--sd-shadow-outline);
+	min-height: 0;
+	opacity: 0;
+	transition: all .2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	font-weight: 400;
+	position: absolute;
+	inset-block-end: 0;
+	inset-inline: 0;
+	transform: translateY(100%);
+	background-color: $editor-neutral-bg;
+	z-index: 1;
+	box-shadow: 0px 1px 2px lch(0% 0 0 / 0.4);
+
+	&.floating-char-count--active {
+		min-height: var(--space-4);
+		padding: var(--space-0-5) var(--space-1-5);
+		opacity: 1;
+	}
+}
+
 .Editor3-root {
 	border: 1px solid $editor-neutral-border;
 	font-weight: 300;
@@ -268,16 +294,20 @@ $editor-styleButton-size: 			3rem;
 			}
 		}
 
-		table td {
-			.public-DraftEditor-content {
-				margin: 0;
-				padding: 0;
+		table {
+			border-block-start: 1px solid var(--sd-editor-colour__controls-border);
+			border-block-end: 1px solid var(--sd-editor-colour__controls-border);
+			td {
+				.public-DraftEditor-content {
+					margin: 0;
+					padding: 0;
+				}
+	
+				position: relative;
+				border: 1px solid var(--sd-editor-colour__controls-border);
+				padding: var(--space--1);
+				min-width: var(--space--3);
 			}
-
-			position: relative;
-			border: 1px solid rgba(150,150,150,0.25);
-			padding: 5px;
-			min-width: 20px;
 		}
 	}
 
@@ -410,7 +440,9 @@ $editor-styleButton-size: 			3rem;
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	padding: 10px 15px 0 15px;
+	padding: var(--space--1-5) var(--space--2) 0 var(--space--2);
+	transition: padding 0.2s ease;
+	transform-origin: top center;
 	span[style*="super"] {
 		display: inline-block;
 		margin-block-start: -6px;

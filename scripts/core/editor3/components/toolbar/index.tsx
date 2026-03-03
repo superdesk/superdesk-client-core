@@ -8,6 +8,7 @@ import {IconButton} from './IconButton';
 import {ToolbarPopup} from './ToolbarPopup';
 import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
+import {FloatingCharacterCount} from './FloatingCharacterCount';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
@@ -107,7 +108,9 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             return defaultState;
         }
 
-        const isToolbarOut = editorRect.top < pageRect.top + 80;
+        // const isToolbarOut = editorRect.top < pageRect.top + 80;
+        const toolbarHeight = this.toolbarNode.current.clientHeight;
+        const isToolbarOut = editorRect.top < pageRect.top + toolbarHeight;
         const isBottomOut = editorRect.bottom < pageRect.top + 70;
 
         const isContentLarger = this.props.editorNode.current.clientHeight < this.toolbarNode.current.clientHeight;
@@ -137,7 +140,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     return;
                 }
 
-                draftjsContentEditable.focus();
+                (draftjsContentEditable as HTMLElement).focus();
 
                 if (scrollableElement != null) {
                     // prevent fousing from changing scroll position
@@ -465,6 +468,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
 
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar editorState={editorState} onEdit={showPopup(PopupTypes.Link)} />
+                <FloatingCharacterCount floating={floating} />
             </div>
         );
     }

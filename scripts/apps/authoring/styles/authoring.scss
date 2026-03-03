@@ -1881,3 +1881,9 @@ feature-image {
 .form-label--invalid {
     color: $errorText;
 }
+
+.Editor3-root:has(.floating-char-count--active) {
+    .public-DraftEditor-content {
+        padding-block-start: var(--space-4);
+    }
+}

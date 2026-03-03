@@ -110,15 +110,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="form__row sd-padding--0">
+                <div class="form__row p-0">
                     <div class="sd-line-input sd-line-input--boxed sd-line-input--required" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
                         <input type="text" name="label" class="sd-line-input__input" ng-model="new.label" required ng-maxlength="40"/>
                         <div class="sd-line-input__message" ng-show="createForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
                     </div>
                 </div>
-                <div class="form__row sd-padding--0">
-                    <div class="sd-line-input sd-line-input--boxed">
+                <div class="form__row p-0">
+                    <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                         <label class="sd-line-input__label" translate>Description</label>
                         <input type="text" name="description" class="sd-line-input__input" ng-model="new.description" />
                     </div>
@@ -134,26 +134,27 @@
 <!-- END Create profile modal -->
 <!-- Edit profile modal -->
 <div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()" data-test-id="'content-profile-editing-modal'">
-    <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex">        
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
+        <a href="" class="modal__close icn-btn" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body sd-padding--0 sd-padding-t--2" data-test-id="content-profile-edit-view">
         <form name="editForm">
             <fieldset ng-init="setNgForm(editForm)">
-                <div class="form__row form__row--flex sd-padding-x--2" style="align-items: start">
+                <div class="form__row form__row--flex px-2" style="align-items: start">
                     <div class="form__row-item sd-flex-no-grow">
                         <sd-icon-picker data-value="editing.form.icon" data-on-change="ctrl.onIconChange"></sd-icon-picker>
                     </div>
                     <div class="form__row-item">
-                        <div class="sd-line-input sd-line-input--boxed" style="padding-block-start: 16px;" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
+                        <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" style="padding-block-start: 16px;" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                             <label class="sd-line-input__label" translate>Label</label>
                             <input type="text" name="label" class="sd-line-input__input" ng-model="editing.form.label" required ng-maxlength="40"/>
                             <div class="sd-line-input__message" ng-show="editForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
                         </div>
                     </div>
                 </div>
-                <div class="form__row sd-padding-x--2">
-                    <div class="sd-line-input sd-line-input--boxed">
+                <div class="form__row px-2">
+                    <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                         <label class="sd-line-input__label" translate>Description</label>
                         <textarea name="description"
                             class="sd-line-input__input"
@@ -162,21 +163,18 @@
                         </textarea>
                     </div>
                 </div>
-                <div class="form__row form__row--flex sd-padding-x--2">
-                    <div class="form__row-item">
+                <div class="d-flex items-center gap-5 px-2 pb-2">
+                    <div>
                         <span ng-model="editing.form.enabled" sd-switch></span><label>{{:: 'Active' | translate }}</label>
                     </div>
-                </div>
-
-                <div class="form__row form__row--flex sd-padding-x--2">
-                    <div class="form__row-item" style="display: flex; align-items: center; gap: 8px;">
+                    <div class="d-flex items-center gap-1">
                         <span ng-model="editing.form.embeddable" sd-switch></span>
                         <label style="margin: 0">{{:: 'Can be embedded' | translate }}</label>
                         <i class="icon-info-sign" title="{{:: 'If enabled, it will be possible to embed articles using this content profile into other articles that accept embeds (configurable in content profile field settings)' | translate }}"></i>
                     </div>
                 </div>
 
-                <div class="form__row sd-padding-b--0" ng-if="editing">
+                <div class="form__row pb-0" ng-if="editing">
                     <sd-content-profile-fields-config
                         profile="editing.form"
                         profile-type="editing.form.type"

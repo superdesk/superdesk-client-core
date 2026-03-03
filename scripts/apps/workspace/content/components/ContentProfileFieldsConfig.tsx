@@ -459,7 +459,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
         }
 
         const tabs = (
-            <div className="sd-nav-tabs" data-test-id="content-profile-tabs">
+            <div className="sd-nav-tabs sd-border--light border-x-0" data-test-id="content-profile-tabs">
                 {
                     getTabs().map((tab) => (
                         <button
