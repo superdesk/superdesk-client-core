@@ -66,7 +66,20 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
             'Editor3-activeButton': active,
         });
 
-        const customTags = Object.fromEntries(customEditorTags.map(({editor3Style, label}) => [editor3Style, label]));
+        const customTags = Object.fromEntries(
+            customEditorTags.map(({editor3Style, label}) => {
+                // Add keyboard shortcuts to tooltips for company and person tags
+                let tooltip = label;
+
+                if (editor3Style === 'EDITOR_TAG_company') {
+                    tooltip = `${label} (Ctrl+3)`;
+                } else if (editor3Style === 'EDITOR_TAG_person') {
+                    tooltip = `${label} (Ctrl+6)`;
+                }
+
+                return [editor3Style, tooltip];
+            }),
+        );
 
         const styleTooltips = {
             ...customTags,
