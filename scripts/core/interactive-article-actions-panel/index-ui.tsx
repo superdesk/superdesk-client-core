@@ -2,7 +2,6 @@ import React from 'react';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {SendToTab} from './actions/send-to-tab';
 import {IArticle} from 'superdesk-api';
-import {TabList} from 'core/ui/components/tabs';
 import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
@@ -15,33 +14,11 @@ import {SendCorrectionTab} from './actions/send-correction-tab';
 import {FetchToTab} from './actions/fetch-to-tab';
 import {UnspikeTab} from './actions/unspike-tab';
 import {IArticleActionInteractive, IPanelAction} from './interfaces';
+import {ActionTabs} from './action-tabs';
 
 const singleColumnWidthRem = 40; // rem
 
 const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
-
-function getTabLabel(id: IArticleActionInteractive) {
-    if (id === 'send_to') {
-        return gettext('Send to');
-    } else if (id === 'fetch_to') {
-        return gettext('Fetch to');
-    } else if (id === 'duplicate_to') {
-        return gettext('Duplicate to');
-    } else if (id === 'unspike') {
-        return gettext('Unspike');
-    } else if (id === 'publish') {
-        return gettext('Publish');
-    } else if (id === 'correct') {
-        /**
-         * Display as "Publish".
-         * It's implemented as separate tab so it's easier
-         * to decouple implementation into a separate component.
-         */
-        return gettext('Publish');
-    } else {
-        assertNever(id);
-    }
-}
 
 export interface IPropsInteractiveArticleActionsPanelStateless extends IPanelAction {
     /**
@@ -83,15 +60,12 @@ export class InteractiveArticleActionsPanel
         const panelHeader = (
             <PanelHeader markupV2={markupV2}>
                 <div className="space-between" style={{width: '100%', paddingInlineEnd: 10}}>
-                    <TabList
-                        tabs={tabs.map((id) => ({id, label: getTabLabel(id)}))}
-                        selectedTabId={activeTab}
-                        onChange={(tab: IArticleActionInteractive) => {
-                            this.setState({
-                                activeTab: tab,
-                            });
+                    <ActionTabs
+                        tabs={tabs}
+                        activeTab={activeTab}
+                        onChange={(tab) => {
+                            this.setState({activeTab: tab});
                         }}
-                        data-test-id="tabs"
                     />
 
                     <Button

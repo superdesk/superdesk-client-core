@@ -726,6 +726,7 @@ declare module 'superdesk-api' {
 
         // only works react based authoring
         background?: 'light' | 'grey';
+        bodyPadding?: 'none' | 'small' | 'medium'; // default is 'medium'
     }
 
     export interface IGenericSidebarComponentProps<T> {
@@ -786,6 +787,12 @@ declare module 'superdesk-api' {
         icon: string;
         component: React.ComponentClass<IArticleSideWidgetComponentType>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
+
+        /**
+         * Button type/color for the widget sidebar button.
+         * Requires superdesk-ui-framework support for ISideBarTab.buttonType
+         */
+        buttonType?: 'default' | 'primary' | 'highlight' | 'success' | 'warning' | 'alert';
 
         /**
          * Up to 2 symbols

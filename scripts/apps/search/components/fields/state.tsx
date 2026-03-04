@@ -5,12 +5,16 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {StateLabel} from 'superdesk-ui-framework';
 import {IArticle} from 'superdesk-api';
+import moment from 'moment-timezone';
+
+function isScheduledTimeInFuture(item: IArticle): boolean {
+    const scheduledTime = item.schedule_settings?.utc_publish_schedule;
+
+    return scheduledTime != null && moment(scheduledTime).isAfter(moment.utc());
+}
 
 export function getStateLabel(item: IArticle) {
-    const hasScheduledPublishTime = item.schedule_settings?.utc_publish_schedule != null;
-
-    // We treat items that have a set scheduled publish time as `scheduled`, regardless if they're published or not
-    if (hasScheduledPublishTime) {
+    if (isScheduledTimeInFuture(item)) {
         return ITEM_STATE.SCHEDULED;
     }
 
@@ -58,14 +62,13 @@ export const StatusInfo = (props: IStateComponentProps) => {
         openArticle(item._id, 'view');
     };
 
-    const scheduledPublishTime = item.schedule_settings?.utc_publish_schedule;
     const handleClick = clickable && item.state === 'being_corrected'
         ? openItem
         : undefined;
 
     return (
         <StateLabel
-            state={scheduledPublishTime != null ? ITEM_STATE.SCHEDULED : item.state}
+            state={isScheduledTimeInFuture(item) ? ITEM_STATE.SCHEDULED : item.state}
             text={getStateLabel(item)}
             onClick={handleClick}
         />

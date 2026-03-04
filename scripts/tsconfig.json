@@ -16,6 +16,7 @@
             "dom",
             "es2020"
         ],
+        "downlevelIteration": true,
         "jsx": "react"
     }
 }

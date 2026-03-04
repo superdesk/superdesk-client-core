@@ -11,11 +11,15 @@ import {getTranslationsWidget} from './article-widgets/translations/translations
 import {getMacrosWidget} from './macros/macros';
 import {getPackagesWidget} from './packages';
 import {getMetadataWidget} from './article-widgets/metadata/metadata';
+import {
+    getInteractiveArticleActionsWidget,
+} from './article-widgets/send-to-publish/interactive-article-actions-widget';
 
 export const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
 export function registerAuthoringReactWidgets() {
     const sidebarWidgets: IExtensionActivationResult['contributions']['authoringSideWidgets'] = [
+        getInteractiveArticleActionsWidget(),
         getFindAndReplaceWidget(),
         getVersionsAndItemHistoryWidget(),
         getTranslationsWidget(),
