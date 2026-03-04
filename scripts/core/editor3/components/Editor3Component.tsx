@@ -416,6 +416,34 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             onCreateChangeStyleSuggestion,
         } = this.props;
 
+        const canEditInSuggestingMode = (editorState, author) =>
+            Suggestions.allowEditSuggestionOnLeft(editorState, author) ||
+            Suggestions.allowEditSuggestionOnRight(editorState, author);
+
+        const toggleInlineStyleOrSuggest = (
+            editorState,
+            style: string,
+            suggestingMode: boolean,
+            author,
+            onCreateChangeStyleSuggestion: (style: string, active: boolean) => void,
+        ) => {
+            const active = editorState.getCurrentInlineStyle().has(style);
+
+            if (suggestingMode) {
+                if (!canEditInSuggestingMode(editorState, author)) {
+                    return {handled: true as const};
+                }
+
+                onCreateChangeStyleSuggestion(style, active);
+                return {handled: true as const};
+            }
+
+            return {
+                handled: false as const,
+                newState: RichUtils.toggleInlineStyle(editorState, style),
+            };
+        };
+
         if (singleLine && command === 'split-block') {
             return 'handled';
         }
@@ -505,37 +533,33 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                 break;
             }
             case 'toggle-company-tag': {
-                const style = 'EDITOR_TAG_company';
-                const inlineStyles = editorState.getCurrentInlineStyle();
-                const active = inlineStyles.has(style);
+                const res = toggleInlineStyleOrSuggest(
+                    editorState,
+                    'EDITOR_TAG_company',
+                    suggestingMode,
+                    author,
+                    onCreateChangeStyleSuggestion,
+                );
 
-                if (suggestingMode) {
-                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                        && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                        return 'handled';
-                    }
-                    onCreateChangeStyleSuggestion(style, active);
+                if (res.handled) {
                     return 'handled';
                 }
-
-                newState = RichUtils.toggleInlineStyle(editorState, style);
+                newState = res.newState;
                 break;
             }
             case 'toggle-person-tag': {
-                const style = 'EDITOR_TAG_person';
-                const inlineStyles = editorState.getCurrentInlineStyle();
-                const active = inlineStyles.has(style);
+                const res = toggleInlineStyleOrSuggest(
+                    editorState,
+                    'EDITOR_TAG_person',
+                    suggestingMode,
+                    author,
+                    onCreateChangeStyleSuggestion,
+                );
 
-                if (suggestingMode) {
-                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                        && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                        return 'handled';
-                    }
-                    onCreateChangeStyleSuggestion(style, active);
+                if (res.handled) {
                     return 'handled';
                 }
-
-                newState = RichUtils.toggleInlineStyle(editorState, style);
+                newState = res.newState;
                 break;
             }
             case 'backspace': {
