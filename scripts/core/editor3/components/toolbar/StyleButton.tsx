@@ -66,7 +66,12 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
             'Editor3-activeButton': active,
         });
 
-        const customTags = Object.fromEntries(customEditorTags.map(({editor3Style, label}) => [editor3Style, label]));
+        const customTags = Object.fromEntries(
+            customEditorTags.map(({editor3Style, label, tooltip}) => {
+                // Use configured tooltip if provided, otherwise fallback to label
+                return [editor3Style, tooltip || label];
+            }),
+        );
 
         const styleTooltips = {
             ...customTags,

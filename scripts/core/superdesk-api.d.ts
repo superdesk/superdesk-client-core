@@ -3758,6 +3758,7 @@ declare module 'superdesk-api' {
                 icon: string;
                 label: string;
                 borderColor: 'tag-color-1' | 'tag-color-2';
+                tooltip?: string;
             }>;
             timeToRead?: any;
             lineLength?: number;
