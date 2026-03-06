@@ -162,6 +162,13 @@ export function getContentProfileFormConfig(
         required: false,
     };
 
+    const showFloatingCountField: IContentProfileFormField = {
+        label: gettext('Show Floating Character Count'),
+        type: GenericFormFieldType.checkbox,
+        field: 'show_floating_count',
+        required: false,
+    };
+
     const fields: Array<IContentProfileFormField> = [
         requiredField,
         readonlyField,
@@ -212,6 +219,10 @@ export function getContentProfileFormConfig(
         };
 
         fields.push(minMax);
+    }
+
+    if (field?.id != null && hasFormattingOptions(field.id, editor, customFields)) {
+        fields.push(showFloatingCountField);
     }
 
     if (field?.id === 'dateline') {

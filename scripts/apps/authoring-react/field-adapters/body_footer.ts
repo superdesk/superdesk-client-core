@@ -17,6 +17,7 @@ export const body_footer: IFieldAdapter<IArticle> = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             maxSoftLength: fieldEditor?.maxSoftLength,
+            showFloatingCount: fieldEditor?.show_floating_count,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: false,
             disallowedCharacters: [],

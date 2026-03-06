@@ -68,6 +68,7 @@ interface IProps {
     limitBehavior?: CharacterLimitUiBehavior;
     limit?: number;
     softLimit?: number;
+    showFloatingCount?: boolean;
 }
 
 export interface IEditorStore {
@@ -98,6 +99,7 @@ export interface IEditorStore {
     loading: boolean;
     limitConfig?: EditorLimit;
     softLimitConfig?: number;
+    showFloatingCount?: boolean;
 }
 
 let editor3Stores = [];
@@ -289,6 +291,7 @@ export default function createEditorStore(
             loading: false,
             limitConfig,
             softLimitConfig,
+            showFloatingCount: props.showFloatingCount === true,
         },
         getMiddlewares(),
     );

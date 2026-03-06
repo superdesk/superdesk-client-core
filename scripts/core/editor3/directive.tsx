@@ -141,6 +141,7 @@ class Editor3Directive {
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
     fieldId?: string;
+    showFloatingCount?: boolean;
 
     // In most cases a function is called to get the label by ID. This is only required for custom fields.
     fieldLabel?: string;
@@ -280,6 +281,8 @@ class Editor3Directive {
 
             softLimit: '=?',
 
+            showFloatingCount: '=?',
+
             /**
              * @type {String}
              * @description Force the output to be plain text and not contain any html.
@@ -332,6 +335,7 @@ class Editor3Directive {
                     this.tabindex = this.tabindex || 0;
                     this.refreshTrigger = this.refreshTrigger || 0;
                     this.showTitle = this.showTitle || false;
+                    this.showFloatingCount = this.showFloatingCount === true;
                     this.$rootScope = $rootScope;
                     this.$scope = $scope;
                     this.svc = {};
