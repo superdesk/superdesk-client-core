@@ -99,7 +99,7 @@ export const sign_off: IFieldAdapter<IArticle> = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             maxSoftLength: fieldEditor?.maxSoftLength,
-            showFloatingCount: fieldEditor?.show_floating_count,
+            showFloatingCount: fieldEditor?.showFloatingCount,
             singleLine: true,
             helperComponent: allowUserDropdown
                 ? ({onChange, language, readOnly}) => {

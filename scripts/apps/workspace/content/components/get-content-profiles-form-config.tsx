@@ -165,7 +165,7 @@ export function getContentProfileFormConfig(
     const showFloatingCountField: IContentProfileFormField = {
         label: gettext('Show Floating Character Count'),
         type: GenericFormFieldType.checkbox,
-        field: 'show_floating_count',
+        field: 'showFloatingCount',
         required: false,
     };
 

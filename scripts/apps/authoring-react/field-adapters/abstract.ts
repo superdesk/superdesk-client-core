@@ -9,7 +9,7 @@ export const abstract: IFieldAdapter<IArticle> = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             maxSoftLength: fieldEditor?.maxSoftLength,
-            showFloatingCount: fieldEditor?.show_floating_count,
+            showFloatingCount: fieldEditor?.showFloatingCount,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: false,
             disallowedCharacters: [],

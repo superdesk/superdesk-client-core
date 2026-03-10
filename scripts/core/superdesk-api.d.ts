@@ -1878,7 +1878,7 @@ declare module 'superdesk-api' {
             showCrops?: boolean;
             imageTitle?: boolean;
             sourceField?: string;
-            show_floating_count?: boolean;
+            showFloatingCount?: boolean;
         }
     };
 
