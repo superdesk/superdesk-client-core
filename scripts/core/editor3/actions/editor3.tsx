@@ -310,6 +310,7 @@ export type IActionPayloadSetExternalOptions =
         | 'spellchecking'
         | 'limitConfig'
         | 'softLimitConfig'
+        | 'showFloatingCount'
         | 'item'
     >>;
 

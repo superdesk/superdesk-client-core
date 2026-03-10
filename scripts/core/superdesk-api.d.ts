@@ -487,6 +487,7 @@ declare module 'superdesk-api' {
         minLength?: number;
         maxLength?: number;
         maxSoftLength?: number;
+        showFloatingCount?: boolean;
         compact?: boolean; // smaller UI element
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
@@ -1877,6 +1878,7 @@ declare module 'superdesk-api' {
             showCrops?: boolean;
             imageTitle?: boolean;
             sourceField?: string;
+            showFloatingCount?: boolean;
         }
     };
 

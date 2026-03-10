@@ -12,13 +12,14 @@ interface IOwnProps {
 interface IReduxStateProps {
     editorState: EditorState;
     limitConfig?: EditorLimit;
+    showFloatingCount?: boolean;
 }
 
 type IProps = IOwnProps & IReduxStateProps;
 
-const FloatingCharacterCountComponent: React.FC<IProps> = ({editorState, limitConfig, floating}) => {
+const FloatingCharacterCountComponent: React.FC<IProps> = ({editorState, limitConfig, floating, showFloatingCount}) => {
     const hasLimit = limitConfig?.chars != null;
-    const isActive = floating && hasLimit;
+    const isActive = floating && hasLimit && showFloatingCount === true;
 
     const cx = classNames({
         'floating-char-count': true,
@@ -40,6 +41,7 @@ const FloatingCharacterCountComponent: React.FC<IProps> = ({editorState, limitCo
 const mapStateToProps = (state): IReduxStateProps => ({
     editorState: state.editorState,
     limitConfig: state.limitConfig,
+    showFloatingCount: state.showFloatingCount,
 });
 
 export const FloatingCharacterCount = connect(mapStateToProps)(FloatingCharacterCountComponent);
