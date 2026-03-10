@@ -33,6 +33,7 @@ const extension: IExtension = {
             ];
             const result: IExtensionActivationResult = {
                 contributions: {
+                    getAuthoringActions: getActionsInitialize(superdesk),
                     globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
                     articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
                     authoringTopbarWidgets: [
