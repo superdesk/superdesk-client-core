@@ -352,11 +352,27 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             const notAllowBold = key === 'b' && editorFormat.indexOf('bold') === -1;
             const notAllowItalic = key === 'i' && editorFormat.indexOf('italic') === -1;
             const notAllowUnderline = key === 'u' && editorFormat.indexOf('underline') === -1;
+            const notAllowCompanyTag = key === '3' &&
+                editorFormat.indexOf('EDITOR_TAG_company' as RICH_FORMATTING_OPTION) === -1;
+            const notAllowPersonTag = key === '6' &&
+                editorFormat.indexOf('EDITOR_TAG_person' as RICH_FORMATTING_OPTION) === -1;
 
-            if (notAllowBold || notAllowItalic || notAllowUnderline) {
+            if (notAllowBold || notAllowItalic || notAllowUnderline || notAllowCompanyTag || notAllowPersonTag) {
                 e.preventDefault();
                 return '';
             }
+        }
+
+        // Ctrl/Cmd + 3 for Company tag
+        if (key === '3' && modifierKey) {
+            e.preventDefault();
+            return 'toggle-company-tag';
+        }
+
+        // Ctrl/Cmd + 6 for Person tag
+        if (key === '6' && modifierKey) {
+            e.preventDefault();
+            return 'toggle-person-tag';
         }
 
         // Cmd/Ctrl + Alt + - for ndash
@@ -399,6 +415,34 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             onCreateDeleteSuggestion,
             onCreateChangeStyleSuggestion,
         } = this.props;
+
+        const canEditInSuggestingMode = (editorState, author) =>
+            Suggestions.allowEditSuggestionOnLeft(editorState, author) ||
+            Suggestions.allowEditSuggestionOnRight(editorState, author);
+
+        const toggleInlineStyleOrSuggest = (
+            editorState,
+            style: string,
+            suggestingMode: boolean,
+            author,
+            onCreateChangeStyleSuggestion: (style: string, active: boolean) => void,
+        ) => {
+            const active = editorState.getCurrentInlineStyle().has(style);
+
+            if (suggestingMode) {
+                if (!canEditInSuggestingMode(editorState, author)) {
+                    return {handled: true as const};
+                }
+
+                onCreateChangeStyleSuggestion(style, active);
+                return {handled: true as const};
+            }
+
+            return {
+                handled: false as const,
+                newState: RichUtils.toggleInlineStyle(editorState, style),
+            };
+        };
 
         if (singleLine && command === 'split-block') {
             return 'handled';
@@ -486,6 +530,36 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                     thinSpaceContentState,
                     'insert-characters',
                 );
+                break;
+            }
+            case 'toggle-company-tag': {
+                const res = toggleInlineStyleOrSuggest(
+                    editorState,
+                    'EDITOR_TAG_company',
+                    suggestingMode,
+                    author,
+                    onCreateChangeStyleSuggestion,
+                );
+
+                if (res.handled) {
+                    return 'handled';
+                }
+                newState = res.newState;
+                break;
+            }
+            case 'toggle-person-tag': {
+                const res = toggleInlineStyleOrSuggest(
+                    editorState,
+                    'EDITOR_TAG_person',
+                    suggestingMode,
+                    author,
+                    onCreateChangeStyleSuggestion,
+                );
+
+                if (res.handled) {
+                    return 'handled';
+                }
+                newState = res.newState;
                 break;
             }
             case 'backspace': {

@@ -31,7 +31,10 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {editor3Style: string}
+type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {
+    editor3Style: string;
+    tooltip?: string;
+}
 
 export const customEditorTags: Array<IEnhancedTag> = (appConfig.authoring?.customEditorTags ?? []).map((item) => {
     return {
