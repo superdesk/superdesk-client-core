@@ -36,7 +36,7 @@
         data-label="{{ field.label }}"
         data-required="field.required"
         data-disabled="isDisabled(field)"
-        data-onchange="onChange({key: 'extra'})"
+        data-onchange="handleExtraTextFieldChange(field.field)"
         data-onblur="onBlur()"
         data-maxlength="field.maxlength"
         data-placeholder="{{ placeholder[field.field] }}"
