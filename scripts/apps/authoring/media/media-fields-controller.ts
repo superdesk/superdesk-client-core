@@ -1,9 +1,9 @@
-import {sortBy, get} from 'lodash';
+import {sortBy} from 'lodash';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
 
-MediaFieldsController.$inject = ['$q', 'metadata', 'vocabularies'];
-export default function MediaFieldsController($q, metadata, vocabularies) {
+MediaFieldsController.$inject = ['$q', 'metadata', 'vocabularies', 'content'];
+export default function MediaFieldsController($q, metadata, vocabularies, content) {
     function getCV(field) {
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
@@ -33,9 +33,10 @@ export default function MediaFieldsController($q, metadata, vocabularies) {
         metadataInit: metadata.initialize(),
         getLabelForFieldId: vocabularies.getAllActiveVocabularies()
             .then((vocabulariesCollection) => (fieldId) => getLabelForFieldId(fieldId, vocabulariesCollection)),
-    }).then(({getLabelForFieldId}) => {
-        const editor = get(appConfig.editor, 'picture', {});
-        const schema = get(appConfig.schema, 'picture', {});
+        pictureType: content.getType('picture'),
+    }).then(({getLabelForFieldId, pictureType}) => {
+        const editor = appConfig.editor?.picture ?? pictureType?.editor ?? {};
+        const schema = appConfig.schema?.picture ?? pictureType?.schema ?? {};
         const validator = appConfig.validator_media_metadata;
 
         // get last order
@@ -58,7 +59,7 @@ export default function MediaFieldsController($q, metadata, vocabularies) {
         this.fields = sortBy(
             Object.keys(editor)
                 .filter((key) => editor[key] != null)
-                .filter((key) => get(editor[key], 'displayOnMediaEditor', true))
+                .filter((key) => editor[key]?.displayOnMediaEditor ?? true)
                 .map((field) => {
                     const cv = getCV(field);
 
