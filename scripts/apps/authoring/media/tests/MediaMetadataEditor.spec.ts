@@ -153,7 +153,7 @@ describe('media metadata editor', () => {
         expect(ctrl.fields.map((f) => f.field)).toEqual(['byline', 'alt_text']);
     }));
 
-    it('displays fields with dislayOnMediaEditor set', inject(($rootScope, $controller, $q, content) => {
+    it('displays fields with displayOnMediaEditor set', inject(($rootScope, $controller, $q, content) => {
         spyOn(content, 'getType').and.returnValue($q.when(null));
 
         const testConfig: Partial<ISuperdeskGlobalConfig> = {

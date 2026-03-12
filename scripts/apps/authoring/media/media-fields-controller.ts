@@ -33,10 +33,12 @@ export default function MediaFieldsController($q, metadata, vocabularies, conten
         metadataInit: metadata.initialize(),
         getLabelForFieldId: vocabularies.getAllActiveVocabularies()
             .then((vocabulariesCollection) => (fieldId) => getLabelForFieldId(fieldId, vocabulariesCollection)),
-        pictureType: content.getType('picture'),
+        pictureType: content.getType('picture').catch(() => null),
     }).then(({getLabelForFieldId, pictureType}) => {
-        const editor = appConfig.editor?.picture ?? pictureType?.editor ?? {};
-        const schema = appConfig.schema?.picture ?? pictureType?.schema ?? {};
+        const editorSource = appConfig.editor?.picture ?? pictureType?.editor ?? {};
+        const schemaSource = appConfig.schema?.picture ?? pictureType?.schema ?? {};
+        const editor = {...editorSource};
+        const schema = {...schemaSource};
         const validator = appConfig.validator_media_metadata;
 
         // get last order
