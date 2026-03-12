@@ -82,7 +82,7 @@ jobs:
         node-version: '22'
 
     - name: Download blob reports from Artifacts
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         path: e2e/client/all-blob-reports
         pattern: blob-report-*
