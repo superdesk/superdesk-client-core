@@ -27,6 +27,17 @@ export const customEditorTagStyleMap: Record<string, React.CSSProperties> = Obje
     ]),
 );
 
+export function applyCustomEditorTagStyles(element: HTMLElement, tagId: string): void {
+    const style = customEditorTagStyleMap[tagId];
+
+    if (style != null) {
+        element.style.display = 'inline-block';
+        for (const [prop, value] of Object.entries(style)) {
+            element.style[prop] = value as string;
+        }
+    }
+}
+
 export const customStyleMap = {
     ...Object.fromEntries(
         Object.entries(customEditorTagStyleMap).map(([style, props]) => [
