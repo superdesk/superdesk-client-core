@@ -1,4 +1,5 @@
 import {sdApi} from 'api';
+import {applyCustomEditorTagStyles, CUSTOM_EDITOR_TAG_ATTR} from 'core/editor3/components/customStyleMap';
 import React from 'react';
 
 interface IProps {
@@ -8,6 +9,10 @@ interface IProps {
 export function adjustHTMLForPreview(html: string): string {
     const parsed: HTMLElement =
     new DOMParser().parseFromString(html, 'text/html').body;
+
+    parsed.querySelectorAll(`[${CUSTOM_EDITOR_TAG_ATTR}]`).forEach((element) => {
+        applyCustomEditorTagStyles(element as HTMLElement, element.getAttribute(CUSTOM_EDITOR_TAG_ATTR));
+    });
 
     parsed.querySelectorAll('[data-custom-block-type]').forEach((element) => {
         const customBlockType = element.getAttribute('data-custom-block-type');
