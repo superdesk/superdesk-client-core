@@ -1,21 +1,21 @@
-import {sanitizeHtmlInput} from './sanitize-html-input';
+import {sanitizeHtmlContent} from './sanitize-html-input';
 
-describe('sanitizeHtmlInput', () => {
+describe('sanitizeHtmlContent', () => {
     it('removes script tags', () => {
         const value = '<p>safe</p><script>alert("xss")</script>';
 
-        expect(sanitizeHtmlInput(value)).toBe('<p>safe</p>');
+        expect(sanitizeHtmlContent(value)).toBe('<p>safe</p>');
     });
 
     it('removes inline event handlers', () => {
         const value = '<img src="/image.jpg" onerror="alert(1)">';
 
-        expect(sanitizeHtmlInput(value)).toBe('<img src="/image.jpg">');
+        expect(sanitizeHtmlContent(value)).toBe('<img src="/image.jpg">');
     });
 
     it('preserves normal formatting tags', () => {
         const value = '<p><strong>hello</strong> <em>world</em></p>';
 
-        expect(sanitizeHtmlInput(value)).toBe('<p><strong>hello</strong> <em>world</em></p>');
+        expect(sanitizeHtmlContent(value)).toBe('<p><strong>hello</strong> <em>world</em></p>');
     });
 });

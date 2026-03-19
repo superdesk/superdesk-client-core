@@ -7,6 +7,7 @@ import {
 } from 'draft-js';
 import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
+import {sanitizeHtmlContent} from 'core/helpers/sanitize-html-input';
 import {
     PopupTypes,
     setAbbreviations,
@@ -408,6 +409,10 @@ export function getInitialContent(props): ContentState {
         get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
 
     if (value != null && value !== '') {
+        if (props.plainText === true || props.singleLine === true) {
+            return getContentStateFromHtml(sanitizeHtmlContent(value));
+        }
+
         // we have only HTML (possibly legacy editor2 or ingested item)
         return getContentStateFromHtml(value, props.item.associations);
     }

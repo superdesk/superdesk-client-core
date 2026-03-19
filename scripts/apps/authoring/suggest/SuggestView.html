@@ -41,7 +41,7 @@
 						<span ng-show="item.comments">
 							<i class="icon-comment"></i>{{item.comments}}
 						</span>
-						<div sd-html-preview="item.body_html"></div>
+						<div sd-html-preview="item.body_html" data-type="body-html"></div>
 					</div>
 				</li>
 			</ul>
@@ -74,7 +74,7 @@
 			</div>
 			<h3 class="headline">{{ showItem.headline }}</h3>
 			<div class="abstract" sd-html-preview="showItem.abstract"></div>
-			<div class="body" sd-html-preview="showItem.body_html"></div>
+			<div class="body" sd-html-preview="showItem.body_html" data-type="body-html"></div>
 		</div>
 	</div>
 </div>

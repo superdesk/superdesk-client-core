@@ -3,6 +3,7 @@ import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {sanitizeHtmlContent} from 'core/helpers/sanitize-html-input';
 import {IArticle} from 'superdesk-api';
 
 function getAnnotationTypesAsync(scope) {
@@ -57,13 +58,19 @@ export function HtmlPreview($sce, $timeout) {
         scope: {
             sdHtmlPreview: '=',
             item: '=?',
+            type: '@',
         },
         templateUrl: 'scripts/apps/archive/views/html-preview.html',
         link: function(scope, elem, attrs) {
-            scope.$watch('sdHtmlPreview', (html) => {
-                scope.html = $sce.trustAsHtml(adjustHTMLForPreview(html));
+            scope.$watch('sdHtmlPreview', (html: string) => {
+                const isBodyHtml = scope.type === 'body-html';
+                const safe = isBodyHtml
+                    ? adjustHTMLForPreview(html)
+                    : sanitizeHtmlContent(html);
 
-                if (window.hasOwnProperty('instgrm')) {
+                scope.html = $sce.trustAsHtml(safe);
+
+                if (isBodyHtml && window.hasOwnProperty('instgrm')) {
                     window.instgrm.Embeds.process();
                 }
             });
