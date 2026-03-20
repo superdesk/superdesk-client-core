@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {convertToRaw, EditorState} from 'draft-js';
+import {convertToRaw, EditorState, ContentState} from 'draft-js';
 import {AnyAction, Store} from 'redux';
 
 import {Editor3} from './components';
@@ -102,7 +102,7 @@ function generateHtml(
     if (plainText) {
         objectToUpdate[
             fieldName
-        ] = sanitizeHtmlContent(contentStatePreparedForExport.getPlainText());
+        ] = contentStatePreparedForExport.getPlainText();
     } else {
         objectToUpdate[fieldName] = editor3StateToHtml(
             contentStatePreparedForExport,

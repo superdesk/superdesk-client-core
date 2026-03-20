@@ -409,7 +409,12 @@ export function getInitialContent(props): ContentState {
         get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
 
     if (value != null && value !== '') {
-        if (props.plainText === true || props.singleLine === true) {
+        if (props.plainText === true) { // no formatting, just plain text
+            return ContentState.createFromText(value);
+        }
+
+        if (props.singleLine === true) {
+            // can have inline tags, but should be treated as single line (ie. no paragraphs)
             return getContentStateFromHtml(sanitizeHtmlContent(value));
         }
 
