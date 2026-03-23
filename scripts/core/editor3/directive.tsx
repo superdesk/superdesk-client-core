@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {convertToRaw, EditorState} from 'draft-js';
+import {convertToRaw, EditorState, ContentState} from 'draft-js';
 import {AnyAction, Store} from 'redux';
 
 import {Editor3} from './components';
@@ -37,6 +37,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 import {findParentScope} from 'core/find-parent-scope';
 import {classnames} from '@sourcefabric/common';
+import {sanitizeHtmlContent} from 'core/helpers/sanitize-html-input';
 
 /**
  * @ngdoc directive
@@ -492,7 +493,9 @@ class Editor3Directive {
                             const text = (newValue || '')
                                 .replace(/<ins/g, '<code')
                                 .replace(/<\/ins>/g, '</code>');
-                            const content = getContentStateFromHtml(text);
+                            const content = this.plainText || this.singleLine
+                                ? getContentStateFromHtml(sanitizeHtmlContent(text))
+                                : getContentStateFromHtml(text);
                             const state = store.getState();
                             const editorState = EditorState.push(
                                 state.editorState,
@@ -537,7 +540,9 @@ class Editor3Directive {
                                     {skipOnChange: true},
                                     options,
                                 );
-                                const content = getContentStateFromHtml(value);
+                                const content = this.plainText || this.singleLine
+                                    ? getContentStateFromHtml(sanitizeHtmlContent(value || ''))
+                                    : getContentStateFromHtml(value);
                                 const state = store.getState();
                                 const editorState = EditorState.push(
                                     state.editorState,

@@ -1,5 +1,4 @@
 import {isEmpty} from 'lodash';
-import {sanitizeHtmlInput} from 'core/helpers/sanitize-html-input';
 
 MediaMetadataEditorDirective.$inject = ['metadata', 'features', 'session'];
 export default function MediaMetadataEditorDirective(metadata, features, session) {
@@ -23,19 +22,12 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.metadata = metadata;
 
             scope.handleInputChange = (newValue: string, {field}) => {
-                scope.item[field] = sanitizeHtmlInput(newValue);
+                scope.item[field] = newValue;
                 scope.onChange({key: field}); // set parent dirty=true
                 scope.$applyAsync(); // apply changes to scope
             };
 
             scope.handleExtraTextFieldChange = (fieldId: string) => {
-                const currentValue = scope.item?.extra?.[fieldId] ?? '';
-                const sanitizedValue = sanitizeHtmlInput(currentValue);
-
-                if (sanitizedValue !== currentValue) {
-                    scope.item.extra[fieldId] = sanitizedValue;
-                }
-
                 scope.onChange({key: 'extra'});
             };
 
