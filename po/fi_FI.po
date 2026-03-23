@@ -1,13 +1,13 @@
 # 
 # Translators:
-# Maija Paikkala, 2024-2025
+# Maija Paikkala, 2024-2026
 # maiju.ylipiessa, 2025-2026
 # Salla Salmela, 2024-2025
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
 "PO-Revision-Date: 2015-05-07 07:31+0000\n"
-"Last-Translator: maiju.ylipiessa, 2025-2026\n"
+"Last-Translator: Maija Paikkala, 2024-2026\n"
 "Language-Team: Finnish (Finland) (http://app.transifex.com/sourcefabric/superdesk/language/fi_FI/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -575,7 +575,7 @@ msgstr "Linkki lähetetään ilmoitettuun sähköpostiosoitteeseen. Käytä link
 
 #: ../superdesk-planning/client/api/locations.ts:30
 msgid "A location matching this one already exists"
-msgstr "Vastaava paikkatieto on jo olemassa"
+msgstr "Vastaava paikka on jo olemassa"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:107
 msgid "A new template will be created"
@@ -933,7 +933,7 @@ msgstr "Lisää uusi sanakirja"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:129
 msgid "Add New Event Location"
-msgstr "Lisää uusi tapahtumapaikka"
+msgstr "Lisää uusi paikka"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:205
 msgid "Add New Filter"
@@ -4468,11 +4468,11 @@ msgstr "Luo kooste"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:180
 msgid "Create Location"
-msgstr "Luo sijainti"
+msgstr "Luo paikka"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:189
 msgid "Create New Location"
-msgstr "Luo uusi sijainti"
+msgstr "Luo uusi paikka"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:45
 msgid "Create New Task"
@@ -4503,7 +4503,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:49
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:50
 msgid "Create a new location"
-msgstr "Luo uusi sijainti"
+msgstr "Luo uusi paikka"
 
 #: ../superdesk-planning/client/constants/events.ts:158
 msgid "Create and Open Planning Item"
@@ -7163,7 +7163,7 @@ msgstr "Jätä pois poistettu sisältö"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:151
 msgid "Existing Locations"
-msgstr ""
+msgstr "Olemassaolevat paikat"
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:3
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:87
@@ -7670,7 +7670,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/api/locations.ts:69
 msgid "Failed to update location"
-msgstr "Paikan päivitys ei onnistunut"
+msgstr "Paikan päivittäminen ei onnistunut"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:468
 #: scripts/extensions/sams/src/api/assets.ts:585
@@ -9932,11 +9932,11 @@ msgstr "Sijaitsee"
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/location/index.tsx:25
 #: ../superdesk-planning/client/utils/contentProfiles.ts:283
 msgid "Location"
-msgstr "Paikkatieto"
+msgstr "Paikka"
 
 #: ../superdesk-planning/client/components/fields/editor/Location.tsx:62
 msgid "Location Details"
-msgstr ""
+msgstr "Tarkennuksia paikkaan"
 
 #: ../superdesk-planning/client/api/locations.ts:86
 msgid "Location deleted"
@@ -9944,11 +9944,11 @@ msgstr "Paikkatieto poistettu"
 
 #: ../superdesk-planning/client/controllers/LocationsController.tsx:27
 msgid "Locations"
-msgstr "Paikkatiedot"
+msgstr "Paikat"
 
 #: ../superdesk-planning/client/apps/LocationsApp.tsx:13
 msgid "Locations Content"
-msgstr "Paikkatiedon sisältö"
+msgstr "Paikan tiedot"
 
 #: ../superdesk-analytics/client/utils.js:170
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:127
@@ -10105,7 +10105,7 @@ msgstr "Hallinnoi jaettuja hakuja"
 
 #: ../superdesk-planning/index.ts:28 ../superdesk-planning/index.ts:29
 msgid "Manage Locations"
-msgstr "Hallinnoi paikkatietoja"
+msgstr "Hallinnoi paikkoja"
 
 #: ../superdesk-planning/client/api/contentProfiles.ts:183
 msgid "Manage Planning Profile"
@@ -13595,7 +13595,7 @@ msgstr "Poista kohde"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/LocationItem.tsx:49
 msgid "Remove Location"
-msgstr "Poista paikkatieto"
+msgstr "Poista paikka"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:154
 msgid "Remove Scheduled Update"
@@ -14813,7 +14813,7 @@ msgstr "Hae yhteystietoa"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupInput.tsx:289
 msgid "Search for a location"
-msgstr "Hae sijaintia"
+msgstr "Hae paikkaa"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:34
 msgid "Search for clock"
@@ -14864,7 +14864,7 @@ msgstr "Haku..."
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:31
 msgid "Search/Browse Locations"
-msgstr "Hae paikkatietoja"
+msgstr "Hae paikkaa"
 
 #: scripts/core/ui/views/sd-timepicker-popup.html:21
 msgid "Seconds"
@@ -16898,11 +16898,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/api/locations.ts:24
 msgid "The location has been created"
-msgstr "Sijainti on luotu"
+msgstr "Paikka on luotu"
 
 #: ../superdesk-planning/client/api/locations.ts:62
 msgid "The location has been updated"
-msgstr "Sijainti on päivitetty"
+msgstr "Paikka on päivitetty"
 
 #: scripts/apps/users/views/change-avatar.html:33
 msgid "The minimum image resolution is 200x200 pixels."
@@ -20204,7 +20204,7 @@ msgstr ""
 
 #: scripts/apps/search/components/ItemContainer.tsx:16
 msgid "location:"
-msgstr "sijainti:"
+msgstr "paikka:"
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
@@ -20584,7 +20584,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "scheduled"
-msgstr ""
+msgstr "uloslähetyksessä"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "scheduled Desk Output"
