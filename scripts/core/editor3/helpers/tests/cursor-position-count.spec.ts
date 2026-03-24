@@ -1,4 +1,4 @@
-import {EditorState, SelectionState} from 'draft-js';
+import {EditorState} from 'draft-js';
 import * as Setup from '../../reducers/tests/suggestion_setup';
 import {getCharsBeforeCursor, getSelectedCharsCount} from '../cursor-position-count';
 
