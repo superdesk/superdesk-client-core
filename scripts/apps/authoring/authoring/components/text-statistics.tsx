@@ -9,12 +9,12 @@ interface IProps {
     text: string;
     language?: string;
     limit?: number;
+    hideReadingTime?: boolean;
 }
 
 export class TextStatistics extends React.PureComponent<IProps> {
     render() {
         const wordCount = countWords(this.props.text);
-        const readingTime: string = getReadingTimeText(this.props.text, this.props.language);
 
         return (
             <div className="char-count__wrapper">
@@ -28,7 +28,11 @@ export class TextStatistics extends React.PureComponent<IProps> {
                     item={this.props.text}
                 />
 
-                <span className="char-count__base">{readingTime}</span>
+                {this.props.hideReadingTime !== true && (
+                    <span className="char-count__base">
+                        {getReadingTimeText(this.props.text, this.props.language)}
+                    </span>
+                )}
             </div>
         );
     }

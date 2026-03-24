@@ -44,28 +44,26 @@ $editor-styleButton-size: 			3rem;
 }
 
 .Editor3-root .floating-char-count {
-	padding: 0 var(--space-1-5);
+	position: absolute;
+	inset-block-start: 100%;
+	inset-inline: 0;
+	z-index: 1;
+	padding: 0 var(--space--2);
 	border-block-start: 1px solid $editor-neutral-border;
-	border-block-end: 1px solid var(--sd-shadow-outline);
-	min-height: 0;
 	opacity: 0;
-	transition: all .2s ease;
+	pointer-events: none;
+	transition: opacity .2s ease;
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
+	justify-content: space-between;
 	font-weight: 400;
-	position: absolute;
-	inset-block-end: 0;
-	inset-inline: 0;
-	transform: translateY(100%);
 	background-color: $editor-neutral-bg;
-	z-index: 1;
 	box-shadow: 0px 1px 2px lch(0% 0 0 / 0.4);
 
 	&.floating-char-count--active {
-		min-height: var(--space-4);
-		padding: var(--space-0-5) var(--space-1-5);
+		padding: calc(0.2 * var(--base-increment)) var(--space--1);
 		opacity: 1;
+		pointer-events: auto;
 	}
 }
 
@@ -75,9 +73,7 @@ $editor-styleButton-size: 			3rem;
 	padding: 0;
 	position: relative;
 	transition: box-shadow 0.3s ease, border-color 0.3s ease;
-	&.no-toolbar {
-		padding-block-start: 5px;
-	}
+
 	iframe {
 		width: 97%;
 	}
@@ -302,7 +298,7 @@ $editor-styleButton-size: 			3rem;
 					margin: 0;
 					padding: 0;
 				}
-	
+
 				position: relative;
 				border: 1px solid var(--sd-editor-colour__controls-border);
 				padding: var(--space--1);
@@ -440,7 +436,7 @@ $editor-styleButton-size: 			3rem;
 
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
-	padding: var(--space--1-5) var(--space--2) 0 var(--space--2);
+	padding: var(--space--2) var(--space--2) 0 var(--space--2);
 	transition: padding 0.2s ease;
 	transform-origin: top center;
 	span[style*="super"] {
@@ -463,7 +459,7 @@ $editor-styleButton-size: 			3rem;
 }
 
 .Editor3-editor .public-DraftEditor-content {
-	min-height: 20px;
+	min-height: var(--space--4);
 
 	[data-block="true"] {
         border-block-end: 1.5em solid transparent;
@@ -560,6 +556,7 @@ $editor-styleButton-size: 			3rem;
 }
 
 .Editor3-controls {
+	position: relative;
 	width: 100%;
 	min-width: 300px;
 	font-family: $baseFontFamily;
