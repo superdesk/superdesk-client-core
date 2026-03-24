@@ -1,5 +1,10 @@
 import {EditorState} from 'draft-js';
 
+// These functions count raw block characters to reflect actual cursor positions
+// in the editor. This intentionally differs from getEditorFieldCharactersCount
+// which trims whitespace for character limit validation. Trimming here would
+// cause reported positions to not match the visible cursor location.
+
 /**
  * Returns the total number of characters before the cursor position
  * by summing the length of all blocks preceding the cursor's block,
