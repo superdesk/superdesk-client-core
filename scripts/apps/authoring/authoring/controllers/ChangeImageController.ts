@@ -95,6 +95,14 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
     $scope.tabs = $scope.data.tabs || ['view', 'image-edit', 'crop'];
+    $scope.schema = content.schema({}, 'picture');
+
+    // use picture profile for schema if exists
+    content.getType('picture').then((pictureProfile) => {
+        if (pictureProfile) {
+            $scope.schema = content.schema(pictureProfile, 'picture');
+        }
+    });
 
     $scope.metadata = {
         isDirty: false,
@@ -239,7 +247,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             validateMediaFieldsThrows(
                 $scope.validator,
                 $scope.data.metadata,
-                content.schema({}, 'picture'),
+                $scope.schema,
                 getLabelForFieldId);
         } catch (e) {
             // show an error and stop the "done" operation
