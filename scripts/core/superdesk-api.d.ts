@@ -3795,7 +3795,6 @@ declare module 'superdesk-api' {
                 label: string;
                 borderColor: 'tag-color-1' | 'tag-color-2';
                 tooltip?: string;
-                shortcut?: IShortcutConfig;
             }>;
             customEditorFeatures?: ICustomEditorFeatures;
             timeToRead?: any;

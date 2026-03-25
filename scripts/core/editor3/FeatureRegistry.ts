@@ -30,26 +30,9 @@ class FeatureRegistryClass {
     initialize() {
         if (this.initialized) return;
 
-        this.migrateLegacyConfig();
         this.registerFromConfig();
 
         this.initialized = true;
-    }
-
-    private migrateLegacyConfig() {
-        const legacyTags = appConfig.authoring?.customEditorTags ?? [];
-
-        for (const tag of legacyTags) {
-            this.registerInlineStyle({
-                id: tag.id,
-                type: 'inline-style',
-                icon: tag.icon,
-                label: tag.label,
-                borderColor: tag.borderColor,
-                tooltip: tag.tooltip,
-                shortcut: tag.shortcut,
-            });
-        }
     }
 
     private registerFromConfig() {
