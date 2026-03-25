@@ -235,7 +235,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * @return {Object}
      */
     this.schema = function(profile: IContentProfile, contentType) {
-        return angular.extend({}, profile.schema);
+        return angular.extend({}, profile?.schema);
     };
 
     /**
