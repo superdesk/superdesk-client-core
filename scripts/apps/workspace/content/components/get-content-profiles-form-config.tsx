@@ -81,6 +81,8 @@ export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTI
         'redo': gettext('redo'),
         'uppercase': gettext('uppercase'),
         'lowercase': gettext('lowercase'),
+        'insert-thin-space': gettext('thin space'),
+        'insert-ndash': gettext('ndash'),
     };
 };
 

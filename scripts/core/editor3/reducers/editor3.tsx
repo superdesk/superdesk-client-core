@@ -16,7 +16,7 @@ import {insertEntity} from '../helpers/draftInsertEntity';
 import {logger} from 'core/services/logger';
 import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {CustomEditor3Entity} from '../constants';
+import {CustomEditor3Entity, THIN_SPACE_CHAR, NDASH_CHAR} from '../constants';
 import {IArticle} from 'superdesk-api';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
@@ -68,6 +68,24 @@ const editor3 = (state: IEditorStore, action) => {
             return autocomplete(state, action.payload);
         case 'SET_EXTERNAL_OPTIONS':
             return setExternalOptions(state, action.payload);
+        case 'INSERT_THIN_SPACE': {
+            const contentState = Modifier.replaceText(
+                state.editorState.getCurrentContent(),
+                state.editorState.getSelection(),
+                THIN_SPACE_CHAR,
+            );
+
+            return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
+        }
+        case 'INSERT_NDASH': {
+            const contentState = Modifier.replaceText(
+                state.editorState.getCurrentContent(),
+                state.editorState.getSelection(),
+                NDASH_CHAR,
+            );
+
+            return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
+        }
         default:
             return state;
     }

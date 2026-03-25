@@ -38,6 +38,8 @@ export function getFormattingOptionsForTableLikeBlocks(): Array<RICH_FORMATTING_
         comments: false,
         suggestions: false,
         embed: false,
+        'insert-thin-space': false,
+        'insert-ndash': false,
     };
 
     return Object.entries(options)

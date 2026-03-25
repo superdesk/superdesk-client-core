@@ -320,3 +320,11 @@ export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
         payload,
     };
 }
+
+export function insertThinSpace() {
+    return {type: 'INSERT_THIN_SPACE'};
+}
+
+export function insertNdash() {
+    return {type: 'INSERT_NDASH'};
+}

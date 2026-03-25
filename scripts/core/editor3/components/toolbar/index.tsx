@@ -50,6 +50,8 @@ interface IDispatchProps {
     toggleSuggestingMode(): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
+    insertThinSpace(): void;
+    insertNdash(): void;
     dispatch(fn: any): void;
 }
 
@@ -197,6 +199,8 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             dispatch,
             editorState,
             draggingInProgress,
+            insertThinSpace,
+            insertNdash,
         } = this.props;
 
         const has = (opt: RICH_FORMATTING_OPTION) => editorFormat.indexOf(opt) > -1;
@@ -260,6 +264,24 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
+
+                {/* Character insertions */}
+                {has('insert-thin-space') && (
+                    <IconButton
+                        onClick={insertThinSpace}
+                        tooltip={gettext('Thin space (Ctrl+Alt+Shift+Space)')}
+                        iconName="text"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
+                {has('insert-ndash') && (
+                    <IconButton
+                        onClick={insertNdash}
+                        tooltip={gettext('Ndash (Ctrl+Alt+-)')}
+                        iconName="minus-sign"
+                        uiTheme={this.props.uiTheme}
+                    />
+                )}
 
                 {/* Formatting options */}
                 {has('link') && (
@@ -501,6 +523,8 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),
     removeAllFormat: () => dispatch(actions.removeAllFormat()),
+    insertThinSpace: () => dispatch(actions.insertThinSpace()),
+    insertNdash: () => dispatch(actions.insertNdash()),
     dispatch: dispatch,
 });
 

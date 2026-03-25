@@ -2681,7 +2681,9 @@ declare module 'superdesk-api' {
         'undo' |
         'redo' |
         'multi-line quote' |
-        'custom blocks';
+        'custom blocks' |
+        'insert-thin-space' |
+        'insert-ndash';
 
     export interface IEditor3HtmlProps {
         value: string;
