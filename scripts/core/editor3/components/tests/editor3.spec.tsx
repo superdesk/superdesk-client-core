@@ -11,6 +11,7 @@ import {IEditorStore} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {isMacOS} from 'core/utils';
 import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {appConfig} from 'appConfig';
 
 const NDASH_CHAR = '\u2013';
 const THIN_SPACE_CHAR = '\u2009';
@@ -180,6 +181,49 @@ describe('editor3.component', () => {
     });
 
     describe('keyboard shortcuts', () => {
+        const resetFeatureRegistry = () => {
+            const registry = FeatureRegistry as any;
+
+            registry.features = new Map();
+            registry.keyBindings = new Map();
+            registry.initialized = false;
+        };
+
+        beforeEach(() => {
+            Object.assign(appConfig, {
+                authoring: {
+                    ...(appConfig.authoring ?? {}),
+                    customEditorFeatures: {
+                        inlineStyles: [],
+                        characterInsertions: [
+                            {
+                                id: 'ndash',
+                                icon: 'dash',
+                                label: 'N dash',
+                                character: NDASH_CHAR,
+                                shortcut: {
+                                    key: '-',
+                                    modifiers: ['primary', 'alt'],
+                                },
+                            },
+                            {
+                                id: 'thin-space',
+                                icon: 'thin_space',
+                                label: 'Thin space',
+                                character: THIN_SPACE_CHAR,
+                                shortcut: {
+                                    key: ' ',
+                                    modifiers: ['primary', 'alt', 'shift'],
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+
+            resetFeatureRegistry();
+        });
+
         const renderComponent = (extraProps = {}) => shallow(
             <Editor3Component
                 {...editor3mandatoryProps}
