@@ -321,10 +321,17 @@ export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
     };
 }
 
+export function insertCharacter(character: string) {
+    return {
+        type: 'INSERT_CHARACTER',
+        payload: {character},
+    };
+}
+
 export function insertThinSpace() {
-    return {type: 'INSERT_THIN_SPACE'};
+    return insertCharacter('\u2009');
 }
 
 export function insertNdash() {
-    return {type: 'INSERT_NDASH'};
+    return insertCharacter('\u2013');
 }

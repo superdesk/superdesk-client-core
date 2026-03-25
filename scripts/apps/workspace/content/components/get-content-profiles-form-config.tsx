@@ -6,12 +6,12 @@ import {
     FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
     ICommonFieldConfig,
-    ISuperdeskGlobalConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {FeatureRegistry, IRegisteredFeature} from 'core/editor3/FeatureRegistry';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
@@ -31,21 +31,38 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {
+export interface IEnhancedTag {
+    id: string;
     editor3Style: string;
+    icon: string;
+    label: string;
+    borderColor: 'tag-color-1' | 'tag-color-2';
     tooltip?: string;
+    shortcut?: IRegisteredFeature['shortcut'];
 }
 
-export const customEditorTags: Array<IEnhancedTag> = (appConfig.authoring?.customEditorTags ?? []).map((item) => {
+export const customEditorTags: Array<IEnhancedTag> = FeatureRegistry.getInlineStyles().map((feature) => {
     return {
-        ...item,
-        editor3Style: `EDITOR_TAG_${item.id}`,
+        id: feature.id,
+        editor3Style: feature.formatOption,
+        icon: feature.icon,
+        label: feature.label,
+        borderColor: feature.borderColor!,
+        tooltip: feature.tooltip,
+        shortcut: feature.shortcut,
     };
 });
 
-export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
+export const getEditor3RichTextFormattingOptions = (): Record<string, string> => {
+    FeatureRegistry.initialize();
+
     return {
-        ...Object.fromEntries((customEditorTags ?? []).map(({editor3Style, label}) => [editor3Style, label])),
+        ...Object.fromEntries(
+            FeatureRegistry.getInlineStyles().map((f) => [f.formatOption, f.label]),
+        ),
+        ...Object.fromEntries(
+            FeatureRegistry.getCharacterInsertions().map((f) => [f.formatOption, f.label]),
+        ),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),
@@ -81,8 +98,6 @@ export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTI
         'redo': gettext('redo'),
         'uppercase': gettext('uppercase'),
         'lowercase': gettext('lowercase'),
-        'insert-thin-space': gettext('thin space'),
-        'insert-ndash': gettext('ndash'),
     };
 };
 

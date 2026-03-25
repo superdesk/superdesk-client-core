@@ -21,6 +21,7 @@ import {RawDraftContentState, convertToRaw, ContentState} from 'draft-js';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {getFormattingOptionsForTableLikeBlocks} from 'core/editor3/get-formatting-options-for-table';
+import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
 
 interface IState {
     // When true, the toolbar is floating at the top of the item. This
@@ -265,23 +266,22 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                 <BlockStyleButtons />
                 <InlineStyleButtons />
 
-                {/* Character insertions */}
-                {has('insert-thin-space') && (
-                    <IconButton
-                        onClick={insertThinSpace}
-                        tooltip={gettext('Thin space (Ctrl+Alt+Shift+Space)')}
-                        iconName="text"
-                        uiTheme={this.props.uiTheme}
-                    />
-                )}
-                {has('insert-ndash') && (
-                    <IconButton
-                        onClick={insertNdash}
-                        tooltip={gettext('Ndash (Ctrl+Alt+-)')}
-                        iconName="minus-sign"
-                        uiTheme={this.props.uiTheme}
-                    />
-                )}
+                {/* Character insertions from FeatureRegistry */}
+                {FeatureRegistry.getCharacterInsertions().map((feature) => {
+                    const tooltipText = feature.shortcut
+                        ? `${feature.label} (${FeatureRegistry.formatShortcut(feature.shortcut)})`
+                        : feature.label;
+
+                    return has(feature.formatOption as RICH_FORMATTING_OPTION) && (
+                        <IconButton
+                            key={feature.id}
+                            onClick={() => dispatch(actions.insertCharacter(feature.character))}
+                            tooltip={feature.tooltip || tooltipText}
+                            iconName={feature.icon}
+                            uiTheme={this.props.uiTheme}
+                        />
+                    );
+                })}
 
                 {/* Formatting options */}
                 {has('link') && (
