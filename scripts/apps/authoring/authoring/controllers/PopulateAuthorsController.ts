@@ -14,7 +14,8 @@ interface IScope extends ng.IScope {
     autosave(item: IArticle): any;
 }
 
-const isNewItem = (item: IArticle): boolean => item._current_version === 0;
+const isNewItem = (item: IArticle): boolean =>
+    item._current_version === 0 || (item.authors || []).length === 0;
 
 /**
  * It will populate item.authors with current user when item is opened for authoring.
@@ -40,9 +41,7 @@ export function PopulateAuthorsController($scope: IScope, roles: IRolesService, 
                 .then((userRole) => {
                     if (isNewItem($scope.item) && userRole.author_role) {
                         addAuthor(userRole.author_role, itemAuthors);
-                    }
-
-                    if (!isNewItem($scope.item) && userRole.editor_role) {
+                    } else if (userRole.editor_role) {
                         addAuthor(userRole.editor_role, itemAuthors);
                     }
                 });
