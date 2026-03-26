@@ -295,6 +295,7 @@ export function VocabularyEditController(
 
     if ($scope.schema) {
         $scope.schemaFields = Object.keys($scope.schema)
+            .filter((key) => key !== 'translations')
             .sort()
             .map((key) => angular.extend(
                 {key: key},
@@ -304,7 +305,7 @@ export function VocabularyEditController(
 
     $scope.schemaFields = $scope.schemaFields
         || Object.keys($scope.model)
-            .filter((key) => key !== 'is_active')
+            .filter((key) => key !== 'is_active' && key !== 'translations')
             .map((key) => ({key: key, label: key, type: key}));
 
     $scope.itemsValidation = {valid: true};
