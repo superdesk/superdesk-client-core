@@ -366,7 +366,7 @@ class Editor3Directive {
 
                         ReactDOM.unmountComponentAtNode(element);
 
-                        const textStatistics = this.limit != null ? (
+                        const textStatistics = this.limit != null || this.headerStyles !== true ? (
                             <Spacer h gap="8" alignItems="center" noWrap noGrow>
                                 <TextStatisticsConnected />
                                 <CharacterCountConfigButton field={this.fieldId} />
