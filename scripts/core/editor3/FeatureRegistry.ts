@@ -4,7 +4,6 @@ import {
     IShortcutConfig,
     ICustomInlineStyle,
     ICharacterInsertion,
-    ICustomEditorFeatures,
     KeyModifier,
 } from 'superdesk-api';
 
