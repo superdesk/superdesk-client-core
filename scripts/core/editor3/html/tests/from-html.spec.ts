@@ -156,6 +156,60 @@ describe('core.editor3.html.from-html', () => {
         expect(block.getInlineStyleAt(8).has('EDITOR_TAG_company')).toBe(false);
     });
 
+    it('should not match a span when only some fingerprint properties are present', () => {
+        const fingerprints: Array<IStyleFingerprint> = [
+            {
+                styleName: 'EDITOR_TAG_company',
+                properties: [
+                    {property: 'display', acceptedValues: new Set(['inline-block'])},
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double purple'])},
+                ],
+            },
+        ];
+        const html = '<p><span style="display: inline-block">not a tag</span> plain</p>';
+        const contentState = getContentStateFromHtml(html, {}, fingerprints);
+        const block = contentState.getBlocksAsArray()[0];
+
+        expect(block.getText()).toBe('not a tag plain');
+        expect(block.getInlineStyleAt(0).has('EDITOR_TAG_company')).toBe(false);
+    });
+
+    it('should not apply any tag style when span CSS matches no fingerprint', () => {
+        const fingerprints: Array<IStyleFingerprint> = [
+            {
+                styleName: 'EDITOR_TAG_company',
+                properties: [
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double purple'])},
+                ],
+            },
+        ];
+        const html = '<p><span style="background-color: red">unrelated</span> plain</p>';
+        const contentState = getContentStateFromHtml(html, {}, fingerprints);
+        const block = contentState.getBlocksAsArray()[0];
+
+        expect(block.getText()).toBe('unrelated plain');
+        expect(block.getInlineStyleAt(0).has('EDITOR_TAG_company')).toBe(false);
+    });
+
+    it('should match a span that has extra CSS properties beyond the fingerprint', () => {
+        const fingerprints: Array<IStyleFingerprint> = [
+            {
+                styleName: 'EDITOR_TAG_company',
+                properties: [
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double purple'])},
+                ],
+            },
+        ];
+        const html = '<p><span style="border-block-end: 4px double purple; color: red; font-size: 14px">tagged</span> plain</p>';
+        const contentState = getContentStateFromHtml(html, {}, fingerprints);
+        const block = contentState.getBlocksAsArray()[0];
+
+        expect(block.getText()).toBe('tagged plain');
+        expect(block.getInlineStyleAt(0).has('EDITOR_TAG_company')).toBe(true);
+        expect(block.getInlineStyleAt(5).has('EDITOR_TAG_company')).toBe(true);
+        expect(block.getInlineStyleAt(6).has('EDITOR_TAG_company')).toBe(false);
+    });
+
     it('should parse Google Docs special paste', () => {
         const {blocks} = blocksFor('<b style="font-weight:normal;" id="docs-internal-guid-63c0f3a6-072a-245e-c39d-3f61398cba2c"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">bold</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">italic</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">underline</span></p><br></b>');
 
