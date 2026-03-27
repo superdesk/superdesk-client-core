@@ -40,7 +40,7 @@ function physicalKeyToChar(code: string): string | null {
         BracketRight: ']',
         Backslash: '\\',
         Semicolon: ';',
-        Quote: "'",
+        Quote: "'", // eslint-disable-line
         Comma: ',',
         Period: '.',
         Slash: '/',
