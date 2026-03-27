@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
-import {getContentStateFromHtml, extractCustomTagRanges} from '../from-html';
+import {getContentStateFromHtml, extractCustomTagRanges, IStyleFingerprint} from '../from-html';
 import {convertFromRaw, ContentState, ContentBlock, convertToRaw} from 'draft-js';
 import {getRawContentStateWithoutBlockAndEntityKeys} from 'core/editor3/helpers/draftInsertEntity.spec';
 
@@ -106,11 +106,16 @@ describe('core.editor3.html.from-html', () => {
     });
 
     it('should recognize custom tag spans by CSS and preserve their inline style', () => {
-        const cssTagStyleMap = new Map([
-            ['borderBlockEnd', new Map([['4px double blue', 'EDITOR_TAG_PEOPLE']])],
-        ]);
+        const fingerprints: Array<IStyleFingerprint> = [
+            {
+                styleName: 'EDITOR_TAG_PEOPLE',
+                properties: [
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double blue'])},
+                ],
+            },
+        ];
         const html = '<p><span style="border-block-end: 4px double blue">tagged</span> plain</p>';
-        const contentState = getContentStateFromHtml(html, {}, cssTagStyleMap);
+        const contentState = getContentStateFromHtml(html, {}, fingerprints);
         const block = contentState.getBlocksAsArray()[0];
 
         expect(block.getText()).toBe('tagged plain');
@@ -118,6 +123,37 @@ describe('core.editor3.html.from-html', () => {
         expect(block.getInlineStyleAt(5).has('EDITOR_TAG_PEOPLE')).toBe(true); // last char of span
         expect(block.getInlineStyleAt(6).has('EDITOR_TAG_PEOPLE')).toBe(false); // space after span
         expect(block.getInlineStyleAt(7).has('EDITOR_TAG_PEOPLE')).toBe(false); // outside span
+    });
+
+    it('should distinguish tags that share a CSS property but differ in another', () => {
+        const fingerprints: Array<IStyleFingerprint> = [
+            {
+                styleName: 'EDITOR_TAG_company',
+                properties: [
+                    {property: 'display', acceptedValues: new Set(['inline-block'])},
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double purple'])},
+                ],
+            },
+            {
+                styleName: 'EDITOR_TAG_person',
+                properties: [
+                    {property: 'display', acceptedValues: new Set(['inline-block'])},
+                    {property: 'borderBlockEnd', acceptedValues: new Set(['4px double blue'])},
+                ],
+            },
+        ];
+        const html = '<p>'
+            + '<span style="display: inline-block; border-block-end: 4px double purple">company</span> '
+            + '<span style="display: inline-block; border-block-end: 4px double blue">person</span>'
+            + '</p>';
+        const contentState = getContentStateFromHtml(html, {}, fingerprints);
+        const block = contentState.getBlocksAsArray()[0];
+
+        expect(block.getText()).toBe('company person');
+        expect(block.getInlineStyleAt(0).has('EDITOR_TAG_company')).toBe(true);
+        expect(block.getInlineStyleAt(0).has('EDITOR_TAG_person')).toBe(false);
+        expect(block.getInlineStyleAt(8).has('EDITOR_TAG_person')).toBe(true);
+        expect(block.getInlineStyleAt(8).has('EDITOR_TAG_company')).toBe(false);
     });
 
     it('should parse Google Docs special paste', () => {
