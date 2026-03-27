@@ -75,24 +75,6 @@ const editor3 = (state: IEditorStore, action) => {
 
             return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
         }
-        case 'INSERT_THIN_SPACE': {
-            const contentState = Modifier.replaceText(
-                state.editorState.getCurrentContent(),
-                state.editorState.getSelection(),
-                '\u2009',
-            );
-
-            return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
-        }
-        case 'INSERT_NDASH': {
-            const contentState = Modifier.replaceText(
-                state.editorState.getCurrentContent(),
-                state.editorState.getSelection(),
-                '\u2013',
-            );
-
-            return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
-        }
         default:
             return state;
     }

@@ -51,8 +51,6 @@ interface IDispatchProps {
     toggleSuggestingMode(): void;
     toggleInvisibles(): void;
     removeAllFormat(): void;
-    insertThinSpace(): void;
-    insertNdash(): void;
     dispatch(fn: any): void;
 }
 
@@ -200,8 +198,6 @@ class ToolbarComponent extends React.Component<IProps, IState> {
             dispatch,
             editorState,
             draggingInProgress,
-            insertThinSpace,
-            insertNdash,
         } = this.props;
 
         const has = (opt: RICH_FORMATTING_OPTION) => editorFormat.indexOf(opt) > -1;
@@ -523,8 +519,6 @@ const mapDispatchToProps = (dispatch: (fn: any) => void) => ({
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),
     removeAllFormat: () => dispatch(actions.removeAllFormat()),
-    insertThinSpace: () => dispatch(actions.insertThinSpace()),
-    insertNdash: () => dispatch(actions.insertNdash()),
     dispatch: dispatch,
 });
 

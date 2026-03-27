@@ -328,10 +328,3 @@ export function insertCharacter(character: string) {
     };
 }
 
-export function insertThinSpace() {
-    return insertCharacter('\u2009');
-}
-
-export function insertNdash() {
-    return insertCharacter('\u2013');
-}
