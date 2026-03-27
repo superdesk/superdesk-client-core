@@ -49,7 +49,7 @@ import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
 import {IconButton, Spacer} from 'superdesk-ui-framework/react';
 import {hashString} from '../helpers/hashString';
-import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -357,7 +357,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        const matchedFeature = FeatureRegistry.matchKeyBinding(e);
+        const matchedFeature = customEditorControls.matchKeyBinding(e);
 
         if (matchedFeature) {
             if (this.props.editorFormat.includes(matchedFeature.formatOption as RICH_FORMATTING_OPTION)) {
@@ -420,7 +420,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
 
         let newState;
 
-        const feature = FeatureRegistry.getFeatureByCommand(command);
+        const feature = customEditorControls.getFeatureByCommand(command);
 
         if (feature) {
             if (feature.type === 'inline-style') {

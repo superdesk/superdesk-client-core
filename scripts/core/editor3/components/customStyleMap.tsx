@@ -1,8 +1,8 @@
-import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 
 export const CUSTOM_EDITOR_TAG_ATTR = 'custom-editor-tag-id';
 
-export const customEditorTagStyleMap: Record<string, React.CSSProperties> = FeatureRegistry.getStyleMap();
+export const customEditorTagStyleMap: Record<string, React.CSSProperties> = customEditorControls.getStyleMap();
 
 export function applyCustomEditorTagStyles(element: HTMLElement, tagId: string): void {
     const style = customEditorTagStyleMap[tagId];

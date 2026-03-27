@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
-import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 interface IPropsStyleButton {
@@ -15,7 +15,7 @@ interface IPropsStyleButton {
 
 const styleIcons = {
     ...Object.fromEntries(
-        FeatureRegistry.getInlineStyles().map((f) => [f.formatOption, `icon-${f.icon}`]),
+        customEditorControls.getInlineStyles().map((f) => [f.formatOption, `icon-${f.icon}`]),
     ),
     bold: 'icon-bold',
     italic: 'icon-italic',
@@ -61,9 +61,9 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
         });
 
         const customTags = Object.fromEntries(
-            FeatureRegistry.getInlineStyles().map((f) => {
+            customEditorControls.getInlineStyles().map((f) => {
                 const shortcutText = f.shortcut
-                    ? ` (${FeatureRegistry.formatShortcut(f.shortcut)})`
+                    ? ` (${customEditorControls.formatShortcut(f.shortcut)})`
                     : '';
 
                 return [f.formatOption, f.tooltip || f.label + shortcutText];

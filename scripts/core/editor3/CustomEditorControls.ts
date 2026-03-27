@@ -7,7 +7,7 @@ import {
     KeyModifier,
 } from 'superdesk-api';
 
-export interface IRegisteredFeature {
+export interface IEditorControl {
     id: string;
     type: 'inline-style' | 'character-insertion';
     formatOption: string;
@@ -21,9 +21,9 @@ export interface IRegisteredFeature {
     shortcut?: IShortcutConfig;
 }
 
-class FeatureRegistryClass {
-    private features: Map<string, IRegisteredFeature> = new Map();
-    private keyBindings: Map<string, IRegisteredFeature> = new Map();
+class CustomEditorControlsClass {
+    private features: Map<string, IEditorControl> = new Map();
+    private keyBindings: Map<string, IEditorControl> = new Map();
     private initialized = false;
 
     initialize() {
@@ -54,7 +54,7 @@ class FeatureRegistryClass {
         const formatOption = this.formatId(config.id, 'EDITOR_TAG');
         const commandName = `toggle-${config.id}-tag`;
 
-        const feature: IRegisteredFeature = {
+        const feature: IEditorControl = {
             id: config.id,
             type: 'inline-style',
             formatOption,
@@ -80,7 +80,7 @@ class FeatureRegistryClass {
         const formatOption = this.formatId(config.id, 'INSERT_CHAR');
         const commandName = `insert-${config.id}`;
 
-        const feature: IRegisteredFeature = {
+        const feature: IEditorControl = {
             id: config.id,
             type: 'character-insertion',
             formatOption,
@@ -111,30 +111,30 @@ class FeatureRegistryClass {
         return `${normalizedModifiers}+${shortcut.key.toLowerCase()}`;
     }
 
-    getAllFeatures(): Array<IRegisteredFeature> {
+    getAllFeatures(): Array<IEditorControl> {
         this.initialize();
         return Array.from(this.features.values());
     }
 
-    getInlineStyles(): Array<IRegisteredFeature> {
+    getInlineStyles(): Array<IEditorControl> {
         return this.getAllFeatures().filter((f) => f.type === 'inline-style');
     }
 
-    getCharacterInsertions(): Array<IRegisteredFeature> {
+    getCharacterInsertions(): Array<IEditorControl> {
         return this.getAllFeatures().filter((f) => f.type === 'character-insertion');
     }
 
-    getFeatureByFormatOption(formatOption: string): IRegisteredFeature | undefined {
+    getFeatureByFormatOption(formatOption: string): IEditorControl | undefined {
         this.initialize();
         return this.features.get(formatOption);
     }
 
-    getFeatureByCommand(command: string): IRegisteredFeature | undefined {
+    getFeatureByCommand(command: string): IEditorControl | undefined {
         this.initialize();
         return this.getAllFeatures().find((f) => f.commandName === command);
     }
 
-    matchKeyBinding(e: KeyboardEvent): IRegisteredFeature | null {
+    matchKeyBinding(e: KeyboardEvent): IEditorControl | null {
         this.initialize();
 
         const key = e.key.toLowerCase();
@@ -209,4 +209,4 @@ class FeatureRegistryClass {
     }
 }
 
-export const FeatureRegistry = new FeatureRegistryClass();
+export const customEditorControls = new CustomEditorControlsClass();

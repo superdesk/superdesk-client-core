@@ -1,9 +1,9 @@
-import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 import {EditorState, SelectionState, Modifier} from 'draft-js';
 
 export const inlineStyles = {
     ...Object.fromEntries(
-        FeatureRegistry.getInlineStyles().map((f) => [f.formatOption, f.draftJsStyle]),
+        customEditorControls.getInlineStyles().map((f) => [f.formatOption, f.draftJsStyle]),
     ),
     bold: 'BOLD',
     italic: 'ITALIC',

@@ -10,7 +10,7 @@ import {getBlockRenderer} from '../blockRenderer';
 import {IEditorStore} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {isMacOS} from 'core/utils';
-import {FeatureRegistry} from 'core/editor3/FeatureRegistry';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 import {appConfig} from 'appConfig';
 
 const NDASH_CHAR = '\u2013';
@@ -181,8 +181,8 @@ describe('editor3.component', () => {
     });
 
     describe('keyboard shortcuts', () => {
-        const resetFeatureRegistry = () => {
-            const registry = FeatureRegistry as any;
+        const resetcustomEditorControls = () => {
+            const registry = customEditorControls as any;
 
             registry.features = new Map();
             registry.keyBindings = new Map();
@@ -221,7 +221,7 @@ describe('editor3.component', () => {
                 },
             });
 
-            resetFeatureRegistry();
+            resetcustomEditorControls();
         });
 
         const renderComponent = (extraProps = {}) => shallow(

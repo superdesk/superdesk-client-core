@@ -11,7 +11,7 @@ import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
-import {FeatureRegistry, IRegisteredFeature} from 'core/editor3/FeatureRegistry';
+import {customEditorControls, IEditorControl} from 'core/editor3/CustomEditorControls';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
@@ -38,10 +38,10 @@ export interface IEnhancedTag {
     label: string;
     borderColor: 'tag-color-1' | 'tag-color-2';
     tooltip?: string;
-    shortcut?: IRegisteredFeature['shortcut'];
+    shortcut?: IEditorControl['shortcut'];
 }
 
-export const customEditorTags: Array<IEnhancedTag> = FeatureRegistry.getInlineStyles().map((feature) => {
+export const customEditorTags: Array<IEnhancedTag> = customEditorControls.getInlineStyles().map((feature) => {
     return {
         id: feature.id,
         editor3Style: feature.formatOption,
@@ -54,14 +54,14 @@ export const customEditorTags: Array<IEnhancedTag> = FeatureRegistry.getInlineSt
 });
 
 export const getEditor3RichTextFormattingOptions = (): Record<string, string> => {
-    FeatureRegistry.initialize();
+    customEditorControls.initialize();
 
     return {
         ...Object.fromEntries(
-            FeatureRegistry.getInlineStyles().map((f) => [f.formatOption, f.label]),
+            customEditorControls.getInlineStyles().map((f) => [f.formatOption, f.label]),
         ),
         ...Object.fromEntries(
-            FeatureRegistry.getCharacterInsertions().map((f) => [f.formatOption, f.label]),
+            customEditorControls.getCharacterInsertions().map((f) => [f.formatOption, f.label]),
         ),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
