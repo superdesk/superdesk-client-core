@@ -3789,13 +3789,6 @@ declare module 'superdesk-api' {
         infoRemovedFields: {};
         previewSubjectFilterKey: any;
         authoring?: {
-            customEditorTags?: Array<{
-                id: string;
-                icon: string;
-                label: string;
-                borderColor: 'tag-color-1' | 'tag-color-2';
-                tooltip?: string;
-            }>;
             customEditorFeatures?: ICustomEditorFeatures;
             timeToRead?: any;
             lineLength?: number;

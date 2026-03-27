@@ -524,7 +524,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                         break;
                     }
                 }
-                    break;
+                // falls through to default for normal backspace handling
                 default:
                     newState = RichUtils.handleKeyCommand(editorState, command);
             }

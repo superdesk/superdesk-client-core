@@ -1,11 +1,54 @@
+import React from 'react';
 import {appConfig} from 'appConfig';
 import {isMacOS} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {
     IShortcutConfig,
     ICustomInlineStyle,
     ICharacterInsertion,
     KeyModifier,
 } from 'superdesk-api';
+
+const SPECIAL_KEY_LABELS: Record<string, string> = {
+    ' ': 'Space',
+    'arrowup': 'Up',
+    'arrowdown': 'Down',
+    'arrowleft': 'Left',
+    'arrowright': 'Right',
+};
+
+/**
+ * Maps KeyboardEvent.code (physical key) to the base character the key
+ * represents without modifiers. This is needed because on macOS, Alt/Option
+ * modifies e.key to produce alternate characters (e.g. Option+- → '–'),
+ * making e.key unreliable for shortcut matching when Alt is a modifier.
+ */
+function physicalKeyToChar(code: string): string | null {
+    if (code.startsWith('Digit')) {
+        return code.charAt(5).toLowerCase();
+    }
+
+    if (code.startsWith('Key')) {
+        return code.charAt(3).toLowerCase();
+    }
+
+    const codeMap: Record<string, string> = {
+        Minus: '-',
+        Equal: '=',
+        Space: ' ',
+        BracketLeft: '[',
+        BracketRight: ']',
+        Backslash: '\\',
+        Semicolon: ';',
+        Quote: "'",
+        Comma: ',',
+        Period: '.',
+        Slash: '/',
+        Backquote: '`',
+    };
+
+    return codeMap[code] ?? null;
+}
 
 export interface IEditorControl {
     id: string;
@@ -52,13 +95,17 @@ class CustomEditorControlsClass {
 
     private registerInlineStyle(config: ICustomInlineStyle) {
         const formatOption = this.formatId(config.id, 'EDITOR_TAG');
-        const commandName = `toggle-${config.id}-tag`;
 
-        const feature: IEditorControl = {
+        if (this.features.has(formatOption)) {
+            logger.warn(`customEditorControls: duplicate formatOption "${formatOption}", skipping`);
+            return;
+        }
+
+        const control: IEditorControl = {
             id: config.id,
             type: 'inline-style',
             formatOption,
-            commandName,
+            commandName: `toggle-${config.id}-tag`,
             draftJsStyle: formatOption,
             icon: config.icon,
             label: config.label,
@@ -67,24 +114,28 @@ class CustomEditorControlsClass {
             shortcut: config.shortcut,
         };
 
-        this.features.set(formatOption, feature);
-
-        if (config.shortcut) {
-            const key = this.shortcutToKey(config.shortcut);
-
-            this.keyBindings.set(key, feature);
-        }
+        this.features.set(formatOption, control);
+        this.registerShortcut(config.shortcut, control);
     }
 
     private registerCharacterInsertion(config: ICharacterInsertion) {
-        const formatOption = this.formatId(config.id, 'INSERT_CHAR');
-        const commandName = `insert-${config.id}`;
+        if (!config.character) {
+            logger.warn(`customEditorControls: character insertion "${config.id}" has no character, skipping`);
+            return;
+        }
 
-        const feature: IEditorControl = {
+        const formatOption = this.formatId(config.id, 'INSERT_CHAR');
+
+        if (this.features.has(formatOption)) {
+            logger.warn(`customEditorControls: duplicate formatOption "${formatOption}", skipping`);
+            return;
+        }
+
+        const control: IEditorControl = {
             id: config.id,
             type: 'character-insertion',
             formatOption,
-            commandName,
+            commandName: `insert-${config.id}`,
             draftJsStyle: formatOption,
             icon: config.icon,
             label: config.label,
@@ -93,13 +144,26 @@ class CustomEditorControlsClass {
             shortcut: config.shortcut,
         };
 
-        this.features.set(formatOption, feature);
+        this.features.set(formatOption, control);
+        this.registerShortcut(config.shortcut, control);
+    }
 
-        if (config.shortcut) {
-            const key = this.shortcutToKey(config.shortcut);
-
-            this.keyBindings.set(key, feature);
+    private registerShortcut(shortcut: IShortcutConfig | undefined, control: IEditorControl) {
+        if (shortcut == null) {
+            return;
         }
+
+        const key = this.shortcutToKey(shortcut);
+
+        if (this.keyBindings.has(key)) {
+            const existing = this.keyBindings.get(key);
+
+            logger.warn(
+                `customEditorControls: shortcut "${key}" for "${control.id}" conflicts with "${existing.id}"`,
+            );
+        }
+
+        this.keyBindings.set(key, control);
     }
 
     private shortcutToKey(shortcut: IShortcutConfig): string {
@@ -134,10 +198,9 @@ class CustomEditorControlsClass {
         return this.getAllFeatures().find((f) => f.commandName === command);
     }
 
-    matchKeyBinding(e: KeyboardEvent): IEditorControl | null {
+    matchKeyBinding(e: KeyboardEvent | React.KeyboardEvent): IEditorControl | null {
         this.initialize();
 
-        const key = e.key.toLowerCase();
         const modifiers: Array<KeyModifier> = [];
 
         if (isMacOS()) {
@@ -150,17 +213,27 @@ class CustomEditorControlsClass {
         if (e.altKey) modifiers.push('alt');
         if (e.shiftKey) modifiers.push('shift');
 
-        const exactKey = `${modifiers.sort().join('+')}+${key}`;
-        const exactMatch = this.keyBindings.get(exactKey);
+        const modifierPrefix = modifiers.sort().join('+');
 
-        if (exactMatch) return exactMatch;
+        // Try e.key first (the character produced by the keypress)
+        const match = this.keyBindings.get(`${modifierPrefix}+${e.key.toLowerCase()}`);
 
-        const primaryModifiers = modifiers
-            .map((m) => (m === 'cmd' || m === 'ctrl' ? 'primary' : m))
-            .filter((m, i, arr) => arr.indexOf(m) === i);
-        const primaryKey = `${primaryModifiers.sort().join('+')}+${key}`;
+        if (match) return match;
 
-        return this.keyBindings.get(primaryKey) || null;
+        // On macOS, Alt/Option modifies e.key (e.g. Option+- → '–' instead of '-').
+        // Fall back to the physical key via e.code so shortcuts still match.
+        // React 16 SyntheticKeyboardEvent does not expose e.code, so we read it
+        // from the native event when available.
+        const code = (e as KeyboardEvent).code ?? (e as React.KeyboardEvent).nativeEvent?.code;
+        const physicalKey = code != null ? physicalKeyToChar(code) : null;
+
+        if (physicalKey != null) {
+            const physicalMatch = this.keyBindings.get(`${modifierPrefix}+${physicalKey}`);
+
+            if (physicalMatch) return physicalMatch;
+        }
+
+        return null;
     }
 
     getStyleMap(): Record<string, React.CSSProperties> {
@@ -188,12 +261,14 @@ class CustomEditorControlsClass {
     }
 
     formatShortcut(shortcut: IShortcutConfig): string {
+        const mac = isMacOS();
+
         const parts = shortcut.modifiers.map((m) => {
             switch (m) {
                 case 'primary':
-                    return isMacOS() ? 'Cmd' : 'Ctrl';
+                    return mac ? 'Cmd' : 'Ctrl';
                 case 'alt':
-                    return 'Alt';
+                    return mac ? 'Option' : 'Alt';
                 case 'shift':
                     return 'Shift';
                 case 'ctrl':
@@ -205,7 +280,9 @@ class CustomEditorControlsClass {
             }
         });
 
-        return [...parts, shortcut.key.toUpperCase()].join('+');
+        const keyLabel = SPECIAL_KEY_LABELS[shortcut.key] ?? shortcut.key.toUpperCase();
+
+        return [...parts, keyLabel].join('+');
     }
 }
 
