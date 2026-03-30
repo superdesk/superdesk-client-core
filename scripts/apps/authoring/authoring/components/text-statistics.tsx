@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {CharacterCount2} from 'apps/authoring/authoring/components/CharacterCount';
 import {gettextPlural} from 'core/utils';
 import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {Spacer} from 'core/ui/components/Spacer';
-import {LineCount} from 'apps/authoring/authoring/components/line-count';
 import {appConfig} from 'appConfig';
+import {LineCount} from './line-count';
+import {CharacterCount2} from './CharacterCount';
 
 interface IProps {
     text: string;
@@ -25,7 +25,7 @@ export class TextStatistics extends React.PureComponent<IProps> {
 
         return (
             <Spacer h gap="8" noWrap>
-                {showLineCount ? <LineCount html={this.props.text} /> : null}
+                {showLineCount ? <LineCount text={this.props.text} /> : null}
 
                 <span className="char-count-base">
                     {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
