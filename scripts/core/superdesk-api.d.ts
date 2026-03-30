@@ -3802,7 +3802,7 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             customEditorFeatures?: ICustomEditorFeatures;
-            timeToRead?: any;
+            timeToRead?: boolean;
             lineLength?: number;
             preview?: {
                 hideContentLabels: boolean;
