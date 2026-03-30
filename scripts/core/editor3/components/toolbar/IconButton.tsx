@@ -9,7 +9,7 @@ import {IEditorComponentProps} from 'superdesk-api';
  */
 
 interface IProps {
-    onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+    onClick(e: React.MouseEvent<HTMLElement, MouseEvent>): void;
     tooltip: string;
     iconName: string;
 
@@ -26,6 +26,14 @@ export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, 
         style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
         role="button"
     >
-        <span role="button" onClick={onClick}><i className={`icon-${iconName}`} /></span>
+        <span
+            role="button"
+            onMouseDown={(e) => {
+                e.preventDefault();
+                onClick(e);
+            }}
+        >
+            <i className={`icon-${iconName}`} />
+        </span>
     </div>
 );

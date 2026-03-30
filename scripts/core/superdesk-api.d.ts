@@ -2647,6 +2647,38 @@ declare module 'superdesk-api' {
 
     export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
+    export type KeyModifier = 'primary' | 'alt' | 'shift' | 'ctrl' | 'cmd';
+
+    export interface IShortcutConfig {
+        key: string;
+        modifiers: Array<KeyModifier>;
+    }
+
+    export interface ICustomInlineStyle {
+        id: string;
+        type: 'inline-style';
+        icon: string;
+        label: string;
+        borderColor: 'tag-color-1' | 'tag-color-2';
+        tooltip?: string;
+        shortcut?: IShortcutConfig;
+    }
+
+    export interface ICharacterInsertion {
+        id: string;
+        type: 'character-insertion';
+        character: string;
+        icon: string;
+        label: string;
+        tooltip?: string;
+        shortcut?: IShortcutConfig;
+    }
+
+    export interface ICustomEditorFeatures {
+        inlineStyles?: Array<ICustomInlineStyle>;
+        characterInsertions?: Array<ICharacterInsertion>;
+    }
+
     export type RICH_FORMATTING_OPTION =
         PLAINTEXT_FORMATTING_OPTION |
         'h1' |
@@ -2681,7 +2713,9 @@ declare module 'superdesk-api' {
         'undo' |
         'redo' |
         'multi-line quote' |
-        'custom blocks';
+        'custom blocks' |
+        `EDITOR_TAG_${string}` |
+        `INSERT_CHAR_${string}`;
 
     export interface IEditor3HtmlProps {
         value: string;
@@ -3755,13 +3789,7 @@ declare module 'superdesk-api' {
         infoRemovedFields: {};
         previewSubjectFilterKey: any;
         authoring?: {
-            customEditorTags?: Array<{
-                id: string;
-                icon: string;
-                label: string;
-                borderColor: 'tag-color-1' | 'tag-color-2';
-                tooltip?: string;
-            }>;
+            customEditorFeatures?: ICustomEditorFeatures;
             timeToRead?: any;
             lineLength?: number;
             preview?: {

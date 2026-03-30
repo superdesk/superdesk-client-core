@@ -1,12 +1,10 @@
-import {customEditorTags} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 import {EditorState, SelectionState, Modifier} from 'draft-js';
 
-/**
- * @type {Object}
- * @description Maps server 'editorFormat' options to Draft inline styles.
- */
 export const inlineStyles = {
-    ...Object.fromEntries(customEditorTags.map(({editor3Style}) => [editor3Style, editor3Style])),
+    ...Object.fromEntries(
+        customEditorControls.getInlineStyles().map((f) => [f.formatOption, f.draftJsStyle]),
+    ),
     bold: 'BOLD',
     italic: 'ITALIC',
     underline: 'UNDERLINE',
@@ -16,14 +14,6 @@ export const inlineStyles = {
 };
 
 export const acceptedInlineStyles = Object.values(inlineStyles);
-
-/**
- * Sanitize given content state on paste
- *
- * @param {ContentState} content
- * @param {Array} inlineStyles
- * @returns {ContentState}
- */
 
 export function sanitizeContent(editorState, styles = acceptedInlineStyles) {
     let contentState = editorState.getCurrentContent();
@@ -37,7 +27,6 @@ export function sanitizeContent(editorState, styles = acceptedInlineStyles) {
     let nextEditorState = editorState;
 
     contentState.getBlockMap().forEach((block) => {
-        // remove extra styles
         block.findStyleRanges(
             (character) => character.getStyle().some(ignoreStyle),
             (start, end) => {

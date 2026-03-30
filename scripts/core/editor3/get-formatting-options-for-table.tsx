@@ -1,7 +1,8 @@
 import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 
 export function getFormattingOptionsForTableLikeBlocks(): Array<RICH_FORMATTING_OPTION> {
-    const options: {[K in RICH_FORMATTING_OPTION] : boolean} = {
+    const options: Record<string, boolean> = {
         h1: true,
         h2: true,
         h3: true,
@@ -40,7 +41,15 @@ export function getFormattingOptionsForTableLikeBlocks(): Array<RICH_FORMATTING_
         embed: false,
     };
 
+    for (const feature of customEditorControls.getCharacterInsertions()) {
+        options[feature.formatOption] = true;
+    }
+
+    for (const feature of customEditorControls.getInlineStyles()) {
+        options[feature.formatOption] = true;
+    }
+
     return Object.entries(options)
         .filter(([_key, value]) => value === true)
-        .map(([key]: [RICH_FORMATTING_OPTION, boolean]) => key);
+        .map(([key]) => key as RICH_FORMATTING_OPTION);
 }

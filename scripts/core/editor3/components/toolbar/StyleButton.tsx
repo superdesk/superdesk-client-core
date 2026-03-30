@@ -2,10 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import {gettext} from 'core/utils';
 import {IEditorComponentProps} from 'superdesk-api';
-import {
-    customEditorTags,
-    getEditor3RichTextFormattingOptions,
-} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
+import {getEditor3RichTextFormattingOptions} from 'apps/workspace/content/components/get-content-profiles-form-config';
 
 interface IPropsStyleButton {
     onToggle?(style: string, active: boolean): void;
@@ -16,7 +14,9 @@ interface IPropsStyleButton {
 }
 
 const styleIcons = {
-    ...Object.fromEntries(customEditorTags.map(({editor3Style, icon}) => [editor3Style, `icon-${icon}`])),
+    ...Object.fromEntries(
+        customEditorControls.getInlineStyles().map((f) => [f.formatOption, `icon-${f.icon}`]),
+    ),
     bold: 'icon-bold',
     italic: 'icon-italic',
     underline: 'icon-underline',
@@ -37,12 +37,6 @@ const styleIcons = {
     superscript: 'icon-superscript',
 };
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name StyleButton
- * @description Toolbar button that can be toggled.
- */
 export default class StyleButton extends React.Component<IPropsStyleButton> {
     static propTypes: any;
     static defaultProps: any;
@@ -67,9 +61,12 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
         });
 
         const customTags = Object.fromEntries(
-            customEditorTags.map(({editor3Style, label, tooltip}) => {
-                // Use configured tooltip if provided, otherwise fallback to label
-                return [editor3Style, tooltip || label];
+            customEditorControls.getInlineStyles().map((f) => {
+                const shortcutText = f.shortcut
+                    ? ` (${customEditorControls.formatShortcut(f.shortcut)})`
+                    : '';
+
+                return [f.formatOption, f.tooltip || f.label + shortcutText];
             }),
         );
 

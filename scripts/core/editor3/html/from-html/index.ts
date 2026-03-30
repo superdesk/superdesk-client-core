@@ -33,54 +33,68 @@ const TAG_CLOSE = '\uE002'; // follows content
 const TAG_REGEX = new RegExp(`${TAG_OPEN}([^${TAG_SEP}]+)${TAG_SEP}([^${TAG_OPEN}]*)${TAG_CLOSE}`, 'g');
 
 /**
- * Builds a reverse map from CSS property+value → editor3 style name.
- *
- * Keyed by property name (camelCase), then by value (lowercased). Two entries
- * are added per value: the raw string from customEditorTagStyleMap (Firefox
- * clipboard preserves CSS variables) and the browser-computed value resolved
- * via a temporary DOM element (Chrome resolves CSS variables, e.g. lch(...)).
- *
- * Iterates all properties in customEditorTagStyleMap so adding a new custom tag
- * style with a different fingerprint property is handled automatically.
+ * Matches a single CSS property on a pasted <span>. Holds the camelCase property
+ * name and a set of accepted values (raw CSS string + browser-computed variants).
+ * Multiple accepted values account for browser differences: Firefox preserves CSS
+ * variables in clipboard HTML while Chrome resolves them to computed values.
  */
-let cssToEditorStyleMap: Map<string, Map<string, string>> | null = null;
+export interface ICssPropertyMatcher {
+    property: string;
+    acceptedValues: Set<string>;
+}
 
-function getCssToEditorStyleMap(): Map<string, Map<string, string>> {
-    if (cssToEditorStyleMap != null) {
-        return cssToEditorStyleMap;
+/**
+ * Identifies a custom editor tag style by its complete CSS fingerprint.
+ * During paste, a <span>'s inline styles are checked against ALL properties
+ * in the fingerprint -- every property must match for positive identification.
+ * This prevents false matches from shared properties like `display: inline-block`.
+ */
+export interface IStyleFingerprint {
+    styleName: string;
+    properties: Array<ICssPropertyMatcher>;
+}
+
+let cachedFingerprints: Array<IStyleFingerprint> | null = null;
+
+/**
+ * Builds a fingerprint for each custom editor tag style from customEditorTagStyleMap.
+ * Each fingerprint contains all CSS properties of that style, with both the raw value
+ * and the browser-computed value (to handle CSS variable resolution differences).
+ */
+function getStyleFingerprints(): Array<IStyleFingerprint> {
+    if (cachedFingerprints != null) {
+        return cachedFingerprints;
     }
 
-    const map = new Map<string, Map<string, string>>();
     const probe = document.createElement('span');
 
     document.body.appendChild(probe);
 
-    for (const [styleName, cssProps] of Object.entries(customEditorTagStyleMap)) {
-        for (const [propName, rawValue] of Object.entries(cssProps)) {
-            if (!map.has(propName)) {
-                map.set(propName, new Map());
-            }
+    cachedFingerprints = Object.entries(customEditorTagStyleMap).map(
+        ([styleName, cssProps]) => ({
+            styleName,
+            properties: Object.entries(cssProps).map(([propName, rawValue]) => {
+                const acceptedValues = new Set<string>();
 
-            const valueMap = map.get(propName);
-            const rawLower = (rawValue as string).toLowerCase();
+                acceptedValues.add((rawValue as string).toLowerCase());
 
-            valueMap.set(rawLower, styleName);
-            probe.style[propName] = rawValue;
+                probe.style[propName] = rawValue;
+                const computed = getComputedStyle(probe)[propName]?.toLowerCase().trim();
 
-            const computed = getComputedStyle(probe)[propName]?.toLowerCase().trim();
+                if (computed) {
+                    acceptedValues.add(computed);
+                }
 
-            if (computed && computed !== rawLower) {
-                valueMap.set(computed, styleName);
-            }
+                probe.style[propName] = '';
 
-            probe.style[propName] = '';
-        }
-    }
+                return {property: propName, acceptedValues};
+            }),
+        }),
+    );
 
     document.body.removeChild(probe);
-    cssToEditorStyleMap = map;
 
-    return map;
+    return cachedFingerprints;
 }
 
 /**
@@ -155,16 +169,16 @@ class HTMLParser {
     media: any;
     associations: any;
     tree: any;
-    private cssTagStyleMap: Map<string, Map<string, string>>;
+    private styleFingerprints: Array<IStyleFingerprint>;
 
-    constructor(html, associations = {}, cssTagStyleMap?: Map<string, Map<string, string>>) {
+    constructor(html, associations = {}, styleFingerprints?: Array<IStyleFingerprint>) {
         this.iframes = {};
         this.scripts = {};
         this.figures = {};
         this.tables = {};
         this.media = {};
         this.associations = associations;
-        this.cssTagStyleMap = cssTagStyleMap ?? getCssToEditorStyleMap();
+        this.styleFingerprints = styleFingerprints ?? getStyleFingerprints();
 
         this.tree = $('<div></div>');
 
@@ -174,20 +188,28 @@ class HTMLParser {
     /**
      * Finds spans styled with custom editor tag CSS (from browser clipboard)
      * and normalises them to the custom-editor-tag-id attribute format.
+     *
+     * Matches a span only when ALL CSS properties in a fingerprint match,
+     * so shared properties (e.g. `display: inline-block`) cannot cause
+     * one tag to be misidentified as another.
      */
     private normalizeCssTagSpans() {
-        if (this.cssTagStyleMap.size === 0) {
+        if (this.styleFingerprints.length === 0) {
             return;
         }
 
         this.tree.find('span[style]').each((_, node) => {
             const el = node as HTMLElement;
 
-            for (const [propName, valueMap] of this.cssTagStyleMap) {
-                const value = el.style[propName]?.toLowerCase().trim();
+            for (const {styleName, properties} of this.styleFingerprints) {
+                const allMatch = properties.every(({property, acceptedValues}) => {
+                    const actual = el.style[property]?.toLowerCase().trim();
 
-                if (value && valueMap.has(value)) {
-                    el.setAttribute(CUSTOM_EDITOR_TAG_ATTR, valueMap.get(value));
+                    return actual && acceptedValues.has(actual);
+                });
+
+                if (allMatch) {
+                    el.setAttribute(CUSTOM_EDITOR_TAG_ATTR, styleName);
                     el.removeAttribute('style');
                     break;
                 }
@@ -592,12 +614,12 @@ class HTMLParser {
 export function getContentStateFromHtml(
     html: string,
     associations: object = {},
-    cssTagStyleMap?: Map<string, Map<string, string>>,
+    styleFingerprints?: Array<IStyleFingerprint>,
 ): ContentState {
     if (html.length < 1) {
         return ContentState.createFromText('');
     } else {
-        return new HTMLParser(html, associations, cssTagStyleMap).contentState();
+        return new HTMLParser(html, associations, styleFingerprints).contentState();
     }
 }
 
