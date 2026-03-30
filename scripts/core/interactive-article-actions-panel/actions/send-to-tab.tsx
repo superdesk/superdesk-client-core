@@ -32,6 +32,7 @@ interface IState {
 
 export class SendToTab extends React.PureComponent<IProps, IState> {
     private availableDesks: OrderedMap<string, IDesk>;
+    private userPreferedDesks: {[key: string]: boolean};
 
     constructor(props: IProps) {
         super(props);
@@ -39,6 +40,10 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         this.availableDesks = sdApi.desks.getAllDesks()
             .filter((desk) => desk.send_to_desk_not_allowed !== true)
             .toOrderedMap();
+
+        const preferedDesks = sdApi.preferences.get('desks:preferred');
+
+        this.userPreferedDesks = preferedDesks?.selected ?? {};
 
         this.state = {
             selectedDestination: getInitialDestination(
@@ -123,6 +128,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                     <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
                             availableDesks={this.availableDesks}
+                            preferedDesks={this.userPreferedDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({
