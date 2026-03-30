@@ -3615,7 +3615,7 @@ declare module 'superdesk-api' {
         infoRemovedFields: {};
         previewSubjectFilterKey: any;
         authoring?: {
-            timeToRead?: any;
+            timeToRead?: boolean;
             lineLength?: number;
             preview?: {
                 hideContentLabels: boolean;
