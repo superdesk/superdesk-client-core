@@ -18,7 +18,7 @@ export class LineCount extends React.PureComponent<IProps> {
             return null;
         }
 
-        return <span className="char-count lines">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
+        return <span className="char-count-base">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
     }
 }
 
