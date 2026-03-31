@@ -7,6 +7,7 @@ import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {formatDatelineText} from '../helpers';
 import {getMonthNamesShort} from 'core/helpers/locale';
 
@@ -136,7 +137,7 @@ export function ArticleEditDirective(
                 };
 
                 scope.preview = function(item) {
-                    superdesk.intent('preview', 'item', item);
+                    previewItems([item]);
                 };
 
                 elem.on('drop dragdrop', (event) => {
