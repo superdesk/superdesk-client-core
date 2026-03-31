@@ -14,6 +14,7 @@ interface IProps {
     includePersonalSpace: boolean;
     disallowedStages?: Array<IStage['_id']>;
     hideStages?: boolean;
+    preferredDesks?: {[key: string]: boolean};
 
     // Defaults to all desks
     availableDesks?: OrderedMap<string, IDesk>;
@@ -29,8 +30,23 @@ export class DestinationSelect extends React.PureComponent<IProps> {
         };
 
         const allDesks = this.props.availableDesks ?? sdApi.desks.getAllDesks();
-        let destinations: Array<{id: string; label: string}> =
+        const deskDestinations: Array<{id: string; label: string}> =
             allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
+
+        const isDeskPreferred = (deskId: string): boolean => {
+            const preferredDesks = this.props.preferredDesks;
+
+            if (preferredDesks == null) {
+                return false;
+            }
+
+            return preferredDesks[deskId] === true;
+        };
+
+        const destinations: Array<{id: string; label: string}> = [
+            ...deskDestinations.filter(({id}) => isDeskPreferred(id)),
+            ...deskDestinations.filter(({id}) => !isDeskPreferred(id)),
+        ];
 
         if (this.props.includePersonalSpace) {
             destinations.push(destinationPersonalSpace);
