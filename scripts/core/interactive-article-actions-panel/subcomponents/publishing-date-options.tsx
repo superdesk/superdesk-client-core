@@ -115,6 +115,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
 
         const canSetEmbargo = this.props.allowSettingEmbargo && sdApi.user.hasPrivilege('embargo');
         const canSetPublishSchedule = this.props.allowSettingPublishSchedule;
+        const allowSeconds = appConfig.authoring?.panels?.publish?.allowSeconds ?? false;
 
         if (items.length !== 1) {
             return null;
@@ -127,6 +128,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={embargo}
                             valueType="date"
+                            allowSeconds={allowSeconds}
                             locale={{
                                 type: 'full',
                                 payload: getLocaleForDatePicker(),
@@ -154,6 +156,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={publishSchedule}
                             valueType="date"
+                            allowSeconds={allowSeconds}
                             locale={{
                                 type: 'full',
                                 payload: getLocaleForDatePicker(),

@@ -3799,6 +3799,7 @@ declare module 'superdesk-api' {
 
             panels?: {
                 publish?: {
+                    allowSeconds?: boolean;
                     publishSchedule?: boolean
                     publishingTarget?: boolean;
                 }
