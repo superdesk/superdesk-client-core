@@ -122,7 +122,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                                             a.click();
                                         }}
                                     >
-                                        Download original
+                                        {gettext('Download original')}
                                     </button>
                                     <img src={item.renditions.baseImage.href} />
 
