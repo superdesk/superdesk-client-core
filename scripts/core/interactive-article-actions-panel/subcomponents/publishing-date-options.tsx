@@ -127,6 +127,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={embargo}
                             valueType="date"
+                            allowSeconds={appConfig.view.timeformat.includes('ss')}
                             locale={{
                                 type: 'full',
                                 payload: getLocaleForDatePicker(),
@@ -154,6 +155,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                         <DateTimePicker
                             value={publishSchedule}
                             valueType="date"
+                            allowSeconds={appConfig.view.timeformat.includes('ss')}
                             locale={{
                                 type: 'full',
                                 payload: getLocaleForDatePicker(),
