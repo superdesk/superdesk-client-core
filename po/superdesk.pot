@@ -9190,10 +9190,6 @@ msgstr ""
 msgid "Last Year"
 msgstr ""
 
-#: scripts/apps/authoring/preview/fullPreview.tsx:124
-msgid "Download original"
-msgstr ""
-
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/PreviewArticle.tsx:71
 #: scripts/apps/authoring/preview/fullPreview.tsx:77
 msgid "Last modified"
@@ -11275,6 +11271,7 @@ msgstr ""
 #: scripts/apps/authoring/views/change-image.html:125
 #: scripts/apps/authoring/views/change-image.html:232
 #: scripts/apps/authoring/views/change-image.html:92
+#: scripts/apps/authoring/preview/fullPreview.tsx:124
 msgid "Original"
 msgstr ""
 
