@@ -50,6 +50,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                 props.items,
                 canSendToPersonal(props.items),
                 this.availableDesks,
+                this.userPreferredDesks,
             ),
             publishingDateOptions: getInitialPublishingDateOptions(props.items),
         };

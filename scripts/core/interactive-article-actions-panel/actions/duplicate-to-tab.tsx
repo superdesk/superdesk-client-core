@@ -23,11 +23,22 @@ interface IState {
 }
 
 export class DuplicateToTab extends React.PureComponent<IProps, IState> {
+    private userPreferredDesks: {[key: string]: boolean};
+
     constructor(props: IProps) {
         super(props);
 
+        const preferredDesks = sdApi.preferences.get('desks:preferred');
+
+        this.userPreferredDesks = preferredDesks?.selected ?? {};
+
         this.state = {
-            selectedDestination: getInitialDestination(props.items, canSendToPersonal(props.items)),
+            selectedDestination: getInitialDestination(
+                props.items,
+                canSendToPersonal(props.items),
+                undefined,
+                this.userPreferredDesks,
+            ),
         };
 
         this.duplicateItems = this.duplicateItems.bind(this);
@@ -59,6 +70,7 @@ export class DuplicateToTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            preferredDesks={this.userPreferredDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({
