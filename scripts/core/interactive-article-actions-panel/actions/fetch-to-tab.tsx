@@ -24,11 +24,17 @@ interface IState {
 }
 
 export class FetchToTab extends React.PureComponent<IProps, IState> {
+    private userPreferredDesks: {[key: string]: boolean};
+
     constructor(props: IProps) {
         super(props);
 
+        const preferredDesks = sdApi.preferences.get('desks:preferred');
+
+        this.userPreferredDesks = preferredDesks?.selected ?? {};
+
         this.state = {
-            selectedDestination: getInitialDestination(props.items, false),
+            selectedDestination: getInitialDestination(props.items, false, undefined, this.userPreferredDesks),
         };
 
         this.fetchItems = this.fetchItems.bind(this);
@@ -76,6 +82,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>
                         <DestinationSelect
+                            preferredDesks={this.userPreferredDesks}
                             value={this.state.selectedDestination}
                             onChange={(value) => {
                                 this.setState({

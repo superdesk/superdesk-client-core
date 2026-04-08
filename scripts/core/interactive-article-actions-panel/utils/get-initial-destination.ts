@@ -8,6 +8,7 @@ export function getInitialDestination(
     items: Array<IArticle>,
     canSendToPersonal: boolean,
     availableDesks: OrderedMap<string, IDesk> = sdApi.desks.getAllDesks(),
+    userPreferredDesks: {[key: string]: boolean} = {},
 ): ISendToDestination {
     const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 
@@ -25,14 +26,17 @@ export function getInitialDestination(
         } else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
-            return availableDesks.first()?._id ?? null;
+            return availableDesks.find((desk) => desk != null && userPreferredDesks[desk._id] === true)?._id
+                ?? availableDesks.first()?._id
+                ?? null;
         }
     })();
 
-    // If destinationDesk isn't found in availableDesks we set the
-    // destinationDesk to the first item from availableDesks
+    // If destinationDesk is no longer available, use the same fallback priority
+    // as initial selection: preferred desk first, then first available desk.
     if (!availableDesks.has(destinationDesk)) {
-        destinationDesk = availableDesks.first()?._id;
+        destinationDesk = availableDesks.find((desk) => desk != null && userPreferredDesks[desk._id] === true)?._id
+            ?? availableDesks.first()?._id;
     }
 
     if (destinationDesk == null) {
