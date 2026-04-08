@@ -7,6 +7,7 @@ import {sdApi} from 'api';
 import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {ISendToDestination} from '../interfaces';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
+import {getUserPreferredDesks} from '../utils/get-user-preferred-desks';
 
 interface IProps {
     value: ISendToDestination;
@@ -14,7 +15,6 @@ interface IProps {
     includePersonalSpace: boolean;
     disallowedStages?: Array<IStage['_id']>;
     hideStages?: boolean;
-    preferredDesks?: {[key: string]: boolean};
 
     // Defaults to all desks
     availableDesks?: OrderedMap<string, IDesk>;
@@ -33,14 +33,10 @@ export class DestinationSelect extends React.PureComponent<IProps> {
         const deskDestinations: Array<{id: string; label: string}> =
             allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
 
+        const userPreferredDesks = getUserPreferredDesks();
+
         const isDeskPreferred = (deskId: string): boolean => {
-            const preferredDesks = this.props.preferredDesks;
-
-            if (preferredDesks == null) {
-                return false;
-            }
-
-            return preferredDesks[deskId] === true;
+            return userPreferredDesks[deskId] === true;
         };
 
         const destinations: Array<{id: string; label: string}> = [

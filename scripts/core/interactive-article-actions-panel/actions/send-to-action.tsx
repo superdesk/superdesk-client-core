@@ -112,15 +112,12 @@ export class SendToAction extends React.PureComponent<IProps, IState> {
         const sendPackages = this.props.items.every(({type}) => type === 'composite');
         const dest = this.state.selectedDestination;
         const noDestinationsAvailable = dest.type === 'desk' && dest.desk == null;
-        const preferredDesks = sdApi.preferences.get('desks:preferred');
-        const userPreferredDesks = preferredDesks?.selected ?? {};
 
         const body = (
             <React.Fragment>
                 <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>
                     <DestinationSelect
                         availableDesks={this.availableDesks}
-                        preferredDesks={userPreferredDesks}
                         value={this.state.selectedDestination}
                         onChange={(value) => {
                             this.setState({
