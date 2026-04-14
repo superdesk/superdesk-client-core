@@ -105,7 +105,7 @@
         <div class="core-content">
 
             <p class="title preview-headline"
-              order="{{editor['headline'].order}}"
+              order="{{selected.preview.type === 'text' ? editor['headline'].order : '0' }}"
               ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
               ng-class="{condensed: !lock}"
               sd-html-preview="selected.preview.headline"
