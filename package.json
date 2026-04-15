@@ -165,6 +165,7 @@
   },
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
+    "gettext-update-po": "node ./tasks/gettext-update-po.js",
     "postinstall": "node ./tasks/patch-package.js && node tasks/generate-placeholder-file-for-extension-styles.js",
     "test": "npm run lint && npm run unit && npm run verify-client-api-changes",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
