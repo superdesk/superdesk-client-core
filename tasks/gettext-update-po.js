@@ -42,21 +42,9 @@ try {
         ],
         {stdio: 'inherit'}
     );
-
-    execFileSync(
-        'msgattrib',
-        [
-            '--no-obsolete',
-            '--no-wrap',
-            '-o',
-            poFile,
-            poFile,
-        ],
-        {stdio: 'inherit'}
-    );
 } catch (error) {
     if (error.code === 'ENOENT') {
-        console.error('GNU gettext tools are required. Ensure "msgmerge" and "msgattrib" are installed.');
+        console.error('GNU gettext tools are required. Ensure "msgmerge" is installed.');
     }
 
     process.exit(error.status ?? 1);

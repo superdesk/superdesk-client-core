@@ -6,6 +6,7 @@ This document defines the current rules for AI-assisted Spanish localization in 
 
 - Source of truth for new and changed strings is `po/superdesk.pot`.
 - Initial write target is `po/es.po` only.
+- `po/superdesk.pot` should be refreshed by a human developer before the agent translation step.
 - Do not modify runtime JSON files directly.
 - Run `npm run gettext-update-po -- es` before asking AI to translate.
 - Do not change extraction, compile, or validation tooling.
@@ -15,7 +16,8 @@ This document defines the current rules for AI-assisted Spanish localization in 
 
 - Translate only entries that exist in `po/superdesk.pot`.
 - Update only matching entries in `po/es.po`.
-- Let the sync step add or remove catalog entries structurally.
+- Let the sync step add matching catalog entries structurally.
+- Do not prune obsolete entries as part of the agent-driven update flow.
 - Never modify `msgid`.
 - Never rewrite unrelated entries.
 - Do not overwrite existing non-empty Spanish translations.
@@ -49,7 +51,7 @@ When skipping, leave the entry unchanged.
 
 After preparing changes:
 
-1. Refresh the template with `npm run gettext-extract`.
+1. Ensure `po/superdesk.pot` was refreshed by a human developer in a known complete environment.
 2. Sync the Spanish catalog with `npm run gettext-update-po -- es`.
 3. Ensure AI changes are limited to translation content in `po/es.po`.
 4. Ensure `msgid` values are untouched.
@@ -57,7 +59,6 @@ After preparing changes:
 6. Run the existing compile/validation flow so current tooling can reject invalid placeholder changes:
 
 ```bash
-npm run gettext-extract
 npm run gettext-update-po -- es
 grunt nggettext_compile
 ```
