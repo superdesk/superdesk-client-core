@@ -19,6 +19,17 @@ For installation instructions, please refer to the README file at: [https://gith
 
 `npm run protractor` - starts the browser and runs the tests.
 
+### Local development with Superdesk
+
+To link this package into a running Superdesk client, use [`npx link`](https://github.com/privatenumber/link):
+
+```sh
+cd /path/to/superdesk/client
+npx link /path/to/superdesk-client-core
+```
+
+A fresh `npm install` in the client will restore the published version.
+
 ### Contributing
 
 Before considering contributions to the Superdesk client, please make sure to read our [contribution guidelines](https://github.com/superdesk/superdesk-client-core/blob/master/CONTRIBUTING.md).
