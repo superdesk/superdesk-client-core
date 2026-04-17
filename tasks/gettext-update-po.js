@@ -1,4 +1,4 @@
-const {execFileSync} = require('child_process');
+const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -11,7 +11,7 @@ if (languageCode == null || languageCode.trim() === '') {
 
 const lang = languageCode.trim();
 
-if (/^[A-Za-z0-9_.@-]+$/.test(lang) !== true) {
+if (!/^[A-Za-z0-9_.@-]+$/.test(lang)) {
     console.error(`Invalid language code: ${lang}`);
     process.exit(1);
 }
@@ -19,12 +19,12 @@ if (/^[A-Za-z0-9_.@-]+$/.test(lang) !== true) {
 const poFile = path.join(__dirname, '..', 'po', `${lang}.po`);
 const potFile = path.join(__dirname, '..', 'po', 'superdesk.pot');
 
-if (fs.existsSync(potFile) !== true) {
+if (!fs.existsSync(potFile)) {
     console.error(`POT file not found: ${potFile}`);
     process.exit(1);
 }
 
-if (fs.existsSync(poFile) !== true) {
+if (!fs.existsSync(poFile)) {
     console.error(`PO file not found for language "${lang}": ${poFile}`);
     process.exit(1);
 }
@@ -36,7 +36,6 @@ try {
             '--update',
             '--backup=none',
             '--no-fuzzy-matching',
-            '--no-wrap',
             poFile,
             potFile,
         ],
