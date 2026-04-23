@@ -49,8 +49,9 @@
         ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
-                ng-if="toDeskEnabled"
+                ng-if="toDeskAvailable"
                 class="btn sd-overflow-ellipsis btn--custom"
+                ng-disabled="!toDeskEnabled"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 aria-label="{{ 'To Desk' | translate }}"
                 title="{{ :: 'To Desk' | translate }}">
@@ -58,8 +59,9 @@
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
-                ng-if="closeAndContinueEnabled"
+                ng-if="closeAndContinueAvailable"
                 class="btn sd-overflow-ellipsis btn--custom"
+                ng-disabled="!closeAndContinueEnabled"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 aria-label="{{ 'Close and Continue' | translate }}"
                 title="{{ 'Close and Continue' | translate }}">
@@ -67,9 +69,10 @@
                 <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
-                ng-if="publishEnabled"
+                ng-if="publishAvailable"
                 class="btn btn--custom btn--publish"
                 type="submit"
+                ng-disabled="!publishEnabled"
                 ng-click="saveAndContinue(publish, true)"
                 aria-label="{{ :: 'Publish' | translate }}"
                 title="{{ :: 'Publish' | translate }}">
@@ -77,8 +80,9 @@
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
-                ng-if="publishAndContinueEnabled"
+                ng-if="publishAndContinueAvailable"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
+                ng-disabled="!publishAndContinueEnabled"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 aria-label="{{ :: 'Publish and Continue' | translate }}"
                 title="{{ :: 'Publish and Continue' | translate }}">
