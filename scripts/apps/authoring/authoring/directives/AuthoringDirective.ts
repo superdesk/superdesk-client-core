@@ -219,21 +219,34 @@ export function AuthoringDirective(
                 getDeskStage();
                 getCurrentTemplate();
                 $scope.$watch('item', () => {
-                    $scope.toDeskEnabled = appConfig.features?.customAuthoringTopbar?.toDesk
-                        && !sdApi.navigation.isPersonalSpace()
+                    $scope.toDeskAvailable = appConfig.features?.customAuthoringTopbar?.toDesk
+                        && !sdApi.navigation.isPersonalSpace();
+
+                    $scope.toDeskEnabled = $scope.toDeskAvailable
                         && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
 
-                    $scope.closeAndContinueEnabled = sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
+                    $scope.closeAndContinueAvailable = appConfig.features?.customAuthoringTopbar?.closeAndContinue
+                        && !sdApi.navigation.isPersonalSpace();
 
-                    $scope.publishEnabled = appConfig.features?.customAuthoringTopbar?.publish
-                        && sdApi.article.canPublishOnDesk($scope.deskType)
+                    $scope.closeAndContinueEnabled = $scope.closeAndContinueAvailable
+                        && sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
+
+                    $scope.publishAvailable = appConfig.features?.customAuthoringTopbar?.publish
+                        && sdApi.article.canPublishOnDesk($scope.deskType);
+
+                    $scope.publishEnabled = $scope.publishAvailable
                         && authoringApiCommon.checkShortcutButtonAvailability(
                             $scope.item,
                             false,
                             sdApi.navigation.isPersonalSpace(),
                         );
 
-                    $scope.publishAndContinueEnabled = sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
+                    $scope.publishAndContinueAvailable = appConfig.features?.customAuthoringTopbar?.publishAndContinue
+                        && !sdApi.navigation.isPersonalSpace()
+                        && sdApi.article.canPublishOnDesk($scope.deskType);
+
+                    $scope.publishAndContinueEnabled = $scope.publishAndContinueAvailable
+                        && sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
             });
 
@@ -621,8 +634,8 @@ export function AuthoringDirective(
             }
 
             $scope.showCustomButtons = () => {
-                return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
-                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
+                return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
+                    || $scope.publishAndContinueAvailable || $scope.publishAvailable;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
