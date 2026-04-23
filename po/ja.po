@@ -5356,11 +5356,11 @@ msgstr "取り込みチャンネル {{name}} を削除しました"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
-msgstr ""
+msgstr "配信タイプ"
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:10
 msgid "Demo widget"
-msgstr ""
+msgstr "デモウィジェット"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:169
 #: ../superdesk-planning/client/components/OrderBar/OrderDirectionIcon.tsx:20
@@ -5368,11 +5368,11 @@ msgstr ""
 #: scripts/apps/search/views/item-sortbar.html:21
 #: scripts/core/ui/components/SortBar/index.tsx:77
 msgid "Descending"
-msgstr ""
+msgstr "降順"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:49
 msgid "Descending Order"
-msgstr ""
+msgstr "降順"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:437
 #: ../superdesk-analytics/client/utils.js:156
@@ -5380,12 +5380,12 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:110
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:316
 msgid "Deschedule"
-msgstr ""
+msgstr "予定解除"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:113
 #: scripts/apps/authoring/versioning/history/views/history.html:17
 msgid "Descheduled by"
-msgstr ""
+msgstr "予定解除者"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:48
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:53
@@ -5440,28 +5440,28 @@ msgstr ""
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:291
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:144
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:291
 msgid "Description Long"
-msgstr ""
+msgstr "説明（長）"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:273
 msgid "Description Short"
-msgstr ""
+msgstr "説明（短）"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:305
 msgid "Description Text"
-msgstr ""
+msgstr "説明テキスト"
 
 #: scripts/apps/authoring-react/fields/media/media-carousel/media-carousel.tsx:135
 msgid "Description:"
-msgstr ""
+msgstr "説明："
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:328
 #: scripts/apps/search/views/multi-image-edit.html:33
 msgid "Deselect All"
-msgstr ""
+msgstr "すべて選択解除"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:495
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:9
@@ -5485,62 +5485,62 @@ msgstr "デスク"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:500
 #: ../superdesk-analytics/client/desk_activity_report/index.js:45
 msgid "Desk Activity"
-msgstr ""
+msgstr "デスクアクティビティ"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:64
 msgid "Desk Assignments"
-msgstr ""
+msgstr "デスクアサインメント"
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
-msgstr ""
+msgstr "デスクメール"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
-msgstr ""
+msgstr "デスク管理"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:56
 #: scripts/apps/workspace/content/constants.ts:66
 msgid "Desk Output"
-msgstr ""
+msgstr "デスク出力"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:152
 msgid "Desk Router"
-msgstr ""
+msgstr "デスクルーター"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:50
 msgid "Desk Schedule Output"
-msgstr ""
+msgstr "デスクスケジュール出力"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
-msgstr ""
+msgstr "デスク送信出力"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:79
 msgid "Desk Templates"
-msgstr ""
+msgstr "デスクテンプレート"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
 msgid "Desk Transitions"
-msgstr ""
+msgstr "デスク遷移"
 
 #: scripts/apps/desks/views/desk-config-modal.html:93
 #: scripts/apps/desks/views/settings.html:82
 msgid "Desk Type"
-msgstr ""
+msgstr "デスクタイプ"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:63
 msgid "Desk deleted."
-msgstr ""
+msgstr "デスクを削除しました。"
 
 #: scripts/apps/desks/views/desk-config-modal.html:32
 msgid "Desk description"
-msgstr ""
+msgstr "デスクの説明"
 
 #: scripts/apps/desks/views/desk-config-modal.html:70
 msgid "Desk email address."
-msgstr ""
+msgstr "デスクのメールアドレス。"
 
 #: scripts/apps/desks/services/DesksFactory.ts:425
 msgid "Desk has been modified elsewhere. Please reload the desks."
@@ -5548,15 +5548,15 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:114
 msgid "Desk language"
-msgstr ""
+msgstr "デスク言語"
 
 #: scripts/apps/desks/views/settings.html:4
 msgid "Desk management"
-msgstr ""
+msgstr "デスク管理"
 
 #: scripts/apps/desks/views/desk-config-modal.html:16
 msgid "Desk name"
-msgstr ""
+msgstr "デスク名"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:26
 msgid "Desk status is outdated, please refresh."
@@ -5565,19 +5565,19 @@ msgstr ""
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:167
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:88
 msgid "Desk subscription"
-msgstr ""
+msgstr "デスクサブスクリプション"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:126
 msgid "Desk template"
-msgstr ""
+msgstr "デスクテンプレート"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:65
 msgid "Desk with name {{name}} already exists."
-msgstr ""
+msgstr "{{name}} という名前のデスクは既に存在します。"
 
 #: scripts/apps/templates/views/templates.html:52
 msgid "Desk(s)"
-msgstr ""
+msgstr "デスク"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:24
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Desk.tsx:12
@@ -5588,11 +5588,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:157
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:166
 msgid "Desk:"
-msgstr ""
+msgstr "デスク："
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:111
 msgid "Desk: {{ desk }}"
-msgstr ""
+msgstr "デスク：{{ desk }}"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:109
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:383
@@ -5607,7 +5607,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/common/DesksSelectInput.js:130
 #: scripts/extensions/sams/src/components/common/DesksSelectInput.tsx:109
 msgid "Desks"
-msgstr ""
+msgstr "デスク"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:196
 #: scripts/apps/publish/views/publish-queue.html:111
@@ -5619,15 +5619,15 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:250
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:325
 msgid "Destination"
-msgstr ""
+msgstr "送信先"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:14
 msgid "Destination name"
-msgstr ""
+msgstr "送信先名"
 
 #: scripts/apps/publish/views/subscribers.html:216
 msgid "Destinations"
-msgstr ""
+msgstr "送信先"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:151
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:64
@@ -5636,19 +5636,19 @@ msgstr ""
 #: scripts/apps/authoring/authoring/index.ts:418
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:253
 msgid "Details"
-msgstr ""
+msgstr "詳細"
 
 #: scripts/apps/authoring/views/change-image.html:7
 msgid "Details / Metadata"
-msgstr ""
+msgstr "詳細 / メタデータ"
 
 #: scripts/apps/dictionaries/index.ts:33
 msgid "Dictionaries"
-msgstr ""
+msgstr "辞書"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Dictionaries List Management"
-msgstr ""
+msgstr "辞書一覧管理"
 
 #: scripts/apps/dictionaries/views/settings.html:23
 msgid "Dictionary"
@@ -5656,27 +5656,27 @@ msgstr "辞書"
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.ts:93
 msgid "Dictionary deleted."
-msgstr ""
+msgstr "辞書を削除しました。"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:36
 msgid "Dictionary file"
-msgstr ""
+msgstr "辞書ファイル"
 
 #: scripts/apps/dictionaries/views/settings.html:4
 msgid "Dictionary management"
-msgstr ""
+msgstr "辞書管理"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:25
 msgid "Dictionary name"
-msgstr ""
+msgstr "辞書名"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:14
 msgid "Dictionary saved successfully"
-msgstr ""
+msgstr "辞書を保存しました"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:28
 msgid "Dictionary with name {{dictionary.name}} already exists."
-msgstr ""
+msgstr "{{dictionary.name}} という名前の辞書は既に存在します。"
 
 #: scripts/apps/authoring-react/compare-articles/view-difference.tsx:74
 msgid ""
@@ -5686,7 +5686,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:72
 msgid "Digital/Internet"
-msgstr ""
+msgstr "デジタル/インターネット"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:45
 #: scripts/apps/archive/views/metadata-view.html:211
@@ -5695,56 +5695,56 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetImagePreviewFullScreen.js:133
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:159
 msgid "Dimensions"
-msgstr ""
+msgstr "寸法"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:192
 msgid "Disable Item Updates"
-msgstr ""
+msgstr "項目更新を無効化"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:169
 msgid "Disable selection of an entire category"
-msgstr ""
+msgstr "カテゴリ全体の選択を無効化"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:487
 msgid "Disable spellchecker"
-msgstr ""
+msgstr "スペルチェッカーを無効化"
 
 #: scripts/apps/users/config.ts:76
 msgid "Disable user"
-msgstr ""
+msgstr "ユーザーを無効化"
 
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:41
 #: ../superdesk-planning/client/utils/planning.tsx:1368
 #: scripts/apps/users/controllers/UserListController.ts:159
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:216
 msgid "Disabled Agendas"
-msgstr ""
+msgstr "無効化されたアジェンダ"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:158
 msgid "Disabled Calendars"
-msgstr ""
+msgstr "無効化されたカレンダー"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:77
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setListPanel.js:77
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:83
 msgid "Disabled Sets"
-msgstr ""
+msgstr "無効化されたセット"
 
 #: scripts/apps/desks/views/desk-config-modal.html:197
 msgid "Disallow sending items to this desk"
-msgstr ""
+msgstr "このデスクへの項目送信を禁止"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:76
 msgid "Disallowed characters"
-msgstr ""
+msgstr "使用不可文字"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:379
 #: ../superdesk-planning/client/components/ContentProfiles/CoverageProfileModal.tsx:217
 msgid "Discard All"
-msgstr ""
+msgstr "すべて破棄"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:104
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/template-edit.js:116
@@ -5756,11 +5756,11 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:231
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:199
 msgid "Discard unsaved changes?"
-msgstr ""
+msgstr "未保存の変更を破棄しますか？"
 
 #: scripts/core/notification/notification.ts:215
 msgid "Disconnected from Notification Server!"
-msgstr ""
+msgstr "通知サーバーから切断されました！"
 
 #: scripts/core/lang/missing-translations-strings.ts:45
 msgid ""
@@ -5775,11 +5775,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/NoContentLinking.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/Flags.tsx:30
 msgid "Do not link content updates"
-msgstr ""
+msgstr "コンテンツ更新をリンクしない"
 
 #: scripts/apps/vocabularies/constants.ts:56
 msgid "Do not show"
-msgstr ""
+msgstr "表示しない"
 
 #: scripts/apps/settings/index.ts:20
 msgid "Do some admin chores"
@@ -5840,42 +5840,42 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:122
 #: scripts/extensions/sams/src/utils/assets.ts:152
 msgid "Document"
-msgstr ""
+msgstr "ドキュメント"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:76
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetTypeFilterButtons.js:76
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:59
 msgid "Documents only"
-msgstr ""
+msgstr "ドキュメントのみ"
 
 #: scripts/apps/content-filters/views/manage-filters.html:147
 msgid "Does match"
-msgstr ""
+msgstr "一致する"
 
 #: scripts/apps/content-filters/views/manage-filters.html:148
 msgid "Doesn't match"
-msgstr ""
+msgstr "一致しない"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:326
 msgid "Don't Fulfil Assignment"
-msgstr ""
+msgstr "アサインメントを実行しない"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:273
 msgid "Don't Save"
-msgstr ""
+msgstr "保存しない"
 
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.tsx:77
 msgid "Don't add"
-msgstr ""
+msgstr "追加しない"
 
 #: scripts/core/auth/reset-password.html:70
 msgid "Don't have token? Get it."
-msgstr ""
+msgstr "トークンがありませんか？取得してください。"
 
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:28
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:49
 msgid "Don't save"
-msgstr ""
+msgstr "保存しない"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:35
 #: scripts/apps/authoring/views/change-image.html:13
@@ -5892,15 +5892,15 @@ msgstr ""
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorHeader.js:11
 #: scripts/extensions/videoEditor/src/VideoEditorHeader.tsx:30
 msgid "Done"
-msgstr ""
+msgstr "完了"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:71
 msgid "Dots"
-msgstr ""
+msgstr "ドット"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:72
 msgid "Dots Vertical"
-msgstr ""
+msgstr "縦ドット"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:269
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:67
@@ -5911,15 +5911,15 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:45
 #: scripts/extensions/sams/src/utils/assets.ts:57
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:74
 msgid "Download Alternate"
-msgstr ""
+msgstr "代替をダウンロード"
 
 #: scripts/apps/vocabularies/views/vocabulary-config.html:84
 msgid "Download config"
-msgstr ""
+msgstr "設定をダウンロード"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:21
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:19
@@ -5936,17 +5936,17 @@ msgstr ""
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:306
 #: scripts/extensions/sams/src/utils/ui.tsx:76
 msgid "Draft"
-msgstr ""
+msgstr "下書き"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:75
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setListPanel.js:75
 #: scripts/extensions/sams/src/components/sets/setListPanel.tsx:61
 msgid "Draft Sets"
-msgstr ""
+msgstr "下書きセット"
 
 #: scripts/apps/archive/views/upload.html:37
 msgid "Drag Your Files Here"
-msgstr ""
+msgstr "ここにファイルをドラッグ"
 
 #: ../superdesk-planning/client/components/UI/Form/FileInput.tsx:200
 #: scripts/core/ui/components/Form/FileInput.tsx:136
@@ -5957,7 +5957,7 @@ msgstr ""
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:192
 #: scripts/extensions/sams/src/apps/samsAttachmentsWidget.tsx:216
 msgid "Drag files here or"
-msgstr ""
+msgstr "ここにファイルをドラッグ、または"
 
 #: scripts/apps/vocabularies/components/UploadConfigModal.tsx:60
 msgid ""
@@ -5967,51 +5967,51 @@ msgstr ""
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:126
 msgid "Drag one or more files here to upload them, or just click here."
-msgstr ""
+msgstr "ここに1つ以上のファイルをドラッグしてアップロードするか、ここをクリックしてください。"
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:104
 msgid ""
 "Drag one or more files here to upload them, or just click the button below."
-msgstr ""
+msgstr "ここに1つ以上のファイルをドラッグしてアップロードするか、下のボタンをクリックしてください。"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:101
 msgid "Drop events here"
-msgstr ""
+msgstr "ここにイベントをドロップ"
 
 #: ../superdesk-planning/client/components/AttachmentsInputStandalone.tsx:87
 msgid "Drop files here to upload"
-msgstr ""
+msgstr "アップロードするファイルをここにドロップ"
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "Drop it here"
-msgstr ""
+msgstr "ここにドロップ"
 
 #: scripts/apps/relations/views/related-items.html:11
 #: scripts/core/ui/components/drop-zone-3.tsx:128
 msgid "Drop items here"
-msgstr ""
+msgstr "ここに項目をドロップ"
 
 #: scripts/apps/authoring/views/item-association.html:11
 #: scripts/apps/authoring/views/item-carousel.html:10
 #: scripts/core/ui/components/drop-zone-3.tsx:127
 msgid "Drop items here or click to upload"
-msgstr ""
+msgstr "ここに項目をドロップするか、クリックしてアップロード"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:184
 msgid "Drop planning items here"
-msgstr ""
+msgstr "ここにプランニングアイテムをドロップ"
 
 #: scripts/apps/authoring-react/fields/dropdown/index.ts:21
 msgid "Dropdown (authoring-react)"
-msgstr ""
+msgstr "ドロップダウン（authoring-react）"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:174
 msgid "Dropped item is not a planning item"
-msgstr ""
+msgstr "ドロップした項目はプランニングアイテムではありません"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:164
 msgid "Dropped item is not an event"
-msgstr ""
+msgstr "ドロップした項目はイベントではありません"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:169
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:235
@@ -6019,26 +6019,26 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/index.ts:197
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:75
 msgid "Due"
-msgstr ""
+msgstr "期限"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:26
 msgid "Due Date"
-msgstr ""
+msgstr "期限日"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:34
 msgid "Due date"
-msgstr ""
+msgstr "期限日"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:38
 msgid "Due time"
-msgstr ""
+msgstr "期限時刻"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:142
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:172
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:119
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:128
 msgid "Due:"
-msgstr ""
+msgstr "期限："
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:435
 #: ../superdesk-analytics/client/utils.js:169
@@ -6053,50 +6053,50 @@ msgstr ""
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:242
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-action.tsx:92
 msgid "Duplicate"
-msgstr ""
+msgstr "複製"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:230
 msgid "Duplicate As"
-msgstr ""
+msgstr "複製として"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Duplicate Content within a Desk"
-msgstr ""
+msgstr "デスク内でコンテンツを複製"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:55
 msgid "Duplicate ID: {{x}}"
-msgstr ""
+msgstr "重複ID：{{x}}"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:239
 msgid "Duplicate In Place"
-msgstr ""
+msgstr "同じ場所に複製"
 
 #: scripts/apps/archive/index.tsx:172
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:225
 msgid "Duplicate To"
-msgstr ""
+msgstr "複製先"
 
 #: scripts/apps/monitoring/index.ts:125
 msgid "Duplicate an item"
-msgstr ""
+msgstr "項目を複製"
 
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-action.tsx:80
 msgid "Duplicate and open"
-msgstr ""
+msgstr "複製して開く"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:96
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:78
 msgid "Duplicate created"
-msgstr ""
+msgstr "複製を作成しました"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:171
 #: scripts/apps/authoring/versioning/history/views/history.html:52
 msgid "Duplicate created by"
-msgstr ""
+msgstr "複製作成者"
 
 #: scripts/apps/archive/index.tsx:151
 msgid "Duplicate in place"
-msgstr ""
+msgstr "同じ場所に複製"
 
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:13
 msgid "Duplicate to"
