@@ -16,7 +16,7 @@ This is the manual GitHub Copilot agent workflow for AI-assisted translations in
 npm run gettext-update-po -- es
 ```
 
-5. The agent fills empty `msgstr` and `msgstr[n]` entries in `po/es.po`, using `po/superdesk.pot` as the source of truth.
+5. The agent fills empty `msgstr` and `msgstr[n]` entries in `po/es.po`, using `po/superdesk.pot` as the source of truth. If there are too many pending entries to handle safely in one pass, the agent works in internal batches during the same session, commits each successful batch separately when practical, and still prepares one PR.
 
 6. The agent validates with existing tooling:
 
@@ -33,6 +33,7 @@ grunt nggettext_compile
 - Read `po/superdesk.pot` as the source of truth.
 - Update only `po/es.po`.
 - Translate only empty entries in `po/es.po`.
+- Use internal batches only when the pending translation set is large, but keep the result in a single PR.
 - Do not prune obsolete entries during the agent-driven sync step.
 - Never modify runtime JSON files directly.
 - Never edit `msgid`.
@@ -43,6 +44,7 @@ grunt nggettext_compile
 ## Notes
 
 - `npm run gettext-update-po -- <lang>` is generic and can be reused for other existing top-level PO files later.
+- `npm run gettext-next-batch -- <lang> --limit 50` can be used to inspect the next deterministic batch of untranslated entries when batching is needed.
 - The current examples use Spanish (`es`), but the agent workflow and skill are designed to work for other supported languages too.
 - The primary trigger is manual: ask the GitHub Copilot agent to perform the translation update.
 - `npm run gettext-extract` is intentionally outside the agent flow and should be run by a human developer when the POT needs to be refreshed.
