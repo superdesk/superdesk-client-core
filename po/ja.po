@@ -2130,123 +2130,123 @@ msgstr "昇順"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
 msgid "Asia/Almaty"
-msgstr ""
+msgstr "Asia/Almaty"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:46
 msgid "Asia/Baghdad"
-msgstr ""
+msgstr "Asia/Baghdad"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:47
 msgid "Asia/Baku"
-msgstr ""
+msgstr "Asia/Baku"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:48
 msgid "Asia/Bangkok"
-msgstr ""
+msgstr "Asia/Bangkok"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:49
 msgid "Asia/Beirut"
-msgstr ""
+msgstr "Asia/Beirut"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:50
 msgid "Asia/Colombo"
-msgstr ""
+msgstr "Asia/Colombo"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:51
 msgid "Asia/Dhaka"
-msgstr ""
+msgstr "Asia/Dhaka"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:52
 msgid "Asia/Dili"
-msgstr ""
+msgstr "Asia/Dili"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:53
 msgid "Asia/Dubai"
-msgstr ""
+msgstr "Asia/Dubai"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:54
 msgid "Asia/Irkutsk"
-msgstr ""
+msgstr "Asia/Irkutsk"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:55
 msgid "Asia/Jakarta"
-msgstr ""
+msgstr "Asia/Jakarta"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:56
 msgid "Asia/Jerusalem"
-msgstr ""
+msgstr "Asia/Jerusalem"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:57
 msgid "Asia/Kabul"
-msgstr ""
+msgstr "Asia/Kabul"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:58
 msgid "Asia/Karachi"
-msgstr ""
+msgstr "Asia/Karachi"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:59
 msgid "Asia/Kathmandu"
-msgstr ""
+msgstr "Asia/Kathmandu"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:60
 msgid "Asia/Krasnoyarsk"
-msgstr ""
+msgstr "Asia/Krasnoyarsk"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:61
 msgid "Asia/Kuala Lumpur"
-msgstr ""
+msgstr "Asia/Kuala Lumpur"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:62
 msgid "Asia/Manila"
-msgstr ""
+msgstr "Asia/Manila"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:63
 msgid "Asia/Novosibirsk"
-msgstr ""
+msgstr "Asia/Novosibirsk"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:64
 msgid "Asia/Pyongyang"
-msgstr ""
+msgstr "Asia/Pyongyang"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:65
 msgid "Asia/Rangoon"
-msgstr ""
+msgstr "Asia/Rangoon"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:66
 msgid "Asia/Riyadh"
-msgstr ""
+msgstr "Asia/Riyadh"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:67
 msgid "Asia/Seoul"
-msgstr ""
+msgstr "Asia/Seoul"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:68
 msgid "Asia/Singapore"
-msgstr ""
+msgstr "Asia/Singapore"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:69
 msgid "Asia/Tashkent"
-msgstr ""
+msgstr "Asia/Tashkent"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:70
 msgid "Asia/Tehran"
-msgstr ""
+msgstr "Asia/Tehran"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:71
 msgid "Asia/Tokyo"
-msgstr ""
+msgstr "Asia/Tokyo"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:72
 msgid "Asia/Vladivostok"
-msgstr ""
+msgstr "Asia/Vladivostok"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:73
 msgid "Asia/Yakutsk"
-msgstr ""
+msgstr "Asia/Yakutsk"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
 msgid "Asia/Yekaterinburg"
-msgstr ""
+msgstr "Asia/Yekaterinburg"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:130
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetPreviewPanel.js:130
@@ -2482,7 +2482,7 @@ msgstr "[{{list}}] のうち少なくとも1つは必須です。"
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:146
 msgid ""
 "At least two versions are needed for comparison. This article has only one."
-msgstr ""
+msgstr "比較には少なくとも2つのバージョンが必要です。この記事には1つしかありません。"
 
 #: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:153
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/selectAssetModal.js:153
@@ -2549,19 +2549,19 @@ msgstr "音声のみ"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
 msgid "Australia/Adelaide"
-msgstr ""
+msgstr "Australia/Adelaide"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:76
 msgid "Australia/Melbourne"
-msgstr ""
+msgstr "Australia/Melbourne"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:77
 msgid "Australia/Perth"
-msgstr ""
+msgstr "Australia/Perth"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:78
 msgid "Australia/Sydney"
-msgstr ""
+msgstr "Australia/Sydney"
 
 #: scripts/apps/publish/views/subscribers.html:269
 msgid "Authentication Token"
@@ -2582,7 +2582,7 @@ msgstr "作成者情報"
 
 #: scripts/apps/users/views/settings-roles.html:61
 msgid "Author roles controlled vocabullary is missing."
-msgstr ""
+msgstr "作成者ロールの管理語彙がありません。"
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:43
 msgid "Author:"
@@ -2600,7 +2600,7 @@ msgid ""
 "Authoring desks are for content creation, and items within it are protected "
 "from accidental publication. Publishing is only permitted  from production "
 "desks."
-msgstr ""
+msgstr "オーサリングデスクはコンテンツ作成用で、内部のアイテムは誤公開から保護されます。公開はプロダクションデスクからのみ許可されます。"
 
 #: scripts/apps/authoring-react/field-adapters/authors.tsx:80
 #: scripts/apps/search/components/fields/authors.tsx:113
@@ -2645,7 +2645,7 @@ msgstr "可用性管理"
 msgid ""
 "Availability manager extension could not start because vocabulary \"{{id}}\""
 " is missing"
-msgstr ""
+msgstr "語彙 \"{{id}}\" がないため、可用性マネージャー拡張を開始できません"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/availability-settings.js:189
 #: scripts/extensions/availability-manager/dist/src/settings/availability-settings.js:189
@@ -2748,7 +2748,7 @@ msgstr "放送前"
 msgid ""
 "Before you start using your new newsroom, please tell us a little about "
 "yourself:"
-msgstr ""
+msgstr "新しいニュースルームの利用を開始する前に、あなたについて少し教えてください："
 
 #: scripts/apps/search/components/fields/state.tsx:41
 msgid "Being Corrected"
@@ -2777,7 +2777,7 @@ msgstr "白黒"
 #: scripts/apps/authoring/packages/views/packages-widget.html:15
 #: scripts/apps/packaging/views/sd-package-item-preview.html:20
 msgid "Blank headline received"
-msgstr ""
+msgstr "空の見出しを受信しました"
 
 #: scripts/apps/content-filters/views/manage-filters.html:58
 msgid "Block API"
@@ -2843,7 +2843,7 @@ msgstr "両方"
 msgid ""
 "Both start and end date need to be filled in (or cleared) to save the "
 "subscriber."
-msgstr ""
+msgstr "配信先を保存するには、開始日と終了日の両方を入力（またはクリア）する必要があります。"
 
 #: scripts/apps/authoring/views/change-image.html:242
 msgid "Brightness"
@@ -2871,7 +2871,7 @@ msgstr "参照"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:546
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
-msgstr ""
+msgstr "建物名、部屋番号、ユニット、アパート、階など"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:52
 msgid "Business"
@@ -2908,7 +2908,7 @@ msgstr "署名"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:244
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:314
 msgid "Bytes"
-msgstr ""
+msgstr "バイト"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/correct-action.tsx:11
 #: scripts/apps/authoring/views/authoring-topbar.html:131
@@ -2922,7 +2922,7 @@ msgstr ""
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/cancel-authoring.tsx:12
 msgid "CANCEL"
-msgstr ""
+msgstr "キャンセル"
 
 #: scripts/apps/publish/views/email-config.html:20
 msgid "CID"
@@ -2950,23 +2950,23 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:53
 msgid "Calendar"
-msgstr ""
+msgstr "カレンダー"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:54
 msgid "Calendar List"
-msgstr ""
+msgstr "カレンダー一覧"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:922
 msgid "Calendar assigned to the event"
-msgstr ""
+msgstr "イベントに割り当てられたカレンダー"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:52
 msgid "Calendar:"
-msgstr ""
+msgstr "カレンダー："
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:37
 msgid "Calendar: {{activeCalendarName}}"
-msgstr ""
+msgstr "カレンダー：{{activeCalendarName}}"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:143
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/calendars.ts:36
@@ -2978,33 +2978,33 @@ msgstr ""
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:96
 #: ../superdesk-planning/client/utils/contentProfiles.ts:277
 msgid "Calendars"
-msgstr ""
+msgstr "カレンダー"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-items/content-profile.js:89
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:89
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:117
 msgid "Camera"
-msgstr ""
+msgstr "カメラ"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:20
 msgid "Can be associated as a take"
-msgstr ""
+msgstr "テイクとして関連付け可能"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:19
 msgid "Can be associated as an update"
-msgstr ""
+msgstr "更新として関連付け可能"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:172
 msgid "Can be embedded"
-msgstr ""
+msgstr "埋め込み可能"
 
 #: scripts/core/editor3/components/article-embed/can-add-article-embed.ts:35
 msgid "Can not embed to item which itself can be embedded."
-msgstr ""
+msgstr "埋め込み可能なアイテム自体には埋め込めません。"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:48
 msgid "Can not update a broadcast version of the story."
-msgstr ""
+msgstr "このストーリーの放送版は更新できません。"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:112
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:58
@@ -3179,49 +3179,49 @@ msgstr "キャンセル"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:86
 msgid "Cancel Event"
-msgstr ""
+msgstr "イベントをキャンセル"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:150
 #: ../superdesk-planning/client/constants/planning.ts:138
 msgid "Cancel Planning"
-msgstr ""
+msgstr "プランニングをキャンセル"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:127
 msgid "Cancel Scheduled Update"
-msgstr ""
+msgstr "予定された更新をキャンセル"
 
 #: scripts/apps/publish/views/publish-queue.html:83
 msgid "Cancel Selection"
-msgstr ""
+msgstr "選択をキャンセル"
 
 #: ../superdesk-planning/client/constants/planning.ts:139
 msgid "Cancel all Coverage(s)"
-msgstr ""
+msgstr "すべての取材をキャンセル"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:152
 msgid "Cancel all recurring events or just this one?"
-msgstr ""
+msgstr "すべての繰り返しイベントをキャンセルしますか、それともこの1件のみですか？"
 
 #: scripts/apps/archive/index.tsx:326
 msgid "Cancel correction"
-msgstr ""
+msgstr "訂正をキャンセル"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:264
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:51
 msgid "Cancel coverage"
-msgstr ""
+msgstr "取材をキャンセル"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:53
 msgid "Cancel planning items with Event"
-msgstr ""
+msgstr "イベント付きプランニングアイテムをキャンセル"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:84
 msgid "Cancel {{event}}"
-msgstr ""
+msgstr "{{event}} をキャンセル"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:110
 msgid "Canceling failed"
-msgstr ""
+msgstr "キャンセルに失敗しました"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:50
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:31
@@ -3229,50 +3229,50 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:374
 #: ../superdesk-planning/client/utils/index.ts:422
 msgid "Cancelled"
-msgstr ""
+msgstr "キャンセル済み"
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:149
 msgid "Cannot add self as related item."
-msgstr ""
+msgstr "自分自身を関連アイテムとして追加できません。"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:32
 msgid ""
 "Cannot change workflow status if the coverage is part of an expired planning"
 " item"
-msgstr ""
+msgstr "取材が期限切れのプランニングアイテムの一部である場合、ワークフローステータスを変更できません"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:35
 msgid "Cannot delete vocabulary"
-msgstr ""
+msgstr "ボキャブラリーを削除できません"
 
 #: ../superdesk-planning/client/validators/events.ts:289
 msgid "Cannot end with \".\""
-msgstr ""
+msgstr "末尾を「.」にすることはできません"
 
 #: ../superdesk-planning/client/actions/main.ts:905
 msgid "Cannot load more data as filter type is not selected."
-msgstr ""
+msgstr "フィルタータイプが選択されていないため、これ以上データを読み込めません。"
 
 #: ../superdesk-planning/client/actions/main.ts:926
 msgid "Cannot load more data. Failed to run the query."
-msgstr ""
+msgstr "これ以上データを読み込めません。クエリの実行に失敗しました。"
 
 #: ../superdesk-planning/client/actions/main.ts:947
 msgid "Cannot search as filter type is not selected."
-msgstr ""
+msgstr "フィルタータイプが選択されていないため、検索できません。"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:7
 #: scripts/core/editor3/components/media/MediaBlock.tsx:317
 msgid "Caption"
-msgstr ""
+msgstr "キャプション"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:18
 msgid "Case Sensitive"
-msgstr ""
+msgstr "大文字小文字を区別"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:96
 msgid "Case sensitive"
-msgstr ""
+msgstr "大文字小文字を区別"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:121
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:431
@@ -3280,7 +3280,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:17
 #: scripts/apps/workspace/content/constants.ts:17
 msgid "Categories"
-msgstr ""
+msgstr "カテゴリー"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:521
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:99
@@ -3290,34 +3290,34 @@ msgstr ""
 #: scripts/apps/legal-archive/tests/legal.spec.ts:69
 #: scripts/apps/search/directives/SearchFilters.ts:44
 msgid "Category"
-msgstr ""
+msgstr "カテゴリー"
 
 #: ../superdesk-analytics/client/utils.js:180
 msgid "Change Image"
-msgstr ""
+msgstr "画像を変更"
 
 #: ../superdesk-analytics/client/utils.js:177
 #: ../superdesk-analytics/client/utils.js:178
 msgid "Change POI"
-msgstr ""
+msgstr "POIを変更"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:235
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:235
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:323
 msgid "Change Set filter"
-msgstr ""
+msgstr "セットフィルターを変更"
 
 #: scripts/apps/users/config.ts:122 scripts/apps/users/views/edit-form.html:52
 msgid "Change avatar"
-msgstr ""
+msgstr "アバターを変更"
 
 #: scripts/apps/authoring/views/change-image.html:203
 msgid "Change image settings"
-msgstr ""
+msgstr "画像設定を変更"
 
 #: scripts/core/auth/login-modal.html:86
 msgid "Change password"
-msgstr ""
+msgstr "パスワードを変更"
 
 #: scripts/apps/users/views/user-preferences.html:258
 msgid "Change the appearance of Superdesk across the whole application."
@@ -3329,22 +3329,22 @@ msgstr ""
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:167
 msgid "Change view"
-msgstr ""
+msgstr "表示を変更"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:143
 #: ../superdesk-analytics/client/featuremedia_updates_report/directives/FeaturemediaUpdatesReportPreview.js:21
 msgid "Changes to Featuremedia"
-msgstr ""
+msgstr "特集メディアへの変更"
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:181
 msgid "Changes will be lost, if they are not saved."
-msgstr ""
+msgstr "保存しない場合、変更は失われます。"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:32
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorTools.js:32
 #: scripts/extensions/videoEditor/src/VideoEditorTools.tsx:76
 msgid "Changing quality is only supported for 480p and higher quality videos."
-msgstr ""
+msgstr "品質変更は 480p 以上の動画でのみサポートされています。"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
@@ -3368,7 +3368,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:124
 msgid "Character limit settings"
-msgstr ""
+msgstr "文字数制限設定"
 
 #: scripts/apps/authoring-react/fields/editor3/editor.tsx:384
 msgid "Character {{chars}} is not allowed"
@@ -3389,11 +3389,11 @@ msgstr[0] ""
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-panel.html:55
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:55
 msgid "Chart"
-msgstr ""
+msgstr "チャート"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:23
 msgid "Chart Colours"
-msgstr ""
+msgstr "チャートの色"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:26
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:24
@@ -3401,37 +3401,37 @@ msgstr ""
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-preview.html:20
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:24
 msgid "Chart Type"
-msgstr ""
+msgstr "チャートタイプ"
 
 #: scripts/core/views/sdselect.html:13
 msgid "Check all"
-msgstr ""
+msgstr "すべて選択"
 
 #: scripts/apps/authoring-react/fields/register-fields.ts:30
 #: scripts/apps/authoring/views/authoring-topbar.html:379
 #: scripts/apps/authoring/views/authoring-topbar.html:388
 msgid "Check spelling"
-msgstr ""
+msgstr "スペルチェック"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:55
 msgid "Chevron Down Thin"
-msgstr ""
+msgstr "細い下向きシェブロン"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:56
 msgid "Chevron Left Thin"
-msgstr ""
+msgstr "細い左向きシェブロン"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:57
 msgid "Chevron Right Thin"
-msgstr ""
+msgstr "細い右向きシェブロン"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:58
 msgid "Chevron Up Thin"
-msgstr ""
+msgstr "細い上向きシェブロン"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:36
 msgid "Choose entire category"
-msgstr ""
+msgstr "カテゴリ全体を選択"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:92
 msgid ""
@@ -3443,32 +3443,32 @@ msgstr ""
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
-msgstr ""
+msgstr "ハイライトリストを選択"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-body.js:40
 #: scripts/extensions/ai-widget/dist/src/translations/translations-body.js:40
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:87
 msgid "Choose the language and click the translate button at the bottom"
-msgstr ""
+msgstr "言語を選択し、下部の翻訳ボタンをクリックしてください"
 
 #: scripts/apps/contacts/constants.ts:75
 #: scripts/apps/contacts/views/search-panel.html:61
 msgid "City"
-msgstr ""
+msgstr "市区町村"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:252
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:118
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:48
 msgid "City/Town"
-msgstr ""
+msgstr "市/町"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:274
 msgid "Clean Pasted HTML"
-msgstr ""
+msgstr "貼り付けたHTMLをクリーンアップ"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:67
 msgid "Clean pasted HTML"
-msgstr ""
+msgstr "貼り付けたHTMLをクリーンアップ"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentFilterPanel.tsx:126
 #: ../superdesk-planning/client/components/Main/SearchPanel.tsx:135
@@ -3485,62 +3485,62 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:260
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:374
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:59
 msgid "Clear All"
-msgstr ""
+msgstr "すべてクリア"
 
 #: scripts/apps/search/views/search-parameters.html:261
 msgid "Clear Edge"
-msgstr ""
+msgstr "エッジをクリア"
 
 #: scripts/apps/authoring/views/article-edit.html:577
 msgid "Clear Embed"
-msgstr ""
+msgstr "埋め込みをクリア"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:123
 #: ../superdesk-planning/client/components/Main/SubNavBar.tsx:32
 #: scripts/apps/master-desk/components/FilterPanelComponent.tsx:178
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:807
 msgid "Clear Filters"
-msgstr ""
+msgstr "フィルターをクリア"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:60
 msgid "Clear Format"
-msgstr ""
+msgstr "書式をクリア"
 
 #: ../superdesk-planning/client/components/UI/SearchBox.tsx:118
 msgid "Clear Search"
-msgstr ""
+msgstr "検索をクリア"
 
 #: scripts/apps/master-desk/components/FilterBarComponent.tsx:34
 msgid "Clear all filters"
-msgstr ""
+msgstr "すべてのフィルターをクリア"
 
 #: scripts/apps/users/views/user-preferences.html:155
 msgid "Clear all selected"
-msgstr ""
+msgstr "選択をすべて解除"
 
 #: ../superdesk-planning/client/components/UI/Form/DateTimeInput/index.tsx:155
 #: scripts/core/ui/components/Form/DateTimeInput/index.tsx:85
 msgid "Clear date and time"
-msgstr ""
+msgstr "日時をクリア"
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:78
 msgid "Clear embed"
-msgstr ""
+msgstr "埋め込みをクリア"
 
 #: scripts/apps/contacts/views/search-panel.html:86
 #: scripts/apps/content-api/views/search-panel.html:22
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:108
 #: scripts/apps/search/views/save-search.html:9
 msgid "Clear filters"
-msgstr ""
+msgstr "フィルターをクリア"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:5
 msgid "Clear saved metadata"
-msgstr ""
+msgstr "保存済みメタデータをクリア"
 
 #: scripts/apps/content-filters/views/filter-search.html:43
 #: scripts/apps/monitoring/views/monitoring-view.html:86
@@ -3548,17 +3548,17 @@ msgstr ""
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:356
 #: scripts/core/list/views/searchbar.html:5
 msgid "Clear search"
-msgstr ""
+msgstr "検索をクリア"
 
 #: scripts/apps/users/config.ts:93
 msgid "Clear sessions"
-msgstr ""
+msgstr "セッションをクリア"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:365
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:365
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:646
 msgid "Click \"Run\" to generate"
-msgstr ""
+msgstr "生成するには「実行」をクリック"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:106
 msgid "Click on a Scheme rules on the left to view details."
@@ -3570,7 +3570,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:160
 msgid "Click the Plus button to add languages"
-msgstr ""
+msgstr "言語を追加するにはプラスボタンをクリックしてください"
 
 #: scripts/apps/users/views/change-avatar.html:38
 msgid ""
@@ -3579,19 +3579,19 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:108
 msgid "Click to replace thumbnail"
-msgstr ""
+msgstr "サムネイルを置き換えるにはクリック"
 
 #: scripts/apps/production-api-keys/config.ts:54
 msgid "Client ID"
-msgstr ""
+msgstr "クライアントID"
 
 #: scripts/apps/production-api-keys/config.ts:59
 msgid "Client Secret"
-msgstr ""
+msgstr "クライアントシークレット"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:5
 msgid "Clock type"
-msgstr ""
+msgstr "時計タイプ"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:104
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:72
@@ -3669,185 +3669,185 @@ msgstr "閉じる"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:67
 msgid "Close & Continue"
-msgstr ""
+msgstr "閉じて続行"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/headlines/headlines-widget.js:48
 #: scripts/extensions/ai-widget/dist/src/headlines/headlines-widget.js:48
 #: scripts/extensions/ai-widget/src/headlines/headlines-widget.tsx:71
 msgid "Close Headlines"
-msgstr ""
+msgstr "見出しを閉じる"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:61
 msgid "Close Small"
-msgstr ""
+msgstr "小さい閉じる"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/summary/summary-widget.js:47
 #: scripts/extensions/ai-widget/dist/src/summary/summary-widget.js:47
 #: scripts/extensions/ai-widget/src/summary/summary-widget.tsx:67
 msgid "Close Summary"
-msgstr ""
+msgstr "要約を閉じる"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:62
 msgid "Close Thick"
-msgstr ""
+msgstr "太い閉じる"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-widget.js:43
 #: scripts/extensions/ai-widget/dist/src/translations/translations-widget.js:43
 #: scripts/extensions/ai-widget/src/translations/translations-widget.tsx:80
 msgid "Close Translate"
-msgstr ""
+msgstr "翻訳を閉じる"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:65
 #: scripts/apps/authoring/views/authoring-topbar.html:66
 msgid "Close and Continue"
-msgstr ""
+msgstr "閉じて続行"
 
 #: scripts/apps/production-api-keys/utils.tsx:27
 msgid "Close anyway"
-msgstr ""
+msgstr "とにかく閉じる"
 
 #: scripts/apps/authoring/authoring/index.ts:469
 msgid "Close current item"
-msgstr ""
+msgstr "現在のアイテムを閉じる"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:159
 msgid "Close desk widget"
-msgstr ""
+msgstr "デスクウィジェットを閉じる"
 
 #: scripts/apps/authoring/views/change-image.html:155
 msgid "Close details"
-msgstr ""
+msgstr "詳細を閉じる"
 
 #: scripts/apps/contacts/views/search-panel.html:4
 #: scripts/apps/content-api/views/search-panel.html:11
 #: scripts/apps/legal-archive/views/legal_archive.html:44
 #: scripts/apps/search/views/search-panel.html:22
 msgid "Close panel"
-msgstr ""
+msgstr "パネルを閉じる"
 
 #: scripts/apps/search/views/item-preview.html:27
 msgid "Close preview"
-msgstr ""
+msgstr "プレビューを閉じる"
 
 #: scripts/apps/production-api-keys/utils.tsx:17
 msgid "Close this panel?"
-msgstr ""
+msgstr "このパネルを閉じますか？"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:140
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:9
 #: scripts/apps/search-providers/views/search-provider-config.html:14
 msgid "Closed"
-msgstr ""
+msgstr "クローズ済み"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:242
 msgid "Closing failed"
-msgstr ""
+msgstr "クローズに失敗しました"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:63
 msgid "Code"
-msgstr ""
+msgstr "コード"
 
 #: ../superdesk-planning/client/components/UI/CollapseBox.tsx:175
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:64
 #: scripts/core/editor3/components/Editor3Component.tsx:901
 msgid "Collapse"
-msgstr ""
+msgstr "折りたたむ"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:158
 msgid "Collapse widgets"
-msgstr ""
+msgstr "ウィジェットを折りたたむ"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:8
 msgid "Color"
-msgstr ""
+msgstr "色"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:90
 msgid "Column"
-msgstr ""
+msgstr "列"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:196
 msgid "Columns:"
-msgstr ""
+msgstr "列："
 
 #: scripts/apps/packaging/index.ts:93
 msgid "Combine with current"
-msgstr ""
+msgstr "現在と結合"
 
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:42
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:18
 msgid "Combined"
-msgstr ""
+msgstr "結合済み"
 
 #: scripts/apps/publish/views/subscribers.html:158
 msgid "Comma separated values"
-msgstr ""
+msgstr "カンマ区切り値"
 
 #: scripts/apps/products/views/products-config-modal.html:55
 msgid "Comma separated values."
-msgstr ""
+msgstr "カンマ区切り値。"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:65
 #: scripts/core/editor3/components/comments/Comment.tsx:90
 #: scripts/core/editor3/components/toolbar/index.tsx:398
 #: scripts/core/editor3/highlightsConfig.ts:12
 msgid "Comment"
-msgstr ""
+msgstr "コメント"
 
 #: scripts/apps/authoring-react/article-widgets/comments/index.tsx:9
 #: scripts/apps/authoring-react/generic-widgets/comments/CommentsWidget.tsx:25
 #: scripts/apps/authoring-react/generic-widgets/comments/index.tsx:38
 #: scripts/apps/authoring/comments/comments.ts:146
 msgid "Comments"
-msgstr ""
+msgstr "コメント"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:223
 msgid "Common"
-msgstr ""
+msgstr "共通"
 
 #: scripts/apps/monitoring/directives/utils.ts:95
 #: scripts/apps/search/views/search.html:22
 #: scripts/apps/search/views/search.html:23
 msgid "Compact View"
-msgstr ""
+msgstr "コンパクト表示"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:102
 msgid "Compact list"
-msgstr ""
+msgstr "コンパクト一覧"
 
 #: scripts/apps/search/constants.ts:16
 #: scripts/apps/workspace/content/constants.ts:18
 msgid "Company Codes"
-msgstr ""
+msgstr "会社コード"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:29
 msgid "Company/Organisation"
-msgstr ""
+msgstr "会社/組織"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:185
 msgid "Compare"
-msgstr ""
+msgstr "比較"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:2
 msgid "Compare Versions"
-msgstr ""
+msgstr "バージョンを比較"
 
 #: scripts/apps/authoring-react/toolbar/compare-article-versions.tsx:129
 msgid "Compare article versions"
-msgstr ""
+msgstr "記事バージョンを比較"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:148
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:132
 #: scripts/apps/authoring/views/authoring-topbar.html:286
 msgid "Compare versions"
-msgstr ""
+msgstr "バージョンを比較"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:124
 msgid "Comparing \"{{x}}\"(primary) to \"{{y}}\"(secondary)"
-msgstr ""
+msgstr "「{{x}}」（主）と「{{y}}」（副）を比較中"
 
 #: ../superdesk-planning/client/constants/assignments.ts:193
 msgid "Complete Assignment"
-msgstr ""
+msgstr "アサインメントを完了"
 
 #: ../superdesk-planning/client/components/Archive/ArchiveItem.tsx:28
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:66
@@ -3856,7 +3856,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:402
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:52
 msgid "Completed"
-msgstr ""
+msgstr "完了"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:66
 #: ../superdesk-planning/client/utils/index.ts:595
