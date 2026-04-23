@@ -8,11 +8,12 @@ Follow these rules when updating translations in `superdesk-client-core`.
 - Target language code: `<lang>`
 - Target PO file: `po/<lang>.po`
 - Optional excluded PO files: any locale-specific files that the workflow marks as out of scope
-- Optional glossary: a language-specific glossary file if one exists
+- Optional glossary: `docs/i18n/<lang>-glossary.md` if one exists
+- Optional internal batch size for large translation sets
 
 ## Environment Requirements
 
-- Use Node.js 22.
+- Use Node.js 20 or newer. Prefer the repo's configured Node.js version when it is easy to use, but do not spend time upgrading from Node.js 20+ only for this workflow.
 - Install project dependencies with `npm ci`.
 - Ensure GNU gettext tools are installed and available:
   - `msgmerge`
@@ -29,7 +30,22 @@ Assume `po/superdesk.pot` was prepared outside the agent flow.
 
 1. Use the existing `po/superdesk.pot` on the branch as the source of truth.
 2. Assume `npm run gettext-update-po -- <lang>` has structurally synced `po/<lang>.po`.
-3. Only then fill missing translations in `po/<lang>.po`.
+3. Only then fill missing translations in `po/<lang>.po`. Use internal batches only when the number of pending entries is too large to handle safely in one pass.
+
+## Internal Batching
+
+The expected output is one pull request for the target language.
+
+- Use internal batches only when the pending translation set is large enough that one pass would reduce quality or risk context loss.
+- Use `npm run gettext-next-batch -- <lang> --limit 50` to inspect the next deterministic batch when batching is needed.
+- If batching is needed, process at most `50` safe active untranslated entries at a time unless the prompt provides a different batch size.
+- After each internal batch, review only the entries just changed for placeholder preservation, plural structure, whitespace, punctuation, and glossary consistency.
+- Run validation after each successful internal batch when practical, and fix only issues introduced in that batch.
+- Commit each successful internal batch separately within the same pull request so review and rollback are easier.
+- Continue in the same agent session until no more safe empty entries remain, or until continuing would reduce quality.
+- If the full file cannot be completed safely, keep the partial work in the same PR and report where translation stopped.
+- Do not translate obsolete `#~` entries.
+- Do not create separate PRs per internal batch unless explicitly requested.
 
 ## Sync Safety Checks
 
@@ -66,7 +82,7 @@ Skip the entry and leave it unchanged if it is:
 - Do not add double spaces unless the source requires them.
 - Do not add spaces before punctuation marks.
 - Do not add unnecessary spaces inside parentheses, quotes, or around slashes.
-- Preserve placeholders exactly, but keep surrounding Spanish spacing natural.
+- Preserve placeholders exactly, but keep surrounding spacing natural for the target language.
 - Re-read changed translations once with a whitespace-only review before finishing.
 
 ## Validation Mindset

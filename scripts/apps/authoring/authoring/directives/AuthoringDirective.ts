@@ -656,7 +656,7 @@ export function AuthoringDirective(
 
             $scope.showCustomButtons = () => {
                 return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
-                    || $scope.publishAndContinueAvailable || $scope.publishAvailable  || $scope.sendAndDuplicateEnabled;
+                    || $scope.publishAndContinueAvailable || $scope.publishAvailable || $scope.sendAndDuplicateEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
