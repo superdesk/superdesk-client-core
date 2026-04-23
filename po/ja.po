@@ -189,7 +189,7 @@ msgstr "1秒"
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:446
 msgid "1 tag can not be displayed"
 msgid_plural "{{n}} tags can not be displayed"
-msgstr[0] ""
+msgstr[0] "{{n}}件のタグを表示できません"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 week"
@@ -207,17 +207,17 @@ msgstr "10年"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:186
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:196
 msgid "100MB"
-msgstr ""
+msgstr "100MB"
 
 #: ../superdesk-planning/client/utils/filters.ts:97
 msgid "108h"
-msgstr ""
+msgstr "108時間"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:183
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:183
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:193
 msgid "10MB"
-msgstr ""
+msgstr "10MB"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:44
 #: ../superdesk-planning/client/utils/filters.ts:81
@@ -319,13 +319,13 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:189
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:199
 msgid "1GB"
-msgstr ""
+msgstr "1GB"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:181
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:181
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:191
 msgid "1MB"
-msgstr ""
+msgstr "1MB"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:21
 msgid "2 weeks"
@@ -337,7 +337,7 @@ msgstr "2年"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
 msgid "200 minimum"
-msgstr ""
+msgstr "最小200"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:54
 #: ../superdesk-planning/client/utils/filters.ts:101
@@ -376,13 +376,13 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:187
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:197
 msgid "250MB"
-msgstr ""
+msgstr "250MB"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:184
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:184
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:194
 msgid "25MB"
-msgstr ""
+msgstr "25MB"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:59
 #: ../superdesk-planning/client/utils/filters.ts:111
@@ -447,19 +447,19 @@ msgstr "5年"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:188
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:198
 msgid "500MB"
-msgstr ""
+msgstr "500MB"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:185
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:185
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:195
 msgid "50MB"
-msgstr ""
+msgstr "50MB"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:182
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:182
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:192
 msgid "5MB"
-msgstr ""
+msgstr "5MB"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:39
 #: ../superdesk-planning/client/utils/filters.ts:71
@@ -472,7 +472,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:16
 msgid "6 Hours"
-msgstr ""
+msgstr "6時間"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:23
 msgid "6 months"
@@ -528,12 +528,12 @@ msgstr "：ON"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:206
 msgid ":00am"
-msgstr ""
+msgstr ":00am"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:208
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:210
 msgid ":00pm"
-msgstr ""
+msgstr ":00pm"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:85
 msgid ""
@@ -587,11 +587,11 @@ msgstr "ユーザーは必須です"
 
 #: scripts/apps/search/views/search-parameters.html:218
 msgid "AAP Image Keyword"
-msgstr ""
+msgstr "AAP画像キーワード"
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "ABSTRACT is too long"
-msgstr ""
+msgstr "要約が長すぎます"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:66
 msgid "ADD WORD"
@@ -624,11 +624,11 @@ msgstr "ANPA テイクキー"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:109
 msgid "ASSOCIATED XMP FILE"
-msgstr ""
+msgstr "関連XMPファイル"
 
 #: ../superdesk-planning/client/validators/events.ts:242
 msgid "ATTACHED FILE {{ index }} is required"
-msgstr ""
+msgstr "添付ファイル {{ index }} は必須です"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:95
 msgid "ATTACHMENTS"
@@ -694,14 +694,14 @@ msgstr "アクセスキー ID"
 #: ../superdesk-planning/client/components/fields/resources/events.ts:108
 #: ../superdesk-planning/client/utils/contentProfiles.ts:347
 msgid "Accreditation Deadline"
-msgstr ""
+msgstr "認定締切"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:73
 #: ../superdesk-planning/client/components/fields/preview/index.ts:284
 #: ../superdesk-planning/client/components/fields/resources/events.ts:97
 #: ../superdesk-planning/client/utils/contentProfiles.ts:345
 msgid "Accreditation Info"
-msgstr ""
+msgstr "認定情報"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:28
 msgid "Acknowledge"
@@ -792,7 +792,7 @@ msgstr "アクティビティストリームウィジェット"
 #: ../superdesk-planning/client/components/fields/editor/AdHocPlanning.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:41
 msgid "Ad Hoc Planning"
-msgstr ""
+msgstr "アドホックプランニング"
 
 #: scripts/apps/authoring-react/fields/date/config.tsx:109
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:239
@@ -826,11 +826,11 @@ msgstr[0] "{{n}} 件追加"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:96
 msgid "Add Abbreviation"
-msgstr ""
+msgstr "略語を追加"
 
 #: ../superdesk-planning/client/constants/planning.ts:140
 msgid "Add As Event"
-msgstr ""
+msgstr "イベントとして追加"
 
 #: ../superdesk-planning/client/components/Contacts/ContactEditor.tsx:88
 #: ../superdesk-planning/client/components/Contacts/ContactField.tsx:126
@@ -844,7 +844,7 @@ msgstr "取材を追加"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:323
 msgid "Add Coverage To Workflow"
-msgstr ""
+msgstr "取材をワークフローに追加"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:267
 msgid "Add Coverages"
@@ -852,7 +852,7 @@ msgstr "取材を追加"
 
 #: ../superdesk-analytics/client/utils.js:176
 msgid "Add Featuremedia"
-msgstr ""
+msgstr "特集メディアを追加"
 
 #: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:232
 #: scripts/extensions/sams/dist/src/extensions/sams/src/containers/FileUploadModal.js:232
@@ -874,7 +874,7 @@ msgstr "画像を追加"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
-msgstr ""
+msgstr "取り込みソースを追加"
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:436
 msgid "Add Item"
@@ -908,15 +908,15 @@ msgstr "新規追加"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid "Add New Abbreviations Dictionary"
-msgstr ""
+msgstr "新しい略語辞書を追加"
 
 #: scripts/apps/content-filters/views/manage-filters.html:33
 msgid "Add New Content Filter"
-msgstr ""
+msgstr "新しいコンテンツフィルターを追加"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:79
 msgid "Add New Content Profile"
-msgstr ""
+msgstr "新しいコンテンツプロファイルを追加"
 
 #: scripts/apps/desks/views/desk-config-modal.html:4
 msgid "Add New Desk"
@@ -924,40 +924,40 @@ msgstr "新しいデスクを追加"
 
 #: scripts/apps/publish/views/subscribers.html:227
 msgid "Add New Destination"
-msgstr ""
+msgstr "新しい送信先を追加"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid "Add New Dictionary"
-msgstr ""
+msgstr "新しい辞書を追加"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:129
 msgid "Add New Event Location"
-msgstr ""
+msgstr "新しいイベント場所を追加"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:215
 msgid "Add New Filter"
-msgstr ""
+msgstr "新しいフィルターを追加"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:43
 msgid "Add New Filter Condition"
-msgstr ""
+msgstr "新しいフィルター条件を追加"
 
 #: scripts/apps/products/views/products-config-modal.html:3
 msgid "Add New Product"
-msgstr ""
+msgstr "新しいプロダクトを追加"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:31
 msgid "Add New Rule Set"
-msgstr ""
+msgstr "新しいルールセットを追加"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:31
 msgid "Add New Scheme"
-msgstr ""
+msgstr "新しいスキームを追加"
 
 #: scripts/apps/search-providers/directive.ts:24
 #: scripts/apps/search-providers/views/search-provider-config.html:28
 msgid "Add New Search Provider"
-msgstr ""
+msgstr "新しい検索プロバイダーを追加"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:58
 msgid "Add New Source"
@@ -973,7 +973,7 @@ msgstr "新しいテンプレートを追加"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AddPlanningBookmark.tsx:30
 msgid "Add Planning Item"
-msgstr ""
+msgstr "プランニングアイテムを追加"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:84
 msgid "Add Rule"
@@ -985,7 +985,7 @@ msgstr "ソースを追加"
 
 #: scripts/apps/dashboard/views/workspace.html:99
 msgid "Add This Widget"
-msgstr ""
+msgstr "このウィジェットを追加"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/TimeInputs.tsx:95
 msgid "Add Time"
@@ -998,7 +998,7 @@ msgstr "URLを追加"
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.tsx:165
 #: ../superdesk-planning/client/components/fields/editor/Coverages.tsx:139
 msgid "Add a coverage"
-msgstr ""
+msgstr "取材を追加"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:239
 msgid "Add a new location"
@@ -1017,7 +1017,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:317
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:322
 msgid "Add as coverage"
-msgstr ""
+msgstr "取材として追加"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:278
 #: ../superdesk-planning/client/utils/events.tsx:717
@@ -1095,12 +1095,12 @@ msgstr ""
 
 #: scripts/apps/packaging/views/search.html:10
 msgid "Add items"
-msgstr ""
+msgstr "アイテムを追加"
 
 #: ../superdesk-planning/client/components/fields/editor/EventLinks.tsx:77
 #: scripts/core/editor3/highlightsConfig.ts:112
 msgid "Add link"
-msgstr ""
+msgstr "リンクを追加"
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:2
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:3
@@ -1109,33 +1109,33 @@ msgstr ""
 #: scripts/core/ui/components/Form/SelectMetaTermsInput/index.tsx:103
 #: scripts/core/ui/views/sd-multi-select.html:3
 msgid "Add new"
-msgstr ""
+msgstr "新規追加"
 
 #: scripts/apps/workspace/content/components/new-field-select.tsx:34
 msgid "Add new field"
-msgstr ""
+msgstr "新しいフィールドを追加"
 
 #: scripts/apps/dashboard/views/workspace.html:69
 msgid "Add new widget"
-msgstr ""
+msgstr "新しいウィジェットを追加"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AddPlanningBookmark.tsx:42
 msgid "Add planning item"
-msgstr ""
+msgstr "プランニングアイテムを追加"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:65
 msgid "Add rule"
-msgstr ""
+msgstr "ルールを追加"
 
 #: scripts/extensions/datetimeField/dist/src/config.js:54
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/config.js:54
 #: scripts/extensions/datetimeField/src/config.tsx:109
 msgid "Add step"
-msgstr ""
+msgstr "ステップを追加"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:66
 msgid "Add task description"
-msgstr ""
+msgstr "タスクの説明を追加"
 
 #: ../superdesk-planning/client/actions/agenda.ts:166
 msgid "Add these  events to the planning list?"
@@ -1152,11 +1152,11 @@ msgstr ""
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
 msgid "Add title"
-msgstr ""
+msgstr "タイトルを追加"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:268
 msgid "Add to Current Package"
-msgstr ""
+msgstr "現在のパッケージに追加"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningItem.tsx:111
 msgid "Add to Feature Stories"
@@ -1166,15 +1166,15 @@ msgstr ""
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:175
 #: ../superdesk-planning/client/planning-extension/src/planning-details-widget.tsx:165
 msgid "Add to Planning"
-msgstr ""
+msgstr "プランニングに追加"
 
 #: scripts/apps/packaging/index.ts:74
 msgid "Add to current"
-msgstr ""
+msgstr "現在に追加"
 
 #: scripts/core/editor3/components/spellchecker/default-spellcheckers.tsx:67
 msgid "Add to dictionary"
-msgstr ""
+msgstr "辞書に追加"
 
 #: ../superdesk-planning/client/constants/planning.ts:145
 msgid "Add to featured stories"
@@ -1182,34 +1182,34 @@ msgstr ""
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:283
 msgid "Add to highlight"
-msgstr ""
+msgstr "ハイライトに追加"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:138
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:129
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:52
 msgid "Add to workflow"
-msgstr ""
+msgstr "ワークフローに追加"
 
 #: scripts/apps/authoring-react/fields/urls/editor.tsx:85
 msgid "Add url"
-msgstr ""
+msgstr "URLを追加"
 
 #: scripts/apps/dashboard/views/workspace.html:13
 #: scripts/apps/dashboard/views/workspace.html:14
 msgid "Add widget"
-msgstr ""
+msgstr "ウィジェットを追加"
 
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:25
 msgid "Added"
-msgstr ""
+msgstr "追加済み"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:90
 msgid "Added to featured stories"
-msgstr ""
+msgstr "注目ストーリーに追加済み"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:236
 msgid "Added to workflow"
-msgstr ""
+msgstr "ワークフローに追加済み"
 
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
@@ -1233,33 +1233,33 @@ msgstr ""
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:49
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:24
 msgid "Address"
-msgstr ""
+msgstr "住所"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:541
 msgid "Address line 1"
-msgstr ""
+msgstr "住所1行目"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:553
 msgid "Address line 2"
-msgstr ""
+msgstr "住所2行目"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:30
 msgid "Adjust"
-msgstr ""
+msgstr "調整"
 
 #: scripts/apps/authoring/views/change-image.html:239
 msgid "Adjust colours"
-msgstr ""
+msgstr "色を調整"
 
 #: scripts/core/menu/views/menu.html:95
 msgid "Admin tools"
-msgstr ""
+msgstr "管理ツール"
 
 #: scripts/apps/users/components/UserAvatar.tsx:92
 #: scripts/apps/users/views/edit-form.html:169
 #: scripts/apps/users/views/edit-form.html:67
 msgid "Administrator"
-msgstr ""
+msgstr "管理者"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:14
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:14
@@ -1270,85 +1270,85 @@ msgstr ""
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-panel.html:14
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:14
 msgid "Advanced"
-msgstr ""
+msgstr "詳細"
 
 #: scripts/apps/search/views/search-panel.html:8
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:215
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:215
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:233
 msgid "Advanced Search"
-msgstr ""
+msgstr "詳細検索"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentFilterPanel.tsx:104
 #: ../superdesk-planning/client/components/Main/SearchPanel.tsx:113
 #: ../superdesk-planning/client/components/Main/ToggleFiltersButton.tsx:14
 #: ../superdesk-planning/client/components/Main/ToggleFiltersButton.tsx:15
 msgid "Advanced filters"
-msgstr ""
+msgstr "詳細フィルター"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddButton/CoveragesMenuPopup.tsx:66
 msgid "Advanced mode"
-msgstr ""
+msgstr "詳細モード"
 
 #: scripts/apps/search/views/search-panel.html:58
 msgid "Advanced search"
-msgstr ""
+msgstr "詳細検索"
 
 #: scripts/apps/search/views/search-panel.html:2
 msgid "Advanced search panel"
-msgstr ""
+msgstr "詳細検索パネル"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:10
 msgid "Africa/Abidjan"
-msgstr ""
+msgstr "Africa/Abidjan"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:11
 msgid "Africa/Accra"
-msgstr ""
+msgstr "Africa/Accra"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:12
 msgid "Africa/Cairo"
-msgstr ""
+msgstr "Africa/Cairo"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:13
 msgid "Africa/Casablanca"
-msgstr ""
+msgstr "Africa/Casablanca"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:14
 msgid "Africa/Dakar"
-msgstr ""
+msgstr "Africa/Dakar"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:15
 msgid "Africa/Johannesburg"
-msgstr ""
+msgstr "Africa/Johannesburg"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:16
 msgid "Africa/Khartoum"
-msgstr ""
+msgstr "Africa/Khartoum"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:17
 msgid "Africa/Kinshasa"
-msgstr ""
+msgstr "Africa/Kinshasa"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:18
 msgid "Africa/Lagos"
-msgstr ""
+msgstr "Africa/Lagos"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:19
 msgid "Africa/Nairobi"
-msgstr ""
+msgstr "Africa/Nairobi"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:20
 msgid "Africa/Tunis"
-msgstr ""
+msgstr "Africa/Tunis"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:38
 msgid "After"
-msgstr ""
+msgstr "後"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.tsx:46
 msgid "Agenda"
-msgstr ""
+msgstr "アジェンダ"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:240
 msgid "Agenda assigned to the planning item."
@@ -1368,7 +1368,7 @@ msgstr ""
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:88
 #: ../superdesk-planning/client/utils/contentProfiles.ts:307
 msgid "Agendas"
-msgstr ""
+msgstr "アジェンダ"
 
 #: scripts/extensions/ai-widget/dist/src/ai-assistant.js:21
 #: scripts/extensions/ai-widget/dist/src/ai-assistant.js:90
@@ -1380,19 +1380,19 @@ msgstr ""
 #: scripts/extensions/ai-widget/src/ai-assistant.tsx:66
 #: scripts/extensions/ai-widget/src/extension.ts:44
 msgid "Ai Assistant"
-msgstr ""
+msgstr "AIアシスタント"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/airing-info-block.js:24
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:24
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:63
 msgid "Air date"
-msgstr ""
+msgstr "放送日"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/airing-info-block.js:20
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/airing-info-block.js:20
 #: scripts/extensions/broadcasting/src/rundowns/components/airing-info-block.tsx:45
 msgid "Air time"
-msgstr ""
+msgstr "放送時刻"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/create-rundown-from-template.js:89
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/create-rundown-from-template.js:97
@@ -1404,7 +1404,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:217
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:69
 msgid "Airtime"
-msgstr ""
+msgstr "放送時間"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/applied-filters.js:38
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/filtering-inputs.js:47
@@ -1413,7 +1413,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:86
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:84
 msgid "Airtime date from"
-msgstr ""
+msgstr "放送開始日"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/applied-filters.js:46
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/filtering-inputs.js:52
@@ -1422,7 +1422,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:104
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:99
 msgid "Airtime date to"
-msgstr ""
+msgstr "放送終了日"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/applied-filters.js:22
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/filtering-inputs.js:24
@@ -1431,7 +1431,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:50
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:43
 msgid "Airtime time from"
-msgstr ""
+msgstr "放送開始時刻"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/applied-filters.js:30
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/filtering-inputs.js:34
@@ -1440,33 +1440,33 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:68
 #: scripts/extensions/broadcasting/src/rundowns/components/filtering-inputs.tsx:60
 msgid "Airtime time to"
-msgstr ""
+msgstr "放送終了時刻"
 
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:18
 msgid "Alert"
-msgstr ""
+msgstr "アラート"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/tag-popover.js:16
 #: scripts/extensions/auto-tagging-widget/dist/src/tag-popover.js:16
 #: scripts/extensions/auto-tagging-widget/src/tag-popover.tsx:26
 msgid "Aliases:"
-msgstr ""
+msgstr "エイリアス："
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:31
 msgid "Align Center"
-msgstr ""
+msgstr "中央揃え"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:32
 msgid "Align Justify"
-msgstr ""
+msgstr "両端揃え"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:33
 msgid "Align Left"
-msgstr ""
+msgstr "左揃え"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:34
 msgid "Align Right"
-msgstr ""
+msgstr "右揃え"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:76
 #: scripts/apps/contacts/services/ContactsService.ts:55
@@ -1477,19 +1477,19 @@ msgstr ""
 #: scripts/apps/users/controllers/UserListController.ts:160
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:178
 msgid "All"
-msgstr ""
+msgstr "すべて"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:32
 msgid "All Calendars"
-msgstr ""
+msgstr "すべてのカレンダー"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:303
 msgid "All Coverage has been cancelled"
-msgstr ""
+msgstr "すべての取材がキャンセルされました"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:25
 msgid "All Coverages Assigned"
-msgstr ""
+msgstr "すべての取材が割り当て済み"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:64
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
