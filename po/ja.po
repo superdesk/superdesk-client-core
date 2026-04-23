@@ -222,20 +222,20 @@ msgstr "10MB"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:44
 #: ../superdesk-planning/client/utils/filters.ts:81
 msgid "10th"
-msgstr ""
+msgstr "第10"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "10th update"
-msgstr ""
+msgstr "第10回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:45
 #: ../superdesk-planning/client/utils/filters.ts:83
 msgid "11th"
-msgstr ""
+msgstr "第11"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "11th update"
-msgstr ""
+msgstr "第11回更新"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "12 Hours"
@@ -243,77 +243,77 @@ msgstr "12時間"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:204
 msgid "12:00am"
-msgstr ""
+msgstr "午前12:00"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:46
 #: ../superdesk-planning/client/utils/filters.ts:85
 msgid "12th"
-msgstr ""
+msgstr "第12"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "12th update"
-msgstr ""
+msgstr "第12回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:47
 #: ../superdesk-planning/client/utils/filters.ts:87
 msgid "13th"
-msgstr ""
+msgstr "第13"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "13th update"
-msgstr ""
+msgstr "第13回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:48
 #: ../superdesk-planning/client/utils/filters.ts:89
 msgid "14th"
-msgstr ""
+msgstr "第14"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "14th update"
-msgstr ""
+msgstr "第14回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:49
 #: ../superdesk-planning/client/utils/filters.ts:91
 msgid "15th"
-msgstr ""
+msgstr "第15"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "15th update"
-msgstr ""
+msgstr "第15回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:50
 #: ../superdesk-planning/client/utils/filters.ts:93
 msgid "16th"
-msgstr ""
+msgstr "第16"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "16th update"
-msgstr ""
+msgstr "第16回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:51
 msgid "17th"
-msgstr ""
+msgstr "第17"
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "17th update"
-msgstr ""
+msgstr "第17回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:52
 msgid "18th"
-msgstr ""
+msgstr "第18"
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "18th update"
-msgstr ""
+msgstr "第18回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:53
 #: ../superdesk-planning/client/utils/filters.ts:99
 msgid "19th"
-msgstr ""
+msgstr "第19"
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "19th update"
-msgstr ""
+msgstr "第19回更新"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:189
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:189
@@ -342,26 +342,26 @@ msgstr "最小200"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:54
 #: ../superdesk-planning/client/utils/filters.ts:101
 msgid "20th"
-msgstr ""
+msgstr "第20"
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "20th update"
-msgstr ""
+msgstr "第20回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:55
 #: ../superdesk-planning/client/utils/filters.ts:103
 msgid "21st"
-msgstr ""
+msgstr "第21"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:56
 #: ../superdesk-planning/client/utils/filters.ts:105
 msgid "22nd"
-msgstr ""
+msgstr "第22"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:57
 #: ../superdesk-planning/client/utils/filters.ts:107
 msgid "23rd"
-msgstr ""
+msgstr "第23"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 msgid "24 Hours"
@@ -370,7 +370,7 @@ msgstr "24時間"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:58
 #: ../superdesk-planning/client/utils/filters.ts:109
 msgid "24th"
-msgstr ""
+msgstr "第24"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:187
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:187
@@ -387,40 +387,40 @@ msgstr "25MB"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:59
 #: ../superdesk-planning/client/utils/filters.ts:111
 msgid "25th"
-msgstr ""
+msgstr "第25"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:60
 #: ../superdesk-planning/client/utils/filters.ts:113
 msgid "26th"
-msgstr ""
+msgstr "第26"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:61
 #: ../superdesk-planning/client/utils/filters.ts:115
 msgid "27th"
-msgstr ""
+msgstr "第27"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:62
 #: ../superdesk-planning/client/utils/filters.ts:117
 msgid "28th"
-msgstr ""
+msgstr "第28"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:36
 #: ../superdesk-planning/client/utils/filters.ts:65
 msgid "2nd"
-msgstr ""
+msgstr "第2"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "2nd update"
-msgstr ""
+msgstr "第2回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:37
 #: ../superdesk-planning/client/utils/filters.ts:67
 msgid "3rd"
-msgstr ""
+msgstr "第3"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "3rd update"
-msgstr ""
+msgstr "第3回更新"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "412: Can't publish as item state is draft"
@@ -433,11 +433,11 @@ msgstr "48時間"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:38
 #: ../superdesk-planning/client/utils/filters.ts:69
 msgid "4th"
-msgstr ""
+msgstr "第4"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "4th update"
-msgstr ""
+msgstr "第4回更新"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:26
 msgid "5 years"
@@ -464,11 +464,11 @@ msgstr "5MB"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:39
 #: ../superdesk-planning/client/utils/filters.ts:71
 msgid "5th"
-msgstr ""
+msgstr "第5"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "5th update"
-msgstr ""
+msgstr "第5回更新"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:16
 msgid "6 Hours"
@@ -481,42 +481,42 @@ msgstr "6か月"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:40
 #: ../superdesk-planning/client/utils/filters.ts:73
 msgid "6th"
-msgstr ""
+msgstr "第6"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "6th update"
-msgstr ""
+msgstr "第6回更新"
 
 #: ../superdesk-planning/client/utils/filters.ts:95
 msgid "70th"
-msgstr ""
+msgstr "第70"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:41
 #: ../superdesk-planning/client/utils/filters.ts:75
 msgid "7th"
-msgstr ""
+msgstr "第7"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "7th update"
-msgstr ""
+msgstr "第7回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:42
 #: ../superdesk-planning/client/utils/filters.ts:77
 msgid "8th"
-msgstr ""
+msgstr "第8"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "8th update"
-msgstr ""
+msgstr "第8回更新"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:43
 #: ../superdesk-planning/client/utils/filters.ts:79
 msgid "9th"
-msgstr ""
+msgstr "第9"
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "9th update"
-msgstr ""
+msgstr "第9回更新"
 
 #: scripts/apps/desks/views/desk-config-modal.html:249
 msgid ": OFF"
@@ -1012,7 +1012,7 @@ msgstr "記事を追加"
 msgid ""
 "Add article to Planning - select an existing Planning Item or create a new "
 "one"
-msgstr ""
+msgstr "記事をプランニングに追加 - 既存のプランニングアイテムを選択するか、新規作成してください"
 
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:317
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:322
@@ -1139,15 +1139,15 @@ msgstr "タスクの説明を追加"
 
 #: ../superdesk-planning/client/actions/agenda.ts:166
 msgid "Add these  events to the planning list?"
-msgstr ""
+msgstr "これらのイベントをプランニングリストに追加しますか？"
 
 #: ../superdesk-planning/client/actions/agenda.ts:165
 msgid "Add this event to the planning list?"
-msgstr ""
+msgstr "このイベントをプランニングリストに追加しますか？"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:251
 msgid "Add this item to all recurring events or just this one?"
-msgstr ""
+msgstr "このアイテムをすべての繰り返しイベントに追加しますか、それともこの1件のみにしますか？"
 
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
@@ -1160,7 +1160,7 @@ msgstr "現在のパッケージに追加"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningItem.tsx:111
 msgid "Add to Feature Stories"
-msgstr ""
+msgstr "注目ストーリーに追加"
 
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/extension.js:129
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:175
@@ -1178,7 +1178,7 @@ msgstr "辞書に追加"
 
 #: ../superdesk-planning/client/constants/planning.ts:145
 msgid "Add to featured stories"
-msgstr ""
+msgstr "注目ストーリーに追加"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:283
 msgid "Add to highlight"
@@ -1214,19 +1214,19 @@ msgstr "ワークフローに追加済み"
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr ""
+msgstr "設定オプションにより、取り込み済みアイテムを関連として追加することはできません"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
 "Adding published items as related is not allowed due to configuration "
 "options"
-msgstr ""
+msgstr "設定オプションにより、公開済みアイテムを関連として追加することはできません"
 
 #: scripts/apps/relations/services/RelationsService.ts:36
 msgid ""
 "Adding related items that are not published is not allowed due to "
 "configuration options"
-msgstr ""
+msgstr "設定オプションにより、未公開アイテムを関連として追加することはできません"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:227
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:112
@@ -1352,11 +1352,11 @@ msgstr "アジェンダ"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:240
 msgid "Agenda assigned to the planning item."
-msgstr ""
+msgstr "プランニングアイテムに割り当てられたアジェンダ。"
 
 #: ../superdesk-planning/client/components/fields/agendas.tsx:29
 msgid "Agenda:"
-msgstr ""
+msgstr "アジェンダ："
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:201
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/agendas-field.ts:27
@@ -1494,15 +1494,15 @@ msgstr "すべての取材が割り当て済み"
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:64
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
 msgid "All Day"
-msgstr ""
+msgstr "終日"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:136
 msgid "All Day Toggle"
-msgstr ""
+msgstr "終日切り替え"
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:21
 msgid "All Desks"
-msgstr ""
+msgstr "すべてのデスク"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:283
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:368
@@ -1510,17 +1510,17 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:253
 #: ../superdesk-planning/client/constants/events.ts:175
 msgid "All Events"
-msgstr ""
+msgstr "すべてのイベント"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:241
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:97
 msgid "All Events & Planning"
-msgstr ""
+msgstr "すべてのイベントとプランニング"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:173
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:270
 msgid "All Planning Items"
-msgstr ""
+msgstr "すべてのプランニングアイテム"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:180
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:215
@@ -1529,99 +1529,99 @@ msgstr ""
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:210
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:268
 msgid "All Sets"
-msgstr ""
+msgstr "すべてのセット"
 
 #: scripts/apps/search/components/fields/authors.tsx:107
 msgid "All authors"
-msgstr ""
+msgstr "すべての作成者"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:139
 msgid "All coverages cancelled:"
-msgstr ""
+msgstr "すべての取材をキャンセル："
 
 #: ../superdesk-planning/client/components/Events/EventDateTime.tsx:134
 msgid "All day"
-msgstr ""
+msgstr "終日"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:122
 msgid "All featured planning items are currently selected"
-msgstr ""
+msgstr "すべての注目プランニングアイテムが現在選択されています"
 
 #: scripts/core/menu/notifications/views/notifications.html:12
 msgid "All good so far"
-msgstr ""
+msgstr "ここまでは問題ありません"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:72
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetTypeFilterButtons.js:72
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:55
 msgid "All item types"
-msgstr ""
+msgstr "すべてのアイテムタイプ"
 
 #: scripts/core/itemList/LazyLoader.tsx:226
 msgid "All items have been loaded"
-msgstr ""
+msgstr "すべてのアイテムを読み込みました"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:327
 msgid "All items were published successfully."
-msgstr ""
+msgstr "すべてのアイテムが正常に公開されました。"
 
 #: ../superdesk-planning/client/components/WorkqueueContainer/index.tsx:25
 msgid "All open items"
-msgstr ""
+msgstr "すべての未クローズ項目"
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr ""
+msgstr "すべての開いている項目"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:282
 msgid "All planning"
-msgstr ""
+msgstr "すべてのプランニング"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
-msgstr ""
+msgstr "すべてのユーザータイプ"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:267
 msgid "Allow Multiple Items"
-msgstr ""
+msgstr "複数アイテムを許可"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:189
 msgid "Allow Remove Ingested Items"
-msgstr ""
+msgstr "取り込み済みアイテムの削除を許可"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:78
 msgid "Allow adding items that are in progress"
-msgstr ""
+msgstr "進行中アイテムの追加を許可"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:94
 msgid "Allow adding items that are published"
-msgstr ""
+msgstr "公開済みアイテムの追加を許可"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:68
 msgid "Allow audio"
-msgstr ""
+msgstr "音声を許可"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:362
 msgid "Allow field to be toggled"
-msgstr ""
+msgstr "フィールドの切り替えを許可"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:38
 msgid "Allow picture"
-msgstr ""
+msgstr "画像を許可"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:122
 msgid "Allow selecting multiple values"
-msgstr ""
+msgstr "複数値の選択を許可"
 
 #: scripts/extensions/predefinedTextField/dist/src/config.js:80
 #: scripts/extensions/predefinedTextField/dist/src/extensions/predefinedTextField/src/config.js:80
 #: scripts/extensions/predefinedTextField/src/config.tsx:152
 msgid "Allow switching to free text input"
-msgstr ""
+msgstr "自由テキスト入力への切り替えを許可"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:58
 msgid "Allow video"
-msgstr ""
+msgstr "動画を許可"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:258
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:156
@@ -1630,215 +1630,215 @@ msgstr ""
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:355
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:164
 msgid "Allowed Desks"
-msgstr ""
+msgstr "許可されたデスク"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:15
 msgid "Alt Text"
-msgstr ""
+msgstr "代替テキスト"
 
 #: scripts/apps/workspace/content/constants.ts:9
 msgid "Alt text"
-msgstr ""
+msgstr "代替テキスト"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:15
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:30
 #: scripts/apps/authoring/views/item-carousel.html:104
 #: scripts/core/editor3/components/media/MediaBlock.tsx:204
 msgid "Alt text:"
-msgstr ""
+msgstr "代替テキスト："
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:27
 msgid "Alter slugline"
-msgstr ""
+msgstr "スラッグラインを変更"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:21
 msgid "America/Anchorage"
-msgstr ""
+msgstr "America/Anchorage"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:22
 msgid "America/Argentina/Buenos Aires"
-msgstr ""
+msgstr "America/Argentina/Buenos Aires"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:23
 msgid "America/Bogota"
-msgstr ""
+msgstr "America/Bogota"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:24
 msgid "America/Caracas"
-msgstr ""
+msgstr "America/Caracas"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:25
 msgid "America/Chicago"
-msgstr ""
+msgstr "America/Chicago"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:26
 msgid "America/Edmonton"
-msgstr ""
+msgstr "America/Edmonton"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:27
 msgid "America/Guatemala"
-msgstr ""
+msgstr "America/Guatemala"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:28
 msgid "America/Halifax"
-msgstr ""
+msgstr "America/Halifax"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:29
 msgid "America/Havana"
-msgstr ""
+msgstr "America/Havana"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:30
 msgid "America/La Paz"
-msgstr ""
+msgstr "America/La Paz"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:31
 msgid "America/Lima"
-msgstr ""
+msgstr "America/Lima"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:32
 msgid "America/Los Angeles"
-msgstr ""
+msgstr "America/Los Angeles"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:33
 msgid "America/Manaus"
-msgstr ""
+msgstr "America/Manaus"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:34
 msgid "America/Mexico City"
-msgstr ""
+msgstr "America/Mexico City"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:35
 msgid "America/Montevideo"
-msgstr ""
+msgstr "America/Montevideo"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:36
 msgid "America/New York"
-msgstr ""
+msgstr "America/New York"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:37
 msgid "America/Phoenix"
-msgstr ""
+msgstr "America/Phoenix"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:38
 msgid "America/Santiago"
-msgstr ""
+msgstr "America/Santiago"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:39
 msgid "America/Sao Paulo"
-msgstr ""
+msgstr "America/Sao Paulo"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:40
 msgid "America/Tegucigalpa"
-msgstr ""
+msgstr "America/Tegucigalpa"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:41
 msgid "America/Tijuana"
-msgstr ""
+msgstr "America/Tijuana"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:42
 msgid "America/Toronto"
-msgstr ""
+msgstr "America/Toronto"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:43
 msgid "America/Vancouver"
-msgstr ""
+msgstr "America/Vancouver"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:44
 msgid "America/Winnipeg"
-msgstr ""
+msgstr "America/Winnipeg"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:395
 msgid "An Item can't have both Embargo and Publish Schedule."
-msgstr ""
+msgstr "アイテムにはエンバーゴと公開スケジュールを同時に設定できません。"
 
 #: ../superdesk-planning/client/actions/agenda.ts:47
 msgid "An agenda with this name already exists"
-msgstr ""
+msgstr "この名前のアジェンダは既に存在します"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:84
 msgid "An error occured when testing config."
-msgstr ""
+msgstr "設定のテスト中にエラーが発生しました。"
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:46
 msgid "An error occured, please try again."
-msgstr ""
+msgstr "エラーが発生しました。再試行してください。"
 
 #: scripts/apps/publish-preview/previewModal.tsx:66
 msgid "An error occurred while trying to preview the item."
-msgstr ""
+msgstr "アイテムのプレビュー中にエラーが発生しました。"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:230
 msgid "An update can not be created"
-msgstr ""
+msgstr "更新を作成できません"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:52
 msgid "An update can not be created for an item which is not published yet."
-msgstr ""
+msgstr "まだ公開されていないアイテムの更新は作成できません。"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:41
 msgid ""
 "An update for this version of the item already exists. To create another "
 "update, find the latest version of the item."
-msgstr ""
+msgstr "このバージョンのアイテムには既に更新があります。別の更新を作成するには、最新バージョンのアイテムを見つけてください。"
 
 #: ../superdesk-analytics/client/index.js:94
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:36
 msgid "Analytics"
-msgstr ""
+msgstr "分析"
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:121
 #: scripts/core/editor3/components/toolbar/index.tsx:410
 #: scripts/core/editor3/highlightsConfig.ts:19
 msgid "Annotation"
-msgstr ""
+msgstr "注釈"
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.tsx:265
 msgid "Annotation Body"
-msgstr ""
+msgstr "注釈本文"
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.tsx:250
 msgid "Annotation Type"
-msgstr ""
+msgstr "注釈タイプ"
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:66
 msgid ""
 "Annotation Types information is not available. Please check your metadata "
 "configuration."
-msgstr ""
+msgstr "注釈タイプ情報を利用できません。メタデータ設定を確認してください。"
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:124
 msgid "Annotation type"
-msgstr ""
+msgstr "注釈タイプ"
 
 #: scripts/apps/archive/views/html-preview.html:2
 #: scripts/apps/authoring-react/article-widgets/metadata/AnnotationsPreview.tsx:20
 msgid "Annotations"
-msgstr ""
+msgstr "注釈"
 
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:70
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/extension.js:70
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:101
 msgid "Annotations Library"
-msgstr ""
+msgstr "注釈ライブラリ"
 
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:59
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/extension.js:59
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:89
 msgid "Annotations library"
-msgstr ""
+msgstr "注釈ライブラリ"
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:6
 msgid "Any"
-msgstr ""
+msgstr "任意"
 
 #: scripts/apps/archive/views/metadata-view.html:162
 msgid "Aperture"
-msgstr ""
+msgstr "絞り"
 
 #: scripts/apps/users/views/user-preferences.html:21
 #: scripts/apps/users/views/user-preferences.html:255
 msgid "Appearance"
-msgstr ""
+msgstr "表示"
 
 #: scripts/apps/publish/views/subscribers.html:244
 msgid "Applied Global Block Filters"
@@ -1860,88 +1860,88 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:243
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:563
 msgid "Apply"
-msgstr ""
+msgstr "適用"
 
 #: scripts/apps/master-desk/components/FilterPanelComponent.tsx:171
 msgid "Apply Filters"
-msgstr ""
+msgstr "フィルターを適用"
 
 #: scripts/apps/vocabularies/components/UploadConfigModal.tsx:80
 msgid "Apply config"
-msgstr ""
+msgstr "設定を適用"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:244
 msgid "Apply the changes to all recurring planning items or just this one?"
-msgstr ""
+msgstr "変更をすべての繰り返しプランニングアイテムに適用しますか、それともこの1件のみにしますか？"
 
 #: scripts/apps/publish/views/email-config.html:38
 msgid "Apply watermark"
-msgstr ""
+msgstr "透かしを適用"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:37
 #: scripts/apps/production-api-keys/config.ts:23
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archive"
-msgstr ""
+msgstr "アーカイブ"
 
 #: scripts/apps/workspace/content/constants.ts:11
 msgid "Archive description"
-msgstr ""
+msgstr "アーカイブの説明"
 
 #: scripts/apps/search/views/item-repo.html:6
 msgid "Archived"
-msgstr ""
+msgstr "アーカイブ済み"
 
 #: scripts/apps/content-filters/views/manage-filters.html:54
 msgid "Archived Block"
-msgstr ""
+msgstr "アーカイブ済みブロック"
 
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archived Management"
-msgstr ""
+msgstr "アーカイブ管理"
 
 #: scripts/apps/archive/views/preview.html:46
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/archived-from.tsx:8
 #: scripts/apps/authoring/views/authoring-topbar.html:35
 msgid "Archived from"
-msgstr ""
+msgstr "アーカイブ元"
 
 #: scripts/apps/search/components/ItemContainer.tsx:14
 msgid "Archived from {{desk}}"
-msgstr ""
+msgstr "{{desk}} からアーカイブ"
 
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:162
 msgid "Are you sure ?"
-msgstr ""
+msgstr "よろしいですか？"
 
 #: scripts/apps/search/directives/SavedSearchManageSubscribers.ts:214
 #: scripts/apps/search/directives/SavedSearchManageSubscribers.ts:226
 msgid "Are you sure to remove this subscription?"
-msgstr ""
+msgstr "このサブスクリプションを削除してもよろしいですか？"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:348
 msgid "Are you sure you want to delete Ingest Source?"
-msgstr ""
+msgstr "Ingest Sourceを削除してもよろしいですか？"
 
 #: scripts/apps/search-providers/directive.ts:87
 msgid "Are you sure you want to delete Search Provider?"
-msgstr ""
+msgstr "Search Providerを削除してもよろしいですか？"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:66
 msgid "Are you sure you want to delete configuration?"
-msgstr ""
+msgstr "configurationを削除してもよろしいですか？"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:84
 msgid "Are you sure you want to delete content filter?"
-msgstr ""
+msgstr "content filterを削除してもよろしいですか？"
 
 #: scripts/apps/workspace/services/WorkspaceService.ts:19
 msgid "Are you sure you want to delete current workspace?"
-msgstr ""
+msgstr "current workspaceを削除してもよろしいですか？"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:120
 msgid "Are you sure you want to delete filter condition?"
-msgstr ""
+msgstr "filter conditionを削除してもよろしいですか？"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:47
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/manage-rundown-items.js:61
@@ -1953,49 +1953,49 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/manage-rundown-items.tsx:118
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:245
 msgid "Are you sure you want to delete it?"
-msgstr ""
+msgstr "itを削除してもよろしいですか？"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:201
 msgid "Are you sure you want to delete product?"
-msgstr ""
+msgstr "productを削除してもよろしいですか？"
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:61
 msgid "Are you sure you want to delete rule set?"
-msgstr ""
+msgstr "rule setを削除してもよろしいですか？"
 
 #: scripts/apps/search/directives/SavedSearches.ts:112
 msgid "Are you sure you want to delete saved search?"
-msgstr ""
+msgstr "saved searchを削除してもよろしいですか？"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/sets/actions.js:95
 #: scripts/extensions/sams/dist/src/store/sets/actions.js:95
 #: scripts/extensions/sams/src/store/sets/actions.ts:113
 msgid "Are you sure you want to delete the Set \"{{name}}\"?"
-msgstr ""
+msgstr "the Set \"{{name}}\"を削除してもよろしいですか？"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/assets/actions.js:324
 #: scripts/extensions/sams/dist/src/store/assets/actions.js:324
 #: scripts/extensions/sams/src/store/assets/actions.ts:383
 msgid "Are you sure you want to delete the asset \"{{name}}\"?"
-msgstr ""
+msgstr "the asset \"{{name}}\"を削除してもよろしいですか？"
 
 #: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
 msgid "Are you sure you want to delete the saved report?"
-msgstr ""
+msgstr "the saved reportを削除してもよろしいですか？"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:204
 msgid "Are you sure you want to delete the scheduled report?"
-msgstr ""
+msgstr "the scheduled reportを削除してもよろしいですか？"
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:363
 msgid "Are you sure you want to delete the template?"
-msgstr ""
+msgstr "the templateを削除してもよろしいですか？"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/assets/actions.js:331
 #: scripts/extensions/sams/dist/src/store/assets/actions.js:331
 #: scripts/extensions/sams/src/store/assets/actions.ts:392
 msgid "Are you sure you want to delete these {{length}} assets"
-msgstr ""
+msgstr "these {{length}} assetsを削除してもよろしいですか？"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:239
 msgid "Are you sure you want to delete this scheme rule?"
