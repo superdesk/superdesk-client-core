@@ -4637,66 +4637,66 @@ msgstr "新しいランダウンテンプレートを作成"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:55
 msgid "Create new schedule"
-msgstr ""
+msgstr "新しいスケジュールを作成"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/create-show-modal.js:48
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-modal.js:48
 #: scripts/extensions/broadcasting/src/shows/create-show-modal.tsx:85
 msgid "Create new show"
-msgstr ""
+msgstr "新しい番組を作成"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:141
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetEditor.js:141
 #: scripts/extensions/sams/src/components/assets/assetEditor.tsx:135
 msgid "Create new tag: \"{{ tag }}\""
-msgstr ""
+msgstr "新しいタグを作成：\"{{ tag }}\""
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:134
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:134
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:261
 msgid "Create new template"
-msgstr ""
+msgstr "新しいテンプレートを作成"
 
 #: scripts/apps/packaging/index.ts:50 scripts/apps/packaging/index.ts:59
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:199
 msgid "Create package"
-msgstr ""
+msgstr "パッケージを作成"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:239
 msgid "Create planning"
-msgstr ""
+msgstr "プランニングを作成"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:259
 msgid "Create planning for all events or just this one?"
-msgstr ""
+msgstr "すべてのイベントのプランニングを作成しますか、それともこの1件のみですか？"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/create-rundown-from-template.js:57
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:57
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:103
 msgid "Create rundown"
-msgstr ""
+msgstr "ランダウンを作成"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/create-show-after-modal.js:14
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:14
 #: scripts/extensions/broadcasting/src/shows/create-show-after-modal.tsx:28
 msgid "Create rundown template"
-msgstr ""
+msgstr "ランダウンテンプレートを作成"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/template-edit.js:161
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:161
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:317
 msgid "Create rundowns automatically"
-msgstr ""
+msgstr "ランダウンを自動作成"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:219
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:219
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:415
 msgid "Create template"
-msgstr ""
+msgstr "テンプレートを作成"
 
 #: scripts/apps/users/views/list.html:3
 msgid "Create user"
-msgstr ""
+msgstr "ユーザーを作成"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:129
 #: ../superdesk-planning/client/components/AuditInformation/index.tsx:110
@@ -4723,48 +4723,48 @@ msgstr ""
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:171
 #: scripts/extensions/sams/src/utils/ui.tsx:105
 msgid "Created"
-msgstr ""
+msgstr "作成済み"
 
 #: ../superdesk-planning/client/components/UI/List/CreatedUpdatedColumn.tsx:28
 msgid "Created : {{ datetime }}"
-msgstr ""
+msgstr "作成日時：{{ datetime }}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:154
 msgid "Created From"
-msgstr ""
+msgstr "作成元"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
-msgstr ""
+msgstr "取り込みチャンネル {{name}} を作成しました"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created To"
-msgstr ""
+msgstr "作成先"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundowns-list.js:105
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:105
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:187
 msgid "Created at {{date}}"
-msgstr ""
+msgstr "{{date}} に作成"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:88
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:88
 #: scripts/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.tsx:165
 msgid "Created at {{time}} by {{user}}"
-msgstr ""
+msgstr "{{time}} に {{user}} が作成"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:96
 #: scripts/apps/authoring/versioning/history/views/history.html:6
 msgid "Created by"
-msgstr ""
+msgstr "作成者"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:111
 msgid "Created by this user"
-msgstr ""
+msgstr "このユーザーが作成"
 
 #: scripts/apps/search/directives/DateFilters.ts:77
 msgid "Created from"
-msgstr ""
+msgstr "作成元"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:92
 msgid "Created from 'update repetitions'"
@@ -4772,66 +4772,66 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:104
 msgid "Created from a planning item"
-msgstr ""
+msgstr "プランニングアイテムから作成"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:37
 msgid "Created from content"
-msgstr ""
+msgstr "コンテンツから作成"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:32
 msgid "Created from event"
-msgstr ""
+msgstr "イベントから作成"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:127
 msgid "Created from highlight"
-msgstr ""
+msgstr "ハイライトから作成"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:380
 msgid "Created from highlight({{x}}) by {{user}}"
-msgstr ""
+msgstr "{{user}} によりハイライト({{x}})から作成"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
-msgstr ""
+msgstr "作成日"
 
 #: scripts/apps/search/directives/DateFilters.ts:78
 msgid "Created to"
-msgstr ""
+msgstr "作成先"
 
 #: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:95
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/common/versionUserDateLines.js:66
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:36
 msgid "Created {{ datetime }}"
-msgstr ""
+msgstr "{{ datetime }} に作成"
 
 #: scripts/extensions/sams/dist/src/components/common/versionUserDateLines.js:96
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/common/versionUserDateLines.js:67
 #: scripts/extensions/sams/src/components/common/versionUserDateLines.tsx:41
 msgid "Created {{ datetime }} by"
-msgstr ""
+msgstr "{{ datetime }} に次のユーザーが作成"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:129
 msgid "Creation Date"
-msgstr ""
+msgstr "作成日"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:80
 msgid "Creation date"
-msgstr ""
+msgstr "作成日"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:17
 #: scripts/apps/search/constants.ts:11
 #: scripts/apps/search/views/search-parameters.html:131
 msgid "Creator"
-msgstr ""
+msgstr "作成者"
 
 #: scripts/apps/production-api-keys/config.ts:49
 msgid "Credentials"
-msgstr ""
+msgstr "認証情報"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:209
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
 msgid "Credit"
-msgstr ""
+msgstr "クレジット"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:19
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:19
@@ -4842,21 +4842,21 @@ msgstr ""
 #: scripts/core/editor3/components/media/MediaBlock.tsx:250
 #: scripts/core/editor3/components/media/MediaBlock.tsx:290
 msgid "Credit:"
-msgstr ""
+msgstr "クレジット："
 
 #: scripts/apps/search/views/search-filters.html:57
 msgid "Credits"
-msgstr ""
+msgstr "クレジット"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:248
 #: scripts/apps/publish/views/subscribers.html:234
 msgid "Critical Errors"
-msgstr ""
+msgstr "重大なエラー"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:68
 #: scripts/apps/authoring/views/change-image.html:205
 msgid "Crop"
-msgstr ""
+msgstr "切り抜き"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:181
 msgid "Crop coordinates are not defined for {{cropName}} picture crop."
@@ -4864,31 +4864,31 @@ msgstr ""
 
 #: scripts/apps/profiling/views/profiling.html:35
 msgid "Cumulative time"
-msgstr ""
+msgstr "累積時間"
 
 #: scripts/apps/profiling/views/profiling.html:36
 msgid "Cumulative time per call"
-msgstr ""
+msgstr "通話ごとの累積時間"
 
 #: ../superdesk-planning/client/constants/assignments.ts:209
 msgid "Current Assignments"
-msgstr ""
+msgstr "現在のアサインメント"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:78
 msgid "Current Date"
-msgstr ""
+msgstr "現在の日付"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:82
 msgid "Current Date (Based on Event timezone)"
-msgstr ""
+msgstr "現在の日付（イベントのタイムゾーンに基づく）"
 
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.tsx:14
 msgid "Current Repeat Summary"
-msgstr ""
+msgstr "現在の繰り返し概要"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:181
 msgid "Currently Selected"
-msgstr ""
+msgstr "現在選択中"
 
 #: scripts/apps/search/views/multi-image-edit.html:93
 msgid "Currently editing: {{getSelectedItemsLength()}} items"
@@ -4896,7 +4896,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningSelectedList.tsx:23
 msgid "Currently selected"
-msgstr ""
+msgstr "現在選択中"
 
 #: scripts/core/upload/image-crop-directive.ts:254
 msgid "Currently the image size is {{width}}x{{height}})."
@@ -4904,44 +4904,44 @@ msgstr ""
 
 #: scripts/apps/authoring/views/dashboard-articles.html:5
 msgid "Currently working on"
-msgstr ""
+msgstr "現在作業中"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:221
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:316
 msgid "Custom Layout"
-msgstr ""
+msgstr "カスタムレイアウト"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:358
 msgid "Custom block"
-msgstr ""
+msgstr "カスタムブロック"
 
 #: scripts/apps/vocabularies/views/settings.html:22
 msgid "Custom blocks"
-msgstr ""
+msgstr "カスタムブロック"
 
 #: scripts/apps/vocabularies/views/settings.html:25
 msgid "Custom date fields"
-msgstr ""
+msgstr "カスタム日付フィールド"
 
 #: scripts/apps/vocabularies/views/settings.html:28
 msgid "Custom embed fields"
-msgstr ""
+msgstr "カスタム埋め込みフィールド"
 
 #: scripts/apps/vocabularies/views/settings.html:19
 msgid "Custom text fields"
-msgstr ""
+msgstr "カスタムテキストフィールド"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:76
 msgid "Customer Installation No.:"
-msgstr ""
+msgstr "顧客インストール番号："
 
 #: scripts/apps/dashboard/index.ts:54
 msgid "Customize your widgets and views"
-msgstr ""
+msgstr "ウィジェットと表示をカスタマイズ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:69
 msgid "Cut"
-msgstr ""
+msgstr "切り取り"
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:46
 msgid "D"
@@ -4949,11 +4949,11 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:11
 msgid "DESKS"
-msgstr ""
+msgstr "デスク"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:32
 msgid "DONE"
-msgstr ""
+msgstr "完了"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:130
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:216
@@ -4961,49 +4961,49 @@ msgstr ""
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:11
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:34
 msgid "Daily"
-msgstr ""
+msgstr "毎日"
 
 #: ../superdesk-planning/client/utils/filters.ts:45
 msgid "Daily @ {{ time }} to {{ desk }}"
-msgstr ""
+msgstr "毎日 {{ time }}（{{ desk }}）"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
 msgid "Daily at {{hour}}"
-msgstr ""
+msgstr "毎日 {{hour}}"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
 msgid "Dark Blue"
-msgstr ""
+msgstr "濃い青"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:47
 msgid "Dark Gray"
-msgstr ""
+msgstr "濃い灰色"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:69
 msgid "Dark Magenta"
-msgstr ""
+msgstr "濃いマゼンタ"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:66
 msgid "Dark Orange"
-msgstr ""
+msgstr "濃いオレンジ"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:70
 msgid "Dark Violet"
-msgstr ""
+msgstr "濃い紫"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:48
 msgid "Darker Gray"
-msgstr ""
+msgstr "より濃い灰色"
 
 #: scripts/apps/dashboard/controllers/DashboardController.ts:38
 #: scripts/apps/dashboard/index.ts:70
 #: scripts/apps/dashboard/views/workspace.html:2
 msgid "Dashboard"
-msgstr ""
+msgstr "ダッシュボード"
 
 #: scripts/apps/dashboard/views/workspace.html:59
 msgid "Dashboard is empty"
-msgstr ""
+msgstr "ダッシュボードは空です"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:419
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:16
@@ -5015,39 +5015,39 @@ msgstr ""
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/editor.js:41
 #: scripts/extensions/datetimeField/src/editor.tsx:64
 msgid "Date"
-msgstr ""
+msgstr "日付"
 
 #: scripts/apps/authoring-react/fields/date/index.tsx:17
 msgid "Date (authoring-react)"
-msgstr ""
+msgstr "日付（authoring-react）"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:177
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:91
 msgid "Date Created"
-msgstr ""
+msgstr "作成日"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:2
 #: ../superdesk-planning/client/components/fields/preview/index.ts:142
 msgid "Date Filter"
-msgstr ""
+msgstr "日付フィルター"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:3
 msgid "Date Filter:"
-msgstr ""
+msgstr "日付フィルター："
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:108
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:16
 msgid "Date Filters"
-msgstr ""
+msgstr "日付フィルター"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:180
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:94
 msgid "Date Updated"
-msgstr ""
+msgstr "更新日"
 
 #: scripts/apps/search/directives/DateFilters.ts:76
 msgid "Date created"
-msgstr ""
+msgstr "作成日"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:183
 msgid "Date field is required"
@@ -5059,34 +5059,34 @@ msgstr ""
 
 #: scripts/apps/search/directives/DateFilters.ts:84
 msgid "Date modified"
-msgstr ""
+msgstr "更新日"
 
 #: ../superdesk-planning/client/apps/Planning/SubNavDatePicker.tsx:71
 #: ../superdesk-planning/client/components/UI/Form/DateInput/index.tsx:209
 msgid "Date picker"
-msgstr ""
+msgstr "日付ピッカー"
 
 #: scripts/apps/search/constants.ts:21
 #: scripts/apps/search/directives/DateFilters.ts:92
 msgid "Date published"
-msgstr ""
+msgstr "公開日"
 
 #: scripts/apps/search/directives/DateFilters.ts:100
 msgid "Date scheduled"
-msgstr ""
+msgstr "予定日"
 
 #: scripts/apps/authoring-react/fields/datetime/preview.tsx:16
 msgid "Date time (AUTHORING-REACT)"
-msgstr ""
+msgstr "日時（AUTHORING-REACT）"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
 msgid "Date/Time"
-msgstr ""
+msgstr "日時"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:113
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:88
 msgid "Date:"
-msgstr ""
+msgstr "日付："
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:352
 #: scripts/apps/authoring-react/field-adapters/dateline.ts:12
@@ -5094,27 +5094,27 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:106
 #: scripts/apps/workspace/content/constants.ts:21
 msgid "Dateline"
-msgstr ""
+msgstr "発信地"
 
 #: scripts/apps/authoring-react/fields/dateline/index.tsx:27
 msgid "Dateline (authoring-react)"
-msgstr ""
+msgstr "発信地（authoring-react）"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:40
 #: ../superdesk-planning/client/components/fields/index.tsx:232
 #: ../superdesk-planning/client/utils/contentProfiles.ts:265
 msgid "Dates"
-msgstr ""
+msgstr "日付"
 
 #: scripts/extensions/datetimeField/dist/src/extension.js:20
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/extension.js:20
 #: scripts/extensions/datetimeField/src/extension.tsx:27
 msgid "Datetime"
-msgstr ""
+msgstr "日時"
 
 #: scripts/apps/authoring-react/fields/datetime/index.tsx:24
 msgid "Datetime (authoring-react)"
-msgstr ""
+msgstr "日時（authoring-react）"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:157
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:77
@@ -5125,88 +5125,88 @@ msgstr ""
 #: scripts/extensions/availability-manager/src/constants.ts:42
 #: scripts/extensions/availability-manager/src/correspondent-availability/filters.tsx:128
 msgid "Day"
-msgstr ""
+msgstr "日"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:29
 msgid "Day of the Month"
-msgstr ""
+msgstr "日（毎月）"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:30
 msgid "Day(s)"
-msgstr ""
+msgstr "日"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:4
 msgid "Days"
-msgstr ""
+msgstr "日数"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
-msgstr ""
+msgstr "ディープピンク"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:31
 #: scripts/apps/monitoring/views/monitoring-group-header.html:43
 #: scripts/apps/search-providers/directive.ts:118
 msgid "Default"
-msgstr ""
+msgstr "デフォルト"
 
 #: scripts/apps/users/views/user-preferences.html:219
 msgid "Default Agenda"
-msgstr ""
+msgstr "デフォルトのアジェンダ"
 
 #: scripts/apps/users/views/user-preferences.html:206
 msgid "Default Calendar"
-msgstr ""
+msgstr "デフォルトのカレンダー"
 
 #: scripts/apps/desks/views/desk-config-modal.html:176
 msgid "Default Content Profile"
-msgstr ""
+msgstr "デフォルトのコンテンツプロファイル"
 
 #: scripts/apps/desks/views/desk-config-modal.html:153
 msgid "Default Content Template"
-msgstr ""
+msgstr "デフォルトのコンテンツテンプレート"
 
 #: scripts/apps/users/views/edit-form.html:220
 msgid "Default Desk"
-msgstr ""
+msgstr "デフォルトのデスク"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:147
 msgid "Default Duration"
-msgstr ""
+msgstr "デフォルトの期間"
 
 #: scripts/apps/users/views/user-preferences.html:232
 msgid "Default Events & Planning Filter"
-msgstr ""
+msgstr "デフォルトのイベント＆プランニングフィルター"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:72
 msgid "Default Template"
-msgstr ""
+msgstr "デフォルトテンプレート"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:96
 #: scripts/apps/authoring/views/theme-select.html:15
 msgid "Default Theme"
-msgstr ""
+msgstr "デフォルトテーマ"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:236
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:208
 msgid "Default Value"
-msgstr ""
+msgstr "デフォルト値"
 
 #: scripts/apps/users/views/settings-roles.html:54
 msgid "Default author roles"
-msgstr ""
+msgstr "デフォルトの作成者ロール"
 
 #: scripts/apps/users/views/edit-form.html:18
 #: scripts/apps/users/views/edit-form.html:215
 msgid "Default desk"
-msgstr ""
+msgstr "デフォルトデスク"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
-msgstr ""
+msgstr "デフォルトのデスクテンプレート"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:189
 msgid "Default language"
-msgstr ""
+msgstr "デフォルト言語"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:69
 msgid "Default language is a required field"
@@ -5214,17 +5214,17 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid "Default monitoring view"
-msgstr ""
+msgstr "デフォルトのモニタリング表示"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/manage-schedule.js:128
 #: scripts/extensions/availability-manager/dist/src/settings/manage-schedule.js:128
 #: scripts/extensions/availability-manager/src/settings/manage-schedule.tsx:199
 msgid "Default schedule"
-msgstr ""
+msgstr "デフォルトスケジュール"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:53
 msgid "Default view"
-msgstr ""
+msgstr "デフォルト表示"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:106
 msgid ""
@@ -5239,7 +5239,7 @@ msgstr ""
 #: scripts/extensions/predefinedTextField/dist/src/extensions/predefinedTextField/src/config.js:21
 #: scripts/extensions/predefinedTextField/src/config.tsx:30
 msgid "Definition"
-msgstr ""
+msgstr "定義"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:204
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:305
@@ -5275,7 +5275,7 @@ msgstr "削除"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:26
 msgid "Delete Agenda"
-msgstr ""
+msgstr "アジェンダを削除"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/assets/actions.js:324
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/assets/actions.js:331
@@ -5284,40 +5284,40 @@ msgstr ""
 #: scripts/extensions/sams/src/store/assets/actions.ts:384
 #: scripts/extensions/sams/src/store/assets/actions.ts:393
 msgid "Delete Asset?"
-msgstr ""
+msgstr "アセットを削除しますか？"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:36
 msgid "Delete Filter"
-msgstr ""
+msgstr "フィルターを削除"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:203
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:304
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:70
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:85
 msgid "Delete Item?"
-msgstr ""
+msgstr "アイテムを削除しますか？"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:70
 msgid "Delete Rule"
-msgstr ""
+msgstr "ルールを削除"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
-msgstr ""
+msgstr "保存済みレポートを削除"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:114
 msgid "Delete Scheduled Export"
-msgstr ""
+msgstr "スケジュール済みエクスポートを削除"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/sets/actions.js:95
 #: scripts/extensions/sams/dist/src/store/sets/actions.js:95
 #: scripts/extensions/sams/src/store/sets/actions.ts:114
 msgid "Delete Set?"
-msgstr ""
+msgstr "セットを削除しますか？"
 
 #: scripts/core/editor3/highlightsConfig.ts:102
 msgid "Delete empty paragraphs"
-msgstr ""
+msgstr "空の段落を削除"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/ListElementTemplate.tsx:101
 msgid "Delete failed! Field is required by the system"
@@ -5325,34 +5325,34 @@ msgstr ""
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:248
 msgid "Delete item?"
-msgstr ""
+msgstr "アイテムを削除しますか？"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:226
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:230
 msgid "Delete link"
-msgstr ""
+msgstr "リンクを削除"
 
 #: scripts/apps/search/views/saved-searches.html:16
 #: scripts/apps/search/views/saved-searches.html:45
 msgid "Delete search"
-msgstr ""
+msgstr "検索を削除"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:35
 msgid "Delete this Schedule"
-msgstr ""
+msgstr "このスケジュールを削除"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:87
 msgid "Delete vocabulary?"
-msgstr ""
+msgstr "ボキャブラリーを削除しますか？"
 
 #: scripts/apps/dashboard/views/workspace.html:35
 #: scripts/apps/monitoring/views/monitoring-view.html:220
 msgid "Delete workspace"
-msgstr ""
+msgstr "ワークスペースを削除"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
-msgstr ""
+msgstr "取り込みチャンネル {{name}} を削除しました"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
