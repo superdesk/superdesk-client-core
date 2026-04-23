@@ -448,6 +448,7 @@ function getDefaults(grunt) {
             'uk_UA',
             'pt_BR',
             'pl',
+            'ja',
         ],
 
         userOnlineMinutes: 15,
