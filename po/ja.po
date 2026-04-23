@@ -571,7 +571,7 @@ msgstr "デスクは必須です"
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr ""
+msgstr "指定されたメールアドレスにリンクを送信しました。パスワードのリセットに使用してください。有効期限は限られています。"
 
 #: ../superdesk-planning/client/api/locations.ts:30
 msgid "A location matching this one already exists"
@@ -641,7 +641,7 @@ msgstr "略語"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:157
 msgid "Abbreviation already exists. Do you want to overwrite it?"
-msgstr ""
+msgstr "略語は既に存在します。上書きしますか？"
 
 #: scripts/apps/dictionaries/views/settings.html:33
 msgid "Abbreviations Dictionary"
@@ -1091,7 +1091,7 @@ msgstr "前にグループを追加"
 
 #: scripts/validate-instance-configuration.tsx:59
 msgid "Add it via Settings > Metadata"
-msgstr ""
+msgstr "設定 > メタデータから追加してください"
 
 #: scripts/apps/packaging/views/search.html:10
 msgid "Add items"
@@ -1842,7 +1842,7 @@ msgstr "表示"
 
 #: scripts/apps/publish/views/subscribers.html:244
 msgid "Applied Global Block Filters"
-msgstr ""
+msgstr "適用済みグローバルブロックフィルター"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:161
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:75
@@ -1999,85 +1999,85 @@ msgstr "these {{length}} assetsを削除してもよろしいですか？"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:239
 msgid "Are you sure you want to delete this scheme rule?"
-msgstr ""
+msgstr "このスキームルールを削除してもよろしいですか？"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:238
 msgid "Are you sure you want to delete this scheme?"
-msgstr ""
+msgstr "このスキームを削除してもよろしいですか？"
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:89
 msgid "Are you sure you want to delete user role?"
-msgstr ""
+msgstr "このユーザーロールを削除してもよろしいですか？"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:1028
 #: ../superdesk-planning/client/actions/events/ui.ts:995
 msgid "Are you sure you want to mark this event as complete?"
-msgstr ""
+msgstr "このイベントを完了としてマークしてもよろしいですか？"
 
 #: scripts/apps/archive/index.tsx:498
 msgid "Are you sure you want to spike the item?"
-msgstr ""
+msgstr "このアイテムをスパイクしてもよろしいですか？"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:188
 msgid "Are you sure you want to spike the items?"
-msgstr ""
+msgstr "これらのアイテムをスパイクしてもよろしいですか？"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:64
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
-msgstr ""
+msgstr "アイテム「{{headline}}」の公開を取り消してもよろしいですか？"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:53
 msgid "Are you sure you want to unpublish item \"{{label}}\"?"
-msgstr ""
+msgstr "アイテム「{{label}}」の公開を取り消してもよろしいですか？"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:96
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:236
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:32
 msgid "Area"
-msgstr ""
+msgstr "エリア"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:38
 msgid "Arrow Left"
-msgstr ""
+msgstr "左矢印"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:39
 msgid "Arrow Right"
-msgstr ""
+msgstr "右矢印"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:40
 msgid "Arrow Small"
-msgstr ""
+msgstr "小さい矢印"
 
 #: scripts/apps/users/views/user-preferences.html:103
 msgid "Article Defaults"
-msgstr ""
+msgstr "記事のデフォルト"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:215
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:297
 msgid "Article Template"
-msgstr ""
+msgstr "記事テンプレート"
 
 #: scripts/apps/archive/views/preview.html:17
 msgid "Article Type"
-msgstr ""
+msgstr "記事タイプ"
 
 #: scripts/apps/search/components/TypeIcon.tsx:39
 #: scripts/apps/search/components/TypeIcon.tsx:50
 msgid "Article Type {{type}}"
-msgstr ""
+msgstr "記事タイプ {{type}}"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:107
 msgid "Article Type(s)"
-msgstr ""
+msgstr "記事タイプ"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:105
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:122
 msgid "Article Type: text"
-msgstr ""
+msgstr "記事タイプ：テキスト"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:100
 msgid "Article Type: {{articleType}}"
-msgstr ""
+msgstr "記事タイプ：{{articleType}}"
 
 #: ../superdesk-planning/client/utils/assignments.ts:504
 #: scripts/apps/authoring/authoring/directives/AuthoringHeaderDirective.ts:70
@@ -2085,36 +2085,36 @@ msgstr ""
 #: scripts/apps/search/components/TypeIcon.tsx:49
 #: scripts/core/directives/FiletypeIconDirective.ts:39
 msgid "Article Type: {{type}}"
-msgstr ""
+msgstr "記事タイプ：{{type}}"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:577
 msgid ""
 "Article cannot be published. Please accept or reject all suggestions first."
-msgstr ""
+msgstr "記事を公開できません。先にすべての提案を承認または却下してください。"
 
 #: scripts/apps/users/views/user-preferences.html:16
 msgid "Article defaults"
-msgstr ""
+msgstr "記事のデフォルト"
 
 #: scripts/apps/authoring-react/packages.tsx:116
 msgid "Article is not linked to any packages"
-msgstr ""
+msgstr "記事はどのパッケージにもリンクされていません"
 
 #: scripts/apps/search/components/fields/scheduledDateTime.tsx:23
 msgid "Article is scheduled for {{schedule}}"
-msgstr ""
+msgstr "記事は {{schedule}} に予定されています"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:304
 msgid "Article preview"
-msgstr ""
+msgstr "記事プレビュー"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:236
 msgid "Article was created."
-msgstr ""
+msgstr "記事が作成されました。"
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:49
 msgid "Article {{slug}} is already marked for this highlight"
-msgstr ""
+msgstr "記事 {{slug}} は既にこのハイライトにマークされています"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:168
 #: ../superdesk-planning/client/components/OrderBar/OrderDirectionIcon.tsx:16
@@ -2122,11 +2122,11 @@ msgstr ""
 #: scripts/apps/search/views/item-sortbar.html:20
 #: scripts/core/ui/components/SortBar/index.tsx:65
 msgid "Ascending"
-msgstr ""
+msgstr "昇順"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:50
 msgid "Ascending Order"
-msgstr ""
+msgstr "昇順"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
 msgid "Asia/Almaty"
@@ -2252,43 +2252,43 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetPreviewPanel.js:130
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:130
 msgid "Asset Preview"
-msgstr ""
+msgstr "アセットプレビュー"
 
 #: scripts/extensions/sams/dist/src/api/assets.js:438
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:438
 #: scripts/extensions/sams/src/api/assets.ts:554
 msgid "Asset deleted successfully"
-msgstr ""
+msgstr "アセットを削除しました"
 
 #: scripts/extensions/sams/dist/src/api/assets.js:460
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:460
 #: scripts/extensions/sams/src/api/assets.ts:577
 msgid "Asset updated successfully"
-msgstr ""
+msgstr "アセットを更新しました"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/notifications/assets.js:30
 #: scripts/extensions/sams/dist/src/notifications/assets.js:30
 #: scripts/extensions/sams/src/notifications/assets.ts:43
 msgid "Asset was deleted by another user."
-msgstr ""
+msgstr "アセットは別のユーザーによって削除されました。"
 
 #: scripts/apps/publish/views/http-push-config.html:10
 #: scripts/apps/publish/views/http-push-config.html:9
 msgid "Assets URL"
-msgstr ""
+msgstr "アセットURL"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:216
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:42
 msgid "Assign"
-msgstr ""
+msgstr "割り当て"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:131
 msgid "Assign \"{{calendar}}\" Calendar to Series"
-msgstr ""
+msgstr "「{{calendar}}」カレンダーをシリーズに割り当て"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:134
 msgid "Assign Calendar"
-msgstr ""
+msgstr "カレンダーを割り当て"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:27
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:21
@@ -2299,63 +2299,63 @@ msgstr ""
 #: scripts/core/editor3/components/media/MediaBlock.tsx:258
 #: scripts/core/editor3/components/media/MediaBlock.tsx:298
 msgid "Assign rights:"
-msgstr ""
+msgstr "権限を割り当て："
 
 #: ../superdesk-planning/client/constants/planning.ts:143
 msgid "Assign to agenda"
-msgstr ""
+msgstr "アジェンダに割り当て"
 
 #: ../superdesk-planning/client/constants/events.ts:168
 msgid "Assign to calendar"
-msgstr ""
+msgstr "カレンダーに割り当て"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:29
 #: ../superdesk-planning/client/utils/index.ts:385
 msgid "Assigned"
-msgstr ""
+msgstr "割り当て済み"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:205
 #: ../superdesk-planning/client/utils/assignments.ts:205
 msgid "Assigned Provider"
-msgstr ""
+msgstr "割り当て先プロバイダー"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:107
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:124
 msgid "Assigned by {{name}}"
-msgstr ""
+msgstr "{{name}} によって割り当て"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:27
 msgid "Assigned desks"
-msgstr ""
+msgstr "割り当て済みデスク"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:74
 msgid "Assigned to agenda '{{ agenda }}'"
-msgstr ""
+msgstr "アジェンダ '{{ agenda }}' に割り当て済み"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:25
 msgid "Assigned to provider"
-msgstr ""
+msgstr "プロバイダーに割り当て済み"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:195
 msgid "Assigned to:"
-msgstr ""
+msgstr "割り当て先："
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:114
 msgid "Assigned:"
-msgstr ""
+msgstr "割り当て済み："
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.tsx:225
 msgid "Assigned: {{ name }}"
-msgstr ""
+msgstr "割り当て済み：{{ name }}"
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:53
 msgid "Assignee"
-msgstr ""
+msgstr "担当者"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:254
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:271
 msgid "Assignee:"
-msgstr ""
+msgstr "担当者："
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:44
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:78
@@ -2366,60 +2366,60 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:8
 #: scripts/apps/search/views/item-preview.html:24
 msgid "Assignment"
-msgstr ""
+msgstr "アサインメント"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:243
 #: ../superdesk-planning/client/components/fields/editor/AssignmentPriority.tsx:28
 msgid "Assignment Priority"
-msgstr ""
+msgstr "アサインメント優先度"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:192
 msgid "Assignment does not exist"
-msgstr ""
+msgstr "アサインメントは存在しません"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:50
 msgid "Assignment for"
-msgstr ""
+msgstr "次のアサインメント"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:144
 msgid "Assignment has been cancelled, unable to reassign"
-msgstr ""
+msgstr "アサインメントはキャンセルされており、再割り当てできません"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:145
 msgid "Assignment has been cancelled, unable to remove"
-msgstr ""
+msgstr "アサインメントはキャンセルされており、削除できません"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:141
 msgid "Assignment has been completed, unable to reassign"
-msgstr ""
+msgstr "アサインメントは完了しており、再割り当てできません"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:142
 msgid "Assignment has been completed, unable to remove"
-msgstr ""
+msgstr "アサインメントは完了しており、削除できません"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:147
 msgid "Assignment is locked, unable to reassign"
-msgstr ""
+msgstr "アサインメントがロックされており、再割り当てできません"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:148
 msgid "Assignment is locked, unable to remove"
-msgstr ""
+msgstr "アサインメントがロックされており、削除できません"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:123
 msgid "Assignment locked"
-msgstr ""
+msgstr "アサインメントがロックされています"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:464
 msgid "Assignment priority has been updated."
-msgstr ""
+msgstr "アサインメント優先度を更新しました。"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:97
 msgid "Assignment removed"
-msgstr ""
+msgstr "アサインメントを削除しました"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:362
 msgid "Assignment reverted."
-msgstr ""
+msgstr "アサインメントを元に戻しました。"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:78
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:62
@@ -2431,53 +2431,53 @@ msgstr ""
 #: scripts/apps/master-desk/MasterDesk.tsx:40
 #: scripts/apps/production-api-keys/config.ts:29
 msgid "Assignments"
-msgstr ""
+msgstr "アサインメント"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentsUi.tsx:14
 #: ../superdesk-planning/client/apps/Assignments/FulfilAssignmentUi.tsx:14
 msgid "Assignments Content"
-msgstr ""
+msgstr "アサインメントコンテンツ"
 
 #: ../superdesk-planning/client/components/fields/editor/XMPFile.tsx:53
 msgid "Associate an XMP file"
-msgstr ""
+msgstr "XMPファイルを関連付け"
 
 #: scripts/apps/search/components/Associations.tsx:40
 msgid "Associated"
-msgstr ""
+msgstr "関連付け済み"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:315
 msgid "Associated Event"
-msgstr ""
+msgstr "関連イベント"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.tsx:210
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:233
 msgid "Associated Events"
-msgstr ""
+msgstr "関連イベント"
 
 #: scripts/apps/search/constants.ts:19
 msgid "Associated Feature Media"
-msgstr ""
+msgstr "関連特集メディア"
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:151
 msgid "Associated XMP File"
-msgstr ""
+msgstr "関連XMPファイル"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:94
 msgid "Associated an event"
-msgstr ""
+msgstr "イベントを関連付け"
 
 #: scripts/apps/publish/views/ftp-config.html:38
 msgid "Associated/featuremedia path"
-msgstr ""
+msgstr "関連/特集メディアパス"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:66
 msgid "At least 2 languages must be selected"
-msgstr ""
+msgstr "少なくとも2つの言語を選択する必要があります"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:198
 msgid "At least one of [{{list}}] is required."
-msgstr ""
+msgstr "[{{list}}] のうち少なくとも1つは必須です。"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:146
 msgid ""
@@ -2488,12 +2488,12 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/selectAssetModal.js:153
 #: scripts/extensions/sams/src/components/assets/selectAssetModal.tsx:172
 msgid "Attach Asset(s)"
-msgstr ""
+msgstr "アセットを添付"
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:112
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:123
 msgid "Attach files"
-msgstr ""
+msgstr "ファイルを添付"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:212
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:209
@@ -2501,21 +2501,21 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/EventAttachments.tsx:100
 #: ../superdesk-planning/client/components/fields/resources/common.tsx:60
 msgid "Attached Files"
-msgstr ""
+msgstr "添付ファイル"
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:165
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:104
 msgid "Attached files"
-msgstr ""
+msgstr "添付ファイル"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:43
 #: scripts/core/editor3/components/links/LinkInput.tsx:72
 msgid "Attachment"
-msgstr ""
+msgstr "添付"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:44
 msgid "Attachment Large"
-msgstr ""
+msgstr "大きい添付"
 
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/planning-attachments/index.tsx:24
 #: scripts/apps/authoring-react/field-adapters/attachments.ts:16
@@ -2524,11 +2524,11 @@ msgstr ""
 #: scripts/apps/authoring/views/article-edit.html:729
 #: scripts/apps/workspace/content/constants.ts:12
 msgid "Attachments"
-msgstr ""
+msgstr "添付ファイル"
 
 #: scripts/apps/authoring-react/fields/attachments/index.tsx:41
 msgid "Attachments (authoring-react)"
-msgstr ""
+msgstr "添付ファイル（authoring-react）"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:45
 #: ../superdesk-planning/client/utils/index.ts:597
@@ -2539,13 +2539,13 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:113
 #: scripts/extensions/sams/src/utils/assets.ts:146
 msgid "Audio"
-msgstr ""
+msgstr "音声"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:75
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetTypeFilterButtons.js:75
 #: scripts/extensions/sams/src/components/assets/assetTypeFilterButtons.tsx:58
 msgid "Audio only"
-msgstr ""
+msgstr "音声のみ"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
 msgid "Australia/Adelaide"
@@ -2565,7 +2565,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:269
 msgid "Authentication Token"
-msgstr ""
+msgstr "認証トークン"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:646
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:120
@@ -2573,12 +2573,12 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:170
 #: scripts/apps/users/views/edit-form.html:66
 msgid "Author"
-msgstr ""
+msgstr "作成者"
 
 #: scripts/apps/users/views/edit-form.html:20
 #: scripts/apps/users/views/edit-form.html:249
 msgid "Author info"
-msgstr ""
+msgstr "作成者情報"
 
 #: scripts/apps/users/views/settings-roles.html:61
 msgid "Author roles controlled vocabullary is missing."
@@ -2586,14 +2586,14 @@ msgstr ""
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:43
 msgid "Author:"
-msgstr ""
+msgstr "作成者："
 
 #: scripts/apps/authoring/authoring/index.ts:205
 #: scripts/apps/authoring/compare-versions/index.ts:27
 #: scripts/apps/authoring/multiedit/multiedit.ts:465
 #: scripts/apps/authoring/views/authoring.html:2
 msgid "Authoring"
-msgstr ""
+msgstr "オーサリング"
 
 #: scripts/apps/desks/views/desk-config-modal.html:106
 msgid ""
@@ -2606,35 +2606,35 @@ msgstr ""
 #: scripts/apps/search/components/fields/authors.tsx:113
 #: scripts/apps/workspace/content/constants.ts:13
 msgid "Authors"
-msgstr ""
+msgstr "作成者"
 
 #: scripts/apps/users/views/list.html:15
 msgid "Authors only"
-msgstr ""
+msgstr "作成者のみ"
 
 #: scripts/apps/templates/views/templates.html:61
 msgid "Automated item creation"
-msgstr ""
+msgstr "自動アイテム作成"
 
 #: scripts/apps/templates/views/template-editor-modal.html:144
 msgid "Automatically create item"
-msgstr ""
+msgstr "アイテムを自動作成"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:39
 msgid "Automatically insert items from"
-msgstr ""
+msgstr "次からアイテムを自動挿入"
 
 #: scripts/extensions/availability-manager/dist/src/extension.js:36
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/extension.js:37
 #: scripts/extensions/availability-manager/src/extension.ts:55
 msgid "Availability"
-msgstr ""
+msgstr "可用性"
 
 #: scripts/extensions/availability-manager/dist/src/extension.js:49
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/extension.js:51
 #: scripts/extensions/availability-manager/src/extension.ts:73
 msgid "Availability Management"
-msgstr ""
+msgstr "可用性管理"
 
 #: scripts/extensions/availability-manager/dist/src/extension.js:17
 #: scripts/extensions/availability-manager/dist/src/extension.js:20
@@ -2651,7 +2651,7 @@ msgstr ""
 #: scripts/extensions/availability-manager/dist/src/settings/availability-settings.js:189
 #: scripts/extensions/availability-manager/src/settings/availability-settings.tsx:326
 msgid "Availability schedule"
-msgstr ""
+msgstr "可用性スケジュール"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:54
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:74
@@ -2660,36 +2660,36 @@ msgstr ""
 #: scripts/extensions/availability-manager/src/utils.ts:57
 #: scripts/extensions/availability-manager/src/utils.ts:77
 msgid "Available"
-msgstr ""
+msgstr "利用可能"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:70
 #: scripts/extensions/availability-manager/dist/src/utils.js:70
 #: scripts/extensions/availability-manager/src/utils.ts:73
 msgid "Available all day"
-msgstr ""
+msgstr "終日利用可能"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:28
 msgid "Available clocks"
-msgstr ""
+msgstr "利用可能な時計"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:209
 msgid "Available in user/desk preferences"
-msgstr ""
+msgstr "ユーザー/デスク設定で利用可能"
 
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:108
 msgid "Available languages"
-msgstr ""
+msgstr "利用可能な言語"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningList.tsx:92
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:167
 msgid "Available selections"
-msgstr ""
+msgstr "利用可能な選択肢"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:279
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:30
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:24
 msgid "Average"
-msgstr ""
+msgstr "平均"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:33
 #: scripts/apps/dashboard/views/workspace.html:89
@@ -2698,51 +2698,51 @@ msgstr ""
 #: scripts/core/itemList/views/relatedItem-list-widget.html:66
 #: scripts/core/ui/components/content-create-dropdown/more-templates.tsx:43
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #: scripts/apps/search/views/search-panel.html:5
 msgid "Back / Cancel"
-msgstr ""
+msgstr "戻る / キャンセル"
 
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:51
 msgid "Back to group list view"
-msgstr ""
+msgstr "グループ一覧表示に戻る"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:10
 msgid "Back to original view"
-msgstr ""
+msgstr "元の表示に戻る"
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
 msgid "Back to results"
-msgstr ""
+msgstr "結果に戻る"
 
 #: scripts/apps/users/views/edit.html:3
 msgid "Back to users list"
-msgstr ""
+msgstr "ユーザー一覧に戻る"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:46
 msgid "Backward Thin"
-msgstr ""
+msgstr "細い戻る矢印"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:47
 msgid "Ban Circle"
-msgstr ""
+msgstr "禁止マーク"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:87
 msgid "Bar"
-msgstr ""
+msgstr "バー"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:24
 msgid "Be the first one..."
-msgstr ""
+msgstr "最初の1人になりましょう…"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/template-edit.js:178
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:181
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:361
 msgid "Before airtime"
-msgstr ""
+msgstr "放送前"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:7
 msgid ""
@@ -2752,27 +2752,27 @@ msgstr ""
 
 #: scripts/apps/search/components/fields/state.tsx:41
 msgid "Being Corrected"
-msgstr ""
+msgstr "修正中"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:48
 msgid "Bell"
-msgstr ""
+msgstr "ベル"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:39
 msgid "Better"
-msgstr ""
+msgstr "より良い"
 
 #: scripts/apps/users/views/edit-form.html:286
 msgid "Biography"
-msgstr ""
+msgstr "経歴"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:46
 msgid "Black"
-msgstr ""
+msgstr "黒"
 
 #: scripts/apps/search/views/search-parameters.html:258
 msgid "Black&White"
-msgstr ""
+msgstr "白黒"
 
 #: scripts/apps/authoring/packages/views/packages-widget.html:15
 #: scripts/apps/packaging/views/sd-package-item-preview.html:20
@@ -2781,15 +2781,15 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:58
 msgid "Block API"
-msgstr ""
+msgstr "ブロックAPI"
 
 #: scripts/apps/products/views/products-config-modal.html:71
 msgid "Blocking"
-msgstr ""
+msgstr "ブロック中"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:56
 msgid "Blue"
-msgstr ""
+msgstr "青"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:57
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:166
@@ -2797,47 +2797,47 @@ msgstr ""
 #: scripts/apps/authoring/views/theme-select.html:105
 #: scripts/apps/authoring/views/theme-select.html:54
 msgid "Body"
-msgstr ""
+msgstr "本文"
 
 #: scripts/apps/authoring-react/field-adapters/body_html.ts:22
 #: scripts/apps/workspace/content/constants.ts:15
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
-msgstr ""
+msgstr "本文HTML"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:37
 #: scripts/apps/workspace/content/constants.ts:14
 msgid "Body footer"
-msgstr ""
+msgstr "本文フッター"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:36
 msgid "Body footer / Helplines / Contact Information"
-msgstr ""
+msgstr "本文フッター / ヘルプライン / 連絡先情報"
 
 #: scripts/apps/authoring/views/theme-select.html:107
 #: scripts/apps/authoring/views/theme-select.html:56
 msgid "Body text example"
-msgstr ""
+msgstr "本文テキスト例"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:49
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:32
 msgid "Bold"
-msgstr ""
+msgstr "太字"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:75
 msgid "Bold (Ctrl+B)"
-msgstr ""
+msgstr "太字 (Ctrl+B)"
 
 #: scripts/apps/authoring-react/fields/boolean/index.ts:23
 msgid "Boolean"
-msgstr ""
+msgstr "真偽値"
 
 #: ../superdesk-planning/client/utils/eventsplanning.ts:23
 #: ../superdesk-planning/client/utils/eventsplanning.ts:26
 #: scripts/apps/publish/directives/SubscribersDirective.ts:66
 #: scripts/apps/publish/views/subscribers.html:149
 msgid "Both"
-msgstr ""
+msgstr "両方"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:200
 msgid ""
@@ -2847,27 +2847,27 @@ msgstr ""
 
 #: scripts/apps/authoring/views/change-image.html:242
 msgid "Brightness"
-msgstr ""
+msgstr "明るさ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:50
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Broadcast"
-msgstr ""
+msgstr "放送"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:51
 msgid "Broadcast Create"
-msgstr ""
+msgstr "放送作成"
 
 #: scripts/extensions/broadcasting/dist/src/extension.js:19
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/extension.js:19
 #: scripts/extensions/broadcasting/src/extension.ts:20
 msgid "Broadcasting"
-msgstr ""
+msgstr "放送中"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:38
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:40
 msgid "Browse"
-msgstr ""
+msgstr "参照"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:546
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
@@ -2875,11 +2875,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:52
 msgid "Business"
-msgstr ""
+msgstr "ビジネス"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "By"
-msgstr ""
+msgstr "作成者"
 
 #: scripts/apps/users/views/user-preferences.html:143
 msgid ""
