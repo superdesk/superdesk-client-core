@@ -40,7 +40,7 @@ export interface IAuthoringApiCommon {
 export const authoringApiCommon: IAuthoringApiCommon = {
     checkShortcutButtonAvailability: (item: IArticle, dirty?: boolean, personal?: boolean): boolean => {
         if (personal) {
-            return appConfig?.features?.publishFromPersonal && item.state !== 'draft';
+            return appConfig?.features?.publishFromPersonal && (item.state !== 'draft' || dirty);
         }
 
         return item.task && item.task.desk && item.state !== 'draft' || dirty;
