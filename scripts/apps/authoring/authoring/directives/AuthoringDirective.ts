@@ -237,7 +237,7 @@ export function AuthoringDirective(
                     $scope.publishEnabled = $scope.publishAvailable
                         && authoringApiCommon.checkShortcutButtonAvailability(
                             $scope.item,
-                            false,
+                            $scope.dirty,
                             sdApi.navigation.isPersonalSpace(),
                         );
 
