@@ -100,7 +100,7 @@ export function AuthoringDirective(
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
             $scope.eventListenersToRemoveOnUnmount = [];
-            $scope.sendAndDuplicateEnabled = () => false; // setting initial value, true value will be set asynchronously
+            $scope.sendAndDuplicateEnabled = () => false; // initial value until desks load
             $scope.toDeskEnabled = () => false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = () => false; // Create an update of an item and Close the item.
             $scope.publishEnabled = () => false; // publish an item
@@ -244,7 +244,8 @@ export function AuthoringDirective(
                         && !sdApi.navigation.isPersonalSpace()
                         && sdApi.article.canPublishOnDesk($scope.deskType);
 
-                    $scope.sendAndDuplicateAvailable = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                    $scope.sendAndDuplicateAvailable =
+                        appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
                         && getSendAndDuplicateTarget() != null;
                 }, true);
 
@@ -659,7 +660,8 @@ export function AuthoringDirective(
 
             $scope.showCustomButtons = () => {
                 return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
-                    || $scope.publishAndContinueAvailable || $scope.publishAvailable || $scope.sendAndDuplicateAvailable;
+                    || $scope.publishAndContinueAvailable || $scope.publishAvailable
+                    || $scope.sendAndDuplicateAvailable;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
