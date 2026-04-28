@@ -100,12 +100,11 @@ export function AuthoringDirective(
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
             $scope.eventListenersToRemoveOnUnmount = [];
-            $scope.toDeskEnabled = false; // Send an Item to a desk
-            $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
-
-            $scope.publishEnabled = false; // publish an item
-            $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
             $scope.sendAndDuplicateEnabled = false; // setting initial value, true value will be set asynchronously
+            $scope.toDeskEnabled = () => false; // Send an Item to a desk
+            $scope.closeAndContinueEnabled = () => false; // Create an update of an item and Close the item.
+            $scope.publishEnabled = () => false; // publish an item
+            $scope.publishAndContinueEnabled = () => false; // Publish an item and Create an update.
 
             $scope.requestEditor3DirectivesToGenerateHtml = [];
 
@@ -238,32 +237,32 @@ export function AuthoringDirective(
                     $scope.toDeskAvailable = appConfig.features?.customAuthoringTopbar?.toDesk
                         && !sdApi.navigation.isPersonalSpace();
 
-                    $scope.toDeskEnabled = $scope.toDeskAvailable
-                        && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.dirty);
-
                     $scope.closeAndContinueAvailable = appConfig.features?.customAuthoringTopbar?.closeAndContinue
                         && !sdApi.navigation.isPersonalSpace();
-
-                    $scope.closeAndContinueEnabled = $scope.closeAndContinueAvailable
-                        && sdApi.article.showCloseAndContinue($scope.item, $scope.dirty);
 
                     $scope.publishAvailable = appConfig.features?.customAuthoringTopbar?.publish
                         && sdApi.article.canPublishOnDesk($scope.deskType);
 
-                    $scope.publishEnabled = $scope.publishAvailable
-                        && authoringApiCommon.checkShortcutButtonAvailability(
-                            $scope.item,
-                            $scope.dirty,
-                            sdApi.navigation.isPersonalSpace(),
-                        );
-
                     $scope.publishAndContinueAvailable = appConfig.features?.customAuthoringTopbar?.publishAndContinue
                         && !sdApi.navigation.isPersonalSpace()
                         && sdApi.article.canPublishOnDesk($scope.deskType);
-
-                    $scope.publishAndContinueEnabled = $scope.publishAndContinueAvailable
-                        && sdApi.article.showPublishAndContinue($scope.item, $scope.dirty);
                 }, true);
+
+                $scope.publishEnabled = () => $scope.publishAvailable
+                    && authoringApiCommon.checkShortcutButtonAvailability(
+                        $scope.item,
+                        $scope.save_enabled(),
+                        sdApi.navigation.isPersonalSpace(),
+                    );
+
+                $scope.publishAndContinueEnabled = () => $scope.publishAndContinueAvailable
+                    && sdApi.article.showPublishAndContinue($scope.item, $scope.save_enabled());
+
+                $scope.toDeskEnabled = () => $scope.toDeskAvailable
+                    && authoringApiCommon.checkShortcutButtonAvailability($scope.item, $scope.save_enabled());
+
+                $scope.closeAndContinueEnabled = () => $scope.closeAndContinueAvailable
+                    && sdApi.article.showCloseAndContinue($scope.item, $scope.save_enabled());
             });
 
             /**
