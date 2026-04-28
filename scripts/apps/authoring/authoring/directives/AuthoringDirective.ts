@@ -100,7 +100,7 @@ export function AuthoringDirective(
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
 
             $scope.eventListenersToRemoveOnUnmount = [];
-            $scope.sendAndDuplicateEnabled = false; // setting initial value, true value will be set asynchronously
+            $scope.sendAndDuplicateEnabled = () => false; // setting initial value, true value will be set asynchronously
             $scope.toDeskEnabled = () => false; // Send an Item to a desk
             $scope.closeAndContinueEnabled = () => false; // Create an update of an item and Close the item.
             $scope.publishEnabled = () => false; // publish an item
@@ -228,9 +228,6 @@ export function AuthoringDirective(
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
 
                 // (depends on desks being initialized)
-                $scope.sendAndDuplicateEnabled = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
-                    && getSendAndDuplicateTarget() != null;
-
                 getLabelForFieldId = _getLabelForFieldId;
 
                 $scope.$watch('item', () => {
@@ -246,6 +243,9 @@ export function AuthoringDirective(
                     $scope.publishAndContinueAvailable = appConfig.features?.customAuthoringTopbar?.publishAndContinue
                         && !sdApi.navigation.isPersonalSpace()
                         && sdApi.article.canPublishOnDesk($scope.deskType);
+
+                    $scope.sendAndDuplicateAvailable = appConfig.features?.customAuthoringTopbar?.sendAndDuplicate != null
+                        && getSendAndDuplicateTarget() != null;
                 }, true);
 
                 $scope.publishEnabled = () => $scope.publishAvailable
@@ -263,6 +263,10 @@ export function AuthoringDirective(
 
                 $scope.closeAndContinueEnabled = () => $scope.closeAndContinueAvailable
                     && sdApi.article.showCloseAndContinue($scope.item, $scope.save_enabled());
+
+                // (depends on desks being initialized)
+                $scope.sendAndDuplicateEnabled = () => $scope.sendAndDuplicateAvailable
+                    && getSendAndDuplicateTarget() != null;
             });
 
             /**
@@ -655,7 +659,7 @@ export function AuthoringDirective(
 
             $scope.showCustomButtons = () => {
                 return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
-                    || $scope.publishAndContinueAvailable || $scope.publishAvailable || $scope.sendAndDuplicateEnabled;
+                    || $scope.publishAndContinueAvailable || $scope.publishAvailable || $scope.sendAndDuplicateAvailable;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {

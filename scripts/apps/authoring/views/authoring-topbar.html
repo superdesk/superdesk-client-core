@@ -45,7 +45,7 @@
     <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons()" style="min-width: 150px;">
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
-        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || sendAndDuplicateEnabled)"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || $root.config.features.customAuthoringTopbar.sendAndDuplicate != null)"
         ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
@@ -83,8 +83,9 @@
         </button>
 
         <button
-          ng-if="sendAndDuplicateEnabled"
+          ng-if="sendAndDuplicateAvailable"
           class="btn sd-overflow-ellipsis btn--custom"
+          ng-disabled="!sendAndDuplicateEnabled()"
           ng-click="sendAndDuplicate()"
           aria-label="{{ :: 'Send and duplicate' | translate }}"
           title="{{ 'Send and duplicate' | translate }}"
