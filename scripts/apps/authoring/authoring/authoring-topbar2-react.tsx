@@ -42,7 +42,7 @@ interface IState {
 /**
  * Only used from angular based authoring view
  */
-export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
+export class AuthoringTopbar2React extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -71,23 +71,6 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         if (this.props.action === 'view') {
             this.fetchArticleFromServer();
         }
-    }
-    shouldComponentUpdate(nextProps: IProps, nextState: IState) {
-        for (const key of Object.keys(this.props)) {
-            if (key === 'children') continue;
-
-            if (this.props[key] !== nextProps[key]) {
-                return true;
-            }
-        }
-
-        for (const key of Object.keys(this.state)) {
-            if (this.state[key] !== nextState[key]) {
-                return true;
-            }
-        }
-
-        return false;
     }
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
