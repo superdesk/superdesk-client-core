@@ -80,27 +80,6 @@ export class AuthoringTopbar2React extends React.Component<IProps, IState> {
             this.fetchArticleFromServer();
         }
     }
-
-    shouldComponentUpdate(nextProps: IProps, nextState: IState) {
-        for (const key of Object.keys(this.props)) {
-            if (key === 'children') continue;
-
-            if (this.props[key] !== nextProps[key]) {
-                return true;
-            }
-        }
-
-        const stateKeys = new Set([...Object.keys(this.state), ...Object.keys(nextState)]);
-
-        for (const key of Array.from(stateKeys)) {
-            if (this.state[key] !== nextState[key]) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
             return null; // fetching article from the server
