@@ -60,7 +60,9 @@ function getRundownItemTemplateAuthoringStorage(
             const warnAboutLosingChanges = isCreationMode || hasUnsavedChanges;
 
             if (warnAboutLosingChanges) {
-                return superdesk.ui.confirm(superdesk.localization.gettext('Discard unsaved changes?')).then((confirmed) => {
+                const {gettext} = superdesk.localization;
+
+                return superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
                     if (confirmed) {
                         doClose();
                     }
