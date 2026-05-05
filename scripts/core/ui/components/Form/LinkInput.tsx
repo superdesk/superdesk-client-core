@@ -123,7 +123,7 @@ export class LinkInput extends React.Component<any, any> {
                         field={field}
                         value={value}
                         onChange={onChange}
-                        placeholder="Paste link"
+                        placeholder={gettext('Paste link')}
                         readOnly={readOnly}
                         paddingInlineEnd60
                         autoFocus

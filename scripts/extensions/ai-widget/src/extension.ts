@@ -10,7 +10,7 @@ const extension: IExtension = {
         const hasConfiguredServices = Object.keys(configuration).length > 0;
 
         if (hasConfiguredServices === false) {
-            superdesk.ui.notify.error('You haven\'t registered any services for the Ai Assistant Widget!', 5000);
+            superdesk.ui.notify.error(superdesk.localization.gettext('You haven\'t registered any services for the Ai Assistant Widget!'), 5000);
             return Promise.resolve({});
         }
 

@@ -59,7 +59,7 @@ export class SendCorrectionAction extends React.Component<IProps, IState> {
                     'correct',
                 ).then(() => {
                     ng.get('authoringWorkspace').close();
-                    notify.success('Correction sent');
+                    notify.success(gettext('Correction sent'));
                 });
             })
             .catch(() => {

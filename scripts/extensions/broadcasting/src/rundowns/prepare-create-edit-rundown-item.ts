@@ -109,7 +109,7 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
         },
         closeAuthoring: (_current, _original, hasUnsavedChanges, _cancelAutosave, doClose) => {
             if (hasUnsavedChanges) {
-                return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
+                return superdesk.ui.confirm(superdesk.localization.gettext('Discard unsaved changes?')).then((confirmed) => {
                     if (confirmed) {
                         doClose();
                     }
@@ -197,7 +197,7 @@ function getRundownItemCreationAuthoringStorage(
             return Promise.resolve(contentProfile);
         },
         closeAuthoring: (_current, _original, _hasUnsavedChanges, _cancelAutosave, doClose) => {
-            return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
+            return superdesk.ui.confirm(superdesk.localization.gettext('Discard unsaved changes?')).then((confirmed) => {
                 if (confirmed) {
                     doClose();
                 }
