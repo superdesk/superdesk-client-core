@@ -157,11 +157,11 @@ msgstr "*потребан је барем један видљив или скр�
 
 #: ../superdesk-analytics/client/utils.js:193
 msgid "1 day"
-msgstr ""
+msgstr "1 дан"
 
 #: ../superdesk-analytics/client/utils.js:199
 msgid "1 hour"
-msgstr ""
+msgstr "1 сат"
 
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:316
 msgid "1 item selected"
@@ -172,7 +172,7 @@ msgstr[2] ""
 
 #: ../superdesk-analytics/client/utils.js:205
 msgid "1 minute"
-msgstr ""
+msgstr "1 минут"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:22
 msgid "1 month"
@@ -187,7 +187,7 @@ msgstr[2] "Још {{n}} ставки"
 
 #: ../superdesk-analytics/client/utils.js:210
 msgid "1 second"
-msgstr ""
+msgstr "1 секунда"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:270
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:270
@@ -250,7 +250,7 @@ msgstr "12 сати"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:204
 msgid "12:00am"
-msgstr ""
+msgstr "12:00am"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:46
 #: ../superdesk-planning/client/utils/filters.ts:85
@@ -535,12 +535,12 @@ msgstr ": УКЉУЧЕНО"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:206
 msgid ":00am"
-msgstr ""
+msgstr ":00am"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:208
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:210
 msgid ":00pm"
-msgstr ""
+msgstr ":00pm"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:85
 msgid ""
@@ -556,7 +556,7 @@ msgid ""
 "<p>Generate a report showing usage of the Planning module.<br></p>\n"
 "    <p>This provides a statistics on who is and who isn't creating items in "
 "the Planning module</p>"
-msgstr ""
+msgstr "<p>Генериши извештај који приказује коришћење модула планирања.<br></p>\n    <p>Ово пружа статистику о томе ко креира, а ко не креира ставке у модулу планирања</p>"
 
 #: scripts/apps/users/views/edit-form.html:6
 msgid ""
@@ -578,7 +578,7 @@ msgstr "Профил садржаја са овим називом већ пос
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:274
 msgid "A desk is required"
-msgstr ""
+msgstr "Деск је обавезан"
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
@@ -596,7 +596,7 @@ msgstr "Биће креиран нови шаблон"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:226
 msgid "A user is required"
-msgstr ""
+msgstr "Корисник је обавезан"
 
 #: scripts/apps/search/views/search-parameters.html:218
 msgid "AAP Image Keyword"
@@ -867,7 +867,7 @@ msgstr "Додај извештавања"
 
 #: ../superdesk-analytics/client/utils.js:176
 msgid "Add Featuremedia"
-msgstr ""
+msgstr "Додај истакнути медиј"
 
 #: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:232
 #: scripts/extensions/sams/dist/src/extensions/sams/src/containers/FileUploadModal.js:232
@@ -1288,7 +1288,7 @@ msgstr "Администратор"
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-panel.html:14
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:14
 msgid "Advanced"
-msgstr ""
+msgstr "Напредно"
 
 #: scripts/apps/search/views/search-panel.html:8
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:215
@@ -1999,11 +1999,11 @@ msgstr ""
 
 #: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
 msgid "Are you sure you want to delete the saved report?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете сачувани извештај?"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:204
 msgid "Are you sure you want to delete the scheduled report?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете заказани извештај?"
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:363
 msgid "Are you sure you want to delete the template?"
@@ -2144,7 +2144,7 @@ msgstr "Растуће"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:50
 msgid "Ascending Order"
-msgstr ""
+msgstr "Растући редослед"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
 msgid "Asia/Almaty"
@@ -2706,7 +2706,7 @@ msgstr "Доступни избори"
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:30
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:24
 msgid "Average"
-msgstr ""
+msgstr "Просек"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:33
 #: scripts/apps/dashboard/views/workspace.html:89
@@ -2749,7 +2749,7 @@ msgstr "Круг забране"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:87
 msgid "Bar"
-msgstr ""
+msgstr "Стубови"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:24
 msgid "Be the first one..."
@@ -2785,7 +2785,7 @@ msgstr "Биографија"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:46
 msgid "Black"
-msgstr ""
+msgstr "Црна"
 
 #: scripts/apps/search/views/search-parameters.html:258
 msgid "Black&White"
@@ -2806,7 +2806,7 @@ msgstr "Блокирање"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:56
 msgid "Blue"
-msgstr ""
+msgstr "Плава"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:57
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:166
@@ -2959,7 +2959,7 @@ msgstr "КРЕИРАЈ НОВИ РАДНИ ПРОСТОР"
 
 #: ../superdesk-analytics/client/charts/views/chart.html:26
 msgid "CSV File"
-msgstr ""
+msgstr "CSV датотека"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:20
 msgid "CUSTOM WORKSPACES"
@@ -3311,12 +3311,12 @@ msgstr "Категорија"
 
 #: ../superdesk-analytics/client/utils.js:180
 msgid "Change Image"
-msgstr ""
+msgstr "Промени слику"
 
 #: ../superdesk-analytics/client/utils.js:177
 #: ../superdesk-analytics/client/utils.js:178
 msgid "Change POI"
-msgstr ""
+msgstr "Промени тачку од интереса"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:235
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:235
@@ -3342,7 +3342,7 @@ msgstr "Промените изглед Superdesk-а кроз целу апли�
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
-msgstr ""
+msgstr "Промените филтере претраге и покушајте поново!"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:167
 msgid "Change view"
@@ -3351,7 +3351,7 @@ msgstr "Промени приказ"
 #: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:143
 #: ../superdesk-analytics/client/featuremedia_updates_report/directives/FeaturemediaUpdatesReportPreview.js:21
 msgid "Changes to Featuremedia"
-msgstr ""
+msgstr "Измене истакнутог медија"
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:181
 msgid "Changes will be lost, if they are not saved."
@@ -3410,11 +3410,11 @@ msgstr[2] "Карактери {{chars}} нису дозвољени у пољу 
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-panel.html:55
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-panel.html:55
 msgid "Chart"
-msgstr ""
+msgstr "Графикон"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:23
 msgid "Chart Colours"
-msgstr ""
+msgstr "Боје графикона"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:26
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:24
@@ -3422,7 +3422,7 @@ msgstr ""
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-preview.html:20
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:24
 msgid "Chart Type"
-msgstr ""
+msgstr "Тип графикона"
 
 #: scripts/core/views/sdselect.html:13
 msgid "Check all"
@@ -3786,7 +3786,7 @@ msgstr "Боја"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:90
 msgid "Column"
-msgstr ""
+msgstr "Колоне"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:196
 msgid "Columns:"
@@ -4076,11 +4076,11 @@ msgstr "Профили садржаја"
 
 #: ../superdesk-analytics/client/content_publishing_report/index.js:44
 msgid "Content Publishing"
-msgstr ""
+msgstr "Објављивање садржаја"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:479
 msgid "Content State"
-msgstr ""
+msgstr "Стање садржаја"
 
 #: ../superdesk-planning/client/components/fields/editor/ContentTemplate.tsx:82
 msgid "Content Template"
@@ -4326,7 +4326,7 @@ msgstr "Линк исправке је уклоњен"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:575
 msgid "Corrections"
-msgstr ""
+msgstr "Исправке"
 
 #: ../superdesk-planning/client/api/editor/item_planning.ts:125
 msgid "Could not link event - Please close the item and try linking again"
@@ -4546,7 +4546,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:175
 msgid "Create Highlight"
-msgstr ""
+msgstr "Креирај истицање"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:180
 msgid "Create Location"
@@ -4660,7 +4660,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:55
 msgid "Create new schedule"
-msgstr ""
+msgstr "Креирај нови распоред"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/create-show-modal.js:48
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-modal.js:48
@@ -4956,7 +4956,7 @@ msgstr "Прилагођена поља за текст"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:76
 msgid "Customer Installation No.:"
-msgstr ""
+msgstr "Број инсталације корисника:"
 
 #: scripts/apps/dashboard/index.ts:54
 msgid "Customize your widgets and views"
@@ -4984,7 +4984,7 @@ msgstr "ГОТОВО"
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:11
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:34
 msgid "Daily"
-msgstr ""
+msgstr "Дневно"
 
 #: ../superdesk-planning/client/utils/filters.ts:45
 msgid "Daily @ {{ time }} to {{ desk }}"
@@ -4992,31 +4992,31 @@ msgstr "Дневно у {{ time }} на {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
 msgid "Daily at {{hour}}"
-msgstr ""
+msgstr "Дневно у {{hour}}"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
 msgid "Dark Blue"
-msgstr ""
+msgstr "Тамноплава"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:47
 msgid "Dark Gray"
-msgstr ""
+msgstr "Тамносива"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:69
 msgid "Dark Magenta"
-msgstr ""
+msgstr "Тамномагента"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:66
 msgid "Dark Orange"
-msgstr ""
+msgstr "Тамнонаранџаста"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:70
 msgid "Dark Violet"
-msgstr ""
+msgstr "Тамнољубичаста"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:48
 msgid "Darker Gray"
-msgstr ""
+msgstr "Тамнија сива"
 
 #: scripts/apps/dashboard/controllers/DashboardController.ts:38
 #: scripts/apps/dashboard/index.ts:70
@@ -5056,7 +5056,7 @@ msgstr "Филтер датума"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:3
 msgid "Date Filter:"
-msgstr ""
+msgstr "Филтер датума:"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:108
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:16
@@ -5074,7 +5074,7 @@ msgstr "Датум креирања"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:183
 msgid "Date field is required"
-msgstr ""
+msgstr "Поље датума је обавезно"
 
 #: ../superdesk-planning/client/validators/planning.ts:253
 msgid "Date is in the past"
@@ -5104,7 +5104,7 @@ msgstr "Датум време (AUTHORING-REACT)"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
 msgid "Date/Time"
-msgstr ""
+msgstr "Датум/време"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:113
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:88
@@ -5164,7 +5164,7 @@ msgstr "Дани"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
-msgstr ""
+msgstr "Тамнорозе"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:31
 #: scripts/apps/monitoring/views/monitoring-group-header.html:43
@@ -5327,7 +5327,7 @@ msgstr "Обриши правило"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
-msgstr ""
+msgstr "Обриши сачувани извештај"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:114
 msgid "Delete Scheduled Export"
@@ -5363,7 +5363,7 @@ msgstr "Обриши претрагу"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:35
 msgid "Delete this Schedule"
-msgstr ""
+msgstr "Обриши овај распоред"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:87
 msgid "Delete vocabulary?"
@@ -5396,7 +5396,7 @@ msgstr "Опадајуће"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:49
 msgid "Descending Order"
-msgstr ""
+msgstr "Опадајући редослед"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:437
 #: ../superdesk-analytics/client/utils.js:156
@@ -5509,7 +5509,7 @@ msgstr "Деск"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:500
 #: ../superdesk-analytics/client/desk_activity_report/index.js:45
 msgid "Desk Activity"
-msgstr ""
+msgstr "Активност деска"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:64
 msgid "Desk Assignments"
@@ -5547,7 +5547,7 @@ msgstr "Шаблони деска"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
 msgid "Desk Transitions"
-msgstr ""
+msgstr "Прелази деска"
 
 #: scripts/apps/desks/views/desk-config-modal.html:93
 #: scripts/apps/desks/views/settings.html:82
@@ -6139,7 +6139,7 @@ msgstr "Дуплирано"
 
 #: ../superdesk-analytics/client/utils.js:152
 msgid "Duplicated From"
-msgstr ""
+msgstr "Дуплирано из"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:146
 #: scripts/apps/authoring/versioning/history/views/history.html:30
@@ -6296,7 +6296,7 @@ msgstr "Уреди"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:8
 msgid "Edit \"' + schedule.name + '\" Schedule"
-msgstr ""
+msgstr "Уреди распоред \"' + schedule.name + '\""
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 msgid "Edit \"{{name}}\" Desk"
@@ -6566,7 +6566,7 @@ msgstr "Уреди извор"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:28
 msgid "Edit this Schedule"
-msgstr ""
+msgstr "Уреди овај распоред"
 
 #: scripts/extensions/videoEditor/dist/src/extension.js:15
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/extension.js:15
@@ -6621,7 +6621,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:21
 msgid "Email this report"
-msgstr ""
+msgstr "Пошаљи имејлом овај извештај"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:405
 #: scripts/apps/search/components/fields/embargo.tsx:46
@@ -6699,7 +6699,7 @@ msgstr "Крајње време (искључиво)"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:177
 msgid "End date cannot be greater than today"
-msgstr ""
+msgstr "Крајњи датум не може бити већи од данашњег"
 
 #: ../superdesk-planning/client/validators/events.ts:84
 msgid "End date is in the past"
@@ -6707,7 +6707,7 @@ msgstr "Крајњи датум је у прошлости"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:162
 msgid "End date is required"
-msgstr ""
+msgstr "Крајњи датум је обавезан"
 
 #: ../superdesk-planning/client/validators/profile.ts:49
 #: ../superdesk-planning/client/validators/profile.ts:50
@@ -6739,7 +6739,7 @@ msgstr "Уверите се да је исправна крајња тачка �
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:535
 msgid "Enter Desk Actions"
-msgstr ""
+msgstr "Радње уласка на деск"
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:164
 msgid "Enter URL or code to embed"
@@ -6824,26 +6824,26 @@ msgstr "Грешка. Сесије нису могле бити очишћене
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:315
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:270
 msgid "Error. The Desk Activity report could not be generated!"
-msgstr ""
+msgstr "Грешка. Извештај о активности деска није могао бити генерисан!"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:223
 msgid "Error. The Planning Usage Report could not be generated!"
-msgstr ""
+msgstr "Грешка. Извештај о коришћењу планирања није могао бити генерисан!"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:240
 msgid "Error. The Production Time report could not be generated!"
-msgstr ""
+msgstr "Грешка. Извештај о времену продукције није могао бити генерисан!"
 
 #: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:275
 #: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:216
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:280
 #: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:243
 msgid "Error. The Publishing Report could not be generated!"
-msgstr ""
+msgstr "Грешка. Извештај о објављивању није могао бити генерисан!"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:246
 msgid "Error. The report could not be generated."
-msgstr ""
+msgstr "Грешка. Извештај није могао бити генерисан."
 
 #: scripts/apps/users/controllers/UserDeleteCommand.ts:24
 msgid "Error. User Profile cannot be disabled."
@@ -7314,7 +7314,7 @@ msgstr "Знак узвика"
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:44
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:73
 msgid "Exclude"
-msgstr ""
+msgstr "Изостави"
 
 #: ../superdesk-planning/client/components/fields/editor/ExcludeRescheduledAndCancelled.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:79
@@ -7323,7 +7323,7 @@ msgstr "Изостави поново заказане и отказане"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:304
 msgid "Exclude Rewrites"
-msgstr ""
+msgstr "Изостави прераде"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:173
 msgid "Exclude Spike"
@@ -7335,7 +7335,7 @@ msgstr "Изостави све закључане ставке"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:67
 msgid "Exclude rewrites"
-msgstr ""
+msgstr "Изостави прераде"
 
 #: scripts/apps/search/views/search-parameters.html:151
 msgid "Exclude spiked content"
@@ -7354,7 +7354,7 @@ msgstr "Излаз"
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:173
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:556
 msgid "Exit Desk Actions"
-msgstr ""
+msgstr "Радње изласка са деска"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:79
 #: scripts/core/editor3/components/Editor3Component.tsx:901
@@ -7386,7 +7386,7 @@ msgstr "Истек"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:82
 msgid "Expiry Date:"
-msgstr ""
+msgstr "Датум истека:"
 
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:64
 msgid "Explanation"
@@ -7412,11 +7412,11 @@ msgstr "Извоз"
 
 #: ../superdesk-analytics/client/charts/views/chart.html:23
 msgid "Export Chart As..."
-msgstr ""
+msgstr "Извези графикон као..."
 
 #: ../superdesk-analytics/client/utils.js:174
 msgid "Export Highlight"
-msgstr ""
+msgstr "Извези истицање"
 
 #: ../superdesk-planning/client/components/fields/editor/ExportTemplate.tsx:48
 msgid "Export Template"
@@ -7455,7 +7455,7 @@ msgstr "Отворено око"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:107
 msgid "FR"
-msgstr ""
+msgstr "ПЕ"
 
 #: scripts/apps/publish/views/ftp-config.html:27
 msgid "FTP File Extension"
@@ -7530,7 +7530,7 @@ msgstr "Креирање архивске ставке није успело."
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:102
 msgid "Failed to create the Report Schedule!"
-msgstr ""
+msgstr "Креирање распореда извештаја није успело!"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:46
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:46
@@ -7564,7 +7564,7 @@ msgstr "Брисање локације није успело"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:194
 msgid "Failed to delete the saved report"
-msgstr ""
+msgstr "Брисање сачуваног извештаја није успело"
 
 #: scripts/apps/authoring/authoring/services/MultiEditUnsavedChangesService.ts:60
 msgid "Failed to discard some changes"
@@ -7577,7 +7577,7 @@ msgstr "Дуплирање ставке није успело"
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:61
 #: ../superdesk-analytics/client/charts/services/ChartManager.js:30
 msgid "Failed to export the chart;"
-msgstr ""
+msgstr "Извоз графикона није успео;"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:239
 msgid "Failed to fetch all filters"
@@ -7699,7 +7699,7 @@ msgstr "Учитавање ставке није успело."
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:241
 msgid "Failed to load the saved report!"
-msgstr ""
+msgstr "Учитавање сачуваног извештаја није успело!"
 
 #: ../superdesk-planning/client/actions/autosave.ts:32
 msgid "Failed to load {{ itemType }} autosaves."
@@ -7800,7 +7800,7 @@ msgstr "Чување записа истакнуте приче није усп�
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:169
 msgid "Failed to save report"
-msgstr ""
+msgstr "Чување извештаја није успело"
 
 #: scripts/apps/authoring/authoring/services/MultiEditUnsavedChangesService.ts:72
 msgid "Failed to save some articles"
@@ -7808,7 +7808,7 @@ msgstr "Чување неких чланака није успело"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:103
 msgid "Failed to save the Report Schedule!"
-msgstr ""
+msgstr "Чување распореда извештаја није успело!"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:461
 msgid "Failed to save the area of interest:"
@@ -7845,7 +7845,7 @@ msgstr "Чување није успело, ставка типа {{itemType}} �
 
 #: ../superdesk-analytics/client/email_report/services/EmailReportService.js:69
 msgid "Failed to send report email!"
-msgstr ""
+msgstr "Слање имејла извештаја није успело!"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:69
 #: ../superdesk-planning/client/actions/events/ui.ts:86
@@ -7981,11 +7981,11 @@ msgstr "Истакнуте приче којима сте управљали о�
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:20
 msgid "Featuremedia History"
-msgstr ""
+msgstr "Историја истакнутог медија"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/index.js:50
 msgid "Featuremedia Updates"
-msgstr ""
+msgstr "Ажурирања истакнутог медија"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:99
 msgid "Feed Parser"
@@ -8005,7 +8005,7 @@ msgstr "Фид сервис"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
 msgid "Fern Green"
-msgstr ""
+msgstr "Папратно зелена"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:434
 #: ../superdesk-analytics/client/utils.js:151 scripts/apps/ingest/index.ts:129
@@ -8271,7 +8271,7 @@ msgstr "Пронађите своје колеге"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:67
 msgid "Fire Brick"
-msgstr ""
+msgstr "Опека"
 
 #: ../superdesk-planning/client/utils/filters.ts:63
 msgid "First"
@@ -8445,7 +8445,7 @@ msgstr "Из шаблона"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:30
 msgid "From:"
-msgstr ""
+msgstr "Од:"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:327
 msgid "Fulfil Assignment with this item?"
@@ -8512,34 +8512,34 @@ msgstr "Генериши из URL-а"
 
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:1
 msgid "Generate a report showing activity on a desk."
-msgstr ""
+msgstr "Генериши извештај који приказује активност на деску."
 
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:1
 msgid ""
 "Generate a report showing average and maximum time it took to produce "
 "content per desk."
-msgstr ""
+msgstr "Генериши извештај који приказује просечно и максимално време потребно за продукцију садржаја по деску."
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:1
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-parameters.html:1
 msgid "Generate a report showing statistics for published content."
-msgstr ""
+msgstr "Генериши извештај који приказује статистике објављеног садржаја."
 
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-parameters.html:1
 msgid ""
 "Generate a report showing the time between original publish and update "
 "publish."
-msgstr ""
+msgstr "Генериши извештај који приказује време између оригиналне објаве и објаве ажурирања."
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-report-parameters.html:1
 msgid ""
 "Generate a report showing updates to featuremedia items after initial "
 "publish."
-msgstr ""
+msgstr "Генериши извештај који приказује ажурирања ставки истакнутог медија након првобитне објаве."
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-parameters.html:1
 msgid "Generate a report showing user activity."
-msgstr ""
+msgstr "Генериши извештај који приказује активност корисника."
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:40
 msgid "Generate from URL"
@@ -8585,7 +8585,7 @@ msgstr "Преузми токен"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:15
 msgid "Global"
-msgstr ""
+msgstr "Глобално"
 
 #: scripts/apps/content-filters/views/manage-filters.html:51
 msgid "Global Block"
@@ -8602,7 +8602,7 @@ msgstr "Глобално читање:"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:28
 msgid "Global Saved Reports"
-msgstr ""
+msgstr "Глобални сачувани извештаји"
 
 #: scripts/apps/search/views/saved-searches.html:36
 msgid "Global Saved Searches"
@@ -8657,15 +8657,15 @@ msgstr "Графика"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:50
 msgid "Gray"
-msgstr ""
+msgstr "Сива"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:52
 msgid "Gray Text"
-msgstr ""
+msgstr "Сиви текст"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:59
 msgid "Green"
-msgstr ""
+msgstr "Зелена"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:99
 msgid "Grid View"
@@ -8686,12 +8686,12 @@ msgstr "Група \"{{group}}\" ће бити трајно обрисана."
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:2
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:2
 msgid "Group By"
-msgstr ""
+msgstr "Групиши по"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:7
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-parameters.html:7
 msgid "Group By:"
-msgstr ""
+msgstr "Групиши по:"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:359
 #: scripts/apps/authoring/macros/views/macros-widget.html:3
@@ -8814,7 +8814,7 @@ msgstr "Наслов"
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:3
 msgid "Headline:"
-msgstr ""
+msgstr "Наслов:"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/headlines/headlines-widget.js:49
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/main-panel.js:14
@@ -8901,7 +8901,7 @@ msgstr "Висок приоритет"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
 msgid "Highcharts {{licenseType}} License"
-msgstr ""
+msgstr "Highcharts {{licenseType}} лиценца"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:109
 msgid "Highlight Package"
@@ -9109,7 +9109,7 @@ msgstr ""
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:82
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:185
 msgid "Image Width"
-msgstr ""
+msgstr "Ширина слике"
 
 #: scripts/core/upload/crop-directive.ts:41
 msgid ""
@@ -9207,7 +9207,7 @@ msgstr "Укључи уништено"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:303
 msgid "Include Rewrites"
-msgstr ""
+msgstr "Укључи прераде"
 
 #: ../superdesk-planning/client/components/fields/editor/IncludeScheduledUpdates.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:95
@@ -9228,7 +9228,7 @@ msgstr "Укључи све закључане ставке"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:64
 msgid "Include rewrites"
-msgstr ""
+msgstr "Укључи прераде"
 
 #: scripts/apps/search/views/search-parameters.html:152
 msgid "Include spiked content"
@@ -9236,16 +9236,16 @@ msgstr "Укључи садржај у корпи"
 
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:15
 msgid "Included Statistics"
-msgstr ""
+msgstr "Укључене статистике"
 
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-preview.html:13
 msgid "Included Stats"
-msgstr ""
+msgstr "Укључене статистике"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:372
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:425
 msgid "Incoming"
-msgstr ""
+msgstr "Долазно"
 
 #: scripts/apps/desks/views/desk-config-modal.html:386
 msgid "Incoming Rule"
@@ -9328,7 +9328,7 @@ msgstr "Провајдер пријема:"
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:151
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:493
 msgid "Ingest Providers"
-msgstr ""
+msgstr "Провајдери пријема"
 
 #: scripts/apps/ingest/views/settings/settings.html:15
 msgid "Ingest Routing"
@@ -9408,7 +9408,7 @@ msgstr "Instagram"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:87
 msgid "Installed Version:"
-msgstr ""
+msgstr "Инсталирана верзија:"
 
 #: scripts/apps/authoring/authoring/index.ts:474
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
@@ -9452,7 +9452,7 @@ msgstr "Интерна напомена:"
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:22
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:9
 msgid "Interval"
-msgstr ""
+msgstr "Интервал"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/index.tsx:191
 msgid "Invalid Date"
@@ -9647,7 +9647,7 @@ msgstr "Ставка није додата. Прекорачен је макси
 
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:65
 msgid "Item not found!"
-msgstr ""
+msgstr "Ставка није пронађена!"
 
 #: scripts/apps/search/directives/ItemGlobalSearch.ts:49
 msgid "Item not found..."
@@ -9720,7 +9720,7 @@ msgstr "Број ставки"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:241
 msgid "Items Created"
-msgstr ""
+msgstr "Креиране ставке"
 
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-article-actions-bulk.js:21
 #: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:21
@@ -9751,7 +9751,7 @@ msgstr "Ставке које не могу бити преузете"
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:101
 msgid "JPEG Image"
-msgstr ""
+msgstr "JPEG слика"
 
 #: scripts/apps/users/views/edit-form.html:186
 msgid "Jabber Identifier (JID)"
@@ -9828,7 +9828,7 @@ msgstr "Уништио"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:574
 msgid "Kills"
-msgstr ""
+msgstr "Уништавања"
 
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:58
 #: scripts/apps/authoring-react/fields/date/config.tsx:37
@@ -9944,7 +9944,7 @@ msgstr "Последња недеља"
 #: ../superdesk-analytics/client/search/views/date-filters.html:31
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:26
 msgid "Last Year"
-msgstr ""
+msgstr "Прошла година"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/PreviewArticle.tsx:83
 #: scripts/apps/authoring/preview/fullPreview.tsx:77
@@ -9971,19 +9971,19 @@ msgstr "Последње ажурирано"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:735
 msgid "Last {{days}} days"
-msgstr ""
+msgstr "Последњих {{days}} дана"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:728
 msgid "Last {{hours}} hours"
-msgstr ""
+msgstr "Последњих {{hours}} сати"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:780
 msgid "Last {{months}} months"
-msgstr ""
+msgstr "Последњих {{months}} месеци"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:751
 msgid "Last {{weeks}} weeks"
-msgstr ""
+msgstr "Последњих {{weeks}} недеља"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:301
 msgid "Latitude"
@@ -10026,27 +10026,27 @@ msgstr "Правна архива"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:70
 msgid "License ID:"
-msgstr ""
+msgstr "ИД лиценце:"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:45
 msgid "License Type"
-msgstr ""
+msgstr "Тип лиценце"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:56
 msgid "Licensee Contact:"
-msgstr ""
+msgstr "Контакт носиоца лиценце:"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:50
 msgid "Licensee:"
-msgstr ""
+msgstr "Носилац лиценце:"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:53
 msgid "Light Gray"
-msgstr ""
+msgstr "Светлосива"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:54
 msgid "Lighter Gray"
-msgstr ""
+msgstr "Светлија сива"
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:163
 msgid "Limit further typing"
@@ -10054,7 +10054,7 @@ msgstr "Ограничи даље куцање"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:99
 msgid "Line"
-msgstr ""
+msgstr "Линија"
 
 #: ../superdesk-analytics/client/utils.js:160
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:120
@@ -10306,7 +10306,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:75
 msgid "MO"
-msgstr ""
+msgstr "ПО"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:411
 msgid "MORE"
@@ -10332,7 +10332,7 @@ msgstr "Главни мени"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-report-form.html:26
 msgid "Make Global"
-msgstr ""
+msgstr "Учини глобалним"
 
 #: scripts/apps/templates/views/template-editor-modal.html:59
 msgid "Make Public"
@@ -10477,7 +10477,7 @@ msgstr "Маркер на мапи"
 
 #: ../superdesk-analytics/client/utils.js:172
 msgid "Mark"
-msgstr ""
+msgstr "Означи"
 
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-mark-for-user-modal.js:38
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:38
@@ -10671,11 +10671,11 @@ msgstr "Галерија медија"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:57
 msgid "Medium Blue"
-msgstr ""
+msgstr "Средње плава"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:49
 msgid "Medium Gray"
-msgstr ""
+msgstr "Средње сива"
 
 #: scripts/apps/users/views/edit-form.html:61
 msgid "Member since"
@@ -10855,7 +10855,7 @@ msgstr "Месечно {{ day }}. дана у {{ time }} на {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:78
 msgid "Monthly on the {{day}} day at {{hour}}"
-msgstr ""
+msgstr "Месечно {{day}}. дана у {{hour}}"
 
 #: ../superdesk-planning/client/components/ItemActionsMenu/index.tsx:71
 #: scripts/apps/authoring/views/authoring-topbar.html:260
@@ -10886,11 +10886,11 @@ msgstr "Премести садржај на други деск"
 
 #: ../superdesk-analytics/client/utils.js:167
 msgid "Move From"
-msgstr ""
+msgstr "Премести из"
 
 #: ../superdesk-analytics/client/utils.js:168
 msgid "Move To"
-msgstr ""
+msgstr "Премести у"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:209
 msgid "Move down"
@@ -10991,7 +10991,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:165
 msgid "Must select at least one day"
-msgstr ""
+msgstr "Морате изабрати најмање један дан"
 
 #: ../superdesk-planning/client/validators/events.ts:283
 msgid "Must start with \"http://\", \"https://\" or \"www.\""
@@ -11023,7 +11023,7 @@ msgstr "Мој профил"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:12
 msgid "My Saved Reports"
-msgstr ""
+msgstr "Моји сачувани извештаји"
 
 #: scripts/apps/search/views/saved-searches.html:7
 msgid "My Saved Searches"
@@ -11139,7 +11139,7 @@ msgstr "Назив варијанте за прилагање имејлу"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:71
 msgid "Navy"
-msgstr ""
+msgstr "Морнаричка"
 
 #: scripts/apps/search/views/search-filters.html:11
 #: scripts/apps/search/views/search-filters.html:111
@@ -11156,7 +11156,7 @@ msgstr "Негирај"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:51
 msgid "Neutral Gray"
-msgstr ""
+msgstr "Неутрална сива"
 
 #: scripts/apps/publish/views/subscribers.html:278
 msgid "Never"
@@ -11168,7 +11168,7 @@ msgstr "Никад не истиче"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:573
 msgid "New"
-msgstr ""
+msgstr "Ново"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:135
 msgid "New Document"
@@ -11393,7 +11393,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/views/table.html:22
 msgid "No data found"
-msgstr ""
+msgstr "Подаци нису пронађени"
 
 #: scripts/apps/users/views/edit-form.html:222
 msgid "No desk selected"
@@ -11842,7 +11842,7 @@ msgstr "Број ставки"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
 msgid "OEM"
-msgstr ""
+msgstr "OEM"
 
 #: scripts/apps/desks/views/desk-config-modal.html:312
 #: scripts/apps/desks/views/desk-config-modal.html:317
@@ -11922,7 +11922,7 @@ msgstr "У реду"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:65
 msgid "Old Gold"
-msgstr ""
+msgstr "Стара златна"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:37
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:73
@@ -12103,12 +12103,12 @@ msgstr "Отворио"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:637
 msgid "Operation"
-msgstr ""
+msgstr "Операција"
 
 #: ../superdesk-analytics/client/user_activity_report/views/item-timeline-tooltip.html:4
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:5
 msgid "Operations:"
-msgstr ""
+msgstr "Операције:"
 
 #: scripts/apps/content-filters/views/filter-search.html:18
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:68
@@ -12130,7 +12130,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:62
 msgid "Orange"
-msgstr ""
+msgstr "Наранџаста"
 
 #: ../superdesk-planning/client/components/OrderBar/OrderFieldInput.tsx:21
 msgid "Order By: {{ name }}"
@@ -12138,7 +12138,7 @@ msgstr "Сортирано по: {{ name }}"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:44
 msgid "Order Data In:"
-msgstr ""
+msgstr "Сортирај податке по:"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:137
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:26
@@ -12191,7 +12191,7 @@ msgstr "Оригинал ({{item.renditions.original.width}} x {{item.renditions
 msgid ""
 "Original ({{preview.item.update.update.renditions.original.width}} x "
 "{{preview.item.update.update.renditions.original.height}} px)"
-msgstr ""
+msgstr "Оригинал ({{preview.item.update.update.renditions.original.width}} x {{preview.item.update.update.renditions.original.height}} px)"
 
 #: scripts/apps/search/components/fields/translations.tsx:26
 msgid "Original Article"
@@ -12208,7 +12208,7 @@ msgstr "Оригинални ИД"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:19
 msgid "Original Image"
-msgstr ""
+msgstr "Оригинална слика"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:27
 #: scripts/apps/archive/views/metadata-view.html:31
@@ -12260,7 +12260,7 @@ msgstr "Остала поља"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:373
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:426
 msgid "Outgoing"
-msgstr ""
+msgstr "Одлазно"
 
 #: scripts/apps/desks/views/desk-config-modal.html:408
 msgid "Outgoing Rule"
@@ -12318,7 +12318,7 @@ msgstr ""
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:95
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:105
 msgid "PDF File"
-msgstr ""
+msgstr "PDF датотека"
 
 #: ../superdesk-planning/client/validators/planning.ts:29
 msgid "PLANNING DATE cannot be in the past"
@@ -12327,7 +12327,7 @@ msgstr "ДАТУМ ПЛАНИРАЊА не може бити у прошлост
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:92
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:102
 msgid "PNG Image"
-msgstr ""
+msgstr "PNG слика"
 
 #: scripts/apps/authoring-react/subcomponents/content-profile-dropdown.tsx:32
 #: scripts/apps/authoring/views/authoring-header.html:24
@@ -12403,7 +12403,7 @@ msgstr "Страница"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:57
 msgid "Page Size"
-msgstr ""
+msgstr "Величина странице"
 
 #: scripts/core/list/views/sdPagination.html:2
 msgid "Page Size:"
@@ -12606,7 +12606,7 @@ msgstr "Слика"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:102
 msgid "Pie"
-msgstr ""
+msgstr "Пита"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:149
 #: scripts/apps/authoring-react/widget-header-component.tsx:24
@@ -12733,16 +12733,16 @@ msgstr "Управљање планирањем"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:150
 msgid "Planning Module (Items created per user)"
-msgstr ""
+msgstr "Модул планирања (ставке креиране по кориснику)"
 
 #: ../superdesk-analytics/client/planning_usage_report/directives/PlanningUsageReportPreview.js:21
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:21
 msgid "Planning Module Usage"
-msgstr ""
+msgstr "Коришћење модула планирања"
 
 #: ../superdesk-analytics/client/planning_usage_report/index.js:45
 msgid "Planning Usage"
-msgstr ""
+msgstr "Коришћење планирања"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:56
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:69
@@ -13212,16 +13212,16 @@ msgstr ""
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:276
 msgid "Production Stats"
-msgstr ""
+msgstr "Статистика продукције"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:293
 #: ../superdesk-analytics/client/production_time_report/index.js:45
 msgid "Production Time"
-msgstr ""
+msgstr "Време продукције"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:173
 msgid "Production Times"
-msgstr ""
+msgstr "Времена продукције"
 
 #: scripts/apps/products/index.ts:20
 #: scripts/apps/products/views/settings.html:9
@@ -13335,11 +13335,11 @@ msgstr "Објави и настави"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:445
 #: ../superdesk-analytics/client/utils.js:157
 msgid "Publish Embargo"
-msgstr ""
+msgstr "Ембарго објаве"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:577
 msgid "Publish Pars"
-msgstr ""
+msgstr "Параметри објаве"
 
 #: scripts/apps/publish/index.ts:51
 msgid "Publish Queue"
@@ -13353,7 +13353,7 @@ msgstr "Распоред објављивања"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:444
 #: ../superdesk-analytics/client/utils.js:155
 msgid "Publish Scheduled"
-msgstr ""
+msgstr "Заказана објава"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:18
 msgid "Publish Without Media"
@@ -13388,11 +13388,11 @@ msgstr "Објављен садржај"
 
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:383
 msgid "Published Content for {{group}}: {{data}}"
-msgstr ""
+msgstr "Објављен садржај за {{group}}: {{data}}"
 
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:389
 msgid "Published Content per {{group}}"
-msgstr ""
+msgstr "Објављен садржај по {{group}}"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:84
 msgid "Published From"
@@ -13400,15 +13400,15 @@ msgstr "Објављено од"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:234
 msgid "Published Stories"
-msgstr ""
+msgstr "Објављене приче"
 
 #: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:377
 msgid "Published Stories per {{group}}"
-msgstr ""
+msgstr "Објављене приче по {{group}}"
 
 #: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:371
 msgid "Published Stories per {{group}} with {{subgroup}} breakdown"
-msgstr ""
+msgstr "Објављене приче по {{group}} са поделом по {{subgroup}}"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:88
 msgid "Published Until"
@@ -13438,16 +13438,16 @@ msgstr "Радња објављивања"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/index.js:47
 msgid "Publishing Actions"
-msgstr ""
+msgstr "Радње објављивања"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/index.js:48
 msgid "Publishing Actions Widget"
-msgstr ""
+msgstr "Виџет радњи објављивања"
 
 #: ../superdesk-analytics/client/publishing_performance_report/index.js:48
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:81
 msgid "Publishing Performance"
-msgstr ""
+msgstr "Перформансе објављивања"
 
 #: scripts/apps/authoring/authoring/constants.ts:16
 msgid "Publishing actions"
@@ -13464,7 +13464,7 @@ msgstr "Pubstatus"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:63
 msgid "Purple"
-msgstr ""
+msgstr "Љубичаста"
 
 #: scripts/apps/publish/views/ftp-config.html:30
 msgid "Push associated/feature media items"
@@ -13557,11 +13557,11 @@ msgstr "Насумично"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:9
 msgid "Range"
-msgstr ""
+msgstr "Опсег"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:168
 msgid "Range cannot be greater than {{max}} days"
-msgstr ""
+msgstr "Опсег не може бити већи од {{max}} дана"
 
 #: scripts/apps/search/views/search-panel.html:15
 msgid "Raw"
@@ -13684,7 +13684,7 @@ msgstr "Правила понављања"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:60
 msgid "Red"
-msgstr ""
+msgstr "Црвена"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:162
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:44
@@ -13832,23 +13832,23 @@ msgstr "Повезане ставке"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:16
 msgid "Relative Days"
-msgstr ""
+msgstr "Релативни дани"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:13
 msgid "Relative Hours"
-msgstr ""
+msgstr "Релативни сати"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:26
 msgid "Relative Months"
-msgstr ""
+msgstr "Релативни месеци"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:21
 msgid "Relative Weeks"
-msgstr ""
+msgstr "Релативне недеље"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:181
 msgid "Relative value is required"
-msgstr ""
+msgstr "Релативна вредност је обавезна"
 
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:68
 #: ../superdesk-planning/client/components/AttachmentsInputStandalone.tsx:58
@@ -13934,7 +13934,7 @@ msgstr "Уклони догађај"
 
 #: ../superdesk-analytics/client/utils.js:179
 msgid "Remove Featuremedia"
-msgstr ""
+msgstr "Уклони истакнути медиј"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:30
 msgid "Remove Filter Condition"
@@ -14086,7 +14086,7 @@ msgstr "Варијанта"
 
 #: ../superdesk-analytics/client/views/renditions-preview.html:11
 msgid "Renditions"
-msgstr ""
+msgstr "Варијанте"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:133
 msgid "Reopened by"
@@ -14171,28 +14171,28 @@ msgstr "Одговори"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:94
 msgid "Report Schedule created!"
-msgstr ""
+msgstr "Распоред извештаја креиран!"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:95
 msgid "Report Schedule saved!"
-msgstr ""
+msgstr "Распоред извештаја сачуван!"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:67
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:63
 msgid "Report Type"
-msgstr ""
+msgstr "Тип извештаја"
 
 #: ../superdesk-analytics/client/email_report/services/EmailReportService.js:66
 msgid "Report chart emailed!"
-msgstr ""
+msgstr "Графикон извештаја послат имејлом!"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:185
 msgid "Report deleted!"
-msgstr ""
+msgstr "Извештај обрисан!"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:151
 msgid "Report saved!"
-msgstr ""
+msgstr "Извештај сачуван!"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:27
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:46
@@ -14270,7 +14270,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:13
 msgid "Reset Filters"
-msgstr ""
+msgstr "Ресетуј филтере"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:247
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorThumbnail.js:247
@@ -14339,7 +14339,7 @@ msgstr "Опозови"
 
 #: ../superdesk-analytics/client/utils.js:158
 msgid "Rewrite"
-msgstr ""
+msgstr "Прерада"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:467
 #: scripts/apps/authoring/versioning/history/views/history.html:154
@@ -14349,15 +14349,15 @@ msgstr "Линк прераде је уклоњен"
 #: ../superdesk-analytics/client/search/views/preview-source-filter.html:13
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:299
 msgid "Rewrites"
-msgstr ""
+msgstr "Прераде"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:305
 msgid "Rewrites Only"
-msgstr ""
+msgstr "Само прераде"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:70
 msgid "Rewrites only"
-msgstr ""
+msgstr "Само прераде"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:176
 msgid "Rewritten by"
@@ -14480,7 +14480,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:18
 msgid "Run Report"
-msgstr ""
+msgstr "Покрени извештај"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:370
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:297
@@ -14514,7 +14514,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:115
 msgid "SA"
-msgstr ""
+msgstr "СУ"
 
 #: scripts/extensions/sams/dist/src/extension.js:13
 #: scripts/extensions/sams/dist/src/extensions/sams/src/extension.js:13
@@ -14565,7 +14565,7 @@ msgstr "ПОЧЕТНО ВРЕМЕ је обавезно када је подеш
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:123
 msgid "SU"
-msgstr ""
+msgstr "НЕ"
 
 #: ../superdesk-planning/client/utils/filters.ts:148
 msgid "Sa"
@@ -14727,7 +14727,7 @@ msgstr "Сачувај догађај"
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:33
 #: ../superdesk-analytics/client/saved_reports/views/save-report-form.html:3
 msgid "Save Report"
-msgstr ""
+msgstr "Сачувај извештај"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundown-view-edit.js:276
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:276
@@ -14873,13 +14873,13 @@ msgstr "Запис истакнутих прича сачуван"
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:71
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:83
 msgid "Saved Report"
-msgstr ""
+msgstr "Сачуван извештај"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:166
 msgid ""
 "Saved Report has changed since it was opened. Please re-select the Saved "
 "Report to continue. Regrettably, your changes cannot be saved."
-msgstr ""
+msgstr "Сачувани извештај је измењен откад је отворен. Поново изаберите сачувани извештај да наставите. Нажалост, ваше измене не могу бити сачуване."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:62
 msgid "Saved Searches"
@@ -14887,7 +14887,7 @@ msgstr "Сачуване претраге"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:238
 msgid "Saved report not found!"
-msgstr ""
+msgstr "Сачувани извештај није пронађен!"
 
 #: scripts/apps/search/directives/SavedSearches.ts:116
 msgid "Saved search removed"
@@ -14917,7 +14917,7 @@ msgstr "Scanpix ИД(ови)"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:105
 msgid "Scatter"
-msgstr ""
+msgstr "Расути"
 
 #: scripts/apps/templates/views/templates.html:56
 msgid "Sched. Desk / Stage"
@@ -15018,7 +15018,7 @@ msgstr "Заказано:"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:51
 msgid "Scheduling"
-msgstr ""
+msgstr "Заказивање"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:103
 msgid "Scheme details"
@@ -15092,27 +15092,27 @@ msgstr "Претражи задатке"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:432
 msgid "Search Categories"
-msgstr ""
+msgstr "Претражи категорије"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:480
 msgid "Search Content State"
-msgstr ""
+msgstr "Претражи стање садржаја"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:396
 msgid "Search Content Type"
-msgstr ""
+msgstr "Претражи тип садржаја"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:384
 msgid "Search Desks"
-msgstr ""
+msgstr "Претражи дескове"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:536
 msgid "Search Enter Desk Actions"
-msgstr ""
+msgstr "Претражи радње уласка на деск"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:557
 msgid "Search Exit Desk Actions"
-msgstr ""
+msgstr "Претражи радње изласка са деска"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:86
 msgid "Search Filters"
@@ -15120,11 +15120,11 @@ msgstr "Филтери претраге"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:444
 msgid "Search Genre"
-msgstr ""
+msgstr "Претражи жанр"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:494
 msgid "Search Ingest Providers"
-msgstr ""
+msgstr "Претражи провајдере пријема"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:160
 msgid "Search OpenStreetMap"
@@ -15149,11 +15149,11 @@ msgstr "Претражи повезане чланке"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:456
 msgid "Search Source"
-msgstr ""
+msgstr "Претражи извор"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:509
 msgid "Search Stages"
-msgstr ""
+msgstr "Претражи фазе"
 
 #: ../superdesk-planning/client/components/fields/editor/FullText.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:87
@@ -15162,16 +15162,16 @@ msgstr "Текст за претрагу"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:468
 msgid "Search Urgency"
-msgstr ""
+msgstr "Претражи хитност"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:414
 #: ../superdesk-analytics/client/search/views/user-select.html:17
 msgid "Search Users"
-msgstr ""
+msgstr "Претражи кориснике"
 
 #: ../superdesk-analytics/client/email_report/views/email-recipients-input.html:9
 msgid "Search emails"
-msgstr ""
+msgstr "Претражи имејлове"
 
 #: ../superdesk-planning/client/components/Contacts/SelectSearchContactsField/SelectListPopup.tsx:226
 msgid "Search for a contact"
@@ -15204,7 +15204,7 @@ msgstr "Контакти провајдера претраге"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:6
 msgid "Search saved reports"
-msgstr ""
+msgstr "Претражи сачуване извештаје"
 
 #: scripts/apps/search/views/saved-searches.html:3
 msgid "Search saved searches"
@@ -15497,7 +15497,7 @@ msgstr "Пошаљи исправку"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:117
 msgid "Send Email"
-msgstr ""
+msgstr "Пошаљи имејл"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:221
 msgid "Send Kill"
@@ -15505,7 +15505,7 @@ msgstr "Пошаљи уништење"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:7
 msgid "Send Report via Email"
-msgstr ""
+msgstr "Пошаљи извештај имејлом"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:228
 msgid "Send Takedown"
@@ -15580,7 +15580,7 @@ msgstr "Послати излаз деска"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
-msgstr ""
+msgstr "Послато из"
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:41
 msgid "Sent Items"
@@ -15588,7 +15588,7 @@ msgstr "Послате ставке"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:436
 msgid "Sent To"
-msgstr ""
+msgstr "Послато на"
 
 #: scripts/api/article-send.tsx:257
 msgid "Sent successfully"
@@ -15932,7 +15932,7 @@ msgstr "Сигнал"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:10
 msgid "Single Day"
-msgstr ""
+msgstr "Један дан"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:122
 msgid "Single Line"
@@ -16159,7 +16159,7 @@ msgstr ""
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-preview.html:24
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:28
 msgid "Sort Order"
-msgstr ""
+msgstr "Редослед сортирања"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:37
 #: scripts/apps/search/views/item-sortbar.html:12
@@ -16328,7 +16328,7 @@ msgstr "Само садржај у корпи"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:108
 msgid "Spline"
-msgstr ""
+msgstr "Спајн"
 
 #: scripts/core/editor3/highlightsConfig.ts:83
 msgid "Split paragraph"
@@ -16393,7 +16393,7 @@ msgstr "Започни рад"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:174
 msgid "Start date cannot be greater than today"
-msgstr ""
+msgstr "Почетни датум не може бити већи од данашњег"
 
 #: ../superdesk-planning/client/validators/events.ts:76
 msgid "Start date is in the past"
@@ -16401,7 +16401,7 @@ msgstr "Почетни датум је у прошлости"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:160
 msgid "Start date is required"
-msgstr ""
+msgstr "Почетни датум је обавезан"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:31
 msgid "Start routing"
@@ -16449,7 +16449,7 @@ msgstr "Држава/Покрајина/Регион"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:145
 msgid "States"
-msgstr ""
+msgstr "Стања"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:64
 #: scripts/apps/publish/views/publish-queue.html:115
@@ -16589,11 +16589,11 @@ msgstr "Не"
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:6
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:6
 msgid "Subgroup By"
-msgstr ""
+msgstr "Подгрупиши по"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:23
 msgid "Subgroup By:"
-msgstr ""
+msgstr "Подгрупиши по:"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-items/content-profile.js:112
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:112
@@ -16628,7 +16628,7 @@ msgstr "Тема је обавезно поље"
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:39
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:150
 msgid "Subject:"
-msgstr ""
+msgstr "Тема:"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:162
 #: scripts/core/lang/missing-translations-strings.ts:12
@@ -16656,7 +16656,7 @@ msgstr "Поднето"
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:109
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:202
 msgid "Submitting...."
-msgstr ""
+msgstr "Слање...."
 
 #: scripts/apps/search/views/saved-search-subscribe.html:34
 #: scripts/apps/search/views/saved-searches.html:21
@@ -16710,7 +16710,7 @@ msgstr "Индекс"
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:15
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-preview.html:6
 msgid "Subtitle"
-msgstr ""
+msgstr "Поднаслов"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:244
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:40
@@ -16738,7 +16738,7 @@ msgstr "Сугестије ће се појавити овде када се т�
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:29
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:32
 msgid "Sum"
-msgstr ""
+msgstr "Збир"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/main-panel.js:18
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/summary/summary-widget.js:48
@@ -16857,7 +16857,7 @@ msgstr "TBC"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:99
 msgid "TH"
-msgstr ""
+msgstr "ЧЕ"
 
 #: ../superdesk-planning/client/validators/events.ts:25
 msgid "TIMEZONE is a required field"
@@ -16865,7 +16865,7 @@ msgstr "ВРЕМЕНСКА ЗОНА је обавезно поље"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:83
 msgid "TU"
-msgstr ""
+msgstr "УТ"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:41
 msgid "Tab"
@@ -16956,12 +16956,12 @@ msgstr "Уклони ставку"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
 msgid "Takedowns"
-msgstr ""
+msgstr "Уклањања"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:50
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:90
 msgid "Taken Down"
-msgstr ""
+msgstr "Уклоњено"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:427
 msgid "Taken as a rewrite of"
@@ -17220,12 +17220,12 @@ msgstr "ИД производа се може копирати и користи
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
-msgstr ""
+msgstr "Сачувани извештај који користите је обрисан!"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:270
 msgid ""
 "The Saved Report you are using was updated! Please re-select the Saved Report"
-msgstr ""
+msgstr "Сачувани извештај који користите је ажуриран! Поново изаберите сачувани извештај"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:52
 msgid ""
@@ -17406,7 +17406,7 @@ msgstr "Распоред претплатника је завршен {{date}}, 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:39
 msgid ""
 "The use of Highcharts is provided under a license with the following details:"
-msgstr ""
+msgstr "Коришћење Highcharts-а је омогућено под лиценцом са следећим детаљима:"
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:14
 msgid ""
@@ -17738,7 +17738,7 @@ msgstr "Овај догађај је заказан да се одржи нак�
 #: ../superdesk-analytics/client/search/views/date-filters.html:28
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:21
 msgid "This Month"
-msgstr ""
+msgstr "Овај месец"
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:92
 msgid "This URL could not be embedded."
@@ -17754,7 +17754,7 @@ msgstr "Ове недеље"
 #: ../superdesk-analytics/client/search/views/date-filters.html:32
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:27
 msgid "This Year"
-msgstr ""
+msgstr "Ова година"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:277
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:365
@@ -18044,7 +18044,7 @@ msgstr "Бирач времена"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:315
 msgid "Time spent producing content"
-msgstr ""
+msgstr "Време утрошено на продукцију садржаја"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/edit-working-hours.js:62
 #: scripts/extensions/availability-manager/dist/src/settings/edit-working-hours.js:62
@@ -18059,11 +18059,11 @@ msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:559
 msgid "Timeline"
-msgstr ""
+msgstr "Временска линија"
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:4
 msgid "Times:"
-msgstr ""
+msgstr "Времена:"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:249
 #: scripts/core/lang/missing-translations-strings.ts:34
@@ -18158,7 +18158,7 @@ msgstr "Да бисте видели детаљне разлике, упоред
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:129
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:31
 msgid "To:"
-msgstr ""
+msgstr "До:"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-footer.js:40
 #: scripts/extensions/ai-widget/dist/src/translations/translations-footer.js:40
@@ -18311,7 +18311,7 @@ msgstr "Прекратко"
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:432
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:440
 msgid "Total"
-msgstr ""
+msgstr "Укупно"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:257
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:257
@@ -18621,7 +18621,7 @@ msgstr "Дошло је до непознате грешке"
 
 #: ../superdesk-analytics/client/utils.js:161
 msgid "Unlink"
-msgstr ""
+msgstr "Уклони везу"
 
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/extension.js:140
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:188
@@ -18678,7 +18678,7 @@ msgstr "Откључано"
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:22
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:77
 msgid "Unmark"
-msgstr ""
+msgstr "Уклони ознаку"
 
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-article-actions.js:21
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:21
@@ -18935,7 +18935,7 @@ msgstr "Ажурирана поља:"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:68
 msgid "Updated In"
-msgstr ""
+msgstr "Ажурирано у"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundowns-list.js:104
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:104
@@ -18977,7 +18977,7 @@ msgstr "Ажурирано:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:576
 msgid "Updates"
-msgstr ""
+msgstr "Ажурирања"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:34
 msgid ""
@@ -19190,7 +19190,7 @@ msgstr "Активност корисника"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:185
 msgid "User Activity - {{username}}"
-msgstr ""
+msgstr "Активност корисника - {{username}}"
 
 #: scripts/apps/users/config.ts:38
 #: scripts/core/lang/missing-translations-strings.ts:21
@@ -19369,19 +19369,19 @@ msgstr ""
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:28
 msgid "View Latest Item Version"
-msgstr ""
+msgstr "Прикажи најновију верзију ставке"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:120
 msgid "View Original"
-msgstr ""
+msgstr "Прикажи оригинал"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:33
 msgid "View Original Image"
-msgstr ""
+msgstr "Прикажи оригиналну слику"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:131
 msgid "View Update"
-msgstr ""
+msgstr "Прикажи ажурирање"
 
 #: scripts/apps/monitoring/index.ts:120
 msgid "View an item"
@@ -19389,7 +19389,7 @@ msgstr "Прикажи ставку"
 
 #: ../superdesk-analytics/client/index.js:95
 msgid "View analytics reports"
-msgstr ""
+msgstr "Прикажи аналитичке извештаје"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:168
 msgid "View associated event"
@@ -19454,7 +19454,7 @@ msgstr "Прикажи поново заказан догађај"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:58
 msgid "View schedules"
-msgstr ""
+msgstr "Прикажи распореде"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:155
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:180
@@ -19511,7 +19511,7 @@ msgstr "УПОЗОРЕЊЕ непозната вредност услова фи
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:91
 msgid "WE"
-msgstr ""
+msgstr "СР"
 
 #: scripts/apps/archive/views/preview.html:63
 #: scripts/apps/authoring/suggest/SuggestView.html:16
@@ -19586,7 +19586,7 @@ msgstr "Недељно у {{ time }} на {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:71
 msgid "Weekly on {{days}} at {{hour}}"
-msgstr ""
+msgstr "Недељно у дане {{days}} у {{hour}}"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
 msgid "Welcome to Superdesk"
@@ -19595,7 +19595,7 @@ msgstr ""
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:2
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:9
 msgid "When"
-msgstr ""
+msgstr "Када"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:38
 #: scripts/apps/highlights/views/highlights_config_modal.html:47
@@ -19608,7 +19608,7 @@ msgstr "Када је омогућено, може слати више став�
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:55
 msgid "White"
-msgstr ""
+msgstr "Бела"
 
 #: scripts/apps/dashboard/views/widget.html:11
 #: scripts/apps/dashboard/views/widget.html:12
@@ -19618,7 +19618,7 @@ msgstr "Подешавања виџета"
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
 msgid ""
 "Widget settings <span translate>for \"{{currentDesk.name}}\" Desk</span>"
-msgstr ""
+msgstr "Подешавања виџета <span translate>за деск \"{{currentDesk.name}}\"</span>"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:95
 msgid "Widgets"
@@ -19730,7 +19730,7 @@ msgstr "Година(е)"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:61
 msgid "Yellow"
-msgstr ""
+msgstr "Жута"
 
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:6
@@ -19746,7 +19746,7 @@ msgstr ""
 #: ../superdesk-analytics/client/search/views/date-filters.html:17
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:8
 msgid "Yesterday"
-msgstr ""
+msgstr "Јуче"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:106
 msgid ""
@@ -20401,7 +20401,7 @@ msgstr "назив датотеке"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:230
 msgid "first"
-msgstr ""
+msgstr "први"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:275
 #: scripts/apps/users/views/edit-form.html:82
@@ -20418,7 +20418,7 @@ msgstr "за"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:9
 msgid "for \"{{currentDesk.name}}\" Desk"
-msgstr ""
+msgstr "за деск \"{{currentDesk.name}}\""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "for \"{{name}}\" Desk"
@@ -20685,7 +20685,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:232
 msgid "last"
-msgstr ""
+msgstr "последњи"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:296
 #: scripts/apps/users/views/edit-form.html:94
@@ -20883,7 +20883,7 @@ msgstr "на задатку од"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:23
 msgid "on the"
-msgstr ""
+msgstr "на"
 
 #: ../superdesk-planning/client/utils/events.tsx:1440
 msgid "on week days"
@@ -20932,7 +20932,7 @@ msgstr "остало"
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:400
 #: scripts/core/utils.tsx:346
 msgid "package"
-msgstr ""
+msgstr "пакет"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:60
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:60
@@ -21646,7 +21646,7 @@ msgstr[2] ""
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:123
 #: ../superdesk-analytics/client/utils.js:196
 msgid "{{days}} days"
-msgstr ""
+msgstr "{{days}} дана"
 
 #: scripts/apps/users/views/edit-form.html:144
 msgid "{{error.email}}"
@@ -21701,11 +21701,11 @@ msgstr "Време {{field}} је обавезно!"
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:118
 #: ../superdesk-analytics/client/utils.js:202
 msgid "{{hours}} hours"
-msgstr ""
+msgstr "{{hours}} сати"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:99
 msgid "{{hours}} hours, {{minutes}} minutes"
-msgstr ""
+msgstr "{{hours}} сати, {{minutes}} минута"
 
 #: ../superdesk-analytics/client/charts/views/chart-colour-picker.html:2
 msgid "{{label | translate}}"
@@ -21718,11 +21718,11 @@ msgstr ""
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:105
 #: ../superdesk-analytics/client/utils.js:208
 msgid "{{minutes}} minutes"
-msgstr ""
+msgstr "{{minutes}} минута"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:133
 msgid "{{months}} months"
-msgstr ""
+msgstr "{{months}} месеци"
 
 #: scripts/apps/publish/views/publish-queue.html:84
 msgid "{{multiSelectCount}} Item selected"
@@ -21768,7 +21768,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:213
 msgid "{{seconds}} seconds"
-msgstr ""
+msgstr "{{seconds}} секунди"
 
 #: scripts/apps/users/views/edit.html:19
 msgid "{{section.label}}"
@@ -21794,11 +21794,11 @@ msgstr ""
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:44
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:45
 msgid "{{update.date}} - {{update.operation}} by {{update.user}}"
-msgstr ""
+msgstr "{{update.date}} - {{update.operation}} од {{update.user}}"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:128
 msgid "{{weeks}} weeks"
-msgstr ""
+msgstr "{{weeks}} недеља"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/utils/ui.js:124
 #: scripts/extensions/sams/dist/src/utils/ui.js:124
