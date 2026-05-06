@@ -108,7 +108,7 @@ msgstr "(Приватно)"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:269
 msgid "(advanced mode)"
-msgstr ""
+msgstr "(напредни режим)"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:44
 msgid "(as defined for all groups)"
@@ -863,7 +863,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:267
 msgid "Add Coverages"
-msgstr ""
+msgstr "Додај извештавања"
 
 #: ../superdesk-analytics/client/utils.js:176
 msgid "Add Featuremedia"
@@ -1013,7 +1013,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.tsx:165
 #: ../superdesk-planning/client/components/fields/editor/Coverages.tsx:139
 msgid "Add a coverage"
-msgstr ""
+msgstr "Додај извештавање"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:239
 msgid "Add a new location"
@@ -1207,7 +1207,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:129
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:52
 msgid "Add to workflow"
-msgstr ""
+msgstr "Додај у радни ток"
 
 #: scripts/apps/authoring-react/fields/urls/editor.tsx:85
 msgid "Add url"
@@ -1228,7 +1228,7 @@ msgstr "Додато у истакнуте приче"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:236
 msgid "Added to workflow"
-msgstr ""
+msgstr "Додато у радни ток"
 
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
@@ -1306,7 +1306,7 @@ msgstr "Напредни филтери"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddButton/CoveragesMenuPopup.tsx:66
 msgid "Advanced mode"
-msgstr ""
+msgstr "Напредни режим"
 
 #: scripts/apps/search/views/search-panel.html:58
 msgid "Advanced search"
@@ -1362,7 +1362,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:38
 msgid "After"
-msgstr ""
+msgstr "После"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.tsx:46
 msgid "Agenda"
@@ -1559,7 +1559,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventDateTime.tsx:134
 msgid "All day"
-msgstr ""
+msgstr "Цео дан"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:122
 msgid "All featured planning items are currently selected"
@@ -2298,7 +2298,7 @@ msgstr "URL ресурса"
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:216
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:42
 msgid "Assign"
-msgstr ""
+msgstr "Додели"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:131
 msgid "Assign \"{{calendar}}\" Calendar to Series"
@@ -2368,12 +2368,12 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:53
 msgid "Assignee"
-msgstr ""
+msgstr "Извршилац"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:254
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:271
 msgid "Assignee:"
-msgstr ""
+msgstr "Извршилац:"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:44
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:78
@@ -2401,27 +2401,27 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:144
 msgid "Assignment has been cancelled, unable to reassign"
-msgstr ""
+msgstr "Задатак је отказан, није могуће поново доделити"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:145
 msgid "Assignment has been cancelled, unable to remove"
-msgstr ""
+msgstr "Задатак је отказан, није могуће уклонити"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:141
 msgid "Assignment has been completed, unable to reassign"
-msgstr ""
+msgstr "Задатак је завршен, није могуће поново доделити"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:142
 msgid "Assignment has been completed, unable to remove"
-msgstr ""
+msgstr "Задатак је завршен, није могуће уклонити"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:147
 msgid "Assignment is locked, unable to reassign"
-msgstr ""
+msgstr "Задатак је закључан, није могуће поново доделити"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:148
 msgid "Assignment is locked, unable to remove"
-msgstr ""
+msgstr "Задатак је закључан, није могуће уклонити"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:123
 msgid "Assignment locked"
@@ -2433,7 +2433,7 @@ msgstr "Приоритет задатка је ажуриран."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:97
 msgid "Assignment removed"
-msgstr ""
+msgstr "Задатак уклоњен"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:362
 msgid "Assignment reverted."
@@ -2478,7 +2478,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:151
 msgid "Associated XMP File"
-msgstr ""
+msgstr "Повезана XMP датотека"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:94
 msgid "Associated an event"
@@ -3205,7 +3205,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:127
 msgid "Cancel Scheduled Update"
-msgstr ""
+msgstr "Откажи заказано ажурирање"
 
 #: scripts/apps/publish/views/publish-queue.html:83
 msgid "Cancel Selection"
@@ -3226,7 +3226,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:264
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:51
 msgid "Cancel coverage"
-msgstr ""
+msgstr "Откажи извештавање"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:53
 msgid "Cancel planning items with Event"
@@ -4143,7 +4143,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:72
 msgid "Content linked to coverage"
-msgstr ""
+msgstr "Садржај повезан са извештавањем"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:122
 msgid "Content locked"
@@ -4160,7 +4160,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:95
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:77
 msgid "Content unlinked"
-msgstr ""
+msgstr "Веза садржаја уклоњена"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Content.tsx:24
 msgid "Content: {{ numberOfContent }}"
@@ -4197,7 +4197,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:80
 msgid "Converted to recurring event"
-msgstr ""
+msgstr "Конвертовано у понављајући догађај"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:92
 msgid "Copied to clipboard"
@@ -4407,7 +4407,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:266
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:60
 msgid "Coverage Provider:"
-msgstr ""
+msgstr "Провајдер извештавања:"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:156
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:231
@@ -4415,21 +4415,21 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/index.ts:205
 #: ../superdesk-planning/client/utils/contentProfiles.ts:327
 msgid "Coverage Status"
-msgstr ""
+msgstr "Статус извештавања"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddButton/CoveragesMenuPopup.tsx:51
 #: ../superdesk-planning/client/components/fields/editor/CoverageType.tsx:34
 #: ../superdesk-planning/client/components/fields/preview/index.ts:70
 msgid "Coverage Type"
-msgstr ""
+msgstr "Тип извештавања"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:85
 msgid "Coverage added to workflow"
-msgstr ""
+msgstr "Извештавање додато у радни ток"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:32
 msgid "Coverage assigned"
-msgstr ""
+msgstr "Извештавање додељено"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:69
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:72
@@ -4438,31 +4438,31 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:89
 msgid "Coverage availability confirmed"
-msgstr ""
+msgstr "Доступност извештавања потврђена"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:93
 msgid "Coverage availability reverted"
-msgstr ""
+msgstr "Доступност извештавања враћена"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:68
 msgid "Coverage cancelled"
-msgstr ""
+msgstr "Извештавање отказано"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:105
 msgid "Coverage completed"
-msgstr ""
+msgstr "Извештавање завршено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:64
 msgid "Coverage edited"
-msgstr ""
+msgstr "Извештавање измењено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:293
 msgid "Coverage enabled"
-msgstr ""
+msgstr "Извештавање омогућено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:287
 msgid "Coverage has been added to workflow"
-msgstr ""
+msgstr "Извештавање је додато у радни ток"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:28
 msgid "Coverage must be assigned to a desk"
@@ -4474,11 +4474,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:25
 msgid "Coverage of type {{ type }} created"
-msgstr ""
+msgstr "Креирано извештавање типа {{ type }}"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:81
 msgid "Coverage priority modified"
-msgstr ""
+msgstr "Приоритет извештавања измењен"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:51
 msgid "Coverage re-assigned to"
@@ -4486,11 +4486,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:30
 msgid "Coverage reassigned"
-msgstr ""
+msgstr "Извештавање поново додељено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:52
 msgid "Coverage removed"
-msgstr ""
+msgstr "Извештавање уклоњено"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:20
 msgid "Coverage was cancelled"
@@ -4791,11 +4791,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:92
 msgid "Created from 'update repetitions'"
-msgstr ""
+msgstr "Креирано из 'ажурирања понављања'"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:104
 msgid "Created from a planning item"
-msgstr ""
+msgstr "Креирано из ставке планирања"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:37
 msgid "Created from content"
@@ -4899,15 +4899,15 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:78
 msgid "Current Date"
-msgstr ""
+msgstr "Тренутни датум"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:82
 msgid "Current Date (Based on Event timezone)"
-msgstr ""
+msgstr "Тренутни датум (према временској зони догађаја)"
 
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.tsx:14
 msgid "Current Repeat Summary"
-msgstr ""
+msgstr "Тренутни сажетак понављања"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:181
 msgid "Currently Selected"
@@ -5109,7 +5109,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:113
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:88
 msgid "Date:"
-msgstr ""
+msgstr "Датум:"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:352
 #: scripts/apps/authoring-react/field-adapters/dateline.ts:12
@@ -5156,7 +5156,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:30
 msgid "Day(s)"
-msgstr ""
+msgstr "Дан(а)"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:4
 msgid "Days"
@@ -5612,11 +5612,11 @@ msgstr "Деск(ови)"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:157
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:166
 msgid "Desk:"
-msgstr ""
+msgstr "Деск:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:111
 msgid "Desk: {{ desk }}"
-msgstr ""
+msgstr "Деск: {{ desk }}"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:109
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:383
@@ -6064,7 +6064,7 @@ msgstr "Време рока"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:119
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:128
 msgid "Due:"
-msgstr ""
+msgstr "Рок:"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:435
 #: ../superdesk-analytics/client/utils.js:169
@@ -6079,11 +6079,11 @@ msgstr ""
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:242
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-action.tsx:92
 msgid "Duplicate"
-msgstr ""
+msgstr "Дуплирај"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:230
 msgid "Duplicate As"
-msgstr ""
+msgstr "Дуплирај као"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Duplicate Content within a Desk"
@@ -6349,7 +6349,7 @@ msgstr "Уреди речник"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:114
 msgid "Edit Event"
-msgstr ""
+msgstr "Уреди догађај"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.tsx:96
 #: ../superdesk-planning/client/constants/tooltips.ts:35
@@ -6728,7 +6728,7 @@ msgstr "URL крајње тачке"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:133
 msgid "Ends"
-msgstr ""
+msgstr "Завршава се"
 
 #: scripts/apps/publish-preview/previewModal.tsx:67
 msgid ""
@@ -7154,7 +7154,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventEditor/index.tsx:182
 msgid "Event Name"
-msgstr ""
+msgstr "Назив догађаја"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:47
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:65
@@ -7172,7 +7172,7 @@ msgstr "Догађај поново заказан"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:51
 msgid "Event Rescheduled from"
-msgstr ""
+msgstr "Догађај поново заказан са"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:206
 msgid "Event Starts"
@@ -7180,7 +7180,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:60
 msgid "Event cancelled"
-msgstr ""
+msgstr "Догађај отказан"
 
 #: ../superdesk-planning/client/validators/events.ts:154
 msgid "Event duration is greater than {{maxDuration}} days."
@@ -7204,7 +7204,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:84
 msgid "Event repetitions modified"
-msgstr ""
+msgstr "Понављања догађаја измењена"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:522
 msgid "Event repetitions updated"
@@ -7212,7 +7212,7 @@ msgstr "Понављања догађаја ажурирана"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:31
 msgid "Event spiked"
-msgstr ""
+msgstr "Догађај премештен у корпу"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:507
 msgid "Event time has been updated"
@@ -7220,11 +7220,11 @@ msgstr "Време догађаја је ажурирано"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:76
 msgid "Event time modified"
-msgstr ""
+msgstr "Време догађаја измењено"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:35
 msgid "Event unspiked"
-msgstr ""
+msgstr "Догађај враћен из корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:234
 msgid "Event will be changed to a multi-day event!"
@@ -7261,7 +7261,7 @@ msgstr "Само догађаји"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:101
 msgid "Every"
-msgstr ""
+msgstr "Сваких"
 
 #: ../superdesk-planning/client/utils/filters.ts:163
 #: ../superdesk-planning/client/utils/filters.ts:180
@@ -7442,7 +7442,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:237
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:116
 msgid "External Links"
-msgstr ""
+msgstr "Спољашњи линкови"
 
 #: ../superdesk-planning/client/components/Events/EventEditor/index.tsx:172
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:61
@@ -10842,7 +10842,7 @@ msgstr "Месец"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:32
 msgid "Month(s)"
-msgstr ""
+msgstr "Месец(и)"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:40
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:26
@@ -11427,7 +11427,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:251
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:129
 msgid "No external links added."
-msgstr ""
+msgstr "Нису додати спољашњи линкови."
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:20
 msgid "No fetch or publish actions defined"
@@ -11534,7 +11534,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:149
 msgid "No related planning items."
-msgstr ""
+msgstr "Нема повезаних ставки планирања."
 
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:79
 msgid "No result"
@@ -11783,13 +11783,13 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:134
 msgid "Not scheduled"
-msgstr ""
+msgstr "Није заказано"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:152
 #: ../superdesk-planning/client/components/fields/preview/index.ts:200
 #: ../superdesk-planning/client/utils/planning.tsx:1816
 msgid "Not scheduled yet"
-msgstr ""
+msgstr "Још није заказано"
 
 #: scripts/extensions/availability-manager/dist/src/components/status-select.js:20
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/components/status-select.js:20
@@ -11934,7 +11934,7 @@ msgstr "Укључено"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:175
 msgid "On Days"
-msgstr ""
+msgstr "У данима"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:341
 msgid ""
@@ -11975,7 +11975,7 @@ msgstr "Дозволи само садржај са\n                           
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:247
 msgid "Only one XMP files are accepted"
-msgstr ""
+msgstr "Прихвата се само једна XMP датотека"
 
 #: scripts/apps/archive/controllers/UploadController.ts:229
 msgid "Only one file can be uploaded"
@@ -12772,7 +12772,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:72
 msgid "Planning item created"
-msgstr ""
+msgstr "Ставка планирања креирана"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:97
 msgid "Planning item has to be created before adding related events"
@@ -13289,7 +13289,7 @@ msgstr "Провајдер {{name}} је неуобичајено тих. Пос
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:279
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:110
 msgid "Provider:"
-msgstr ""
+msgstr "Провајдер:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.tsx:218
 msgid "Provider: {{ name }}"
@@ -13631,7 +13631,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:155
 #: ../superdesk-planning/client/constants/assignments.ts:192
 msgid "Reassign"
-msgstr ""
+msgstr "Поново додели"
 
 #: scripts/apps/search/components/fields/state.tsx:43
 msgid "Recalled"
@@ -13800,7 +13800,7 @@ msgstr "Повезане ставке"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:134
 msgid "Related Planning Items"
-msgstr ""
+msgstr "Повезане ставке планирања"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:220
 msgid "Related Planning(s)"
@@ -13930,7 +13930,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:127
 msgid "Remove Event"
-msgstr ""
+msgstr "Уклони догађај"
 
 #: ../superdesk-analytics/client/utils.js:179
 msgid "Remove Featuremedia"
@@ -13954,7 +13954,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:154
 msgid "Remove Scheduled Update"
-msgstr ""
+msgstr "Уклони заказано ажурирање"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
@@ -13982,7 +13982,7 @@ msgstr "Уклони конфигурацију"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:277
 msgid "Remove coverage"
-msgstr ""
+msgstr "Уклони извештавање"
 
 #: scripts/apps/desks/views/settings.html:53
 msgid "Remove desk"
@@ -14110,12 +14110,12 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/DaysOfWeekInput.tsx:98
 msgid "Repeat On"
-msgstr ""
+msgstr "Понови у"
 
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.tsx:99
 #: ../superdesk-planning/client/components/Events/RepeatEventSummary/index.tsx:15
 msgid "Repeat Summary"
-msgstr ""
+msgstr "Сажетак понављања"
 
 #: ../superdesk-planning/client/validators/profile.ts:44
 #: ../superdesk-planning/client/validators/profile.ts:45
@@ -14131,7 +14131,7 @@ msgstr "Понавља се"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:88
 msgid "Repetitions updated"
-msgstr ""
+msgstr "Понављања ажурирана"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:125
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:161
@@ -14524,7 +14524,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:178
 msgid "SCHEDULED UPDATES"
-msgstr ""
+msgstr "ЗАКАЗАНА АЖУРИРАЊА"
 
 #: scripts/apps/authoring/views/authoring-header.html:45
 msgid "SIGNAL"
@@ -16477,11 +16477,11 @@ msgstr "Статус:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:112
 msgid "Status: Unassigned"
-msgstr ""
+msgstr "Статус: Недодељено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:143
 msgid "Status: {{ state }}"
-msgstr ""
+msgstr "Статус: {{ state }}"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:11
 msgid "Status: {{filter}}"
@@ -16853,7 +16853,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/planning.tsx:1380
 #: ../superdesk-planning/client/utils/planning.tsx:1795
 msgid "TBC"
-msgstr ""
+msgstr "TBC"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:99
 msgid "TH"
@@ -17915,7 +17915,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:105
 msgid "This will also remove linked assignments if any"
-msgstr ""
+msgstr "Ово ће такође уклонити повезане задатке ако постоје"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:762
 msgid ""
@@ -17990,7 +17990,7 @@ msgstr "Временски ограничено"
 
 #: ../superdesk-planning/client/components/Events/EventDateTime.tsx:59
 msgid "Time TBC"
-msgstr ""
+msgstr "Време TBC"
 
 #: scripts/apps/archive/views/metadata-view.html:141
 #: scripts/core/ui/views/sd-timezone.html:1
@@ -18470,7 +18470,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:139
 msgid "Type: {{ type }}"
-msgstr ""
+msgstr "Тип: {{ type }}"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:152
 msgid "Type: {{type}}"
@@ -18849,7 +18849,7 @@ msgstr "Циклус ажурирања:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:200
 msgid "Update Due:"
-msgstr ""
+msgstr "Рок ажурирања:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:114
 #: ../superdesk-planning/client/constants/events.ts:164
@@ -18931,7 +18931,7 @@ msgstr "Ажурирано"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:129
 msgid "Updated Fields:"
-msgstr ""
+msgstr "Ажурирана поља:"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:68
 msgid "Updated In"
@@ -19397,7 +19397,7 @@ msgstr "Прикажи повезан догађај"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:155
 msgid "View duplicate event"
-msgstr ""
+msgstr "Прикажи дупликат догађаја"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:140
 msgid "View duplicate planning item"
@@ -19433,7 +19433,7 @@ msgstr "Прикажи обавештења"
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:189
 #: ../superdesk-planning/client/components/fields/state.tsx:32
 msgid "View original event"
-msgstr ""
+msgstr "Прикажи оригинални догађај"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:152
 msgid "View original planning item"
@@ -19442,7 +19442,7 @@ msgstr "Прикажи оригиналну ставку планирања"
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:143
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:204
 msgid "View planning item"
-msgstr ""
+msgstr "Прикажи ставку планирања"
 
 #: scripts/core/menu/views/menu.html:58
 msgid "View profile details"
@@ -19450,7 +19450,7 @@ msgstr "Прикажи детаље профила"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:177
 msgid "View rescheduled event"
-msgstr ""
+msgstr "Прикажи поново заказан догађај"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:58
 msgid "View schedules"
@@ -19573,7 +19573,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:31
 msgid "Week(s)"
-msgstr ""
+msgstr "Недеља(е)"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:37
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:23
@@ -19661,7 +19661,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:101
 msgid "Work started on coverage"
-msgstr ""
+msgstr "Започет рад на извештавању"
 
 #: scripts/core/activity/activity.ts:22
 msgid "Workflow"
@@ -19726,7 +19726,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:33
 msgid "Year(s)"
-msgstr ""
+msgstr "Година(е)"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:61
 msgid "Yellow"
@@ -19787,7 +19787,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:233
 msgid "You can associate only one XMP file"
-msgstr ""
+msgstr "Можете повезати само једну XMP датотеку"
 
 #: scripts/apps/desks/views/desk-config-modal.html:134
 msgid ""
@@ -19979,7 +19979,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:45
 msgid "and '{{ user }}'"
-msgstr ""
+msgstr "и '{{ user }}'"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:90
 msgid "annotation"
@@ -20426,7 +20426,7 @@ msgstr "за деск \"{{name}}\""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:42
 msgid "for '{{ desk }}'"
-msgstr ""
+msgstr "за '{{ desk }}'"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:97
 msgid "for desk"
@@ -20452,7 +20452,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:28
 msgid "from content"
-msgstr ""
+msgstr "из садржаја"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:95
 msgid "from coverage assignment by"
@@ -20763,7 +20763,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:390
 msgid "make this mode the default"
-msgstr ""
+msgstr "постави овај режим као подразумевани"
 
 #: scripts/core/views/sdSearchList.html:17
 msgid "many"
@@ -21313,7 +21313,7 @@ msgstr "до"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:41
 msgid "to '{{ desk }}'"
-msgstr ""
+msgstr "на '{{ desk }}'"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:75
 msgid "to coverage assignment by"
