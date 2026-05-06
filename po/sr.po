@@ -889,7 +889,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
-msgstr "Додај изворе доласка"
+msgstr "Додај изворе пријема"
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:436
 msgid "Add Item"
@@ -1233,7 +1233,7 @@ msgstr ""
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr "Додавање ставки из доласка као повезаних није дозвољено због подешавања"
+msgstr "Додавање ставки из пријема као повезаних није дозвољено због подешавања"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
@@ -1939,7 +1939,7 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:348
 msgid "Are you sure you want to delete Ingest Source?"
-msgstr "Да ли сте сигурни да желите да обришете извор доласка?"
+msgstr "Да ли сте сигурни да желите да обришете извор пријема?"
 
 #: scripts/apps/search-providers/directive.ts:87
 msgid "Are you sure you want to delete Search Provider?"
@@ -4758,7 +4758,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
-msgstr "Креиран канал доласка {{name}}"
+msgstr "Креиран канал пријема {{name}}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created To"
@@ -5376,7 +5376,7 @@ msgstr "Обриши радни простор"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
-msgstr "Обрисан канал доласка {{name}}"
+msgstr "Обрисан канал пријема {{name}}"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
@@ -5790,7 +5790,7 @@ msgstr "Прекинута веза са сервером обавештења!"
 msgid ""
 "Displaying news ingest statistics. You can switch color themes or graph "
 "sources."
-msgstr "Приказује статистике доласка вести. Можете променити теме боја или изворе графикона."
+msgstr "Приказује статистике пријема вести. Можете променити теме боја или изворе графикона."
 
 #: scripts/core/keyboard/keyboard.ts:401 scripts/core/keyboard/keyboard.ts:410
 msgid "Displays active keyboard shortcuts"
@@ -6363,11 +6363,11 @@ msgstr "Уреди услов филтера"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:109
 msgid "Edit Ingest Source"
-msgstr "Уреди извор доласка"
+msgstr "Уреди извор пријема"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:6
 msgid "Edit Ingest Sources"
-msgstr "Уреди изворе доласка"
+msgstr "Уреди изворе пријема"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:75
 msgid "Edit Line"
@@ -6962,7 +6962,7 @@ msgstr "Грешка: речник већ постоји."
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:359
 msgid "Error: Unable to delete Ingest Source"
-msgstr "Грешка: није могуће обрисати извор доласка"
+msgstr "Грешка: није могуће обрисати извор пријема"
 
 #: scripts/apps/search-providers/directive.ts:98
 msgid "Error: Unable to delete Search Provider."
@@ -8001,7 +8001,7 @@ msgstr "Повратне информације/Предлози"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:92
 msgid "Feeding Service"
-msgstr "Сервис за довод"
+msgstr "Фид сервис"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
 msgid "Fern Green"
@@ -8992,7 +8992,7 @@ msgstr "Извините, али дошло је до грешке прилик�
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:188
 msgid "I'm sorry but there was an error when saving the routing scheme."
-msgstr "Извините, али дошло је до грешке приликом чувања шеме усмеравања."
+msgstr "Извините, али дошло је до грешке приликом чувања шеме рутирања."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:37
 msgid "I'm sorry but there was an error when saving the rule set."
@@ -9297,20 +9297,20 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/settings.html:4
 #: scripts/apps/search/views/item-repo.html:3
 msgid "Ingest"
-msgstr "Долазак"
+msgstr "Пријем"
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Ingest Channels"
-msgstr "Канали доласка"
+msgstr "Канали пријема"
 
 #: scripts/apps/ingest/index.ts:92
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
-msgstr "Контролна табла доласка"
+msgstr "Контролна табла пријема"
 
 #: scripts/apps/ingest/controllers/IngestDashboardController.ts:36
 msgid "Ingest Dashboard preferences could not be saved."
-msgstr "Поставке контролне табле доласка нису могле бити сачуване."
+msgstr "Поставке контролне табле пријема нису могле бити сачуване."
 
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:263
@@ -9318,11 +9318,11 @@ msgstr "Поставке контролне табле доласка нису �
 #: scripts/apps/publish/views/publish-queue.html:110
 #: scripts/apps/workspace/content/constants.ts:32
 msgid "Ingest Provider"
-msgstr "Провајдер доласка"
+msgstr "Провајдер пријема"
 
 #: scripts/apps/publish/views/publish-queue.html:30
 msgid "Ingest Provider:"
-msgstr "Провајдер доласка:"
+msgstr "Провајдер пријема:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:596
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:151
@@ -9332,11 +9332,11 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/settings.html:15
 msgid "Ingest Routing"
-msgstr "Усмеравање доласка"
+msgstr "Рутирање пријема"
 
 #: scripts/apps/ingest/views/settings/settings.html:12
 msgid "Ingest Rule sets"
-msgstr "Скупови правила доласка"
+msgstr "Скупови правила пријема"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:99
 msgid "Ingest Source"
@@ -9344,16 +9344,16 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:353
 msgid "Ingest Source deleted."
-msgstr "Извор доласка обрисан."
+msgstr "Извор пријема обрисан."
 
 #: scripts/apps/ingest/views/settings/settings.html:9
 msgid "Ingest Sources"
-msgstr "Извори доласка"
+msgstr "Извори пријема"
 
 #: scripts/apps/ingest/ingest-stats-widget/stats.ts:9
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Ingest Stats"
-msgstr "Статистика доласка"
+msgstr "Статистика пријема"
 
 #: scripts/apps/archive/views/metadata-view.html:128
 msgid "Ingest provider sequence"
@@ -14421,7 +14421,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:22
 msgid "Route incoming content to"
-msgstr "Усмери долазни садржај у"
+msgstr "Рутирај долазни садржај у"
 
 #: scripts/apps/search/components/fields/state.tsx:32
 msgid "Routed"
@@ -14429,31 +14429,31 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:3
 msgid "Routed from"
-msgstr "Усмерено са"
+msgstr "Рутирано са"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:8
 msgid "Routed from other desks"
-msgstr "Усмерено са других дескова"
+msgstr "Рутирано са других дескова"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:9
 msgid "Routed from:"
-msgstr "Усмерено са:"
+msgstr "Рутирано са:"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Routing Rules Management"
-msgstr "Управљање правилима усмеравања"
+msgstr "Управљање правилима рутирања"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:219
 msgid "Routing Scheme"
-msgstr "Шема усмеравања"
+msgstr "Шема рутирања"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:182
 msgid "Routing scheme saved."
-msgstr "Шема усмеравања сачувана."
+msgstr "Шема рутирања сачувана."
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:12
 msgid "Routing to:"
-msgstr "Усмеравање на:"
+msgstr "Рутирање на:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:53
 msgid "Rule name"
@@ -14968,7 +14968,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:70
 msgid "Scheduled Desk Output"
-msgstr "Заказани излазни деск"
+msgstr "Заказани излаз деска"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:151
 msgid "Scheduled Export"
@@ -15295,7 +15295,7 @@ msgid ""
 "ingest. If you don't see any, create one\n"
 "                                   <a href=\"#/settings/content-"
 "profiles\">here</a>"
-msgstr "Изаберите подразумевани профил садржаја који се користи за чланке преузете из доласка. Ако ниједан не видите, креирајте га\n                                   <a href=\"#/settings/content-profiles\">овде</a>"
+msgstr "Изаберите подразумевани профил садржаја који се користи за чланке преузете из пријема. Ако ниједан не видите, креирајте га\n                                   <a href=\"#/settings/content-profiles\">овде</a>"
 
 #: scripts/apps/desks/views/desk-config-modal.html:156
 msgid ""
@@ -15689,7 +15689,7 @@ msgid ""
 "sensible name, select a saved search or desk or its workflow stages. Monitor "
 "anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr "Подесите различите мониторе да бисте пратили било које теме из доласка или продукције, излаза дескова или било ког дела радног тока. Све што вам треба је да им дате смислен назив, изаберете сачувану претрагу или деск или његове радне фазе. Пратите било шта, било где, било када. Можете имати онолико виџета Монитора колико желите."
+msgstr "Подесите различите мониторе да бисте пратили било које теме из пријема или продукције, излаза дескова или било ког дела радног тока. Све што вам треба је да им дате смислен назив, изаберете сачувану претрагу или деск или његове радне фазе. Пратите било шта, било где, било када. Можете имати онолико виџета Монитора колико желите."
 
 #: scripts/extensions/sams/dist/src/api/sets.js:57
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:57
@@ -16405,7 +16405,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:31
 msgid "Start routing"
-msgstr "Започни усмеравање"
+msgstr "Започни рутирање"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:87
 #: scripts/apps/search/views/item-searchbar.html:19
@@ -16493,7 +16493,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:37
 msgid "Stop routing"
-msgstr "Заустави усмеравање"
+msgstr "Заустави рутирање"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:254
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:150
@@ -17712,7 +17712,7 @@ msgstr "Дошло је до грешке. Улога не може бити о�
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:55
 msgid "There was an error. Routing scheme cannot be deleted."
-msgstr "Дошло је до грешке. Шема усмеравања не може бити обрисана."
+msgstr "Дошло је до грешке. Шема рутирања не може бити обрисана."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:54
 msgid "There was an error. Rule set cannot be deleted."
@@ -17903,7 +17903,7 @@ msgid ""
 "This widget allows you to create literally any content view you may need in "
 "Superdesk, be it production or ingest. All you need is to select a desk, its "
 "stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr "Овај виџет вам омогућава да креирате буквално било који приказ садржаја који вам је потребан у Superdesk-у, било да се ради о продукцији или доласку. Све што треба је да изаберете деск, његове фазе или сачувану претрагу. Именујте свој приказ када завршите. Уживајте!"
+msgstr "Овај виџет вам омогућава да креирате буквално било који приказ садржаја који вам је потребан у Superdesk-у, било да се ради о продукцији или пријему. Све што треба је да изаберете деск, његове фазе или сачувану претрагу. Именујте свој приказ када завршите. Уживајте!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
@@ -21120,7 +21120,7 @@ msgstr "улози {{role}} су додељене нове привилегиј�
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "routed"
-msgstr "усмерено"
+msgstr "рутирано"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:90
 msgid "row"
@@ -21377,7 +21377,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "updated Ingest Channel {{name}}"
-msgstr "ажуриран канал доласка {{name}}"
+msgstr "ажуриран канал пријема {{name}}"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:25
 msgid "updated fields"
@@ -21780,7 +21780,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "{{status}} Ingest Channel {{name}}"
-msgstr "{{status}} канал доласка {{name}}"
+msgstr "{{status}} канал пријема {{name}}"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:1
 msgid "{{title}}"

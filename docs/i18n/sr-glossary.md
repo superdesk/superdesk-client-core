@@ -32,6 +32,12 @@ Use neutral Serbian Cyrillic (Вукова ћирилица). Prefer consistency
 | spike (verb) | преместити у корпу | journalism: move article to discard bin. Decline `корпа` per case (`у корпу` / `у корпи` / `мониторинг корпе`) |
 | spike (noun) | корпа | the discard bin itself |
 | spiked | у корпи | item state |
+| ingest | пријем | automatic feed-based content reception. Decline: `пријема` (gen), `пријему` (loc) — e.g. `Канали пријема`, `Извори пријема` |
+| feeding service | фид сервис | newsroom feed service |
+| feed parser | парсер фида | RSS/feed parser |
+| routing (scheme/rules) | рутирање | content routing — `Шема рутирања`, `правила рутирања`, `Започни рутирање`, `Рутирано са` |
+| filter statement | критеријум филтера | not `изјава филтера` |
+| highlight (noun) | истицање | featured-content list (not text-highlight) |
 | workspace | радни простор | |
 | assignment | задатак | work assignment |
 | planning | планирање | |
