@@ -889,7 +889,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
-msgstr ""
+msgstr "Додај изворе доласка"
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:436
 msgid "Add Item"
@@ -963,20 +963,20 @@ msgstr "Додај нови производ"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:31
 msgid "Add New Rule Set"
-msgstr ""
+msgstr "Додај нови скуп правила"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:31
 msgid "Add New Scheme"
-msgstr ""
+msgstr "Додај нову шему"
 
 #: scripts/apps/search-providers/directive.ts:24
 #: scripts/apps/search-providers/views/search-provider-config.html:28
 msgid "Add New Search Provider"
-msgstr ""
+msgstr "Додај новог провајдера претраге"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:58
 msgid "Add New Source"
-msgstr ""
+msgstr "Додај нови извор"
 
 #: scripts/apps/publish/views/subscribers.html:69
 msgid "Add New Subscriber"
@@ -992,11 +992,11 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:84
 msgid "Add Rule"
-msgstr ""
+msgstr "Додај правило"
 
 #: scripts/apps/ingest/views/dashboard/dashboard.html:4
 msgid "Add Sources"
-msgstr ""
+msgstr "Додај изворе"
 
 #: scripts/apps/dashboard/views/workspace.html:99
 msgid "Add This Widget"
@@ -1088,7 +1088,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:8
 msgid "Add filter"
-msgstr ""
+msgstr "Додај филтер"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldList.tsx:43
 msgid "Add first field"
@@ -1144,7 +1144,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:65
 msgid "Add rule"
-msgstr ""
+msgstr "Додај правило"
 
 #: scripts/extensions/datetimeField/dist/src/config.js:54
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/config.js:54
@@ -1512,7 +1512,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:64
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
 msgid "All Day"
-msgstr ""
+msgstr "Цео дан"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:136
 msgid "All Day Toggle"
@@ -1605,7 +1605,7 @@ msgstr "Дозволи више ставки"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:189
 msgid "Allow Remove Ingested Items"
-msgstr ""
+msgstr "Дозволи уклањање примљених ставки"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:78
 msgid "Allow adding items that are in progress"
@@ -1775,7 +1775,7 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:84
 msgid "An error occured when testing config."
-msgstr ""
+msgstr "Дошло је до грешке приликом тестирања конфигурације."
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:46
 msgid "An error occured, please try again."
@@ -1939,11 +1939,11 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:348
 msgid "Are you sure you want to delete Ingest Source?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете извор доласка?"
 
 #: scripts/apps/search-providers/directive.ts:87
 msgid "Are you sure you want to delete Search Provider?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете провајдера претраге?"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:66
 msgid "Are you sure you want to delete configuration?"
@@ -1979,7 +1979,7 @@ msgstr "Да ли сте сигурни да желите да обришете 
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:61
 msgid "Are you sure you want to delete rule set?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете скуп правила?"
 
 #: scripts/apps/search/directives/SavedSearches.ts:112
 msgid "Are you sure you want to delete saved search?"
@@ -2017,11 +2017,11 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:239
 msgid "Are you sure you want to delete this scheme rule?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете ово правило шеме?"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:238
 msgid "Are you sure you want to delete this scheme?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете ову шему?"
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:89
 msgid "Are you sure you want to delete user role?"
@@ -2086,7 +2086,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:107
 msgid "Article Type(s)"
-msgstr ""
+msgstr "Тип(ови) чланка"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:105
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:122
@@ -3365,7 +3365,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
-msgstr ""
+msgstr "Канал је неуобичајено тих."
 
 #: scripts/apps/desks/views/desk-config-modal.html:205
 msgid "Character limit exceeded, desk can not be created/updated."
@@ -3585,7 +3585,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:106
 msgid "Click on a Scheme rules on the left to view details."
-msgstr ""
+msgstr "Кликните на правило шеме лево да бисте видели детаље."
 
 #: scripts/apps/dashboard/views/workspace.html:60
 msgid "Click on the \"+\" button in the top right corner to add some widgets."
@@ -3760,7 +3760,7 @@ msgstr ""
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:9
 #: scripts/apps/search-providers/views/search-provider-config.html:14
 msgid "Closed"
-msgstr ""
+msgstr "Затворено"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:242
 msgid "Closing failed"
@@ -3968,7 +3968,7 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/authenticate-ingest-provider.tsx:20
 msgid "Connect an account"
-msgstr ""
+msgstr "Повежи налог"
 
 #: scripts/core/notification/notification.ts:222
 msgid "Connected to Notification Server!"
@@ -5160,7 +5160,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:4
 msgid "Days"
-msgstr ""
+msgstr "Дани"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
@@ -5247,7 +5247,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:53
 msgid "Default view"
-msgstr ""
+msgstr "Подразумевани приказ"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:106
 msgid ""
@@ -5323,7 +5323,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:70
 msgid "Delete Rule"
-msgstr ""
+msgstr "Обриши правило"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
@@ -5723,7 +5723,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:192
 msgid "Disable Item Updates"
-msgstr ""
+msgstr "Онемогући ажурирања ставки"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:169
 msgid "Disable selection of an entire category"
@@ -6158,7 +6158,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:124
 #: scripts/extensions/broadcasting/src/rundowns/components/duration-label.tsx:21
 msgid "Duration"
-msgstr ""
+msgstr "Трајање"
 
 #: scripts/apps/authoring-react/fields/duration/index.tsx:20
 msgid "Duration (authoring-react)"
@@ -6363,11 +6363,11 @@ msgstr "Уреди услов филтера"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:109
 msgid "Edit Ingest Source"
-msgstr ""
+msgstr "Уреди извор доласка"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:6
 msgid "Edit Ingest Sources"
-msgstr ""
+msgstr "Уреди изворе доласка"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:75
 msgid "Edit Line"
@@ -6395,11 +6395,11 @@ msgstr "Уреди улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:67
 msgid "Edit Rule"
-msgstr ""
+msgstr "Уреди правило"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:30
 msgid "Edit Rule set"
-msgstr ""
+msgstr "Уреди скуп правила"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundown-view-edit.js:262
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:262
@@ -6414,16 +6414,16 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:30
 msgid "Edit Scheme"
-msgstr ""
+msgstr "Уреди шему"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:16
 #: scripts/apps/search-providers/views/search-provider-config.html:27
 msgid "Edit Search Provider"
-msgstr ""
+msgstr "Уреди провајдера претраге"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:57
 msgid "Edit Source"
-msgstr ""
+msgstr "Уреди извор"
 
 #: scripts/apps/publish/views/subscribers.html:50
 #: scripts/apps/publish/views/subscribers.html:68
@@ -6549,11 +6549,11 @@ msgstr "Уреди улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:19
 msgid "Edit rule set"
-msgstr ""
+msgstr "Уреди скуп правила"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:19
 msgid "Edit scheme"
-msgstr ""
+msgstr "Уреди шему"
 
 #: scripts/apps/search/views/saved-searches.html:15
 #: scripts/apps/search/views/saved-searches.html:44
@@ -6562,7 +6562,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:46
 msgid "Edit source"
-msgstr ""
+msgstr "Уреди извор"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:28
 msgid "Edit this Schedule"
@@ -6669,7 +6669,7 @@ msgstr "Омогући преглед нових функција"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:204
 msgid "Enable if config can't be tested on REST server."
-msgstr ""
+msgstr "Омогући ако конфигурација не може бити тестирана на REST серверу."
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:488
 msgid "Enable spellchecker"
@@ -6695,7 +6695,7 @@ msgstr "Крајњи датум"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:23
 msgid "End Time (exclusive)"
-msgstr ""
+msgstr "Крајње време (искључиво)"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:177
 msgid "End date cannot be greater than today"
@@ -6778,7 +6778,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:243
 msgid "Error"
-msgstr ""
+msgstr "Грешка"
 
 #: scripts/api/highlights.ts:44 scripts/api/highlights.ts:48
 msgid "Error creating highlight."
@@ -6896,7 +6896,7 @@ msgstr "Грешка:"
 
 #: scripts/apps/search-providers/directive.ts:62
 msgid "Error: A Search Provider with type  already exists."
-msgstr ""
+msgstr "Грешка: провајдер претраге са типом већ постоји."
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:208
 msgid "Error: Failed to delete product."
@@ -6912,7 +6912,7 @@ msgstr "Грешка: поновно заказивање није успело"
 
 #: scripts/apps/search-providers/directive.ts:66
 msgid "Error: Failed to save Search Provider."
-msgstr ""
+msgstr "Грешка: чување провајдера претраге није успело."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:228
 msgid "Error: Failed to save Subscriber."
@@ -6962,11 +6962,11 @@ msgstr "Грешка: речник већ постоји."
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:359
 msgid "Error: Unable to delete Ingest Source"
-msgstr ""
+msgstr "Грешка: није могуће обрисати извор доласка"
 
 #: scripts/apps/search-providers/directive.ts:98
 msgid "Error: Unable to delete Search Provider."
-msgstr ""
+msgstr "Грешка: није могуће обрисати провајдера претраге."
 
 #: scripts/api/article.ts:422
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:100
@@ -7648,7 +7648,7 @@ msgstr ""
 
 #: scripts/apps/ingest/controllers/ExternalSourceController.ts:29
 msgid "Failed to get item."
-msgstr ""
+msgstr "Преузимање ставке није успело."
 
 #: scripts/extensions/sams/dist/src/api/assets.js:527
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:527
@@ -7989,7 +7989,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:99
 msgid "Feed Parser"
-msgstr ""
+msgstr "Парсер фида"
 
 #: scripts/core/menu/views/menu.html:105
 msgid "Feedback"
@@ -8001,7 +8001,7 @@ msgstr "Повратне информације/Предлози"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:92
 msgid "Feeding Service"
-msgstr ""
+msgstr "Сервис за довод"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
 msgid "Fern Green"
@@ -8016,7 +8016,7 @@ msgstr ""
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:70
 #: scripts/core/interactive-article-actions-panel/actions/fetch-to-action.tsx:116
 msgid "Fetch"
-msgstr ""
+msgstr "Преузми"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:87
 msgid "Fetch As"
@@ -8028,7 +8028,7 @@ msgstr "Преузми садржај на деск"
 
 #: scripts/apps/ingest/index.ts:115 scripts/apps/ingest/index.ts:146
 msgid "Fetch To"
-msgstr ""
+msgstr "Преузми на"
 
 #: scripts/apps/monitoring/index.ts:122
 msgid "Fetch an item"
@@ -8431,7 +8431,7 @@ msgstr "Петак"
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:67
 #: scripts/core/interactive-article-actions-panel/actions/publish-action.tsx:181
 msgid "From"
-msgstr ""
+msgstr "Од"
 
 #: scripts/apps/search/constants.ts:12
 #: scripts/apps/search/views/search-parameters.html:102
@@ -8642,7 +8642,7 @@ msgstr "Иди на профиле садржаја"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:45
 msgid "Go to items"
-msgstr ""
+msgstr "Иди на ставке"
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:133
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:92
@@ -8992,11 +8992,11 @@ msgstr "Извините, али дошло је до грешке прилик�
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:188
 msgid "I'm sorry but there was an error when saving the routing scheme."
-msgstr ""
+msgstr "Извините, али дошло је до грешке приликом чувања шеме усмеравања."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:37
 msgid "I'm sorry but there was an error when saving the rule set."
-msgstr ""
+msgstr "Извините, али дошло је до грешке приликом чувања скупа правила."
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:110
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:29
@@ -9297,7 +9297,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/settings.html:4
 #: scripts/apps/search/views/item-repo.html:3
 msgid "Ingest"
-msgstr ""
+msgstr "Долазак"
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Ingest Channels"
@@ -9306,11 +9306,11 @@ msgstr "Канали доласка"
 #: scripts/apps/ingest/index.ts:92
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
 msgid "Ingest Dashboard"
-msgstr ""
+msgstr "Контролна табла доласка"
 
 #: scripts/apps/ingest/controllers/IngestDashboardController.ts:36
 msgid "Ingest Dashboard preferences could not be saved."
-msgstr ""
+msgstr "Поставке контролне табле доласка нису могле бити сачуване."
 
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:263
@@ -9332,11 +9332,11 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/settings.html:15
 msgid "Ingest Routing"
-msgstr ""
+msgstr "Усмеравање доласка"
 
 #: scripts/apps/ingest/views/settings/settings.html:12
 msgid "Ingest Rule sets"
-msgstr ""
+msgstr "Скупови правила доласка"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:99
 msgid "Ingest Source"
@@ -9344,11 +9344,11 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:353
 msgid "Ingest Source deleted."
-msgstr ""
+msgstr "Извор доласка обрисан."
 
 #: scripts/apps/ingest/views/settings/settings.html:9
 msgid "Ingest Sources"
-msgstr ""
+msgstr "Извори доласка"
 
 #: scripts/apps/ingest/ingest-stats-widget/stats.ts:9
 #: scripts/core/lang/missing-translations-strings.ts:44
@@ -9487,7 +9487,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:41
 msgid "Is Default"
-msgstr ""
+msgstr "Је подразумевано"
 
 #: scripts/apps/archive/views/metadata-view.html:165
 msgid "Iso"
@@ -9540,7 +9540,7 @@ msgstr ""
 
 #: scripts/apps/ingest/controllers/ExternalSourceController.ts:25
 msgid "Item Fetched."
-msgstr ""
+msgstr "Ставка преузета."
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:56
 msgid "Item History"
@@ -9678,7 +9678,7 @@ msgstr ""
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
-msgstr ""
+msgstr "Статистика типа ставке"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:125
 msgid "Item unmarked"
@@ -9913,7 +9913,7 @@ msgstr "Последњи дан"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:34
 msgid "Last Item Arrived"
-msgstr ""
+msgstr "Последња ставка стигла"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:27
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:20
@@ -9929,7 +9929,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:30
 msgid "Last Time Updated"
-msgstr ""
+msgstr "Последње ажурирано"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:14
 msgid "Last Updated"
@@ -10275,7 +10275,7 @@ msgstr "Пријави се преко Google-а"
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:41
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:87
 msgid "Log Messages"
-msgstr ""
+msgstr "Поруке дневника"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:239
 #: ../superdesk-planning/client/components/fields/resources/events.ts:20
@@ -11124,7 +11124,7 @@ msgstr "Поље назива треба да садржи само алфану
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:79
 msgid "Name is not unique."
-msgstr ""
+msgstr "Назив није јединствен."
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilter.tsx:153
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/new-item.js:77
@@ -11284,7 +11284,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:7
 msgid "No Fetch actions defined"
-msgstr ""
+msgstr "Нису дефинисане радње преузимања"
 
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
@@ -11296,7 +11296,7 @@ msgstr "Нема пронађених производа"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:39
 msgid "No Publish actions defined"
-msgstr ""
+msgstr "Нису дефинисане радње објављивања"
 
 #: scripts/apps/publish/views/subscribers.html:57
 msgid "No Subscribers Found"
@@ -11383,7 +11383,7 @@ msgstr "За сада нема коментара."
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:5
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:11
 msgid "No content filter defined"
-msgstr ""
+msgstr "Није дефинисан филтер садржаја"
 
 #: scripts/extensions/availability-manager/dist/src/correspondent-availability/with-availability-records.js:54
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/correspondent-availability/with-availability-records.js:54
@@ -11431,7 +11431,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:20
 msgid "No fetch or publish actions defined"
-msgstr ""
+msgstr "Нису дефинисане радње преузимања ни објављивања"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:1080
 msgid ""
@@ -11563,11 +11563,11 @@ msgstr "Још нису креиране улоге."
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:63
 msgid "No rules defined in a set."
-msgstr ""
+msgstr "Нема дефинисаних правила у скупу."
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:58
 msgid "No rules defined yet"
-msgstr ""
+msgstr "Још нису дефинисана правила"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.tsx:180
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningSelectedList.tsx:25
@@ -11685,7 +11685,7 @@ msgstr "Ниједан"
 #: scripts/apps/ingest/directives/IngestRoutingAction.ts:67
 #: scripts/core/interactive-article-actions-panel/subcomponents/controlled-vocabulary-select.tsx:46
 msgid "Not"
-msgstr ""
+msgstr "Не"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:432
 msgid "Not Active"
@@ -11805,7 +11805,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/NotificationModal.tsx:44
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:227
 msgid "Notification"
-msgstr ""
+msgstr "Обавештење"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:15
 msgid "Notification list"
@@ -11820,7 +11820,7 @@ msgstr "Обавештења"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:150
 msgid "Notify when idle for more than"
-msgstr ""
+msgstr "Обавести када је неактиван дуже од"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:84
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:67
@@ -11899,7 +11899,7 @@ msgstr ""
 #: ../superdesk-planning/client/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.tsx:82
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:41
 msgid "Off"
-msgstr ""
+msgstr "Искључено"
 
 #: scripts/apps/users/components/UserAvatar.tsx:100
 msgid "Offline"
@@ -12029,7 +12029,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:47
 msgid "Open advanced search panel by default"
-msgstr ""
+msgstr "Подразумевано отвори напредни панел претраге"
 
 #: scripts/apps/workspace/index.ts:34
 msgid "Open highlights"
@@ -12095,7 +12095,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:18
 msgid "Opened"
-msgstr ""
+msgstr "Отворено"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:35
 msgid "Opened by"
@@ -13009,7 +13009,7 @@ msgstr "Преформатирани текст"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:92
 msgid "Preserve Desk"
-msgstr ""
+msgstr "Сачувај деск"
 
 #: scripts/apps/desks/views/desk-config-modal.html:86
 msgid "Preserve Published Content"
@@ -13267,15 +13267,15 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:77
 msgid "Provider Name"
-msgstr ""
+msgstr "Назив провајдера"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:72
 msgid "Provider Type"
-msgstr ""
+msgstr "Тип провајдера"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:563
 msgid "Provider saved!"
-msgstr ""
+msgstr "Провајдер сачуван!"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:88
 msgid "Provider sequence"
@@ -13326,7 +13326,7 @@ msgstr ""
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:24
 #: scripts/core/interactive-article-actions-panel/actions/publish-action.tsx:304
 msgid "Publish"
-msgstr ""
+msgstr "Објави"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:99
 msgid "Publish & Continue"
@@ -13958,7 +13958,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
-msgstr ""
+msgstr "Уклони провајдера претраге"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:164
 msgid "Remove Sign"
@@ -13994,7 +13994,7 @@ msgstr "Уклони речник"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:14
 msgid "Remove fetch action"
-msgstr ""
+msgstr "Уклони радњу преузимања"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/ListElementTemplate.tsx:98
 msgid "Remove field"
@@ -14002,7 +14002,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:16
 msgid "Remove filter"
-msgstr ""
+msgstr "Уклони филтер"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:377
 msgid "Remove formatting"
@@ -14045,7 +14045,7 @@ msgstr "Уклони производ"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:46
 msgid "Remove publish action"
-msgstr ""
+msgstr "Уклони радњу објављивања"
 
 #: scripts/apps/users/views/settings-roles.html:18
 msgid "Remove role"
@@ -14053,15 +14053,15 @@ msgstr "Уклони улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:20
 msgid "Remove rule set"
-msgstr ""
+msgstr "Уклони скуп правила"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:20
 msgid "Remove scheme"
-msgstr ""
+msgstr "Уклони шему"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:47
 msgid "Remove source"
-msgstr ""
+msgstr "Уклони извор"
 
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:35
 msgid "Removed"
@@ -14445,11 +14445,11 @@ msgstr "Управљање правилима усмеравања"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:219
 msgid "Routing Scheme"
-msgstr ""
+msgstr "Шема усмеравања"
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:182
 msgid "Routing scheme saved."
-msgstr ""
+msgstr "Шема усмеравања сачувана."
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:12
 msgid "Routing to:"
@@ -14457,20 +14457,20 @@ msgstr "Усмеравање на:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:53
 msgid "Rule name"
-msgstr ""
+msgstr "Назив правила"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:38
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:39
 msgid "Rule set name"
-msgstr ""
+msgstr "Назив скупа правила"
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:34
 msgid "Rule set saved."
-msgstr ""
+msgstr "Скуп правила сачуван."
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:210
 msgid "Ruleset"
-msgstr ""
+msgstr "Скуп правила"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:410
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:410
@@ -14741,7 +14741,7 @@ msgstr ""
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:713
 msgid "Save all other changes before performing this action."
-msgstr ""
+msgstr "Сачувајте све друге измене пре извођења ове радње."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:60
 msgid "Save and publish"
@@ -14928,7 +14928,7 @@ msgstr "Зак. деск / фаза"
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:2
 #: scripts/apps/search/views/edit-time-interval.html:1
 msgid "Schedule"
-msgstr ""
+msgstr "Распоред"
 
 #: scripts/apps/templates/views/template-editor-modal.html:175
 msgid "Schedule Desk"
@@ -15022,15 +15022,15 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:103
 msgid "Scheme details"
-msgstr ""
+msgstr "Детаљи шеме"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:41
 msgid "Scheme name"
-msgstr ""
+msgstr "Назив шеме"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:49
 msgid "Scheme rules"
-msgstr ""
+msgstr "Правила шеме"
 
 #: scripts/apps/production-api-keys/config.ts:18
 msgid "Scopes"
@@ -15132,16 +15132,16 @@ msgstr ""
 
 #: scripts/apps/search-providers/directive.ts:92
 msgid "Search Provider deleted."
-msgstr ""
+msgstr "Провајдер претраге обрисан."
 
 #: scripts/apps/search-providers/directive.ts:53
 msgid "Search Provider saved."
-msgstr ""
+msgstr "Провајдер претраге сачуван."
 
 #: scripts/apps/search-providers/index.ts:37
 #: scripts/apps/search-providers/views/settings.html:4
 msgid "Search Providers"
-msgstr ""
+msgstr "Провајдери претраге"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:118
 msgid "Search Related Articles"
@@ -15283,7 +15283,7 @@ msgstr "Изабери датотеке"
 #: scripts/apps/archive/views/resend-configuration.html:10
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:55
 msgid "Select Subscribers"
-msgstr ""
+msgstr "Изабери претплатнике"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:5
 msgid "Select Workspace"
@@ -15365,7 +15365,7 @@ msgstr ""
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:20
 msgid "Select color"
-msgstr ""
+msgstr "Изабери боју"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:12
 msgid "Select current version."
@@ -15431,7 +15431,7 @@ msgstr ""
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:7
 msgid "Select source"
-msgstr ""
+msgstr "Изабери извор"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:62
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/create-rundown-from-template.js:85
@@ -15753,7 +15753,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/components/applied-filters.tsx:31
 #: scripts/extensions/broadcasting/src/rundowns/components/select-show.tsx:35
 msgid "Show"
-msgstr ""
+msgstr "Прикажи"
 
 #: ../superdesk-planning/client/components/fields/related_events.tsx:46
 msgid "Show 1 event"
@@ -15801,7 +15801,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:93
 msgid "Show all messages"
-msgstr ""
+msgstr "Прикажи све поруке"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/manage-shows.js:19
 #: scripts/extensions/broadcasting/dist/src/shows/manage-shows.js:19
@@ -15815,7 +15815,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:101
 msgid "Show error messages"
-msgstr ""
+msgstr "Прикажи поруке грешке"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:302
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:302
@@ -16004,7 +16004,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:203
 msgid "Skip config test"
-msgstr ""
+msgstr "Прескочи тест конфигурације"
 
 #: scripts/apps/desks/views/desk-config-modal.html:59
 msgid "Slack Channel Name"
@@ -16217,11 +16217,11 @@ msgstr "Извор"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:85
 msgid "Source Name"
-msgstr ""
+msgstr "Назив извора"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:3
 msgid "Source Type:"
-msgstr ""
+msgstr "Тип извора:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:44
 msgid "Source for User Created Articles"
@@ -16229,7 +16229,7 @@ msgstr "Извор за чланке које су креирали корисн
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
-msgstr ""
+msgstr "Статистика извора"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/tag-popover.js:20
 #: scripts/extensions/auto-tagging-widget/dist/src/tag-popover.js:20
@@ -16385,7 +16385,7 @@ msgstr "Почетни датум"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:18
 msgid "Start Time (inclusive)"
-msgstr ""
+msgstr "Почетно време (укључиво)"
 
 #: ../superdesk-planning/client/constants/assignments.ts:191
 msgid "Start Working"
@@ -16485,7 +16485,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:11
 msgid "Status: {{filter}}"
-msgstr ""
+msgstr "Статус: {{filter}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:179
 msgid "Stop"
@@ -17007,7 +17007,7 @@ msgstr "Циљни тип:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:67
 msgid "Target Types"
-msgstr ""
+msgstr "Циљни типови"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:131
 msgid "Target regions"
@@ -17512,7 +17512,7 @@ msgstr "Још нема ставки."
 
 #: scripts/apps/search-providers/directive.ts:24
 msgid "There are no providers available."
-msgstr ""
+msgstr "Нема доступних провајдера."
 
 #: scripts/core/editor3/components/links/AttachmentList.tsx:83
 msgid ""
@@ -17712,11 +17712,11 @@ msgstr "Дошло је до грешке. Улога не може бити о�
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:55
 msgid "There was an error. Routing scheme cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Шема усмеравања не може бити обрисана."
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:54
 msgid "There was an error. Rule set cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Скуп правила не може бити обрисан."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:371
 msgid "There was an error. Template cannot be deleted."
@@ -17978,7 +17978,7 @@ msgstr "Четвртак"
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:79
 #: scripts/apps/search/views/edit-time-interval.html:15
 msgid "Time"
-msgstr ""
+msgstr "Време"
 
 #: scripts/apps/authoring-react/fields/time/index.tsx:20
 msgid "Time (authoring-react)"
@@ -18836,7 +18836,7 @@ msgstr "Без наслова"
 #: scripts/apps/authoring/views/authoring-topbar.html:120
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:231
 msgid "Update"
-msgstr ""
+msgstr "Ажурирај"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:256
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:470
@@ -18845,7 +18845,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:4
 msgid "Update Cycle:"
-msgstr ""
+msgstr "Циклус ажурирања:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:200
 msgid "Update Due:"
@@ -18880,7 +18880,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Update every"
-msgstr ""
+msgstr "Ажурирај сваких"
 
 #: scripts/validate-instance-configuration.tsx:42
 msgid "Update or disable incompatible extensions."
@@ -19093,7 +19093,7 @@ msgstr "Хитност"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
-msgstr ""
+msgstr "Статистика хитности"
 
 #: ../superdesk-planning/client/components/fields/urgency.tsx:21
 msgid "Urgency:"
@@ -20106,7 +20106,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:41
 msgid "closed"
-msgstr ""
+msgstr "затворено"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:112
 msgid "color"
@@ -20549,7 +20549,7 @@ msgstr "ч"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:162
 msgid "hrs"
-msgstr ""
+msgstr "ч"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:26
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/extension.js:26
@@ -20622,7 +20622,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:72
 msgid "in the last 24 hours."
-msgstr ""
+msgstr "у последња 24 сата."
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "in-progress"
@@ -20694,7 +20694,7 @@ msgstr "презиме"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:80
 msgid "last update and last item arrived."
-msgstr ""
+msgstr "последње ажурирање и последња ставка стигла."
 
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:20
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:54
@@ -20871,7 +20871,7 @@ msgstr "од"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr ""
+msgstr "укључено"
 
 #: ../superdesk-planning/client/utils/events.tsx:1443
 msgid "on all week (including weekends)"
@@ -21140,15 +21140,15 @@ msgstr "претрага"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
-msgstr ""
+msgstr "лозинка провајдера претраге"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:110
 msgid "search provider username"
-msgstr ""
+msgstr "корисничко име провајдера претраге"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:144
 msgid "sec"
-msgstr ""
+msgstr "сек"
 
 #: scripts/core/views/sdSearchList.html:5
 msgid "selected"
@@ -21164,7 +21164,7 @@ msgstr "слање"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:20
 msgid "since"
-msgstr ""
+msgstr "од"
 
 #: scripts/apps/content-filters/controllers/FilterSearchController.ts:31
 msgid "single value is required"
@@ -21192,7 +21192,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:90
 msgid "source of the search provider"
-msgstr ""
+msgstr "извор провајдера претраге"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"
@@ -21309,7 +21309,7 @@ msgstr "текст"
 #: scripts/extensions/availability-manager/dist/src/settings/edit-working-hours.js:61
 #: scripts/extensions/availability-manager/src/settings/edit-working-hours.tsx:121
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:41
 msgid "to '{{ desk }}'"
@@ -21398,7 +21398,7 @@ msgstr "велика слова"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:98
 msgid "url of the search provider"
-msgstr ""
+msgstr "URL провајдера претраге"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
