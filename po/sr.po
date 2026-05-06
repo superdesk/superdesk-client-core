@@ -527,11 +527,11 @@ msgstr "9. ажурирање"
 
 #: scripts/apps/desks/views/desk-config-modal.html:249
 msgid ": OFF"
-msgstr ""
+msgstr ": ИСКЉУЧЕНО"
 
 #: scripts/apps/desks/views/desk-config-modal.html:252
 msgid ": ON"
-msgstr ""
+msgstr ": УКЉУЧЕНО"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:206
 msgid ":00am"
@@ -935,7 +935,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:4
 msgid "Add New Desk"
-msgstr ""
+msgstr "Додај нови деск"
 
 #: scripts/apps/publish/views/subscribers.html:227
 msgid "Add New Destination"
@@ -1277,7 +1277,7 @@ msgstr "Алати администратора"
 #: scripts/apps/users/views/edit-form.html:169
 #: scripts/apps/users/views/edit-form.html:67
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:14
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:14
@@ -1597,7 +1597,7 @@ msgstr ""
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
-msgstr ""
+msgstr "Сви типови корисника"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:267
 msgid "Allow Multiple Items"
@@ -1856,7 +1856,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:21
 #: scripts/apps/users/views/user-preferences.html:255
 msgid "Appearance"
-msgstr ""
+msgstr "Изглед"
 
 #: scripts/apps/publish/views/subscribers.html:244
 msgid "Applied Global Block Filters"
@@ -2025,7 +2025,7 @@ msgstr ""
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:89
 msgid "Are you sure you want to delete user role?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете корисничку улогу?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:1028
 #: ../superdesk-planning/client/actions/events/ui.ts:995
@@ -2068,7 +2068,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:103
 msgid "Article Defaults"
-msgstr ""
+msgstr "Подразумеване вредности чланка"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:215
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:297
@@ -2112,7 +2112,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:16
 msgid "Article defaults"
-msgstr ""
+msgstr "Подразумеване вредности чланка"
 
 #: scripts/apps/authoring-react/packages.tsx:116
 msgid "Article is not linked to any packages"
@@ -2590,16 +2590,16 @@ msgstr "Токен за аутентификацију"
 #: scripts/apps/users/views/edit-form.html:170
 #: scripts/apps/users/views/edit-form.html:66
 msgid "Author"
-msgstr ""
+msgstr "Аутор"
 
 #: scripts/apps/users/views/edit-form.html:20
 #: scripts/apps/users/views/edit-form.html:249
 msgid "Author info"
-msgstr ""
+msgstr "Информације о аутору"
 
 #: scripts/apps/users/views/settings-roles.html:61
 msgid "Author roles controlled vocabullary is missing."
-msgstr ""
+msgstr "Недостаје контролисани вокабулар улога аутора."
 
 #: scripts/apps/authoring-react/toolbar/version-header.tsx:43
 msgid "Author:"
@@ -2617,7 +2617,7 @@ msgid ""
 "Authoring desks are for content creation, and items within it are protected "
 "from accidental publication. Publishing is only permitted  from production "
 "desks."
-msgstr ""
+msgstr "Дескови за уређивање служе за креирање садржаја, а ставке у њима су заштићене од случајног објављивања. Објављивање је дозвољено само са продукцијских дескова."
 
 #: scripts/apps/authoring-react/field-adapters/authors.tsx:80
 #: scripts/apps/search/components/fields/authors.tsx:113
@@ -2627,7 +2627,7 @@ msgstr ""
 
 #: scripts/apps/users/views/list.html:15
 msgid "Authors only"
-msgstr ""
+msgstr "Само аутори"
 
 #: scripts/apps/templates/views/templates.html:61
 msgid "Automated item creation"
@@ -2737,7 +2737,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit.html:3
 msgid "Back to users list"
-msgstr ""
+msgstr "Назад на листу корисника"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:46
 msgid "Backward Thin"
@@ -2781,7 +2781,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:286
 msgid "Biography"
-msgstr ""
+msgstr "Биографија"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:46
 msgid "Black"
@@ -2903,13 +2903,13 @@ msgid ""
 "By selecting the categories you are interested in, the system will only "
 "display these in a menu for setting the content item's categories (along "
 "with any of its existing categories)."
-msgstr ""
+msgstr "Бирањем категорија које вас занимају, систем ће приказивати само њих у менију за подешавање категорија ставке садржаја (заједно са постојећим категоријама)."
 
 #: scripts/apps/users/views/user-preferences.html:185
 msgid ""
 "By selecting the desks as your preferred desks, they appear first in the "
 "order when sending or publishing items."
-msgstr ""
+msgstr "Бирањем дескова као омиљених, они се појављују први у редоследу приликом слања или објављивања ставки."
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:362
 #: scripts/apps/authoring-react/field-adapters/byline.ts:20
@@ -2919,7 +2919,7 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:268
 #: scripts/apps/workspace/content/constants.ts:16
 msgid "Byline"
-msgstr ""
+msgstr "Потпис"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:244
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:244
@@ -3326,7 +3326,7 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:122 scripts/apps/users/views/edit-form.html:52
 msgid "Change avatar"
-msgstr ""
+msgstr "Промени аватар"
 
 #: scripts/apps/authoring/views/change-image.html:203
 msgid "Change image settings"
@@ -3338,7 +3338,7 @@ msgstr "Промени лозинку"
 
 #: scripts/apps/users/views/user-preferences.html:258
 msgid "Change the appearance of Superdesk across the whole application."
-msgstr ""
+msgstr "Промените изглед Superdesk-а кроз целу апликацију."
 
 #: ../superdesk-analytics/client/charts/views/table.html:23
 msgid "Change the search filters and try again!"
@@ -3369,7 +3369,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:205
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr ""
+msgstr "Прекорачен је лимит карактера, деск није могуће креирати/ажурирати."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:49
 msgid "Character limit exceeded, dictionary can not be created/updated."
@@ -3381,7 +3381,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:290
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr ""
+msgstr "Прекорачен је лимит карактера, фазу није могуће креирати/ажурирати."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:124
 msgid "Character limit settings"
@@ -3543,7 +3543,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:155
 msgid "Clear all selected"
-msgstr ""
+msgstr "Очисти све изабрано"
 
 #: ../superdesk-planning/client/components/UI/Form/DateTimeInput/index.tsx:155
 #: scripts/core/ui/components/Form/DateTimeInput/index.tsx:85
@@ -3575,7 +3575,7 @@ msgstr "Очисти претрагу"
 
 #: scripts/apps/users/config.ts:93
 msgid "Clear sessions"
-msgstr ""
+msgstr "Очисти сесије"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:365
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:365
@@ -3598,7 +3598,7 @@ msgstr ""
 #: scripts/apps/users/views/change-avatar.html:38
 msgid ""
 "Click to capture using camera. Be sure that you allow camera accessibility."
-msgstr ""
+msgstr "Кликните да снимите камером. Уверите се да сте дозволили приступ камери."
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:108
 msgid "Click to replace thumbnail"
@@ -4107,15 +4107,15 @@ msgstr "Подешавање садржаја"
 
 #: scripts/apps/users/views/settings-roles.html:65
 msgid "Content creation"
-msgstr ""
+msgstr "Креирање садржаја"
 
 #: scripts/apps/users/views/settings-roles.html:75
 msgid "Content editing"
-msgstr ""
+msgstr "Уређивање садржаја"
 
 #: scripts/apps/desks/views/desk-config-modal.html:324
 msgid "Content expiry:"
-msgstr ""
+msgstr "Истек садржаја:"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:103
 msgid "Content fields"
@@ -4630,7 +4630,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:292
 msgid "Create new Stage"
-msgstr ""
+msgstr "Креирај нову фазу"
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:3
 msgid "Create new Workspace"
@@ -4719,7 +4719,7 @@ msgstr ""
 
 #: scripts/apps/users/views/list.html:3
 msgid "Create user"
-msgstr ""
+msgstr "Креирај корисника"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:129
 #: ../superdesk-planning/client/components/AuditInformation/index.tsx:110
@@ -5117,7 +5117,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:106
 #: scripts/apps/workspace/content/constants.ts:21
 msgid "Dateline"
-msgstr ""
+msgstr "Датумска линија"
 
 #: scripts/apps/authoring-react/fields/dateline/index.tsx:27
 msgid "Dateline (authoring-react)"
@@ -5174,23 +5174,23 @@ msgstr "Подразумевано"
 
 #: scripts/apps/users/views/user-preferences.html:219
 msgid "Default Agenda"
-msgstr ""
+msgstr "Подразумевана агенда"
 
 #: scripts/apps/users/views/user-preferences.html:206
 msgid "Default Calendar"
-msgstr ""
+msgstr "Подразумевани календар"
 
 #: scripts/apps/desks/views/desk-config-modal.html:176
 msgid "Default Content Profile"
-msgstr ""
+msgstr "Подразумевани профил садржаја"
 
 #: scripts/apps/desks/views/desk-config-modal.html:153
 msgid "Default Content Template"
-msgstr ""
+msgstr "Подразумевани шаблон садржаја"
 
 #: scripts/apps/users/views/edit-form.html:220
 msgid "Default Desk"
-msgstr ""
+msgstr "Подразумевани деск"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:147
 msgid "Default Duration"
@@ -5198,7 +5198,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:232
 msgid "Default Events & Planning Filter"
-msgstr ""
+msgstr "Подразумевани филтер догађаја и планирања"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:72
 msgid "Default Template"
@@ -5216,12 +5216,12 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:54
 msgid "Default author roles"
-msgstr ""
+msgstr "Подразумеване улоге аутора"
 
 #: scripts/apps/users/views/edit-form.html:18
 #: scripts/apps/users/views/edit-form.html:215
 msgid "Default desk"
-msgstr ""
+msgstr "Подразумевани деск"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
@@ -5237,7 +5237,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:131
 msgid "Default monitoring view"
-msgstr ""
+msgstr "Подразумевани приказ мониторинга"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/manage-schedule.js:128
 #: scripts/extensions/availability-manager/dist/src/settings/manage-schedule.js:128
@@ -5502,7 +5502,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:80
 #: scripts/apps/workspace/content/constants.ts:23
 msgid "Desk"
-msgstr ""
+msgstr "Деск"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:231
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:383
@@ -5517,7 +5517,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
-msgstr ""
+msgstr "Имејл деска"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
@@ -5552,35 +5552,35 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:93
 #: scripts/apps/desks/views/settings.html:82
 msgid "Desk Type"
-msgstr ""
+msgstr "Тип деска"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:63
 msgid "Desk deleted."
-msgstr ""
+msgstr "Деск обрисан."
 
 #: scripts/apps/desks/views/desk-config-modal.html:32
 msgid "Desk description"
-msgstr ""
+msgstr "Опис деска"
 
 #: scripts/apps/desks/views/desk-config-modal.html:70
 msgid "Desk email address."
-msgstr ""
+msgstr "Имејл адреса деска."
 
 #: scripts/apps/desks/services/DesksFactory.ts:425
 msgid "Desk has been modified elsewhere. Please reload the desks."
-msgstr ""
+msgstr "Деск је измењен на другом месту. Поново учитајте дескове."
 
 #: scripts/apps/desks/views/desk-config-modal.html:114
 msgid "Desk language"
-msgstr ""
+msgstr "Језик деска"
 
 #: scripts/apps/desks/views/settings.html:4
 msgid "Desk management"
-msgstr ""
+msgstr "Управљање десковима"
 
 #: scripts/apps/desks/views/desk-config-modal.html:16
 msgid "Desk name"
-msgstr ""
+msgstr "Назив деска"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:26
 msgid "Desk status is outdated, please refresh."
@@ -5597,7 +5597,7 @@ msgstr "Шаблон деска"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:65
 msgid "Desk with name {{name}} already exists."
-msgstr ""
+msgstr "Деск са називом {{name}} већ постоји."
 
 #: scripts/apps/templates/views/templates.html:52
 msgid "Desk(s)"
@@ -5735,13 +5735,13 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:76
 msgid "Disable user"
-msgstr ""
+msgstr "Онемогући корисника"
 
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:41
 #: ../superdesk-planning/client/utils/planning.tsx:1368
 #: scripts/apps/users/controllers/UserListController.ts:159
 msgid "Disabled"
-msgstr ""
+msgstr "Онемогућено"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:216
 msgid "Disabled Agendas"
@@ -5759,7 +5759,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:197
 msgid "Disallow sending items to this desk"
-msgstr ""
+msgstr "Забрани слање ставки на овај деск"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:76
 msgid "Disallowed characters"
@@ -5852,7 +5852,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:360
 msgid "Do you want to reset the password for user {{user.full_name}} ?"
-msgstr ""
+msgstr "Да ли желите да ресетујете лозинку за корисника {{user.full_name}}?"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:128
 msgid "Do you want to spike  item(s) ?"
@@ -6010,7 +6010,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:29
 msgid "Drop it here"
-msgstr ""
+msgstr "Пустите овде"
 
 #: scripts/apps/relations/views/related-items.html:11
 #: scripts/core/ui/components/drop-zone-3.tsx:128
@@ -6300,7 +6300,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 msgid "Edit \"{{name}}\" Desk"
-msgstr ""
+msgstr "Уреди деск \"{{name}}\""
 
 #: scripts/apps/products/views/products-config-modal.html:4
 msgid "Edit \"{{name}}\" Product"
@@ -6391,7 +6391,7 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:29
 msgid "Edit Role"
-msgstr ""
+msgstr "Уреди улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:67
 msgid "Edit Rule"
@@ -6473,7 +6473,7 @@ msgstr "Уреди исечке"
 
 #: scripts/apps/desks/views/settings.html:34
 msgid "Edit desk"
-msgstr ""
+msgstr "Уреди деск"
 
 #: scripts/apps/dictionaries/views/settings.html:54
 msgid "Edit dictionary"
@@ -6545,7 +6545,7 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:17
 msgid "Edit role"
-msgstr ""
+msgstr "Уреди улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:19
 msgid "Edit rule set"
@@ -6677,7 +6677,7 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:108
 msgid "Enable user"
-msgstr ""
+msgstr "Омогући корисника"
 
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:31
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/availability-settings.js:129
@@ -6752,7 +6752,7 @@ msgstr "Унесите нову лозинку"
 
 #: scripts/apps/users/views/change-avatar.html:44
 msgid "Enter web url"
-msgstr ""
+msgstr "Унесите веб URL"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/new-item.js:36
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:36
@@ -6819,7 +6819,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/SessionsDeleteCommand.ts:15
 msgid "Error. Sessions could not be cleared."
-msgstr ""
+msgstr "Грешка. Сесије нису могле бити очишћене."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:315
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:270
@@ -6847,11 +6847,11 @@ msgstr ""
 
 #: scripts/apps/users/controllers/UserDeleteCommand.ts:24
 msgid "Error. User Profile cannot be disabled."
-msgstr ""
+msgstr "Грешка. Кориснички профил не може бити онемогућен."
 
 #: scripts/apps/users/controllers/UserEnableCommand.ts:21
 msgid "Error. User Profile cannot be enabled."
-msgstr ""
+msgstr "Грешка. Кориснички профил не може бити омогућен."
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:120
 msgid "Error. Vocabulary not saved."
@@ -6979,7 +6979,7 @@ msgstr ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:272
 msgid "Error: {{error}}"
-msgstr ""
+msgstr "Грешка: {{error}}"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:316
 #: scripts/apps/authoring/authoring/services/LockService.ts:20
@@ -7476,7 +7476,7 @@ msgstr "URL FTP сервера"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:83
 #: scripts/apps/users/views/edit-form.html:295
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:84
 msgid "Facebook Circle"
@@ -7947,7 +7947,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:13
 #: scripts/apps/users/views/user-preferences.html:27
 msgid "Feature preview"
-msgstr ""
+msgstr "Преглед нових функција"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeatureLabel.tsx:9
 #: ../superdesk-planning/client/components/fields/editor/Featured.tsx:15
@@ -8267,7 +8267,7 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:39
 msgid "Find your colleagues"
-msgstr ""
+msgstr "Пронађите своје колеге"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:67
 msgid "Fire Brick"
@@ -8461,7 +8461,7 @@ msgstr ""
 
 #: scripts/apps/users/views/list.html:33
 msgid "Full name"
-msgstr ""
+msgstr "Пуно име"
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Full width mode"
@@ -8594,11 +8594,11 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:249
 #: scripts/apps/desks/views/desk-config-modal.html:350
 msgid "Global Read"
-msgstr ""
+msgstr "Глобално читање"
 
 #: scripts/apps/desks/views/desk-config-modal.html:310
 msgid "Global Read:"
-msgstr ""
+msgstr "Глобално читање:"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:28
 msgid "Global Saved Reports"
@@ -8841,7 +8841,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:238
 msgid "Help us translate Superdesk"
-msgstr ""
+msgstr "Помозите нам да преведемо Superdesk"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:115
 msgid ""
@@ -8984,11 +8984,11 @@ msgstr "Сати"
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:46
 msgid "I'm sorry but a role with that name already exists."
-msgstr ""
+msgstr "Извините, али улога са тим називом већ постоји."
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:50
 msgid "I'm sorry but there was an error when saving the role."
-msgstr ""
+msgstr "Извините, али дошло је до грешке приликом чувања улоге."
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:188
 msgid "I'm sorry but there was an error when saving the routing scheme."
@@ -9056,7 +9056,7 @@ msgstr "Ако није подешено, претпоставља се врем
 
 #: scripts/apps/desks/views/desk-config-modal.html:84
 msgid "If selected, content published from this desk will be not be expired"
-msgstr ""
+msgstr "Ако је изабрано, садржај објављен са овог деска неће истицати"
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:153
 msgid "If you paste an embed code, it will be used \"as is\"."
@@ -9069,7 +9069,7 @@ msgid ""
 "name and the role.\n"
 "                        The roles are managed in <b>Author roles</b> "
 "controlled vocabulary in the Metadata section."
-msgstr ""
+msgstr "Ако изаберете подразумевану улогу за креирање или уређивање садржаја,\n                        Superdesk ће унапред попунити поље Аутори корисниковим именом и улогом.\n                        Улоге се управљају у контролисаном вокабулару <b>Улоге аутора</b> у одељку Метаподаци."
 
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:137
 #: ../superdesk-planning/client/components/FulFilAssignmentModal/index.tsx:104
@@ -9140,11 +9140,11 @@ msgstr ""
 
 #: scripts/apps/users/import/views/import-user.html:44
 msgid "Import"
-msgstr ""
+msgstr "Увоз"
 
 #: scripts/apps/users/import/import.ts:50
 msgid "Import user"
-msgstr ""
+msgstr "Увези корисника"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/field-components/time-header-common.tsx:35
 msgid "In 1 hr"
@@ -9249,17 +9249,17 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:386
 msgid "Incoming Rule"
-msgstr ""
+msgstr "Долазно правило"
 
 #: scripts/apps/desks/views/desk-config-modal.html:334
 msgid "Incoming Rule:"
-msgstr ""
+msgstr "Долазно правило:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:307
 #: scripts/apps/desks/views/desk-config-modal.html:362
 #: scripts/apps/workspace/content/constants.ts:57
 msgid "Incoming Stage"
-msgstr ""
+msgstr "Долазна фаза"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:17
 msgid "Indefinite Usage"
@@ -9404,7 +9404,7 @@ msgstr "Уметни"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:116
 #: scripts/apps/users/views/edit-form.html:312
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:87
 msgid "Installed Version:"
@@ -9464,7 +9464,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:258
 msgid "Invalid format. Only Alphanumerics are allowed."
-msgstr ""
+msgstr "Неисправан формат. Дозвољени су само алфанумерички знакови."
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:315
 msgid "Invalid time"
@@ -9755,13 +9755,13 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:186
 msgid "Jabber Identifier (JID)"
-msgstr ""
+msgstr "Jabber идентификатор (JID)"
 
 #: scripts/apps/contacts/constants.ts:73
 #: scripts/apps/contacts/views/search-panel.html:39
 #: scripts/apps/users/views/edit-form.html:277
 msgid "Job Title"
-msgstr ""
+msgstr "Назив посла"
 
 #: ../superdesk-planning/client/components/Main/JumpToDropdown.tsx:61
 #: ../superdesk-planning/client/components/Main/JumpToDropdown.tsx:67
@@ -9858,7 +9858,7 @@ msgstr ""
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/GetFields.js:14
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:15
 msgid "Language"
-msgstr ""
+msgstr "Језик"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:31
 msgid "Language code"
@@ -10140,7 +10140,7 @@ msgstr ""
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:28
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:30
 msgid "List View"
-msgstr ""
+msgstr "Приказ листе"
 
 #: scripts/apps/monitoring/directives/utils.ts:88
 msgid "List view"
@@ -10188,15 +10188,15 @@ msgstr "Учитавање..."
 
 #: scripts/apps/desks/views/desk-config-modal.html:354
 msgid "Local Read Only"
-msgstr ""
+msgstr "Само локално читање"
 
 #: scripts/apps/desks/views/desk-config-modal.html:315
 msgid "Local Read Only:"
-msgstr ""
+msgstr "Само локално читање:"
 
 #: scripts/apps/desks/views/desk-config-modal.html:252
 msgid "Local Readonly"
-msgstr ""
+msgstr "Само локално читање"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:260
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:56
@@ -10315,12 +10315,12 @@ msgstr ""
 #: scripts/apps/desks/views/actionpicker.html:26
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:59
 msgid "Macro"
-msgstr ""
+msgstr "Макро"
 
 #: scripts/apps/authoring/macros/macros.ts:399
 #: scripts/apps/desks/views/desk-config-modal.html:465
 msgid "Macros"
-msgstr ""
+msgstr "Макрои"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:37
 msgid "Macros widget"
@@ -10344,7 +10344,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:53
 msgid "Make sure you're looking the best"
-msgstr ""
+msgstr "Уверите се да изгледате најбоље"
 
 #: scripts/apps/production-api-keys/utils.tsx:45
 msgid ""
@@ -10457,11 +10457,11 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:145
 msgid "Manage user roles"
-msgstr ""
+msgstr "Управљај корисничким улогама"
 
 #: scripts/apps/users/config.ts:135
 msgid "Manage users"
-msgstr ""
+msgstr "Управљај корисницима"
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:5
 msgid "Manage:"
@@ -10679,7 +10679,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:61
 msgid "Member since"
-msgstr ""
+msgstr "Члан од"
 
 #: scripts/core/editor3/highlightsConfig.ts:92
 msgid "Merge paragraphs"
@@ -10915,11 +10915,11 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:397
 msgid "Moved onto stage Rule"
-msgstr ""
+msgstr "Премештено у фазу - правило"
 
 #: scripts/apps/desks/views/desk-config-modal.html:338
 msgid "Moved onto stage Rule:"
-msgstr ""
+msgstr "Премештено у фазу - правило:"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:154
 msgid "Moved to a working stage by this user"
@@ -11019,7 +11019,7 @@ msgstr ""
 
 #: scripts/apps/users/index.ts:89
 msgid "My Profile"
-msgstr ""
+msgstr "Мој профил"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:12
 msgid "My Saved Reports"
@@ -11176,7 +11176,7 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:30
 msgid "New Role"
-msgstr ""
+msgstr "Нова улога"
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.tsx:310
 msgid "New annotation"
@@ -11184,7 +11184,7 @@ msgstr "Нова анотација"
 
 #: scripts/apps/desks/views/desk-config-modal.html:237
 msgid "New stage"
-msgstr ""
+msgstr "Нова фаза"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:6
 msgid "New subscription"
@@ -11227,7 +11227,7 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:158
 msgid "Next user"
-msgstr ""
+msgstr "Следећи корисник"
 
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:7
@@ -11327,7 +11327,7 @@ msgstr ""
 #: scripts/apps/desks/views/mark_desks_dropdown_directive.html:8
 #: scripts/apps/search/components/actions-menu/Item.tsx:168
 msgid "No available desks"
-msgstr ""
+msgstr "Нема доступних дескова"
 
 #: scripts/apps/desks/directives/MarkDesksDropdown.ts:24
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:113
@@ -11335,7 +11335,7 @@ msgstr ""
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:26
 #: scripts/apps/search/components/actions-menu/Item.tsx:167
 msgid "No available highlights"
-msgstr ""
+msgstr "Нема доступних истицања"
 
 #: scripts/apps/archive/views/package_item_labels_dropdown_directive.html:13
 msgid "No available labels"
@@ -11352,7 +11352,7 @@ msgstr ""
 #: scripts/apps/desks/directives/MarkDesksDropdown.ts:26
 #: scripts/apps/search/components/actions-menu/Item.tsx:169
 msgid "No available translations"
-msgstr ""
+msgstr "Нема доступних превода"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/TemplatesListView.tsx:38
 msgid "No calendar"
@@ -11397,7 +11397,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:222
 msgid "No desk selected"
-msgstr ""
+msgstr "Није изабран деск"
 
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/send-to-publish-widget.tsx:174
 #: scripts/core/interactive-article-actions-panel/actions/send-to-tab.tsx:40
@@ -11444,7 +11444,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:15
 msgid "No image"
-msgstr ""
+msgstr "Нема слике"
 
 #: scripts/core/ui/components/generic-form/input-types/select_single_value.tsx:88
 #: scripts/extensions/broadcasting/dist/src/authoring-fields/subitems/editor.js:34
@@ -11483,7 +11483,7 @@ msgstr "Нема ставки за додавање!"
 
 #: scripts/apps/desks/views/task-status-items.html:3
 msgid "No items with this status"
-msgstr ""
+msgstr "Нема ставки са овим статусом"
 
 #: scripts/core/ui/components/virtual-lists/select.tsx:149
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:146
@@ -11526,7 +11526,7 @@ msgstr ""
 msgid ""
 "No preferred categories selected. Should you choose to proceed with your "
 "choice. A default set of categories will be selected for you."
-msgstr ""
+msgstr "Нису изабране омиљене категорије. Ако одлучите да наставите са својим избором, биће вам изабран подразумевани скуп категорија."
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EditorFieldEventRelatedItems.tsx:85
 msgid "No related articles yet"
@@ -11559,7 +11559,7 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:22
 msgid "No roles created yet."
-msgstr ""
+msgstr "Још нису креиране улоге."
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:63
 msgid "No rules defined in a set."
@@ -11641,7 +11641,7 @@ msgstr ""
 
 #: scripts/apps/users/views/list.html:28
 msgid "No user roles defined!"
-msgstr ""
+msgstr "Нису дефинисане корисничке улоге!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:87
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:136
@@ -11701,7 +11701,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/settings.html:87
 msgid "Not Expired"
-msgstr ""
+msgstr "Није истекло"
 
 #: ../superdesk-planning/client/components/fields/editor/NotForPublication.tsx:15
 #: ../superdesk-planning/client/constants/tooltips.ts:31
@@ -11838,7 +11838,7 @@ msgstr ""
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:71
 #: scripts/apps/users/activity-widget/configuration.html:7
 msgid "Number of items"
-msgstr ""
+msgstr "Број ставки"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
 msgid "OEM"
@@ -11847,7 +11847,7 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:312
 #: scripts/apps/desks/views/desk-config-modal.html:317
 msgid "OFF"
-msgstr ""
+msgstr "ИСКЉУЧЕНО"
 
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.tsx:106
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:106
@@ -11863,7 +11863,7 @@ msgstr "У реду"
 #: scripts/apps/desks/views/desk-config-modal.html:311
 #: scripts/apps/desks/views/desk-config-modal.html:316
 msgid "ON"
-msgstr ""
+msgstr "УКЉУЧЕНО"
 
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:87
 msgid "OR"
@@ -11903,7 +11903,7 @@ msgstr ""
 
 #: scripts/apps/users/components/UserAvatar.tsx:100
 msgid "Offline"
-msgstr ""
+msgstr "Ван мреже"
 
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:127
 #: scripts/apps/archive/controllers/file-upload-error-modal.tsx:38
@@ -11950,7 +11950,7 @@ msgstr[2] ""
 #: scripts/apps/users/components/UserAvatar.tsx:99
 #: scripts/apps/users/controllers/UserListController.ts:156
 msgid "Online"
-msgstr ""
+msgstr "На мрежи"
 
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:86
 msgid "Only 1 image is allowed in this field"
@@ -12264,11 +12264,11 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:408
 msgid "Outgoing Rule"
-msgstr ""
+msgstr "Одлазно правило"
 
 #: scripts/apps/desks/views/desk-config-modal.html:342
 msgid "Outgoing Rule:"
-msgstr ""
+msgstr "Одлазно правило:"
 
 #: scripts/apps/publish/views/file-config.html:2
 #: scripts/apps/publish/views/file-config.html:4
@@ -12294,7 +12294,7 @@ msgstr ""
 #: scripts/apps/master-desk/MasterDesk.tsx:36
 #: scripts/apps/users/controllers/UserEditController.ts:14
 msgid "Overview"
-msgstr ""
+msgstr "Преглед"
 
 #: scripts/apps/templates/views/templates.html:48
 msgid "Owner"
@@ -12499,7 +12499,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/UserListController.ts:157
 msgid "Pending"
-msgstr ""
+msgstr "На чекању"
 
 #: scripts/apps/desks/views/desk-config-modal.html:426
 #: scripts/apps/desks/views/settings.html:71
@@ -12507,7 +12507,7 @@ msgstr ""
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:14
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:21
 msgid "People"
-msgstr ""
+msgstr "Људи"
 
 #: scripts/apps/products/views/products-config-modal.html:70
 msgid "Permitting"
@@ -12560,7 +12560,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/UserEditController.ts:23
 msgid "Personal preferences"
-msgstr ""
+msgstr "Личне поставке"
 
 #: scripts/apps/monitoring/config.ts:64
 #: scripts/core/interactive-article-actions-panel/subcomponents/destination-select.tsx:28
@@ -12686,7 +12686,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:19
 #: scripts/apps/users/views/user-preferences.html:203
 msgid "Planning"
-msgstr ""
+msgstr "Планирање"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:61
 msgid "Planning Cancelled"
@@ -12815,15 +12815,15 @@ msgstr "Проверите да ли је следећи ИД исти као н
 
 #: scripts/apps/users/config.ts:95
 msgid "Please confirm that you want to delete all the sessions for this user."
-msgstr ""
+msgstr "Потврдите да желите да обришете све сесије за овог корисника."
 
 #: scripts/apps/users/config.ts:78
 msgid "Please confirm that you want to disable a user."
-msgstr ""
+msgstr "Потврдите да желите да онемогућите корисника."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:57
 msgid "Please confirm you want to delete desk."
-msgstr ""
+msgstr "Потврдите да желите да обришете деск."
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.ts:89
 msgid "Please confirm you want to delete dictionary."
@@ -12844,7 +12844,7 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:94
 #: scripts/apps/users/views/edit-form.html:340
 msgid "Please provide a valid twitter account"
-msgstr ""
+msgstr "Унесите исправан Twitter налог"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:129
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:130
@@ -12991,7 +12991,7 @@ msgstr "Преферисане категорије"
 
 #: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Preferred values for vocabularies"
-msgstr ""
+msgstr "Омиљене вредности за вокабуларе"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:374
 msgid "Prefill the field with text from:"
@@ -13013,7 +13013,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:86
 msgid "Preserve Published Content"
-msgstr ""
+msgstr "Сачувај објављен садржај"
 
 #: ../superdesk-planning/client/constants/events.ts:171
 #: ../superdesk-planning/client/constants/planning.ts:148
@@ -13078,7 +13078,7 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:157
 msgid "Previous user"
-msgstr ""
+msgstr "Претходни корисник"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:157
 #: scripts/apps/authoring-react/preview-article-modal.tsx:24
@@ -13141,16 +13141,16 @@ msgstr "Приватне сачуване претраге"
 
 #: scripts/apps/users/controllers/UserEditController.ts:32
 msgid "Privileges"
-msgstr ""
+msgstr "Привилегије"
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.ts:43
 msgid "Privileges not found."
-msgstr ""
+msgstr "Привилегије нису пронађене."
 
 #: scripts/apps/users/directives/RolesPrivilegesDirective.ts:34
 #: scripts/apps/users/directives/UserPrivilegesDirective.ts:77
 msgid "Privileges updated."
-msgstr ""
+msgstr "Привилегије ажуриране."
 
 #: scripts/apps/packaging/views/sd-package-item-preview.html:37
 #: scripts/apps/packaging/views/sd-package-item-preview.html:8
@@ -13258,7 +13258,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:47
 msgid "Provided image URL is not valid."
-msgstr ""
+msgstr "Унет URL слике није исправан."
 
 #: scripts/apps/search/constants.ts:18
 #: scripts/apps/search/views/search-parameters.html:161
@@ -13384,7 +13384,7 @@ msgstr "Објављено"
 
 #: scripts/apps/desks/views/settings.html:86
 msgid "Published Content"
-msgstr ""
+msgstr "Објављен садржај"
 
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:383
 msgid "Published Content for {{group}}: {{data}}"
@@ -13577,11 +13577,11 @@ msgstr ""
 
 #: scripts/apps/users/config.ts:150
 msgid "Read user roles"
-msgstr ""
+msgstr "Читај корисничке улоге"
 
 #: scripts/apps/users/config.ts:140
 msgid "Read users"
-msgstr ""
+msgstr "Читај кориснике"
 
 #: scripts/apps/authoring-react/fields/common-field-configuration.tsx:29
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/read-only-label.tsx:7
@@ -13647,7 +13647,7 @@ msgstr "Недавни шаблони"
 
 #: scripts/apps/users/views/list.html:42
 msgid "Recently added"
-msgstr ""
+msgstr "Недавно додато"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:62
 #: scripts/apps/publish/views/email-config.html:2
@@ -13986,7 +13986,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/settings.html:53
 msgid "Remove desk"
-msgstr ""
+msgstr "Уклони деск"
 
 #: scripts/apps/dictionaries/views/settings.html:55
 msgid "Remove dictionary"
@@ -14049,7 +14049,7 @@ msgstr ""
 
 #: scripts/apps/users/views/settings-roles.html:18
 msgid "Remove role"
-msgstr ""
+msgstr "Уклони улогу"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:20
 msgid "Remove rule set"
@@ -14377,19 +14377,19 @@ msgstr ""
 #: scripts/apps/users/views/list.html:35
 #: scripts/apps/users/views/user-privileges.html:19
 msgid "Role"
-msgstr ""
+msgstr "Улога"
 
 #: scripts/apps/users/views/settings-roles.html:45
 msgid "Role Description"
-msgstr ""
+msgstr "Опис улоге"
 
 #: scripts/apps/users/views/settings-roles.html:38
 msgid "Role Name"
-msgstr ""
+msgstr "Назив улоге"
 
 #: scripts/apps/users/views/settings.html:9
 msgid "Roles"
-msgstr ""
+msgstr "Улоге"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Roles Management"
@@ -14397,7 +14397,7 @@ msgstr "Управљање улогама"
 
 #: scripts/apps/users/views/settings.html:12
 msgid "Roles privileges"
-msgstr ""
+msgstr "Привилегије улога"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:168
 msgid "Rotate Left"
@@ -14682,7 +14682,7 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:214
 #: scripts/apps/desks/views/desk-config-modal.html:451
 msgid "Save & Continue"
-msgstr ""
+msgstr "Сачувај и настави"
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.tsx:137
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:372
@@ -14847,7 +14847,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:401
 msgid "Save password"
-msgstr ""
+msgstr "Сачувај лозинку"
 
 #: scripts/apps/search/views/save-search.html:23
 msgid "Save search"
@@ -14864,7 +14864,7 @@ msgstr ""
 #: scripts/apps/search/views/search-panel.html:9
 #: scripts/apps/users/directives/UserEditDirective.ts:240
 msgid "Saved"
-msgstr ""
+msgstr "Сачувано"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:348
 msgid "Saved Featured Stories record"
@@ -15295,14 +15295,14 @@ msgid ""
 "ingest. If you don't see any, create one\n"
 "                                   <a href=\"#/settings/content-"
 "profiles\">here</a>"
-msgstr ""
+msgstr "Изаберите подразумевани профил садржаја који се користи за чланке преузете из доласка. Ако ниједан не видите, креирајте га\n                                   <a href=\"#/settings/content-profiles\">овде</a>"
 
 #: scripts/apps/desks/views/desk-config-modal.html:156
 msgid ""
 "Select a default template for new articles. If you don't see any, first make "
 "sure that there is at least one content profile. Each time a profile is "
 "created, Superdesk creates a template with the same name."
-msgstr ""
+msgstr "Изаберите подразумевани шаблон за нове чланке. Ако ниједан не видите, прво се уверите да постоји барем један профил садржаја. Сваки пут када се креира профил, Superdesk креира шаблон са истим називом."
 
 #: scripts/core/ui/components/generic-form/input-types/desk_single_value.tsx:40
 msgid "Select a desk"
@@ -15344,7 +15344,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:149
 msgid "Select all categories"
-msgstr ""
+msgstr "Изабери све категорије"
 
 #: ../superdesk-planning/client/components/FulFilAssignmentModal/index.tsx:76
 msgid "Select an Assignment"
@@ -15377,7 +15377,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:161
 msgid "Select default categories only"
-msgstr ""
+msgstr "Изабери само подразумеване категорије"
 
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:43
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:224
@@ -15568,7 +15568,7 @@ msgstr ""
 
 #: scripts/apps/users/components/EmailNotificationPreferences.tsx:24
 msgid "Send {{name}} notifications"
-msgstr ""
+msgstr "Шаљи {{name}} обавештења"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Sending"
@@ -15621,7 +15621,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/SessionsDeleteCommand.ts:13
 msgid "Sessions cleared"
-msgstr ""
+msgstr "Сесије очишћене"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetEditor.js:192
 #: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:136
@@ -15656,7 +15656,7 @@ msgstr "Постављено и потом скривено"
 
 #: scripts/apps/users/views/settings-roles.html:50
 msgid "Set as default"
-msgstr ""
+msgstr "Постави као подразумевано"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:34
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:34
@@ -15897,7 +15897,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:17
 msgid "Shows your initials instead"
-msgstr ""
+msgstr "Уместо тога приказује ваше иницијале"
 
 #: scripts/apps/authoring-react/field-adapters/sign_off.tsx:118
 #: scripts/apps/workspace/content/constants.ts:40
@@ -15916,7 +15916,7 @@ msgstr "Одјави се"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:159
 #: scripts/apps/users/views/edit-form.html:254
 msgid "Sign-Off"
-msgstr ""
+msgstr "Потпис"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:364
 #: scripts/apps/search/views/search-parameters.html:22
@@ -16008,7 +16008,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:59
 msgid "Slack Channel Name"
-msgstr ""
+msgstr "Назив Slack канала"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:176
 msgid "Slideshow"
@@ -16141,7 +16141,7 @@ msgstr "Извините, дати назив радног простора се
 
 #: scripts/apps/users/views/settings-roles.html:40
 msgid "Sorry, this role name already exists."
-msgstr ""
+msgstr "Извините, овај назив улоге већ постоји."
 
 #: scripts/core/auth/login-modal.html:38
 msgid "Sorry, user not found."
@@ -16225,7 +16225,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:44
 msgid "Source for User Created Articles"
-msgstr ""
+msgstr "Извор за чланке које су креирали корисници"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:9
 msgid "Source stats"
@@ -16339,27 +16339,27 @@ msgstr "Подели пасус"
 #: scripts/apps/workspace/content/constants.ts:45
 #: scripts/core/interactive-article-actions-panel/subcomponents/destination-select.tsx:87
 msgid "Stage"
-msgstr ""
+msgstr "Фаза"
 
 #: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Stage Details"
-msgstr ""
+msgstr "Детаљи фазе"
 
 #: scripts/apps/desks/views/desk-config-modal.html:369
 msgid "Stage description"
-msgstr ""
+msgstr "Опис фазе"
 
 #: scripts/apps/desks/views/desk-config-modal.html:320
 msgid "Stage description:"
-msgstr ""
+msgstr "Опис фазе:"
 
 #: scripts/apps/desks/directives/DeskeditStages.ts:190
 msgid "Stage has been modified elsewhere. Please reload the desks"
-msgstr ""
+msgstr "Фаза је измењена на другом месту. Поново учитајте дескове"
 
 #: scripts/apps/desks/views/desk-config-modal.html:289
 msgid "Stage with name"
-msgstr ""
+msgstr "Фаза са називом"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:624
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:157
@@ -16922,7 +16922,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:7
 msgid "Take a picture"
-msgstr ""
+msgstr "Сними слику"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:132
 msgid "Take created by"
@@ -17341,12 +17341,12 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:33
 msgid "The minimum image resolution is 200x200 pixels."
-msgstr ""
+msgstr "Минимална резолуција слике је 200x200 пиксела."
 
 #: scripts/apps/desks/views/desk-config-modal.html:61
 msgid ""
 "The name of a Slack channel associated with this desk, the # is not required"
-msgstr ""
+msgstr "Назив Slack канала повезаног са овим деском, # није потребан"
 
 #: scripts/api/article-send.tsx:113
 msgid ""
@@ -17365,7 +17365,7 @@ msgstr "Лозинка је промењена."
 
 #: scripts/apps/users/directives/ResetPasswordDirective.ts:18
 msgid "The password has been reset."
-msgstr ""
+msgstr "Лозинка је ресетована."
 
 #: scripts/apps/publish/views/email-config.html:35
 msgid "The rendition to attach to the email"
@@ -17444,7 +17444,7 @@ msgstr ""
 
 #: scripts/apps/users/views/user-preferences.html:257
 msgid "Themes"
-msgstr ""
+msgstr "Теме"
 
 #: scripts/apps/contacts/components/ItemList.tsx:180
 #: scripts/apps/master-desk/components/ListItemsComponent.tsx:45
@@ -17608,7 +17608,7 @@ msgstr ""
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:51
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:63
 msgid "There was a problem with your upload"
-msgstr ""
+msgstr "Дошло је до проблема са вашим отпремањем"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:42
 msgid "There was a problem, Planning item not spiked!"
@@ -17620,11 +17620,11 @@ msgstr ""
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:61
 msgid "There was a problem, desk not created/updated."
-msgstr ""
+msgstr "Дошло је до проблема, деск није креиран/ажуриран."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:106
 msgid "There was a problem, desk not saved. Refresh Desks."
-msgstr ""
+msgstr "Дошло је до проблема, деск није сачуван. Освежите дескове."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:50
 msgid "There was a problem, dictionary not created/updated."
@@ -17637,15 +17637,15 @@ msgstr ""
 
 #: scripts/apps/desks/directives/DeskeditPeople.ts:66
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr ""
+msgstr "Дошло је до проблема, чланови нису сачувани. Освежите дескове."
 
 #: scripts/apps/desks/views/desk-config-modal.html:291
 msgid "There was a problem, stage not created/updated."
-msgstr ""
+msgstr "Дошло је до проблема, фаза није креирана/ажурирана."
 
 #: scripts/apps/desks/directives/DeskeditStages.ts:241
 msgid "There was a problem, stage was not deleted."
-msgstr ""
+msgstr "Дошло је до проблема, фаза није обрисана."
 
 #: scripts/apps/search/components/ErrorBox.tsx:7
 msgid "There was an error archiving this item"
@@ -17661,7 +17661,7 @@ msgstr ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:268
 msgid "There was an error when saving the user account."
-msgstr ""
+msgstr "Дошло је до грешке приликом чувања корисничког налога."
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/summary/summary.js:22
 #: scripts/extensions/ai-widget/dist/src/summary/summary.js:22
@@ -17708,7 +17708,7 @@ msgstr ""
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:68
 msgid "There was an error. Role cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Улога не може бити обрисана."
 
 #: scripts/apps/ingest/directives/IngestRoutingContent.ts:55
 msgid "There was an error. Routing scheme cannot be deleted."
@@ -17821,7 +17821,7 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:85
 #: scripts/apps/users/views/edit-form.html:97
 msgid "This field is required."
-msgstr ""
+msgstr "Ово поље је обавезно."
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:92
 msgid ""
@@ -18419,7 +18419,7 @@ msgstr "Искључи преглед нових функција"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:198
 #: scripts/apps/users/views/edit-form.html:329
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:199
 msgid "Twitter Circle"
@@ -18600,7 +18600,7 @@ msgstr ""
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:69
 msgid "Unknown Error: There was a problem, desk was not deleted."
-msgstr ""
+msgstr "Непозната грешка: дошло је до проблема, деск није обрисан."
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:73
 msgid "Unknown Type ({{qcode}})"
@@ -19016,7 +19016,7 @@ msgstr ""
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:6
 msgid "Upload from computer"
-msgstr ""
+msgstr "Отпреми са рачунара"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:243
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorThumbnail.js:243
@@ -19139,7 +19139,7 @@ msgstr "Користи безбедност транспортног слоја 
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:8
 msgid "Use a Web URL"
-msgstr ""
+msgstr "Користи веб URL"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:238
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorThumbnail.js:238
@@ -19180,7 +19180,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:52
 #: scripts/apps/users/views/user-privileges.html:18
 msgid "User"
-msgstr ""
+msgstr "Корисник"
 
 #: ../superdesk-analytics/client/user_activity_report/index.js:46
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:340
@@ -19199,43 +19199,43 @@ msgstr "Управљање корисницима"
 
 #: scripts/apps/users/import/views/import-user.html:28
 msgid "User Profile to Import"
-msgstr ""
+msgstr "Кориснички профил за увоз"
 
 #: scripts/apps/users/config.ts:66 scripts/apps/users/views/settings.html:4
 msgid "User Roles"
-msgstr ""
+msgstr "Корисничке улоге"
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.ts:32
 msgid "User not found."
-msgstr ""
+msgstr "Корисник није пронађен."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:163
 msgid "User preferences could not be saved..."
-msgstr ""
+msgstr "Корисничке поставке нису могле бити сачуване..."
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:159
 msgid "User preferences saved"
-msgstr ""
+msgstr "Корисничке поставке сачуване"
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:35
 msgid "User role created."
-msgstr ""
+msgstr "Корисничка улога креирана."
 
 #: scripts/apps/users/directives/UserPrivilegesDirective.ts:55
 msgid "User role not found."
-msgstr ""
+msgstr "Корисничка улога није пронађена."
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:37
 msgid "User role updated."
-msgstr ""
+msgstr "Корисничка улога ажурирана."
 
 #: scripts/apps/users/controllers/UserResolver.ts:12
 msgid "User was not found, sorry."
-msgstr ""
+msgstr "Корисник није пронађен, извините."
 
 #: scripts/apps/users/directives/UserEditDirective.ts:266
 msgid "User was not found. The account might have been deleted."
-msgstr ""
+msgstr "Корисник није пронађен. Налог је можда обрисан."
 
 #: ../superdesk-analytics/client/user_activity_report/views/item-timeline-tooltip.html:2
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:102
@@ -19257,15 +19257,15 @@ msgstr "Корисничко име"
 #: scripts/apps/production-api-keys/config.ts:25
 #: scripts/apps/users/views/list.html:2
 msgid "Users"
-msgstr ""
+msgstr "Корисници"
 
 #: scripts/apps/users/config.ts:56
 msgid "Users Profile"
-msgstr ""
+msgstr "Кориснички профил"
 
 #: scripts/apps/users/views/edit.html:9
 msgid "Users Profile:"
-msgstr ""
+msgstr "Кориснички профил:"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "Users archive view format"
@@ -19406,11 +19406,11 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:14
 #: scripts/apps/users/views/user-preferences.html:43
 msgid "View formats"
-msgstr ""
+msgstr "Формати приказа"
 
 #: scripts/apps/users/views/list.html:67
 msgid "View full profile"
-msgstr ""
+msgstr "Прикажи цео профил"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:516
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:106
@@ -19491,7 +19491,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:20
 #: scripts/apps/users/views/user-preferences.html:248
 msgid "Vocabulary values"
-msgstr ""
+msgstr "Вредности вокабулара"
 
 #: scripts/apps/vocabularies/controllers/VocabularyConfigController.ts:243
 msgid "Vocabulary was deleted."
@@ -19653,7 +19653,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:232
 msgid "Work stages"
-msgstr ""
+msgstr "Радне фазе"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:100
 msgid "Work started"
@@ -19679,7 +19679,7 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:358
 #: scripts/apps/workspace/content/constants.ts:55
 msgid "Working Stage"
-msgstr ""
+msgstr "Радна фаза"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/working-hours-grid-labels.js:16
 #: scripts/extensions/availability-manager/dist/src/settings/working-hours-grid-labels.js:16
@@ -19794,7 +19794,7 @@ msgid ""
 "You can choose the default content view of your desk. Use only if you want "
 "to override individual users' monitoring view preferences. Select \"none\" "
 "if you want to let users decide."
-msgstr ""
+msgstr "Можете изабрати подразумевани приказ садржаја вашег деска. Користите само ако желите да заобиђете поставке приказа мониторинга појединачних корисника. Изаберите \"ништа\" ако желите да оставите корисницима да одлуче."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:148
 msgid ""
@@ -19828,7 +19828,7 @@ msgstr "Имате несачуване измене, желите ли да н�
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:93
 msgid "You have unsaved changes. Do you want to save them now?"
-msgstr ""
+msgstr "Имате несачуване измене. Желите ли сада да их сачувате?"
 
 #: scripts/core/ui/components/ListPage/show-unsaved-changes-modal.tsx:76
 msgid "You have unsaved changes. What would you like to do?"
@@ -19848,11 +19848,11 @@ msgstr ""
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
-msgstr ""
+msgstr "Ваши акредитиви"
 
 #: scripts/apps/users/views/edit-form.html:198
 msgid "Your Slack user name without the leading @"
-msgstr ""
+msgstr "Ваше Slack корисничко име без водећег @"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:500
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:124
@@ -19930,7 +19930,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:36
 msgid "active"
-msgstr ""
+msgstr "активно"
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "added new task {{subject}} of type {{type}}"
@@ -19957,7 +19957,7 @@ msgstr "све"
 #: scripts/apps/desks/views/desk-config-modal.html:289
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "already exists"
-msgstr ""
+msgstr "већ постоји"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:103
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:120
@@ -20075,7 +20075,7 @@ msgstr "категорије"
 
 #: scripts/apps/users/views/edit-form.html:211
 msgid "change password"
-msgstr ""
+msgstr "промени лозинку"
 
 #: scripts/core/menu/notifications/views/notifications.html:42
 msgid ""
@@ -20135,7 +20135,7 @@ msgstr "композитни"
 
 #: scripts/apps/users/views/edit-form.html:390
 msgid "confirm"
-msgstr ""
+msgstr "потврди"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:69
 msgid "confirmed"
@@ -20192,7 +20192,7 @@ msgstr "креирао корисника {{user}}"
 
 #: scripts/apps/users/views/edit-form.html:379
 msgid "current"
-msgstr ""
+msgstr "тренутно"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:86
 msgid "custom blocks"
@@ -20209,20 +20209,20 @@ msgstr "датум"
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:41
 #: scripts/apps/desks/views/content-expiry.html:3
 msgid "day"
-msgstr ""
+msgstr "дан"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:11
 #: scripts/apps/authoring-react/fields/date/config.tsx:83
 #: scripts/apps/desks/views/content-expiry.html:32
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:153
 msgid "days"
-msgstr ""
+msgstr "дана"
 
 #: scripts/apps/users/views/settings-privileges.html:16
 #: scripts/apps/users/views/settings-roles.html:15
 #: scripts/apps/users/views/user-preferences.html:159
 msgid "default"
-msgstr ""
+msgstr "подразумевано"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:21
 msgid "default template"
@@ -20248,7 +20248,7 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:34
 #: scripts/apps/users/views/user-list-item.html:15
 msgid "disabled"
-msgstr ""
+msgstr "онемогућено"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "disabled user {{user}}"
@@ -20276,7 +20276,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:338
 msgid "e.g. @superdeskman"
-msgstr ""
+msgstr "нпр. @superdeskman"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:559
 msgid "e.g. Rhodes, CBD"
@@ -20300,16 +20300,16 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:303
 msgid "e.g. superdeskman from https://www.facebook.com/superdeskman"
-msgstr ""
+msgstr "нпр. superdeskman из https://www.facebook.com/superdeskman"
 
 #: scripts/apps/users/views/edit-form.html:320
 msgid "e.g. superdeskman from https://www.instagram.com/superdeskman"
-msgstr ""
+msgstr "нпр. superdeskman из https://www.instagram.com/superdeskman"
 
 #: scripts/apps/contacts/constants.ts:49
 #: scripts/apps/users/views/edit-form.html:131
 msgid "email"
-msgstr ""
+msgstr "имејл"
 
 #: scripts/apps/archive/views/item-state.html:6
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:225
@@ -20406,7 +20406,7 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:275
 #: scripts/apps/users/views/edit-form.html:82
 msgid "first name"
-msgstr ""
+msgstr "име"
 
 #: ../superdesk-planning/client/utils/tests/index_test.ts:208
 msgid "foo"
@@ -20479,7 +20479,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:73
 msgid "full name"
-msgstr ""
+msgstr "пуно име"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:42
 msgid "genre:"
@@ -20545,7 +20545,7 @@ msgstr ""
 #: scripts/apps/desks/views/content-expiry.html:4
 #: scripts/apps/desks/views/content-expiry.html:40
 msgid "hr"
-msgstr ""
+msgstr "ч"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:162
 msgid "hrs"
@@ -20635,7 +20635,7 @@ msgstr "у_току"
 #: scripts/apps/users/views/edit-form.html:35
 #: scripts/apps/users/views/user-list-item.html:16
 msgid "inactive"
-msgstr ""
+msgstr "неактивно"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "ingested"
@@ -20690,7 +20690,7 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:296
 #: scripts/apps/users/views/edit-form.html:94
 msgid "last name"
-msgstr ""
+msgstr "презиме"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:80
 msgid "last update and last item arrived."
@@ -20786,7 +20786,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:133
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:174
 msgid "min"
-msgstr ""
+msgstr "мин"
 
 #: scripts/extensions/datetimeField/dist/src/config.js:31
 #: scripts/extensions/datetimeField/dist/src/config.js:52
@@ -20821,7 +20821,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:385
 msgid "new"
-msgstr ""
+msgstr "ново"
 
 #: scripts/core/ui/components/content-create-dropdown/content-create-dropdown.tsx:17
 msgid "new item"
@@ -20913,7 +20913,7 @@ msgstr "или"
 
 #: scripts/apps/users/views/change-avatar.html:31
 msgid "or Select from computer"
-msgstr ""
+msgstr "или изаберите са рачунара"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:73
 #: scripts/core/editor3/helpers/highlights.ts:67
@@ -20953,7 +20953,7 @@ msgstr "лозинке морају бити исте"
 
 #: scripts/apps/users/views/user-list-item.html:17
 msgid "pending"
-msgstr ""
+msgstr "на чекању"
 
 #: scripts/apps/contacts/constants.ts:48
 msgid "phone"
@@ -20961,7 +20961,7 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:177
 msgid "phone number"
-msgstr ""
+msgstr "број телефона"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:399
 #: scripts/core/lang/missing-translations-strings.ts:9
@@ -20979,13 +20979,13 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:141
 msgid "please provide a valid email address"
-msgstr ""
+msgstr "унесите исправну имејл адресу"
 
 #: scripts/apps/users/views/edit-form.html:121
 msgid ""
 "please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores "
 "(_), apostrophes (') and periods (.)"
-msgstr ""
+msgstr "користите само слова (a-z), бројеве (0-9), цртице (&mdash;), доње црте (_), апострофе (') и тачке (.)"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:121
 msgid "post"
@@ -21023,7 +21023,7 @@ msgstr "продукција"
 
 #: scripts/apps/users/import/views/import-user.html:31
 msgid "profile"
-msgstr ""
+msgstr "профил"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:233
 msgid "public"
@@ -21096,7 +21096,7 @@ msgstr "обавезно"
 
 #: scripts/apps/users/views/edit-form.html:208
 msgid "reset password"
-msgstr ""
+msgstr "ресетуј лозинку"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "retrying"
@@ -21180,11 +21180,11 @@ msgstr "слаглајни"
 
 #: scripts/apps/users/views/edit-form.html:146
 msgid "sorry, a user with this email already exists"
-msgstr ""
+msgstr "извините, корисник са овим имејлом већ постоји"
 
 #: scripts/apps/users/views/edit-form.html:119
 msgid "sorry, this username is already taken."
-msgstr ""
+msgstr "извините, ово корисничко име је већ заузето."
 
 #: scripts/apps/search/components/MediaInfo.tsx:26
 msgid "source"
@@ -21480,7 +21480,7 @@ msgstr "видео"
 
 #: scripts/apps/desks/views/settings.html:77
 msgid "view all"
-msgstr ""
+msgstr "прикажи све"
 
 #: scripts/core/notification/notification.ts:231
 msgid ""
