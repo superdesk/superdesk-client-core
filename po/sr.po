@@ -29,7 +29,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:240
 msgid "\"{{x}}\" field is required"
-msgstr ""
+msgstr "Поље \"{{x}}\" је обавезно"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:74
 msgid ""
@@ -344,7 +344,7 @@ msgstr "2 године"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
 msgid "200 minimum"
-msgstr ""
+msgstr "200 минимум"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:54
 #: ../superdesk-planning/client/utils/filters.ts:101
@@ -574,7 +574,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:216
 msgid "A content profile with this name already exists."
-msgstr ""
+msgstr "Профил садржаја са овим називом већ постоји."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:274
 msgid "A desk is required"
@@ -608,7 +608,7 @@ msgstr "САЖЕТАК је предугачак"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:66
 msgid "ADD WORD"
-msgstr ""
+msgstr "ДОДАЈ РЕЧ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:35
 msgid "AMP"
@@ -625,7 +625,7 @@ msgstr "И"
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:69
 msgid "ANPA Category"
-msgstr ""
+msgstr "ANPA категорија"
 
 #: ../superdesk-planning/client/components/fields/list/Categories.tsx:19
 msgid "ANPA Category:"
@@ -650,15 +650,15 @@ msgstr ""
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:107
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:88
 msgid "Abbreviation"
-msgstr ""
+msgstr "Скраћеница"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:157
 msgid "Abbreviation already exists. Do you want to overwrite it?"
-msgstr ""
+msgstr "Скраћеница већ постоји. Желите ли да је замените?"
 
 #: scripts/apps/dictionaries/views/settings.html:33
 msgid "Abbreviations Dictionary"
-msgstr ""
+msgstr "Речник скраћеница"
 
 #: scripts/core/menu/views/menu.html:115
 msgid "About Superdesk"
@@ -787,7 +787,7 @@ msgstr "Активно"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:22
 msgid "Active only"
-msgstr ""
+msgstr "Само активно"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:424
 msgid "Active until {{end}}"
@@ -841,7 +841,7 @@ msgstr[2] ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:96
 msgid "Add Abbreviation"
-msgstr ""
+msgstr "Додај скраћеницу"
 
 #: ../superdesk-planning/client/constants/planning.ts:140
 msgid "Add As Event"
@@ -877,7 +877,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:116
 msgid "Add Filter Statement"
-msgstr ""
+msgstr "Додај критеријум филтера"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:28
 msgid "Add Gallery"
@@ -893,7 +893,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:436
 msgid "Add Item"
-msgstr ""
+msgstr "Додај ставку"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:7
 #: scripts/apps/content-filters/views/manage-filters.html:6
@@ -923,15 +923,15 @@ msgstr "Додај нови"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid "Add New Abbreviations Dictionary"
-msgstr ""
+msgstr "Додај нови речник скраћеница"
 
 #: scripts/apps/content-filters/views/manage-filters.html:33
 msgid "Add New Content Filter"
-msgstr ""
+msgstr "Додај нови филтер садржаја"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:79
 msgid "Add New Content Profile"
-msgstr ""
+msgstr "Додај нови профил садржаја"
 
 #: scripts/apps/desks/views/desk-config-modal.html:4
 msgid "Add New Desk"
@@ -943,7 +943,7 @@ msgstr "Додај нову дестинацију"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid "Add New Dictionary"
-msgstr ""
+msgstr "Додај нови речник"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.tsx:129
 msgid "Add New Event Location"
@@ -955,11 +955,11 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:43
 msgid "Add New Filter Condition"
-msgstr ""
+msgstr "Додај нови услов филтера"
 
 #: scripts/apps/products/views/products-config-modal.html:3
 msgid "Add New Product"
-msgstr ""
+msgstr "Додај нови производ"
 
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:31
 msgid "Add New Rule Set"
@@ -984,7 +984,7 @@ msgstr "Додај новог претплатника"
 
 #: scripts/apps/templates/views/template-editor-modal.html:4
 msgid "Add New Template"
-msgstr ""
+msgstr "Додај нови шаблон"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AddPlanningBookmark.tsx:30
 msgid "Add Planning Item"
@@ -1132,7 +1132,7 @@ msgstr "Додај нови"
 
 #: scripts/apps/workspace/content/components/new-field-select.tsx:34
 msgid "Add new field"
-msgstr ""
+msgstr "Додај ново поље"
 
 #: scripts/apps/dashboard/views/workspace.html:69
 msgid "Add new widget"
@@ -1601,7 +1601,7 @@ msgstr "Сви типови корисника"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:267
 msgid "Allow Multiple Items"
-msgstr ""
+msgstr "Дозволи више ставки"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:189
 msgid "Allow Remove Ingested Items"
@@ -1621,7 +1621,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:362
 msgid "Allow field to be toggled"
-msgstr ""
+msgstr "Дозволи укључивање/искључивање поља"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:38
 msgid "Allow picture"
@@ -1656,7 +1656,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:9
 msgid "Alt text"
-msgstr ""
+msgstr "Алтернативни текст"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:15
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:30
@@ -1886,7 +1886,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/UploadConfigModal.tsx:80
 msgid "Apply config"
-msgstr ""
+msgstr "Примени конфигурацију"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:244
 msgid "Apply the changes to all recurring planning items or just this one?"
@@ -1904,7 +1904,7 @@ msgstr "Архива"
 
 #: scripts/apps/workspace/content/constants.ts:11
 msgid "Archive description"
-msgstr ""
+msgstr "Опис архиве"
 
 #: scripts/apps/search/views/item-repo.html:6
 msgid "Archived"
@@ -1912,7 +1912,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:54
 msgid "Archived Block"
-msgstr ""
+msgstr "Архивирани блок"
 
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archived Management"
@@ -1951,7 +1951,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:84
 msgid "Are you sure you want to delete content filter?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете филтер садржаја?"
 
 #: scripts/apps/workspace/services/WorkspaceService.ts:19
 msgid "Are you sure you want to delete current workspace?"
@@ -1959,7 +1959,7 @@ msgstr "Да ли сте сигурни да желите да обришете 
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:120
 msgid "Are you sure you want to delete filter condition?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете услов филтера?"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:47
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/manage-rundown-items.js:61
@@ -1975,7 +1975,7 @@ msgstr ""
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:201
 msgid "Are you sure you want to delete product?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете производ?"
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:61
 msgid "Are you sure you want to delete rule set?"
@@ -2007,7 +2007,7 @@ msgstr ""
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:363
 msgid "Are you sure you want to delete the template?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете шаблон?"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/store/assets/actions.js:331
 #: scripts/extensions/sams/dist/src/store/assets/actions.js:331
@@ -2541,7 +2541,7 @@ msgstr ""
 #: scripts/apps/authoring/views/article-edit.html:729
 #: scripts/apps/workspace/content/constants.ts:12
 msgid "Attachments"
-msgstr ""
+msgstr "Прилози"
 
 #: scripts/apps/authoring-react/fields/attachments/index.tsx:41
 msgid "Attachments (authoring-react)"
@@ -2556,7 +2556,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:113
 #: scripts/extensions/sams/src/utils/assets.ts:146
 msgid "Audio"
-msgstr ""
+msgstr "Аудио"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:75
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetTypeFilterButtons.js:75
@@ -2623,7 +2623,7 @@ msgstr "Дескови за уређивање служе за креирање 
 #: scripts/apps/search/components/fields/authors.tsx:113
 #: scripts/apps/workspace/content/constants.ts:13
 msgid "Authors"
-msgstr ""
+msgstr "Аутори"
 
 #: scripts/apps/users/views/list.html:15
 msgid "Authors only"
@@ -2631,11 +2631,11 @@ msgstr "Само аутори"
 
 #: scripts/apps/templates/views/templates.html:61
 msgid "Automated item creation"
-msgstr ""
+msgstr "Аутоматско креирање ставке"
 
 #: scripts/apps/templates/views/template-editor-modal.html:144
 msgid "Automatically create item"
-msgstr ""
+msgstr "Аутоматски креирај ставку"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:39
 msgid "Automatically insert items from"
@@ -2691,7 +2691,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:209
 msgid "Available in user/desk preferences"
-msgstr ""
+msgstr "Доступно у поставкама корисника/деска"
 
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:108
 msgid "Available languages"
@@ -2798,11 +2798,11 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:58
 msgid "Block API"
-msgstr ""
+msgstr "Блокирај API"
 
 #: scripts/apps/products/views/products-config-modal.html:71
 msgid "Blocking"
-msgstr ""
+msgstr "Блокирање"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:56
 msgid "Blue"
@@ -2825,7 +2825,7 @@ msgstr "Тело HTML"
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:37
 #: scripts/apps/workspace/content/constants.ts:14
 msgid "Body footer"
-msgstr ""
+msgstr "Подножје тела"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:36
 msgid "Body footer / Helplines / Contact Information"
@@ -3013,7 +3013,7 @@ msgstr "Може се повезати као ажурирање"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:172
 msgid "Can be embedded"
-msgstr ""
+msgstr "Може бити уграђено"
 
 #: scripts/core/editor3/components/article-embed/can-add-article-embed.ts:35
 msgid "Can not embed to item which itself can be embedded."
@@ -3260,7 +3260,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:35
 msgid "Cannot delete vocabulary"
-msgstr ""
+msgstr "Није могуће обрисати вокабулар"
 
 #: ../superdesk-planning/client/validators/events.ts:289
 msgid "Cannot end with \".\""
@@ -3373,7 +3373,7 @@ msgstr "Прекорачен је лимит карактера, деск ниј
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:49
 msgid "Character limit exceeded, dictionary can not be created/updated."
-msgstr ""
+msgstr "Прекорачен је лимит карактера, речник није могуће креирати/ажурирати."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:14
 msgid "Character limit exceeded, highlight can not be created/updated."
@@ -3462,7 +3462,7 @@ msgid ""
 "                                    in the list. The CVs are grouped under "
 "each label. You can choose only one\n"
 "                                    label."
-msgstr ""
+msgstr "Изаберите постојеће ознаке или креирајте нове\n                                    куцањем. Ознаке се користе само за организовање контролисаних вокабулара\n                                    у листи. КВ су груписани под сваком ознаком. Можете изабрати само једну\n                                    ознаку."
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
@@ -3487,7 +3487,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:274
 msgid "Clean Pasted HTML"
-msgstr ""
+msgstr "Очисти налепљени HTML"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:67
 msgid "Clean pasted HTML"
@@ -3782,7 +3782,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:8
 msgid "Color"
-msgstr ""
+msgstr "Боја"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:90
 msgid "Column"
@@ -3807,7 +3807,7 @@ msgstr "Вредности раздвојене зарезом"
 
 #: scripts/apps/products/views/products-config-modal.html:55
 msgid "Comma separated values."
-msgstr ""
+msgstr "Вредности раздвојене зарезом."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:65
 #: scripts/core/editor3/components/comments/Comment.tsx:90
@@ -3840,7 +3840,7 @@ msgstr ""
 #: scripts/apps/search/constants.ts:16
 #: scripts/apps/workspace/content/constants.ts:18
 msgid "Company Codes"
-msgstr ""
+msgstr "Кодови компанија"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:29
 msgid "Company/Organisation"
@@ -4026,7 +4026,7 @@ msgstr "Садржај"
 msgid ""
 "Content\n"
 "                                Type"
-msgstr ""
+msgstr "Тип\n                                садржаја"
 
 #: scripts/apps/publish/views/subscribers.html:254
 msgid "Content API"
@@ -4050,17 +4050,17 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:3
 #: scripts/apps/products/views/products-config-modal.html:60
 msgid "Content Filter"
-msgstr ""
+msgstr "Филтер садржаја"
 
 #: scripts/apps/products/views/products-config-modal.html:68
 msgid "Content Filter Type"
-msgstr ""
+msgstr "Тип филтера садржаја"
 
 #: scripts/apps/content-filters/index.ts:38
 #: scripts/apps/content-filters/views/filter-search-result.html:24
 #: scripts/apps/content-filters/views/settings.html:4
 msgid "Content Filters"
-msgstr ""
+msgstr "Филтери садржаја"
 
 #: scripts/apps/monitoring/directives/utils.ts:23
 #: scripts/apps/templates/views/template-editor-modal.html:28
@@ -4119,7 +4119,7 @@ msgstr "Истек садржаја:"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:103
 msgid "Content fields"
-msgstr ""
+msgstr "Поља садржаја"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:31
 msgid "Content filter"
@@ -4127,7 +4127,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:58
 msgid "Content filter saved."
-msgstr ""
+msgstr "Филтер садржаја сачуван."
 
 #: scripts/core/activity/activity.ts:32
 msgid "Content flow"
@@ -4240,7 +4240,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:173
 #: scripts/apps/workspace/content/constants.ts:19
 msgid "Copyright holder"
-msgstr ""
+msgstr "Носилац ауторских права"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:23
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:20
@@ -4259,7 +4259,7 @@ msgstr "Носилац ауторских права:"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:68
 #: scripts/apps/workspace/content/constants.ts:20
 msgid "Copyright notice"
-msgstr ""
+msgstr "Обавештење о ауторским правима"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:31
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:22
@@ -4940,19 +4940,19 @@ msgstr "Прилагођени блок"
 
 #: scripts/apps/vocabularies/views/settings.html:22
 msgid "Custom blocks"
-msgstr ""
+msgstr "Прилагођени блокови"
 
 #: scripts/apps/vocabularies/views/settings.html:25
 msgid "Custom date fields"
-msgstr ""
+msgstr "Прилагођена поља за датум"
 
 #: scripts/apps/vocabularies/views/settings.html:28
 msgid "Custom embed fields"
-msgstr ""
+msgstr "Прилагођена поља за уграђивање"
 
 #: scripts/apps/vocabularies/views/settings.html:19
 msgid "Custom text fields"
-msgstr ""
+msgstr "Прилагођена поља за текст"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:76
 msgid "Customer Installation No.:"
@@ -5254,7 +5254,7 @@ msgid ""
 "Defines the width of the pop-up in the\n"
 "                                    article header. A minimal value of 200 "
 "is required."
-msgstr ""
+msgstr "Дефинише ширину искачућег прозора у\n                                    заглављу чланка. Потребна је минимална вредност 200."
 
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/GetFields.js:23
@@ -5367,7 +5367,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:87
 msgid "Delete vocabulary?"
-msgstr ""
+msgstr "Обрисати вокабулар?"
 
 #: scripts/apps/dashboard/views/workspace.html:35
 #: scripts/apps/monitoring/views/monitoring-view.html:220
@@ -5601,7 +5601,7 @@ msgstr "Деск са називом {{name}} већ постоји."
 
 #: scripts/apps/templates/views/templates.html:52
 msgid "Desk(s)"
-msgstr ""
+msgstr "Деск(ови)"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:24
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Desk.tsx:12
@@ -5668,7 +5668,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/index.ts:33
 msgid "Dictionaries"
-msgstr ""
+msgstr "Речници"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Dictionaries List Management"
@@ -5676,31 +5676,31 @@ msgstr "Управљање листом речника"
 
 #: scripts/apps/dictionaries/views/settings.html:23
 msgid "Dictionary"
-msgstr ""
+msgstr "Речник"
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.ts:93
 msgid "Dictionary deleted."
-msgstr ""
+msgstr "Речник обрисан."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:36
 msgid "Dictionary file"
-msgstr ""
+msgstr "Датотека речника"
 
 #: scripts/apps/dictionaries/views/settings.html:4
 msgid "Dictionary management"
-msgstr ""
+msgstr "Управљање речницима"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:25
 msgid "Dictionary name"
-msgstr ""
+msgstr "Назив речника"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:14
 msgid "Dictionary saved successfully"
-msgstr ""
+msgstr "Речник успешно сачуван"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:28
 msgid "Dictionary with name {{dictionary.name}} already exists."
-msgstr ""
+msgstr "Речник са називом {{dictionary.name}} већ постоји."
 
 #: scripts/apps/authoring-react/compare-articles/view-difference.tsx:74
 msgid ""
@@ -5727,7 +5727,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:169
 msgid "Disable selection of an entire category"
-msgstr ""
+msgstr "Онемогући избор целе категорије"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:487
 msgid "Disable spellchecker"
@@ -5803,7 +5803,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/constants.ts:56
 msgid "Do not show"
-msgstr ""
+msgstr "Не приказуј"
 
 #: scripts/apps/settings/index.ts:20
 msgid "Do some admin chores"
@@ -5848,7 +5848,7 @@ msgstr[2] ""
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:148
 msgid "Do you want to remove Abbreviation?"
-msgstr ""
+msgstr "Желите ли да уклоните скраћеницу?"
 
 #: scripts/apps/users/views/edit-form.html:360
 msgid "Do you want to reset the password for user {{user.full_name}} ?"
@@ -5876,11 +5876,11 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:147
 msgid "Does match"
-msgstr ""
+msgstr "Поклапа се"
 
 #: scripts/apps/content-filters/views/manage-filters.html:148
 msgid "Doesn't match"
-msgstr ""
+msgstr "Не поклапа се"
 
 #: ../superdesk-planning/client/services/AssignmentsService.tsx:326
 msgid "Don't Fulfil Assignment"
@@ -5945,7 +5945,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config.html:84
 msgid "Download config"
-msgstr ""
+msgstr "Преузми конфигурацију"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:21
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:19
@@ -5989,7 +5989,7 @@ msgstr "Превуците датотеке овде или"
 msgid ""
 "Drag one or more files here to upload them,\n"
 "                or select files by clicking the button below"
-msgstr ""
+msgstr "Превуците једну или више датотека овде да их отпремите,\n                или изаберите датотеке кликом на дугме испод"
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:126
 msgid "Drag one or more files here to upload them, or just click here."
@@ -6221,7 +6221,7 @@ msgstr ""
 #: scripts/apps/authoring-react/field-adapters/ednote.ts:20
 #: scripts/apps/workspace/content/constants.ts:24
 msgid "Ed. Note"
-msgstr ""
+msgstr "Ур. напомена"
 
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:57
 #: ../superdesk-planning/client/components/Events/ManageEventTemplatesModal.tsx:42
@@ -6304,7 +6304,7 @@ msgstr "Уреди деск \"{{name}}\""
 
 #: scripts/apps/products/views/products-config-modal.html:4
 msgid "Edit \"{{name}}\" Product"
-msgstr ""
+msgstr "Уреди производ \"{{name}}\""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{name}}\" highlight"
@@ -6312,7 +6312,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:7
 msgid "Edit Abbreviations Dictionary"
-msgstr ""
+msgstr "Уреди речник скраћеница"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:23
 msgid "Edit Agenda"
@@ -6333,11 +6333,11 @@ msgstr ""
 #: scripts/apps/content-filters/views/manage-filters.html:20
 #: scripts/apps/content-filters/views/manage-filters.html:32
 msgid "Edit Content Filter"
-msgstr ""
+msgstr "Уреди филтер садржаја"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:47
 msgid "Edit Content Profile"
-msgstr ""
+msgstr "Уреди профил садржаја"
 
 #: scripts/apps/authoring/views/change-image.html:4
 msgid "Edit Crops"
@@ -6345,7 +6345,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:8
 msgid "Edit Dictionary"
-msgstr ""
+msgstr "Уреди речник"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:114
 msgid "Edit Event"
@@ -6359,7 +6359,7 @@ msgstr ""
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:23
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:42
 msgid "Edit Filter Condition"
-msgstr ""
+msgstr "Уреди услов филтера"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:109
 msgid "Edit Ingest Source"
@@ -6432,7 +6432,7 @@ msgstr "Уреди претплатника"
 
 #: scripts/apps/templates/views/templates.html:36
 msgid "Edit Template"
-msgstr ""
+msgstr "Уреди шаблон"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Edit Unique Name"
@@ -6477,7 +6477,7 @@ msgstr "Уреди деск"
 
 #: scripts/apps/dictionaries/views/settings.html:54
 msgid "Edit dictionary"
-msgstr ""
+msgstr "Уреди речник"
 
 #: scripts/core/editor3/components/embeds/EmbedBlock.tsx:83
 msgid "Edit embed"
@@ -6541,7 +6541,7 @@ msgstr "Уреди метаподатке"
 #: scripts/apps/products/views/product-test.html:35
 #: scripts/apps/products/views/products.html:31
 msgid "Edit product"
-msgstr ""
+msgstr "Уреди производ"
 
 #: scripts/apps/users/views/settings-roles.html:17
 msgid "Edit role"
@@ -6581,7 +6581,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/profile-settings.html:138
 msgid "Editing"
-msgstr ""
+msgstr "Уређивање"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:124
 msgid "Editor 3"
@@ -6629,7 +6629,7 @@ msgstr ""
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-action.tsx:75
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:126
 msgid "Embargo"
-msgstr ""
+msgstr "Ембарго"
 
 #: scripts/apps/archive/views/metadata-view.html:132
 msgid "Embargo Timestamp"
@@ -6799,7 +6799,7 @@ msgstr ""
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:28
 msgid "Error. Dictionary not saved."
-msgstr ""
+msgstr "Грешка. Речник није сачуван."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:626
 msgid "Error. Item not published."
@@ -6855,7 +6855,7 @@ msgstr "Грешка. Кориснички профил не може бити �
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:120
 msgid "Error. Vocabulary not saved."
-msgstr ""
+msgstr "Грешка. Вокабулар није сачуван."
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:199
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:107
@@ -6900,11 +6900,11 @@ msgstr ""
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:208
 msgid "Error: Failed to delete product."
-msgstr ""
+msgstr "Грешка: брисање производа није успело."
 
 #: scripts/apps/content-filters/controllers/ProductionTestController.ts:111
 msgid "Error: Failed to fetch production test results."
-msgstr ""
+msgstr "Грешка: преузимање резултата теста продукције није успело."
 
 #: scripts/apps/publish/controllers/PublishQueueController.ts:183
 msgid "Error: Failed to re-schedule"
@@ -6920,29 +6920,29 @@ msgstr "Грешка: чување претплатника није успел�
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:151
 msgid "Error: Failed to save content filter."
-msgstr ""
+msgstr "Грешка: чување филтера садржаја није успело."
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:112
 msgid "Error: Failed to save filter condition."
-msgstr ""
+msgstr "Грешка: чување услова филтера није успело."
 
 #: scripts/apps/templates/helpers.ts:13
 msgid "Error: Failed to save template."
-msgstr ""
+msgstr "Грешка: чување шаблона није успело."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:76
 msgid "Error: Failed to test content filter."
-msgstr ""
+msgstr "Грешка: тестирање филтера садржаја није успело."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:74
 msgid "Error: Internal error in Filter testing"
-msgstr ""
+msgstr "Грешка: интерна грешка приликом тестирања филтера"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:105
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:67
 #: scripts/apps/products/controllers/ProductsConfigController.ts:183
 msgid "Error: Name needs to be unique"
-msgstr ""
+msgstr "Грешка: назив мора бити јединствен"
 
 #: scripts/core/itemList/itemList.ts:110
 msgid "Error: Slugline required."
@@ -6958,7 +6958,7 @@ msgstr "Грешка: претплатник са овим називом већ
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:24
 msgid "Error: The dictionary already exists."
-msgstr ""
+msgstr "Грешка: речник већ постоји."
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:359
 msgid "Error: Unable to delete Ingest Source"
@@ -6975,7 +6975,7 @@ msgstr "Грешка: јединствени назив није јединст�
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:111
 msgid "Error: {{ message }}"
-msgstr ""
+msgstr "Грешка: {{ message }}"
 
 #: scripts/apps/users/directives/UserEditDirective.ts:272
 msgid "Error: {{error}}"
@@ -7929,12 +7929,12 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:26
 msgid "Feature Image"
-msgstr ""
+msgstr "Истакнута слика"
 
 #: scripts/apps/search/views/search-parameters.html:175
 #: scripts/apps/workspace/content/constants.ts:27
 msgid "Feature Media"
-msgstr ""
+msgstr "Истакнути медиј"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Feature Preview"
@@ -8060,13 +8060,13 @@ msgstr ""
 #: scripts/apps/content-filters/views/filter-search.html:9
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:59
 msgid "Field"
-msgstr ""
+msgstr "Поље"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:66
 msgid ""
 "Field\n"
 "                                    type"
-msgstr ""
+msgstr "Тип\n                                    поља"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:200
 msgid "Field \"{{field}}\" will be permanently deleted."
@@ -8161,12 +8161,12 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:102
 msgid "Filter Condition"
-msgstr ""
+msgstr "Услов филтера"
 
 #: scripts/apps/content-filters/views/filter-search-result.html:7
 #: scripts/apps/content-filters/views/settings.html:14
 msgid "Filter Conditions"
-msgstr ""
+msgstr "Услови филтера"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilter.tsx:183
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:36
@@ -8187,19 +8187,19 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/settings.html:19
 msgid "Filter Search"
-msgstr ""
+msgstr "Претрага филтера"
 
 #: scripts/apps/content-filters/views/manage-filters.html:66
 msgid "Filter Statement"
-msgstr ""
+msgstr "Критеријум филтера"
 
 #: scripts/apps/content-filters/views/manage-filters.html:133
 msgid "Filter Test"
-msgstr ""
+msgstr "Тест филтера"
 
 #: scripts/apps/content-filters/views/production-test.html:4
 msgid "Filter Test Results"
-msgstr ""
+msgstr "Резултати теста филтера"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:111
 msgid "Filter by day:"
@@ -8207,7 +8207,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:99
 msgid "Filter condition saved."
-msgstr ""
+msgstr "Услов филтера сачуван."
 
 #: scripts/apps/contacts/views/search-panel.html:3
 msgid "Filter contacts"
@@ -8219,11 +8219,11 @@ msgstr "Филтрирај типове датотека"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:50
 msgid "Filter statement {{id}} does not have a filter condition."
-msgstr ""
+msgstr "Критеријум филтера {{id}} нема услов филтера."
 
 #: scripts/apps/templates/views/templates.html:8
 msgid "Filter:"
-msgstr ""
+msgstr "Филтер:"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:76
 msgid "Filtered By"
@@ -8344,11 +8344,11 @@ msgstr "Фонт"
 
 #: scripts/apps/workspace/content/constants.ts:28
 msgid "Footer"
-msgstr ""
+msgstr "Подножје"
 
 #: scripts/apps/workspace/content/constants.ts:29
 msgid "Footers"
-msgstr ""
+msgstr "Подножја"
 
 #: scripts/apps/publish/views/subscribers.html:218
 msgid "For Content API only subscriber destinations are not required."
@@ -8390,13 +8390,13 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:75
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:177
 msgid "Formatting Options"
-msgstr ""
+msgstr "Опције форматирања"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:17
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:316
 #: scripts/apps/workspace/content/views/FormattingOptionsMultiSelect.tsx:34
 msgid "Formatting options"
-msgstr ""
+msgstr "Опције форматирања"
 
 #: ../superdesk-planning/client/components/fields/editor/OverrideAutoAssignToWorkflow.tsx:15
 msgid "Forward Planning"
@@ -8457,7 +8457,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:160
 msgid "Full"
-msgstr ""
+msgstr "Пуно"
 
 #: scripts/apps/users/views/list.html:33
 msgid "Full name"
@@ -8571,7 +8571,7 @@ msgstr ""
 #: scripts/apps/search/services/SearchService.ts:72
 #: scripts/apps/workspace/content/constants.ts:30
 msgid "Genre"
-msgstr ""
+msgstr "Жанр"
 
 #: ../superdesk-planning/client/components/Archive/ArchiveItem.tsx:102
 #: ../superdesk-planning/client/components/Archive/ArchiveItem.tsx:78
@@ -8589,7 +8589,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:51
 msgid "Global Block"
-msgstr ""
+msgstr "Глобална блокада"
 
 #: scripts/apps/desks/views/desk-config-modal.html:249
 #: scripts/apps/desks/views/desk-config-modal.html:350
@@ -8638,7 +8638,7 @@ msgstr "Иди назад"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:41
 msgid "Go to content profiles"
-msgstr ""
+msgstr "Иди на профиле садржаја"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:45
 msgid "Go to items"
@@ -8653,7 +8653,7 @@ msgstr "Иди на"
 #: ../superdesk-planning/client/utils/index.ts:593
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:253
 msgid "Graphic"
-msgstr ""
+msgstr "Графика"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:50
 msgid "Gray"
@@ -8754,7 +8754,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:161
 msgid "Half"
-msgstr ""
+msgstr "Половина"
 
 #: scripts/core/auth/reset-password.html:69
 msgid "Have password? Sign in."
@@ -8762,7 +8762,7 @@ msgstr "Имате лозинку? Пријавите се."
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:101
 msgid "Header fields"
-msgstr ""
+msgstr "Поља заглавља"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:101
 msgid "Heading 1"
@@ -8847,7 +8847,7 @@ msgstr "Помозите нам да преведемо Superdesk"
 msgid ""
 "Helper\n"
 "                                    text"
-msgstr ""
+msgstr "Помоћни\n                                    текст"
 
 #: scripts/apps/authoring/views/article-edit.html:395
 msgid "Helplines/Contact Information"
@@ -8873,7 +8873,7 @@ msgstr[2] ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:250
 msgid "Hide Date"
-msgstr ""
+msgstr "Сакриј датум"
 
 #: scripts/apps/authoring/views/article-edit.html:586
 msgid "Hide Preview"
@@ -9002,24 +9002,24 @@ msgstr ""
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:29
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
 msgid "ID"
-msgstr ""
+msgstr "ИД"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:45
 msgid ""
 "ID\n"
 "                                must contain only letters, digits and "
 "characters -, _."
-msgstr ""
+msgstr "ИД\n                                мора садржати само слова, цифре и знакове -, _."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:43
 msgid ""
 "ID conflicts\n"
 "                                with system field."
-msgstr ""
+msgstr "ИД је у конфликту\n                                са системским пољем."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:41
 msgid "ID must be unique."
-msgstr ""
+msgstr "ИД мора бити јединствен."
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:93
 msgid "Icon"
@@ -9046,7 +9046,7 @@ msgid ""
 "If enabled, it will be possible to embed articles using this content profile "
 "into other articles that accept embeds (configurable in content profile "
 "field settings)"
-msgstr ""
+msgstr "Ако је омогућено, биће могуће уградити чланке користећи овај профил садржаја у друге чланке који прихватају уграђени садржај (подесиво у поставкама поља профила садржаја)"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-action.tsx:134
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:194
@@ -9098,7 +9098,7 @@ msgstr "Игнориши реч"
 #: scripts/extensions/sams/dist/src/utils/assets.js:107
 #: scripts/extensions/sams/src/utils/assets.ts:142
 msgid "Image"
-msgstr ""
+msgstr "Слика"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:103
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetImagePreviewFullScreen.js:103
@@ -9162,7 +9162,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/services/VocabularyService.ts:136
 msgid "In 3 days"
-msgstr ""
+msgstr "За 3 дана"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/field-components/time-header-common.tsx:24
 msgid "In 30 min"
@@ -9506,11 +9506,11 @@ msgstr ""
 
 #: scripts/apps/templates/views/create-template.html:26
 msgid "It will create a new template."
-msgstr ""
+msgstr "Биће креиран нови шаблон."
 
 #: scripts/apps/templates/views/create-template.html:25
 msgid "It will update existing template."
-msgstr ""
+msgstr "Постојећи шаблон ће бити ажуриран."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:117
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:31
@@ -9712,7 +9712,7 @@ msgstr ""
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:15
 #: scripts/core/views/sdSearchList.html:36
 msgid "Items"
-msgstr ""
+msgstr "Ставке"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:128
 msgid "Items Count"
@@ -9797,7 +9797,7 @@ msgstr "Пречице на тастатури"
 #: scripts/apps/search/views/search-parameters.html:229
 #: scripts/apps/workspace/content/constants.ts:33
 msgid "Keywords"
-msgstr ""
+msgstr "Кључне речи"
 
 #: ../superdesk-analytics/client/utils.js:162
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:119
@@ -9837,7 +9837,7 @@ msgstr ""
 #: scripts/apps/workspace/content/views/profile-settings.html:115
 #: scripts/apps/workspace/content/views/profile-settings.html:150
 msgid "Label"
-msgstr ""
+msgstr "Ознака"
 
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:126
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/language.ts:36
@@ -9862,7 +9862,7 @@ msgstr "Језик"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:31
 msgid "Language code"
-msgstr ""
+msgstr "Код језика"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Language.tsx:17
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:209
@@ -10126,7 +10126,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:9
 msgid "List Name"
-msgstr ""
+msgstr "Назив листе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:125
 msgid "List Plus"
@@ -10336,7 +10336,7 @@ msgstr ""
 
 #: scripts/apps/templates/views/template-editor-modal.html:59
 msgid "Make Public"
-msgstr ""
+msgstr "Учини јавним"
 
 #: scripts/apps/search/views/save-search-dialog.html:14
 msgid "Make global"
@@ -10614,7 +10614,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:272
 msgid "Max. number of items"
-msgstr ""
+msgstr "Макс. број ставки"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:280
 #: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:31
@@ -10625,7 +10625,7 @@ msgstr "Максимум"
 
 #: scripts/apps/content-filters/views/manage-filters.html:44
 msgid "Maximum 80 characters."
-msgstr ""
+msgstr "Максимално 80 карактера."
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:241
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:241
@@ -10640,11 +10640,11 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:44
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:216
 msgid "Maximum length"
-msgstr ""
+msgstr "Максимална дужина"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:226
 msgid "Maximum soft length"
-msgstr ""
+msgstr "Максимална препоручена дужина"
 
 #: scripts/apps/authoring-react/field-adapters/_media_self.ts:29
 #: scripts/apps/publish/views/subscribers.html:147
@@ -10667,7 +10667,7 @@ msgstr "Тип медија"
 
 #: scripts/apps/vocabularies/constants.ts:18
 msgid "Media gallery"
-msgstr ""
+msgstr "Галерија медија"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:57
 msgid "Medium Blue"
@@ -10711,7 +10711,7 @@ msgstr "Метаподаци"
 
 #: scripts/apps/vocabularies/views/settings.html:4
 msgid "Metadata management"
-msgstr ""
+msgstr "Управљање метаподацима"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:86
 msgid "Min"
@@ -10742,12 +10742,12 @@ msgstr "Минимална дозвољена величина слике је {
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:213
 msgid "Minimum height and width should be greater than or equal to 200"
-msgstr ""
+msgstr "Минимална висина и ширина треба да буду веће или једнаке 200"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:32
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:206
 msgid "Minimum length"
-msgstr ""
+msgstr "Минимална дужина"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:129
 msgid "Minus Sign"
@@ -10940,7 +10940,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/constants.ts:52
 msgid "Multi selection"
-msgstr ""
+msgstr "Вишеструки избор"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:167
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:124
@@ -11111,7 +11111,7 @@ msgstr "Назив"
 
 #: scripts/apps/vocabularies/ManageVocabularyItemTranslations.tsx:28
 msgid "Name ({{language}})"
-msgstr ""
+msgstr "Назив ({{language}})"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:131
 msgid "Name Translations"
@@ -11120,7 +11120,7 @@ msgstr ""
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:218
 msgid ""
 "Name field should only have alphanumeric characters, dashes and underscores"
-msgstr ""
+msgstr "Поље назива треба да садржи само алфанумеричке знакове, цртице и доње црте"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:79
 msgid "Name is not unique."
@@ -11276,7 +11276,7 @@ msgstr ""
 
 #: scripts/apps/templates/constants.ts:11
 msgid "No Desk"
-msgstr ""
+msgstr "Нема деска"
 
 #: ../superdesk-planning/client/components/Main/ListPanel.tsx:343
 msgid "No Event or Planning items found"
@@ -11292,7 +11292,7 @@ msgstr ""
 
 #: scripts/apps/products/views/products.html:39
 msgid "No Products Found"
-msgstr ""
+msgstr "Нема пронађених производа"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:39
 msgid "No Publish actions defined"
@@ -11718,7 +11718,7 @@ msgstr "Није истекло"
 #: scripts/apps/search/components/fields/flags.tsx:17
 #: scripts/apps/templates/views/template-editor-modal.html:104
 msgid "Not For Publication"
-msgstr ""
+msgstr "Није за објаву"
 
 #: scripts/apps/search/constants.ts:34
 msgid "Not Genre"
@@ -11930,7 +11930,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:40
 #: scripts/apps/templates/views/template-editor-modal.html:151
 msgid "On"
-msgstr ""
+msgstr "Укључено"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:175
 msgid "On Days"
@@ -11971,7 +11971,7 @@ msgstr ""
 msgid ""
 "Only allow content with the\n"
 "                                following status:"
-msgstr ""
+msgstr "Дозволи само садржај са\n                                следећим статусом:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:247
 msgid "Only one XMP files are accepted"
@@ -12113,7 +12113,7 @@ msgstr ""
 #: scripts/apps/content-filters/views/filter-search.html:18
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:68
 msgid "Operator"
-msgstr ""
+msgstr "Оператор"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:105
 msgid "Options:"
@@ -12243,7 +12243,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:125
 #: scripts/extensions/sams/src/utils/assets.ts:154
 msgid "Other"
-msgstr ""
+msgstr "Остало"
 
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:264
 msgid "Other Coverages"
@@ -12255,7 +12255,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/settings.html:37
 msgid "Other fields"
-msgstr ""
+msgstr "Остала поља"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:373
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:426
@@ -12298,7 +12298,7 @@ msgstr "Преглед"
 
 #: scripts/apps/templates/views/templates.html:48
 msgid "Owner"
-msgstr ""
+msgstr "Власник"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:79
 msgid "P"
@@ -12357,7 +12357,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:256
 msgid "Package"
-msgstr ""
+msgstr "Пакет"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:138
 msgid "Package Create"
@@ -12386,7 +12386,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:7
 msgid "Package story labels"
-msgstr ""
+msgstr "Ознаке прича у пакету"
 
 #: scripts/apps/authoring-react/packages.tsx:22
 #: scripts/apps/authoring/packages/packages.ts:47
@@ -12511,7 +12511,7 @@ msgstr "Људи"
 
 #: scripts/apps/products/views/products-config-modal.html:70
 msgid "Permitting"
-msgstr ""
+msgstr "Дозвољавање"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/groups.js:13
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:13
@@ -12538,7 +12538,7 @@ msgstr "Лично"
 
 #: scripts/apps/dictionaries/views/settings.html:28
 msgid "Personal Dictionary"
-msgstr ""
+msgstr "Лични речник"
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:40
 msgid "Personal Items"
@@ -12556,7 +12556,7 @@ msgstr ""
 msgid ""
 "Personal dictionary for language \"{{dictionary.language_id}}\" already "
 "exists."
-msgstr ""
+msgstr "Лични речник за језик \"{{dictionary.language_id}}\" већ постоји."
 
 #: scripts/apps/users/controllers/UserEditController.ts:23
 msgid "Personal preferences"
@@ -12588,7 +12588,7 @@ msgstr "Приказ мреже фотографија"
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:110
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:92
 msgid "Phrase"
-msgstr ""
+msgstr "Фраза"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:147
 msgid "Pick"
@@ -12602,7 +12602,7 @@ msgstr "Изабери задатак"
 #: ../superdesk-planning/client/utils/index.ts:589
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:58
 msgid "Picture"
-msgstr ""
+msgstr "Слика"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:102
 msgid "Pie"
@@ -12628,7 +12628,7 @@ msgstr ""
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:21
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:30
 msgid "Place"
-msgstr ""
+msgstr "Место"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:137
 #: scripts/core/lang/missing-translations-strings.ts:12
@@ -12803,11 +12803,11 @@ msgstr ""
 msgid ""
 "Please be aware that uploading external config files\n"
 "                will overwrite your existing configuration."
-msgstr ""
+msgstr "Имајте на уму да отпремање спољних конфигурационих датотека\n                ће заменити вашу постојећу конфигурацију."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:359
 msgid "Please change the default templates first."
-msgstr ""
+msgstr "Прво промените подразумеване шаблоне."
 
 #: scripts/core/auth/secure-login.html:14
 msgid "Please check that the following id is the same as on your device:"
@@ -12827,7 +12827,7 @@ msgstr "Потврдите да желите да обришете деск."
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.ts:89
 msgid "Please confirm you want to delete dictionary."
-msgstr ""
+msgstr "Потврдите да желите да обришете речник."
 
 #: scripts/apps/search/views/saved-search-subscribe.html:12
 msgid "Please define the frequency and time of your email notifications below."
@@ -12849,11 +12849,11 @@ msgstr "Унесите исправан Twitter налог"
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:129
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:130
 msgid "Please provide an article GUID"
-msgstr ""
+msgstr "Унесите GUID чланка"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:234
 msgid "Please provide an article id"
-msgstr ""
+msgstr "Унесите ИД чланка"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:208
 msgid ""
@@ -12866,15 +12866,15 @@ msgstr ""
 #: scripts/apps/workspace/content/views/profile-settings.html:117
 #: scripts/apps/workspace/content/views/profile-settings.html:152
 msgid "Please use less than 40 characters"
-msgstr ""
+msgstr "Користите мање од 40 карактера"
 
 #: scripts/apps/content-filters/views/manage-filters.html:45
 msgid "Please use less than 80 characters"
-msgstr ""
+msgstr "Користите мање од 80 карактера"
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:53
 msgid "Please use less than 80 characters."
-msgstr ""
+msgstr "Користите мање од 80 карактера."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:151
 msgid "Plus Large"
@@ -12995,13 +12995,13 @@ msgstr "Омиљене вредности за вокабуларе"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:374
 msgid "Prefill the field with text from:"
-msgstr ""
+msgstr "Унапред попуни поље текстом из:"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:155
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:37
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:250
 msgid "Preformatted"
-msgstr ""
+msgstr "Преформатирано"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:91
 msgid "Preformatted text"
@@ -13159,47 +13159,47 @@ msgstr ""
 
 #: scripts/apps/products/views/products-config-modal.html:12
 msgid "Product Details"
-msgstr ""
+msgstr "Детаљи производа"
 
 #: scripts/apps/products/views/products-config-modal.html:26
 msgid "Product ID"
-msgstr ""
+msgstr "ИД производа"
 
 #: scripts/apps/products/views/settings.html:12
 msgid "Product Test"
-msgstr ""
+msgstr "Тест производа"
 
 #: scripts/apps/products/views/products-config-modal.html:44
 msgid "Product Type"
-msgstr ""
+msgstr "Тип производа"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:185
 msgid "Product Type is required"
-msgstr ""
+msgstr "Тип производа је обавезан"
 
 #: scripts/apps/products/views/products.html:5
 msgid "Product Type:"
-msgstr ""
+msgstr "Тип производа:"
 
 #: scripts/apps/products/views/products-config-modal.html:53
 msgid "Product codes"
-msgstr ""
+msgstr "Кодови производа"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:203
 msgid "Product deleted."
-msgstr ""
+msgstr "Производ обрисан."
 
 #: scripts/apps/products/views/products-config-modal.html:40
 msgid "Product description"
-msgstr ""
+msgstr "Опис производа"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:175
 msgid "Product is saved."
-msgstr ""
+msgstr "Производ сачуван."
 
 #: scripts/apps/products/views/products-config-modal.html:36
 msgid "Product name"
-msgstr ""
+msgstr "Назив производа"
 
 #: scripts/apps/search/views/item-repo.html:4
 msgid "Production"
@@ -13232,7 +13232,7 @@ msgstr "Производи"
 
 #: scripts/apps/products/views/settings.html:4
 msgid "Products management"
-msgstr ""
+msgstr "Управљање производима"
 
 #: scripts/apps/profiling/views/profiling.html:6
 msgid "Profile:"
@@ -13476,7 +13476,7 @@ msgstr "Гурни оригиналну варијанту"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:7
 msgid "QCode"
-msgstr ""
+msgstr "QCode"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:30
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorTools.js:30
@@ -13486,7 +13486,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:163
 msgid "Quarter"
-msgstr ""
+msgstr "Четвртина"
 
 #: scripts/apps/search/views/save-search-dialog.html:4
 msgid "Query"
@@ -13814,7 +13814,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/settings.html:31
 msgid "Related content"
-msgstr ""
+msgstr "Повезани садржај"
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:237
 msgid "Related item is not available."
@@ -13828,7 +13828,7 @@ msgstr "Повезана ставка није додата јер је поље
 
 #: scripts/apps/vocabularies/constants.ts:22
 msgid "Related items"
-msgstr ""
+msgstr "Повезане ставке"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:16
 msgid "Relative Days"
@@ -13922,7 +13922,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:21
 msgid "Remove Content Filter"
-msgstr ""
+msgstr "Уклони филтер садржаја"
 
 #: ../superdesk-planning/client/components/UI/Form/InputArray/index.tsx:84
 msgid "Remove Coverage"
@@ -13938,7 +13938,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:30
 msgid "Remove Filter Condition"
-msgstr ""
+msgstr "Уклони услов филтера"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:35
 msgid "Remove Format"
@@ -13966,7 +13966,7 @@ msgstr ""
 
 #: scripts/apps/templates/views/templates.html:37
 msgid "Remove Template"
-msgstr ""
+msgstr "Уклони шаблон"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:386
 msgid "Remove all formatting"
@@ -13990,7 +13990,7 @@ msgstr "Уклони деск"
 
 #: scripts/apps/dictionaries/views/settings.html:55
 msgid "Remove dictionary"
-msgstr ""
+msgstr "Уклони речник"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:14
 msgid "Remove fetch action"
@@ -14041,7 +14041,7 @@ msgstr "Уклони панел"
 
 #: scripts/apps/products/views/products.html:32
 msgid "Remove product"
-msgstr ""
+msgstr "Уклони производ"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:46
 msgid "Remove publish action"
@@ -14225,7 +14225,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:116
 msgid "Required {{field}} in item {{item}}"
-msgstr ""
+msgstr "Обавезно {{field}} у ставци {{item}}"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:98
 #: ../superdesk-planning/client/constants/events.ts:161
@@ -14318,7 +14318,7 @@ msgstr "Врати"
 
 #: scripts/apps/products/views/product-test.html:15
 msgid "Result Type"
-msgstr ""
+msgstr "Тип резултата"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:166
 msgid "Retweet"
@@ -14536,12 +14536,12 @@ msgstr "СЛАГЛАЈН је предугачак"
 
 #: scripts/apps/workspace/content/constants.ts:42
 msgid "SMS"
-msgstr ""
+msgstr "СМС"
 
 #: scripts/apps/authoring-react/field-adapters/sms_message.ts:21
 #: scripts/apps/workspace/content/constants.ts:43
 msgid "SMS Message"
-msgstr ""
+msgstr "СМС порука"
 
 #: scripts/apps/authoring/views/authoring-header.html:49
 msgid "SOURCE"
@@ -14573,7 +14573,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:188
 msgid "Sample content"
-msgstr ""
+msgstr "Пример садржаја"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:113
 msgid "Sat"
@@ -14699,7 +14699,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/profile-settings.html:131
 msgid "Save &amp; Continue"
-msgstr ""
+msgstr "Сачувај &amp; настави"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:388
 #: ../superdesk-planning/client/components/ContentProfiles/CoverageProfileModal.tsx:225
@@ -14921,7 +14921,7 @@ msgstr ""
 
 #: scripts/apps/templates/views/templates.html:56
 msgid "Sched. Desk / Stage"
-msgstr ""
+msgstr "Зак. деск / фаза"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:27
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:49
@@ -14932,15 +14932,15 @@ msgstr ""
 
 #: scripts/apps/templates/views/template-editor-modal.html:175
 msgid "Schedule Desk"
-msgstr ""
+msgstr "Закажи деск"
 
 #: scripts/apps/templates/views/template-editor-modal.html:197
 msgid "Schedule Macro"
-msgstr ""
+msgstr "Закажи макро"
 
 #: scripts/apps/templates/views/template-editor-modal.html:187
 msgid "Schedule Stage"
-msgstr ""
+msgstr "Закажи фазу"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:98
 msgid "Schedule an update"
@@ -14968,7 +14968,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:70
 msgid "Scheduled Desk Output"
-msgstr ""
+msgstr "Заказани излазни деск"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:151
 msgid "Scheduled Export"
@@ -14976,11 +14976,11 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:38
 msgid "Scheduled Time"
-msgstr ""
+msgstr "Заказано време"
 
 #: scripts/apps/templates/views/templates.html:68
 msgid "Scheduled Time(s)"
-msgstr ""
+msgstr "Заказано(а) време(на)"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:64
 #: ../superdesk-planning/client/utils/contentProfiles.ts:331
@@ -15278,7 +15278,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/drop-zone.tsx:76
 msgid "Select Files"
-msgstr ""
+msgstr "Изабери датотеке"
 
 #: scripts/apps/archive/views/resend-configuration.html:10
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:55
@@ -15576,7 +15576,7 @@ msgstr "Слање"
 
 #: scripts/apps/workspace/content/constants.ts:68
 msgid "Sent Desk Output"
-msgstr ""
+msgstr "Послати излаз деска"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
@@ -15738,7 +15738,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:138
 msgid "Shortcuts"
-msgstr ""
+msgstr "Пречице"
 
 #: ../superdesk-planning/client/validators/planning.ts:305
 #: ../superdesk-planning/client/validators/planning.ts:307
@@ -15779,15 +15779,15 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:332
 msgid "Show Crops"
-msgstr ""
+msgstr "Прикажи исечке"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:186
 msgid "Show Floating Character Count"
-msgstr ""
+msgstr "Прикажи плутајући бројач карактера"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:352
 msgid "Show Image Title"
-msgstr ""
+msgstr "Прикажи наслов слике"
 
 #: ../superdesk-planning/client/components/UI/Preview/ExpandableText.tsx:47
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:226
@@ -15829,7 +15829,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:263
 msgid "Show in preview"
-msgstr ""
+msgstr "Прикажи у прегледу"
 
 #: scripts/apps/authoring-react/fields/media/config.tsx:120
 msgid "Show input for editing description"
@@ -15870,7 +15870,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/WidgetsConfig.tsx:57
 msgid "Show or hide the widgets in the right toolbar in the editor workspace."
-msgstr ""
+msgstr "Прикажи или сакриј виџете у десној траци уређивача."
 
 #: scripts/apps/search/components/fields/nested-link.tsx:28
 msgid "Show previous items"
@@ -15888,7 +15888,7 @@ msgstr ""
 msgid ""
 "Show to users\n"
 "                                as"
-msgstr ""
+msgstr "Прикажи корисницима\n                                као"
 
 #: scripts/apps/archive/views/item-crops.html:1
 #: scripts/apps/authoring-react/fields/media/media-carousel/image-crops.tsx:22
@@ -15945,11 +15945,11 @@ msgstr "Једнократно коришћење"
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:57
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:214
 msgid "Single line"
-msgstr ""
+msgstr "Један ред"
 
 #: scripts/apps/vocabularies/constants.ts:48
 msgid "Single selection"
-msgstr ""
+msgstr "Један избор"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetImagePreviewFullScreen.js:120
 #: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:152
@@ -16126,7 +16126,7 @@ msgstr ""
 
 #: scripts/apps/templates/views/create-template.html:23
 msgid "Sorry, but template name must be unique."
-msgstr ""
+msgstr "Извините, али назив шаблона мора бити јединствен."
 
 #: scripts/core/auth/login-modal.html:37
 #: scripts/core/auth/reset-password.html:28
@@ -16213,7 +16213,7 @@ msgstr "Сортирање:"
 #: scripts/apps/search-providers/views/search-provider-config.html:89
 #: scripts/apps/workspace/content/constants.ts:44
 msgid "Source"
-msgstr ""
+msgstr "Извор"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:85
 msgid "Source Name"
@@ -16434,7 +16434,7 @@ msgstr "Започни претрагу"
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:154
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:186
 msgid "State"
-msgstr ""
+msgstr "Стање"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:598
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:611
@@ -16532,7 +16532,7 @@ msgstr "Складиштена процедура"
 
 #: scripts/apps/products/views/product-test.html:9
 msgid "Story GUID"
-msgstr ""
+msgstr "GUID приче"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:78
 #: scripts/apps/search/views/search-parameters.html:31
@@ -16619,7 +16619,7 @@ msgstr ""
 #: scripts/apps/search/constants.ts:15
 #: scripts/apps/workspace/content/constants.ts:46
 msgid "Subject"
-msgstr ""
+msgstr "Тема"
 
 #: ../superdesk-planning/client/validators/planning.ts:109
 msgid "Subject is a required field"
@@ -16918,7 +16918,7 @@ msgstr ""
 #: scripts/apps/authoring-react/field-adapters/anpa_take_key.ts:20
 #: scripts/apps/workspace/content/constants.ts:10
 msgid "Take Key"
-msgstr ""
+msgstr "Кључ наставка"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:7
 msgid "Take a picture"
@@ -16986,7 +16986,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:151
 #: scripts/apps/products/views/products-config-modal.html:76
 msgid "Target Regions"
-msgstr ""
+msgstr "Циљни региони"
 
 #: scripts/apps/archive/views/metadata-view.html:156
 msgid "Target Subscriber Types"
@@ -16995,7 +16995,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:146
 #: scripts/apps/templates/views/template-editor-modal.html:135
 msgid "Target Subscribers"
-msgstr ""
+msgstr "Циљни претплатници"
 
 #: scripts/apps/publish/views/subscribers.html:130
 msgid "Target Type"
@@ -17063,7 +17063,7 @@ msgstr ""
 
 #: scripts/apps/templates/views/template-editor-modal.html:46
 msgid "Template Type"
-msgstr ""
+msgstr "Тип шаблона"
 
 #: ../superdesk-planning/client/actions/events/api.ts:842
 msgid "Template already exists. Do you want to overwrite it?"
@@ -17087,11 +17087,11 @@ msgstr "Назив шаблона"
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:248
 msgid "Template saved."
-msgstr ""
+msgstr "Шаблон сачуван."
 
 #: scripts/apps/templates/views/templates.html:45
 msgid "Template type"
-msgstr ""
+msgstr "Тип шаблона"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:117
 msgid "Template will be updated"
@@ -17100,7 +17100,7 @@ msgstr "Шаблон ће бити ажуриран"
 #: scripts/apps/templates/index.ts:46
 #: scripts/apps/templates/views/templates.html:3
 msgid "Templates"
-msgstr ""
+msgstr "Шаблони"
 
 #: scripts/apps/authoring-react/field-adapters/usageterms.ts:20
 msgid "Terms of use"
@@ -17108,15 +17108,15 @@ msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filters.html:138
 msgid "Test"
-msgstr ""
+msgstr "Тестирај"
 
 #: scripts/apps/content-filters/views/manage-filters.html:19
 msgid "Test Filter Against Content"
-msgstr ""
+msgstr "Тестирај филтер на садржају"
 
 #: scripts/apps/products/views/product-test.html:24
 msgid "Test Products"
-msgstr ""
+msgstr "Тестирај производе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:189
 #: ../superdesk-planning/client/utils/index.ts:587
@@ -17127,7 +17127,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:119
 #: scripts/extensions/sams/src/utils/assets.ts:150
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:190
 msgid "Text Format"
@@ -17216,7 +17216,7 @@ msgstr ""
 #: scripts/apps/products/views/products-config-modal.html:31
 msgid ""
 "The Product ID can be copied and used as Superdesk Newshub product query."
-msgstr ""
+msgstr "ИД производа се може копирати и користити као упит за производе у Superdesk Newshub-у."
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
@@ -17304,7 +17304,7 @@ msgstr "Следећи статус није дозвољен у овом пољ
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:121
 msgid "The helper text must not exceed 120 characters."
-msgstr ""
+msgstr "Помоћни текст не сме прелазити 120 карактера."
 
 #: scripts/core/helpers/crud-manager-http.tsx:52
 msgid "The item has been created."
@@ -17417,7 +17417,7 @@ msgstr "Виџет активности корисника пружа инфор
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:226
 msgid "The values should be unique for {{uniqueField}}"
-msgstr ""
+msgstr "Вредности треба да буду јединствене за {{uniqueField}}"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:55
 msgid ""
@@ -17426,9 +17426,9 @@ msgid ""
 msgid_plural ""
 "The vocabulary {{name}} can't be deleted because it is currently used in the "
 "following Content Profiles:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећем профилу садржаја:"
+msgstr[1] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим профилима садржаја:"
+msgstr[2] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим профилима садржаја:"
 
 #: ../superdesk-planning/client/actions/main.ts:468
 msgid "The {{ itemType }} has been posted"
@@ -17628,7 +17628,7 @@ msgstr "Дошло је до проблема, деск није сачуван.
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:50
 msgid "There was a problem, dictionary not created/updated."
-msgstr ""
+msgstr "Дошло је до проблема, речник није креиран/ажуриран."
 
 #: scripts/apps/search/directives/ItemGlobalSearch.ts:59
 #: scripts/apps/search/directives/ItemGlobalSearch.ts:91
@@ -17687,7 +17687,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:92
 msgid "There was an error. Content filter cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Филтер садржаја не може бити обрисан."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:262
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:477
@@ -17704,7 +17704,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:128
 msgid "There was an error. Filter condition cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Услов филтера не може бити обрисан."
 
 #: scripts/apps/users/directives/UserRolesDirective.ts:68
 msgid "There was an error. Role cannot be deleted."
@@ -17720,11 +17720,11 @@ msgstr ""
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:371
 msgid "There was an error. Template cannot be deleted."
-msgstr ""
+msgstr "Дошло је до грешке. Шаблон не може бити обрисан."
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:162
 msgid "Third"
-msgstr ""
+msgstr "Трећина"
 
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:259
 msgid "This Coverage"
@@ -17832,7 +17832,7 @@ msgstr ""
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:358
 msgid "This is a default template of the following desk(s): {{deskNames}}."
-msgstr ""
+msgstr "Ово је подразумевани шаблон следећих десков(а): {{deskNames}}."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:351
 msgid "This is a recurring event."
@@ -17892,7 +17892,7 @@ msgstr ""
 msgid ""
 "This vocabulary is not currently used in any Content Profile and can be "
 "safely removed."
-msgstr ""
+msgstr "Овај вокабулар се тренутно не користи ни у једном профилу садржаја и може се безбедно уклонити."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:42
 msgid "This week"
@@ -17935,7 +17935,7 @@ msgstr ""
 msgid ""
 "This will appear below the field in the\n"
 "                                    Editor."
-msgstr ""
+msgstr "Ово ће се појавити испод поља у\n                                    уређивачу."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:152
 msgid "This will create new events in the remote ({{timeZone}}) timezone"
@@ -18143,7 +18143,7 @@ msgstr ""
 msgid ""
 "To delete this vocabulary, you must first remove it from all Content "
 "Profiles listed above."
-msgstr ""
+msgstr "Да бисте обрисали овај вокабулар, прво га уклоните из свих профила садржаја наведених изнад."
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:152
 msgid "To get a responsive embed code, paste a URL."
@@ -18248,7 +18248,7 @@ msgstr "Прикажи/сакриј главни мени"
 
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:343
 msgid "Toggle search"
-msgstr ""
+msgstr "Прикажи/сакриј претрагу"
 
 #: scripts/apps/search/index.ts:139
 msgid "Toggle search view"
@@ -18438,7 +18438,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:146
 #: scripts/extensions/sams/src/components/assets/assetPreviewPanel.tsx:178
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/new-item.js:80
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:80
@@ -18448,7 +18448,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:89
 msgid "Type to search or create a new label"
-msgstr ""
+msgstr "Куцајте за претрагу или креирајте нову ознаку"
 
 #: scripts/apps/authoring-react/generic-widgets/comments/CommentsWidget.tsx:184
 #: scripts/core/editor3/components/comments/CommentTextArea.tsx:122
@@ -18508,7 +18508,7 @@ msgstr "URL није пронађен."
 
 #: scripts/apps/vocabularies/views/settings.html:34
 msgid "URLs"
-msgstr ""
+msgstr "URL-ови"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:211
 msgid "Uknown validation error"
@@ -18995,7 +18995,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/views/settings.html:9
 msgid "Upload Config"
-msgstr ""
+msgstr "Отпреми конфигурацију"
 
 #: scripts/apps/archive/controllers/UploadController.ts:165
 msgid "Upload Error:"
@@ -19012,7 +19012,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/components/UploadConfigModal.tsx:69
 msgid "Upload config"
-msgstr ""
+msgstr "Отпреми конфигурацију"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:6
 msgid "Upload from computer"
@@ -19115,7 +19115,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/constants.ts:49
 msgid "Usage Terms"
-msgstr ""
+msgstr "Услови коришћења"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:40
 #: scripts/apps/archive/views/metadata-view.html:181
@@ -19123,7 +19123,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:35
 #: scripts/apps/templates/views/template-editor-modal.html:113
 msgid "Usage terms"
-msgstr ""
+msgstr "Услови коришћења"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:17
 msgid "Use Media"
@@ -19159,7 +19159,7 @@ msgstr "Користи ред приоритета за пренос."
 
 #: scripts/apps/content-filters/views/manage-filters.html:135
 msgid "Use the article GUID for testing."
-msgstr ""
+msgstr "Користите GUID чланка за тестирање."
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:14
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.js:14
@@ -19279,20 +19279,20 @@ msgstr "Провери"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:299
 msgid "Validate Characters"
-msgstr ""
+msgstr "Провери карактере"
 
 #: scripts/apps/authoring-react/fields/date/config.tsx:53
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:147
 msgid "Value"
-msgstr ""
+msgstr "Вредност"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:282
 msgid "Value must be greater than or equal to 2."
-msgstr ""
+msgstr "Вредност мора бити већа или једнака 2."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:284
 msgid "Value must be less than or equal to 99."
-msgstr ""
+msgstr "Вредност мора бити мања или једнака 99."
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:207
 msgid "Value must be unique"
@@ -19308,7 +19308,7 @@ msgstr ""
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:83
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:88
 msgid "Values"
-msgstr ""
+msgstr "Вредности"
 
 #: scripts/apps/archive/views/metadata-view.html:85
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:366
@@ -19344,7 +19344,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:110
 #: scripts/extensions/sams/src/utils/assets.ts:144
 msgid "Video"
-msgstr ""
+msgstr "Видео"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:306
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:80
@@ -19470,7 +19470,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/index.tsx:226
 #: scripts/apps/vocabularies/views/settings.html:16
 msgid "Vocabularies"
-msgstr ""
+msgstr "Вокабулари"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Vocabularies Management"
@@ -19486,7 +19486,7 @@ msgstr ""
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:101
 msgid "Vocabulary saved successfully"
-msgstr ""
+msgstr "Вокабулар успешно сачуван"
 
 #: scripts/apps/users/views/user-preferences.html:20
 #: scripts/apps/users/views/user-preferences.html:248
@@ -19495,7 +19495,7 @@ msgstr "Вредности вокабулара"
 
 #: scripts/apps/vocabularies/controllers/VocabularyConfigController.ts:243
 msgid "Vocabulary was deleted."
-msgstr ""
+msgstr "Вокабулар је обрисан."
 
 #: scripts/validate-instance-configuration.tsx:56
 msgid "Vocabulary with ID \"categories\" is required"
@@ -19507,7 +19507,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:44
 msgid "WARNING unknown filter condition value: {{ value }}"
-msgstr ""
+msgstr "УПОЗОРЕЊЕ непозната вредност услова филтера: {{ value }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:91
 msgid "WE"
@@ -19622,18 +19622,18 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:95
 msgid "Widgets"
-msgstr ""
+msgstr "Виџети"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:58
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:156
 msgid "Width"
-msgstr ""
+msgstr "Ширина"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:102
 msgid ""
 "Width of the\n"
 "                                    popup window (in pixels)"
-msgstr ""
+msgstr "Ширина\n                                    искачућег прозора (у пикселима)"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:73
 msgid "Wire/Paper"
@@ -19751,7 +19751,7 @@ msgstr ""
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:106
 msgid ""
 "You are about to delete the vocabulary {{name}}. This action can't be undone."
-msgstr ""
+msgstr "Управо ћете обрисати вокабулар {{name}}. Ова радња не може бити поништена."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:109
 msgid ""
@@ -19773,11 +19773,11 @@ msgstr ""
 
 #: scripts/apps/workspace/content/services/ContentService.ts:71
 msgid "You are not allowed to create an article there."
-msgstr ""
+msgstr "Није вам дозвољено да креирате чланак тамо."
 
 #: scripts/apps/workspace/content/services/ContentService.ts:69
 msgid "You are not allowed to create article on readonly stage."
-msgstr ""
+msgstr "Није вам дозвољено да креирате чланак у фази само за читање."
 
 #: ../superdesk-planning/client/utils/events.tsx:510
 msgid ""
@@ -19878,7 +19878,7 @@ msgstr "Ваша сесија је истекла."
 
 #: scripts/apps/vocabularies/components/UploadComplete.tsx:8
 msgid "Your upload was successful"
-msgstr ""
+msgstr "Ваше отпремање је успешно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:209
 msgid "Zoom In"
@@ -19983,7 +19983,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:90
 msgid "annotation"
-msgstr ""
+msgstr "анотација"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "archive"
@@ -20023,7 +20023,7 @@ msgstr "уређивање"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:83
 msgid "bold"
-msgstr ""
+msgstr "подебљано"
 
 #: ../superdesk-planning/client/components/UI/Form/FileInput.tsx:205
 #: scripts/core/ui/components/Form/FileInput.tsx:137
@@ -20122,7 +20122,7 @@ msgstr "коментарисао"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:91
 msgid "comments"
-msgstr ""
+msgstr "коментари"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "compact"
@@ -20196,7 +20196,7 @@ msgstr "тренутно"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:86
 msgid "custom blocks"
-msgstr ""
+msgstr "прилагођени блокови"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:17
 msgid "custom vocabulary"
@@ -20323,7 +20323,7 @@ msgstr "уграђени садржај"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:94
 msgid "embed articles"
-msgstr ""
+msgstr "уградња чланака"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:97
 #: scripts/extensions/availability-manager/dist/src/utils.js:97
@@ -20442,7 +20442,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:87
 msgid "formatting marks"
-msgstr ""
+msgstr "ознаке форматирања"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:36
 #: scripts/apps/authoring/versioning/history/views/history.html:47
@@ -20653,7 +20653,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:82
 msgid "italic"
-msgstr ""
+msgstr "курзив"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:429
 msgid "item"
@@ -20710,7 +20710,7 @@ msgstr[2] ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:77
 msgid "link"
-msgstr ""
+msgstr "линк"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:143
 msgid "linked to"
@@ -20754,7 +20754,7 @@ msgstr ""
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:100
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:31
 msgid "lowercase"
-msgstr ""
+msgstr "мала слова"
 
 #: scripts/apps/packaging/services/PackagesService.ts:24
 #: scripts/apps/packaging/services/PackagesService.ts:55
@@ -20771,7 +20771,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:76
 msgid "media"
-msgstr ""
+msgstr "медиј"
 
 #: scripts/core/menu/notifications/views/notifications.html:35
 msgid "mentioned you"
@@ -20809,11 +20809,11 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/date/config.tsx:85
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:155
 msgid "months"
-msgstr ""
+msgstr "месеци"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:85
 msgid "multi-line quote"
-msgstr ""
+msgstr "цитат у више редова"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:23
 msgid "never"
@@ -20835,7 +20835,7 @@ msgstr "следеће"
 
 #: scripts/apps/content-filters/controllers/FilterSearchController.ts:112
 msgid "no results found"
-msgstr ""
+msgstr "нема пронађених резултата"
 
 #: scripts/apps/profiling/views/profiling.html:10
 #: scripts/apps/publish/views/publish-queue.html:18
@@ -21054,7 +21054,7 @@ msgstr "цитат"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:98
 msgid "redo"
-msgstr ""
+msgstr "понови"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:10
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:7
@@ -21063,11 +21063,11 @@ msgstr "повезани садржај"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:89
 msgid "remove all format"
-msgstr ""
+msgstr "уклони сво форматирање"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:88
 msgid "remove format"
-msgstr ""
+msgstr "уклони форматирање"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:111
 msgid "removed desk"
@@ -21168,7 +21168,7 @@ msgstr ""
 
 #: scripts/apps/content-filters/controllers/FilterSearchController.ts:31
 msgid "single value is required"
-msgstr ""
+msgstr "обавезна је једна вредност"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "slugline"
@@ -21237,7 +21237,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:80
 msgid "strikethrough"
-msgstr ""
+msgstr "прецртано"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:83
 #: scripts/core/lang/missing-translations-strings.ts:11
@@ -21246,7 +21246,7 @@ msgstr "поднето"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:79
 msgid "subscript"
-msgstr ""
+msgstr "индекс"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "subscription"
@@ -21263,11 +21263,11 @@ msgstr "успех"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:92
 msgid "suggestions"
-msgstr ""
+msgstr "сугестије"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:78
 msgid "superscript"
-msgstr ""
+msgstr "експонент"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:16
 msgid "switch to grid view"
@@ -21279,15 +21279,15 @@ msgstr "пређи на приказ листе"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:95
 msgid "tab"
-msgstr ""
+msgstr "таб"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:96
 msgid "tab as space"
-msgstr ""
+msgstr "таб као размак"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:84
 msgid "table"
-msgstr ""
+msgstr "табела"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:58
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:58
@@ -21341,11 +21341,11 @@ msgstr ""
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:81
 msgid "underline"
-msgstr ""
+msgstr "подвучено"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:97
 msgid "undo"
-msgstr ""
+msgstr "опозови"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:72
 #: scripts/core/editor3/helpers/highlights.ts:66
@@ -21394,7 +21394,7 @@ msgstr "отпремио медиј {{name}}"
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:30
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:99
 msgid "uppercase"
-msgstr ""
+msgstr "велика слова"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:98
 msgid "url of the search provider"
@@ -21495,7 +21495,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/date/config.tsx:84
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:154
 msgid "weeks"
-msgstr ""
+msgstr "недеље"
 
 #: scripts/api/article-fetch.tsx:136
 msgid "width"
@@ -21523,7 +21523,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/date/config.tsx:86
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:156
 msgid "years"
-msgstr ""
+msgstr "године"
 
 #: scripts/apps/dashboard/views/configuration.html:2
 msgid "{{ 'Configuration' }}"
@@ -21813,9 +21813,9 @@ msgstr ""
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:55
 msgid "{{wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{wordsCount}} реч"
+msgstr[1] "{{wordsCount}} речи"
+msgstr[2] "{{wordsCount}} речи"
 
 #: scripts/extensions/datetimeField/dist/src/editor.js:76
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/editor.js:81
