@@ -12079,7 +12079,7 @@ msgstr "Отвори претрагу"
 
 #: scripts/apps/workspace/index.ts:36
 msgid "Open spike"
-msgstr "Отвори кош"
+msgstr "Отвори корпу"
 
 #: scripts/apps/workspace/index.ts:35
 msgid "Open tasks"
@@ -16264,7 +16264,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/config.ts:29
 msgid "Spike Monitoring"
-msgstr "Мониторинг коша"
+msgstr "Мониторинг корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:138
 msgid "Spike Planning Item"
@@ -16280,7 +16280,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:127
 msgid "Spike item(s)"
-msgstr "Премести ставку(е) у кош"
+msgstr "Премести ставку(е) у корпу"
 
 #: ../superdesk-planning/client/constants/planning.ts:135
 msgid "Spike planning"
@@ -16298,7 +16298,7 @@ msgstr ""
 #: scripts/apps/search/components/fields/state.tsx:36
 #: scripts/apps/search/constants.ts:14
 msgid "Spiked"
-msgstr "У кошу"
+msgstr "У корпи"
 
 #: scripts/apps/search/views/search-parameters.html:145
 msgid "Spiked Content"
@@ -16307,7 +16307,7 @@ msgstr ""
 #: scripts/apps/monitoring/config.ts:40
 #: scripts/apps/monitoring/views/monitoring-view.html:257
 msgid "Spiked Items"
-msgstr "Ставке у кошу"
+msgstr "Ставке у корпи"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:177
 msgid "Spiked Only"
@@ -16320,7 +16320,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
-msgstr "Ставке у кошу"
+msgstr "Ставке у корпи"
 
 #: scripts/apps/search/views/search-parameters.html:153
 msgid "Spiked only content"

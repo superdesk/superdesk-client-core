@@ -29,6 +29,9 @@ Use neutral Serbian Cyrillic (Вукова ћирилица). Prefer consistency
 | slugline | слаглајн | transliterated journalist jargon |
 | desk | деск | editorial unit (e.g. politics desk, sports desk) |
 | stage | фаза | workflow stage |
+| spike (verb) | преместити у корпу | journalism: move article to discard bin. Decline `корпа` per case (`у корпу` / `у корпи` / `мониторинг корпе`) |
+| spike (noun) | корпа | the discard bin itself |
+| spiked | у корпи | item state |
 | workspace | радни простор | |
 | assignment | задатак | work assignment |
 | planning | планирање | |
