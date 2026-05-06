@@ -181,9 +181,9 @@ msgstr "1 месец"
 #: ../superdesk-planning/client/components/fields/with-more-items.tsx:52
 msgid "1 more item"
 msgid_plural "{{n}} more items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Још 1 ставка"
+msgstr[1] "Још {{n}} ставке"
+msgstr[2] "Још {{n}} ставки"
 
 #: ../superdesk-analytics/client/utils.js:210
 msgid "1 second"
@@ -229,7 +229,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:44
 #: ../superdesk-planning/client/utils/filters.ts:81
 msgid "10th"
-msgstr ""
+msgstr "10."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "10th update"
@@ -238,7 +238,7 @@ msgstr "10. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:45
 #: ../superdesk-planning/client/utils/filters.ts:83
 msgid "11th"
-msgstr ""
+msgstr "11."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "11th update"
@@ -255,7 +255,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:46
 #: ../superdesk-planning/client/utils/filters.ts:85
 msgid "12th"
-msgstr ""
+msgstr "12."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "12th update"
@@ -264,7 +264,7 @@ msgstr "12. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:47
 #: ../superdesk-planning/client/utils/filters.ts:87
 msgid "13th"
-msgstr ""
+msgstr "13."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "13th update"
@@ -273,7 +273,7 @@ msgstr "13. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:48
 #: ../superdesk-planning/client/utils/filters.ts:89
 msgid "14th"
-msgstr ""
+msgstr "14."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "14th update"
@@ -282,7 +282,7 @@ msgstr "14. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:49
 #: ../superdesk-planning/client/utils/filters.ts:91
 msgid "15th"
-msgstr ""
+msgstr "15."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "15th update"
@@ -291,7 +291,7 @@ msgstr "15. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:50
 #: ../superdesk-planning/client/utils/filters.ts:93
 msgid "16th"
-msgstr ""
+msgstr "16."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "16th update"
@@ -299,7 +299,7 @@ msgstr "16. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:51
 msgid "17th"
-msgstr ""
+msgstr "17."
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "17th update"
@@ -307,7 +307,7 @@ msgstr "17. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:52
 msgid "18th"
-msgstr ""
+msgstr "18."
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "18th update"
@@ -316,7 +316,7 @@ msgstr "18. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:53
 #: ../superdesk-planning/client/utils/filters.ts:99
 msgid "19th"
-msgstr ""
+msgstr "19."
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "19th update"
@@ -349,7 +349,7 @@ msgstr "200 минимум"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:54
 #: ../superdesk-planning/client/utils/filters.ts:101
 msgid "20th"
-msgstr ""
+msgstr "20."
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "20th update"
@@ -358,17 +358,17 @@ msgstr "20. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:55
 #: ../superdesk-planning/client/utils/filters.ts:103
 msgid "21st"
-msgstr ""
+msgstr "21."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:56
 #: ../superdesk-planning/client/utils/filters.ts:105
 msgid "22nd"
-msgstr ""
+msgstr "22."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:57
 #: ../superdesk-planning/client/utils/filters.ts:107
 msgid "23rd"
-msgstr ""
+msgstr "23."
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 msgid "24 Hours"
@@ -377,7 +377,7 @@ msgstr "24 сата"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:58
 #: ../superdesk-planning/client/utils/filters.ts:109
 msgid "24th"
-msgstr ""
+msgstr "24."
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:187
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:187
@@ -394,27 +394,27 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:59
 #: ../superdesk-planning/client/utils/filters.ts:111
 msgid "25th"
-msgstr ""
+msgstr "25."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:60
 #: ../superdesk-planning/client/utils/filters.ts:113
 msgid "26th"
-msgstr ""
+msgstr "26."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:61
 #: ../superdesk-planning/client/utils/filters.ts:115
 msgid "27th"
-msgstr ""
+msgstr "27."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:62
 #: ../superdesk-planning/client/utils/filters.ts:117
 msgid "28th"
-msgstr ""
+msgstr "28."
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:36
 #: ../superdesk-planning/client/utils/filters.ts:65
 msgid "2nd"
-msgstr ""
+msgstr "2."
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "2nd update"
@@ -423,7 +423,7 @@ msgstr "2. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:37
 #: ../superdesk-planning/client/utils/filters.ts:67
 msgid "3rd"
-msgstr ""
+msgstr "3."
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "3rd update"
@@ -440,7 +440,7 @@ msgstr "48 сати"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:38
 #: ../superdesk-planning/client/utils/filters.ts:69
 msgid "4th"
-msgstr ""
+msgstr "4."
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "4th update"
@@ -471,7 +471,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:39
 #: ../superdesk-planning/client/utils/filters.ts:71
 msgid "5th"
-msgstr ""
+msgstr "5."
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "5th update"
@@ -488,7 +488,7 @@ msgstr "6 месеци"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:40
 #: ../superdesk-planning/client/utils/filters.ts:73
 msgid "6th"
-msgstr ""
+msgstr "6."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "6th update"
@@ -501,7 +501,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:41
 #: ../superdesk-planning/client/utils/filters.ts:75
 msgid "7th"
-msgstr ""
+msgstr "7."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "7th update"
@@ -510,7 +510,7 @@ msgstr "7. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:42
 #: ../superdesk-planning/client/utils/filters.ts:77
 msgid "8th"
-msgstr ""
+msgstr "8."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "8th update"
@@ -519,7 +519,7 @@ msgstr "8. ажурирање"
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:43
 #: ../superdesk-planning/client/utils/filters.ts:79
 msgid "9th"
-msgstr ""
+msgstr "9."
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "9th update"
@@ -612,7 +612,7 @@ msgstr "ДОДАЈ РЕЧ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:35
 msgid "AMP"
-msgstr ""
+msgstr "AMP"
 
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:88
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:97
@@ -629,7 +629,7 @@ msgstr "ANPA категорија"
 
 #: ../superdesk-planning/client/components/fields/list/Categories.tsx:19
 msgid "ANPA Category:"
-msgstr ""
+msgstr "ANPA категорија:"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "ANPA Take Key"
@@ -805,7 +805,7 @@ msgstr "Виџет тока активности"
 #: ../superdesk-planning/client/components/fields/editor/AdHocPlanning.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:41
 msgid "Ad Hoc Planning"
-msgstr ""
+msgstr "Ад хок планирање"
 
 #: scripts/apps/authoring-react/fields/date/config.tsx:109
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:239
@@ -881,11 +881,11 @@ msgstr "Додај критеријум филтера"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:28
 msgid "Add Gallery"
-msgstr ""
+msgstr "Додај галерију"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:29
 msgid "Add Image"
-msgstr ""
+msgstr "Додај слику"
 
 #: scripts/apps/ingest/views/dashboard/ingest-sources-list.html:1
 msgid "Add Ingest Sources"
@@ -1251,7 +1251,7 @@ msgstr "Додавање повезаних ставки које нису об�
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:49
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:24
 msgid "Address"
-msgstr ""
+msgstr "Адреса"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:541
 msgid "Address line 1"
@@ -1263,7 +1263,7 @@ msgstr "Адреса 2"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:30
 msgid "Adjust"
-msgstr ""
+msgstr "Подеси"
 
 #: scripts/apps/authoring/views/change-image.html:239
 msgid "Adjust colours"
@@ -1374,7 +1374,7 @@ msgstr "Агенда додељена ставци планирања."
 
 #: ../superdesk-planning/client/components/fields/agendas.tsx:29
 msgid "Agenda:"
-msgstr ""
+msgstr "Агенда:"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:201
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/agendas-field.ts:27
@@ -1472,19 +1472,19 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:31
 msgid "Align Center"
-msgstr ""
+msgstr "Поравнај по средини"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:32
 msgid "Align Justify"
-msgstr ""
+msgstr "Обострано поравнај"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:33
 msgid "Align Left"
-msgstr ""
+msgstr "Поравнај лево"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:34
 msgid "Align Right"
-msgstr ""
+msgstr "Поравнај десно"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:76
 #: scripts/apps/contacts/services/ContactsService.ts:55
@@ -1507,7 +1507,7 @@ msgstr "Сва извештавања су отказана"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:25
 msgid "All Coverages Assigned"
-msgstr ""
+msgstr "Сва извештавања додељена"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:64
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:12
@@ -1516,7 +1516,7 @@ msgstr "Цео дан"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:136
 msgid "All Day Toggle"
-msgstr ""
+msgstr "Прекидач за цео дан"
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:21
 msgid "All Desks"
@@ -1802,7 +1802,7 @@ msgstr ""
 #: ../superdesk-analytics/client/index.js:94
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:36
 msgid "Analytics"
-msgstr ""
+msgstr "Аналитика"
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:121
 #: scripts/core/editor3/components/toolbar/index.tsx:410
@@ -1878,7 +1878,7 @@ msgstr "Примењени глобални филтери блокирања"
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:243
 #: scripts/extensions/broadcasting/src/rundown-templates/template-edit.tsx:563
 msgid "Apply"
-msgstr ""
+msgstr "Примени"
 
 #: scripts/apps/master-desk/components/FilterPanelComponent.tsx:171
 msgid "Apply Filters"
@@ -2052,19 +2052,19 @@ msgstr "Да ли сте сигурни да желите да повучете 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:236
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:32
 msgid "Area"
-msgstr ""
+msgstr "Област"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:38
 msgid "Arrow Left"
-msgstr ""
+msgstr "Стрелица лево"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:39
 msgid "Arrow Right"
-msgstr ""
+msgstr "Стрелица десно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:40
 msgid "Arrow Small"
-msgstr ""
+msgstr "Мала стрелица"
 
 #: scripts/apps/users/views/user-preferences.html:103
 msgid "Article Defaults"
@@ -2091,11 +2091,11 @@ msgstr "Тип(ови) чланка"
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:105
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:122
 msgid "Article Type: text"
-msgstr ""
+msgstr "Тип чланка: текст"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/RelatedArticlesListComponent.tsx:100
 msgid "Article Type: {{articleType}}"
-msgstr ""
+msgstr "Тип чланка: {{articleType}}"
 
 #: ../superdesk-planning/client/utils/assignments.ts:504
 #: scripts/apps/authoring/authoring/directives/AuthoringHeaderDirective.ts:70
@@ -2124,7 +2124,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:304
 msgid "Article preview"
-msgstr ""
+msgstr "Преглед чланка"
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:236
 msgid "Article was created."
@@ -2457,7 +2457,7 @@ msgstr "Садржај задатака"
 
 #: ../superdesk-planning/client/components/fields/editor/XMPFile.tsx:53
 msgid "Associate an XMP file"
-msgstr ""
+msgstr "Повежи XMP датотеку"
 
 #: scripts/apps/search/components/Associations.tsx:40
 msgid "Associated"
@@ -2532,7 +2532,7 @@ msgstr "Прилог"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:44
 msgid "Attachment Large"
-msgstr ""
+msgstr "Велики прилог"
 
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/planning-attachments/index.tsx:24
 #: scripts/apps/authoring-react/field-adapters/attachments.ts:16
@@ -2741,11 +2741,11 @@ msgstr "Назад на листу корисника"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:46
 msgid "Backward Thin"
-msgstr ""
+msgstr "Уназад танко"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:47
 msgid "Ban Circle"
-msgstr ""
+msgstr "Круг забране"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:87
 msgid "Bar"
@@ -2773,7 +2773,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:48
 msgid "Bell"
-msgstr ""
+msgstr "Звоно"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:39
 msgid "Better"
@@ -2839,7 +2839,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:49
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:32
 msgid "Bold"
-msgstr ""
+msgstr "Подебљано"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:75
 msgid "Bold (Ctrl+B)"
@@ -2873,7 +2873,7 @@ msgstr "Емисија"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:51
 msgid "Broadcast Create"
-msgstr ""
+msgstr "Креирај емисију"
 
 #: scripts/extensions/broadcasting/dist/src/extension.js:19
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/extension.js:19
@@ -2892,7 +2892,7 @@ msgstr "Зграда, апартман, стан, спрат, итд."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:52
 msgid "Business"
-msgstr ""
+msgstr "Бизнис"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "By"
@@ -2967,11 +2967,11 @@ msgstr "ПРИЛАГОЂЕНИ РАДНИ ПРОСТОРИ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:53
 msgid "Calendar"
-msgstr ""
+msgstr "Календар"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:54
 msgid "Calendar List"
-msgstr ""
+msgstr "Листа календара"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:922
 msgid "Calendar assigned to the event"
@@ -2979,7 +2979,7 @@ msgstr "Календар додељен догађају"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:52
 msgid "Calendar:"
-msgstr ""
+msgstr "Календар:"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:37
 msgid "Calendar: {{activeCalendarName}}"
@@ -3230,7 +3230,7 @@ msgstr "Откажи извештавање"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:53
 msgid "Cancel planning items with Event"
-msgstr ""
+msgstr "Откажи ставке планирања са догађајем"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:84
 msgid "Cancel {{event}}"
@@ -3256,7 +3256,7 @@ msgstr "Не можете додати саму ставку као повеза
 msgid ""
 "Cannot change workflow status if the coverage is part of an expired planning "
 "item"
-msgstr ""
+msgstr "Није могуће променити статус радног тока ако је извештавање део истекле ставке планирања"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:35
 msgid "Cannot delete vocabulary"
@@ -3436,19 +3436,19 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:55
 msgid "Chevron Down Thin"
-msgstr ""
+msgstr "Шеврон доле танко"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:56
 msgid "Chevron Left Thin"
-msgstr ""
+msgstr "Шеврон лево танко"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:57
 msgid "Chevron Right Thin"
-msgstr ""
+msgstr "Шеврон десно танко"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:58
 msgid "Chevron Up Thin"
-msgstr ""
+msgstr "Шеврон горе танко"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:36
 msgid "Choose entire category"
@@ -3483,7 +3483,7 @@ msgstr "Град"
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:118
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:48
 msgid "City/Town"
-msgstr ""
+msgstr "Град/насеље"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:274
 msgid "Clean Pasted HTML"
@@ -3512,7 +3512,7 @@ msgstr "Очисти"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:59
 msgid "Clear All"
-msgstr ""
+msgstr "Очисти све"
 
 #: scripts/apps/search/views/search-parameters.html:261
 msgid "Clear Edge"
@@ -3531,11 +3531,11 @@ msgstr "Очисти филтере"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:60
 msgid "Clear Format"
-msgstr ""
+msgstr "Очисти форматирање"
 
 #: ../superdesk-planning/client/components/UI/SearchBox.tsx:118
 msgid "Clear Search"
-msgstr ""
+msgstr "Очисти претрагу"
 
 #: scripts/apps/master-desk/components/FilterBarComponent.tsx:34
 msgid "Clear all filters"
@@ -3593,7 +3593,7 @@ msgstr "Кликните на дугме \"+\" у горњем десном уг
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:160
 msgid "Click the Plus button to add languages"
-msgstr ""
+msgstr "Кликните на дугме плус да бисте додали језике"
 
 #: scripts/apps/users/views/change-avatar.html:38
 msgid ""
@@ -3702,7 +3702,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:61
 msgid "Close Small"
-msgstr ""
+msgstr "Мало затвори"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/summary/summary-widget.js:47
 #: scripts/extensions/ai-widget/dist/src/summary/summary-widget.js:47
@@ -3712,7 +3712,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:62
 msgid "Close Thick"
-msgstr ""
+msgstr "Дебело затвори"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-widget.js:43
 #: scripts/extensions/ai-widget/dist/src/translations/translations-widget.js:43
@@ -3768,7 +3768,7 @@ msgstr "Затварање није успело"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:63
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #: ../superdesk-planning/client/components/UI/CollapseBox.tsx:175
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:64
@@ -3799,7 +3799,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:42
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:18
 msgid "Combined"
-msgstr ""
+msgstr "Комбиновано"
 
 #: scripts/apps/publish/views/subscribers.html:158
 msgid "Comma separated values"
@@ -3825,7 +3825,7 @@ msgstr "Коментари"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:223
 msgid "Common"
-msgstr ""
+msgstr "Уобичајено"
 
 #: scripts/apps/monitoring/directives/utils.ts:95
 #: scripts/apps/search/views/search.html:22
@@ -3884,7 +3884,7 @@ msgstr "Завршено"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:66
 #: ../superdesk-planning/client/utils/index.ts:595
 msgid "Composite"
-msgstr ""
+msgstr "Композитни"
 
 #: scripts/apps/legal-archive/index.ts:38
 msgid "Confidential data"
@@ -4084,7 +4084,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/ContentTemplate.tsx:82
 msgid "Content Template"
-msgstr ""
+msgstr "Шаблон садржаја"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:321
 #: scripts/apps/publish/views/publish-queue.html:107
@@ -4393,7 +4393,7 @@ msgstr "Детаљи доделе извештавања"
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:37
 #: ../superdesk-planning/client/components/fields/preview/index.ts:45
 msgid "Coverage Assignment Status"
-msgstr ""
+msgstr "Статус доделе извештавања"
 
 #: ../superdesk-planning/client/utils/assignments.ts:206
 msgid "Coverage Contact"
@@ -4466,11 +4466,11 @@ msgstr "Извештавање је додато у радни ток"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:28
 msgid "Coverage must be assigned to a desk"
-msgstr ""
+msgstr "Извештавање мора бити додељено деску"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:24
 msgid "Coverage must be in draft status"
-msgstr ""
+msgstr "Извештавање мора бити у статусу нацрта"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:25
 msgid "Coverage of type {{ type }} created"
@@ -4494,7 +4494,7 @@ msgstr "Извештавање уклоњено"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:20
 msgid "Coverage was cancelled"
-msgstr ""
+msgstr "Извештавање је отказано"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:77
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.tsx:199
@@ -4750,11 +4750,11 @@ msgstr "Креирано"
 
 #: ../superdesk-planning/client/components/UI/List/CreatedUpdatedColumn.tsx:28
 msgid "Created : {{ datetime }}"
-msgstr ""
+msgstr "Креирано: {{ datetime }}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:154
 msgid "Created From"
-msgstr ""
+msgstr "Креирано од"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
@@ -4762,7 +4762,7 @@ msgstr "Креиран канал пријема {{name}}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created To"
-msgstr ""
+msgstr "Креирано до"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundowns-list.js:105
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:105
@@ -4839,7 +4839,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:80
 msgid "Creation date"
-msgstr ""
+msgstr "Датум креирања"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:17
 #: scripts/apps/search/constants.ts:11
@@ -4879,7 +4879,7 @@ msgstr "Критичне грешке"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:68
 #: scripts/apps/authoring/views/change-image.html:205
 msgid "Crop"
-msgstr ""
+msgstr "Исеци"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:181
 msgid "Crop coordinates are not defined for {{cropName}} picture crop."
@@ -4964,7 +4964,7 @@ msgstr "Прилагодите своје виџете и приказе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:69
 msgid "Cut"
-msgstr ""
+msgstr "Исеци"
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:46
 msgid "D"
@@ -5052,7 +5052,7 @@ msgstr "Датум креирања"
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:2
 #: ../superdesk-planning/client/components/fields/preview/index.ts:142
 msgid "Date Filter"
-msgstr ""
+msgstr "Филтер датума"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:3
 msgid "Date Filter:"
@@ -5061,7 +5061,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:108
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:16
 msgid "Date Filters"
-msgstr ""
+msgstr "Филтери датума"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:180
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:94
@@ -5127,7 +5127,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/index.tsx:232
 #: ../superdesk-planning/client/utils/contentProfiles.ts:265
 msgid "Dates"
-msgstr ""
+msgstr "Датуми"
 
 #: scripts/extensions/datetimeField/dist/src/extension.js:20
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/extension.js:20
@@ -5152,7 +5152,7 @@ msgstr "Дан"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:29
 msgid "Day of the Month"
-msgstr ""
+msgstr "Дан у месецу"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:30
 msgid "Day(s)"
@@ -5194,7 +5194,7 @@ msgstr "Подразумевани деск"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:147
 msgid "Default Duration"
-msgstr ""
+msgstr "Подразумевано трајање"
 
 #: scripts/apps/users/views/user-preferences.html:232
 msgid "Default Events & Planning Filter"
@@ -5212,7 +5212,7 @@ msgstr "Подразумевана тема"
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:236
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:208
 msgid "Default Value"
-msgstr ""
+msgstr "Подразумевана вредност"
 
 #: scripts/apps/users/views/settings-roles.html:54
 msgid "Default author roles"
@@ -5229,7 +5229,7 @@ msgstr "Подразумевани шаблон деска"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:189
 msgid "Default language"
-msgstr ""
+msgstr "Подразумевани језик"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:69
 msgid "Default language is a required field"
@@ -5354,7 +5354,7 @@ msgstr "Обрисати ставку?"
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:226
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:230
 msgid "Delete link"
-msgstr ""
+msgstr "Обриши линк"
 
 #: scripts/apps/search/views/saved-searches.html:16
 #: scripts/apps/search/views/saved-searches.html:45
@@ -5799,7 +5799,7 @@ msgstr "Приказује активне пречице на тастатури
 #: ../superdesk-planning/client/components/fields/editor/NoContentLinking.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/Flags.tsx:30
 msgid "Do not link content updates"
-msgstr ""
+msgstr "Не повезуј ажурирања садржаја"
 
 #: scripts/apps/vocabularies/constants.ts:56
 msgid "Do not show"
@@ -5922,11 +5922,11 @@ msgstr "Готово"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:71
 msgid "Dots"
-msgstr ""
+msgstr "Тачке"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:72
 msgid "Dots Vertical"
-msgstr ""
+msgstr "Тачке вертикално"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:269
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:67
@@ -5937,11 +5937,11 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/utils/assets.js:45
 #: scripts/extensions/sams/src/utils/assets.ts:57
 msgid "Download"
-msgstr ""
+msgstr "Преузми"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:74
 msgid "Download Alternate"
-msgstr ""
+msgstr "Алтернативно преузимање"
 
 #: scripts/apps/vocabularies/views/vocabulary-config.html:84
 msgid "Download config"
@@ -6002,7 +6002,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:101
 msgid "Drop events here"
-msgstr ""
+msgstr "Пустите догађаје овде"
 
 #: ../superdesk-planning/client/components/AttachmentsInputStandalone.tsx:87
 msgid "Drop files here to upload"
@@ -6025,7 +6025,7 @@ msgstr "Пустите ставке овде или кликните за отп
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:184
 msgid "Drop planning items here"
-msgstr ""
+msgstr "Пустите ставке планирања овде"
 
 #: scripts/apps/authoring-react/fields/dropdown/index.ts:21
 msgid "Dropdown (authoring-react)"
@@ -6033,11 +6033,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:174
 msgid "Dropped item is not a planning item"
-msgstr ""
+msgstr "Пуштена ставка није ставка планирања"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:164
 msgid "Dropped item is not an event"
-msgstr ""
+msgstr "Пуштена ставка није догађај"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/ScheduledUpdateForm.tsx:169
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:235
@@ -6371,7 +6371,7 @@ msgstr "Уреди изворе пријема"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:75
 msgid "Edit Line"
-msgstr ""
+msgstr "Уреди линију"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:190
 msgid "Edit Location"
@@ -6585,7 +6585,7 @@ msgstr "Уређивање"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:124
 msgid "Editor 3"
-msgstr ""
+msgstr "Уређивач 3"
 
 #: scripts/apps/authoring-react/fields/editor3/index.tsx:57
 msgid "Editor3 (authoring-react)"
@@ -6606,7 +6606,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:253
 msgid "Ednote"
-msgstr ""
+msgstr "Ур. напомена"
 
 #: scripts/apps/contacts/constants.ts:70
 #: scripts/apps/contacts/views/search-panel.html:47
@@ -6774,7 +6774,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:76
 msgid "Envelope"
-msgstr ""
+msgstr "Коверта"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:243
 msgid "Error"
@@ -7146,7 +7146,7 @@ msgstr "Детаљи догађаја"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:225
 msgid "Event Ends"
-msgstr ""
+msgstr "Догађај се завршава"
 
 #: ../superdesk-planning/client/api/contentProfiles.ts:212
 msgid "Event Fields"
@@ -7176,7 +7176,7 @@ msgstr "Догађај поново заказан са"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:206
 msgid "Event Starts"
-msgstr ""
+msgstr "Догађај почиње"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:60
 msgid "Event cancelled"
@@ -7200,7 +7200,7 @@ msgstr "Догађај је поново заказан"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:77
 msgid "Event has to be created before adding related plannings"
-msgstr ""
+msgstr "Догађај мора бити креиран пре додавања повезаних планирања"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:84
 msgid "Event repetitions modified"
@@ -7232,7 +7232,7 @@ msgstr "Догађај ће бити промењен у вишедневни д
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:44
 msgid "Event/Planning date"
-msgstr ""
+msgstr "Датум догађаја/планирања"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:75
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:21
@@ -7244,7 +7244,7 @@ msgstr ""
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:18
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:26
 msgid "Events"
-msgstr ""
+msgstr "Догађаји"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.tsx:39
 msgid "Events & Planning"
@@ -7298,7 +7298,7 @@ msgstr "Тачно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:78
 msgid "Exclamation Sign"
-msgstr ""
+msgstr "Знак узвика"
 
 #: ../superdesk-analytics/client/search/views/preview-source-filter.html:6
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:102
@@ -7319,7 +7319,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ExcludeRescheduledAndCancelled.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:79
 msgid "Exclude Rescheduled And Cancelled"
-msgstr ""
+msgstr "Изостави поново заказане и отказане"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:304
 msgid "Exclude Rewrites"
@@ -7327,7 +7327,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:173
 msgid "Exclude Spike"
-msgstr ""
+msgstr "Изостави корпу"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:359
 msgid "Exclude all locked items"
@@ -7363,11 +7363,11 @@ msgstr "Прошири"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:80
 msgid "Expand Thin"
-msgstr ""
+msgstr "Прошири танко"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:108
 msgid "Expandable"
-msgstr ""
+msgstr "Проширив"
 
 #: scripts/apps/publish/views/subscribers.html:304
 msgid "Expire in:"
@@ -7376,7 +7376,7 @@ msgstr "Истиче за:"
 #: ../superdesk-planning/client/components/fields/state.tsx:55
 #: ../superdesk-planning/client/utils/index.ts:430
 msgid "Expired"
-msgstr ""
+msgstr "Истекло"
 
 #: scripts/apps/archive/views/metadata-view.html:98
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:277
@@ -7420,7 +7420,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/ExportTemplate.tsx:48
 msgid "Export Template"
-msgstr ""
+msgstr "Шаблон извоза"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:255
 msgid "Export as article"
@@ -7437,7 +7437,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:81
 msgid "External"
-msgstr ""
+msgstr "Спољашњи"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:237
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:116
@@ -7451,7 +7451,7 @@ msgstr "Спољна референца"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:82
 msgid "Eye Open"
-msgstr ""
+msgstr "Отворено око"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:107
 msgid "FR"
@@ -7480,7 +7480,7 @@ msgstr "Facebook"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:84
 msgid "Facebook Circle"
-msgstr ""
+msgstr "Facebook круг"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:923
 msgid "Failed to add Calendar to the Event"
@@ -7912,20 +7912,20 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/containers/FileUploadModal.js:208
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:240
 msgid "Failed to upload files"
-msgstr ""
+msgstr "Отпремање датотека није успело"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:34
 #: ../superdesk-planning/client/components/fields/preview/base/utils.ts:17
 msgid "False"
-msgstr ""
+msgstr "Нетачно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:85
 msgid "Fast Forward"
-msgstr ""
+msgstr "Брзо унапред"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:86
 msgid "Fast Rewind"
-msgstr ""
+msgstr "Брзо уназад"
 
 #: scripts/apps/workspace/content/constants.ts:26
 msgid "Feature Image"
@@ -8020,7 +8020,7 @@ msgstr "Преузми"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:87
 msgid "Fetch As"
-msgstr ""
+msgstr "Преузми као"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Fetch Content To a Desk"
@@ -8085,7 +8085,7 @@ msgstr "Поље је обавезно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:88
 msgid "File"
-msgstr ""
+msgstr "Датотека"
 
 #: scripts/apps/publish/views/file-config.html:11
 #: scripts/apps/publish/views/file-config.html:9
@@ -8175,7 +8175,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:89
 msgid "Filter Large"
-msgstr ""
+msgstr "Велики филтер"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilter.tsx:225
 msgid "Filter Name"
@@ -8279,15 +8279,15 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:35
 msgid "First Day"
-msgstr ""
+msgstr "Први дан"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:224
 msgid "First Event Ends"
-msgstr ""
+msgstr "Први догађај се завршава"
 
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:205
 msgid "First Event Starts"
-msgstr ""
+msgstr "Први догађај почиње"
 
 #: scripts/apps/contacts/constants.ts:68
 #: scripts/apps/contacts/views/search-panel.html:14
@@ -8309,11 +8309,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:90
 msgid "Flip Horizontal"
-msgstr ""
+msgstr "Окрени хоризонтално"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:91
 msgid "Flip Vertical"
-msgstr ""
+msgstr "Окрени вертикално"
 
 #: scripts/apps/authoring/views/change-image.html:208
 msgid "Flip horizontal"
@@ -8329,11 +8329,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:92
 msgid "Folder Close"
-msgstr ""
+msgstr "Затвори фасциклу"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:93
 msgid "Folder Open"
-msgstr ""
+msgstr "Отвори фасциклу"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:94
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-panel.tsx:94
@@ -8384,7 +8384,7 @@ msgstr "Форматери"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:34
 msgid "Formatting Marks"
-msgstr ""
+msgstr "Ознаке форматирања"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:69
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:75
@@ -8400,11 +8400,11 @@ msgstr "Опције форматирања"
 
 #: ../superdesk-planning/client/components/fields/editor/OverrideAutoAssignToWorkflow.tsx:15
 msgid "Forward Planning"
-msgstr ""
+msgstr "Будуће планирање"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:95
 msgid "Forward Thin"
-msgstr ""
+msgstr "Унапред танко"
 
 #: ../superdesk-planning/client/utils/filters.ts:145
 msgid "Fr"
@@ -8412,11 +8412,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:16
 msgid "Frequency"
-msgstr ""
+msgstr "Учесталост"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:112
 msgid "Fri"
-msgstr ""
+msgstr "Пет"
 
 #: ../superdesk-planning/client/utils/events.tsx:1458
 #: scripts/core/datetime/datetime.ts:294
@@ -8475,7 +8475,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:96
 msgid "Fullscreen"
-msgstr ""
+msgstr "Цео екран"
 
 #: scripts/apps/profiling/views/profiling.html:38
 msgid "Function"
@@ -8614,7 +8614,7 @@ msgstr "Глобалне сачуване претраге"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:97
 msgid "Globe"
-msgstr ""
+msgstr "Глобус"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:94
 #: scripts/apps/search/views/item-globalsearch.html:19
@@ -8669,11 +8669,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:99
 msgid "Grid View"
-msgstr ""
+msgstr "Приказ мреже"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:100
 msgid "Grid View Large"
-msgstr ""
+msgstr "Велики приказ мреже"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:298
 msgid "Group \"{{group}}\" and all its fields will be permanently deleted."
@@ -8766,27 +8766,27 @@ msgstr "Поља заглавља"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:101
 msgid "Heading 1"
-msgstr ""
+msgstr "Наслов 1"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:102
 msgid "Heading 2"
-msgstr ""
+msgstr "Наслов 2"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:103
 msgid "Heading 3"
-msgstr ""
+msgstr "Наслов 3"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:104
 msgid "Heading 4"
-msgstr ""
+msgstr "Наслов 4"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:105
 msgid "Heading 5"
-msgstr ""
+msgstr "Наслов 5"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:106
 msgid "Heading 6"
-msgstr ""
+msgstr "Наслов 6"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:67
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:57
@@ -8827,7 +8827,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:107
 msgid "Heart"
-msgstr ""
+msgstr "Срце"
 
 #: scripts/extensions/helloWorld/dist/src/extension.js:5
 #: scripts/extensions/helloWorld/dist/src/extensions/helloWorld/src/extension.js:5
@@ -8837,7 +8837,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:108
 msgid "Help Large"
-msgstr ""
+msgstr "Велика помоћ"
 
 #: scripts/apps/users/views/edit-form.html:238
 msgid "Help us translate Superdesk"
@@ -8860,16 +8860,16 @@ msgstr "Скривени примаоци (Bcc)"
 #: ../superdesk-planning/client/components/fields/related_events.tsx:40
 msgid "Hide 1 event"
 msgid_plural "Hide {{n}} events"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Сакриј 1 догађај"
+msgstr[1] "Сакриј {{n}} догађаја"
+msgstr[2] "Сакриј {{n}} догађаја"
 
 #: ../superdesk-planning/client/components/fields/related_plannings.tsx:30
 msgid "Hide 1 planning item"
 msgid_plural "Hide {{n}} planning items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Сакриј 1 ставку планирања"
+msgstr[1] "Сакриј {{n}} ставке планирања"
+msgstr[2] "Сакриј {{n}} ставки планирања"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:250
 msgid "Hide Date"
@@ -8905,7 +8905,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:109
 msgid "Highlight Package"
-msgstr ""
+msgstr "Пакет истицања"
 
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
@@ -8953,7 +8953,7 @@ msgstr "Задржи"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:110
 msgid "Home"
-msgstr ""
+msgstr "Почетна"
 
 #: scripts/apps/publish/views/ftp-config.html:2
 msgid "Host"
@@ -8961,7 +8961,7 @@ msgstr "Хост"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleHour.tsx:41
 msgid "Hour"
-msgstr ""
+msgstr "Сат"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:127
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:213
@@ -8971,7 +8971,7 @@ msgstr ""
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:62
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:20
 msgid "Hourly"
-msgstr ""
+msgstr "Сваког сата"
 
 #: ../superdesk-planning/client/utils/filters.ts:42
 msgid "Hourly to {{ desk }}"
@@ -9203,7 +9203,7 @@ msgstr "Укључи истакнути медиј"
 #: ../superdesk-planning/client/components/fields/editor/IncludeKilled.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:91
 msgid "Include Killed"
-msgstr ""
+msgstr "Укључи уништено"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:303
 msgid "Include Rewrites"
@@ -9212,15 +9212,15 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/IncludeScheduledUpdates.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:95
 msgid "Include Scheduled Updates"
-msgstr ""
+msgstr "Укључи заказана ажурирања"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:175
 msgid "Include Spike"
-msgstr ""
+msgstr "Укључи корпу"
 
 #: ../superdesk-planning/client/components/fields/editor/SpikeState.tsx:31
 msgid "Include Spiked"
-msgstr ""
+msgstr "Укључи у корпи"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:358
 msgid "Include all locked items"
@@ -9267,11 +9267,11 @@ msgstr "Неограничено коришћење"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:111
 msgid "Indent Left"
-msgstr ""
+msgstr "Увлачење лево"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:112
 msgid "Indent Right"
-msgstr ""
+msgstr "Увлачење десно"
 
 #: scripts/apps/authoring/metadata/metadata.ts:1420
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:21
@@ -9280,11 +9280,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:113
 msgid "Info Large"
-msgstr ""
+msgstr "Велика информација"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:114
 msgid "Info Sign"
-msgstr ""
+msgstr "Знак информације"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/ImageTaggingComponent/ImageTaggingComponent.js:199
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.js:199
@@ -9340,7 +9340,7 @@ msgstr "Скупови правила пријема"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:99
 msgid "Ingest Source"
-msgstr ""
+msgstr "Извор пријема"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:353
 msgid "Ingest Source deleted."
@@ -9390,7 +9390,7 @@ msgstr "Уметнути коментари"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:119
 msgid "Input Type"
-msgstr ""
+msgstr "Тип уноса"
 
 #: scripts/apps/authoring-react/fields/tag-input/editor.tsx:23
 msgid "Input tags here"
@@ -9456,7 +9456,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/index.tsx:191
 msgid "Invalid Date"
-msgstr ""
+msgstr "Неисправан датум"
 
 #: scripts/apps/archive/controllers/file-upload-error-modal.tsx:73
 msgid "Invalid File : {{name}}"
@@ -9468,7 +9468,7 @@ msgstr "Неисправан формат. Дозвољени су само ал
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:315
 msgid "Invalid time"
-msgstr ""
+msgstr "Неисправно време"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:146
 msgid "Invalid value for latitude"
@@ -9515,7 +9515,7 @@ msgstr "Постојећи шаблон ће бити ажуриран."
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:117
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:31
 msgid "Italic"
-msgstr ""
+msgstr "Курзив"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:76
 msgid "Italic (Ctrl+I)"
@@ -9557,7 +9557,7 @@ msgstr "Ставка преведена"
 #: ../superdesk-planning/client/components/fields/editor/ItemType.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:104
 msgid "Item Type"
-msgstr ""
+msgstr "Тип ставке"
 
 #: ../superdesk-planning/client/actions/main.ts:1466
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:206
@@ -9781,7 +9781,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:118
 msgid "Kanban View"
-msgstr ""
+msgstr "Канбан приказ"
 
 #: scripts/core/keyboard/views/keyboard-modal.html:3
 msgid "Keyboard Shortcuts"
@@ -9820,7 +9820,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:363
 #: scripts/apps/search/components/fields/state.tsx:42
 msgid "Killed"
-msgstr ""
+msgstr "Уништено"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:184
 msgid "Killed by"
@@ -9872,7 +9872,7 @@ msgstr "Језик:"
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:158
 #: scripts/apps/search/views/search-filters.html:18
 msgid "Languages"
-msgstr ""
+msgstr "Језици"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-footer.js:32
 #: scripts/extensions/ai-widget/dist/src/translations/translations-footer.js:32
@@ -9949,7 +9949,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/PreviewArticle.tsx:83
 #: scripts/apps/authoring/preview/fullPreview.tsx:77
 msgid "Last modified"
-msgstr ""
+msgstr "Последње измењено"
 
 #: scripts/apps/profiling/views/profiling.html:24
 #: scripts/apps/publish/views/publish-queue.html:78
@@ -10099,11 +10099,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:121
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:122
 msgid "LinkedIn Circle"
-msgstr ""
+msgstr "LinkedIn круг"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/link-field.ts:14
 #: ../superdesk-planning/client/components/fields/editor/EventLinks.tsx:62
@@ -10118,11 +10118,11 @@ msgstr "Листа"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:123
 msgid "List Alternate"
-msgstr ""
+msgstr "Алтернативна листа"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:124
 msgid "List Menu"
-msgstr ""
+msgstr "Мени листе"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:9
 msgid "List Name"
@@ -10130,7 +10130,7 @@ msgstr "Назив листе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:125
 msgid "List Plus"
-msgstr ""
+msgstr "Листа плус"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:126
 #: scripts/apps/desks/directives/DeskConfigModal.ts:34
@@ -10201,7 +10201,7 @@ msgstr "Само локално читање"
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:260
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:56
 msgid "Locality"
-msgstr ""
+msgstr "Место"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 #: scripts/core/lang/missing-translations-strings.ts:31
@@ -10219,7 +10219,7 @@ msgstr "Локација"
 
 #: ../superdesk-planning/client/components/fields/editor/Location.tsx:62
 msgid "Location Details"
-msgstr ""
+msgstr "Детаљи локације"
 
 #: ../superdesk-planning/client/api/locations.ts:86
 msgid "Location deleted"
@@ -10236,18 +10236,18 @@ msgstr ""
 #: ../superdesk-analytics/client/utils.js:170
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:127
 msgid "Lock"
-msgstr ""
+msgstr "Закључај"
 
 #: ../superdesk-planning/client/components/fields/editor/LockState.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:117
 msgid "Lock State"
-msgstr ""
+msgstr "Статус закључавања"
 
 #: ../superdesk-planning/client/components/fields/editor/LockState.tsx:18
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:147
 #: scripts/apps/authoring/views/article-edit.html:460
 msgid "Locked"
-msgstr ""
+msgstr "Закључано"
 
 #: scripts/apps/archive/views/item-lock.html:7
 #: scripts/apps/authoring-react/subcomponents/lock-info-generic.tsx:47
@@ -10280,7 +10280,7 @@ msgstr "Поруке дневника"
 #: ../superdesk-planning/client/components/fields/preview/index.ts:239
 #: ../superdesk-planning/client/components/fields/resources/events.ts:20
 msgid "Long Description"
-msgstr ""
+msgstr "Дугачак опис"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:310
 msgid "Longitude"
@@ -10288,7 +10288,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:19
 msgid "Lowercase"
-msgstr ""
+msgstr "Мала слова"
 
 #: ../superdesk-planning/client/components/Main/CalendarNavigation.tsx:66
 msgid "M"
@@ -10473,7 +10473,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:128
 msgid "Map Marker"
-msgstr ""
+msgstr "Маркер на мапи"
 
 #: ../superdesk-analytics/client/utils.js:172
 msgid "Mark"
@@ -10604,7 +10604,7 @@ msgstr "Поклапа префикс"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:97
 msgid "Max"
-msgstr ""
+msgstr "Макс"
 
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:147
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setPreviewPanel.js:147
@@ -10715,7 +10715,7 @@ msgstr "Управљање метаподацима"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:86
 msgid "Min"
-msgstr ""
+msgstr "Мин"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:485
 #: ../superdesk-planning/client/constants/tooltips.ts:33
@@ -10751,11 +10751,11 @@ msgstr "Минимална дужина"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:129
 msgid "Minus Sign"
-msgstr ""
+msgstr "Знак минус"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:130
 msgid "Minus Small"
-msgstr ""
+msgstr "Мали минус"
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/TimeInputPopup.tsx:162
 #: scripts/core/ui/views/sd-timepicker-popup.html:15
@@ -10776,7 +10776,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:131
 msgid "Mobile"
-msgstr ""
+msgstr "Мобилни"
 
 #: scripts/apps/archive/views/preview.html:9
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:30
@@ -10806,11 +10806,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/List/CreatedUpdatedColumn.tsx:29
 msgid "Modified: {{ datetime }}"
-msgstr ""
+msgstr "Измењено: {{ datetime }}"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:108
 msgid "Mon"
-msgstr ""
+msgstr "Пон"
 
 #: ../superdesk-planning/client/utils/events.tsx:1454
 #: scripts/core/datetime/datetime.ts:290
@@ -10847,7 +10847,7 @@ msgstr "Месец(и)"
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:40
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:26
 msgid "Monthly"
-msgstr ""
+msgstr "Месечно"
 
 #: ../superdesk-planning/client/utils/filters.ts:51
 msgid "Monthly on the {{ day }} day @ {{ time }} to {{ desk }}"
@@ -10878,7 +10878,7 @@ msgstr "Више шаблона..."
 #: ../superdesk-analytics/client/utils.js:166
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:132
 msgid "Move"
-msgstr ""
+msgstr "Премести"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Move Content to another desk"
@@ -10928,15 +10928,15 @@ msgstr "Премештено у радну фазу од стране овог �
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:134
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:240
 msgid "Multi Edit"
-msgstr ""
+msgstr "Више уређивања"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:123
 msgid "Multi Line"
-msgstr ""
+msgstr "Више редова"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:133
 msgid "Multi Start"
-msgstr ""
+msgstr "Више почетака"
 
 #: scripts/apps/vocabularies/constants.ts:52
 msgid "Multi selection"
@@ -10964,12 +10964,12 @@ msgstr "Вишеструко уређивање"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:178
 msgid "Multilingual"
-msgstr ""
+msgstr "Вишејезично"
 
 #: ../superdesk-planning/client/components/fields/resources/planning.ts:33
 #: ../superdesk-planning/client/utils/contentProfiles.ts:353
 msgid "Multiple Content"
-msgstr ""
+msgstr "Више садржаја"
 
 #: ../superdesk-planning/client/validators/events.ts:129
 msgid "Must be greater than 1"
@@ -11172,7 +11172,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:135
 msgid "New Document"
-msgstr ""
+msgstr "Нови документ"
 
 #: scripts/apps/users/views/settings-roles.html:30
 msgid "New Role"
@@ -11218,7 +11218,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:29
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:162
 msgid "Next Week"
-msgstr ""
+msgstr "Следећа недеља"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:115
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:114
@@ -11264,15 +11264,15 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:23
 msgid "No Coverage Assigned"
-msgstr ""
+msgstr "Није додељено извештавање"
 
 #: ../superdesk-planning/client/components/UI/Form/InputArray/index.tsx:190
 msgid "No Coverages Yet"
-msgstr ""
+msgstr "Још нема извештавања"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:129
 msgid "No Coverge"
-msgstr ""
+msgstr "Нема извештавања"
 
 #: scripts/apps/templates/constants.ts:11
 msgid "No Desk"
@@ -11305,7 +11305,7 @@ msgstr "Нема пронађених претплатника"
 #: ../superdesk-planning/client/components/fields/editor/ContentTemplate.tsx:70
 #: ../superdesk-planning/client/components/fields/editor/ExportTemplate.tsx:38
 msgid "No Templates Available"
-msgstr ""
+msgstr "Нема доступних шаблона"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-body.js:39
 #: scripts/extensions/ai-widget/dist/src/translations/translations-body.js:39
@@ -11315,7 +11315,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:51
 msgid "No agendas assigned."
-msgstr ""
+msgstr "Нису додељене агенде."
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:233
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:227
@@ -11360,11 +11360,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:80
 msgid "No calendars assigned"
-msgstr ""
+msgstr "Нису додељени календари"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:59
 msgid "No calendars assigned."
-msgstr ""
+msgstr "Нису додељени календари."
 
 #: scripts/apps/dashboard/world-clock/configuration.html:20
 msgid "No clock here!"
@@ -11422,7 +11422,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:99
 msgid "No events yet, drop some here, or click the plus button"
-msgstr ""
+msgstr "Још нема догађаја, пустите овде, или кликните на дугме плус"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:251
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:129
@@ -11456,7 +11456,7 @@ msgstr "Нема доступних ставки"
 #: ../superdesk-planning/client/components/UI/Form/SelectMetaTermsInput/SelectFieldPopup.tsx:379
 #: ../superdesk-planning/client/components/UI/Form/SelectMetaTermsInput/SelectFieldPopup.tsx:471
 msgid "No items found"
-msgstr ""
+msgstr "Нису пронађене ставке"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundowns-list.js:176
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundowns-list.js:176
@@ -11520,7 +11520,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:101
 msgid "No planning items have been added"
-msgstr ""
+msgstr "Нису додате ставке планирања"
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:442
 msgid ""
@@ -11530,7 +11530,7 @@ msgstr "Нису изабране омиљене категорије. Ако о
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EditorFieldEventRelatedItems.tsx:85
 msgid "No related articles yet"
-msgstr ""
+msgstr "Још нема повезаних чланака"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:149
 msgid "No related planning items."
@@ -11735,7 +11735,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/LockState.tsx:21
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:148
 msgid "Not Locked"
-msgstr ""
+msgstr "Није закључано"
 
 #: scripts/apps/search/constants.ts:38
 msgid "Not Priority"
@@ -11771,7 +11771,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/preview/Flags.tsx:23
 msgid "Not for Publication"
-msgstr ""
+msgstr "Није за објаву"
 
 #: scripts/core/ui/components/List/PubStatus.tsx:22
 msgid "Not for publication"
@@ -11779,7 +11779,7 @@ msgstr "Не за објаву"
 
 #: ../superdesk-planning/client/components/UI/List/PubStatus.tsx:38
 msgid "Not posted"
-msgstr ""
+msgstr "Није објављено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:134
 msgid "Not scheduled"
@@ -11800,7 +11800,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:319
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:96
 msgid "Notes"
-msgstr ""
+msgstr "Белешке"
 
 #: ../superdesk-planning/client/components/NotificationModal.tsx:44
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:227
@@ -11918,7 +11918,7 @@ msgstr "У реду"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:136
 msgid "Okay"
-msgstr ""
+msgstr "У реду"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:65
 msgid "Old Gold"
@@ -11965,7 +11965,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:15
 msgid "Only Posted"
-msgstr ""
+msgstr "Само објављено"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:293
 msgid ""
@@ -12051,7 +12051,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:215
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:218
 msgid "Open link"
-msgstr ""
+msgstr "Отвори линк"
 
 #: scripts/apps/authoring/views/change-image.html:26
 msgid "Open metadata"
@@ -12143,7 +12143,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:137
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:26
 msgid "Ordered List"
-msgstr ""
+msgstr "Нумерисана листа"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:87
 msgid "Ordered list"
@@ -12361,11 +12361,11 @@ msgstr "Пакет"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:138
 msgid "Package Create"
-msgstr ""
+msgstr "Креирај пакет"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:139
 msgid "Package Plus"
-msgstr ""
+msgstr "Пакет плус"
 
 #: scripts/apps/publish/views/http-push-config.html:2
 msgid "Package individual items"
@@ -12415,7 +12415,7 @@ msgstr "Страничење"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:140
 msgid "Paragraph"
-msgstr ""
+msgstr "Пасус"
 
 #: scripts/apps/publish/views/subscribers.html:203
 msgid "Parallel publishing"
@@ -12471,11 +12471,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:141
 msgid "Paste"
-msgstr ""
+msgstr "Налепи"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.tsx:191
 msgid "Paste link"
-msgstr ""
+msgstr "Налепи линк"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:3
 msgid "Paste metadata"
@@ -12487,15 +12487,15 @@ msgstr "Путања"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:142
 msgid "Pause"
-msgstr ""
+msgstr "Паузирај"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:143
 msgid "Paywall"
-msgstr ""
+msgstr "Платни зид"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:144
 msgid "Pencil"
-msgstr ""
+msgstr "Оловка"
 
 #: scripts/apps/users/controllers/UserListController.ts:157
 msgid "Pending"
@@ -12574,7 +12574,7 @@ msgstr "Телефон"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:146
 msgid "Photo"
-msgstr ""
+msgstr "Фотографија"
 
 #: scripts/apps/desks/directives/DeskConfigModal.ts:40
 #: scripts/apps/monitoring/directives/utils.ts:110
@@ -12592,7 +12592,7 @@ msgstr "Фраза"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:147
 msgid "Pick"
-msgstr ""
+msgstr "Изабери"
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:385
 msgid "Pick task"
@@ -12611,7 +12611,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:149
 #: scripts/apps/authoring-react/widget-header-component.tsx:24
 msgid "Pin"
-msgstr ""
+msgstr "Закачи"
 
 #: scripts/apps/authoring/widgets/WidgetHeaderComponent.tsx:24
 msgid "Pin/Unpin"
@@ -12640,7 +12640,7 @@ msgstr "Места"
 
 #: ../superdesk-planning/client/components/fields/list/Places.tsx:20
 msgid "Places:"
-msgstr ""
+msgstr "Места:"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/rundown-items.js:40
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/rundown-items.js:40
@@ -12776,7 +12776,7 @@ msgstr "Ставка планирања креирана"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:97
 msgid "Planning item has to be created before adding related events"
-msgstr ""
+msgstr "Ставка планирања мора бити креирана пре додавања повезаних догађаја"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:320
 #: ../superdesk-planning/client/actions/planning/ui.ts:364
@@ -12797,7 +12797,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:150
 msgid "Play"
-msgstr ""
+msgstr "Пусти"
 
 #: scripts/apps/vocabularies/components/UploadConfigModal.tsx:58
 msgid ""
@@ -12878,15 +12878,15 @@ msgstr "Користите мање од 80 карактера."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:151
 msgid "Plus Large"
-msgstr ""
+msgstr "Велики плус"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:152
 msgid "Plus Sign"
-msgstr ""
+msgstr "Знак плус"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:153
 msgid "Plus Small"
-msgstr ""
+msgstr "Мали плус"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
 msgid "Point of contact"
@@ -12947,7 +12947,7 @@ msgstr "Постави на 'Enter'"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:64
 msgid "Post planning items with Event"
-msgstr ""
+msgstr "Објави ставке планирања са догађајем"
 
 #: ../superdesk-planning/client/components/AuditInformation/index.tsx:132
 #: ../superdesk-planning/client/components/fields/preview/index.ts:133
@@ -12973,7 +12973,7 @@ msgstr "Одложи {{event}}"
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:208
 #: ../superdesk-planning/client/utils/index.ts:379
 msgid "Postponed"
-msgstr ""
+msgstr "Одложено"
 
 #: scripts/core/menu/views/menu.html:113
 msgid "Powered by Superdesk technology"
@@ -13042,7 +13042,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:156
 msgid "Preview Mode"
-msgstr ""
+msgstr "Режим прегледа"
 
 #: scripts/apps/publish/views/destination.html:17
 msgid "Preview endpoint URL"
@@ -13085,7 +13085,7 @@ msgstr "Претходни корисник"
 #: scripts/apps/authoring/preview/fullPreviewMultiple.tsx:57
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:296
 msgid "Print"
-msgstr ""
+msgstr "Штампај"
 
 #: scripts/apps/authoring-react/toolbar-components/integration-wrapper/print-preview-button.tsx:13
 msgid "Print preview"
@@ -13118,7 +13118,7 @@ msgstr "Приоритет промењен на"
 #: ../superdesk-planning/client/components/fields/preview/index.ts:288
 #: ../superdesk-planning/client/components/fields/priority.tsx:30
 msgid "Priority:"
-msgstr ""
+msgstr "Приоритет:"
 
 #: ../superdesk-planning/client/components/PriorityLabel/index.tsx:51
 msgid "Priority: {{ name }}"
@@ -13498,7 +13498,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:158
 msgid "Question Sign"
-msgstr ""
+msgstr "Знак питања"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:67
 msgid "Queue Name"
@@ -13553,7 +13553,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:160
 msgid "Random"
-msgstr ""
+msgstr "Насумично"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:9
 msgid "Range"
@@ -13573,7 +13573,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:42
 msgid "Read Only"
-msgstr ""
+msgstr "Само за читање"
 
 #: scripts/apps/users/config.ts:150
 msgid "Read user roles"
@@ -13664,7 +13664,7 @@ msgstr "Примаоци (видљиви свима)"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:161
 msgid "Recurring"
-msgstr ""
+msgstr "Понављајуће"
 
 #: ../superdesk-planning/client/components/ItemIcon.tsx:26
 msgid "Recurring Event"
@@ -13696,7 +13696,7 @@ msgstr "Понови"
 #: ../superdesk-planning/client/components/fields/resources/events.ts:42
 #: ../superdesk-planning/client/utils/contentProfiles.ts:275
 msgid "Reference"
-msgstr ""
+msgstr "Референца"
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:770
 msgid "Refine search"
@@ -13751,7 +13751,7 @@ msgstr "Регион"
 
 #: ../superdesk-planning/client/components/fields/resources/events.ts:75
 msgid "Registration"
-msgstr ""
+msgstr "Регистрација"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:77
 #: ../superdesk-planning/client/components/fields/preview/index.ts:271
@@ -13786,11 +13786,11 @@ msgstr "Повежи ставку"
 #: ../superdesk-planning/client/components/fields/resources/events.ts:120
 #: ../superdesk-planning/client/utils/contentProfiles.ts:351
 msgid "Related Articles"
-msgstr ""
+msgstr "Повезани чланци"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:109
 msgid "Related Events"
-msgstr ""
+msgstr "Повезани догађаји"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:109
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:13
@@ -13810,7 +13810,7 @@ msgstr "Повезано планирање"
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:111
 #: ../superdesk-planning/client/utils/contentProfiles.ts:301
 msgid "Related Plannings"
-msgstr ""
+msgstr "Повезана планирања"
 
 #: scripts/apps/vocabularies/views/settings.html:31
 msgid "Related content"
@@ -13909,7 +13909,7 @@ msgstr "Уклони"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:36
 msgid "Remove All Format"
-msgstr ""
+msgstr "Уклони сво форматирање"
 
 #: ../superdesk-planning/client/constants/assignments.ts:195
 msgid "Remove Assignment"
@@ -13926,7 +13926,7 @@ msgstr "Уклони филтер садржаја"
 
 #: ../superdesk-planning/client/components/UI/Form/InputArray/index.tsx:84
 msgid "Remove Coverage"
-msgstr ""
+msgstr "Уклони извештавање"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:127
 msgid "Remove Event"
@@ -13942,7 +13942,7 @@ msgstr "Уклони услов филтера"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:35
 msgid "Remove Format"
-msgstr ""
+msgstr "Уклони форматирање"
 
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-article.html:4
 msgid "Remove Item"
@@ -13962,7 +13962,7 @@ msgstr "Уклони провајдера претраге"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:164
 msgid "Remove Sign"
-msgstr ""
+msgstr "Знак уклањања"
 
 #: scripts/apps/templates/views/templates.html:37
 msgid "Remove Template"
@@ -14106,7 +14106,7 @@ msgstr "Прераспореди фазе и сачуване претраге �
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:165
 msgid "Repeat"
-msgstr ""
+msgstr "Понови"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/DaysOfWeekInput.tsx:98
 msgid "Repeat On"
@@ -14240,11 +14240,11 @@ msgstr "Поново закажи {{event}}"
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:206
 #: ../superdesk-planning/client/utils/index.ts:369
 msgid "Rescheduled"
-msgstr ""
+msgstr "Поново заказано"
 
 #: ../superdesk-planning/client/components/fields/state.tsx:30
 msgid "Rescheduled Event"
-msgstr ""
+msgstr "Поново заказан догађај"
 
 #: scripts/apps/archive/views/resend-configuration.html:25
 #: scripts/apps/publish/views/publish-queue.html:147
@@ -14322,12 +14322,12 @@ msgstr "Тип резултата"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:166
 msgid "Retweet"
-msgstr ""
+msgstr "Ретвит"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:167
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:272
 msgid "Revert"
-msgstr ""
+msgstr "Врати"
 
 #: ../superdesk-planning/client/constants/assignments.ts:198
 msgid "Revert Availability"
@@ -14401,11 +14401,11 @@ msgstr "Привилегије улога"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:168
 msgid "Rotate Left"
-msgstr ""
+msgstr "Ротирај лево"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:169
 msgid "Rotate Right"
-msgstr ""
+msgstr "Ротирај десно"
 
 #: scripts/apps/authoring/views/change-image.html:206
 msgid "Rotate left"
@@ -14577,7 +14577,7 @@ msgstr "Пример садржаја"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:113
 msgid "Sat"
-msgstr ""
+msgstr "Суб"
 
 #: scripts/apps/authoring/views/change-image.html:256
 msgid "Saturation"
@@ -14944,7 +14944,7 @@ msgstr "Закажи фазу"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:98
 msgid "Schedule an update"
-msgstr ""
+msgstr "Закажи ажурирање"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:84
 msgid "Schedule will be permanently deleted."
@@ -14985,7 +14985,7 @@ msgstr "Заказано(а) време(на)"
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:64
 #: ../superdesk-planning/client/utils/contentProfiles.ts:331
 msgid "Scheduled Updates"
-msgstr ""
+msgstr "Заказана ажурирања"
 
 #: scripts/apps/publish/views/publish-queue.html:113
 #: scripts/apps/templates/views/template-editor-modal.html:156
@@ -14998,7 +14998,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/common/PreviewFilterSchedule.tsx:46
 msgid "Scheduled export: {{ description }}"
-msgstr ""
+msgstr "Заказани извоз: {{ description }}"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:426
 msgid "Scheduled from {{start}} to {{end}}"
@@ -15145,7 +15145,7 @@ msgstr "Провајдери претраге"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:118
 msgid "Search Related Articles"
-msgstr ""
+msgstr "Претражи повезане чланке"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:456
 msgid "Search Source"
@@ -15158,7 +15158,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/FullText.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:87
 msgid "Search Text"
-msgstr ""
+msgstr "Текст за претрагу"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:468
 msgid "Search Urgency"
@@ -15726,7 +15726,7 @@ msgstr "Подешавања"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:172
 msgid "Share Alternate"
-msgstr ""
+msgstr "Алтернативно дељење"
 
 #: scripts/apps/search/views/item-preview.html:3
 msgid "Shift preview"
@@ -15758,16 +15758,16 @@ msgstr "Прикажи"
 #: ../superdesk-planning/client/components/fields/related_events.tsx:46
 msgid "Show 1 event"
 msgid_plural "Show {{n}} events"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Прикажи 1 догађај"
+msgstr[1] "Прикажи {{n}} догађаја"
+msgstr[2] "Прикажи {{n}} догађаја"
 
 #: ../superdesk-planning/client/components/fields/related_plannings.tsx:35
 msgid "Show 1 planning item"
 msgid_plural "Show {{n}} planning items"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Прикажи 1 ставку планирања"
+msgstr[1] "Прикажи {{n}} ставке планирања"
+msgstr[2] "Прикажи {{n}} ставки планирања"
 
 #: scripts/apps/archive/views/provider-menu.html:9
 msgid "Show All"
@@ -15793,11 +15793,11 @@ msgstr "Прикажи наслов слике"
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:226
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:229
 msgid "Show all"
-msgstr ""
+msgstr "Прикажи све"
 
 #: ../superdesk-planning/client/components/fields/editor/Language.tsx:96
 msgid "Show all language fields"
-msgstr ""
+msgstr "Прикажи сва језичка поља"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:93
 msgid "Show all messages"
@@ -15825,7 +15825,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:30
 msgid "Show in embedded form"
-msgstr ""
+msgstr "Прикажи у уграђеном облику"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:263
 msgid "Show in preview"
@@ -15845,14 +15845,14 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:94
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:109
 msgid "Show less"
-msgstr ""
+msgstr "Прикажи мање"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/index.tsx:42
 #: ../superdesk-planning/client/components/Contacts/ContactMetaData.tsx:93
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:94
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:109
 msgid "Show more"
-msgstr ""
+msgstr "Прикажи више"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/create-show.js:66
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/manage-shows.js:13
@@ -15928,7 +15928,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:303
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:124
 msgid "Signal"
-msgstr ""
+msgstr "Сигнал"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:10
 msgid "Single Day"
@@ -15936,7 +15936,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:122
 msgid "Single Line"
-msgstr ""
+msgstr "Један ред"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:13
 msgid "Single Usage"
@@ -15996,11 +15996,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:174
 msgid "Skip Next"
-msgstr ""
+msgstr "Прескочи следеће"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:175
 msgid "Skip Previous"
-msgstr ""
+msgstr "Прескочи претходно"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:203
 msgid "Skip config test"
@@ -16012,7 +16012,7 @@ msgstr "Назив Slack канала"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:176
 msgid "Slideshow"
-msgstr ""
+msgstr "Слајдшоу"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:18
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:66
@@ -16072,7 +16072,7 @@ msgstr "СМС"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:24
 msgid "Some Coverages Assigned"
-msgstr ""
+msgstr "Нека извештавања додељена"
 
 #: scripts/apps/authoring/multiedit/multiedit.ts:85
 msgid "Some articles failed to unlock"
@@ -16272,7 +16272,7 @@ msgstr "Премести ставку планирања у корпу"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:146
 msgid "Spike State"
-msgstr ""
+msgstr "Статус корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:104
 msgid "Spike all recurring events or just this one?"
@@ -16311,7 +16311,7 @@ msgstr "Ставке у корпи"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:177
 msgid "Spiked Only"
-msgstr ""
+msgstr "Само у корпи"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:221
 #: scripts/apps/authoring/versioning/history/views/history.html:63
@@ -16373,11 +16373,11 @@ msgstr "Фазе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:177
 msgid "Star"
-msgstr ""
+msgstr "Звезда"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:178
 msgid "Star Empty"
-msgstr ""
+msgstr "Празна звезда"
 
 #: scripts/apps/publish/views/subscribers.html:87
 msgid "Start Date"
@@ -16445,7 +16445,7 @@ msgstr "Држава/Покрајина или регион"
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:124
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:64
 msgid "State/Province/Region"
-msgstr ""
+msgstr "Држава/Покрајина/Регион"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:145
 msgid "States"
@@ -16489,7 +16489,7 @@ msgstr "Статус: {{filter}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:179
 msgid "Stop"
-msgstr ""
+msgstr "Заустави"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:37
 msgid "Stop routing"
@@ -16554,7 +16554,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:180
 msgid "Stream"
-msgstr ""
+msgstr "Ток"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:534
 msgid "Street Address"
@@ -16637,7 +16637,7 @@ msgstr "Теме"
 
 #: ../superdesk-planning/client/components/fields/list/Subject.tsx:20
 msgid "Subjects:"
-msgstr ""
+msgstr "Теме:"
 
 #: scripts/core/editor3/components/annotations/AnnotationInput.tsx:287
 #: scripts/core/editor3/components/comments/CommentInput.tsx:97
@@ -16715,7 +16715,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:244
 #: ../superdesk-planning/client/components/fields/resources/locations.ts:40
 msgid "Suburb"
-msgstr ""
+msgstr "Предграђе"
 
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:27
 msgid "Success"
@@ -16723,7 +16723,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:183
 msgid "Suggestion"
-msgstr ""
+msgstr "Сугестија"
 
 #: scripts/apps/authoring/track-changes/suggestions.ts:91
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:84
@@ -16751,7 +16751,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:106
 msgid "Sun"
-msgstr ""
+msgstr "Нед"
 
 #: ../superdesk-planning/client/utils/events.tsx:1460
 #: scripts/core/datetime/datetime.ts:296
@@ -16784,7 +16784,7 @@ msgstr "Канбан приказ"
 
 #: ../superdesk-planning/client/components/fields/editor/Language.tsx:111
 msgid "Switch Metadata Language"
-msgstr ""
+msgstr "Промени језик метаподатака"
 
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:115
 msgid "Switch article"
@@ -16830,7 +16830,7 @@ msgstr "Пребаци на приказ листе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:185
 msgid "Switches"
-msgstr ""
+msgstr "Прекидачи"
 
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:148
 #: scripts/apps/system-messages/index.ts:34
@@ -16869,11 +16869,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:41
 msgid "Tab"
-msgstr ""
+msgstr "Таб"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:42
 msgid "Tab As Spaces"
-msgstr ""
+msgstr "Таб као размаци"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:93
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:186
@@ -16884,15 +16884,15 @@ msgstr "Табела"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:191
 msgid "Table Header"
-msgstr ""
+msgstr "Заглавље табеле"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:192
 msgid "Table Header Large"
-msgstr ""
+msgstr "Велико заглавље табеле"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:193
 msgid "Table Header List"
-msgstr ""
+msgstr "Листа заглавља табеле"
 
 #: scripts/apps/authoring-react/fields/tag-input/index.tsx:26
 msgid "Tag-input (authoring-react)"
@@ -16973,7 +16973,7 @@ msgstr "Наставци"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:187
 msgid "Takes Package"
-msgstr ""
+msgstr "Пакет наставака"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:540
 msgid "Tansa is not responding. You can continue editing or publish the story."
@@ -17131,7 +17131,7 @@ msgstr "Текст"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:190
 msgid "Text Format"
-msgstr ""
+msgstr "Формат текста"
 
 #: ../superdesk-planning/client/utils/filters.ts:142
 msgid "Th"
@@ -17266,7 +17266,7 @@ msgstr "Коментар ће бити обрисан. Да ли сте сигу
 
 #: ../superdesk-planning/client/components/UI/Form/InputArray/index.tsx:94
 msgid "The coverage has been removed"
-msgstr ""
+msgstr "Извештавање је уклоњено"
 
 #: ../superdesk-planning/client/constants/tooltips.ts:29
 msgid "The event has been killed"
@@ -17749,7 +17749,7 @@ msgstr "Овај URL није могуће уградити."
 #: ../superdesk-planning/client/components/fields/editor/RelativeDate.tsx:26
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:160
 msgid "This Week"
-msgstr ""
+msgstr "Ове недеље"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:32
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:27
@@ -17956,7 +17956,7 @@ msgstr "Ово ће уклонити везу текстуалне ставке 
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:111
 msgid "Thu"
-msgstr ""
+msgstr "Чет"
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:117
 msgid "Thumbnail"
@@ -18040,7 +18040,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:344
 msgid "Time picker"
-msgstr ""
+msgstr "Бирач времена"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:315
 msgid "Time spent producing content"
@@ -18114,7 +18114,7 @@ msgstr "До"
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:65
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:87
 msgid "To Be Confirmed"
-msgstr ""
+msgstr "Биће потврђено"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/to-desk.tsx:13
 #: scripts/apps/authoring/views/authoring-topbar.html:55
@@ -18133,11 +18133,11 @@ msgstr "За урадити"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:195
 msgid "To Lowercase"
-msgstr ""
+msgstr "У мала слова"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:196
 msgid "To Uppercase"
-msgstr ""
+msgstr "У велика слова"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:70
 msgid ""
@@ -18385,12 +18385,12 @@ msgstr "Пренето у"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:197
 msgid "Trash"
-msgstr ""
+msgstr "Корпа"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:33
 #: ../superdesk-planning/client/components/fields/preview/base/utils.ts:16
 msgid "True"
-msgstr ""
+msgstr "Тачно"
 
 #: scripts/core/auth/login-modal.html:48
 #: scripts/core/auth/reset-password.html:38
@@ -18405,7 +18405,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:109
 msgid "Tue"
-msgstr ""
+msgstr "Уто"
 
 #: ../superdesk-planning/client/utils/events.tsx:1455
 #: scripts/core/datetime/datetime.ts:291
@@ -18423,7 +18423,7 @@ msgstr "Twitter"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:199
 msgid "Twitter Circle"
-msgstr ""
+msgstr "Twitter круг"
 
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:36
 #: scripts/apps/archive/views/metadata-view.html:207
@@ -18466,7 +18466,7 @@ msgstr "Унесите свој коментар..."
 #: scripts/extensions/sams/src/components/assets/assetGridItem.tsx:147
 #: scripts/extensions/sams/src/components/assets/assetListItem.tsx:131
 msgid "Type:"
-msgstr ""
+msgstr "Тип:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:139
 msgid "Type: {{ type }}"
@@ -18548,7 +18548,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:200
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:30
 msgid "Underline"
-msgstr ""
+msgstr "Подвучено"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:77
 msgid "Underline (Ctrl+U)"
@@ -18631,11 +18631,11 @@ msgstr "Уклони везу као извештавање"
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEventItem.tsx:75
 msgid "Unlink related event"
-msgstr ""
+msgstr "Уклони везу повезаног догађаја"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/RelatedPlanningItem.tsx:90
 msgid "Unlink related planning"
-msgstr ""
+msgstr "Уклони везу повезаног планирања"
 
 #: scripts/apps/archive/index.tsx:310
 msgid "Unlink update"
@@ -18671,7 +18671,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:202
 #: scripts/apps/authoring/views/article-edit.html:461
 msgid "Unlocked"
-msgstr ""
+msgstr "Откључано"
 
 #: ../superdesk-analytics/client/utils.js:173
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-mark-for-user-modal.js:22
@@ -18701,7 +18701,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:203
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:27
 msgid "Unordered List"
-msgstr ""
+msgstr "Ненумерисана листа"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:86
 msgid "Unordered list"
@@ -18991,7 +18991,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/containers/FileUploadModal.js:233
 #: scripts/extensions/sams/src/containers/FileUploadModal.tsx:295
 msgid "Upload"
-msgstr ""
+msgstr "Отпреми"
 
 #: scripts/apps/vocabularies/views/settings.html:9
 msgid "Upload Config"
@@ -19062,7 +19062,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:18
 msgid "Uppercase"
-msgstr ""
+msgstr "Велика слова"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:560
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:139
@@ -19097,7 +19097,7 @@ msgstr "Статистика хитности"
 
 #: ../superdesk-planning/client/components/fields/urgency.tsx:21
 msgid "Urgency:"
-msgstr ""
+msgstr "Хитност:"
 
 #: scripts/apps/authoring-react/fields/urls/index.tsx:20
 msgid "Urls (authoring-react)"
@@ -19532,7 +19532,7 @@ msgstr "Упозорење"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:208
 msgid "Warning Sign"
-msgstr ""
+msgstr "Знак упозорења"
 
 #: ../superdesk-planning/client/utils/filters.ts:139
 msgid "We"
@@ -19552,7 +19552,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:110
 msgid "Wed"
-msgstr ""
+msgstr "Сре"
 
 #: ../superdesk-planning/client/utils/events.tsx:1456
 #: scripts/core/datetime/datetime.ts:292
@@ -19569,7 +19569,7 @@ msgstr "Недеља"
 
 #: ../superdesk-planning/client/components/fields/editor/Days.tsx:32
 msgid "Week Days"
-msgstr ""
+msgstr "Дани у недељи"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:31
 msgid "Week(s)"
@@ -19578,7 +19578,7 @@ msgstr "Недеља(е)"
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:37
 #: ../superdesk-planning/client/components/fields/editor/ScheduleFrequency.tsx:23
 msgid "Weekly"
-msgstr ""
+msgstr "Недељно"
 
 #: ../superdesk-planning/client/utils/filters.ts:48
 msgid "Weekly @ {{ time }} to {{ desk }}"
@@ -19641,7 +19641,7 @@ msgstr "Агенција/Штампа"
 
 #: ../superdesk-planning/client/components/fields/editor/NoCoverage.tsx:15
 msgid "Without Coverage"
-msgstr ""
+msgstr "Без извештавања"
 
 #: scripts/apps/archive/views/metadata-view.html:17
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:288
@@ -19669,11 +19669,11 @@ msgstr "Радни ток"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:171
 msgid "Workflow State"
-msgstr ""
+msgstr "Стање радног тока"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:229
 msgid "Workflow States"
-msgstr ""
+msgstr "Стања радног тока"
 
 #: scripts/apps/desks/views/desk-config-modal.html:305
 #: scripts/apps/desks/views/desk-config-modal.html:358
@@ -19808,7 +19808,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:35
 msgid "You cannot change workflow status"
-msgstr ""
+msgstr "Не можете променити статус радног тока"
 
 #: scripts/core/menu/notifications/views/notifications.html:13
 msgid "You don't have any notifications"
@@ -19882,11 +19882,11 @@ msgstr "Ваше отпремање је успешно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:209
 msgid "Zoom In"
-msgstr ""
+msgstr "Увеличај"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:210
 msgid "Zoom Out"
-msgstr ""
+msgstr "Умањи"
 
 #: scripts/apps/search/views/saved-searches.html:11
 msgid "[Global]"
@@ -21571,11 +21571,11 @@ msgstr[2] ""
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:45
 msgid "{{ name }} (disabled)"
-msgstr ""
+msgstr "{{ name }} (онемогућено)"
 
 #: ../superdesk-planning/client/components/fields/editor/base/multilingualText.tsx:150
 msgid "{{ name }} ({{ language }})"
-msgstr ""
+msgstr "{{ name }} ({{ language }})"
 
 #: ../superdesk-planning/client/validators/assignments.tsx:9
 #: ../superdesk-planning/client/validators/profile.ts:108
