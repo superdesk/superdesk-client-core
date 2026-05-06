@@ -1,13 +1,13 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 "PO-Revision-Date: 2026-05-06 00:00+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
@@ -35,7 +35,9 @@ msgstr "Поље \"{{x}}\" је обавезно"
 msgid ""
 "'' is currently managing featured stories. This feature can only be accessed "
 "by one user at a time."
-msgstr "'' тренутно управља истакнутим причама. Овој функцији може приступити само један корисник истовремено."
+msgstr ""
+"'' тренутно управља истакнутим причама. Овој функцији може приступити само "
+"један корисник истовремено."
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'ABSTRACT is a required field'"
@@ -556,7 +558,10 @@ msgid ""
 "<p>Generate a report showing usage of the Planning module.<br></p>\n"
 "    <p>This provides a statistics on who is and who isn't creating items in "
 "the Planning module</p>"
-msgstr "<p>Генериши извештај који приказује коришћење модула планирања.<br></p>\n    <p>Ово пружа статистику о томе ко креира, а ко не креира ставке у модулу планирања</p>"
+msgstr ""
+"<p>Генериши извештај који приказује коришћење модула планирања.<br></p>\n"
+"    <p>Ово пружа статистику о томе ко креира, а ко не креира ставке у модулу "
+"планирања</p>"
 
 #: scripts/apps/users/views/edit-form.html:6
 msgid ""
@@ -584,7 +589,9 @@ msgstr "Деск је обавезан"
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
-msgstr "Линк је послат на наведену имејл адресу. Користите га да ресетујете лозинку. Важи ограничено време."
+msgstr ""
+"Линк је послат на наведену имејл адресу. Користите га да ресетујете лозинку. "
+"Важи ограничено време."
 
 #: ../superdesk-planning/client/api/locations.ts:30
 msgid "A location matching this one already exists"
@@ -1027,7 +1034,9 @@ msgstr "Додај чланак"
 msgid ""
 "Add article to Planning - select an existing Planning Item or create a new "
 "one"
-msgstr "Додај чланак у планирање - изаберите постојећу ставку планирања или креирајте нову"
+msgstr ""
+"Додај чланак у планирање - изаберите постојећу ставку планирања или "
+"креирајте нову"
 
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:317
 #: ../superdesk-planning/client/components/Planning/PlanningItem.tsx:322
@@ -1233,18 +1242,21 @@ msgstr "Додато у радни ток"
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr "Додавање ставки из пријема као повезаних није дозвољено због подешавања"
+msgstr ""
+"Додавање ставки из пријема као повезаних није дозвољено због подешавања"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
 "Adding published items as related is not allowed due to configuration options"
-msgstr "Додавање објављених ставки као повезаних није дозвољено због подешавања"
+msgstr ""
+"Додавање објављених ставки као повезаних није дозвољено због подешавања"
 
 #: scripts/apps/relations/services/RelationsService.ts:36
 msgid ""
 "Adding related items that are not published is not allowed due to "
 "configuration options"
-msgstr "Додавање повезаних ставки које нису објављене није дозвољено због подешавања"
+msgstr ""
+"Додавање повезаних ставки које нису објављене није дозвољено због подешавања"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:227
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:112
@@ -1797,7 +1809,9 @@ msgstr "Ажурирање не може бити креирано за став
 msgid ""
 "An update for this version of the item already exists. To create another "
 "update, find the latest version of the item."
-msgstr "Ажурирање за ову верзију ставке већ постоји. Да бисте креирали ново ажурирање, пронађите најновију верзију ставке."
+msgstr ""
+"Ажурирање за ову верзију ставке већ постоји. Да бисте креирали ново "
+"ажурирање, пронађите најновију верзију ставке."
 
 #: ../superdesk-analytics/client/index.js:94
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:36
@@ -1822,7 +1836,9 @@ msgstr "Тип анотације"
 msgid ""
 "Annotation Types information is not available. Please check your metadata "
 "configuration."
-msgstr "Информације о типовима анотација нису доступне. Проверите подешавање метаподатака."
+msgstr ""
+"Информације о типовима анотација нису доступне. Проверите подешавање "
+"метаподатака."
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:124
 msgid "Annotation type"
@@ -2042,7 +2058,8 @@ msgstr "Да ли сте сигурни да желите да премести�
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:64
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
-msgstr "Да ли сте сигурни да желите да повучете објаву ставке \"{{headline}}\"?"
+msgstr ""
+"Да ли сте сигурни да желите да повучете објаву ставке \"{{headline}}\"?"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:53
 msgid "Are you sure you want to unpublish item \"{{label}}\"?"
@@ -2108,7 +2125,8 @@ msgstr "Тип чланка: {{type}}"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:577
 msgid ""
 "Article cannot be published. Please accept or reject all suggestions first."
-msgstr "Чланак не може бити објављен. Прво прихватите или одбијте све сугестије."
+msgstr ""
+"Чланак не може бити објављен. Прво прихватите или одбијте све сугестије."
 
 #: scripts/apps/users/views/user-preferences.html:16
 msgid "Article defaults"
@@ -2499,7 +2517,8 @@ msgstr "Потребно је најмање једно од [{{list}}]."
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:146
 msgid ""
 "At least two versions are needed for comparison. This article has only one."
-msgstr "За поређење су потребне најмање две верзије. Овај чланак има само једну."
+msgstr ""
+"За поређење су потребне најмање две верзије. Овај чланак има само једну."
 
 #: scripts/extensions/sams/dist/src/components/assets/selectAssetModal.js:153
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/selectAssetModal.js:153
@@ -2617,7 +2636,10 @@ msgid ""
 "Authoring desks are for content creation, and items within it are protected "
 "from accidental publication. Publishing is only permitted  from production "
 "desks."
-msgstr "Дескови за уређивање служе за креирање садржаја, а ставке у њима су заштићене од случајног објављивања. Објављивање је дозвољено само са продукцијских дескова."
+msgstr ""
+"Дескови за уређивање служе за креирање садржаја, а ставке у њима су "
+"заштићене од случајног објављивања. Објављивање је дозвољено само са "
+"продукцијских дескова."
 
 #: scripts/apps/authoring-react/field-adapters/authors.tsx:80
 #: scripts/apps/search/components/fields/authors.tsx:113
@@ -2662,7 +2684,9 @@ msgstr "Управљање доступношћу"
 msgid ""
 "Availability manager extension could not start because vocabulary \"{{id}}\" "
 "is missing"
-msgstr "Екстензија управљача доступношћу није могла да се покрене јер недостаје вокабулар \"{{id}}\""
+msgstr ""
+"Екстензија управљача доступношћу није могла да се покрене јер недостаје "
+"вокабулар \"{{id}}\""
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/availability-settings.js:189
 #: scripts/extensions/availability-manager/dist/src/settings/availability-settings.js:189
@@ -2765,7 +2789,8 @@ msgstr "Пре емитовања"
 msgid ""
 "Before you start using your new newsroom, please tell us a little about "
 "yourself:"
-msgstr "Пре него што почнете са коришћењем нове редакције, реците нам нешто о себи:"
+msgstr ""
+"Пре него што почнете са коришћењем нове редакције, реците нам нешто о себи:"
 
 #: scripts/apps/search/components/fields/state.tsx:41
 msgid "Being Corrected"
@@ -2860,7 +2885,9 @@ msgstr "Обоје"
 msgid ""
 "Both start and end date need to be filled in (or cleared) to save the "
 "subscriber."
-msgstr "Морате попунити (или обрисати) и почетни и крајњи датум да бисте сачували претплатника."
+msgstr ""
+"Морате попунити (или обрисати) и почетни и крајњи датум да бисте сачували "
+"претплатника."
 
 #: scripts/apps/authoring/views/change-image.html:242
 msgid "Brightness"
@@ -2903,13 +2930,18 @@ msgid ""
 "By selecting the categories you are interested in, the system will only "
 "display these in a menu for setting the content item's categories (along "
 "with any of its existing categories)."
-msgstr "Бирањем категорија које вас занимају, систем ће приказивати само њих у менију за подешавање категорија ставке садржаја (заједно са постојећим категоријама)."
+msgstr ""
+"Бирањем категорија које вас занимају, систем ће приказивати само њих у "
+"менију за подешавање категорија ставке садржаја (заједно са постојећим "
+"категоријама)."
 
 #: scripts/apps/users/views/user-preferences.html:185
 msgid ""
 "By selecting the desks as your preferred desks, they appear first in the "
 "order when sending or publishing items."
-msgstr "Бирањем дескова као омиљених, они се појављују први у редоследу приликом слања или објављивања ставки."
+msgstr ""
+"Бирањем дескова као омиљених, они се појављују први у редоследу приликом "
+"слања или објављивања ставки."
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:362
 #: scripts/apps/authoring-react/field-adapters/byline.ts:20
@@ -3256,7 +3288,9 @@ msgstr "Не можете додати саму ставку као повеза
 msgid ""
 "Cannot change workflow status if the coverage is part of an expired planning "
 "item"
-msgstr "Није могуће променити статус радног тока ако је извештавање део истекле ставке планирања"
+msgstr ""
+"Није могуће променити статус радног тока ако је извештавање део истекле "
+"ставке планирања"
 
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:35
 msgid "Cannot delete vocabulary"
@@ -3361,7 +3395,8 @@ msgstr "Измене ће бити изгубљене ако не буду са�
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorTools.js:32
 #: scripts/extensions/videoEditor/src/VideoEditorTools.tsx:76
 msgid "Changing quality is only supported for 480p and higher quality videos."
-msgstr "Промена квалитета подржана је само за видео записе квалитета 480p и већег."
+msgstr ""
+"Промена квалитета подржана је само за видео записе квалитета 480p и већег."
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
@@ -3377,7 +3412,8 @@ msgstr "Прекорачен је лимит карактера, речник н
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:14
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr "Прекорачен је лимит карактера, истицање није могуће креирати/ажурирати."
+msgstr ""
+"Прекорачен је лимит карактера, истицање није могуће креирати/ажурирати."
 
 #: scripts/apps/desks/views/desk-config-modal.html:290
 msgid "Character limit exceeded, stage can not be created/updated."
@@ -3462,7 +3498,13 @@ msgid ""
 "                                    in the list. The CVs are grouped under "
 "each label. You can choose only one\n"
 "                                    label."
-msgstr "Изаберите постојеће ознаке или креирајте нове\n                                    куцањем. Ознаке се користе само за организовање контролисаних вокабулара\n                                    у листи. КВ су груписани под сваком ознаком. Можете изабрати само једну\n                                    ознаку."
+msgstr ""
+"Изаберите постојеће ознаке или креирајте нове\n"
+"                                    куцањем. Ознаке се користе само за "
+"организовање контролисаних вокабулара\n"
+"                                    у листи. КВ су груписани под сваком "
+"ознаком. Можете изабрати само једну\n"
+"                                    ознаку."
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
@@ -3598,7 +3640,8 @@ msgstr "Кликните на дугме плус да бисте додали �
 #: scripts/apps/users/views/change-avatar.html:38
 msgid ""
 "Click to capture using camera. Be sure that you allow camera accessibility."
-msgstr "Кликните да снимите камером. Уверите се да сте дозволили приступ камери."
+msgstr ""
+"Кликните да снимите камером. Уверите се да сте дозволили приступ камери."
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:108
 msgid "Click to replace thumbnail"
@@ -3898,7 +3941,9 @@ msgstr "Конфигурација обрисана."
 msgid ""
 "Configuration has changed. {{message}} Would you like to save the story to "
 "your workspace?"
-msgstr "Конфигурација је измењена. {{message}} Желите ли да сачувате причу у свој радни простор?"
+msgstr ""
+"Конфигурација је измењена. {{message}} Желите ли да сачувате причу у свој "
+"радни простор?"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:11
 #: scripts/apps/highlights/views/highlights_config_modal.html:12
@@ -4026,7 +4071,9 @@ msgstr "Садржај"
 msgid ""
 "Content\n"
 "                                Type"
-msgstr "Тип\n                                садржаја"
+msgstr ""
+"Тип\n"
+"                                садржаја"
 
 #: scripts/apps/publish/views/subscribers.html:254
 msgid "Content API"
@@ -5254,7 +5301,10 @@ msgid ""
 "Defines the width of the pop-up in the\n"
 "                                    article header. A minimal value of 200 "
 "is required."
-msgstr "Дефинише ширину искачућег прозора у\n                                    заглављу чланка. Потребна је минимална вредност 200."
+msgstr ""
+"Дефинише ширину искачућег прозора у\n"
+"                                    заглављу чланка. Потребна је минимална "
+"вредност 200."
 
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/GetFields.js:23
@@ -5706,7 +5756,9 @@ msgstr "Речник са називом {{dictionary.name}} већ постој
 msgid ""
 "Difference view for \"{{type}}\" fields is not implemented. Latter version "
 "is being displayed."
-msgstr "Приказ разлика за \"{{type}}\" поља није имплементиран. Приказана је новија верзија."
+msgstr ""
+"Приказ разлика за \"{{type}}\" поља није имплементиран. Приказана је новија "
+"верзија."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:72
 msgid "Digital/Internet"
@@ -5790,7 +5842,9 @@ msgstr "Прекинута веза са сервером обавештења!"
 msgid ""
 "Displaying news ingest statistics. You can switch color themes or graph "
 "sources."
-msgstr "Приказује статистике пријема вести. Можете променити теме боја или изворе графикона."
+msgstr ""
+"Приказује статистике пријема вести. Можете променити теме боја или изворе "
+"графикона."
 
 #: scripts/core/keyboard/keyboard.ts:401 scripts/core/keyboard/keyboard.ts:410
 msgid "Displays active keyboard shortcuts"
@@ -5989,16 +6043,22 @@ msgstr "Превуците датотеке овде или"
 msgid ""
 "Drag one or more files here to upload them,\n"
 "                or select files by clicking the button below"
-msgstr "Превуците једну или више датотека овде да их отпремите,\n                или изаберите датотеке кликом на дугме испод"
+msgstr ""
+"Превуците једну или више датотека овде да их отпремите,\n"
+"                или изаберите датотеке кликом на дугме испод"
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:126
 msgid "Drag one or more files here to upload them, or just click here."
-msgstr "Превуците једну или више датотека овде да их отпремите, или само кликните овде."
+msgstr ""
+"Превуците једну или више датотека овде да их отпремите, или само кликните "
+"овде."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:104
 msgid ""
 "Drag one or more files here to upload them, or just click the button below."
-msgstr "Превуците једну или више датотека овде да их отпремите, или само кликните на дугме испод."
+msgstr ""
+"Превуците једну или више датотека овде да их отпремите, или само кликните на "
+"дугме испод."
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:101
 msgid "Drop events here"
@@ -6210,7 +6270,9 @@ msgstr "СПОЉАШЊИ ЛИНК {{ index }} не може се завршит�
 msgid ""
 "EXTERNAL LINK {{ index }} must start with \"http://\", \"https://\" or \"www."
 "\""
-msgstr "СПОЉАШЊИ ЛИНК {{ index }} мора почињати са \"http://\", \"https://\" или \"www.\""
+msgstr ""
+"СПОЉАШЊИ ЛИНК {{ index }} мора почињати са \"http://\", \"https://\" или "
+"\"www.\""
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:35
 #: ../superdesk-planning/client/components/fields/resources/common.tsx:16
@@ -6734,7 +6796,9 @@ msgstr "Завршава се"
 msgid ""
 "Ensure correct preview endpoint is configured or contact endpoint "
 "maintainers."
-msgstr "Уверите се да је исправна крајња тачка прегледа подешена или контактирајте њене одржаваоце."
+msgstr ""
+"Уверите се да је исправна крајња тачка прегледа подешена или контактирајте "
+"њене одржаваоце."
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:535
@@ -7816,11 +7880,14 @@ msgstr "Чување области од интереса није успело:
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:94
 msgid "Failed to save the area of interest: Failed to call picture_crop."
-msgstr "Чување области од интереса није успело: позивање picture_crop није успело."
+msgstr ""
+"Чување области од интереса није успело: позивање picture_crop није успело."
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:128
 msgid "Failed to save the area of interest: Failed to call picture_renditions."
-msgstr "Чување области од интереса није успело: позивање picture_renditions није успело."
+msgstr ""
+"Чување области од интереса није успело: позивање picture_renditions није "
+"успело."
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:469
 msgid "Failed to save the assignment."
@@ -8066,7 +8133,9 @@ msgstr "Поље"
 msgid ""
 "Field\n"
 "                                    type"
-msgstr "Тип\n                                    поља"
+msgstr ""
+"Тип\n"
+"                                    поља"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:200
 msgid "Field \"{{field}}\" will be permanently deleted."
@@ -8518,7 +8587,9 @@ msgstr "Генериши извештај који приказује актив
 msgid ""
 "Generate a report showing average and maximum time it took to produce "
 "content per desk."
-msgstr "Генериши извештај који приказује просечно и максимално време потребно за продукцију садржаја по деску."
+msgstr ""
+"Генериши извештај који приказује просечно и максимално време потребно за "
+"продукцију садржаја по деску."
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:1
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-parameters.html:1
@@ -8529,13 +8600,17 @@ msgstr "Генериши извештај који приказује стати
 msgid ""
 "Generate a report showing the time between original publish and update "
 "publish."
-msgstr "Генериши извештај који приказује време између оригиналне објаве и објаве ажурирања."
+msgstr ""
+"Генериши извештај који приказује време између оригиналне објаве и објаве "
+"ажурирања."
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-report-parameters.html:1
 msgid ""
 "Generate a report showing updates to featuremedia items after initial "
 "publish."
-msgstr "Генериши извештај који приказује ажурирања ставки истакнутог медија након првобитне објаве."
+msgstr ""
+"Генериши извештај који приказује ажурирања ставки истакнутог медија након "
+"првобитне објаве."
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-parameters.html:1
 msgid "Generate a report showing user activity."
@@ -8847,7 +8922,9 @@ msgstr "Помозите нам да преведемо Superdesk"
 msgid ""
 "Helper\n"
 "                                    text"
-msgstr "Помоћни\n                                    текст"
+msgstr ""
+"Помоћни\n"
+"                                    текст"
 
 #: scripts/apps/authoring/views/article-edit.html:395
 msgid "Helplines/Contact Information"
@@ -9009,13 +9086,18 @@ msgid ""
 "ID\n"
 "                                must contain only letters, digits and "
 "characters -, _."
-msgstr "ИД\n                                мора садржати само слова, цифре и знакове -, _."
+msgstr ""
+"ИД\n"
+"                                мора садржати само слова, цифре и знакове -, "
+"_."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:43
 msgid ""
 "ID conflicts\n"
 "                                with system field."
-msgstr "ИД је у конфликту\n                                са системским пољем."
+msgstr ""
+"ИД је у конфликту\n"
+"                                са системским пољем."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:41
 msgid "ID must be unique."
@@ -9046,7 +9128,10 @@ msgid ""
 "If enabled, it will be possible to embed articles using this content profile "
 "into other articles that accept embeds (configurable in content profile "
 "field settings)"
-msgstr "Ако је омогућено, биће могуће уградити чланке користећи овај профил садржаја у друге чланке који прихватају уграђени садржај (подесиво у поставкама поља профила садржаја)"
+msgstr ""
+"Ако је омогућено, биће могуће уградити чланке користећи овај профил садржаја "
+"у друге чланке који прихватају уграђени садржај (подесиво у поставкама поља "
+"профила садржаја)"
 
 #: scripts/core/interactive-article-actions-panel/actions/send-correction-action.tsx:134
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-date-options.tsx:194
@@ -9069,7 +9154,12 @@ msgid ""
 "name and the role.\n"
 "                        The roles are managed in <b>Author roles</b> "
 "controlled vocabulary in the Metadata section."
-msgstr "Ако изаберете подразумевану улогу за креирање или уређивање садржаја,\n                        Superdesk ће унапред попунити поље Аутори корисниковим именом и улогом.\n                        Улоге се управљају у контролисаном вокабулару <b>Улоге аутора</b> у одељку Метаподаци."
+msgstr ""
+"Ако изаберете подразумевану улогу за креирање или уређивање садржаја,\n"
+"                        Superdesk ће унапред попунити поље Аутори "
+"корисниковим именом и улогом.\n"
+"                        Улоге се управљају у контролисаном вокабулару "
+"<b>Улоге аутора</b> у одељку Метаподаци."
 
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:137
 #: ../superdesk-planning/client/components/FulFilAssignmentModal/index.tsx:104
@@ -9114,7 +9204,9 @@ msgstr "Ширина слике"
 #: scripts/core/upload/crop-directive.ts:41
 msgid ""
 "Image is bigger than {{maxFileSize}}MB, upload file size may be limited!"
-msgstr "Слика је већа од {{maxFileSize}}MB, величина отпремљене датотеке може бити ограничена!"
+msgstr ""
+"Слика је већа од {{maxFileSize}}MB, величина отпремљене датотеке може бити "
+"ограничена!"
 
 #: scripts/apps/authoring/views/change-image.html:217
 msgid "Image size"
@@ -9130,7 +9222,9 @@ msgstr "Провера величине слике није успела"
 msgid ""
 "Image suggestions are based on generated tags and can be added to article "
 "content by dragging."
-msgstr "Сугестије слика заснивају се на генерисаним ознакама и могу се додати у садржај чланка превлачењем."
+msgstr ""
+"Сугестије слика заснивају се на генерисаним ознакама и могу се додати у "
+"садржај чланка превлачењем."
 
 #: scripts/extensions/sams/dist/src/components/assets/assetTypeFilterButtons.js:73
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetTypeFilterButtons.js:73
@@ -9184,7 +9278,9 @@ msgstr "У току"
 msgid ""
 "In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected "
 "repeat."
-msgstr "У причи {{slugline}} послато: {{date}}.{{lineBreak}}Ово је исправљено понављање."
+msgstr ""
+"У причи {{slugline}} послато: {{date}}.{{lineBreak}}Ово је исправљено "
+"понављање."
 
 #: ../superdesk-planning/client/utils/index.ts:335
 #: scripts/apps/contacts/components/ContactInfo.tsx:64
@@ -9606,7 +9702,9 @@ msgstr "Ставка је поново послата."
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
-msgstr "Ставка је измењена откад је отворена. Затворите и поново је отворите да бисте наставили. Нажалост, ваше измене не могу бити сачуване."
+msgstr ""
+"Ставка је измењена откад је отворена. Затворите и поново је отворите да "
+"бисте наставили. Нажалост, ваше измене не могу бити сачуване."
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:60
 msgid "Item has not been transmitted to any subscriber"
@@ -9694,8 +9792,10 @@ msgid "Item was not added. Only 1 item is allowed for this field."
 msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
 msgstr[0] "Ставка није додата. У овом пољу је дозвољена само 1 ставка."
-msgstr[1] "Ставка није додата. У овом пољу су дозвољене само {{number}} ставке."
-msgstr[2] "Ставка није додата. У овом пољу је дозвољено само {{number}} ставки."
+msgstr[1] ""
+"Ставка није додата. У овом пољу су дозвољене само {{number}} ставке."
+msgstr[2] ""
+"Ставка није додата. У овом пољу је дозвољено само {{number}} ставки."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
@@ -9996,7 +10096,12 @@ msgid ""
 "support, join the discussion on <a href=\"https://forum.sourcefabric.org/"
 "categories/superdesk-dev\" title=\"Superdesk forum\" "
 "target=\"_blank\">Superdesk forums</a>."
-msgstr "Сазнајте више о Superdesk-у на <a href=\"https://www.superdesk.org/\" title=\"Superdesk\" target=\"_blank\">www.superdesk.org</a>. За помоћ и подршку, придружите се дискусији на <a href=\"https://forum.sourcefabric.org/categories/superdesk-dev\" title=\"Superdesk forum\" target=\"_blank\">Superdesk форумима</a>."
+msgstr ""
+"Сазнајте више о Superdesk-у на <a href=\"https://www.superdesk.org/\" "
+"title=\"Superdesk\" target=\"_blank\">www.superdesk.org</a>. За помоћ и "
+"подршку, придружите се дискусији на <a href=\"https://forum.sourcefabric.org/"
+"categories/superdesk-dev\" title=\"Superdesk forum\" "
+"target=\"_blank\">Superdesk форумима</a>."
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Leave full width mode"
@@ -10350,7 +10455,9 @@ msgstr "Уверите се да изгледате најбоље"
 msgid ""
 "Make sure you've saved your Client Secret.You won't be able to access it "
 "again after closing"
-msgstr "Уверите се да сте сачували тајни кључ клијента. Након затварања нећете моћи поново да приступите."
+msgstr ""
+"Уверите се да сте сачували тајни кључ клијента. Након затварања нећете моћи "
+"поново да приступите."
 
 #: scripts/apps/search/views/search-panel.html:45
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/availability-settings.js:190
@@ -10987,7 +11094,9 @@ msgstr "Мора бити мање од {{ maximum }}"
 msgid ""
 "Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 "
 "of the following:"
-msgstr "Мора бити дуго {{MIN_LENGTH}} карактера и садржати {{MIN_STRENGTH}} од 4 следећа елемента:"
+msgstr ""
+"Мора бити дуго {{MIN_LENGTH}} карактера и садржати {{MIN_STRENGTH}} од 4 "
+"следећа елемента:"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:165
 msgid "Must select at least one day"
@@ -11120,7 +11229,8 @@ msgstr "Преводи назива"
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:218
 msgid ""
 "Name field should only have alphanumeric characters, dashes and underscores"
-msgstr "Поље назива треба да садржи само алфанумеричке знакове, цртице и доње црте"
+msgstr ""
+"Поље назива треба да садржи само алфанумеричке знакове, цртице и доње црте"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:79
 msgid "Name is not unique."
@@ -11436,7 +11546,9 @@ msgstr "Нису дефинисане радње преузимања ни об�
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:1080
 msgid ""
 "No formatters found for {{formats}} while publishing item having unique name."
-msgstr "Форматери за {{formats}} нису пронађени приликом објављивања ставке са јединственим називом."
+msgstr ""
+"Форматери за {{formats}} нису пронађени приликом објављивања ставке са "
+"јединственим називом."
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:206
 msgid "No highlights have been created yet."
@@ -11526,7 +11638,9 @@ msgstr "Нису додате ставке планирања"
 msgid ""
 "No preferred categories selected. Should you choose to proceed with your "
 "choice. A default set of categories will be selected for you."
-msgstr "Нису изабране омиљене категорије. Ако одлучите да наставите са својим избором, биће вам изабран подразумевани скуп категорија."
+msgstr ""
+"Нису изабране омиљене категорије. Ако одлучите да наставите са својим "
+"избором, биће вам изабран подразумевани скуп категорија."
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EditorFieldEventRelatedItems.tsx:85
 msgid "No related articles yet"
@@ -11943,9 +12057,15 @@ msgid ""
 msgid_plural ""
 "{{ count }} items that were selected are locked. By default locked items are "
 "not included in the export."
-msgstr[0] "Једна од изабраних ставки је закључана. Подразумевано, закључане ставке нису укључене у извоз."
-msgstr[1] "{{ count }} изабраних ставки је закључано. Подразумевано, закључане ставке нису укључене у извоз."
-msgstr[2] "{{ count }} изабраних ставки је закључано. Подразумевано, закључане ставке нису укључене у извоз."
+msgstr[0] ""
+"Једна од изабраних ставки је закључана. Подразумевано, закључане ставке нису "
+"укључене у извоз."
+msgstr[1] ""
+"{{ count }} изабраних ставки је закључано. Подразумевано, закључане ставке "
+"нису укључене у извоз."
+msgstr[2] ""
+"{{ count }} изабраних ставки је закључано. Подразумевано, закључане ставке "
+"нису укључене у извоз."
 
 #: scripts/apps/users/components/UserAvatar.tsx:99
 #: scripts/apps/users/controllers/UserListController.ts:156
@@ -11971,7 +12091,9 @@ msgstr "Само објављено"
 msgid ""
 "Only allow content with the\n"
 "                                following status:"
-msgstr "Дозволи само садржај са\n                                следећим статусом:"
+msgstr ""
+"Дозволи само садржај са\n"
+"                                следећим статусом:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:247
 msgid "Only one XMP files are accepted"
@@ -12185,13 +12307,17 @@ msgstr "Оригинал"
 msgid ""
 "Original ({{item.renditions.original.width}} x "
 "{{item.renditions.original.height}} px)"
-msgstr "Оригинал ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)"
+msgstr ""
+"Оригинал ({{item.renditions.original.width}} x "
+"{{item.renditions.original.height}} px)"
 
 #: ../superdesk-analytics/client/views/renditions-preview.html:33
 msgid ""
 "Original ({{preview.item.update.update.renditions.original.width}} x "
 "{{preview.item.update.update.renditions.original.height}} px)"
-msgstr "Оригинал ({{preview.item.update.update.renditions.original.width}} x {{preview.item.update.update.renditions.original.height}} px)"
+msgstr ""
+"Оригинал ({{preview.item.update.update.renditions.original.width}} x "
+"{{preview.item.update.update.renditions.original.height}} px)"
 
 #: scripts/apps/search/components/fields/translations.tsx:26
 msgid "Original Article"
@@ -12768,7 +12894,8 @@ msgstr "Ставка планирања додата као истакнута �
 
 #: ../superdesk-planning/client/utils/events.tsx:501
 msgid "Planning item already has one related event. Can not add more."
-msgstr "Ставка планирања већ има један повезан догађај. Више није могуће додати."
+msgstr ""
+"Ставка планирања већ има један повезан догађај. Више није могуће додати."
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:72
 msgid "Planning item created"
@@ -12803,7 +12930,9 @@ msgstr "Пусти"
 msgid ""
 "Please be aware that uploading external config files\n"
 "                will overwrite your existing configuration."
-msgstr "Имајте на уму да отпремање спољних конфигурационих датотека\n                ће заменити вашу постојећу конфигурацију."
+msgstr ""
+"Имајте на уму да отпремање спољних конфигурационих датотека\n"
+"                ће заменити вашу постојећу конфигурацију."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:359
 msgid "Please change the default templates first."
@@ -12859,7 +12988,9 @@ msgstr "Унесите ИД чланка"
 msgid ""
 "Please specify 'first name, last name' or  'organisation' or both, and at "
 "least one of [{{list}}] fields."
-msgstr "Наведите 'име, презиме' или 'организацију' или оба, и најмање једно од [{{list}}] поља."
+msgstr ""
+"Наведите 'име, презиме' или 'организацију' или оба, и најмање једно од "
+"[{{list}}] поља."
 
 #: scripts/apps/templates/views/create-template.html:27
 #: scripts/apps/templates/views/template-editor-modal.html:22
@@ -13254,7 +13385,9 @@ msgstr "Тема за лектуру"
 msgid ""
 "Provide your email in order to get 'Reset Token'. Once you get it, use it to "
 "reset your password."
-msgstr "Унесите свој имејл да бисте добили 'Токен за ресет'. Када га добијете, искористите га за ресет лозинке."
+msgstr ""
+"Унесите свој имејл да бисте добили 'Токен за ресет'. Када га добијете, "
+"искористите га за ресет лозинке."
 
 #: scripts/apps/users/views/change-avatar.html:47
 msgid "Provided image URL is not valid."
@@ -13284,7 +13417,8 @@ msgstr "Секвенца провајдера"
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid ""
 "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
-msgstr "Провајдер {{name}} је неуобичајено тих. Последња активност је била {{last}}"
+msgstr ""
+"Провајдер {{name}} је неуобичајено тих. Последња активност је била {{last}}"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:279
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:110
@@ -13824,7 +13958,9 @@ msgstr "Повезана ставка није доступна."
 msgid ""
 "Related item was not added, because the field reached the limit of related "
 "items allowed."
-msgstr "Повезана ставка није додата јер је поље достигло ограничење дозвољених повезаних ставки."
+msgstr ""
+"Повезана ставка није додата јер је поље достигло ограничење дозвољених "
+"повезаних ставки."
 
 #: scripts/apps/vocabularies/constants.ts:22
 msgid "Related items"
@@ -14879,7 +15015,9 @@ msgstr "Сачуван извештај"
 msgid ""
 "Saved Report has changed since it was opened. Please re-select the Saved "
 "Report to continue. Regrettably, your changes cannot be saved."
-msgstr "Сачувани извештај је измењен откад је отворен. Поново изаберите сачувани извештај да наставите. Нажалост, ваше измене не могу бити сачуване."
+msgstr ""
+"Сачувани извештај је измењен откад је отворен. Поново изаберите сачувани "
+"извештај да наставите. Нажалост, ваше измене не могу бити сачуване."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:62
 msgid "Saved Searches"
@@ -15295,14 +15433,21 @@ msgid ""
 "ingest. If you don't see any, create one\n"
 "                                   <a href=\"#/settings/content-"
 "profiles\">here</a>"
-msgstr "Изаберите подразумевани профил садржаја који се користи за чланке преузете из пријема. Ако ниједан не видите, креирајте га\n                                   <a href=\"#/settings/content-profiles\">овде</a>"
+msgstr ""
+"Изаберите подразумевани профил садржаја који се користи за чланке преузете "
+"из пријема. Ако ниједан не видите, креирајте га\n"
+"                                   <a href=\"#/settings/content-"
+"profiles\">овде</a>"
 
 #: scripts/apps/desks/views/desk-config-modal.html:156
 msgid ""
 "Select a default template for new articles. If you don't see any, first make "
 "sure that there is at least one content profile. Each time a profile is "
 "created, Superdesk creates a template with the same name."
-msgstr "Изаберите подразумевани шаблон за нове чланке. Ако ниједан не видите, прво се уверите да постоји барем један профил садржаја. Сваки пут када се креира профил, Superdesk креира шаблон са истим називом."
+msgstr ""
+"Изаберите подразумевани шаблон за нове чланке. Ако ниједан не видите, прво "
+"се уверите да постоји барем један профил садржаја. Сваки пут када се креира "
+"профил, Superdesk креира шаблон са истим називом."
 
 #: scripts/core/ui/components/generic-form/input-types/desk_single_value.tsx:40
 msgid "Select a desk"
@@ -15680,7 +15825,8 @@ msgstr "Постави ознаку у тренутном пакету"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:131
 msgid "Set maximum items per stages and saved searches for view"
-msgstr "Подеси максималан број ставки по фазама и сачуваним претрагама за приказ"
+msgstr ""
+"Подеси максималан број ставки по фазама и сачуваним претрагама за приказ"
 
 #: scripts/apps/monitoring/aggregate-widget/aggregate.ts:17
 msgid ""
@@ -15689,7 +15835,12 @@ msgid ""
 "sensible name, select a saved search or desk or its workflow stages. Monitor "
 "anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr "Подесите различите мониторе да бисте пратили било које теме из пријема или продукције, излаза дескова или било ког дела радног тока. Све што вам треба је да им дате смислен назив, изаберете сачувану претрагу или деск или његове радне фазе. Пратите било шта, било где, било када. Можете имати онолико виџета Монитора колико желите."
+msgstr ""
+"Подесите различите мониторе да бисте пратили било које теме из пријема или "
+"продукције, излаза дескова или било ког дела радног тока. Све што вам треба "
+"је да им дате смислен назив, изаберете сачувану претрагу или деск или његове "
+"радне фазе. Пратите било шта, било где, било када. Можете имати онолико "
+"виџета Монитора колико желите."
 
 #: scripts/extensions/sams/dist/src/api/sets.js:57
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:57
@@ -15888,7 +16039,9 @@ msgstr "Прикажи послате/ставке у реду"
 msgid ""
 "Show to users\n"
 "                                as"
-msgstr "Прикажи корисницима\n                                као"
+msgstr ""
+"Прикажи корисницима\n"
+"                                као"
 
 #: scripts/apps/archive/views/item-crops.html:1
 #: scripts/apps/authoring-react/fields/media/media-carousel/image-crops.tsx:22
@@ -16096,7 +16249,9 @@ msgstr "Провера објаве неких повезаних ставки �
 msgid ""
 "Some selected items have not yet been posted. All selections must be visible "
 "to subscribers."
-msgstr "Неке изабране ставке још нису објављене. Сви избори морају бити видљиви претплатницима."
+msgstr ""
+"Неке изабране ставке још нису објављене. Сви избори морају бити видљиви "
+"претплатницима."
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:53
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:53
@@ -16122,7 +16277,8 @@ msgstr "Слика мора бити најмање {{width}}x{{height}}."
 #: scripts/apps/authoring/attachments/AttachmentsWidget.tsx:38
 msgid ""
 "Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})"
-msgstr "Извините, али неке датотеке \"{{filenames}}\" су веће од лимита ({{limit}})"
+msgstr ""
+"Извините, али неке датотеке \"{{filenames}}\" су веће од лимита ({{limit}})"
 
 #: scripts/apps/templates/views/create-template.html:23
 msgid "Sorry, but template name must be unique."
@@ -17216,7 +17372,9 @@ msgstr "Ставка планирања коју сте уређивали аж�
 #: scripts/apps/products/views/products-config-modal.html:31
 msgid ""
 "The Product ID can be copied and used as Superdesk Newshub product query."
-msgstr "ИД производа се може копирати и користити као упит за производе у Superdesk Newshub-у."
+msgstr ""
+"ИД производа се може копирати и користити као упит за производе у Superdesk "
+"Newshub-у."
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
@@ -17225,7 +17383,9 @@ msgstr "Сачувани извештај који користите је об�
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:270
 msgid ""
 "The Saved Report you are using was updated! Please re-select the Saved Report"
-msgstr "Сачувани извештај који користите је ажуриран! Поново изаберите сачувани извештај"
+msgstr ""
+"Сачувани извештај који користите је ажуриран! Поново изаберите сачувани "
+"извештај"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:52
 msgid ""
@@ -17233,7 +17393,11 @@ msgid ""
 "github.com/superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</"
 "a> by <a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" "
 "target=\"_blank\">Sourcefabric</a>."
-msgstr "Superdesk пројекат развија и одржава <a href=\"https://github.com/superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</a> заједница и <a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" target=\"_blank\">Sourcefabric</a>."
+msgstr ""
+"Superdesk пројекат развија и одржава <a href=\"https://github.com/"
+"superdesk\" title=\"Superdesk GitHub\" target=\"_blank\">GitHub</a> "
+"заједница и <a href=\"https://www.sourcefabric.org/\" title=\"Sourcefabric\" "
+"target=\"_blank\">Sourcefabric</a>."
 
 #: scripts/core/auth/reset-password.html:74
 msgid "The activation token is not valid."
@@ -17352,7 +17516,8 @@ msgstr "Назив Slack канала повезаног са овим деск�
 msgid ""
 "The package \"{{name}}\" contains the following published items that can not "
 "be sent:"
-msgstr "Пакет \"{{name}}\" садржи следеће објављене ставке које не могу бити послате:"
+msgstr ""
+"Пакет \"{{name}}\" садржи следеће објављене ставке које не могу бити послате:"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:19
 msgid "The page needs to be reloaded in order to do that."
@@ -17389,19 +17554,25 @@ msgstr "Величина {{filename}} је {{width}}x{{height}}"
 msgid ""
 "The subscriber is currently inactive, but the schedule from {{start}} to "
 "{{end}} is valid. The subscriber will be activated on save."
-msgstr "Претплатник је тренутно неактиван, али распоред од {{start}} до {{end}} је важећи. Претплатник ће бити активиран приликом чувања."
+msgstr ""
+"Претплатник је тренутно неактиван, али распоред од {{start}} до {{end}} је "
+"важећи. Претплатник ће бити активиран приликом чувања."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:383
 msgid ""
 "The subscriber is set to start on {{date}}, but the Active switch will "
 "override this and activate the subscriber on save."
-msgstr "Претплатник је подешен да почне {{date}}, али ће га прекидач Активно заменити и активирати приликом чувања."
+msgstr ""
+"Претплатник је подешен да почне {{date}}, али ће га прекидач Активно "
+"заменити и активирати приликом чувања."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:391
 msgid ""
 "The subscriber schedule ended on {{date}}, but the Active switch will keep "
 "the subscriber active on save."
-msgstr "Распоред претплатника је завршен {{date}}, али ће га прекидач Активно одржати активним приликом чувања."
+msgstr ""
+"Распоред претплатника је завршен {{date}}, али ће га прекидач Активно "
+"одржати активним приликом чувања."
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:39
 msgid ""
@@ -17413,7 +17584,10 @@ msgid ""
 "The user activity widget provides information about user activity. Using the "
 "widget, editors can search and select a user. Upon selection a list of "
 "content items is shown categorized as follows:"
-msgstr "Виџет активности корисника пружа информације о активности корисника. Користећи виџет, уредници могу претраживати и изабрати корисника. Након избора приказује се листа ставки садржаја категоризована на следећи начин:"
+msgstr ""
+"Виџет активности корисника пружа информације о активности корисника. "
+"Користећи виџет, уредници могу претраживати и изабрати корисника. Након "
+"избора приказује се листа ставки садржаја категоризована на следећи начин:"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:226
 msgid "The values should be unique for {{uniqueField}}"
@@ -17426,9 +17600,15 @@ msgid ""
 msgid_plural ""
 "The vocabulary {{name}} can't be deleted because it is currently used in the "
 "following Content Profiles:"
-msgstr[0] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећем профилу садржаја:"
-msgstr[1] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим профилима садржаја:"
-msgstr[2] "Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим профилима садржаја:"
+msgstr[0] ""
+"Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећем "
+"профилу садржаја:"
+msgstr[1] ""
+"Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим "
+"профилима садржаја:"
+msgstr[2] ""
+"Вокабулар {{name}} не може бити обрисан јер се тренутно користи у следећим "
+"профилима садржаја:"
 
 #: ../superdesk-planning/client/actions/main.ts:468
 msgid "The {{ itemType }} has been posted"
@@ -17459,7 +17639,8 @@ msgstr "Постоје проблеми са конфигурацијом инс
 
 #: scripts/api/highlights.ts:37
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr "Постоје ставке које су закључане или нису објављене. Желите ли да наставите?"
+msgstr ""
+"Постоје ставке које су закључане или нису објављене. Желите ли да наставите?"
 
 #: ../superdesk-planning/client/components/ItemActionsMenu/ActionsMenuPopup.tsx:91
 msgid "There are no actions available."
@@ -17574,7 +17755,8 @@ msgstr "Постоје несачуване измене."
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:28
 msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
-msgstr "Постоје несачуване измене. Ако напустите страницу, измене ће бити изгубљене."
+msgstr ""
+"Постоје несачуване измене. Ако напустите страницу, измене ће бити изгубљене."
 
 #: ../superdesk-planning/client/actions/assignments/notifications.ts:350
 msgid "There is a {{ type }} assignment '{{ slugline }}' {{ state }}"
@@ -17683,7 +17865,9 @@ msgstr "Дошло је до грешке приликом покушаја ге
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:219
 msgid "There was an error, could not delete Events and Planning view filter."
-msgstr "Дошло је до грешке, филтер приказа догађаја и планирања није могао бити обрисан."
+msgstr ""
+"Дошло је до грешке, филтер приказа догађаја и планирања није могао бити "
+"обрисан."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:92
 msgid "There was an error. Content filter cannot be deleted."
@@ -17770,7 +17954,10 @@ msgstr "Ово и све будуће планирање"
 msgid ""
 "This article contains unresolved comments.Click on Cancel to go back to "
 "editing toresolve those comments or OK to ignore and proceed with publishing"
-msgstr "Овај чланак садржи неразрешене коментаре. Кликните на Откажи да се вратите на уређивање и разрешите коментаре или У реду да их игноришете и наставите са објавом"
+msgstr ""
+"Овај чланак садржи неразрешене коментаре. Кликните на Откажи да се вратите "
+"на уређивање и разрешите коментаре или У реду да их игноришете и наставите "
+"са објавом"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:25
 msgid "This event is a recurring event!"
@@ -17828,7 +18015,10 @@ msgid ""
 "This field will initialize with the value of specified field when toggled "
 "from \"off\" to \"on\". Only plain-text gets copied. Formatting options or "
 "links are not preserved."
-msgstr "Ово поље ће се иницијализовати вредношћу наведеног поља при пребацивању са \"off\" на \"on\". Копира се само обичан текст. Опције форматирања и линкови се не задржавају."
+msgstr ""
+"Ово поље ће се иницијализовати вредношћу наведеног поља при пребацивању са "
+"\"off\" на \"on\". Копира се само обичан текст. Опције форматирања и линкови "
+"се не задржавају."
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:358
 msgid "This is a default template of the following desk(s): {{deskNames}}."
@@ -17892,7 +18082,9 @@ msgstr "Ову причу је прерадио:"
 msgid ""
 "This vocabulary is not currently used in any Content Profile and can be "
 "safely removed."
-msgstr "Овај вокабулар се тренутно не користи ни у једном профилу садржаја и може се безбедно уклонити."
+msgstr ""
+"Овај вокабулар се тренутно не користи ни у једном профилу садржаја и може се "
+"безбедно уклонити."
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:42
 msgid "This week"
@@ -17903,7 +18095,11 @@ msgid ""
 "This widget allows you to create literally any content view you may need in "
 "Superdesk, be it production or ingest. All you need is to select a desk, its "
 "stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr "Овај виџет вам омогућава да креирате буквално било који приказ садржаја који вам је потребан у Superdesk-у, било да се ради о продукцији или пријему. Све што треба је да изаберете деск, његове фазе или сачувану претрагу. Именујте свој приказ када завршите. Уживајте!"
+msgstr ""
+"Овај виџет вам омогућава да креирате буквално било који приказ садржаја који "
+"вам је потребан у Superdesk-у, било да се ради о продукцији или пријему. Све "
+"што треба је да изаберете деск, његове фазе или сачувану претрагу. Именујте "
+"свој приказ када завршите. Уживајте!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
@@ -17921,7 +18117,9 @@ msgstr "Ово ће такође уклонити повезане задатк�
 msgid ""
 "This will also remove other linked assignments (if any, for story updates). "
 "Are you sure?"
-msgstr "Ово ће такође уклонити друге повезане задатке (ако постоје, за ажурирања приче). Да ли сте сигурни?"
+msgstr ""
+"Ово ће такође уклонити друге повезане задатке (ако постоје, за ажурирања "
+"приче). Да ли сте сигурни?"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:51
 msgid "This will also {{action}} the following events"
@@ -17935,11 +18133,14 @@ msgstr "Ово ће такође {{action}} следеће ставке план
 msgid ""
 "This will appear below the field in the\n"
 "                                    Editor."
-msgstr "Ово ће се појавити испод поља у\n                                    уређивачу."
+msgstr ""
+"Ово ће се појавити испод поља у\n"
+"                                    уређивачу."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:152
 msgid "This will create new events in the remote ({{timeZone}}) timezone"
-msgstr "Ово ће креирати нове догађаје у удаљеној ({{timeZone}}) временској зони"
+msgstr ""
+"Ово ће креирати нове догађаје у удаљеној ({{timeZone}}) временској зони"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:269
 msgid "This will create the new event in the remote ({{timeZone}}) timezone"
@@ -17952,7 +18153,9 @@ msgstr "Ово ће означити следеће ставке планира�
 #: ../superdesk-planning/client/actions/assignments/ui.ts:553
 msgid ""
 "This will unlink the text item associated with the assignment. Are you sure ?"
-msgstr "Ово ће уклонити везу текстуалне ставке повезане са задатком. Да ли сте сигурни?"
+msgstr ""
+"Ово ће уклонити везу текстуалне ставке повезане са задатком. Да ли сте "
+"сигурни?"
 
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DayPicker.tsx:111
 msgid "Thu"
@@ -18032,7 +18235,11 @@ msgid ""
 "article is created\n"
 "            based on this template, it's value will initialize to creation "
 "time + {{x}} minutes"
-msgstr "Временски померај је подешен на {{x}} минута за ово поље. Када се чланак креира\n            на основу овог шаблона, његова вредност ће се иницијализовати на време креирања + {{x}} минута"
+msgstr ""
+"Временски померај је подешен на {{x}} минута за ово поље. Када се чланак "
+"креира\n"
+"            на основу овог шаблона, његова вредност ће се иницијализовати на "
+"време креирања + {{x}} минута"
 
 #: scripts/apps/profiling/views/profiling.html:34
 msgid "Time per call"
@@ -18143,7 +18350,9 @@ msgstr "У велика слова"
 msgid ""
 "To delete this vocabulary, you must first remove it from all Content "
 "Profiles listed above."
-msgstr "Да бисте обрисали овај вокабулар, прво га уклоните из свих профила садржаја наведених изнад."
+msgstr ""
+"Да бисте обрисали овај вокабулар, прво га уклоните из свих профила садржаја "
+"наведених изнад."
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:152
 msgid "To get a responsive embed code, paste a URL."
@@ -18152,7 +18361,9 @@ msgstr "За добијање прилагодљивог кода за угра�
 #: scripts/apps/authoring-react/fields/media/difference.tsx:72
 msgid ""
 "To see detailed differences, compare primary and secondary items visually"
-msgstr "Да бисте видели детаљне разлике, упоредите примарну и секундарну ставку визуелно"
+msgstr ""
+"Да бисте видели детаљне разлике, упоредите примарну и секундарну ставку "
+"визуелно"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:18
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:129
@@ -18613,7 +18824,9 @@ msgstr "Дошло је до непознате грешке, покушајте
 #: scripts/apps/search/controllers/get-multi-actions.tsx:302
 msgid ""
 "Unknown error occured. Try publishing the item from the article edit view."
-msgstr "Дошло је до непознате грешке. Покушајте да објавите ставку из приказа за уређивање чланка."
+msgstr ""
+"Дошло је до непознате грешке. Покушајте да објавите ставку из приказа за "
+"уређивање чланка."
 
 #: scripts/api/article-send.tsx:248
 msgid "Unknown error occurred"
@@ -18811,7 +19024,9 @@ msgstr "Откажи претплату корисника"
 msgid ""
 "Unsupported extension point is being used: "
 "`contributions.authoringHeaderComponents`"
-msgstr "Користи се неподржана тачка проширења: `contributions.authoringHeaderComponents`"
+msgstr ""
+"Користи се неподржана тачка проширења: "
+"`contributions.authoringHeaderComponents`"
 
 #: ../superdesk-planning/client/components/WorkqueueContainer/WorkqueueItem.tsx:41
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:6
@@ -18982,7 +19197,9 @@ msgstr "Ажурирања"
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:34
 msgid ""
 "Updates can only be created for text items. The type of this item is {{type}}"
-msgstr "Ажурирања могу бити креирана само за текстуалне ставке. Тип ове ставке је {{type}}"
+msgstr ""
+"Ажурирања могу бити креирана само за текстуалне ставке. Тип ове ставке је "
+"{{type}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:205
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:136
@@ -19544,7 +19761,10 @@ msgid ""
 "address you have provided. Your data will be kept secure and it won't be "
 "used for any other purpose. You may opt-out of receiving further email "
 "communications at any time."
-msgstr "Слаћемо повремена ажурирања о Superdesk развоју на имејл адресу коју сте навели. Ваши подаци ће бити безбедни и неће се користити у друге сврхе. Можете отказати даља имејл обавештења у било ком тренутку."
+msgstr ""
+"Слаћемо повремена ажурирања о Superdesk развоју на имејл адресу коју сте "
+"навели. Ваши подаци ће бити безбедни и неће се користити у друге сврхе. "
+"Можете отказати даља имејл обавештења у било ком тренутку."
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:38
 msgid "Weak"
@@ -19618,7 +19838,8 @@ msgstr "Подешавања виџета"
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
 msgid ""
 "Widget settings <span translate>for \"{{currentDesk.name}}\" Desk</span>"
-msgstr "Подешавања виџета <span translate>за деск \"{{currentDesk.name}}\"</span>"
+msgstr ""
+"Подешавања виџета <span translate>за деск \"{{currentDesk.name}}\"</span>"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:95
 msgid "Widgets"
@@ -19633,7 +19854,9 @@ msgstr "Ширина"
 msgid ""
 "Width of the\n"
 "                                    popup window (in pixels)"
-msgstr "Ширина\n                                    искачућег прозора (у пикселима)"
+msgstr ""
+"Ширина\n"
+"                                    искачућег прозора (у пикселима)"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:73
 msgid "Wire/Paper"
@@ -19751,13 +19974,16 @@ msgstr "Јуче"
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:106
 msgid ""
 "You are about to delete the vocabulary {{name}}. This action can't be undone."
-msgstr "Управо ћете обрисати вокабулар {{name}}. Ова радња не може бити поништена."
+msgstr ""
+"Управо ћете обрисати вокабулар {{name}}. Ова радња не може бити поништена."
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:109
 msgid ""
 "You are changing you personal preferences. If you would like to set the "
 "default order for the desk, you can do so from the settings page."
-msgstr "Мењате своје личне поставке. Ако желите да поставите подразумевани редослед за деск, то можете учинити на страници подешавања."
+msgstr ""
+"Мењате своје личне поставке. Ако желите да поставите подразумевани редослед "
+"за деск, то можете учинити на страници подешавања."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
@@ -19769,7 +19995,8 @@ msgstr "Тренутно управљате истакнутом причом у
 
 #: scripts/validate-instance-configuration.tsx:38
 msgid "You are likely running an outdated version of auto tagging extension."
-msgstr "Вероватно користите застарелу верзију екстензије за аутоматско означавање."
+msgstr ""
+"Вероватно користите застарелу верзију екстензије за аутоматско означавање."
 
 #: scripts/apps/workspace/content/services/ContentService.ts:71
 msgid "You are not allowed to create an article there."
@@ -19783,7 +20010,9 @@ msgstr "Није вам дозвољено да креирате чланак у
 msgid ""
 "You are trying to add multiple related events when only one is allowed. Only "
 "the first event({{name}}) will be added."
-msgstr "Покушавате да додате више повезаних догађаја када је дозвољен само један. Биће додат само први догађај ({{name}})."
+msgstr ""
+"Покушавате да додате више повезаних догађаја када је дозвољен само један. "
+"Биће додат само први догађај ({{name}})."
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:233
 msgid "You can associate only one XMP file"
@@ -19794,13 +20023,18 @@ msgid ""
 "You can choose the default content view of your desk. Use only if you want "
 "to override individual users' monitoring view preferences. Select \"none\" "
 "if you want to let users decide."
-msgstr "Можете изабрати подразумевани приказ садржаја вашег деска. Користите само ако желите да заобиђете поставке приказа мониторинга појединачних корисника. Изаберите \"ништа\" ако желите да оставите корисницима да одлуче."
+msgstr ""
+"Можете изабрати подразумевани приказ садржаја вашег деска. Користите само "
+"ако желите да заобиђете поставке приказа мониторинга појединачних корисника. "
+"Изаберите \"ништа\" ако желите да оставите корисницима да одлуче."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:148
 msgid ""
 "You can either completely block further writing after the characterlimit is "
 "reached or highlight exceeding characters in red."
-msgstr "Можете потпуно блокирати даље писање након што се достигне лимит карактера или истаћи карактере преко лимита црвеном бојом."
+msgstr ""
+"Можете потпуно блокирати даље писање након што се достигне лимит карактера "
+"или истаћи карактере преко лимита црвеном бојом."
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:154
 msgid "You can't multi-edit, because these articles can't be edited"
@@ -19837,14 +20071,19 @@ msgstr "Имате несачуване измене. Шта желите да �
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:242
 msgid ""
 "You made changes to this planning item that is part of a recurring event."
-msgstr "Направили сте измене на овој ставци планирања која је део понављајућег догађаја."
+msgstr ""
+"Направили сте измене на овој ставци планирања која је део понављајућег "
+"догађаја."
 
 #: scripts/apps/production-api-keys/config.ts:40
 msgid ""
 "Your Client ID and Client Secret will be generated when you save. Make sure "
 "to copy the Client Secret immediately. It will only be shown once and it "
 "cannot be retrieved later."
-msgstr "ИД клијента и тајни кључ клијента биће генерисани приликом чувања. Обавезно одмах копирајте тајни кључ клијента. Биће приказан само једном и не може се касније преузети."
+msgstr ""
+"ИД клијента и тајни кључ клијента биће генерисани приликом чувања. Обавезно "
+"одмах копирајте тајни кључ клијента. Биће приказан само једном и не може се "
+"касније преузети."
 
 #: scripts/apps/users/import/views/import-user.html:11
 msgid "Your Credentials"
@@ -19858,11 +20097,13 @@ msgstr "Ваше Slack корисничко име без водећег @"
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:124
 #: ../superdesk-planning/client/components/ContentProfiles/CoverageProfileModal.tsx:84
 msgid "Your changes will be lost if you close now. What would you like to do?"
-msgstr "Ваше измене ће бити изгубљене ако сада затворите. Шта желите да урадите?"
+msgstr ""
+"Ваше измене ће бити изгубљене ако сада затворите. Шта желите да урадите?"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:285
 msgid "Your changes will be lost if you switch now. What would you like to do?"
-msgstr "Ваше измене ће бити изгубљене ако сада промените. Шта желите да урадите?"
+msgstr ""
+"Ваше измене ће бити изгубљене ако сада промените. Шта желите да урадите?"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:12
 msgid "Your clock"
@@ -20081,7 +20322,9 @@ msgstr "промени лозинку"
 msgid ""
 "changed the following original item. Please make sure to update the "
 "corresponding translated item accordingly"
-msgstr "изменио је следећу оригиналну ставку. Обавезно ажурирајте одговарајућу преведену ставку у складу са тим"
+msgstr ""
+"изменио је следећу оригиналну ставку. Обавезно ажурирајте одговарајућу "
+"преведену ставку у складу са тим"
 
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:30
 #: scripts/apps/authoring/authoring/components/CharacterCount.tsx:64
@@ -20184,7 +20427,8 @@ msgstr "креирао"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
-msgstr "креирао нову верзију {{version}} за ставку типа {{type}} о \"{{subject}}\""
+msgstr ""
+"креирао нову верзију {{version}} за ставку типа {{type}} о \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "created user {{user}}"
@@ -20572,7 +20816,9 @@ msgstr "iMatrics грешка сервиса"
 msgid ""
 "iMatrics service has returned tags referencing parents that do not exist in "
 "the response."
-msgstr "iMatrics сервис је вратио ознаке које реферишу родитеље који не постоје у одговору."
+msgstr ""
+"iMatrics сервис је вратио ознаке које реферишу родитеље који не постоје у "
+"одговору."
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extension.js:10
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/extension.js:10
@@ -20985,7 +21231,9 @@ msgstr "унесите исправну имејл адресу"
 msgid ""
 "please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores "
 "(_), apostrophes (') and periods (.)"
-msgstr "користите само слова (a-z), бројеве (0-9), цртице (&mdash;), доње црте (_), апострофе (') и тачке (.)"
+msgstr ""
+"користите само слова (a-z), бројеве (0-9), цртице (&mdash;), доње црте (_), "
+"апострофе (') и тачке (.)"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:121
 msgid "post"
@@ -21223,7 +21471,9 @@ msgstr "почетно време"
 #: scripts/extensions/availability-manager/src/utils.ts:102
 msgid ""
 "start time cannot be greater than end time ({{start_time}} - {{end_time}})"
-msgstr "почетно време не може бити веће од крајњег времена ({{start_time}} - {{end_time}})"
+msgstr ""
+"почетно време не може бити веће од крајњег времена ({{start_time}} - "
+"{{end_time}})"
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:19
 msgid "state, region, ..."
@@ -21485,7 +21735,9 @@ msgstr "прикажи све"
 #: scripts/core/notification/notification.ts:231
 msgid ""
 "vocabulary has been updated. Please re-login to see updated vocabulary values"
-msgstr "вокабулар је ажуриран. Поново се пријавите да бисте видели ажуриране вредности вокабулара"
+msgstr ""
+"вокабулар је ажуриран. Поново се пријавите да бисте видели ажуриране "
+"вредности вокабулара"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:448
 msgid "website"
