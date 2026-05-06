@@ -1318,47 +1318,47 @@ msgstr "Панел напредне претраге"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:10
 msgid "Africa/Abidjan"
-msgstr ""
+msgstr "Африка/Абиџан"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:11
 msgid "Africa/Accra"
-msgstr ""
+msgstr "Африка/Акра"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:12
 msgid "Africa/Cairo"
-msgstr ""
+msgstr "Африка/Каиро"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:13
 msgid "Africa/Casablanca"
-msgstr ""
+msgstr "Африка/Казабланка"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:14
 msgid "Africa/Dakar"
-msgstr ""
+msgstr "Африка/Дакар"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:15
 msgid "Africa/Johannesburg"
-msgstr ""
+msgstr "Африка/Јоханезбург"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:16
 msgid "Africa/Khartoum"
-msgstr ""
+msgstr "Африка/Картум"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:17
 msgid "Africa/Kinshasa"
-msgstr ""
+msgstr "Африка/Киншаса"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:18
 msgid "Africa/Lagos"
-msgstr ""
+msgstr "Африка/Лагос"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:19
 msgid "Africa/Nairobi"
-msgstr ""
+msgstr "Африка/Најроби"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:20
 msgid "Africa/Tunis"
-msgstr ""
+msgstr "Африка/Тунис"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:38
 msgid "After"
@@ -1671,99 +1671,99 @@ msgstr "Измени слаглајн"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:21
 msgid "America/Anchorage"
-msgstr ""
+msgstr "Америка/Енкоридж"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:22
 msgid "America/Argentina/Buenos Aires"
-msgstr ""
+msgstr "Америка/Аргентина/Буенос Ајрес"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:23
 msgid "America/Bogota"
-msgstr ""
+msgstr "Америка/Богота"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:24
 msgid "America/Caracas"
-msgstr ""
+msgstr "Америка/Каракас"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:25
 msgid "America/Chicago"
-msgstr ""
+msgstr "Америка/Чикаго"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:26
 msgid "America/Edmonton"
-msgstr ""
+msgstr "Америка/Едмонтон"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:27
 msgid "America/Guatemala"
-msgstr ""
+msgstr "Америка/Гватемала"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:28
 msgid "America/Halifax"
-msgstr ""
+msgstr "Америка/Халифакс"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:29
 msgid "America/Havana"
-msgstr ""
+msgstr "Америка/Хавана"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:30
 msgid "America/La Paz"
-msgstr ""
+msgstr "Америка/Ла Паз"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:31
 msgid "America/Lima"
-msgstr ""
+msgstr "Америка/Лима"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:32
 msgid "America/Los Angeles"
-msgstr ""
+msgstr "Америка/Лос Анђелес"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:33
 msgid "America/Manaus"
-msgstr ""
+msgstr "Америка/Манаус"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:34
 msgid "America/Mexico City"
-msgstr ""
+msgstr "Америка/Мексико Сити"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:35
 msgid "America/Montevideo"
-msgstr ""
+msgstr "Америка/Монтевидео"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:36
 msgid "America/New York"
-msgstr ""
+msgstr "Америка/Њујорк"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:37
 msgid "America/Phoenix"
-msgstr ""
+msgstr "Америка/Феникс"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:38
 msgid "America/Santiago"
-msgstr ""
+msgstr "Америка/Сантјаго"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:39
 msgid "America/Sao Paulo"
-msgstr ""
+msgstr "Америка/Сао Паоло"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:40
 msgid "America/Tegucigalpa"
-msgstr ""
+msgstr "Америка/Тегусигалпа"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:41
 msgid "America/Tijuana"
-msgstr ""
+msgstr "Америка/Тихуана"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:42
 msgid "America/Toronto"
-msgstr ""
+msgstr "Америка/Торонто"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:43
 msgid "America/Vancouver"
-msgstr ""
+msgstr "Америка/Ванкувер"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:44
 msgid "America/Winnipeg"
-msgstr ""
+msgstr "Америка/Винипег"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:395
 msgid "An Item can't have both Embargo and Publish Schedule."
@@ -2148,123 +2148,123 @@ msgstr "Растући редослед"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
 msgid "Asia/Almaty"
-msgstr ""
+msgstr "Азија/Алмати"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:46
 msgid "Asia/Baghdad"
-msgstr ""
+msgstr "Азија/Багдад"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:47
 msgid "Asia/Baku"
-msgstr ""
+msgstr "Азија/Баку"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:48
 msgid "Asia/Bangkok"
-msgstr ""
+msgstr "Азија/Бангкок"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:49
 msgid "Asia/Beirut"
-msgstr ""
+msgstr "Азија/Бејрут"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:50
 msgid "Asia/Colombo"
-msgstr ""
+msgstr "Азија/Коломбо"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:51
 msgid "Asia/Dhaka"
-msgstr ""
+msgstr "Азија/Дака"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:52
 msgid "Asia/Dili"
-msgstr ""
+msgstr "Азија/Дили"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:53
 msgid "Asia/Dubai"
-msgstr ""
+msgstr "Азија/Дубаи"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:54
 msgid "Asia/Irkutsk"
-msgstr ""
+msgstr "Азија/Иркутск"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:55
 msgid "Asia/Jakarta"
-msgstr ""
+msgstr "Азија/Џакарта"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:56
 msgid "Asia/Jerusalem"
-msgstr ""
+msgstr "Азија/Јерусалим"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:57
 msgid "Asia/Kabul"
-msgstr ""
+msgstr "Азија/Кабул"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:58
 msgid "Asia/Karachi"
-msgstr ""
+msgstr "Азија/Карачи"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:59
 msgid "Asia/Kathmandu"
-msgstr ""
+msgstr "Азија/Катманду"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:60
 msgid "Asia/Krasnoyarsk"
-msgstr ""
+msgstr "Азија/Краснојарск"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:61
 msgid "Asia/Kuala Lumpur"
-msgstr ""
+msgstr "Азија/Куала Лумпур"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:62
 msgid "Asia/Manila"
-msgstr ""
+msgstr "Азија/Манила"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:63
 msgid "Asia/Novosibirsk"
-msgstr ""
+msgstr "Азија/Новосибирск"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:64
 msgid "Asia/Pyongyang"
-msgstr ""
+msgstr "Азија/Пјонгјанг"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:65
 msgid "Asia/Rangoon"
-msgstr ""
+msgstr "Азија/Рангун"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:66
 msgid "Asia/Riyadh"
-msgstr ""
+msgstr "Азија/Ријад"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:67
 msgid "Asia/Seoul"
-msgstr ""
+msgstr "Азија/Сеул"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:68
 msgid "Asia/Singapore"
-msgstr ""
+msgstr "Азија/Сингапур"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:69
 msgid "Asia/Tashkent"
-msgstr ""
+msgstr "Азија/Ташкент"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:70
 msgid "Asia/Tehran"
-msgstr ""
+msgstr "Азија/Техеран"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:71
 msgid "Asia/Tokyo"
-msgstr ""
+msgstr "Азија/Токио"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:72
 msgid "Asia/Vladivostok"
-msgstr ""
+msgstr "Азија/Владивосток"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:73
 msgid "Asia/Yakutsk"
-msgstr ""
+msgstr "Азија/Јакутск"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
 msgid "Asia/Yekaterinburg"
-msgstr ""
+msgstr "Азија/Јекатеринбург"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetPreviewPanel.js:130
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetPreviewPanel.js:130
@@ -2566,19 +2566,19 @@ msgstr "Само аудио"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
 msgid "Australia/Adelaide"
-msgstr ""
+msgstr "Аустралија/Аделаида"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:76
 msgid "Australia/Melbourne"
-msgstr ""
+msgstr "Аустралија/Мелбурн"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:77
 msgid "Australia/Perth"
-msgstr ""
+msgstr "Аустралија/Перт"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:78
 msgid "Australia/Sydney"
-msgstr ""
+msgstr "Аустралија/Сиднеј"
 
 #: scripts/apps/publish/views/subscribers.html:269
 msgid "Authentication Token"
@@ -2687,7 +2687,7 @@ msgstr "Доступно цео дан"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:28
 msgid "Available clocks"
-msgstr ""
+msgstr "Доступни часовници"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:209
 msgid "Available in user/desk preferences"
@@ -3614,7 +3614,7 @@ msgstr "Тајни кључ клијента"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:5
 msgid "Clock type"
-msgstr ""
+msgstr "Тип часовника"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:104
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:72
@@ -7024,79 +7024,79 @@ msgstr "Грешке"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:79
 msgid "Europe/Athens"
-msgstr ""
+msgstr "Европа/Атина"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:80
 msgid "Europe/Belgrade"
-msgstr ""
+msgstr "Европа/Београд"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:81
 msgid "Europe/Berlin"
-msgstr ""
+msgstr "Европа/Берлин"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:82
 msgid "Europe/Brussels"
-msgstr ""
+msgstr "Европа/Брисел"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:83
 msgid "Europe/Bucharest"
-msgstr ""
+msgstr "Европа/Букурешт"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:84
 msgid "Europe/Dublin"
-msgstr ""
+msgstr "Европа/Даблин"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:85
 msgid "Europe/Helsinki"
-msgstr ""
+msgstr "Европа/Хелсинки"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:86
 msgid "Europe/Istanbul"
-msgstr ""
+msgstr "Европа/Истанбул"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:87
 msgid "Europe/Kiev"
-msgstr ""
+msgstr "Европа/Кијев"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:88
 msgid "Europe/Lisbon"
-msgstr ""
+msgstr "Европа/Лисабон"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:89
 msgid "Europe/London"
-msgstr ""
+msgstr "Европа/Лондон"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:90
 msgid "Europe/Madrid"
-msgstr ""
+msgstr "Европа/Мадрид"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:91
 msgid "Europe/Minsk"
-msgstr ""
+msgstr "Европа/Минск"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:92
 msgid "Europe/Moscow"
-msgstr ""
+msgstr "Европа/Москва"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:93
 msgid "Europe/Paris"
-msgstr ""
+msgstr "Европа/Париз"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:94
 msgid "Europe/Prague"
-msgstr ""
+msgstr "Европа/Праг"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:95
 msgid "Europe/Rome"
-msgstr ""
+msgstr "Европа/Рим"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:96
 msgid "Europe/Sofia"
-msgstr ""
+msgstr "Европа/Софија"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:97
 msgid "Europe/Stockholm"
-msgstr ""
+msgstr "Европа/Стокхолм"
 
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:40
 #: ../superdesk-planning/client/components/ItemIcon.tsx:23
@@ -11368,7 +11368,7 @@ msgstr "Нису додељени календари."
 
 #: scripts/apps/dashboard/world-clock/configuration.html:20
 msgid "No clock here!"
-msgstr ""
+msgstr "Нема часовника овде!"
 
 #: scripts/apps/authoring-react/generic-widgets/comments/CommentsWidget.tsx:170
 #: scripts/apps/authoring-react/generic-widgets/inline-comments.tsx:216
@@ -12341,19 +12341,19 @@ msgstr "ОБЈАВИ"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
 msgid "Pacific/Auckland"
-msgstr ""
+msgstr "Пацифик/Окланд"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:99
 msgid "Pacific/Honolulu"
-msgstr ""
+msgstr "Пацифик/Хонолулу"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:100
 msgid "Pacific/Noumea"
-msgstr ""
+msgstr "Пацифик/Нумеа"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:101
 msgid "Pacific/Port Moresby"
-msgstr ""
+msgstr "Пацифик/Порт Морсби"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:256
 msgid "Package"
@@ -15183,7 +15183,7 @@ msgstr "Тражи локацију"
 
 #: scripts/apps/dashboard/world-clock/configuration.html:34
 msgid "Search for clock"
-msgstr ""
+msgstr "Тражи часовник"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:91
 msgid "Search icons...."
@@ -19709,11 +19709,11 @@ msgstr "Светски сат"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:42
 msgid "World clock added: {{zone}}"
-msgstr ""
+msgstr "Светски сат додат: {{zone}}"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:44
 msgid "World clock removed: {{zone}}"
-msgstr ""
+msgstr "Светски сат уклоњен: {{zone}}"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:221
 #: scripts/core/lang/missing-translations-strings.ts:45
@@ -19866,7 +19866,7 @@ msgstr "Ваше измене ће бити изгубљене ако сада �
 
 #: scripts/apps/dashboard/world-clock/configuration.html:12
 msgid "Your clock"
-msgstr ""
+msgstr "Ваш сат"
 
 #: scripts/core/auth/login-modal.html:71
 msgid "Your password has expired. Please change your password."
