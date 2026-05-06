@@ -49,6 +49,17 @@ module.exports = function(grunt) {
         'webpack-dev-server:ui-guide',
     ]);
 
+    // Compile PO files to runtime JSON catalogs (gettext.js flat format with metadata under "" key).
+    // Used by scripts/init.ts and scripts/reload-language.ts. Production build runs this via
+    // build-tools' build-root-repo command; this grunt task lets `grunt server` produce them too.
+    grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', function() {
+        var poDir = path.join(__dirname, 'po');
+        var jsonDir = path.join(process.cwd(), config.distDir, 'languages');
+        var compileTranslationsPoToJson = require('@superdesk/build-tools/src/po-to-json');
+
+        compileTranslationsPoToJson(poDir, jsonDir);
+    });
+
     // Development server
     grunt.registerTask('server', [
         'clean',
@@ -56,6 +67,7 @@ module.exports = function(grunt) {
         'copy:index',
         'copy:config',
         'copy:locales',
+        'po-to-json',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',
