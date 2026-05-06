@@ -100,11 +100,11 @@ msgstr ""
 
 #: scripts/apps/highlights/services/HighlightsService.ts:16
 msgid "(Global)"
-msgstr ""
+msgstr "(Глобално)"
 
 #: scripts/apps/contacts/components/ListTypeIcon.tsx:13
 msgid "(Private)"
-msgstr ""
+msgstr "(Приватно)"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:269
 msgid "(advanced mode)"
@@ -1255,11 +1255,11 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:541
 msgid "Address line 1"
-msgstr ""
+msgstr "Адреса 1"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:553
 msgid "Address line 2"
-msgstr ""
+msgstr "Адреса 2"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:30
 msgid "Adjust"
@@ -1947,7 +1947,7 @@ msgstr "Да ли сте сигурни да желите да обришете 
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:66
 msgid "Are you sure you want to delete configuration?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете конфигурацију?"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:84
 msgid "Are you sure you want to delete content filter?"
@@ -2132,7 +2132,7 @@ msgstr ""
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:49
 msgid "Article {{slug}} is already marked for this highlight"
-msgstr ""
+msgstr "Чланак {{slug}} је већ означен за ово истицање"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:168
 #: ../superdesk-planning/client/components/OrderBar/OrderDirectionIcon.tsx:16
@@ -2344,7 +2344,7 @@ msgstr ""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:27
 msgid "Assigned desks"
-msgstr ""
+msgstr "Додељени дескови"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:74
 msgid "Assigned to agenda '{{ agenda }}'"
@@ -2494,7 +2494,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:198
 msgid "At least one of [{{list}}] is required."
-msgstr ""
+msgstr "Потребно је најмање једно од [{{list}}]."
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:146
 msgid ""
@@ -2639,7 +2639,7 @@ msgstr "Аутоматски креирај ставку"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:39
 msgid "Automatically insert items from"
-msgstr ""
+msgstr "Аутоматски убаци ставке из"
 
 #: scripts/extensions/availability-manager/dist/src/extension.js:36
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/extension.js:37
@@ -2888,7 +2888,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:546
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
-msgstr ""
+msgstr "Зграда, апартман, стан, спрат, итд."
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:52
 msgid "Business"
@@ -3377,7 +3377,7 @@ msgstr "Прекорачен је лимит карактера, речник н
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:14
 msgid "Character limit exceeded, highlight can not be created/updated."
-msgstr ""
+msgstr "Прекорачен је лимит карактера, истицање није могуће креирати/ажурирати."
 
 #: scripts/apps/desks/views/desk-config-modal.html:290
 msgid "Character limit exceeded, stage can not be created/updated."
@@ -3466,7 +3466,7 @@ msgstr "Изаберите постојеће ознаке или креирај
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:20
 msgid "Choose highlight list"
-msgstr ""
+msgstr "Изабери листу истицања"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/translations/translations-body.js:40
 #: scripts/extensions/ai-widget/dist/src/translations/translations-body.js:40
@@ -3477,7 +3477,7 @@ msgstr ""
 #: scripts/apps/contacts/constants.ts:75
 #: scripts/apps/contacts/views/search-panel.html:61
 msgid "City"
-msgstr ""
+msgstr "Град"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:252
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:118
@@ -3892,7 +3892,7 @@ msgstr "Поверљиви подаци"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:70
 msgid "Configuration deleted."
-msgstr ""
+msgstr "Конфигурација обрисана."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:79
 msgid ""
@@ -3903,7 +3903,7 @@ msgstr ""
 #: scripts/apps/highlights/views/highlights_config_modal.html:11
 #: scripts/apps/highlights/views/highlights_config_modal.html:12
 msgid "Configuration name"
-msgstr ""
+msgstr "Назив конфигурације"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:89
 #: scripts/apps/authoring/views/theme-select.html:9
@@ -3987,11 +3987,11 @@ msgstr ""
 #: scripts/apps/contacts/constants.ts:72
 #: scripts/apps/contacts/views/search-panel.html:31
 msgid "Contact Type"
-msgstr ""
+msgstr "Тип контакта"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:108
 msgid "Contact type \"{{ contact_type }}\" MUST have an email"
-msgstr ""
+msgstr "Тип контакта \"{{ contact_type }}\" МОРА имати имејл"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/contacts.ts:10
 #: ../superdesk-planning/client/components/fields/editor/Contacts.tsx:19
@@ -4365,11 +4365,11 @@ msgstr ""
 
 #: scripts/apps/highlights/services/HighlightsService.ts:126
 msgid "Couldn't mark item"
-msgstr ""
+msgstr "Није могуће означити ставку"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:126
 msgid "Couldn't unmark item"
-msgstr ""
+msgstr "Није могуће поништити ознаку ставке"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:288
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:136
@@ -4378,7 +4378,7 @@ msgstr ""
 #: scripts/apps/contacts/constants.ts:77
 #: scripts/apps/contacts/views/search-panel.html:75
 msgid "Country"
-msgstr ""
+msgstr "Држава"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:88
 #: scripts/apps/archive/views/assignment-icon.html:1
@@ -4602,15 +4602,15 @@ msgstr ""
 
 #: scripts/apps/highlights/views/settings.html:11
 msgid "Create configuration"
-msgstr ""
+msgstr "Креирај конфигурацију"
 
 #: scripts/apps/contacts/views/list.html:10
 msgid "Create contact"
-msgstr ""
+msgstr "Креирај контакт"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:3
 msgid "Create highlight configuration"
-msgstr ""
+msgstr "Креирај конфигурацију истицања"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:45
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:55
@@ -6308,7 +6308,7 @@ msgstr "Уреди производ \"{{name}}\""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{name}}\" highlight"
-msgstr ""
+msgstr "Уреди истицање \"{{name}}\""
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:7
 msgid "Edit Abbreviations Dictionary"
@@ -6460,7 +6460,7 @@ msgstr ""
 
 #: scripts/apps/highlights/views/settings.html:19
 msgid "Edit configuration"
-msgstr ""
+msgstr "Уреди конфигурацију"
 
 #: scripts/apps/authoring-react/fields/media/media-carousel/image.tsx:104
 #: scripts/apps/authoring/views/article-edit.html:301
@@ -7784,7 +7784,7 @@ msgstr ""
 #: scripts/apps/content-api/directives/ContentAPISearchResultsDirective.ts:77
 #: scripts/apps/search/directives/SearchResults.ts:293
 msgid "Failed to run the query!"
-msgstr ""
+msgstr "Извршавање упита није успело!"
 
 #: ../superdesk-planning/client/actions/main.ts:986
 msgid "Failed to run the query.."
@@ -8211,7 +8211,7 @@ msgstr "Услов филтера сачуван."
 
 #: scripts/apps/contacts/views/search-panel.html:3
 msgid "Filter contacts"
-msgstr ""
+msgstr "Филтрирај контакте"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:158
 msgid "Filter file types"
@@ -8293,7 +8293,7 @@ msgstr ""
 #: scripts/apps/contacts/views/search-panel.html:14
 #: scripts/core/directives/views/phone-home-modal-directive.html:19
 msgid "First Name"
-msgstr ""
+msgstr "Име"
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:1058
 msgid "First created"
@@ -8917,7 +8917,7 @@ msgstr ""
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Highlight with name"
-msgstr ""
+msgstr "Истицање са називом"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:219
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/manage-highlights.tsx:21
@@ -8931,11 +8931,11 @@ msgstr "Истицања"
 
 #: scripts/apps/highlights/index.ts:70
 msgid "Highlights View"
-msgstr ""
+msgstr "Приказ истицања"
 
 #: scripts/apps/highlights/views/settings.html:4
 msgid "Highlights configurations"
-msgstr ""
+msgstr "Конфигурације истицања"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Highlights/Summary List Management"
@@ -9639,7 +9639,7 @@ msgstr ""
 
 #: scripts/apps/highlights/services/HighlightsService.ts:125
 msgid "Item marked"
-msgstr ""
+msgstr "Ставка означена"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:134
 msgid "Item not added. Maximum limit of {{n}} items exceeded."
@@ -9682,7 +9682,7 @@ msgstr "Статистика типа ставке"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:125
 msgid "Item unmarked"
-msgstr ""
+msgstr "Ознака ставке поништена"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:299
 #: scripts/apps/authoring/multiedit/multiedit.ts:375
@@ -9888,7 +9888,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/filters.ts:119
 #: scripts/apps/highlights/views/highlights_config_modal.html:45
 msgid "Last"
-msgstr ""
+msgstr "Последње"
 
 #: scripts/apps/search/directives/DateFilters.ts:47
 msgid "Last 24 Hours"
@@ -9925,7 +9925,7 @@ msgstr "Последњи месец"
 #: scripts/apps/contacts/views/search-panel.html:22
 #: scripts/core/directives/views/phone-home-modal-directive.html:24
 msgid "Last Name"
-msgstr ""
+msgstr "Презиме"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:30
 msgid "Last Time Updated"
@@ -10310,7 +10310,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:411
 msgid "MORE"
-msgstr ""
+msgstr "ВИШЕ"
 
 #: scripts/apps/desks/views/actionpicker.html:26
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:59
@@ -10659,7 +10659,7 @@ msgstr ""
 
 #: scripts/apps/contacts/index.ts:22
 msgid "Media Contacts"
-msgstr ""
+msgstr "Медијски контакти"
 
 #: scripts/apps/publish/views/subscribers.html:143
 msgid "Media Type"
@@ -11288,7 +11288,7 @@ msgstr "Нису дефинисане радње преузимања"
 
 #: scripts/apps/highlights/views/search_highlights_dropdown_directive.html:6
 msgid "No Filter"
-msgstr ""
+msgstr "Без филтера"
 
 #: scripts/apps/products/views/products.html:39
 msgid "No Products Found"
@@ -11825,7 +11825,7 @@ msgstr "Обавести када је неактиван дуже од"
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:84
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:67
 msgid "Number"
-msgstr ""
+msgstr "Број"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.tsx:306
 msgid "Number of Assignments:"
@@ -12156,12 +12156,12 @@ msgstr "Нумерисана листа"
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:9
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:15
 msgid "Organisation"
-msgstr ""
+msgstr "Организација"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:249
 #: scripts/apps/contacts/components/ListTypeIcon.tsx:7
 msgid "Organisation Contact"
-msgstr ""
+msgstr "Контакт организације"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/groups.js:10
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:10
@@ -12521,11 +12521,11 @@ msgstr ""
 
 #: scripts/apps/contacts/services/ContactsService.ts:38
 msgid "Person (Last Name)"
-msgstr ""
+msgstr "Особа (презиме)"
 
 #: scripts/apps/contacts/components/ListTypeIcon.tsx:7
 msgid "Person Contact"
-msgstr ""
+msgstr "Контакт особе"
 
 #: scripts/apps/dictionaries/views/settings.html:48
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:568
@@ -12570,7 +12570,7 @@ msgstr "Лични простор"
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:145
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:394
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:146
 msgid "Photo"
@@ -12839,7 +12839,7 @@ msgstr "Пријавите се поново."
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:86
 msgid "Please provide a valid email address"
-msgstr ""
+msgstr "Унесите исправну имејл адресу"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:94
 #: scripts/apps/users/views/edit-form.html:340
@@ -12859,7 +12859,7 @@ msgstr "Унесите ИД чланка"
 msgid ""
 "Please specify 'first name, last name' or  'organisation' or both, and at "
 "least one of [{{list}}] fields."
-msgstr ""
+msgstr "Наведите 'име, презиме' или 'организацију' или оба, и најмање једно од [{{list}}] поља."
 
 #: scripts/apps/templates/views/create-template.html:27
 #: scripts/apps/templates/views/template-editor-modal.html:22
@@ -12890,7 +12890,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
 msgid "Point of contact"
-msgstr ""
+msgstr "Тачка контакта"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:171
 msgid "Point of interest is not defined."
@@ -12924,7 +12924,7 @@ msgstr "Постави"
 #: scripts/apps/contacts/constants.ts:74
 #: scripts/apps/contacts/views/search-panel.html:54
 msgid "Post Code"
-msgstr ""
+msgstr "Поштански број"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:66
 msgid "Post Event"
@@ -13126,7 +13126,7 @@ msgstr ""
 
 #: scripts/apps/contacts/views/list.html:27
 msgid "Privacy Level:"
-msgstr ""
+msgstr "Ниво приватности:"
 
 #: scripts/apps/contacts/services/ContactsService.ts:57
 #: scripts/apps/templates/constants.ts:9
@@ -13311,7 +13311,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:312
 #: scripts/extensions/sams/src/utils/ui.tsx:84
 msgid "Public"
-msgstr ""
+msgstr "Јавно"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:441
 #: ../superdesk-analytics/client/utils.js:154
@@ -13978,7 +13978,7 @@ msgstr ""
 
 #: scripts/apps/highlights/views/settings.html:20
 msgid "Remove configuration"
-msgstr ""
+msgstr "Уклони конфигурацију"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.tsx:277
 msgid "Remove coverage"
@@ -15672,7 +15672,7 @@ msgstr ""
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:90
 msgid "Set highlights"
-msgstr ""
+msgstr "Постави истицања"
 
 #: scripts/apps/archive/index.tsx:219
 msgid "Set label in current package"
@@ -16439,7 +16439,7 @@ msgstr "Стање"
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:598
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:611
 msgid "State/Province or Region"
-msgstr ""
+msgstr "Држава/Покрајина или регион"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:268
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:124
@@ -16558,11 +16558,11 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:534
 msgid "Street Address"
-msgstr ""
+msgstr "Адреса улице"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:533
 msgid "Street Address, PO Box, Company Name"
-msgstr ""
+msgstr "Адреса улице, поштански фах, назив компаније"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:65
 msgid "Strength"
@@ -16760,7 +16760,7 @@ msgstr "Недеља"
 
 #: scripts/apps/contacts/controllers/ContactsController.ts:33
 msgid "Superdesk Contacts Management"
-msgstr ""
+msgstr "Superdesk управљање контактима"
 
 #: scripts/core/menu/views/superdesk-view.html:50
 msgid "Superdesk is experiencing network connection issues:/"
@@ -16817,7 +16817,7 @@ msgstr "Пређи на преглед нових функција"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:270
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:439
 msgid "Switch to grid view"
-msgstr ""
+msgstr "Пребаци на приказ мреже"
 
 #: scripts/apps/archive/views/list.html:21
 #: scripts/apps/contacts/views/list.html:7
@@ -16826,7 +16826,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:271
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:440
 msgid "Switch to list view"
-msgstr ""
+msgstr "Пребаци на приказ листе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:185
 msgid "Switches"
@@ -17055,7 +17055,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:136
 #: scripts/extensions/broadcasting/src/rundowns/rundowns-list.tsx:210
 msgid "Template"
-msgstr ""
+msgstr "Шаблон"
 
 #: ../superdesk-planning/client/components/ExportTemplates/ManageExportTemplates.tsx:49
 msgid "Template Content"
@@ -17603,7 +17603,7 @@ msgstr "Нема токена за претплатника."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:60
 msgid "There was a problem while saving highlights configuration"
-msgstr ""
+msgstr "Дошло је до проблема приликом чувања конфигурације истицања"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:51
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:63
@@ -17657,7 +17657,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:195
 msgid "There was an error when saving the contact."
-msgstr ""
+msgstr "Дошло је до грешке приликом чувања контакта."
 
 #: scripts/apps/users/directives/UserEditDirective.ts:268
 msgid "There was an error when saving the user account."
@@ -17896,7 +17896,7 @@ msgstr "Овај вокабулар се тренутно не користи н
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:42
 msgid "This week"
-msgstr ""
+msgstr "Ове недеље"
 
 #: scripts/core/lang/missing-translations-strings.ts:46
 msgid ""
@@ -18973,7 +18973,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/ContactFooter.tsx:18
 msgid "Updated:"
-msgstr ""
+msgstr "Ажурирано:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:576
 msgid "Updates"
@@ -19111,7 +19111,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:85
 msgid "Usage"
-msgstr ""
+msgstr "Употреба"
 
 #: scripts/apps/workspace/content/constants.ts:49
 msgid "Usage Terms"
@@ -19464,7 +19464,7 @@ msgstr ""
 
 #: scripts/apps/contacts/index.ts:23
 msgid "View/Manage media contacts"
-msgstr ""
+msgstr "Прикажи/Управљај медијским контактима"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectCustomVocabulariesList.tsx:27
 #: ../superdesk-planning/client/components/fields/index.tsx:226
@@ -19600,7 +19600,7 @@ msgstr ""
 #: scripts/apps/highlights/views/highlights_config_modal.html:38
 #: scripts/apps/highlights/views/highlights_config_modal.html:47
 msgid "When creating a highlights package"
-msgstr ""
+msgstr "Када се креира пакет истицања"
 
 #: scripts/apps/publish/views/subscribers.html:204
 msgid "When enabled it can send multiple items at the same time."
@@ -20092,7 +20092,7 @@ msgstr "знакови"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:583
 msgid "city"
-msgstr ""
+msgstr "град"
 
 #: scripts/core/ui/components/virtual-lists/select.tsx:176
 msgid "clear"
@@ -20143,7 +20143,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:181
 msgid "contact saved."
-msgstr ""
+msgstr "контакт сачуван."
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "content"
@@ -20226,7 +20226,7 @@ msgstr "подразумевано"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:21
 msgid "default template"
-msgstr ""
+msgstr "подразумевани шаблон"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "desk Output"
@@ -20272,7 +20272,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:463
 msgid "e.g. @cityofsydney"
-msgstr ""
+msgstr "нпр. @cityofsydney"
 
 #: scripts/apps/users/views/edit-form.html:338
 msgid "e.g. @superdeskman"
@@ -20280,23 +20280,23 @@ msgstr "нпр. @superdeskman"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:559
 msgid "e.g. Rhodes, CBD"
-msgstr ""
+msgstr "нпр. Rhodes, CBD"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:489
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
-msgstr ""
+msgstr "нпр. cityofsydney из https://www.facebook.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:513
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
-msgstr ""
+msgstr "нпр. cityofsydney из https://www.instagram.com/cityofsydney"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:447
 msgid "e.g. http://www.website.com"
-msgstr ""
+msgstr "нпр. http://www.website.com"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:254
 msgid "e.g. professor, commissioner"
-msgstr ""
+msgstr "нпр. професор, комесар"
 
 #: scripts/apps/users/views/edit-form.html:303
 msgid "e.g. superdeskman from https://www.facebook.com/superdeskman"
@@ -20360,7 +20360,7 @@ msgstr "истиче:"
 
 #: scripts/apps/contacts/constants.ts:51
 msgid "facebook"
-msgstr ""
+msgstr "facebook"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "failed"
@@ -20368,7 +20368,7 @@ msgstr "неуспешно"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:435
 msgid "fax"
-msgstr ""
+msgstr "факс"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "feature"
@@ -20535,12 +20535,12 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:255
 msgid "honorific"
-msgstr ""
+msgstr "почасна титула"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:5
 #: scripts/apps/highlights/views/highlights_config_modal.html:45
 msgid "hours"
-msgstr ""
+msgstr "сати"
 
 #: scripts/apps/desks/views/content-expiry.html:4
 #: scripts/apps/desks/views/content-expiry.html:40
@@ -20643,7 +20643,7 @@ msgstr "примљено"
 
 #: scripts/apps/contacts/constants.ts:52
 msgid "instagram"
-msgstr ""
+msgstr "instagram"
 
 #: scripts/extensions/sams/dist/src/components/attachments/samsAttachmentsList.js:114
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/attachments/samsAttachmentsList.js:114
@@ -20741,7 +20741,7 @@ msgstr "учитавање..."
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:560
 msgid "locality"
-msgstr ""
+msgstr "место"
 
 #: scripts/apps/search/components/ItemContainer.tsx:16
 msgid "location:"
@@ -20803,7 +20803,7 @@ msgstr ""
 
 #: scripts/apps/contacts/constants.ts:47
 msgid "mobile"
-msgstr ""
+msgstr "мобилни"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:23
 #: scripts/apps/authoring-react/fields/date/config.tsx:85
@@ -20852,7 +20852,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:650
 msgid "notes"
-msgstr ""
+msgstr "белешке"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "notifications"
@@ -20923,11 +20923,11 @@ msgstr "нумерисана листа"
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:320
 #: scripts/apps/contacts/constants.ts:71
 msgid "organisation"
-msgstr ""
+msgstr "организација"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:624
 msgid "other"
-msgstr ""
+msgstr "остало"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:400
 #: scripts/core/utils.tsx:346
@@ -20957,7 +20957,7 @@ msgstr "на чекању"
 
 #: scripts/apps/contacts/constants.ts:48
 msgid "phone"
-msgstr ""
+msgstr "телефон"
 
 #: scripts/apps/users/views/edit-form.html:177
 msgid "phone number"
@@ -20993,7 +20993,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:570
 msgid "postcode"
-msgstr ""
+msgstr "поштански број"
 
 #: ../superdesk-planning/client/utils/history.tsx:84
 msgid "posted"
@@ -21027,7 +21027,7 @@ msgstr "профил"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:233
 msgid "public"
-msgstr ""
+msgstr "јавно"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "publish"
@@ -21337,7 +21337,7 @@ msgstr ""
 
 #: scripts/apps/contacts/constants.ts:50
 msgid "twitter"
-msgstr ""
+msgstr "twitter"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:81
 msgid "underline"
@@ -21489,7 +21489,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:448
 msgid "website"
-msgstr ""
+msgstr "веб сајт"
 
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:17
 #: scripts/apps/authoring-react/fields/date/config.tsx:84
