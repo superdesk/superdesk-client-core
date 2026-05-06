@@ -149,7 +149,7 @@ msgstr "* изаберите верзију чланка из падајућег
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:127
 msgid "* fields are required"
-msgstr ""
+msgstr "* поља су обавезна"
 
 #: scripts/apps/publish/views/email-config.html:3
 msgid "*at least one visible or hidden recipient needed"
@@ -676,7 +676,7 @@ msgstr "Сажетак"
 #: scripts/apps/authoring/views/theme-select.html:47
 #: scripts/apps/authoring/views/theme-select.html:98
 msgid "Abstract example"
-msgstr ""
+msgstr "Пример сажетка"
 
 #: scripts/apps/dashboard/views/workspace.html:9
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:160
@@ -1008,7 +1008,7 @@ msgstr "Додај време"
 
 #: scripts/apps/authoring/authoring/article-url-fields.tsx:103
 msgid "Add URL"
-msgstr ""
+msgstr "Додај URL"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.tsx:165
 #: ../superdesk-planning/client/components/fields/editor/Coverages.tsx:139
@@ -1053,11 +1053,11 @@ msgstr[2] "Додај као повезана планирања"
 #: scripts/apps/authoring/media/views/media-metadata-editor-directive.html:122
 #: scripts/apps/authoring/views/authoring-header.html:614
 msgid "Add author"
-msgstr ""
+msgstr "Додај аутора"
 
 #: scripts/apps/authoring/views/item-association.html:110
 msgid "Add caption"
-msgstr ""
+msgstr "Додај натпис"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:55
 msgid "Add content slugline"
@@ -1267,7 +1267,7 @@ msgstr "Подеси"
 
 #: scripts/apps/authoring/views/change-image.html:239
 msgid "Adjust colours"
-msgstr ""
+msgstr "Подеси боје"
 
 #: scripts/core/menu/views/menu.html:95
 msgid "Admin tools"
@@ -1589,7 +1589,7 @@ msgstr "Све отворене ставке"
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr ""
+msgstr "Све отворене ставке"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:282
 msgid "All planning"
@@ -1767,7 +1767,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:395
 msgid "An Item can't have both Embargo and Publish Schedule."
-msgstr ""
+msgstr "Ставка не може имати и ембарго и распоред објављивања."
 
 #: ../superdesk-planning/client/actions/agenda.ts:47
 msgid "An agenda with this name already exists"
@@ -1787,17 +1787,17 @@ msgstr "Дошло је до грешке приликом покушаја пр
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:230
 msgid "An update can not be created"
-msgstr ""
+msgstr "Ажурирање не може бити креирано"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:52
 msgid "An update can not be created for an item which is not published yet."
-msgstr ""
+msgstr "Ажурирање не може бити креирано за ставку која још није објављена."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:41
 msgid ""
 "An update for this version of the item already exists. To create another "
 "update, find the latest version of the item."
-msgstr ""
+msgstr "Ажурирање за ову верзију ставке већ постоји. Да бисте креирали ново ажурирање, пронађите најновију верзију ставке."
 
 #: ../superdesk-analytics/client/index.js:94
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:36
@@ -2042,7 +2042,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:64
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да повучете објаву ставке \"{{headline}}\"?"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:53
 msgid "Are you sure you want to unpublish item \"{{label}}\"?"
@@ -2108,7 +2108,7 @@ msgstr "Тип чланка: {{type}}"
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:577
 msgid ""
 "Article cannot be published. Please accept or reject all suggestions first."
-msgstr ""
+msgstr "Чланак не може бити објављен. Прво прихватите или одбијте све сугестије."
 
 #: scripts/apps/users/views/user-preferences.html:16
 msgid "Article defaults"
@@ -2510,7 +2510,7 @@ msgstr ""
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:112
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:123
 msgid "Attach files"
-msgstr ""
+msgstr "Приложи датотеке"
 
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.tsx:212
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:209
@@ -2794,7 +2794,7 @@ msgstr ""
 #: scripts/apps/authoring/packages/views/packages-widget.html:15
 #: scripts/apps/packaging/views/sd-package-item-preview.html:20
 msgid "Blank headline received"
-msgstr ""
+msgstr "Примљен празан наслов"
 
 #: scripts/apps/content-filters/views/manage-filters.html:58
 msgid "Block API"
@@ -2834,7 +2834,7 @@ msgstr ""
 #: scripts/apps/authoring/views/theme-select.html:107
 #: scripts/apps/authoring/views/theme-select.html:56
 msgid "Body text example"
-msgstr ""
+msgstr "Пример тела текста"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:49
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:32
@@ -2864,7 +2864,7 @@ msgstr "Морате попунити (или обрисати) и почетн�
 
 #: scripts/apps/authoring/views/change-image.html:242
 msgid "Brightness"
-msgstr ""
+msgstr "Светлина"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:50
 #: scripts/core/lang/missing-translations-strings.ts:15
@@ -3021,7 +3021,7 @@ msgstr "Није могуће уградити у ставку која се с�
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:48
 msgid "Can not update a broadcast version of the story."
-msgstr ""
+msgstr "Није могуће ажурирати емисијску верзију приче."
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:112
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:58
@@ -3285,7 +3285,7 @@ msgstr "Натпис"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:18
 msgid "Case Sensitive"
-msgstr ""
+msgstr "Осетљиво на велика и мала слова"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:96
 msgid "Case sensitive"
@@ -3330,7 +3330,7 @@ msgstr "Промени аватар"
 
 #: scripts/apps/authoring/views/change-image.html:203
 msgid "Change image settings"
-msgstr ""
+msgstr "Промени поставке слике"
 
 #: scripts/core/auth/login-modal.html:86
 msgid "Change password"
@@ -3385,7 +3385,7 @@ msgstr "Прекорачен је лимит карактера, фазу ниј
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:124
 msgid "Character limit settings"
-msgstr ""
+msgstr "Поставке лимита карактера"
 
 #: scripts/apps/authoring-react/fields/editor3/editor.tsx:384
 msgid "Character {{chars}} is not allowed"
@@ -3397,9 +3397,9 @@ msgstr[2] ""
 #: scripts/apps/authoring/authoring/ValidateCharacters.tsx:23
 msgid "Character {{chars}} not allowed in the {{field}}."
 msgid_plural "Characters {{chars}} not allowed in the {{field}}."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Карактер {{chars}} није дозвољен у пољу {{field}}."
+msgstr[1] "Карактери {{chars}} нису дозвољени у пољу {{field}}."
+msgstr[2] "Карактери {{chars}} нису дозвољени у пољу {{field}}."
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:55
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:55
@@ -3432,7 +3432,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:379
 #: scripts/apps/authoring/views/authoring-topbar.html:388
 msgid "Check spelling"
-msgstr ""
+msgstr "Провери правопис"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:55
 msgid "Chevron Down Thin"
@@ -3452,7 +3452,7 @@ msgstr "Шеврон горе танко"
 
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:36
 msgid "Choose entire category"
-msgstr ""
+msgstr "Изабери целу категорију"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:92
 msgid ""
@@ -3520,7 +3520,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/article-edit.html:577
 msgid "Clear Embed"
-msgstr ""
+msgstr "Очисти уграђени садржај"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:123
 #: ../superdesk-planning/client/components/Main/SubNavBar.tsx:32
@@ -3563,7 +3563,7 @@ msgstr "Очисти филтере"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:5
 msgid "Clear saved metadata"
-msgstr ""
+msgstr "Очисти сачуване метаподатке"
 
 #: scripts/apps/content-filters/views/filter-search.html:43
 #: scripts/apps/monitoring/views/monitoring-view.html:86
@@ -3602,7 +3602,7 @@ msgstr "Кликните да снимите камером. Уверите се
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:108
 msgid "Click to replace thumbnail"
-msgstr ""
+msgstr "Кликните да замените сличицу"
 
 #: scripts/apps/production-api-keys/config.ts:54
 msgid "Client ID"
@@ -3692,7 +3692,7 @@ msgstr "Затвори"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:67
 msgid "Close & Continue"
-msgstr ""
+msgstr "Затвори и настави"
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/headlines/headlines-widget.js:48
 #: scripts/extensions/ai-widget/dist/src/headlines/headlines-widget.js:48
@@ -3723,7 +3723,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:65
 #: scripts/apps/authoring/views/authoring-topbar.html:66
 msgid "Close and Continue"
-msgstr ""
+msgstr "Затвори и настави"
 
 #: scripts/apps/production-api-keys/utils.tsx:27
 msgid "Close anyway"
@@ -3731,7 +3731,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:469
 msgid "Close current item"
-msgstr ""
+msgstr "Затвори тренутну ставку"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:159
 msgid "Close desk widget"
@@ -3739,7 +3739,7 @@ msgstr "Затвори виџет деска"
 
 #: scripts/apps/authoring/views/change-image.html:155
 msgid "Close details"
-msgstr ""
+msgstr "Затвори детаље"
 
 #: scripts/apps/contacts/views/search-panel.html:4
 #: scripts/apps/content-api/views/search-panel.html:11
@@ -3862,7 +3862,7 @@ msgstr "Упореди верзије чланка"
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:132
 #: scripts/apps/authoring/views/authoring-topbar.html:286
 msgid "Compare versions"
-msgstr ""
+msgstr "Упореди верзије"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:124
 msgid "Comparing \"{{x}}\"(primary) to \"{{y}}\"(secondary)"
@@ -3898,7 +3898,7 @@ msgstr "Конфигурација обрисана."
 msgid ""
 "Configuration has changed. {{message}} Would you like to save the story to "
 "your workspace?"
-msgstr ""
+msgstr "Конфигурација је измењена. {{message}} Желите ли да сачувате причу у свој радни простор?"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:11
 #: scripts/apps/highlights/views/highlights_config_modal.html:12
@@ -3946,7 +3946,7 @@ msgstr "Потврди доступност"
 
 #: scripts/apps/authoring/authoring/components/publish-warning-confirm-modal.tsx:24
 msgid "Confirm Publish Warnings"
-msgstr ""
+msgstr "Потврди упозорења за објаву"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:28
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:41
@@ -3955,7 +3955,7 @@ msgstr "Потврди повлачење објаве"
 
 #: scripts/apps/authoring/views/change-image.html:194
 msgid "Confirm crop"
-msgstr ""
+msgstr "Потврди исечак"
 
 #: scripts/core/auth/login-modal.html:78
 #: scripts/core/auth/reset-password.html:51
@@ -4173,11 +4173,11 @@ msgstr "Настави"
 
 #: scripts/apps/authoring/views/change-image.html:249
 msgid "Contrast"
-msgstr ""
+msgstr "Контраст"
 
 #: scripts/apps/authoring/views/change-image.html:154
 msgid "Controls"
-msgstr ""
+msgstr "Контроле"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:452
 msgid "Convert text to lowercase"
@@ -4225,7 +4225,7 @@ msgstr "Копирај ИД задатка"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:2
 msgid "Copy metadata"
-msgstr ""
+msgstr "Копирај метаподатке"
 
 #: scripts/apps/production-api-keys/config.ts:64
 msgid "Copy this now, you won't be able to access it again."
@@ -4234,7 +4234,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:195
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:64
 msgid "Copyright"
-msgstr ""
+msgstr "Ауторска права"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:32
 #: scripts/apps/archive/views/metadata-view.html:173
@@ -4286,7 +4286,7 @@ msgstr "Исправи"
 
 #: scripts/apps/authoring/authoring/index.ts:357
 msgid "Correct item"
-msgstr ""
+msgstr "Исправи ставку"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:38
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:87
@@ -4296,7 +4296,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:182
 msgid "Corrected by"
-msgstr ""
+msgstr "Исправио"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:137
 msgid "Correcting multiple items from authoring pane is not supported"
@@ -4309,7 +4309,7 @@ msgstr "Исправка"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:165
 msgid "Correction Cancel by"
-msgstr ""
+msgstr "Исправку отказао"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:485
 msgid "Correction cancelled by {{user}}"
@@ -4317,12 +4317,12 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:467
 msgid "Correction has been removed"
-msgstr ""
+msgstr "Исправка је уклоњена"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:495
 #: scripts/apps/authoring/versioning/history/views/history.html:171
 msgid "Correction link is removed"
-msgstr ""
+msgstr "Линк исправке је уклоњен"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:575
 msgid "Corrections"
@@ -4779,7 +4779,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:96
 #: scripts/apps/authoring/versioning/history/views/history.html:6
 msgid "Created by"
-msgstr ""
+msgstr "Креирао"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:111
 msgid "Created by this user"
@@ -4807,7 +4807,7 @@ msgstr "Креирано из догађаја"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:127
 msgid "Created from highlight"
-msgstr ""
+msgstr "Креирано из истицања"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:380
 msgid "Created from highlight({{x}}) by {{user}}"
@@ -4854,7 +4854,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:209
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
 msgid "Credit"
-msgstr ""
+msgstr "Заслуге"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:19
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:19
@@ -4883,7 +4883,7 @@ msgstr "Исеци"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:181
 msgid "Crop coordinates are not defined for {{cropName}} picture crop."
-msgstr ""
+msgstr "Координате исечка нису дефинисане за исечак слике {{cropName}}."
 
 #: scripts/apps/profiling/views/profiling.html:35
 msgid "Cumulative time"
@@ -4927,7 +4927,7 @@ msgstr "Тренутна величина слике је {{width}}x{{height}}).
 
 #: scripts/apps/authoring/views/dashboard-articles.html:5
 msgid "Currently working on"
-msgstr ""
+msgstr "Тренутно ради на"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:221
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:316
@@ -5409,7 +5409,7 @@ msgstr "Откажи заказивање"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:113
 #: scripts/apps/authoring/versioning/history/views/history.html:17
 msgid "Descheduled by"
-msgstr ""
+msgstr "Отказао заказивање"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:48
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/index.ts:53
@@ -5664,7 +5664,7 @@ msgstr "Детаљи"
 
 #: scripts/apps/authoring/views/change-image.html:7
 msgid "Details / Metadata"
-msgstr ""
+msgstr "Детаљи / метаподаци"
 
 #: scripts/apps/dictionaries/index.ts:33
 msgid "Dictionaries"
@@ -5719,7 +5719,7 @@ msgstr "Дигитално/Интернет"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetImagePreviewFullScreen.js:133
 #: scripts/extensions/sams/src/components/assets/assetImagePreviewFullScreen.tsx:159
 msgid "Dimensions"
-msgstr ""
+msgstr "Димензије"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:192
 msgid "Disable Item Updates"
@@ -5811,7 +5811,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:3
 msgid "Do you want to add an image to this update?"
-msgstr ""
+msgstr "Желите ли да додате слику у ово ажурирање?"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/shows/create-show-after-modal.js:26
 #: scripts/extensions/broadcasting/dist/src/shows/create-show-after-modal.js:26
@@ -5842,9 +5842,9 @@ msgstr "Желите ли да повежете са тим задатком?"
 #: scripts/apps/authoring/authoring/services/quick-publish-modal.tsx:50
 msgid "Do you want to publish the article?"
 msgid_plural "Do you want to publish {{number}} articles?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Желите ли да објавите чланак?"
+msgstr[1] "Желите ли да објавите {{number}} чланка?"
+msgstr[2] "Желите ли да објавите {{number}} чланака?"
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:148
 msgid "Do you want to remove Abbreviation?"
@@ -5993,12 +5993,12 @@ msgstr "Превуците једну или више датотека овде 
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:126
 msgid "Drag one or more files here to upload them, or just click here."
-msgstr ""
+msgstr "Превуците једну или више датотека овде да их отпремите, или само кликните овде."
 
 #: scripts/apps/authoring/attachments/AttachmentsWidgetComponent.tsx:104
 msgid ""
 "Drag one or more files here to upload them, or just click the button below."
-msgstr ""
+msgstr "Превуците једну или више датотека овде да их отпремите, или само кликните на дугме испод."
 
 #: ../superdesk-planning/client/components/fields/editor/AssociatedEvent.tsx:101
 msgid "Drop events here"
@@ -6118,7 +6118,7 @@ msgstr "Дупликат креиран"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:171
 #: scripts/apps/authoring/versioning/history/views/history.html:52
 msgid "Duplicate created by"
-msgstr ""
+msgstr "Дупликат креирао"
 
 #: scripts/apps/archive/index.tsx:151
 msgid "Duplicate in place"
@@ -6144,7 +6144,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:146
 #: scripts/apps/authoring/versioning/history/views/history.html:30
 msgid "Duplicated by"
-msgstr ""
+msgstr "Дуплирао"
 
 #: scripts/apps/search/views/item-preview.html:15
 msgid "Duplicates"
@@ -6323,7 +6323,7 @@ msgstr "Уреди агенду"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/attachments/editAttachmentModal.js:122
 #: scripts/extensions/sams/src/components/attachments/editAttachmentModal.tsx:102
 msgid "Edit Attachment"
-msgstr ""
+msgstr "Уреди прилог"
 
 #: ../superdesk-planning/client/components/Contacts/ContactMetaData.tsx:76
 #: ../superdesk-planning/client/components/Contacts/ContactMetaData.tsx:77
@@ -6341,7 +6341,7 @@ msgstr "Уреди профил садржаја"
 
 #: scripts/apps/authoring/views/change-image.html:4
 msgid "Edit Crops"
-msgstr ""
+msgstr "Уреди исечке"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:8
 msgid "Edit Dictionary"
@@ -6379,7 +6379,7 @@ msgstr "Уреди локацију"
 
 #: scripts/apps/authoring/authoring/index.ts:254
 msgid "Edit Media Metadata"
-msgstr ""
+msgstr "Уреди метаподатке медија"
 
 #: ../superdesk-planning/client/planning-extension/src/planning-details-widget.tsx:148
 msgid "Edit Planning"
@@ -6495,7 +6495,7 @@ msgstr "Уреди слику"
 
 #: scripts/apps/authoring/authoring/index.ts:241
 msgid "Edit in new Window"
-msgstr ""
+msgstr "Уреди у новом прозору"
 
 #: scripts/apps/authoring-react/fields/linked-items/editor.tsx:54
 #: scripts/apps/authoring-react/fields/package-items/editor.tsx:51
@@ -6791,7 +6791,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:21
 msgid "Error sending as"
-msgstr ""
+msgstr "Грешка приликом слања као"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:74
 msgid "Error sending as {{name}} to {{destination}} at {{date}}"
@@ -6803,11 +6803,11 @@ msgstr "Грешка. Речник није сачуван."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:626
 msgid "Error. Item not published."
-msgstr ""
+msgstr "Грешка. Ставка није објављена."
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:322
 msgid "Error. Item not updated."
-msgstr ""
+msgstr "Грешка. Ставка није ажурирана."
 
 #: scripts/apps/search/directives/SavedSearches.ts:119
 msgid "Error. Saved search not deleted."
@@ -6987,7 +6987,7 @@ msgstr "Грешка: {{error}}"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:446
 #: scripts/extensions/sams/src/api/assets.ts:562
 msgid "Error: {{message}}"
-msgstr ""
+msgstr "Грешка: {{message}}"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/utils/api.js:25
 #: scripts/extensions/sams/dist/src/utils/api.js:25
@@ -7382,7 +7382,7 @@ msgstr "Истекло"
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:277
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:92
 msgid "Expiry"
-msgstr ""
+msgstr "Истек"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:82
 msgid "Expiry Date:"
@@ -7429,7 +7429,7 @@ msgstr "Извези као чланак"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:353
 #: scripts/apps/authoring/versioning/history/views/history.html:116
 msgid "Exported by"
-msgstr ""
+msgstr "Извезао"
 
 #: scripts/apps/archive/views/metadata-view.html:163
 msgid "Exposure time"
@@ -7498,7 +7498,7 @@ msgstr "Додавање ставке планирања као истакнут
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:33
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.ts:97
 msgid "Failed to apply kill template to the item."
-msgstr ""
+msgstr "Примена шаблона уништења на ставку није успела."
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:188
 msgid "Failed to associate update: {{message}}"
@@ -7522,7 +7522,7 @@ msgstr "Промена лозинке није успела."
 
 #: scripts/apps/authoring/authoring/services/MultiEditUnsavedChangesService.ts:78
 msgid "Failed to check for unsaved changes"
-msgstr ""
+msgstr "Провера несачуваних измена није успела"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:710
 msgid "Failed to create an archive item."
@@ -7568,7 +7568,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/MultiEditUnsavedChangesService.ts:60
 msgid "Failed to discard some changes"
-msgstr ""
+msgstr "Одбацивање неких измена није успело"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:258
 msgid "Failed to duplicate the item"
@@ -7607,12 +7607,12 @@ msgstr "Није пронађен задатак за повезивање!"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:407
 msgid "Failed to generate picture crops."
-msgstr ""
+msgstr "Генерисање исечака слике није успело."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:260
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:474
 msgid "Failed to generate update: {{message}}"
-msgstr ""
+msgstr "Генерисање ажурирања није успело: {{message}}"
 
 #: scripts/extensions/sams/dist/src/api/assets.js:348
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/assets.js:348
@@ -7622,7 +7622,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/LockService.ts:21
 msgid "Failed to get a lock on the item!"
-msgstr ""
+msgstr "Закључавање ставке није успело!"
 
 #: scripts/extensions/sams/src/api/assets.ts:406
 msgid "Failed to get asset \"\""
@@ -7753,7 +7753,7 @@ msgstr "Уклањање аутоматског чувања није успел
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:279
 msgid "Failed to remove link: {{message}}"
-msgstr ""
+msgstr "Уклањање линка није успело: {{message}}"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:327
 #: ../superdesk-planning/client/actions/planning/ui.ts:368
@@ -7804,7 +7804,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/MultiEditUnsavedChangesService.ts:72
 msgid "Failed to save some articles"
-msgstr ""
+msgstr "Чување неких чланака није успело"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:103
 msgid "Failed to save the Report Schedule!"
@@ -7812,15 +7812,15 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:461
 msgid "Failed to save the area of interest:"
-msgstr ""
+msgstr "Чување области од интереса није успело:"
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:94
 msgid "Failed to save the area of interest: Failed to call picture_crop."
-msgstr ""
+msgstr "Чување области од интереса није успело: позивање picture_crop није успело."
 
 #: scripts/apps/authoring/tests/changeImage.spec.ts:128
 msgid "Failed to save the area of interest: Failed to call picture_renditions."
-msgstr ""
+msgstr "Чување области од интереса није успело: позивање picture_renditions није успело."
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:469
 msgid "Failed to save the assignment."
@@ -7957,7 +7957,7 @@ msgstr "Истакнуто"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:8
 msgid "Featured Media"
-msgstr ""
+msgstr "Истакнути медиј"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.tsx:75
 msgid "Featured Stories"
@@ -8055,7 +8055,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:269
 #: scripts/apps/authoring/versioning/history/views/history.html:76
 msgid "Fetched by"
-msgstr ""
+msgstr "Преузео"
 
 #: scripts/apps/content-filters/views/filter-search.html:9
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:59
@@ -8095,11 +8095,11 @@ msgstr "Екстензија датотеке"
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:201
 msgid "File Name"
-msgstr ""
+msgstr "Назив датотеке"
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:211
 msgid "File Size"
-msgstr ""
+msgstr "Величина датотеке"
 
 #: scripts/apps/profiling/views/profiling.html:37
 msgid "File name/line"
@@ -8254,12 +8254,12 @@ msgstr "Филтери"
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:78
 #: scripts/apps/authoring/editor/views/find-replace.html:5
 msgid "Find"
-msgstr ""
+msgstr "Пронађи"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:12
 #: scripts/apps/authoring/editor/find-replace.ts:95
 msgid "Find and Replace"
-msgstr ""
+msgstr "Пронађи и замени"
 
 #: scripts/apps/search/index.ts:108
 msgid "Find live and archived content"
@@ -8317,11 +8317,11 @@ msgstr "Окрени вертикално"
 
 #: scripts/apps/authoring/views/change-image.html:208
 msgid "Flip horizontal"
-msgstr ""
+msgstr "Окрени хоризонтално"
 
 #: scripts/apps/authoring/views/change-image.html:209
 msgid "Flip vertical"
-msgstr ""
+msgstr "Окрени вертикално"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Focal length"
@@ -8356,7 +8356,7 @@ msgstr "Само за претплатнике типа Content API дестин
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:21
 msgid "For Publication"
-msgstr ""
+msgstr "За објаву"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/utils/assets.js:63
 #: scripts/extensions/sams/dist/src/utils/assets.js:63
@@ -8465,7 +8465,7 @@ msgstr "Пуно име"
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Full width mode"
-msgstr ""
+msgstr "Режим пуне ширине"
 
 #: scripts/extensions/sams/dist/src/extensions/sams/src/utils/assets.js:69
 #: scripts/extensions/sams/dist/src/utils/assets.js:69
@@ -8508,7 +8508,7 @@ msgstr "Опште"
 
 #: scripts/apps/authoring/views/article-edit.html:580
 msgid "Generate From URL"
-msgstr ""
+msgstr "Генериши из URL-а"
 
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:1
 msgid "Generate a report showing activity on a desk."
@@ -8696,7 +8696,7 @@ msgstr ""
 #: scripts/apps/authoring-react/macros/macros.tsx:359
 #: scripts/apps/authoring/macros/views/macros-widget.html:3
 msgid "Group Macros"
-msgstr ""
+msgstr "Групиши макрое"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:155
 msgid "Group by day"
@@ -8851,7 +8851,7 @@ msgstr "Помоћни\n                                    текст"
 
 #: scripts/apps/authoring/views/article-edit.html:395
 msgid "Helplines/Contact Information"
-msgstr ""
+msgstr "Помоћне линије/контакт информације"
 
 #: scripts/apps/publish/views/email-config.html:11
 msgid "Hidden recipients (blind carbon copy)"
@@ -8877,11 +8877,11 @@ msgstr "Сакриј датум"
 
 #: scripts/apps/authoring/views/article-edit.html:586
 msgid "Hide Preview"
-msgstr ""
+msgstr "Сакриј преглед"
 
 #: scripts/apps/authoring/preview/fullPreviewMultiple.tsx:46
 msgid "Hide media"
-msgstr ""
+msgstr "Сакриј медиј"
 
 #: scripts/apps/authoring-react/fields/embed/editor.tsx:55
 msgid "Hide preview"
@@ -8893,7 +8893,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:6
 msgid "Hide sent/queued items"
-msgstr ""
+msgstr "Сакриј послате/ставке у реду"
 
 #: scripts/apps/publish/views/subscribers.html:209
 msgid "High priority"
@@ -8913,7 +8913,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:159
 msgid "Highlight characters"
-msgstr ""
+msgstr "Истакни карактере"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Highlight with name"
@@ -9118,7 +9118,7 @@ msgstr "Слика је већа од {{maxFileSize}}MB, величина отп
 
 #: scripts/apps/authoring/views/change-image.html:217
 msgid "Image size"
-msgstr ""
+msgstr "Величина слике"
 
 #: scripts/api/article-fetch.tsx:111
 msgid "Image size validation failed"
@@ -9184,7 +9184,7 @@ msgstr "У току"
 msgid ""
 "In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected "
 "repeat."
-msgstr ""
+msgstr "У причи {{slugline}} послато: {{date}}.{{lineBreak}}Ово је исправљено понављање."
 
 #: ../superdesk-planning/client/utils/index.ts:335
 #: scripts/apps/contacts/components/ContactInfo.tsx:64
@@ -9276,7 +9276,7 @@ msgstr "Увлачење десно"
 #: scripts/apps/authoring/metadata/metadata.ts:1420
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:21
 msgid "Info"
-msgstr ""
+msgstr "Информација"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:113
 msgid "Info Large"
@@ -9412,7 +9412,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:474
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
-msgstr ""
+msgstr "Тренутна провера правописа када је аутоматска искључена"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:181
 msgid "Insufficient privileges to view the assignment"
@@ -9429,7 +9429,7 @@ msgstr "Недовољне привилегије за приказ задатк
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:309
 #: scripts/extensions/sams/src/utils/ui.tsx:68
 msgid "Internal"
-msgstr ""
+msgstr "Интерно"
 
 #: scripts/apps/internal-destinations/index.ts:13
 #: scripts/apps/internal-destinations/views/settings.html:5
@@ -9631,11 +9631,11 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/controllers/AssociationController.ts:299
 msgid "Item is locked. Cannot associate media item."
-msgstr ""
+msgstr "Ставка је закључана. Није могуће повезати медијску ставку."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:120
 msgid "Item locked"
-msgstr ""
+msgstr "Ставка закључана"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:125
 msgid "Item marked"
@@ -9674,7 +9674,7 @@ msgstr "Ставка сачувана."
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:114
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:29
 msgid "Item sent to Subscriber"
-msgstr ""
+msgstr "Ставка послата претплатнику"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
@@ -9693,13 +9693,13 @@ msgstr "Ставка ажурирана."
 msgid "Item was not added. Only 1 item is allowed for this field."
 msgid_plural ""
 "Item was not added. Only {{number}} items are allowed in this field."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ставка није додата. У овом пољу је дозвољена само 1 ставка."
+msgstr[1] "Ставка није додата. У овом пољу су дозвољене само {{number}} ставке."
+msgstr[2] "Ставка није додата. У овом пољу је дозвољено само {{number}} ставки."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
-msgstr ""
+msgstr "Објава ставке је успешно повучена."
 
 #: scripts/apps/search/MultiImageEdit.ts:198
 msgid "Item {{headline}} unlocked by another user."
@@ -9707,7 +9707,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:96
 msgid "Item {{headline}} was unlocked by {{username}}."
-msgstr ""
+msgstr "Ставку {{headline}} откључао је {{username}}."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:15
 #: scripts/core/views/sdSearchList.html:36
@@ -9811,7 +9811,7 @@ msgstr "Уништи"
 
 #: scripts/apps/authoring/authoring/index.ts:309
 msgid "Kill item"
-msgstr ""
+msgstr "Уништи ставку"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:32
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:84
@@ -9824,7 +9824,7 @@ msgstr "Уништено"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:184
 msgid "Killed by"
-msgstr ""
+msgstr "Уништио"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:574
 msgid "Kills"
@@ -10000,7 +10000,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/toggleFullWithEditor.tsx:20
 msgid "Leave full width mode"
-msgstr ""
+msgstr "Изађи из режима пуне ширине"
 
 #: scripts/apps/archive/views/item-preview.html:10
 #: scripts/apps/archive/views/metadata-view.html:193
@@ -10050,7 +10050,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:163
 msgid "Limit further typing"
-msgstr ""
+msgstr "Ограничи даље куцање"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:99
 msgid "Line"
@@ -10073,7 +10073,7 @@ msgstr "Контроле линка:"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:276
 msgid "Link has been removed"
-msgstr ""
+msgstr "Линк је уклоњен"
 
 #: scripts/core/auth/auth.ts:103
 msgid "Link sent. Please check your email inbox."
@@ -10087,7 +10087,7 @@ msgstr "Линк до задатка"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:131
 msgid "Linked by"
-msgstr ""
+msgstr "Повезао"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:398
 msgid "Linked by {{user}}"
@@ -10152,7 +10152,7 @@ msgstr "Сугестије уживо"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:278
 msgid "Live suggestions"
-msgstr ""
+msgstr "Сугестије уживо"
 
 #: scripts/apps/stream/views/activity-stream.html:30
 msgid "Load more"
@@ -10254,7 +10254,7 @@ msgstr "Закључано"
 #: scripts/apps/authoring-react/subcomponents/lock-info.tsx:48
 #: scripts/apps/authoring/views/authoring-topbar.html:20
 msgid "Locked by"
-msgstr ""
+msgstr "Закључао"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:91
 msgid "Locked by this user"
@@ -10296,7 +10296,7 @@ msgstr "M"
 
 #: scripts/apps/authoring/views/authoring-header.html:72
 msgid "MASTER"
-msgstr ""
+msgstr "МАСТЕР"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:246
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:246
@@ -10550,7 +10550,7 @@ msgstr "Означено да није за објаву"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:88
 msgid "Marked by"
-msgstr ""
+msgstr "Означио"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/marked-desks.tsx:11
 #: scripts/apps/authoring-react/toolbar/highlights-management.tsx:74
@@ -10768,7 +10768,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-header.html:61
 msgid "Missing Link"
-msgstr ""
+msgstr "Недостаје линк"
 
 #: ../superdesk-planning/client/utils/filters.ts:133
 msgid "Mo"
@@ -10782,7 +10782,7 @@ msgstr "Мобилни"
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:30
 #: scripts/apps/authoring/authoring/modified-info.tsx:20
 msgid "Modified"
-msgstr ""
+msgstr "Измењено"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:96
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:96
@@ -10911,7 +10911,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:253
 #: scripts/apps/authoring/versioning/history/views/history.html:75
 msgid "Moved by"
-msgstr ""
+msgstr "Преместио"
 
 #: scripts/apps/desks/views/desk-config-modal.html:397
 msgid "Moved onto stage Rule"
@@ -11436,7 +11436,7 @@ msgstr "Нису дефинисане радње преузимања ни об�
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:1080
 msgid ""
 "No formatters found for {{formats}} while publishing item having unique name."
-msgstr ""
+msgstr "Форматери за {{formats}} нису пронађени приликом објављивања ставке са јединственим називом."
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:206
 msgid "No highlights have been created yet."
@@ -11508,7 +11508,7 @@ msgstr ""
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:2
 msgid "No matches found."
-msgstr ""
+msgstr "Нису пронађена поклапања."
 
 #: scripts/apps/profiling/views/profiling.html:32
 msgid "No of calls"
@@ -11759,7 +11759,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:10
 msgid "Not been transmitted to any subscriber"
-msgstr ""
+msgstr "Није пренето ниједном претплатнику"
 
 #: ../superdesk-planning/client/validators/profile.ts:100
 msgid "Not enough"
@@ -11955,9 +11955,9 @@ msgstr "На мрежи"
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:86
 msgid "Only 1 image is allowed in this field"
 msgid_plural "Only {{number}} images are allowed in this field"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "У овом пољу је дозвољена само 1 слика"
+msgstr[1] "У овом пољу су дозвољене само {{number}} слике"
+msgstr[2] "У овом пољу је дозвољено само {{number}} слика"
 
 #: ../superdesk-planning/client/utils/planning.tsx:541
 msgid "Only 1 item can be linked. Adding this would exceed the limit"
@@ -11983,7 +11983,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:269
 msgid "Only the following content item types are allowed:"
-msgstr ""
+msgstr "Дозвољени су само следећи типови ставки садржаја:"
 
 #: scripts/apps/archive/controllers/UploadController.ts:333
 msgid "Only the following files are allowed: {{fileTypes}}"
@@ -11991,7 +11991,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:89
 msgid "Only the following media item types are allowed:"
-msgstr ""
+msgstr "Дозвољени су само следећи типови медијских ставки:"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:159
 msgid "Only the following media types are allowed: {{types}}"
@@ -12037,7 +12037,7 @@ msgstr "Отвори истицања"
 
 #: scripts/apps/authoring/authoring/index.ts:401
 msgid "Open in new Window"
-msgstr ""
+msgstr "Отвори у новом прозору"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/notifications.js:10
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/notifications.js:14
@@ -12055,7 +12055,7 @@ msgstr "Отвори линк"
 
 #: scripts/apps/authoring/views/change-image.html:26
 msgid "Open metadata"
-msgstr ""
+msgstr "Отвори метаподатке"
 
 #: scripts/apps/workspace/index.ts:33
 msgid "Open monitoring"
@@ -12185,7 +12185,7 @@ msgstr "Оригинал"
 msgid ""
 "Original ({{item.renditions.original.width}} x "
 "{{item.renditions.original.height}} px)"
-msgstr ""
+msgstr "Оригинал ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)"
 
 #: ../superdesk-analytics/client/views/renditions-preview.html:33
 msgid ""
@@ -12200,7 +12200,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:102
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:176
 msgid "Original ID"
-msgstr ""
+msgstr "Оригинални ИД"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:386
 msgid "Original Id"
@@ -12219,7 +12219,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:390
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:182
 msgid "Original creator"
-msgstr ""
+msgstr "Оригинални креатор"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:43
 msgid "Original size"
@@ -12228,12 +12228,12 @@ msgstr ""
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:432
 #: scripts/apps/authoring/tests/changeImage.spec.ts:56
 msgid "Original size cannot be less than the required crop sizes."
-msgstr ""
+msgstr "Оригинална величина не може бити мања од захтеваних величина исечака."
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:188
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:60
 msgid "Original source"
-msgstr ""
+msgstr "Оригинални извор"
 
 #: ../superdesk-planning/client/components/UI/Form/SelectInputWithFreeText.tsx:70
 #: ../superdesk-planning/client/components/fields/editor/base/selectWithFreeText.tsx:171
@@ -12333,7 +12333,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-header.html:24
 #: scripts/apps/authoring/views/authoring-header.html:28
 msgid "PROFILE"
-msgstr ""
+msgstr "ПРОФИЛ"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/publish-correction.tsx:13
 msgid "PUBLISH"
@@ -12391,7 +12391,7 @@ msgstr "Ознаке прича у пакету"
 #: scripts/apps/authoring-react/packages.tsx:22
 #: scripts/apps/authoring/packages/packages.ts:47
 msgid "Packages"
-msgstr ""
+msgstr "Пакети"
 
 #: scripts/apps/authoring-react/data-layer.ts:223
 msgid "Packages profile"
@@ -12479,7 +12479,7 @@ msgstr "Налепи линк"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:3
 msgid "Paste metadata"
-msgstr ""
+msgstr "Налепи метаподатке"
 
 #: scripts/apps/publish/views/ftp-config.html:21
 msgid "Path"
@@ -12615,7 +12615,7 @@ msgstr "Закачи"
 
 #: scripts/apps/authoring/widgets/WidgetHeaderComponent.tsx:24
 msgid "Pin/Unpin"
-msgstr ""
+msgstr "Закачи/откачи"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/place-field.ts:37
 #: ../superdesk-planning/client/components/fields/editor/Place.tsx:25
@@ -12894,11 +12894,11 @@ msgstr "Тачка контакта"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:171
 msgid "Point of interest is not defined."
-msgstr ""
+msgstr "Тачка од интереса није дефинисана."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:188
 msgid "Point of interest outside the crop {{cropName}} limits"
-msgstr ""
+msgstr "Тачка од интереса је ван граница исечка {{cropName}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:33
 msgid "Populate Abstract"
@@ -13038,7 +13038,7 @@ msgstr "Преглед"
 
 #: scripts/apps/authoring/views/preview-formatted.html:6
 msgid "Preview Formatted Story"
-msgstr ""
+msgstr "Преглед форматиране приче"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:156
 msgid "Preview Mode"
@@ -13050,11 +13050,11 @@ msgstr "URL крајње тачке прегледа"
 
 #: scripts/apps/authoring/authoring/index.ts:472
 msgid "Preview formatted article, when previewFormats feature configured"
-msgstr ""
+msgstr "Преглед форматираног чланка када је функција previewFormats подешена"
 
 #: scripts/apps/authoring/views/authoring-header.html:74
 msgid "Preview master story"
-msgstr ""
+msgstr "Преглед мастер приче"
 
 #: scripts/apps/authoring-react/fields/media/media-carousel/media-carousel.tsx:171
 #: scripts/apps/monitoring/views/aggregate-settings.html:155
@@ -13244,7 +13244,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/theme-select.html:66
 msgid "Proofread Theme"
-msgstr ""
+msgstr "Тема за лектуру"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:104
 msgid "Proofreading Theme"
@@ -13279,7 +13279,7 @@ msgstr "Провајдер сачуван!"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:88
 msgid "Provider sequence"
-msgstr ""
+msgstr "Секвенца провајдера"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid ""
@@ -13330,7 +13330,7 @@ msgstr "Објави"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:99
 msgid "Publish & Continue"
-msgstr ""
+msgstr "Објави и настави"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:445
 #: ../superdesk-analytics/client/utils.js:157
@@ -13348,7 +13348,7 @@ msgstr "Ред објављивања"
 #: scripts/apps/archive/views/metadata-view.html:137
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:416
 msgid "Publish Schedule"
-msgstr ""
+msgstr "Распоред објављивања"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:444
 #: ../superdesk-analytics/client/utils.js:155
@@ -13357,12 +13357,12 @@ msgstr ""
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:18
 msgid "Publish Without Media"
-msgstr ""
+msgstr "Објави без медија"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:97
 #: scripts/apps/authoring/views/authoring-topbar.html:98
 msgid "Publish and Continue"
-msgstr ""
+msgstr "Објави и настави"
 
 #: scripts/core/interactive-article-actions-panel/actions/publish-action.tsx:290
 msgid "Publish from"
@@ -13416,7 +13416,7 @@ msgstr "Објављено до"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:180
 msgid "Published by"
-msgstr ""
+msgstr "Објавио"
 
 #: scripts/apps/search/constants.ts:22
 #: scripts/apps/search/directives/DateFilters.ts:93
@@ -13430,7 +13430,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/quick-publish-modal.tsx:25
 msgid "Publishing"
-msgstr ""
+msgstr "Објављивање"
 
 #: scripts/apps/publish/views/publish-queue.html:108
 msgid "Publishing Action"
@@ -13451,7 +13451,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/constants.ts:16
 msgid "Publishing actions"
-msgstr ""
+msgstr "Радње објављивања"
 
 #: scripts/core/interactive-article-actions-panel/index-ui.tsx:104
 msgid "Publishing multiple items from authoring pane is not supported"
@@ -13460,7 +13460,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:181
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:56
 msgid "Pubstatus"
-msgstr ""
+msgstr "Pubstatus"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:63
 msgid "Purple"
@@ -13544,7 +13544,7 @@ msgstr "ПОНАВЉАЊЕ ДО је обавезно поље"
 
 #: scripts/apps/authoring/views/authoring-header.html:53
 msgid "RELATED"
-msgstr ""
+msgstr "ПОВЕЗАНО"
 
 #: scripts/apps/search/components/HighlightsList.tsx:98
 #: scripts/apps/search/components/MarkedDesksList.tsx:110
@@ -13639,7 +13639,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:186
 msgid "Recalled by"
-msgstr ""
+msgstr "Опозвао"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:151
 msgid "Recent templates"
@@ -13721,11 +13721,11 @@ msgstr "Освежи садржај"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:9
 msgid "Refresh suggestions"
-msgstr ""
+msgstr "Освежи сугестије"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:10
 msgid "Refreshing..."
-msgstr ""
+msgstr "Освежавање..."
 
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/headlines/headlines-widget.js:54
 #: scripts/extensions/ai-widget/dist/src/extensions/ai-widget/src/headlines/headlines.js:22
@@ -14090,7 +14090,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:133
 msgid "Reopened by"
-msgstr ""
+msgstr "Поново отворио"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:443
 msgid "Reopened by {{user}}"
@@ -14142,7 +14142,7 @@ msgstr "Замени"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:29
 msgid "Replace All"
-msgstr ""
+msgstr "Замени све"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:141
 msgid "Replace all"
@@ -14155,7 +14155,7 @@ msgstr "Замени линк"
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:88
 #: scripts/apps/authoring/editor/views/find-replace.html:13
 msgid "Replace with"
-msgstr ""
+msgstr "Замени са"
 
 #: scripts/apps/authoring-react/article-widgets/suggestions.tsx:87
 msgid "Replace {{x}} with {{y}}"
@@ -14221,7 +14221,7 @@ msgstr "Обавезно"
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:24
 msgid "Required field {{key}} is missing. ..."
-msgstr ""
+msgstr "Недостаје обавезно поље {{key}}. ..."
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:116
 msgid "Required {{field}} in item {{item}}"
@@ -14262,7 +14262,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:188
 msgid "Resent by"
-msgstr ""
+msgstr "Поново послао"
 
 #: scripts/apps/profiling/views/profiling.html:22
 msgid "Reset"
@@ -14301,11 +14301,11 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:592
 msgid "Resolving comments"
-msgstr ""
+msgstr "Разрешавање коментара"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:576
 msgid "Resolving suggestions"
-msgstr ""
+msgstr "Разрешавање сугестија"
 
 #: scripts/apps/publish/views/http-push-config.html:5
 #: scripts/apps/publish/views/http-push-config.html:6
@@ -14344,7 +14344,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:467
 #: scripts/apps/authoring/versioning/history/views/history.html:154
 msgid "Rewrite link is removed"
-msgstr ""
+msgstr "Линк прераде је уклоњен"
 
 #: ../superdesk-analytics/client/search/views/preview-source-filter.html:13
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:299
@@ -14361,7 +14361,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:176
 msgid "Rewritten by"
-msgstr ""
+msgstr "Прерадио"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:504
 msgid "Rewritten by {{user}}"
@@ -14370,7 +14370,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:469
 #: scripts/apps/authoring/versioning/history/views/history.html:157
 msgid "Rewritten link is removed"
-msgstr ""
+msgstr "Линк прерађеног је уклоњен"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
 #: scripts/apps/users/views/edit-form.html:155
@@ -14409,11 +14409,11 @@ msgstr "Ротирај десно"
 
 #: scripts/apps/authoring/views/change-image.html:206
 msgid "Rotate left"
-msgstr ""
+msgstr "Ротирај лево"
 
 #: scripts/apps/authoring/views/change-image.html:207
 msgid "Rotate right"
-msgstr ""
+msgstr "Ротирај десно"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:253
 msgid "Round corners for dropdown items"
@@ -14487,7 +14487,7 @@ msgstr ""
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:297
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:497
 msgid "Run automatically"
-msgstr ""
+msgstr "Покрени аутоматски"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/page.js:170
 #: scripts/extensions/broadcasting/dist/src/page.js:174
@@ -14528,7 +14528,7 @@ msgstr "ЗАКАЗАНА АЖУРИРАЊА"
 
 #: scripts/apps/authoring/views/authoring-header.html:45
 msgid "SIGNAL"
-msgstr ""
+msgstr "СИГНАЛ"
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "SLUGLINE is too long"
@@ -14545,7 +14545,7 @@ msgstr "СМС порука"
 
 #: scripts/apps/authoring/views/authoring-header.html:49
 msgid "SOURCE"
-msgstr ""
+msgstr "ИЗВОР"
 
 #: ../superdesk-planning/client/validators/events.ts:79
 msgid "START DATE cannot be in the past"
@@ -14581,7 +14581,7 @@ msgstr "Суб"
 
 #: scripts/apps/authoring/views/change-image.html:256
 msgid "Saturation"
-msgstr ""
+msgstr "Засићење"
 
 #: ../superdesk-planning/client/utils/events.tsx:1459
 #: scripts/core/datetime/datetime.ts:295
@@ -14745,11 +14745,11 @@ msgstr "Сачувајте све друге измене пре извођењ�
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:60
 msgid "Save and publish"
-msgstr ""
+msgstr "Сачувај и објави"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:72
 msgid "Save and send"
-msgstr ""
+msgstr "Сачувај и пошаљи"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:230
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:65
@@ -14833,7 +14833,7 @@ msgstr "Сачувати измене?"
 
 #: scripts/apps/authoring/authoring/index.ts:470
 msgid "Save current item"
-msgstr ""
+msgstr "Сачувај тренутну ставку"
 
 #: ../superdesk-planning/client/constants/events.ts:169
 msgid "Save event as a template"
@@ -14994,7 +14994,7 @@ msgstr "Заказано за"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:180
 msgid "Scheduled by"
-msgstr ""
+msgstr "Заказао"
 
 #: ../superdesk-planning/client/components/fields/common/PreviewFilterSchedule.tsx:46
 msgid "Scheduled export: {{ description }}"
@@ -15014,7 +15014,7 @@ msgstr "Заказана ажурирања морају имати датум/�
 
 #: scripts/apps/authoring/authoring/services/quick-publish-modal.tsx:73
 msgid "Scheduled:"
-msgstr ""
+msgstr "Заказано:"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:51
 msgid "Scheduling"
@@ -15356,12 +15356,12 @@ msgstr "Изабери чланке"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:70
 msgid "Select at most 1 file to upload."
-msgstr ""
+msgstr "Изаберите највише 1 датотеку за отпремање."
 
 #: scripts/apps/archive/controllers/UploadController.ts:233
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:207
 msgid "Select at most {{maxUploads}} files to upload."
-msgstr ""
+msgstr "Изаберите највише {{maxUploads}} датотека за отпремање."
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:20
 msgid "Select color"
@@ -15446,7 +15446,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:122
 msgid "Select thumbnail"
-msgstr ""
+msgstr "Изабери сличицу"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/new-item.js:63
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:63
@@ -15488,7 +15488,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:89
 msgid "Send & duplicate"
-msgstr ""
+msgstr "Пошаљи и дуплирај"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-correction.tsx:13
 #: scripts/apps/authoring/views/authoring-topbar.html:214
@@ -15501,7 +15501,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:221
 msgid "Send Kill"
-msgstr ""
+msgstr "Пошаљи уништење"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:7
 msgid "Send Report via Email"
@@ -15509,7 +15509,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:228
 msgid "Send Takedown"
-msgstr ""
+msgstr "Пошаљи уклањање"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-and-duplicate.tsx:15
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/send-and-duplicate.tsx:16
@@ -15553,18 +15553,18 @@ msgstr ""
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:201
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:9
 msgid "Send to"
-msgstr ""
+msgstr "Пошаљи у"
 
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/interactive-article-actions-widget.tsx:12
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/send-to-publish-widget.tsx:20
 #: scripts/apps/authoring/views/authoring-topbar.html:400
 #: scripts/apps/authoring/views/authoring-topbar.html:401
 msgid "Send to / Publish"
-msgstr ""
+msgstr "Пошаљи у / објави"
 
 #: scripts/apps/authoring/authoring/index.ts:292
 msgid "Send to Personal Space"
-msgstr ""
+msgstr "Пошаљи у лични простор"
 
 #: scripts/apps/users/components/EmailNotificationPreferences.tsx:24
 msgid "Send {{name}} notifications"
@@ -15596,7 +15596,7 @@ msgstr "Успешно послато"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
-msgstr ""
+msgstr "Послато/у реду као"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:89
 msgid "Sent/Queued as {{name}} to {{destination}} at {{date}}"
@@ -15617,7 +15617,7 @@ msgstr "Датум почетка серије"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:128
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:143
 msgid "Service"
-msgstr ""
+msgstr "Услуга"
 
 #: scripts/apps/users/controllers/SessionsDeleteCommand.ts:13
 msgid "Sessions cleared"
@@ -15882,7 +15882,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:3
 msgid "Show sent/queued items"
-msgstr ""
+msgstr "Прикажи послате/ставке у реду"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:128
 msgid ""
@@ -16122,7 +16122,7 @@ msgstr "Слика мора бити најмање {{width}}x{{height}}."
 #: scripts/apps/authoring/attachments/AttachmentsWidget.tsx:38
 msgid ""
 "Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})"
-msgstr ""
+msgstr "Извините, али неке датотеке \"{{filenames}}\" су веће од лимита ({{limit}})"
 
 #: scripts/apps/templates/views/create-template.html:23
 msgid "Sorry, but template name must be unique."
@@ -16244,7 +16244,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:361
 msgid "Spell Checker"
-msgstr ""
+msgstr "Провера правописа"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:442
 #: ../superdesk-analytics/client/utils.js:164
@@ -16316,7 +16316,7 @@ msgstr "Само у корпи"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:221
 #: scripts/apps/authoring/versioning/history/views/history.html:63
 msgid "Spiked by"
-msgstr ""
+msgstr "Преместио у корпу"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
@@ -16926,7 +16926,7 @@ msgstr "Сними слику"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:132
 msgid "Take created by"
-msgstr ""
+msgstr "Наставак креирао"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:418
 msgid "Take created by {{user}}"
@@ -16935,12 +16935,12 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:299
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:120
 msgid "Take key"
-msgstr ""
+msgstr "Кључ наставка"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:471
 #: scripts/apps/authoring/versioning/history/views/history.html:160
 msgid "Take link is removed"
-msgstr ""
+msgstr "Линк наставка је уклоњен"
 
 #: ../superdesk-analytics/client/utils.js:163
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/takedown-action.tsx:10
@@ -16952,7 +16952,7 @@ msgstr "Уклањање"
 
 #: scripts/apps/authoring/authoring/index.ts:333
 msgid "Takedown item"
-msgstr ""
+msgstr "Уклони ставку"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
 msgid "Takedowns"
@@ -16977,7 +16977,7 @@ msgstr "Пакет наставака"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:540
 msgid "Tansa is not responding. You can continue editing or publish the story."
-msgstr ""
+msgstr "Tansa не одговара. Можете наставити уређивање или објавити причу."
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:105
 msgid "Target"
@@ -17320,7 +17320,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:30
 msgid "The item is read-only."
-msgstr ""
+msgstr "Ставка је само за читање."
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.tsx:207
 #: ../superdesk-planning/client/controllers/FulfilAssignmentController.tsx:173
@@ -17536,19 +17536,19 @@ msgstr ""
 
 #: scripts/apps/authoring/metadata/views/prefered-cv-items-config.html:15
 msgid "There are no vocabularies configured."
-msgstr ""
+msgstr "Нема подешених вокабулара."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:58
 msgid "There are some unsaved changes, do you want to save and publish it now?"
-msgstr ""
+msgstr "Постоје несачуване измене, желите ли да их сачувате и објавите сада?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:70
 msgid "There are some unsaved changes, do you want to save and send it now?"
-msgstr ""
+msgstr "Постоје несачуване измене, желите ли да их сачувате и пошаљете сада?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:45
 msgid "There are some unsaved changes, do you want to save it now?"
-msgstr ""
+msgstr "Постоје несачуване измене, желите ли да их сачувате сада?"
 
 #: scripts/core/ui/components/prompt-for-unsaved-changes.tsx:71
 msgid "There are some unsaved changes, go to the article to save changes?"
@@ -17574,7 +17574,7 @@ msgstr "Постоје несачуване измене."
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:28
 msgid ""
 "There are unsaved changes. If you navigate away, your changes will be lost."
-msgstr ""
+msgstr "Постоје несачуване измене. Ако напустите страницу, измене ће бити изгубљене."
 
 #: ../superdesk-planning/client/actions/assignments/notifications.ts:350
 msgid "There is a {{ type }} assignment '{{ slugline }}' {{ state }}"
@@ -17692,15 +17692,15 @@ msgstr "Дошло је до грешке. Филтер садржаја не м
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:262
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:477
 msgid "There was an error. Failed to generate update."
-msgstr ""
+msgstr "Дошло је до грешке. Генерисање ажурирања није успело."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:281
 msgid "There was an error. Failed to remove link."
-msgstr ""
+msgstr "Дошло је до грешке. Уклањање линка није успело."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:463
 msgid "There was an error. Failed to save the area of interest."
-msgstr ""
+msgstr "Дошло је до грешке. Чување области од интереса није успело."
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:128
 msgid "There was an error. Filter condition cannot be deleted."
@@ -17770,7 +17770,7 @@ msgstr "Ово и све будуће планирање"
 msgid ""
 "This article contains unresolved comments.Click on Cancel to go back to "
 "editing toresolve those comments or OK to ignore and proceed with publishing"
-msgstr ""
+msgstr "Овај чланак садржи неразрешене коментаре. Кликните на Откажи да се вратите на уређивање и разрешите коментаре или У реду да их игноришете и наставите са објавом"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:25
 msgid "This event is a recurring event!"
@@ -17788,7 +17788,7 @@ msgstr "Само овај догађај"
 
 #: scripts/apps/authoring/authoring/directives/ArticleEditDirective.ts:58
 msgid "This field is read-only"
-msgstr ""
+msgstr "Ово поље је само за читање"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:181
 #: ../superdesk-planning/client/validators/assignments.tsx:8
@@ -17841,7 +17841,7 @@ msgstr "Ово је понављајући догађај."
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89
 msgid "This is the headline"
-msgstr ""
+msgstr "Ово је наслов"
 
 #: scripts/apps/authoring-react/fields/media/editor.tsx:175
 msgid "This item is already added"
@@ -17853,7 +17853,7 @@ msgstr "Ова ставка је већ додата као повезана."
 
 #: scripts/apps/authoring/authoring/controllers/AssociationController.ts:211
 msgid "This item is already added."
-msgstr ""
+msgstr "Ова ставка је већ додата."
 
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/extension.js:26
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:40
@@ -17862,11 +17862,11 @@ msgstr "Ова ставка је повезана са извештавањем 
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:118
 msgid "This item was locked by {{username}}."
-msgstr ""
+msgstr "Ову ставку је закључао {{username}}."
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:101
 msgid "This item was unlocked by {{username}}."
-msgstr ""
+msgstr "Ову ставку је откључао {{username}}."
 
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:249
 msgid "This item will be permanently deleted."
@@ -17960,7 +17960,7 @@ msgstr "Чет"
 
 #: scripts/apps/authoring/authoring/components/video-thumbnail-editor.tsx:117
 msgid "Thumbnail"
-msgstr ""
+msgstr "Сличица"
 
 #: scripts/apps/archive/views/related-items-preview.html:12
 #: scripts/apps/relations/views/related-items.html:30
@@ -18199,12 +18199,12 @@ msgstr "Прикажи/сакриј заглавље"
 
 #: scripts/apps/authoring/widgets/widgets.ts:519
 msgid "Toggle Nth widget, where 'N' is order of widget it appears"
-msgstr ""
+msgstr "Прикажи/сакриј N-ти виџет, где је 'N' редни број виџета"
 
 #: scripts/apps/authoring/views/article-edit.html:456
 #: scripts/apps/authoring/views/article-edit.html:457
 msgid "Toggle Sign-Off lock"
-msgstr ""
+msgstr "Прикажи/сакриј закључавање потписа"
 
 #: scripts/core/editor3/components/toolbar/StyleButton.tsx:89
 msgid "Toggle Suggestions Mode"
@@ -18295,9 +18295,9 @@ msgstr "Предугачко"
 #: scripts/apps/authoring/attachments/AttachmentsWidget.tsx:24
 msgid "Too many files selected. Only 1 file is allowed"
 msgid_plural "Too many files selected. Only {{count}} files are allowed"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Изабрано је превише датотека. Дозвољена је само 1 датотека"
+msgstr[1] "Изабрано је превише датотека. Дозвољене су само {{count}} датотеке"
+msgstr[2] "Изабрано је превише датотека. Дозвољено је само {{count}} датотека"
 
 #: ../superdesk-planning/client/validators/profile.ts:58
 #: ../superdesk-planning/client/validators/profile.ts:59
@@ -18350,18 +18350,18 @@ msgstr "Преведи"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:352
 msgid "Translate item to"
-msgstr ""
+msgstr "Преведи ставку на"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:196
 #: scripts/apps/authoring/versioning/history/views/history.html:41
 msgid "Translated by"
-msgstr ""
+msgstr "Превео"
 
 #: scripts/apps/authoring-react/article-widgets/translations/translations.tsx:63
 #: scripts/apps/authoring/translations/translationsWidget.tsx:53
 #: scripts/apps/authoring/views/authoring-header.html:81
 msgid "Translated from"
-msgstr ""
+msgstr "Преведено са"
 
 #: scripts/apps/search/components/fields/translations.tsx:58
 #: scripts/apps/search/components/fields/translations.tsx:72
@@ -18377,7 +18377,7 @@ msgstr ""
 #: scripts/extensions/ai-widget/dist/src/main-panel.js:22
 #: scripts/extensions/ai-widget/src/main-panel.tsx:45
 msgid "Translations"
-msgstr ""
+msgstr "Преводи"
 
 #: scripts/apps/publish/views/publish-queue.html:114
 msgid "Transmitted at"
@@ -18486,7 +18486,7 @@ msgstr "ВРАТИ"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:149
 msgid "UP"
-msgstr ""
+msgstr "ГОРЕ"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:18
 msgid "UPCOMING"
@@ -18576,7 +18576,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:405
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:197
 msgid "Unique name"
-msgstr ""
+msgstr "Јединствени назив"
 
 #: scripts/core/ui/constants.ts:5
 msgid "Unknow error occured. Try repeating the action or reloading the page."
@@ -18596,7 +18596,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:436
 msgid "Unknown Error: Item not published."
-msgstr ""
+msgstr "Непозната грешка: ставка није објављена."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:69
 msgid "Unknown Error: There was a problem, desk was not deleted."
@@ -18643,7 +18643,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:148
 msgid "Unlinked by"
-msgstr ""
+msgstr "Уклонио везу"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:456
 msgid "Unlinked by {{user}}"
@@ -18666,7 +18666,7 @@ msgstr "Откључај садржај"
 
 #: scripts/apps/authoring/authoring/index.ts:468
 msgid "Unlock current item"
-msgstr ""
+msgstr "Откључај тренутну ставку"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:202
 #: scripts/apps/authoring/views/article-edit.html:461
@@ -18688,7 +18688,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:102
 msgid "Unmarked by"
-msgstr ""
+msgstr "Уклонио ознаку"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:336
 msgid "Unmarked from desk({{x}}) by {{user}}"
@@ -18727,7 +18727,7 @@ msgstr "Повуци објаву"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:69
 msgid "Unpublish related items:"
-msgstr ""
+msgstr "Повуци објаву повезаних ставки:"
 
 #: scripts/apps/search/components/fields/state.tsx:44
 msgid "Unpublished"
@@ -18735,7 +18735,7 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:190
 msgid "Unpublished by"
-msgstr ""
+msgstr "Повукао објаву"
 
 #: scripts/apps/authoring-react/generic-widgets/inline-comments.tsx:168
 #: scripts/apps/authoring/track-changes/views/inline-comments-widget.html:3
@@ -18793,7 +18793,7 @@ msgstr "Враћено из корпе"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:237
 #: scripts/apps/authoring/versioning/history/views/history.html:74
 msgid "Unspiked by"
-msgstr ""
+msgstr "Вратио из корпе"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:29
 msgid "Unsubscribe"
@@ -18841,7 +18841,7 @@ msgstr "Ажурирај"
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:256
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:470
 msgid "Update Created."
-msgstr ""
+msgstr "Ажурирање креирано."
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:4
 msgid "Update Cycle:"
@@ -18946,7 +18946,7 @@ msgstr ""
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:129
 #: scripts/apps/authoring/versioning/history/views/history.html:18
 msgid "Updated by"
-msgstr ""
+msgstr "Ажурирао"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:119
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:135
@@ -18982,7 +18982,7 @@ msgstr ""
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:34
 msgid ""
 "Updates can only be created for text items. The type of this item is {{type}}"
-msgstr ""
+msgstr "Ажурирања могу бити креирана само за текстуалне ставке. Тип ове ставке је {{type}}"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:205
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:136
@@ -19032,7 +19032,7 @@ msgstr "Отпреми медиј"
 
 #: scripts/apps/authoring/views/item-carousel.html:166
 msgid "Upload new"
-msgstr ""
+msgstr "Отпреми ново"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetListPanel.js:62
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetListPanel.js:62
@@ -19127,7 +19127,7 @@ msgstr "Услови коришћења"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:17
 msgid "Use Media"
-msgstr ""
+msgstr "Користи медиј"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:111
 msgid "Use Togglebox"
@@ -19314,13 +19314,13 @@ msgstr "Вредности"
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:366
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:163
 msgid "Version"
-msgstr ""
+msgstr "Верзија"
 
 #: scripts/apps/archive/views/metadata-view.html:110
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:397
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:186
 msgid "Version creator"
-msgstr ""
+msgstr "Креатор верзије"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:76
 msgid "Version: {{n}}"
@@ -19330,7 +19330,7 @@ msgstr ""
 #: scripts/apps/authoring/versioning/versioning.ts:8
 #: scripts/apps/authoring/versioning/views/versioning.html:3
 msgid "Versions"
-msgstr ""
+msgstr "Верзије"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/index.tsx:15
 msgid "Versions and item history"
@@ -19649,7 +19649,7 @@ msgstr "Без извештавања"
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:108
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:112
 msgid "Word Count"
-msgstr ""
+msgstr "Број речи"
 
 #: scripts/apps/desks/views/desk-config-modal.html:232
 msgid "Work stages"
@@ -19800,7 +19800,7 @@ msgstr "Можете изабрати подразумевани приказ с
 msgid ""
 "You can either completely block further writing after the characterlimit is "
 "reached or highlight exceeding characters in red."
-msgstr ""
+msgstr "Можете потпуно блокирати даље писање након што се достигне лимит карактера или истаћи карактере преко лимита црвеном бојом."
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:154
 msgid "You can't multi-edit, because these articles can't be edited"
@@ -19995,13 +19995,13 @@ msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:140
 msgid "as rewrite of"
-msgstr ""
+msgstr "као прерада"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:45
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:17
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 msgid "at"
-msgstr ""
+msgstr "у"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:401
 #: scripts/apps/archive/controllers/UploadController.ts:330
@@ -20159,7 +20159,7 @@ msgstr ""
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:20
 msgid "country"
-msgstr ""
+msgstr "држава"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "create"
@@ -20256,7 +20256,7 @@ msgstr "онемогућио корисника {{user}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:9
 msgid "done"
-msgstr ""
+msgstr "завршено"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "draft"
@@ -20268,7 +20268,7 @@ msgstr "рок"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:58
 msgid "duplicate id"
-msgstr ""
+msgstr "ИД дупликата"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:463
 msgid "e.g. @cityofsydney"
@@ -20430,11 +20430,11 @@ msgstr "за '{{ desk }}'"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:97
 msgid "for desk"
-msgstr ""
+msgstr "за деск"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:94
 msgid "for highlight"
-msgstr ""
+msgstr "за истицање"
 
 #: ../superdesk-planning/client/utils/events.tsx:1428
 msgid "for {{ repeatCount }} repeats"
@@ -20448,7 +20448,7 @@ msgstr "ознаке форматирања"
 #: scripts/apps/authoring/versioning/history/views/history.html:47
 #: scripts/apps/authoring/versioning/history/views/history.html:69
 msgid "from"
-msgstr ""
+msgstr "од"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:28
 msgid "from content"
@@ -20460,7 +20460,7 @@ msgstr "из доделе извештавања од"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:122
 msgid "from highlight"
-msgstr ""
+msgstr "из истицања"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:361
 msgid "from highlight: {{x}}"
@@ -20584,7 +20584,7 @@ msgstr ""
 #: scripts/apps/authoring-react/fields/media/editor.tsx:147
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:196
 msgid "image"
-msgstr ""
+msgstr "слика"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/ImageTaggingComponent/ImageTaggingComponent.js:198
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.js:198
@@ -20699,14 +20699,14 @@ msgstr "последње ажурирање и последња ставка с�
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:20
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:54
 msgid "less than one minute read"
-msgstr ""
+msgstr "мање од минут читања"
 
 #: scripts/apps/authoring/authoring/components/line-count.tsx:21
 msgid "line"
 msgid_plural "lines"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "ред"
+msgstr[1] "реда"
+msgstr[2] "редова"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:77
 msgid "link"
@@ -20714,7 +20714,7 @@ msgstr "линк"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:143
 msgid "linked to"
-msgstr ""
+msgstr "повезано са"
 
 #: scripts/apps/contacts/views/search-results.html:4
 #: scripts/apps/content-api/views/search-results.html:4
@@ -20799,7 +20799,7 @@ msgstr ""
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:31
 msgid "miscellaneous"
-msgstr ""
+msgstr "разно"
 
 #: scripts/apps/contacts/constants.ts:47
 msgid "mobile"
@@ -20892,9 +20892,9 @@ msgstr "радним данима"
 #: scripts/apps/authoring/authoring/components/text-statistics.tsx:22
 msgid "one word"
 msgid_plural "{{x}} words"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "једна реч"
+msgstr[1] "{{x}} речи"
+msgstr[2] "{{x}} речи"
 
 #: scripts/core/editor3/components/article-embed/article-embed.tsx:32
 msgid "open in a new window"
@@ -21045,7 +21045,7 @@ msgstr ""
 
 #: scripts/apps/authoring/macros/views/macros-widget.html:14
 msgid "quick list"
-msgstr ""
+msgstr "брза листа"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:75
 #: scripts/core/editor3/helpers/highlights.ts:65
@@ -21071,11 +21071,11 @@ msgstr "уклони форматирање"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:111
 msgid "removed desk"
-msgstr ""
+msgstr "уклоњен деск"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:108
 msgid "removed highlight"
-msgstr ""
+msgstr "уклоњено истицање"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "removed item {{type}} about {{subject}}"
@@ -21083,7 +21083,7 @@ msgstr "уклонио ставку типа {{type}} о {{subject}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
-msgstr ""
+msgstr "замени"
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "replaced item {{type}} about {{subject}}"
@@ -21104,7 +21104,7 @@ msgstr "поновни покушај"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:20
 msgid "revert"
-msgstr ""
+msgstr "врати"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:72
 msgid "reverted"
@@ -21112,7 +21112,7 @@ msgstr "враћено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:182
 msgid "rewrite id"
-msgstr ""
+msgstr "ИД прераде"
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "role {{role}} is granted new privileges: Please re-login."
@@ -21227,7 +21227,7 @@ msgstr ""
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:19
 msgid "state, region, ..."
-msgstr ""
+msgstr "држава, регион, ..."
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:109
 #: scripts/extensions/availability-manager/dist/src/utils.js:109
@@ -21333,7 +21333,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/authoring-header.html:85
 msgid "translations"
-msgstr ""
+msgstr "преводи"
 
 #: scripts/apps/contacts/constants.ts:50
 msgid "twitter"
@@ -21381,7 +21381,7 @@ msgstr "ажуриран канал пријема {{name}}"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:25
 msgid "updated fields"
-msgstr ""
+msgstr "ажурирана поља"
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "updated task {{subject}} for item {{type}}"
@@ -21672,7 +21672,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:384
 msgid "{{field}} cannot be earlier than now!"
-msgstr ""
+msgstr "{{field}} не може бити раније од сада!"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:109
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:94
@@ -21688,15 +21688,15 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:372
 msgid "{{field}} date is required!"
-msgstr ""
+msgstr "Датум {{field}} је обавезан!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:380
 msgid "{{field}} is not a valid date!"
-msgstr ""
+msgstr "{{field}} није исправан датум!"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:376
 msgid "{{field}} time is required!"
-msgstr ""
+msgstr "Време {{field}} је обавезно!"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:118
 #: ../superdesk-analytics/client/utils.js:202
@@ -21733,7 +21733,7 @@ msgstr[2] "{{multiSelectCount}} ставки изабрано"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
-msgstr ""
+msgstr "{{numWords}} речи"
 
 #: scripts/api/article-fetch.tsx:117
 msgid "{{n}} images can not be fetched because they are too small."
@@ -21839,4 +21839,4 @@ msgstr ""
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:22
 #: scripts/apps/authoring/authoring/directives/ReadingTime.ts:52
 msgid "{{x}} min read"
-msgstr ""
+msgstr "{{x}} мин читања"
