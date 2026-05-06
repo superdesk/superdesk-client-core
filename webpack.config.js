@@ -449,6 +449,7 @@ function getDefaults(grunt) {
             'pt_BR',
             'pl',
             'ja',
+            'sr',
         ],
 
         userOnlineMinutes: 15,
