@@ -13,7 +13,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
-msgstr ""
+msgstr "\"ЖАНР 'није дозвољена нул вредност'"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:199
 msgid "\"Name\" is a required field"
@@ -39,59 +39,59 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'ABSTRACT is a required field'"
-msgstr ""
+msgstr "'САЖЕТАК је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'ANPA_CATEGORY is a required field'"
-msgstr ""
+msgstr "'ANPA_CATEGORY је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'BYLINE is a required field'"
-msgstr ""
+msgstr "'ПОТПИС је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:33
 msgid "'CATEGORY is a required field'"
-msgstr ""
+msgstr "'КАТЕГОРИЈА је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "'DATELINE is a required field'"
-msgstr ""
+msgstr "'ДАТУМСКА ЛИНИЈА је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "'GENRE is a required field'"
-msgstr ""
+msgstr "'ЖАНР је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "'GENRE null value not allowed'"
-msgstr ""
+msgstr "'ЖАНР није дозвољена нул вредност'"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'HEADLINE is a required field'"
-msgstr ""
+msgstr "'НАСЛОВ је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "'PLACE is a required field'"
-msgstr ""
+msgstr "'МЕСТО је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "'PRIORITY is a required field'"
-msgstr ""
+msgstr "'ПРИОРИТЕТ је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'SLUGLINE is a required field'"
-msgstr ""
+msgstr "'СЛАГЛАЈН је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'SUBJECT is a required field'"
-msgstr ""
+msgstr "'ТЕМА је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "'URGENCY is a required field'"
-msgstr ""
+msgstr "'ХИТНОСТ је обавезно поље'"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "'must be of list type'\""
-msgstr ""
+msgstr "'мора бити типа листе'\""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:37
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:146
@@ -233,7 +233,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "10th update"
-msgstr ""
+msgstr "10. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:45
 #: ../superdesk-planning/client/utils/filters.ts:83
@@ -242,7 +242,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "11th update"
-msgstr ""
+msgstr "11. ажурирање"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "12 Hours"
@@ -259,7 +259,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "12th update"
-msgstr ""
+msgstr "12. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:47
 #: ../superdesk-planning/client/utils/filters.ts:87
@@ -268,7 +268,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "13th update"
-msgstr ""
+msgstr "13. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:48
 #: ../superdesk-planning/client/utils/filters.ts:89
@@ -277,7 +277,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "14th update"
-msgstr ""
+msgstr "14. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:49
 #: ../superdesk-planning/client/utils/filters.ts:91
@@ -286,7 +286,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "15th update"
-msgstr ""
+msgstr "15. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:50
 #: ../superdesk-planning/client/utils/filters.ts:93
@@ -295,7 +295,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "16th update"
-msgstr ""
+msgstr "16. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:51
 msgid "17th"
@@ -303,7 +303,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "17th update"
-msgstr ""
+msgstr "17. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:52
 msgid "18th"
@@ -311,7 +311,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "18th update"
-msgstr ""
+msgstr "18. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:53
 #: ../superdesk-planning/client/utils/filters.ts:99
@@ -320,7 +320,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "19th update"
-msgstr ""
+msgstr "19. ажурирање"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:189
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:189
@@ -353,7 +353,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "20th update"
-msgstr ""
+msgstr "20. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:55
 #: ../superdesk-planning/client/utils/filters.ts:103
@@ -418,7 +418,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "2nd update"
-msgstr ""
+msgstr "2. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:37
 #: ../superdesk-planning/client/utils/filters.ts:67
@@ -427,11 +427,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "3rd update"
-msgstr ""
+msgstr "3. ажурирање"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "412: Can't publish as item state is draft"
-msgstr ""
+msgstr "412: Није могуће објавити јер је стање ставке нацрт"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:20
 msgid "48 Hours"
@@ -444,7 +444,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "4th update"
-msgstr ""
+msgstr "4. ажурирање"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:26
 msgid "5 years"
@@ -475,7 +475,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "5th update"
-msgstr ""
+msgstr "5. ажурирање"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:16
 msgid "6 Hours"
@@ -492,7 +492,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "6th update"
-msgstr ""
+msgstr "6. ажурирање"
 
 #: ../superdesk-planning/client/utils/filters.ts:95
 msgid "70th"
@@ -505,7 +505,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "7th update"
-msgstr ""
+msgstr "7. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:42
 #: ../superdesk-planning/client/utils/filters.ts:77
@@ -514,7 +514,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "8th update"
-msgstr ""
+msgstr "8. ажурирање"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:43
 #: ../superdesk-planning/client/utils/filters.ts:79
@@ -523,7 +523,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "9th update"
-msgstr ""
+msgstr "9. ажурирање"
 
 #: scripts/apps/desks/views/desk-config-modal.html:249
 msgid ": OFF"
@@ -604,7 +604,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "ABSTRACT is too long"
-msgstr ""
+msgstr "САЖЕТАК је предугачак"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:66
 msgid "ADD WORD"
@@ -633,7 +633,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "ANPA Take Key"
-msgstr ""
+msgstr "ANPA кључ наставка"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:109
 msgid "ASSOCIATED XMP FILE"
@@ -796,11 +796,11 @@ msgstr "Активно до {{end}}"
 #: scripts/apps/users/views/activity-feed.html:4
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Activity Stream"
-msgstr ""
+msgstr "Ток активности"
 
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Activity stream widget"
-msgstr ""
+msgstr "Виџет тока активности"
 
 #: ../superdesk-planning/client/components/fields/editor/AdHocPlanning.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:41
@@ -1900,7 +1900,7 @@ msgstr "Примени водени жиг"
 #: scripts/apps/production-api-keys/config.ts:23
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archive"
-msgstr ""
+msgstr "Архива"
 
 #: scripts/apps/workspace/content/constants.ts:11
 msgid "Archive description"
@@ -1916,7 +1916,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Archived Management"
-msgstr ""
+msgstr "Управљање архивираним"
 
 #: scripts/apps/archive/views/preview.html:46
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/archived-from.tsx:8
@@ -2820,7 +2820,7 @@ msgstr "Тело"
 #: scripts/apps/workspace/content/constants.ts:15
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
-msgstr ""
+msgstr "Тело HTML"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:37
 #: scripts/apps/workspace/content/constants.ts:14
@@ -2869,7 +2869,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:50
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Broadcast"
-msgstr ""
+msgstr "Емисија"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:51
 msgid "Broadcast Create"
@@ -2896,7 +2896,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "By"
-msgstr ""
+msgstr "Од"
 
 #: scripts/apps/users/views/user-preferences.html:143
 msgid ""
@@ -4039,7 +4039,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "Content Expiry"
-msgstr ""
+msgstr "Истек садржаја"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:332
 msgid "Content Fields"
@@ -4072,7 +4072,7 @@ msgstr "Профил садржаја"
 #: scripts/apps/workspace/content/views/profile-settings.html:4
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Content Profiles"
-msgstr ""
+msgstr "Профили садржаја"
 
 #: ../superdesk-analytics/client/content_publishing_report/index.js:44
 msgid "Content Publishing"
@@ -4099,7 +4099,7 @@ msgstr "Тип садржаја:"
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:395
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Content Types"
-msgstr ""
+msgstr "Типови садржаја"
 
 #: scripts/core/activity/activity.ts:27
 msgid "Content config"
@@ -4305,7 +4305,7 @@ msgstr ""
 #: scripts/apps/search/components/fields/state.tsx:40
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Correction"
-msgstr ""
+msgstr "Исправка"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:165
 msgid "Correction Cancel by"
@@ -4758,7 +4758,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
-msgstr ""
+msgstr "Креиран канал доласка {{name}}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created To"
@@ -5038,7 +5038,7 @@ msgstr "Контролна табла је празна"
 #: scripts/extensions/datetimeField/dist/src/extensions/datetimeField/src/editor.js:41
 #: scripts/extensions/datetimeField/src/editor.tsx:64
 msgid "Date"
-msgstr ""
+msgstr "Датум"
 
 #: scripts/apps/authoring-react/fields/date/index.tsx:17
 msgid "Date (authoring-react)"
@@ -5376,7 +5376,7 @@ msgstr "Обриши радни простор"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
-msgstr ""
+msgstr "Обрисан канал доласка {{name}}"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
@@ -5521,7 +5521,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
-msgstr ""
+msgstr "Управљање десковима"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:56
 #: scripts/apps/workspace/content/constants.ts:66
@@ -5672,7 +5672,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Dictionaries List Management"
-msgstr ""
+msgstr "Управљање листом речника"
 
 #: scripts/apps/dictionaries/views/settings.html:23
 msgid "Dictionary"
@@ -5790,7 +5790,7 @@ msgstr "Прекинута веза са сервером обавештења!"
 msgid ""
 "Displaying news ingest statistics. You can switch color themes or graph "
 "sources."
-msgstr ""
+msgstr "Приказује статистике доласка вести. Можете променити теме боја или изворе графикона."
 
 #: scripts/core/keyboard/keyboard.ts:401 scripts/core/keyboard/keyboard.ts:410
 msgid "Displays active keyboard shortcuts"
@@ -6087,7 +6087,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Duplicate Content within a Desk"
-msgstr ""
+msgstr "Дуплирај садржај унутар деска"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:55
 msgid "Duplicate ID: {{x}}"
@@ -6436,7 +6436,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Edit Unique Name"
-msgstr ""
+msgstr "Уреди јединствени назив"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:486
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditor.js:486
@@ -6665,7 +6665,7 @@ msgstr "Уграђивање није дозвољено за овај уређ�
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Enable Feature Preview"
-msgstr ""
+msgstr "Омогући преглед нових функција"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:204
 msgid "Enable if config can't be tested on REST server."
@@ -7938,7 +7938,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Feature Preview"
-msgstr ""
+msgstr "Преглед нових функција"
 
 #: scripts/apps/authoring-react/field-adapters/feature_media.ts:21
 msgid "Feature media"
@@ -8024,7 +8024,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Fetch Content To a Desk"
-msgstr ""
+msgstr "Преузми садржај на деск"
 
 #: scripts/apps/ingest/index.ts:115 scripts/apps/ingest/index.ts:146
 msgid "Fetch To"
@@ -8708,7 +8708,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Groups Management"
-msgstr ""
+msgstr "Управљање групама"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:402
 msgid "Guid"
@@ -8746,7 +8746,7 @@ msgstr "H6"
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "HEADLINE is too long"
-msgstr ""
+msgstr "НАСЛОВ је предугачак"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/TimeInputs.tsx:45
 msgid "HOUR"
@@ -8939,7 +8939,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Highlights/Summary List Management"
-msgstr ""
+msgstr "Управљање листом истицања/прегледа"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.tsx:63
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.tsx:92
@@ -8949,7 +8949,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Hold"
-msgstr ""
+msgstr "Задржи"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:110
 msgid "Home"
@@ -9301,7 +9301,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Ingest Channels"
-msgstr ""
+msgstr "Канали доласка"
 
 #: scripts/apps/ingest/index.ts:92
 #: scripts/apps/ingest/views/dashboard/dashboard.html:2
@@ -9353,7 +9353,7 @@ msgstr ""
 #: scripts/apps/ingest/ingest-stats-widget/stats.ts:9
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Ingest Stats"
-msgstr ""
+msgstr "Статистика доласка"
 
 #: scripts/apps/archive/views/metadata-view.html:128
 msgid "Ingest provider sequence"
@@ -9909,7 +9909,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:63
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Last Day"
-msgstr ""
+msgstr "Последњи дан"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:34
 msgid "Last Item Arrived"
@@ -9919,7 +9919,7 @@ msgstr ""
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:20
 #: scripts/core/lang/missing-translations-strings.ts:21
 msgid "Last Month"
-msgstr ""
+msgstr "Последњи месец"
 
 #: scripts/apps/contacts/constants.ts:69
 #: scripts/apps/contacts/views/search-panel.html:22
@@ -9939,7 +9939,7 @@ msgstr "Последње ажурирано"
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:14
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "Last Week"
-msgstr ""
+msgstr "Последња недеља"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:31
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:26
@@ -10206,7 +10206,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:14
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Located"
-msgstr ""
+msgstr "Лоцирано"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/locations-field.ts:19
 #: ../superdesk-planning/client/components/fields/editor/Location.tsx:49
@@ -10394,7 +10394,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Global Saved Searches"
-msgstr ""
+msgstr "Управљај глобалним сачуваним претрагама"
 
 #: ../superdesk-planning/index.ts:28 ../superdesk-planning/index.ts:29
 msgid "Manage Locations"
@@ -10419,7 +10419,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Search Providers"
-msgstr ""
+msgstr "Управљај провајдерима претраге"
 
 #: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:99
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:118
@@ -10531,7 +10531,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Mark items for Highlights/Summary Lists"
-msgstr ""
+msgstr "Означи ставке за листе истицања/прегледа"
 
 #: scripts/apps/search/constants.ts:17
 #: scripts/apps/search/views/search-parameters.html:71
@@ -10882,7 +10882,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Move Content to another desk"
-msgstr ""
+msgstr "Премести садржај на други деск"
 
 #: ../superdesk-analytics/client/utils.js:167
 msgid "Move From"
@@ -11040,7 +11040,7 @@ msgstr "НЕМА СУГЕСТИЈА."
 
 #: scripts/core/lang/missing-translations-strings.ts:33
 msgid "NTB Currency Macro"
-msgstr ""
+msgstr "NTB макро за валуту"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:31
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:15
@@ -12636,7 +12636,7 @@ msgstr ""
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:22
 #: scripts/extensions/auto-tagging-widget/src/groups.ts:31
 msgid "Places"
-msgstr ""
+msgstr "Места"
 
 #: ../superdesk-planning/client/components/fields/list/Places.tsx:20
 msgid "Places:"
@@ -12729,7 +12729,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Planning Management"
-msgstr ""
+msgstr "Управљање планирањем"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:150
 msgid "Planning Module (Items created per user)"
@@ -12902,7 +12902,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:33
 msgid "Populate Abstract"
-msgstr ""
+msgstr "Попуни сажетак"
 
 #: scripts/core/editor3/components/toolbar/FloatingCharacterCount.tsx:45
 msgid "Position"
@@ -12987,7 +12987,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Preferred Categories"
-msgstr ""
+msgstr "Преферисане категорије"
 
 #: scripts/apps/desks/views/desk-config-modal.html:200
 msgid "Preferred values for vocabularies"
@@ -13284,7 +13284,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid ""
 "Provider {{name}} has gone strangely quiet. Last activity was on {{last}}"
-msgstr ""
+msgstr "Провајдер {{name}} је неуобичајено тих. Последња активност је била {{last}}"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:279
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:110
@@ -14314,7 +14314,7 @@ msgstr "URL ресурса"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Restore"
-msgstr ""
+msgstr "Врати"
 
 #: scripts/apps/products/views/product-test.html:15
 msgid "Result Type"
@@ -14393,7 +14393,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Roles Management"
-msgstr ""
+msgstr "Управљање улогама"
 
 #: scripts/apps/users/views/settings.html:12
 msgid "Roles privileges"
@@ -14441,7 +14441,7 @@ msgstr "Усмерено са:"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Routing Rules Management"
-msgstr ""
+msgstr "Управљање правилима усмеравања"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:219
 msgid "Routing Scheme"
@@ -14532,7 +14532,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:47
 msgid "SLUGLINE is too long"
-msgstr ""
+msgstr "СЛАГЛАЈН је предугачак"
 
 #: scripts/apps/workspace/content/constants.ts:42
 msgid "SMS"
@@ -15532,7 +15532,7 @@ msgstr "Пошаљи уништење"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Send notifications via email"
-msgstr ""
+msgstr "Шаљи обавештења путем имејла"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:70
 msgid "Send only after publish schedule"
@@ -15572,7 +15572,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Sending"
-msgstr ""
+msgstr "Слање"
 
 #: scripts/apps/workspace/content/constants.ts:68
 msgid "Sent Desk Output"
@@ -15903,7 +15903,7 @@ msgstr ""
 #: scripts/apps/workspace/content/constants.ts:40
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Sign Off"
-msgstr ""
+msgstr "Потпис"
 
 #: scripts/core/auth/login-modal.html:31
 msgid "Sign in as a different user."
@@ -16633,7 +16633,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/index.ts:162
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "Subjects"
-msgstr ""
+msgstr "Теме"
 
 #: ../superdesk-planning/client/components/fields/list/Subject.tsx:20
 msgid "Subjects:"
@@ -17033,7 +17033,7 @@ msgstr "Задаци"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Tasks Management"
-msgstr ""
+msgstr "Управљање задацима"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-items/content-profile.js:58
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:58
@@ -17903,7 +17903,7 @@ msgid ""
 "This widget allows you to create literally any content view you may need in "
 "Superdesk, be it production or ingest. All you need is to select a desk, its "
 "stages or a saved search. Name your view once you are done. Enjoy!"
-msgstr ""
+msgstr "Овај виџет вам омогућава да креирате буквално било који приказ садржаја који вам је потребан у Superdesk-у, било да се ради о продукцији или доласку. Све што треба је да изаберете деск, његове фазе или сачувану претрагу. Именујте свој приказ када завршите. Уживајте!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
@@ -18068,7 +18068,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/editor/EventSchedule.tsx:249
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "Timezone"
-msgstr ""
+msgstr "Временска зона"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:3
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:11
@@ -18333,7 +18333,7 @@ msgstr "Укупно:"
 
 #: scripts/core/lang/missing-translations-strings.ts:21
 msgid "Transformation Rules Management"
-msgstr ""
+msgstr "Управљање правилима трансформације"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:244
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:100
@@ -18516,7 +18516,7 @@ msgstr "Непозната грешка валидације"
 
 #: scripts/core/lang/missing-translations-strings.ts:21
 msgid "Un Spike"
-msgstr ""
+msgstr "Врати из корпе"
 
 #: scripts/extensions/sams/dist/src/components/assets/uploadAssetModal.js:148
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/uploadAssetModal.js:148
@@ -18662,7 +18662,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:21
 msgid "Unlock content"
-msgstr ""
+msgstr "Откључај садржај"
 
 #: scripts/apps/authoring/authoring/index.ts:468
 msgid "Unlock current item"
@@ -19195,7 +19195,7 @@ msgstr ""
 #: scripts/apps/users/config.ts:38
 #: scripts/core/lang/missing-translations-strings.ts:21
 msgid "User Management"
-msgstr ""
+msgstr "Управљање корисницима"
 
 #: scripts/apps/users/import/views/import-user.html:28
 msgid "User Profile to Import"
@@ -19269,7 +19269,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "Users archive view format"
-msgstr ""
+msgstr "Формат приказа архиве за кориснике"
 
 #: scripts/apps/archive/views/export.html:17
 #: scripts/apps/archive/views/export.html:18
@@ -19474,7 +19474,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Vocabularies Management"
-msgstr ""
+msgstr "Управљање вокабуларима"
 
 #: scripts/apps/authoring-react/fields/dropdown/config-main.tsx:82
 msgid "Vocabulary"
@@ -19705,7 +19705,7 @@ msgstr "Радни простор:"
 #: scripts/apps/dashboard/world-clock/world-clock.ts:209
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "World Clock"
-msgstr ""
+msgstr "Светски сат"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:42
 msgid "World clock added: {{zone}}"
@@ -19718,7 +19718,7 @@ msgstr ""
 #: scripts/apps/dashboard/world-clock/world-clock.ts:221
 #: scripts/core/lang/missing-translations-strings.ts:45
 msgid "World clock widget"
-msgstr ""
+msgstr "Виџет светског сата"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:339
 msgid "XMP File"
@@ -19934,15 +19934,15 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "added new task {{subject}} of type {{type}}"
-msgstr ""
+msgstr "додао нови задатак {{subject}} типа {{type}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:35
 msgid "added new {{type}} item about \"{{subject}}\""
-msgstr ""
+msgstr "додао нову ставку типа {{type}} о \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:35
 msgid "added new {{type}} item with empty header/title"
-msgstr ""
+msgstr "додао нову ставку типа {{type}} са празним заглављем/насловом"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:78
 msgid "added to workflow"
@@ -19987,7 +19987,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "archive"
-msgstr ""
+msgstr "архива"
 
 #: scripts/apps/search/components/ItemContainer.tsx:20
 msgid "archived"
@@ -20010,7 +20010,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:281 scripts/core/utils.tsx:349
 msgid "audio"
-msgstr ""
+msgstr "аудио"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html:7
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-inner-dropdown.html:7
@@ -20019,7 +20019,7 @@ msgstr "аутор"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "authoring"
-msgstr ""
+msgstr "уређивање"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:83
 msgid "bold"
@@ -20071,7 +20071,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "categories"
-msgstr ""
+msgstr "категорије"
 
 #: scripts/apps/users/views/edit-form.html:211
 msgid "change password"
@@ -20126,12 +20126,12 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "compact"
-msgstr ""
+msgstr "компактно"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:283
 msgid "composite"
-msgstr ""
+msgstr "композитни"
 
 #: scripts/apps/users/views/edit-form.html:390
 msgid "confirm"
@@ -20147,11 +20147,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "content"
-msgstr ""
+msgstr "садржај"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "corrected"
-msgstr ""
+msgstr "исправљено"
 
 #: scripts/apps/search/components/fields/update.tsx:15
 msgid "correction sequence"
@@ -20163,7 +20163,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "create"
-msgstr ""
+msgstr "креирање"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:189
 msgid "created"
@@ -20184,11 +20184,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
-msgstr ""
+msgstr "креирао нову верзију {{version}} за ставку типа {{type}} о \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "created user {{user}}"
-msgstr ""
+msgstr "креирао корисника {{user}}"
 
 #: scripts/apps/users/views/edit-form.html:379
 msgid "current"
@@ -20230,7 +20230,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "desk Output"
-msgstr ""
+msgstr "излаз деска"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:9
 #: scripts/apps/authoring/versioning/versions/views/versions.html:13
@@ -20252,7 +20252,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "disabled user {{user}}"
-msgstr ""
+msgstr "онемогућио корисника {{user}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:9
 msgid "done"
@@ -20260,7 +20260,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "draft"
-msgstr ""
+msgstr "нацрт"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:42
 msgid "due"
@@ -20333,7 +20333,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "error"
-msgstr ""
+msgstr "грешка"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:71
 msgid "event"
@@ -20364,7 +20364,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "failed"
-msgstr ""
+msgstr "неуспешно"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:435
 msgid "fax"
@@ -20372,11 +20372,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "feature"
-msgstr ""
+msgstr "функција"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "fetched"
-msgstr ""
+msgstr "преузето"
 
 #: scripts/apps/archive/views/fetched-desks.html:2
 #: scripts/apps/search/components/FetchedDesksInfo.tsx:75
@@ -20527,7 +20527,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "highlights"
-msgstr ""
+msgstr "истицања"
 
 #: scripts/core/utils.tsx:347
 msgid "highlights package"
@@ -20626,11 +20626,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "in-progress"
-msgstr ""
+msgstr "у току"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "in_progress"
-msgstr ""
+msgstr "у_току"
 
 #: scripts/apps/users/views/edit-form.html:35
 #: scripts/apps/users/views/user-list-item.html:16
@@ -20639,7 +20639,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "ingested"
-msgstr ""
+msgstr "примљено"
 
 #: scripts/apps/contacts/constants.ts:52
 msgid "instagram"
@@ -20673,7 +20673,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "killed"
-msgstr ""
+msgstr "уништено"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:111
 msgid "label"
@@ -20856,7 +20856,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "notifications"
-msgstr ""
+msgstr "обавештења"
 
 #: scripts/core/list/views/sdPagination.html:15
 #: scripts/core/list/views/sdPaginationAlt.html:2
@@ -20967,7 +20967,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:287 scripts/core/utils.tsx:344
 msgid "picture"
-msgstr ""
+msgstr "слика"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.tsx:75
 msgid "planning item"
@@ -21019,7 +21019,7 @@ msgstr "преглед"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "production"
-msgstr ""
+msgstr "продукција"
 
 #: scripts/apps/users/import/views/import-user.html:31
 msgid "profile"
@@ -21031,11 +21031,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "publish"
-msgstr ""
+msgstr "објављивање"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "published"
-msgstr ""
+msgstr "објављено"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:59
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:59
@@ -21079,7 +21079,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "removed item {{type}} about {{subject}}"
-msgstr ""
+msgstr "уклонио ставку типа {{type}} о {{subject}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
@@ -21087,7 +21087,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "replaced item {{type}} about {{subject}}"
-msgstr ""
+msgstr "заменио ставку типа {{type}} о {{subject}}"
 
 #: scripts/apps/workspace/content/components/ContentProfileFieldsConfig.tsx:181
 #: scripts/core/editor3/directive.tsx:452
@@ -21100,7 +21100,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "retrying"
-msgstr ""
+msgstr "поновни покушај"
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:20
 msgid "revert"
@@ -21116,11 +21116,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "role {{role}} is granted new privileges: Please re-login."
-msgstr ""
+msgstr "улози {{role}} су додељене нове привилегије: пријавите се поново."
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "routed"
-msgstr ""
+msgstr "усмерено"
 
 #: scripts/core/editor3/components/toolbar/TableControls.tsx:90
 msgid "row"
@@ -21128,15 +21128,15 @@ msgstr "ред"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "scheduled"
-msgstr ""
+msgstr "заказано"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "scheduled Desk Output"
-msgstr ""
+msgstr "заказани излаз деска"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "search"
-msgstr ""
+msgstr "претрага"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
@@ -21160,7 +21160,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "send"
-msgstr ""
+msgstr "слање"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:20
 msgid "since"
@@ -21172,11 +21172,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "slugline"
-msgstr ""
+msgstr "слаглајн"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "sluglines"
-msgstr ""
+msgstr "слаглајни"
 
 #: scripts/apps/users/views/edit-form.html:146
 msgid "sorry, a user with this email already exists"
@@ -21196,7 +21196,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"
-msgstr ""
+msgstr "у корпи"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:91
 msgid "spiked and unlinked"
@@ -21204,7 +21204,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "stage"
-msgstr ""
+msgstr "фаза"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:10
 #: scripts/apps/authoring/versioning/versions/views/versions.html:14
@@ -21242,7 +21242,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:83
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "submitted"
-msgstr ""
+msgstr "поднето"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:79
 msgid "subscript"
@@ -21250,7 +21250,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "subscription"
-msgstr ""
+msgstr "претплата"
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:16
 #: scripts/apps/search/views/search-panel.html:43
@@ -21259,7 +21259,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "success"
-msgstr ""
+msgstr "успех"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:92
 msgid "suggestions"
@@ -21366,7 +21366,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "update"
-msgstr ""
+msgstr "ажурирање"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.ts:189
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:47
@@ -21377,7 +21377,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "updated Ingest Channel {{name}}"
-msgstr ""
+msgstr "ажуриран канал доласка {{name}}"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:25
 msgid "updated fields"
@@ -21385,11 +21385,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:38
 msgid "updated task {{subject}} for item {{type}}"
-msgstr ""
+msgstr "ажурирао задатак {{subject}} за ставку типа {{type}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "uploaded media {{name}}"
-msgstr ""
+msgstr "отпремио медиј {{name}}"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:30
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:99
@@ -21402,15 +21402,15 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
-msgstr ""
+msgstr "корисник {{user}} је додат на деск {{desk}}: пријавите се поново."
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "user {{user}} is granted new privileges: Please re-login."
-msgstr ""
+msgstr "кориснику {{user}} су додељене нове привилегије: пријавите се поново."
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "user {{user}} is updated to administrator: Please re-login."
-msgstr ""
+msgstr "корисник {{user}} је ажуриран у администратора: пријавите се поново."
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:3
 #: scripts/apps/users/import/views/import-user.html:14
@@ -21421,7 +21421,7 @@ msgstr "корисничко име"
 
 #: scripts/core/lang/missing-translations-strings.ts:10
 msgid "users"
-msgstr ""
+msgstr "корисници"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/form-validation.js:27
 #: scripts/extensions/broadcasting/dist/src/form-validation.js:27
@@ -21476,7 +21476,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:293 scripts/core/utils.tsx:348
 msgid "video"
-msgstr ""
+msgstr "видео"
 
 #: scripts/apps/desks/views/settings.html:77
 msgid "view all"
@@ -21780,7 +21780,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "{{status}} Ingest Channel {{name}}"
-msgstr ""
+msgstr "{{status}} канал доласка {{name}}"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:1
 msgid "{{title}}"
