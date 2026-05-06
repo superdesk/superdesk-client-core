@@ -96,7 +96,7 @@ msgstr "'мора бити типа листе'\""
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:37
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:146
 msgid "'not scheduled yet'"
-msgstr ""
+msgstr "'још није заказано'"
 
 #: scripts/apps/highlights/services/HighlightsService.ts:16
 msgid "(Global)"
@@ -637,7 +637,7 @@ msgstr "ANPA кључ наставка"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:109
 msgid "ASSOCIATED XMP FILE"
-msgstr ""
+msgstr "ПОВЕЗАНА XMP ДАТОТЕКА"
 
 #: ../superdesk-planning/client/validators/events.ts:242
 msgid "ATTACHED FILE {{ index }} is required"
@@ -645,7 +645,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:95
 msgid "ATTACHMENTS"
-msgstr ""
+msgstr "ПРИЛОЗИ"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:107
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:88
@@ -1166,7 +1166,7 @@ msgstr "Додати овај догађај на листу планирања?
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:251
 msgid "Add this item to all recurring events or just this one?"
-msgstr ""
+msgstr "Додати ову ставку у све понављајуће догађаје или само у овај?"
 
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
@@ -1366,7 +1366,7 @@ msgstr "После"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.tsx:46
 msgid "Agenda"
-msgstr ""
+msgstr "Агенда"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:240
 msgid "Agenda assigned to the planning item."
@@ -1520,7 +1520,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:21
 msgid "All Desks"
-msgstr ""
+msgstr "Сви дескови"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:283
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:368
@@ -1555,7 +1555,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:139
 msgid "All coverages cancelled:"
-msgstr ""
+msgstr "Сва извештавања отказана:"
 
 #: ../superdesk-planning/client/components/Events/EventDateTime.tsx:134
 msgid "All day"
@@ -1593,7 +1593,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:282
 msgid "All planning"
-msgstr ""
+msgstr "Сво планирање"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
@@ -1890,7 +1890,7 @@ msgstr "Примени конфигурацију"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:244
 msgid "Apply the changes to all recurring planning items or just this one?"
-msgstr ""
+msgstr "Применити измене на све понављајуће ставке планирања или само на ову?"
 
 #: scripts/apps/publish/views/email-config.html:38
 msgid "Apply watermark"
@@ -2302,11 +2302,11 @@ msgstr "Додели"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:131
 msgid "Assign \"{{calendar}}\" Calendar to Series"
-msgstr ""
+msgstr "Додели календар \"{{calendar}}\" серији"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:134
 msgid "Assign Calendar"
-msgstr ""
+msgstr "Додели календар"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:27
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:21
@@ -2330,17 +2330,17 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/State.tsx:29
 #: ../superdesk-planning/client/utils/index.ts:385
 msgid "Assigned"
-msgstr ""
+msgstr "Додељено"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:205
 #: ../superdesk-planning/client/utils/assignments.ts:205
 msgid "Assigned Provider"
-msgstr ""
+msgstr "Додељени провајдер"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:107
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:124
 msgid "Assigned by {{name}}"
-msgstr ""
+msgstr "Доделио {{name}}"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:27
 msgid "Assigned desks"
@@ -2352,7 +2352,7 @@ msgstr "Додељено агенди '{{ agenda }}'"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:25
 msgid "Assigned to provider"
-msgstr ""
+msgstr "Додељено провајдеру"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:195
 msgid "Assigned to:"
@@ -2360,11 +2360,11 @@ msgstr "Додељено:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:114
 msgid "Assigned:"
-msgstr ""
+msgstr "Додељено:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.tsx:225
 msgid "Assigned: {{ name }}"
-msgstr ""
+msgstr "Додељено: {{ name }}"
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:53
 msgid "Assignee"
@@ -2389,7 +2389,7 @@ msgstr "Задатак"
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:243
 #: ../superdesk-planning/client/components/fields/editor/AssignmentPriority.tsx:28
 msgid "Assignment Priority"
-msgstr ""
+msgstr "Приоритет задатка"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:192
 msgid "Assignment does not exist"
@@ -2397,7 +2397,7 @@ msgstr "Задатак не постоји"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:50
 msgid "Assignment for"
-msgstr ""
+msgstr "Задатак за"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:144
 msgid "Assignment has been cancelled, unable to reassign"
@@ -2425,7 +2425,7 @@ msgstr "Задатак је закључан, није могуће уклони
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:123
 msgid "Assignment locked"
-msgstr ""
+msgstr "Задатак закључан"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:464
 msgid "Assignment priority has been updated."
@@ -2453,7 +2453,7 @@ msgstr "Задаци"
 #: ../superdesk-planning/client/apps/Assignments/AssignmentsUi.tsx:14
 #: ../superdesk-planning/client/apps/Assignments/FulfilAssignmentUi.tsx:14
 msgid "Assignments Content"
-msgstr ""
+msgstr "Садржај задатака"
 
 #: ../superdesk-planning/client/components/fields/editor/XMPFile.tsx:53
 msgid "Associate an XMP file"
@@ -2723,7 +2723,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:51
 msgid "Back to group list view"
-msgstr ""
+msgstr "Назад на приказ листе група"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:10
 msgid "Back to original view"
@@ -3196,12 +3196,12 @@ msgstr "Откажи"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:86
 msgid "Cancel Event"
-msgstr ""
+msgstr "Откажи догађај"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:150
 #: ../superdesk-planning/client/constants/planning.ts:138
 msgid "Cancel Planning"
-msgstr ""
+msgstr "Откажи планирање"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.tsx:127
 msgid "Cancel Scheduled Update"
@@ -3217,7 +3217,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:152
 msgid "Cancel all recurring events or just this one?"
-msgstr ""
+msgstr "Отказати све понављајуће догађаје или само овај?"
 
 #: scripts/apps/archive/index.tsx:326
 msgid "Cancel correction"
@@ -3234,7 +3234,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:84
 msgid "Cancel {{event}}"
-msgstr ""
+msgstr "Откажи {{event}}"
 
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:110
 msgid "Canceling failed"
@@ -3246,7 +3246,7 @@ msgstr "Отказивање није успело"
 #: ../superdesk-planning/client/utils/index.ts:374
 #: ../superdesk-planning/client/utils/index.ts:422
 msgid "Cancelled"
-msgstr ""
+msgstr "Отказано"
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:149
 msgid "Cannot add self as related item."
@@ -3879,7 +3879,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:402
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:52
 msgid "Completed"
-msgstr ""
+msgstr "Завршено"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:66
 #: ../superdesk-planning/client/utils/index.ts:595
@@ -4139,7 +4139,7 @@ msgstr "Ставке садржаја нису пронађене!"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:75
 msgid "Content linked"
-msgstr ""
+msgstr "Садржај повезан"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:72
 msgid "Content linked to coverage"
@@ -4147,7 +4147,7 @@ msgstr "Садржај повезан са извештавањем"
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:122
 msgid "Content locked"
-msgstr ""
+msgstr "Садржај закључан"
 
 #: scripts/apps/search/components/TypeIcon.tsx:26
 msgid "Content profile: {{name}}"
@@ -4164,7 +4164,7 @@ msgstr "Веза садржаја уклоњена"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Content.tsx:24
 msgid "Content: {{ numberOfContent }}"
-msgstr ""
+msgstr "Садржај: {{ numberOfContent }}"
 
 #: scripts/api/article-send.tsx:93
 #: scripts/apps/desks/views/desk-config-modal.html:421
@@ -4193,7 +4193,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:110
 msgid "Convert to a recurring event"
-msgstr ""
+msgstr "Конвертуј у понављајући догађај"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:80
 msgid "Converted to recurring event"
@@ -4201,7 +4201,7 @@ msgstr "Конвертовано у понављајући догађај"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:92
 msgid "Copied to clipboard"
-msgstr ""
+msgstr "Копирано у клипборд"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:67
 #: scripts/apps/archive/index.tsx:268
@@ -4221,7 +4221,7 @@ msgstr "Копирај"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:89
 msgid "Copy assignment Id"
-msgstr ""
+msgstr "Копирај ИД задатка"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:2
 msgid "Copy metadata"
@@ -4384,11 +4384,11 @@ msgstr "Држава"
 #: scripts/apps/archive/views/assignment-icon.html:1
 #: scripts/apps/search/components/fields/assignment.tsx:17
 msgid "Coverage"
-msgstr ""
+msgstr "Извештавање"
 
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.tsx:81
 msgid "Coverage Assignment Details"
-msgstr ""
+msgstr "Детаљи доделе извештавања"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:37
 #: ../superdesk-planning/client/components/fields/preview/index.ts:45
@@ -4401,7 +4401,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:191
 msgid "Coverage Provider"
-msgstr ""
+msgstr "Провајдер извештавања"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:133
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:266
@@ -4434,7 +4434,7 @@ msgstr "Извештавање додељено"
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:69
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:72
 msgid "Coverage availability"
-msgstr ""
+msgstr "Доступност извештавања"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:89
 msgid "Coverage availability confirmed"
@@ -4482,7 +4482,7 @@ msgstr "Приоритет извештавања измењен"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:51
 msgid "Coverage re-assigned to"
-msgstr ""
+msgstr "Извештавање поново додељено"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:30
 msgid "Coverage reassigned"
@@ -4691,7 +4691,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:259
 msgid "Create planning for all events or just this one?"
-msgstr ""
+msgstr "Креирати планирање за све догађаје или само за овај?"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/create-rundown-from-template.js:57
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:57
@@ -5202,7 +5202,7 @@ msgstr "Подразумевани филтер догађаја и планир
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:72
 msgid "Default Template"
-msgstr ""
+msgstr "Подразумевани шаблон"
 
 #: scripts/apps/authoring-react/toolbar/proofreading-theme-modal.tsx:96
 #: scripts/apps/authoring/views/theme-select.html:15
@@ -5513,7 +5513,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:64
 msgid "Desk Assignments"
-msgstr ""
+msgstr "Задаци деска"
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
@@ -5542,7 +5542,7 @@ msgstr "Послати излаз деска"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:79
 msgid "Desk Templates"
-msgstr ""
+msgstr "Шаблони деска"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
@@ -5962,7 +5962,7 @@ msgstr "Преузми конфигурацију"
 #: scripts/extensions/sams/src/components/assets/assetFilterPanel.tsx:306
 #: scripts/extensions/sams/src/utils/ui.tsx:76
 msgid "Draft"
-msgstr ""
+msgstr "Нацрт"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:75
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setListPanel.js:75
@@ -6049,7 +6049,7 @@ msgstr "Рок"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:26
 msgid "Due Date"
-msgstr ""
+msgstr "Датум рока"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:34
 msgid "Due date"
@@ -7122,7 +7122,7 @@ msgstr "Догађај отказан"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:59
 msgid "Event Cancelled:"
-msgstr ""
+msgstr "Догађај отказан:"
 
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/PlanningEditorHeader.tsx:61
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:187
@@ -7163,7 +7163,7 @@ msgstr "Догађај одложен"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:41
 msgid "Event Postponed:"
-msgstr ""
+msgstr "Догађај одложен:"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:39
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:53
@@ -7228,7 +7228,7 @@ msgstr "Догађај враћен из корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:234
 msgid "Event will be changed to a multi-day event!"
-msgstr ""
+msgstr "Догађај ће бити промењен у вишедневни догађај!"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:44
 msgid "Event/Planning date"
@@ -8203,7 +8203,7 @@ msgstr "Резултати теста филтера"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:111
 msgid "Filter by day:"
-msgstr ""
+msgstr "Филтрирај по дану:"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:99
 msgid "Filter condition saved."
@@ -8577,7 +8577,7 @@ msgstr "Жанр"
 #: ../superdesk-planning/client/components/Archive/ArchiveItem.tsx:78
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Genre.tsx:18
 msgid "Genre:"
-msgstr ""
+msgstr "Жанр:"
 
 #: scripts/core/auth/reset-password.html:17
 msgid "Get token"
@@ -9027,7 +9027,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:85
 msgid "Id: {{id}}"
-msgstr ""
+msgstr "ИД: {{id}}"
 
 #: scripts/apps/publish/views/email-config.html:26
 msgid "Identifier for the media in the email template"
@@ -9544,7 +9544,7 @@ msgstr "Ставка преузета."
 
 #: ../superdesk-planning/client/apps/Assignments/AssignmentPreview.tsx:56
 msgid "Item History"
-msgstr ""
+msgstr "Историја ставке"
 
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:80
 #: scripts/extensions/ai-widget/dist/src/extension.js:32
@@ -9867,7 +9867,7 @@ msgstr "Код језика"
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Language.tsx:17
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:209
 msgid "Language:"
-msgstr ""
+msgstr "Језик:"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:158
 #: scripts/apps/search/views/search-filters.html:18
@@ -10166,7 +10166,7 @@ msgstr "Учитавање"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.tsx:350
 msgid "Loading more..."
-msgstr ""
+msgstr "Учитавање још..."
 
 #: scripts/apps/publish-preview/previewModal.tsx:45
 msgid "Loading preview"
@@ -11000,7 +11000,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:20
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:75
 msgid "My Assignments"
-msgstr ""
+msgstr "Моји задаци"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:115
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:254
@@ -11031,7 +11031,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:92
 msgid "My Templates"
-msgstr ""
+msgstr "Моји шаблони"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:17
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:10
@@ -11651,7 +11651,7 @@ msgstr "Нису дефинисане корисничке улоге!"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:338
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:231
 msgid "No. of Events"
-msgstr ""
+msgstr "Број догађаја"
 
 #: scripts/apps/publish/views/subscribers.html:148
 msgid "Non-media"
@@ -11829,11 +11829,11 @@ msgstr "Број"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentGroupList.tsx:306
 msgid "Number of Assignments:"
-msgstr ""
+msgstr "Број задатака:"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:83
 msgid "Number of assignments in TO DO"
-msgstr ""
+msgstr "Број задатака у „за урадити\""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:71
 #: scripts/apps/users/activity-widget/configuration.html:7
@@ -12725,7 +12725,7 @@ msgstr "Ставка планирања је отказана"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:111
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:214
 msgid "Planning Items"
-msgstr ""
+msgstr "Ставке планирања"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Planning Management"
@@ -12751,7 +12751,7 @@ msgstr "Планирање отказано"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:142
 msgid "Planning cancelled:"
-msgstr ""
+msgstr "Планирање отказано:"
 
 #: ../superdesk-planning/client/validators/planning.ts:26
 msgid "Planning date is in the past"
@@ -12928,7 +12928,7 @@ msgstr "Поштански број"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:66
 msgid "Post Event"
-msgstr ""
+msgstr "Објави догађај"
 
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRuleEditor.js:75
 #: ../superdesk-planning/client/planning-extension/dist/planning-extension/src/ingest_rule_autopost/AutopostIngestRulePreview.js:70
@@ -12939,7 +12939,7 @@ msgstr "Објави ставке"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:77
 msgid "Post all recurring events or just this one?"
-msgstr ""
+msgstr "Објавити све понављајуће догађаје или само овај?"
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:45
 msgid "Post on 'Enter'"
@@ -12963,11 +12963,11 @@ msgstr "Запис истакнутих прича објављен"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:104
 msgid "Postpone"
-msgstr ""
+msgstr "Одложи"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:102
 msgid "Postpone {{event}}"
-msgstr ""
+msgstr "Одложи {{event}}"
 
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:37
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:208
@@ -13113,7 +13113,7 @@ msgstr "Приоритет"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:63
 msgid "Priority modified to"
-msgstr ""
+msgstr "Приоритет промењен на"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:288
 #: ../superdesk-planning/client/components/fields/priority.tsx:30
@@ -13293,7 +13293,7 @@ msgstr "Провајдер:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.tsx:218
 msgid "Provider: {{ name }}"
-msgstr ""
+msgstr "Провајдер: {{ name }}"
 
 #: scripts/apps/archive/views/metadata-view.html:123
 msgid "PubStatus"
@@ -13600,33 +13600,33 @@ msgstr "Прераспореди виџете"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:161
 msgid "Reason for Event cancellation:"
-msgstr ""
+msgstr "Разлог отказивања догађаја:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:82
 msgid "Reason for Event postponement:"
-msgstr ""
+msgstr "Разлог одлагања догађаја:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:97
 msgid "Reason for cancelling all coverage:"
-msgstr ""
+msgstr "Разлог отказивања свих извештавања:"
 
 #: ../superdesk-planning/client/api/coverages.ts:33
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelCoverageForm.tsx:81
 msgid "Reason for cancelling the coverage"
-msgstr ""
+msgstr "Разлог отказивања извештавања"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:98
 msgid "Reason for cancelling the planning item:"
-msgstr ""
+msgstr "Разлог отказивања ставке планирања:"
 
 #: ../superdesk-planning/client/api/coverages.ts:54
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelCoverageForm.tsx:80
 msgid "Reason for cancelling the scheduled update"
-msgstr ""
+msgstr "Разлог отказивања заказаног ажурирања"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:179
 msgid "Reason for rescheduling this event:"
-msgstr ""
+msgstr "Разлог поновног заказивања овог догађаја:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:155
 #: ../superdesk-planning/client/constants/assignments.ts:192
@@ -13676,7 +13676,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:85
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:91
 msgid "Recurring Event(s)"
-msgstr ""
+msgstr "Понављајући догађај(и)"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:263
 msgid "Recurring Rules"
@@ -13804,7 +13804,7 @@ msgstr "Повезане ставке планирања"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:220
 msgid "Related Planning(s)"
-msgstr ""
+msgstr "Повезано планирање"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AssociatedPlanningsBookmark.tsx:95
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EventRelatedPlannings.tsx:111
@@ -14230,11 +14230,11 @@ msgstr "Обавезно {{field}} у ставци {{item}}"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:98
 #: ../superdesk-planning/client/constants/events.ts:161
 msgid "Reschedule"
-msgstr ""
+msgstr "Поново закажи"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:96
 msgid "Reschedule {{event}}"
-msgstr ""
+msgstr "Поново закажи {{event}}"
 
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:34
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:206
@@ -14691,7 +14691,7 @@ msgstr "Сачувај и објави"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:64
 msgid "Save & Post Event"
-msgstr ""
+msgstr "Сачувај и објави догађај"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:382
 msgid "Save & Unpost"
@@ -14722,7 +14722,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:67
 msgid "Save Event"
-msgstr ""
+msgstr "Сачувај догађај"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:33
 #: ../superdesk-analytics/client/saved_reports/views/save-report-form.html:3
@@ -14959,7 +14959,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:357
 #: scripts/apps/search/components/fields/state.tsx:38
 msgid "Scheduled"
-msgstr ""
+msgstr "Заказано"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:174
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:88
@@ -15088,7 +15088,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:72
 msgid "Search Assignments"
-msgstr ""
+msgstr "Претражи задатке"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:432
 msgid "Search Categories"
@@ -15200,7 +15200,7 @@ msgstr "Претражи планирање"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.tsx:217
 msgid "Search provider contacts"
-msgstr ""
+msgstr "Контакти провајдера претраге"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-list.html:6
 msgid "Search saved reports"
@@ -15270,7 +15270,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:49
 msgid "Select Assignments From:"
-msgstr ""
+msgstr "Изабери задатке из:"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:260
 msgid "Select Calendar"
@@ -15438,7 +15438,7 @@ msgstr "Изабери извор"
 #: scripts/extensions/broadcasting/dist/src/rundowns/create-rundown-from-template.js:85
 #: scripts/extensions/broadcasting/src/rundowns/create-rundown-from-template.tsx:157
 msgid "Select template"
-msgstr ""
+msgstr "Изабери шаблон"
 
 #: scripts/apps/archive/views/upload.html:39
 msgid "Select them from folder"
@@ -15612,7 +15612,7 @@ msgstr "Подешавања редног броја"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:111
 msgid "Series Start Date"
-msgstr ""
+msgstr "Датум почетка серије"
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:128
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:143
@@ -16056,7 +16056,7 @@ msgstr "Поклапање слаглајна"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:85
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:118
 msgid "Slugline:"
-msgstr ""
+msgstr "Слаглајн:"
 
 #: scripts/apps/archive/views/item-preview.html:11
 #: scripts/apps/archive/views/metadata-view.html:194
@@ -16256,7 +16256,7 @@ msgstr ""
 #: scripts/apps/archive/show-spike-dialog.tsx:61
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:189
 msgid "Spike"
-msgstr ""
+msgstr "Премести у корпу"
 
 #: scripts/apps/archive/index.tsx:120
 msgid "Spike Item"
@@ -16268,7 +16268,7 @@ msgstr "Мониторинг корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:138
 msgid "Spike Planning Item"
-msgstr ""
+msgstr "Премести ставку планирања у корпу"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:146
 msgid "Spike State"
@@ -16276,7 +16276,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:104
 msgid "Spike all recurring events or just this one?"
-msgstr ""
+msgstr "Преместити све понављајуће догађаје у корпу или само овај?"
 
 #: scripts/apps/monitoring/index.ts:127
 msgid "Spike item(s)"
@@ -16288,7 +16288,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:72
 msgid "Spike {{event}}"
-msgstr ""
+msgstr "Премести {{event}} у корпу"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:45
 #: ../superdesk-planning/client/components/fields/editor/WorkflowState.tsx:40
@@ -17246,11 +17246,11 @@ msgstr "Анотација ће бити обрисана. Да ли сте си
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:107
 msgid "The assignment has been accepted"
-msgstr ""
+msgstr "Задатак је прихваћен"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:105
 msgid "The assignment has been accepted by"
-msgstr ""
+msgstr "Задатак је прихватио"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:541
 msgid "The assignment has been reverted."
@@ -17289,7 +17289,7 @@ msgstr[2] ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.tsx:112
 msgid "The following Events are in use and will not be spiked:"
-msgstr ""
+msgstr "Следећи догађаји су у употреби и неће бити премештени у корпу:"
 
 #: scripts/extensions/predefinedTextField/dist/src/config.js:66
 #: scripts/extensions/predefinedTextField/dist/src/extensions/predefinedTextField/src/config.js:66
@@ -17733,7 +17733,7 @@ msgstr "Ово извештавање"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:261
 msgid ""
 "This Event is scheduled to occur after the end date of its recurring cycle!"
-msgstr ""
+msgstr "Овај догађај је заказан да се одржи након завршетка циклуса понављања!"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:28
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:21
@@ -17760,11 +17760,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:365
 #: ../superdesk-planning/client/constants/events.ts:174
 msgid "This and all future events"
-msgstr ""
+msgstr "Овај и сви будући догађаји"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:276
 msgid "This and all future planning"
-msgstr ""
+msgstr "Ово и све будуће планирање"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:587
 msgid ""
@@ -17774,17 +17774,17 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:25
 msgid "This event is a recurring event!"
-msgstr ""
+msgstr "Овај догађај је понављајући!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:84
 msgid "This event is a recurring event. Post all recurring events"
-msgstr ""
+msgstr "Овај догађај је понављајући. Објави све понављајуће догађаје"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:271
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:362
 #: ../superdesk-planning/client/constants/events.ts:173
 msgid "This event only"
-msgstr ""
+msgstr "Само овај догађај"
 
 #: scripts/apps/authoring/authoring/directives/ArticleEditDirective.ts:58
 msgid "This field is read-only"
@@ -17836,7 +17836,7 @@ msgstr "Ово је подразумевани шаблон следећих д�
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:351
 msgid "This is a recurring event."
-msgstr ""
+msgstr "Ово је понављајући догађај."
 
 #: scripts/apps/authoring/views/theme-select.html:38
 #: scripts/apps/authoring/views/theme-select.html:89
@@ -17882,7 +17882,7 @@ msgstr "Ова листа садржи необјављене измене!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:270
 msgid "This planning only"
-msgstr ""
+msgstr "Само ово планирање"
 
 #: scripts/apps/archive/views/preview.html:100
 msgid "This story has been rewritten by:"
@@ -17907,11 +17907,11 @@ msgstr "Овај виџет вам омогућава да креирате бу
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
-msgstr ""
+msgstr "Ово ће такође објавити целу понављајућу серију повезаног догађаја"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.tsx:118
 msgid "This will also postpone the following planning items"
-msgstr ""
+msgstr "Ово ће такође одложити следеће ставке планирања"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:105
 msgid "This will also remove linked assignments if any"
@@ -17925,11 +17925,11 @@ msgstr "Ово ће такође уклонити друге повезане з
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:51
 msgid "This will also {{action}} the following events"
-msgstr ""
+msgstr "Ово ће такође {{action}} следеће догађаје"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.tsx:39
 msgid "This will also {{action}} the following planning items"
-msgstr ""
+msgstr "Ово ће такође {{action}} следеће ставке планирања"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:119
 msgid ""
@@ -17939,15 +17939,15 @@ msgstr "Ово ће се појавити испод поља у\n              
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.tsx:152
 msgid "This will create new events in the remote ({{timeZone}}) timezone"
-msgstr ""
+msgstr "Ово ће креирати нове догађаје у удаљеној ({{timeZone}}) временској зони"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:269
 msgid "This will create the new event in the remote ({{timeZone}}) timezone"
-msgstr ""
+msgstr "Ово ће креирати нови догађај у удаљеној ({{timeZone}}) временској зони"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:222
 msgid "This will mark as rescheduled the following planning items"
-msgstr ""
+msgstr "Ово ће означити следеће ставке планирања као поново заказане"
 
 #: ../superdesk-planning/client/actions/assignments/ui.ts:553
 msgid ""
@@ -18107,7 +18107,7 @@ msgstr "Наслов:"
 #: ../superdesk-planning/client/components/fields/editor/EndDateTime.tsx:33
 #: ../superdesk-planning/client/components/fields/preview/index.ts:75
 msgid "To"
-msgstr ""
+msgstr "До"
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:357
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/index.tsx:379
@@ -18474,7 +18474,7 @@ msgstr "Тип: {{ type }}"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:152
 msgid "Type: {{type}}"
-msgstr ""
+msgstr "Тип: {{type}}"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:121
 msgid "U"
@@ -18715,7 +18715,7 @@ msgstr "Поништи објаву"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:78
 msgid "Unpost all recurring events or just this one?"
-msgstr ""
+msgstr "Поништити објаву свих понављајућих догађаја или само овог?"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/unpublish-action.tsx:14
 #: scripts/apps/authoring/authoring/index.ts:426
@@ -18764,7 +18764,7 @@ msgstr "Несачуване измене"
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:15
 #: scripts/core/interactive-article-actions-panel/actions/unspike-action.tsx:76
 msgid "Unspike"
-msgstr ""
+msgstr "Врати из корпе"
 
 #: scripts/apps/archive/index.tsx:134
 msgid "Unspike Item"
@@ -18772,11 +18772,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:143
 msgid "Unspike Planning Item"
-msgstr ""
+msgstr "Врати ставку планирања из корпе"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.tsx:99
 msgid "Unspike all recurring events or just this one?"
-msgstr ""
+msgstr "Вратити све понављајуће догађаје из корпе или само овај?"
 
 #: ../superdesk-planning/client/constants/planning.ts:136
 msgid "Unspike planning"
@@ -18784,7 +18784,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:78
 msgid "Unspike {{event}}"
-msgstr ""
+msgstr "Врати {{event}} из корпе"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:49
 msgid "Unspiked"
@@ -18854,29 +18854,29 @@ msgstr "Рок ажурирања:"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:114
 #: ../superdesk-planning/client/constants/events.ts:164
 msgid "Update Repetitions"
-msgstr ""
+msgstr "Ажурирај понављања"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:113
 msgid "Update Repetitions of the Series"
-msgstr ""
+msgstr "Ажурирај понављања серије"
 
 #: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:162
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeReportPreview.js:21
 #: ../superdesk-analytics/client/update_time_report/index.js:50
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:93
 msgid "Update Time"
-msgstr ""
+msgstr "Ажурирај време"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/assignCalendarForm.tsx:96
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:352
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:355
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.tsx:298
 msgid "Update all recurring events or just this one?"
-msgstr ""
+msgstr "Ажурирати све понављајуће догађаје или само овај?"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:258
 msgid "Update all recurring planning or just this one?"
-msgstr ""
+msgstr "Ажурирати све понављајуће планирање или само ово?"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:121
 msgid "Update every"
@@ -18896,7 +18896,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:90
 msgid "Update time of {{event}}"
-msgstr ""
+msgstr "Ажурирај време {{event}}"
 
 #: scripts/apps/search/components/fields/update.tsx:17
 msgid "Update {{sequence}}"
@@ -19240,7 +19240,7 @@ msgstr "Корисник није пронађен. Налог је можда �
 #: ../superdesk-analytics/client/user_activity_report/views/item-timeline-tooltip.html:2
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:102
 msgid "User:"
-msgstr ""
+msgstr "Корисник:"
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:2
 #: scripts/apps/publish/views/ftp-config.html:7
@@ -19657,7 +19657,7 @@ msgstr "Радне фазе"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:100
 msgid "Work started"
-msgstr ""
+msgstr "Започет рад"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:101
 msgid "Work started on coverage"
@@ -19761,7 +19761,7 @@ msgstr "Мењате своје личне поставке. Ако желите
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
-msgstr ""
+msgstr "Креирате нову ставку планирања."
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.tsx:73
 msgid "You are currently managing featured story in another session"
@@ -19837,7 +19837,7 @@ msgstr "Имате несачуване измене. Шта желите да �
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:242
 msgid ""
 "You made changes to this planning item that is part of a recurring event."
-msgstr ""
+msgstr "Направили сте измене на овој ставци планирања која је део понављајућег догађаја."
 
 #: scripts/apps/production-api-keys/config.ts:40
 msgid ""
@@ -19914,7 +19914,7 @@ msgstr "[Нема вредности]"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:103
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:97
 msgid "a Recurring Event"
-msgstr ""
+msgstr "понављајући догађај"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:51
 msgid "a lower case letter (a-z)"
@@ -19946,7 +19946,7 @@ msgstr "додао нову ставку типа {{type}} са празним �
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:78
 msgid "added to workflow"
-msgstr ""
+msgstr "додато у радни ток"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:167
 #: scripts/apps/users/views/user-preferences.html:147
@@ -19967,7 +19967,7 @@ msgstr "већ постоји"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:91
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:97
 msgid "an Event"
-msgstr ""
+msgstr "догађај"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:52
 msgid "an upper case letter (A-Z)"
@@ -19975,7 +19975,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:56
 msgid "and"
-msgstr ""
+msgstr "и"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:45
 msgid "and '{{ user }}'"
@@ -20067,7 +20067,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:88
 msgid "cancelled"
-msgstr ""
+msgstr "отказано"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "categories"
@@ -20139,7 +20139,7 @@ msgstr "потврди"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:69
 msgid "confirmed"
-msgstr ""
+msgstr "потврђено"
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:181
 msgid "contact saved."
@@ -20180,7 +20180,7 @@ msgstr "креирана / ставка(е) планирања"
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:42
 #: ../superdesk-planning/client/components/RelatedPlannings/index.tsx:102
 msgid "created by"
-msgstr ""
+msgstr "креирао"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
@@ -20264,7 +20264,7 @@ msgstr "нацрт"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:42
 msgid "due"
-msgstr ""
+msgstr "рок"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:58
 msgid "duplicate id"
@@ -20456,7 +20456,7 @@ msgstr "из садржаја"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:95
 msgid "from coverage assignment by"
-msgstr ""
+msgstr "из доделе извештавања од"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:122
 msgid "from highlight"
@@ -20468,7 +20468,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.tsx:238
 msgid "from {{from}} to {{to}}"
-msgstr ""
+msgstr "од {{from}} до {{to}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:228
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:244
@@ -20879,7 +20879,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:100
 msgid "on assignment by"
-msgstr ""
+msgstr "на задатку од"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:23
 msgid "on the"
@@ -20989,7 +20989,7 @@ msgstr "користите само слова (a-z), бројеве (0-9), цр
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:121
 msgid "post"
-msgstr ""
+msgstr "објави"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:570
 msgid "postcode"
@@ -21108,7 +21108,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:72
 msgid "reverted"
-msgstr ""
+msgstr "враћено"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:182
 msgid "rewrite id"
@@ -21200,7 +21200,7 @@ msgstr "у корпи"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:91
 msgid "spiked and unlinked"
-msgstr ""
+msgstr "премештено у корпу и веза уклоњена"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "stage"
@@ -21317,7 +21317,7 @@ msgstr "на '{{ desk }}'"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:75
 msgid "to coverage assignment by"
-msgstr ""
+msgstr "на доделу извештавања од"
 
 #: scripts/apps/authoring-react/compare-articles/compare-articles.tsx:150
 msgid "toggle difference"
@@ -21354,7 +21354,7 @@ msgstr "ненумерисана листа"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:121
 msgid "unpost"
-msgstr ""
+msgstr "поништи објаву"
 
 #: ../superdesk-planning/client/utils/history.tsx:87
 msgid "unposted"
@@ -21624,7 +21624,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:118
 msgid "{{action}} {{event}}"
-msgstr ""
+msgstr "{{action}} {{event}}"
 
 #: ../superdesk-planning/client/components/Main/ItemEditorModal/EditorModalPanel.tsx:166
 msgid "{{action}} {{type}}"
