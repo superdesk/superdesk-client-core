@@ -1,6 +1,6 @@
 <div ng-controller="WorldClockConfigController" class="widget-config world-clock">
     <div sd-wizard>
-        <div sd-wizard-step data-title="Your clock" data-code="your-clock">
+        <div sd-wizard-step data-title="{{ 'Your clock' | translate }}" data-code="your-clock">
             <div class="sd-margin-b--3">
                 <label class="form-label">{{'Clock type'|translate}}</label>
                 <div class="button-group button-group--start">
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div sd-wizard-step data-title="Available clocks" data-code="available-clocks">
+        <div sd-wizard-step data-title="{{ 'Available clocks' | translate }}" data-code="available-clocks">
             <div class="form__group form__group--default form__group--mb-2 sd-margin-t--0-5">
                 <div class="form__item">
                     <div class="sd-input">

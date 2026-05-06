@@ -4,6 +4,7 @@ import {DebounceInput} from 'react-debounce-input';
 import {Row, LineInput, Label} from '../';
 import {SelectFieldPopup} from './SelectFieldPopup';
 import {isEmpty} from 'lodash';
+import {gettext} from 'core/utils';
 
 export class SelectFieldSearchInput extends React.Component<any, any> {
     static propTypes: any;
@@ -98,7 +99,7 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
                                 minLength={1}
                                 debounceTimeout={500}
                                 onChange={this.filterDataList}
-                                placeholder="Search"
+                                placeholder={gettext('Search')}
                             />
 
                             {this.state.openFilterList && (

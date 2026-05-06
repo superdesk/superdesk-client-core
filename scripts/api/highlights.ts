@@ -31,7 +31,7 @@ function exportHighlight(id: IArticle['_id'], hasUnsavedChanges: boolean): Promi
             payload: {package: id},
         })
             .then(ng.get('authoringWorkspace').edit)
-            .then(() => notify.success('Export successful.'))
+            .then(() => notify.success(gettext('Export successful.')))
             .catch((response) => {
                 if (response.internal_error === 403) {
                     ui.confirm(gettext('There are items locked or not published. Do you want to continue?'))

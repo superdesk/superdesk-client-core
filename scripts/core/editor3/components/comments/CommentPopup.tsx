@@ -201,7 +201,7 @@ export class CommentPopup extends React.Component<any, any> {
                                     this.setState({replyFieldFocused: true});
                                 }}
                                 singleLine={false}
-                                placeholder={'Reply'}
+                                placeholder={gettext('Reply')}
                                 maxHeight={189} // 10 lines
                             />
                             {

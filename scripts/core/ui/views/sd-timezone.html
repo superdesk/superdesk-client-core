@@ -7,7 +7,7 @@
         search="searchTimeZones(term)"
         select="selectTimeZone(item)"
         always-visible="tzSearchTerm"
-        placeholder="ie. Europe/London">
+        placeholder="{{ 'ie. Europe/London' | translate }}">
         <li class="typeahead-item--padded" typeahead-item="tz" ng-repeat="tz in matchingTimeZones track by tz">{{ ::getTimezoneLabel(tz)}}</li>
         <li class="typeahead-item--padded" ng-show="tzSearchTerm && matchingTimeZones.length === 0"
             class="no-match"

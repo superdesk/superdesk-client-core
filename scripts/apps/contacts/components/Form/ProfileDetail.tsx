@@ -500,7 +500,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder="username"
+                                placeholder={gettext('username')}
                             />
                         </LineInput>
                     </Row>
@@ -524,7 +524,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder="username"
+                                placeholder={gettext('username')}
                             />
                         </LineInput>
                     </Row>
@@ -614,7 +614,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                     value={contact?.contact_state?.name || contact.contact_state}
                                     onChange={onChange}
                                     type="text"
-                                    placeholder="State/Province or Region"
+                                    placeholder={gettext('State/Province or Region')}
                                     readOnly={readOnly}
                                 />
                             </LineInput>
