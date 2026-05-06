@@ -153,7 +153,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:3
 msgid "*at least one visible or hidden recipient needed"
-msgstr ""
+msgstr "*потребан је барем један видљив или скривен прималац"
 
 #: ../superdesk-analytics/client/utils.js:193
 msgid "1 day"
@@ -176,7 +176,7 @@ msgstr ""
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:22
 msgid "1 month"
-msgstr ""
+msgstr "1 месец"
 
 #: ../superdesk-planning/client/components/fields/with-more-items.tsx:52
 msgid "1 more item"
@@ -200,15 +200,15 @@ msgstr[2] ""
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 week"
-msgstr ""
+msgstr "1 недеља"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:24
 msgid "1 year"
-msgstr ""
+msgstr "1 година"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:27
 msgid "10 years"
-msgstr ""
+msgstr "10 година"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:186
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:186
@@ -246,7 +246,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "12 Hours"
-msgstr ""
+msgstr "12 сати"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:204
 msgid "12:00am"
@@ -336,11 +336,11 @@ msgstr ""
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:21
 msgid "2 weeks"
-msgstr ""
+msgstr "2 недеље"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:25
 msgid "2 years"
-msgstr ""
+msgstr "2 године"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
 msgid "200 minimum"
@@ -372,7 +372,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:19
 msgid "24 Hours"
-msgstr ""
+msgstr "24 сата"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:58
 #: ../superdesk-planning/client/utils/filters.ts:109
@@ -435,7 +435,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:20
 msgid "48 Hours"
-msgstr ""
+msgstr "48 сати"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:38
 #: ../superdesk-planning/client/utils/filters.ts:69
@@ -448,7 +448,7 @@ msgstr ""
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:26
 msgid "5 years"
-msgstr ""
+msgstr "5 година"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:188
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:188
@@ -479,11 +479,11 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:16
 msgid "6 Hours"
-msgstr ""
+msgstr "6 сати"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:23
 msgid "6 months"
-msgstr ""
+msgstr "6 месеци"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:40
 #: ../superdesk-planning/client/utils/filters.ts:73
@@ -700,7 +700,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:33
 msgid "Access Key ID"
-msgstr ""
+msgstr "ИД приступног кључа"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/accreditation-deadline.tsx:24
 #: ../superdesk-planning/client/components/fields/preview/index.ts:188
@@ -723,7 +723,7 @@ msgstr "Потврди пријем"
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:16
 #: scripts/apps/publish/views/publish-queue.html:117
 msgid "Action"
-msgstr ""
+msgstr "Радња"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.tsx:318
 #: ../superdesk-planning/client/components/Events/EventItem.tsx:132
@@ -783,7 +783,7 @@ msgstr ""
 #: scripts/apps/workspace/content/views/profile-settings.html:168
 #: scripts/apps/workspace/content/views/profile-settings.html:61
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:22
 msgid "Active only"
@@ -791,7 +791,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:424
 msgid "Active until {{end}}"
-msgstr ""
+msgstr "Активно до {{end}}"
 
 #: scripts/apps/users/views/activity-feed.html:4
 #: scripts/core/lang/missing-translations-strings.ts:44
@@ -919,7 +919,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/manageSetsModal.js:103
 #: scripts/extensions/sams/src/components/sets/manageSetsModal.tsx:107
 msgid "Add New"
-msgstr ""
+msgstr "Додај нови"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:4
 msgid "Add New Abbreviations Dictionary"
@@ -939,7 +939,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:227
 msgid "Add New Destination"
-msgstr ""
+msgstr "Додај нову дестинацију"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:5
 msgid "Add New Dictionary"
@@ -980,7 +980,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:69
 msgid "Add New Subscriber"
-msgstr ""
+msgstr "Додај новог претплатника"
 
 #: scripts/apps/templates/views/template-editor-modal.html:4
 msgid "Add New Template"
@@ -1233,18 +1233,18 @@ msgstr ""
 #: scripts/apps/relations/services/RelationsService.ts:46
 msgid ""
 "Adding ingested items as related is not allowed due to configuration options"
-msgstr ""
+msgstr "Додавање ставки из доласка као повезаних није дозвољено због подешавања"
 
 #: scripts/apps/relations/services/RelationsService.ts:29
 msgid ""
 "Adding published items as related is not allowed due to configuration options"
-msgstr ""
+msgstr "Додавање објављених ставки као повезаних није дозвољено због подешавања"
 
 #: scripts/apps/relations/services/RelationsService.ts:36
 msgid ""
 "Adding related items that are not published is not allowed due to "
 "configuration options"
-msgstr ""
+msgstr "Додавање повезаних ставки које нису објављене није дозвољено због подешавања"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:227
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:112
@@ -1495,7 +1495,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserListController.ts:160
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:178
 msgid "All"
-msgstr ""
+msgstr "Сви"
 
 #: ../superdesk-planning/client/components/PlanningTemplatesModal/PlanningTemplatesModal.tsx:32
 msgid "All Calendars"
@@ -1783,7 +1783,7 @@ msgstr "Дошло је до грешке, покушајте поново."
 
 #: scripts/apps/publish-preview/previewModal.tsx:66
 msgid "An error occurred while trying to preview the item."
-msgstr ""
+msgstr "Дошло је до грешке приликом покушаја прегледа ставке."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:230
 msgid "An update can not be created"
@@ -1860,7 +1860,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:244
 msgid "Applied Global Block Filters"
-msgstr ""
+msgstr "Примењени глобални филтери блокирања"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:161
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:75
@@ -1894,7 +1894,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:38
 msgid "Apply watermark"
-msgstr ""
+msgstr "Примени водени жиг"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:37
 #: scripts/apps/production-api-keys/config.ts:23
@@ -2293,7 +2293,7 @@ msgstr ""
 #: scripts/apps/publish/views/http-push-config.html:10
 #: scripts/apps/publish/views/http-push-config.html:9
 msgid "Assets URL"
-msgstr ""
+msgstr "URL ресурса"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:216
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:42
@@ -2486,7 +2486,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:38
 msgid "Associated/featuremedia path"
-msgstr ""
+msgstr "Путања повезаног/истакнутог медија"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:66
 msgid "At least 2 languages must be selected"
@@ -2582,7 +2582,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:269
 msgid "Authentication Token"
-msgstr ""
+msgstr "Токен за аутентификацију"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:646
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:120
@@ -2854,13 +2854,13 @@ msgstr ""
 #: scripts/apps/publish/directives/SubscribersDirective.ts:66
 #: scripts/apps/publish/views/subscribers.html:149
 msgid "Both"
-msgstr ""
+msgstr "Обоје"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:200
 msgid ""
 "Both start and end date need to be filled in (or cleared) to save the "
 "subscriber."
-msgstr ""
+msgstr "Морате попунити (или обрисати) и почетни и крајњи датум да бисте сачували претплатника."
 
 #: scripts/apps/authoring/views/change-image.html:242
 msgid "Brightness"
@@ -2943,7 +2943,7 @@ msgstr "ОТКАЖИ"
 
 #: scripts/apps/publish/views/email-config.html:20
 msgid "CID"
-msgstr ""
+msgstr "CID"
 
 #: ../superdesk-planning/client/validators/planning.ts:232
 msgid "COVERAGE SCHEDULE is required"
@@ -3209,7 +3209,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/publish-queue.html:83
 msgid "Cancel Selection"
-msgstr ""
+msgstr "Откажи избор"
 
 #: ../superdesk-planning/client/constants/planning.ts:139
 msgid "Cancel all Coverage(s)"
@@ -3250,7 +3250,7 @@ msgstr ""
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:149
 msgid "Cannot add self as related item."
-msgstr ""
+msgstr "Не можете додати саму ставку као повезану."
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:32
 msgid ""
@@ -3307,7 +3307,7 @@ msgstr "Категорије"
 #: scripts/apps/legal-archive/tests/legal.spec.ts:69
 #: scripts/apps/search/directives/SearchFilters.ts:44
 msgid "Category"
-msgstr ""
+msgstr "Категорија"
 
 #: ../superdesk-analytics/client/utils.js:180
 msgid "Change Image"
@@ -3746,7 +3746,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:44
 #: scripts/apps/search/views/search-panel.html:22
 msgid "Close panel"
-msgstr ""
+msgstr "Затвори панел"
 
 #: scripts/apps/search/views/item-preview.html:27
 msgid "Close preview"
@@ -3803,7 +3803,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:158
 msgid "Comma separated values"
-msgstr ""
+msgstr "Вредности раздвојене зарезом"
 
 #: scripts/apps/products/views/products-config-modal.html:55
 msgid "Comma separated values."
@@ -3888,7 +3888,7 @@ msgstr ""
 
 #: scripts/apps/legal-archive/index.ts:38
 msgid "Confidential data"
-msgstr ""
+msgstr "Поверљиви подаци"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:70
 msgid "Configuration deleted."
@@ -3977,7 +3977,7 @@ msgstr "Повезано на сервер обавештења!"
 #: scripts/apps/publish/views/odbc-config.html:2
 #: scripts/apps/publish/views/odbc-config.html:4
 msgid "Connection string"
-msgstr ""
+msgstr "Стринг везе"
 
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/contact/index.tsx:23
 msgid "Contact"
@@ -4030,7 +4030,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:254
 msgid "Content API"
-msgstr ""
+msgstr "Content API"
 
 #: scripts/apps/content-api/controllers/ContentAPIController.ts:26
 #: scripts/apps/content-api/index.ts:21
@@ -4090,11 +4090,11 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:107
 #: scripts/apps/workspace/content/views/profile-settings.html:98
 msgid "Content Type"
-msgstr ""
+msgstr "Тип садржаја"
 
 #: scripts/apps/publish/views/publish-queue.html:60
 msgid "Content Type:"
-msgstr ""
+msgstr "Тип садржаја:"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:395
 #: scripts/core/lang/missing-translations-strings.ts:15
@@ -4169,7 +4169,7 @@ msgstr ""
 #: scripts/api/article-send.tsx:93
 #: scripts/apps/desks/views/desk-config-modal.html:421
 msgid "Continue"
-msgstr ""
+msgstr "Настави"
 
 #: scripts/apps/authoring/views/change-image.html:249
 msgid "Contrast"
@@ -4217,7 +4217,7 @@ msgstr ""
 #: scripts/extensions/ai-widget/src/summary/summary.tsx:62
 #: scripts/extensions/ai-widget/src/translations/translations-body.tsx:118
 msgid "Copy"
-msgstr ""
+msgstr "Копирај"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:89
 msgid "Copy assignment Id"
@@ -4620,7 +4620,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/page.js:170
 #: scripts/extensions/broadcasting/src/page.tsx:252
 msgid "Create new"
-msgstr ""
+msgstr "Креирај нови"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/page.js:183
 #: scripts/extensions/broadcasting/dist/src/page.js:187
@@ -4874,7 +4874,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:248
 #: scripts/apps/publish/views/subscribers.html:234
 msgid "Critical Errors"
-msgstr ""
+msgstr "Критичне грешке"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:68
 #: scripts/apps/authoring/views/change-image.html:205
@@ -5380,7 +5380,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
-msgstr ""
+msgstr "Тип испоруке"
 
 #: scripts/apps/authoring-react/article-widgets/demo-widget.tsx:10
 msgid "Demo widget"
@@ -5643,7 +5643,7 @@ msgstr "Дескови"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:250
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:325
 msgid "Destination"
-msgstr ""
+msgstr "Дестинација"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:14
 msgid "Destination name"
@@ -5651,7 +5651,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:216
 msgid "Destinations"
-msgstr ""
+msgstr "Дестинације"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:151
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/GroupEditor.tsx:64
@@ -5710,7 +5710,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:72
 msgid "Digital/Internet"
-msgstr ""
+msgstr "Дигитално/Интернет"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:45
 #: scripts/apps/archive/views/metadata-view.html:211
@@ -6428,7 +6428,7 @@ msgstr ""
 #: scripts/apps/publish/views/subscribers.html:50
 #: scripts/apps/publish/views/subscribers.html:68
 msgid "Edit Subscriber"
-msgstr ""
+msgstr "Уреди претплатника"
 
 #: scripts/apps/templates/views/templates.html:36
 msgid "Edit Template"
@@ -6691,7 +6691,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:96
 msgid "End Date"
-msgstr ""
+msgstr "Крајњи датум"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:23
 msgid "End Time (exclusive)"
@@ -6724,7 +6724,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:3
 msgid "Endpoint URL"
-msgstr ""
+msgstr "URL крајње тачке"
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.tsx:133
 msgid "Ends"
@@ -6734,7 +6734,7 @@ msgstr ""
 msgid ""
 "Ensure correct preview endpoint is configured or contact endpoint "
 "maintainers."
-msgstr ""
+msgstr "Уверите се да је исправна крајња тачка прегледа подешена или контактирајте њене одржаваоце."
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:535
@@ -6782,7 +6782,7 @@ msgstr ""
 
 #: scripts/api/highlights.ts:44 scripts/api/highlights.ts:48
 msgid "Error creating highlight."
-msgstr ""
+msgstr "Грешка приликом креирања истицања."
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:339
 #: scripts/apps/search/controllers/get-multi-actions.tsx:381
@@ -6892,7 +6892,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserEnableCommand.ts:19
 #: scripts/apps/users/directives/UserRolesDirective.ts:66
 msgid "Error:"
-msgstr ""
+msgstr "Грешка:"
 
 #: scripts/apps/search-providers/directive.ts:62
 msgid "Error: A Search Provider with type  already exists."
@@ -6908,7 +6908,7 @@ msgstr ""
 
 #: scripts/apps/publish/controllers/PublishQueueController.ts:183
 msgid "Error: Failed to re-schedule"
-msgstr ""
+msgstr "Грешка: поновно заказивање није успело"
 
 #: scripts/apps/search-providers/directive.ts:66
 msgid "Error: Failed to save Search Provider."
@@ -6916,7 +6916,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:228
 msgid "Error: Failed to save Subscriber."
-msgstr ""
+msgstr "Грешка: чување претплатника није успело."
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:151
 msgid "Error: Failed to save content filter."
@@ -6950,11 +6950,11 @@ msgstr "Грешка: слаглајн је обавезан."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:225
 msgid "Error: Subscriber must have at least one destination."
-msgstr ""
+msgstr "Грешка: претплатник мора имати барем једну дестинацију."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:222
 msgid "Error: Subscriber with Name  already exists."
-msgstr ""
+msgstr "Грешка: претплатник са овим називом већ постоји."
 
 #: scripts/apps/dictionaries/controllers/DictionaryEditController.ts:24
 msgid "Error: The dictionary already exists."
@@ -6971,7 +6971,7 @@ msgstr ""
 #: scripts/api/article.ts:422
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:100
 msgid "Error: Unique Name is not unique."
-msgstr ""
+msgstr "Грешка: јединствени назив није јединствен."
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:111
 msgid "Error: {{ message }}"
@@ -7294,7 +7294,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:6
 msgid "Exact"
-msgstr ""
+msgstr "Тачно"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:78
 msgid "Exclamation Sign"
@@ -7371,7 +7371,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:304
 msgid "Expire in:"
-msgstr ""
+msgstr "Истиче за:"
 
 #: ../superdesk-planning/client/components/fields/state.tsx:55
 #: ../superdesk-planning/client/utils/index.ts:430
@@ -7459,19 +7459,19 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:27
 msgid "FTP File Extension"
-msgstr ""
+msgstr "FTP екстензија датотеке"
 
 #: scripts/apps/publish/views/ftp-config.html:22
 msgid "FTP Server Path"
-msgstr ""
+msgstr "Путања FTP сервера"
 
 #: scripts/apps/publish/views/ftp-config.html:39
 msgid "FTP Server Path for Associated media items"
-msgstr ""
+msgstr "Путања FTP сервера за повезане медијске ставке"
 
 #: scripts/apps/publish/views/ftp-config.html:4
 msgid "FTP Server URL"
-msgstr ""
+msgstr "URL FTP сервера"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:83
 #: scripts/apps/users/views/edit-form.html:295
@@ -7502,7 +7502,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:188
 msgid "Failed to associate update: {{message}}"
-msgstr ""
+msgstr "Повезивање ажурирања није успело: {{message}}"
 
 #: ../superdesk-planning/client/actions/planning/ui.ts:307
 msgid "Failed to cancel all coverage!"
@@ -8046,7 +8046,7 @@ msgstr ""
 
 #: scripts/api/article-fetch.tsx:104
 msgid "Fetch valid({{count}})"
-msgstr ""
+msgstr "Преузми важеће ({{count}})"
 
 #: scripts/apps/search/components/fields/state.tsx:33
 msgid "Fetched"
@@ -8091,7 +8091,7 @@ msgstr ""
 #: scripts/apps/publish/views/file-config.html:9
 #: scripts/apps/publish/views/ftp-config.html:25
 msgid "File Extension"
-msgstr ""
+msgstr "Екстензија датотеке"
 
 #: scripts/apps/authoring/attachments/UploadAttachmentsModal.tsx:201
 msgid "File Name"
@@ -8352,7 +8352,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:218
 msgid "For Content API only subscriber destinations are not required."
-msgstr ""
+msgstr "Само за претплатнике типа Content API дестинације нису обавезне."
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:21
 msgid "For Publication"
@@ -8374,7 +8374,7 @@ msgstr "Заборавили лозинку?"
 #: scripts/apps/authoring/views/preview-formatted.html:18
 #: scripts/apps/publish/views/destination.html:9
 msgid "Format"
-msgstr ""
+msgstr "Формат"
 
 #: scripts/apps/archive/views/export.html:10
 #: scripts/apps/authoring-react/toolbar/export-modal.tsx:88
@@ -8495,7 +8495,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:191
 #: scripts/apps/legal-archive/views/legal_archive.html:52
 msgid "GUID"
-msgstr ""
+msgstr "GUID"
 
 #: scripts/apps/desks/views/desk-config-modal.html:10
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:70
@@ -8547,7 +8547,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:318
 msgid "Generate token"
-msgstr ""
+msgstr "Генериши токен"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/template-edit.js:188
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/template-edit.js:191
@@ -8619,7 +8619,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:94
 #: scripts/apps/search/views/item-globalsearch.html:19
 msgid "Go"
-msgstr ""
+msgstr "Иди"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:268
 msgid "Go Back"
@@ -8855,7 +8855,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:11
 msgid "Hidden recipients (blind carbon copy)"
-msgstr ""
+msgstr "Скривени примаоци (Bcc)"
 
 #: ../superdesk-planning/client/components/fields/related_events.tsx:40
 msgid "Hide 1 event"
@@ -8897,7 +8897,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:209
 msgid "High priority"
-msgstr ""
+msgstr "Висок приоритет"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
 msgid "Highcharts {{licenseType}} License"
@@ -8957,7 +8957,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:2
 msgid "Host"
-msgstr ""
+msgstr "Хост"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleHour.tsx:41
 msgid "Hour"
@@ -9031,11 +9031,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:26
 msgid "Identifier for the media in the email template"
-msgstr ""
+msgstr "Идентификатор медија у предлошку имејла"
 
 #: scripts/apps/publish/views/email-config.html:21
 msgid "Identifier for the media within the email html template"
-msgstr ""
+msgstr "Идентификатор медија унутар HTML предлошка имејла"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:53
 msgid "Identifiers have to be specified for all items."
@@ -9122,7 +9122,7 @@ msgstr ""
 
 #: scripts/api/article-fetch.tsx:111
 msgid "Image size validation failed"
-msgstr ""
+msgstr "Провера величине слике није успела"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/ImageTaggingComponent/ImageTaggingComponent.js:199
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.js:199
@@ -9194,11 +9194,11 @@ msgstr ""
 #: scripts/apps/users/controllers/UserListController.ts:158
 #: scripts/apps/workspace/content/views/profile-settings.html:62
 msgid "Inactive"
-msgstr ""
+msgstr "Неактивно"
 
 #: scripts/apps/publish/views/email-config.html:17
 msgid "Include Feature Media"
-msgstr ""
+msgstr "Укључи истакнути медиј"
 
 #: ../superdesk-planning/client/components/fields/editor/IncludeKilled.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:91
@@ -9318,11 +9318,11 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:110
 #: scripts/apps/workspace/content/constants.ts:32
 msgid "Ingest Provider"
-msgstr ""
+msgstr "Провајдер доласка"
 
 #: scripts/apps/publish/views/publish-queue.html:30
 msgid "Ingest Provider:"
-msgstr ""
+msgstr "Провајдер доласка:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:596
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:151
@@ -9589,9 +9589,9 @@ msgstr "Профил садржаја ставке није подешен да 
 #: scripts/api/article-duplicate.tsx:42
 msgid "Item duplicated"
 msgid_plural "Items duplicated"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Ставка дуплирана"
+msgstr[1] "Ставке дуплиране"
+msgstr[2] "Ставке дуплиране"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:47
 msgid "Item has been killed."
@@ -9606,7 +9606,7 @@ msgstr ""
 msgid ""
 "Item has changed since it was opened. Please close and reopen the item to "
 "continue. Regrettably, your changes cannot be saved."
-msgstr ""
+msgstr "Ставка је измењена откад је отворена. Затворите и поново је отворите да бисте наставили. Нажалост, ваше измене не могу бити сачуване."
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:60
 msgid "Item has not been transmitted to any subscriber"
@@ -9617,7 +9617,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:127
 #: scripts/apps/search/views/item-preview.html:18
 msgid "Item history"
-msgstr ""
+msgstr "Историја ставке"
 
 #: scripts/apps/packaging/directives/PackageItemsEdit.ts:21
 msgid "Item is already in this package."
@@ -9664,7 +9664,7 @@ msgstr ""
 
 #: scripts/api/article.ts:380
 msgid "Item published."
-msgstr ""
+msgstr "Ставка објављена."
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:190
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:257
@@ -9746,7 +9746,7 @@ msgstr "Ставке које је корисник преместио у рад
 
 #: scripts/api/article-fetch.tsx:131
 msgid "Items that can not be fetched"
-msgstr ""
+msgstr "Ставке које не могу бити преузете"
 
 #: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
 #: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:101
@@ -9933,7 +9933,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:14
 msgid "Last Updated"
-msgstr ""
+msgstr "Последње ажурирано"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:22
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:14
@@ -9954,7 +9954,7 @@ msgstr ""
 #: scripts/apps/profiling/views/profiling.html:24
 #: scripts/apps/publish/views/publish-queue.html:78
 msgid "Last refreshed at"
-msgstr ""
+msgstr "Последње освежено у"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:21
 msgid "Last report sent on:"
@@ -10022,7 +10022,7 @@ msgstr "Правно"
 
 #: scripts/apps/legal-archive/index.ts:37
 msgid "Legal Archive"
-msgstr ""
+msgstr "Правна архива"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:70
 msgid "License ID:"
@@ -10170,7 +10170,7 @@ msgstr ""
 
 #: scripts/apps/publish-preview/previewModal.tsx:45
 msgid "Loading preview"
-msgstr ""
+msgstr "Учитавање прегледа"
 
 #: scripts/extensions/videoEditor/dist/src/VideoEditor.js:78
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditor.js:78
@@ -10596,11 +10596,11 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:7
 msgid "Match Any"
-msgstr ""
+msgstr "Поклапа било шта"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:8
 msgid "Match Prefix"
-msgstr ""
+msgstr "Поклапа префикс"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:97
 msgid "Max"
@@ -10621,7 +10621,7 @@ msgstr ""
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:28
 #: scripts/apps/publish/views/subscribers.html:193
 msgid "Maximum"
-msgstr ""
+msgstr "Максимум"
 
 #: scripts/apps/content-filters/views/manage-filters.html:44
 msgid "Maximum 80 characters."
@@ -10663,7 +10663,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:143
 msgid "Media Type"
-msgstr ""
+msgstr "Тип медија"
 
 #: scripts/apps/vocabularies/constants.ts:18
 msgid "Media gallery"
@@ -10688,11 +10688,11 @@ msgstr "Споји пасусе"
 #: scripts/apps/publish/views/publish-queue.html:116
 #: scripts/apps/system-messages/components/system-messages-settings.tsx:69
 msgid "Message"
-msgstr ""
+msgstr "Порука"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:82
 msgid "Message Group ID"
-msgstr ""
+msgstr "ИД групе порука"
 
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:66
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:19
@@ -10733,12 +10733,12 @@ msgstr "Умањи"
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:20
 #: scripts/apps/publish/views/subscribers.html:184
 msgid "Minimum"
-msgstr ""
+msgstr "Минимум"
 
 #: scripts/api/article-fetch.tsx:122
 #: scripts/apps/archive/controllers/file-upload-error-modal.tsx:44
 msgid "Minimum allowed image size is {{minWidth}}x{{minHeight}}"
-msgstr ""
+msgstr "Минимална дозвољена величина слике је {{minWidth}}x{{minHeight}}"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:213
 msgid "Minimum height and width should be greater than or equal to 200"
@@ -11107,7 +11107,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:165
 #: scripts/extensions/sams/src/utils/ui.tsx:99
 msgid "Name"
-msgstr ""
+msgstr "Назив"
 
 #: scripts/apps/vocabularies/ManageVocabularyItemTranslations.tsx:28
 msgid "Name ({{language}})"
@@ -11135,7 +11135,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:30
 msgid "Name of the rendition to attach to the email"
-msgstr ""
+msgstr "Назив варијанте за прилагање имејлу"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:71
 msgid "Navy"
@@ -11160,11 +11160,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:278
 msgid "Never"
-msgstr ""
+msgstr "Никада"
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:28
 msgid "Never expire"
-msgstr ""
+msgstr "Никад не истиче"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:573
 msgid "New"
@@ -11300,7 +11300,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:57
 msgid "No Subscribers Found"
-msgstr ""
+msgstr "Нема пронађених претплатника"
 
 #: ../superdesk-planning/client/components/fields/editor/ContentTemplate.tsx:70
 #: ../superdesk-planning/client/components/fields/editor/ExportTemplate.tsx:38
@@ -11655,7 +11655,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:148
 msgid "Non-media"
-msgstr ""
+msgstr "Без медија"
 
 #: ../superdesk-planning/client/components/UI/Form/ColouredValueInput/ColouredValuePopup.tsx:129
 #: ../superdesk-planning/client/components/UI/Form/ColouredValueInput/index.tsx:146
@@ -11689,7 +11689,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:432
 msgid "Not Active"
-msgstr ""
+msgstr "Неактивно"
 
 #: scripts/apps/search/constants.ts:35
 msgid "Not Category"
@@ -12273,7 +12273,7 @@ msgstr ""
 #: scripts/apps/publish/views/file-config.html:2
 #: scripts/apps/publish/views/file-config.html:4
 msgid "Output file path"
-msgstr ""
+msgstr "Путања излазне датотеке"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:55
 msgid "Output/Published"
@@ -12369,7 +12369,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/http-push-config.html:2
 msgid "Package individual items"
-msgstr ""
+msgstr "Запакуј појединачне ставке"
 
 #: scripts/apps/authoring-react/data-layer.ts:212
 #: scripts/apps/authoring-react/field-adapters/package_items.ts:9
@@ -12411,7 +12411,7 @@ msgstr "Величина странице:"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:24
 msgid "Pagination"
-msgstr ""
+msgstr "Страничење"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:140
 msgid "Paragraph"
@@ -12419,7 +12419,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:203
 msgid "Parallel publishing"
-msgstr ""
+msgstr "Паралелно објављивање"
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:41
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:41
@@ -12446,7 +12446,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:15
 msgid "Passive mode"
-msgstr ""
+msgstr "Пасивни режим"
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:6
 #: scripts/apps/publish/views/ftp-config.html:11
@@ -12454,7 +12454,7 @@ msgstr ""
 #: scripts/apps/users/views/edit-form.html:17
 #: scripts/apps/users/views/edit-form.html:205
 msgid "Password"
-msgstr ""
+msgstr "Лозинка"
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:75
 msgid "Password is too weak."
@@ -12483,7 +12483,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:21
 msgid "Path"
-msgstr ""
+msgstr "Путања"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:142
 msgid "Pause"
@@ -13046,7 +13046,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/destination.html:17
 msgid "Preview endpoint URL"
-msgstr ""
+msgstr "URL крајње тачке прегледа"
 
 #: scripts/apps/authoring/authoring/index.ts:472
 msgid "Preview formatted article, when previewFormats feature configured"
@@ -13109,7 +13109,7 @@ msgstr "Преглед штампе"
 #: scripts/apps/search/services/SearchService.ts:71
 #: scripts/apps/workspace/content/constants.ts:37
 msgid "Priority"
-msgstr ""
+msgstr "Приоритет"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:63
 msgid "Priority modified to"
@@ -13228,7 +13228,7 @@ msgstr ""
 #: scripts/apps/publish/views/subscribers.html:168
 #: scripts/apps/publish/views/subscribers.html:257
 msgid "Products"
-msgstr ""
+msgstr "Производи"
 
 #: scripts/apps/products/views/settings.html:4
 msgid "Products management"
@@ -13343,7 +13343,7 @@ msgstr ""
 
 #: scripts/apps/publish/index.ts:51
 msgid "Publish Queue"
-msgstr ""
+msgstr "Ред објављивања"
 
 #: scripts/apps/archive/views/metadata-view.html:137
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:416
@@ -13396,7 +13396,7 @@ msgstr ""
 
 #: scripts/apps/legal-archive/views/legal_archive.html:84
 msgid "Published From"
-msgstr ""
+msgstr "Објављено од"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:234
 msgid "Published Stories"
@@ -13412,7 +13412,7 @@ msgstr ""
 
 #: scripts/apps/legal-archive/views/legal_archive.html:88
 msgid "Published Until"
-msgstr ""
+msgstr "Објављено до"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:180
 msgid "Published by"
@@ -13434,7 +13434,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/publish-queue.html:108
 msgid "Publishing Action"
-msgstr ""
+msgstr "Радња објављивања"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/index.js:47
 msgid "Publishing Actions"
@@ -13468,11 +13468,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:30
 msgid "Push associated/feature media items"
-msgstr ""
+msgstr "Гурни повезане/истакнуте медијске ставке"
 
 #: scripts/apps/publish/views/ftp-config.html:34
 msgid "Push the original rendition"
-msgstr ""
+msgstr "Гурни оригиналну варијанту"
 
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:7
 msgid "QCode"
@@ -13502,11 +13502,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:67
 msgid "Queue Name"
-msgstr ""
+msgstr "Назив реда"
 
 #: scripts/apps/publish/views/publish-queue.html:112
 msgid "Queued at"
-msgstr ""
+msgstr "Стављено у ред у"
 
 #: scripts/apps/authoring-react/macros/macros.tsx:57
 msgid "Quick List"
@@ -13652,15 +13652,15 @@ msgstr ""
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:62
 #: scripts/apps/publish/views/email-config.html:2
 msgid "Recipients"
-msgstr ""
+msgstr "Примаоци"
 
 #: scripts/apps/publish/views/email-config.html:10
 msgid "Recipients (Bcc, hidden)"
-msgstr ""
+msgstr "Примаоци (Bcc, скривени)"
 
 #: scripts/apps/publish/views/email-config.html:4
 msgid "Recipients (visible to everybody)"
-msgstr ""
+msgstr "Примаоци (видљиви свима)"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:161
 msgid "Recurring"
@@ -13747,7 +13747,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:18
 msgid "Region"
-msgstr ""
+msgstr "Регион"
 
 #: ../superdesk-planning/client/components/fields/resources/events.ts:75
 msgid "Registration"
@@ -13779,7 +13779,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:114
 msgid "Relate an item"
-msgstr ""
+msgstr "Повежи ставку"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EditorFieldEventRelatedItems.tsx:54
 #: ../superdesk-planning/client/components/fields/preview/RelatedArticles.tsx:34
@@ -13796,7 +13796,7 @@ msgstr ""
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:13
 #: scripts/apps/workspace/content/constants.ts:39
 msgid "Related Items"
-msgstr ""
+msgstr "Повезане ставке"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:134
 msgid "Related Planning Items"
@@ -13818,13 +13818,13 @@ msgstr ""
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:237
 msgid "Related item is not available."
-msgstr ""
+msgstr "Повезана ставка није доступна."
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:160
 msgid ""
 "Related item was not added, because the field reached the limit of related "
 "items allowed."
-msgstr ""
+msgstr "Повезана ставка није додата јер је поље достигло ограничење дозвољених повезаних ставки."
 
 #: scripts/apps/vocabularies/constants.ts:22
 msgid "Related items"
@@ -14082,7 +14082,7 @@ msgstr "Преименуј радни простор"
 
 #: scripts/apps/publish/views/email-config.html:29
 msgid "Rendition"
-msgstr ""
+msgstr "Варијанта"
 
 #: ../superdesk-analytics/client/views/renditions-preview.html:11
 msgid "Renditions"
@@ -14250,7 +14250,7 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:147
 #: scripts/apps/publish/views/publish-queue.html:90
 msgid "Resend"
-msgstr ""
+msgstr "Пошаљи поново"
 
 #: scripts/apps/archive/views/resend-configuration.html:4
 msgid "Resend To"
@@ -14310,7 +14310,7 @@ msgstr ""
 #: scripts/apps/publish/views/http-push-config.html:5
 #: scripts/apps/publish/views/http-push-config.html:6
 msgid "Resource URL"
-msgstr ""
+msgstr "URL ресурса"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Restore"
@@ -14335,7 +14335,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:283
 msgid "Revoke"
-msgstr ""
+msgstr "Опозови"
 
 #: ../superdesk-analytics/client/utils.js:158
 msgid "Rewrite"
@@ -14990,7 +14990,7 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:113
 #: scripts/apps/templates/views/template-editor-modal.html:156
 msgid "Scheduled at"
-msgstr ""
+msgstr "Заказано за"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:180
 msgid "Scheduled by"
@@ -15002,7 +15002,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:426
 msgid "Scheduled from {{start}} to {{end}}"
-msgstr ""
+msgstr "Заказано од {{start}} до {{end}}"
 
 #: ../superdesk-planning/client/validators/planning.ts:320
 msgid "Scheduled updates have to be after the previous updates."
@@ -15238,11 +15238,11 @@ msgstr "Секунде"
 
 #: scripts/apps/publish/views/amazon-sqs-fifo-config.html:50
 msgid "Secret Access Key"
-msgstr ""
+msgstr "Тајни приступни кључ"
 
 #: scripts/apps/publish/views/http-push-config.html:13
 msgid "Secret Token"
-msgstr ""
+msgstr "Тајни токен"
 
 #: scripts/core/auth/secure-login.html:18
 msgid "Secure Log In"
@@ -15252,7 +15252,7 @@ msgstr "Безбедна пријава"
 #: scripts/apps/publish/views/subscribers.html:10
 #: scripts/core/views/sdSearchList.html:3
 msgid "Select"
-msgstr ""
+msgstr "Изабери"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:277
 msgid "Select Agenda"
@@ -15413,7 +15413,7 @@ msgstr "Изабери следећу ставку у фокусираној ф�
 
 #: scripts/apps/publish-preview/previewModal.tsx:87
 msgid "Select preview target"
-msgstr ""
+msgstr "Изабери циљ прегледа"
 
 #: scripts/apps/monitoring/index.ts:119
 msgid "Select previous item on focused stage or group"
@@ -15592,7 +15592,7 @@ msgstr ""
 
 #: scripts/api/article-send.tsx:257
 msgid "Sent successfully"
-msgstr ""
+msgstr "Успешно послато"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
@@ -15604,11 +15604,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/publish-queue.html:104
 msgid "Sequence No"
-msgstr ""
+msgstr "Редни број"
 
 #: scripts/apps/publish/views/subscribers.html:181
 msgid "Sequence Number Settings"
-msgstr ""
+msgstr "Подешавања редног броја"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:111
 msgid "Series Start Date"
@@ -15652,7 +15652,7 @@ msgstr ""
 #: scripts/apps/publish/views/ftp-config.html:12
 #: scripts/apps/publish/views/http-push-config.html:14
 msgid "Set and hidden thereafter"
-msgstr ""
+msgstr "Постављено и потом скривено"
 
 #: scripts/apps/users/views/settings-roles.html:50
 msgid "Set as default"
@@ -16046,11 +16046,11 @@ msgstr ""
 #: scripts/apps/search/views/search-parameters.html:6
 #: scripts/apps/workspace/content/constants.ts:41
 msgid "Slugline"
-msgstr ""
+msgstr "Слаглајн"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:4
 msgid "Slugline Match"
-msgstr ""
+msgstr "Поклапање слаглајна"
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:2
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/editPriorityForm.tsx:85
@@ -16086,7 +16086,7 @@ msgstr ""
 #: scripts/api/article-send.tsx:135
 msgid ""
 "Some packages contain the following published items that can not be sent:"
-msgstr ""
+msgstr "Неки пакети садрже следеће објављене ставке које не могу бити послате:"
 
 #: ../superdesk-planning/client/actions/main.ts:477
 msgid "Some related planning item post validation failed"
@@ -16195,7 +16195,7 @@ msgstr ""
 
 #: scripts/apps/legal-archive/views/legal_archive.html:29
 msgid "Sorting"
-msgstr ""
+msgstr "Сортирање"
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:28
 msgid "Sorting:"
@@ -16381,7 +16381,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:87
 msgid "Start Date"
-msgstr ""
+msgstr "Почетни датум"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:18
 msgid "Start Time (inclusive)"
@@ -16466,14 +16466,14 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:124
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:158
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:233
 #: scripts/apps/contacts/views/list.html:38
 #: scripts/apps/publish/views/publish-queue.html:46
 #: scripts/apps/publish/views/subscribers.html:15
 msgid "Status:"
-msgstr ""
+msgstr "Статус:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:112
 msgid "Status: Unassigned"
@@ -16528,7 +16528,7 @@ msgstr ""
 #: scripts/apps/publish/views/odbc-config.html:11
 #: scripts/apps/publish/views/odbc-config.html:9
 msgid "Stored Procedure"
-msgstr ""
+msgstr "Складиштена процедура"
 
 #: scripts/apps/products/views/product-test.html:9
 msgid "Story GUID"
@@ -16537,11 +16537,11 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:78
 #: scripts/apps/search/views/search-parameters.html:31
 msgid "Story Text"
-msgstr ""
+msgstr "Текст приче"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:183
 msgid "Story is associated as update."
-msgstr ""
+msgstr "Прича је повезана као ажурирање."
 
 #: ../superdesk-planning/client/reducers/featuredPlanning.ts:177
 msgid "Story with slugline \"{{ slugline }}\" is added to the list"
@@ -16668,33 +16668,33 @@ msgstr ""
 #: scripts/apps/search/constants.ts:20
 #: scripts/apps/search/views/search-parameters.html:181
 msgid "Subscriber"
-msgstr ""
+msgstr "Претплатник"
 
 #: scripts/apps/publish/views/subscribers.html:84
 msgid "Subscriber Schedule Settings"
-msgstr ""
+msgstr "Подешавања распореда претплатника"
 
 #: scripts/apps/publish/views/subscribers.html:156
 msgid "Subscriber codes"
-msgstr ""
+msgstr "Кодови претплатника"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:284
 msgid "Subscriber could not be initialized!"
-msgstr ""
+msgstr "Претплатник није могао бити иницијализован!"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:213
 msgid "Subscriber saved."
-msgstr ""
+msgstr "Претплатник сачуван."
 
 #: scripts/apps/publish/views/publish-queue.html:14
 msgid "Subscriber:"
-msgstr ""
+msgstr "Претплатник:"
 
 #: scripts/apps/content-filters/views/filter-search-result.html:42
 #: scripts/apps/products/views/products-config-modal.html:16
 #: scripts/apps/publish/index.ts:41 scripts/apps/publish/views/settings.html:4
 msgid "Subscribers"
-msgstr ""
+msgstr "Претплатници"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:182
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:39
@@ -16999,11 +16999,11 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:130
 msgid "Target Type"
-msgstr ""
+msgstr "Циљни тип"
 
 #: scripts/apps/publish/views/subscribers.html:5
 msgid "Target Type:"
-msgstr ""
+msgstr "Циљни тип:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:67
 msgid "Target Types"
@@ -17023,7 +17023,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:163
 msgid "Targetable by users"
-msgstr ""
+msgstr "Може се циљати од стране корисника"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:188
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:405
@@ -17300,7 +17300,7 @@ msgstr ""
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:246
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:141
 msgid "The following status is not allowed in this field: {{status}}"
-msgstr ""
+msgstr "Следећи статус није дозвољен у овом пољу: {{status}}"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:121
 msgid "The helper text must not exceed 120 characters."
@@ -17352,7 +17352,7 @@ msgstr ""
 msgid ""
 "The package \"{{name}}\" contains the following published items that can not "
 "be sent:"
-msgstr ""
+msgstr "Пакет \"{{name}}\" садржи следеће објављене ставке које не могу бити послате:"
 
 #: scripts/apps/authoring-react/authoring-swtich.tsx:19
 msgid "The page needs to be reloaded in order to do that."
@@ -17369,7 +17369,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:35
 msgid "The rendition to attach to the email"
-msgstr ""
+msgstr "Варијанта за прилагање имејлу"
 
 #: scripts/core/editor3/components/comments/CommentPopup.tsx:155
 msgid "The reply will be deleted. Are you sure?"
@@ -17389,19 +17389,19 @@ msgstr ""
 msgid ""
 "The subscriber is currently inactive, but the schedule from {{start}} to "
 "{{end}} is valid. The subscriber will be activated on save."
-msgstr ""
+msgstr "Претплатник је тренутно неактиван, али распоред од {{start}} до {{end}} је важећи. Претплатник ће бити активиран приликом чувања."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:383
 msgid ""
 "The subscriber is set to start on {{date}}, but the Active switch will "
 "override this and activate the subscriber on save."
-msgstr ""
+msgstr "Претплатник је подешен да почне {{date}}, али ће га прекидач Активно заменити и активирати приликом чувања."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:391
 msgid ""
 "The subscriber schedule ended on {{date}}, but the Active switch will keep "
 "the subscriber active on save."
-msgstr ""
+msgstr "Распоред претплатника је завршен {{date}}, али ће га прекидач Активно одржати активним приликом чувања."
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:39
 msgid ""
@@ -17459,7 +17459,7 @@ msgstr ""
 
 #: scripts/api/highlights.ts:37
 msgid "There are items locked or not published. Do you want to continue?"
-msgstr ""
+msgstr "Постоје ставке које су закључане или нису објављене. Желите ли да наставите?"
 
 #: ../superdesk-planning/client/components/ItemActionsMenu/ActionsMenuPopup.tsx:91
 msgid "There are no actions available."
@@ -17582,7 +17582,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:194
 msgid "There is an error. Failed to associate update."
-msgstr ""
+msgstr "Дошло је до грешке. Повезивање ажурирања није успело."
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/rundown-view-edit.js:40
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/utils/handle-unsaved-rundown-changes.js:18
@@ -17599,7 +17599,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:296
 msgid "There is no token for subscriber."
-msgstr ""
+msgstr "Нема токена за претплатника."
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:60
 msgid "There was a problem while saving highlights configuration"
@@ -17849,7 +17849,7 @@ msgstr ""
 
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:154
 msgid "This item is already added as related."
-msgstr ""
+msgstr "Ова ставка је већ додата као повезана."
 
 #: scripts/apps/authoring/authoring/controllers/AssociationController.ts:211
 msgid "This item is already added."
@@ -17965,7 +17965,7 @@ msgstr ""
 #: scripts/apps/archive/views/related-items-preview.html:12
 #: scripts/apps/relations/views/related-items.html:30
 msgid "Thumbnail for related item"
-msgstr ""
+msgstr "Минијатура за повезану ставку"
 
 #: ../superdesk-planning/client/utils/events.tsx:1457
 #: scripts/core/datetime/datetime.ts:293
@@ -18277,7 +18277,7 @@ msgstr "Укључи/искључи подвучено"
 
 #: scripts/apps/publish/views/subscribers.html:311
 msgid "Token expiry"
-msgstr ""
+msgstr "Истек токена"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:103
 #: ../superdesk-planning/client/components/UI/Form/DateInput/DateInputPopup.tsx:213
@@ -18381,7 +18381,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/publish-queue.html:114
 msgid "Transmitted at"
-msgstr ""
+msgstr "Пренето у"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:197
 msgid "Trash"
@@ -18567,7 +18567,7 @@ msgstr "Опозови"
 #: scripts/apps/search/constants.ts:10
 #: scripts/apps/search/views/search-parameters.html:42
 msgid "Unique Name"
-msgstr ""
+msgstr "Јединствени назив"
 
 #: scripts/apps/search/views/item-globalsearch.html:11
 msgid "Unique Name/ID/GUID"
@@ -18617,7 +18617,7 @@ msgstr ""
 
 #: scripts/api/article-send.tsx:248
 msgid "Unknown error occurred"
-msgstr ""
+msgstr "Дошло је до непознате грешке"
 
 #: ../superdesk-analytics/client/utils.js:161
 msgid "Unlink"
@@ -19089,7 +19089,7 @@ msgstr ""
 #: scripts/apps/search/tests/search.spec.ts:249
 #: scripts/apps/workspace/content/constants.ts:48
 msgid "Urgency"
-msgstr ""
+msgstr "Хитност"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:10
 msgid "Urgency stats"
@@ -19135,7 +19135,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:18
 msgid "Use Transport Layer Security (FTPS)"
-msgstr ""
+msgstr "Користи безбедност транспортног слоја (FTPS)"
 
 #: scripts/apps/users/controllers/ChangeAvatarController.ts:8
 msgid "Use a Web URL"
@@ -19155,7 +19155,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:210
 msgid "Use priority queue for transmission."
-msgstr ""
+msgstr "Користи ред приоритета за пренос."
 
 #: scripts/apps/content-filters/views/manage-filters.html:135
 msgid "Use the article GUID for testing."
@@ -19248,7 +19248,7 @@ msgstr ""
 #: scripts/apps/search-providers/views/search-provider-config.html:109
 #: scripts/apps/users/views/list.html:34
 msgid "Username"
-msgstr ""
+msgstr "Корисничко име"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:115
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:413
@@ -19604,7 +19604,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:204
 msgid "When enabled it can send multiple items at the same time."
-msgstr ""
+msgstr "Када је омогућено, може слати више ставки истовремено."
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:55
 msgid "White"
@@ -19637,7 +19637,7 @@ msgstr ""
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:73
 msgid "Wire/Paper"
-msgstr ""
+msgstr "Агенција/Штампа"
 
 #: ../superdesk-planning/client/components/fields/editor/NoCoverage.tsx:15
 msgid "Without Coverage"
@@ -19824,7 +19824,7 @@ msgstr ""
 
 #: scripts/api/highlights.ts:53 scripts/apps/search/MultiImageEdit.ts:173
 msgid "You have unsaved changes, do you want to continue?"
-msgstr ""
+msgstr "Имате несачуване измене, желите ли да наставите?"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:93
 msgid "You have unsaved changes. Do you want to save them now?"
@@ -20345,7 +20345,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:26
 msgid "example"
-msgstr ""
+msgstr "пример"
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:116
@@ -20356,7 +20356,7 @@ msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:276
 msgid "expires:"
-msgstr ""
+msgstr "истиче:"
 
 #: scripts/apps/contacts/constants.ts:51
 msgid "facebook"
@@ -20397,7 +20397,7 @@ msgstr ""
 
 #: scripts/api/article-fetch.tsx:135
 msgid "file name"
-msgstr ""
+msgstr "назив датотеке"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:230
 msgid "first"
@@ -20519,7 +20519,7 @@ msgstr ""
 
 #: scripts/api/article-fetch.tsx:137
 msgid "height"
-msgstr ""
+msgstr "висина"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
@@ -20661,7 +20661,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:166
 msgid "item metadata associated."
-msgstr ""
+msgstr "метаподаци ставке повезани."
 
 #: scripts/apps/master-desk/components/OverviewComponent.tsx:235
 msgid "items in production"
@@ -20721,7 +20721,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:107
 #: scripts/apps/search/views/search-results.html:6
 msgid "loading"
-msgstr ""
+msgstr "учитавање"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/ImageTaggingComponent/ImageTaggingComponent.js:197
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/ImageTaggingComponent/ImageTaggingComponent.js:197
@@ -20844,7 +20844,7 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:64
 #: scripts/apps/users/views/user-preferences.html:153
 msgid "none"
-msgstr ""
+msgstr "ништа"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/controlled-vocabulary-select.tsx:95
 msgid "not"
@@ -21015,7 +21015,7 @@ msgstr "претходно"
 
 #: scripts/apps/publish-preview/previewModal.tsx:122
 msgid "preview"
-msgstr ""
+msgstr "преглед"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "production"
@@ -21271,11 +21271,11 @@ msgstr ""
 
 #: scripts/apps/legal-archive/views/legal_archive.html:16
 msgid "switch to grid view"
-msgstr ""
+msgstr "пређи на приказ мреже"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:17
 msgid "switch to list view"
-msgstr ""
+msgstr "пређи на приказ листе"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:95
 msgid "tab"
@@ -21499,7 +21499,7 @@ msgstr ""
 
 #: scripts/api/article-fetch.tsx:136
 msgid "width"
-msgstr ""
+msgstr "ширина"
 
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:110
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:95
@@ -21727,9 +21727,9 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:84
 msgid "{{multiSelectCount}} Item selected"
 msgid_plural "{{multiSelectCount}} Items selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{{multiSelectCount}} ставка изабрана"
+msgstr[1] "{{multiSelectCount}} ставке изабране"
+msgstr[2] "{{multiSelectCount}} ставки изабрано"
 
 #: scripts/apps/authoring/authoring/directives/WordCount.html:1
 msgid "{{numWords}} words"
@@ -21738,9 +21738,9 @@ msgstr ""
 #: scripts/api/article-fetch.tsx:117
 msgid "{{n}} images can not be fetched because they are too small."
 msgid_plural "One image can not be fetched because it is too small."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Једна слика не може бити преузета јер је премала."
+msgstr[1] "{{n}} слике не могу бити преузете јер су премале."
+msgstr[2] "{{n}} слика не може бити преузето јер су премале."
 
 #: scripts/apps/authoring-react/fields/media/difference.tsx:41
 msgid "{{n}} items added"
