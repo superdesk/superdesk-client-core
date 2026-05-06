@@ -112,7 +112,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:44
 msgid "(as defined for all groups)"
-msgstr ""
+msgstr "(као што је дефинисано за све групе)"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/index.tsx:237
 msgid "(custom text field)"
@@ -617,7 +617,7 @@ msgstr ""
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:88
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:97
 msgid "AND"
-msgstr ""
+msgstr "И"
 
 #: ../superdesk-planning/client/components/fields/editor/Categories.tsx:26
 #: ../superdesk-planning/client/components/fields/preview/index.ts:65
@@ -718,7 +718,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/desk-notifications.html:28
 msgid "Acknowledge"
-msgstr ""
+msgstr "Потврди пријем"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:16
 #: scripts/apps/publish/views/publish-queue.html:117
@@ -1000,7 +1000,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:99
 msgid "Add This Widget"
-msgstr ""
+msgstr "Додај овај виџет"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/TimeInputs.tsx:95
 msgid "Add Time"
@@ -1061,7 +1061,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:55
 msgid "Add content slugline"
-msgstr ""
+msgstr "Додај слаглајн садржаја"
 
 #: ../superdesk-planning/client/constants/planning.ts:144
 #: ../superdesk-planning/client/constants/planning.ts:147
@@ -1070,7 +1070,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:58
 msgid "Add description"
-msgstr ""
+msgstr "Додај опис"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/new-item.js:50
 #: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:50
@@ -1136,7 +1136,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:69
 msgid "Add new widget"
-msgstr ""
+msgstr "Додај нови виџет"
 
 #: ../superdesk-planning/client/components/Editor/bookmarks/AddPlanningBookmark.tsx:42
 msgid "Add planning item"
@@ -1154,7 +1154,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:66
 msgid "Add task description"
-msgstr ""
+msgstr "Додај опис задатка"
 
 #: ../superdesk-planning/client/actions/agenda.ts:166
 msgid "Add these  events to the planning list?"
@@ -1171,7 +1171,7 @@ msgstr ""
 #: scripts/apps/authoring/views/item-association.html:100
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:56
 msgid "Add title"
-msgstr ""
+msgstr "Додај наслов"
 
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:268
 msgid "Add to Current Package"
@@ -1216,7 +1216,7 @@ msgstr ""
 #: scripts/apps/dashboard/views/workspace.html:13
 #: scripts/apps/dashboard/views/workspace.html:14
 msgid "Add widget"
-msgstr ""
+msgstr "Додај виџет"
 
 #: scripts/apps/authoring-react/fields/attachments/difference-row.tsx:25
 msgid "Added"
@@ -1577,7 +1577,7 @@ msgstr ""
 
 #: scripts/core/itemList/LazyLoader.tsx:226
 msgid "All items have been loaded"
-msgstr ""
+msgstr "Све ставке су учитане"
 
 #: scripts/apps/search/controllers/get-multi-actions.tsx:327
 msgid "All items were published successfully."
@@ -1847,7 +1847,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:6
 msgid "Any"
-msgstr ""
+msgstr "Било који"
 
 #: scripts/apps/archive/views/metadata-view.html:162
 msgid "Aperture"
@@ -1955,7 +1955,7 @@ msgstr ""
 
 #: scripts/apps/workspace/services/WorkspaceService.ts:19
 msgid "Are you sure you want to delete current workspace?"
-msgstr ""
+msgstr "Да ли сте сигурни да желите да обришете тренутни радни простор?"
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:120
 msgid "Are you sure you want to delete filter condition?"
@@ -2727,7 +2727,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:10
 msgid "Back to original view"
-msgstr ""
+msgstr "Назад на оригинални приказ"
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.js:13
@@ -2955,7 +2955,7 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:32
 msgid "CREATE NEW WORKSPACE"
-msgstr ""
+msgstr "КРЕИРАЈ НОВИ РАДНИ ПРОСТОР"
 
 #: ../superdesk-analytics/client/charts/views/chart.html:26
 msgid "CSV File"
@@ -2963,7 +2963,7 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:20
 msgid "CUSTOM WORKSPACES"
-msgstr ""
+msgstr "ПРИЛАГОЂЕНИ РАДНИ ПРОСТОРИ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:53
 msgid "Calendar"
@@ -3005,11 +3005,11 @@ msgstr ""
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:20
 msgid "Can be associated as a take"
-msgstr ""
+msgstr "Може се повезати као наставак"
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:19
 msgid "Can be associated as an update"
-msgstr ""
+msgstr "Може се повезати као ажурирање"
 
 #: scripts/apps/workspace/content/views/profile-settings.html:172
 msgid "Can be embedded"
@@ -3297,7 +3297,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:17
 #: scripts/apps/workspace/content/constants.ts:17
 msgid "Categories"
-msgstr ""
+msgstr "Категорије"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:521
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:99
@@ -3559,7 +3559,7 @@ msgstr ""
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:108
 #: scripts/apps/search/views/save-search.html:9
 msgid "Clear filters"
-msgstr ""
+msgstr "Очисти филтере"
 
 #: scripts/apps/authoring/media/views/media-copy-metadata-directive.html:5
 msgid "Clear saved metadata"
@@ -3571,7 +3571,7 @@ msgstr ""
 #: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:356
 #: scripts/core/list/views/searchbar.html:5
 msgid "Clear search"
-msgstr ""
+msgstr "Очисти претрагу"
 
 #: scripts/apps/users/config.ts:93
 msgid "Clear sessions"
@@ -3589,7 +3589,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/views/workspace.html:60
 msgid "Click on the \"+\" button in the top right corner to add some widgets."
-msgstr ""
+msgstr "Кликните на дугме \"+\" у горњем десном углу да бисте додали виџете."
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:160
 msgid "Click the Plus button to add languages"
@@ -3735,7 +3735,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/index.ts:159
 msgid "Close desk widget"
-msgstr ""
+msgstr "Затвори виџет деска"
 
 #: scripts/apps/authoring/views/change-image.html:155
 msgid "Close details"
@@ -3790,7 +3790,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:196
 msgid "Columns:"
-msgstr ""
+msgstr "Колоне:"
 
 #: scripts/apps/packaging/index.ts:93
 msgid "Combine with current"
@@ -3831,7 +3831,7 @@ msgstr ""
 #: scripts/apps/search/views/search.html:22
 #: scripts/apps/search/views/search.html:23
 msgid "Compact View"
-msgstr ""
+msgstr "Компактан приказ"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningSubNav.tsx:102
 msgid "Compact list"
@@ -4020,7 +4020,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/src/authoring-fields/subitems/subitems-view-edit.tsx:119
 #: scripts/extensions/broadcasting/src/rundown-items/content-profile.tsx:89
 msgid "Content"
-msgstr ""
+msgstr "Садржај"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:219
 msgid ""
@@ -4066,7 +4066,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:28
 #: scripts/apps/templates/views/template-editor-modal.html:38
 msgid "Content Profile"
-msgstr ""
+msgstr "Профил садржаја"
 
 #: scripts/apps/workspace/content/index.ts:43
 #: scripts/apps/workspace/content/views/profile-settings.html:4
@@ -4103,7 +4103,7 @@ msgstr ""
 
 #: scripts/core/activity/activity.ts:27
 msgid "Content config"
-msgstr ""
+msgstr "Подешавање садржаја"
 
 #: scripts/apps/users/views/settings-roles.html:65
 msgid "Content creation"
@@ -4131,7 +4131,7 @@ msgstr ""
 
 #: scripts/core/activity/activity.ts:32
 msgid "Content flow"
-msgstr ""
+msgstr "Ток садржаја"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:265
 msgid "Content items not found!"
@@ -4534,7 +4534,7 @@ msgstr ""
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/sets/setEditorPanel.js:223
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:245
 msgid "Create"
-msgstr ""
+msgstr "Креирај"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.tsx:420
 msgid "Create & Post"
@@ -4558,12 +4558,12 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:45
 msgid "Create New Task"
-msgstr ""
+msgstr "Креирај нови задатак"
 
 #: scripts/apps/monitoring/index.ts:128
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:257
 msgid "Create Package"
-msgstr ""
+msgstr "Креирај пакет"
 
 #: ../superdesk-planning/client/components/Editor/EditorBookmarksBar.tsx:64
 msgid "Create Planning"
@@ -4580,7 +4580,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:126
 msgid "Create a broadcast"
-msgstr ""
+msgstr "Креирај емисију"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:49
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:50
@@ -4634,14 +4634,14 @@ msgstr ""
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:3
 msgid "Create new Workspace"
-msgstr ""
+msgstr "Креирај нови радни простор"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:110
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:114
 #: scripts/apps/monitoring/views/monitoring-view.html:126
 #: scripts/apps/workspace/content/index.ts:54
 msgid "Create new item"
-msgstr ""
+msgstr "Креирај нову ставку"
 
 #: ../superdesk-planning/client/components/Main/ListPanel.tsx:344
 msgid "Create new items or change your search filters"
@@ -4783,7 +4783,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:111
 msgid "Created by this user"
-msgstr ""
+msgstr "Креирао овај корисник"
 
 #: scripts/apps/search/directives/DateFilters.ts:77
 msgid "Created from"
@@ -4815,7 +4815,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "Created on"
-msgstr ""
+msgstr "Креирано"
 
 #: scripts/apps/search/directives/DateFilters.ts:78
 msgid "Created to"
@@ -4960,7 +4960,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/index.ts:54
 msgid "Customize your widgets and views"
-msgstr ""
+msgstr "Прилагодите своје виџете и приказе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:69
 msgid "Cut"
@@ -4972,11 +4972,11 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:11
 msgid "DESKS"
-msgstr ""
+msgstr "ДЕСКОВИ"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:32
 msgid "DONE"
-msgstr ""
+msgstr "ГОТОВО"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:130
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:216
@@ -5022,11 +5022,11 @@ msgstr ""
 #: scripts/apps/dashboard/index.ts:70
 #: scripts/apps/dashboard/views/workspace.html:2
 msgid "Dashboard"
-msgstr ""
+msgstr "Контролна табла"
 
 #: scripts/apps/dashboard/views/workspace.html:59
 msgid "Dashboard is empty"
-msgstr ""
+msgstr "Контролна табла је празна"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:419
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:16
@@ -5170,7 +5170,7 @@ msgstr ""
 #: scripts/apps/monitoring/views/monitoring-group-header.html:43
 #: scripts/apps/search-providers/directive.ts:118
 msgid "Default"
-msgstr ""
+msgstr "Подразумевано"
 
 #: scripts/apps/users/views/user-preferences.html:219
 msgid "Default Agenda"
@@ -5372,7 +5372,7 @@ msgstr ""
 #: scripts/apps/dashboard/views/workspace.html:35
 #: scripts/apps/monitoring/views/monitoring-view.html:220
 msgid "Delete workspace"
-msgstr ""
+msgstr "Обриши радни простор"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
@@ -5526,19 +5526,19 @@ msgstr ""
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:56
 #: scripts/apps/workspace/content/constants.ts:66
 msgid "Desk Output"
-msgstr ""
+msgstr "Излаз деска"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:152
 msgid "Desk Router"
-msgstr ""
+msgstr "Рутер деска"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:50
 msgid "Desk Schedule Output"
-msgstr ""
+msgstr "Заказани излаз деска"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
-msgstr ""
+msgstr "Послати излаз деска"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:79
 msgid "Desk Templates"
@@ -5584,7 +5584,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/index.ts:26
 msgid "Desk status is outdated, please refresh."
-msgstr ""
+msgstr "Статус деска је застарео, освежите."
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:167
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:88
@@ -5918,7 +5918,7 @@ msgstr "Не чувати"
 #: scripts/extensions/videoEditor/dist/src/extensions/videoEditor/src/VideoEditorHeader.js:11
 #: scripts/extensions/videoEditor/src/VideoEditorHeader.tsx:30
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:71
 msgid "Dots"
@@ -6045,7 +6045,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/index.ts:197
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:75
 msgid "Due"
-msgstr ""
+msgstr "Рок"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:26
 msgid "Due Date"
@@ -6053,11 +6053,11 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:34
 msgid "Due date"
-msgstr ""
+msgstr "Датум рока"
 
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:38
 msgid "Due time"
-msgstr ""
+msgstr "Време рока"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:142
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:172
@@ -6104,7 +6104,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:125
 msgid "Duplicate an item"
-msgstr ""
+msgstr "Дуплирај ставку"
 
 #: scripts/core/interactive-article-actions-panel/actions/duplicate-to-action.tsx:80
 msgid "Duplicate and open"
@@ -6446,11 +6446,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:121
 msgid "Edit an item"
-msgstr ""
+msgstr "Уреди ставку"
 
 #: scripts/apps/monitoring/index.ts:124
 msgid "Edit an item in a new Window"
-msgstr ""
+msgstr "Уреди ставку у новом прозору"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/settings/edit-workday-modal.js:106
 #: scripts/extensions/availability-manager/dist/src/settings/edit-workday-modal.js:106
@@ -6946,7 +6946,7 @@ msgstr ""
 
 #: scripts/core/itemList/itemList.ts:110
 msgid "Error: Slugline required."
-msgstr ""
+msgstr "Грешка: слаглајн је обавезан."
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:225
 msgid "Error: Subscriber must have at least one destination."
@@ -8032,7 +8032,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:122
 msgid "Fetch an item"
-msgstr ""
+msgstr "Преузми ставку"
 
 #: scripts/core/interactive-article-actions-panel/actions/fetch-to-action.tsx:101
 msgid "Fetch and open"
@@ -8107,7 +8107,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:161
 msgid "File types"
-msgstr ""
+msgstr "Типови датотека"
 
 #: scripts/extensions/sams/dist/src/containers/FileUploadModal.js:203
 #: scripts/extensions/sams/dist/src/extensions/sams/src/containers/FileUploadModal.js:203
@@ -8215,7 +8215,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:158
 msgid "Filter file types"
-msgstr ""
+msgstr "Филтрирај типове датотека"
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:50
 msgid "Filter statement {{id}} does not have a filter condition."
@@ -8249,7 +8249,7 @@ msgstr ""
 #: scripts/apps/search/views/search-panel.html:64
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:292
 msgid "Filters"
-msgstr ""
+msgstr "Филтери"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:78
 #: scripts/apps/authoring/editor/views/find-replace.html:5
@@ -8610,7 +8610,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:66
 msgid "Global saved searches"
-msgstr ""
+msgstr "Глобалне сачуване претраге"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:97
 msgid "Globe"
@@ -9177,7 +9177,7 @@ msgstr ""
 #: scripts/apps/search/components/fields/state.tsx:35
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:298
 msgid "In Progress"
-msgstr ""
+msgstr "У току"
 
 #: scripts/apps/authoring-react/data-layer.ts:428
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.ts:72
@@ -9669,7 +9669,7 @@ msgstr ""
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:190
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:257
 msgid "Item saved."
-msgstr ""
+msgstr "Ставка сачувана."
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:114
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:29
@@ -9716,7 +9716,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:128
 msgid "Items Count"
-msgstr ""
+msgstr "Број ставки"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:241
 msgid "Items Created"
@@ -9730,19 +9730,19 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:22
 msgid "Items created by the user"
-msgstr ""
+msgstr "Ставке које је креирао корисник"
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:25
 msgid "Items locked by the user"
-msgstr ""
+msgstr "Ставке које је закључао корисник"
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:28
 msgid "Items marked for the user"
-msgstr ""
+msgstr "Ставке означене за корисника"
 
 #: scripts/apps/dashboard/user-activity/user-activity.ts:31
 msgid "Items moved to a working stage by the user"
-msgstr ""
+msgstr "Ставке које је корисник преместио у радну фазу"
 
 #: scripts/api/article-fetch.tsx:131
 msgid "Items that can not be fetched"
@@ -10018,7 +10018,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:108
 #: scripts/core/itemList/views/relatedItem-list-widget.html:33
 msgid "Legal"
-msgstr ""
+msgstr "Правно"
 
 #: scripts/apps/legal-archive/index.ts:37
 msgid "Legal Archive"
@@ -10144,7 +10144,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/directives/utils.ts:88
 msgid "List view"
-msgstr ""
+msgstr "Приказ листе"
 
 #: scripts/apps/authoring/suggest/SuggestView.html:4
 msgid "Live Suggestions"
@@ -10258,7 +10258,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:91
 msgid "Locked by this user"
-msgstr ""
+msgstr "Закључао овај корисник"
 
 #: scripts/apps/archive/views/item-lock.html:19
 msgid "Locked by you in another browser"
@@ -10502,11 +10502,11 @@ msgstr ""
 
 #: scripts/apps/desks/index.ts:60 scripts/apps/monitoring/index.ts:130
 msgid "Mark for desk"
-msgstr ""
+msgstr "Означи за деск"
 
 #: scripts/apps/highlights/index.ts:46 scripts/apps/monitoring/index.ts:129
 msgid "Mark for highlight"
-msgstr ""
+msgstr "Означи за истицање"
 
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-article-actions.js:29
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
@@ -10588,7 +10588,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:99
 msgid "Marked for this user"
-msgstr ""
+msgstr "Означено за овог корисника"
 
 #: scripts/apps/master-desk/index.ts:12 scripts/apps/master-desk/index.ts:23
 msgid "Master Desk"
@@ -10707,7 +10707,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:102
 #: scripts/apps/vocabularies/index.ts:43
 msgid "Metadata"
-msgstr ""
+msgstr "Метаподаци"
 
 #: scripts/apps/vocabularies/views/settings.html:4
 msgid "Metadata management"
@@ -10819,21 +10819,21 @@ msgstr "Понедељак"
 
 #: scripts/apps/monitoring/aggregate-widget/aggregate.ts:6
 msgid "Monitor"
-msgstr ""
+msgstr "Монитор"
 
 #: scripts/apps/monitoring/config.ts:19 scripts/apps/monitoring/config.ts:7
 #: scripts/apps/monitoring/views/monitoring-view.html:21
 #: scripts/apps/monitoring/views/monitoring-view.html:3
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Monitoring"
-msgstr ""
+msgstr "Мониторинг"
 
 #: scripts/apps/desks/views/settings.html:43
 #: scripts/apps/desks/views/settings.html:47
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 #: scripts/apps/monitoring/views/monitoring-view.html:107
 msgid "Monitoring settings"
-msgstr ""
+msgstr "Подешавања мониторинга"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:163
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:83
@@ -10864,7 +10864,7 @@ msgstr ""
 #: scripts/apps/monitoring/views/monitoring-view.html:159
 #: scripts/apps/monitoring/views/monitoring-view.html:201
 msgid "More actions"
-msgstr ""
+msgstr "Више радњи"
 
 #: scripts/core/ui/components/content-create-dropdown/more-templates.tsx:49
 msgid "More templates"
@@ -10898,11 +10898,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:113
 msgid "Move focus to next stage or group"
-msgstr ""
+msgstr "Премести фокус на следећу фазу или групу"
 
 #: scripts/apps/monitoring/index.ts:115
 msgid "Move focus to previous stage or group"
-msgstr ""
+msgstr "Премести фокус на претходну фазу или групу"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:197
 msgid "Move up"
@@ -10923,7 +10923,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:154
 msgid "Moved to a working stage by this user"
-msgstr ""
+msgstr "Премештено у радну фазу од стране овог корисника"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:134
 #: scripts/apps/authoring-react/multi-edit-modal.tsx:240
@@ -10954,7 +10954,7 @@ msgstr "Цитат у више редова"
 
 #: scripts/apps/workspace/index.ts:39
 msgid "Multi-select (or deselect) an item"
-msgstr ""
+msgstr "Изабери (или поништи избор) више ставки"
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:2
 #: scripts/apps/authoring/views/authoring-topbar.html:296
@@ -11205,7 +11205,7 @@ msgstr ""
 #: scripts/extensions/availability-manager/src/correspondent-availability/filters.tsx:115
 #: scripts/extensions/availability-manager/src/settings/availability-settings.tsx:313
 msgid "Next"
-msgstr ""
+msgstr "Следеће"
 
 #: scripts/apps/search/directives/DateFilters.ts:23
 msgid "Next 3 Months"
@@ -11542,7 +11542,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/user-activity/components/Group.tsx:55
 msgid "No results for this user"
-msgstr ""
+msgstr "Нема резултата за овог корисника"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:205
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.tsx:230
@@ -11809,7 +11809,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/desk-notifications.html:15
 msgid "Notification list"
-msgstr ""
+msgstr "Листа обавештења"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:4
 #: scripts/apps/users/views/user-preferences.html:15
@@ -11867,7 +11867,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/directives/ActiveFilterTags.tsx:87
 msgid "OR"
-msgstr ""
+msgstr "ИЛИ"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/groups.js:25
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:25
@@ -12012,7 +12012,7 @@ msgstr "Упс! Неисправан имејл корисника.<br>Поку�
 #: scripts/apps/users/views/user-list-item.html:37
 #: scripts/core/list/views/list-view.html:3
 msgid "Oops! There are no items."
-msgstr ""
+msgstr "Упс! Нема ставки."
 
 #: ../superdesk-planning/client/actions/multiSelect.ts:238
 #: scripts/apps/authoring/authoring/index.ts:380
@@ -12033,7 +12033,7 @@ msgstr ""
 
 #: scripts/apps/workspace/index.ts:34
 msgid "Open highlights"
-msgstr ""
+msgstr "Отвори истицања"
 
 #: scripts/apps/authoring/authoring/index.ts:401
 msgid "Open in new Window"
@@ -12059,7 +12059,7 @@ msgstr ""
 
 #: scripts/apps/workspace/index.ts:33
 msgid "Open monitoring"
-msgstr ""
+msgstr "Отвори мониторинг"
 
 #: scripts/apps/authoring-react/toolbar/multi-edit-toolbar-action.tsx:58
 msgid "Open multi edit"
@@ -12071,23 +12071,23 @@ msgstr ""
 
 #: scripts/apps/workspace/index.ts:37
 msgid "Open personal"
-msgstr ""
+msgstr "Отвори лично"
 
 #: scripts/apps/workspace/index.ts:38
 msgid "Open search"
-msgstr ""
+msgstr "Отвори претрагу"
 
 #: scripts/apps/workspace/index.ts:36
 msgid "Open spike"
-msgstr ""
+msgstr "Отвори кош"
 
 #: scripts/apps/workspace/index.ts:35
 msgid "Open tasks"
-msgstr ""
+msgstr "Отвори задатке"
 
 #: scripts/apps/workspace/index.ts:32
 msgid "Open workspace / dashboard"
-msgstr ""
+msgstr "Отвори радни простор / контролну таблу"
 
 #: ../superdesk-planning/client/components/Locations/OpenStreetMapPreviewList.tsx:40
 msgid "OpenStreetMap Details"
@@ -12099,7 +12099,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/desk-notifications.html:35
 msgid "Opened by"
-msgstr ""
+msgstr "Отворио"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:637
 msgid "Operation"
@@ -12277,15 +12277,15 @@ msgstr ""
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:55
 msgid "Output/Published"
-msgstr ""
+msgstr "Излаз/објављено"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:49
 msgid "Output/Scheduled"
-msgstr ""
+msgstr "Излаз/заказано"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:61
 msgid "Output/Sent"
-msgstr ""
+msgstr "Излаз/послато"
 
 #: ../superdesk-planning/client/utils/contentProfiles.ts:313
 msgid "Override Auto Assign to Workflow"
@@ -12399,7 +12399,7 @@ msgstr ""
 
 #: scripts/core/list/views/sdPaginationAlt.html:2
 msgid "Page"
-msgstr ""
+msgstr "Страница"
 
 #: ../superdesk-analytics/client/charts/views/chart-form-options.html:57
 msgid "Page Size"
@@ -12407,7 +12407,7 @@ msgstr ""
 
 #: scripts/core/list/views/sdPagination.html:2
 msgid "Page Size:"
-msgstr ""
+msgstr "Величина странице:"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:24
 msgid "Pagination"
@@ -12534,7 +12534,7 @@ msgstr ""
 #: scripts/apps/monitoring/views/aggregate-settings.html:55
 #: scripts/apps/templates/constants.ts:10
 msgid "Personal"
-msgstr ""
+msgstr "Лично"
 
 #: scripts/apps/dictionaries/views/settings.html:28
 msgid "Personal Dictionary"
@@ -12542,11 +12542,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:40
 msgid "Personal Items"
-msgstr ""
+msgstr "Личне ставке"
 
 #: scripts/apps/monitoring/config.ts:54
 msgid "Personal Space"
-msgstr ""
+msgstr "Лични простор"
 
 #: ../superdesk-planning/client/constants/index.ts:170
 msgid "Personal Workspace"
@@ -12565,7 +12565,7 @@ msgstr ""
 #: scripts/apps/monitoring/config.ts:64
 #: scripts/core/interactive-article-actions-panel/subcomponents/destination-select.tsx:28
 msgid "Personal space"
-msgstr ""
+msgstr "Лични простор"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:145
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:394
@@ -12583,7 +12583,7 @@ msgstr ""
 #: scripts/apps/search/views/search.html:28
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:29
 msgid "Photo Grid View"
-msgstr ""
+msgstr "Приказ мреже фотографија"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:110
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:92
@@ -12596,7 +12596,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:385
 msgid "Pick task"
-msgstr ""
+msgstr "Изабери задатак"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:148
 #: ../superdesk-planning/client/utils/index.ts:589
@@ -13065,7 +13065,7 @@ msgstr ""
 #: scripts/extensions/availability-manager/src/correspondent-availability/filters.tsx:104
 #: scripts/extensions/availability-manager/src/settings/availability-settings.tsx:301
 msgid "Previous"
-msgstr ""
+msgstr "Претходно"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:107
 #: scripts/apps/authoring-react/macros/interactive-macros-display.tsx:122
@@ -13137,7 +13137,7 @@ msgstr "Приватно"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:89
 msgid "Private saved searches"
-msgstr ""
+msgstr "Приватне сачуване претраге"
 
 #: scripts/apps/users/controllers/UserEditController.ts:32
 msgid "Privileges"
@@ -13380,7 +13380,7 @@ msgstr ""
 #: scripts/apps/search/views/item-repo.html:5
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:301
 msgid "Published"
-msgstr ""
+msgstr "Објављено"
 
 #: scripts/apps/desks/views/settings.html:86
 msgid "Published Content"
@@ -13592,11 +13592,11 @@ msgstr "Само за читање"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:206
 msgid "Rearrange Groups"
-msgstr ""
+msgstr "Прераспореди групе"
 
 #: scripts/apps/dashboard/views/workspace.html:5
 msgid "Rearrange widgets"
-msgstr ""
+msgstr "Прераспореди виџете"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.tsx:161
 msgid "Reason for Event cancellation:"
@@ -13713,11 +13713,11 @@ msgstr "Прецизирај претрагу"
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:415
 #: scripts/extensions/auto-tagging-widget/src/auto-tagging.tsx:794
 msgid "Refresh"
-msgstr ""
+msgstr "Освежи"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:99
 msgid "Refresh content"
-msgstr ""
+msgstr "Освежи садржај"
 
 #: scripts/apps/authoring/metadata/views/metadata-tags.html:9
 msgid "Refresh suggestions"
@@ -14073,12 +14073,12 @@ msgstr ""
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:4
 msgid "Rename Workspace"
-msgstr ""
+msgstr "Преименуј радни простор"
 
 #: scripts/apps/dashboard/views/workspace.html:29
 #: scripts/apps/monitoring/views/monitoring-view.html:213
 msgid "Rename workspace"
-msgstr ""
+msgstr "Преименуј радни простор"
 
 #: scripts/apps/publish/views/email-config.html:29
 msgid "Rendition"
@@ -14098,11 +14098,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:105
 msgid "Reorder Sections"
-msgstr ""
+msgstr "Прераспореди секције"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:108
 msgid "Reorder stages and saved searches for monitoring view"
-msgstr ""
+msgstr "Прераспореди фазе и сачуване претраге за приказ мониторинга"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:165
 msgid "Repeat"
@@ -14421,7 +14421,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:22
 msgid "Route incoming content to"
-msgstr ""
+msgstr "Усмери долазни садржај у"
 
 #: scripts/apps/search/components/fields/state.tsx:32
 msgid "Routed"
@@ -14429,15 +14429,15 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:3
 msgid "Routed from"
-msgstr ""
+msgstr "Усмерено са"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:8
 msgid "Routed from other desks"
-msgstr ""
+msgstr "Усмерено са других дескова"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:9
 msgid "Routed from:"
-msgstr ""
+msgstr "Усмерено са:"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Routing Rules Management"
@@ -14453,7 +14453,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:12
 msgid "Routing to:"
-msgstr ""
+msgstr "Усмеравање на:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:53
 msgid "Rule name"
@@ -14883,7 +14883,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:62
 msgid "Saved Searches"
-msgstr ""
+msgstr "Сачуване претраге"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:238
 msgid "Saved report not found!"
@@ -15078,7 +15078,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/page.js:131
 #: scripts/extensions/broadcasting/src/page.tsx:186
 msgid "Search"
-msgstr ""
+msgstr "Претрага"
 
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:238
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/workspaceSubnav.js:238
@@ -15287,7 +15287,7 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:5
 msgid "Select Workspace"
-msgstr ""
+msgstr "Изабери радни простор"
 
 #: scripts/apps/desks/views/desk-config-modal.html:179
 msgid ""
@@ -15386,7 +15386,7 @@ msgstr "Изабери дескове"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:18
 msgid "Select desks for view"
-msgstr ""
+msgstr "Изабери дескове за приказ"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:41
 msgid "Select either Search or Browse the locations"
@@ -15409,7 +15409,7 @@ msgstr "Изабери ставку"
 
 #: scripts/apps/monitoring/index.ts:117
 msgid "Select next item on focused stage or group"
-msgstr ""
+msgstr "Изабери следећу ставку у фокусираној фази или групи"
 
 #: scripts/apps/publish-preview/previewModal.tsx:87
 msgid "Select preview target"
@@ -15417,11 +15417,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:119
 msgid "Select previous item on focused stage or group"
-msgstr ""
+msgstr "Изабери претходну ставку у фокусираној фази или групи"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:65
 msgid "Select saved searches for view"
-msgstr ""
+msgstr "Изабери сачуване претраге за приказ"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/select-show.js:21
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/select-show.js:21
@@ -15584,7 +15584,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:41
 msgid "Sent Items"
-msgstr ""
+msgstr "Послате ставке"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:436
 msgid "Sent To"
@@ -15680,7 +15680,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:131
 msgid "Set maximum items per stages and saved searches for view"
-msgstr ""
+msgstr "Подеси максималан број ставки по фазама и сачуваним претрагама за приказ"
 
 #: scripts/apps/monitoring/aggregate-widget/aggregate.ts:17
 msgid ""
@@ -15689,7 +15689,7 @@ msgid ""
 "sensible name, select a saved search or desk or its workflow stages. Monitor "
 "anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr ""
+msgstr "Подесите различите мониторе да бисте пратили било које теме из доласка или продукције, излаза дескова или било ког дела радног тока. Све што вам треба је да им дате смислен назив, изаберете сачувану претрагу или деск или његове радне фазе. Пратите било шта, било где, било када. Можете имати онолико виџета Монитора колико желите."
 
 #: scripts/extensions/sams/dist/src/api/sets.js:57
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:57
@@ -16068,7 +16068,7 @@ msgstr ""
 #: scripts/apps/search/views/search-filters.html:130
 #: scripts/core/itemList/views/relatedItem-list-widget.html:34
 msgid "Sms"
-msgstr ""
+msgstr "СМС"
 
 #: ../superdesk-planning/client/components/fields/editor/AssignedCoverage.tsx:24
 msgid "Some Coverages Assigned"
@@ -16137,7 +16137,7 @@ msgstr "Ваш налог је суспендован."
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:23
 msgid "Sorry, given workspace name is in use"
-msgstr ""
+msgstr "Извините, дати назив радног простора се већ користи"
 
 #: scripts/apps/users/views/settings-roles.html:40
 msgid "Sorry, this role name already exists."
@@ -16165,7 +16165,7 @@ msgstr ""
 #: scripts/apps/search/views/item-sortbar.html:12
 #: scripts/apps/search/views/item-sortbar.html:6
 msgid "Sort by"
-msgstr ""
+msgstr "Сортирај по"
 
 #: ../superdesk-planning/client/apps/Planning/PlanningListSubNav.tsx:239
 msgid "Sort by:"
@@ -16199,7 +16199,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-group-header.html:28
 msgid "Sorting:"
-msgstr ""
+msgstr "Сортирање:"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:586
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:455
@@ -16264,7 +16264,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/config.ts:29
 msgid "Spike Monitoring"
-msgstr ""
+msgstr "Мониторинг коша"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.tsx:138
 msgid "Spike Planning Item"
@@ -16280,7 +16280,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:127
 msgid "Spike item(s)"
-msgstr ""
+msgstr "Премести ставку(е) у кош"
 
 #: ../superdesk-planning/client/constants/planning.ts:135
 msgid "Spike planning"
@@ -16298,7 +16298,7 @@ msgstr ""
 #: scripts/apps/search/components/fields/state.tsx:36
 #: scripts/apps/search/constants.ts:14
 msgid "Spiked"
-msgstr ""
+msgstr "У кошу"
 
 #: scripts/apps/search/views/search-parameters.html:145
 msgid "Spiked Content"
@@ -16307,7 +16307,7 @@ msgstr ""
 #: scripts/apps/monitoring/config.ts:40
 #: scripts/apps/monitoring/views/monitoring-view.html:257
 msgid "Spiked Items"
-msgstr ""
+msgstr "Ставке у кошу"
 
 #: ../superdesk-planning/client/components/fields/preview/base/converters.ts:177
 msgid "Spiked Only"
@@ -16320,7 +16320,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
-msgstr ""
+msgstr "Ставке у кошу"
 
 #: scripts/apps/search/views/search-parameters.html:153
 msgid "Spiked only content"
@@ -16369,7 +16369,7 @@ msgstr ""
 #: scripts/apps/monitoring/views/monitoring-view.html:23
 #: scripts/apps/monitoring/views/monitoring-view.html:66
 msgid "Stages"
-msgstr ""
+msgstr "Фазе"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:177
 msgid "Star"
@@ -16405,12 +16405,12 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:31
 msgid "Start routing"
-msgstr ""
+msgstr "Започни усмеравање"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:87
 #: scripts/apps/search/views/item-searchbar.html:19
 msgid "Start search"
-msgstr ""
+msgstr "Започни претрагу"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:571
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:123
@@ -16493,7 +16493,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:37
 msgid "Stop routing"
-msgstr ""
+msgstr "Заустави усмеравање"
 
 #: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:254
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:150
@@ -16780,7 +16780,7 @@ msgstr "Експонент"
 #: scripts/apps/monitoring/directives/utils.ts:103
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:31
 msgid "Swimlane View"
-msgstr ""
+msgstr "Канбан приказ"
 
 #: ../superdesk-planning/client/components/fields/editor/Language.tsx:111
 msgid "Switch Metadata Language"
@@ -16800,11 +16800,11 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:111
 msgid "Switch between grouped/single desk view"
-msgstr ""
+msgstr "Пребацуј између груписаног/појединачног приказа деска"
 
 #: scripts/apps/monitoring/index.ts:109
 msgid "Switch between grouped/single stage view"
-msgstr ""
+msgstr "Пребацуј између груписаног/појединачног приказа фазе"
 
 #: scripts/core/menu/views/menu.html:38
 msgid "Switch to feature preview"
@@ -16969,7 +16969,7 @@ msgstr ""
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:31
 msgid "Takes"
-msgstr ""
+msgstr "Наставци"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:187
 msgid "Takes Package"
@@ -17029,7 +17029,7 @@ msgstr ""
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:405
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:2
 msgid "Tasks"
-msgstr ""
+msgstr "Задаци"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Tasks Management"
@@ -17413,7 +17413,7 @@ msgid ""
 "The user activity widget provides information about user activity. Using the "
 "widget, editors can search and select a user. Upon selection a list of "
 "content items is shown categorized as follows:"
-msgstr ""
+msgstr "Виџет активности корисника пружа информације о активности корисника. Користећи виџет, уредници могу претраживати и изабрати корисника. Након избора приказује се листа ставки садржаја категоризована на следећи начин:"
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:226
 msgid "The values should be unique for {{uniqueField}}"
@@ -17451,7 +17451,7 @@ msgstr ""
 #: scripts/apps/search/components/ItemList.tsx:523
 #: scripts/core/itemList/LazyLoader.tsx:216
 msgid "There are currently no items"
-msgstr ""
+msgstr "Тренутно нема ставки"
 
 #: scripts/validate-instance-configuration.tsx:108
 msgid "There are issues with instance configuration"
@@ -18129,7 +18129,7 @@ msgstr "На деск"
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:9
 #: scripts/apps/master-desk/components/AssignmentsComponent.tsx:40
 msgid "To Do"
-msgstr ""
+msgstr "За урадити"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:195
 msgid "To Lowercase"
@@ -18490,7 +18490,7 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:18
 msgid "UPCOMING"
-msgstr ""
+msgstr "ПРЕДСТОЈЕЋЕ"
 
 #: scripts/apps/authoring-react/toolbar-components/angular-integration/update-action.tsx:10
 #: scripts/apps/authoring/views/authoring-header.html:57
@@ -18530,7 +18530,7 @@ msgstr ""
 #: scripts/apps/dashboard/workspace-tasks/views/assignee-view.html:8
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:50
 msgid "Unassigned"
-msgstr ""
+msgstr "Недодељено"
 
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:56
 #: scripts/extensions/availability-manager/dist/src/extensions/availability-manager/src/utils.js:72
@@ -18927,7 +18927,7 @@ msgstr ""
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:174
 #: scripts/extensions/sams/src/utils/ui.tsx:107
 msgid "Updated"
-msgstr ""
+msgstr "Ажурирано"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.tsx:129
 msgid "Updated Fields:"
@@ -19186,7 +19186,7 @@ msgstr ""
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:340
 #: scripts/apps/dashboard/user-activity/user-activity.ts:37
 msgid "User Activity"
-msgstr ""
+msgstr "Активност корисника"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:185
 msgid "User Activity - {{username}}"
@@ -19385,7 +19385,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/index.ts:120
 msgid "View an item"
-msgstr ""
+msgstr "Прикажи ставку"
 
 #: ../superdesk-analytics/client/index.js:95
 msgid "View analytics reports"
@@ -19423,7 +19423,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:13
 msgid "View name"
-msgstr ""
+msgstr "Назив приказа"
 
 #: scripts/core/menu/views/menu.html:49
 msgid "View notifications"
@@ -19613,7 +19613,7 @@ msgstr ""
 #: scripts/apps/dashboard/views/widget.html:11
 #: scripts/apps/dashboard/views/widget.html:12
 msgid "Widget settings"
-msgstr ""
+msgstr "Подешавања виџета"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
 msgid ""
@@ -19665,7 +19665,7 @@ msgstr ""
 
 #: scripts/core/activity/activity.ts:22
 msgid "Workflow"
-msgstr ""
+msgstr "Радни ток"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:171
 msgid "Workflow State"
@@ -19692,15 +19692,15 @@ msgstr ""
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:376
 #: scripts/apps/ingest/index.ts:72 scripts/apps/stream/index.ts:18
 msgid "Workspace"
-msgstr ""
+msgstr "Радни простор"
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:15
 msgid "Workspace name"
-msgstr ""
+msgstr "Назив радног простора"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:1
 msgid "Workspace:"
-msgstr ""
+msgstr "Радни простор:"
 
 #: scripts/apps/dashboard/world-clock/world-clock.ts:209
 #: scripts/core/lang/missing-translations-strings.ts:44
@@ -19757,7 +19757,7 @@ msgstr ""
 msgid ""
 "You are changing you personal preferences. If you would like to set the "
 "default order for the desk, you can do so from the settings page."
-msgstr ""
+msgstr "Мењате своје личне поставке. Ако желите да поставите подразумевани редослед за деск, то можете учинити на страници подешавања."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
@@ -19816,7 +19816,7 @@ msgstr "Немате ниједно обавештење"
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:44
 msgid "You don't have the privileges to perform any action"
-msgstr ""
+msgstr "Немате привилегије за извршавање било које радње"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:12
 msgid "You have chosen to subscribe to"
@@ -19952,7 +19952,7 @@ msgstr ""
 #: scripts/apps/users/views/user-preferences.html:147
 #: scripts/core/utils.tsx:342
 msgid "all"
-msgstr ""
+msgstr "све"
 
 #: scripts/apps/desks/views/desk-config-modal.html:289
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
@@ -20200,11 +20200,11 @@ msgstr ""
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:17
 msgid "custom vocabulary"
-msgstr ""
+msgstr "прилагођени вокабулар"
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:8
 msgid "date"
-msgstr ""
+msgstr "датум"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:41
 #: scripts/apps/desks/views/content-expiry.html:3
@@ -20319,7 +20319,7 @@ msgstr ""
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:93
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:9
 msgid "embed"
-msgstr ""
+msgstr "уграђени садржај"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:94
 msgid "embed articles"
@@ -20422,7 +20422,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "for \"{{name}}\" Desk"
-msgstr ""
+msgstr "за деск \"{{name}}\""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:42
 msgid "for '{{ desk }}'"
@@ -20483,7 +20483,7 @@ msgstr ""
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:42
 msgid "genre:"
-msgstr ""
+msgstr "жанр:"
 
 #: scripts/core/ui/components/UserPopup/UserPopup.tsx:27
 msgid "go to profile"
@@ -20862,7 +20862,7 @@ msgstr ""
 #: scripts/core/list/views/sdPaginationAlt.html:2
 #: scripts/core/views/sdSearchList.html:15
 msgid "of"
-msgstr ""
+msgstr "од"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:63
 #: ../superdesk-planning/client/utils/events.tsx:1467
@@ -21059,7 +21059,7 @@ msgstr ""
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:10
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:7
 msgid "related content"
-msgstr ""
+msgstr "повезани садржај"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:89
 msgid "remove all format"
@@ -21300,7 +21300,7 @@ msgstr ""
 #: scripts/core/lang/missing-translations-strings.ts:9
 #: scripts/core/utils.tsx:291 scripts/core/utils.tsx:343
 msgid "text"
-msgstr ""
+msgstr "текст"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:84
 #: scripts/apps/authoring/versioning/history/views/history.html:83
