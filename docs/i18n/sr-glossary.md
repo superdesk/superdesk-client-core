@@ -50,7 +50,7 @@ Use neutral Serbian Cyrillic (Вукова ћирилица). Prefer consistency
 | publish | објавити | imperative: `Објави` |
 | unpublish | повући објаву | "retract publication" |
 | schedule | заказати | imperative: `Закажи` |
-| scheduled | заказано | | |
+| scheduled | заказано | |
 | save | сачувати | imperative: `Сачувај` |
 | close | затворити | imperative: `Затвори` |
 | open | отворити | imperative: `Отвори` |
@@ -109,7 +109,7 @@ Use neutral Serbian Cyrillic (Вукова ћирилица). Prefer consistency
 - Keep product names untranslated: **Superdesk**, **Newshub**, etc.
 - Keep technical identifiers and field codes untranslated (e.g. `slug`, `guid`, `urgency`, field names in API).
 - Prefer neutral Serbian. Do not use regionalisms.
-- Use Ekavian pronunciation (standard in Serbia): `време` not `вријеме`, `мрежа` not `мрежа` (same), `превод` not `пријевод`.
+- Use Ekavian pronunciation (standard in Serbia): `време` not `вријеме`, `превод` not `пријевод`.
 
 ## Consistency rules
 
