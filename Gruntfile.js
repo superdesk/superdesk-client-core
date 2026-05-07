@@ -49,6 +49,38 @@ module.exports = function(grunt) {
         'webpack-dev-server:ui-guide',
     ]);
 
+    // Compile PO files to runtime JSON catalogs (gettext.js flat format with metadata under "" key).
+    // Used by scripts/init.ts and scripts/reload-language.ts. Production build runs the equivalent
+    // step via build-tools' build-root-repo command; this grunt task lets `grunt server` produce
+    // them too. Invokes gettext.js's shipped po2json CLI directly so we don't have to depend on
+    // @superdesk/build-tools at runtime (it's a devDependency and may not be installed when this
+    // Gruntfile is consumed from another project).
+    grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', function() {
+        var fs = require('fs');
+        var distDir = grunt.config.get('distDir');
+        var poDir = path.join(__dirname, 'po');
+        var jsonDir = path.join(process.cwd(), distDir, 'languages');
+        var po2json = path.join(
+            path.dirname(require.resolve('gettext.js/package.json')),
+            'bin',
+            'po2json'
+        );
+
+        fs.mkdirSync(jsonDir, {recursive: true});
+
+        fs.readdirSync(poDir).forEach(function(filename) {
+            var poFile = path.join(poDir, filename);
+
+            if (!filename.endsWith('.po') || fs.statSync(poFile).isDirectory()) {
+                return;
+            }
+
+            var jsonFile = path.join(jsonDir, filename.replace('.po', '.json'));
+
+            execSync(`node "${po2json}" "${poFile}" "${jsonFile}"`, {stdio: 'inherit'});
+        });
+    });
+
     // Development server
     grunt.registerTask('server', [
         'clean',
@@ -56,6 +88,7 @@ module.exports = function(grunt) {
         'copy:index',
         'copy:config',
         'copy:locales',
+        'po-to-json',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',
