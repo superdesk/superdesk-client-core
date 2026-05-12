@@ -5,6 +5,8 @@ import {gettext} from 'core/utils';
 
 const RELATED_LINK_KEYS = 3; // links only have _id, type keys and order (and some old ones only _id)
 
+type VocabularyField = IVocabularyRelatedContent | IVocabularyMedia;
+
 export const isLink = (association) =>
     association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
@@ -79,7 +81,25 @@ export function RelationsService(api, $q) {
         })).then((values) => zipObject(relatedItemsKeys, values));
     };
 
-    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabularyRelatedContent | IVocabularyMedia) {
+    this.itemHasAllowedStatus = function(item: IArticle, field: VocabularyField) {
         return validateWorkflow(item, field?.field_options?.allowed_workflows ?? {}).result;
+    };
+
+    /**
+     * Checks if an item can be added to a related content field.
+     * Returns false if the field requires external providers but the item is not from an external source.
+     */
+    this.isItemAllowedInField = (item: IArticle, field: VocabularyField): boolean => {
+        if (field.field_type !== 'related_content')
+            return true;
+
+        const onlyExternalProvidersAllowed = (field as IVocabularyRelatedContent)
+            ?.field_options
+            ?.only_allow_external_providers === true;
+
+        if (item._type !== 'externalsource' && onlyExternalProvidersAllowed)
+            return false;
+
+        return true;
     };
 }

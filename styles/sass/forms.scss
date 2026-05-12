@@ -1439,3 +1439,8 @@ input {
         background-color: var(--sd-colour-bg__searchbar);
     }
 }
+
+.form__row-item-content-type .sd-checkbox--button-style {
+    min-width: 100px;
+    margin-right: calc(0.5 * var(--base-increment));
+}
