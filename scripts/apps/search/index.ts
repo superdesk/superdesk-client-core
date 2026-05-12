@@ -86,7 +86,7 @@ angular.module('superdesk.apps.search', [
         'searchPanelWidgets',
         reactToAngular1(
             SearchPanelWidgets,
-            ['provider', 'params', 'setParams'],
+            ['provider', 'params', 'setParams', 'searchParameters'],
         ),
     )
 
