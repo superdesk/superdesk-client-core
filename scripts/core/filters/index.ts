@@ -91,6 +91,32 @@ export default angular.module('superdesk.core.filters', [])
             }
         };
     }])
+    .filter('humanizeMilliseconds', () => function(input) {
+        if (input == null || input === '') {
+            return '';
+        }
+
+        var milliseconds = Number(input);
+
+        if (!Number.isFinite(milliseconds)) {
+            return input;
+        }
+
+        var totalSeconds = Math.round(milliseconds / 1000);
+
+        if (totalSeconds === 0) {
+            return '0s';
+        }
+
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+
+        if (minutes > 0) {
+            return minutes + 'm ' + seconds + 's';
+        }
+
+        return seconds + 's';
+    })
     .filter('queueStatus', () =>
         function(input) {
             if (input === 'pending') {

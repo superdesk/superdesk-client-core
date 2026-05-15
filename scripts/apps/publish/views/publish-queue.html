@@ -112,6 +112,7 @@
                                 <th class="align-right" translate>Queued at</th>
                                 <th class="align-right" translate>Scheduled at</th>
                                 <th class="align-right" translate>Transmitted at</th>
+                                <th class="align-right" translate>Processing time</th>
                                 <th class="align-right" translate>Status</th>
                                 <th class="align-right" translate>Message</th>
                                 <th class="align-right" translate>Action</th>
@@ -138,6 +139,7 @@
                                 <td class="align-right">{{queue_item._created| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.publish_schedule| dateTimeStringWithSecs}}</td>
                                 <td class="align-right">{{queue_item.completed_at| dateTimeStringWithSecs}}</td>
+                                <td class="align-right">{{queue_item.lifecycle_to_transmit_ms | humanizeMilliseconds}}</td>
                                 <td class="align-right">{{queue_item.state}}</td>
                                 <td class="align-right">{{queue_item.error_message}}</td>
                                 <td class="align-right" ng-if="queue_item.state === 'pending' || queue_item.state === 'retrying'">
