@@ -91,31 +91,39 @@ export default angular.module('superdesk.core.filters', [])
             }
         };
     }])
-    .filter('humanizeMilliseconds', () => function(input) {
-        if (input == null || input === '') {
-            return '';
-        }
+    .filter('humanizeMilliseconds', () => {
+        const minuteFormatter = new Intl.NumberFormat(undefined, {
+            style: 'unit',
+            unit: 'minute',
+            unitDisplay: 'narrow',
+        });
+        const secondFormatter = new Intl.NumberFormat(undefined, {
+            style: 'unit',
+            unit: 'second',
+            unitDisplay: 'narrow',
+        });
 
-        var milliseconds = Number(input);
+        return function(input) {
+            if (input == null || input === '') {
+                return '';
+            }
 
-        if (!Number.isFinite(milliseconds)) {
-            return input;
-        }
+            const milliseconds = Number(input);
 
-        var totalSeconds = Math.round(milliseconds / 1000);
+            if (!Number.isFinite(milliseconds)) {
+                return input;
+            }
 
-        if (totalSeconds === 0) {
-            return '0s';
-        }
+            const totalSeconds = Math.round(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
 
-        var minutes = Math.floor(totalSeconds / 60);
-        var seconds = totalSeconds % 60;
+            if (minutes > 0) {
+                return minuteFormatter.format(minutes) + ' ' + secondFormatter.format(seconds);
+            }
 
-        if (minutes > 0) {
-            return minutes + 'm ' + seconds + 's';
-        }
-
-        return seconds + 's';
+            return secondFormatter.format(seconds);
+        };
     })
     .filter('queueStatus', () =>
         function(input) {
