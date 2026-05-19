@@ -10,6 +10,6 @@
     "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "react": "16.8.6"
+    "react": "*"
   }
 }
