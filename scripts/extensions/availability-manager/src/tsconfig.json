@@ -7,5 +7,6 @@
             "dom",
             "ES2019",
         ],
-    }
+    },
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

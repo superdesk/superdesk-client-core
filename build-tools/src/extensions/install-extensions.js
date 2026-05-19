@@ -83,6 +83,24 @@ module.exports = function installExtensions(clientDir) {
     directories.forEach(({extensionRootPath, extensionSrcPath}) => {
         // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
         if (fs.existsSync(extensionSrcPath)) {
+            const pkgPath = path.join(extensionRootPath, 'package.json');
+            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+
+            // Extensions whose `main` points at TypeScript source are consumed
+            // directly by webpack's ts-loader. Skip compile and the legacy
+            // `correct*` fixups. Still install runtime `dependencies` so webpack
+            // can resolve them via the extension's nested node_modules walk.
+            // (When workspaces land, this per-extension install goes away.)
+            if (typeof pkg.main === 'string' && /\.(ts|tsx)$/.test(pkg.main)) {
+                if (pkg.dependencies && Object.keys(pkg.dependencies).length > 0) {
+                    execSync(
+                        `cd ${extensionRootPath} && npm install --no-audit --omit=dev`,
+                        {stdio: 'inherit'}
+                    );
+                }
+                return;
+            }
+
             correctApiDefinitionsPath(extensionRootPath, clientDir);
 
             execSync(
