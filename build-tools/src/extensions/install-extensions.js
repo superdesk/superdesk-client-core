@@ -94,8 +94,8 @@ module.exports = function installExtensions(clientDir) {
             if (typeof pkg.main === 'string' && /\.(ts|tsx)$/.test(pkg.main)) {
                 if (pkg.dependencies && Object.keys(pkg.dependencies).length > 0) {
                     execSync(
-                        `cd ${extensionRootPath} && npm install --no-audit --omit=dev`,
-                        {stdio: 'inherit'}
+                        'npm install --no-audit --omit=dev',
+                        {stdio: 'inherit', cwd: extensionRootPath}
                     );
                 }
                 return;

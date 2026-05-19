@@ -5,7 +5,7 @@
  * against their own tsconfig, since they no longer carry a compile step.
  */
 
-const execSync = require('child_process').execSync;
+const {execSync, execFileSync} = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -16,7 +16,7 @@ function getDirectories(p) {
 }
 
 const allExtensions = 'scripts/extensions';
-const tsc = path.join('node_modules', '.bin', 'tsc');
+const tscEntry = require.resolve('typescript/bin/tsc');
 
 getDirectories(allExtensions).forEach((extensionDir) => {
     const extensionPath = `${allExtensions}/${extensionDir}`;
@@ -24,7 +24,7 @@ getDirectories(allExtensions).forEach((extensionDir) => {
     const main = pkg.main;
     const isMigrated = typeof main === 'string' && /\.(ts|tsx)$/.test(main);
 
-    execSync(`cd ${extensionPath} && npm install`, {stdio: 'inherit'});
+    execSync('npm install', {stdio: 'inherit', cwd: extensionPath});
 
     if (isMigrated) {
         const tsconfig = ['src/tsconfig.json', 'tsconfig.json']
@@ -35,8 +35,12 @@ getDirectories(allExtensions).forEach((extensionDir) => {
             throw new Error(`Migrated extension ${extensionDir} has no tsconfig.json`);
         }
 
-        execSync(`${tsc} --noEmit -p ${tsconfig}`, {stdio: 'inherit'});
+        execFileSync(
+            process.execPath,
+            [tscEntry, '--noEmit', '-p', tsconfig],
+            {stdio: 'inherit'}
+        );
     } else {
-        execSync(`cd ${extensionPath} && npm run compile`, {stdio: 'inherit'});
+        execSync('npm run compile', {stdio: 'inherit', cwd: extensionPath});
     }
 });
