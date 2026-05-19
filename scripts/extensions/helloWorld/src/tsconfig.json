@@ -2,5 +2,6 @@
     "extends": "superdesk-code-style/tsconfig-strict",
     "compilerOptions": {
         "outDir": "../dist/src"
-    }
+    },
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }
