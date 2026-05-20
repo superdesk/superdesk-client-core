@@ -83,7 +83,8 @@ function ensureSymlink(target, linkPath) {
         }
     }
 
-    fs.symlinkSync(target, linkPath, 'dir');
+    fs.mkdirSync(path.dirname(linkPath), {recursive: true});
+    fs.symlinkSync(target, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
 }
 
 function devLink(consumerDir, sources) {
