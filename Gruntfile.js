@@ -81,14 +81,40 @@ module.exports = function(grunt) {
         });
     });
 
+    // Extension preparation tasks. These mirror what build-tools' build-root-repo does
+    // around the production build, so `grunt server` produces a working dev environment
+    // from a fresh checkout without needing an external wrapper command. Each task
+    // requires @superdesk/build-tools lazily inside the action so a missing dep doesn't
+    // break Gruntfile load for callers that don't need these tasks.
+    grunt.registerTask('install-extensions', 'Install each loaded extension', function() {
+        var installExtensions = require('@superdesk/build-tools/src/extensions/install-extensions');
+
+        installExtensions(process.cwd());
+    });
+
+    grunt.registerTask('namespace-css', 'Generate the namespaced extension stylesheet', function() {
+        var {namespaceCSS} = require('@superdesk/build-tools/src/extensions/css');
+
+        namespaceCSS(process.cwd());
+    });
+
+    grunt.registerTask('merge-extension-translations', 'Merge translations from loaded extensions', function() {
+        var {mergeTranslationsFromExtensions} = require('@superdesk/build-tools/src/extensions/translations');
+
+        mergeTranslationsFromExtensions(process.cwd());
+    });
+
     // Development server
     grunt.registerTask('server', [
+        'install-extensions',
+        'namespace-css',
         'clean',
         'ngtemplates:index',
         'copy:index',
         'copy:config',
         'copy:locales',
         'po-to-json',
+        'merge-extension-translations',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',

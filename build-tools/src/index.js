@@ -9,6 +9,7 @@ const installExtensions = require('./extensions/install-extensions');
 const {mergeTranslationsFromExtensions} = require('./extensions/translations');
 const {extractTranslations} = require('./extensions/extract-translations');
 const {namespaceCSS, watchCSS} = require('./extensions/css');
+const devLink = require('./dev-link');
 
 const {Command} = require('commander');
 const program = new Command();
@@ -107,6 +108,8 @@ extensions
     });
 
 program.addCommand(extensions);
+
+devLink.register(program, currentDir);
 
 program.version(require('../package.json').version);
 program.parse(process.argv);
