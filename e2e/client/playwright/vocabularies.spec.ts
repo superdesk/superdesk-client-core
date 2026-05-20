@@ -19,5 +19,7 @@ test('can restore vocabulary data when editing is cancelled', async ({page}) => 
     await expect(page.locator(s('vocabulary-edit-field--name'))).toHaveValue(updatedName);
 
     await page.locator(s('vocabulary-edit-modal--cancel')).click();
-    await expect(page.locator(originalVocabularyItemSelector).locator(s('vocabulary-item--name'))).toHaveText(originalName);
+    await expect(
+        page.locator(originalVocabularyItemSelector).locator(s('vocabulary-item--name')),
+    ).toHaveText(originalName);
 });
