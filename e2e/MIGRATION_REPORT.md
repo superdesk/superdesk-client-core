@@ -6,7 +6,7 @@
 ## Totals
 - Original non-Playwright specs (at the start of this branch): 26
 - Migrated on this branch: 2
-- Blocked: 1 (carried over from PR #5181, see below)
+- Blocked: 2 (one carried over from PR #5181, see below)
 - Obsolete: 1
 - Flaky: 0
 - Redundant: 1
@@ -23,6 +23,7 @@
 
 ## Blocked
 - Protractor `e2e/client/specs/notifications_spec.ts` — create a user mention and verify the mentioned user's unread badge clears after sign-in — current `main` snapshot no longer accepts the legacy `admin1` / `admin` credentials used by the spec, so migrating this scenario needs a maintained secondary-user test fixture or snapshot update. (Carried over from PR #5181; spec file kept until final cleanup.)
+- Protractor `e2e/client/specs/saved_search_spec.ts` — covers two scenarios: (1) save a private search from the global-search filter panel and verify it appears in the user's saved searches, (2) save a global search, log out, log in as `admin1`, verify the global search is visible to that user. Scenario (2) hits the same `admin1` credentials issue as `notifications_spec.ts` — neither the `main` nor `legacy` snapshot has a working second test user — and migrating scenario (1) alone would require ~10 product-source `data-test-id` additions (priority filter list items, `save_search_init`, `save-search-panel`, `search_name`, `search_description`, `search_save`, `search_global`, `userSavedSearches`/`globalSavedSearches` rows, `.search-name`) while still leaving the file in place for scenario (2). Treating the whole spec as blocked until a maintained secondary-user fixture exists.
 
 ## Obsolete
 - Protractor `e2e/client/specs/marked_desks_spec.ts` — the file declares a single test `displays the story in desk attention stage` and it is `xit` (skipped) in source with the inline comment `can't reproduce failures`. The scenario it would have covered (mark/unmark for desk from monitoring) is already exercised by `e2e/client/playwright/desks.spec.ts` (`can mark/unmark for desk`). The attention-stage saved-search workflow it would also have touched is not unique to this spec; the same wiring is exercised by other monitoring/saved-search tests. Migrating a disabled scenario whose original maintainers could not stabilise adds no coverage. File retained until final cleanup commit.
