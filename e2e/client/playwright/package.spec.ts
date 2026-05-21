@@ -31,9 +31,9 @@ function packageGroupItems(page: Page, groupId: string): Locator {
 test.describe('package', () => {
     // FLAKY: even with Monitoring.executeSubmenuAction's mouse-move-out-then-in
     // pattern the inner dropdown submenu doesn't open reliably under Playwright.
-    // The Protractor helper drove the same flow without issues using
+    // The previous Protractor helper drove the same flow without issues using
     // browser.actions().mouseMove(), suggesting a Playwright-specific event
-    // synthesis gap. Keeps the Protractor source spec until a deeper fix lands.
+    // synthesis gap; left skipped until a deeper fix lands.
     test.skip('increment package version', async ({page}) => {
         const monitoring = new Monitoring(page);
 

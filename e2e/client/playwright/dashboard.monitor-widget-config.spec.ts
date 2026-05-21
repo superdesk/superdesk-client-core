@@ -34,7 +34,7 @@ async function selectDesk(page, deskName: string) {
 // initial selected desk doesn't surface "Politic Desk" reliably and the
 // dropdown's Politic Desk button is rendered as disabled even after the
 // helper's no-op guard. Needs a different desk anchor or a fresh-state
-// helper before this can be enabled. Source Protractor file kept.
+// helper before this can be enabled.
 test.skip('configures a custom label for a monitor widget', async ({page}) => {
     await selectDesk(page, 'Politic Desk');
     await addMonitorWidget(page);

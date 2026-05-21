@@ -28,7 +28,7 @@ test.describe('ingest provider', () => {
     // FLAKY: the sd-switch class toggle assertion (`toHaveClass(/checked/)`)
     // races with the AngularJS digest cycle after click. Marked skip pending a
     // helper that waits on `sdApi.preferences.userIngestProviders()` settling
-    // instead of a CSS class. Source Protractor file kept until addressed.
+    // instead of a CSS class.
     test.skip('add ingest provider to dashboard', async ({page}) => {
         await addProviderToDashboard(page);
     });

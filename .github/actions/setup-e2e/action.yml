@@ -13,18 +13,10 @@ runs:
       shell: bash
 
     - run: npm ci
-      working-directory: ./end-to-end-testing-helpers
-      shell: bash
-
-    - run: npm ci
       working-directory: ./e2e/client
       shell: bash
 
     - run: npm run build
-      working-directory: ./e2e/client
-      shell: bash
-
-    - run: npm run specs--compile
       working-directory: ./e2e/client
       shell: bash
 

@@ -130,7 +130,6 @@ fi
 # 2. Dependencies
 ensure_deps "$REPO_ROOT"
 ensure_deps "$REPO_ROOT/build-tools"
-[ -d "$REPO_ROOT/end-to-end-testing-helpers" ] && ensure_deps "$REPO_ROOT/end-to-end-testing-helpers"
 ensure_deps "$E2E_CLIENT"
 
 # 3. Client build (only if dist is missing or stale relative to scripts/)
