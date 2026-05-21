@@ -15,12 +15,7 @@ import {restoreDatabaseSnapshot, s} from './utils';
  * rendered when a desk is the active selection. The per-desk entry point lives on the
  * desks settings page (`desk-actions--monitoring-settings`).
  */
-// FLAKY: the monitoring-settings entry point is conditional on workspace vs
-// desk selection in monitoring-view.html; the test reaches it via the toolbar
-// button which is hidden for desk selections. Needs a per-desk-settings entry
-// path (likely from /settings/desks). Source spec kept until the entry point
-// is reworked.
-test.skip('enabling a global saved search shows it on the monitoring view', async ({page}) => {
+test('enabling a global saved search shows it on the monitoring view', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
