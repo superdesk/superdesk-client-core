@@ -25,16 +25,11 @@ test.describe('ingest provider', () => {
         ).toBeVisible();
     }
 
-    // FLAKY: the sd-switch class toggle assertion (`toHaveClass(/checked/)`)
-    // races with the AngularJS digest cycle after click. Marked skip pending a
-    // helper that waits on `sdApi.preferences.userIngestProviders()` settling
-    // instead of a CSS class.
-    test.skip('add ingest provider to dashboard', async ({page}) => {
+    test('add ingest provider to dashboard', async ({page}) => {
         await addProviderToDashboard(page);
     });
 
-    // FLAKY: same root cause as `add ingest provider to dashboard` above.
-    test.skip('remove ingest provider from dashboard', async ({page}) => {
+    test('remove ingest provider from dashboard', async ({page}) => {
         await addProviderToDashboard(page);
 
         // Reload to reset the dashboard dropdown state. The previous toggle
@@ -46,7 +41,20 @@ test.describe('ingest provider', () => {
             page.locator(s('ingest-dashboard-list', `ingest-dashboard-widget=${PROVIDER_NAME}`)),
         ).toBeVisible();
 
-        await page.locator(s('ingest-dashboard-add-sources--toggle')).click();
+        // The dropdown's <ul> is rendered into the DOM only when the parent
+        // <div data-test-id="ingest-dashboard-add-sources" class="dropdown"> has the
+        // `.open` class. The Add Sources toggle is the only child button, but
+        // its first click sometimes lands before AngularJS's `dropdown` directive
+        // wires up the click handler. Retry until the dropdown opens.
+        const dropdownContainer = page.locator(s('ingest-dashboard-add-sources'));
+
+        await expect.poll(async () => {
+            if (!(await dropdownContainer.evaluate((el) => el.classList.contains('open')))) {
+                await page.locator(s('ingest-dashboard-add-sources--toggle')).click();
+            }
+
+            return dropdownContainer.evaluate((el) => el.classList.contains('open'));
+        }, {timeout: 10000}).toBe(true);
 
         const providerToggle = page.locator(
             s('ingest-dashboard-add-sources', `ingest-source-option=${PROVIDER_NAME}`, 'ingest-source-option--toggle'),
@@ -84,11 +92,7 @@ test.describe('ingest provider', () => {
         await expect(page.locator(s('ingest-settings'))).toBeVisible();
     });
 
-    // FLAKY: the edit-source flow lands in ingest settings but the sd-modal
-    // scope-evaluated data-test-id fix is partial — the modal body still
-    // hydrates asynchronously. Marked skip pending a stable wait on the
-    // modal-open lifecycle.
-    test.skip('open edit source dialog from ingest settings', async ({page}) => {
+    test('open edit source dialog from ingest settings', async ({page}) => {
         await addProviderToDashboard(page);
 
         const widget = page.locator(s('ingest-dashboard-list', `ingest-dashboard-widget=${PROVIDER_NAME}`));
@@ -104,6 +108,7 @@ test.describe('ingest provider', () => {
         const providerRow = page.locator(s(`ingest-source=${PROVIDER_NAME}`));
 
         await expect(providerRow).toBeVisible();
+        await providerRow.hover();
         await providerRow.locator(s('ingest-source--edit')).click();
 
         await expect(
