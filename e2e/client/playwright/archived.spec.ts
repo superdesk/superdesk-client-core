@@ -54,40 +54,43 @@ test('archived items are listed under the Archived repo filter and open in previ
     ).toHaveText(firstItemHeadline!);
 });
 
-test('archived items open as read-only authoring (Close visible, no Save/Edit/Correct/Kill/Takedown/Send)', async ({page}) => {
+test(
+    'archived items open as read-only authoring (Close visible, no Save/Edit/Correct/Kill/Takedown/Send)',
+    async ({page}) => {
     // The 'main' snapshot has no items in the archived repo; fall back to the
     // 'legacy' snapshot the Protractor suite used for the same scenario, and
     // log in fresh since storageState targets the 'main' user database.
-    await restoreDatabaseSnapshot({snapshotName: 'legacy'});
-    await login(page);
-    await openSearchAndShowOnlyArchived(page);
+        await restoreDatabaseSnapshot({snapshotName: 'legacy'});
+        await login(page);
+        await openSearchAndShowOnlyArchived(page);
 
-    const items = page.locator(s('article-item'));
+        const items = page.locator(s('article-item'));
 
-    await expect(items.first()).toBeVisible();
+        await expect(items.first()).toBeVisible();
 
-    const firstItem = items.first();
+        const firstItem = items.first();
 
-    await firstItem.hover();
-    await firstItem.locator(s('context-menu-button')).click();
-    await page.locator(s('context-menu')).getByRole('button', {name: 'Open', exact: true}).click();
+        await firstItem.hover();
+        await firstItem.locator(s('context-menu-button')).click();
+        await page.locator(s('context-menu')).getByRole('button', {name: 'Open', exact: true}).click();
 
-    const topbar = page.locator(s('authoring-topbar'));
+        const topbar = page.locator(s('authoring-topbar'));
 
-    await expect(topbar).toBeVisible();
-    await expect(topbar.locator(s('close'))).toBeVisible();
+        await expect(topbar).toBeVisible();
+        await expect(topbar.locator(s('close'))).toBeVisible();
 
-    // Save / Edit / Correct / Kill / Takedown / Send-To-Publish / Create-new buttons
-    // must not be available on an archived (read-only) item. `data-test-id="save"` and
-    // `data-test-id="open-send-publish-pane"` exist in the topbar markup; the
-    // remaining buttons are identified by role+name (assertions, not
-    // interactions). Some of the action buttons stay in the DOM but
-    // get hidden via ng-show, so .not.toBeVisible() is the right check.
-    await expect(topbar.locator(s('save'))).not.toBeVisible();
-    await expect(topbar.locator(s('open-send-publish-pane'))).not.toBeVisible();
-    await expect(topbar.getByRole('button', {name: 'Edit', exact: true})).not.toBeVisible();
-    await expect(topbar.getByRole('button', {name: 'Correct', exact: true})).not.toBeVisible();
-    await expect(topbar.getByRole('button', {name: 'Kill', exact: true})).not.toBeVisible();
-    await expect(topbar.getByRole('button', {name: 'Takedown', exact: true})).not.toBeVisible();
-    await expect(page.locator(s('content-create'))).not.toBeVisible();
-});
+        // Save / Edit / Correct / Kill / Takedown / Send-To-Publish / Create-new buttons
+        // must not be available on an archived (read-only) item. `data-test-id="save"` and
+        // `data-test-id="open-send-publish-pane"` exist in the topbar markup; the
+        // remaining buttons are identified by role+name (assertions, not
+        // interactions). Some of the action buttons stay in the DOM but
+        // get hidden via ng-show, so .not.toBeVisible() is the right check.
+        await expect(topbar.locator(s('save'))).not.toBeVisible();
+        await expect(topbar.locator(s('open-send-publish-pane'))).not.toBeVisible();
+        await expect(topbar.getByRole('button', {name: 'Edit', exact: true})).not.toBeVisible();
+        await expect(topbar.getByRole('button', {name: 'Correct', exact: true})).not.toBeVisible();
+        await expect(topbar.getByRole('button', {name: 'Kill', exact: true})).not.toBeVisible();
+        await expect(topbar.getByRole('button', {name: 'Takedown', exact: true})).not.toBeVisible();
+        await expect(page.locator(s('content-create'))).not.toBeVisible();
+    },
+);

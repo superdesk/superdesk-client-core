@@ -8,6 +8,7 @@ async function multiSelect(article: Locator): Promise<void> {
     // hover (or when already selected), so we hover first.
     await article.locator(s('item-type-and-multi-select')).hover();
     const checkbox = article.locator(s('multi-select-checkbox'));
+
     await expect(checkbox).toBeVisible();
     await checkbox.click();
     await expect(checkbox).toHaveAttribute('aria-checked', 'true');
