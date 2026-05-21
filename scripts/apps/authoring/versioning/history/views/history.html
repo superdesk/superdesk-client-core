@@ -1,6 +1,6 @@
 <div class="article-versions" ng-controller="HistoryWidgetCtrl">
     <ul class="simple-list simple-list--dotted sd-padding--2 sd-padding-t--3">
-        <li class="simple-list__item" ng-repeat="historyItem in historyItems">
+        <li class="simple-list__item" ng-repeat="historyItem in historyItems" data-test-id="history-item">
 
             <div ng-if="historyItem.operation === 'create'">
                 <strong>{{ :: 'Created by' | translate }}</strong> {{ :: historyItem.displayName }}
