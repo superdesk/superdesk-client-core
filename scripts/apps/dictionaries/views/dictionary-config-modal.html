@@ -1,5 +1,5 @@
 <form name="editForm">
-    <div sd-modal data-model="dictionary" data-close="cancel()">
+    <div sd-modal data-model="dictionary" data-close="cancel()" data-test-id="dictionary-config-modal">
         <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="!dictionary._id && isAbbreviations()" translate>Add New Abbreviations Dictionary</h3>
             <h3 class="modal__heading" ng-show="!dictionary._id && !isAbbreviations()" translate>Add New Dictionary</h3>
@@ -23,13 +23,13 @@
                     </div>
                     <div class="sd-line-input sd-line-input--required sd-line-input--boxed" ng-class="{'sd-line-input--invalid' : _errorUniqueness && !dictionary.user}">
                         <label for="dict-name" class="sd-line-input__label">{{'Dictionary name' | translate}}</label>
-                        <input id="dict-name" class="sd-line-input__input" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
+                        <input id="dict-name" data-test-id="dict-name" class="sd-line-input__input" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
                         <input class="sd-line-input__input" type="text" ng-if="dictionary.user" value="{{ :: (!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}" disabled>
                         <div ng-show="_errorUniqueness && !dictionary.user" class="sd-line-input__message"><span translate>Dictionary with name {{dictionary.name}} already exists.</span></div>
                     </div>
                     <div class="sd-line-input sd-line-input--required" ng-class="{'sd-line-input--invalid' : _errorUniqueness && dictionary.user}">
                         <label class="sd-line-input__label" for="dict-lang-code">{{'Language code' | translate}}</label>
-                        <input class="sd-line-input__input" id="dict-lang-code" type="text" ng-model="dictionary.language_id" required>
+                        <input class="sd-line-input__input" id="dict-lang-code" data-test-id="dict-lang-code" type="text" ng-model="dictionary.language_id" required>
                         <div ng-show="_errorUniqueness && dictionary.user" class="sd-line-input__message"><span translate>Personal dictionary for language "{{dictionary.language_id}}" already exists.</span></div>
                     </div>
                     <div class="sd-line-input" ng-if="!isAbbreviations()">
@@ -56,6 +56,7 @@
                     <div class="form__row form__row--flex form__row--no-padding">
                         <div class="sd-line-input sd-line-input--no-label sd-line-input--no-margin">
                                 <input id="words-search"
+                                data-test-id="words-search"
                                 type="text"
                                 class="sd-line-input__input"
                                 ng-model="search"
@@ -64,17 +65,19 @@
                                 />
                         </div>
                         <button class="btn flex-field no-shrink"
+                                data-test-id="add-word"
                                 type="submit"
                                 ng-disabled="!isNew"
                                 ng-click="addWord(search)"
                                 translate>ADD WORD</button>
                     </div>
 
-                    <ul vs-repeat class="words-list" ng-show="words.length">
+                    <ul vs-repeat class="words-list" data-test-id="dictionary-words" ng-show="words.length">
                         {{words.length}}
-                        <li ng-repeat="word in words track by word">
+                        <li ng-repeat="word in words track by word" data-test-id="dictionary-word" data-test-value="{{word}}">
                             {{ :: word}}
                             <button class="icn-btn"
+                                    data-test-id="dictionary-word-remove"
                                     ng-click="removeWord(word, search)">
                                 <i class="icon-trash"></i>
                             </button>
@@ -129,8 +132,8 @@
         </div>
 
         <div class="modal__footer">
-            <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel</button>
-            <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right"
+            <button id="cancel-edit-btn" data-test-id="cancel" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel</button>
+            <button id="save-edit-btn" data-test-id="save" type="submit" class="btn btn--primary pull-right"
                     ng-click="save()"
                     ng-disabled="editForm.$invalid || progress.width" translate>Save</button>
         </div>

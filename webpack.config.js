@@ -381,6 +381,10 @@ module.exports = function makeConfig(grunt) {
             host: '0.0.0.0',
             compress: true,
             headers: {'Cache-Control': 'no-store'},
+            // The compile-warning overlay iframe intercepts pointer events,
+            // which is fine for human dev but breaks Playwright clicks during
+            // e2e runs. Errors still surface via the terminal output.
+            client: {overlay: false},
             static: [
                 {directory: path.resolve(process.cwd(), 'dist')},
                 {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},
