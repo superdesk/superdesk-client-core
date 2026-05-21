@@ -19,7 +19,12 @@ async function addMonitorWidget(page: Page) {
 async function selectDesk(page: Page, deskName: string) {
     const selectedDesk = page.locator(s('monitoring--selected-desk'));
 
-    if ((await selectedDesk.textContent())?.includes(deskName)) {
+    // The selected desk button renders its name uppercased via CSS pipe;
+    // the dropdown's option text matches the original case. Compare
+    // case-insensitively so the no-op early-return guard triggers when
+    // the desired desk is already selected and avoids opening the dropdown
+    // only to find the option button disabled.
+    if ((await selectedDesk.textContent())?.toLocaleLowerCase().includes(deskName.toLocaleLowerCase())) {
         return;
     }
 
@@ -30,12 +35,7 @@ async function selectDesk(page: Page, deskName: string) {
         .click();
 }
 
-// FLAKY: the selectDesk helper still fails on the legacy snapshot — the
-// initial selected desk doesn't surface "Politic Desk" reliably and the
-// dropdown's Politic Desk button is rendered as disabled even after the
-// helper's no-op guard. Needs a different desk anchor or a fresh-state
-// helper before this can be enabled.
-test.skip('configures a custom label for a monitor widget', async ({page}) => {
+test('configures a custom label for a monitor widget', async ({page}) => {
     await selectDesk(page, 'Politic Desk');
     await addMonitorWidget(page);
 
@@ -48,5 +48,7 @@ test.skip('configures a custom label for a monitor widget', async ({page}) => {
     await settings.locator(s('widget-view-name')).fill('my view');
     await settings.locator(s('footer')).getByRole('button', {name: 'Done'}).click();
 
-    await expect(page.locator(s('dashboard-widget=my view'))).toBeVisible();
+    await expect(
+        page.locator(s('dashboard-widget=Monitor')).getByRole('heading', {name: 'my view', exact: true}),
+    ).toBeVisible();
 });
