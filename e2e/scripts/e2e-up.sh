@@ -32,14 +32,17 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 E2E_CLIENT="$REPO_ROOT/e2e/client"
 E2E_SERVER="$REPO_ROOT/e2e/server"
 
-# SUPERDESK_URL points at the e2e backend's /api root (no trailing slash needed).
-# PORT controls the port the server binds inside docker (via hypercorn_config.py).
-# Both default to 5000. macOS users typically override (AirPlay uses 5000):
-#   export PORT=5002
+# SUPERDESK_URL is the single knob: point it at the e2e backend's /api root.
+# PORT (docker container bind) and SERVER_NAME (Quart config) are derived from
+# it so port-overriding (e.g. macOS AirPlay grabs 5000) needs only one export:
 #   export SUPERDESK_URL=http://localhost:5002/api
 SUPERDESK_URL="${SUPERDESK_URL:-http://localhost:5000/api}"
 SERVER_URL="${SUPERDESK_URL%/}/"
 CLIENT_URL="http://localhost:9000/"
+SUPERDESK_HOST_PORT="$(printf '%s\n' "$SUPERDESK_URL" | sed -E 's#^https?://##; s#/.*$##')"
+PORT="${PORT:-${SUPERDESK_HOST_PORT##*:}}"
+SERVER_NAME="${SERVER_NAME:-$SUPERDESK_HOST_PORT}"
+export SUPERDESK_URL PORT SERVER_NAME
 
 log() { printf '\n[e2e-up] %s\n' "$*"; }
 fail() { printf '\n[e2e-up] ERROR: %s\n' "$*" >&2; exit 1; }
@@ -111,11 +114,10 @@ EOF
 if reachable "$SERVER_URL"; then
     log "server already reachable; skipping docker bring-up"
 else
-    SERVER_PORT="${PORT:-5000}"
     preflight_check_port 27017 mongo || true
     preflight_check_port 6379 redis || true
     preflight_check_port 9200 elasticsearch || true
-    preflight_check_port "$SERVER_PORT" "superdesk server" || true
+    preflight_check_port "$PORT" "superdesk server" || true
 
     log "bringing up server via docker compose"
     if [ "$REBUILD" = true ]; then
