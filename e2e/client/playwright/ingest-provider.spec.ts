@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 const PROVIDER_NAME = 'Antara news provider';
@@ -9,7 +9,7 @@ test.describe('ingest provider', () => {
         await page.goto('/#/ingest_dashboard');
     });
 
-    async function addProviderToDashboard(page) {
+    async function addProviderToDashboard(page: Page) {
         await page.locator(s('ingest-dashboard-add-sources--toggle')).click();
 
         const providerToggle = page.locator(

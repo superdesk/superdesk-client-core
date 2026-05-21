@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import * as path from 'path';
 import {Monitoring} from './page-object-models/monitoring';
 import {login, restoreDatabaseSnapshot, s} from './utils';
@@ -10,7 +10,7 @@ test.use({storageState: {cookies: [], origins: []}});
 
 test.setTimeout(90000);
 
-async function uploadMediaToGallery(page, imageFile: string) {
+async function uploadMediaToGallery(page: Page, imageFile: string) {
     const gallery = s('authoring-field=Image gallery 33');
 
     await page.locator(s(gallery, 'media-gallery--upload-placeholder')).click();

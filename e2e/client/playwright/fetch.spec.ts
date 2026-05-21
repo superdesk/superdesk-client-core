@@ -1,11 +1,11 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
 const INGEST_ITEM = 'Indonesia opens pasteurized milk facility to back free meals program';
 
-async function toggleStageGlobalRead(page, stageName: string): Promise<void> {
+async function toggleStageGlobalRead(page: Page, stageName: string): Promise<void> {
     await page.locator(s(`stage--${stageName}`)).click();
     await page.locator(s(`stage--${stageName}`, 'stage-actions--edit')).click();
     await page.locator(s('desk-config-modal', 'field--global-read')).click();

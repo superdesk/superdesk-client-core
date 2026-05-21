@@ -1,4 +1,4 @@
-import {test, expect} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {login, restoreDatabaseSnapshot, s} from './utils';
 
 test.use({storageState: {cookies: [], origins: []}});
@@ -9,14 +9,14 @@ test.beforeEach(async ({page}) => {
     await page.goto('/#/workspace');
 });
 
-async function addMonitorWidget(page) {
+async function addMonitorWidget(page: Page) {
     await page.getByRole('button', {name: 'Add widget'}).click();
     await page.locator(s('widget-modal', 'widget-item=aggregate')).click();
     await page.locator(s('widget-modal')).getByRole('button', {name: 'Add This Widget'}).click();
     await page.locator(s('widget-modal')).getByRole('button', {name: 'Done'}).click();
 }
 
-async function selectDesk(page, deskName: string) {
+async function selectDesk(page: Page, deskName: string) {
     const selectedDesk = page.locator(s('monitoring--selected-desk'));
 
     if ((await selectedDesk.textContent())?.includes(deskName)) {
