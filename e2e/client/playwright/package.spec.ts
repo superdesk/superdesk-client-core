@@ -2,15 +2,6 @@ import {test, expect, Locator, Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-async function addItemToCurrentPackageGroup(page: Page, item: Locator, group: string): Promise<void> {
-    await item.hover();
-    await item.locator(s('context-menu-button')).click();
-    await page.locator(s('context-menu'))
-        .getByRole('button', {name: 'Add to current', exact: true})
-        .hover();
-    await page.locator(s('context-menu', `add-to-package-group=${group}`)).click();
-}
-
 async function multiSelect(item: Locator): Promise<void> {
     await item.locator(s('item-type-and-multi-select')).hover();
     const checkbox = item.locator(s('multi-select-checkbox'));
@@ -38,12 +29,11 @@ function packageGroupItems(page: Page, groupId: string): Locator {
 }
 
 test.describe('package', () => {
-    // The "Add to current" -> "MAIN" submenu navigation is unreliable under
-    // Playwright: the inner dropdown directive opens on hover but Playwright's
-    // synthetic hover events don't always trigger it. Marked flaky pending a
-    // page-object helper that mouse-moves out-then-in like the Protractor
-    // helper did. The Protractor source spec stays in place; see
-    // MIGRATION_REPORT.md FLAKY section.
+    // FLAKY: even with Monitoring.executeSubmenuAction's mouse-move-out-then-in
+    // pattern the inner dropdown submenu doesn't open reliably under Playwright.
+    // The Protractor helper drove the same flow without issues using
+    // browser.actions().mouseMove(), suggesting a Playwright-specific event
+    // synthesis gap. Keeps the Protractor source spec until a deeper fix lands.
     test.skip('increment package version', async ({page}) => {
         const monitoring = new Monitoring(page);
 
@@ -57,10 +47,11 @@ test.describe('package', () => {
         );
         await expect(page.locator(s('authoring'))).toBeVisible();
 
-        await addItemToCurrentPackageGroup(
-            page,
+        await monitoring.executeSubmenuAction(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+            'Add to current',
             'MAIN',
+            {innerByTestId: 'add-to-package-group=MAIN'},
         );
 
         await page.locator(s('authoring-topbar', 'save')).click();
@@ -74,7 +65,7 @@ test.describe('package', () => {
         ).toHaveCount(2);
     });
 
-    // Same "Add to current" submenu flake as `increment package version` above.
+    // Same submenu-flake as `increment package version` above.
     test.skip('add to current package removed after adding an item', async ({page}) => {
         const monitoring = new Monitoring(page);
 
@@ -92,7 +83,12 @@ test.describe('package', () => {
             s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
         );
 
-        await addItemToCurrentPackageGroup(page, targetItem, 'MAIN');
+        await monitoring.executeSubmenuAction(
+            targetItem,
+            'Add to current',
+            'MAIN',
+            {innerByTestId: 'add-to-package-group=MAIN'},
+        );
 
         await targetItem.hover();
         await targetItem.locator(s('context-menu-button')).click();

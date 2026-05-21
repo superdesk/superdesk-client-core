@@ -18,8 +18,7 @@ test.describe('highlights configuration', () => {
         await expect(page.locator(s('highlight-configuration-modal', 'error-uniqueness'))).toBeVisible();
     });
 
-    // FLAKY: hover-revealed action buttons (edit/remove) need an explicit hover step before clicking; see dictionaries.spec.ts for the pattern. The limit-error test also depends on a real-time validation that fires on input, which may need an explicit blur/keypress trigger.
-    test.skip('shows a character-limit error and disables save when the name exceeds 40 chars', async ({page}) => {
+    test('shows a character-limit error and disables save when the name exceeds 40 chars', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/settings/highlights');
         await page.getByRole('button', {name: 'Create configuration'}).click();
@@ -29,20 +28,24 @@ test.describe('highlights configuration', () => {
         const saveButton = modal.getByRole('button', {name: 'Save'});
         const limitError = modal.locator(s('error-limits'));
 
-        await nameInput.fill('Highlights greater than Fourty characters');
+        // pressSequentially dispatches input events per keystroke so the live
+        // length validation fires, unlike fill() which sets the value in one go.
+        await nameInput.pressSequentially('Highlights greater than Fourty characters');
         await expect(limitError).toBeVisible();
         await expect(saveButton).toBeDisabled();
 
-        await nameInput.fill('Highlights less than Fourty characters');
+        await nameInput.fill('');
+        await nameInput.pressSequentially('Highlights less than Fourty characters');
         await expect(limitError).not.toBeVisible();
         await expect(saveButton).toBeEnabled();
     });
 
-    // FLAKY: hover-revealed action buttons (edit/remove) need an explicit hover step before clicking; see dictionaries.spec.ts for the pattern. The limit-error test also depends on a real-time validation that fires on input, which may need an explicit blur/keypress trigger.
-    test.skip('renames a highlight configuration', async ({page}) => {
+    test('renames a highlight configuration', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/settings/highlights');
 
+        // The row's edit button is only visible on hover.
+        await page.locator(s('highlights-item=Highlight 1')).hover();
         await page.locator(s('highlights-item=Highlight 1', 'edit')).click();
         await page
             .locator(s('highlight-configuration-modal'))
@@ -54,12 +57,13 @@ test.describe('highlights configuration', () => {
         await expect(page.locator(s('highlights-list', 'highlights-item=Highlight 1'))).not.toBeVisible();
     });
 
-    // FLAKY: hover-revealed action buttons (edit/remove) need an explicit hover step before clicking; see dictionaries.spec.ts for the pattern. The limit-error test also depends on a real-time validation that fires on input, which may need an explicit blur/keypress trigger.
-    test.skip('deletes a highlight configuration', async ({page}) => {
+    test('deletes a highlight configuration', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/settings/highlights');
         await expect(page.locator(s('highlights-list', 'highlights-item=Highlight 1'))).toBeVisible();
 
+        // The row's remove button is only visible on hover.
+        await page.locator(s('highlights-item=Highlight 1')).hover();
         await page.locator(s('highlights-item=Highlight 1', 'remove')).click();
         await page.locator(s('modal-confirm')).getByRole('button', {name: /ok/i}).click();
 
