@@ -1,4 +1,4 @@
-<div class="live-suggest">
+<div class="live-suggest" data-test-id="live-suggestions">
 	<div ng-show="showItem === null" class="item-list">
 		<div class="live-suggest__header subnav">
 			<h3 class="subnav__page-title" translate>Live Suggestions</h3>
@@ -6,8 +6,8 @@
 		</div>
 		<div class="live-suggest__body">
 			<h6 class="no-suggestions" ng-hide="items" translate>Suggestions will appear here once the article's body starts changing...</h6>
-			<ul sd-list-view class="list-view compact-view" data-items="items" ng-show="items">
-				<li class="media-box" ng-click="ctrl.showItem(item)">
+			<ul sd-list-view class="list-view compact-view" data-items="items" ng-show="items" data-test-id="suggestions-list">
+				<li class="media-box" ng-click="ctrl.showItem(item)" data-test-id="suggestion-item">
 					<div class="line item-info">
 						<i sd-filetype-icon data-item="item"></i>
 						<span class="keyword">{{ item.slugline || '-' }}</span>

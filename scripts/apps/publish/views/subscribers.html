@@ -29,7 +29,12 @@
 
     <div class="sd-page__content">
         <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-            <li ng-repeat="subscriber in subscribers | subscribersBy:search as filtered_subscribers track by subscriber._id" class="sd-list-item sd-shadow--z1">
+            <li
+                ng-repeat="subscriber in subscribers | subscribersBy:search as filtered_subscribers track by subscriber._id"
+                class="sd-list-item sd-shadow--z1"
+                data-test-id="subscriber-item"
+                data-test-value="{{ subscriber.name }}"
+            >
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
