@@ -25,7 +25,7 @@ var config = {
     allScriptsTimeout: 34000,
     baseUrl: 'http://localhost:9000',
     params: {
-        baseBackendUrl: 'http://localhost:5000/api/',
+        baseBackendUrl: (process.env.SUPERDESK_URL || 'http://localhost:5000/api').replace(/\/?$/, '/'),
         username: 'admin',
         password: 'admin',
     },
