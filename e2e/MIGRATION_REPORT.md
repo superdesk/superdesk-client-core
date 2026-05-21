@@ -5,7 +5,7 @@
 
 ## Totals
 - Original non-Playwright specs (at the start of this branch): 26
-- Migrated on this branch: 0
+- Migrated on this branch: 1
 - Blocked: 1 (carried over from PR #5181, see below)
 - Obsolete: 1
 - Flaky: 0
@@ -18,7 +18,7 @@
 - Protractor `e2e/client/specs/suggest_spec.ts` -> `e2e/client/playwright/suggest.spec.ts`
 
 ## Migrated specs (this branch)
-<!-- Format: <framework> <original path> -> <new playwright path> [commit sha] — scenario -->
+- Protractor `e2e/client/specs/spike_spec.ts` -> `e2e/client/playwright/spike.spec.ts` — covers single spike from Personal workspace (via the generic `modal-confirm` dialog, not the production-desk `spike-modal`), and a bulk spike + bulk unspike round-trip through the multi-action bar. Bulk-action helper handles both the inline and compact-dropdown layouts of the multi-action bar so the test works in both monitoring and spike-monitoring views.
 
 ## Blocked
 - Protractor `e2e/client/specs/notifications_spec.ts` — create a user mention and verify the mentioned user's unread badge clears after sign-in — current `main` snapshot no longer accepts the legacy `admin1` / `admin` credentials used by the spec, so migrating this scenario needs a maintained secondary-user test fixture or snapshot update. (Carried over from PR #5181; spec file kept until final cleanup.)
