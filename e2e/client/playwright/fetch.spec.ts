@@ -12,8 +12,12 @@ async function toggleStageGlobalRead(page: Page, stageName: string): Promise<voi
     await page.locator(s('desk-config-modal', 'save-edited-stage')).click();
 }
 
-// FLAKY: Removing ingest items leaves the item visible — the deletion likely
-// goes through a confirm modal we haven't located yet.
+// FLAKY: Remove action does not show in the ingest item context menu because
+// canRemove() requires the ingest_provider to have allow_remove_ingested=true
+// (see scripts/apps/ingest/services/RemoveIngestedService.ts). Neither the
+// `main` nor `legacy` snapshot's ingest providers have that flag set, so the
+// activity is filtered out before the menu opens. Re-enable once the e2e
+// fixtures include an ingest provider with allow_remove_ingested=true.
 test.skip('removing an ingest item', async ({page}) => {
     const monitoring = new Monitoring(page);
 
@@ -30,9 +34,7 @@ test.skip('removing an ingest item', async ({page}) => {
     await expect(page.locator(s(`article-item=${INGEST_ITEM}`))).not.toBeVisible();
 });
 
-// FLAKY: Desk config modal stage editor needs additional test-ids beyond
-// what's currently in place; see desks_spec BLOCKED entry in MIGRATION_REPORT.
-test.skip(
+test(
     'fetch-and-open is disabled when selected desk is non-member and target stage has Global Read OFF',
     async ({page}) => {
         const monitoring = new Monitoring(page);
@@ -44,7 +46,7 @@ test.skip(
         await page.locator(s('desk--Without members', 'desk-actions')).click();
         await page.locator(s('desk--Without members', 'desk-actions--edit')).click();
 
-        await page.locator(s('desk-config-modal')).getByRole('tab', {name: 'Stages'}).click();
+        await page.locator(s('desk-config-modal')).getByRole('button', {name: 'Stages', exact: true}).click();
         await toggleStageGlobalRead(page, 'Working Stage');
         await page.locator(s('desk-config-modal', 'done-stages')).click();
 
@@ -65,9 +67,7 @@ test.skip(
     },
 );
 
-// FLAKY: Desk config modal stage editor needs additional test-ids beyond
-// what's currently in place; see desks_spec BLOCKED entry in MIGRATION_REPORT.
-test.skip(
+test(
     'stage with Global Read OFF is hidden from stage selector for a non-member',
     async ({page}) => {
         const monitoring = new Monitoring(page);
@@ -79,7 +79,7 @@ test.skip(
         await page.locator(s('desk--Without members', 'desk-actions')).click();
         await page.locator(s('desk--Without members', 'desk-actions--edit')).click();
 
-        await page.locator(s('desk-config-modal')).getByRole('tab', {name: 'Stages'}).click();
+        await page.locator(s('desk-config-modal')).getByRole('button', {name: 'Stages', exact: true}).click();
 
         await page.locator(s('desk-config-modal', 'new-stage')).click();
         await page.locator(s('desk-config-modal', 'field--stage-name')).fill('Test Stage');
@@ -127,8 +127,9 @@ test('bulk-fetching an ingest item via the multi-action bar', async ({page}) => 
     ).toBeVisible();
 });
 
-// FLAKY: Removing ingest items leaves the item visible — the deletion likely
-// goes through a confirm modal we haven't located yet.
+// FLAKY: same root cause as `removing an ingest item` above — the Remove
+// activity is filtered out because the ingest provider in the fixtures does
+// not have allow_remove_ingested=true.
 test.skip('bulk-removing an ingest item via the multi-action bar', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/search?repo=ingest');
