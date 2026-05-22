@@ -47,6 +47,60 @@ export async function login(page: Page) {
     await expect(page.locator(s('dashboard'))).toBeVisible();
 }
 
+/**
+ * Test-side workaround for the "Your session has expired" overlay race that
+ * only reproduces under the `legacy` DB snapshot.
+ *
+ * Why this exists:
+ *   1. `restoreDatabaseSnapshot({snapshotName: 'legacy'})` wipes the DB.
+ *   2. `login(page)` issues a fresh session token into the just-wiped DB.
+ *   3. The first save/publish action works.
+ *   4. A backend background process invalidates that just-issued token (the
+ *      exact mechanism lives in superdesk-core's session lifecycle and is
+ *      out of scope for this client repo to fix).
+ *   5. The next client request returns HTTP 401.
+ *   6. The auth interceptor at scripts/core/auth/auth.ts:30,53 calls
+ *      `session.expire()` and broadcasts LOGOUT.
+ *   7. scripts/core/auth/login-modal-directive.ts:128-146 renders the
+ *      `.login-screen` overlay from scripts/core/auth/login-modal.html,
+ *      with `<p class="session-error">Your session has expired.</p>` on
+ *      the `ng-if="identity._id"` (mid-session) branch.
+ *   8. That overlay covers the article list and swallows every subsequent
+ *      context-menu / topbar click until dismissed.
+ *
+ * The `main` snapshot does not exhibit this — only `legacy`.
+ *
+ * This helper detects the mid-session overlay (the selector keys off the
+ * `.session-error` element which only renders for *mid-session* expiry,
+ * never on a fresh login page — so calling it as a no-op anywhere is safe)
+ * and re-authenticates in place so the test can continue.
+ *
+ * TODO(backend): re-bake the legacy Mongo snapshot so the admin entry in
+ * the `auth` collection either does not exist (forcing a clean login via
+ * login()) or carries a token valid for the full test run. That would
+ * eliminate the race and every dismissSessionExpiry() call below would
+ * become dead code. Tracked separately; out of scope for this client repo
+ * because it requires editing `e2e/server/dump/full/legacy/superdesk_e2e/`
+ * fixtures and verifying no other consumers of the snapshot regress.
+ */
+export async function dismissSessionExpiry(page: Page): Promise<void> {
+    const overlay = page.locator('.login-screen .session-error');
+
+    // isVisible() is synchronous (no implicit wait), so use waitFor with a
+    // short timeout. The overlay appears after a mid-session 401 round-trip,
+    // so we need to give the interceptor a beat to render it.
+    try {
+        await overlay.waitFor({state: 'visible', timeout: 2000});
+    } catch {
+        return;
+    }
+
+    await page.locator(s('login-page', 'username')).fill('admin');
+    await page.locator(s('login-page', 'password')).fill('admin');
+    await page.locator(s('login-page', 'submit')).click();
+    await expect(page.locator('.login-screen')).toBeHidden();
+}
+
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);

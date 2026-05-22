@@ -12,13 +12,7 @@ async function toggleStageGlobalRead(page: Page, stageName: string): Promise<voi
     await page.locator(s('desk-config-modal', 'save-edited-stage')).click();
 }
 
-// FLAKY: Remove action does not show in the ingest item context menu because
-// canRemove() requires the ingest_provider to have allow_remove_ingested=true
-// (see scripts/apps/ingest/services/RemoveIngestedService.ts). Neither the
-// `main` nor `legacy` snapshot's ingest providers have that flag set, so the
-// activity is filtered out before the menu opens. Re-enable once the e2e
-// fixtures include an ingest provider with allow_remove_ingested=true.
-test.skip('removing an ingest item', async ({page}) => {
+test('removing an ingest item', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -127,10 +121,7 @@ test('bulk-fetching an ingest item via the multi-action bar', async ({page}) => 
     ).toBeVisible();
 });
 
-// FLAKY: same root cause as `removing an ingest item` above — the Remove
-// activity is filtered out because the ingest provider in the fixtures does
-// not have allow_remove_ingested=true.
-test.skip('bulk-removing an ingest item via the multi-action bar', async ({page}) => {
+test('bulk-removing an ingest item via the multi-action bar', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/search?repo=ingest');
 

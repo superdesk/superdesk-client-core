@@ -417,18 +417,156 @@ test.describe('desks - legacy snapshot', () => {
         await closeDeskModal(page);
     });
 
-    // FLAKY: the original Protractor scenario chains content-profile editing,
-    // article creation from a template, and three sequential `Send To` flows
-    // across freshly created stages, asserting brittle error-toast text
-    // (`Error:["BODY HTML is a required field", "SUBJECT is a required field"]
-    // in incoming rule:Validate for Publish for stage:Test Stage A`). That
-    // toast string is produced by the backend macro engine and breaks on any
-    // upstream message change. Combined with the multi-modal `sendTo` widget
-    // refactor and the shared-snapshot contention this run is exposed to, this
-    // scenario needs its own follow-up migration with smaller integration
-    // tests for each rule type. Skipped here so the other two scenarios are
-    // not held hostage by it.
-    test.skip('can enforce incoming, outgoing and onstage rules', async () => {
-        // intentionally empty — see FLAKY comment above
+    test('can enforce incoming, outgoing and onstage rules', async ({page}) => {
+        const monitoring = new Monitoring(page);
+        const deskName = `Rule Desk ${Date.now()}`;
+
+        await restoreDatabaseSnapshot({snapshotName: 'legacy'});
+        await login(page);
+
+        // 1. Create a desk with three macro-bearing stages.
+        await openDesksSettings(page);
+        await page.locator(s('add-new-desk')).click();
+
+        await withTestContext('desk-config-modal', async ({cs}) => {
+            await page.locator(cs('field--name')).fill(deskName);
+            await page.locator(cs('field--source')).fill('Rule Source');
+            await page.locator(cs('field--desk-type')).selectOption('authoring');
+            await page.locator(cs('field--default-content-template')).selectOption({label: 'testing'});
+            await page.locator(cs('field--default-content-profile')).selectOption({label: 'testing'});
+            await expect(page.locator(cs('save-and-continue'))).toBeEnabled();
+            await page.locator(cs('save-and-continue')).click();
+        });
+
+        await expect(page.locator('#new-stage')).toBeVisible();
+
+        async function addStage(
+            stageName: string,
+            slot: 'incoming_macro' | 'onstage_macro' | 'outgoing_macro',
+            macroName: string,
+        ): Promise<void> {
+            await page.locator('#new-stage').click();
+            await page.locator('#insert-stage').fill(stageName);
+
+            const select = page.locator(`select[ng-model="editStage.${slot}"]`);
+
+            await expect.poll(
+                async () => select.locator('option').count(),
+                {timeout: 10000},
+            ).toBeGreaterThan(1);
+            await select.selectOption(macroName);
+            await page.locator('#save-new-stage').click();
+        }
+
+        await addStage('Test Stage A', 'incoming_macro', 'Validate for Publish');
+        await addStage('Test Stage B', 'outgoing_macro', 'Validate for Publish');
+        await addStage('Test Stage C', 'onstage_macro', 'Validate for Publish');
+
+        // Add admin to People — otherwise the new desk is invisible in the
+        // logged-in user's monitoring desk picker. The user assignment is
+        // only persisted on save() via #next-people / #done-people; jumping
+        // to another tab discards it.
+        await page.locator('#next-stages').click();
+        await page.locator(s('select-user--input')).fill('admin');
+        await page.locator('[data-test-id^="select-user--option-"]').first().click();
+        await page.locator('#done-people').click();
+        await expect(page.locator('[data-test-id="desk-config-modal"]')).not.toBeVisible();
+
+        // 2. Mark Subject + Body HTML required on the `testing` profile.
+        await page.goto('/#/settings/content-profiles');
+        await page.locator(s('content-profile=testing', 'content-profile-actions')).click();
+        await page.locator(s('content-profile-actions--options'))
+            .getByRole('button', {name: 'Edit'}).click();
+
+        const editModal = page.locator(s('content-profile-editing-modal'));
+
+        async function setFieldRequired(tabName: string, fieldLabel: string): Promise<void> {
+            await editModal.locator(s('content-profile-tabs'))
+                .getByRole('tab', {name: tabName}).click();
+            await editModal.locator(s('content-profile-fields', `field=${fieldLabel}`)).click();
+
+            const fieldEdit = page.locator(s('item-view-edit'));
+
+            await fieldEdit.getByText('Required', {exact: true}).click();
+            await fieldEdit.locator(s('item-view-edit--save')).click();
+        }
+
+        await setFieldRequired('Header fields', 'Subject');
+        await setFieldRequired('Content fields', 'Body HTML');
+
+        await editModal.getByRole('button', {name: 'Save'}).click();
+        await expect(editModal).not.toBeVisible();
+
+        // 3. Create an article from the testing template on the new desk.
+        // Reload first — the monitoring desk picker caches the list.
+        await page.goto('/#/workspace/monitoring');
+        await page.reload();
+        await monitoring.selectDeskOrWorkspace(deskName);
+        await monitoring.createArticleFromTemplate('testing', {slugline: 'macro rule probe'});
+        await page.locator(s('authoring-topbar', 'save')).click();
+        await expect(page.locator(s('authoring-topbar', 'save'))).toBeDisabled();
+
+        const workingStage = page.locator(s(`monitoring-group=${deskName} / Working Stage`));
+        const stageA = page.locator(s(`monitoring-group=${deskName} / Test Stage A`));
+        const stageB = page.locator(s(`monitoring-group=${deskName} / Test Stage B`));
+        const stageC = page.locator(s(`monitoring-group=${deskName} / Test Stage C`));
+
+        await expect(workingStage.locator(s('article-item'))).toHaveCount(1);
+
+        // helper: open Send-to, pick the named stage, click Send.
+        async function sendToStage(stageName: string): Promise<void> {
+            await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+            await page.locator(s('interactive-actions-panel', 'tabs'))
+                .getByRole('tab', {name: 'Send to'}).click();
+            // Radio inputs are visually hidden behind sd-check-button labels.
+            // check({force: true}) clicks the input directly.
+            await page.locator(s('interactive-actions-panel', 'stage-select'))
+                .getByRole('radio', {name: stageName}).check({force: true});
+            await page.locator(s('interactive-actions-panel', 'send')).click();
+        }
+
+        async function expectMacroToast(rule: 'incoming' | 'onstage' | 'outgoing', stage: string): Promise<void> {
+            const toast = page.locator('[data-test-id^="notification--error"]')
+                .filter({hasText: `${rule} rule:Validate for Publish for stage:${stage}`});
+
+            await expect(toast.first()).toBeVisible({timeout: 10000});
+        }
+
+        // 4a. incoming rule on Test Stage A.
+        await monitoring.executeActionOnMonitoringItem(
+            workingStage.locator(s('article-item')).first(), 'Edit');
+        await sendToStage('Test Stage A');
+        await expectMacroToast('incoming', 'Test Stage A');
+        await expect(stageA.locator(s('article-item'))).toHaveCount(0);
+        // Close the lingering Send-to panel (the macro toast leaves it open
+        // intercepting topbar clicks), then close authoring.
+        await page.locator('sd-interactive-article-actions-panel-combined .icon-close-small').click();
+        await page.locator(s('authoring-topbar', 'close')).click();
+
+        // 4b. onstage rule on Test Stage C (macro fires AFTER the move, so
+        // the item ends up on Stage C with a toast).
+        await monitoring.executeActionOnMonitoringItem(
+            workingStage.locator(s('article-item')).first(), 'Edit');
+        await sendToStage('Test Stage C');
+        await expectMacroToast('onstage', 'Test Stage C');
+        await expect(stageC.locator(s('article-item'))).toHaveCount(1);
+        // Close the lingering Send-to panel (the macro toast leaves it open
+        // intercepting topbar clicks), then close authoring.
+        await page.locator('sd-interactive-article-actions-panel-combined .icon-close-small').click();
+        await page.locator(s('authoring-topbar', 'close')).click();
+
+        // 4c. outgoing rule on Test Stage B (move C → B succeeds, then B → A
+        // triggers B's outgoing macro and is blocked).
+        await monitoring.executeActionOnMonitoringItem(
+            stageC.locator(s('article-item')).first(), 'Edit');
+        await sendToStage('Test Stage B');
+        await expect(stageB.locator(s('article-item'))).toHaveCount(1);
+
+        await monitoring.executeActionOnMonitoringItem(
+            stageB.locator(s('article-item')).first(), 'Edit');
+        await sendToStage('Test Stage A');
+        await expectMacroToast('outgoing', 'Test Stage B');
+        await expect(stageB.locator(s('article-item'))).toHaveCount(1);
+        await expect(stageA.locator(s('article-item'))).toHaveCount(0);
     });
 });

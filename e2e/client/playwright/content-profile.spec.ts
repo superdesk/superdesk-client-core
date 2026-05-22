@@ -123,14 +123,48 @@ test(
     },
 );
 
-// FLAKY: scenario 2 of the original Protractor content_profile_spec
-// ('displays defined fields in authoring') drives subject-metadata
-// dropdown keyboard navigation + a publish that asserts a backend
-// validation toast. Both the subject-metadata dropdown interaction and
-// the publish-error toast contract need page-object helpers that don't
-// exist yet for Playwright. Tracking as a follow-up rather than
-// smuggling a half-working migration in.
-test.skip('content profile required field blocks publish', async () => {
-    // intentionally empty
+test('content profile required field blocks publish', async ({page}) => {
+    const monitoring = new Monitoring(page);
+
+    await restoreDatabaseSnapshot();
+
+    // Mark Ed. Note required on the Story content profile.
+    await page.goto('/#/settings/content-profiles');
+    await page.locator(s('content-profile=Story', 'content-profile-actions')).click();
+    await page.locator(s('content-profile-actions--options'))
+        .getByRole('button', {name: 'Edit'}).click();
+
+    const editModal = page.locator(s('content-profile-editing-modal'));
+
+    await editModal.locator(s('content-profile-tabs'))
+        .getByRole('tab', {name: 'Header fields'}).click();
+    await editModal.locator(s('content-profile-fields', 'field=Ed. Note')).click();
+
+    const fieldEdit = page.locator(s('item-view-edit'));
+
+    await fieldEdit.getByText('Required', {exact: true}).click();
+    await fieldEdit.locator(s('item-view-edit--save')).click();
+
+    await editModal.getByRole('button', {name: 'Save'}).click();
+    await expect(editModal).not.toBeVisible();
+
+    // Edit an existing Sports / Working Stage article (publish-eligible —
+    // pattern proven in monitoring.publishing.spec.ts:19-32).
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+        'Edit',
+    );
+
+    // Attempt to publish — missing Ed. Note must surface a validation toast.
+    await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
+    await page.locator(s('interactive-actions-panel', 'tabs'))
+        .getByRole('tab', {name: 'Publish'}).click();
+    await page.locator(s('interactive-actions-panel', 'publish')).click();
+
+    await expect(
+        page.locator(s('notification--error=ED. NOTE is a required field')),
+    ).toBeVisible();
 });
 

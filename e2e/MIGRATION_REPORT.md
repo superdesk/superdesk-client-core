@@ -15,25 +15,92 @@
     (edit + stage-macros appended)
 - Fully redundant (no new file needed; existing Playwright coverage matches): 2
   - editor3, marked_desks
-- Tests inside migrated specs that are currently `test.skip` pending
-  follow-up:
-  - 2 in package.spec.ts: `Add to current → MAIN` submenu — product-source
-    `data-test-id="add-to-package-group"` was added on this branch (so the
-    selector now exists); needs the test bodies un-skipped + verified.
-  - 1 in fetch.spec.ts: `removing an ingest item` + `bulk-removing an ingest
-    item` — stay skipped, root cause documented: the fixture ingest provider
-    in both `main` and `legacy` snapshots lacks `allow_remove_ingested=true`,
-    so `canRemove()` filters the activity. Re-enable once fixtures include
-    such a provider.
-  - 5 in authoring.legacy.*.spec.ts: legacy snapshot session-expiry overlay
-    race + editor3 body-clear semantics. Out of scope for this PR.
-  - 1 in content-profile.spec.ts: `displays defined fields in authoring` —
-    needs subject-metadata dropdown + publish-error toast page-object
-    helpers.
-  - 1 in desks.spec.ts: `can enforce incoming, outgoing and onstage rules` —
-    chains content-profile editing + template-driven article creation +
-    three sequential Send To flows. Needs to be broken into smaller
-    integration tests as a follow-up.
+- Tests recovered from the previous skip list (now passing):
+  - `fetch.spec.ts` 2 tests (`removing an ingest item`, `bulk-removing an
+    ingest item via the multi-action bar`) — flipped
+    `allow_remove_ingested=true` on the Antara news provider in
+    `e2e/server/dump/full/main/superdesk_e2e/ingest_providers.json.bz2`.
+  - `package.spec.ts` 2 tests (`increment package version`, `add to current
+    package removed after adding an item`) — the FLAKY skip-reason was
+    wrong; the actual bug was `'MAIN'` vs the lowercase `'main'` group value
+    that the AngularJS template interpolates into `data-test-value`.
+  - All 6 `authoring.legacy.*` tests (broadcast 1, sign-off 1, kill-template
+    2, media-gallery 2) — fixed via a new `dismissSessionExpiry(page)` helper
+    in `e2e/client/playwright/utils/index.ts` that detects the
+    `.login-screen .session-error` overlay (rendered by
+    `scripts/core/auth/login-modal.html` on a mid-session 401) and
+    re-authenticates in place. Media-gallery also needed:
+    (i) a deterministic completion signal — wait for the parent article's
+    `PATCH /api/archive/<id>` after the `change-image done` click;
+    (ii) a `galleryLocator(page)` refactor — the prior `s(galleryStr, ...)`
+    code passed an already-built selector as a test-id, producing malformed
+    selectors (latent bug, harmless while tests were skipped);
+    (iii) `TEST_FILE_DIR` corrected from the deleted `../specs/test-files`
+    to `../test-files`.
+
+- Additional tests landed (4):
+  - `content-filters.spec.ts` `can match stories` — fixed by replacing
+    `locator.fill()` on `body_html` with `keyboard.type` after
+    `click + ControlOrMeta+A + Delete` (Draft.js doesn't intercept
+    `fill()`, so the autosave never persisted the body change). Also
+    added `dismissSessionExpiry(page)` between item edits.
+  - `content-filters.spec.ts` `can serve as global block` — published
+    with `subscribers: ['Public API']` (the only subscriber in the legacy
+    snapshot — verified by unpacking
+    `e2e/server/dump/full/legacy/superdesk_e2e/subscribers.json.bz2`).
+    Second publish targets item7 not item5 (item5 ends up in Desk Output
+    after the first publish — global block suppresses transmission but
+    not the local publish action).
+  - `content-profile.spec.ts` `content profile required field blocks
+    publish` — edit an existing Sports / Working Stage article instead
+    of creating from template, plus the proven selector pattern from
+    `monitoring.publishing.spec.ts:24-25`
+    (`s('authoring-topbar', 'open-send-publish-pane')` then
+    `s('interactive-actions-panel', 'tabs')` — without the `authoring`
+    parent wrapper).
+  - `desks.spec.ts` `can enforce incoming, outgoing and onstage rules`
+    — single test (not the 2-test split the agent proposed) that creates
+    the desk, adds 3 macro-bearing stages, adds admin to People (via
+    `#done-people` to actually persist), marks Subject + Body HTML
+    required on the `testing` profile, creates an article, and runs the
+    three Send-To flows. Send-To radio inputs are visually hidden behind
+    sd-check-button labels, so `check({force: true})` is required. The
+    Send-To panel stays open after a macro-blocked send, so an explicit
+    `sd-interactive-article-actions-panel-combined .icon-close-small`
+    click is needed before closing authoring.
+
+  All four pass in isolation. Cross-spec contention can cause one to flake
+  when run in a long sequence; the legacy-snapshot describe blocks have
+  retry-restore guards but content-filters does not — re-running the
+  failed spec alone confirms the pass.
+
+- Pre-existing skips on `develop` (out of migration scope, listed here for
+  completeness):
+  - `publish-queue.spec.ts` no-subscriber variant — **deleted**:
+    structurally impossible (no subscriber → no publish-queue entry by
+    design); superseded by the passing sibling at the same line range.
+  - `multiedit.spec.ts` `editing articles in multi-edit mode` — **un-
+    skipped**: STT-1541 fixed the underlying `closeMulti` flake; the
+    skip-line `page.waitForTimeout(1000)` was also missing an `await`.
+  - `editor3.spec.ts` `adding a custom block inside editor3` — kept
+    skipped with an updated diagnosis: clicking the toolbar Custom-block
+    IconButton does not open the TreeMenu popover under Playwright
+    (investigated with both outer-div and inner-span as click targets).
+    Likely a real regression from PR #4777 (soft-newline + `<Spacer>`
+    wrapper changes); needs product-side debugging.
+
+- Tests deleted as never-correct:
+  - `authoring.empty-body-validation.spec.ts` — added by this branch and
+    never passed. Assumes body_html is required by the Story profile in
+    the main snapshot; it isn't. The publish succeeds silently because no
+    validation fires. Coverage is redundant with the content-profile
+    required-field test once that one lands.
+
+- Infrastructure changes for these fixes:
+  - `e2e/client/playwright/utils/index.ts`: new `dismissSessionExpiry`
+    helper.
+  - `e2e/server/dump/full/main/superdesk_e2e/ingest_providers.json.bz2`:
+    Antara provider's `allow_remove_ingested` flipped to `true`.
 
 ## How the original Protractor suite ran (re-audit, 2026-05-21)
 
@@ -136,7 +203,7 @@ All entries previously listed here have been migrated. Summary:
 ## Product source changes
 - `scripts/apps/search/views/item-repo.html` — `data-test-id="repo--ingest"`, `repo--production`, `repo--published`, `repo--archived` added to the four repo-filter toggle buttons — for `e2e/client/playwright/archived.spec.ts`.
 - `scripts/apps/publish/views/publish-queue.html` — `data-test-id="search"` on the queue search input and `data-test-id="search-close"` on the clear-search button — for `e2e/client/playwright/publishing.spec.ts`.
-- `scripts/apps/packaging/components/PackageGroup.tsx` — `data-test-id="add-to-package-group"` + `data-test-value` on the per-group add button. Enables the two `package.spec.ts` tests that target `s('add-to-package-group=MAIN')` to be re-enabled in a follow-up.
+- `scripts/apps/packaging/components/PackageGroup.tsx` — `data-test-id="add-to-package-group"` + `data-test-value` on the per-group add button. Used by the two un-skipped `package.spec.ts` tests (`increment package version`, `add to current package removed after adding an item`) — they target `s('add-to-package-group=main')` (the actual group value is lowercase `main`, not `MAIN`).
 
 (Previously, in PR #5181, `data-test-id` attributes were added to `scripts/apps/publish/views/subscribers.html` and `scripts/apps/authoring/suggest/SuggestView.html`. Those changes are already on `develop`.)
 

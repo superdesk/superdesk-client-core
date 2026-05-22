@@ -1,15 +1,10 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {login, restoreDatabaseSnapshot, s} from './utils';
+import {dismissSessionExpiry, login, restoreDatabaseSnapshot, s} from './utils';
 
 test.use({storageState: {cookies: [], origins: []}});
 
-// FLAKY: same legacy-snapshot session-expiry overlay symptom as the other
-// authoring.legacy.* tests — after the first save and close the second
-// 3-dot context menu click is blocked. Needs an upstream fix to either the
-// legacy snapshot's auth tokens or the save flow's interaction with the
-// session lifecycle.
-test.skip('sign off can be edited manually and is appended on subsequent saves', async ({page}) => {
+test('sign off can be edited manually and is appended on subsequent saves', async ({page}) => {
     await restoreDatabaseSnapshot({snapshotName: 'legacy'});
     await login(page);
 
@@ -36,8 +31,10 @@ test.skip('sign off can be edited manually and is appended on subsequent saves',
     // before clicking close. Otherwise the close races the save and triggers the
     // "unsaved changes" confirm dialog which blocks subsequent context menus.
     await expect(saveBtn).toBeDisabled();
+    await dismissSessionExpiry(page);
     await page.locator(s('authoring-topbar', 'close')).click();
 
+    await dismissSessionExpiry(page);
     await monitoring.executeActionOnMonitoringItem(
         page.locator(s('article-item=item5')).first(),
         'Edit',

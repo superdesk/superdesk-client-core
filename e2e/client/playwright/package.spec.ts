@@ -29,12 +29,7 @@ function packageGroupItems(page: Page, groupId: string): Locator {
 }
 
 test.describe('package', () => {
-    // FLAKY: even with Monitoring.executeSubmenuAction's mouse-move-out-then-in
-    // pattern the inner dropdown submenu doesn't open reliably under Playwright.
-    // The previous Protractor helper drove the same flow without issues using
-    // browser.actions().mouseMove(), suggesting a Playwright-specific event
-    // synthesis gap; left skipped until a deeper fix lands.
-    test.skip('increment package version', async ({page}) => {
+    test('increment package version', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -50,8 +45,8 @@ test.describe('package', () => {
         await monitoring.executeSubmenuAction(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
             'Add to current',
-            'MAIN',
-            {innerByTestId: 'add-to-package-group=MAIN'},
+            'main',
+            {innerByTestId: 'add-to-package-group=main'},
         );
 
         await page.locator(s('authoring-topbar', 'save')).click();
@@ -65,8 +60,7 @@ test.describe('package', () => {
         ).toHaveCount(2);
     });
 
-    // Same submenu-flake as `increment package version` above.
-    test.skip('add to current package removed after adding an item', async ({page}) => {
+    test('add to current package removed after adding an item', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -86,8 +80,8 @@ test.describe('package', () => {
         await monitoring.executeSubmenuAction(
             targetItem,
             'Add to current',
-            'MAIN',
-            {innerByTestId: 'add-to-package-group=MAIN'},
+            'main',
+            {innerByTestId: 'add-to-package-group=main'},
         );
 
         await targetItem.hover();

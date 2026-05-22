@@ -1,5 +1,7 @@
 import {test, expect, Page} from '@playwright/test';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {Monitoring} from './page-object-models/monitoring';
+import {Authoring} from './page-object-models/authoring';
+import {dismissSessionExpiry, restoreDatabaseSnapshot, s} from './utils';
 
 // Local login helper with a longer dashboard wait. The legacy snapshot takes
 // longer to render the dashboard than the default 10s expect timeout used by
@@ -311,23 +313,169 @@ test.describe('content filters', () => {
         await expect(modal).not.toBeVisible();
     });
 
-    // FLAKY: the original "can match stories" scenario requires creating and
-    // editing fixture items (item5/7/8/9) via monitoring + authoring, then
-    // running the content filter test panel against their GUIDs. Driving
-    // monitoring/authoring is out of scope for a focused content-filters
-    // migration; the legacy AngularJS authoring helpers (writeText,
-    // setHeaderSluglineText, toggleSms) have no faithful Playwright
-    // equivalent in this branch. Mark as skipped to preserve the original
-    // intent without claiming a passing test.
-    test.skip('can match stories', async () => {
-        // Intentionally left blank.
+    test('can match stories', async ({page}) => {
+        const monitoring = new Monitoring(page);
+
+        // Build the 5 filter conditions
+        await openFilterConditionsTab(page);
+        await addFilterCondition(page, {name: 'Desk Condition', field: 'Desk',
+            operator: 'eq', value: 'Politic Desk'});
+        await addFilterCondition(page, {name: 'Body Condition', field: 'Body HTML',
+            operator: 'startswith', value: 'Help'});
+        await addFilterCondition(page, {name: 'Slugline Condition', field: 'Slugline',
+            operator: 'notlike', value: 'amaz'});
+        await addFilterCondition(page, {name: 'Sms Condition', field: 'SMS',
+            operator: 'eq', value: 'True'});
+        await addFilterCondition(page, {name: 'Urgency', field: 'Urgency',
+            operator: 'nin', listValues: ['1', '2']});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Politic Desk');
+
+        async function editItemAndApply(headline: string, mutate: () => Promise<void>): Promise<void> {
+            await dismissSessionExpiry(page);
+            await monitoring.executeActionOnMonitoringItem(
+                page.locator(s(`article-item=${headline}`)).first(), 'Edit');
+            await mutate();
+
+            // Save explicitly — debounced autosave doesn't always flush before
+            // a goto cancels the request, leaving the change unpersisted.
+            const saveBtn = page.locator(s('authoring-topbar', 'save'));
+
+            await expect(saveBtn).toBeEnabled({timeout: 5000});
+            await saveBtn.click();
+            await expect(saveBtn).toBeDisabled();
+            await dismissSessionExpiry(page);
+            await page.locator(s('authoring-topbar', 'close')).click();
+        }
+
+        await editItemAndApply('item5', async () => {
+            // body_html is an sd-editor3 (Draft.js) field. locator.fill() sets
+            // the contenteditable DOM but does not route through Draft.js's
+            // onChange, so the bridged Angular ng-change/autosave never sees
+            // the new content. Use keyboard.type after select+delete instead
+            // (same pattern as authoring.legacy.sign-off.spec.ts:44-46).
+            const body = page.locator(s('authoring', 'authoring-field=body_html'))
+                .getByRole('textbox');
+
+            await body.click();
+            await page.keyboard.press('ControlOrMeta+A');
+            await page.keyboard.press('Delete');
+            await page.keyboard.type('Help needed item5 text');
+        });
+
+        await editItemAndApply('item9', async () => {
+            await page.locator(s('authoring', 'field-slugline')).fill('Another amazing story');
+        });
+
+        await editItemAndApply('item7', async () => {
+            await page.locator(s('authoring')).locator('.sms-switch').click();
+        });
+
+        await openFilterConditionsTab(page);
+        await openContentFiltersTab(page, false);
+
+        async function testStoryAgainst(filterConditionName: string, guid: string): Promise<string> {
+            await page.locator('[ng-click="editFilter()"]').click();
+            const modal = page.locator('.modal.content-filter-modal.in');
+
+            await expect(modal).toBeVisible();
+            await modal.locator('select[ng-model="filterRow.selected"]').first()
+                .selectOption({label: filterConditionName});
+            await modal.locator('[ng-click="addFilter(filterRow, \'fc\')"]').first().click();
+            await modal.locator('#contentFilter-test').fill(guid);
+            await modal.locator('[ng-click="test()"]').click();
+            const result = await modal.locator('#test-result').innerText();
+
+            await modal.locator('[ng-click="close()"]').last().click();
+            await expect(modal).not.toBeVisible();
+            return result.trim();
+        }
+
+        expect(await testStoryAgainst('Desk Condition',     'item5')).toBe('Does match');
+        expect(await testStoryAgainst('Body Condition',     'item5')).toBe('Does match');
+        expect(await testStoryAgainst('Body Condition',     'item9')).toBe("Doesn't match");
+        expect(await testStoryAgainst('Slugline Condition', 'item9')).toBe("Doesn't match");
+        expect(await testStoryAgainst('Slugline Condition', 'item5')).toBe('Does match');
+        expect(await testStoryAgainst('Sms Condition',      'item5')).toBe("Doesn't match");
+        expect(await testStoryAgainst('Sms Condition',      'item7')).toBe('Does match');
+        expect(await testStoryAgainst('Urgency',            'item7')).toBe("Doesn't match");
+        expect(await testStoryAgainst('Urgency',            'item8')).toBe('Does match');
     });
 
-    // FLAKY: same root cause as 'can match stories' — exercising the global
-    // block requires editing fixture items, publishing them, then asserting
-    // publish-queue counts. Authoring/publish flows are not yet ported as
-    // first-class Playwright helpers in this branch.
-    test.skip('can serve as global block', async () => {
-        // Intentionally left blank.
+    test('can serve as global block', async ({page}) => {
+        const monitoring = new Monitoring(page);
+        const authoring = new Authoring(page);
+
+        await openFilterConditionsTab(page);
+        await addFilterCondition(page, {name: 'Body Condition', field: 'Body HTML',
+            operator: 'startswith', value: 'Help'});
+
+        await openContentFiltersTab(page, false);
+        await addContentFilter(page, {
+            name: 'Blocking Content Filter',
+            filterConditionName: 'Body Condition',
+            toggleGlobalBlock: true,
+        });
+
+        await page.goto('/#/publish_queue');
+        await expect(page.locator(s('publish-queue-item'))).toHaveCount(0);
+
+        // Publish item5 with body starting "Help" — should be blocked.
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Politic Desk');
+        await dismissSessionExpiry(page);
+        await monitoring.executeActionOnMonitoringItem(
+            page.locator(s('article-item=item5')).first(), 'Edit');
+        {
+            const body = page.locator(s('authoring', 'authoring-field=body_html'))
+                .getByRole('textbox');
+
+            await body.click();
+            await page.keyboard.press('ControlOrMeta+A');
+            await page.keyboard.press('Delete');
+            await page.keyboard.type('Help needed item5 text');
+        }
+        await authoring.publish({subscribers: ['Public API']});
+
+        await page.goto('/#/publish_queue');
+        await expect(page.locator(s('publish-queue-item'))).toHaveCount(0);
+
+        // Disable global block, re-publish.
+        await page.goto('/#/settings/content-filters');
+        await openContentFiltersTab(page, false);
+        const filterRow = page.locator('li.clearfix', {hasText: 'Blocking Content Filter'});
+
+        await filterRow.hover();
+        await filterRow.locator('[ng-click^="editFilter("]').click();
+        const modal = page.locator('.modal.content-filter-modal.in');
+
+        await expect(modal).toBeVisible();
+        await modal.locator('[ng-model="contentFilter.is_global"]').click();
+        await modal.getByRole('button', {name: 'Save', exact: true}).click();
+        await expect(modal).not.toBeVisible();
+
+        // The first publish moved item5 to Desk Output (Published) — the
+        // global block only suppresses publish_queue transmission, not the
+        // local publish action. Use a different working-stage item for the
+        // second publish so the Edit action is still available.
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Politic Desk');
+        await dismissSessionExpiry(page);
+        await monitoring.executeActionOnMonitoringItem(
+            page.locator(s('article-item=item7')).first(), 'Edit');
+        {
+            const body = page.locator(s('authoring', 'authoring-field=body_html'))
+                .getByRole('textbox');
+
+            await body.click();
+            await page.keyboard.press('ControlOrMeta+A');
+            await page.keyboard.press('Delete');
+            await page.keyboard.type('Help needed item7 text');
+        }
+        await authoring.publish({subscribers: ['Public API']});
+
+        await page.goto('/#/publish_queue');
+        await expect(page.locator(s('publish-queue-item'))).toHaveCount(1);
     });
 });

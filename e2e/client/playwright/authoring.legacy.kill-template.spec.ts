@@ -1,6 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {login, restoreDatabaseSnapshot, s} from './utils';
+import {dismissSessionExpiry, login, restoreDatabaseSnapshot, s} from './utils';
 
 test.use({storageState: {cookies: [], origins: []}});
 
@@ -11,13 +11,7 @@ test.beforeEach(async ({page}) => {
     await login(page);
 });
 
-// FLAKY: in the 'legacy' snapshot the publish-then-Kill flow hits a "Your session
-// has expired" overlay after the item moves to Desk Output (confirmed via
-// error-context.md page snapshot). The expiry is triggered after the publish
-// completes, blocking the subsequent 3-dot context menu click. Root cause looks
-// environmental (snapshot-restore vs. session token), not a regression in the
-// kill template flow.
-test.skip('applying kill template populates body and headline', async ({page}) => {
+test('applying kill template populates body and headline', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -31,6 +25,7 @@ test.skip('applying kill template populates body and headline', async ({page}) =
 
     const publishedItem = page.locator(s('article-item=item5')).last();
 
+    await dismissSessionExpiry(page);
     await monitoring.executeActionOnMonitoringItem(publishedItem, 'Publishing actions', 'Kill item');
 
     await expect(
@@ -42,10 +37,7 @@ test.skip('applying kill template populates body and headline', async ({page}) =
     ).toBeVisible();
 });
 
-// FLAKY: same session-expiry symptom as the sibling kill-template test above —
-// the second context-menu interaction on the published item5 races a "Your
-// session has expired" overlay in the legacy snapshot.
-test.skip('Multiedit option hidden when action is kill', async ({page}) => {
+test('Multiedit option hidden when action is kill', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -64,8 +56,10 @@ test.skip('Multiedit option hidden when action is kill', async ({page}) => {
 
     const publishedItem = page.locator(s('article-item=item5')).last();
 
+    await dismissSessionExpiry(page);
     await monitoring.executeActionOnMonitoringItem(publishedItem, 'Publishing actions', 'Kill item');
 
+    await dismissSessionExpiry(page);
     await page.locator(s('authoring-topbar', 'actions-button')).click();
     await expect(page.locator(s('actions-list', 'multiedit-action'))).not.toBeVisible();
 });
