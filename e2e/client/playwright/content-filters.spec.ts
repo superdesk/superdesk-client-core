@@ -3,9 +3,9 @@ import {Monitoring} from './page-object-models/monitoring';
 import {Authoring} from './page-object-models/authoring';
 import {dismissSessionExpiry, restoreDatabaseSnapshot, s} from './utils';
 
-// Local login helper with a longer dashboard wait. The legacy snapshot takes
-// longer to render the dashboard than the default 10s expect timeout used by
-// the shared login() helper in utils/index.ts.
+// Local login helper with a longer dashboard wait — the legacy snapshot
+// renders the dashboard more slowly than the shared login() helper's
+// default 10s expect timeout allows.
 async function login(page: Page): Promise<void> {
     await page.goto('/');
     await page.locator(s('login-page', 'username')).fill('admin');
@@ -14,12 +14,8 @@ async function login(page: Page): Promise<void> {
     await expect(page.locator(s('dashboard'))).toBeVisible({timeout: 20000});
 }
 
-// The Protractor suite ran against the 'legacy' snapshot (fixtures define
-// the 'Politic Desk', 'Politics Desk', item5/7/8/9 items, etc.). That
-// snapshot replaces the user database, so the Playwright storageState
-// targets the 'main' user database and is invalidated. Override with a
-// blank storageState and log in fresh per test, matching archived.spec.ts
-// and saved-search.spec.ts.
+// The 'legacy' snapshot replaces the user database, so the default
+// storageState (built against 'main') is invalid. Log in fresh per test.
 test.use({storageState: {cookies: [], origins: []}});
 
 async function openFilterConditionsTab(page: Page, reload = true): Promise<void> {
@@ -55,16 +51,13 @@ async function addFilterCondition(
     await expect(modal).toBeVisible();
     await modal.locator('#filterCondition-name').fill(options.name);
 
-    // Select the Field by its visible label text.
     await modal.locator('select[ng-model="filterCondition.field"]')
         .selectOption({label: options.field});
 
-    // Select the Operator by exact value.
     await modal.locator('select[ng-model="filterCondition.operator"]')
         .selectOption({label: options.operator});
 
     if (options.listValues != null) {
-        // sd-meta-terms widget. Click the dropdown toggle then type+enter for each value.
         for (const v of options.listValues) {
             await modal.locator('.dropdown__toggle').first().click();
             await page.keyboard.type(v);
@@ -72,7 +65,6 @@ async function addFilterCondition(
             await page.keyboard.press('Enter');
         }
     } else if (options.value != null) {
-        // Decide between <select> (comparison values) and <input> (free text) based on what is rendered.
         const valueSelect = modal.locator('select[ng-model="filterCondition.value"]');
         const valueInput = modal.locator('input[ng-model="filterCondition.value"]');
 
@@ -98,7 +90,6 @@ async function deleteFilterCondition(page: Page, name: string): Promise<void> {
 
     await row.hover();
     await row.locator('[data-test-id="delete-filter-condition"]').click();
-    // Confirmation modal with an OK button.
     await page.getByRole('button', {name: 'OK', exact: true}).click();
 }
 
@@ -141,7 +132,6 @@ test.describe('content filters', () => {
     test('can manage filter conditions', async ({page}) => {
         await openFilterConditionsTab(page);
 
-        // add a new filter condition
         await addFilterCondition(page, {
             name: 'Test Filter Condition',
             field: 'Desk',
@@ -316,7 +306,6 @@ test.describe('content filters', () => {
     test('can match stories', async ({page}) => {
         const monitoring = new Monitoring(page);
 
-        // Build the 5 filter conditions
         await openFilterConditionsTab(page);
         await addFilterCondition(page, {name: 'Desk Condition', field: 'Desk',
             operator: 'eq', value: 'Politic Desk'});
@@ -326,12 +315,11 @@ test.describe('content filters', () => {
             operator: 'notlike', value: 'amaz'});
         await addFilterCondition(page, {name: 'Sms Condition', field: 'SMS',
             operator: 'eq', value: 'True'});
-        // Note: the original Protractor scenario also asserted an Urgency
-        // `nin [1, 2]` condition, but the sd-meta-terms list-value typeahead
-        // is flaky under Playwright (typing+ArrowDown+Enter occasionally
-        // submits an empty value, surfacing "invalid literal for int()" from
-        // the backend). The other four condition types cover the same
-        // matching mechanics; dropping Urgency keeps the test deterministic.
+        // The original Protractor scenario also asserted an Urgency `nin [1, 2]`
+        // condition; the sd-meta-terms list-value typeahead is flaky under
+        // Playwright (typing+ArrowDown+Enter occasionally submits empty,
+        // surfacing "invalid literal for int()" from the backend), so it was
+        // dropped. The other four conditions cover the same matching mechanics.
 
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Politic Desk');
@@ -342,8 +330,8 @@ test.describe('content filters', () => {
                 page.locator(s(`article-item=${headline}`)).first(), 'Edit');
             await mutate();
 
-            // Save explicitly — debounced autosave doesn't always flush before
-            // a goto cancels the request, leaving the change unpersisted.
+            // Debounced autosave doesn't always flush before a goto cancels
+            // the request, leaving the change unpersisted — save explicitly.
             const saveBtn = page.locator(s('authoring-topbar', 'save'));
 
             await expect(saveBtn).toBeEnabled({timeout: 5000});
@@ -411,17 +399,7 @@ test.describe('content filters', () => {
         expect(await testStoryAgainst('Sms Condition', 'item7')).toBe('Does match');
     });
 
-    // The original Protractor scenario published without selecting a
-    // subscriber in the UI and relied on Superdesk's auto-product-routing
-    // (Public API has product "all" and would auto-receive every publish
-    // into publish_queue). That behaviour appears to have changed in
-    // superdesk-core since the Protractor era — locally the queue
-    // populates ~80% of the time, on CI Ubuntu it consistently stays at 0.
-    // Re-enabling needs either restoring the auto-routing semantics
-    // upstream, or switching the legacy snapshot's Public API destination
-    // from http_push:5050 to email:mailcrab to make delivery succeed
-    // deterministically (and explicitly selecting the subscriber in the UI).
-    test.skip('can serve as global block', async ({page}) => {
+    test('can serve as global block', async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 
@@ -458,7 +436,6 @@ test.describe('content filters', () => {
 
         // Unsaved body changes surface a "Save and send" confirm dialog;
         // Authoring.publish only auto-handles it when subscribers are set.
-        // Mirrors Protractor's authoring.publish() skipConfirm-false branch.
         {
             const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
 
@@ -506,7 +483,6 @@ test.describe('content filters', () => {
 
         // Unsaved body changes surface a "Save and send" confirm dialog;
         // Authoring.publish only auto-handles it when subscribers are set.
-        // Mirrors Protractor's authoring.publish() skipConfirm-false branch.
         {
             const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
 
