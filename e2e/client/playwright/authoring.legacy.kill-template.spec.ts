@@ -28,9 +28,16 @@ test('applying kill template populates body and headline', async ({page}) => {
     await dismissSessionExpiry(page);
     await monitoring.executeActionOnMonitoringItem(publishedItem, 'Publishing actions', 'Kill item');
 
+    // The kill template body interpolates the published item's slugline:
+    // "This is kill template. Slugged <slugline>." — item5's slugline in the
+    // legacy snapshot is "item5 slugline one/two".
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
-    ).toContainText('This is kill template.');
+    ).toHaveText('This is kill template. Slugged item5 slugline one/two.');
+
+    await expect(
+        page.locator(s('authoring', 'field--headline')).getByRole('textbox'),
+    ).toHaveText('KILL NOTICE');
 
     await expect(
         page.locator(s('authoring-topbar')).getByRole('button', {name: 'Send Kill'}),

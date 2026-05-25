@@ -52,9 +52,9 @@ test.describe('legal archive (legacy snapshot)', () => {
         await expect(menu.getByRole('button', {name: 'Open', exact: true})).toBeVisible();
         await expect(menu.getByRole('button', {name: 'Open in new Window', exact: true})).toBeVisible();
 
-        await expect(menu.getByRole('button', {name: 'Edit', exact: true})).toHaveCount(0);
-        await expect(menu.getByRole('button', {name: 'Spike Item', exact: true})).toHaveCount(0);
-        await expect(menu.getByRole('button', {name: 'Duplicate', exact: true})).toHaveCount(0);
+        // Exact menu size guards against new actions leaking into legal archive
+        // (compliance: items must stay immutable — no Edit/Spike/Duplicate/etc).
+        await expect(menu.locator('li button')).toHaveCount(3);
     });
 
     test('preview can be closed from a Legal Archive item', async ({page}) => {
@@ -83,6 +83,16 @@ test.describe('legal archive (legacy snapshot)', () => {
         await expect(page.locator(s('authoring-topbar', 'save'))).not.toBeVisible();
         await expect(page.locator(s('authoring-topbar', 'open-send-publish-pane'))).not.toBeVisible();
         await expect(page.locator(s('content-create'))).toHaveCount(0);
+
+        await expect(page.locator(s('navigation-tabs', 'authoring-widget'))).toHaveCount(2);
+
+        await page.locator(s('authoring-widget=Info')).click();
+        // The item-state span renders the state via the sd-state-label
+        // component (text content, not attribute) — Protractor checked
+        // `getText()` against the set below; matching the same set here.
+        await expect(
+            page.locator(s('authoring-widget-panel=Info', 'item-state')),
+        ).toHaveText(/\b(published|corrected|killed|recalled|unpublished)\b/i);
     });
 
     test('opens a package read-only', async ({page}) => {
@@ -99,9 +109,19 @@ test.describe('legal archive (legacy snapshot)', () => {
         await expect(page.locator(s('authoring-topbar', 'close'))).toBeVisible();
         await expect(page.locator(s('authoring-topbar', 'save'))).not.toBeVisible();
         await expect(page.locator(s('authoring-topbar', 'open-send-publish-pane'))).not.toBeVisible();
+
+        await expect(page.locator(s('navigation-tabs', 'authoring-widget'))).toHaveCount(2);
+
+        await page.locator(s('authoring-widget=Info')).click();
+        // The item-state span renders the state via the sd-state-label
+        // component (text content, not attribute) — Protractor checked
+        // `getText()` against the set below; matching the same set here.
+        await expect(
+            page.locator(s('authoring-widget-panel=Info', 'item-state')),
+        ).toHaveText(/\b(published|corrected|killed|recalled|unpublished)\b/i);
     });
 
-    test('shows versions for a Legal Archive item', async ({page}) => {
+    test('shows versions and item history for a Legal Archive item', async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/legal_archive');
@@ -111,10 +131,13 @@ test.describe('legal archive (legacy snapshot)', () => {
             'Open',
         );
 
-        const versioningTab = page.locator(s('authoring-widget=Versions/History'));
+        const widgetPanel = page.locator(s('authoring-widget-panel=Versions/History'));
 
-        await versioningTab.click();
+        await page.locator(s('navigation-tabs', 'authoring-widget=Versions/History')).click();
 
-        await expect(page.locator(s('article-version'))).toHaveCount(3);
+        await expect(widgetPanel.locator(s('article-version'))).toHaveCount(3);
+
+        await widgetPanel.getByRole('button', {name: 'Item history', exact: true}).click();
+        await expect(widgetPanel.locator(s('history-item'))).toHaveCount(3);
     });
 });
