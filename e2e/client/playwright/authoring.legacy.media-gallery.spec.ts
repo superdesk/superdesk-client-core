@@ -33,11 +33,8 @@ async function uploadMediaToGallery(page: Page, imageFile: string) {
     );
     await page.locator(s('multi-image-edit--start-upload')).click();
 
-    // The change-image "done" click triggers: N x POST /api/picture_crop, then a
-    // PATCH /api/archive/<id> (parent article save with the new associations).
-    // The gallery only renders the new media-gallery-image after that PATCH
-    // lands. We also wait for the modal to fully unmount so it can't mask the
-    // gallery query.
+    // Gallery only renders the new image after the parent article PATCH lands;
+    // also wait for the modal to unmount so it can't mask the gallery query.
     const articlePatch = page.waitForResponse((resp) =>
         /\/api\/archive\/[^/]+$/.test(resp.url())
         && resp.request().method() === 'PATCH'

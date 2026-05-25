@@ -27,9 +27,8 @@ test('sign off can be edited manually and is appended on subsequent saves', asyn
 
     await saveBtn.click();
 
-    // Wait for save to complete (button becomes disabled once the item is saved)
-    // before clicking close. Otherwise the close races the save and triggers the
-    // "unsaved changes" confirm dialog which blocks subsequent context menus.
+    // Wait until save settles (button re-disables); otherwise close races the
+    // save and pops the "unsaved changes" dialog which blocks the next menu.
     await expect(saveBtn).toBeDisabled();
     await dismissSessionExpiry(page);
     await page.locator(s('authoring-topbar', 'close')).click();

@@ -34,12 +34,16 @@ test('can add embeds', async ({page}) => {
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    page.locator(s('toolbar')).getByRole('button', {name: 'Embed'}).click();
+    await page.locator(s('toolbar')).getByRole('button', {name: 'Embed'}).click();
 
     await page.locator(s('embed-form')).getByPlaceholder('Enter URL or code to embed')
         .fill('https://sourcefabric.org');
 
     await page.locator(s('embed-controls', 'submit')).click();
+    // FIXME: toBeDefined() on a Locator is always true — this assertion is a
+    // no-op. Also the page.route URL above contains literal newlines and won't
+    // match the real iframe.ly request; the mock is dead. Needs a real
+    // visibility assertion + a correctly-formatted route URL.
     await expect(
         page.locator(s('authoring', 'authoring-field=body_html')).getByText('https://sourcefabric.org'),
     ).toBeDefined();
@@ -212,7 +216,7 @@ test('tables maintaining cursor position at the end when executing "undo" action
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo', {delay: 100});
 
-    await page.keyboard.press('Control+z'); // undo last character
+    await page.keyboard.press('Control+z');
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('bar', {delay: 100});
@@ -266,7 +270,6 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
 
     await page.getByRole('button', {name: 'Add New'}).click();
 
-    // Input sample data
     await page.locator(s('vocabulary-edit-content')).getByLabel('Id').fill('custom_blocks_2');
 
     await page.locator(s('vocabulary-edit-content')).getByLabel('Name').fill('Custom blocks 2');
@@ -283,27 +286,22 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await page.locator(s('editor3')).getByText('test data').click();
     await page.locator(s('editor3', 'formatting-option=h1')).click();
 
-    // Save editor block
     await page.locator(s('vocabulary-edit-footer')).getByRole('button', {name: 'Save'}).click();
 
     await expect(page.locator(s('vocabulary-edit-content'))).not.toBeVisible(); // wait for saving to finish
 
-    // Edit custom block
+    // Re-open the saved block and verify formatting + sample text persisted
     await page.locator(s('vocabulary-item=Custom blocks 2')).hover();
     await page.locator(s('vocabulary-item=Custom blocks 2', 'vocabulary-item--start-editing')).click();
 
-    // Check if formatting option, sample text data
     await expect(page.locator(s('editor3', 'formatting-option=h1'))).toBeVisible();
     await expect(page.locator(s('editor3')).getByRole('textbox')).toHaveText('test data');
 });
 
 // Skipped: the TreeMenu popover opened by the toolbar "Custom block" IconButton
-// (scripts/core/editor3/components/toolbar/index.tsx:348) does not render after
-// the click in this Playwright run — investigated 2026-05-22 with both the
-// labeled outer div and the inner span as click targets. The "Custom block"
-// button is found and clicked, but `tree-menu-popover` never appears in the
-// DOM. Likely a real regression from PR #4777 (soft-newline + <Spacer> wrapper
-// changes to Editor3Component.tsx). Needs product-side debugging.
+// (scripts/core/editor3/components/toolbar/index.tsx) does not render after the
+// click — `tree-menu-popover` never appears in the DOM. Suspected regression
+// from PR #4777 (soft-newline + <Spacer> wrapper changes to Editor3Component).
 test.skip('adding a custom block inside editor3', async ({page}) => {
     const monitoring = new Monitoring(page);
 

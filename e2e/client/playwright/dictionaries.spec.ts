@@ -13,7 +13,7 @@ test('create, edit, add and remove a word in, and delete a dictionary', async ({
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/dictionaries');
 
-    // Create new dictionary "Test Dict".
+    // create dictionary "Test Dict"
     await openAddDictionaryMenu(page);
     await page.locator(s('create-dictionary')).click();
 

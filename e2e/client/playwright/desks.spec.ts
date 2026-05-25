@@ -165,8 +165,7 @@ test('Switching between desks', async ({page}) => {
 // The remaining scenarios use the `legacy` snapshot (which has `Politic Desk`,
 // the `testing` content template / profile, and the `populate_abstract` /
 // `Validate for Publish` macros). The Playwright storageState targets the
-// `main` user database, so override it and log in fresh — same pattern as
-// saved-search.spec.ts.
+// `main` user database, so override it and log in fresh.
 //
 // Run serially so that snapshot restoration and modal-state changes do not
 // race against each other (a single backend serves every parallel worktree).
@@ -233,11 +232,6 @@ test.describe('desks - legacy snapshot', () => {
         await expiryRow.locator('input[ng-model="contentExpiry.minutes"]').fill(String(minutes));
     }
 
-    // FLAKY note: this scenario exercises a long sequence on the legacy
-    // snapshot's `Politic Desk` (edit + reopen + verify + add stage + toggle
-    // working/incoming/global-read flags). It is sensitive to snapshot races
-    // with other agents sharing the same backend — if it fails repeatedly,
-    // contention is the likely cause.
     test('edit desk', async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'legacy'});
         await login(page);
@@ -251,7 +245,6 @@ test.describe('desks - legacy snapshot', () => {
         const description = `New Description ${nonce}`;
         const source = `Test ${nonce}`;
 
-        // .fill() replaces (unlike Protractor's sendKeys which appended).
         await withTestContext('desk-config-modal', async ({cs}) => {
             await page.locator(cs('field--description')).fill(description);
             await page.locator(cs('field--source')).fill(source);
@@ -286,7 +279,6 @@ test.describe('desks - legacy snapshot', () => {
         await showTab(page, 'Stages');
         await expect(page.locator('#new-stage')).toBeVisible();
 
-        // add a new working stage
         await page.locator('#new-stage').click();
         await page.locator('#insert-stage').fill('Test Stage');
         await page.locator('textarea[ng-model="editStage.description"]').fill('Test Stage Description');
@@ -339,7 +331,6 @@ test.describe('desks - legacy snapshot', () => {
         await expect(globalReadSwitch).toHaveClass(/checked/);
         await expect(globalReadSwitch).toHaveClass(/prevent-off/);
 
-        // cancel the stage edit and close the modal — we don't need to persist
         await page.locator('[data-test-id="desk-config-modal"]')
             .getByRole('button', {name: 'Cancel'})
             .click();
@@ -393,7 +384,6 @@ test.describe('desks - legacy snapshot', () => {
         await showTab(page, 'Macros');
         await page.locator('#save').click();
 
-        // re-open the desk and verify
         await openDeskEdit(page, deskName);
         await showTab(page, 'Stages');
 
@@ -513,7 +503,6 @@ test.describe('desks - legacy snapshot', () => {
 
         await expect(workingStage.locator(s('article-item'))).toHaveCount(1);
 
-        // helper: open Send-to, pick the named stage, click Send.
         async function sendToStage(stageName: string): Promise<void> {
             await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
             await page.locator(s('interactive-actions-panel', 'tabs'))

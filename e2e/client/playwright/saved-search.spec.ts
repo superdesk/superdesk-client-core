@@ -1,10 +1,8 @@
 import {test, expect, Page} from '@playwright/test';
 import {login, restoreDatabaseSnapshot, s} from './utils';
 
-// The 'legacy' snapshot has 16 items in the global search and the
-// admin1/admin2/... users used by the multi-user scenario. The Playwright
-// storageState targets the 'main' user database, so override and log in
-// fresh (same pattern as archived.spec.ts).
+// 'legacy' snapshot replaces the user database; override storageState and
+// log in fresh per test (same pattern as archived.spec.ts).
 test.use({storageState: {cookies: [], origins: []}});
 
 async function openGlobalSearchListView(page: Page): Promise<void> {
@@ -88,8 +86,7 @@ test('can save a global search and another user sees it', async ({browser, page}
     await expect(userSavedSearches.first().locator('.search-name')).toContainText('A Global Search');
     await expect(userSavedSearches.first().locator('.search-name')).toContainText('[Global]');
 
-    // Log in as admin1 in a fresh browser context (no logout helper exists
-    // yet for Playwright; using a new context is equivalent for this assertion).
+    // Fresh context emulates the Protractor logout + admin1 login flow.
     const admin1Context = await browser.newContext({storageState: {cookies: [], origins: []}});
     const admin1Page = await admin1Context.newPage();
 

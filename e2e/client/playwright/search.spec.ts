@@ -26,17 +26,13 @@ async function openParametersTab(page: Page): Promise<void> {
 }
 
 async function clickGoSearch(page: Page): Promise<void> {
-    // The "Search" submit button is rendered by the `sd-save-search` directive
-    // (`save-search.html`) as a sibling of `[data-test-id="advanced-search-panel"]`,
-    // not inside it. Both live under the `#advanced_search_filters` aside, so scope
-    // the lookup there. The button carries the `.search` class and is unique while
-    // the parameters tab is active.
+    // The "Search" submit lives outside [data-test-id="advanced-search-panel"]
+    // (rendered by sd-save-search as a sibling); scope to the parent aside.
     await page.locator('#advanced_search_filters button.search:visible').first().click();
 }
 
 async function submitRawSearch(page: Page): Promise<void> {
-    // Raw search has no submit button; the textarea triggers `keyPressed($event)`
-    // and runs the query when ENTER is pressed (see `RawSearch.ts`).
+    // Raw search has no submit button; the textarea runs the query on ENTER.
     await page.locator(s('raw-query')).press('Enter');
 }
 

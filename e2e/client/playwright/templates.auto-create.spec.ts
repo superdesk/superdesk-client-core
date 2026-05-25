@@ -7,7 +7,6 @@ test('creating an automatic-item-creation template persists schedule on reload',
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/templates');
 
-    // Add a new template.
     await page.locator(s('template-header')).getByRole('button', {name: 'Add new'}).click();
 
     const editView = page.locator(s('template-edit-view'));
@@ -15,13 +14,11 @@ test('creating an automatic-item-creation template persists schedule on reload',
     await editView.getByPlaceholder('template name').fill(TEMPLATE_NAME);
     await editView.getByLabel('Content Profile').selectOption({label: 'Story'});
 
-    // Assign to Sports desk.
     await editView.locator(s('desks', 'desk--Sports')).click();
 
     // Toggle "Automatically create item".
     await editView.locator('span[sd-switch][ng-model="template.schedule.is_active"]').click();
 
-    // Pick Tuesday in the weekday picker.
     await editView.locator('div[sd-weekday-picker] .sd-checkbox--button-Tuesday').click();
 
     // Pick 10:30 via the timepicker popup rather than typing into the input.
@@ -45,7 +42,6 @@ test('creating an automatic-item-creation template persists schedule on reload',
     await editView.locator('#add_time').click();
     await expect(editView.locator('[ng-repeat="time in cron_times"]').first()).toContainText('10:30');
 
-    // Schedule desk + stage.
     await editView.locator('#schedule-desk').selectOption({label: 'Sports'});
     await editView.locator('#template-stage').selectOption({label: 'Working Stage'});
 
@@ -56,7 +52,6 @@ test('creating an automatic-item-creation template persists schedule on reload',
     // and intercept the dropdown toggle.
     await expect(editView).not.toBeVisible();
 
-    // Verify the template appears in the list.
     await expect(
         page.locator(s('template-content', `content-template=${TEMPLATE_NAME.toLowerCase()}`)),
     ).toBeVisible();

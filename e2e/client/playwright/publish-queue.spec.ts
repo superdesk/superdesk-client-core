@@ -17,7 +17,7 @@ test('item appearing in publish queue after publishing with subscriber', async (
         'Edit',
     );
 
-    authoring.publish({subscribers: ['Subscriber 1']});
+    await authoring.publish({subscribers: ['Subscriber 1']});
 
     await expect(page.locator(
         s('monitoring-group=Sports desk output', 'article-item=test sports story'),
@@ -38,5 +38,5 @@ test('item appearing in publish queue after publishing with subscriber', async (
         'Subscriber',
     );
 
-    await expect(value).toBe('Subscriber 1');
+    expect(value).toBe('Subscriber 1');
 });

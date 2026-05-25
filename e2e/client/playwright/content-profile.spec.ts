@@ -7,8 +7,6 @@ test('content profile icon', async ({page}) => {
 
     await restoreDatabaseSnapshot();
 
-    // expect an article to have a regular text icon
-
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
 
@@ -20,9 +18,6 @@ test('content profile icon', async ({page}) => {
         )),
     ).toHaveAttribute('data-test-value', 'text');
 
-
-    // go to content profile and set icon to "map-marker"
-
     await page.goto('/#/settings/content-profiles');
     await page.locator(s('content-profile=Story', 'content-profile-actions')).click();
     await page.locator(s('content-profile-actions--options')).getByRole('button', {name: 'Edit'}).click();
@@ -32,9 +27,6 @@ test('content profile icon', async ({page}) => {
     await page.locator(s('content-profile-edit-view--footer')).getByRole('button', {name: 'Save'}).click();
 
     await expect(page.locator(s('content-profile=Story', 'icon'))).toHaveAttribute('data-test-value', 'map-marker');
-
-
-    // go back to monitoring and test whether the newly set icon is being used
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
@@ -82,7 +74,6 @@ test(
         await page.locator('button.btn--icon-only').first().click();
         await page.locator('#profile-save').click();
 
-        // After save, the edit modal opens; enable + save.
         const editView = page.locator(s('content-profile-edit-view'));
 
         await expect(editView).toBeVisible();
@@ -91,7 +82,7 @@ test(
             .getByRole('button', {name: 'Save'}).click();
         await expect(editView).not.toBeVisible();
 
-        // 2. A matching template named "simple" should now exist.
+        // A matching template named "simple" should now exist
         await openTemplateEdit(page, PROFILE_NAME);
 
         const profileSelect = page.locator(s('template-edit-view')).getByLabel('Content Profile');
@@ -99,22 +90,16 @@ test(
         await expect(profileSelect.locator('option:checked')).toHaveText(PROFILE_NAME);
         await page.locator(s('template-edit-view')).getByRole('button', {name: 'Cancel'}).click();
 
-        // The original Protractor scenario also asserted that disabling a
-        // profile referenced by templates surfaces an error toast
-        // ("Cannot disable content profile..."). Under the current React
-        // toast/AngularJS settings hybrid, that toast does not appear in the
-        // observed page state — disabling completes silently. Treating that
-        // sub-assertion as out of scope for this migration; the create→
-        // matching-template and delete→blank-template-profile assertions
-        // below preserve the meaningful coverage.
+        // The original Protractor scenario also asserted that disabling a profile
+        // referenced by templates surfaces an error toast ("Cannot disable content
+        // profile..."). The toast no longer appears in the current React/AngularJS
+        // hybrid; disabling completes silently. Sub-assertion intentionally omitted.
 
-        // Delete the profile; the referencing template should then have no profile.
+        // Delete the profile; the referencing template should then have no profile
         await openProfileDelete(page, PROFILE_NAME);
         await expect(page.locator(s(`content-profile=${PROFILE_NAME}`))).not.toBeVisible();
 
         await openTemplateEdit(page, PROFILE_NAME);
-        // After the profile is deleted, the template's Content Profile select
-        // should not list Simple as its selected option.
         await expect(
             page.locator(s('template-edit-view'))
                 .getByLabel('Content Profile')
@@ -128,7 +113,7 @@ test('content profile required field blocks publish', async ({page}) => {
 
     await restoreDatabaseSnapshot();
 
-    // Mark Ed. Note required on the Story content profile.
+    // Mark Ed. Note required on the Story content profile
     await page.goto('/#/settings/content-profiles');
     await page.locator(s('content-profile=Story', 'content-profile-actions')).click();
     await page.locator(s('content-profile-actions--options'))
@@ -148,8 +133,6 @@ test('content profile required field blocks publish', async ({page}) => {
     await editModal.getByRole('button', {name: 'Save'}).click();
     await expect(editModal).not.toBeVisible();
 
-    // Edit an existing Sports / Working Stage article (publish-eligible —
-    // pattern proven in monitoring.publishing.spec.ts:19-32).
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.executeActionOnMonitoringItem(
@@ -157,7 +140,6 @@ test('content profile required field blocks publish', async ({page}) => {
         'Edit',
     );
 
-    // Attempt to publish — missing Ed. Note must surface a validation toast.
     await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
     await page.locator(s('interactive-actions-panel', 'tabs'))
         .getByRole('tab', {name: 'Publish'}).click();

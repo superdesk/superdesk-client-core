@@ -55,7 +55,6 @@ test('sending an item from personal space', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/personal');
 
-    // send article to desk
     await monitoring.executeActionOnMonitoringItem(
         page.locator(s('article-item=personal space article 1')),
         'Send to',
@@ -65,12 +64,10 @@ test('sending an item from personal space', async ({page}) => {
     await page.locator(s('interactive-actions-panel')).locator(s('item'), {hasText: 'Working Stage'}).check();
     await page.locator(s('interactive-actions-panel', 'send')).click();
 
-    // check if article removed from personal space
     await expect(
         page.locator(s('monitoring-group=Personal Items', 'article-item=personal space article 1')),
     ).not.toBeVisible();
 
-    // go to monitoring and check visibility of article
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
     await expect(page.locator(s('monitoring-view', 'monitoring-group=Sports / Working Stage'))).toBeVisible();

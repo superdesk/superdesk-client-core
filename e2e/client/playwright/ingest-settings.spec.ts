@@ -1,10 +1,8 @@
 import {test, expect, Page} from '@playwright/test';
 import {login, restoreDatabaseSnapshot, s} from './utils';
 
-// The Protractor ingest_settings_spec ran against the 'legacy' snapshot
-// (resetApp(..., {name: 'legacy'}) in fixtures.ts). The Playwright suite
-// defaults to 'main', whose storageState targets the 'main' user database;
-// reset storageState and log in fresh, matching archived.spec.ts.
+// Uses the 'legacy' snapshot; the default 'main' storageState targets a
+// different user DB, so reset cookies and log in fresh.
 test.use({storageState: {cookies: [], origins: []}});
 
 async function openRoutingTab(page: Page): Promise<void> {

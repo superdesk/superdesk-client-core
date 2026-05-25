@@ -60,7 +60,6 @@ test('remembers the last duplicate destination desk', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // first duplicate to Finance
     await monitoring.executeActionOnMonitoringItem(
         page.locator(articleSelector),
         'Duplicate',
@@ -76,7 +75,6 @@ test('remembers the last duplicate destination desk', async ({page}) => {
         .check();
     await page.locator(s('interactive-actions-panel', 'duplicate')).click();
 
-    // open the duplicate panel again
     await monitoring.executeActionOnMonitoringItem(
         page.locator(articleSelector),
         'Duplicate',

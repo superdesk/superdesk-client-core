@@ -93,7 +93,7 @@ test('searching the monitoring list filters items across groups', async ({page})
 });
 
 /**
- * Opening an article via "Open" from the 3-dot menu loads authoring with a save button.
+ * Editing an article via the 3-dot menu loads authoring with a save button.
  */
 test('open article from the context menu loads authoring', async ({page}) => {
     const monitoring = new Monitoring(page);

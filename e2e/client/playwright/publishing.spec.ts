@@ -29,20 +29,17 @@ test('publish queue is searchable by headline and by unique name', async ({page}
 
     await expect(queueRow).toBeVisible();
 
-    // Search by exact headline → 1 matching row.
     await page.locator(s('search')).fill('test sports story');
     await expect(queueRow).toHaveCount(1);
     await expect(page.locator(s('publish-queue-item'))).toHaveCount(1);
 
-    // Search by a different headline → 0 rows.
     await page.locator(s('search')).fill('a headline that does not exist');
     await expect(page.locator(s('publish-queue-item'))).toHaveCount(0);
 
-    // Clear the search → all rows back.
     await page.locator(s('search-close')).click();
     await expect(queueRow).toBeVisible();
 
-    // Search by the row's unique name (third visible <td>) → 1 matching row.
+    // third visible <td> holds the unique name
     const uniqueName = (await queueRow.locator('td').nth(2).innerText()).trim();
 
     expect(uniqueName.length).toBeGreaterThan(0);

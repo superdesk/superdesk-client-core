@@ -4,13 +4,13 @@ import {login, restoreDatabaseSnapshot, s} from './utils';
 
 // Mentions a different user (admin1) which only exists in the 'legacy'
 // snapshot. The Playwright storageState targets the 'main' user database,
-// so we override it and log in fresh, same pattern as archived.spec.ts.
+// so we override it and log in fresh.
 test.use({storageState: {cookies: [], origins: []}});
 
 test('user mention notifies the mentioned user and clearing the badge', async ({page, browser}) => {
     await restoreDatabaseSnapshot({snapshotName: 'legacy'});
 
-    // 1. Log in as the author and post a mention of admin1.
+    // log in as the author and post a mention of admin1
     await login(page);
 
     const monitoring = new Monitoring(page);
@@ -32,8 +32,8 @@ test('user mention notifies the mentioned user and clearing the badge', async ({
     // so we assert it's not visible rather than asserting empty text.
     await expect(page.locator('#unread-count').first()).not.toBeVisible({timeout: 5000});
 
-    // 2. Log in as admin1 in a fresh context. Asserts the unread badge
-    //    appears, click clears it.
+    // log in as admin1 in a fresh context; assert the unread badge appears,
+    // then click clears it
     const admin1Context = await browser.newContext({storageState: {cookies: [], origins: []}});
     const admin1Page = await admin1Context.newPage();
 
