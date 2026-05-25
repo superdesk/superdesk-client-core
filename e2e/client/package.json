@@ -18,7 +18,7 @@
     "check-types": "tsc --noEmit --resolveJsonModule",
     "build": "npm run check-types && npx @superdesk/build-tools build-root-repo ./",
     "server": "grunt server",
-    "playwright": "playwright test --workers 1",
+    "playwright": "playwright test",
     "playwright-interactive": "playwright test --ui",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",

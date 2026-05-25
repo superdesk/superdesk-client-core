@@ -12,16 +12,16 @@ import path from 'path';
  */
 export default defineConfig({
     testDir: './playwright',
-    /* Tests share backend state via restoreDatabaseSnapshot, so we run tests
-     * within a single file serially, but allow Playwright to run multiple
-     * spec FILES in parallel (workers > 1) when running locally on a machine
-     * with spare resources. CI keeps workers: 1 for cloud runner stability. */
+    /* Tests share backend state via restoreDatabaseSnapshot, which resets the
+     * whole DB — running spec files in parallel races across workers, so keep
+     * workers: 1. Devs who know a subset is isolation-safe can override with
+     * `playwright test --workers=N`. */
     fullyParallel: false,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: 0,
-    workers: process.env.CI ? 1 : 4,
+    workers: 1,
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: process.env.CI ? 'blob' : 'html',
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
