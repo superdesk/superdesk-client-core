@@ -70,5 +70,10 @@ test('sending an item from personal space', async ({page}) => {
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
-    await expect(page.locator(s('monitoring-view', 'monitoring-group=Sports / Working Stage'))).toBeVisible();
+    await expect(
+        page.locator(s(
+            'monitoring-group=Sports / Working Stage',
+            'article-item=personal space article 1',
+        )),
+    ).toBeVisible();
 });

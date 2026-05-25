@@ -42,10 +42,7 @@ test('Fetch and open puts the article into authoring', async ({page}) => {
  * Fetch-as does not show schedule/embargo controls in the fetch panel.
  *
  * Given an ingest article and the Fetch To panel open,
- * Then the publish schedule and embargo timestamp controls are not present in the panel.
- *
- * (Original Protractor assertion checked for id=publishScheduleTimestamp / embargoScheduleTimestamp;
- * we assert on test-id labels visible in the panel today.)
+ * Then the publish-schedule and embargo controls are not present in the panel.
  */
 test('Fetch To panel does not expose publish-schedule or embargo controls', async ({page}) => {
     const monitoring = new Monitoring(page);
@@ -63,6 +60,6 @@ test('Fetch To panel does not expose publish-schedule or embargo controls', asyn
         page.locator(s('interactive-actions-panel', 'publish-schedule')),
     ).toHaveCount(0);
     await expect(
-        page.locator(s('interactive-actions-panel')).locator('#embargoScheduleTimestamp'),
+        page.locator(s('interactive-actions-panel', 'embargo')),
     ).toHaveCount(0);
 });

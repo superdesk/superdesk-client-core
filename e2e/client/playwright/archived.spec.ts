@@ -32,7 +32,7 @@ test('archived items are listed under the Archived repo filter and open in previ
 
     const items = page.locator(s('article-item'));
 
-    await expect(items.first()).toBeVisible();
+    await expect(items).toHaveCount(3);
 
     const firstItem = items.first();
     const firstItemHeadline = await firstItem.getAttribute('data-test-value');

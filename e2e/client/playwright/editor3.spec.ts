@@ -9,23 +9,26 @@ test('can add embeds', async ({page}) => {
 
     const monitoring = new Monitoring(page);
 
-    const requestRoute = 'https://sourcefabric.org';
+    // EmbedInput.tsx calls iframe.ly via jQuery JSONP (`callback=?`), so the
+    // request URL is `//iframe.ly/api/oembed?callback=jQuery_xxx&...`. Intercept
+    // any iframe.ly oembed call, extract the JSONP callback name, and return a
+    // wrapped response with the `html` field that EmbedInput requires.
+    await page.route(/iframe\.ly\/api\/oembed/, async (route) => {
+        const url = new URL(route.request().url());
+        const callback = url.searchParams.get('callback') ?? 'callback';
+        const data = {
+            html: '<iframe src="//cdn.iframe.ly/test" data-test-id="embed-iframe"></iframe>',
+            title: 'Open Source Software for Journalism',
+            description: 'Sourcefabric is Europe\'s largest developer of open source tools for news media.',
+            url: 'https://sourcefabric.org',
+            type: 'link',
+        };
 
-    await page.route(
-        `https://iframe.ly/api/oembed?callback=?&url=
-        ${requestRoute}
-        &api_key="mock_api_key"
-        &omit_script=true&iframe=true`,
-        (route) => {
-            route.fulfill({
-                body: JSON.stringify([{
-                    title: 'Open Source Software for Journalism',
-                    description: 'Sourcefabric is Europe\'s largest developer of '
-                    + 'open source tools for news media, powering news and media organisations around the world.',
-                }]),
-            });
-        },
-    );
+        await route.fulfill({
+            contentType: 'application/javascript',
+            body: `${callback}(${JSON.stringify(data)})`,
+        });
+    });
     await page.goto('/#/workspace/monitoring');
 
     await monitoring.selectDeskOrWorkspace('Sports');
@@ -40,13 +43,10 @@ test('can add embeds', async ({page}) => {
         .fill('https://sourcefabric.org');
 
     await page.locator(s('embed-controls', 'submit')).click();
-    // FIXME: toBeDefined() on a Locator is always true — this assertion is a
-    // no-op. Also the page.route URL above contains literal newlines and won't
-    // match the real iframe.ly request; the mock is dead. Needs a real
-    // visibility assertion + a correctly-formatted route URL.
+
     await expect(
-        page.locator(s('authoring', 'authoring-field=body_html')).getByText('https://sourcefabric.org'),
-    ).toBeDefined();
+        page.locator(s('authoring', 'authoring-field=body_html')).locator('.embed-block'),
+    ).toBeVisible();
 });
 
 test('accepting a spelling suggestion', async ({page}) => {

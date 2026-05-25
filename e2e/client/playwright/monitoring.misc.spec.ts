@@ -93,9 +93,11 @@ test('searching the monitoring list filters items across groups', async ({page})
 });
 
 /**
- * Editing an article via the 3-dot menu loads authoring with a save button.
+ * "Open" on a published item loads authoring with no Save and no Publish —
+ * the fields are not directly editable. The Correct/Kill/Takedown workflow
+ * buttons remain available (those are the only way to mutate a published item).
  */
-test('open article from the context menu loads authoring', async ({page}) => {
+test('Open on a published item loads authoring read-only', async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -103,11 +105,17 @@ test('open article from the context menu loads authoring', async ({page}) => {
     await monitoring.selectDeskOrWorkspace('Sports');
 
     await monitoring.executeActionOnMonitoringItem(
-        page.locator(s('article-item=test sports story')),
-        'Edit',
+        page.locator(s('monitoring-group=Sports desk output', 'article-item=Story 5')),
+        'Open',
     );
 
-    await expect(page.locator(s('authoring-topbar', 'save'))).toBeVisible();
+    const topbar = page.locator(s('authoring-topbar'));
+
+    await expect(topbar).toBeVisible();
+    // ng-show keeps action buttons in the DOM, so assert not-visible rather
+    // than toHaveCount(0).
+    await expect(topbar.locator(s('save'))).not.toBeVisible();
+    await expect(topbar.locator(s('open-send-publish-pane'))).not.toBeVisible();
 });
 
 /**
