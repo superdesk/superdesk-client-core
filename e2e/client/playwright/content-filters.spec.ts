@@ -411,16 +411,16 @@ test.describe('content filters', () => {
         expect(await testStoryAgainst('Sms Condition', 'item7')).toBe('Does match');
     });
 
-    // CI-only failure (passes 100% locally on macOS): the publish_queue stays
-    // empty after the second publish even though local runs populate it with
-    // 1 item. The legacy snapshot's only subscriber is `Public API`, which
-    // uses http_push delivery to `http://localhost:5050/publish` (see
-    // e2e/server/dump/full/legacy/superdesk_e2e/subscribers.json.bz2). That
-    // endpoint isn't running in either environment — locally the queue item
-    // is created anyway and the assertion passes; on CI Ubuntu, queue
-    // population appears gated by the delivery attempt's outcome, leaving
-    // the queue at 0. Re-enabling needs either a non-http_push subscriber in
-    // the legacy snapshot, or a mock http server bound to :5050 on CI.
+    // The original Protractor scenario published without selecting a
+    // subscriber in the UI and relied on Superdesk's auto-product-routing
+    // (Public API has product "all" and would auto-receive every publish
+    // into publish_queue). That behaviour appears to have changed in
+    // superdesk-core since the Protractor era — locally the queue
+    // populates ~80% of the time, on CI Ubuntu it consistently stays at 0.
+    // Re-enabling needs either restoring the auto-routing semantics
+    // upstream, or switching the legacy snapshot's Public API destination
+    // from http_push:5050 to email:mailcrab to make delivery succeed
+    // deterministically (and explicitly selecting the subscriber in the UI).
     test.skip('can serve as global block', async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
@@ -454,7 +454,18 @@ test.describe('content filters', () => {
             await page.keyboard.press('Delete');
             await page.keyboard.type('Help needed item5 text');
         }
-        await authoring.publish({subscribers: ['Public API']});
+        await authoring.publish({subscribers: []});
+
+        // Unsaved body changes surface a "Save and send" confirm dialog;
+        // Authoring.publish only auto-handles it when subscribers are set.
+        // Mirrors Protractor's authoring.publish() skipConfirm-false branch.
+        {
+            const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
+
+            if (await saveSend.isVisible().catch(() => false)) {
+                await saveSend.click();
+            }
+        }
 
         await page.goto('/#/publish_queue');
         await expect(page.locator(s('publish-queue-item'))).toHaveCount(0);
@@ -491,7 +502,18 @@ test.describe('content filters', () => {
             await page.keyboard.press('Delete');
             await page.keyboard.type('Help needed item7 text');
         }
-        await authoring.publish({subscribers: ['Public API']});
+        await authoring.publish({subscribers: []});
+
+        // Unsaved body changes surface a "Save and send" confirm dialog;
+        // Authoring.publish only auto-handles it when subscribers are set.
+        // Mirrors Protractor's authoring.publish() skipConfirm-false branch.
+        {
+            const saveSend = page.getByRole('button', {name: 'Save and send', exact: true});
+
+            if (await saveSend.isVisible().catch(() => false)) {
+                await saveSend.click();
+            }
+        }
 
         await page.goto('/#/publish_queue');
         await expect(page.locator(s('publish-queue-item'))).toHaveCount(1);
