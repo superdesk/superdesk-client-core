@@ -3,9 +3,9 @@
 # Tear down the local end-to-end stack started by e2e-up.sh: stop the docker
 # compose server and kill the http-server serving the client on :9000.
 #
-# Usage:
-#   ./e2e-down.sh                # stop server + client
-#   ./e2e-down.sh --volumes      # also remove docker volumes (drops DB state)
+# Usage (from repo root):
+#   ./e2e/scripts/e2e-down.sh                # stop server + client
+#   ./e2e/scripts/e2e-down.sh --volumes      # also remove docker volumes (drops DB state)
 #
 # Always exits 0 even if some pieces were already stopped — the script is
 # idempotent.

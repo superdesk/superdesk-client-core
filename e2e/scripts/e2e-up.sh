@@ -5,10 +5,10 @@
 # and health checks so the script can be run repeatedly without doing wasted
 # work.
 #
-# Usage:
-#   ./e2e-up.sh                  # bring up the stack
-#   ./e2e-up.sh --reinstall      # force `npm ci` in every dependency root
-#   ./e2e-up.sh --rebuild        # force docker compose build
+# Usage (from repo root):
+#   ./e2e/scripts/e2e-up.sh                  # bring up the stack
+#   ./e2e/scripts/e2e-up.sh --reinstall      # force `npm ci` in every dependency root
+#   ./e2e/scripts/e2e-up.sh --rebuild        # force docker compose build
 #
 # Exits 0 only when both the server (http://localhost:5000/api/) and the
 # client (http://localhost:9000/) respond. Otherwise exits non-zero with a
