@@ -50,18 +50,16 @@ test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
 
-    // check unsaved changes modal is visible
     await page.locator(s('authoring-topbar', 'close')).click();
     await expect(page.locator(s('unsaved-changes-dialog'))).toBeVisible();
 
-    // button - cancel
+    // cancel
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'cancel'}).click();
     await expect(page.locator(s('authoring'))).toBeVisible();
 
-    // button - ignore
+    // ignore
     await page.locator(s('authoring-topbar', 'close')).click();
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'ignore'}).click();
     await expect(page.locator(s('authoring'))).not.toBeVisible();
@@ -76,10 +74,9 @@ test('save button from unsaved changes modal', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
 
-    // button - save
+    // save
     await page.locator(s('authoring-topbar', 'close')).click();
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'save'}).click();
     await expect(page.locator(s('authoring'))).not.toBeVisible();
@@ -147,7 +144,6 @@ test('edit urgency and priority', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // create article without saving
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article'});
 
     const priority = page.locator(s('authoring-field=priority'));

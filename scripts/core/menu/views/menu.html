@@ -80,7 +80,7 @@
 
 <div id="side-menu" ng-class="{'menu-open': flags.menu}" ng-include="currentRoute.sideTemplateUrl"></div>
 
-<nav id="main-menu" data-theme="dark-ui" class="main-menu" aria-labelledby="main-menu_title">
+<nav id="main-menu" data-theme="dark-ui" class="main-menu" aria-labelledby="main-menu_title" data-test-id="main-menu">
     <div class="main-menu__header">
         <h2 id="main-menu_title" class="main-menu__heading" translate>Main menu</h2>
     </div>
@@ -90,14 +90,18 @@
                 ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'"
                 ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
                 <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
-                    title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
+                    title="{{ :: item.description | translate }}"
+                    data-test-id="main-menu-item"
+                    data-test-value="{{ :: item.label | translate }}">{{ :: item.label | translate }}</a>
             </li>
             <li class="main-menu__group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
             <li class="main-menu__list-item"
                 ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions"
                 ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
                 <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}"
-                    title="{{ :: item.description | translate }}">
+                    title="{{ :: item.description | translate }}"
+                    data-test-id="main-menu-item"
+                    data-test-value="{{ :: item.label | translate }}">
                     {{ :: item.label | translate }}
                     <sup class="btn-toggle-label" ng-if="item.betaMark">Beta</sup>
                 </a>

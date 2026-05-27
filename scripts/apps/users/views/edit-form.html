@@ -252,7 +252,7 @@
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="sign_off" translate>Sign-Off</label>
-                                    <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
+                                    <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern" data-test-id="field--sign_off">
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>

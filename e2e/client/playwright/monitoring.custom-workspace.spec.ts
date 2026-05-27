@@ -43,10 +43,8 @@ test('creating an article from a custom workspace', async ({page}) => {
 
     await monitoring.selectDeskOrWorkspace('Workspace 1');
 
-    // create new article and save it
     await monitoring.createArticleFromTemplate('story', {slugline: 'new article 2'});
     await page.locator(s('authoring-topbar', 'save')).click();
 
-    // check if article exist in monitoring group
     await expect(page.locator(s('monitoring-view', 'article-item=new article 2'))).toBeVisible();
 });

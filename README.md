@@ -9,15 +9,17 @@ For installation instructions, please refer to the README file at: [https://gith
 
 ### Running end-to-end tests
 
-`npm run install` - Install dependencies.
+End-to-end tests run on Playwright. See `e2e/README.md` for the full workflow.
 
-`npm run build && npm run start-client-server` - Build and serve the bundle. Alternatively `npm run server` can be used serve the bundle in watch mode.
+Quick start (from `e2e/client/`):
 
-`npm run start-test-server`
+`npm install` - Install dependencies.
 
-`npm run e2e-compile` OR `npm run e2e-compile-watch` - compiles tests from TypeScript to JavaScript.
+`npm run build && npm run start-client-server` - Build and serve the bundle. Alternatively `npm run server` can be used to serve the bundle in watch mode.
 
-`npm run protractor` - starts the browser and runs the tests.
+`npm run start-test-server` - Start the dockerized backend.
+
+`npm run playwright` - Run all Playwright tests in headless mode. Use `npm run playwright-interactive` for the Playwright UI.
 
 ### Contributing
 

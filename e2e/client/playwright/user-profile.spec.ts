@@ -1,8 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test.setTimeout(10000);
-
 const MAILCRAB = 'http://localhost:1080';
 
 test('switching system language', async ({page}) => {
@@ -18,7 +16,6 @@ test('switching system language', async ({page}) => {
     await page.locator(s('action-bar')).locator('[data-test-id="save"]').click();
     await page.getByRole('dialog').getByRole('button', {name: 'Confirm'}).click();
 
-    // timeout needed due to page reload
     await expect(page.locator(s('page-title'))).toHaveText('Mein Profil');
 });
 
@@ -87,26 +84,54 @@ test('can reset password', async ({page}) => {
     await page.locator(s('my-profile-dropdown')).getByRole('button', {name: 'Sign Out'}).click();
     await page.locator(s('login-page')).getByRole('link', {name: 'Forgot password?'}).click();
     await page.getByPlaceholder('Email').fill('admin@example.com');
+
+    // The next click triggers a POST that we must let finish before
+    // navigating — otherwise page.request cancels it and no email is sent.
+    const resetRequest = page.waitForResponse(
+        (resp) => resp.url().includes('/api/reset_user_password') && resp.request().method() === 'POST',
+    );
+
+    // Snapshot inbox so we can identify the email this run produced.
+    // Resetting admin's password invalidates every prior admin token, so
+    // picking a stale email between retries means the token won't validate.
+    const initialMessages = await page.request.get(`${MAILCRAB}/api/messages`)
+        .then((r) => r.json() as Promise<Array<{id: string}>>);
+
     await page.getByRole('button', {name: 'Get token'}).click();
+    await resetRequest;
 
-    // Navigate to MailCrab to get the reset email
-    await page.goto(MAILCRAB);
-    await page.getByRole('listitem')
-        .filter({hasText: 'Reset password'})
-        .first()
-        .click();
+    let newMessageId: string | null = null;
 
-    // Extract the password reset link from the iFrame email content
-    const resetPasswordLink = await page.frameLocator('iFrame')
-        .locator('p:has-text("Please use this link") a')
-        .getAttribute('href');
+    await expect.poll(async () => {
+        const messages = await page.request.get(`${MAILCRAB}/api/messages`)
+            .then((r) => r.json() as Promise<Array<{id: string; subject: string; date: string}>>);
+        const fresh = messages
+            .filter((m) => !initialMessages.find((seen) => seen.id === m.id))
+            .filter((m) => m.subject === 'Reset password')
+            .sort((a, b) => b.date.localeCompare(a.date));
 
-    if (!resetPasswordLink) throw new Error('Reset link was not found in the iFrame');
+        if (fresh.length > 0) {
+            newMessageId = fresh[0].id;
+            return true;
+        }
+        return false;
+    }, {timeout: 20000, message: 'No new reset-password email arrived in MailCrab'}).toBe(true);
+
+    const message = await page.request.get(`${MAILCRAB}/api/message/${newMessageId}`)
+        .then((r) => r.json() as Promise<{text: string}>);
+    const linkMatch = message.text.match(/(https?:\/\/[^\s]+reset-password[^\s]+)/);
+
+    if (!linkMatch) throw new Error('Reset link was not found in the email body');
+    const resetPasswordLink = linkMatch[1];
 
     await page.goto(resetPasswordLink);
 
-    // Reset password
-    await page.locator('form[name="resetForm"] input[name="password"]').fill('admin123.');
+    // The form is hidden until the controller validates the token via an
+    // async POST and flips flowStep to 3.
+    const passwordInput = page.locator('form[name="resetForm"] input[name="password"]');
+
+    await expect(passwordInput).toBeVisible({timeout: 10000});
+    await passwordInput.fill('admin123.');
     await page.locator('form[name="resetForm"] input[name="passwordConfirm"]').fill('admin123.');
     await page.getByRole('button', {name: 'Reset password'}).click();
 

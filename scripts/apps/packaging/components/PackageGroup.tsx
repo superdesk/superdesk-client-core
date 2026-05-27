@@ -21,7 +21,12 @@ export default class PackageGroup extends React.Component<any, any> {
 
         return (
             <li>
-                <button data-option={group} onClick={this.select}>
+                <button
+                    data-option={group}
+                    data-test-id="add-to-package-group"
+                    data-test-value={group}
+                    onClick={this.select}
+                >
                     <i className="icon-plus" />{group}
                 </button>
             </li>

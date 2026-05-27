@@ -1,6 +1,6 @@
-<div class="ingest-dashboard-list">
+<div class="ingest-dashboard-list" data-test-id="ingest-dashboard-list">
     <ul class="card-list">
-        <li ng-repeat="item in items track by item._id">
+        <li ng-repeat="item in items track by item._id" data-test-id="ingest-dashboard-widget" data-test-value="{{item.name}}">
             <div sd-user-ingest-dashboard data-item="item" data-set-user-preferences="setUserPreferences()"></div>
         </li>
     </ul>
