@@ -36,14 +36,27 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount(): void {
+        if (this.props.item.template == null) {
+            this.setState({
+                initialized: true,
+                template: null,
+                templateName: this.props.item.slugline ?? null,
+                isDeskTemplate: false,
+                responseError: null,
+                deskId: null,
+            });
+
+            return;
+        }
+
         sdApi.templates.getById(this.props.item.template).then((res) => {
             this.setState({
                 initialized: true,
                 template: res,
                 templateName: res.template_name,
-                isDeskTemplate: true,
+                isDeskTemplate: (res.template_desks?.length ?? 0) > 0,
                 responseError: null,
-                deskId: res.template_desks[0],
+                deskId: res.template_desks?.[0] ?? null,
             });
         });
     }
@@ -119,7 +132,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                             )
                     }
                     {
-                        availableDesks != null && state.template.is_public &&
+                        availableDesks != null && state.template?.is_public &&
                         (
                             <>
                                 <Checkbox
@@ -135,7 +148,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                                     state.isDeskTemplate && (
                                         <Select
                                             label={gettext('Desks')}
-                                            value={state.deskId}
+                                            value={state.deskId ?? ''}
                                             onChange={(value) => {
                                                 this.setState({...state, deskId: value});
                                             }}
