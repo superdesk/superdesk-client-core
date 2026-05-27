@@ -77,7 +77,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                 size="medium"
                 headerTemplate={gettext('Save as template')}
             >
-                <Spacer v gap="16">
+                <Spacer v gap="16" data-test-id="modal-save-as-template">
                     <Input
                         type="text"
                         label={gettext('Template name')}
