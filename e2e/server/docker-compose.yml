@@ -34,6 +34,8 @@ services:
         build: .
         network_mode: "host"
         environment:
+            - PORT=${PORT:-5000}
+            - SERVER_NAME=${SERVER_NAME:-localhost:5000}
             - REDIS_URL=redis://localhost:6379/1
             - ELASTICSEARCH_URL=http://localhost:9200
             - MONGO_URI=mongodb://localhost/superdesk_e2e

@@ -17,7 +17,7 @@ test.describe('sending an article', async () => {
             'Edit',
         );
 
-        authoring.sendTo({desk: 'Education', stage: 'Working Stage'});
+        await authoring.sendTo({desk: 'Education', stage: 'Working Stage'});
 
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
@@ -43,7 +43,7 @@ test.describe('sending an article', async () => {
             'Edit',
         );
 
-        authoring.sendTo({desk: currentDesk, stage: 'Incoming Stage'});
+        await authoring.sendTo({desk: currentDesk, stage: 'Incoming Stage'});
 
         await expect(
             page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),

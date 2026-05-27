@@ -4,7 +4,7 @@
     <div class="sub-title"><span translate>Update Cycle:</span> <span class="text">{{item.update_schedule | scheduleFilter}}</span></div>
 </div>
 
-<div ng-show="item.show_status" class="status" ng-class="{closed: item.is_closed, opened: !item.is_closed}">
+<div ng-show="item.show_status" class="status" ng-class="{closed: item.is_closed, opened: !item.is_closed}" data-test-id="ingest-dashboard-widget--status">
     <div ng-show="item.is_closed">
         <div><span class="uppercase" translate>Closed</span><span>by {{item.last_closed.display_name || 'System' | translate}}</span></div>
         <div class="time" ng-show="item.last_closed && item.last_closed.closed_at">
@@ -21,7 +21,7 @@
         </div>
     </div>
 </div>
-<div ng-show="item.show_ingest_count" class="ingested-count">
+<div ng-show="item.show_ingest_count" class="ingested-count" data-test-id="ingest-dashboard-widget--ingest-count">
     <div class="count">{{ingested_count}}</div>
     <div class="text">items in last 24 hours.</div>
 </div>
@@ -48,8 +48,8 @@
     </ul>
 </div>
 
-<div class="dropdown dropdown--bigger card-list__controls" dropdown>
-    <button class="dropdown__toggle" dropdown__toggle><i class="icon--white icon-dots-vertical"></i></button>
+<div class="dropdown dropdown--bigger card-list__controls" dropdown data-test-id="ingest-dashboard-widget--settings">
+    <button class="dropdown__toggle" dropdown__toggle data-test-id="ingest-dashboard-widget--settings-toggle"><i class="icon--white icon-dots-vertical"></i></button>
         <ul class="dropdown__menu">
             <li>
             <div class="dropdown__menu-label">
@@ -60,14 +60,14 @@
             <li class="dropdown__menu-divider"></li>
             <li class="dropdown__menu-item--no-link">
                 <div>
-                    <span class="pull-right" sd-switch ng-model="item.show_status" ng-click="setUserPreferences()"></span>
+                    <span class="pull-right" sd-switch ng-model="item.show_status" ng-click="setUserPreferences()" data-test-id="ingest-dashboard-widget--settings-status"></span>
                     <label translate>Status</label>
                 </div>
             </li>
             <li class="dropdown__menu-divider"></li>
             <li class="dropdown__menu-item--no-link">
                 <div>
-                    <span class="pull-right" sd-switch ng-model="item.show_ingest_count" ng-click="setUserPreferences()"></span>
+                    <span class="pull-right" sd-switch ng-model="item.show_ingest_count" ng-click="setUserPreferences()" data-test-id="ingest-dashboard-widget--settings-ingest-count"></span>
                     <label translate>Number of items</label>
                     <span class="dropdown__menu-info" translate>in the last 24 hours.</span>
                 </div>
@@ -106,7 +106,7 @@
                 </div>
             </li>
             <li class="dropdown__menu-divider"></li>
-            <li class="dropdown__menu-item" ng-if="showIngest"><a class="uppercase" ng-href="#/settings/ingest?_id={{item._id}}"><i class="icon-pencil"></i><span translate>Edit Ingest Source</span></a></li>
+            <li class="dropdown__menu-item" ng-if="showIngest"><a class="uppercase" ng-href="#/settings/ingest?_id={{item._id}}" data-test-id="ingest-dashboard-widget--edit-source"><i class="icon-pencil"></i><span translate>Edit Ingest Source</span></a></li>
         </ul>
 </div>
 

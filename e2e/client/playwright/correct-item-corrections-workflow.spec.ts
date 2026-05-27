@@ -16,7 +16,6 @@ test('can correct published item using corrections workflow', async ({page}) => 
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();
@@ -40,7 +39,6 @@ test('can correct published item using corrections workflow', async ({page}) => 
             .getByText('Correction', {exact: true}),
     ).toBeVisible();
 
-    // edit item
     await setEditor3FieldValue(
         page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox'),
         'Story 5.1',
