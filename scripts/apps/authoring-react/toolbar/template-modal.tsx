@@ -40,7 +40,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
             this.setState({
                 initialized: true,
                 template: null,
-                templateName: this.props.item.slugline ?? null,
+                templateName: this.props.item.slugline || null,
                 isDeskTemplate: false,
                 responseError: null,
                 deskId: null,
@@ -150,7 +150,7 @@ export class TemplateModal extends React.PureComponent<IProps, IState> {
                                             label={gettext('Desks')}
                                             value={state.deskId ?? ''}
                                             onChange={(value) => {
-                                                this.setState({...state, deskId: value});
+                                                this.setState({...state, deskId: value === '' ? null : value});
                                             }}
                                         >
                                             <Option />
