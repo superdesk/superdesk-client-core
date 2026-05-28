@@ -262,7 +262,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     />
                     <div
                         className={getClass('controlbars__progress-output')}
-                        style={{left: video ? `${(this.state.currentTime / video.duration) * 100}%` : '0%'}}
+                        style={{insetInlineStart: video ? `${(this.state.currentTime / video.duration) * 100}%` : '0%'}}
                     >
                         <div className={getClass('controlbars__progress-output__content')}>
                             <BarIcon />
@@ -274,7 +274,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     </div>
                     <div
                         className={`${getClass('controlbars__wrapper-out')}`}
-                        style={{left: left, insetInlineEnd: right}}
+                        style={{insetInlineStart: left, insetInlineEnd: right}}
                     >
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--left')}`}
