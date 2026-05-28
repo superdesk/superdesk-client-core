@@ -181,6 +181,17 @@ describe('monitoring', () => {
             });
         }));
 
+        it('can get criteria for sent desk output', inject((cards, session) => {
+            var card: any = {_id: '1:sent', type: 'sentDeskOutput'};
+            var criteria = cards.criteria(card);
+
+            expect(criteria.source.query.filtered.filter.and).toContain({bool: {
+                filter: {term: {'task.desk_history': '1'}},
+                must: {exists: {field: 'task.desk'}},
+                must_not: {term: {'task.desk': '1'}},
+            }});
+        }));
+
         it('can get criteria for highlight', inject((cards, session) => {
             var card = {type: 'highlights'};
             var queryParam = {highlight: '123'};

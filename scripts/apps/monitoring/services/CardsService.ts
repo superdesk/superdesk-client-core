@@ -140,6 +140,7 @@ export function CardsService(search, session, desks, $location) {
                 deskId = card._id.substring(0, card._id.indexOf(':'));
                 query.filter({bool: {
                     filter: {term: {'task.desk_history': deskId}},
+                    must: {exists: {field: 'task.desk'}},
                     must_not: {term: {'task.desk': deskId}},
                 }});
                 break;
