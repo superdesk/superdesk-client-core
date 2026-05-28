@@ -2,7 +2,7 @@ var path = require('path');
 var makeConfig = require('../../webpack.config.js');
 
 module.exports = function(grunt) {
-    var webpackConfig = makeConfig(grunt);
+    var webpackConfig = makeConfig(grunt, {typeCheck: true});
 
     return {
         start: Object.assign({mode: 'development'}, webpackConfig),
