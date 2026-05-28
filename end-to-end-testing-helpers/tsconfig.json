@@ -1,7 +1,0 @@
-{
-    "extends": "superdesk-code-style/tsconfig-strict",
-    "compilerOptions": {
-        "declaration": true,
-        "outDir": "./dist"
-    }
-}

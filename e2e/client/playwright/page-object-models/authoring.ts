@@ -50,13 +50,11 @@ export class Authoring {
         await page.locator(s('authoring-topbar', 'open-send-publish-pane')).click();
         await page.locator(s('interactive-actions-panel', 'tabs')).getByRole('tab', {name: 'Send to'}).click();
 
-        // select desk
         await new TreeSelectDriver(
             page,
             page.locator(s('destination-select')),
         ).setValues(destination.desk);
 
-        // select stage
         await page
             .locator(s('interactive-actions-panel', 'stage-select'))
             .getByRole('radio', {name: destination.stage})

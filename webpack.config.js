@@ -381,6 +381,9 @@ module.exports = function makeConfig(grunt) {
             host: '0.0.0.0',
             compress: true,
             headers: {'Cache-Control': 'no-store'},
+            // Errors stay visible; warnings hidden because the warning
+            // overlay iframe intercepts pointer events during Playwright runs.
+            client: {overlay: {errors: true, warnings: false}},
             static: [
                 {directory: path.resolve(process.cwd(), 'dist')},
                 {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},

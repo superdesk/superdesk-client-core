@@ -6,7 +6,7 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {clearInput} from './utils/inputs';
 
 test.describe('Multiedit', async () => {
-    test.skip('editing articles in multi-edit mode', async ({page}) => {
+    test('editing articles in multi-edit mode', async ({page}) => {
         const monitoring = new Monitoring(page);
         const multiedit = new MultiEdit(page);
 
@@ -36,12 +36,10 @@ test.describe('Multiedit', async () => {
 
         await multiedit.save('story 2');
 
-        /**
-         * TAG: AUTHORING-ANGULAR implementation is unreliable and "Exit" button doesn't always work
-         */
-        page.waitForTimeout(1000);
+        await page.waitForTimeout(1000);
 
         await page.locator(s('multiedit-subnav')).getByRole('button', {name: 'Exit'}).click();
+        await expect(page.locator(s('multiedit-subnav'))).not.toBeVisible();
 
         await monitoring.executeActionOnMonitoringItem(
             page.locator(s('article-item=test sports story 1.1')),
