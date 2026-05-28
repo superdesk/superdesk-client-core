@@ -4,69 +4,7 @@ var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const fs = require('fs');
-
-// Discover loaded in-tree extensions that build from TypeScript sources so each
-// can get its own ForkTsCheckerWebpackPlugin during development. Externally
-// maintained extensions (e.g. superdesk-planning) are type-checked in their own
-// repos; their minimal host-side tsconfig cannot resolve the ambient
-// `superdesk-api` module, so they are excluded here.
-const getExtensionDirectoriesSync = require('./build-tools/src/extensions/get-extension-directories-sync');
-
-const inTreeExtensionsRoot = path.join(__dirname, 'scripts', 'extensions') + path.sep;
-
-const loadedExtensions = fs.existsSync(path.join(process.cwd(), 'superdesk.config.js'))
-    ? getExtensionDirectoriesSync(process.cwd())
-    : [];
-
-const migratedExtensionTsConfigs = loadedExtensions
-    .filter(({extensionRootPath}) => {
-        if (!extensionRootPath.startsWith(inTreeExtensionsRoot)) {
-            return false;
-        }
-
-        const pkgPath = path.join(extensionRootPath, 'package.json');
-
-        if (!fs.existsSync(pkgPath)) {
-            return false;
-        }
-
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-
-        return typeof pkg.main === 'string' && /\.(ts|tsx)$/.test(pkg.main);
-    })
-    .map(({extensionRootPath}) => {
-        // Resolve the extension's tsconfig.json, checking src/ first then the package root.
-        return [
-            path.join(extensionRootPath, 'src/tsconfig.json'),
-            path.join(extensionRootPath, 'tsconfig.json'),
-        ].find((candidate) => fs.existsSync(candidate));
-    })
-    .filter(Boolean);
-
-// Type-checking needs each package's devDependencies (e.g. @types/jasmine for core,
-// superdesk-code-style for the extension tsconfigs). npm never installs a
-// dependency's devDeps, so they are present only when the package is dev-linked to a
-// source checkout or installed in place. Probe the package's own declared devDeps
-// rather than hard-coding a name; in practice it is all-or-nothing.
-function devDepsInstalled(pkgDir) {
-    const {devDependencies = {}} = require(path.join(pkgDir, 'package.json'));
-    const names = Object.keys(devDependencies);
-
-    return names.length > 0 && names.every((name) => {
-        try {
-            require.resolve(name + '/package.json', {paths: [pkgDir]});
-            return true;
-        } catch (e) {
-            return false;
-        }
-    });
-}
-
-// In-tree extensions share core's installed devDeps (e.g. superdesk-code-style), so a
-// single probe of core covers core + its in-tree extension checkers.
-const coreDevDepsInstalled = devDepsInstalled(__dirname);
 
 function getModuleDir(moduleName) {
     return path.join(
@@ -166,8 +104,8 @@ function applyDefaults(appConfig) {
     }
 }
 
-// makeConfig creates a new configuration file based on the passed options.
-module.exports = function makeConfig(grunt, options) {
+// makeConfig creates a new webpack configuration.
+module.exports = function makeConfig(grunt) {
     var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
 
     if (process.env.SUPERDESK_CONFIG) {
@@ -236,29 +174,6 @@ module.exports = function makeConfig(grunt, options) {
             new NodePolyfillPlugin({
                 excludeAliases: ['console'],
             }),
-
-            // Type-checking runs only when requested AND possible: the dev-server
-            // (`npm run start`) passes {typeCheck: true}, and core's devDependencies
-            // must be installed (dev-link or in-place install). `npm run build` leaves
-            // typeCheck off, and CI/packaged installs lack the devDeps, so both skip it
-            // and rely on ts-loader's transpileOnly. Externally-maintained extensions
-            // are excluded above and checked in their own repos.
-            ...((options && options.typeCheck && coreDevDepsInstalled) ? [
-                new ForkTsCheckerWebpackPlugin({
-                    typescript: {
-                        configFile: path.join(__dirname, 'scripts/tsconfig.json'),
-                    },
-                }),
-                ...migratedExtensionTsConfigs.map((absPath) => new ForkTsCheckerWebpackPlugin({
-                    typescript: {
-                        configFile: absPath,
-                    },
-                    logger: {
-                        log: () => {}, // eslint-disable-line no-empty-function
-                        error: (message) => process.stderr.write(String(message) + '\n'),
-                    },
-                })),
-            ] : []),
         ],
 
         resolve: {

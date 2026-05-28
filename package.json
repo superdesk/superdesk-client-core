@@ -169,10 +169,11 @@
     "gettext-next-batch": "node ./tasks/gettext-next-batch.js",
     "gettext-update-po": "node ./tasks/gettext-update-po.js",
     "postinstall": "node ./tasks/patch-package.js && node tasks/generate-placeholder-file-for-extension-styles.js",
-    "test": "npm run lint && npm run unit && npm run verify-client-api-changes",
+    "test": "npm run lint && npm run typecheck && npm run unit && npm run verify-client-api-changes",
     "debug-unit-tests": "karma start --reporters=progress --browsers=Chrome",
     "unit": "karma start --single-run",
-    "lint": "python3 ./grep-lint.py && tsc -p scripts --noEmit && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
+    "lint": "python3 ./grep-lint.py && eslint --quiet --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
+    "typecheck": "node tasks/typecheck.js",
     "lint-fix": "eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client tasks",
     "verify-client-api-changes": "node tasks/verify-client-api-changes.js"
   },
