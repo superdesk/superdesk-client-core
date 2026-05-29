@@ -186,8 +186,10 @@ describe('monitoring', () => {
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({bool: {
-                filter: {term: {'task.desk_history': '1'}},
-                must: {exists: {field: 'task.desk'}},
+                must: [
+                    {term: {'task.desk_history': '1'}},
+                    {exists: {field: 'task.desk'}},
+                ],
                 must_not: {term: {'task.desk': '1'}},
             }});
         }));
