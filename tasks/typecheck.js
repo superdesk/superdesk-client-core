@@ -6,13 +6,11 @@ const ROOT = path.join(__dirname, '..');
 const TSC = require.resolve('typescript/bin/tsc');
 const EXTENSIONS_DIR = path.join(ROOT, 'scripts', 'extensions');
 
-// In-tree extensions to skip, e.g. ones whose dependencies are not installed in CI
-// or with known type errors not yet fixed. Add a name with a one-line reason.
+// In-tree extensions to skip (e.g. deps not installed in CI, or known unfixed errors).
 const SKIP = new Set([
     'sams', // deps (e.g. reselect) not installed by root `npm ci`; install its deps to re-enable
 ]);
 
-// An in-tree extension builds from TypeScript when its package main is a .ts(x) file.
 function buildsFromTypeScript(root) {
     const pkgPath = path.join(root, 'package.json');
 
@@ -25,9 +23,8 @@ function buildsFromTypeScript(root) {
     return typeof main === 'string' && (main.endsWith('.ts') || main.endsWith('.tsx'));
 }
 
-// Every in-tree extension that builds from TypeScript, each with its own tsconfig.
-// Each extension is checked from its own directory so it resolves its own deps; a
-// single unified program cannot (extensions have independent node_modules).
+// Each extension is checked against its own tsconfig: extensions have independent
+// node_modules, so a single unified program can't resolve their deps.
 function extensionTargets() {
     if (!fs.existsSync(EXTENSIONS_DIR)) {
         return [];
