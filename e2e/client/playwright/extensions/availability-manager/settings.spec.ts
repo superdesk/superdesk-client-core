@@ -37,7 +37,6 @@ test.describe('availability manager settings', async () => {
 
         await expect(mar10).toHaveAttribute('data-test-status', 'available');
 
-        // click to view
         await mar10.click();
 
         await page.locator(s('working-day-view')).getByRole('button', {name: 'Remove'}).click();
@@ -53,10 +52,8 @@ test.describe('availability manager settings', async () => {
         await expect(feb15).toBeVisible();
         await expect(feb15).not.toHaveAttribute('data-test-status', 'available');
 
-        // click to create
         await feb15.click();
 
-        // choose status
         await page.locator(s('edit-workday', 'status', 'item=Available')).click();
 
         await new TreeSelectDriver(
@@ -66,10 +63,8 @@ test.describe('availability manager settings', async () => {
 
         await expect(page.locator(s('edit-workday'))).toHaveScreenshot();
 
-        // save and close
         await page.getByRole('button', {name: 'Save'}).click();
 
-        // should be visible, and marked as available
         await expect(feb15).toHaveAttribute('data-test-status', 'available');
     });
 
@@ -82,7 +77,6 @@ test.describe('availability manager settings', async () => {
 
         await expect(feb15).not.toHaveAttribute('data-test-status', 'partial');
 
-        // enter creation mode
         await feb15.click();
 
         await page.locator(s('edit-workday', 'status', 'item=Partially available')).click();
@@ -162,19 +156,15 @@ test.describe('first use', async () => {
 
         await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
 
-        // click to create
         await feb15.click();
 
-        // choose status
         await page.locator(s('edit-workday', 'status', 'item=Available')).click();
 
-        // save and close
         await page.getByRole('button', {name: 'Save'}).click();
 
-        // should be visible, and marked as available
         await expect(feb15).toHaveAttribute('data-test-status', 'available');
 
-        // going to previous month and back to test that changes were persisted and reloaded from API correctly
+        // navigate to previous month and back — exercises persistence and reload from API
 
         await expect(page.locator(s('availability-settings'))).toHaveScreenshot();
 

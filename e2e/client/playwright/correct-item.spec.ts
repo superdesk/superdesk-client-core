@@ -8,7 +8,6 @@ test('can correct published item', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();
@@ -23,7 +22,6 @@ test('can correct published item', async ({page}) => {
         'Correct item',
     );
 
-    // edit item
     await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').clear();
     await page.locator(s('authoring')).locator(s('field--headline')).getByRole('textbox').fill('Story 5.1');
     await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Send Correction'}).click();

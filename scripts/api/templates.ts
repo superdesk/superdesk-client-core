@@ -125,6 +125,12 @@ function createTemplateFromArticle(
 
         // Clean the article from fields not usable for template creation
         const item: IArticle = clone(ng.get('templates').pickItemData(sourceArticle));
+
+        // Backend rejects keywords: null on content_templates; treat null as absent.
+        if (item.keywords === null) {
+            delete item.keywords;
+        }
+
         const userId = ng.get('session').identity._id;
 
         return applyMiddleware(item).then((itemAfterMiddleware) => {

@@ -294,7 +294,7 @@
                   </li>
                 </ul>
 
-                <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
+                <ul id="multiedit" data-test-id="multiedit-action" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
                     <li>
                     <div class="dropdown multiedit-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>

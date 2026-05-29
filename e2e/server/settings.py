@@ -4,7 +4,7 @@ import os
 DEBUG = False
 SUPERDESK_TESTING = True
 
-SERVER_NAME = 'localhost:5000'
+SERVER_NAME = os.environ.get('SERVER_NAME', 'localhost:5000')
 URL_PROTOCOL = 'http'
 URL_PREFIX = 'api'
 

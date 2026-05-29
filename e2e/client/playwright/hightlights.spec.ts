@@ -64,21 +64,19 @@ test.describe('highlights', async () => {
         );
         await expect(page.locator(s('article-item=test sports story', 'highlights-indicator'))).toBeVisible();
 
-        // check visibility of article in highlight list
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 1'}).click();
         await expect(page.locator(s('articles-list', 'article-item=test sports story'))).toBeVisible();
     });
 
     test('creating a highlights package', async ({page}) => {
-        // this test requires an article created on today's date
+        // requires an article created on today's date for highlight inclusion
 
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
-        // create fresh article
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1'});
         await page.locator(s('authoring-topbar', 'save')).click();
@@ -89,7 +87,6 @@ test.describe('highlights', async () => {
             'Highlight 1',
         );
 
-        // create package highlights
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 1'}).click();
         await page.locator(s('articles-list--toolbar')).getByRole('button', {name: 'Create'}).click();
@@ -104,7 +101,6 @@ test.describe('highlights', async () => {
         ).not.toBeVisible();
         await page.locator(s('authoring-topbar', 'close')).click();
 
-        // check visibility of highlight
         await page.goto('/#/workspace/monitoring');
         await expect(page.locator(s('monitoring-view', 'article-item=Package Highlight 2'))).toBeVisible();
     });
@@ -140,14 +136,13 @@ test.describe('highlights', async () => {
     });
 
     test('exporting a highlight', async ({page}) => {
-        // this test requires an article created on today's date
+        // requires an article created on today's date for highlight inclusion
 
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');
 
-        // create fresh article
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.createArticleFromTemplate('story', {slugline: 'article 1', body_html: 'body html article'});
         await page.locator(s('authoring-topbar', 'save')).click();
@@ -158,14 +153,13 @@ test.describe('highlights', async () => {
             'Highlight 1',
         );
 
-        // create and export package highlights
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlights'}).hover();
         await page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 1'}).click();
         await page.locator(s('articles-list--toolbar')).getByRole('button', {name: 'Create'}).click();
         await page.locator(s('authoring-topbar')).getByRole('button', {name: 'Export'}).click();
         await page.locator(s('modal-confirm')).getByRole('button', {name: 'ok'}).click();
 
-        // checking if the package inherits the body_html of the article
+        // exported package should inherit the body_html of the article
         await expect(
             page.locator(s('authoring', 'authoring-field=body_html')).getByRole('textbox'),
         ).toHaveText('body html article');

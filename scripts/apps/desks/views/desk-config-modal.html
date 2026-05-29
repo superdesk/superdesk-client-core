@@ -234,7 +234,7 @@
                             <ul class="pills-list stages-list" ng-class="{'edit-mode': editStage, 'pills-list--draggable': !editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
                                     <div class="sd-line-input">
-                                        <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
+                                        <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}" data-test-id="field--stage-name">
                                         <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                     </div>
                                 </li>
@@ -242,6 +242,7 @@
                                     ng-repeat="stage in stages track by $index"
                                     ng-click="select(stage)"
                                     ng-class="{active: selected === stage, editable: isActive(stage)}"
+                                    data-test-id="stage--{{stage.name}}"
                                 >
                                     <div ng-if="!isActive(stage)">
                                         <span data-test-id="stage-name">{{ labelForStage(stage) }}</span>
@@ -254,15 +255,15 @@
                                     </div>
                                     <div ng-if="isActive(stage)">
                                         <div class="sd-line-input">
-                                            <input class="sd-line-input__input" type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required>
+                                            <input class="sd-line-input__input" type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required data-test-id="field--stage-name">
                                             <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                         </div>
                                     </div>
                                     <div class="actions" ng-if="!editStage">
-                                        <button ng-click="edit(stage)">
+                                        <button ng-click="edit(stage)" data-test-id="stage-actions--edit">
                                             <i class="icon-pencil" ></i>
                                         </button>
-                                        <button ng-if="!stage.working_stage && !stage.default_incoming" ng-click="remove(stage)">
+                                        <button ng-if="!stage.working_stage && !stage.default_incoming" ng-click="remove(stage)" data-test-id="stage-actions--remove">
                                             <i class="icon-trash"></i>
                                         </button>
                                     </div>
@@ -275,7 +276,9 @@
                                 <button id="save-edited-stage"
                                         class="btn btn--primary"
                                         ng-click="save()"
-                                        ng-disabled="!enableSave() || saving" translate>Save</button>
+                                        ng-disabled="!enableSave() || saving"
+                                        data-test-id="save-edited-stage"
+                                        translate>Save</button>
                             </div>
                             <div class="button-toolbar" ng-if="editStage && !editStage._id">
                                 <button class="btn"
@@ -283,13 +286,15 @@
                                 <button id="save-new-stage"
                                         class="btn btn--primary"
                                         ng-click="save()"
-                                        ng-disabled="!enableSave()" translate>Save</button>
+                                        ng-disabled="!enableSave()"
+                                        data-test-id="save-new-stage"
+                                        translate>Save</button>
                             </div>
                             <div ng-show="message" class="sd-alert sd-alert--hollow sd-alert--alert">{{ message}}</div>
                             <div ng-show="_errorUniqueness" class="sd-alert sd-alert--hollow sd-alert--alert"><span translate>Stage with name</span> "{{ editStage.name}}"" <span translate>already exists</span>.</div>
                             <div ng-show="_errorLimits" class="sd-alert sd-alert--hollow sd-alert--alert"translate>Character limit exceeded, stage can not be created/updated.</div>
                             <div ng-show="_error" class="sd-alert sd-alert--hollow sd-alert--alert" translate>There was a problem, stage not created/updated.</div>
-                            <button ng-if="!editStage && !editStage._id" style="margin-top: 1.6rem;" id="new-stage" class="btn btn--large btn--expanded" data-target="#insert-stage" ng-click="edit({}); selected = null" ng-disabled="editStage" sd-tooltip="{{'Create new Stage' | translate}}">
+                            <button ng-if="!editStage && !editStage._id" style="margin-top: 1.6rem;" id="new-stage" class="btn btn--large btn--expanded" data-target="#insert-stage" ng-click="edit({}); selected = null" ng-disabled="editStage" sd-tooltip="{{'Create new Stage' | translate}}" data-test-id="new-stage">
                                 <i class="icon-plus-large"></i>
                             </button>
                         </div>
@@ -346,7 +351,7 @@
 
                         <div class="column column--mb24" ng-if="editStage">
                             <div class="list-row list-row--small" title="{{ editStage.default_incoming ? 'Global Read OFF is not allowed for Incoming stage' : null | translate }}">
-                                <span class="" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible"></span>
+                                <span class="" ng-class="{'prevent-off' : editStage.default_incoming && editStage.is_visible}" sd-switch ng-model="editStage.is_visible" data-test-id="field--global-read"></span>
                                 <label>{{ :: 'Global Read' | translate }}</label>
                             </div>
                             <div class="list-row list-row--small">
@@ -367,7 +372,7 @@
                             <div class="form__row-item">
                                 <div class="sd-line-input">
                                     <label class="sd-line-input__label">{{ :: 'Stage description' | translate }}</label>
-                                    <textarea class="sd-line-input__input" ng-model="editStage.description"></textarea>
+                                    <textarea class="sd-line-input__input" ng-model="editStage.description" data-test-id="field--stage-description"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -419,7 +424,7 @@
             </div>
             <div class="modal__footer" ng-if="step.current === 'stages'">
                 <button id="next-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next()" translate>Continue</button>
-                <button id="done-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next(true)" translate>Done</button>
+                <button id="done-stages" class="btn btn--primary" ng-disabled="message != null || (editStage && editStage._id) || (editStage && !editStage._id)" ng-click="next(true)" data-test-id="done-stages" translate>Done</button>
             </div>
         </div>
 

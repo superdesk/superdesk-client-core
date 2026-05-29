@@ -9,7 +9,6 @@ test('fetching an article to selected desk', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();
@@ -27,13 +26,11 @@ test('fetching an article to selected desk', async ({page}) => {
         'Fetch To',
     );
 
-    // select desk
     await new TreeSelectDriver(
         page,
         page.locator(s('destination-select')),
     ).setValues('Education');
 
-    // select stage
     await page
         .locator(s('interactive-actions-panel', 'stage-select'))
         .locator(s('item=Working Stage'))
@@ -57,7 +54,6 @@ test('fetching an article', async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
-    // checking that articles are loaded
     await expect(
         page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
     ).toBeVisible();

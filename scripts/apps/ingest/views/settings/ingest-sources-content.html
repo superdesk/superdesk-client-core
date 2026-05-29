@@ -7,14 +7,14 @@
             </div>
         </div>
         <div class="dropdown" dropdown>
-            <button id="status_filter_button" class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
+            <button id="status_filter_button" class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle data-test-id="ingest-sources-status-filter">
                 <span translate translate-params-filter="activeStatusFilter.label">Status: {{filter}}</span>
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
                 <li ng-repeat="filter in statusFilters track by filter.id" >
                     <!-- dynamic id only for testing purpose --->
-                    <button ng-click="filterIngestSources(filter.id)" id="status--{{::filter.id}}-filter">{{filter.label | translate}}</button>
+                    <button ng-click="filterIngestSources(filter.id)" id="status--{{::filter.id}}-filter" data-test-id="ingest-sources-status-filter--option" data-test-value="{{::filter.label | translate}}">{{filter.label | translate}}</button>
                 </li>
             </ul>
         </div>
@@ -28,7 +28,7 @@
 
     <div class="sd-page__content">
         <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-            <li class="sd-list-item sd-shadow--z1" ng-repeat="provider in providers._items">
+            <li class="sd-list-item sd-shadow--z1" ng-repeat="provider in providers._items" data-test-id="ingest-source" data-test-value="{{provider.name}}">
                 <div class="sd-list-item__border"></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="icn-btn" ng-click="gotoIngest(provider)" title="{{:: 'Go to items' | translate }}"><i class="icon-external"></i></button>
-                    <button class="icn-btn" ng-click="edit(provider)" title="{{:: 'Edit source' | translate }}"><i class="icon-pencil"></i></button>
+                    <button class="icn-btn" ng-click="edit(provider)" title="{{:: 'Edit source' | translate }}" data-test-id="ingest-source--edit"><i class="icon-pencil"></i></button>
                     <button class="icn-btn" ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{:: 'Remove source' | translate }}"><i class="icon-trash"></i></button>
                 </div>
             </li>
@@ -52,7 +52,7 @@
 </div>
 
 <!-- Modal -->
-<div sd-modal data-model="provider" class="modal--tabs modal--large">
+<div sd-modal data-model="provider" class="modal--tabs modal--large" data-test-id="'ingest-source-modal'">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="provider._id"><span translate>Edit Source</span> "{{ provider.name}}"</h3>
         <h3 class="modal__heading" translate ng-hide="provider._id" translate>Add New Source</h3>
@@ -75,7 +75,7 @@
                     <div class="form__row form__row--s-padding">
                         <div class="sd-line-input sd-line-input--boxed sd-line-input--required" ng-class="{'sd-line-input--invalid' : error._issues.name}">
                             <label class="sd-line-input__label" for="provider-name" translate>Provider Name</label>
-                            <input class="sd-line-input__input" type="text" id="provider-name" ng-model="provider.name" required>
+                            <input class="sd-line-input__input" type="text" id="provider-name" ng-model="provider.name" required data-test-id="ingest-source-modal--field--name">
                             <div class="input__message" ng-show="error._issues.name" translate>Name is not unique.</div>
                         </div>
                     </div>
