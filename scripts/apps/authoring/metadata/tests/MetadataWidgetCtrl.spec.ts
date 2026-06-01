@@ -353,7 +353,7 @@ describe('metadata terms directive', () => {
 
         $rootScope.$digest();
         iScope = elm.isolateScope();
-        iScope.searchTerms('abc');
+        iScope.searchTerms('foo');
         expect(iScope.terms.length).toBe(1);
         expect(iScope.activeTree.length).toBe(2);
         expect(elm[0].querySelectorAll('.nested-indicator').length).toBe(1);
