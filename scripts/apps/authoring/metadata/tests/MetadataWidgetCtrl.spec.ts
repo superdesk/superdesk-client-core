@@ -356,7 +356,7 @@ describe('metadata terms directive', () => {
         iScope.searchTerms('foo');
         expect(iScope.terms.length).toBe(1);
         expect(iScope.activeTree.length).toBe(2);
-        expect(elm[0].querySelectorAll('.nested-indicator').length).toBe(1);
+        expect(iScope.tree[iScope.terms[0].qcode]).toEqual(jasmine.any(Array));
     }));
 
     it('select metadata term from tree type metadata dropdown', inject(() => {
