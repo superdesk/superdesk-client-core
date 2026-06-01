@@ -1,7 +1,30 @@
 <div class="term-editor data visible" ng-if="!header" ng-attr-title="{{helperText}}">
-    <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
+    <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" close="resetDropdownState()" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
-            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{getLocaleName(t, item)}}</li>
+            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]" data-test-id="dropdown__item">
+                <button
+                    ng-if="tree[t[uniqueField]]"
+                    class="nested-toggle flex-row sibling-spacer-10"
+                    style="display: flex;"
+                    ng-click="selectTerm(t, $event)"
+                    title="{{getLocaleName(t, item)}}"
+                >
+                    <span ng-if="t.user != null">
+                        <sd-user-avatar data-user="t.user"></sd-user-avatar>
+                    </span>
+                    <span>{{getLocaleName(t, item)}}</span>
+                    <i class="icon-chevron-right-thin sd-margin-start--auto nested-indicator"></i>
+                </button>
+                <button
+                    ng-if="!tree[t[uniqueField]]"
+                    ng-click="selectTerm(t, $event)"
+                    title="{{getLocaleName(t, item)}}"
+                    ng-class="{'greyout': isSelected(t)}"
+                    ng-disabled="isSelected(t)"
+                >
+                    {{getLocaleName(t, item)}}
+                </button>
+            </li>
         </ul>
     </div>
 </div>
@@ -13,16 +36,28 @@
     </button>
     <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}" id="metadata-terms-dropdown-users">
         <li ng-show="!activeTerm && header">
-            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item, $event)" always-visible="header" data-disabled="disabled || allSelected">
+            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item, $event)" close="resetDropdownState()" always-visible="header" data-disabled="disabled || allSelected">
                 <ul class="item-list" vs-repeat ng-if="!activeTree.length || activeList">
-                    <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">
+                    <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]" data-test-id="dropdown__item">
                         <button
+                            ng-if="tree[t[uniqueField]]"
                             class="nested-toggle flex-row sibling-spacer-10"
                             style="display: flex;"
                             ng-click="selectTerm(t, $event)"
+                            title="{{getLocaleName(t, item)}}"
                         >
                             <sd-user-avatar ng-if="t.user != null" data-user="t.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
                             <span>{{getLocaleName(t, item)}}</span>
+                            <i class="icon-chevron-right-thin sd-margin-start--auto nested-indicator"></i>
+                        </button>
+                        <button
+                            ng-if="!tree[t[uniqueField]]"
+                            ng-click="selectTerm(t, $event)"
+                            title="{{getLocaleName(t, item)}}"
+                            ng-class="{'greyout': isSelected(t)}"
+                            ng-disabled="isSelected(t)"
+                        >
+                            {{getLocaleName(t, item)}}
                         </button>
                     </li>
                 </ul>

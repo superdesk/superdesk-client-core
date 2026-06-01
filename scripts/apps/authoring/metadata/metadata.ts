@@ -758,6 +758,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     });
                 }
 
+                scope.preferredView = null;
                 scope.activeTerm = term;
                 scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
@@ -969,6 +970,16 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 if (scope.activeTerm) {
                     scope.openParent({}, $event);
                 }
+            };
+
+            scope.resetDropdownState = function() {
+                scope.activeTerm = null;
+                scope.termPath = [];
+                scope.selectedTerm = '';
+                scope.activeList = false;
+                scope.activeTree = scope.tree.null;
+                setPreferredItems();
+                scope.searchTerms();
             };
 
             function setPreferredItems() {

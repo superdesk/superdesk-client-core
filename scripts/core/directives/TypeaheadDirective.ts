@@ -15,7 +15,9 @@ export default angular.module('superdesk.core.directives.typeahead', [])
      * @param {Boolen} alwaysVisible List of posible choices always stay visible.
      * @param {Function} search Callback for filtering choice action.
      * @param {Function} select Callback for select item aciton.
-     * @param {Boolean} keepinput if true, the input text after selecting an item-selection will not be deleted/nulled
+     * @param {Function} close Callback for when the dropdown closes.
+     * @param {Boolean} keepinput if true, the input text after selecting
+     *   an item-selection will not be deleted/nulled
      *
      * @description Typeahead directive.
      *
@@ -42,6 +44,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 alwaysVisible: '=',
                 disabled: '=',
                 blur: '&',
+                close: '&?',
                 placeholder: '@',
                 tabindex: '=',
                 style: '=',
@@ -111,6 +114,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
             link: function(scope, element, attrs, controller) {
                 var $input = element.find('.input-term > input');
                 var $list = element.find('.item-list');
+                let wasVisible = false;
 
                 $input.on('focus', () => {
                     scope.$applyAsync(() => {
@@ -203,6 +207,12 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 });
 
                 scope.$watch('isVisible()', (visible) => {
+                    if (wasVisible && !visible && typeof scope.close === 'function') {
+                        scope.close();
+                    }
+
+                    wasVisible = visible;
+
                     if (visible || scope.alwaysVisible) {
                         scope.hide = false;
                     } else {
