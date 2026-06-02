@@ -750,7 +750,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             };
 
             scope.openTree = function(term, $event) {
-                if ($event.altKey) {
+                if ($event?.altKey) {
                     let activeTree = scope.tree[term ? term[scope.uniqueField] : null];
 
                     return angular.forEach(activeTree, (_term) => {
@@ -762,7 +762,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeTerm = term;
                 scope.termPath.push(term);
                 scope.activeTree = scope.tree[term ? term[scope.uniqueField] : null];
-                $event.stopPropagation();
+                $event?.stopPropagation();
                 _.defer(() => {
                     const el = elem.find('button:not([disabled]):not(.dropdown__toggle)');
 

@@ -207,7 +207,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 });
 
                 scope.$watch('isVisible()', (visible) => {
-                    if (wasVisible && !visible && typeof scope.close === 'function') {
+                    if (wasVisible && !visible && !scope.focused && typeof scope.close === 'function') {
                         scope.close();
                     }
 
