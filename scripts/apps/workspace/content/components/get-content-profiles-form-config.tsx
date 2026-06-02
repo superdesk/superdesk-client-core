@@ -6,12 +6,12 @@ import {
     FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
     ICommonFieldConfig,
-    ISuperdeskGlobalConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {customEditorControls, IEditorControl} from 'core/editor3/CustomEditorControls';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
@@ -31,18 +31,38 @@ export const getEditor3PlainTextFormattingOptions = (): Dictionary<PLAINTEXT_FOR
     'lowercase': gettext('lowercase'),
 });
 
-type IEnhancedTag = ISuperdeskGlobalConfig['authoring']['customEditorTags'][0] & {editor3Style: string}
+export interface IEnhancedTag {
+    id: string;
+    editor3Style: string;
+    icon: string;
+    label: string;
+    borderColor: 'tag-color-1' | 'tag-color-2';
+    tooltip?: string;
+    shortcut?: IEditorControl['shortcut'];
+}
 
-export const customEditorTags: Array<IEnhancedTag> = (appConfig.authoring?.customEditorTags ?? []).map((item) => {
+export const customEditorTags: Array<IEnhancedTag> = customEditorControls.getInlineStyles().map((feature) => {
     return {
-        ...item,
-        editor3Style: `EDITOR_TAG_${item.id}`,
+        id: feature.id,
+        editor3Style: feature.formatOption,
+        icon: feature.icon,
+        label: feature.label,
+        borderColor: feature.borderColor!,
+        tooltip: feature.tooltip,
+        shortcut: feature.shortcut,
     };
 });
 
-export const getEditor3RichTextFormattingOptions = (): {[MEMBER in RICH_FORMATTING_OPTION]: string} => {
+export const getEditor3RichTextFormattingOptions = (): Record<string, string> => {
+    customEditorControls.initialize();
+
     return {
-        ...Object.fromEntries((customEditorTags ?? []).map(({editor3Style, label}) => [editor3Style, label])),
+        ...Object.fromEntries(
+            customEditorControls.getInlineStyles().map((f) => [f.formatOption, f.label]),
+        ),
+        ...Object.fromEntries(
+            customEditorControls.getCharacterInsertions().map((f) => [f.formatOption, f.label]),
+        ),
         'h1': gettext('h1'),
         'h2': gettext('h2'),
         'h3': gettext('h3'),
@@ -162,6 +182,13 @@ export function getContentProfileFormConfig(
         required: false,
     };
 
+    const showFloatingCountField: IContentProfileFormField = {
+        label: gettext('Show Floating Character Count'),
+        type: GenericFormFieldType.checkbox,
+        field: 'showFloatingCount',
+        required: false,
+    };
+
     const fields: Array<IContentProfileFormField> = [
         requiredField,
         readonlyField,
@@ -212,6 +239,10 @@ export function getContentProfileFormConfig(
         };
 
         fields.push(minMax);
+    }
+
+    if (field?.id != null && hasFormattingOptions(field.id, editor, customFields)) {
+        fields.push(showFloatingCountField);
     }
 
     if (field?.id === 'dateline') {

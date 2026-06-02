@@ -318,7 +318,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     <Layout.LeftPanel open={this.state.filtersOpen}>
                                         <Layout.Panel side="left" background="grey">
                                             <Layout.PanelHeader
-                                                title="Advanced filters"
+                                                title={gettext('Advanced filters')}
                                                 onClose={() => {
                                                     this.setState({filtersOpen: false});
                                                 }}

@@ -13,6 +13,8 @@ interface IState {
 }
 
 export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
+    private treeSelectRef = React.createRef<TreeSelect<IUser>>();
+
     static getDerivedStateFromProps(props: IPropsSelectUser, state: IState): Partial<IState> | null {
         if (props.selectedUserId !== state.selectedUser?._id) {
             const users = store.getState().entities.users;
@@ -32,6 +34,17 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
         };
     }
 
+    componentDidMount() {
+        if (this.props.autoFocus) {
+            // dropdownInitiallyOpen opens the dropdown via setState in TreeSelect's componentDidMount.
+            // We defer inputFocus by one tick to ensure that re-render has completed
+            // and the search input is in the DOM before attempting to focus it.
+            setTimeout(() => {
+                this.treeSelectRef.current?.inputFocus();
+            }, 0);
+        }
+    }
+
     render() {
         const users = store.getState().entities.users;
 
@@ -47,6 +60,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
         return (
             <TreeSelect
+                ref={this.treeSelectRef}
+                dropdownInitiallyOpen={this.props.autoFocus === true}
                 kind="synchronous"
                 label={gettext('Select a user')}
                 inlineLabel={true}
@@ -63,10 +78,10 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 search={(users, _query) => users.filter((user) => {
                     const query = _query.toLocaleLowerCase();
 
-                    return user.display_name.toLocaleLowerCase().includes(query)
-                        || user.username.toLocaleLowerCase().includes(query)
-                        || user.sign_off.toLocaleLowerCase().includes(query)
-                        || user.email.toLocaleLowerCase().includes(query);
+                    return user.display_name?.toLocaleLowerCase().includes(query)
+                        || user.username?.toLocaleLowerCase().includes(query)
+                        || user.sign_off?.toLocaleLowerCase().includes(query)
+                        || user.email?.toLocaleLowerCase().includes(query);
                 })}
                 getId={(user) => user._id}
                 optionTemplate={(user) => (

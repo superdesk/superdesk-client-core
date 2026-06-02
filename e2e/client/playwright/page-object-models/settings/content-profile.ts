@@ -39,7 +39,6 @@ export class ContentProfileSettings {
 
         await this.page.locator(s('content-profile-edit-view--footer')).getByRole('button', {name: 'Save'}).click();
 
-        // wait for saving to finish and modal to close
         await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
     }
 

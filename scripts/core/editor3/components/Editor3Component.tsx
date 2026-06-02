@@ -36,8 +36,6 @@ import {
     EDITOR_BLOCK_TYPE,
     formattingOptionsThatRequireDragAndDrop,
     MIME_TYPE_SUPERDESK_TEXT_ITEM,
-    NDASH_CHAR,
-    THIN_SPACE_CHAR,
 } from '../constants';
 import {IEditorComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
@@ -51,6 +49,7 @@ import {canAddArticleEmbed} from './article-embed/can-add-article-embed';
 import {addInternalEventListener} from 'core/internal-events';
 import {IconButton, Spacer} from 'superdesk-ui-framework/react';
 import {hashString} from '../helpers/hashString';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
 
 export const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
@@ -198,6 +197,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     resizeObserver: ResizeObserver;
 
     private removeListeners: Array<() => void> = [];
+    private scrollCaretIntoViewFrame: number | null = null;
 
     private spellcheckAbortController: AbortController;
     private scheduleSpellchecking: () => void;
@@ -339,10 +339,9 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             return '';
         }
 
-        // ctrl + X
         if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
             if (!selectionState.isCollapsed()) {
-                document.execCommand('copy'); // add selected text to clipboard
+                document.execCommand('copy');
                 return 'delete';
             }
         }
@@ -359,27 +358,15 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             }
         }
 
-        // Cmd/Ctrl + Alt + - for ndash
-        if (key === '-' && altKey && !shiftKey) {
-            const isMac = isMacOS();
-            const macCombo = isMac && metaKey && !ctrlKey;
-            const winCombo = !isMac && !metaKey && ctrlKey;
+        const matchedFeature = customEditorControls.matchKeyBinding(e);
 
-            if (macCombo || winCombo) {
+        if (matchedFeature) {
+            if (this.props.editorFormat.includes(matchedFeature.formatOption as RICH_FORMATTING_OPTION)) {
                 e.preventDefault();
-                return 'custom-ndash';
-            }
-        }
-
-        // Cmd/Ctrl + Alt + Shift + Space for thin space
-        if (key === ' ' && altKey && shiftKey) {
-            const isMac = isMacOS();
-            const macCombo = isMac && metaKey && !ctrlKey;
-            const winCombo = !isMac && !metaKey && ctrlKey;
-
-            if (macCombo || winCombo) {
+                return matchedFeature.commandName;
+            } else {
                 e.preventDefault();
-                return 'custom-thin-space';
+                return '';
             }
         }
 
@@ -400,123 +387,148 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             onCreateChangeStyleSuggestion,
         } = this.props;
 
+        const canEditInSuggestingMode = (editorState, author) =>
+            Suggestions.allowEditSuggestionOnLeft(editorState, author) ||
+            Suggestions.allowEditSuggestionOnRight(editorState, author);
+
+        const toggleInlineStyleOrSuggest = (
+            editorState,
+            style: string,
+            suggestingMode: boolean,
+            author,
+            onCreateChangeStyleSuggestion: (style: string, active: boolean) => void,
+        ) => {
+            const active = editorState.getCurrentInlineStyle().has(style);
+
+            if (suggestingMode) {
+                if (!canEditInSuggestingMode(editorState, author)) {
+                    return {handled: true as const};
+                }
+
+                onCreateChangeStyleSuggestion(style, active);
+                return {handled: true as const};
+            }
+
+            return {
+                handled: false as const,
+                newState: RichUtils.toggleInlineStyle(editorState, style),
+            };
+        };
+
         if (singleLine && command === 'split-block') {
             return 'handled';
         }
 
         let newState;
 
-        switch (command) {
-            case 'bold':
-            case 'italic':
-            case 'underline':
-                if (suggestingMode) {
-                // prevent to change other user suggestion
-                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                        return 'handled';
-                    }
+        const feature = customEditorControls.getFeatureByCommand(command);
 
-                    const style = command.toUpperCase();
-                    const inlineStyles = editorState.getCurrentInlineStyle();
-                    const active = inlineStyles.has(style);
+        if (feature) {
+            if (feature.type === 'inline-style') {
+                const res = toggleInlineStyleOrSuggest(
+                    editorState,
+                    feature.draftJsStyle,
+                    suggestingMode,
+                    author,
+                    onCreateChangeStyleSuggestion,
+                );
 
-                    onCreateChangeStyleSuggestion(style, active);
+                if (res.handled) {
                     return 'handled';
                 }
-
-                newState = RichUtils.handleKeyCommand(editorState, command);
-                break;
-            case 'soft-newline':
-                newState = RichUtils.insertSoftNewline(editorState);
-                break;
-            case 'split-block':
-                if (suggestingMode) {
-                // prevent to change other user suggestion
-                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
-                    && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                        return 'handled';
-                    }
-
-                    onCreateSplitParagraphSuggestion();
-                    return 'handled';
-                }
-
-                newState = RichUtils.handleKeyCommand(editorState, command);
-                break;
-            case 'delete':
-                if (suggestingMode) {
-                // prevent to change other user suggestion that is after current position
-                    if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
-                        return 'handled';
-                    }
-
-                    onCreateDeleteSuggestion('delete');
-                    return 'handled';
-                }
-
-                newState = RichUtils.handleKeyCommand(editorState, command);
-                break;
-            case 'secondary-paste': // this is blocking redo on non-windows systems, should be osx specific
-                newState = EditorState.redo(editorState);
-                break;
-            case 'custom-ndash': {
-                const ndashContentState = Modifier.replaceText(
+                newState = res.newState;
+            } else if (feature.type === 'character-insertion' && feature.character) {
+                const contentState = Modifier.replaceText(
                     editorState.getCurrentContent(),
                     editorState.getSelection(),
-                    NDASH_CHAR,
+                    feature.character,
                 );
 
                 newState = EditorState.push(
                     editorState,
-                    ndashContentState,
+                    contentState,
                     'insert-characters',
                 );
-                break;
             }
-            case 'custom-thin-space': {
-                const thinSpaceContentState = Modifier.replaceText(
-                    editorState.getCurrentContent(),
-                    editorState.getSelection(),
-                    THIN_SPACE_CHAR,
-                );
+        } else {
+            switch (command) {
+                case 'bold':
+                case 'italic':
+                case 'underline':
+                    if (suggestingMode) {
+                        if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                        && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                            return 'handled';
+                        }
 
-                newState = EditorState.push(
-                    editorState,
-                    thinSpaceContentState,
-                    'insert-characters',
-                );
-                break;
-            }
-            case 'backspace': {
-                this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+                        const style = command.toUpperCase();
+                        const inlineStyles = editorState.getCurrentInlineStyle();
+                        const active = inlineStyles.has(style);
 
-                if (suggestingMode) {
-                // prevent to change other user suggestion that is before current position
-                    if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
+                        onCreateChangeStyleSuggestion(style, active);
                         return 'handled';
                     }
 
-                    onCreateDeleteSuggestion('backspace');
-                    return 'handled';
-                }
-
-                // This is a workaround for un/ordered-list-item, when it is deleted an empty
-                // ordered list(just 1. is shown) it will delete the previous block if it exists
-                // (for example a table and then imediately after the ordered list)
-                const selection = editorState.getSelection();
-                const key = selection.getAnchorKey();
-                const content = editorState.getCurrentContent();
-                const block = content.getBlockForKey(key);
-                const commands = ['unordered-list-item', 'ordered-list-item'];
-
-                if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
-                    newState = RichUtils.toggleBlockType(editorState, block.getType());
+                    newState = RichUtils.handleKeyCommand(editorState, command);
                     break;
+                case 'soft-newline':
+                    newState = RichUtils.insertSoftNewline(editorState);
+                    break;
+                case 'split-block':
+                    if (suggestingMode) {
+                        if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
+                        && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                            return 'handled';
+                        }
+
+                        onCreateSplitParagraphSuggestion();
+                        return 'handled';
+                    }
+
+                    newState = RichUtils.handleKeyCommand(editorState, command);
+                    break;
+                case 'delete':
+                    if (suggestingMode) {
+                        if (!Suggestions.allowEditSuggestionOnRight(editorState, author)) {
+                            return 'handled';
+                        }
+
+                        onCreateDeleteSuggestion('delete');
+                        return 'handled';
+                    }
+
+                    newState = RichUtils.handleKeyCommand(editorState, command);
+                    break;
+                case 'secondary-paste':
+                    newState = EditorState.redo(editorState);
+                    break;
+                case 'backspace': {
+                    this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
+                    if (suggestingMode) {
+                        if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
+                            return 'handled';
+                        }
+
+                        onCreateDeleteSuggestion('backspace');
+                        return 'handled';
+                    }
+
+                    const selection = editorState.getSelection();
+                    const key = selection.getAnchorKey();
+                    const content = editorState.getCurrentContent();
+                    const block = content.getBlockForKey(key);
+                    const commands = ['unordered-list-item', 'ordered-list-item'];
+
+                    if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                        newState = RichUtils.toggleBlockType(editorState, block.getType());
+                        break;
+                    }
                 }
-            } // fall through
-            default:
-                newState = RichUtils.handleKeyCommand(editorState, command);
+                // falls through to default for normal backspace handling
+                default:
+                    newState = RichUtils.handleKeyCommand(editorState, command);
+            }
         }
 
         if (newState) {
@@ -627,6 +639,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         // blocks in its internal clipboard. The native listener fires
         // after DraftJS's handler, so both run.
         this.div?.addEventListener('copy', this.storeCopyOrigin);
+
+        // `input` covers typing/deletion/paste; `keyup` covers caret-only movement
+        // via arrow keys. Both fire after DraftJS has reconciled the selection.
+        this.div?.addEventListener('input', this.scrollCaretIntoView);
+        this.div?.addEventListener('keyup', this.scrollCaretIntoView);
     }
 
     handleRefs(editor: IEditor3) {
@@ -645,6 +662,13 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         $(this.div).off();
 
         this.div?.removeEventListener('copy', this.storeCopyOrigin);
+        this.div?.removeEventListener('input', this.scrollCaretIntoView);
+        this.div?.removeEventListener('keyup', this.scrollCaretIntoView);
+
+        if (this.scrollCaretIntoViewFrame != null) {
+            window.cancelAnimationFrame(this.scrollCaretIntoViewFrame);
+            this.scrollCaretIntoViewFrame = null;
+        }
 
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
 
@@ -652,6 +676,41 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
             fn();
         }
     }
+
+    // DraftJS reconstructs the selection after each render, so the browser's native
+    // caret scrolling is unreliable. Scroll the nearest Draft block into view on the
+    // next frame so typing and caret movement stay aligned.
+    private scrollCaretIntoView = () => {
+        const focusNode = window.getSelection()?.focusNode;
+
+        if (focusNode == null || !this.div?.contains(focusNode)) {
+            return;
+        }
+
+        const caretContainer = focusNode.nodeType === Node.TEXT_NODE
+            ? focusNode.parentElement
+            : focusNode instanceof Element
+                ? focusNode
+                : null;
+
+        if (caretContainer == null) {
+            return;
+        }
+
+        if (this.scrollCaretIntoViewFrame != null) {
+            window.cancelAnimationFrame(this.scrollCaretIntoViewFrame);
+        }
+
+        this.scrollCaretIntoViewFrame = window.requestAnimationFrame(() => {
+            this.scrollCaretIntoViewFrame = null;
+
+            if (this.div != null && this.div.contains(caretContainer)) {
+                const block = caretContainer.closest('[data-block="true"]') ?? caretContainer;
+
+                block.scrollIntoView({block: 'nearest', inline: 'nearest'});
+            }
+        });
+    };
 
     /**
      * Stores the origin of the copy event in a window variable so that `handlePastedText`

@@ -1,4 +1,4 @@
-import {get, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 
 MediaMetadataEditorDirective.$inject = ['metadata', 'features', 'session'];
 export default function MediaMetadataEditorDirective(metadata, features, session) {
@@ -25,6 +25,10 @@ export default function MediaMetadataEditorDirective(metadata, features, session
                 scope.item[field] = newValue;
                 scope.onChange({key: field}); // set parent dirty=true
                 scope.$applyAsync(); // apply changes to scope
+            };
+
+            scope.handleExtraTextFieldChange = (fieldId: string) => {
+                scope.onChange({key: 'extra'});
             };
 
             // set default values
@@ -63,7 +67,7 @@ export default function MediaMetadataEditorDirective(metadata, features, session
                     });
 
                 // populate fields for current user
-                if (get(session, 'identity.sign_off') && !item.hasOwnProperty('sign_off')) {
+                if (session?.identity?.sign_off && !item.hasOwnProperty('sign_off')) {
                     item.sign_off = session.identity.sign_off;
                 }
             });

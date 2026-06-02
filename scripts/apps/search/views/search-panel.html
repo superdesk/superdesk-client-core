@@ -13,7 +13,8 @@
                 ng-click="changeTab('savedSearches')" translate>Saved
             </li>
             <li id="raw_search_tab"
-                role="tab" 
+                data-test-id="raw-search-tab"
+                role="tab"
                 ng-if="isAdmin()"
                 ng-class="{active: sTab === 'rawSearch'}"
                 ng-click="changeTab('rawSearch')"

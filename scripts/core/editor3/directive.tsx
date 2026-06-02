@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {convertToRaw, EditorState} from 'draft-js';
+import {convertToRaw, EditorState, ContentState} from 'draft-js';
 import {AnyAction, Store} from 'redux';
 
 import {Editor3} from './components';
@@ -36,7 +36,7 @@ import {ValidateCharactersConnected} from 'apps/authoring/authoring/ValidateChar
 import {Spacer} from 'core/ui/components/Spacer';
 import {copyEmbeddedArticlesIntoAssociations} from 'apps/authoring-react/copy-embedded-articles-into-associations';
 import {findParentScope} from 'core/find-parent-scope';
-import {classnames} from '@sourcefabric/common';
+import {sanitizeHtmlContent} from 'core/helpers/sanitize-html-input';
 
 /**
  * @ngdoc directive
@@ -141,6 +141,7 @@ class Editor3Directive {
     cleanPastedHtml?: boolean;
     removeEventListeners?: Array<() => void>;
     fieldId?: string;
+    showFloatingCount?: boolean;
 
     // In most cases a function is called to get the label by ID. This is only required for custom fields.
     fieldLabel?: string;
@@ -280,6 +281,8 @@ class Editor3Directive {
 
             softLimit: '=?',
 
+            showFloatingCount: '=?',
+
             /**
              * @type {String}
              * @description Force the output to be plain text and not contain any html.
@@ -332,6 +335,7 @@ class Editor3Directive {
                     this.tabindex = this.tabindex || 0;
                     this.refreshTrigger = this.refreshTrigger || 0;
                     this.showTitle = this.showTitle || false;
+                    this.showFloatingCount = this.showFloatingCount === true;
                     this.$rootScope = $rootScope;
                     this.$scope = $scope;
                     this.svc = {};
@@ -361,12 +365,17 @@ class Editor3Directive {
 
                         ReactDOM.unmountComponentAtNode(element);
 
-                        const textStatistics = this.limit != null ? (
-                            <div className="d-flex justify-end items-center gap-0-5 ms-auto">
+                        const textStatistics = (
+                            <Spacer h gap="8" alignItems="center" noWrap noGrow>
                                 <TextStatisticsConnected />
-                                <CharacterCountConfigButton field={this.fieldId} />
-                            </div>
-                        ) : null;
+
+                                {
+                                    this.limit != null && (
+                                        <CharacterCountConfigButton field={this.fieldId} />
+                                    )
+                                }
+                            </Spacer>
+                        );
 
                         const validationErrors = (() => {
                             if (this.validationError != null) {
@@ -432,19 +441,27 @@ class Editor3Directive {
                         };
 
                         const getTemplateForHeader = () => {
-                            const itemClasses = classnames(
-                                'authoring-header__item',
-                                {'sd-validate': this.required},
-                            );
-
                             return (
-                                <div className={itemClasses}>
-                                    <label className="authoring-header__item-label">
+                                <div style={{display: 'flex'}} className="sd-input-style">
+                                    <div className="authoring-header__item-label">
                                         {fieldName}
-                                    </label>
+                                        {this.required && (
+                                            <span>
+                                                &nbsp;
+                                                <span
+                                                    aria-label={gettext('required')}
+                                                    style={{color: 'red', fontSize: 12}}
+                                                >
+                                                    *
+                                                </span>
+                                            </span>
+                                        )}
+                                    </div>
 
-                                    <div className="authoring-header__input-holder sd-input-style">
-                                        {editor3}
+                                    <div style={{flexGrow: 1}}>
+                                        <div>
+                                            {editor3}
+                                        </div>
 
                                         <div className="authoring-header__input-helper-content">
                                             {
@@ -488,7 +505,9 @@ class Editor3Directive {
                             const text = (newValue || '')
                                 .replace(/<ins/g, '<code')
                                 .replace(/<\/ins>/g, '</code>');
-                            const content = getContentStateFromHtml(text);
+                            const content = this.plainText || this.singleLine
+                                ? getContentStateFromHtml(sanitizeHtmlContent(text))
+                                : getContentStateFromHtml(text);
                             const state = store.getState();
                             const editorState = EditorState.push(
                                 state.editorState,
@@ -533,7 +552,9 @@ class Editor3Directive {
                                     {skipOnChange: true},
                                     options,
                                 );
-                                const content = getContentStateFromHtml(value);
+                                const content = this.plainText || this.singleLine
+                                    ? getContentStateFromHtml(sanitizeHtmlContent(value || ''))
+                                    : getContentStateFromHtml(value);
                                 const state = store.getState();
                                 const editorState = EditorState.push(
                                     state.editorState,

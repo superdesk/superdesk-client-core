@@ -136,6 +136,13 @@
     flex-direction: column;
 }
 
+// Used by Editor3's scrollCaretIntoView to keep the caret clear of the
+// sticky authoring header / floating toolbar.
+.page-content-container--scrollable {
+    scroll-padding-block-start: 80px;
+    scroll-padding-block-end: 40px;
+}
+
 .workqueue .page-content-container {
     inset-block-end: 32px;
 }

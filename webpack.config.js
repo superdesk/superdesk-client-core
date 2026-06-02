@@ -104,7 +104,7 @@ function applyDefaults(appConfig) {
     }
 }
 
-// makeConfig creates a new configuration file based on the passed options.
+// makeConfig creates a new webpack configuration.
 module.exports = function makeConfig(grunt) {
     var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
 
@@ -167,6 +167,7 @@ module.exports = function makeConfig(grunt) {
                 filename: '[name].bundle.css',
                 chunkFilename: '[id].bundle.css',
             }),
+
             // Webpack 5 removed automatic Node.js polyfills for browser builds
             // This plugin restores them for legacy code that depends on Node APIs (e.g., Buffer, process, stream)
             // Exclude 'console' since browsers provide their own implementation
@@ -250,6 +251,7 @@ module.exports = function makeConfig(grunt) {
 
                             // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
                             || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+
                             || absolutePath.includes('/@sourcefabric/common/')
                         ) {
                             return false;
@@ -320,6 +322,9 @@ module.exports = function makeConfig(grunt) {
             host: '0.0.0.0',
             compress: true,
             headers: {'Cache-Control': 'no-store'},
+            // Errors stay visible; warnings hidden because the warning
+            // overlay iframe intercepts pointer events during Playwright runs.
+            client: {overlay: {errors: true, warnings: false}},
             static: [
                 {directory: path.resolve(process.cwd(), 'dist')},
                 {directory: path.resolve(__dirname, 'scripts'), publicPath: '/scripts'},
@@ -448,6 +453,8 @@ function getDefaults(grunt) {
             'uk_UA',
             'pt_BR',
             'pl',
+            'ja',
+            'sr',
         ],
 
         userOnlineMinutes: 15,

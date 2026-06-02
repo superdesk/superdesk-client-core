@@ -38,6 +38,7 @@
          data-test-id="field--headline"
          data-limit="schema.headline.maxlength"
          data-soft-limit="editor.headline.maxSoftLength"
+         data-show-floating-count="editor.headline.showFloatingCount"
          data-field-id="'headline'"
          data-required="schema.headline.required"
          data-validation-error="error.headline"
@@ -67,7 +68,7 @@
             ng-model="item.sms_message"
             ng-change="autosave(item)"
             ng-disabled="!_editable || schema.sms.readonly === true"
-            placeholder="Add sms message here"
+            placeholder="{{ 'Add sms message here' | translate }}"
             sd-focus-element
             sd-auto-height
             data-append-element=".field"
@@ -151,6 +152,7 @@
          data-clean-pasted-html="editor.abstract.cleanPastedHTML"
          data-limit="schema.abstract.maxlength"
          data-soft-limit="editor.abstract.maxSoftLength"
+         data-show-floating-count="editor.abstract.showFloatingCount"
          data-field-id="'abstract'"
          data-required="schema.abstract.required"
          data-validation-error="error.abstract"
@@ -199,7 +201,7 @@
              data-item="item"
              data-fieldprefix="dateline"
              data-field="located"
-             placeholder="Add location"
+             placeholder="{{ 'Add location' | translate }}"
              data-postprocessing="updateDateline(item, city)"
              sd-focus-element
              data-element="input"
@@ -214,7 +216,7 @@
                     tabindex="{{editor.dateline.order}}"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="resetNumberOfDays(true, dateline.month)"
-                    placeholder="Choose month"
+                    placeholder="{{ 'Choose month' | translate }}"
                     ng-model="dateline.month"
                     sd-focus-element
                     data-append-element=".field"
@@ -229,7 +231,7 @@
                     ng-options="day for day in daysInMonth"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="modifyDatelineDate(dateline.day)"
-                    placeholder="Choose day"
+                    placeholder="{{ 'Choose day' | translate }}"
                     ng-model="dateline.day"
                     sd-focus-element
                     tabindex="{{editor.dateline.order}}"
@@ -268,6 +270,7 @@
          data-clean-pasted-html="editor.body_html.cleanPastedHTML"
          data-limit="schema.body_html.maxlength"
          data-soft-limit="editor.body_html.maxSoftLength"
+         data-show-floating-count="editor.body_html.showFloatingCount"
          data-field-id="'body_html'"
          data-required="schema.body_html.required"
          data-validation-error="error.body_html"
@@ -372,6 +375,7 @@
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
          data-limit="schema.description_text.maxlength"
          data-soft-limit="editor.description.maxSoftLength"
+         data-show-floating-count="editor.description_text.showFloatingCount"
          data-plain-text="true"
          data-field-id="'description_text'"
          data-required="schema.description_text.required"
@@ -424,6 +428,7 @@
          data-item="item"
          data-limit="schema.body_footer.maxlength"
          data-soft-limit="editor.body_footer.maxSoftLength"
+         data-show-floating-count="editor.body_footer.showFloatingCount"
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.body_footer.order"
          data-clean-pasted-html="editor.body_footer.cleanPastedHTML"
@@ -455,14 +460,15 @@
         <i class="icon-lock" ng-hide="editSignOff" aria-label="{{ 'Locked' | translate}}"></i>
         <i class="icon-unlocked" ng-show="editSignOff" aria-label="{{ 'Unlocked' | translate}}"></i>
     </button>
-    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off">{{item.sign_off}}</div>
+    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off" data-test-id="sign-off-value">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
            class="byline"
            id="sign_off"
+           data-test-id="sign-off-input"
            ng-model="item.sign_off"
            ng-change="autosave(item)"
            ng-show="editSignOff"
-           placeholder="Sign off"
+           placeholder="{{ 'Sign off' | translate }}"
            sd-focus-element
            data-append-element=".field"
            data-append-class="active"
@@ -519,6 +525,7 @@
         data-clean-pasted-html="editor[field._id].cleanPastedHTML"
         data-limit="schema[field._id].maxlength"
         data-soft-limit="editor[field._id].maxSoftLength"
+        data-show-floating-count="editor[field._id].showFloatingCount"
         data-field-id="field._id"
         data-helper-text="field.helper_text"
         data-field-label="field.display_name"

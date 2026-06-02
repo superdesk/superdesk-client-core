@@ -21,9 +21,6 @@ import {IArticle} from 'superdesk-api';
 import {IAcceptSuggestion} from '../components/spellchecker/SpellcheckerContextMenu';
 import {IActiveCell} from '../components/tables/TableBlock';
 
-/**
- * @description Contains the list of editor related reducers.
- */
 const editor3 = (state: IEditorStore, action) => {
     switch (action.type) {
         case 'EDITOR_CHANGE_STATE':
@@ -68,6 +65,16 @@ const editor3 = (state: IEditorStore, action) => {
             return autocomplete(state, action.payload);
         case 'SET_EXTERNAL_OPTIONS':
             return setExternalOptions(state, action.payload);
+        case 'INSERT_CHARACTER': {
+            const {character} = action.payload;
+            const contentState = Modifier.replaceText(
+                state.editorState.getCurrentContent(),
+                state.editorState.getSelection(),
+                character,
+            );
+
+            return onChange(state, EditorState.push(state.editorState, contentState, 'insert-characters'));
+        }
         default:
             return state;
     }
@@ -143,6 +150,7 @@ export function updateDecorators(
         limitConfig: stateCurrent.limitConfig,
         softLimitConfig: stateCurrent.softLimitConfig,
         invisibles: stateCurrent?.invisibles,
+        editorState: {current: stateCurrent.editorState, next: editorStateNext},
     });
 
     if (result.mustReApplyDecorators !== true) {

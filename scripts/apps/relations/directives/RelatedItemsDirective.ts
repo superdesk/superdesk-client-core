@@ -145,6 +145,9 @@ export function RelatedItemsDirective(
                         return;
                     }
 
+                    if (!relationsService.isItemAllowedInField(item, scope.field))
+                        return notify.error(gettext('Only content from external providers is allowed in this field.'));
+
                     if (scope.item._id === item._id) {
                         notify.error(gettext('Cannot add self as related item.'));
                         return;

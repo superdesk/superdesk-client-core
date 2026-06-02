@@ -9,6 +9,7 @@ export const ednote: IFieldAdapter<IArticle> = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             maxSoftLength: fieldEditor?.maxSoftLength,
+            showFloatingCount: fieldEditor?.showFloatingCount,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
             singleLine: false,
             disallowedCharacters: [],

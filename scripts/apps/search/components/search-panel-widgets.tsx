@@ -6,6 +6,7 @@ interface IProps {
     provider: any;
     params: any;
     setParams: (updates: any) => void;
+    searchParameters: () => void;
 }
 
 export class SearchPanelWidgets extends React.PureComponent<IProps> {
@@ -23,12 +24,18 @@ export class SearchPanelWidgets extends React.PureComponent<IProps> {
         return (
             <React.Fragment>
                 {widgets.map((Widget, index) => (
-                    <Widget
+                    <div
                         key={index}
-                        provider={this.props.provider}
-                        params={this.props.params}
-                        setParams={(updates) => this.props.setParams(updates)}
-                    />
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') this.props.searchParameters();
+                        }}
+                    >
+                        <Widget
+                            provider={this.props.provider}
+                            params={this.props.params}
+                            setParams={(updates) => this.props.setParams(updates)}
+                        />
+                    </div>
                 ),
                 )}
             </React.Fragment>

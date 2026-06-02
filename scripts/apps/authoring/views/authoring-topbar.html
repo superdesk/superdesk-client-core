@@ -45,12 +45,13 @@
     <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons()" style="min-width: 150px;">
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
-        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || sendAndDuplicateEnabled)"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true || $root.config.features.customAuthoringTopbar.sendAndDuplicate != null)"
         ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
-                ng-if="toDeskEnabled"
+                ng-if="toDeskAvailable"
                 class="btn sd-overflow-ellipsis btn--custom"
+                ng-disabled="!toDeskEnabled()"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 aria-label="{{ 'To Desk' | translate }}"
                 title="{{ :: 'To Desk' | translate }}">
@@ -59,8 +60,9 @@
         </button>
 
         <button
-                ng-if="closeAndContinueEnabled"
+                ng-if="closeAndContinueAvailable"
                 class="btn sd-overflow-ellipsis btn--custom"
+                ng-disabled="!closeAndContinueEnabled()"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 aria-label="{{ 'Close and Continue' | translate }}"
                 title="{{ 'Close and Continue' | translate }}">
@@ -69,9 +71,10 @@
         </button>
 
         <button
-                ng-if="publishEnabled"
+                ng-if="publishAvailable"
                 class="btn btn--custom btn--publish"
                 type="submit"
+                ng-disabled="!publishEnabled()"
                 ng-click="saveAndContinue(publish, true)"
                 aria-label="{{ :: 'Publish' | translate }}"
                 title="{{ :: 'Publish' | translate }}">
@@ -80,8 +83,9 @@
         </button>
 
         <button
-          ng-if="sendAndDuplicateEnabled"
+          ng-if="sendAndDuplicateAvailable"
           class="btn sd-overflow-ellipsis btn--custom"
+          ng-disabled="!sendAndDuplicateEnabled()"
           ng-click="sendAndDuplicate()"
           aria-label="{{ :: 'Send and duplicate' | translate }}"
           title="{{ 'Send and duplicate' | translate }}"
@@ -91,8 +95,9 @@
         </button>
 
         <button
-                ng-if="publishAndContinueEnabled"
+                ng-if="publishAndContinueAvailable"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
+                ng-disabled="!publishAndContinueEnabled()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 aria-label="{{ :: 'Publish and Continue' | translate }}"
                 title="{{ :: 'Publish and Continue' | translate }}">
@@ -252,7 +257,7 @@
         </button>
 
         <div id="authoring-extra-dropdown"
-             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
+             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
              class="dropdown pull-left strict" dropdown>
             <button
               id="more-actions"
@@ -289,7 +294,7 @@
                   </li>
                 </ul>
 
-                <ul id="multiedit" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
+                <ul id="multiedit" data-test-id="multiedit-action" ng-if="item.task.desk && itemActions.multi_edit && !isLocked()" ng-show="action !== 'kill'">
                     <li>
                     <div class="dropdown multiedit-toggle" dropdown>
                       <button class="dropdown__toggle" dropdown__toggle>

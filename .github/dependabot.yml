@@ -9,15 +9,26 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+    
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/e2e/client" # Location of package manifests
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "pip" # See documentation for possible values
     directory: "/e2e/server" # Location of package manifests
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7

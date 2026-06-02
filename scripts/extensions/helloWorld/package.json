@@ -1,10 +1,8 @@
 {
   "private": true,
-  "main": "dist/src/extension.js",
+  "main": "src/extension.ts",
   "scripts": {
-    "compile": "tsc -p src",
     "compile-e2e": "echo 'No end-to-end tests defined'",
-    "watch": "tsc -watch -p src",
     "test": "mocha",
     "debug-tests": "mocha --inspect-brk"
   },

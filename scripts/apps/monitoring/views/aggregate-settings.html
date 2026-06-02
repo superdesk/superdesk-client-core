@@ -11,7 +11,7 @@
             <div ng-if="widget">
                 <div class="sd-line-input sd-line-input--required sd-line-input--boxed">
                     <label class="sd-line-input__label" translate>View name</label>
-                    <input class="sd-line-input__input" type="text" ng-model="widget.configuration.label" ng-keyup="handleEdit($event);" required>
+                    <input class="sd-line-input__input" type="text" data-test-id="widget-view-name" ng-model="widget.configuration.label" ng-keyup="handleEdit($event);" required>
                     <sd-character-count class="sd-line-input__char-count" data-item="widget.configuration.label" data-limit="30"></sd-character-count>
                 </div>
             </div>

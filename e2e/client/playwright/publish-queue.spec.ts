@@ -5,29 +5,6 @@ import {getCellValueByColumTitle, restoreDatabaseSnapshot, s} from './utils';
 
 test.setTimeout(50000);
 
-test.skip('item appearing in publish queue after publishing', async ({page}) => {
-    const monitoring = new Monitoring(page);
-
-    await restoreDatabaseSnapshot();
-    await page.goto('/#/workspace/monitoring');
-
-    await monitoring.executeActionOnMonitoringItem(
-        page.locator(s('article-item=test sports story')),
-        'Edit',
-    );
-
-    await page.locator(s('authoring', 'open-send-publish-pane')).click();
-    await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
-
-    await expect(page.locator(
-        s('monitoring-group=Sports', 'article-item=test sports story'),
-    )).toBeAttached();
-
-    await page.goto('/#/publish_queue');
-
-    await expect(page.locator(s('publish-queue-item=test sports story'))).toBeAttached();
-});
-
 test('item appearing in publish queue after publishing with subscriber', async ({page}) => {
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);
@@ -40,7 +17,7 @@ test('item appearing in publish queue after publishing with subscriber', async (
         'Edit',
     );
 
-    authoring.publish({subscribers: ['Subscriber 1']});
+    await authoring.publish({subscribers: ['Subscriber 1']});
 
     await expect(page.locator(
         s('monitoring-group=Sports desk output', 'article-item=test sports story'),
@@ -61,5 +38,5 @@ test('item appearing in publish queue after publishing with subscriber', async (
         'Subscriber',
     );
 
-    await expect(value).toBe('Subscriber 1');
+    expect(value).toBe('Subscriber 1');
 });

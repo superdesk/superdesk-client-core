@@ -20,7 +20,7 @@
       <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
     </div>
     <div>
-      <span ng-if="data.pubstatus === 'canceled'" title="unpublished" class="state-label state-unpublished">unpublished</span>
+      <span ng-if="data.pubstatus === 'canceled'" title="{{ 'unpublished' | translate }}" class="state-label state-unpublished" translate>unpublished</span>
       <span ng-if="label" class="state-label state-in_progress" translate>label: <b>{{label.name}}</b></span></span>
       <span class="package-item__item-creator">
         Created <time sd-datetime data-date="data.firstcreated" data-from-now="true"></time>

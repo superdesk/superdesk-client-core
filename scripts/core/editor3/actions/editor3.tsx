@@ -310,6 +310,7 @@ export type IActionPayloadSetExternalOptions =
         | 'spellchecking'
         | 'limitConfig'
         | 'softLimitConfig'
+        | 'showFloatingCount'
         | 'item'
     >>;
 
@@ -319,3 +320,11 @@ export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
         payload,
     };
 }
+
+export function insertCharacter(character: string) {
+    return {
+        type: 'INSERT_CHARACTER',
+        payload: {character},
+    };
+}
+

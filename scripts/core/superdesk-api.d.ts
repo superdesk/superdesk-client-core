@@ -487,6 +487,7 @@ declare module 'superdesk-api' {
         minLength?: number;
         maxLength?: number;
         maxSoftLength?: number;
+        showFloatingCount?: boolean;
         compact?: boolean; // smaller UI element
         singleLine?: boolean; // also limits to plain text
         cleanPastedHtml?: boolean;
@@ -1762,6 +1763,7 @@ declare module 'superdesk-api' {
                 audio?: boolean;
                 video?: boolean;
             };
+            only_allow_external_providers?: boolean;
             allowed_workflows?: {
                 in_progress?: boolean;
                 published?: boolean;
@@ -1877,6 +1879,7 @@ declare module 'superdesk-api' {
             showCrops?: boolean;
             imageTitle?: boolean;
             sourceField?: string;
+            showFloatingCount?: boolean;
         }
     };
 
@@ -2645,6 +2648,38 @@ declare module 'superdesk-api' {
 
     export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
+    export type KeyModifier = 'primary' | 'alt' | 'shift' | 'ctrl' | 'cmd';
+
+    export interface IShortcutConfig {
+        key: string;
+        modifiers: Array<KeyModifier>;
+    }
+
+    export interface ICustomInlineStyle {
+        id: string;
+        type: 'inline-style';
+        icon: string;
+        label: string;
+        borderColor: 'tag-color-1' | 'tag-color-2';
+        tooltip?: string;
+        shortcut?: IShortcutConfig;
+    }
+
+    export interface ICharacterInsertion {
+        id: string;
+        type: 'character-insertion';
+        character: string;
+        icon: string;
+        label: string;
+        tooltip?: string;
+        shortcut?: IShortcutConfig;
+    }
+
+    export interface ICustomEditorFeatures {
+        inlineStyles?: Array<ICustomInlineStyle>;
+        characterInsertions?: Array<ICharacterInsertion>;
+    }
+
     export type RICH_FORMATTING_OPTION =
         PLAINTEXT_FORMATTING_OPTION |
         'h1' |
@@ -2679,7 +2714,9 @@ declare module 'superdesk-api' {
         'undo' |
         'redo' |
         'multi-line quote' |
-        'custom blocks';
+        'custom blocks' |
+        `EDITOR_TAG_${string}` |
+        `INSERT_CHAR_${string}`;
 
     export interface IEditor3HtmlProps {
         value: string;
@@ -3753,12 +3790,7 @@ declare module 'superdesk-api' {
         infoRemovedFields: {};
         previewSubjectFilterKey: any;
         authoring?: {
-            customEditorTags?: Array<{
-                id: string;
-                icon: string;
-                label: string;
-                borderColor: 'tag-color-1' | 'tag-color-2';
-            }>;
+            customEditorFeatures?: ICustomEditorFeatures;
             timeToRead?: any;
             lineLength?: number;
             preview?: {

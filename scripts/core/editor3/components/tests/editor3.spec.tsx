@@ -5,11 +5,16 @@ import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
-import {CustomEditor3Entity, NDASH_CHAR, THIN_SPACE_CHAR} from 'core/editor3/constants';
+import {CustomEditor3Entity} from 'core/editor3/constants';
 import {getBlockRenderer} from '../blockRenderer';
 import {IEditorStore} from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {isMacOS} from 'core/utils';
+import {customEditorControls} from 'core/editor3/CustomEditorControls';
+import {appConfig} from 'appConfig';
+
+const NDASH_CHAR = '\u2013';
+const THIN_SPACE_CHAR = '\u2009';
 
 const spellchecking: IEditorStore['spellchecking'] = {
     enabled: false,
@@ -176,6 +181,49 @@ describe('editor3.component', () => {
     });
 
     describe('keyboard shortcuts', () => {
+        const resetcustomEditorControls = () => {
+            const registry = customEditorControls as any;
+
+            registry.features = new Map();
+            registry.keyBindings = new Map();
+            registry.initialized = false;
+        };
+
+        beforeEach(() => {
+            Object.assign(appConfig, {
+                authoring: {
+                    ...(appConfig.authoring ?? {}),
+                    customEditorFeatures: {
+                        inlineStyles: [],
+                        characterInsertions: [
+                            {
+                                id: 'ndash',
+                                icon: 'dash',
+                                label: 'N dash',
+                                character: NDASH_CHAR,
+                                shortcut: {
+                                    key: '-',
+                                    modifiers: ['primary', 'alt'],
+                                },
+                            },
+                            {
+                                id: 'thin-space',
+                                icon: 'thin_space',
+                                label: 'Thin space',
+                                character: THIN_SPACE_CHAR,
+                                shortcut: {
+                                    key: ' ',
+                                    modifiers: ['primary', 'alt', 'shift'],
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+
+            resetcustomEditorControls();
+        });
+
         const renderComponent = (extraProps = {}) => shallow(
             <Editor3Component
                 {...editor3mandatoryProps}
@@ -185,8 +233,10 @@ describe('editor3.component', () => {
             />,
         );
 
-        it('maps Cmd/Ctrl + Alt + - to custom-ndash', () => {
-            const wrapper = renderComponent();
+        it('maps Cmd/Ctrl + Alt + - to insert-ndash', () => {
+            const wrapper = renderComponent({
+                editorFormat: ['INSERT_CHAR_ndash'],
+            });
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
             const isMac = isMacOS();
@@ -200,12 +250,14 @@ describe('editor3.component', () => {
                 preventDefault,
             });
 
-            expect(command).toBe('custom-ndash');
+            expect(command).toBe('insert-ndash');
             expect(preventDefault).toHaveBeenCalled();
         });
 
-        it('maps Cmd/Ctrl + Alt + Shift + Space to custom-thin-space', () => {
-            const wrapper = renderComponent();
+        it('maps Cmd/Ctrl + Alt + Shift + Space to insert-thin-space', () => {
+            const wrapper = renderComponent({
+                editorFormat: ['INSERT_CHAR_thin-space'],
+            });
             const instance = wrapper.instance() as any;
             const preventDefault = jasmine.createSpy('preventDefault');
             const isMac = isMacOS();
@@ -219,7 +271,7 @@ describe('editor3.component', () => {
                 preventDefault,
             });
 
-            expect(command).toBe('custom-thin-space');
+            expect(command).toBe('insert-thin-space');
             expect(preventDefault).toHaveBeenCalled();
         });
 
@@ -228,7 +280,7 @@ describe('editor3.component', () => {
             const wrapper = renderComponent({onChange});
             const instance = wrapper.instance() as any;
 
-            const result = instance.handleKeyCommand('custom-ndash');
+            const result = instance.handleKeyCommand('insert-ndash');
 
             expect(result).toBe('handled');
             expect(onChange).toHaveBeenCalled();
@@ -242,7 +294,7 @@ describe('editor3.component', () => {
             const wrapper = renderComponent({onChange});
             const instance = wrapper.instance() as any;
 
-            const result = instance.handleKeyCommand('custom-thin-space');
+            const result = instance.handleKeyCommand('insert-thin-space');
 
             expect(result).toBe('handled');
             expect(onChange).toHaveBeenCalled();

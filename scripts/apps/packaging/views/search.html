@@ -31,7 +31,7 @@
                     <p><span class="keyword" ng-if="pitem.slugline">{{ pitem.slugline }}</span>{{pitem.headline || pitem.type}}</p>
                     <ul class="item-functions" ng-if="!itemInPackage(pitem) && !pitem.multi">
                     <li class="dropdown group-select" dropdown>
-                        <button title="Add to package" class="dropdown__toggle" dropdown__toggle>
+                        <button title="{{ 'Add to package' | translate }}" class="dropdown__toggle" dropdown__toggle>
                             <i class="icon-package-plus"></i>
                         </button>
                         <ul class="dropdown__menu pull-right">

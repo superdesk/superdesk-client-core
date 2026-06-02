@@ -51,6 +51,7 @@ module.exports = function(config) {
             // Serve webpack-emitted assets (WASM, images, videos) from dist/
             // karma-webpack 5 doesn't automatically serve physical files from disk
             {pattern: 'dist/**/*', included: false, served: true, watched: false},
+            {pattern: 'fixtures/**/*', included: false, served: true, watched: false}
         ],
 
         ngHtml2JsPreprocessor: {
