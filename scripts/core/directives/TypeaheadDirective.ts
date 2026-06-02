@@ -114,7 +114,6 @@ export default angular.module('superdesk.core.directives.typeahead', [])
             link: function(scope, element, attrs, controller) {
                 var $input = element.find('.input-term > input');
                 var $list = element.find('.item-list');
-                let wasVisible = false;
 
                 $input.on('focus', () => {
                     scope.$applyAsync(() => {
@@ -206,12 +205,10 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                     }
                 });
 
-                scope.$watch('isVisible()', (visible) => {
-                    if (wasVisible && !visible && !scope.focused && typeof scope.close === 'function') {
+                scope.$watch('isVisible()', (visible, oldVisible) => {
+                    if (oldVisible === true && visible === false && !scope.focused && typeof scope.close === 'function') {
                         scope.close();
                     }
-
-                    wasVisible = visible;
 
                     if (visible || scope.alwaysVisible) {
                         scope.hide = false;
