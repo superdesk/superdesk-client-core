@@ -24,12 +24,6 @@
 .wide {
     max-width: 960px;
 }
-div {
-    -webkit-column-rule: 4px outset #ff00ff; /* Chrome, Safari, Opera */
-    -moz-column-rule: 4px outset #ff00ff; /* Firefox */
-    column-rule: 4px outset #ff00ff;
-}
-
 
 .filter-result-modal {
     position: absolute;
