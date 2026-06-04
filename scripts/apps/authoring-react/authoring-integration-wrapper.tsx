@@ -505,7 +505,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 }
 
                                 const runCheck = () => {
-                                    const language = getLatestItem().language;
+                                    // Must match the editor3 `getLanguage` fallback, or this can
+                                    // report "no dictionary" while the editor spellchecks with 'en'.
+                                    const language = getLatestItem().language ?? 'en';
                                     const spellcheck = ng.get('spellcheck');
                                     const dictAvailable =
                                         spellcheck.isActiveDictionary
