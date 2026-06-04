@@ -28,6 +28,7 @@ export class TextEditor3 extends React.PureComponent<IProps> {
                 )}
             >
                 <label className="sd-input__label">{this.props.formField.label}</label>
+                <div className="sd-input__input-container">
                 <Editor3Html
                     value={this.props.value}
                     scrollContainer={'window'}
@@ -40,6 +41,7 @@ export class TextEditor3 extends React.PureComponent<IProps> {
                         <div key={i} className="sd-input__message">{str}</div>
                     ))
                 }
+                </div>
             </div>
         );
     }
