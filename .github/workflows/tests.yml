@@ -49,8 +49,32 @@ jobs:
     - name: Setup E2E Environment
       uses: ./.github/actions/setup-e2e
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+    - name: Resolve Playwright version
+      id: playwright-version
+      run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      id: playwright-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+    - name: Install Playwright browsers and system deps
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
+      timeout-minutes: 15
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        NEEDRESTART_MODE: a
+      run: npx playwright install --with-deps chromium
+
+    - name: Install Playwright system deps only
+      if: steps.playwright-cache.outputs.cache-hit == 'true'
+      timeout-minutes: 15
+      env:
+        DEBIAN_FRONTEND: noninteractive
+        NEEDRESTART_MODE: a
+      run: npx playwright install-deps chromium
 
     - name: Run Playwright tests
       run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}

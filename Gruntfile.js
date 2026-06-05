@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     // them too. Invokes gettext.js's shipped po2json CLI directly so we don't have to depend on
     // @superdesk/build-tools at runtime (it's a devDependency and may not be installed when this
     // Gruntfile is consumed from another project).
-    grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', function() {
+    grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', () => {
         var fs = require('fs');
         var distDir = grunt.config.get('distDir');
         var poDir = path.join(__dirname, 'po');
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
 
         fs.mkdirSync(jsonDir, {recursive: true});
 
-        fs.readdirSync(poDir).forEach(function(filename) {
+        fs.readdirSync(poDir).forEach((filename) => {
             var poFile = path.join(poDir, filename);
 
             if (!filename.endsWith('.po') || fs.statSync(poFile).isDirectory()) {
@@ -86,19 +86,19 @@ module.exports = function(grunt) {
     // from a fresh checkout without needing an external wrapper command. Each task
     // requires @superdesk/build-tools lazily inside the action so a missing dep doesn't
     // break Gruntfile load for callers that don't need these tasks.
-    grunt.registerTask('install-extensions', 'Install each loaded extension', function() {
+    grunt.registerTask('install-extensions', 'Install each loaded extension', () => {
         var installExtensions = require('@superdesk/build-tools/src/extensions/install-extensions');
 
         installExtensions(process.cwd());
     });
 
-    grunt.registerTask('namespace-css', 'Generate the namespaced extension stylesheet', function() {
+    grunt.registerTask('namespace-css', 'Generate the namespaced extension stylesheet', () => {
         var {namespaceCSS} = require('@superdesk/build-tools/src/extensions/css');
 
         namespaceCSS(process.cwd());
     });
 
-    grunt.registerTask('merge-extension-translations', 'Merge translations from loaded extensions', function() {
+    grunt.registerTask('merge-extension-translations', 'Merge translations from loaded extensions', () => {
         var {mergeTranslationsFromExtensions} = require('@superdesk/build-tools/src/extensions/translations');
 
         mergeTranslationsFromExtensions(process.cwd());
