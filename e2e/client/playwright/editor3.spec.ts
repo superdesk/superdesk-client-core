@@ -9,23 +9,26 @@ test('can add embeds', async ({page}) => {
 
     const monitoring = new Monitoring(page);
 
-    const requestRoute = 'https://sourcefabric.org';
+    // EmbedInput.tsx calls iframe.ly via jQuery JSONP (`callback=?`), so the
+    // request URL is `//iframe.ly/api/oembed?callback=jQuery_xxx&...`. Intercept
+    // any iframe.ly oembed call, extract the JSONP callback name, and return a
+    // wrapped response with the `html` field that EmbedInput requires.
+    await page.route(/iframe\.ly\/api\/oembed/, async (route) => {
+        const url = new URL(route.request().url());
+        const callback = url.searchParams.get('callback') ?? 'callback';
+        const data = {
+            html: '<iframe src="//cdn.iframe.ly/test" data-test-id="embed-iframe"></iframe>',
+            title: 'Open Source Software for Journalism',
+            description: 'Sourcefabric is Europe\'s largest developer of open source tools for news media.',
+            url: 'https://sourcefabric.org',
+            type: 'link',
+        };
 
-    await page.route(
-        `https://iframe.ly/api/oembed?callback=?&url=
-        ${requestRoute}
-        &api_key="mock_api_key"
-        &omit_script=true&iframe=true`,
-        (route) => {
-            route.fulfill({
-                body: JSON.stringify([{
-                    title: 'Open Source Software for Journalism',
-                    description: 'Sourcefabric is Europe\'s largest developer of '
-                    + 'open source tools for news media, powering news and media organisations around the world.',
-                }]),
-            });
-        },
-    );
+        await route.fulfill({
+            contentType: 'application/javascript',
+            body: `${callback}(${JSON.stringify(data)})`,
+        });
+    });
     await page.goto('/#/workspace/monitoring');
 
     await monitoring.selectDeskOrWorkspace('Sports');
@@ -34,15 +37,16 @@ test('can add embeds', async ({page}) => {
         s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'),
     ).dblclick();
 
-    page.locator(s('toolbar')).getByRole('button', {name: 'Embed'}).click();
+    await page.locator(s('toolbar')).getByRole('button', {name: 'Embed'}).click();
 
     await page.locator(s('embed-form')).getByPlaceholder('Enter URL or code to embed')
         .fill('https://sourcefabric.org');
 
     await page.locator(s('embed-controls', 'submit')).click();
+
     await expect(
-        page.locator(s('authoring', 'authoring-field=body_html')).getByText('https://sourcefabric.org'),
-    ).toBeDefined();
+        page.locator(s('authoring', 'authoring-field=body_html')).locator('.embed-block'),
+    ).toBeVisible();
 });
 
 test('accepting a spelling suggestion', async ({page}) => {
@@ -212,7 +216,7 @@ test('tables maintaining cursor position at the end when executing "undo" action
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('foo', {delay: 100});
 
-    await page.keyboard.press('Control+z'); // undo last character
+    await page.keyboard.press('Control+z');
 
     await page.locator(s('authoring', 'authoring-field=body_html', 'table-block'))
         .locator('[contenteditable]').first().pressSequentially('bar', {delay: 100});
@@ -266,7 +270,6 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
 
     await page.getByRole('button', {name: 'Add New'}).click();
 
-    // Input sample data
     await page.locator(s('vocabulary-edit-content')).getByLabel('Id').fill('custom_blocks_2');
 
     await page.locator(s('vocabulary-edit-content')).getByLabel('Name').fill('Custom blocks 2');
@@ -283,20 +286,22 @@ test('configuring a vocabulary for custom blocks', async ({page}) => {
     await page.locator(s('editor3')).getByText('test data').click();
     await page.locator(s('editor3', 'formatting-option=h1')).click();
 
-    // Save editor block
     await page.locator(s('vocabulary-edit-footer')).getByRole('button', {name: 'Save'}).click();
 
     await expect(page.locator(s('vocabulary-edit-content'))).not.toBeVisible(); // wait for saving to finish
 
-    // Edit custom block
+    // Re-open the saved block and verify formatting + sample text persisted
     await page.locator(s('vocabulary-item=Custom blocks 2')).hover();
     await page.locator(s('vocabulary-item=Custom blocks 2', 'vocabulary-item--start-editing')).click();
 
-    // Check if formatting option, sample text data
     await expect(page.locator(s('editor3', 'formatting-option=h1'))).toBeVisible();
     await expect(page.locator(s('editor3')).getByRole('textbox')).toHaveText('test data');
 });
 
+// Skipped: the TreeMenu popover opened by the toolbar "Custom block" IconButton
+// (scripts/core/editor3/components/toolbar/index.tsx) does not render after the
+// click — `tree-menu-popover` never appears in the DOM. Suspected regression
+// from PR #4777 (soft-newline + <Spacer> wrapper changes to Editor3Component).
 test.skip('adding a custom block inside editor3', async ({page}) => {
     const monitoring = new Monitoring(page);
 

@@ -22,18 +22,14 @@ test.describe('login', () => {
         await page.locator(s('login-page', 'password')).fill('admin');
         await page.locator(s('login-page', 'submit')).click();
 
-        // Wait for navigation to workspace
         await expect(page.locator(s('dashboard'))).toBeVisible();
         await expect(page).toHaveURL(/.*\/#\/workspace/);
 
-        // Check current user
         await page.locator(s('my-profile')).click();
         await expect(page.locator(s('current-user__username'))).toHaveText('admin');
 
-        // Logout
         await page.getByRole('button', {name: 'Sign out'}).click();
 
-        // Wait for redirect back to login
         await expect(page.locator(s('login-page', 'submit'))).toBeVisible();
     });
 
@@ -44,11 +40,9 @@ test.describe('login', () => {
         await page.locator(s('login-page', 'password')).fill('bar');
         await page.locator(s('login-page', 'submit')).click();
 
-        // Should still be on login page
         await expect(page.locator(s('login-page', 'submit'))).toBeVisible();
         await expect(page).not.toHaveURL(/.*\/#\/workspace/);
 
-        // Check for error message
         await expect(page.locator(s('login-error-401'))).toBeVisible();
     });
 });

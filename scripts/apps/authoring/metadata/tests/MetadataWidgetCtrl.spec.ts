@@ -356,6 +356,7 @@ describe('metadata terms directive', () => {
         iScope.searchTerms('foo');
         expect(iScope.terms.length).toBe(1);
         expect(iScope.activeTree.length).toBe(2);
+        expect(iScope.tree[iScope.terms[0].parent]).toEqual(jasmine.any(Array));
     }));
 
     it('select metadata term from tree type metadata dropdown', inject(() => {
@@ -405,10 +406,12 @@ describe('metadata terms directive', () => {
 
         $rootScope.$digest();
         iScope = elm.isolateScope();
+        iScope.preferredView = 'desk';
         iScope.openTree({name: 'test', qcode: '111'}, event);
         expect(iScope.item[iScope.field].length).toBe(2);
         expect(iScope.activeTree.length).toBe(3);
         expect(iScope.terms.length).toBe(8);
+        expect(iScope.preferredView).toBe(null);
     }));
 });
 

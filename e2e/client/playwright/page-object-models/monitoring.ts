@@ -41,6 +41,45 @@ export class Monitoring {
             .click();
     }
 
+    /**
+     * Opens the 3-dot menu for an article, hovers a submenu parent entry and clicks an inner item.
+     *
+     * AngularJS dropdown submenus only render after the parent receives a mouseenter event,
+     * and the inner items often have an accessible name that mixes an icon glyph with the
+     * visible label (e.g. `MAIN`, `Sports Desk`). `getByRole('button', {name, exact: true})`
+     * is unreliable in that case, so we explicitly re-hover the parent (mouseMove out then in)
+     * to force the submenu to open and locate the inner item by text or by test id.
+     */
+    async executeSubmenuAction(
+        item: Locator,
+        parentLabel: string,
+        innerLabel: string,
+        opts?: {innerByTestId?: string},
+    ): Promise<void> {
+        await item.hover();
+        await item.locator(s('context-menu-button')).click();
+
+        const contextMenu = this.page.locator(s('context-menu'));
+        const parent = contextMenu.getByRole('button', {name: parentLabel, exact: true});
+
+        await parent.hover();
+
+        // mouse-move away then onto the parent to force the AngularJS dropdown to (re)open
+        const box = await parent.boundingBox();
+
+        if (box != null) {
+            await this.page.mouse.move(box.x - 100, box.y - 100);
+        }
+
+        await parent.hover();
+
+        if (opts?.innerByTestId != null) {
+            await this.page.locator(s('context-menu', opts.innerByTestId)).click();
+        } else {
+            await contextMenu.getByText(innerLabel, {exact: true}).click();
+        }
+    }
+
     async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
         for (const selectedArticle of articleNames) {
             await this.page.locator(s(`article-item=${selectedArticle}`, 'item-type-and-multi-select')).hover();
