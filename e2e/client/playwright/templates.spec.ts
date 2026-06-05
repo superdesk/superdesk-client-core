@@ -117,9 +117,12 @@ test('legal-flag toggle on a template persists across edit', async ({page}) => {
     await page.locator(s('template-edit-view')).getByRole('button', {name: 'Save'}).click();
     await expect(page.locator(s('template-edit-view'))).not.toBeVisible();
 
-    // Reload to force a fresh template list — the post-save in-place state
-    // sometimes leaves the actions dropdown unresponsive.
+    // Reload to force a fresh template list. The save above triggers a
+    // template:update websocket event that re-runs fetchTemplates() in
+    // TemplatesDirective; if that fetch resolves mid-click, ng-repeat
+    // re-renders the cards and the Edit button gets detached.
     await page.goto('/#/settings/templates');
+    await page.waitForLoadState('networkidle');
     await page.locator(s('template-content', 'content-template=story 2', 'template-actions')).click();
     await page.locator(s('template-actions--options')).getByRole('button', {name: 'Edit'}).click();
     await page.locator('#template-editor-metadata').click();
