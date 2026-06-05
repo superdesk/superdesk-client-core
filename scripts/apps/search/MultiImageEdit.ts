@@ -73,6 +73,7 @@ export function MultiImageEditController(
             $scope.images.forEach((image) => {
                 image.selected = true;
             });
+            updateMetadata();
         }
     };
 
@@ -81,6 +82,7 @@ export function MultiImageEditController(
             $scope.images.forEach((image) => {
                 image.selected = false;
             });
+            updateMetadata();
         }
     };
 
