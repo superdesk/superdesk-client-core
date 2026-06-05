@@ -139,8 +139,11 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
      * This version works fine and we can still handle our own selection state
      * */
     UNSAFE_componentWillReceiveProps(props: IProps) {
-        if (this.lastComputedValue !== props.value) {
-            this.setState({editorState: updateStateWithValue(props.value || '', this.state.editorState)});
+        const newValue = props.value || '';
+
+        if (this.lastComputedValue !== newValue) {
+            this.lastComputedValue = newValue;
+            this.setState({editorState: updateStateWithValue(newValue, this.state.editorState)});
         }
     }
 

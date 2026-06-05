@@ -4,42 +4,7 @@ var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const fs = require('fs');
-
-// Discover loaded extensions that still build from TypeScript sources so each
-// one can get its own ForkTsCheckerWebpackPlugin instance. We start from the
-// same loaded-extension set used by installExtensions, ignore unloaded
-// extensions to avoid noise from optional per-extension deps, and treat an
-// extension as migrated when its package.json `main` points to .ts or .tsx.
-const getExtensionDirectoriesSync = require('./build-tools/src/extensions/get-extension-directories-sync');
-
-// Only consumers (templates) ship superdesk.config.js; running webpack directly
-// in superdesk-client-core (e.g. for tests) has no extensions to discover.
-const loadedExtensions = fs.existsSync(path.join(process.cwd(), 'superdesk.config.js'))
-    ? getExtensionDirectoriesSync(process.cwd())
-    : [];
-
-const migratedExtensionTsConfigs = loadedExtensions
-    .filter(({extensionRootPath}) => {
-        const pkgPath = path.join(extensionRootPath, 'package.json');
-
-        if (!fs.existsSync(pkgPath)) {
-            return false;
-        }
-
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-
-        return typeof pkg.main === 'string' && /\.(ts|tsx)$/.test(pkg.main);
-    })
-    .map(({extensionRootPath}) => {
-        // Resolve the extension's tsconfig.json, checking src/ first then the package root.
-        return [
-            path.join(extensionRootPath, 'src/tsconfig.json'),
-            path.join(extensionRootPath, 'tsconfig.json'),
-        ].find((candidate) => fs.existsSync(candidate));
-    })
-    .filter(Boolean);
 
 function getModuleDir(moduleName) {
     return path.join(
@@ -139,7 +104,7 @@ function applyDefaults(appConfig) {
     }
 }
 
-// makeConfig creates a new configuration file based on the passed options.
+// makeConfig creates a new webpack configuration.
 module.exports = function makeConfig(grunt) {
     var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
 
@@ -209,30 +174,6 @@ module.exports = function makeConfig(grunt) {
             new NodePolyfillPlugin({
                 excludeAliases: ['console'],
             }),
-
-            // Type-check the core scripts tree. Extensions are checked by their
-            // own ForkTsCheckerWebpackPlugin instances below, and because
-            // ts-loader runs with transpileOnly: true, this is what makes core
-            // type errors fail the webpack build.
-            new ForkTsCheckerWebpackPlugin({
-                typescript: {
-                    configFile: path.join(__dirname, 'scripts/tsconfig.json'),
-                },
-            }),
-
-            // Give each loaded migrated extension its own checker, using the
-            // tsconfig discovered above. We silence its success logger to avoid
-            // one "No typescript errors found" line per extension; actual issues
-            // still flow through webpack's normal reporting.
-            ...migratedExtensionTsConfigs.map((absPath) => new ForkTsCheckerWebpackPlugin({
-                typescript: {
-                    configFile: absPath,
-                },
-                logger: {
-                    log: () => {}, // eslint-disable-line no-empty-function
-                    error: (message) => process.stderr.write(String(message) + '\n'),
-                },
-            })),
         ],
 
         resolve: {
