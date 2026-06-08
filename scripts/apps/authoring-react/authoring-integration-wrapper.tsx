@@ -21,6 +21,9 @@ import {appConfig, extensions} from 'appConfig';
 import {getAuthoringActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
+import ng from 'core/services/ng';
+import {notify} from 'core/notify/notify';
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {
     IActionsInteractiveActionsPanelHOC,
     IStateInteractiveActionsPanelHOC,
@@ -486,13 +489,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         label: spellchecker.enabled
                                             ? gettext('Disable spellchecker')
                                             : gettext('Enable spellchecker'),
+                                        groupId: 'spellchecker',
                                         onTrigger: () => {
                                             spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
-                                        },
-                                        keyBindings: {
-                                            'ctrl+shift+y': () => {
-                                                spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
-                                            },
                                         },
                                     } satisfies IAuthoringAction;
                                 }
@@ -500,10 +499,51 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 return null;
                             };
 
+                            const getCheckSpellingAction = (): IAuthoringAction | null => {
+                                if (appConfig.features.useTansaProofing === true) {
+                                    return null;
+                                }
+
+                                const runCheck = () => {
+                                    // Must match the editor3 `getLanguage` fallback, or this can
+                                    // report "no dictionary" while the editor spellchecks with 'en'.
+                                    const language = getLatestItem().language ?? 'en';
+                                    const spellcheck = ng.get('spellcheck');
+                                    const dictAvailable =
+                                        spellcheck.isActiveDictionary
+                                        || getSpellchecker(language) != null;
+
+                                    if (!dictAvailable) {
+                                        notify.error(gettext('No dictionary available for spell checking.'));
+                                        return;
+                                    }
+
+                                    // Mirrors legacy SpellcheckMenuController.runSpellchecker: enables
+                                    // auto-mode and re-runs the check. Calling with `true` when already
+                                    // enabled re-dispatches the editor3 spellcheck via the existing event.
+                                    spellchecker.setSpellcheckerStatus(true);
+                                };
+
+                                return {
+                                    label: gettext('Check spelling'),
+                                    groupId: 'spellchecker',
+                                    onTrigger: runCheck,
+                                    keyBindings: {
+                                        'ctrl+shift+y': runCheck,
+                                    },
+                                } satisfies IAuthoringAction;
+                            };
+
                             const spellcheckerAction = getSpellcheckerAction();
 
                             if (spellcheckerAction != null) {
                                 actions.push(spellcheckerAction);
+                            }
+
+                            const checkSpellingAction = getCheckSpellingAction();
+
+                            if (checkSpellingAction != null) {
+                                actions.push(checkSpellingAction);
                             }
 
                             return actions;
