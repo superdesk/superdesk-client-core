@@ -17,6 +17,7 @@ interface IScope extends ng.IScope {
     metadata: any;
     save: any;
     close: any;
+    schemaLoading: boolean;
     getSelectedImages(): Array<any>;
     saveHandler(images): Promise<void>;
     successHandler?(): void;
@@ -72,6 +73,7 @@ export function MultiImageEditController(
             $scope.images.forEach((image) => {
                 image.selected = true;
             });
+            updateMetadata();
         }
     };
 
@@ -80,6 +82,7 @@ export function MultiImageEditController(
             $scope.images.forEach((image) => {
                 image.selected = false;
             });
+            updateMetadata();
         }
     };
 
@@ -134,6 +137,18 @@ export function MultiImageEditController(
         getLabelForFieldId = _getLabelForFieldId;
     });
 
+    let schema = {};
+
+    $scope.schemaLoading = true;
+
+    content.getType('picture').then((pictureSchema) => {
+        schema = pictureSchema;
+    }, (error) => {
+        logger.warn('Failed to load picture schema', error);
+    }).finally(() => {
+        $scope.schemaLoading = false;
+    });
+
     $scope.save = (close) => {
         const imagesForSaving = angular.copy($scope.images);
 
@@ -146,7 +161,7 @@ export function MultiImageEditController(
                 validateMediaFieldsThrows(
                     $scope.validator,
                     metadata,
-                    content.schema({}, 'picture'),
+                    content.schema(schema, 'picture'),
                     getLabelForFieldId);
             });
         } catch (e) {

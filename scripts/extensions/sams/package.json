@@ -1,13 +1,10 @@
 {
   "private": true,
-  "main": "dist/src/extension.js",
+  "main": "src/extension.ts",
   "scripts": {
-    "compile": "tsc -p src",
-    "compile-e2e": "echo 'No end-to-end tests defined'",
-    "watch": "tsc -watch -p src"
+    "compile-e2e": "echo 'No end-to-end tests defined'"
   },
   "dependencies": {
-    "@sourcefabric/common": "0.0.66",
     "reselect": "~4.0.0"
   },
   "devDependencies": {
@@ -20,10 +17,11 @@
     "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "react": "^16.9.0",
-    "superdesk-ui-framework": "4.0.47",
-    "classnames": "^2.2.5",
-    "lodash": "^4.17.5",
-    "json-merge-patch": "0.2.3"
+    "@sourcefabric/common": "*",
+    "react": "*",
+    "superdesk-ui-framework": "*",
+    "classnames": "*",
+    "lodash": "*",
+    "json-merge-patch": "*"
   }
 }

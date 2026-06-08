@@ -2,6 +2,7 @@ import React, {CSSProperties} from 'react';
 import {ContentBlock, ContentState} from 'draft-js';
 import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 import {THIN_SPACE_CHAR} from 'core/editor3/constants';
+import {gettext} from 'core/utils';
 
 class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
     render() {
@@ -28,7 +29,7 @@ class ThinSpaceComponent extends React.Component<IPropsDraftDecorator> {
             <span
                 className="whitespace-pre text-sm font-bold place-items-center"
                 style={wrapperStyle}
-                title="Thin space"
+                title={gettext('Thin space')}
             >
                 <span style={contentStyle}>{this.props.children}</span>
                 <span

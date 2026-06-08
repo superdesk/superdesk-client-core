@@ -5,8 +5,8 @@
                 <div class="flat-searchbar extended">
                     <div class="search-handler" role="search">
                         <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
-                        <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
-                        <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}" aria-label="{{ :: 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
+                        <input id="search-input" data-test-id="search" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
+                        <button class="search-close" data-test-id="search-close" ng-click="search(query = null)" ng-class="{visible: query}" aria-label="{{ :: 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
                     </div>
                 </div>
 

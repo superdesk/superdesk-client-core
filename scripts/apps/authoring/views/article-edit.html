@@ -68,7 +68,7 @@
             ng-model="item.sms_message"
             ng-change="autosave(item)"
             ng-disabled="!_editable || schema.sms.readonly === true"
-            placeholder="Add sms message here"
+            placeholder="{{ 'Add sms message here' | translate }}"
             sd-focus-element
             sd-auto-height
             data-append-element=".field"
@@ -201,7 +201,7 @@
              data-item="item"
              data-fieldprefix="dateline"
              data-field="located"
-             placeholder="Add location"
+             placeholder="{{ 'Add location' | translate }}"
              data-postprocessing="updateDateline(item, city)"
              sd-focus-element
              data-element="input"
@@ -216,7 +216,7 @@
                     tabindex="{{editor.dateline.order}}"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="resetNumberOfDays(true, dateline.month)"
-                    placeholder="Choose month"
+                    placeholder="{{ 'Choose month' | translate }}"
                     ng-model="dateline.month"
                     sd-focus-element
                     data-append-element=".field"
@@ -231,7 +231,7 @@
                     ng-options="day for day in daysInMonth"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="modifyDatelineDate(dateline.day)"
-                    placeholder="Choose day"
+                    placeholder="{{ 'Choose day' | translate }}"
                     ng-model="dateline.day"
                     sd-focus-element
                     tabindex="{{editor.dateline.order}}"
@@ -460,14 +460,15 @@
         <i class="icon-lock" ng-hide="editSignOff" aria-label="{{ 'Locked' | translate}}"></i>
         <i class="icon-unlocked" ng-show="editSignOff" aria-label="{{ 'Unlocked' | translate}}"></i>
     </button>
-    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off">{{item.sign_off}}</div>
+    <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off" data-test-id="sign-off-value">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
            class="byline"
            id="sign_off"
+           data-test-id="sign-off-input"
            ng-model="item.sign_off"
            ng-change="autosave(item)"
            ng-show="editSignOff"
-           placeholder="Sign off"
+           placeholder="{{ 'Sign off' | translate }}"
            sd-focus-element
            data-append-element=".field"
            data-append-class="active"

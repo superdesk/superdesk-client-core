@@ -52,7 +52,7 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                             {!pinned && (
                                 <IconButton
                                     icon="close-small"
-                                    ariaValue="Close"
+                                    ariaValue={gettext('Close')}
                                     onClick={() => this.props.closeWidget()}
                                 />
                             )}

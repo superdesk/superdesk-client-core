@@ -235,7 +235,7 @@
                                     <select class="sd-input__select" ng-focus="focused()" ng-model="user.language" name="user_language" id="user_language" ng-options="lang.code as lang.nativeName for lang in languages"></select>
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">
-                                            <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank">{{ :: "Help us translate Superdesk" | translate }}</a>
+                                            <a href="https://explore.transifex.com/sourcefabric/superdesk/" target="_blank" rel="noopener noreferrer">{{ :: "Help us translate Superdesk" | translate }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -252,7 +252,7 @@
                             <div class="form__item">
                                 <div class="sd-input">
                                     <label class="sd-input__label" for="sign_off" translate>Sign-Off</label>
-                                    <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern">
+                                    <input class="sd-input__input" type="text" name="sign_off" id="sign_off" ng-model="user.sign_off" ng-pattern="signOffPattern" data-test-id="field--sign_off">
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__message" ng-show="userForm.sign_off.$error.pattern || error.sign_off" sd-valid-info>
                                             <span translate>Invalid format. Only Alphanumerics are allowed.</span>

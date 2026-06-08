@@ -106,7 +106,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                             <input
                                                 className="sd-inset-search__input"
                                                 type="text"
-                                                placeholder="Search desk"
+                                                placeholder={gettext('Search desk')}
                                                 value={this.state.desk}
                                                 onChange={this.handleDeskChange}
                                             />

@@ -150,6 +150,7 @@ export function updateDecorators(
         limitConfig: stateCurrent.limitConfig,
         softLimitConfig: stateCurrent.softLimitConfig,
         invisibles: stateCurrent?.invisibles,
+        editorState: {current: stateCurrent.editorState, next: editorStateNext},
     });
 
     if (result.mustReApplyDecorators !== true) {

@@ -473,7 +473,7 @@ export function SearchResults(
                                     processPreview(item);
                                 }
                             }, (error) => {
-                                notify.error('Detailed informations is not found for the item : ' + item.guid);
+                                notify.error(gettext('Detailed information is not found for the item : ') + item.guid);
                                 processPreview(item);
                             });
                         } else {

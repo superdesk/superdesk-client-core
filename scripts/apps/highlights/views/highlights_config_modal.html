@@ -11,13 +11,13 @@
                         <label class="sd-line-input__label">{{'Configuration name' | translate}}</label>
                         <input class="sd-line-input__input" type="text"  ng-model="configEdit.name"  ng-keyup="handleEdit($event);" aria-label="{{'Configuration name' | translate}}" required>
                         <div class="sd-line-input__char-count" sd-character-count data-item="configEdit.name" data-limit="limits.highlight"></div>
-                        <div ng-show="_errorLimits" class="sd-line-input__message sd-line-input__message--with-char-count"><span translate>Character limit exceeded, highlight can not be created/updated.</span></div>
-                        <div ng-show="_errorUniqueness" class="sd-line-input__message"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</div>
+                        <div ng-show="_errorLimits" data-test-id="error-limits" class="sd-line-input__message sd-line-input__message--with-char-count"><span translate>Character limit exceeded, highlight can not be created/updated.</span></div>
+                        <div ng-show="_errorUniqueness" data-test-id="error-uniqueness" class="sd-line-input__message"><span translate>Highlight with name</span> "{{ configEdit.name }}" <span translate>already exists</span>.</div>
                     </div>
 
                 <div class="sd-line-input sd-line-input--is-select">
                     <label class="sd-line-input__label">{{'Template' | translate}}</label>
-                    <select class="sd-line-input__select"ng-model="configEdit.template" name="template" id="template">
+                    <select class="sd-line-input__select" data-test-id="template-select" ng-model="configEdit.template" name="template" id="template">
                             <option id="default" value="" ng-selected="!configEdit.template" translate>default template</option>
                             <option id="{{template.template_name}}" ng-repeat="template in templates" value="{{template._id}}" ng-selected="configEdit.template === template._id">{{ template.template_name }}</option>
                     </select>

@@ -78,7 +78,7 @@ export function CardsService(search, session, desks) {
 
         if (card.type === 'spike' || card.type === 'spike-personal') {
             params.spike = 'only';
-        } else if (card.type === 'personal' && card.sent) {
+        } else if (card.type === 'sent') {
             params.spike = 'include';
         } else if (card.type === 'sentDeskOutput') {
             params.spike = 'include';
@@ -141,7 +141,10 @@ export function CardsService(search, session, desks) {
             case SENT_OUTPUT:
                 deskId = card._id.substring(0, card._id.indexOf(':'));
                 query.filter({bool: {
-                    filter: {term: {'task.desk_history': deskId}},
+                    must: [
+                        {term: {'task.desk_history': deskId}},
+                        {exists: {field: 'task.desk'}},
+                    ],
                     must_not: {term: {'task.desk': deskId}},
                 }});
                 break;

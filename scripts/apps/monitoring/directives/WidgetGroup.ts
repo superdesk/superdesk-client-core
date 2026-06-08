@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import {WidgetItemList as WidgetItemListComponent} from 'apps/search/components';
 import {IActivityService} from 'core/activity/activity';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 WidgetGroup.$inject = [
     'search',
@@ -66,7 +67,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             };
 
             scope.preview = function(item) {
-                superdesk.intent('preview', 'item', item);
+                previewItems([item]);
             };
 
             scope.edit = function(item) {

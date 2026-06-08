@@ -18,7 +18,7 @@
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
             <div>
-                <i class="filetype-icon-{{ :: item.type}}" title="{{getArticleTypeLabel(item)}}"></i>
+                <i class="filetype-icon-{{ :: item.type}}" title="{{getArticleTypeLabel(item)}}" data-test-id="item-type-icon" data-test-value="{{ :: item.type }}"></i>
             </div>
             <div ng-if="item.profile && !change_profile">
                 <span class="authoring-header__label" translate>PROFILE</span>
@@ -450,37 +450,39 @@
             </div>
 
             <!-- custom text editor fields -->
-            <div
+            <div class="authoring-header__item"
                 ng-repeat="field in fields track by field._id"
                 ng-if="field.field_type === 'text' && editor[field._id].section === 'header'"
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 order="{{ editor[field._id].order }}"
                 ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
             >
-                <div sd-editor3
-                    data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
-                    data-single-line="field.field_options.single"
-                    data-value="item.extra[field._id]"
-                    data-bind-to-value="compareView"
-                    data-scroll-container=".page-content-container--scrollable"
-                    data-language="item.language"
-                    data-on-change="autosave(item)"
-                    data-read-only="!_editable || schema[field._id].readonly === true"
-                    data-editor-format="editor[field._id].formatOptions"
-                    data-item="item"
-                    data-refresh-trigger="refreshTrigger"
-                    data-tabindex="editor[field._id].order"
-                    data-limit="schema[field._id].maxlength"
-                    data-soft-limit="editor[field._id].maxSoftLength"
-                    data-show-floating-count="editor[field._id].showFloatingCount"
-                    data-header-styles="true"
-                    data-helper-text="field.helper_text"
-                    data-field-id="field._id"
-                    data-field-label="field.display_name"
-                    data-required="schema[field._id].required"
-                    data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
-                    data-validate-characters="schema[field._id].validate_characters"
-                ></div>
+                <div class="authoring-header__input-holder">
+                    <div sd-editor3
+                        data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
+                        data-single-line="field.field_options.single"
+                        data-value="item.extra[field._id]"
+                        data-bind-to-value="compareView"
+                        data-scroll-container=".page-content-container--scrollable"
+                        data-language="item.language"
+                        data-on-change="autosave(item)"
+                        data-read-only="!_editable || schema[field._id].readonly === true"
+                        data-editor-format="editor[field._id].formatOptions"
+                        data-item="item"
+                        data-refresh-trigger="refreshTrigger"
+                        data-tabindex="editor[field._id].order"
+                        data-limit="schema[field._id].maxlength"
+                        data-soft-limit="editor[field._id].maxSoftLength"
+                        data-show-floating-count="editor[field._id].showFloatingCount"
+                        data-header-styles="true"
+                        data-helper-text="field.helper_text"
+                        data-field-id="field._id"
+                        data-field-label="field.display_name"
+                        data-required="schema[field._id].required"
+                        data-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
+                        data-validate-characters="schema[field._id].validate_characters"
+                    ></div>
+                </div>
             </div>
 
             <!-- custom date editor fields -->

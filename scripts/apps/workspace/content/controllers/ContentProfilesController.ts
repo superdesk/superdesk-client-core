@@ -285,7 +285,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @description Queries the user for confirmation and deletes the content profile.
      */
     this.delete = function(item) {
-        modal.confirm('Are you sure you want to delete this profile?').then(() => {
+        modal.confirm(gettext('Are you sure you want to delete this profile?')).then(() => {
             content.removeProfile(item)
                 .then(refreshList.bind(this, false), reportError)
                 .then(this.toggleEdit.bind(this, null));

@@ -14,7 +14,7 @@
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate data-test-id="multi-image-edit--start-upload">Upload</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length || schemaLoading === true" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
 </div>
 
@@ -53,7 +53,13 @@
                                     style="display: flex; align-items: center; justify-content: center;">
                                 </div>
 
-                                <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="{{'Remove item' | translate}}" flow="left">
+                                <a
+                                    ng-if="onRemoveItem"
+                                    class="icn-btn sd-grid-item__remove"
+                                    sd-tooltip="{{'Remove item' | translate}}"
+                                    flow="left"
+                                    ng-click="onRemoveItem(image)"
+                                >
                                     <i class="icon-close-small"></i>
                                 </a>
 

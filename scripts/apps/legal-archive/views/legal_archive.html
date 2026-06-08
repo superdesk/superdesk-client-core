@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div id="item-preview" class="preview-pane content-item-preview" ng-show="selected.preview" ng-init="tab = 'content'">
+            <div id="item-preview" class="preview-pane content-item-preview" ng-show="selected.preview" ng-init="tab = 'content'" data-test-id="item-preview">
                 <header>
                     <ul class="nav nav-tabs">
                         <li ng-class="{
@@ -127,7 +127,7 @@
                             <button ng-click="tab = 'history'"><span translate>Item history</span></button>
                         </li>
                     </ul>
-                    <button ng-click="preview(null)" class="icn-btn close-preview">
+                    <button ng-click="preview(null)" class="icn-btn close-preview" data-test-id="close-preview">
                         <i class="icon-close-small"></i>
                     </button>
                 </header>
