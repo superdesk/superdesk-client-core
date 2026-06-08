@@ -83,7 +83,7 @@
     "htmldiff-js": "github:superdesk/htmldiff-js#master",
     "immer": "^10.1.1",
     "immutable": "3.8.3",
-    "jquery": "3.3.1",
+    "jquery": "4.0.0",
     "jquery-jcrop": "0.9.13",
     "jquery-ui": "github:superdesk/jqueryui#1.12.1",
     "json-merge-patch": "0.2.3",
