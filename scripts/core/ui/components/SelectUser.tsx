@@ -103,7 +103,11 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                         : (
                             <Wrapper>
                                 <Spacer h gap="8" justifyContent="start" noGrow>
-                                    <UserAvatar size="x-small" user={user} displayStatus={this.props.displayStatus ?? true} />
+                                    <UserAvatar
+                                        size="x-small"
+                                        user={user}
+                                        displayStatus={this.props.displayStatus ?? true}
+                                    />
                                     {user.display_name}
                                 </Spacer>
                             </Wrapper>
