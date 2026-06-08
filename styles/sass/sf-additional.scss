@@ -2519,3 +2519,7 @@ sd-multi-image-edit {
 .sd-flex--nowrap {
     flex-wrap: nowrap !important;
 }
+
+.sd-avatar {
+    flex-shrink: 0;
+}
