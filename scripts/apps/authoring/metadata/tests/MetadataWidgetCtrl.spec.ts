@@ -114,6 +114,7 @@ describe('metadata terms directive', () => {
     itemSubjects = [{name: 'b', qcode: '456', parent: '123'}, {name: 'test', qcode: '111'}];
 
     beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.core.filters'));
     beforeEach(window.module('superdesk.apps.publish'));
@@ -412,6 +413,34 @@ describe('metadata terms directive', () => {
         expect(iScope.activeTree.length).toBe(3);
         expect(iScope.terms.length).toBe(8);
         expect(iScope.preferredView).toBe(null);
+    }));
+
+    it('resets dropdown state only when the dropdown closes after being open', inject(($rootScope, $compile) => {
+        var scope = $rootScope.$new(),
+            elm;
+
+        scope.open = false;
+        scope.resetDropdownState = jasmine.createSpy('resetDropdownState');
+
+        elm = $compile(
+            '<div dropdown sd-dropdown-focus is-open="open">' +
+                '<button class="dropdown__toggle" dropdown__toggle></button>' +
+                '<ul class="dropdown__menu"><li><button type="button">Item</button></li></ul>' +
+            '</div>',
+        )(scope);
+
+        scope.$digest();
+        expect(scope.resetDropdownState).not.toHaveBeenCalled();
+
+        scope.open = true;
+        scope.$digest();
+        expect(scope.resetDropdownState).not.toHaveBeenCalled();
+
+        scope.open = false;
+        scope.$digest();
+        expect(scope.resetDropdownState).toHaveBeenCalledTimes(1);
+
+        elm.remove();
     }));
 });
 

@@ -294,7 +294,7 @@ function MetadropdownFocusDirective(keyboardManager) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
-            scope.$watch(dropdown.isOpen, (isOpen) => {
+            scope.$watch(dropdown.isOpen, (isOpen, oldIsOpen) => {
                 if (isOpen) {
                     _.defer(() => {
                         var keyboardOptions = {inputDisabled: false, propagate: false};
@@ -332,6 +332,10 @@ function MetadropdownFocusDirective(keyboardManager) {
                 } else if (isOpen === false) {
                     keyboardManager.pop('down');
                     keyboardManager.pop('up');
+
+                    if (oldIsOpen === true && typeof scope.resetDropdownState === 'function') {
+                        scope.resetDropdownState();
+                    }
                 }
             });
         },
