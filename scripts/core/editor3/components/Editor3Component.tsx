@@ -190,6 +190,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     resizeObserver: ResizeObserver;
 
     private removeListeners: Array<() => void> = [];
+    private scrollCaretIntoViewFrame: number | null = null;
 
     private spellcheckAbortController: AbortController;
     private scheduleSpellchecking: () => void;
@@ -561,6 +562,11 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
         this.removeListeners.push(
             addInternalEventListener('editor3SpellcheckerActionWasExecuted', this.spellcheck),
         );
+
+        // `input` covers typing/deletion/paste; `keyup` covers caret-only movement
+        // via arrow keys. Both fire after DraftJS has reconciled the selection.
+        this.div?.addEventListener('input', this.scrollCaretIntoView);
+        this.div?.addEventListener('keyup', this.scrollCaretIntoView);
     }
 
     handleRefs(editor: IEditor3) {
@@ -578,12 +584,55 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
     componentWillUnmount() {
         $(this.div).off();
 
+        this.div?.removeEventListener('input', this.scrollCaretIntoView);
+        this.div?.removeEventListener('keyup', this.scrollCaretIntoView);
+
+        if (this.scrollCaretIntoViewFrame != null) {
+            window.cancelAnimationFrame(this.scrollCaretIntoViewFrame);
+            this.scrollCaretIntoViewFrame = null;
+        }
+
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
 
         for (const fn of this.removeListeners) {
             fn();
         }
     }
+
+    // DraftJS reconstructs the selection after each render, so the browser's native
+    // caret scrolling is unreliable. Scroll the nearest Draft block into view on the
+    // next frame so typing and caret movement stay aligned.
+    private scrollCaretIntoView = () => {
+        const focusNode = window.getSelection()?.focusNode;
+
+        if (focusNode == null || !this.div?.contains(focusNode)) {
+            return;
+        }
+
+        const caretContainer = focusNode.nodeType === Node.TEXT_NODE
+            ? focusNode.parentElement
+            : focusNode instanceof Element
+                ? focusNode
+                : null;
+
+        if (caretContainer == null) {
+            return;
+        }
+
+        if (this.scrollCaretIntoViewFrame != null) {
+            window.cancelAnimationFrame(this.scrollCaretIntoViewFrame);
+        }
+
+        this.scrollCaretIntoViewFrame = window.requestAnimationFrame(() => {
+            this.scrollCaretIntoViewFrame = null;
+
+            if (this.div != null && this.div.contains(caretContainer)) {
+                const block = caretContainer.closest('[data-block="true"]') ?? caretContainer;
+
+                block.scrollIntoView({block: 'nearest', inline: 'nearest'});
+            }
+        });
+    };
 
     componentDidUpdate(prevProps: IPropsEditor3Component) {
         if (window.hasOwnProperty('instgrm')) {
