@@ -413,7 +413,6 @@ describe('metadata terms directive', () => {
         expect(iScope.terms.length).toBe(8);
         expect(iScope.preferredView).toBe(null);
     }));
-
 });
 
 describe('dateline dropdown', () => {
