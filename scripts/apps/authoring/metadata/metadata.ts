@@ -294,7 +294,7 @@ function MetadropdownFocusDirective(keyboardManager) {
     return {
         require: 'dropdown',
         link: function(scope, elem, attrs, dropdown) {
-            scope.$watch(dropdown.isOpen, (isOpen, oldIsOpen) => {
+            scope.$watch(dropdown.isOpen, (isOpen) => {
                 if (isOpen) {
                     _.defer(() => {
                         var keyboardOptions = {inputDisabled: false, propagate: false};
@@ -332,10 +332,6 @@ function MetadropdownFocusDirective(keyboardManager) {
                 } else if (isOpen === false) {
                     keyboardManager.pop('down');
                     keyboardManager.pop('up');
-
-                    if (oldIsOpen === true && typeof scope.resetDropdownState === 'function') {
-                        scope.resetDropdownState();
-                    }
                 }
             });
         },
@@ -984,6 +980,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeTree = scope.tree.null;
                 setPreferredItems();
                 scope.searchTerms();
+            };
+
+            scope.onDropdownToggle = function(isOpen) {
+                if (isOpen === false) {
+                    scope.resetDropdownState();
+                }
             };
 
             function setPreferredItems() {
