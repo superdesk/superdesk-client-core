@@ -4,6 +4,7 @@ import {showPrintableModal} from 'core/services/modalService';
 import {PreviewAuthoringItem} from './preview-authoring-item';
 import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
+import {formatDate} from 'core/get-superdesk-api-implementation';
 
 export function previewAuthoringEntity(
     item: any,
@@ -43,12 +44,28 @@ export function previewAuthoringEntity(
                 </React.Fragment>
             )}
             contentSections={[
-                <PreviewAuthoringItem
-                    key="0"
-                    item={item}
-                    profile={profile}
-                    fieldsData={fieldsData}
-                />,
+                <React.Fragment key="0">
+                    {item.versioncreated != null && (
+                        <div className="css-table" data-test-id="print-preview-last-modified">
+                            <div className="tr">
+                                <div className="td" style={{paddingBlockEnd: 4}}>
+                                    <span className="form-label">{gettext('Last modified')}</span>
+                                </div>
+                                <div className="td" style={{paddingInlineStart: 30, paddingBlockEnd: 4}}>
+                                    {formatDate(new Date(item.versioncreated))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <br />
+
+                    <PreviewAuthoringItem
+                        item={item}
+                        profile={profile}
+                        fieldsData={fieldsData}
+                    />
+                </React.Fragment>,
             ]}
         />
     ));
