@@ -2,6 +2,7 @@ import React from 'react';
 import {Map} from 'immutable';
 import {IContentProfileV2} from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 import {getField} from 'apps/fields';
 
 interface IProps {
@@ -17,7 +18,7 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
         const allFields = profile.header.merge(profile.content);
 
         return (
-            <Spacer v gap="16" noWrap>
+            <Spacer v gap="16" noWrap data-test-id="print-preview">
                 {
                     allFields.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
@@ -32,11 +33,14 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
                                 </span>
 
                                 <div>
-                                    <FieldEditorConfig.previewComponent
-                                        item={this.props.item}
-                                        value={fieldsData.get(field.id)}
-                                        config={field.fieldConfig}
-                                    />
+                                    {/* A single misbehaving field preview must not blank the whole document. */}
+                                    <ErrorBoundary>
+                                        <FieldEditorConfig.previewComponent
+                                            item={this.props.item}
+                                            value={fieldsData.get(field.id)}
+                                            config={field.fieldConfig}
+                                        />
+                                    </ErrorBoundary>
                                 </div>
                             </div>
                         );
