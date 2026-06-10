@@ -982,6 +982,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.searchTerms();
             };
 
+            scope.onDropdownToggle = function(isOpen) {
+                if (isOpen === false) {
+                    scope.resetDropdownState();
+                }
+            };
+
             function setPreferredItems() {
                 scope.preferredView = null;
                 scope.userPreferredItems = [];
