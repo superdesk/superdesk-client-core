@@ -18,7 +18,7 @@ export class Preview extends React.PureComponent<IProps> {
                             <div>{url}</div>
 
                             {
-                                description.length > 0 && (
+                                (description ?? '').length > 0 && (
                                     <div>{description}</div>
                                 )
                             }
