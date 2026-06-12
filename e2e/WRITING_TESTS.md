@@ -1,0 +1,227 @@
+# Writing end-to-end tests for superdesk-client-core
+
+How to write a Playwright end-to-end test in this repo. Read this before
+authoring a spec. A companion doc exists in `superdesk-planning`; the two share
+most conventions but differ in auth and state-reset, so do not copy planning's
+patterns verbatim here.
+
+## TL;DR
+
+Every new spec:
+
+- Lives flat under `e2e/client/playwright/` as `<scenario>.spec.ts` with a
+  descriptive hyphenated name (`article-send-to.spec.ts`).
+- Selects elements with `page.getByTestId('...')` and locator chaining. Never
+  the legacy `s()` helper (see "Selectors" for why, and what to do when you
+  copy an existing spec that uses it).
+- Starts logged in via the committed `storageState`. No `login()` call unless
+  the spec needs a non-default user or exercises the login flow itself.
+- Resets state with `await restoreDatabaseSnapshot()` at the start of any test
+  that mutates server data.
+- Reuses Page Objects from `playwright/page-object-models/`.
+- Asserts with web-first assertions (`await expect(locator).toBeVisible()`).
+  Never `page.waitForTimeout(...)`.
+
+## Where specs and helpers live
+
+```
+e2e/client/playwright/
+├── <scenario>.spec.ts          <- specs are flat here, hyphenated names
+├── page-object-models/
+│   └── <feature>.ts            <- Page Object classes (Authoring, Monitoring, ...)
+└── utils/
+    ├── index.ts                <- restoreDatabaseSnapshot, login, helpers
+    └── storage-state.ts        <- getStorageState
+```
+
+- Specs are flat files directly under `playwright/`. Do not create
+  `<feature>/` subdirectories for specs. Name the file after the user-visible
+  behaviour: `assign-coverage.spec.ts`, not `test1.spec.ts` or `bug-123.spec.ts`.
+- Page Objects live in `playwright/page-object-models/<feature>.ts`, one class
+  per feature area, methods named after user-facing operations.
+- Import helpers and Page Objects with local relative paths:
+  ```ts
+  import {restoreDatabaseSnapshot} from './utils';
+  import {Monitoring} from './page-object-models/monitoring';
+  ```
+  There is no published helpers package. Do not import from
+  `@superdesk/end-to-end-testing-helpers` or any `@superdesk/...` path for e2e
+  helpers; it does not exist.
+
+## Selectors
+
+The Playwright config sets `testIdAttribute: 'data-test-id'`, so `getByTestId`
+matches Superdesk's `data-test-id` attributes directly.
+
+### Primary selector: `getByTestId` with chaining
+
+```ts
+await page.getByTestId('save-button').click();
+
+// "the child inside this specific parent": chain, do not build a CSS string
+await page.getByTestId('action-bar').getByTestId('save').click();
+```
+
+### Do not use `s()` in new specs
+
+Most existing specs use a local helper `s('a', 'b')` that builds a CSS selector
+string (`[data-test-id="a"] [data-test-id="b"]`) passed to `page.locator(...)`.
+It still works, but new specs use `getByTestId` instead, because:
+
+- It is the standard, documented Playwright API. QA and AI agents can look it up.
+- `planning` already uses it, so both repos share one idiom.
+- It returns a real Locator that composes with `.filter()`, `.and()`, `.nth()`.
+
+When you copy an existing spec for structure (see "Reference specs"), translate
+its `s()` selectors to `getByTestId`. Do not carry `s()` into a new spec.
+
+Translation reference:
+
+| Legacy `s()` | Native equivalent |
+|---|---|
+| `s('save-button')` | `page.getByTestId('save-button')` |
+| `s('action-bar', 'save')` | `page.getByTestId('action-bar').getByTestId('save')` |
+| `s('article-item=story 2')` | `page.getByTestId('article-item').filter({hasText: 'story 2'})` when the value is visible text, otherwise `page.getByTestId('article-item').and(page.locator('[data-test-value="story 2"]'))` |
+
+The value-matched case (`s('id=value')`, which matches `data-test-value`) is
+more verbose natively. Prefer `.filter({hasText})` when the value is the visible
+text of the element (it is substring-based and whitespace-tolerant, so it is
+also more robust than the old exact-attribute match). Fall back to
+`.and(page.locator('[data-test-value="..."]'))` only when the value is a
+non-text attribute.
+
+### What not to use for primary selectors
+
+- CSS class chains (`.sd-list-item .item-title`): brittle, drift-prone.
+- Text matching for actionable elements (buttons, links): breaks under
+  localization.
+- XPath.
+
+### Fine for assertions
+
+- `getByRole('button', {name: '...'})` for accessibility-shape checks.
+- `getByText(...)` / `toHaveText(...)` for asserting user-facing copy.
+- Text matching where the text itself is the behaviour under test (a toast
+  message, a validation error).
+
+## Authentication
+
+The browser starts logged in as the default admin user via a committed
+`storageState` file (`playwright/.auth/user.json`), wired into the Playwright
+config's project. That session is valid because it is also present in the `main`
+database snapshot that `restoreDatabaseSnapshot()` restores. Most specs need no
+login step.
+
+To override application config while keeping the auth session, use
+`getStorageState`:
+
+```ts
+import {getStorageState} from './utils/storage-state';
+
+test.use({storageState: getStorageState({featureName: true})});
+```
+
+Exceptions that do need an explicit login:
+
+- A different user role, or exercising the login flow itself. The repo has a
+  `login(page)` helper in `./utils`, but note it is currently `s()`-based legacy
+  code. If you write a new spec that needs a fresh login, prefer driving the
+  login form with `getByTestId` directly rather than extending the legacy helper.
+
+## State reset
+
+If a test creates, edits, or deletes server data, restore the base snapshot
+first:
+
+```ts
+import {restoreDatabaseSnapshot} from './utils';
+
+test('sends an article to another desk', async ({page}) => {
+    await restoreDatabaseSnapshot();          // restores the 'main' snapshot
+    await page.goto('/#/workspace/monitoring');
+    // ...
+});
+```
+
+- `restoreDatabaseSnapshot()` defaults to the `'main'` snapshot. Pass
+  `{snapshotName: 'legacy'}` only if you specifically need the legacy dataset
+  (which has a known session-expiry quirk; see `dismissSessionExpiry` in
+  `utils`).
+- It posts to `/api/restore_record` on the backend. There is no per-test
+  "add one item" API in client-core. Any state your test needs must exist in
+  the snapshot. If it does not, that is a fixture gap for a developer to fill,
+  not something to construct through the UI in a setup step.
+- Pure-read tests that only assert on data already in the snapshot can skip the
+  reset. When in doubt, reset.
+
+## Page Objects
+
+Reuse the classes in `playwright/page-object-models/`. They take a `Page` in the
+constructor and expose methods named after user operations:
+
+```ts
+import {Monitoring} from './page-object-models/monitoring';
+
+const monitoring = new Monitoring(page);
+await monitoring.selectDeskOrWorkspace('Sports');
+```
+
+When an interaction is not covered by an existing method, add a method to the
+relevant Page Object rather than inlining it in the spec. Keep Page Objects
+stateless beyond holding the `Page`; they are interaction wrappers, not models.
+New Page Object methods use `getByTestId`, not `s()`.
+
+## Running tests
+
+The bootstrap script runs from the repo root. Playwright runs from `e2e/client/`.
+Do not run `npm test` at the repo root; that is unit tests and lint, not e2e.
+
+```sh
+# From the repo root: bring up the stack (idempotent; rebuilds the client if
+# product source changed since the last build).
+./e2e/scripts/e2e-up.sh
+
+# From e2e/client/: run one spec
+cd e2e/client
+npx playwright test playwright/<scenario>.spec.ts
+
+# Watch it execute in a real browser
+npx playwright test playwright/<scenario>.spec.ts --headed
+
+# After a failure, open the trace
+npx playwright show-trace test-results/<run-id>/trace.zip
+
+# From the repo root: tear down
+./e2e/scripts/e2e-down.sh
+```
+
+The backend defaults to `http://localhost:5002/api` (override via the
+`SUPERDESK_URL` env var, from which the bootstrap script derives the port). Port
+5000 is avoided because macOS AirPlay Receiver answers on it and silently masks
+a missing server.
+
+## Common pitfalls
+
+- `page.waitForTimeout(N)` to paper over a race is almost always wrong. Wait for
+  the actual condition: `await expect(page.getByTestId('result')).toBeVisible()`.
+  Web-first assertions auto-retry until they pass or time out.
+- Order-dependent selectors (`.nth(2)`) only when order is the behaviour under
+  test. Otherwise find the item by a stable value.
+- "Passes solo, fails in a suite" is a shared-state problem. Add
+  `restoreDatabaseSnapshot()`.
+- The only acceptable product-source change from a test is adding a
+  `data-test-id` attribute. Anything more, including renaming an existing
+  `data-test-id`, belongs in a separate PR with product review.
+- Do not import product modules from `scripts/` into specs. Tests depend on the
+  `data-test-id` contract and the e2e helpers, nothing else.
+
+## Reference specs
+
+When writing a new spec, start from the closest of these curated native
+examples, copy its structure, and adapt. These use the current conventions
+(`getByTestId`, `storageState`, `restoreDatabaseSnapshot`, Page Objects):
+
+<!-- TODO(exemplar): add the path(s) to the native reference spec(s) produced
+     from a real QA test case (workstream W2). Until then, fall back to the
+     closest existing spec under playwright/ and translate its s() selectors to
+     getByTestId per the table in "Selectors". -->

@@ -2473,7 +2473,10 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
         valueTemplate?: React.ComponentType<{option: IUser}>;
         clearable: boolean;
-        deskId?: string
+        deskId?: string;
+        inlineLabel?: boolean;
+        labelHidden?: boolean;
+        displayStatus?: boolean;
     }
 
     export interface IDropdownTreeGroup<T> {

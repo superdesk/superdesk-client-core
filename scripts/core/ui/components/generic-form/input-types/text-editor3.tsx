@@ -28,18 +28,20 @@ export class TextEditor3 extends React.PureComponent<IProps> {
                 )}
             >
                 <label className="sd-input__label">{this.props.formField.label}</label>
-                <Editor3Html
-                    value={this.props.value}
-                    scrollContainer={'window'}
-                    onChange={this.props.onChange}
-                    editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
-                    readOnly={this.props.disabled}
-                />
-                {
-                    this.props.issues.map((str, i) => (
-                        <div key={i} className="sd-input__message">{str}</div>
-                    ))
-                }
+                <div className="sd-input__input-container">
+                    <Editor3Html
+                        value={this.props.value}
+                        scrollContainer={'window'}
+                        onChange={this.props.onChange}
+                        editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
+                        readOnly={this.props.disabled}
+                    />
+                    {
+                        this.props.issues.map((str, i) => (
+                            <div key={i} className="sd-input__message">{str}</div>
+                        ))
+                    }
+                </div>
             </div>
         );
     }

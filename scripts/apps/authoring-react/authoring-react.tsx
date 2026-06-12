@@ -1291,7 +1291,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             },
             printPreview: () => {
                 previewAuthoringEntity(
-                    state.profile,
+                    state.itemWithChanges,
                     state.profile,
                     state.fieldsDataWithChanges,
                 );
