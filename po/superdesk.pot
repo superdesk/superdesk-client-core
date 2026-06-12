@@ -9869,6 +9869,10 @@ msgstr ""
 msgid "Last Year"
 msgstr ""
 
+#: scripts/apps/authoring/preview/fullPreview.tsx:124
+msgid "Download original"
+msgstr ""
+
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/PreviewArticle.tsx:83
 #: scripts/apps/authoring/preview/fullPreview.tsx:77
 msgid "Last modified"
