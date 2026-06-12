@@ -111,7 +111,19 @@ export class FullPreview extends React.Component<IProps, IState> {
                     {
                         item.type === 'picture' && hideMedia !== true && item.renditions?.baseImage?.href != null
                             ? (
-                                <div>
+                                <div className="d-flex flex-col justify-start">
+                                    <button
+                                        className="btn btn--hollow btn--tertiary btn--small mb-1 ms-auto"
+                                        onClick={() => {
+                                            const a = document.createElement('a');
+
+                                            a.href = item.renditions.original.href;
+                                            a.download = item.renditions.original.href.split('/').pop();
+                                            a.click();
+                                        }}
+                                    >
+                                        {gettext('Download original')}
+                                    </button>
                                     <img src={item.renditions.baseImage.href} />
 
                                     <MediaMetadataView
