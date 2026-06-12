@@ -1,7 +1,7 @@
 import * as request from 'request';
 import {expect, Locator, Page} from '@playwright/test';
 
-const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5000/api').replace(/\/$/, '');
+const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/$/, '');
 
 export function restoreDatabaseSnapshot(options?: {snapshotName?: string}): Promise<void> {
     return new Promise((resolve) => {
