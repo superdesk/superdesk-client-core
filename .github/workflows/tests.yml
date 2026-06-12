@@ -30,6 +30,11 @@ jobs:
 
   playwright-e2e:
     runs-on: ubuntu-latest
+    env:
+      # CI runs the e2e server on :5000 (docker-compose PORT default; no AirPlay
+      # conflict on Linux). The test helpers and client build read SUPERDESK_URL,
+      # which defaults to 5002 locally to dodge macOS AirPlay; pin it to the CI port.
+      SUPERDESK_URL: http://localhost:5000/api
     strategy:
       fail-fast: false
       matrix:
