@@ -1,7 +1,9 @@
 import React from 'react';
 import {Map} from 'immutable';
 import {IContentProfileV2} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 import {Spacer} from 'core/ui/components/Spacer';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 import {getField} from 'apps/fields';
 
 interface IProps {
@@ -17,26 +19,30 @@ export class PreviewAuthoringItem extends React.PureComponent<IProps> {
         const allFields = profile.header.merge(profile.content);
 
         return (
-            <Spacer v gap="16" noWrap>
+            <Spacer v gap="16" noWrap data-test-id="print-preview">
                 {
                     allFields.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         return (
                             <div key={field.id} style={{width: '100%', padding: fieldPadding ?? 0}}>
-                                <span
-                                    className="field-label--base"
-                                    style={{marginBottom: 20}}
-                                >
-                                    {field.name}
-                                </span>
+                                {
+                                    appConfig?.authoring?.preview?.hideContentLabels === true ? null : (
+                                        <h3 style={{marginBlockStart: 20, marginBlockEnd: 10}}>
+                                            {field.name}
+                                        </h3>
+                                    )
+                                }
 
                                 <div>
-                                    <FieldEditorConfig.previewComponent
-                                        item={this.props.item}
-                                        value={fieldsData.get(field.id)}
-                                        config={field.fieldConfig}
-                                    />
+                                    {/* A single misbehaving field preview must not blank the whole document. */}
+                                    <ErrorBoundary>
+                                        <FieldEditorConfig.previewComponent
+                                            item={this.props.item}
+                                            value={fieldsData.get(field.id)}
+                                            config={field.fieldConfig}
+                                        />
+                                    </ErrorBoundary>
                                 </div>
                             </div>
                         );

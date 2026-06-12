@@ -1,4 +1,5 @@
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import * as fullPreviewMultiple from 'apps/authoring/preview/fullPreviewMultiple';
 
 describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
@@ -60,11 +61,11 @@ describe('packaging', () => {
             scope = elem.isolateScope();
         }));
 
-        it('can preview item', inject(($rootScope, $q, superdesk) => {
-            spyOn(superdesk, 'intent').and.returnValue($q.when());
+        it('can preview item', inject(($rootScope) => {
+            spyOn(fullPreviewMultiple, 'previewItems');
             scope.preview(item);
             $rootScope.$apply();
-            expect(superdesk.intent).toHaveBeenCalledWith('preview', 'item', item);
+            expect(fullPreviewMultiple.previewItems).toHaveBeenCalledWith([item]);
         }));
 
         it('can open item', inject(($rootScope, $q, authoringWorkspace: AuthoringWorkspaceService) => {

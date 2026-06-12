@@ -1,5 +1,5 @@
 <div class="term-editor data visible" ng-if="!header" ng-attr-title="{{helperText}}">
-    <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="tree[item[uniqueField]] ? openTree(item) : selectTerm(item)" close="resetDropdownState()" data-disabled="disabled">
+    <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="tree[item[uniqueField]] ? openTree(item) : selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
             <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]" data-test-id="dropdown__item">
                 <button
@@ -30,13 +30,14 @@
 </div>
 
 <div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
+    on-toggle="onDropdownToggle(open)"
     ng-attr-title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
     <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
     <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}" id="metadata-terms-dropdown-users">
         <li ng-show="!activeTerm && header">
-            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="tree[item[uniqueField]] ? openTree(item, $event) : selectTerm(item, $event)" close="resetDropdownState()" always-visible="header" data-disabled="disabled || allSelected">
+            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="tree[item[uniqueField]] ? openTree(item, $event) : selectTerm(item, $event)" always-visible="header" data-disabled="disabled || allSelected">
                 <ul class="item-list" vs-repeat ng-if="!activeTree.length || activeList">
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]" data-test-id="dropdown__item">
                         <button
