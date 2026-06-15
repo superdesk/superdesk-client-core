@@ -59,9 +59,13 @@ test.describe('editing an embed in the article body', () => {
             .and(page.locator('[data-test-value="body_html"]'));
 
         await page.getByTestId('toolbar').getByRole('button', {name: 'Embed'}).click();
-        await page.getByTestId('embed-form')
-            .getByPlaceholder('Enter URL or code to embed')
-            .fill(ORIGINAL_EMBED_URL);
+        // The embed URL field is uncontrolled (read by ref on submit), so confirm
+        // the value landed before clicking submit; otherwise submit can fire first
+        // and create an embed with empty html.
+        const embedUrlInput = page.getByTestId('embed-form').getByRole('textbox');
+
+        await embedUrlInput.fill(ORIGINAL_EMBED_URL);
+        await expect(embedUrlInput).toHaveValue(ORIGINAL_EMBED_URL);
         await page.getByTestId('embed-controls').getByTestId('submit').click();
 
         const embed = body.getByTestId('embed-block');
@@ -100,9 +104,13 @@ test.describe('editing an embed in the article body', () => {
         // so it does not collide with the topbar Save button.
         await page.getByTestId('authoring-topbar').getByTestId('close').click();
 
-        const unsavedChangesPrompt = page.locator('.p-dialog').filter({hasText: 'Save changes?'});
+        const unsavedChangesPrompt = page.getByTestId('unsaved-changes-dialog');
 
         await unsavedChangesPrompt.getByRole('button', {name: 'Save', exact: true}).click();
+
+        // Wait for the article to fully close before reopening; otherwise the
+        // reopen races the closing authoring view.
+        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
 
         await monitoring.getArticleLocator('test sports story').dblclick();
 
