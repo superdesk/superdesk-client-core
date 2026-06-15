@@ -215,13 +215,45 @@ a missing server.
 - Do not import product modules from `scripts/` into specs. Tests depend on the
   `data-test-id` contract and the e2e helpers, nothing else.
 
+## Comments
+
+Comment the non-obvious *why*, not the *what*. A reader can see what
+`getByTestId('save').click()` does; they cannot see why you had to
+`dispatchEvent('mousedown')` instead of `click()`, or why a third-party call is
+stubbed. Reserve comments for that: workarounds, async timing, app quirks, an
+unusual selector shape.
+
+Do not narrate the steps (`// hover the embed`) or restate the QA case
+(`// Expected: Cancel discards`). The scenario mapping belongs in the
+`describe`/`test` titles, which are the first thing a reviewer reads. The
+reference spec below (`edit-embed.spec.ts`) follows this: every comment in it
+explains a non-obvious decision, and the flow itself is left to read as code.
+
 ## Reference specs
 
 When writing a new spec, start from the closest of these curated native
 examples, copy its structure, and adapt. These use the current conventions
 (`getByTestId`, `storageState`, `restoreDatabaseSnapshot`, Page Objects):
 
-<!-- TODO(exemplar): add the path(s) to the native reference spec(s) produced
-     from a real QA test case (workstream W2). Until then, fall back to the
-     closest existing spec under playwright/ and translate its s() selectors to
-     getByTestId per the table in "Selectors". -->
+- `playwright/edit-embed.spec.ts` - the canonical native reference. Built from a
+  real QA case ("Edit embed", SDESK-4441/4213). It opens an article from
+  Monitoring, edits the Body field, drives a dialog, and verifies persistence
+  across save and reopen. It demonstrates, in order:
+  - `restoreDatabaseSnapshot()` plus the committed `storageState` (no `login()`).
+  - `getByTestId` with locator chaining, and the value-matched field case
+    (`authoring-field=body_html`) written natively with
+    `.and(page.locator('[data-test-value="body_html"]'))`.
+  - building a precondition through the UI when the snapshot lacks it (the
+    article ships without an embed, so the spec adds one first).
+  - `page.route(...)` to stub a third-party call (iframe.ly) so the test is
+    deterministic and offline.
+  - escape hatches used deliberately and only where justified, each with a
+    comment explaining why: `dispatchEvent('mousedown')` for a hover-revealed
+    control on a frequently re-rendering element (a plain `click()` flakes on
+    the visible+stable check), and a `.p-dialog` scope for a shared confirmation
+    dialog whose buttons carry no `data-test-id`.
+
+The only product-source change it required was adding `data-test-id` attributes
+to the embed controls and the prompt dialog (`EmbedBlock.tsx`,
+`ModalPrompt.tsx`). That is the one product change a spec may carry; see "Common
+pitfalls".
