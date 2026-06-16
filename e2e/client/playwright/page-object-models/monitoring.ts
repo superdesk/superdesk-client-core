@@ -116,4 +116,8 @@ export class Monitoring {
     getArticleLocator(headline: string): Locator {
         return this.page.locator(s('article-item=' + headline));
     }
+
+    getPreviewPane(): Locator {
+        return this.page.getByTestId('authoring-preview');
+    }
 }
