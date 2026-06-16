@@ -29,7 +29,8 @@ export async function getEditor3FormattingOptions(field: Locator): Promise<Array
 
 /**
  * Adds an embed to an editor3 field through the add-embed flow (toolbar Embed >
- * enter URL > submit) and waits for it to fully settle.
+ * enter URL > submit) and waits for its layout to settle (the iframe onLoad height
+ * applied), so a following interaction is not churned by the reflow.
  *
  * `field` is the editor3 field locator (e.g. the body_html authoring-field). The
  * URL is resolved through iframe.ly, so a test that calls this must stub that
@@ -43,8 +44,8 @@ export async function getEditor3FormattingOptions(field: Locator): Promise<Array
  *   be present before submit.
  * - A new embed renders before its iframe onLoad sets the height (EmbedBlock sets
  *   iframe.height = scrollHeight), and that height change reflows the editor.
- *   Waiting for every embed iframe to carry a height attribute defers the caller
- *   (e.g. a second add) until the reflow is done, so it is not churned mid-interaction.
+ *   Waiting for every embed's iframe to carry a height attribute defers the caller
+ *   (e.g. a second add) until that reflow has happened.
  */
 export async function addEditor3Embed(field: Locator, url: string): Promise<void> {
     const page = field.page();
@@ -65,7 +66,7 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
     await expect(embedForm).toBeHidden();
 
     await expect(embedBlocks).toHaveCount(countBefore + 1);
-    await expect(field.locator('iframe[height]')).toHaveCount(countBefore + 1);
+    await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
 }
 
 export async function setEditor3FieldValue(locator: Locator, value: string) {
