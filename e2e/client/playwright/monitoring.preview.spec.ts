@@ -47,8 +47,18 @@ test.describe('opening an article in preview mode', () => {
         await expect(preview.getByRole('button', {name: 'More actions'})).toBeVisible();
         await expect(preview.getByRole('button', {name: 'Close preview'})).toBeVisible();
 
-        // Content tab is active by default; the headline field proves content renders.
+        // Content tab is active by default; headline and body prove content fields render.
         await expect(preview.getByTestId('field--headline')).toContainText(ARTICLE);
+        await expect(preview.getByText('test sport story body')).toBeVisible();
+
+        // Metadata tab: a metadata-only label and the slugline value prove the tab body renders.
+        await monitoring.openPreviewTab('Metadata');
+        await expect(preview.getByText('Word Count', {exact: true})).toBeVisible();
+        await expect(preview.getByText(ARTICLE)).toBeVisible();
+
+        // Item history tab: the snapshot item has history, so at least one entry renders.
+        await monitoring.openPreviewTab('Item history');
+        await expect(preview.getByTestId('history-item').first()).toBeVisible();
 
         // Preview must not lock the item: no `locked` class (the red stripe) in the
         // list and no authoring editor opened.

@@ -120,4 +120,8 @@ export class Monitoring {
     getPreviewPane(): Locator {
         return this.page.getByTestId('authoring-preview');
     }
+
+    async openPreviewTab(name: string): Promise<void> {
+        await this.getPreviewPane().getByRole('tab', {name, exact: true}).click();
+    }
 }
