@@ -149,15 +149,44 @@ test('sends an article to another desk', async ({page}) => {
   `utils`).
 - It posts to `/api/restore_record` on the backend. There is no per-test
   "add one item" API in client-core. Any state your test needs must exist in
-  the snapshot. If it does not, that is a fixture gap for a developer to fill,
-  not something to construct through the UI in a setup step. The one narrow
-  exception: a precondition that is itself produced by a stable, test-id-driven
-  UI flow that is cheap and deterministic may be built in-test (see
-  `edit-embed.spec.ts`, which adds the embed through the add-embed flow because
-  no snapshot fixture carries one). Prefer a snapshot fixture when one exists;
-  reach for the UI only when there is none and the flow is stable.
+  the snapshot. If it does not, add it server-side (see "Adding fixture data"),
+  do not construct it through the UI in a setup step. The one narrow exception:
+  a precondition created by a **single atomic UI action** may be built in-test
+  (as `edit-embed.spec.ts` adds one embed). Building state through a **loop** of
+  UI actions (several of something) is fragile and not allowed: the editor
+  reflows between actions and the flakiness compounds, so anything you need more
+  than one of belongs in a fixture.
 - Pure-read tests that only assert on data already in the snapshot can skip the
   reset. When in doubt, reset.
+
+## What's in the `main` snapshot
+
+The base snapshot is small. Commonly used data (read existing specs for the full
+set, this is not exhaustive):
+
+- **Desks:** Sports (the default in most specs), Education, Finance, Politic Desk.
+- **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
+- **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
+  "Package Highlight 1" there too, and "Story 5" published in Sports desk output.
+
+Other datasets are separate and loaded with
+`restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
+`editor3-tables`, `custom-blocks`, `availability-management`.
+
+### Adding fixture data
+
+If your scenario needs data the snapshot lacks, add it server-side rather than
+building it through the UI. Full steps are in `e2e/README.md` ("Managing database
+snapshots"); both run from `e2e/server` in a Python venv:
+
+- **A record (patch)** for test-specific data that should not bloat `main`:
+  `python manage.py storage:record --base-dump main --name <name>`, then load it
+  with `restoreDatabaseSnapshot({snapshotName: '<name>'})`.
+- **Regenerate `main`** for broadly useful data: `storage:restore main`, make the
+  change in the browser, then `storage:dump --name main`.
+
+This alters shared fixtures, so treat it like a product-source change: call it
+out in your hand-off for review.
 
 ## Page Objects
 
@@ -175,6 +204,10 @@ When an interaction is not covered by an existing method, add a method to the
 relevant Page Object rather than inlining it in the spec. Keep Page Objects
 stateless beyond holding the `Page`; they are interaction wrappers, not models.
 New Page Object methods use `getByTestId`, not `s()`.
+
+An interaction with **known flakiness** (settling waits, a retry/`toPass`, a
+network stub) especially belongs in a Page Object: write the robustness once so
+the next spec inherits it instead of re-deriving it from scratch.
 
 ## Running tests
 
@@ -205,6 +238,13 @@ The backend defaults to `http://localhost:5002/api` (override via the
 5000 is avoided because macOS AirPlay Receiver answers on it and silently masks
 a missing server.
 
+Prefer `e2e-up.sh` even when the servers already respond: "servers up" does not
+imply "deps installed." If you run a spec against an already-running stack and
+hit a module-not-found error, note that `e2e/client` resolves some deps (e.g.
+`request`) from the **repo-root** `node_modules`, so both root and `e2e/client`
+need `npm ci`, and the browser needs `npx playwright install chromium`. The
+bootstrap script does all three.
+
 ## Common pitfalls
 
 - `page.waitForTimeout(N)` to paper over a race is almost always wrong. Wait for
@@ -219,6 +259,12 @@ a missing server.
   `data-test-id`, belongs in a separate PR with product review.
 - Do not import product modules from `scripts/` into specs. Tests depend on the
   `data-test-id` contract and the e2e helpers, nothing else.
+- A single green run is not proof of stability. Before calling a new spec done,
+  run it under repeat: `npx playwright test playwright/<scenario>.spec.ts
+  --repeat-each 5` (more for fast specs). Flakiness from async UI churn often
+  shows only on repeat.
+- Find a `data-test-id` by grepping the feature's source
+  (`grep -rn 'data-test-id' scripts/...`); there is no central catalog.
 
 ## Comments
 
