@@ -135,17 +135,25 @@ export class EmbedBlockComponent extends React.Component<IProps> {
         };
 
         return (
-            <div className="embed-block">
+            <div className="embed-block" data-test-id="embed-block">
                 {
                     readOnly ? null : (
-                        <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
+                        <a
+                            className="icn-btn embed-block__remove"
+                            data-test-id="embed-block-remove"
+                            onMouseDown={this.onClickDelete}
+                        >
                             <i className="icon-close-small" />
                         </a>
                     )
                 }
                 {
                     readOnly ? null : (
-                        <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
+                        <a
+                            className="icn-btn embed-block__edit"
+                            data-test-id="embed-block-edit"
+                            onMouseDown={this.editEmbedHtml}
+                        >
                             <i className="icon-pencil" />
                         </a>
                     )
