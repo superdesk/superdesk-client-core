@@ -5,6 +5,7 @@ import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 import {Alert} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 
 interface IProps {
     profile1: IContentProfileV2;
@@ -49,11 +50,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                         </span>
 
                                         <div>
-                                            <FieldEditorConfig.differenceComponent
-                                                value1={fieldsData1.get(field.id)}
-                                                value2={fieldsData2.get(field.id)}
-                                                config={field.fieldConfig}
-                                            />
+                                            <ErrorBoundary>
+                                                <FieldEditorConfig.differenceComponent
+                                                    value1={fieldsData1.get(field.id)}
+                                                    value2={fieldsData2.get(field.id)}
+                                                    config={field.fieldConfig}
+                                                />
+                                            </ErrorBoundary>
                                         </div>
                                     </div>
                                 );
@@ -83,11 +86,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                         <SpacerBlock v gap="16" />
 
                                         <div>
-                                            <FieldEditorConfig.previewComponent
-                                                item={this.props.item2}
-                                                value={fieldsData2.get(field.id)}
-                                                config={field.fieldConfig}
-                                            />
+                                            <ErrorBoundary>
+                                                <FieldEditorConfig.previewComponent
+                                                    item={this.props.item2}
+                                                    value={fieldsData2.get(field.id)}
+                                                    config={field.fieldConfig}
+                                                />
+                                            </ErrorBoundary>
                                         </div>
                                     </div>
                                 );
@@ -106,11 +111,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                     </span>
 
                                     <div>
-                                        <FieldEditorConfig.previewComponent
-                                            item={this.props.item2}
-                                            value={fieldsData2.get(field.id)}
-                                            config={field.fieldConfig}
-                                        />
+                                        <ErrorBoundary>
+                                            <FieldEditorConfig.previewComponent
+                                                item={this.props.item2}
+                                                value={fieldsData2.get(field.id)}
+                                                config={field.fieldConfig}
+                                            />
+                                        </ErrorBoundary>
                                     </div>
                                 </div>
                             );
@@ -134,11 +141,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                 </span>
 
                                 <div>
-                                    <FieldEditorConfig.previewComponent
-                                        item={this.props.item1}
-                                        value={fieldsData1.get(field.id)}
-                                        config={field.fieldConfig}
-                                    />
+                                    <ErrorBoundary>
+                                        <FieldEditorConfig.previewComponent
+                                            item={this.props.item1}
+                                            value={fieldsData1.get(field.id)}
+                                            config={field.fieldConfig}
+                                        />
+                                    </ErrorBoundary>
                                 </div>
                             </div>
                         );

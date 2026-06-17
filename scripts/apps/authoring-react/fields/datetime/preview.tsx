@@ -1,25 +1,17 @@
-import {appConfig} from 'appConfig';
-import {gettext} from 'core/utils';
-import {noop} from 'lodash';
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 import React from 'react';
 import {IDateTimeFieldConfig, IDateTimeValueOperational, IPreviewComponentProps} from 'superdesk-api';
-import {DateTimePicker} from 'superdesk-ui-framework/react';
 
 type IProps = IPreviewComponentProps<IDateTimeValueOperational, IDateTimeFieldConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
+        if (this.props.value == null) {
+            return null;
+        }
+
         return (
-            <DateTimePicker
-                valueType="date"
-                dateFormat={appConfig.view.dateformat}
-                label={gettext('Date time (AUTHORING-REACT)')}
-                onChange={noop}
-                preview={true}
-                value={this.props.value}
-                disabled={this.props.config.readOnly}
-                fullWidth
-            />
+            <div>{formatDateTime(this.props.value)}</div>
         );
     }
 }
