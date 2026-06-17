@@ -42,6 +42,12 @@ export function ViewDifference(props: IProps) {
     const fromFields = fromProfile.header.merge(fromProfile.content);
     const toFields = toProfile.header.merge(toProfile.content);
 
+    // ErrorBoundary latches its error state and never resets on its own. Switching the compared
+    // versions re-renders in place without remounting, so a field that threw for one version would
+    // stay blank after switching. Keying the boundaries on the compared versions forces a remount
+    // (and a fresh render attempt) whenever the selection changes.
+    const versionKey = `${fromItem?._current_version}-${toItem?._current_version}`;
+
     return (
         <Spacer v gap={gapBetweenFields} noWrap>
             {
@@ -61,7 +67,7 @@ export function ViewDifference(props: IProps) {
                                     <FieldLabel name={field.name} />
 
                                     <div>
-                                        <ErrorBoundary>
+                                        <ErrorBoundary key={versionKey}>
                                             <fieldRenderer.differenceComponent
                                                 value1={fromFieldsData.get(field.id)}
                                                 value2={toFieldsData.get(field.id)}
@@ -97,7 +103,7 @@ export function ViewDifference(props: IProps) {
                                     <SpacerBlock v gap="16" />
 
                                     <div>
-                                        <ErrorBoundary>
+                                        <ErrorBoundary key={versionKey}>
                                             <fieldRenderer.previewComponent
                                                 item={toItem}
                                                 value={toFieldsData.get(field.id)}
@@ -119,7 +125,7 @@ export function ViewDifference(props: IProps) {
                                 <FieldLabel name={field.name} />
 
                                 <div>
-                                    <ErrorBoundary>
+                                    <ErrorBoundary key={versionKey}>
                                         <fieldRenderer.previewComponent
                                             item={toItem}
                                             value={toFieldsData.get(field.id)}
@@ -146,7 +152,7 @@ export function ViewDifference(props: IProps) {
                             <FieldLabel name={field.name} />
 
                             <div>
-                                <ErrorBoundary>
+                                <ErrorBoundary key={versionKey}>
                                     <fieldRenderer.previewComponent
                                         item={fromItem}
                                         value={fromFieldsData.get(field.id)}
