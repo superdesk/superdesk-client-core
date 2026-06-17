@@ -3,6 +3,7 @@ import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ISendToDestination} from '../interfaces';
+import {getUserPreferredDesks} from './get-user-preferred-desks';
 
 export function getInitialDestination(
     items: Array<IArticle>,
@@ -16,6 +17,7 @@ export function getInitialDestination(
     }
 
     const currentDeskId = sdApi.desks.getCurrentDeskId();
+    const userPreferredDesks = getUserPreferredDesks();
 
     let destinationDesk: string = (() => {
         if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
@@ -25,14 +27,17 @@ export function getInitialDestination(
         } else if (items.length === 1 && items[0].task?.desk != null) {
             return items[0].task.desk;
         } else {
-            return availableDesks.first()?._id ?? null;
+            return availableDesks.find((desk) => desk != null && userPreferredDesks[desk._id] === true)?._id
+                ?? availableDesks.first()?._id
+                ?? null;
         }
     })();
 
-    // If destinationDesk isn't found in availableDesks we set the
-    // destinationDesk to the first item from availableDesks
+    // If destinationDesk is no longer available, use the same fallback priority
+    // as initial selection: preferred desk first, then first available desk.
     if (!availableDesks.has(destinationDesk)) {
-        destinationDesk = availableDesks.first()?._id;
+        destinationDesk = availableDesks.find((desk) => desk != null && userPreferredDesks[desk._id] === true)?._id
+            ?? availableDesks.first()?._id;
     }
 
     if (destinationDesk == null) {

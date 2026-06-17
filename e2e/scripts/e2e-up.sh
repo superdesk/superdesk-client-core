@@ -10,7 +10,7 @@
 #   ./e2e/scripts/e2e-up.sh --reinstall      # force `npm ci` in every dependency root
 #   ./e2e/scripts/e2e-up.sh --rebuild        # force docker compose build
 #
-# Exits 0 only when both the server (http://localhost:5000/api/) and the
+# Exits 0 only when both the server (http://localhost:5002/api/) and the
 # client (http://localhost:9000/) respond. Otherwise exits non-zero with a
 # clear error message.
 
@@ -34,18 +34,30 @@ E2E_SERVER="$REPO_ROOT/e2e/server"
 
 # SUPERDESK_URL is the single knob: point it at the e2e backend's /api root.
 # PORT (docker container bind) and SERVER_NAME (Quart config) are derived from
-# it so port-overriding (e.g. macOS AirPlay grabs 5000) needs only one export:
-#   export SUPERDESK_URL=http://localhost:5002/api
-SUPERDESK_URL="${SUPERDESK_URL:-http://localhost:5000/api}"
+# it so any port override needs only one export:
+#   export SUPERDESK_URL=http://localhost:5003/api
+# Default is 5002, chosen to avoid 5000 (macOS AirPlay answers on it).
+SUPERDESK_URL="${SUPERDESK_URL:-http://localhost:5002/api}"
 SERVER_URL="${SUPERDESK_URL%/}/"
 CLIENT_URL="http://localhost:9000/"
 SUPERDESK_HOST_PORT="$(printf '%s\n' "$SUPERDESK_URL" | sed -E 's#^https?://##; s#/.*$##')"
 PORT="${PORT:-${SUPERDESK_HOST_PORT##*:}}"
+case "$PORT" in
+    ''|*[!0-9]*)
+        printf '\n[e2e-up] ERROR: could not derive a numeric backend port from SUPERDESK_URL="%s". Include an explicit port, e.g. http://localhost:5002/api.\n' "$SUPERDESK_URL" >&2
+        exit 1
+        ;;
+esac
 SERVER_NAME="${SERVER_NAME:-$SUPERDESK_HOST_PORT}"
 export SUPERDESK_URL PORT SERVER_NAME
 
 log() { printf '\n[e2e-up] %s\n' "$*"; }
 fail() { printf '\n[e2e-up] ERROR: %s\n' "$*" >&2; exit 1; }
+
+# Strict HTTP status (echoes the code, or 000 on connection failure). Unlike
+# reachable(), this lets callers require a specific code, e.g. a real 200 on a
+# bundle rather than "the port answered".
+http_status() { curl -sS --max-time 5 -o /dev/null -w '%{http_code}' "$1" 2>/dev/null || echo "000"; }
 
 reachable() {
     # Any HTTP response counts as "up" — the superdesk e2e server returns 403
@@ -132,10 +144,38 @@ ensure_deps "$REPO_ROOT"
 ensure_deps "$REPO_ROOT/build-tools"
 ensure_deps "$E2E_CLIENT"
 
-# 3. Client build (only if dist is missing or stale relative to scripts/)
-if [ "$REINSTALL" = true ] || [ ! -d "$E2E_CLIENT/dist" ] || [ -z "$(ls -A "$E2E_CLIENT/dist" 2>/dev/null)" ]; then
-    log "building client (this is the slow step on a cold cache)"
-    (cd "$E2E_CLIENT" && npm run build)
+# 3. Client build.
+# Rebuild when forced, deps reinstalled, the app bundles are missing, OR the
+# dist was built against a different SUPERDESK_URL. The last two matter because:
+#   - a failed/partial build leaves a non-empty dist/ WITHOUT the bundles, so
+#     "is dist empty?" is not a sufficient staleness test;
+#   - the backend URL is baked into the bundle at build time (webpack
+#     DefinePlugin), so a dist built for one port silently breaks on another.
+REQUIRED_BUNDLES="app.bundle.js init.bundle.js app.bundle.css"
+BUILD_META="$E2E_CLIENT/dist/.e2e-built-with"
+
+client_build_complete() {
+    for b in $REQUIRED_BUNDLES; do
+        [ -f "$E2E_CLIENT/dist/$b" ] || return 1
+    done
+    return 0
+}
+build_url_matches() {
+    [ -f "$BUILD_META" ] && [ "$(cat "$BUILD_META" 2>/dev/null)" = "$SUPERDESK_URL" ]
+}
+
+if [ "$REBUILD" = true ] || [ "$REINSTALL" = true ] || ! client_build_complete || ! build_url_matches; then
+    if ! client_build_complete; then
+        log "client bundles missing or incomplete; (re)building client"
+    elif ! build_url_matches; then
+        log "dist was built for a different backend URL; rebuilding for $SUPERDESK_URL"
+    else
+        log "building client (this is the slow step on a cold cache)"
+    fi
+    (cd "$E2E_CLIENT" && SUPERDESK_URL="$SUPERDESK_URL" npm run build)
+    client_build_complete || fail "client build finished but the app bundles are missing from dist/ ($REQUIRED_BUNDLES). The build failed; re-read the build output above and re-run with --rebuild."
+    printf '%s\n' "$SUPERDESK_URL" > "$BUILD_META"
+    log "client build complete (backend baked as $SUPERDESK_URL)"
 fi
 
 # 4. Client dev server (http-server serving dist on :9000)
@@ -145,6 +185,14 @@ else
     log "starting client server on $CLIENT_URL"
     (cd "$E2E_CLIENT" && npm run start-client-server)
     wait_until_reachable "$CLIENT_URL" "client" 60
+fi
+
+# Final health gate: the app entry bundle must actually be served with a 200.
+# A 200 on / (index.html) is returned even when the bundles 404 -> blank page.
+# This is the difference between "the port answers" and "the app works".
+bundle_status="$(http_status "${CLIENT_URL}app.bundle.js")"
+if [ "$bundle_status" != "200" ]; then
+    fail "client is up but app.bundle.js returns HTTP $bundle_status, the app would render blank. The build is incomplete; re-run: ./e2e/scripts/e2e-up.sh --rebuild"
 fi
 
 log "ready"
