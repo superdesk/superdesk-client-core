@@ -1,6 +1,7 @@
 import {test, expect, type Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
+import {addEditor3Embed} from './utils/editor3';
 
 /**
  * QA case "Edit embed" (SDESK-4441 / SDESK-4213).
@@ -58,15 +59,7 @@ test.describe('editing an embed in the article body', () => {
             .getByTestId('authoring-field')
             .and(page.locator('[data-test-value="body_html"]'));
 
-        await page.getByTestId('toolbar').getByRole('button', {name: 'Embed'}).click();
-        // The embed URL field is uncontrolled (read by ref on submit), so confirm
-        // the value landed before clicking submit; otherwise submit can fire first
-        // and create an embed with empty html.
-        const embedUrlInput = page.getByTestId('embed-form').getByRole('textbox');
-
-        await embedUrlInput.fill(ORIGINAL_EMBED_URL);
-        await expect(embedUrlInput).toHaveValue(ORIGINAL_EMBED_URL);
-        await page.getByTestId('embed-controls').getByTestId('submit').click();
+        await addEditor3Embed(body, ORIGINAL_EMBED_URL);
 
         const embed = body.getByTestId('embed-block');
 
