@@ -36,3 +36,5 @@ yarn-error.log
 .idea
 
 .DS_Store
+.agents/
+skills-lock.json
