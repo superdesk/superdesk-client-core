@@ -9,6 +9,7 @@ import {Preview as DateTimePreview} from 'apps/authoring-react/fields/datetime/p
 import {Difference as DateTimeDifference} from 'apps/authoring-react/fields/datetime/difference';
 import {Preview as DatelinePreview} from 'apps/authoring-react/fields/dateline/preview';
 import {Difference as DatelineDifference} from 'apps/authoring-react/fields/dateline/difference';
+import {Difference as BooleanDifference} from 'apps/authoring-react/fields/boolean/difference';
 
 /**
  * The datetime value is a `Date | null` and the dateline value is an object; both previously rendered
@@ -133,6 +134,34 @@ describe('authoring-react datetime/dateline preview and difference rendering', (
             );
 
             expect(wrapper.text()).toContain('PARIS, June 16 AP -');
+        });
+    });
+
+    describe('boolean <Difference />', () => {
+        it('renders both labels when the value flips', () => {
+            const wrapper = mount(
+                <BooleanDifference config={commonConfig} value1={true} value2={false} />,
+            );
+
+            expect(wrapper.text()).toContain('Yes');
+            expect(wrapper.text()).toContain('No');
+        });
+
+        it('treats an unchanged value as unchanged', () => {
+            const wrapper = mount(
+                <BooleanDifference config={commonConfig} value1={true} value2={true} />,
+            );
+
+            expect(wrapper.text()).toContain('Yes');
+            expect(wrapper.text()).not.toContain('No');
+        });
+
+        it('distinguishes false from null', () => {
+            const wrapper = mount(
+                <BooleanDifference config={commonConfig} value1={null} value2={false} />,
+            );
+
+            expect(wrapper.text()).toContain('No');
         });
     });
 });

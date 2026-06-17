@@ -37,4 +37,12 @@ test('compare versions renders dateline and custom field differences (authoring-
     await expect(difference).toContainText('BERLIN, June 15 AP -');
     await expect(difference).toContainText('PARIS, March 1 AP -');
     await expect(difference).not.toContainText('object Object');
+
+    // boolean had no difference component, so it fell back to the "not implemented" alert. It now
+    // diffs as Yes/No. The compared versions flip sample_boolean true -> false, so both labels show.
+    const booleanDifference = page.locator(s('compare-versions-difference', 'compare-field=sample_boolean'));
+
+    await expect(booleanDifference).toContainText('Yes');
+    await expect(booleanDifference).toContainText('No');
+    await expect(booleanDifference).not.toContainText('is not implemented');
 });
