@@ -1,3 +1,5 @@
+import {OrderedMap} from 'immutable';
+import {IDesk} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
 /**
@@ -14,4 +16,15 @@ export function toggleMarkedDesk(deskId: string, articleId: string) {
             marked_item: articleId,
         },
     });
+}
+
+/**
+ * Resolves marked desk ids to desk objects, dropping ids that no longer exist.
+ * A desk can be deleted while an article keeps the stale id in marked_desks, and
+ * the callers would otherwise render undefined entries.
+ */
+export function resolveDesks(deskIds: Array<string>, allDesks: OrderedMap<IDesk['_id'], IDesk>): Array<IDesk> {
+    return deskIds
+        .map((id) => allDesks.get(id))
+        .filter((desk): desk is IDesk => desk != null);
 }

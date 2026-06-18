@@ -1,11 +1,12 @@
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {notify} from 'core/notify/notify';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, Text} from 'superdesk-ui-framework/react';
-import {toggleMarkedDesk} from './helper';
+import {resolveDesks, toggleMarkedDesk} from './helper';
 
 interface IProps {
     article: IArticle;
@@ -19,7 +20,7 @@ export class MarkedDesks extends React.PureComponent<IProps> {
         this.getSelectedDeskIds = this.getSelectedDeskIds.bind(this);
     }
 
-    private getSelectedDeskIds(): Array<string> | null {
+    private getSelectedDeskIds(): Array<string> {
         return (this.props.article.marked_desks ?? []).map((x) => x.desk_id);
     }
 
@@ -38,12 +39,14 @@ export class MarkedDesks extends React.PureComponent<IProps> {
                     marked_desks: nextMarks,
                 },
             });
+        }).catch(() => {
+            notify.error(gettext('Could not remove desk.'));
         });
     }
 
     render(): React.ReactNode {
         const allDesks = sdApi.desks.getAllDesks();
-        const selectedDesks = this.getSelectedDeskIds().map((id) => allDesks.get(id));
+        const selectedDesks = resolveDesks(this.getSelectedDeskIds(), allDesks);
 
         return selectedDesks.map(({name, _id}) => (
             <Spacer

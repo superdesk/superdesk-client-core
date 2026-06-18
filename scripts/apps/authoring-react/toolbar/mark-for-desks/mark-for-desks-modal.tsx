@@ -4,7 +4,8 @@ import {IArticle, IDesk} from 'superdesk-api';
 import {Modal, TreeSelect} from 'superdesk-ui-framework/react';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {toggleMarkedDesk} from './helper';
+import {notify} from 'core/notify/notify';
+import {resolveDesks, toggleMarkedDesk} from './helper';
 
 type IMarkedDesk = NonNullable<IArticle['marked_desks']>[number];
 
@@ -28,50 +29,79 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
         this.handleSelectionChange = this.handleSelectionChange.bind(this);
     }
 
+    private markFor(deskId: string): IMarkedDesk {
+        return {
+            desk_id: deskId,
+            user_marked: sdApi.user.getCurrentUserId(),
+            date_marked: new Date().toISOString(),
+        };
+    }
+
     private handleSelectionChange(nextValue: Array<IDesk>): void {
         const articleId = this.props.article._id;
-        const previousIds = this.state.selectedDesks.map((m) => m.desk_id);
+        const previousSelected = this.state.selectedDesks;
+        const previousIds = previousSelected.map((m) => m.desk_id);
         const nextIds = nextValue.map((desk) => desk._id);
-        const isAdding = nextIds.length > previousIds.length;
-        const delta = isAdding
-            ? nextIds.find((id) => !previousIds.includes(id))
-            : previousIds.find((id) => !nextIds.includes(id));
 
-        if (delta == null) {
+        // TreeSelect always reports the full next value (its clear-all button empties the whole
+        // selection in a single change), so toggle every desk that was added or removed rather than
+        // assuming a single delta.
+        const changedIds = [
+            ...nextIds.filter((id) => !previousIds.includes(id)),
+            ...previousIds.filter((id) => !nextIds.includes(id)),
+        ];
+
+        if (changedIds.length === 0) {
             return;
         }
 
-        const nextSelected: Array<IMarkedDesk> = isAdding
-            ? [
-                ...this.state.selectedDesks,
-                {
-                    desk_id: delta,
-                    user_marked: sdApi.user.getCurrentUserId(),
-                    date_marked: new Date().toISOString(),
-                },
-            ]
-            : this.state.selectedDesks.filter((m) => m.desk_id !== delta);
+        const existingById = new Map(previousSelected.map((m) => [m.desk_id, m]));
+        const nextSelected = nextValue.map((desk) => existingById.get(desk._id) ?? this.markFor(desk._id));
 
-        // Optimistic local state: chip appears/disappears immediately, regardless of POST latency.
         this.setState({selectedDesks: nextSelected});
 
-        toggleMarkedDesk(delta, articleId).then(() => {
+        Promise.allSettled(
+            changedIds.map((deskId) => toggleMarkedDesk(deskId, articleId)),
+        ).then((results) => {
+            // Each toggle flips one desk; fold in only the ones that actually persisted so the UI and
+            // the server agree even if some requests failed.
+            const persistedIds = new Set(previousIds);
+
+            changedIds.forEach((deskId, index) => {
+                if (results[index].status === 'rejected') {
+                    return;
+                }
+
+                if (persistedIds.has(deskId)) {
+                    persistedIds.delete(deskId);
+                    return;
+                }
+
+                persistedIds.add(deskId);
+            });
+
+            const persisted = Array.from(persistedIds).map((id) => existingById.get(id) ?? this.markFor(id));
+
             // Safe to overwrite locally: marked_desks is a side-channel field with no editor input, so
-            // there are no unsaved user edits to clobber, and the patch matches what the server already
-            // persisted via the toggle above. A full reload here would race with the archive index refresh
-            // and return stale data.
+            // there are no unsaved user edits to clobber. A full reload would race the archive index
+            // refresh and return stale data.
+            this.setState({selectedDesks: persisted});
             dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
                 item: {
                     _id: articleId,
-                    marked_desks: nextSelected,
+                    marked_desks: persisted,
                 },
             });
+
+            if (results.some((result) => result.status === 'rejected')) {
+                notify.error(gettext('Some desks could not be updated.'));
+            }
         });
     }
 
     render(): JSX.Element {
         const allDesks = sdApi.desks.getAllDesks();
-        const treeSelectValue = this.state.selectedDesks.map((m) => allDesks.get(m.desk_id));
+        const treeSelectValue = resolveDesks(this.state.selectedDesks.map((m) => m.desk_id), allDesks);
 
         return (
             <Modal

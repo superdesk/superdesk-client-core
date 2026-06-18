@@ -46,3 +46,43 @@ test('mark for desks: per-action toggle via modal (authoring-react)', async ({pa
 
     await expect(bell).toHaveCount(0);
 });
+
+test('mark for desks: clear-all unmarks every desk, not just one (authoring-react)', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    const monitoring = new Monitoring(page);
+    const authoring = new Authoring(page);
+
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
+        'Edit',
+    );
+
+    await authoring.waitForAuthoringReactToInitialize();
+
+    const bell = page.locator('#marked-for-desks');
+
+    await expect(bell).toHaveCount(0);
+
+    await page.getByRole('button', {name: 'Actions menu'}).click();
+    await page.getByText('Marked for desks', {exact: true}).click();
+
+    const modal = page.locator(s('modal-mark-for-desks'));
+
+    await expect(modal).toBeVisible();
+
+    const desksSelect = new TreeSelectDriver(page, modal.locator(s('desks-select')));
+
+    await desksSelect.addValues('Finance', 'Education');
+
+    await expect(bell).toBeVisible();
+
+    // Clear-all empties the whole selection in one change. The handler must toggle every marked
+    // desk, not just the first one, so the article ends up with no marked desks.
+    await desksSelect.setValues();
+
+    await expect(bell).toHaveCount(0);
+    expect(await desksSelect.getValues()).toEqual([]);
+});
