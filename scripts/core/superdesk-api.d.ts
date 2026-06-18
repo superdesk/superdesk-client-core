@@ -2552,6 +2552,7 @@ declare module 'superdesk-api' {
         children: Array<React.ReactNode>;
 
         'data-test-id'?: string;
+        'data-test-value'?: string;
     }
 
     type ILiveQueryChildrenOptions<T> = {loading: true} | {loading: false; data: IRestApiResponse<T>};

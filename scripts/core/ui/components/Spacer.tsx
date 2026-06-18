@@ -22,6 +22,7 @@ export class Spacer extends React.PureComponent<IPropsSpacer> {
                     ...(this.props.style ?? {}),
                 }}
                 data-test-id={this.props['data-test-id']}
+                data-test-value={this.props['data-test-value']}
             >
                 {this.props.children.map((el, i) => noWrap ? el : (
                     <div

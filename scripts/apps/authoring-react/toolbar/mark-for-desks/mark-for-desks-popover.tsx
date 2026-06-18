@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, Text} from 'superdesk-ui-framework/react';
-import {setMarkedDesks} from './helper';
+import {toggleMarkedDesk} from './helper';
 
 interface IProps {
     article: IArticle;
@@ -24,13 +24,20 @@ export class MarkedDesks extends React.PureComponent<IProps> {
     }
 
     private unMarkDesks(deskId: string): void {
-        const deskIds = this.getSelectedDeskIds().filter((id) => id !== deskId);
+        const articleId = this.props.article._id;
+        const nextMarks = (this.props.article.marked_desks ?? []).filter((m) => m.desk_id !== deskId);
 
-        setMarkedDesks(deskIds, this.props.article._id).then(() => {
-            this.setState({
-                selectedDeskIds: deskIds,
+        toggleMarkedDesk(deskId, articleId).then(() => {
+            // Safe to overwrite locally: marked_desks is a side-channel field with no editor input, so
+            // there are no unsaved user edits to clobber, and the patch matches what the server already
+            // persisted via the toggle above. A full reload here would race with the archive index refresh
+            // and return stale data.
+            dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
+                item: {
+                    _id: articleId,
+                    marked_desks: nextMarks,
+                },
             });
-            dispatchInternalEvent('dangerouslyForceReloadAuthoring', undefined);
         });
     }
 
@@ -39,7 +46,15 @@ export class MarkedDesks extends React.PureComponent<IProps> {
         const selectedDesks = this.getSelectedDeskIds().map((id) => allDesks.get(id));
 
         return selectedDesks.map(({name, _id}) => (
-            <Spacer gap="32" h key={_id} justifyContent="space-between" alignItems="stretch">
+            <Spacer
+                gap="32"
+                h
+                key={_id}
+                justifyContent="space-between"
+                alignItems="stretch"
+                data-test-id="marked-desk"
+                data-test-value={name}
+            >
                 <Text size="small">{name}</Text>
                 <Button
                     size="small"
