@@ -26,6 +26,14 @@ export default defineConfig({
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: 'http://localhost:9000',
 
+        /*
+         * Superdesk emits `data-test-id` attributes. Playwright's getByTestId
+         * default is `data-testid` (no middle hyphen), so this must be set for
+         * getByTestId to resolve. Legacy specs that build CSS via the s() helper
+         * are unaffected (they call page.locator, which ignores this option).
+         */
+        testIdAttribute: 'data-test-id',
+
         viewport: {width: 1280, height: 800},
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */

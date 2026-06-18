@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
 import {IVocabulary} from 'superdesk-api';
 import {appConfig} from 'appConfig';
-import {gettext} from 'core/utils';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 /**
  * @ngdoc directive
@@ -86,7 +86,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
              * @description Preview the item (picture, story).
              */
             scope.preview = function(item) {
-                superdesk.intent('preview', 'item', item);
+                previewItems([item]);
             };
 
             /**

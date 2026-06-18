@@ -64,8 +64,8 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 dropdownInitiallyOpen={this.props.autoFocus === true}
                 kind="synchronous"
                 label={gettext('Select a user')}
-                inlineLabel={true}
-                labelHidden={true}
+                inlineLabel={this.props.inlineLabel ?? true}
+                labelHidden={this.props.labelHidden ?? true}
                 value={this.state.selectedUser ? [this.state.selectedUser] : []}
                 getOptions={() => options.map((user) => ({value: user}))}
                 onChange={(users) => {
@@ -86,13 +86,10 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                 getId={(user) => user._id}
                 optionTemplate={(user) => (
                     <Spacer h gap="8" noWrap justifyContent="start">
-                        <div>
-                            <UserAvatar user={user} displayStatus={true} />
-                        </div>
-
-                        <Spacer v gap="4" noWrap>
-                            <div>{user.display_name}</div>
-                            <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
+                        <UserAvatar size="medium" user={user} displayStatus={this.props.displayStatus ?? true} />
+                        <Spacer v gap="0" noWrap justifyContent="center">
+                            <span className="text-sm">{user.display_name}</span>
+                            <span className="text-xs text-color-muted">@{user.username}</span>
                         </Spacer>
                     </Spacer>
                 )}
@@ -106,7 +103,11 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                         : (
                             <Wrapper>
                                 <Spacer h gap="8" justifyContent="start" noGrow>
-                                    <UserAvatar user={user} displayStatus={true} />
+                                    <UserAvatar
+                                        size="x-small"
+                                        user={user}
+                                        displayStatus={this.props.displayStatus ?? true}
+                                    />
                                     {user.display_name}
                                 </Spacer>
                             </Wrapper>

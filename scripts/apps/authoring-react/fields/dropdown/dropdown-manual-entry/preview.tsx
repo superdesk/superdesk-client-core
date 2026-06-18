@@ -19,7 +19,9 @@ export class PreviewManualEntry extends React.PureComponent<IProps> {
                     return [value];
                 }
             })()
-                .map((val) => options.find((_option) => _option.id === val));
+                .map((val) => options.find((_option) => _option.id === val))
+                // an article may still reference an option that was removed from the profile config
+                .filter((option) => option != null);
 
         const noPadding = optionsToPreview.every(({color}) => color == null);
 

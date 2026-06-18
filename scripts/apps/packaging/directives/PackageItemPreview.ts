@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$sce',
     'desks', 'vocabularies'];
@@ -99,7 +100,7 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace: Aut
             });
 
             scope.preview = function(item) {
-                superdesk.intent('preview', 'item', item);
+                previewItems([item]);
             };
 
             scope.open = function(item) {
