@@ -19,9 +19,8 @@ export function toggleMarkedDesk(deskId: string, articleId: string) {
 }
 
 /**
- * Resolves marked desk ids to desk objects, dropping ids that no longer exist.
- * A desk can be deleted while an article keeps the stale id in marked_desks, and
- * the callers would otherwise render undefined entries.
+ * Turns marked desk ids into desk objects, dropping ids that no longer exist. A desk can be
+ * deleted while an article keeps the stale id, which would otherwise render as undefined.
  */
 export function resolveDesks(deskIds: Array<string>, allDesks: OrderedMap<IDesk['_id'], IDesk>): Array<IDesk> {
     return deskIds

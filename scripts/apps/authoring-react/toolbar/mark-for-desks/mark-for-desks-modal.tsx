@@ -43,9 +43,8 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
         const previousIds = previousSelected.map((m) => m.desk_id);
         const nextIds = nextValue.map((desk) => desk._id);
 
-        // TreeSelect always reports the full next value (its clear-all button empties the whole
-        // selection in a single change), so toggle every desk that was added or removed rather than
-        // assuming a single delta.
+        // TreeSelect gives us the whole next value (its clear-all empties everything at once), so
+        // toggle every added or removed desk, not just one.
         const changedIds = [
             ...nextIds.filter((id) => !previousIds.includes(id)),
             ...previousIds.filter((id) => !nextIds.includes(id)),
@@ -63,8 +62,7 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
         Promise.allSettled(
             changedIds.map((deskId) => toggleMarkedDesk(deskId, articleId)),
         ).then((results) => {
-            // Each toggle flips one desk; fold in only the ones that actually persisted so the UI and
-            // the server agree even if some requests failed.
+            // Each toggle flips one desk. Apply only the ones that succeeded so the UI matches the server.
             const persistedIds = new Set(previousIds);
 
             changedIds.forEach((deskId, index) => {
@@ -80,11 +78,15 @@ export class MarkForDesksModal extends React.PureComponent<IProps, IState> {
                 persistedIds.add(deskId);
             });
 
-            const persisted = Array.from(persistedIds).map((id) => existingById.get(id) ?? this.markFor(id));
+            // Keep the user's order; put desks that stayed marked after a failed unmark at the end.
+            const persistedOrder = [
+                ...nextIds.filter((id) => persistedIds.has(id)),
+                ...Array.from(persistedIds).filter((id) => !nextIds.includes(id)),
+            ];
+            const persisted = persistedOrder.map((id) => existingById.get(id) ?? this.markFor(id));
 
-            // Safe to overwrite locally: marked_desks is a side-channel field with no editor input, so
-            // there are no unsaved user edits to clobber. A full reload would race the archive index
-            // refresh and return stale data.
+            // Patch state directly instead of reloading; a reload would race the index and read stale
+            // data. marked_desks has no editor input, so there are no unsaved edits to lose.
             this.setState({selectedDesks: persisted});
             dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
                 item: {

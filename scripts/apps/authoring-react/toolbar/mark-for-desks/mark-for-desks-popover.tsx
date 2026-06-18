@@ -26,13 +26,13 @@ export class MarkedDesks extends React.PureComponent<IProps> {
 
     private unMarkDesks(deskId: string): void {
         const articleId = this.props.article._id;
-        const nextMarks = (this.props.article.marked_desks ?? []).filter((m) => m.desk_id !== deskId);
 
         toggleMarkedDesk(deskId, articleId).then(() => {
-            // Safe to overwrite locally: marked_desks is a side-channel field with no editor input, so
-            // there are no unsaved user edits to clobber, and the patch matches what the server already
-            // persisted via the toggle above. A full reload here would race with the archive index refresh
-            // and return stale data.
+            // Read the marks here, not at call time, so fast repeated removals do not start from stale
+            // props and bring a removed desk back. Patch state directly instead of reloading; a reload
+            // would race the index and read stale data.
+            const nextMarks = (this.props.article.marked_desks ?? []).filter((m) => m.desk_id !== deskId);
+
             dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
                 item: {
                     _id: articleId,
