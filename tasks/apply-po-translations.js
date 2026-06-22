@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 const fs = require('fs');
 const path = require('path');
@@ -27,85 +28,105 @@ const lines = content.split('\n');
 
 function extractQuoted(s) {
     const m = s.match(/^"(.*)"$/);
+
     return m ? m[1] : null;
 }
 
 function unesc(s) {
-    return s.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+    return s.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\');
 }
 
 function esc(s) {
-    return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\t/g, '\\t').replace(/\n/g, '\\n');
+    return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\t/g, '\\t')
+        .replace(/\n/g, '\\n');
 }
 
-// Parse entries: find msgid, msgid_plural, msgstr, msgstr[n] with their line indices
-let entries = [];
+// Append a continuation line value to the field currently being parsed.
+function appendContinuation(entry, field, val) {
+    if (field === 'msgid') {
+        entry.msgid += val;
+    } else if (field === 'msgid_plural') {
+        entry.msgidPlural += val;
+    } else if (field === 'msgstr') {
+        entry.msgstr += val;
+    } else if (field && field.startsWith('msgstr_')) {
+        const idx = parseInt(field.split('_')[1], 10);
+
+        entry.msgstrPluralMap[idx] += val;
+    }
+}
+
+// Parse one contiguous block of PO lines into an entry, tracking line indices.
+function parseEntry(entryLines, start) {
+    const entry = {
+        msgid: null,
+        msgidPlural: null,
+        msgstr: null,
+        msgstrPluralMap: {},
+        msgstrLine: -1,
+        msgstrPluralLines: {},
+        obsolete: false,
+    };
+    let field = null;
+
+    for (let j = 0; j < entryLines.length; j++) {
+        const el = entryLines[j];
+        const absLine = start + j;
+
+        // Do not touch obsolete entries (#~ ...)
+        if (el.startsWith('#~')) {
+            entry.obsolete = true;
+            field = null;
+        } else if (el.startsWith('#')) {
+            field = null;
+        } else if (el.startsWith('msgctxt ')) {
+            field = 'msgctxt';
+        } else if (el.startsWith('msgid_plural ')) {
+            field = 'msgid_plural';
+            entry.msgidPlural = unesc(extractQuoted(el.substring(13)) || '');
+        } else if (el.startsWith('msgid ')) {
+            field = 'msgid';
+            entry.msgid = unesc(extractQuoted(el.substring(6)) || '');
+        } else if (el.match(/^msgstr\[\d+\] /)) {
+            const idx = parseInt(el.match(/^msgstr\[(\d+)\]/)[1], 10);
+
+            field = 'msgstr_' + idx;
+            entry.msgstrPluralMap[idx] = unesc(extractQuoted(el.substring(el.indexOf('"'))) || '');
+            entry.msgstrPluralLines[idx] = absLine;
+        } else if (el.startsWith('msgstr ')) {
+            field = 'msgstr';
+            entry.msgstr = unesc(extractQuoted(el.substring(7)) || '');
+            entry.msgstrLine = absLine;
+        } else if (el.startsWith('"')) {
+            appendContinuation(entry, field, unesc(extractQuoted(el) || ''));
+        }
+    }
+
+    return entry;
+}
+
+const entries = [];
 let i = 0;
 
 while (i < lines.length) {
     // Skip blank lines
-    if (lines[i].trim() === '') { i++; continue; }
-
-    // Collect contiguous non-blank lines as one entry
-    let start = i;
-    while (i < lines.length && lines[i].trim() !== '') i++;
-
-    let entryLines = lines.slice(start, i);
-    let msgid = null, msgidPlural = null, msgstr = null;
-    let msgstrPluralMap = {};
-    let msgstrLine = -1, msgstrPluralLines = {};
-    let field = null;
-    let obsolete = false;
-
-    for (let j = 0; j < entryLines.length; j++) {
-        let el = entryLines[j];
-        let absLine = start + j;
-
-        // Do not touch obsolete entries (#~ ...)
-        if (el.startsWith('#~')) { obsolete = true; field = null; continue; }
-        if (el.startsWith('#')) { field = null; continue; }
-
-        if (el.startsWith('msgctxt ')) {
-            field = 'msgctxt'; continue;
-        }
-        if (el.startsWith('msgid_plural ')) {
-            field = 'msgid_plural';
-            msgidPlural = unesc(extractQuoted(el.substring(13)) || '');
-            continue;
-        }
-        if (el.startsWith('msgid ')) {
-            field = 'msgid';
-            msgid = unesc(extractQuoted(el.substring(6)) || '');
-            continue;
-        }
-        if (el.match(/^msgstr\[\d+\] /)) {
-            let idx = parseInt(el.match(/^msgstr\[(\d+)\]/)[1]);
-            field = 'msgstr_' + idx;
-            let val = unesc(extractQuoted(el.substring(el.indexOf('"'))) || '');
-            msgstrPluralMap[idx] = val;
-            msgstrPluralLines[idx] = absLine;
-            continue;
-        }
-        if (el.startsWith('msgstr ')) {
-            field = 'msgstr';
-            msgstr = unesc(extractQuoted(el.substring(7)) || '');
-            msgstrLine = absLine;
-            continue;
-        }
-        if (el.startsWith('"')) {
-            let val = unesc(extractQuoted(el) || '');
-            if (field === 'msgid') msgid += val;
-            else if (field === 'msgid_plural') msgidPlural += val;
-            else if (field === 'msgstr') msgstr += val;
-            else if (field && field.startsWith('msgstr_')) {
-                let idx = parseInt(field.split('_')[1]);
-                msgstrPluralMap[idx] += val;
-            }
-        }
+    if (lines[i].trim() === '') {
+        i++;
+        continue;
     }
 
-    if (msgid !== null && !obsolete) {
-        entries.push({ msgid, msgidPlural, msgstr, msgstrPluralMap, msgstrLine, msgstrPluralLines });
+    // Collect contiguous non-blank lines as one entry
+    const start = i;
+
+    while (i < lines.length && lines[i].trim() !== '') {
+        i++;
+    }
+
+    const entry = parseEntry(lines.slice(start, i), start);
+
+    if (entry.msgid !== null && !entry.obsolete) {
+        entries.push(entry);
     }
 }
 
@@ -113,35 +134,50 @@ while (i < lines.length) {
 let applied = 0;
 let skippedNonEmpty = 0;
 
-for (const entry of entries) {
-    if (entry.msgid === '') continue; // Skip header
+// Fill a plural entry from a "msgid|plural" translation, leaving non-empty slots untouched.
+function applyPlural(entry) {
+    let trans = translations[entry.msgid + '|plural'];
 
+    if (!trans) {
+        return;
+    }
+    if (typeof trans === 'string') {
+        trans = {'0': trans};
+    }
+    for (const [idx, value] of Object.entries(trans)) {
+        const numIdx = parseInt(idx, 10);
+        const current = entry.msgstrPluralMap[numIdx];
+
+        if (current === '') {
+            lines[entry.msgstrPluralLines[numIdx]] = `msgstr[${numIdx}] "${esc(value)}"`;
+            applied++;
+        } else if (current !== undefined) {
+            skippedNonEmpty++;
+        }
+    }
+}
+
+// Fill a singular entry, leaving an existing non-empty translation untouched.
+function applySingular(entry) {
+    if (!translations[entry.msgid]) {
+        return;
+    }
+    if (entry.msgstr === '') {
+        lines[entry.msgstrLine] = `msgstr "${esc(translations[entry.msgid])}"`;
+        applied++;
+    } else {
+        skippedNonEmpty++;
+    }
+}
+
+for (const entry of entries) {
+    if (entry.msgid === '') {
+        continue; // Skip header
+    }
     if (entry.msgidPlural !== null) {
-        // Plural entry - look up by "msgid|plural" key
-        let key = entry.msgid + '|plural';
-        if (translations[key]) {
-            let trans = translations[key];
-            if (typeof trans === 'string') trans = { '0': trans };
-            for (const [idx, value] of Object.entries(trans)) {
-                let numIdx = parseInt(idx);
-                if (entry.msgstrPluralMap[numIdx] === '') {
-                    lines[entry.msgstrPluralLines[numIdx]] = `msgstr[${numIdx}] "${esc(value)}"`;
-                    applied++;
-                } else if (entry.msgstrPluralMap[numIdx] !== '') {
-                    skippedNonEmpty++;
-                }
-            }
-        }
+        applyPlural(entry);
     } else if (entry.msgstr !== null) {
-        // Singular entry
-        if (translations[entry.msgid]) {
-            if (entry.msgstr === '') {
-                lines[entry.msgstrLine] = `msgstr "${esc(translations[entry.msgid])}"`;
-                applied++;
-            } else {
-                skippedNonEmpty++;
-            }
-        }
+        applySingular(entry);
     }
 }
 
