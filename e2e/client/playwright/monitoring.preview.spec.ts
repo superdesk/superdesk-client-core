@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
+import {restoreDatabaseSnapshot} from './utils';
 
 /**
  * QA case "Open article in preview mode".
@@ -12,14 +13,13 @@ import {Monitoring} from './page-object-models/monitoring';
  * The Duplicates tab is intentionally not asserted: it only renders when the item
  * has related items (see ItemPreview's showRelatedTab), which the snapshot's
  * "test sports story" does not have.
- *
- * Pure-read scenario, so it skips restoreDatabaseSnapshot(): it only asserts on
- * data already in the `main` snapshot and never mutates server state. Restoring
- * here is also actively harmful, the post-restore reindex/session-expiry window
- * leaves the list empty and makes the first click race (verified under repeat).
  */
 test.describe('opening an article in preview mode', () => {
     const ARTICLE = 'test sports story';
+
+    test.beforeEach(async () => {
+        await restoreDatabaseSnapshot();
+    });
 
     test('single click previews the item read-only and the close icon dismisses it', async ({page}) => {
         const monitoring = new Monitoring(page);
@@ -28,6 +28,10 @@ test.describe('opening an article in preview mode', () => {
         await monitoring.selectDeskOrWorkspace('Sports');
 
         const item = monitoring.getArticleLocator(ARTICLE);
+
+        // Wait for the list to populate (the post-restore reindex empties it briefly)
+        // so the first click does not race the rebuild.
+        await expect(item).toBeVisible();
 
         await item.click();
 
