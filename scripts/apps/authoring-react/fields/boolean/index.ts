@@ -8,6 +8,7 @@ import {
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
 import {Preview} from './preview';
+import {Difference} from './difference';
 
 type IBooleanField = ICustomFieldType<
     IBooleanFieldValueOperational,
@@ -23,6 +24,7 @@ export const getBooleanField = (): IBooleanField => {
         label: gettext('Boolean'),
         editorComponent: Editor,
         previewComponent: Preview,
+        differenceComponent: Difference,
         hasValue: (val) => val != null,
         getEmptyValue: () => null,
     };

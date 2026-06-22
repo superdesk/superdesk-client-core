@@ -9,12 +9,15 @@ type IProps = IPreviewComponentProps<IDatelineValueOperational, IDatelineFieldCo
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
-        if (this.props.value == null) {
+        // The dateline value is an object; `text` is its composed, human-readable form.
+        const text = this.props.value?.text;
+
+        if (text == null || text.length === 0) {
             return null;
         }
 
         return (
-            <div>{this.props.value}</div>
+            <div>{text}</div>
         );
     }
 }
