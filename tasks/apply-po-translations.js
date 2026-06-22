@@ -4,16 +4,27 @@
 const fs = require('fs');
 const path = require('path');
 
-const lang = process.argv[2];
+const lang = (process.argv[2] || '').trim();
 const translationsFile = process.argv[3];
-const poFilePath = process.argv[4]
-    || (lang ? path.join(__dirname, '..', 'po', `${lang}.po`) : null);
+const poFileOverride = process.argv[4];
 
 if (!lang || !translationsFile) {
     console.error('Usage: node tasks/apply-po-translations.js <lang> <translations.json> [po-file]');
     console.error('  <lang>             PO filename stem, e.g. uk_UA, ja, es (resolves to po/<lang>.po)');
     console.error('  <translations.json> JSON map of msgid -> translation (use "<msgid>|plural" for plural forms)');
     console.error('  [po-file]          optional explicit PO path, overrides po/<lang>.po');
+    process.exit(1);
+}
+
+if (!/^[A-Za-z0-9_.@-]+$/.test(lang)) {
+    console.error(`Invalid language code: ${lang}`);
+    process.exit(1);
+}
+
+const poFilePath = poFileOverride || path.join(__dirname, '..', 'po', `${lang}.po`);
+
+if (!fs.existsSync(translationsFile)) {
+    console.error(`Translations file not found: ${translationsFile}`);
     process.exit(1);
 }
 
@@ -24,7 +35,7 @@ if (!fs.existsSync(poFilePath)) {
 
 const translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
 const content = fs.readFileSync(poFilePath, 'utf8');
-const lines = content.split('\n');
+const lines = content.split(/\r?\n/);
 
 function extractQuoted(s) {
     const m = s.match(/^"(.*)"$/);
@@ -32,9 +43,28 @@ function extractQuoted(s) {
     return m ? m[1] : null;
 }
 
+// Decode PO string escapes in a single left-to-right pass so an escaped
+// backslash (\\) is consumed before the following character is interpreted.
 function unesc(s) {
-    return s.replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\"/g, '"')
-        .replace(/\\\\/g, '\\');
+    let out = '';
+
+    for (let k = 0; k < s.length; k++) {
+        if (s[k] !== '\\' || k === s.length - 1) {
+            out += s[k];
+            continue;
+        }
+        const next = s[++k];
+
+        if (next === 'n') {
+            out += '\n';
+        } else if (next === 't') {
+            out += '\t';
+        } else {
+            out += next;
+        }
+    }
+
+    return out;
 }
 
 function esc(s) {
