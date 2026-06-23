@@ -4,15 +4,18 @@ description: 'Install e2e runtime dependencies and start services'
 runs:
   using: "composite"
   steps:
-    - run: npm ci
+    - name: Install root dependencies
+      run: npm ci
       working-directory: ./
       shell: bash
 
-    - run: npm ci
+    - name: Install build-tools dependencies
+      run: npm ci
       working-directory: ./build-tools
       shell: bash
 
-    - run: npm ci
+    - name: Install e2e client dependencies
+      run: npm ci
       working-directory: ./e2e/client
       shell: bash
 

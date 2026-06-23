@@ -37,7 +37,7 @@ jobs:
       uses: actions/cache@v5
       with:
         path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml') }}
+        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', '.github/workflows/tests.yml') }}
         restore-keys: |
           base-docker-images-
 
@@ -48,7 +48,10 @@ jobs:
           docker load -i /tmp/base-docker-images.tar
         else
           echo "Pulling base images and saving to cache"
-          docker compose pull
+          docker pull redis:alpine
+          docker pull mongo:6
+          docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.22
+          docker pull marlonb/mailcrab:latest
           docker save \
             redis:alpine \
             mongo:6 \
@@ -59,7 +62,7 @@ jobs:
       working-directory: e2e/server
 
     - name: Build superdesk server
-      run: docker compose build server
+      run: docker build -t superdesk-client-core-e2e-server:ci .
       working-directory: e2e/server
 
     - name: Archive e2e server images
@@ -100,10 +103,13 @@ jobs:
           build-tools/package-lock.json
           e2e/client/package-lock.json
 
+    - name: Install root dependencies
+      run: npm ci
     - run: npm ci
-    - run: npm ci
+      name: Install build-tools dependencies
       working-directory: build-tools
     - run: npm ci
+      name: Install e2e client dependencies
       working-directory: e2e/client
     - run: npm run build
       working-directory: e2e/client
