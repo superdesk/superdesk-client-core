@@ -14,7 +14,8 @@ Use this skill when asked to update translations in `superdesk-client-core`.
 - Source of truth: `po/superdesk.pot`
 - Optional glossary file, normally `docs/i18n/<lang>-glossary.md` when it exists
 - Translation rules: `docs/i18n/translation-rules.md`
-- Optional internal batch size for large translation sets
+- Apply helper: `tasks/apply-po-translations.js` (writes a JSON translation map into the PO, filling only empty entries)
+- Optional internal batch size for large translation sets (default 50, larger is fine when handled safely)
 
 ## Environment requirements
 
@@ -46,7 +47,7 @@ Assume `po/superdesk.pot` was prepared by a human developer in a complete local 
 npm run gettext-update-po -- <lang>
 ```
 
-2. Fill empty `msgstr` and `msgstr[n]` entries in `po/<lang>.po`. Use internal batches only when the number of pending entries is too large to handle safely in one pass.
+2. Fill empty `msgstr` and `msgstr[n]` entries in `po/<lang>.po`. Use internal batches only when the number of pending entries is too large to handle safely in one pass. Prefer the apply helper over hand-editing the PO (see "Applying translations").
 
 3. Validate the result:
 
@@ -56,14 +57,31 @@ grunt nggettext_compile
 
 4. Prepare a pull request against `develop`.
 
+## Applying translations
+
+You can edit `po/<lang>.po` directly, but for any non-trivial set prefer the deterministic apply helper. It only fills empty entries, never overwrites existing translations, preserves placeholders and plural structures, and skips obsolete `#~` entries.
+
+```bash
+node tasks/apply-po-translations.js <lang> <translations.json> [po-file]
+```
+
+- `<lang>` is the PO filename stem, for example `uk_UA`, `ja`, or `es` (resolves to `po/<lang>.po`).
+- `<translations.json>` is a JSON map keyed by source `msgid`:
+  - singular: `"<msgid>": "<translation>"`
+  - plural: `"<msgid>|plural": {"0": "<form0>", "1": "<form1>", ...}` with one entry per plural slot the target language requires (for example four forms for Ukrainian).
+- The script reports how many entries it applied, how many it skipped because they were already non-empty, and the total it was given. It rewrites the file byte-for-byte when nothing matches, so it is safe to run repeatedly.
+
+To inspect what still needs translating, list the next deterministic batch with `npm run gettext-next-batch -- <lang> --limit <n>`, translate those entries into a JSON map, then apply it. Always re-run validation after applying.
+
 ## Internal batching
 
 The final result should be a single pull request, not one pull request per batch.
 
 Use internal batches only when the pending translation set is large enough that one pass would reduce quality or risk context loss.
 
-- use `npm run gettext-next-batch -- <lang> --limit 50` to inspect the next deterministic batch when batching is needed
-- if batching is needed, process at most `50` safe untranslated active entries at a time unless the prompt provides a different batch size
+- use `npm run gettext-next-batch -- <lang> --limit <n>` to inspect the next deterministic batch when batching is needed
+- `50` is a safe default batch size; larger batches such as `100` to `150` are acceptable when each batch still gets the per-batch re-checks below. Honour any batch size the prompt provides
+- translate a batch into a JSON map and write it with `tasks/apply-po-translations.js` (see "Applying translations") rather than hand-editing many entries
 - after each internal batch, re-check placeholders, plural structures, whitespace, and glossary consistency for the entries just changed
 - run validation after each successful internal batch when practical, and fix only issues introduced in that batch
 - commit each successful internal batch separately within the same pull request so review and rollback are easier
@@ -71,6 +89,8 @@ Use internal batches only when the pending translation set is large enough that 
 - if the session cannot safely finish the full file, keep the partial work in the same PR and report exactly where the agent stopped
 - do not translate obsolete `#~` entries
 - do not create separate PRs for each internal batch unless the user explicitly asks for that
+
+For very large sets, batches can be translated in parallel (for example one agent per batch) and then merged into a single JSON map applied once with `tasks/apply-po-translations.js`. The same per-batch re-checks, single-PR rule, and validation still apply.
 
 ## Sync safety checks
 
