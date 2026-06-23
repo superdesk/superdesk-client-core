@@ -40,7 +40,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
                         itemInEditMode = null;
                     }
 
-                    if (state.action === 'edit') {
+                    if (state.action === 'edit' || state.action === 'correct') {
                         itemInEditMode = state.item;
 
                         dispatchCustomEvent('articleEditStart', itemInEditMode);
