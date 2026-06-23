@@ -37,21 +37,24 @@ jobs:
       uses: actions/cache@v5
       with:
         path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', 'e2e/server/Dockerfile', 'e2e/server/base-images.txt') }}
+        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', 'e2e/server/base-images.txt') }}
         restore-keys: |
           base-docker-images-
 
     - name: Load or pull base Docker images
       run: |
+        BASE_IMAGES="$(grep -v '^$' base-images.txt | paste -sd ' ' -)"
+
         if [ -f /tmp/base-docker-images.tar ]; then
           echo "Loading base images from cache"
           docker load -i /tmp/base-docker-images.tar
         else
           echo "Pulling base images and saving to cache"
           while IFS= read -r image; do
+            [ -n "$image" ] || continue
             docker pull "$image"
           done < base-images.txt
-          docker save $(tr '\n' ' ' < base-images.txt) -o /tmp/base-docker-images.tar
+          docker save $BASE_IMAGES -o /tmp/base-docker-images.tar
         fi
       working-directory: e2e/server
 
@@ -61,8 +64,10 @@ jobs:
 
     - name: Archive e2e server images
       run: |
+        BASE_IMAGES="$(grep -v '^$' base-images.txt | paste -sd ' ' -)"
+
         docker save \
-          $(tr '\n' ' ' < base-images.txt) \
+          $BASE_IMAGES \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
       working-directory: e2e/server
 
