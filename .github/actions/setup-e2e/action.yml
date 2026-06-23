@@ -5,6 +5,14 @@ runs:
   using: "composite"
   steps:
     - run: npm ci
+      working-directory: ./
+      shell: bash
+
+    - run: npm ci
+      working-directory: ./build-tools
+      shell: bash
+
+    - run: npm ci
       working-directory: ./e2e/client
       shell: bash
 

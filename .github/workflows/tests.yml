@@ -140,7 +140,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: e2e/client/package-lock.json
+        cache-dependency-path: |
+          package-lock.json
+          build-tools/package-lock.json
+          e2e/client/package-lock.json
 
     - name: Download e2e client dist
       uses: actions/download-artifact@v8
