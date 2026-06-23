@@ -28,8 +28,98 @@ jobs:
       env:
         TZ: "Europe/Prague"
 
+  prepare-e2e-server:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Cache base Docker images
+      uses: actions/cache@v5
+      with:
+        path: /tmp/base-docker-images.tar
+        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml') }}
+        restore-keys: |
+          base-docker-images-
+
+    - name: Load or pull base Docker images
+      run: |
+        if [ -f /tmp/base-docker-images.tar ]; then
+          echo "Loading base images from cache"
+          docker load -i /tmp/base-docker-images.tar
+        else
+          echo "Pulling base images and saving to cache"
+          docker compose pull
+          docker save \
+            redis:alpine \
+            mongo:6 \
+            docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
+            marlonb/mailcrab:latest \
+            -o /tmp/base-docker-images.tar
+        fi
+      working-directory: e2e/server
+
+    - name: Build superdesk server
+      run: docker compose build server
+      working-directory: e2e/server
+
+    - name: Archive e2e server images
+      run: |
+        docker save \
+          redis:alpine \
+          mongo:6 \
+          docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
+          marlonb/mailcrab:latest \
+          superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
+
+    - name: Upload e2e server images
+      uses: actions/upload-artifact@v7
+      with:
+        name: e2e-server-images
+        path: /tmp/e2e-server-images.tar.gz
+        retention-days: 1
+
+  prepare-e2e-client:
+    runs-on: ubuntu-latest
+    env:
+      # CI runs the e2e server on :5000 (docker-compose PORT default; no AirPlay
+      # conflict on Linux). The test helpers and client build read SUPERDESK_URL,
+      # which defaults to 5002 locally to dodge macOS AirPlay; pin it to the CI port.
+      SUPERDESK_URL: http://localhost:5000/api
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['22', '24']
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: |
+          package-lock.json
+          build-tools/package-lock.json
+          e2e/client/package-lock.json
+
+    - run: npm ci
+    - run: npm ci
+      working-directory: build-tools
+    - run: npm ci
+      working-directory: e2e/client
+    - run: npm run build
+      working-directory: e2e/client
+
+    - name: Upload e2e client dist
+      uses: actions/upload-artifact@v7
+      with:
+        name: e2e-client-dist-node-${{ matrix.node-version }}
+        path: e2e/client/dist
+        retention-days: 1
+
   playwright-e2e:
     runs-on: ubuntu-latest
+    needs:
+    - prepare-e2e-server
+    - prepare-e2e-client
     env:
       # CI runs the e2e server on :5000 (docker-compose PORT default; no AirPlay
       # conflict on Linux). The test helpers and client build read SUPERDESK_URL,
@@ -50,6 +140,22 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: e2e/client/package-lock.json
+
+    - name: Download e2e client dist
+      uses: actions/download-artifact@v8
+      with:
+        name: e2e-client-dist-node-${{ matrix.node-version }}
+        path: e2e/client/dist
+
+    - name: Download e2e server images
+      uses: actions/download-artifact@v8
+      with:
+        name: e2e-server-images
+        path: /tmp/e2e-server-images
+
+    - name: Load e2e server images
+      run: gunzip -c /tmp/e2e-server-images/e2e-server-images.tar.gz | docker load
 
     - name: Setup E2E Environment
       uses: ./.github/actions/setup-e2e
@@ -88,7 +194,7 @@ jobs:
       if: ${{ !cancelled() }}
       uses: actions/upload-artifact@v7
       with:
-        name: blob-report-${{ matrix.shardIndex }}
+        name: blob-report-node-${{ matrix.node-version }}-shard-${{ matrix.shardIndex }}
         path: e2e/client/blob-report
         retention-days: 1
 
