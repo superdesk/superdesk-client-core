@@ -37,7 +37,7 @@ jobs:
       uses: actions/cache@v5
       with:
         path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', '.github/workflows/tests.yml') }}
+        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', 'e2e/server/Dockerfile', 'e2e/server/base-images.txt') }}
         restore-keys: |
           base-docker-images-
 
@@ -48,16 +48,10 @@ jobs:
           docker load -i /tmp/base-docker-images.tar
         else
           echo "Pulling base images and saving to cache"
-          docker pull redis:alpine
-          docker pull mongo:6
-          docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.22
-          docker pull marlonb/mailcrab:latest
-          docker save \
-            redis:alpine \
-            mongo:6 \
-            docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
-            marlonb/mailcrab:latest \
-            -o /tmp/base-docker-images.tar
+          while IFS= read -r image; do
+            docker pull "$image"
+          done < base-images.txt
+          docker save $(tr '\n' ' ' < base-images.txt) -o /tmp/base-docker-images.tar
         fi
       working-directory: e2e/server
 
@@ -68,11 +62,9 @@ jobs:
     - name: Archive e2e server images
       run: |
         docker save \
-          redis:alpine \
-          mongo:6 \
-          docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
-          marlonb/mailcrab:latest \
+          $(tr '\n' ' ' < base-images.txt) \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
+      working-directory: e2e/server
 
     - name: Upload e2e server images
       uses: actions/upload-artifact@v7
