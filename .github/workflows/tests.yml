@@ -34,7 +34,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Resolve base Docker images
-      run: echo "BASE_IMAGES=$(paste -sd ' ' e2e/server/base-images.txt)" >> "$GITHUB_ENV"
+      run: echo "BASE_IMAGES_FILE=${{ github.workspace }}/e2e/server/base-images.txt" >> "$GITHUB_ENV"
 
     - name: Cache base Docker images
       uses: actions/cache@v5
@@ -46,6 +46,8 @@ jobs:
 
     - name: Load or pull base Docker images
       run: |
+        mapfile -t base_images < "$BASE_IMAGES_FILE"
+
         if [ -f /tmp/base-docker-images.tar ]; then
           echo "Loading base images from cache"
           docker load -i /tmp/base-docker-images.tar
@@ -54,8 +56,8 @@ jobs:
           while IFS= read -r image; do
             [ -n "$image" ] || continue
             docker pull "$image"
-          done < e2e/server/base-images.txt
-          docker save $BASE_IMAGES -o /tmp/base-docker-images.tar
+          done < "$BASE_IMAGES_FILE"
+          docker save "${base_images[@]}" -o /tmp/base-docker-images.tar
         fi
 
     - name: Build superdesk server
@@ -64,8 +66,10 @@ jobs:
 
     - name: Archive e2e server images
       run: |
+        mapfile -t base_images < "$BASE_IMAGES_FILE"
+
         docker save \
-          $BASE_IMAGES \
+          "${base_images[@]}" \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
 
     - name: Upload e2e server images
