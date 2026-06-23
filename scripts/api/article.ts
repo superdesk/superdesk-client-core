@@ -377,7 +377,7 @@ function publishItem_legacy(
             : Promise.reject(false)
         ))
         .then((response: IArticle) => {
-            notify.success(action === 'correct' ? gettext('Correction sent.') : gettext('Item published.'));
+            notify.success(gettext('Item published.'));
             scope.item = response;
             scope.dirty = false;
             ng.get('authoringWorkspace').close(true);
