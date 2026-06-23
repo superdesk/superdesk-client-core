@@ -1,6 +1,7 @@
 // settings.scss
 // Styling for the superdesk ingest settings
 // ----------------------------------------------------------------------------------------
+@use "sass:color";
 @import '~mixins.scss';
 @import '~variables.scss';
 
@@ -163,7 +164,7 @@
     }
     .ui-sortable-placeholder {
         border: 1px dashed $sd-blue !important;
-        background-color: scale-color($sd-blue, $alpha: -90%) !important;
+        background-color: color.scale($sd-blue, $alpha: -90%) !important;
         visibility: visible !important;
         box-shadow: none !important;
         &:after {

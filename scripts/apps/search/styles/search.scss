@@ -1,6 +1,7 @@
 // search.scss
 // Styling for search page, and search functionalities
 // ----------------------------------------------------------------------------------------
+@use "sass:math";
 @import '~mixins.scss';
 @import '~variables.scss';
 @import '~animation.scss';
@@ -366,7 +367,7 @@
 
 .sortbar {
     .label-total {
-        margin: 0 $sd-base-increment / 2;
+        margin: 0 math.div($sd-base-increment, 2);
         background-color: var(--sd-colour-bg--09);
     }
 }
