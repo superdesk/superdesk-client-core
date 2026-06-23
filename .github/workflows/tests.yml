@@ -33,18 +33,19 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
+    - name: Resolve base Docker images
+      run: echo "BASE_IMAGES=$(paste -sd ' ' e2e/server/base-images.txt)" >> "$GITHUB_ENV"
+
     - name: Cache base Docker images
       uses: actions/cache@v5
       with:
         path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml', 'e2e/server/base-images.txt') }}
+        key: base-docker-images-${{ hashFiles('e2e/server/base-images.txt') }}
         restore-keys: |
           base-docker-images-
 
     - name: Load or pull base Docker images
       run: |
-        BASE_IMAGES="$(grep -v '^$' base-images.txt | paste -sd ' ' -)"
-
         if [ -f /tmp/base-docker-images.tar ]; then
           echo "Loading base images from cache"
           docker load -i /tmp/base-docker-images.tar
@@ -64,8 +65,6 @@ jobs:
 
     - name: Archive e2e server images
       run: |
-        BASE_IMAGES="$(grep -v '^$' base-images.txt | paste -sd ' ' -)"
-
         docker save \
           $BASE_IMAGES \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
@@ -102,11 +101,11 @@ jobs:
 
     - name: Install root dependencies
       run: npm ci
-    - run: npm ci
-      name: Install build-tools dependencies
+    - name: Install build-tools dependencies
+      run: npm ci
       working-directory: build-tools
-    - run: npm ci
-      name: Install e2e client dependencies
+    - name: Install e2e client dependencies
+      run: npm ci
       working-directory: e2e/client
     - run: npm run build
       working-directory: e2e/client
