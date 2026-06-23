@@ -54,10 +54,9 @@ jobs:
           while IFS= read -r image; do
             [ -n "$image" ] || continue
             docker pull "$image"
-          done < base-images.txt
+          done < e2e/server/base-images.txt
           docker save $BASE_IMAGES -o /tmp/base-docker-images.tar
         fi
-      working-directory: e2e/server
 
     - name: Build superdesk server
       run: docker build -t superdesk-client-core-e2e-server:ci .
@@ -68,7 +67,6 @@ jobs:
         docker save \
           $BASE_IMAGES \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
-      working-directory: e2e/server
 
     - name: Upload e2e server images
       uses: actions/upload-artifact@v7
