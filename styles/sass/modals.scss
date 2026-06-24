@@ -1,3 +1,4 @@
+@use "sass:math";
 @import '~variables.scss';
 
 // // MODALS
@@ -381,5 +382,5 @@ $sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: $sd-base-increment / 2;
+    gap: math.div($sd-base-increment, 2);
 }

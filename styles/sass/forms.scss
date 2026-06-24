@@ -1,4 +1,5 @@
 
+@use "sass:color";
 @import '~mixins.scss';
 // Forms.scss
 // Base styles for various input types, form layouts, and states
@@ -496,7 +497,7 @@ textarea[readonly] {
         z-index: 5;
     }
     .active {
-        background-color: lighten($green, 30);
+        background-color: color.adjust($green, $lightness: 30%);
         border-color: $green;
     }
 }

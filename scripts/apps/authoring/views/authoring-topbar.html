@@ -400,7 +400,8 @@
 
         <button id="send-to-btn" ng-show="_editable"
             ng-if="(action !== 'correct' && action !== 'kill' && buttonsToHide['article-edit--topbar--sendto-publish'] !== true)
-            || isCorrection(item)"
+            || isCorrection(item)
+            || action === 'correct'"
             class="navbtn navbtn--highlighted"
             aria-label="{{ :: 'Send to / Publish' | translate }}"
             sd-tooltip="{{ :: 'Send to / Publish' | translate }}"
