@@ -1,6 +1,7 @@
 // menu.scss
 // Styling for the superdesk top menu and sidebar main menu
 // ----------------------------------------------------------------------------------------
+@use "sass:math";
 @import '~variables.scss';
 @import '~mixins.scss';
 
@@ -522,8 +523,8 @@
         inset-inline-end: 0 !important;
     }
     hr {
-        width: $sidebar-width / 2;
-        margin: 18px $sidebar-width / 4;
+        width: math.div($sidebar-width, 2);
+        margin: 18px math.div($sidebar-width, 4);
         border-block-start: 1px dotted var(--sd-colour-line--medium);
         border-block-end: 0;
     }
