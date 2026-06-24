@@ -1,5 +1,6 @@
 // LABELS
 // ------
+@use "sass:color";
 
 // Label lite
 .label--lite {
@@ -239,7 +240,7 @@ $priority-label-color-6 : #c0c9a1;
     }
     &.state-killed {
         @include state-color($state-color-red);
-        background-color: lighten($state-color-red, 58%);
+        background-color: color.adjust($state-color-red, $lightness: 58%);
     }
     &.state-on_hold, 
     &.state-scheduled {
