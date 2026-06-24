@@ -69,7 +69,7 @@ export function AuthoringTopbarDirective(
             };
 
             function getAvailableTabs(): Array<IArticleActionInteractive> {
-                if (scope.isCorrection(scope.item)) {
+                if (scope.action === 'correct' || scope.isCorrection(scope.item)) {
                     return ['send_to', 'correct'];
                 } else {
                     const result: Array<IArticleActionInteractive> = ['send_to'];

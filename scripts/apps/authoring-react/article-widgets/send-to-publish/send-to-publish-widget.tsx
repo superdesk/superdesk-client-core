@@ -11,7 +11,6 @@ import {SendToAction} from 'core/interactive-article-actions-panel/actions/send-
 import {DuplicateToAction} from 'core/interactive-article-actions-panel/actions/duplicate-to-action';
 import {UnspikeAction} from 'core/interactive-article-actions-panel/actions/unspike-action';
 import {FetchToAction} from 'core/interactive-article-actions-panel/actions/fetch-to-action';
-import {SendCorrectionAction} from 'core/interactive-article-actions-panel/actions/send-correction-action';
 import {PublishAction} from 'core/interactive-article-actions-panel/actions/publish-action';
 import {Text} from 'superdesk-ui-framework/react';
 
@@ -201,14 +200,22 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
             );
         } else if (activeTab === 'correct') {
             return (
-                <SendCorrectionAction
+                <PublishAction
                     item={article}
                     closePublishView={this.handleClose}
                     handleUnsavedChanges={handleUnsavedChanges}
+                    onError={this.handleError}
                     onDataChange={this.handleDataChange}
+                    action="correct"
                 >
-                    {({body, footer}) => this.renderWithLayout(body, footer, tabs, activeTab)}
-                </SendCorrectionAction>
+                    {({body, footer, loading}) => {
+                        if (loading) {
+                            return this.renderWithLayout(null, null, tabs, activeTab);
+                        }
+
+                        return this.renderWithLayout(body, footer, tabs, activeTab);
+                    }}
+                </PublishAction>
             );
         } else if (activeTab === 'duplicate_to') {
             return (
