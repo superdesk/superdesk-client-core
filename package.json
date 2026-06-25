@@ -72,7 +72,7 @@
     "gridster": "github:superdesk/gridster.js#885d0c9",
     "grunt": "~1.5.0",
     "grunt-angular-gettext": "2.5.3",
-    "grunt-angular-templates": "1.1.0",
+    "grunt-angular-templates": "1.2.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
     "grunt-filerev": "2.3.1",
