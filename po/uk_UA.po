@@ -23,7 +23,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "\"GENRE 'null value not allowed'"
-msgstr "\"ЖАНР Відсутність значення неможливо'"
+msgstr "\"ЖАНР 'нульове значення неможливе'"
 
 #: ../superdesk-planning/client/components/ContentProfiles/GroupTab/index.tsx:199
 msgid "\"Name\" is a required field"
@@ -89,19 +89,19 @@ msgstr "'ПРІОРИТЕТ - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.ts:24
 msgid "'SLUGLINE is a required field'"
-msgstr "'Слаглайн обов'язкове поле'"
+msgstr "'Слаглайн - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'SUBJECT is a required field'"
-msgstr "'ТЕМА обов'язкове поле'"
+msgstr "'ТЕМА - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.ts:43
 msgid "'URGENCY is a required field'"
-msgstr "'ТЕРМІНОВІСТЬ обов'язкове поле'"
+msgstr "'ТЕРМІНОВІСТЬ - обов'язкове поле'"
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "'must be of list type'\""
-msgstr "'має бути з переліку'"
+msgstr "'має бути списком'"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:37
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.tsx:146
@@ -246,7 +246,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "10th update"
-msgstr "10-е оновлення"
+msgstr "10-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:45
 #: ../superdesk-planning/client/utils/filters.ts:83
@@ -255,7 +255,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:28
 msgid "11th update"
-msgstr "11-е оновлення"
+msgstr "11-те оновлення"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:17
 msgid "12 Hours"
@@ -272,7 +272,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "12th update"
-msgstr "12-е оновлення"
+msgstr "12-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:47
 #: ../superdesk-planning/client/utils/filters.ts:87
@@ -281,7 +281,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "13th update"
-msgstr "13-е оновлення"
+msgstr "13-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:48
 #: ../superdesk-planning/client/utils/filters.ts:89
@@ -290,7 +290,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "14th update"
-msgstr "14-е оновлення"
+msgstr "14-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:49
 #: ../superdesk-planning/client/utils/filters.ts:91
@@ -299,7 +299,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "15th update"
-msgstr "15-е оновлення"
+msgstr "15-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:50
 #: ../superdesk-planning/client/utils/filters.ts:93
@@ -308,7 +308,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "16th update"
-msgstr "16-е оновлення"
+msgstr "16-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:51
 msgid "17th"
@@ -316,7 +316,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:29
 msgid "17th update"
-msgstr "17-е оновлення"
+msgstr "17-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:52
 msgid "18th"
@@ -324,7 +324,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "18th update"
-msgstr "18-е оновлення"
+msgstr "18-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:53
 #: ../superdesk-planning/client/utils/filters.ts:99
@@ -333,7 +333,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "19th update"
-msgstr "19-е оновлення"
+msgstr "19-те оновлення"
 
 #: scripts/extensions/sams/dist/src/components/assets/assetFilterPanel.js:189
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/assets/assetFilterPanel.js:189
@@ -366,7 +366,7 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:30
 msgid "20th update"
-msgstr "20-е оновлення"
+msgstr "20-те оновлення"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduleMonthDay.tsx:55
 #: ../superdesk-planning/client/utils/filters.ts:103
@@ -587,19 +587,19 @@ msgstr ""
 
 #: scripts/apps/workspace/content/controllers/ContentProfilesController.ts:216
 msgid "A content profile with this name already exists."
-msgstr "Профіль Контенту з такою назвою вже існує."
+msgstr "Профіль контенту з такою назвою вже існує."
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:274
 msgid "A desk is required"
-msgstr "Потрібно вказати стіл"
+msgstr "Потрібно вказати деск"
 
 #: scripts/core/auth/reset-password.html:43
 msgid ""
 "A link was sent to the specified email address. Please use it to reset your "
 "password. It is valid a limited amount of time."
 msgstr ""
-"Посилання було відправлене на вказану адресу email. Скористайтесь ним, щоб "
-"встановити свій пароль. Посилання  обмежене в часі."
+"Посилання було надіслано на вказану адресу електронної пошти. Скористайтеся "
+"ним, щоб скинути пароль. Воно дійсне протягом обмеженого часу."
 
 #: ../superdesk-planning/client/api/locations.ts:30
 msgid "A location matching this one already exists"
@@ -648,7 +648,7 @@ msgstr "Категорія ANPA:"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "ANPA Take Key"
-msgstr "Візьміть ключ ANPA"
+msgstr "ANPA Take Key"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.tsx:109
 msgid "ASSOCIATED XMP FILE"
@@ -691,7 +691,7 @@ msgstr "Лід"
 #: scripts/apps/authoring/views/theme-select.html:47
 #: scripts/apps/authoring/views/theme-select.html:98
 msgid "Abstract example"
-msgstr "Приклад анотації"
+msgstr "Приклад ліду"
 
 #: scripts/apps/dashboard/views/workspace.html:9
 #: scripts/core/editor3/components/suggestions/SuggestionPopup.tsx:160
@@ -951,7 +951,7 @@ msgstr "Додати новий профіль контенту"
 
 #: scripts/apps/desks/views/desk-config-modal.html:4
 msgid "Add New Desk"
-msgstr "Додати новий Стіл"
+msgstr "Додати новий деск"
 
 #: scripts/apps/publish/views/subscribers.html:227
 msgid "Add New Destination"
@@ -988,7 +988,7 @@ msgstr "Додати нову схему"
 #: scripts/apps/search-providers/directive.ts:24
 #: scripts/apps/search-providers/views/search-provider-config.html:28
 msgid "Add New Search Provider"
-msgstr "Додати новий пошук постачальника"
+msgstr "Додати нового постачальника пошуку"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:58
 msgid "Add New Source"
@@ -1128,7 +1128,7 @@ msgstr "Додати групу перед"
 
 #: scripts/validate-instance-configuration.tsx:59
 msgid "Add it via Settings > Metadata"
-msgstr "Додайте це через Настройки > Метадані"
+msgstr "Додайте це через Налаштування > Метадані"
 
 #: scripts/apps/packaging/views/search.html:10
 msgid "Add items"
@@ -1207,7 +1207,7 @@ msgstr "Додати до планування"
 
 #: scripts/apps/packaging/index.ts:74
 msgid "Add to current"
-msgstr "Додати до поточного "
+msgstr "Додати до поточного"
 
 #: scripts/core/editor3/components/spellchecker/default-spellcheckers.tsx:67
 msgid "Add to dictionary"
@@ -1538,7 +1538,7 @@ msgstr "Перемикач \"Весь день\""
 
 #: ../superdesk-planning/client/components/Assignments/DesksSubNavDropDown.tsx:21
 msgid "All Desks"
-msgstr "Усі столи"
+msgstr "Усі дески"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:283
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:368
@@ -1607,7 +1607,7 @@ msgstr "Усі відкриті елементи"
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr "Всі елементи відкриті"
+msgstr "Усі відкриті елементи"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:282
 msgid "All planning"
@@ -1666,7 +1666,7 @@ msgstr "Дозволити відео"
 #: scripts/extensions/sams/src/components/sets/setEditorPanel.tsx:355
 #: scripts/extensions/sams/src/components/sets/setPreviewPanel.tsx:164
 msgid "Allowed Desks"
-msgstr "Дозволені столи"
+msgstr "Дозволені дески"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:15
 msgid "Alt Text"
@@ -1944,7 +1944,7 @@ msgstr "Архівовано зі"
 
 #: scripts/apps/search/components/ItemContainer.tsx:14
 msgid "Archived from {{desk}}"
-msgstr "Архівовано зі столу {{desk}}"
+msgstr "Архівовано з деску {{desk}}"
 
 #: ../superdesk-planning/client/components/ConfirmationModal.tsx:162
 msgid "Are you sure ?"
@@ -1961,7 +1961,7 @@ msgstr "Ви впевнені, що хочете видалити джерело
 
 #: scripts/apps/search-providers/directive.ts:87
 msgid "Are you sure you want to delete Search Provider?"
-msgstr "Ви впевнені, що хочете видалити Пошук постачальника?"
+msgstr "Ви впевнені, що хочете видалити постачальника пошуку?"
 
 #: scripts/apps/highlights/controllers/HighlightsConfig.ts:66
 msgid "Are you sure you want to delete configuration?"
@@ -2086,7 +2086,7 @@ msgstr "Стрілка мала"
 
 #: scripts/apps/users/views/user-preferences.html:103
 msgid "Article Defaults"
-msgstr "Стаття за замовчуванням"
+msgstr "Типові значення для статей"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:215
 #: ../superdesk-planning/client/components/ExportAsArticleModal.tsx:297
@@ -2362,7 +2362,7 @@ msgstr "Призначено користувачем {{name}}"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:27
 msgid "Assigned desks"
-msgstr "Призначено Столи"
+msgstr "Призначені дески"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.tsx:74
 msgid "Assigned to agenda '{{ agenda }}'"
@@ -2386,7 +2386,7 @@ msgstr "Призначено: {{ name }}"
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.tsx:53
 msgid "Assignee"
-msgstr "Правонаступник"
+msgstr "Виконавець"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.tsx:254
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:271
@@ -2709,7 +2709,7 @@ msgstr "Доступні годинники"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:209
 msgid "Available in user/desk preferences"
-msgstr "Доступно в налаштуваннях користувача/столу"
+msgstr "Доступно в налаштуваннях користувача/деску"
 
 #: scripts/apps/authoring-react/toolbar/translate-modal.tsx:108
 msgid "Available languages"
@@ -2737,7 +2737,7 @@ msgstr "Назад"
 
 #: scripts/apps/search/views/search-panel.html:5
 msgid "Back / Cancel"
-msgstr "Назад / Відмінити"
+msgstr "Назад / Скасувати"
 
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.tsx:51
 msgid "Back to group list view"
@@ -2843,7 +2843,7 @@ msgstr "Тіло HTML"
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:37
 #: scripts/apps/workspace/content/constants.ts:14
 msgid "Body footer"
-msgstr "Нижній футер"
+msgstr "Нижній колонтитул тексту"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:36
 msgid "Body footer / Helplines / Contact Information"
@@ -2914,7 +2914,7 @@ msgstr "Бізнес"
 
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "By"
-msgstr "Згідно з"
+msgstr "Від"
 
 #: scripts/apps/users/views/user-preferences.html:143
 msgid ""
@@ -2986,7 +2986,7 @@ msgstr "Файл CSV"
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:20
 msgid "CUSTOM WORKSPACES"
-msgstr "РОБОЧІ ПРОСТОРИ ЗАМОВНИКА"
+msgstr "ВЛАСНІ РОБОЧІ ПРОСТОРИ"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:53
 msgid "Calendar"
@@ -3232,7 +3232,7 @@ msgstr "Скасувати заплановане оновлення"
 
 #: scripts/apps/publish/views/publish-queue.html:83
 msgid "Cancel Selection"
-msgstr "Скасувати Видбір"
+msgstr "Скасувати вибір"
 
 #: ../superdesk-planning/client/constants/planning.ts:139
 msgid "Cancel all Coverage(s)"
@@ -3308,7 +3308,7 @@ msgstr "Підпис"
 
 #: scripts/apps/authoring/editor/views/find-replace.html:18
 msgid "Case Sensitive"
-msgstr " Чутливість до регістру"
+msgstr "Чутливість до регістру"
 
 #: scripts/apps/authoring-react/article-widgets/find-and-replace.tsx:96
 msgid "Case sensitive"
@@ -3353,7 +3353,7 @@ msgstr "Змінити аватар"
 
 #: scripts/apps/authoring/views/change-image.html:203
 msgid "Change image settings"
-msgstr "Змінити настройки зображення"
+msgstr "Змінити налаштування зображення"
 
 #: scripts/core/auth/login-modal.html:86
 msgid "Change password"
@@ -3392,7 +3392,7 @@ msgstr "Канал непомітно вимкнувся. "
 
 #: scripts/apps/desks/views/desk-config-modal.html:205
 msgid "Character limit exceeded, desk can not be created/updated."
-msgstr "Перевищений ліміт символів, стіл не може бути створений/оновлений."
+msgstr "Перевищений ліміт символів, деск не може бути створений/оновлений."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:49
 msgid "Character limit exceeded, dictionary can not be created/updated."
@@ -3404,11 +3404,11 @@ msgstr "Перевищений ліміт символів, вибране не 
 
 #: scripts/apps/desks/views/desk-config-modal.html:290
 msgid "Character limit exceeded, stage can not be created/updated."
-msgstr "Перевищений ліміт символів, Етап не може бути створений/оновлений."
+msgstr "Перевищений ліміт символів, етап не може бути створений/оновлений."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:124
 msgid "Character limit settings"
-msgstr "Настройки обмеження символів"
+msgstr "Налаштування обмеження символів"
 
 #: scripts/apps/authoring-react/fields/editor3/editor.tsx:384
 msgid "Character {{chars}} is not allowed"
@@ -3762,7 +3762,7 @@ msgstr "Закрити поточний елемент"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:159
 msgid "Close desk widget"
-msgstr "Закрити віджет столу"
+msgstr "Закрити віджет деску"
 
 #: scripts/apps/authoring/views/change-image.html:155
 msgid "Close details"
@@ -4066,7 +4066,7 @@ msgstr "Пошук Content API"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "Content Expiry"
-msgstr "Термін Дії контенту"
+msgstr "Термін дії контенту"
 
 #: ../superdesk-planning/client/components/ContentProfiles/ContentProfileModal.tsx:332
 msgid "Content Fields"
@@ -4093,13 +4093,13 @@ msgstr "Фільтри контенту"
 #: scripts/apps/templates/views/template-editor-modal.html:28
 #: scripts/apps/templates/views/template-editor-modal.html:38
 msgid "Content Profile"
-msgstr "Профіль Контенту"
+msgstr "Профіль контенту"
 
 #: scripts/apps/workspace/content/index.ts:43
 #: scripts/apps/workspace/content/views/profile-settings.html:4
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Content Profiles"
-msgstr "Профілі Контенту"
+msgstr "Профілі контенту"
 
 #: ../superdesk-analytics/client/content_publishing_report/index.js:44
 msgid "Content Publishing"
@@ -4313,7 +4313,7 @@ msgstr "Виправити"
 
 #: scripts/apps/authoring/authoring/index.ts:357
 msgid "Correct item"
-msgstr "Коректний елемент"
+msgstr "Виправити елемент"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:38
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:87
@@ -4493,7 +4493,7 @@ msgstr "Висвітлення додано до робочого процесу
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:28
 msgid "Coverage must be assigned to a desk"
-msgstr "Висвітлення має бути призначене столу"
+msgstr "Висвітлення має бути призначене деску"
 
 #: ../superdesk-planning/client/components/fields/editor/AddCoverageToWorkflow.tsx:24
 msgid "Coverage must be in draft status"
@@ -4590,7 +4590,7 @@ msgstr "Створити нове завдання"
 #: scripts/apps/monitoring/index.ts:128
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:257
 msgid "Create Package"
-msgstr "Створити Пакет"
+msgstr "Створити пакет"
 
 #: ../superdesk-planning/client/components/Editor/EditorBookmarksBar.tsx:64
 msgid "Create Planning"
@@ -4785,7 +4785,7 @@ msgstr "Створено з"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
-msgstr "Створено Канал Завантаження {{назва}}"
+msgstr "Створено канал завантаження {{name}}"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:158
 msgid "Created To"
@@ -4881,7 +4881,7 @@ msgstr "Облікові дані"
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:209
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:72
 msgid "Credit"
-msgstr "Довіра"
+msgstr "Авторство"
 
 #: scripts/apps/authoring-react/fields/media/media-metadata.tsx:19
 #: scripts/apps/authoring/media/MediaMetadataView.tsx:19
@@ -4999,7 +4999,7 @@ msgstr ""
 
 #: scripts/apps/workspace/views/workspace-dropdown.html:11
 msgid "DESKS"
-msgstr "СТОЛИ"
+msgstr "ДЕСКИ"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:32
 msgid "DONE"
@@ -5015,7 +5015,7 @@ msgstr "Щоденно"
 
 #: ../superdesk-planning/client/utils/filters.ts:45
 msgid "Daily @ {{ time }} to {{ desk }}"
-msgstr "Щоденно о {{ time }} на стіл {{ desk }}"
+msgstr "Щоденно о {{ time }} до деску {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
 msgid "Daily at {{hour}}"
@@ -5053,7 +5053,7 @@ msgstr "Панель керування"
 
 #: scripts/apps/dashboard/views/workspace.html:59
 msgid "Dashboard is empty"
-msgstr "Інформаційна панель порожня"
+msgstr "Панель керування порожня"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:419
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:16
@@ -5144,7 +5144,7 @@ msgstr "Дата:"
 #: scripts/apps/users/views/user-preferences.html:106
 #: scripts/apps/workspace/content/constants.ts:21
 msgid "Dateline"
-msgstr "Дата-місце"
+msgstr "Дейтлайн"
 
 #: scripts/apps/authoring-react/fields/dateline/index.tsx:27
 msgid "Dateline (authoring-react)"
@@ -5187,7 +5187,7 @@ msgstr "Дні"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-schedule.html:4
 msgid "Days"
-msgstr "Дни"
+msgstr "Дні"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
@@ -5217,7 +5217,7 @@ msgstr "Шаблон контенту за замовчуванням"
 
 #: scripts/apps/users/views/edit-form.html:220
 msgid "Default Desk"
-msgstr "Cтіл за замовчуванням"
+msgstr "Деск за замовчуванням"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:147
 msgid "Default Duration"
@@ -5248,11 +5248,11 @@ msgstr "Ролі авторів за замовчуванням"
 #: scripts/apps/users/views/edit-form.html:18
 #: scripts/apps/users/views/edit-form.html:215
 msgid "Default desk"
-msgstr "Стіл за замовчуванням"
+msgstr "Деск за замовчуванням"
 
 #: scripts/core/ui/components/content-create-dropdown/initial-view.tsx:131
 msgid "Default desk template"
-msgstr "Шаблон столу за замовчуванням"
+msgstr "Шаблон деску за замовчуванням"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:189
 msgid "Default language"
@@ -5403,7 +5403,7 @@ msgstr "Видалити робочий простір"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
-msgstr "Видалений канал завантаженняч {{name}}"
+msgstr "Видалений канал завантаження {{name}}"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
@@ -5431,7 +5431,7 @@ msgstr "Порядок за спаданням"
 #: scripts/apps/authoring/views/authoring-topbar.html:110
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:316
 msgid "Deschedule"
-msgstr "Зміна розкладу"
+msgstr "Зняти з планування"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:113
 #: scripts/apps/authoring/versioning/history/views/history.html:17
@@ -5529,106 +5529,106 @@ msgstr "Зняти весь вибір"
 #: scripts/apps/templates/views/template-editor-modal.html:80
 #: scripts/apps/workspace/content/constants.ts:23
 msgid "Desk"
-msgstr "Стіл"
+msgstr "Деск"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:231
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:383
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:500
 #: ../superdesk-analytics/client/desk_activity_report/index.js:45
 msgid "Desk Activity"
-msgstr "Активність столу"
+msgstr "Активність деску"
 
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.tsx:64
 msgid "Desk Assignments"
-msgstr "Завдання столу"
+msgstr "Завдання деску"
 
 #: scripts/apps/desks/views/desk-config-modal.html:68
 msgid "Desk Email"
-msgstr "Електронна пошта столу"
+msgstr "Електронна пошта деску"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Desk Management"
-msgstr "Керування Столом"
+msgstr "Керування деском"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:56
 #: scripts/apps/workspace/content/constants.ts:66
 msgid "Desk Output"
-msgstr "Стіл Випуску"
+msgstr "Виведення деску"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:152
 msgid "Desk Router"
-msgstr "Маршрутизатор столу"
+msgstr "Маршрутизатор деску"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:50
 msgid "Desk Schedule Output"
-msgstr "Виведення розкладу столу"
+msgstr "Виведення розкладу деску"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
-msgstr "Надіслане виведення столу"
+msgstr "Надіслане виведення деску"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.tsx:79
 msgid "Desk Templates"
-msgstr "Шаблони Столу"
+msgstr "Шаблони деску"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
 msgid "Desk Transitions"
-msgstr "Переходи столу"
+msgstr "Переходи деску"
 
 #: scripts/apps/desks/views/desk-config-modal.html:93
 #: scripts/apps/desks/views/settings.html:82
 msgid "Desk Type"
-msgstr "Тип Столу"
+msgstr "Тип деску"
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:63
 msgid "Desk deleted."
-msgstr "Стіл видалено."
+msgstr "Деск видалено."
 
 #: scripts/apps/desks/views/desk-config-modal.html:32
 msgid "Desk description"
-msgstr "Опис Столу"
+msgstr "Опис деску"
 
 #: scripts/apps/desks/views/desk-config-modal.html:70
 msgid "Desk email address."
-msgstr "Адреса електронної пошти столу."
+msgstr "Адреса електронної пошти деску."
 
 #: scripts/apps/desks/services/DesksFactory.ts:425
 msgid "Desk has been modified elsewhere. Please reload the desks."
-msgstr "Стіл було змінено в іншому місці. Перезавантажте Столи."
+msgstr "Деск було змінено в іншому місці. Перезавантажте дески."
 
 #: scripts/apps/desks/views/desk-config-modal.html:114
 msgid "Desk language"
-msgstr "Мова Столу"
+msgstr "Мова деску"
 
 #: scripts/apps/desks/views/settings.html:4
 msgid "Desk management"
-msgstr "Керування Столом"
+msgstr "Керування деском"
 
 #: scripts/apps/desks/views/desk-config-modal.html:16
 msgid "Desk name"
-msgstr "Ім'я Столу"
+msgstr "Ім'я деску"
 
 #: scripts/apps/dashboard/closed-desk/index.ts:26
 msgid "Desk status is outdated, please refresh."
-msgstr "Статус столу застарів, будь ласка, оновіть."
+msgstr "Статус деску застарів, будь ласка, оновіть."
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:167
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:88
 msgid "Desk subscription"
-msgstr "Підписка столу"
+msgstr "Підписка деску"
 
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:126
 msgid "Desk template"
-msgstr "Шаблон столу"
+msgstr "Шаблон деску"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:65
 msgid "Desk with name {{name}} already exists."
-msgstr "Стіл з назвою {{name}} вже існує."
+msgstr "Деск з назвою {{name}} вже існує."
 
 #: scripts/apps/templates/views/templates.html:52
 msgid "Desk(s)"
-msgstr "Стіл(и)"
+msgstr "Деск(и)"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:24
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Desk.tsx:12
@@ -5639,11 +5639,11 @@ msgstr "Стіл(и)"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateAssignmentForm.tsx:157
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:166
 msgid "Desk:"
-msgstr "Стіл:"
+msgstr "Деск:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageIcons.tsx:111
 msgid "Desk: {{ desk }}"
-msgstr "Стіл: {{ desk }}"
+msgstr "Деск: {{ desk }}"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:109
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:383
@@ -5658,7 +5658,7 @@ msgstr "Стіл: {{ desk }}"
 #: scripts/extensions/sams/dist/src/extensions/sams/src/components/common/DesksSelectInput.js:130
 #: scripts/extensions/sams/src/components/common/DesksSelectInput.tsx:109
 msgid "Desks"
-msgstr "Столи"
+msgstr "Дески"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/EditFilterSchedule.tsx:196
 #: scripts/apps/publish/views/publish-queue.html:111
@@ -5786,7 +5786,7 @@ msgstr "Вимкнені набори"
 
 #: scripts/apps/desks/views/desk-config-modal.html:197
 msgid "Disallow sending items to this desk"
-msgstr "Заборонити надсилання елементів на цей стіл"
+msgstr "Заборонити надсилання елементів на цей деск"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:76
 msgid "Disallowed characters"
@@ -6115,7 +6115,7 @@ msgstr "Дублювати як"
 
 #: scripts/core/lang/missing-translations-strings.ts:16
 msgid "Duplicate Content within a Desk"
-msgstr "Дубльований контент Столу"
+msgstr "Дубльований контент деску"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:55
 msgid "Duplicate ID: {{x}}"
@@ -6249,7 +6249,7 @@ msgstr "Редакційна примітка"
 #: scripts/apps/authoring-react/field-adapters/ednote.ts:20
 #: scripts/apps/workspace/content/constants.ts:24
 msgid "Ed. Note"
-msgstr "Зробити примітку"
+msgstr "Ред. примітка"
 
 #: ../superdesk-planning/client/components/Agendas/AgendaListItem.tsx:57
 #: ../superdesk-planning/client/components/Events/ManageEventTemplatesModal.tsx:42
@@ -6328,7 +6328,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:5
 msgid "Edit \"{{name}}\" Desk"
-msgstr "Редагувати стіл \"{{name}}\""
+msgstr "Редагувати деск \"{{name}}\""
 
 #: scripts/apps/products/views/products-config-modal.html:4
 msgid "Edit \"{{name}}\" Product"
@@ -6447,7 +6447,7 @@ msgstr "Редагувати Схему"
 #: scripts/apps/search-providers/views/search-provider-config.html:16
 #: scripts/apps/search-providers/views/search-provider-config.html:27
 msgid "Edit Search Provider"
-msgstr "Редагувати Пошук Постачальника"
+msgstr "Редагувати постачальника пошуку"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:57
 msgid "Edit Source"
@@ -6501,7 +6501,7 @@ msgstr "Редагувати обрізки"
 
 #: scripts/apps/desks/views/settings.html:34
 msgid "Edit desk"
-msgstr "Редагувати Cтіл"
+msgstr "Редагувати деск"
 
 #: scripts/apps/dictionaries/views/settings.html:54
 msgid "Edit dictionary"
@@ -6767,7 +6767,7 @@ msgstr "Переконайтеся, що налаштовано правильн
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:535
 msgid "Enter Desk Actions"
-msgstr "Дії зі входу на стіл"
+msgstr "Дії зі входу до деску"
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:164
 msgid "Enter URL or code to embed"
@@ -6819,7 +6819,7 @@ msgstr "Помилка в елементі:"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:21
 msgid "Error sending as"
-msgstr "Помилка відправлення"
+msgstr "Помилка надсилання"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:74
 msgid "Error sending as {{name}} to {{destination}} at {{date}}"
@@ -6852,7 +6852,7 @@ msgstr "Помилка. Сесії не можуть бути очищені."
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:315
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:270
 msgid "Error. The Desk Activity report could not be generated!"
-msgstr "Помилка. Не вдалося згенерувати звіт про активність столу!"
+msgstr "Помилка. Не вдалося згенерувати звіт про активність деску!"
 
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:223
 msgid "Error. The Planning Usage Report could not be generated!"
@@ -6924,7 +6924,7 @@ msgstr "Помилка:"
 
 #: scripts/apps/search-providers/directive.ts:62
 msgid "Error: A Search Provider with type  already exists."
-msgstr "Помилка: Пошук Постачальника с таким типом вже існує"
+msgstr "Помилка: постачальника пошуку з таким типом вже існує"
 
 #: scripts/apps/products/controllers/ProductsConfigController.ts:208
 msgid "Error: Failed to delete product."
@@ -6940,7 +6940,7 @@ msgstr "Помилка: Неможливо змінити розклад"
 
 #: scripts/apps/search-providers/directive.ts:66
 msgid "Error: Failed to save Search Provider."
-msgstr "Помилка: Не вдалося зберегти Пошук Постачальника"
+msgstr "Помилка: Не вдалося зберегти постачальника пошуку"
 
 #: scripts/apps/publish/directives/SubscribersDirective.ts:228
 msgid "Error: Failed to save Subscriber."
@@ -6994,7 +6994,7 @@ msgstr "Помилка: Не можливо видалити Джерело За
 
 #: scripts/apps/search-providers/directive.ts:98
 msgid "Error: Unable to delete Search Provider."
-msgstr "Помилка: Не можливо видалити Пошук Постачальника"
+msgstr "Помилка: Неможливо видалити постачальника пошуку"
 
 #: scripts/api/article.ts:422
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:100
@@ -7382,7 +7382,7 @@ msgstr "Вихід"
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:173
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:556
 msgid "Exit Desk Actions"
-msgstr "Вийти з дій столу"
+msgstr "Вийти з дій деску"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:79
 #: scripts/core/editor3/components/Editor3Component.tsx:901
@@ -7957,16 +7957,16 @@ msgstr "Перемотати назад"
 
 #: scripts/apps/workspace/content/constants.ts:26
 msgid "Feature Image"
-msgstr "Ознака зображення"
+msgstr "Рекомендоване зображення"
 
 #: scripts/apps/search/views/search-parameters.html:175
 #: scripts/apps/workspace/content/constants.ts:27
 msgid "Feature Media"
-msgstr "Ознака медіа"
+msgstr "Рекомендоване медіа"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Feature Preview"
-msgstr "Ознака передперегляду"
+msgstr "Передперегляд функції"
 
 #: scripts/apps/authoring-react/field-adapters/feature_media.ts:21
 msgid "Feature media"
@@ -7981,7 +7981,7 @@ msgstr "Передперегляд функції"
 #: ../superdesk-planning/client/components/fields/editor/Featured.tsx:15
 #: ../superdesk-planning/client/components/fields/preview/index.ts:83
 msgid "Featured"
-msgstr "Відомий"
+msgstr "Рекомендований"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:8
 msgid "Featured Media"
@@ -8029,7 +8029,7 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:92
 msgid "Feeding Service"
-msgstr "Сервіс відправки"
+msgstr "Сервіс надсилання"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
 msgid "Fern Green"
@@ -8044,7 +8044,7 @@ msgstr "Папоротево-зелений"
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:70
 #: scripts/core/interactive-article-actions-panel/actions/fetch-to-action.tsx:116
 msgid "Fetch"
-msgstr "Піймати"
+msgstr "Отримати"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:87
 msgid "Fetch As"
@@ -8052,11 +8052,11 @@ msgstr "Отримати як"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Fetch Content To a Desk"
-msgstr "Піймати контент на Стіл"
+msgstr "Отримати контент до деску"
 
 #: scripts/apps/ingest/index.ts:115 scripts/apps/ingest/index.ts:146
 msgid "Fetch To"
-msgstr "Піймати до"
+msgstr "Отримати до"
 
 #: scripts/apps/monitoring/index.ts:122
 msgid "Fetch an item"
@@ -8070,7 +8070,7 @@ msgstr "Отримати та відкрити"
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:78
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:11
 msgid "Fetch to"
-msgstr "Піймати до"
+msgstr "Отримати до"
 
 #: scripts/api/article-fetch.tsx:104
 msgid "Fetch valid({{count}})"
@@ -8083,7 +8083,7 @@ msgstr "Отримано"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:269
 #: scripts/apps/authoring/versioning/history/views/history.html:76
 msgid "Fetched by"
-msgstr "Отримано"
+msgstr "Отримано користувачем"
 
 #: scripts/apps/content-filters/views/filter-search.html:9
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:59
@@ -8131,7 +8131,7 @@ msgstr "Розмір файлу"
 
 #: scripts/apps/profiling/views/profiling.html:37
 msgid "File name/line"
-msgstr "І'мя файла/рядок"
+msgstr "Ім'я файла/рядок"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:161
 msgid "File types"
@@ -8465,7 +8465,7 @@ msgstr "Від"
 #: scripts/apps/search/constants.ts:12
 #: scripts/apps/search/views/search-parameters.html:102
 msgid "From Desk"
-msgstr "Зі Столу"
+msgstr "З деску"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:73
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.tsx:84
@@ -8541,13 +8541,13 @@ msgstr "Згенерувати з URL"
 
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:1
 msgid "Generate a report showing activity on a desk."
-msgstr "Згенерувати звіт, що показує активність на столі."
+msgstr "Згенерувати звіт, що показує активність на деску."
 
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:1
 msgid ""
 "Generate a report showing average and maximum time it took to produce "
 "content per desk."
-msgstr "Згенерувати звіт, що показує середній і максимальний час, витрачений на створення контенту на кожному столі."
+msgstr "Згенерувати звіт, що показує середній і максимальний час, витрачений на створення контенту на кожному деску."
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-parameters.html:1
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-parameters.html:1
@@ -8656,7 +8656,7 @@ msgstr "Назад"
 
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:208
 msgid "Go To Desk"
-msgstr "Перейти до столу"
+msgstr "Перейти до деску"
 
 #: scripts/apps/production-api-keys/utils.tsx:36
 #: scripts/apps/vocabularies/components/VocabularyDeletionModal.tsx:46
@@ -8924,7 +8924,7 @@ msgstr "Приховати попередні елементи"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:6
 msgid "Hide sent/queued items"
-msgstr "Скриті відправлення/черговий елемент"
+msgstr "Приховати надіслані/чергові елементи"
 
 #: scripts/apps/publish/views/subscribers.html:209
 msgid "High priority"
@@ -8970,7 +8970,7 @@ msgstr "Конфігурації вибраного"
 
 #: scripts/core/lang/missing-translations-strings.ts:17
 msgid "Highlights/Summary List Management"
-msgstr "Вибране/Спрощенний список керування"
+msgstr "Вибране/Спрощений список керування"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.tsx:63
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.tsx:92
@@ -9027,7 +9027,7 @@ msgstr "Виникла помилка при збереженні схеми м�
 
 #: scripts/apps/ingest/directives/IngestRulesContent.ts:37
 msgid "I'm sorry but there was an error when saving the rule set."
-msgstr " Виникла помилка при збереженні набору правил"
+msgstr "Виникла помилка при збереженні набору правил"
 
 #: scripts/apps/authoring-react/fields/dropdown/dropdown-manual-entry/config.tsx:110
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:29
@@ -9087,7 +9087,7 @@ msgstr "Часовий пояс UTC + 0, якщо не встановлено і
 
 #: scripts/apps/desks/views/desk-config-modal.html:84
 msgid "If selected, content published from this desk will be not be expired"
-msgstr "Якщо вибрано, контент, оприлюднений з цього столу, не матиме терміну дії"
+msgstr "Якщо вибрано, контент, оприлюднений з цього деску, не матиме терміну дії"
 
 #: scripts/core/editor3/components/embeds/EmbedInput.tsx:153
 msgid "If you paste an embed code, it will be used \"as is\"."
@@ -9175,7 +9175,7 @@ msgstr "Імпорт"
 
 #: scripts/apps/users/import/import.ts:50
 msgid "Import user"
-msgstr "Kористувач імпорту "
+msgstr "Імпортувати користувача"
 
 #: ../superdesk-planning/client/components/editor-standalone/field-definitions/field-components/time-header-common.tsx:35
 msgid "In 1 hr"
@@ -9388,7 +9388,7 @@ msgstr "Статистика завантаження"
 
 #: scripts/apps/archive/views/metadata-view.html:128
 msgid "Ingest provider sequence"
-msgstr "Постачальник послідовністі завантажень"
+msgstr "Постачальник послідовності завантажень"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:270
 msgid "Ingest sequence"
@@ -9632,7 +9632,7 @@ msgstr "Елемент було знищено."
 
 #: scripts/apps/archive/directives/ResendItem.ts:39
 msgid "Item has been resent."
-msgstr "Елемент був відправлений повторно."
+msgstr "Елемент було надіслано повторно."
 
 #: ../superdesk-planning/client/actions/main.ts:1663 scripts/api/article.ts:294
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:445
@@ -9652,7 +9652,7 @@ msgstr "Елемент не було передано жодному перед�
 #: scripts/apps/legal-archive/views/legal_archive.html:127
 #: scripts/apps/search/views/item-preview.html:18
 msgid "Item history"
-msgstr "Історія Елемента"
+msgstr "Історія елемента"
 
 #: scripts/apps/packaging/directives/PackageItemsEdit.ts:21
 msgid "Item is already in this package."
@@ -9709,7 +9709,7 @@ msgstr "Елемент збережено."
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:114
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:29
 msgid "Item sent to Subscriber"
-msgstr "Елемент відправлено Передплатнику"
+msgstr "Елемент надіслано передплатнику"
 
 #: scripts/apps/ingest/ingest-stats-widget/configuration.html:11
 msgid "Item type stats"
@@ -9821,7 +9821,7 @@ msgstr "Канбан-вигляд"
 
 #: scripts/core/keyboard/views/keyboard-modal.html:3
 msgid "Keyboard Shortcuts"
-msgstr "Гарячі клавіши"
+msgstr "Гарячі клавіші"
 
 #: ../superdesk-planning/client/components/fields/editor/Keywords.tsx:25
 #: ../superdesk-planning/client/components/fields/preview/index.ts:184
@@ -9860,7 +9860,7 @@ msgstr "Вилучено"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:184
 msgid "Killed by"
-msgstr "Знищено"
+msgstr "Знищено користувачем"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:574
 msgid "Kills"
@@ -9898,7 +9898,7 @@ msgstr "Мова"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:31
 msgid "Language code"
-msgstr "Код Мови "
+msgstr "Код мови"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Language.tsx:17
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/EmbeddedCoverageForm.tsx:209
@@ -9994,7 +9994,7 @@ msgstr "Останнє змінення"
 #: scripts/apps/profiling/views/profiling.html:24
 #: scripts/apps/publish/views/publish-queue.html:78
 msgid "Last refreshed at"
-msgstr "Останній оновлено в"
+msgstr "Востаннє оновлено о"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:21
 msgid "Last report sent on:"
@@ -10117,7 +10117,7 @@ msgstr "Посилання вилучено"
 
 #: scripts/core/auth/auth.ts:103
 msgid "Link sent. Please check your email inbox."
-msgstr "Посилання відправлено. Перевірте свою поштову скриньку."
+msgstr "Посилання надіслано. Перевірте свою поштову скриньку."
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.tsx:186
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:204
@@ -10315,7 +10315,7 @@ msgstr "Увійти за допомогою Google"
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:41
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:87
 msgid "Log Messages"
-msgstr "Повідомлення авторизації"
+msgstr "Повідомлення журналу"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:239
 #: ../superdesk-planning/client/components/fields/resources/events.ts:20
@@ -10384,7 +10384,7 @@ msgstr "Зробити глобальним"
 
 #: scripts/apps/users/views/change-avatar.html:53
 msgid "Make sure you're looking the best"
-msgstr "Переконайтеся, що шукаєте кращий"
+msgstr "Переконайтеся, що виглядаєте якнайкраще"
 
 #: scripts/apps/production-api-keys/utils.tsx:45
 msgid ""
@@ -10459,7 +10459,7 @@ msgstr "Керувати SAMS"
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Search Providers"
-msgstr "Керування пошуком постачальників"
+msgstr "Керування постачальниками пошуку"
 
 #: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:99
 #: scripts/extensions/sams/dist/src/components/workspaceSubnav.js:118
@@ -10542,7 +10542,7 @@ msgstr "Позначити для користувача"
 
 #: scripts/apps/desks/index.ts:60 scripts/apps/monitoring/index.ts:130
 msgid "Mark for desk"
-msgstr "Позначити для столу"
+msgstr "Позначити для деску"
 
 #: scripts/apps/highlights/index.ts:46 scripts/apps/monitoring/index.ts:129
 msgid "Mark for highlight"
@@ -10576,7 +10576,7 @@ msgstr "Відмітити елементи для вибраного/підсу
 #: scripts/apps/search/constants.ts:17
 #: scripts/apps/search/views/search-parameters.html:71
 msgid "Marked Desks"
-msgstr "Позначені столи"
+msgstr "Позначені дески"
 
 #: scripts/apps/archive/views/marked_item_title.html:13
 #: scripts/apps/search/components/HighlightsList.tsx:74
@@ -10599,13 +10599,13 @@ msgstr "Позначено для"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:319
 msgid "Marked for desk {{x}} by {{user}}"
-msgstr "Позначено для столу {{x}} користувачем {{user}}"
+msgstr "Позначено для деску {{x}} користувачем {{user}}"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:256
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:37
 #: scripts/apps/authoring/views/authoring-topbar.html:337
 msgid "Marked for desks"
-msgstr "Позначено для столів"
+msgstr "Позначено для десків"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:285
 msgid "Marked for highlight {{x}} by {{user}}"
@@ -10632,7 +10632,7 @@ msgstr "Позначено для цього користувача"
 
 #: scripts/apps/master-desk/index.ts:12 scripts/apps/master-desk/index.ts:23
 msgid "Master Desk"
-msgstr "Головний Стіл"
+msgstr "Головний деск"
 
 #: scripts/apps/archive/related-item-widget/relatedItem-configuration.html:7
 msgid "Match Any"
@@ -10922,7 +10922,7 @@ msgstr "Перемістити"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Move Content to another desk"
-msgstr "Перемістити контент на інший Стіл"
+msgstr "Перемістити контент на інший деск"
 
 #: ../superdesk-analytics/client/utils.js:167
 msgid "Move From"
@@ -11080,7 +11080,7 @@ msgstr "НЕМАЄ ПРОПОЗИЦІЙ."
 
 #: scripts/core/lang/missing-translations-strings.ts:33
 msgid "NTB Currency Macro"
-msgstr "Задіяний NTB Maкрос"
+msgstr "Макрос NTB Currency"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:31
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.tsx:15
@@ -11147,7 +11147,7 @@ msgstr "Задіяний NTB Maкрос"
 #: scripts/extensions/sams/src/components/workspaceSubnav.tsx:165
 #: scripts/extensions/sams/src/utils/ui.tsx:99
 msgid "Name"
-msgstr "І’мя"
+msgstr "Ім’я"
 
 #: scripts/apps/vocabularies/ManageVocabularyItemTranslations.tsx:28
 msgid "Name ({{language}})"
@@ -11316,7 +11316,7 @@ msgstr ""
 
 #: scripts/apps/templates/constants.ts:11
 msgid "No Desk"
-msgstr "Немає Столу"
+msgstr "Немає деску"
 
 #: ../superdesk-planning/client/components/Main/ListPanel.tsx:343
 msgid "No Event or Planning items found"
@@ -11367,7 +11367,7 @@ msgstr "Долучених файлів не додано."
 #: scripts/apps/desks/views/mark_desks_dropdown_directive.html:8
 #: scripts/apps/search/components/actions-menu/Item.tsx:168
 msgid "No available desks"
-msgstr "Немає доступних столів"
+msgstr "Немає доступних десків"
 
 #: scripts/apps/desks/directives/MarkDesksDropdown.ts:24
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:113
@@ -11437,7 +11437,7 @@ msgstr "Даних не знайдено"
 
 #: scripts/apps/users/views/edit-form.html:222
 msgid "No desk selected"
-msgstr "Стіл не вибрано"
+msgstr "Деск не вибрано"
 
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/send-to-publish-widget.tsx:174
 #: scripts/core/interactive-article-actions-panel/actions/send-to-tab.tsx:40
@@ -11552,7 +11552,7 @@ msgstr "Співпадінь не знайдено."
 
 #: scripts/apps/profiling/views/profiling.html:32
 msgid "No of calls"
-msgstr "Немає дзвінків"
+msgstr "Кількість викликів"
 
 #: ../superdesk-planning/client/components/ContentProfiles/FieldTab/FieldEditor.tsx:179
 msgid "No options available for this field"
@@ -11737,7 +11737,7 @@ msgstr "Не категорія"
 
 #: scripts/apps/search/constants.ts:32
 msgid "Not Desk"
-msgstr "Не стіл"
+msgstr "Не деск"
 
 #: scripts/apps/desks/views/settings.html:87
 msgid "Not Expired"
@@ -12141,7 +12141,7 @@ msgstr "Відкрито"
 
 #: scripts/apps/monitoring/views/desk-notifications.html:35
 msgid "Opened by"
-msgstr "Відкрито"
+msgstr "Відкрито користувачем"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:637
 msgid "Operation"
@@ -12315,7 +12315,7 @@ msgstr "Вихідне правило:"
 #: scripts/apps/publish/views/file-config.html:2
 #: scripts/apps/publish/views/file-config.html:4
 msgid "Output file path"
-msgstr "Шлях файла випуску"
+msgstr "Шлях до вихідного файлу"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:55
 msgid "Output/Published"
@@ -12866,7 +12866,7 @@ msgstr "Підтвердіть відключення користувача."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:57
 msgid "Please confirm you want to delete desk."
-msgstr "Підтвердіть видалення Стола."
+msgstr "Підтвердіть видалення деску."
 
 #: scripts/apps/dictionaries/controllers/DictionaryConfigController.ts:89
 msgid "Please confirm you want to delete dictionary."
@@ -12959,7 +12959,7 @@ msgstr "Позиція"
 #: ../superdesk-planning/client/constants/events.ts:165
 #: scripts/apps/authoring/comments/views/comments-widget.html:46
 msgid "Post"
-msgstr "Відправляти"
+msgstr "Опублікувати"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.tsx:280
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:130
@@ -12986,7 +12986,7 @@ msgstr "Опублікувати всі повторювані події чи �
 
 #: scripts/apps/authoring/comments/views/comments-widget.html:45
 msgid "Post on 'Enter'"
-msgstr "Відправити натиском 'Enter'"
+msgstr "Надіслати натиском 'Enter'"
 
 #: ../superdesk-planning/client/components/fields/resources/profiles.ts:64
 msgid "Post planning items with Event"
@@ -13052,7 +13052,7 @@ msgstr "Попередньо форматований текст"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:92
 msgid "Preserve Desk"
-msgstr "Зберегти Стіл"
+msgstr "Зберегти деск"
 
 #: scripts/apps/desks/views/desk-config-modal.html:86
 msgid "Preserve Published Content"
@@ -13198,7 +13198,7 @@ msgstr "Привілеї оновлено."
 #: scripts/apps/packaging/views/sd-package-item-preview.html:37
 #: scripts/apps/packaging/views/sd-package-item-preview.html:8
 msgid "Problems occurred while fetching data."
-msgstr "Проблеми виникли при вибірці даних."
+msgstr "Виникли проблеми під час отримання даних."
 
 #: scripts/apps/products/views/products-config-modal.html:12
 msgid "Product Details"
@@ -13303,7 +13303,7 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:47
 msgid "Provided image URL is not valid."
-msgstr "Вказані зображення URL  недійсні."
+msgstr "Вказана URL-адреса зображення недійсна."
 
 #: scripts/apps/search/constants.ts:18
 #: scripts/apps/search/views/search-parameters.html:161
@@ -13388,7 +13388,7 @@ msgstr ""
 
 #: scripts/apps/publish/index.ts:51
 msgid "Publish Queue"
-msgstr "Черга на Оприлюднення"
+msgstr "Черга на оприлюднення"
 
 #: scripts/apps/archive/views/metadata-view.html:137
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:416
@@ -13461,7 +13461,7 @@ msgstr "Оприлюднено до"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:180
 msgid "Published by"
-msgstr "Оприлюднено"
+msgstr "Оприлюднено користувачем"
 
 #: scripts/apps/search/constants.ts:22
 #: scripts/apps/search/directives/DateFilters.ts:93
@@ -13539,7 +13539,7 @@ msgstr "Запит"
 
 #: scripts/apps/search/views/raw-search.html:4
 msgid "Query Text"
-msgstr "Техт запиту"
+msgstr "Текст запиту"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:158
 msgid "Question Sign"
@@ -13950,7 +13950,7 @@ msgstr "Відносне значення є обов'язковим"
 #: scripts/extensions/predefinedTextField/src/config.tsx:66
 #: scripts/extensions/predefinedTextField/src/config.tsx:67
 msgid "Remove"
-msgstr "Видалити "
+msgstr "Видалити"
 
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:36
 msgid "Remove All Format"
@@ -14031,7 +14031,7 @@ msgstr "Вилучити висвітлення"
 
 #: scripts/apps/desks/views/settings.html:53
 msgid "Remove desk"
-msgstr "Видалити Стіл"
+msgstr "Видалити деск"
 
 #: scripts/apps/dictionaries/views/settings.html:55
 msgid "Remove dictionary"
@@ -14143,7 +14143,7 @@ msgstr "Повторно відкрито користувачем {{user}}"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:105
 msgid "Reorder Sections"
-msgstr "Переномерувати розділи"
+msgstr "Змінити порядок розділів"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:108
 msgid "Reorder stages and saved searches for monitoring view"
@@ -14295,15 +14295,15 @@ msgstr "Переплановану подію"
 #: scripts/apps/publish/views/publish-queue.html:147
 #: scripts/apps/publish/views/publish-queue.html:90
 msgid "Resend"
-msgstr "Відправити повторно"
+msgstr "Надіслати повторно"
 
 #: scripts/apps/archive/views/resend-configuration.html:4
 msgid "Resend To"
-msgstr "Відправити до"
+msgstr "Надіслати до"
 
 #: scripts/apps/archive/index.tsx:280
 msgid "Resend item"
-msgstr "Відправити елемент повторно"
+msgstr "Надіслати елемент повторно"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:188
 msgid "Resent by"
@@ -14311,7 +14311,7 @@ msgstr "Повторно надіслано користувачем"
 
 #: scripts/apps/profiling/views/profiling.html:22
 msgid "Reset"
-msgstr "Скидання"
+msgstr "Скинути"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:13
 msgid "Reset Filters"
@@ -14329,7 +14329,7 @@ msgstr "Скинути пароль"
 
 #: scripts/core/editor3/components/comments/CommentPopup.tsx:173
 msgid "Resolve"
-msgstr "Дозволити"
+msgstr "Вирішити"
 
 #: scripts/apps/authoring-react/generic-widgets/inline-comments.tsx:176
 #: scripts/apps/authoring/track-changes/views/inline-comments-widget.html:4
@@ -14355,11 +14355,11 @@ msgstr "Вирішення пропозицій"
 #: scripts/apps/publish/views/http-push-config.html:5
 #: scripts/apps/publish/views/http-push-config.html:6
 msgid "Resource URL"
-msgstr "URL Ресурсу"
+msgstr "URL ресурсу"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Restore"
-msgstr "Відновлено"
+msgstr "Відновити"
 
 #: scripts/apps/products/views/product-test.html:15
 msgid "Result Type"
@@ -14380,7 +14380,7 @@ msgstr "Повернути доступність"
 
 #: scripts/apps/publish/views/subscribers.html:283
 msgid "Revoke"
-msgstr "Відмінити"
+msgstr "Відкликати"
 
 #: ../superdesk-analytics/client/utils.js:158
 msgid "Rewrite"
@@ -14478,7 +14478,7 @@ msgstr "Спрямовано з"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:8
 msgid "Routed from other desks"
-msgstr "Спрямовано з інших столів"
+msgstr "Спрямовано з інших десків"
 
 #: scripts/apps/dashboard/closed-desk/views/top-menu-info.html:9
 msgid "Routed from:"
@@ -14794,7 +14794,7 @@ msgstr "Зберегти та оприлюднити"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:72
 msgid "Save and send"
-msgstr "Зберегти та відправити"
+msgstr "Зберегти та надіслати"
 
 #: scripts/apps/authoring-react/authoring-integration-wrapper.tsx:230
 #: scripts/apps/authoring-react/toolbar/template-modal.tsx:65
@@ -14966,7 +14966,7 @@ msgstr "Точкова діаграма"
 
 #: scripts/apps/templates/views/templates.html:56
 msgid "Sched. Desk / Stage"
-msgstr "Розклад Стола/Етапу"
+msgstr "Розклад деску/етапу"
 
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:27
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:49
@@ -14977,7 +14977,7 @@ msgstr "Розклад"
 
 #: scripts/apps/templates/views/template-editor-modal.html:175
 msgid "Schedule Desk"
-msgstr "Розклад Столу"
+msgstr "Розклад деску"
 
 #: scripts/apps/templates/views/template-editor-modal.html:197
 msgid "Schedule Macro"
@@ -14985,7 +14985,7 @@ msgstr "Запланувати макрос"
 
 #: scripts/apps/templates/views/template-editor-modal.html:187
 msgid "Schedule Stage"
-msgstr "Розклад Етапу"
+msgstr "Розклад етапу"
 
 #: ../superdesk-planning/client/components/fields/editor/ScheduledUpdates.tsx:98
 msgid "Schedule an update"
@@ -15013,7 +15013,7 @@ msgstr "Запланована дата"
 
 #: scripts/apps/workspace/content/constants.ts:70
 msgid "Scheduled Desk Output"
-msgstr "Запланований вихід столу"
+msgstr "Запланований вихід деску"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:151
 msgid "Scheduled Export"
@@ -15149,15 +15149,15 @@ msgstr "Пошук типу контенту"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:384
 msgid "Search Desks"
-msgstr "Пошук столів"
+msgstr "Пошук десків"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:536
 msgid "Search Enter Desk Actions"
-msgstr "Пошук дій входу на стіл"
+msgstr "Пошук дій входу до деску"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:557
 msgid "Search Exit Desk Actions"
-msgstr "Пошук дій виходу зі столу"
+msgstr "Пошук дій виходу з деску"
 
 #: ../superdesk-planning/client/components/Main/FilterSubnavDropdown.tsx:86
 msgid "Search Filters"
@@ -15177,16 +15177,16 @@ msgstr "Пошук в OpenStreetMap"
 
 #: scripts/apps/search-providers/directive.ts:92
 msgid "Search Provider deleted."
-msgstr "Пошук постачальника видалено."
+msgstr "Постачальника пошуку видалено."
 
 #: scripts/apps/search-providers/directive.ts:53
 msgid "Search Provider saved."
-msgstr "Пошук постачальника збережено."
+msgstr "Постачальника пошуку збережено."
 
 #: scripts/apps/search-providers/index.ts:37
 #: scripts/apps/search-providers/views/settings.html:4
 msgid "Search Providers"
-msgstr "Пошук постачальників"
+msgstr "Постачальники пошуку"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedArticles/EventsRelatedArticlesModal.tsx:118
 msgid "Search Related Articles"
@@ -15351,12 +15351,12 @@ msgstr "Виберіть типовий шаблон для нових стат�
 
 #: scripts/core/ui/components/generic-form/input-types/desk_single_value.tsx:40
 msgid "Select a desk"
-msgstr "Виберіть стіл"
+msgstr "Виберіть деск"
 
 #: scripts/core/ui/components/generic-form/input-types/macro_single_value.tsx:27
 #: scripts/core/ui/components/generic-form/input-types/stage_single_value.tsx:42
 msgid "Select a desk first"
-msgstr "Спершу виберіть стіл"
+msgstr "Спершу виберіть деск"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-templates/manage-rundown-templates.js:123
 #: scripts/extensions/broadcasting/dist/src/rundown-templates/manage-rundown-templates.js:123
@@ -15427,11 +15427,11 @@ msgstr "Оберіть лише категорії за замовчування
 #: scripts/apps/authoring-react/toolbar/mark-for-desks/mark-for-desks-modal.tsx:43
 #: scripts/apps/master-desk/components/HeaderComponent.tsx:224
 msgid "Select desks"
-msgstr "Виберіть столи"
+msgstr "Виберіть дески"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:18
 msgid "Select desks for view"
-msgstr "Оберіть Столи для перегляду"
+msgstr "Оберіть дески для перегляду"
 
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.tsx:41
 msgid "Select either Search or Browse the locations"
@@ -15577,7 +15577,7 @@ msgstr "Надіслати скасування"
 
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Send notifications via email"
-msgstr "Відправити повідомлення email"
+msgstr "Надіслати сповіщення електронною поштою"
 
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:70
 msgid "Send only after publish schedule"
@@ -15599,14 +15599,14 @@ msgstr "Надіслати пакет до"
 #: scripts/apps/search/controllers/get-bulk-actions.tsx:201
 #: scripts/core/interactive-article-actions-panel/action-tabs.tsx:9
 msgid "Send to"
-msgstr "Відправити до"
+msgstr "Надіслати до"
 
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/interactive-article-actions-widget.tsx:12
 #: scripts/apps/authoring-react/article-widgets/send-to-publish/send-to-publish-widget.tsx:20
 #: scripts/apps/authoring/views/authoring-topbar.html:400
 #: scripts/apps/authoring/views/authoring-topbar.html:401
 msgid "Send to / Publish"
-msgstr "Відправити до / Оприлюднити"
+msgstr "Надіслати до / Оприлюднити"
 
 #: scripts/apps/authoring/authoring/index.ts:292
 msgid "Send to Personal Space"
@@ -15618,11 +15618,11 @@ msgstr "Надсилати сповіщення {{name}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:22
 msgid "Sending"
-msgstr "Відправка"
+msgstr "Надсилання"
 
 #: scripts/apps/workspace/content/constants.ts:68
 msgid "Sent Desk Output"
-msgstr "Надісланий вихід столу"
+msgstr "Надісланий вихід деску"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
@@ -15642,7 +15642,7 @@ msgstr "Успішно надіслано"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
-msgstr "Відправлено/В черзі"
+msgstr "Надіслано/в черзі"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/transmission-details.tsx:89
 msgid "Sent/Queued as {{name}} to {{destination}} at {{date}}"
@@ -15654,7 +15654,7 @@ msgstr "№ з/п"
 
 #: scripts/apps/publish/views/subscribers.html:181
 msgid "Sequence Number Settings"
-msgstr "Порядковий номер настройок"
+msgstr "Налаштування порядкового номера"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.tsx:111
 msgid "Series Start Date"
@@ -15736,7 +15736,7 @@ msgid ""
 "sensible name, select a saved search or desk or its workflow stages. Monitor "
 "anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
-msgstr "Налаштуйте різні монітори, щоб стежити за будь-якими темами із завантаження чи виробництва, виходами столів або будь-якою частиною робочого процесу. Усе, що вам потрібно, це дати йому зрозумілу назву, вибрати збережений пошук, стіл або його етапи робочого процесу. Відстежуйте будь-що, будь-де, будь-коли. Ви можете мати скільки завгодно віджетів Монітора."
+msgstr "Налаштуйте різні монітори, щоб стежити за будь-якими темами із завантаження чи виробництва, виходами десків або будь-якою частиною робочого процесу. Усе, що вам потрібно, це дати йому зрозумілу назву, вибрати збережений пошук, деск або його етапи робочого процесу. Відстежуйте будь-що, будь-де, будь-коли. Ви можете мати скільки завгодно віджетів Монітора."
 
 #: scripts/extensions/sams/dist/src/api/sets.js:57
 #: scripts/extensions/sams/dist/src/extensions/sams/src/api/sets.js:57
@@ -15910,7 +15910,7 @@ msgstr "Показати більше"
 #: scripts/extensions/broadcasting/src/shows/create-show.tsx:95
 #: scripts/extensions/broadcasting/src/shows/manage-shows.tsx:25
 msgid "Show name"
-msgstr "Показати ім'я"
+msgstr "Назва шоу"
 
 #: ../superdesk-planning/client/components/Location/index.tsx:54
 #: ../superdesk-planning/client/components/Locations/LocationsList.tsx:93
@@ -15931,7 +15931,7 @@ msgstr "Показати вікно пошуку"
 
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:3
 msgid "Show sent/queued items"
-msgstr "Показати елементи відправлені/в черзі"
+msgstr "Показати елементи надіслані/в черзі"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:128
 msgid ""
@@ -15952,7 +15952,7 @@ msgstr "Замість цього показує ваші ініціали"
 #: scripts/apps/workspace/content/constants.ts:40
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Sign Off"
-msgstr "Вийти"
+msgstr "Позначка"
 
 #: scripts/core/auth/login-modal.html:31
 msgid "Sign in as a different user."
@@ -15989,7 +15989,7 @@ msgstr "Один рядок"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:13
 msgid "Single Usage"
-msgstr "Окремий користувач"
+msgstr "Одноразове використання"
 
 #: scripts/apps/authoring-react/fields/editor3/config.tsx:57
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:214
@@ -16139,7 +16139,7 @@ msgstr "Деякі пакети містять такі оприлюднені �
 
 #: ../superdesk-planning/client/actions/main.ts:477
 msgid "Some related planning item post validation failed"
-msgstr "Не вдалося пройти перевірку при оприлюдненні деяких пов'язаних елементів планування"
+msgstr "Не вдалося пройти перевірку під час оприлюднення деяких пов'язаних елементів планування"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.ts:458
 msgid ""
@@ -16365,7 +16365,7 @@ msgstr "Лише усунуте"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:221
 #: scripts/apps/authoring/versioning/history/views/history.html:63
 msgid "Spiked by"
-msgstr "Усунув"
+msgstr "Усунено користувачем"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:4
 msgid "Spiked items"
@@ -16404,7 +16404,7 @@ msgstr "Опис Етапу:"
 
 #: scripts/apps/desks/directives/DeskeditStages.ts:190
 msgid "Stage has been modified elsewhere. Please reload the desks"
-msgstr "Етап змінено в іншому місці. Перезавантажьте Столи"
+msgstr "Етап змінено в іншому місці. Перезавантажте дески"
 
 #: scripts/apps/desks/views/desk-config-modal.html:289
 msgid "Stage with name"
@@ -16615,7 +16615,7 @@ msgstr "Адреса, поштова скринька, назва компані
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:65
 msgid "Strength"
-msgstr "Чисельність"
+msgstr "Надійність"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:181
 #: ../superdesk-planning/client/components/fields/editor/SelectEditor3FormattingOptions.tsx:40
@@ -16849,7 +16849,7 @@ msgstr "Перемкнути редагування?"
 
 #: scripts/apps/monitoring/index.ts:111
 msgid "Switch between grouped/single desk view"
-msgstr "Перемкнути між згрупованим/одиночним поданням столів"
+msgstr "Перемкнути між згрупованим/одиночним поданням десків"
 
 #: scripts/apps/monitoring/index.ts:109
 msgid "Switch between grouped/single stage view"
@@ -17082,7 +17082,7 @@ msgstr "Задачі"
 
 #: scripts/core/lang/missing-translations-strings.ts:20
 msgid "Tasks Management"
-msgstr "Керування задачами"
+msgstr "Керування завданнями"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-items/content-profile.js:58
 #: scripts/extensions/broadcasting/dist/src/rundown-items/content-profile.js:58
@@ -17396,7 +17396,7 @@ msgstr "Мінімальна роздільна здатність фото 200x
 #: scripts/apps/desks/views/desk-config-modal.html:61
 msgid ""
 "The name of a Slack channel associated with this desk, the # is not required"
-msgstr "Назва каналу Slack, пов'язаного з цим столом, символ # не потрібен"
+msgstr "Назва каналу Slack, пов'язаного з цим деском, символ # не потрібен"
 
 #: scripts/api/article-send.tsx:113
 msgid ""
@@ -17583,7 +17583,7 @@ msgstr "Сценаріїв поки немає"
 
 #: scripts/apps/master-desk/components/UsersComponent.tsx:150
 msgid "There are no users assigned to this desk"
-msgstr "До цього столу не призначено жодного користувача"
+msgstr "До цього деску не призначено жодного користувача"
 
 #: scripts/apps/authoring/metadata/views/prefered-cv-items-config.html:15
 msgid "There are no vocabularies configured."
@@ -17595,7 +17595,7 @@ msgstr "Деякі зміни не збережено, хочете зберег
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:70
 msgid "There are some unsaved changes, do you want to save and send it now?"
-msgstr "Деякі зміни не збережено, хочете зберегти та відправити зараз?"
+msgstr "Деякі зміни не збережено, хочете зберегти та надіслати зараз?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:45
 msgid "There are some unsaved changes, do you want to save it now?"
@@ -17672,11 +17672,11 @@ msgstr "Сталася проблема, елемент планування н�
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:61
 msgid "There was a problem, desk not created/updated."
-msgstr "Проблема, Стіл не створено/не оновлено."
+msgstr "Проблема, деск не створено/не оновлено."
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:106
 msgid "There was a problem, desk not saved. Refresh Desks."
-msgstr "Сталася проблема, стіл не збережено. Оновіть столи."
+msgstr "Сталася проблема, деск не збережено. Оновіть дески."
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:50
 msgid "There was a problem, dictionary not created/updated."
@@ -17689,7 +17689,7 @@ msgstr "Проблема. Елемент неможливо відкрити."
 
 #: scripts/apps/desks/directives/DeskeditPeople.ts:66
 msgid "There was a problem, members not saved. Refresh Desks."
-msgstr "Проблема. Учасників не збережено. Оновіть Стіл."
+msgstr "Проблема. Учасників не збережено. Оновіть деск."
 
 #: scripts/apps/desks/views/desk-config-modal.html:291
 msgid "There was a problem, stage not created/updated."
@@ -17884,7 +17884,7 @@ msgstr "Це поле ініціалізується значенням вказ
 
 #: scripts/apps/templates/directives/TemplatesDirective.ts:358
 msgid "This is a default template of the following desk(s): {{deskNames}}."
-msgstr "Це типовий шаблон таких столів: {{deskNames}}."
+msgstr "Це типовий шаблон таких десків: {{deskNames}}."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:351
 msgid "This is a recurring event."
@@ -17957,8 +17957,8 @@ msgid ""
 "stages or a saved search. Name your view once you are done. Enjoy!"
 msgstr ""
 "Цей віджет дозволяє створювати практично будь-який вид контенту в Superdesk, "
-"будь то виробництво або завантаження. Все, що вам потрібно, це вибрати стіл, "
-"його етапи або збережений пошук. Оцініть, як тільки ви закінчите."
+"будь то виробництво або завантаження. Все, що вам потрібно, це вибрати деск, "
+"його етапи або збережений пошук. Насолоджуйтесь!"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.tsx:83
 msgid "This will also post the related event's entire recurring series"
@@ -18178,7 +18178,7 @@ msgstr "Буде підтверджено"
 #: scripts/apps/search/constants.ts:13
 #: scripts/apps/search/views/search-parameters.html:115
 msgid "To Desk"
-msgstr "До Столу"
+msgstr "До деску"
 
 #: ../superdesk-planning/client/constants/assignments.ts:200
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:9
@@ -18411,7 +18411,7 @@ msgstr "Зробити переклад елемента до"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:196
 #: scripts/apps/authoring/versioning/history/views/history.html:41
 msgid "Translated by"
-msgstr "Перекладено"
+msgstr "Перекладено користувачем"
 
 #: scripts/apps/authoring-react/article-widgets/translations/translations.tsx:63
 #: scripts/apps/authoring/translations/translationsWidget.tsx:53
@@ -18648,7 +18648,7 @@ msgstr "Невідома помилка: Не можу знищити елеме
 
 #: scripts/apps/archive/directives/ResendItem.ts:45
 msgid "Unknown Error: Cannot resend the item"
-msgstr "Невідома помилка: Не можу повторно відправити елемент."
+msgstr "Невідома помилка: Не вдалося повторно надіслати елемент."
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:436
 msgid "Unknown Error: Item not published."
@@ -18656,7 +18656,7 @@ msgstr "Невідома помилка: Елемент не оприлюдне�
 
 #: scripts/apps/desks/controllers/DeskConfigController.ts:69
 msgid "Unknown Error: There was a problem, desk was not deleted."
-msgstr "Невідома помилка: Стіл не був видалений."
+msgstr "Невідома помилка: деск не було видалено."
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:73
 msgid "Unknown Type ({{qcode}})"
@@ -18699,7 +18699,7 @@ msgstr "Від'єднати оновлення"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:148
 msgid "Unlinked by"
-msgstr "Від'єднано"
+msgstr "Від'єднано користувачем"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:456
 msgid "Unlinked by {{user}}"
@@ -18744,11 +18744,11 @@ msgstr "Зняти позначку з користувача"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:102
 msgid "Unmarked by"
-msgstr "Позначку знято"
+msgstr "Позначку знято користувачем"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:336
 msgid "Unmarked from desk({{x}}) by {{user}}"
-msgstr "Позначку зі столу ({{x}}) знято користувачем {{user}}"
+msgstr "Позначку з деску ({{x}}) знято користувачем {{user}}"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:302
 msgid "Unmarked from highlight({{x}}) by {{user}}"
@@ -18791,7 +18791,7 @@ msgstr "Знято з оприлюднення"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:190
 msgid "Unpublished by"
-msgstr "Знято з оприлюднення"
+msgstr "Знято з оприлюднення користувачем"
 
 #: scripts/apps/authoring-react/generic-widgets/inline-comments.tsx:168
 #: scripts/apps/authoring/track-changes/views/inline-comments-widget.html:3
@@ -18849,7 +18849,7 @@ msgstr "Відновлено"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:237
 #: scripts/apps/authoring/versioning/history/views/history.html:74
 msgid "Unspiked by"
-msgstr "Відновлено"
+msgstr "Відновлено користувачем"
 
 #: scripts/apps/search/views/saved-search-subscribe.html:29
 msgid "Unsubscribe"
@@ -18857,7 +18857,7 @@ msgstr "Скасувати підписку"
 
 #: scripts/apps/search/directives/SavedSearchManageSubscribers.ts:227
 msgid "Unsubscribe desk"
-msgstr "Скасувати підписку столу"
+msgstr "Скасувати підписку деску"
 
 #: scripts/apps/search/directives/SavedSearchManageSubscribers.ts:215
 msgid "Unsubscribe user"
@@ -19002,7 +19002,7 @@ msgstr "Оновлено о {{date}}"
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:129
 #: scripts/apps/authoring/versioning/history/views/history.html:18
 msgid "Updated by"
-msgstr "Оновлено"
+msgstr "Оновлено користувачем"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:119
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:135
@@ -19639,7 +19639,7 @@ msgstr "Щотижня"
 
 #: ../superdesk-planning/client/utils/filters.ts:48
 msgid "Weekly @ {{ time }} to {{ desk }}"
-msgstr "Щотижня о {{ time }} на стіл {{ desk }}"
+msgstr "Щотижня о {{ time }} до деску {{ desk }}"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:71
 msgid "Weekly on {{days}} at {{hour}}"
@@ -19814,7 +19814,7 @@ msgstr "Ви збираєтеся видалити словник {{name}}. Цю
 msgid ""
 "You are changing you personal preferences. If you would like to set the "
 "default order for the desk, you can do so from the settings page."
-msgstr "Ви змінюєте свої особисті налаштування. Якщо ви хочете задати типовий порядок для столу, це можна зробити на сторінці настройок."
+msgstr "Ви змінюєте свої особисті налаштування. Якщо ви хочете задати типовий порядок для деску, це можна зробити на сторінці налаштувань."
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.tsx:249
 msgid "You are creating a new planning item."
@@ -19851,7 +19851,7 @@ msgid ""
 "You can choose the default content view of your desk. Use only if you want "
 "to override individual users' monitoring view preferences. Select \"none\" "
 "if you want to let users decide."
-msgstr "Ви можете вибрати типовий вигляд контенту вашого столу. Використовуйте лише тоді, коли хочете перевизначити індивідуальні налаштування вигляду моніторингу для користувачів. Виберіть \"none\", якщо хочете дозволити користувачам вирішувати самостійно."
+msgstr "Ви можете вибрати типовий вигляд контенту вашого деску. Використовуйте лише тоді, коли хочете перевизначити індивідуальні налаштування вигляду моніторингу для користувачів. Виберіть \"none\", якщо хочете дозволити користувачам вирішувати самостійно."
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:148
 msgid ""
@@ -20110,7 +20110,7 @@ msgstr "масові дії"
 #: scripts/apps/authoring/versioning/versions/views/versions.html:7
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:2
 msgid "by"
-msgstr "згідно з"
+msgstr "від"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/versions-tab.tsx:210
 msgid "by {{user}}"
@@ -20273,7 +20273,7 @@ msgstr "день"
 #: scripts/apps/desks/views/content-expiry.html:32
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:153
 msgid "days"
-msgstr "дни"
+msgstr "дні"
 
 #: scripts/apps/users/views/settings-privileges.html:16
 #: scripts/apps/users/views/settings-roles.html:15
@@ -20283,18 +20283,18 @@ msgstr "за замовчуванням"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:21
 msgid "default template"
-msgstr "Шаблон за замовчуванням"
+msgstr "шаблон за замовчуванням"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "desk Output"
-msgstr "Стіл Випуску"
+msgstr "деск випуску"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:9
 #: scripts/apps/authoring/versioning/versions/views/versions.html:13
 #: scripts/apps/search/components/ItemContainer.tsx:13
 #: scripts/core/itemList/views/relatedItem-list-widget.html:38
 msgid "desk:"
-msgstr "Стіл:"
+msgstr "деск:"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:272
 #: scripts/extensions/auto-tagging-widget/dist/src/extensions/auto-tagging-widget/src/auto-tagging.js:272
@@ -20475,11 +20475,11 @@ msgstr "для"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:9
 msgid "for \"{{currentDesk.name}}\" Desk"
-msgstr "для столу \"{{currentDesk.name}}\""
+msgstr "для деску \"{{currentDesk.name}}\""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "for \"{{name}}\" Desk"
-msgstr "для столу \"{{name}}\""
+msgstr "для деску \"{{name}}\""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.tsx:42
 msgid "for '{{ desk }}'"
@@ -20487,7 +20487,7 @@ msgstr "для '{{ desk }}'"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:97
 msgid "for desk"
-msgstr "для столу"
+msgstr "для деску"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:94
 msgid "for highlight"
@@ -20710,7 +20710,7 @@ msgstr "внутрішній"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:82
 msgid "italic"
-msgstr "Курсив"
+msgstr "курсив"
 
 #: scripts/apps/authoring-react/article-widgets/versions-and-item-history/history-tab.tsx:429
 msgid "item"
@@ -20747,7 +20747,7 @@ msgstr "останній"
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:296
 #: scripts/apps/users/views/edit-form.html:94
 msgid "last name"
-msgstr "Прізвище"
+msgstr "прізвище"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:80
 msgid "last update and last item arrived."
@@ -20929,7 +20929,7 @@ msgstr "з"
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:11
 msgid "on"
-msgstr "вкл"
+msgstr "о"
 
 #: ../superdesk-planning/client/utils/events.tsx:1443
 msgid "on all week (including weekends)"
@@ -21132,7 +21132,7 @@ msgstr "вилучити форматування"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:111
 msgid "removed desk"
-msgstr "вилучено стіл"
+msgstr "вилучено деск"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:108
 msgid "removed highlight"
@@ -21193,7 +21193,7 @@ msgstr "внесено до розкладу"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "scheduled Desk Output"
-msgstr "внесено до розкладу Стола Випуску"
+msgstr "внесено до розкладу деску випуску"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "search"
@@ -21201,11 +21201,11 @@ msgstr "пошук"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
-msgstr "пароль Пошуку постачальника"
+msgstr "пароль постачальника пошуку"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:110
 msgid "search provider username"
-msgstr "шукати імя постачальника"
+msgstr "ім'я користувача постачальника пошуку"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:144
 msgid "sec"
@@ -21221,7 +21221,7 @@ msgstr "вибір не дозволено"
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "send"
-msgstr "відправити"
+msgstr "надіслати"
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:20
 msgid "since"
@@ -21257,7 +21257,7 @@ msgstr "джерело з пошуку постачальника"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"
-msgstr "Усунутий"
+msgstr "усунутий"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.tsx:91
 msgid "spiked and unlinked"
@@ -21332,11 +21332,11 @@ msgstr "верхній індекс"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:16
 msgid "switch to grid view"
-msgstr "переключить на вид сітки"
+msgstr "перемкнути на вид сітки"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:17
 msgid "switch to list view"
-msgstr "Перейти до виду списку"
+msgstr "перейти до виду списку"
 
 #: scripts/apps/workspace/content/components/get-content-profiles-form-config.tsx:95
 msgid "tab"
@@ -21438,7 +21438,7 @@ msgstr "оновлено"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "updated Ingest Channel {{name}}"
-msgstr "Оновлено Канал Завантаження {{name}}"
+msgstr "Оновлено канал завантаження {{name}}"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:25
 msgid "updated fields"
@@ -21463,7 +21463,7 @@ msgstr "URL постачальника пошуку"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "user {{user}} has been added to desk {{desk}}: Please re-login."
-msgstr "користувача {{user}} було додано до Столу {{desk}}: увійдіть знову."
+msgstr "користувача {{user}} було додано до деску {{desk}}: увійдіть знову."
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "user {{user}} is granted new privileges: Please re-login."
@@ -21846,7 +21846,7 @@ msgstr "{{some}} з {{total}} елементів не можна додати я
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "{{status}} Ingest Channel {{name}}"
-msgstr "{{status}} Канал Завантаження {{name}}"
+msgstr "{{status}} канал завантаження {{name}}"
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:1
 msgid "{{title}}"
