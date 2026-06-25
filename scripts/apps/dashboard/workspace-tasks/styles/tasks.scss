@@ -1,6 +1,7 @@
 // tasks.scss
 // Styling for the superdesk dashboard page (gridster, widgets)
 // ----------------------------------------------------------------------------------------
+@use "sass:color";
 @import '~mixins.scss';
 @import '~variables.scss';
 
@@ -398,7 +399,7 @@ TASK PAGE
             border-color: #505050 !important;
             border-block-start: 0 !important;
             color: #fff !important;
-            @include box-shadow(inset 0 2px 0px darken(#505050, 10%) !important);
+            @include box-shadow(inset 0 2px 0px color.adjust(#505050, $lightness: -10%) !important);
             &:hover {
                 background: #505050 !important;
             }

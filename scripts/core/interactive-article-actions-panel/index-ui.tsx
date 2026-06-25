@@ -10,7 +10,6 @@ import {authoringReactViewEnabled, appConfig} from 'appConfig';
 import {DuplicateToTab} from './actions/duplicate-to-tab';
 import {WithPublishTab} from './actions/publish-tab';
 import {logger} from 'core/services/logger';
-import {SendCorrectionTab} from './actions/send-correction-tab';
 import {FetchToTab} from './actions/fetch-to-tab';
 import {UnspikeTab} from './actions/unspike-tab';
 import {IArticleActionInteractive, IPanelAction} from './interfaces';
@@ -146,17 +145,23 @@ export class InteractiveArticleActionsPanel
             const item = items[0]; // only one item is supported in correction tab
 
             return (
-                <PanelWithHeader>
-                    <SendCorrectionTab
-                        onDataChange={onDataChange}
-                        item={item}
-                        closePublishView={onClose}
-                        markupV2={markupV2}
-                        handleUnsavedChanges={
-                            () => handleUnsavedChanges([item]).then((res) => res[0])
-                        }
-                    />
-                </PanelWithHeader>
+                <WithPublishTab
+                    onDataChange={onDataChange}
+                    onError={onError}
+                    item={item}
+                    closePublishView={onClose}
+                    markupV2={markupV2}
+                    handleUnsavedChanges={
+                        () => handleUnsavedChanges([item]).then((res) => res[0])
+                    }
+                    action="correct"
+                >
+                    {({columnCount, content}) => (
+                        <PanelWithHeader columnCount={columnCount}>
+                            {content}
+                        </PanelWithHeader>
+                    )}
+                </WithPublishTab>
             );
         } else if (activeTab === 'send_to') {
             return (
