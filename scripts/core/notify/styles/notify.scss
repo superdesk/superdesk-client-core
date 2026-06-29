@@ -1,6 +1,7 @@
 // notify.scss
 // Styling for notifications displayed on top of the page
 // ----------------------------------------------------------------------------------------
+@use "sass:math";
 @import '~mixins.scss';
 @import '~variables.scss';
 
@@ -12,7 +13,7 @@ $notif-holder-w : 340px;
     width: $notif-holder-w;
     inset-block-start: -5px;
     inset-inline-start: 50%;
-    margin-inline-start: -$notif-holder-w/2;
+    margin-inline-start: math.div(-$notif-holder-w, 2);
     overflow: hidden;
     padding: 0 10px 10px;
     .alert {

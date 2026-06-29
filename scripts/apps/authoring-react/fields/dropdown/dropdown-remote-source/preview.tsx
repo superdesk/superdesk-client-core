@@ -8,8 +8,12 @@ type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfigRemoteSource
 export class PreviewRemoteSource extends React.PureComponent<IProps> {
     render() {
         const {config, value} = this.props;
-        const optionsToPreview =
-            (Array.isArray(value) ? value : [value]);
+
+        if (value == null) {
+            return null;
+        }
+
+        const optionsToPreview = Array.isArray(value) ? value : [value];
 
         const Template = getValueTemplate(config);
 

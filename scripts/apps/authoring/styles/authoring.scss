@@ -1,6 +1,8 @@
 // article-edit.scss
 // Styling for the superdesk article edit module
 // ----------------------------------------------------------------------------------------
+@use "sass:color";
+@use "sass:math";
 @import '~mixins.scss';
 @import '~variables.scss';
 @import "~sf-additional.scss";
@@ -205,7 +207,7 @@ $bottom-bar-item-border-color-active: transparent;
         text-overflow: ellipsis;
         white-space: nowrap;
         transition: all 0.2s ease-in-out;
-        gap: $sd-base-increment / 2;
+        gap: math.div($sd-base-increment, 2);
         .opened-articles-bar__item-close {
             height: 2.2rem;
             width: 2.2rem;
@@ -239,7 +241,7 @@ $bottom-bar-item-border-color-active: transparent;
             font-size: 1.2rem;
             transition: color 0.2s ease-in-out;
             opacity: 0.75;
-            gap: $sd-base-increment / 2;
+            gap: math.div($sd-base-increment, 2);
             i {
                 margin-inline-end: 0.4rem;
             }
@@ -1829,7 +1831,7 @@ feature-image {
     .draggable-list {
         .placeholder {
             border: 2px dotted $sd-blue;
-            background-color: scale-color($sd-blue, $alpha: -90%);
+            background-color: color.scale($sd-blue, $alpha: -90%);
             min-height: 58px !important;
             margin: 0 0 1rem;
         }
@@ -1847,7 +1849,7 @@ feature-image {
     }
     &.dragover {
         border: 1px dashed $sd-blue;
-        background-color: scale-color($sd-blue, $alpha: -90%);
+        background-color: color.scale($sd-blue, $alpha: -90%);
     }
     .groups {
         padding: 0 !important;
@@ -1889,3 +1891,8 @@ feature-image {
     color: $errorText;
 }
 
+.Editor3-root:has(.floating-char-count--active) {
+    .public-DraftEditor-content {
+        padding-block-start: var(--space-4);
+    }
+}

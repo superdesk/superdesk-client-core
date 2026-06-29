@@ -1,3 +1,4 @@
+import {formatDateTime} from 'core/get-superdesk-api-implementation';
 import React from 'react';
 import {IDateTimeFieldConfig, IDateTimeValueOperational, IDifferenceComponentProps} from 'superdesk-api';
 import {DifferenceGeneric} from '../difference-generic';
@@ -10,9 +11,9 @@ export class Difference extends React.PureComponent<IProps> {
 
         return (
             <DifferenceGeneric
-                items1={value1 == null ? [] : [value1]}
-                items2={value2 == null ? [] : [value2]}
-                getId={(item) => item.getDate().toString()}
+                items1={value1 == null ? [] : [formatDateTime(value1)]}
+                items2={value2 == null ? [] : [formatDateTime(value2)]}
+                getId={(item) => item}
                 template={({item}) => <span>{item}</span>}
             />
         );

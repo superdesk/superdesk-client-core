@@ -1,5 +1,6 @@
 // BUTTON GROUPS
 // -------------
+@use "sass:math";
 
 
 // Make the div behave like a button
@@ -15,8 +16,8 @@
 
 // Optional: Group multiple button groups together for a toolbar
 .btn-toolbar {
-  margin-block-start: $baseLineHeight / 2;
-  margin-block-end: $baseLineHeight / 2;
+  margin-block-start: math.div($baseLineHeight, 2);
+  margin-block-end: math.div($baseLineHeight, 2);
   .btn-group {
     display: inline-block;
   }

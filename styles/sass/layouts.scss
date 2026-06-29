@@ -678,7 +678,7 @@ $slide-pane-width: 400px;
     inset-block-end: 32px;
     inset-inline-end: -$notification-pane-width - 16px;
     width: $notification-pane-width;
-    background: hsla(214, 13%, 12, 0.82);
+    background: hsla(214, 13%, 12%, 0.82);
     backdrop-filter: blur(6px);
     box-shadow: 0 2px 12px hsla(0, 0%, 0%, 0.32), 0 1px 4px hsla(0, 0%, 0%, 0.32), 0 0 0 1px var(--sd-colour-line--light);
     z-index: 100;

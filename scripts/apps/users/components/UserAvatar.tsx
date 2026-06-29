@@ -47,7 +47,7 @@ class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
 interface IProps {
     user: IUser;
 
-    size?: 'small' | 'medium' | 'large'; // defaults to medium
+    size?: 'x-small' | 'small' | 'medium' | 'large'; // defaults to medium
 
     // indicates whether to show online/offline status
     // should only be used when the user object is up to date

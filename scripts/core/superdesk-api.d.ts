@@ -2473,7 +2473,10 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
         valueTemplate?: React.ComponentType<{option: IUser}>;
         clearable: boolean;
-        deskId?: string
+        deskId?: string;
+        inlineLabel?: boolean;
+        labelHidden?: boolean;
+        displayStatus?: boolean;
     }
 
     export interface IDropdownTreeGroup<T> {
@@ -2552,6 +2555,7 @@ declare module 'superdesk-api' {
         children: Array<React.ReactNode>;
 
         'data-test-id'?: string;
+        'data-test-value'?: string;
     }
 
     type ILiveQueryChildrenOptions<T> = {loading: true} | {loading: false; data: IRestApiResponse<T>};
@@ -3799,6 +3803,7 @@ declare module 'superdesk-api' {
 
             panels?: {
                 publish?: {
+                    allowSeconds?: boolean;
                     publishSchedule?: boolean
                     publishingTarget?: boolean;
                 }

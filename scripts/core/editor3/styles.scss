@@ -1,5 +1,7 @@
 //TODO: Refactor these styles into separate smaller files.
 
+@use "sass:color";
+@use "sass:math";
 @import '~mixins.scss';
 @import '~variables/_typography.scss';
 @import '~variables/_colors.scss';
@@ -298,7 +300,6 @@ $editor-styleButton-size: 			3rem;
 					margin: 0;
 					padding: 0;
 				}
-
 				position: relative;
 				border: 1px solid var(--sd-editor-colour__controls-border);
 				padding: var(--space--1);
@@ -458,7 +459,7 @@ $editor-styleButton-size: 			3rem;
         &.unstyled__block--over {
 			border-bottom-width: 1.5em;
 			transition: border-width 0.1s ease-in-out;
-            border-bottom-color: scale-color($blue, $alpha: -70%);
+            border-bottom-color: color.scale($blue, $alpha: -70%);
 		}
 		&:only-child {
 			border-bottom-width: 0.6em;
@@ -484,7 +485,7 @@ $editor-styleButton-size: 			3rem;
 
     .unstyled--over {
         padding-block-start: 0;
-		border-block-start: 1.5em solid scale-color($blue, $alpha: -70%);
+		border-block-start: 1.5em solid color.scale($blue, $alpha: -70%);
 		transition: border-width 0.1s ease-in-out;
 	}
 
@@ -623,7 +624,7 @@ $editor-styleButton-size: 			3rem;
 	min-width: $editor-styleButton-size;
 	padding: 0.6rem;
 	display: inline-block;
-	border-radius: $editor-styleButton-size / 2;
+	border-radius: math.div($editor-styleButton-size, 2);
 	text-align: center;
 	line-height: 1.6rem;
 	[class*="icon-"] {
