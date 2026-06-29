@@ -27,6 +27,27 @@ import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
 import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
+/**
+ * `section` ('header' | 'content') is an authoring-react-era concept. Content profiles created before
+ * it (e.g. the stock "Text" profile) have no section on their editor fields. Legacy authoring never
+ * required it and rendered such fields anyway, so treating a missing section as an error made
+ * authoring-react unable to open or switch to those profiles. Default to "content" to match legacy's
+ * "just render it" behaviour, and warn so the stale profile gets noticed and migrated.
+ */
+export function resolveFieldSection(section: string | undefined, fieldId: string): 'header' | 'content' {
+    if (section === 'header' || section === 'content') {
+        return section;
+    }
+
+    // eslint-disable-next-line no-console
+    console.warn(
+        `Content profile field "${fieldId}" has no section; defaulting to "content". `
+        + 'This profile predates the header/content split and should be migrated.',
+    );
+
+    return 'content';
+}
+
 export function getArticleContentProfile<T>(
     item: IArticle,
     fieldsAdapter: IFieldsAdapter<T>,
@@ -163,12 +184,10 @@ export function getArticleContentProfile<T>(
                 }
             })();
 
-            if (editorItem.section === 'header') {
+            if (resolveFieldSection(editorItem.section, fieldId) === 'header') {
                 headerFields = headerFields.set(fieldV2.id, fieldV2);
-            } else if (editorItem.section === 'content') {
-                contentFields = contentFields.set(fieldV2.id, fieldV2);
             } else {
-                throw new Error('invalid section');
+                contentFields = contentFields.set(fieldV2.id, fieldV2);
             }
         }
 

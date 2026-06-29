@@ -1237,9 +1237,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             autosaved: itemWithUpdates,
         };
 
-        newProfile.header.merge(newProfile.header).forEach((x) => {
-            this.fieldRefs[x.id] = createRef();
-        });
+        if (newProfile != null) {
+            newProfile.header.merge(newProfile.content).forEach((x) => {
+                this.fieldRefs[x.id] = createRef();
+            });
+        }
 
         this.setState(getInitialState(
             item,
@@ -1307,7 +1309,15 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     pinnedId: id === activeWidgetId ? activeWidgetId : this.props.sideWidget?.pinnedId,
                 });
             },
-            reinitialize: (item, profile) => this.reinitialize(state, item, profile),
+            reinitialize: (item, profile) => {
+                // Read this.state at call time, not the render-time `state` captured by this closure.
+                // The dropdown calls reinitialize after an async step, by which point a save may have
+                // produced a fresh _etag; using the stale captured state would rewind it and 412 the
+                // next save.
+                if (this.state.initialized) {
+                    this.reinitialize(this.state, item, profile);
+                }
+            },
             getValidationErrors: () => {
                 return state.validationErrors;
             },
