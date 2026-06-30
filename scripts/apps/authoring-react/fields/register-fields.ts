@@ -28,6 +28,7 @@ export function registerAuthoringReactFields() {
                 if (appConfig.features.useTansaProofing === true) {
                     const checkSpellingAction: IAuthoringAction = {
                         label: gettext('Check spelling'),
+                        groupId: 'spellchecker',
                         onTrigger: () => {
                             runTansa(contentProfile, fieldsData);
                         },

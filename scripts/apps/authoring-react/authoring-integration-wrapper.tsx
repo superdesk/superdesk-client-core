@@ -64,6 +64,13 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     },
 ];
 
+const ACTION_GROUPS = {
+    general: 'general',
+    highlights: 'highlights',
+    translations: 'translations',
+    spellchecker: 'spellchecker',
+};
+
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
         .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
@@ -133,6 +140,7 @@ const getCompareVersionsModal = (
     storageAdapter: IStorageAdapter<IArticle>,
 ): IAuthoringAction => ({
     label: gettext('Compare versions'),
+    groupId: ACTION_GROUPS.general,
     onTrigger: () => {
         const article = getLatestItem();
 
@@ -167,7 +175,8 @@ const getCompareVersionsModal = (
 });
 
 const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
-    label: gettext('Multi-edit'),
+    label: gettext('Multiedit'),
+    groupId: ACTION_GROUPS.general,
     onTrigger: () => {
         showModal(({closeModal}) => (
             <MultiEditToolbarAction
@@ -184,6 +193,7 @@ const getExportModal = (
     hasUnsavedChanges: () => boolean,
 ): IAuthoringAction => ({
     label: gettext('Export'),
+    groupId: ACTION_GROUPS.general,
     onTrigger: () => {
         const openModal = (article: IArticle) => showModal(({closeModal}) => {
             return (
@@ -220,6 +230,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
     return {
         label: gettext('Highlights'),
+        groupId: ACTION_GROUPS.highlights,
         onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
@@ -231,6 +242,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
 const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
+    groupId: ACTION_GROUPS.general,
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -243,8 +255,17 @@ const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
     ),
 });
 
+const getLiveSuggestionsAction = (): IAuthoringAction => ({
+    label: gettext('Live suggestions'),
+    groupId: ACTION_GROUPS.general,
+    onTrigger: () => {
+        ng.get('suggest').setActive();
+    },
+});
+
 const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
-    label: gettext('Translate'),
+    label: gettext('Translate item to'),
+    groupId: ACTION_GROUPS.translations,
     onTrigger: () => {
         showModal(({closeModal}) => (
             <TranslateModal
@@ -257,6 +278,7 @@ const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
+    groupId: ACTION_GROUPS.highlights,
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -469,6 +491,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                             const actions = [
                                 getSaveAsTemplate(getLatestItem),
+                                ...(
+                                    appConfig.features?.hideLiveSuggestions === true
+                                        ? []
+                                        : [getLiveSuggestionsAction()]
+                                ),
                                 getCompareVersionsModal(
                                     getLatestItem,
                                     authoringStorage,
@@ -485,13 +512,15 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                             const getSpellcheckerAction = (): IAuthoringAction | null => {
                                 if (appConfig.features.useTansaProofing !== true) {
+                                    let enabled = spellchecker.enabled;
+
                                     return {
-                                        label: spellchecker.enabled
-                                            ? gettext('Disable spellchecker')
-                                            : gettext('Enable spellchecker'),
+                                        label: gettext('Run automatically'),
                                         groupId: 'spellchecker',
+                                        icon: enabled ? 'toggle-on' : 'toggle-off',
                                         onTrigger: () => {
-                                            spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
+                                            enabled = !enabled;
+                                            spellchecker.setSpellcheckerStatus(enabled);
                                         },
                                     } satisfies IAuthoringAction;
                                 }
