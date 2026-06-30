@@ -28,11 +28,9 @@ import {description_text} from './field-adapters/description_text';
 import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 /**
- * `section` ('header' | 'content') is an authoring-react-era concept. Content profiles created before
- * it (e.g. the stock "Text" profile) have no section on their editor fields. Legacy authoring never
- * required it and rendered such fields anyway, so treating a missing section as an error made
- * authoring-react unable to open or switch to those profiles. Default to "content" to match legacy's
- * "just render it" behaviour, and warn so the stale profile gets noticed and migrated.
+ * Field `section` ('header' | 'content') is an authoring-react concept. Profiles created before it
+ * (e.g. the stock "Text" profile) have none, and treating that as an error stopped authoring-react
+ * from opening or switching to them. Default to "content" (legacy just rendered such fields) and warn.
  */
 export function resolveFieldSection(section: string | undefined, fieldId: string): 'header' | 'content' {
     if (section === 'header' || section === 'content') {

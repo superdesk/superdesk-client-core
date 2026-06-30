@@ -15,9 +15,9 @@ export const ContentProfileDropdownWidget: React.ComponentType<{entity: IArticle
                         return;
                     }
 
-                    // Mirror legacy changeProfile: no "save changes?" prompt. Rebuild from the latest
-                    // in-memory item so unsaved edits are preserved (not the `entity` prop, which lags
-                    // one edit behind), then let the normal autosave persist the switch.
+                    // Match legacy: switch with no "save changes?" prompt. Rebuild from the latest
+                    // in-memory item (getLatestItem, not the entity prop which can be stale) so unsaved
+                    // edits survive the switch; the normal autosave then persists it.
                     const updatedItem: IArticle = {
                         ...exposed.getLatestItem(),
                         profile: itemWithNewProfile.profile,

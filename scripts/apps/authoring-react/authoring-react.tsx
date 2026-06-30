@@ -1310,10 +1310,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 });
             },
             reinitialize: (item, profile) => {
-                // Read this.state at call time, not the render-time `state` captured by this closure.
-                // The dropdown calls reinitialize after an async step, by which point a save may have
-                // produced a fresh _etag; using the stale captured state would rewind it and 412 the
-                // next save.
+                // Read this.state at call time. This runs after the dropdown's async step, so the
+                // `state` captured by the closure can be stale (e.g. an _etag bumped by a save in
+                // between); reinitializing from it would use outdated data.
                 if (this.state.initialized) {
                     this.reinitialize(this.state, item, profile);
                 }
