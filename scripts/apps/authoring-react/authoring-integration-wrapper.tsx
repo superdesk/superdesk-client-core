@@ -516,8 +516,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                     return {
                                         label: gettext('Run automatically'),
-                                        groupId: 'spellchecker',
-                                        icon: enabled ? 'toggle-on' : 'toggle-off',
+                                        groupId: ACTION_GROUPS.spellchecker,
+                                        icon: spellchecker.enabled ? 'toggle-on' : 'toggle-off',
                                         onTrigger: () => {
                                             enabled = !enabled;
                                             spellchecker.setSpellcheckerStatus(enabled);
@@ -555,7 +555,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                 return {
                                     label: gettext('Check spelling'),
-                                    groupId: 'spellchecker',
+                                    groupId: ACTION_GROUPS.spellchecker,
                                     onTrigger: runCheck,
                                     keyBindings: {
                                         'ctrl+shift+y': runCheck,
