@@ -22,10 +22,26 @@ describe('authoring-react header word count and source', () => {
         expect(wrapper.find('[data-test-id="authoring-header-word-count"]').prop('data-test-value')).toBe('4');
     });
 
-    it('updates the count when body_html changes', () => {
-        const wrapper = renderWith({type: 'text', body_html: '<p>only two</p>'});
+    it('re-reads the latest item on re-render, so the count tracks live edits', () => {
+        // entity stays the stale initial item on purpose; only getLatestItem() returns fresh content.
+        // This is what makes the test discriminate: it passes only if the widget reads getLatestItem()
+        // on each render, and fails if it ever reverts to reading the static entity prop.
+        const staleEntity = {type: 'text', body_html: '<p>only two</p>'} as IArticle;
+        let latest: Partial<IArticle> = {type: 'text', body_html: '<p>only two</p>'};
+        const exposed = {getLatestItem: () => latest as IArticle} as IExposedFromAuthoring<IArticle>;
+
+        const wrapper = mount(
+            <ToolbarContextProvider exposed={exposed} authoringStorage={null}>
+                <HeaderWordCountSourceWidget entity={staleEntity} />
+            </ToolbarContextProvider>,
+        );
 
         expect(wrapper.find('[data-test-id="authoring-header-word-count"]').prop('data-test-value')).toBe('2');
+
+        latest = {type: 'text', body_html: '<p>one two three four</p>'};
+        wrapper.setProps({children: <HeaderWordCountSourceWidget entity={staleEntity} />});
+
+        expect(wrapper.find('[data-test-id="authoring-header-word-count"]').prop('data-test-value')).toBe('4');
     });
 
     it('renders a zero count for an empty body', () => {
