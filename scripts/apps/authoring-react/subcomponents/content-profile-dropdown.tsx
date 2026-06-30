@@ -32,6 +32,8 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
                 <span className="authoring-header__label">{gettext('PROFILE')}</span>
                 <div className="authoring-header__value">
                     <select
+                        data-test-id="content-profile-select"
+                        data-test-value={this.state.selectedProfileId}
                         style={{height: 16}}
                         value={this.state.selectedProfileId}
                         onChange={(e) => {

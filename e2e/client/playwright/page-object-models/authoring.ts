@@ -1,4 +1,4 @@
-import {Locator, Page} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -73,6 +73,24 @@ export class Authoring {
 
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
+    }
+
+    /**
+     * Opens the authoring-react "Save as template" modal, fills the name and saves.
+     * Menu items render in a portal outside the actions wrapper, so locate them by
+     * role/text rather than a test-id chain.
+     */
+    async saveAsTemplate(templateName: string): Promise<void> {
+        const {page} = this;
+        const modal = page.getByTestId('modal-save-as-template');
+
+        await page.getByRole('button', {name: 'Actions menu'}).click();
+        await page.getByText('Save as template', {exact: true}).click();
+        await expect(modal).toBeVisible();
+
+        await modal.getByLabel('Template name').fill(templateName);
+        await modal.getByRole('button', {name: 'Save'}).click();
+        await expect(modal).not.toBeVisible();
     }
 }
 

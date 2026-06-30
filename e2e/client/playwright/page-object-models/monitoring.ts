@@ -1,4 +1,4 @@
-import {Page, Locator} from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 import {s} from '../utils';
 
 export class Monitoring {
@@ -10,6 +10,8 @@ export class Monitoring {
 
     async selectDeskOrWorkspace(deskName: string): Promise<void> {
         const deskSelectDropdown = this.page.locator(s('monitoring--selected-desk'));
+
+        await expect(deskSelectDropdown).toBeVisible();
 
         const selectedDeskText = await deskSelectDropdown.textContent();
 
