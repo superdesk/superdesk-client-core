@@ -77,23 +77,16 @@ export class Authoring {
 
     /**
      * Opens the authoring-react "Save as template" modal, fills the name and saves.
-     * The actions menu renders its items in a portal; the first open occasionally
-     * does not surface the modal, so the open is retried. The guard avoids toggling
-     * an already-open menu shut on a retry.
+     * Menu items render in a portal outside the actions wrapper, so locate them by
+     * role/text rather than a test-id chain.
      */
     async saveAsTemplate(templateName: string): Promise<void> {
         const {page} = this;
         const modal = page.getByTestId('modal-save-as-template');
-        const saveAsTemplateItem = page.getByText('Save as template', {exact: true});
 
-        await expect(async () => {
-            if (!(await saveAsTemplateItem.isVisible())) {
-                await page.getByRole('button', {name: 'Actions menu'}).click();
-            }
-
-            await saveAsTemplateItem.click();
-            await expect(modal).toBeVisible({timeout: 5000});
-        }).toPass({timeout: 30000});
+        await page.getByRole('button', {name: 'Actions menu'}).click();
+        await page.getByText('Save as template', {exact: true}).click();
+        await expect(modal).toBeVisible();
 
         await modal.getByLabel('Template name').fill(templateName);
         await modal.getByRole('button', {name: 'Save'}).click();
