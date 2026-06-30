@@ -130,6 +130,7 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                 contentPadding="none"
             >
                 <table
+                    data-test-id="compare-versions"
                     style={{
                         width: '100%',
                         height: '100%',
@@ -195,7 +196,10 @@ export class CompareArticleVersionsModal extends React.PureComponent<IProps, ISt
                                     fieldPadding={ITEM_PADDING}
                                 />
                             </td>
-                            <td style={{background: 'white', height: '100%', width: '100%'}}>
+                            <td
+                                style={{background: 'white', height: '100%', width: '100%'}}
+                                data-test-id="compare-versions-difference"
+                            >
                                 <ViewDifference
                                     gapBetweenFields="16"
                                     profile1={profile2}

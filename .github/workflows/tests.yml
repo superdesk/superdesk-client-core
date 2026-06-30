@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
@@ -30,6 +30,11 @@ jobs:
 
   playwright-e2e:
     runs-on: ubuntu-latest
+    env:
+      # CI runs the e2e server on :5000 (docker-compose PORT default; no AirPlay
+      # conflict on Linux). The test helpers and client build read SUPERDESK_URL,
+      # which defaults to 5002 locally to dodge macOS AirPlay; pin it to the CI port.
+      SUPERDESK_URL: http://localhost:5000/api
     strategy:
       fail-fast: false
       matrix:
@@ -40,7 +45,7 @@ jobs:
       run:
         working-directory: e2e/client
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
@@ -55,7 +60,7 @@ jobs:
 
     - name: Cache Playwright browsers
       id: playwright-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5.0.5
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
@@ -100,7 +105,7 @@ jobs:
       run:
         working-directory: e2e/client
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: actions/setup-node@v6
       with:
         node-version: '22'

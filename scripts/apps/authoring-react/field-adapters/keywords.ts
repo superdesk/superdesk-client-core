@@ -30,7 +30,9 @@ export function getKeywordsAdapter(): IFieldAdapter<IArticle> {
                 return fieldV2;
             },
             retrieveStoredValue: (article) => {
-                return article.keywords ?? null;
+                // Absent value must be undefined, not null, so a profile switch does not patch
+                // keywords: null (an invalid value for this list field). Mirrors the non-vocabulary branch.
+                return article.keywords ?? undefined;
             },
             storeValue: (val: Array<string>, article) => {
                 return {

@@ -41,6 +41,7 @@ export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
                 visible
                 size="medium"
                 position="top"
+                data-test-id="modal-prompt"
                 headerTemplate={this.props.title}
                 footerTemplate={
                     (
@@ -48,12 +49,14 @@ export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
                             <Button
                                 type="default"
                                 text={gettext('Cancel')}
+                                data-test-id="modal-prompt-cancel"
                                 onClick={this.props.close}
                             />
                             <Button
                                 type="primary"
                                 text={gettext('Submit')}
                                 disabled={this.state.value.length < 1}
+                                data-test-id="modal-prompt-submit"
                                 onClick={this.submitValue}
                             />
                         </ButtonGroup>
@@ -63,6 +66,7 @@ export class ModalPrompt extends React.Component<IPropsModalPrompt, any> {
                 <Textarea
                     value={this.state.value}
                     onChange={this.updateValue}
+                    data-test-id="modal-prompt-input"
                     style={{maxHeight: 400, resize: 'none'}}
                 />
             </Modal>

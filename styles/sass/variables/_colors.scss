@@ -1,5 +1,6 @@
 // variables/colors.scss
 // -----------------------------------------------------
+@use "sass:color";
 
 $superdesk-green:       rgba(30,176,108,1);
 
@@ -60,7 +61,7 @@ $state-border--locked:          rgb(229, 28, 35);
 $state-border--published:       rgb(94, 141, 50);
 $state-border--killed:          rgb(48, 48, 48);
 $item-background-killed:        rgb(255, 249, 248);
-$item-background-published:     lighten($state-border--published, 60%);
+$item-background-published:     color.adjust($state-border--published, $lightness: 60%);
 
 // Links
 // -------------------------
@@ -120,7 +121,7 @@ $navbarLinkBackgroundActive:    $navbarBackground;
 // -------------------------
 $warningText:          #c09853;
 $warningBackground:    #fcf8e3;
-$warningBorder:        darken(adjust-hue($warningBackground, -10), 3%);
+$warningBorder:        color.adjust(color.adjust($warningBackground, $hue: -10), $lightness: -3%);
 
 :root {
     --error-text-color: #E51C23;
@@ -128,15 +129,15 @@ $warningBorder:        darken(adjust-hue($warningBackground, -10), 3%);
 
 $errorText:            var(--error-text-color);
 $errorBackground:      #f2dede;
-$errorBorder:          darken(adjust-hue($errorBackground, -10), 3%);
+$errorBorder:          color.adjust(color.adjust($errorBackground, $hue: -10), $lightness: -3%);
 
 $successText:          #468847;
 $successBackground:    #dff0d8;
-$successBorder:        darken(adjust-hue($successBackground, -10), 5%);
+$successBorder:        color.adjust(color.adjust($successBackground, $hue: -10), $lightness: -5%);
 
 $infoText:             #3a87ad;
 $infoBackground:       #d9edf7;
-$infoBorder:           darken(adjust-hue($infoBackground, -10), 7%);
+$infoBorder:           color.adjust(color.adjust($infoBackground, $hue: -10), $lightness: -7%);
 
 // Theme
 // -------------------------

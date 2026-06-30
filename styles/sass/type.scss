@@ -1,13 +1,14 @@
 // Typography.scss
 // Headings, body text, lists, code, and more for a versatile and durable typography system
 // ----------------------------------------------------------------------------------------
+@use "sass:math";
 
 
 // BODY TEXT
 // ---------
 
 p {
-    margin: 0 0 $baseLineHeight / 2;
+    margin: 0 0 math.div($baseLineHeight, 2);
     font-family: $baseFontFamily;
     font-size: $baseFontSize;
     line-height: $baseLineHeight;
@@ -144,7 +145,7 @@ dt {
     line-height: $baseLineHeight - 1; // fix jank Helvetica Neue font bug
 }
 dd {
-    margin-inline-start: $baseLineHeight / 2;
+    margin-inline-start: math.div($baseLineHeight, 2);
 }
 // Horizontal layout (like forms)
 .dl-horizontal {

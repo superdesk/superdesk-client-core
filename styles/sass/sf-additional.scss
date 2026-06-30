@@ -1,5 +1,7 @@
 // Styling for the superdesk specific elements
 // ----------------------------------------------------------------------------------------
+@use "sass:color";
+@use "sass:math";
 
 
 // Webkit scroll
@@ -452,7 +454,7 @@
                 color: $grayLighter;
                 background: #505050;
                 border-color: #505050;
-                @include box-shadow(inset 0 1px 0px darken(#505050, 10%) !important);
+                @include box-shadow(inset 0 1px 0px color.adjust(#505050, $lightness: -10%) !important);
             }
 
             a {
@@ -460,7 +462,7 @@
                 background: #505050 !important;
                 border-color: #373737 #505050 #505050 !important;
                 color: #fff !important;
-                @include box-shadow(inset 0 2px 0px darken(#505050, 10%) !important);
+                @include box-shadow(inset 0 2px 0px color.adjust(#505050, $lightness: -10%) !important);
             }
 
             &:hover {
@@ -2417,7 +2419,7 @@ sd-multi-image-edit {
 // Margin
 .sd-margin-start {
     &--0-5 {
-        margin-inline-start: $sd-base-increment / 2;
+        margin-inline-start: math.div($sd-base-increment, 2);
     }
     &--1 {
         margin-inline-start: $sd-base-increment * 1;
@@ -2443,7 +2445,7 @@ sd-multi-image-edit {
 }
 .sd-margin-end {
     &--0-5 {
-        margin-inline-end: $sd-base-increment / 2;
+        margin-inline-end: math.div($sd-base-increment, 2);
     }
     &--1 {
         margin-inline-end: $sd-base-increment * 1;
@@ -2471,7 +2473,7 @@ sd-multi-image-edit {
 // Padding
 .sd-padding-start {
     &--0-5 {
-        padding-inline-start: $sd-base-increment / 2;
+        padding-inline-start: math.div($sd-base-increment, 2);
     }
     &--1 {
         padding-inline-start: $sd-base-increment * 1;
@@ -2494,7 +2496,7 @@ sd-multi-image-edit {
 }
 .sd-padding-end {
     &--0-5 {
-        padding-inline-end: $sd-base-increment / 2;
+        padding-inline-end: math.div($sd-base-increment, 2);
     }
     &--1 {
         padding-inline-end: $sd-base-increment * 1;
@@ -2518,4 +2520,8 @@ sd-multi-image-edit {
 
 .sd-flex--nowrap {
     flex-wrap: nowrap !important;
+}
+
+.sd-avatar {
+    flex-shrink: 0;
 }

@@ -1,6 +1,8 @@
 // Mixins.scss
 // Snippets of reusable CSS to develop faster and keep code readable
 // -----------------------------------------------------------------
+@use "sass:color";
+@use "sass:math";
 
 
 // UTILITY MIXINS
@@ -122,8 +124,8 @@
         color: $textColor;
         border-color: $borderColor;
         &:focus {
-            border-color: darken($borderColor, 10%);
-            @include box-shadow(0 0 6px lighten($borderColor, 20%));
+            border-color: color.adjust($borderColor, $lightness: -10%);
+            @include box-shadow(0 0 6px color.adjust($borderColor, $lightness: 20%));
         }
     }
     // Give a small background color for input-prepend/-append
@@ -233,7 +235,7 @@
 
 // Opacity
 @mixin opacity($opacity: 100) {
-    opacity: $opacity / 100;
+    opacity: math.div($opacity, 100);
      filter: "alpha(opacity=#{$opacity})";
 }
 
@@ -259,7 +261,7 @@
 // Dividers (basically an hr) within dropdowns and nav lists
 @mixin nav-divider() {
     height: 1px;
-    margin: (($baseLineHeight / 2) - 1) 1px; // 8px 1px
+    margin: ((math.div($baseLineHeight, 2)) - 1) 1px; // 8px 1px
     overflow: hidden;
     background-color: var(--sd-colour-line--medium);
     //border-block-end: 1px solid $white;

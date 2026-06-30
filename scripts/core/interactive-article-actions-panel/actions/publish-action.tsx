@@ -33,6 +33,7 @@ export interface IPublishConfig {
     handleUnsavedChanges(): Promise<IArticle>;
     onError: (error: IPanelError) => void;
     onDataChange: (item: IArticle) => void;
+    action?: 'publish' | 'correct';
 }
 
 interface IState {
@@ -84,6 +85,8 @@ export class PublishAction extends React.PureComponent<IProps, IState> {
     }
 
     doPublish(applyDestination?: boolean): void {
+        const action = this.props.action ?? 'publish';
+
         this.props.handleUnsavedChanges()
             .then((item) => {
                 const emptyPatches: Array<Partial<IArticle>> = [{}];
@@ -112,7 +115,7 @@ export class PublishAction extends React.PureComponent<IProps, IState> {
                         sdApi.article.publishItem(
                             cloneDeep(item),
                             cloneDeep(itemToPublish),
-                            'publish',
+                            action,
                             this.props.onError,
                         )
                             .then(() => {
@@ -301,7 +304,7 @@ export class PublishAction extends React.PureComponent<IProps, IState> {
                 )}
 
                 <Button
-                    text={gettext('Publish')}
+                    text={this.props.action === 'correct' ? gettext('Send correction') : gettext('Publish')}
                     onClick={() => {
                         this.doPublish();
                     }}

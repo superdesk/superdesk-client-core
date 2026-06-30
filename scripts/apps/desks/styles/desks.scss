@@ -1,6 +1,7 @@
 // desk.scss
 // Styling for the superdesk desk module
 // ----------------------------------------------------------------------------------------
+@use "sass:color";
 @import '~mixins.scss';
 @import '~variables.scss';
 @import '~labels.scss';
@@ -14,9 +15,9 @@ $desk-width: 270px;
 
 /* board colors */
 @mixin status-config-color($color) {
-    $r: red($color);
-    $g: green($color);
-    $b: blue($color);
+    $r: color.channel($color, "red", $space: rgb);
+    $g: color.channel($color, "green", $space: rgb);
+    $b: color.channel($color, "blue", $space: rgb);
     background: rgba($r, $g, $b, 25%);
     color: rgb($r, $g, $b);
     &.active {
@@ -248,7 +249,7 @@ $desk-width: 270px;
         }
         &.active {
             .action button:hover {
-                background: darken($sd-hover, 10%);
+                background: color.adjust($sd-hover, $lightness: -10%);
             }
         }
         &.shifted:hover {
@@ -681,7 +682,7 @@ $desk-width: 270px;
     }
     &.active {
         .action button:hover {
-            background: darken($sd-hover, 10%);
+            background: color.adjust($sd-hover, $lightness: -10%);
         }
         &.custom-monitoring {
             background-color: #eff7fa !important;

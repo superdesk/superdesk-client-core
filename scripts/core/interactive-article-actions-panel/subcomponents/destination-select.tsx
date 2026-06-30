@@ -7,6 +7,7 @@ import {sdApi} from 'api';
 import {FormLabel, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {ISendToDestination} from '../interfaces';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
+import {getUserPreferredDesks} from '../utils/get-user-preferred-desks';
 
 interface IProps {
     value: ISendToDestination;
@@ -29,8 +30,19 @@ export class DestinationSelect extends React.PureComponent<IProps> {
         };
 
         const allDesks = this.props.availableDesks ?? sdApi.desks.getAllDesks();
-        let destinations: Array<{id: string; label: string}> =
+        const deskDestinations: Array<{id: string; label: string}> =
             allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
+
+        const userPreferredDesks = getUserPreferredDesks();
+
+        const isDeskPreferred = (deskId: string): boolean => {
+            return userPreferredDesks[deskId] === true;
+        };
+
+        const destinations: Array<{id: string; label: string}> = [
+            ...deskDestinations.filter(({id}) => isDeskPreferred(id)),
+            ...deskDestinations.filter(({id}) => !isDeskPreferred(id)),
+        ];
 
         if (this.props.includePersonalSpace) {
             destinations.push(destinationPersonalSpace);

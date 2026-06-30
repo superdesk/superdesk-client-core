@@ -1,4 +1,4 @@
-import {Locator} from '@playwright/test';
+import {Locator, expect} from '@playwright/test';
 import {s} from '.';
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
@@ -25,6 +25,48 @@ export async function getEditor3FormattingOptions(field: Locator): Promise<Array
     }
 
     return result;
+}
+
+/**
+ * Adds an embed to an editor3 field through the add-embed flow (toolbar Embed >
+ * enter URL > submit) and waits for its layout to settle (the iframe onLoad height
+ * applied), so a following interaction is not churned by the reflow.
+ *
+ * `field` is the editor3 field locator (e.g. the body_html authoring-field). The
+ * URL is resolved through iframe.ly, so a test that calls this must stub that
+ * network (see remove-embed.spec.ts / edit-embed.spec.ts).
+ *
+ * The flow is fiddly enough to need a single hardened implementation:
+ * - EmbedInput's URL field is uncontrolled (read by ref on submit) and the popup
+ *   can re-render right after it opens, dropping the typed value. Filling and
+ *   verifying as a retried unit re-fills if the value did not stick. Submitting an
+ *   empty ref injects a malformed embed that crashes the editor, so the value must
+ *   be present before submit.
+ * - A new embed renders before its iframe onLoad sets the height (EmbedBlock sets
+ *   iframe.height = scrollHeight), and that height change reflows the editor.
+ *   Waiting for every embed's iframe to carry a height attribute defers the caller
+ *   (e.g. a second add) until that reflow has happened.
+ */
+export async function addEditor3Embed(field: Locator, url: string): Promise<void> {
+    const page = field.page();
+    const embedBlocks = field.getByTestId('embed-block');
+    const countBefore = await embedBlocks.count();
+
+    await field.getByTestId('toolbar').getByRole('button', {name: 'Embed'}).click();
+
+    const embedForm = page.getByTestId('embed-form');
+    const urlInput = embedForm.getByRole('textbox');
+
+    await expect(async () => {
+        await urlInput.fill(url);
+        await expect(urlInput).toHaveValue(url);
+    }).toPass();
+
+    await page.getByTestId('embed-controls').getByTestId('submit').click();
+    await expect(embedForm).toBeHidden();
+
+    await expect(embedBlocks).toHaveCount(countBefore + 1);
+    await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
 }
 
 export async function setEditor3FieldValue(locator: Locator, value: string) {
