@@ -289,7 +289,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
                         {keywords && (
                             <MetadataItem
-                                label={gettext('Word Count')}
+                                label={gettext('Keywords')}
                                 value={sdApi.vocabularies.vocabularyItemsToString(keywords)}
                             />
                         )}
