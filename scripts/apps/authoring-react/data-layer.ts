@@ -37,11 +37,12 @@ export function resolveFieldSection(section: string | undefined, fieldId: string
         return section;
     }
 
+    const reason = section == null
+        ? 'has no section (predates the header/content split)'
+        : `has an unrecognized section "${section}"`;
+
     // eslint-disable-next-line no-console
-    console.warn(
-        `Content profile field "${fieldId}" has no section; defaulting to "content". `
-        + 'This profile predates the header/content split and should be migrated.',
-    );
+    console.warn(`Content profile field "${fieldId}" ${reason}; defaulting to "content".`);
 
     return 'content';
 }
