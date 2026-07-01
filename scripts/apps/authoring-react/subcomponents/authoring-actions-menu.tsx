@@ -32,28 +32,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
         this.setState({actions: this.props.getActions()});
     }
 
-    isRunAutomaticallyAction(action: IAuthoringAction): boolean {
-        const groupId = action.group?.id ?? action.groupId;
-
-        return groupId === 'spellchecker' && action.label === gettext('Run automatically');
-    }
-
     toMenuItem(action: IAuthoringAction): IMenuItem {
-        if (this.isRunAutomaticallyAction(action)) {
-            return {
-                type: 'switch',
-                label: action.label,
-                value: action.icon === 'toggle-on',
-                onChange: (value) => {
-                    action.icon = value ? 'toggle-on' : 'toggle-off';
-                    action.onTrigger();
-                    this.setState((state) => ({
-                        actions: state.actions == null ? null : [...state.actions],
-                    }));
-                },
-            };
-        }
-
         return {
             label: action.label,
             onClick: action.onTrigger,

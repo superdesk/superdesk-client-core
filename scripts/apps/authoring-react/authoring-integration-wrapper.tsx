@@ -512,15 +512,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                             const getSpellcheckerAction = (): IAuthoringAction | null => {
                                 if (appConfig.features.useTansaProofing !== true) {
-                                    let enabled = spellchecker.enabled;
-
                                     return {
-                                        label: gettext('Run automatically'),
+                                        label: spellchecker.enabled
+                                            ? gettext('Disable spellchecker')
+                                            : gettext('Enable spellchecker'),
                                         group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
-                                        icon: spellchecker.enabled ? 'toggle-on' : 'toggle-off',
                                         onTrigger: () => {
-                                            enabled = !enabled;
-                                            spellchecker.setSpellcheckerStatus(enabled);
+                                            spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
                                         },
                                     } satisfies IAuthoringAction;
                                 }
