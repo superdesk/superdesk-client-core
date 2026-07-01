@@ -22,23 +22,25 @@ test.describe('authoring actions menu groups', () => {
         // Open the actions menu
         await page.getByRole('button', {name: 'Actions menu'}).click();
 
-        // The menu renders in a portal; assert it's visible
-        const menu = page.getByTestId('actions-list');
-
-        await expect(menu).toBeVisible();
+        // Menu renders in a portal; locate items at page level
+        await expect(page.getByTestId('actions-list')).toBeVisible();
 
         // General actions (ungrouped, flat list at the top)
-        await expect(menu.getByRole('menuitem', {name: 'Save as template'})).toBeVisible();
-        await expect(menu.getByRole('menuitem', {name: 'Compare versions'})).toBeVisible();
-        await expect(menu.getByRole('menuitem', {name: 'Multiedit'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Save as template'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Compare versions'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Multiedit'})).toBeVisible();
 
         // Highlights section — action items exist, but group label does NOT
-        await expect(menu.getByRole('menuitem', {name: 'Highlights'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Highlights'})).toBeVisible();
         // Exactly 1 "Highlights" menuitem means only the action is present, not a group label
-        await expect(menu.getByRole('menuitem', {name: 'Highlights'})).toHaveCount(1);
-        await expect(menu.getByRole('menuitem', {name: 'Marked for desks'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Highlights'})).toHaveCount(1);
+        await expect(page.getByRole('menuitem', {name: 'Marked for desks'})).toBeVisible();
 
-        // Spell Checker group label exists
-        await expect(menu.getByRole('menuitem', {name: 'Spell Checker'})).toBeVisible();
+        // Group labels
+        await expect(page.getByRole('menuitem', {name: 'Translations'})).toBeVisible();
+        await expect(page.getByRole('menuitem', {name: 'Spell Checker'})).toBeVisible();
+
+        // Verify separators exist between sections
+        await expect(page.locator('.p-menu-separator')).toHaveCount(3);
     });
 });

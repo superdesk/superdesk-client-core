@@ -43,7 +43,10 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
 
         return {
             label: action.label,
-            onClick: action.onTrigger,
+            onClick: () => {
+                action.onTrigger();
+                this.setState({actions: null});
+            },
             shortcut,
         };
     }
