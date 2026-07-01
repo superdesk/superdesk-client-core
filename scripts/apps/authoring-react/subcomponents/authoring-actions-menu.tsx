@@ -2,6 +2,7 @@ import React from 'react';
 import {Menu} from 'superdesk-ui-framework/react';
 import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {AUTHORING_MENU_GROUPS} from 'core/constants';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {MoreActionsButton} from 'core/ui/components/MoreActionsButton';
 
@@ -74,13 +75,14 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 'Migrate to the "group" attribute.',
             );
 
-            const fallbackKey = '__general__fallback';
-            const existing = groupsMap.get(fallbackKey);
+            const existing = groupsMap.get(action.groupId);
 
             if (existing == null) {
-                groupsMap.set(fallbackKey, {
-                    label: undefined,
-                    priority: 0,
+                const fallback = AUTHORING_MENU_GROUPS[action.groupId];
+
+                groupsMap.set(action.groupId, {
+                    label: fallback?.label,
+                    priority: fallback?.priority ?? 0,
                     actions: [action],
                 });
             } else {
