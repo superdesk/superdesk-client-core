@@ -33,13 +33,18 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     }
 
     toMenuItem(action: IAuthoringAction): IMenuItem {
+        const rawShortcut = action.keyBindings == null
+            ? undefined
+            : Object.keys(action.keyBindings)[0];
+
+        const shortcut = rawShortcut == null
+            ? undefined
+            : rawShortcut.split('+').map((s) => s[0].toUpperCase() + s.slice(1)).join('+');
+
         return {
             label: action.label,
             onClick: action.onTrigger,
-            shortcut: (action.group?.id ?? action.groupId) === 'spellchecker'
-                && action.label === gettext('Check spelling')
-                ? 'Ctrl+Shift+Y'
-                : undefined,
+            shortcut,
         };
     }
 
