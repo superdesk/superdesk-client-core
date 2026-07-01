@@ -24,6 +24,7 @@ test.describe('authoring actions menu groups', () => {
 
         // The menu renders in a portal; assert it's visible
         const menu = page.getByTestId('actions-list');
+
         await expect(menu).toBeVisible();
 
         // General actions (ungrouped, flat list at the top)
