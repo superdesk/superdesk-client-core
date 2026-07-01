@@ -51,12 +51,12 @@ test('toggling spellchecker on/off shows/clears warnings (authoring-react)', asy
     await expect(warnings).toHaveCount(2);
 
     await page.getByRole('button', {name: 'Actions menu'}).click();
-    await page.getByRole('switch', {name: 'Run automatically'}).click();
+    await page.getByRole('menuitem', {name: 'Run automatically'}).click();
 
     await expect(warnings).toHaveCount(0);
 
     await page.getByRole('button', {name: 'Actions menu'}).click();
-    await page.getByRole('switch', {name: 'Run automatically'}).click();
+    await page.getByRole('menuitem', {name: 'Run automatically'}).click();
 
     await expect(warnings).toHaveCount(2);
 });
