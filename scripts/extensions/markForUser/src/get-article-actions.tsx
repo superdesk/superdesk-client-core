@@ -1,5 +1,4 @@
 import {ISuperdesk, IArticle, IAuthoringAction} from 'superdesk-api';
-import {AUTHORING_MENU_GROUPS} from 'core/constants';
 import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 import {updateMarkedUser, canChangeMarkedUser} from './common';
 
@@ -14,7 +13,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const markForUser: IAuthoringAction = {
             label: gettext('Mark for user'),
             icon: 'icon-assign',
-            group: AUTHORING_MENU_GROUPS.highlights,
+            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, article);
             },
@@ -23,7 +22,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const unmark: IAuthoringAction = {
             label: gettext('Unmark user'),
             icon: 'icon-assign',
-            group: AUTHORING_MENU_GROUPS.highlights,
+            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
             onTrigger: () => {
                 updateMarkedUser(superdesk, article, {marked_for_user: null});
             },
@@ -31,7 +30,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const markForOtherUser: IAuthoringAction = {
             label: gettext('Mark for other user'),
-            group: AUTHORING_MENU_GROUPS.highlights,
+            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
             icon: 'icon-assign',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, article);

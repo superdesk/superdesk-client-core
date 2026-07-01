@@ -1,5 +1,3 @@
-import {gettext} from 'core/utils';
-
 // Used for determining whether to update articles list upon receiving a websocket event.
 export const ARTICLE_RELATED_RESOURCE_NAMES = [
     'archive',
@@ -33,21 +31,4 @@ const devToolsValues = devtoolsString == null ? [] : JSON.parse(devtoolsString);
 export const DEV_TOOLS = {
     reduxLoggerEnabled: devToolsValues.includes('redux-logger'),
     networkQueueLoggerEnabled: devToolsValues.includes('network-queue-logger'),
-};
-
-/**
- * Registry of authoring action menu groups.
- *
- * NOTE: This exists primarily for backward compatibility with extensions
- * that still use the deprecated `groupId` string (e.g. `planning-actions`
- * from the superdesk-planning extension). Once all extensions migrate to
- * the `group` attribute on `IAuthoringAction`, this constant should be
- * reviewed and potentially simplified.
- */
-export const AUTHORING_MENU_GROUPS: {[groupId: string]: {label?: string; priority: number}} = {
-    'general': {priority: 0},
-    'planning-actions': {label: gettext('Planning'), priority: 10},
-    'highlights': {priority: 20},
-    'translations': {label: gettext('Translations'), priority: 30},
-    'spellchecker': {label: gettext('Spell Checker'), priority: 40},
 };

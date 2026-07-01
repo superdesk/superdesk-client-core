@@ -31,7 +31,7 @@ import {
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 
-import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_MENU_GROUPS} from 'core/constants';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@sourcefabric/common';
 import {ExportModal} from './toolbar/export-modal';
 import {TranslateModal} from './toolbar/translate-modal';
@@ -140,7 +140,7 @@ const getCompareVersionsModal = (
     storageAdapter: IStorageAdapter<IArticle>,
 ): IAuthoringAction => ({
     label: gettext('Compare versions'),
-    group: AUTHORING_MENU_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const article = getLatestItem();
 
@@ -176,7 +176,7 @@ const getCompareVersionsModal = (
 
 const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Multiedit'),
-    group: AUTHORING_MENU_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <MultiEditToolbarAction
@@ -193,7 +193,7 @@ const getExportModal = (
     hasUnsavedChanges: () => boolean,
 ): IAuthoringAction => ({
     label: gettext('Export'),
-    group: AUTHORING_MENU_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const openModal = (article: IArticle) => showModal(({closeModal}) => {
             return (
@@ -230,7 +230,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
     return {
         label: gettext('Highlights'),
-        group: AUTHORING_MENU_GROUPS.highlights,
+        group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
         onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
@@ -242,7 +242,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
 const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
-    group: AUTHORING_MENU_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -257,7 +257,7 @@ const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getLiveSuggestionsAction = (): IAuthoringAction => ({
     label: gettext('Live suggestions'),
-    group: AUTHORING_MENU_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         ng.get('suggest').setActive();
     },
@@ -265,7 +265,7 @@ const getLiveSuggestionsAction = (): IAuthoringAction => ({
 
 const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Translate item to'),
-    group: AUTHORING_MENU_GROUPS.translations,
+    group: {id: 'translations', label: gettext('Translations'), priority: 30},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <TranslateModal
@@ -278,7 +278,7 @@ const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
-    group: AUTHORING_MENU_GROUPS.highlights,
+    group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -516,7 +516,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         label: spellchecker.enabled
                                             ? gettext('Disable spellchecker')
                                             : gettext('Enable spellchecker'),
-                                        group: AUTHORING_MENU_GROUPS.spellchecker,
+                                        group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                         onTrigger: () => {
                                             spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
                                         },
@@ -553,7 +553,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                 return {
                                     label: gettext('Check spelling'),
-                                    group: AUTHORING_MENU_GROUPS.spellchecker,
+                                    group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                     onTrigger: runCheck,
                                     keyBindings: {
                                         'ctrl+shift+y': runCheck,

@@ -1,7 +1,6 @@
 import {IExtensionActivationResult, IAuthoringAction} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
-import {AUTHORING_MENU_GROUPS} from 'core/constants';
 import {runTansa} from '../editor3-tansa-integration';
 import {getEditor3Field} from './editor3';
 import {registerInternalExtension} from 'core/helpers/register-internal-extension';
@@ -29,7 +28,7 @@ export function registerAuthoringReactFields() {
                 if (appConfig.features.useTansaProofing === true) {
                     const checkSpellingAction: IAuthoringAction = {
                         label: gettext('Check spelling'),
-                        group: AUTHORING_MENU_GROUPS.spellchecker,
+                        group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                         onTrigger: () => {
                             runTansa(contentProfile, fieldsData);
                         },
