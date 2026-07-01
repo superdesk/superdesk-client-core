@@ -230,7 +230,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
     return {
         label: gettext('Highlights'),
-        group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
+        group: {id: 'highlights', priority: 20},
         onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
@@ -278,7 +278,7 @@ const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
-    group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
+    group: {id: 'highlights', priority: 20},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (

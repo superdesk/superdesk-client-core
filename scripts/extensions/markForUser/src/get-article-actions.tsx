@@ -13,7 +13,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const markForUser: IAuthoringAction = {
             label: gettext('Mark for user'),
             icon: 'icon-assign',
-            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
+            group: {id: 'highlights', priority: 20},
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, article);
             },
@@ -22,7 +22,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const unmark: IAuthoringAction = {
             label: gettext('Unmark user'),
             icon: 'icon-assign',
-            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
+            group: {id: 'highlights', priority: 20},
             onTrigger: () => {
                 updateMarkedUser(superdesk, article, {marked_for_user: null});
             },
@@ -30,7 +30,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const markForOtherUser: IAuthoringAction = {
             label: gettext('Mark for other user'),
-            group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
+            group: {id: 'highlights', priority: 20},
             icon: 'icon-assign',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, article);
