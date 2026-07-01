@@ -643,8 +643,15 @@ declare module 'superdesk-api' {
         [key: string]: () => void;
     }
 
+    export interface IAuthoringActionGroup {
+        id: string;
+        label?: string;      // header text; omit => separator-only (current behavior)
+        priority?: number;   // group order across the menu
+    }
+
     export interface IAuthoringAction {
-        groupId?: string; // action lists can specify which groups they wanna render via an id
+        groupId?: string;
+        group?: IAuthoringActionGroup;
         priority?: IDisplayPriority;
         icon?: string;
         label: string;

@@ -13,14 +13,6 @@ interface IState {
     actions: Array<IAuthoringAction> | null;
 }
 
-const ACTION_GROUPS = {
-    general: 'general',
-    planning: 'planning-actions',
-    highlights: 'highlights',
-    translations: 'translations',
-    spellchecker: 'spellchecker',
-};
-
 /**
  * Menu items are computed only when the user opens the menu because some actions
  * depend on the latest authoring state.
@@ -41,7 +33,9 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     }
 
     isRunAutomaticallyAction(action: IAuthoringAction): boolean {
-        return action.groupId === ACTION_GROUPS.spellchecker && action.label === gettext('Run automatically');
+        const groupId = action.group?.id ?? action.groupId;
+
+        return groupId === 'spellchecker' && action.label === gettext('Run automatically');
     }
 
     toMenuItem(action: IAuthoringAction): IMenuItem {
@@ -63,55 +57,99 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
         return {
             label: action.label,
             onClick: action.onTrigger,
-            shortcut: action.groupId === ACTION_GROUPS.spellchecker && action.label === gettext('Check spelling')
+            shortcut: (action.group?.id ?? action.groupId) === 'spellchecker'
+                && action.label === gettext('Check spelling')
                 ? 'Ctrl+Shift+Y'
                 : undefined,
         };
     }
 
-    addSection(
-        menuItems: Array<IMenuItem>,
-        actions: Array<IAuthoringAction>,
-        label?: string,
+    private insertAction(
+        action: IAuthoringAction,
+        ungrouped: Array<IAuthoringAction>,
+        groupsMap: Map<string, {
+            label?: string;
+            priority: number;
+            actions: Array<IAuthoringAction>;
+        }>,
     ) {
-        if (actions.length < 1) {
-            return;
-        }
+        if (action.group != null) {
+            const existing = groupsMap.get(action.group.id);
 
-        if (menuItems.length > 0) {
-            menuItems.push({separator: true});
-        }
+            if (existing == null) {
+                groupsMap.set(action.group.id, {
+                    label: action.group.label,
+                    priority: action.group.priority ?? 0,
+                    actions: [action],
+                });
+            } else {
+                existing.actions.push(action);
 
-        const items = actions.map((action) => this.toMenuItem(action));
+                if (existing.label == null && action.group.label != null) {
+                    existing.label = action.group.label;
+                }
+            }
+        } else if (action.groupId != null) {
+            console.warn(
+                'AuthoringAction "' + action.label + '" uses deprecated groupId "' + action.groupId + '". ' +
+                'Migrate to the "group" attribute.',
+            );
 
-        if (label == null) {
-            menuItems.push(...items);
+            const fallbackKey = '__general__fallback';
+            const existing = groupsMap.get(fallbackKey);
+
+            if (existing == null) {
+                groupsMap.set(fallbackKey, {
+                    label: undefined,
+                    priority: 0,
+                    actions: [action],
+                });
+            } else {
+                existing.actions.push(action);
+            }
         } else {
-            menuItems.push({
-                type: 'group',
-                label,
-                children: items,
-            });
+            ungrouped.push(action);
         }
     }
 
     getMenuItems(actions: Array<IAuthoringAction>): Array<IMenuItem> {
-        const knownGroups = Object.values(ACTION_GROUPS);
-        const actionsForGroup = (groupId: string) => actions.filter((action) => action.groupId === groupId);
-        const generalActions = actions.filter((action) => {
-            const groupId = action.groupId;
+        const ungrouped: Array<IAuthoringAction> = [];
+        const groupsMap = new Map<string, {
+            label?: string;
+            priority: number;
+            actions: Array<IAuthoringAction>;
+        }>();
 
-            return groupId == null
-                || groupId === ACTION_GROUPS.general
-                || knownGroups.includes(groupId) !== true;
-        });
+        for (const action of actions) {
+            this.insertAction(action, ungrouped, groupsMap);
+        }
+
+        const sortedGroups = Array.from(groupsMap.entries())
+            .sort((a, b) => a[1].priority - b[1].priority);
+
         const menuItems: Array<IMenuItem> = [];
 
-        this.addSection(menuItems, generalActions);
-        this.addSection(menuItems, actionsForGroup(ACTION_GROUPS.planning), gettext('Planning'));
-        this.addSection(menuItems, actionsForGroup(ACTION_GROUPS.highlights));
-        this.addSection(menuItems, actionsForGroup(ACTION_GROUPS.translations), gettext('Translations'));
-        this.addSection(menuItems, actionsForGroup(ACTION_GROUPS.spellchecker), gettext('Spell Checker'));
+        if (ungrouped.length > 0) {
+            menuItems.push(...ungrouped.map((action) => this.toMenuItem(action)));
+        }
+
+        for (const [, groupData] of sortedGroups) {
+            if (menuItems.length > 0) {
+                menuItems.push({separator: true});
+            }
+
+            const items = groupData.actions.map((action) => this.toMenuItem(action));
+
+            if (groupData.label == null) {
+                menuItems.push(...items);
+            } else {
+                menuItems.push({
+                    type: 'group',
+                    label: groupData.label,
+                    children: items,
+                });
+            }
+        }
 
         return menuItems;
     }

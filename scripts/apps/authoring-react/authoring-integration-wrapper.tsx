@@ -71,13 +71,6 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     },
 ];
 
-const ACTION_GROUPS = {
-    general: 'general',
-    highlights: 'highlights',
-    translations: 'translations',
-    spellchecker: 'spellchecker',
-};
-
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
         .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
@@ -147,7 +140,7 @@ const getCompareVersionsModal = (
     storageAdapter: IStorageAdapter<IArticle>,
 ): IAuthoringAction => ({
     label: gettext('Compare versions'),
-    groupId: ACTION_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const article = getLatestItem();
 
@@ -183,7 +176,7 @@ const getCompareVersionsModal = (
 
 const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Multiedit'),
-    groupId: ACTION_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <MultiEditToolbarAction
@@ -200,7 +193,7 @@ const getExportModal = (
     hasUnsavedChanges: () => boolean,
 ): IAuthoringAction => ({
     label: gettext('Export'),
-    groupId: ACTION_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const openModal = (article: IArticle) => showModal(({closeModal}) => {
             return (
@@ -237,7 +230,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
     return {
         label: gettext('Highlights'),
-        groupId: ACTION_GROUPS.highlights,
+        group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
         onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
@@ -249,7 +242,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
 const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
-    groupId: ACTION_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -264,7 +257,7 @@ const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getLiveSuggestionsAction = (): IAuthoringAction => ({
     label: gettext('Live suggestions'),
-    groupId: ACTION_GROUPS.general,
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         ng.get('suggest').setActive();
     },
@@ -272,7 +265,7 @@ const getLiveSuggestionsAction = (): IAuthoringAction => ({
 
 const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Translate item to'),
-    groupId: ACTION_GROUPS.translations,
+    group: {id: 'translations', label: gettext('Translations'), priority: 30},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <TranslateModal
@@ -285,7 +278,7 @@ const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
-    groupId: ACTION_GROUPS.highlights,
+    group: {id: 'highlights', label: gettext('Highlights'), priority: 20},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -523,7 +516,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                     return {
                                         label: gettext('Run automatically'),
-                                        groupId: ACTION_GROUPS.spellchecker,
+                                        group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                         icon: spellchecker.enabled ? 'toggle-on' : 'toggle-off',
                                         onTrigger: () => {
                                             enabled = !enabled;
@@ -562,7 +555,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                 return {
                                     label: gettext('Check spelling'),
-                                    groupId: ACTION_GROUPS.spellchecker,
+                                    group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                     onTrigger: runCheck,
                                     keyBindings: {
                                         'ctrl+shift+y': runCheck,
