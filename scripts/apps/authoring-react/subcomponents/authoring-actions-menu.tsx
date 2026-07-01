@@ -1,5 +1,4 @@
 import React from 'react';
-import {groupBy} from 'lodash';
 import {Menu} from 'superdesk-ui-framework/react';
 import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -15,10 +14,8 @@ interface IState {
 }
 
 /**
- * Menu component requires providing actions up-front
- * while here we don't want to compute them unless user initiates opening of the menu.
- * To work around this, we render a button, when it is clicked we fetch the items
- * and replace the button with an actual Menu component.
+ * Menu items are computed only when the user opens the menu because some actions
+ * depend on the latest authoring state.
  */
 export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
@@ -35,6 +32,119 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
         this.setState({actions: this.props.getActions()});
     }
 
+    toMenuItem(action: IAuthoringAction): IMenuItem {
+        const rawShortcut = action.keyBindings == null
+            ? undefined
+            : Object.keys(action.keyBindings)[0];
+
+        const shortcut = rawShortcut == null
+            ? undefined
+            : rawShortcut.split('+').map((s) => s[0].toUpperCase() + s.slice(1)).join('+');
+
+        return {
+            label: action.label,
+            onClick: () => {
+                action.onTrigger();
+                this.setState({actions: null});
+            },
+            shortcut,
+        };
+    }
+
+    private insertAction(
+        action: IAuthoringAction,
+        ungrouped: Array<IAuthoringAction>,
+        groupsMap: Map<string, {
+            label?: string;
+            priority: number;
+            actions: Array<IAuthoringAction>;
+        }>,
+    ) {
+        if (action.group != null) {
+            const existing = groupsMap.get(action.group.id);
+
+            if (existing == null) {
+                groupsMap.set(action.group.id, {
+                    label: action.group.label,
+                    priority: action.group.priority ?? 0,
+                    actions: [action],
+                });
+            } else {
+                existing.actions.push(action);
+
+                if (existing.label == null && action.group.label != null) {
+                    existing.label = action.group.label;
+                }
+            }
+        } else if (action.groupId != null) {
+            console.warn(
+                'AuthoringAction "' + action.label + '" uses deprecated groupId "' + action.groupId + '". ' +
+                'Migrate to the "group" attribute.',
+            );
+
+            // TODO: Remove this fallback once superdesk-planning migrates from groupId to group.
+            const isPlanning = action.groupId === 'planning-actions';
+            const fallbackLabel = isPlanning ? gettext('Planning') : undefined;
+            const fallbackPriority = isPlanning ? 10 : 0;
+
+            const existing = groupsMap.get(action.groupId);
+
+            if (existing == null) {
+                groupsMap.set(action.groupId, {
+                    label: fallbackLabel,
+                    priority: fallbackPriority,
+                    actions: [action],
+                });
+            } else {
+                existing.actions.push(action);
+            }
+        } else {
+            ungrouped.push(action);
+        }
+    }
+
+    getMenuItems(actions: Array<IAuthoringAction>): Array<IMenuItem> {
+        const ungrouped: Array<IAuthoringAction> = [];
+        const groupsMap = new Map<string, {
+            label?: string;
+            priority: number;
+            actions: Array<IAuthoringAction>;
+        }>();
+
+        for (const action of actions) {
+            this.insertAction(action, ungrouped, groupsMap);
+        }
+
+        const sortedGroups = Array.from(groupsMap.entries())
+            .sort((a, b) => a[1].priority - b[1].priority);
+
+        const menuItems: Array<IMenuItem> = [];
+
+        if (ungrouped.length > 0) {
+            menuItems.push(...ungrouped.map((action) => this.toMenuItem(action)));
+        }
+
+        for (const [, groupData] of sortedGroups) {
+            if (menuItems.length > 0) {
+                menuItems.push({separator: true});
+            }
+
+            const items = groupData.actions.map((action) => this.toMenuItem(action));
+
+            if (groupData.label == null) {
+                menuItems.push(...items);
+            } else {
+                menuItems.push({
+                    type: 'group',
+                    label: groupData.label,
+                    children: items,
+                });
+            }
+        }
+
+        return menuItems;
+    }
+
     render() {
         if (this.state.actions == null) {
             return (
@@ -44,43 +154,22 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 />
             );
         } else {
-            const actionsGrouped = groupBy(this.state.actions, (action) => action.groupId);
-            const menuItems: Array<IMenuItem> = [];
-
-            for (const actions of Object.values(actionsGrouped)) {
-                if (menuItems.length > 0) {
-                    menuItems.push({separator: true});
-                }
-
-                const menuItemsGroup = actions.map((action) => ({
-                    label: action.label,
-                    onClick: () => {
-                        action.onTrigger();
-                        this.setState({actions: null});
-                    },
-                }));
-
-                menuItems.push(...menuItemsGroup);
-            }
-
             return (
-                <div>
-                    <Menu items={menuItems} data-test-id="actions-list">
-                        {(toggle) => (
-                            <MoreActionsButton
-                                aria-label={gettext('Actions menu')}
-                                onClick={toggle}
-                                buttonRef={(el) => {
-                                    if (el != null) {
-                                        setTimeout(() => {
-                                            el.click();
-                                        });
-                                    }
-                                }}
-                            />
-                        )}
-                    </Menu>
-                </div>
+                <Menu items={this.getMenuItems(this.state.actions)} data-test-id="actions-list">
+                    {(toggle) => (
+                        <MoreActionsButton
+                            aria-label={gettext('Actions menu')}
+                            onClick={toggle}
+                            buttonRef={(el) => {
+                                if (el != null) {
+                                    setTimeout(() => {
+                                        el.click();
+                                    });
+                                }
+                            }}
+                        />
+                    )}
+                </Menu>
             );
         }
     }
