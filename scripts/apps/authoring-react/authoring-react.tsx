@@ -141,7 +141,7 @@ const ANPA_CATEGORY = {
 };
 
 function getInitialState<T extends IBaseRestApiResponse>(
-    item: {saved: T; autosaved: T},
+    item: {saved: T; autosaved: T | null},
     profile: IContentProfileV2,
     userPreferencesForFields: IStateLoaded<T>['userPreferencesForFields'],
     spellcheckerEnabled: boolean,
@@ -1042,8 +1042,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     this.computeLatestEntity(),
                     state.itemOriginal,
                 ).then((item: T) => {
+                    // `cancelAutosave()` above deleted the autosave document, so there is no
+                    // autosave to reference anymore. Passing it here would leave `itemAutosaved`
+                    // pointing at a non-existent resource and make the next autosave fail.
                     const nextState = getInitialState(
-                        {saved: item, autosaved: item},
+                        {saved: item, autosaved: null},
                         state.profile,
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
@@ -1105,6 +1108,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 this.hasUnsavedChanges(),
                 () => {
                     authoringStorage.autosave.cancel();
+
+                    if (state.itemAutosaved == null) {
+                        return Promise.resolve();
+                    }
 
                     return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
                 },
