@@ -27,6 +27,7 @@ const internalWebsocketMessageNames: IInternalWebsocketMessages = {
     'item:spike': undefined,
     'item:unspike': undefined,
     'item:highlights': undefined,
+    'item:marked_desks': undefined,
     'item:publish': undefined,
 };
 
@@ -59,6 +60,13 @@ interface IInternalWebsocketMessages { // not exposed to client API
     'item:spike': IWebsocketMessage<never>;
     'item:unspike': IWebsocketMessage<never>;
     'item:highlights': IWebsocketMessage<{item_id?: string; mark_id?: string; marked: number}>;
+    'item:marked_desks': IWebsocketMessage<{
+        item_id: string;
+        mark_id: string;
+        marked: number;
+        user_marked?: string;
+        date_marked?: string;
+    }>;
     'item:publish': IWebsocketMessage<any>;
 }
 

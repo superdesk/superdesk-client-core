@@ -86,3 +86,49 @@ test('mark for desks: clear-all unmarks every desk, not just one (authoring-reac
     await expect(bell).toHaveCount(0);
     expect(await desksSelect.getValues()).toEqual([]);
 });
+
+test('mark for desks: editor reflects a desk unmarked from the monitoring list (authoring-react)', async ({
+    page,
+}) => {
+    await restoreDatabaseSnapshot();
+    const monitoring = new Monitoring(page);
+    const authoring = new Authoring(page);
+
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    const listItem = page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'));
+
+    await monitoring.executeActionOnMonitoringItem(listItem, 'Edit');
+    await authoring.waitForAuthoringReactToInitialize();
+
+    // Mark a desk from the editor.
+    await page.getByRole('button', {name: 'Actions menu'}).click();
+    await page.getByText('Marked for desks', {exact: true}).click();
+
+    const modal = page.locator(s('modal-mark-for-desks'));
+
+    await expect(modal).toBeVisible();
+    await new TreeSelectDriver(page, modal.locator(s('desks-select'))).addValues('Education');
+
+    const bell = page.locator('#marked-for-desks');
+
+    await expect(bell).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+
+    // Unmark it from the monitoring list, a surface outside the open, locked editor.
+    const listBell = listItem.locator(s('mark-for-desk--bell'));
+
+    await expect(listBell).toBeVisible();
+    await listBell.click();
+
+    const listMarks = page.locator(s('marked-desk-list'));
+
+    await expect(listMarks).toBeVisible();
+    await listMarks.getByRole('button', {name: 'remove'}).click();
+
+    // The editor must reflect the external change: its marked-for-desks bell disappears.
+    await expect(bell).toHaveCount(0);
+});
