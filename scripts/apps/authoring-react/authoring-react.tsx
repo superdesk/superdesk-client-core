@@ -900,8 +900,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     return;
                 }
 
-                // A mark carries the real marker and timestamp (an unmark does not), so store the
-                // true values instead of fabricating ones that could later overwrite the marker on save.
                 const nextMarkedDesks = shouldMark
                     ? [...current, {desk_id: mark_id, user_marked: user_marked!, date_marked: date_marked!}]
                     : current.filter((desk) => desk.desk_id !== mark_id);
