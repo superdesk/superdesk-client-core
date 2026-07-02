@@ -33,7 +33,7 @@ import {
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
-import {addInternalEventListener} from 'core/internal-events';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
@@ -872,6 +872,46 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         state.allThemes.default,
                         state.allThemes.proofreading,
                     ));
+                });
+            }),
+        );
+
+        /**
+         * marked_desks can change from outside this editor (the monitoring list, or another
+         * session). The reload handler above bails while the item is locked here or has unsaved
+         * edits, so it never picks those changes up and the editor keeps showing stale marks.
+         * Apply the toggle from the event rather than re-reading the item: right after a toggle the
+         * server read is stale (eventual consistency), so a re-fetch would reconcile to old marks.
+         */
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalWebsocketEventListener('item:marked_desks', (event) => {
+                const {item_id, mark_id, marked} = event.extra;
+                const state = this.state;
+
+                if (state.initialized !== true || state.itemOriginal._id !== item_id) {
+                    return;
+                }
+
+                const current = (state.itemWithChanges as unknown as IArticle).marked_desks ?? [];
+                const alreadyMarked = current.some((desk) => desk.desk_id === mark_id);
+                const shouldMark = marked === 1;
+
+                if (shouldMark === alreadyMarked) {
+                    return;
+                }
+
+                const nextMarkedDesks = shouldMark
+                    ? [...current, {
+                        desk_id: mark_id,
+                        // Event includes only desk id. user_marked/date_marked are placeholders, replaced
+                        // on next item load and excluded from save diff so they are never sent to server
+                        date_marked: new Date().toISOString(),
+                        user_marked: sdApi.user.getCurrentUserId(),
+                    }]
+                    : current.filter((desk) => desk.desk_id !== mark_id);
+
+                dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
+                    item: {_id: item_id, marked_desks: nextMarkedDesks},
                 });
             }),
         );
