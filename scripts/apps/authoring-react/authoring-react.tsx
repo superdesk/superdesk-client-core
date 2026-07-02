@@ -878,10 +878,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
         /**
          * marked_desks can change from outside this editor (the monitoring list, or another
-         * session). The reload handler above bails while the item is locked here or has unsaved
-         * edits, so it never picks those changes up and the editor keeps showing stale marks.
-         * Apply the toggle from the event rather than re-reading the item: right after a toggle the
-         * server read is stale (eventual consistency), so a re-fetch would reconcile to old marks.
+         * session). Listen to 'item:marked_desks' and update here to avoid having stale marks.
          */
         this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalWebsocketEventListener('item:marked_desks', (event) => {
