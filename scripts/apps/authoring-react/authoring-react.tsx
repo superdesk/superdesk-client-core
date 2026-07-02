@@ -141,7 +141,7 @@ const ANPA_CATEGORY = {
 };
 
 function getInitialState<T extends IBaseRestApiResponse>(
-    item: {saved: T; autosaved: T},
+    item: {saved: T; autosaved: T | null},
     profile: IContentProfileV2,
     userPreferencesForFields: IStateLoaded<T>['userPreferencesForFields'],
     spellcheckerEnabled: boolean,
@@ -1042,8 +1042,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     this.computeLatestEntity(),
                     state.itemOriginal,
                 ).then((item: T) => {
+                    // `cancelAutosave()` above deleted the autosave document, so there is no
+                    // autosave to reference anymore. Passing it here would leave `itemAutosaved`
+                    // pointing at a non-existent resource and make the next autosave fail.
                     const nextState = getInitialState(
-                        {saved: item, autosaved: item},
+                        {saved: item, autosaved: null},
                         state.profile,
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
@@ -1105,6 +1108,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 this.hasUnsavedChanges(),
                 () => {
                     authoringStorage.autosave.cancel();
+
+                    if (state.itemAutosaved == null) {
+                        return Promise.resolve();
+                    }
 
                     return authoringStorage.autosave.delete(state.itemOriginal._id, state.itemAutosaved._etag);
                 },
@@ -1237,9 +1244,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             autosaved: itemWithUpdates,
         };
 
-        newProfile.header.merge(newProfile.header).forEach((x) => {
-            this.fieldRefs[x.id] = createRef();
-        });
+        if (newProfile != null) {
+            newProfile.header.merge(newProfile.content).forEach((x) => {
+                this.fieldRefs[x.id] = createRef();
+            });
+        }
 
         this.setState(getInitialState(
             item,
@@ -1307,7 +1316,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     pinnedId: id === activeWidgetId ? activeWidgetId : this.props.sideWidget?.pinnedId,
                 });
             },
-            reinitialize: (item, profile) => this.reinitialize(state, item, profile),
+            reinitialize: (item, profile) => {
+                // Read this.state at call time. This runs after the dropdown's async step, so the
+                // `state` captured by the closure can be stale (e.g. an _etag bumped by a save in
+                // between); reinitializing from it would use outdated data.
+                if (this.state.initialized) {
+                    this.reinitialize(this.state, item, profile);
+                }
+            },
             getValidationErrors: () => {
                 return state.validationErrors;
             },

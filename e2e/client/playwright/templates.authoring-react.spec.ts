@@ -20,19 +20,34 @@ test('performing "save as" action on a template (authoring-react)', async ({page
 
     await authoring.waitForAuthoringReactToInitialize();
 
-    // Menu items render in a portal, outside the actions-list test-id wrapper.
-    await page.getByRole('button', {name: 'Actions menu'}).click();
-    await page.getByText('Save as template', {exact: true}).click();
-
-    const modal = page.locator(s('modal-save-as-template'));
-
-    await expect(modal).toBeVisible();
-
-    await modal.getByLabel('Template name').fill('story 2-react');
-    await modal.getByRole('button', {name: 'Save'}).click();
-
-    await expect(modal).not.toBeVisible();
+    await authoring.saveAsTemplate('story 2-react');
 
     await page.goto('/#/settings/templates');
     await expect(page.locator(s('template-content', 'content-template=story 2-react'))).toBeVisible();
+});
+
+test('saving an article that has no keywords as a template (authoring-react)', async ({page}) => {
+    const monitoring = new Monitoring(page);
+    const authoring = new Authoring(page);
+
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    await monitoring.executeActionOnMonitoringItem(
+        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=story 2')),
+        'Edit',
+    );
+
+    await authoring.waitForAuthoringReactToInitialize();
+
+    // SDESK-7800: a null keywords value used to fail content_templates validation,
+    // leaving the modal open with an error. saveAsTemplate asserts the modal closes,
+    // so the save must now complete for an article whose keywords are null.
+    await authoring.saveAsTemplate('story 2 no-keywords');
+
+    await page.goto('/#/settings/templates');
+    await expect(
+        page.locator(s('template-content', 'content-template=story 2 no-keywords')),
+    ).toBeVisible();
 });

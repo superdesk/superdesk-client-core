@@ -9,3 +9,4 @@ export {ToggleThemeButton} from './toggle-theme-button';
 export {ConfigureThemeButton} from './configure-theme-button';
 export {CreatedModifiedInfoWidget} from './created-modified-info-widget';
 export {ContentProfileDropdownWidget} from './content-profile-dropdown-widget';
+export {HeaderWordCountSourceWidget} from './header-word-count-source-widget';

@@ -53,6 +53,7 @@ import {
     ConfigureThemeButton,
     CreatedModifiedInfoWidget,
     ContentProfileDropdownWidget,
+    HeaderWordCountSourceWidget,
 } from './toolbar-components/integration-wrapper';
 
 const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
@@ -61,6 +62,12 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
         availableOffline: false,
         group: 'start',
         priority: 1,
+    },
+    {
+        component: HeaderWordCountSourceWidget,
+        availableOffline: false,
+        group: 'start',
+        priority: 2,
     },
 ];
 
@@ -133,6 +140,7 @@ const getCompareVersionsModal = (
     storageAdapter: IStorageAdapter<IArticle>,
 ): IAuthoringAction => ({
     label: gettext('Compare versions'),
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const article = getLatestItem();
 
@@ -167,7 +175,8 @@ const getCompareVersionsModal = (
 });
 
 const getMultiEditModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
-    label: gettext('Multi-edit'),
+    label: gettext('Multiedit'),
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <MultiEditToolbarAction
@@ -184,6 +193,7 @@ const getExportModal = (
     hasUnsavedChanges: () => boolean,
 ): IAuthoringAction => ({
     label: gettext('Export'),
+    group: {id: 'general', priority: 0},
     onTrigger: () => {
         const openModal = (article: IArticle) => showModal(({closeModal}) => {
             return (
@@ -220,6 +230,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
     return {
         label: gettext('Highlights'),
+        group: {id: 'highlights', priority: 20},
         onTrigger: () => showHighlightsModal(),
         keyBindings: {
             'ctrl+shift+h': () => {
@@ -231,6 +242,7 @@ const getHighlightsAction = (getItem: IExposedFromAuthoring<IArticle>['getLatest
 
 const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Save as template'),
+    group: {id: 'general', priority: 0},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -243,8 +255,17 @@ const getSaveAsTemplate = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
     ),
 });
 
+const getLiveSuggestionsAction = (): IAuthoringAction => ({
+    label: gettext('Live suggestions'),
+    group: {id: 'general', priority: 0},
+    onTrigger: () => {
+        ng.get('suggest').setActive();
+    },
+});
+
 const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
-    label: gettext('Translate'),
+    label: gettext('Translate item to'),
+    group: {id: 'translations', label: gettext('Translations'), priority: 30},
     onTrigger: () => {
         showModal(({closeModal}) => (
             <TranslateModal
@@ -257,6 +278,7 @@ const getTranslateModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestIt
 
 const getMarkedForDesksModal = (getItem: IExposedFromAuthoring<IArticle>['getLatestItem']): IAuthoringAction => ({
     label: gettext('Marked for desks'),
+    group: {id: 'highlights', priority: 20},
     onTrigger: () => (
         showModal(({closeModal}) => {
             return (
@@ -469,6 +491,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                             const actions = [
                                 getSaveAsTemplate(getLatestItem),
+                                ...(
+                                    appConfig.features?.hideLiveSuggestions === true
+                                        ? []
+                                        : [getLiveSuggestionsAction()]
+                                ),
                                 getCompareVersionsModal(
                                     getLatestItem,
                                     authoringStorage,
@@ -489,7 +516,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         label: spellchecker.enabled
                                             ? gettext('Disable spellchecker')
                                             : gettext('Enable spellchecker'),
-                                        groupId: 'spellchecker',
+                                        group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                         onTrigger: () => {
                                             spellchecker.setSpellcheckerStatus(!spellchecker.enabled);
                                         },
@@ -526,7 +553,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
                                 return {
                                     label: gettext('Check spelling'),
-                                    groupId: 'spellchecker',
+                                    group: {id: 'spellchecker', label: gettext('Spell Checker'), priority: 40},
                                     onTrigger: runCheck,
                                     keyBindings: {
                                         'ctrl+shift+y': runCheck,
