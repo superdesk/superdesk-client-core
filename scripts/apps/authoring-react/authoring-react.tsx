@@ -885,7 +885,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
          */
         this.cleanupFunctionsToRunBeforeUnmounting.push(
             addInternalWebsocketEventListener('item:marked_desks', (event) => {
-                const {item_id, mark_id, marked} = event.extra;
+                const {item_id, mark_id, marked, user_marked, date_marked} = event.extra;
                 const state = this.state;
 
                 if (state.initialized !== true || state.itemOriginal._id !== item_id) {
@@ -900,14 +900,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     return;
                 }
 
+                // A mark carries the real marker and timestamp (an unmark does not), so store the
+                // true values instead of fabricating ones that could later overwrite the marker on save.
                 const nextMarkedDesks = shouldMark
-                    ? [...current, {
-                        desk_id: mark_id,
-                        // Event includes only desk id. user_marked/date_marked are placeholders, replaced
-                        // on next item load and excluded from save diff so they are never sent to server
-                        date_marked: new Date().toISOString(),
-                        user_marked: sdApi.user.getCurrentUserId(),
-                    }]
+                    ? [...current, {desk_id: mark_id, user_marked: user_marked!, date_marked: date_marked!}]
                     : current.filter((desk) => desk.desk_id !== mark_id);
 
                 dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
