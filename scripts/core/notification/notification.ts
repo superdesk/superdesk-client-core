@@ -64,7 +64,6 @@ interface IInternalWebsocketMessages { // not exposed to client API
         item_id: string;
         mark_id: string;
         marked: number;
-        // present on a mark (older servers omit them); absent on an unmark
         user_marked?: string;
         date_marked?: string;
     }>;
