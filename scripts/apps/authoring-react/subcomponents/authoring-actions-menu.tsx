@@ -82,17 +82,12 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                 'Migrate to the "group" attribute.',
             );
 
-            // TODO: Remove this fallback once superdesk-planning migrates from groupId to group.
-            const isPlanning = action.groupId === 'planning-actions';
-            const fallbackLabel = isPlanning ? gettext('Planning') : undefined;
-            const fallbackPriority = isPlanning ? 10 : 0;
-
             const existing = groupsMap.get(action.groupId);
 
             if (existing == null) {
                 groupsMap.set(action.groupId, {
-                    label: fallbackLabel,
-                    priority: fallbackPriority,
+                    label: undefined,
+                    priority: 0,
                     actions: [action],
                 });
             } else {

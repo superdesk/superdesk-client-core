@@ -33,7 +33,7 @@ import {
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
-import {addInternalEventListener} from 'core/internal-events';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
@@ -872,6 +872,37 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         state.allThemes.default,
                         state.allThemes.proofreading,
                     ));
+                });
+            }),
+        );
+
+        /**
+         * marked_desks can change from outside this editor (the monitoring list, or another
+         * session). Listen to 'item:marked_desks' and update here to avoid having stale marks.
+         */
+        this.cleanupFunctionsToRunBeforeUnmounting.push(
+            addInternalWebsocketEventListener('item:marked_desks', (event) => {
+                const {item_id, mark_id, marked, user_marked, date_marked} = event.extra;
+                const state = this.state;
+
+                if (state.initialized !== true || state.itemOriginal._id !== item_id) {
+                    return;
+                }
+
+                const current = (state.itemWithChanges as unknown as IArticle).marked_desks ?? [];
+                const alreadyMarked = current.some((desk) => desk.desk_id === mark_id);
+                const shouldMark = marked === 1;
+
+                if (shouldMark === alreadyMarked) {
+                    return;
+                }
+
+                const nextMarkedDesks = shouldMark
+                    ? [...current, {desk_id: mark_id, user_marked: user_marked!, date_marked: date_marked!}]
+                    : current.filter((desk) => desk.desk_id !== mark_id);
+
+                dispatchInternalEvent('dangerouslyOverwriteAuthoringData', {
+                    item: {_id: item_id, marked_desks: nextMarkedDesks},
                 });
             }),
         );
