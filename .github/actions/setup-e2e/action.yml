@@ -1,22 +1,21 @@
 name: 'Setup E2E Environment'
-description: 'Install dependencies and start e2e server'
+description: 'Install e2e runtime dependencies and start services'
 
 runs:
   using: "composite"
   steps:
-    - run: npm ci
+    - name: Install root dependencies
+      run: npm ci
       working-directory: ./
       shell: bash
 
-    - run: npm ci
+    - name: Install build-tools dependencies
+      run: npm ci
       working-directory: ./build-tools
       shell: bash
 
-    - run: npm ci
-      working-directory: ./e2e/client
-      shell: bash
-
-    - run: npm run build
+    - name: Install e2e client dependencies
+      run: npm ci
       working-directory: ./e2e/client
       shell: bash
 
@@ -24,38 +23,7 @@ runs:
       working-directory: ./e2e/client
       shell: bash
 
-    - name: Cache base Docker images
-      uses: actions/cache@v4
-      with:
-        path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/docker-compose.yml') }}
-        restore-keys: |
-          base-docker-images-
-
-    - name: Load or pull base Docker images
-      run: |
-        if [ -f /tmp/base-docker-images.tar ]; then
-          echo "Loading base images from cache"
-          docker load -i /tmp/base-docker-images.tar
-        else
-          echo "Pulling base images and saving to cache"
-          docker compose pull
-          docker save \
-            redis:alpine \
-            mongo:6 \
-            docker.elastic.co/elasticsearch/elasticsearch:7.17.22 \
-            marlonb/mailcrab:latest \
-            -o /tmp/base-docker-images.tar
-        fi
-      working-directory: e2e/server
-      shell: bash
-
-    - name: Build superdesk server
-      run: docker compose build
-      working-directory: e2e/server
-      shell: bash
-
     - name: Start superdesk server
-      run: docker compose up -d
+      run: docker compose up -d --no-build
       working-directory: e2e/server
       shell: bash

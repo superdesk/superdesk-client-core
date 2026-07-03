@@ -31,7 +31,7 @@ services:
         network_mode: "host"
 
     server:
-        build: .
+        image: superdesk-client-core-e2e-server:ci
         network_mode: "host"
         environment:
             - PORT=${PORT:-5000}
