@@ -13,11 +13,5 @@
     "@types/react-beautiful-dnd": "13.1.8",
     "superdesk-code-style": "1.3.0",
     "typescript": "~4.9.5"
-  },
-  "peerDependencies": {
-    "@sourcefabric/common": "*",
-    "lodash": "*",
-    "react": "*",
-    "superdesk-ui-framework": "*"
   }
 }
