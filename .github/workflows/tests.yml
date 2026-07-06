@@ -23,6 +23,9 @@ jobs:
         cache: 'npm'
 
     - run: npm ci
+    - name: Install content-lists extension dependencies
+      run: npm ci --legacy-peer-deps
+      working-directory: scripts/extensions/content-lists
     - run: npm run test
 
       env:
@@ -103,6 +106,9 @@ jobs:
 
     - name: Install root dependencies
       run: npm ci
+    - name: Install content-lists extension dependencies
+      run: npm ci --legacy-peer-deps
+      working-directory: scripts/extensions/content-lists
     - name: Install build-tools dependencies
       run: npm ci
       working-directory: build-tools

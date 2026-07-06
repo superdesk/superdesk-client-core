@@ -1,2 +1,3 @@
 honcho
-git+https://github.com/superdesk/superdesk-core.git@develop#egg=superdesk-core
+# TODO: revert to superdesk/superdesk-core@develop once the content-lists API branch is merged
+git+https://github.com/IvanJelicSF/superdesk-core.git@feature/content-lists-with-develop#egg=superdesk-core

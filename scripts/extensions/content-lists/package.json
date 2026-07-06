@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "main": "src/extension.ts",
+  "scripts": {
+    "compile-e2e": "echo 'No end-to-end tests defined'"
+  },
+  "dependencies": {
+    "react-beautiful-dnd": "13.1.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.117",
+    "@types/react": "16.9.44",
+    "@types/react-beautiful-dnd": "13.1.8",
+    "superdesk-code-style": "1.3.0",
+    "typescript": "~4.9.5"
+  },
+  "peerDependencies": {
+    "@sourcefabric/common": "*",
+    "lodash": "*",
+    "react": "*",
+    "superdesk-ui-framework": "*"
+  }
+}
