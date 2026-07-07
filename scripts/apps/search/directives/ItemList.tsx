@@ -255,25 +255,49 @@ export function ItemList(
                 });
 
                 scope.$on('item:highlights', (_e, data) => updateMarkedItems('highlights', data));
+                scope.$on('item:marked_desks', (_e, data) => updateMarkedItems('marked_desks', data));
 
                 function updateMarkedItems(field, data) {
                     var item = listComponent.findItemByPrefix(data.item_id);
 
-                    function filterMark(mark) {
-                        return mark !== data.mark_id;
-                    }
-
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         var markedItems = item[field] || [];
+                        var changes: any;
 
-                        if (data.marked) {
-                            markedItems = markedItems.concat([data.mark_id]);
+                        if (field === 'marked_desks') {
+                            if (data.marked) {
+                                markedItems = markedItems.concat([{
+                                    desk_id: data.mark_id,
+                                    user_marked: data.user_marked,
+                                    date_marked: data.date_marked,
+                                }]);
+                            } else {
+                                markedItems = markedItems.filter((desk) => desk.desk_id !== data.mark_id);
+                            }
+
+                            changes = {marked_desks: markedItems};
+
+                            if (item.archive_item) {
+                                changes.archive_item = angular.extend({}, item.archive_item, {
+                                    marked_desks: markedItems,
+                                });
+                            }
                         } else {
-                            markedItems = markedItems.filter(filterMark);
+                            if (data.marked) {
+                                markedItems = markedItems.concat([data.mark_id]);
+                            } else {
+                                markedItems = markedItems.filter((mark) => mark !== data.mark_id);
+                            }
+
+                            changes = {[field]: markedItems};
                         }
 
-                        listComponent.updateItem(itemId, {[field]: markedItems});
+                        listComponent.updateItem(itemId, changes);
+
+                        if (field === 'marked_desks') {
+                            search.recordMarkedDesksPatch(data.item_id, markedItems);
+                        }
                     }
                 }
 
