@@ -20,6 +20,26 @@
     padding-inline-end: 0.8rem;
 }
 
+/* thumbnail column in the available-items (picker) pane:
+   drop the framework column padding and hug the image to the row edge */
+[data-test-id="content-list--picker-results"] [class*="sd-list-item__column"]:has(> img[class*="sd-list-item__thumbnail"]) {
+    padding: 0;
+}
+
+[data-test-id="content-list--picker-results"] img[class*="sd-list-item__thumbnail"] {
+    margin: 0 0 0 0.2rem;
+}
+
+/* same treatment for the list (left) pane */
+[data-test-id="content-list--items"] [class*="sd-list-item__column"]:has(> img[class*="sd-list-item__thumbnail"]) {
+    padding: 0;
+    margin: 0 0 0 0.2rem;
+}
+
+[data-test-id="content-list--items"] img[class*="sd-list-item__thumbnail"] {
+    margin: 0 0 0 0.8rem;
+}
+
 /* pin/remove buttons are rendered as a regular always-visible column;
    hide the empty hover-expanding action-menu slot so rows don't shift on mouse over */
 [data-test-id="content-list-item"] [class*="sd-list-item__action-menu"] {
