@@ -47,7 +47,7 @@ test('mark for desks: per-action toggle via modal (authoring-react)', async ({pa
     await expect(bell).toHaveCount(0);
 });
 
-test('mark for desks: clear-all unmarks every desk, not just one (authoring-react)', async ({page}) => {
+test('mark for desks: clear-all removes every desk and keeps list bell hidden (authoring-react)', async ({page}) => {
     await restoreDatabaseSnapshot();
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);
@@ -55,10 +55,9 @@ test('mark for desks: clear-all unmarks every desk, not just one (authoring-reac
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    await monitoring.executeActionOnMonitoringItem(
-        page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story')),
-        'Edit',
-    );
+    const listItem = page.locator(s('monitoring-group=Sports / Working Stage', 'article-item=test sports story'));
+
+    await monitoring.executeActionOnMonitoringItem(listItem, 'Edit');
 
     await authoring.waitForAuthoringReactToInitialize();
 
@@ -79,12 +78,30 @@ test('mark for desks: clear-all unmarks every desk, not just one (authoring-reac
 
     await expect(bell).toBeVisible();
 
+    const listBell = listItem.locator(s('mark-for-desk--bell'));
+
+    await expect(listBell).toBeVisible();
+
+    // Wait for the list re-query that will be triggered after clearing all desks.
+    const listRefresh = page.waitForResponse((response) => (
+        response.request().method() === 'GET'
+        && (
+            response.url().includes('/api/archive')
+            || response.url().includes('/api/search')
+        )
+    ));
+
     // Clear-all empties the whole selection in one change. The handler must toggle every marked
     // desk, not just the first one, so the article ends up with no marked desks.
     await desksSelect.setValues();
 
     await expect(bell).toHaveCount(0);
     expect(await desksSelect.getValues()).toEqual([]);
+
+    // After the scheduled list query returns, the bell must still be gone.
+    // This guards against stale ES data resurrecting the bell.
+    await listRefresh;
+    await expect(listBell).toHaveCount(0);
 });
 
 test('mark for desks: editor reflects a desk unmarked from the monitoring list (authoring-react)', async ({
