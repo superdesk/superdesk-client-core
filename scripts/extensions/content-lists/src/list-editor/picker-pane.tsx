@@ -58,14 +58,6 @@ export class PickerPane extends React.PureComponent<IProps> {
                 data-test-id="content-list--picker-pane"
             >
                 <SubNav>
-                    <SearchBar
-                        placeholder={gettext('Search articles')}
-                        onSubmit={(value: string) => {
-                            this.props.onSearch(value);
-                        }}
-                        searchOptions={{searchOnType: true, searchDelay: 300}}
-                        boxed
-                    />
                     <Dropdown
                         items={[{
                             type: 'group',
@@ -84,6 +76,13 @@ export class PickerPane extends React.PureComponent<IProps> {
                             onClick={() => false}
                         />
                     </Dropdown>
+                    <SearchBar
+                        placeholder={gettext('Search articles')}
+                        onSubmit={(value: string) => {
+                            this.props.onSearch(value);
+                        }}
+                        searchOptions={{searchOnType: true, searchDelay: 300}}
+                    />
                 </SubNav>
                 <div
                     style={{flexGrow: 1, overflowY: 'auto'}}

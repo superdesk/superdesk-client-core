@@ -2,9 +2,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.4rem 0.4rem 1.2rem;
-    min-height: 4rem;
+    gap: 0.8rem;
+    padding: 0.8rem 1.2rem;
     border-block-end: 1px solid var(--sd-colour-line--x-light);
 }
 

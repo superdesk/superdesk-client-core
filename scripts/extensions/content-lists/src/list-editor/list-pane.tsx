@@ -39,10 +39,9 @@ export class ListPane extends React.PureComponent<IProps> {
                 style={{display: 'flex', flexDirection: 'column', height: '100%'}}
                 data-test-id="content-list--items-pane"
             >
-                <SubNav color="darker" theme="dark">
+                <SubNav>
                     <NavButton
                         icon="arrow-left"
-                        theme="dark"
                         text={gettext('Back to content lists')}
                         onClick={() => {
                             this.props.onBack();
@@ -54,7 +53,6 @@ export class ListPane extends React.PureComponent<IProps> {
                             this.props.onSearch(value);
                         }}
                         searchOptions={{searchOnType: true, searchDelay: 300}}
-                        boxed
                     />
                     <Dropdown
                         items={[{
@@ -72,7 +70,6 @@ export class ListPane extends React.PureComponent<IProps> {
                     >
                         <NavButton
                             text={list.name}
-                            theme="dark"
                             onClick={() => false}
                         />
                     </Dropdown>

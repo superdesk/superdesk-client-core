@@ -365,7 +365,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
         return (
             <DragDropContext onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
                 <div
-                    style={{display: 'flex', height: '100%'}}
+                    style={{display: 'flex', height: '100%', width: '100%'}}
                     data-test-id="content-list--editor"
                 >
                     <div style={{flex: 1, minWidth: 0, borderInlineEnd: '1px solid var(--sd-colour-line--medium)'}}>
