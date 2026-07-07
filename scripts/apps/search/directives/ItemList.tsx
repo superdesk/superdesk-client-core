@@ -262,7 +262,11 @@ export function ItemList(
 
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
-                        var markedItems = item[field] || [];
+                        var markedItems = (field === 'marked_desks'
+                            && item.archive_item
+                            && item.archive_item.marked_desks)
+                            ? item.archive_item.marked_desks
+                            : (item[field] || []);
                         var changes: any;
 
                         if (field === 'marked_desks') {

@@ -133,6 +133,12 @@ export function SearchService($location, session, multi,
     var recentMarkedDesksPatches = {};
 
     this.recordMarkedDesksPatch = function(itemId, markedDesks) {
+        Object.keys(recentMarkedDesksPatches).forEach((key) => {
+            if (Date.now() - recentMarkedDesksPatches[key].timestamp >= 5000) {
+                delete recentMarkedDesksPatches[key];
+            }
+        });
+
         recentMarkedDesksPatches[itemId] = {
             marked_desks: markedDesks,
             timestamp: Date.now(),
