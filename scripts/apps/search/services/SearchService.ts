@@ -130,6 +130,51 @@ export function SearchService($location, session, multi,
     var sortOptions = getArticleSortOptions();
 
     var self = this;
+    var recentMarkedDesksPatches = {};
+
+    this.recordMarkedDesksPatch = function(itemId, markedDesks) {
+        Object.keys(recentMarkedDesksPatches).forEach((key) => {
+            if (Date.now() - recentMarkedDesksPatches[key].timestamp >= 5000) {
+                delete recentMarkedDesksPatches[key];
+            }
+        });
+
+        recentMarkedDesksPatches[itemId] = {
+            marked_desks: markedDesks,
+            timestamp: Date.now(),
+        };
+    };
+
+    this.getRecentMarkedDesksPatch = function(itemId) {
+        var patch = recentMarkedDesksPatches[itemId];
+
+        if (patch && (Date.now() - patch.timestamp) < 5000) {
+            return patch;
+        }
+
+        delete recentMarkedDesksPatches[itemId];
+        return null;
+    };
+
+    function getMarkedDesksPatchKey(item) {
+        return item.item_id || item._id;
+    }
+
+    function applyMarkedDesksPatchesToItems(items) {
+        items.forEach((item) => {
+            var patch = self.getRecentMarkedDesksPatch(getMarkedDesksPatchKey(item));
+
+            if (patch) {
+                item.marked_desks = patch.marked_desks;
+
+                if (item.archive_item) {
+                    item.archive_item = angular.extend({}, item.archive_item, {
+                        marked_desks: patch.marked_desks,
+                    });
+                }
+            }
+        });
+    }
 
     this.cvs = appConfig.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
@@ -754,6 +799,8 @@ export function SearchService($location, session, multi,
             newItems._items = _.map(newItems._items, this.mergeHighlightFields);
         }
 
+        applyMarkedDesksPatchesToItems(newItems._items);
+
         newItems._items.forEach((item) => {
             item.selected = multi.isSelected(item);
         });
@@ -862,19 +909,35 @@ export function SearchService($location, session, multi,
      */
     this.updateItems = function(newItems, scopeItems) {
         _.map(scopeItems._items, (item) => {
-            if (item._type === 'published') {
-                return _.extend(item, _.find(newItems._items,
-                    {_id: item._id, _current_version: item._current_version}));
-            }
-
-            // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
+            let fetched;
             let itm = item;
 
-            if (angular.isDefined(item.gone)) {
-                itm = _.omit(item, 'gone');
+            if (item._type === 'published') {
+                fetched = _.find(newItems._items,
+                    {_id: item._id, _current_version: item._current_version});
+            } else {
+                // remove gone flag to prevent item remaining grey, if gone item moves back to this stage.
+                if (angular.isDefined(item.gone)) {
+                    itm = _.omit(item, 'gone');
+                }
+
+                fetched = _.find(newItems._items, {_id: itm._id});
             }
 
-            return _.extend(itm, _.find(newItems._items, {_id: itm._id}));
+            var recentPatch = self.getRecentMarkedDesksPatch(getMarkedDesksPatchKey(item));
+
+            if (recentPatch && fetched) {
+                fetched = angular.extend({}, fetched);
+                fetched.marked_desks = recentPatch.marked_desks;
+
+                if (fetched.archive_item) {
+                    fetched.archive_item = angular.extend({}, fetched.archive_item, {
+                        marked_desks: recentPatch.marked_desks,
+                    });
+                }
+            }
+
+            return _.extend(itm, fetched);
         });
 
         // update aggregations
