@@ -10,8 +10,10 @@ import {
     IconButton,
     Label,
 } from 'superdesk-ui-framework/react';
+import {debounce} from 'lodash';
 import {deleteList, fetchListItems} from '../api';
 import {IContentList} from '../interfaces';
+import {addArticleChangesListener} from '../live-updates';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
@@ -34,6 +36,9 @@ interface IState {
 }
 
 export class ListCard extends React.PureComponent<IProps, IState> {
+    private removeArticleChangesListener: (() => void) | null;
+    private loadPreviewDebounced: () => void;
+
     constructor(props: IProps) {
         super(props);
 
@@ -42,12 +47,26 @@ export class ListCard extends React.PureComponent<IProps, IState> {
             itemsTotal: 0,
         };
 
+        this.removeArticleChangesListener = null;
+
         this.removeList = this.removeList.bind(this);
         this.loadPreview = this.loadPreview.bind(this);
+        this.loadPreviewDebounced = debounce(this.loadPreview, 1000);
     }
 
     componentDidMount() {
         this.loadPreview();
+
+        // preview titles are resolved at read time on the backend; an article
+        // change doesn't touch content_list_items_updated_at, so re-fetch on
+        // the public content:update event
+        this.removeArticleChangesListener = addArticleChangesListener(() => {
+            this.loadPreviewDebounced();
+        });
+    }
+
+    componentWillUnmount() {
+        this.removeArticleChangesListener?.();
     }
 
     componentDidUpdate(prevProps: IProps) {

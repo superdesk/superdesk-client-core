@@ -102,8 +102,13 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
             addListItemsChangeListener(this.props.listId, () => {
                 this.refreshFromServerDebounced();
             }),
+            // article data is resolved at read time on the backend, so a
+            // changed article means list items must be re-fetched too; the
+            // backend doesn't push content_list:items_updated for article
+            // changes (yet), but content:update is public and always fires
             addArticleChangesListener(() => {
                 this.refreshArticlesDebounced();
+                this.refreshFromServerDebounced();
             }),
         ];
     }
