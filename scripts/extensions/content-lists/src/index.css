@@ -11,3 +11,32 @@
     margin: 0;
     flex-grow: 1;
 }
+
+/* pin/remove buttons are rendered as a regular always-visible column;
+   hide the empty hover-expanding action-menu slot so rows don't shift on mouse over */
+[data-test-id="content-list-item"] [class*="sd-list-item__action-menu"] {
+    display: none;
+}
+
+.manage-webhooks {
+    position: relative;
+    height: 100%;
+}
+
+.webhook-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.webhook-item-url {
+    font-weight: 500;
+}
+
+.webhook-updated-time {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    color: var(--sd-colour-text-light);
+    font-size: 1.2rem;
+}

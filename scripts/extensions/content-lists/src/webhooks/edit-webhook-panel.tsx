@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {Button, ButtonGroup, Input, MultiSelect, Switch} from 'superdesk-ui-framework/react';
 import {createWebhook, updateWebhook} from '../api';
 import {IContentList, IWebhook} from '../interfaces';
@@ -61,69 +62,68 @@ export class EditWebhookPanel extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {webhook} = this.props;
         const {url, enabled, excludedLists, saving} = this.state;
 
         return (
-            <div
-                style={{display: 'flex', flexDirection: 'column', height: '100%'}}
-                data-test-id="webhook-edit-panel"
-            >
-                <div className="side-panel__header side-panel__header--border-b">
-                    <h3 className="side-panel__heading side-panel__heading--big">
-                        {webhook == null ? gettext('Add Webhook') : gettext('Edit Webhook')}
-                    </h3>
-                </div>
-                <div style={{flexGrow: 1, overflowY: 'auto', padding: '1.6rem'}}>
-                    <div className="sd-margin-b--2">
-                        <Input
-                            type="text"
-                            label={gettext('URL')}
-                            value={url}
-                            required={true}
-                            onChange={(value) => {
-                                this.setState({url: value});
-                            }}
-                            data-test-id="webhook-edit-panel--url"
-                        />
-                    </div>
-                    <div className="sd-margin-b--2">
-                        <MultiSelect
-                            label={gettext('Excluded lists')}
-                            info={gettext('The webhook fires for every content list except the selected ones.')}
-                            options={this.props.lists}
-                            value={excludedLists}
-                            optionLabel={(list) => list.name}
-                            onChange={(value) => {
-                                this.setState({excludedLists: value});
-                            }}
-                        />
-                    </div>
-                    <Switch
-                        label={{content: gettext('Enabled')}}
-                        value={enabled}
-                        onChange={(value) => {
-                            this.setState({enabled: value});
-                        }}
-                    />
-                </div>
-                <div className="side-panel__footer side-panel__footer--button-box">
-                    <ButtonGroup align="end">
-                        <Button
-                            text={gettext('Cancel')}
-                            onClick={() => {
-                                this.props.onClose();
-                            }}
-                        />
-                        <Button
-                            text={gettext('Save')}
-                            type="primary"
-                            disabled={url.trim().length < 1 || saving}
-                            onClick={this.save}
-                        />
-                    </ButtonGroup>
-                </div>
-            </div>
+            <Layout.Panel side="right" data-test-id="webhook-edit-panel">
+                <Layout.PanelHeader>
+                    <Layout.PanelHeaderSlidingToolbar>
+                        <ButtonGroup align="end">
+                            <Button
+                                text={gettext('Cancel')}
+                                style="hollow"
+                                disabled={saving}
+                                onClick={() => {
+                                    this.props.onClose();
+                                }}
+                            />
+                            <Button
+                                text={gettext('Save')}
+                                type="primary"
+                                disabled={url.trim().length < 1 || saving}
+                                onClick={this.save}
+                            />
+                        </ButtonGroup>
+                    </Layout.PanelHeaderSlidingToolbar>
+                </Layout.PanelHeader>
+                <Layout.PanelContent>
+                    <Layout.PanelContentBlock>
+                        <div className="form__row">
+                            <Input
+                                type="text"
+                                label={gettext('URL')}
+                                value={url}
+                                required={true}
+                                onChange={(value) => {
+                                    this.setState({url: value});
+                                }}
+                                data-test-id="webhook-edit-panel--url"
+                            />
+                        </div>
+                        <div className="form__row">
+                            <MultiSelect
+                                label={gettext('Excluded lists')}
+                                info={gettext('The webhook fires for every content list except the selected ones.')}
+                                options={this.props.lists}
+                                value={excludedLists}
+                                optionLabel={(list) => list.name}
+                                onChange={(value) => {
+                                    this.setState({excludedLists: value});
+                                }}
+                            />
+                        </div>
+                        <div className="form__row">
+                            <Switch
+                                label={{content: gettext('Enabled')}}
+                                value={enabled}
+                                onChange={(value) => {
+                                    this.setState({enabled: value});
+                                }}
+                            />
+                        </div>
+                    </Layout.PanelContentBlock>
+                </Layout.PanelContent>
+            </Layout.Panel>
         );
     }
 }

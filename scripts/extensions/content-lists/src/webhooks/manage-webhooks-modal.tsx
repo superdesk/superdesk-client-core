@@ -1,5 +1,18 @@
 import * as React from 'react';
-import {Button, ButtonGroup, FormLabel, Loader, Modal, SubNav} from 'superdesk-ui-framework/react';
+import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
+import {
+    BoxedList,
+    Button,
+    ButtonGroup,
+    CreateButton,
+    Dropdown,
+    EmptyState,
+    Loader,
+    Modal,
+    NavButton,
+    SearchBar,
+    SubNav,
+} from 'superdesk-ui-framework/react';
 import {deleteWebhook, fetchWebhooks} from '../api';
 import {IContentList, IWebhook} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -8,6 +21,9 @@ import {WebhookItem} from './webhook-item';
 
 const {gettext} = superdesk.localization;
 const {notify} = superdesk.ui;
+const {getClass} = superdesk.utilities.CSS;
+
+type IEnabledFilter = 'all' | 'enabled' | 'disabled';
 
 interface IProps {
     lists: Array<IContentList>;
@@ -16,9 +32,24 @@ interface IProps {
 
 interface IState {
     webhooks: Array<IWebhook> | null;
+    searchString: string;
+    filter: IEnabledFilter;
     editorOpen: boolean;
     selectedWebhook: IWebhook | null;
 }
+
+function getFilterLabel(filter: IEnabledFilter): string {
+    switch (filter) {
+        case 'all':
+            return gettext('All');
+        case 'enabled':
+            return gettext('Enabled');
+        case 'disabled':
+            return gettext('Disabled');
+    }
+}
+
+const FILTERS: Array<IEnabledFilter> = ['all', 'enabled', 'disabled'];
 
 export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
@@ -26,6 +57,8 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
 
         this.state = {
             webhooks: null,
+            searchString: '',
+            filter: 'all',
             editorOpen: false,
             selectedWebhook: null,
         };
@@ -63,44 +96,43 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
             });
     }
 
-    renderGroup(title: string, webhooks: Array<IWebhook>, emptyMessage: string) {
-        const {editorOpen} = this.state;
+    getVisibleWebhooks(): Array<IWebhook> {
+        const {webhooks, searchString, filter} = this.state;
 
-        return (
-            <div className="sd-margin-b--2">
-                <FormLabel text={title} />
-                {
-                    webhooks.length < 1
-                        ? <p className="sd-text--light">{emptyMessage}</p>
-                        : webhooks.map((webhook) => (
-                            <WebhookItem
-                                key={webhook._id}
-                                webhook={webhook}
-                                lists={this.props.lists}
-                                onEdit={
-                                    editorOpen
-                                        ? null
-                                        : () => {
-                                            this.setState({editorOpen: true, selectedWebhook: webhook});
-                                        }
-                                }
-                                onDelete={() => {
-                                    this.removeWebhook(webhook);
-                                }}
-                            />
-                        ))
+        const searchLowercase = searchString.trim().toLowerCase();
+
+        return (webhooks ?? [])
+            .filter((webhook) => {
+                const enabled = webhook.enabled !== false;
+
+                if (filter === 'enabled' && !enabled) {
+                    return false;
                 }
-            </div>
-        );
+
+                if (filter === 'disabled' && enabled) {
+                    return false;
+                }
+
+                return searchLowercase.length < 1 || webhook.url.toLowerCase().includes(searchLowercase);
+            })
+            .sort((a, b) => {
+                const aEnabled = a.enabled !== false ? 0 : 1;
+                const bEnabled = b.enabled !== false ? 0 : 1;
+
+                return aEnabled - bEnabled || a.url.localeCompare(b.url);
+            });
     }
 
     render() {
-        const {webhooks, editorOpen, selectedWebhook} = this.state;
+        const {webhooks, filter, editorOpen, selectedWebhook} = this.state;
+
+        const visibleWebhooks = this.getVisibleWebhooks();
 
         return (
             <Modal
                 visible
-                size="large"
+                size="x-large"
+                closeOnEscape
                 contentBg="medium"
                 contentPadding="none"
                 headerTemplate={gettext('Manage Webhooks')}
@@ -112,61 +144,95 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                     />
                 )}
             >
-                <div
-                    style={{display: 'flex', flexDirection: 'column', height: '100%', minHeight: '40vh'}}
-                    data-test-id="manage-webhooks"
-                >
-                    <SubNav>
-                        <ButtonGroup align="end">
-                            {
-                                !editorOpen && (
-                                    <Button
-                                        text={gettext('Add New Webhook')}
-                                        type="primary"
-                                        icon="plus-sign"
-                                        onClick={() => {
-                                            this.setState({editorOpen: true, selectedWebhook: null});
-                                        }}
-                                    />
-                                )
-                            }
-                        </ButtonGroup>
-                    </SubNav>
+                <div className={getClass('manage-webhooks')} data-test-id="manage-webhooks">
                     {
                         webhooks == null
-                            ? (
-                                <div style={{position: 'relative', flexGrow: 1}}>
-                                    <Loader overlay />
-                                </div>
-                            )
+                            ? <Loader overlay />
                             : (
-                                <div style={{display: 'flex', flexGrow: 1, minHeight: 0}}>
-                                    <div style={{flexGrow: 1, overflowY: 'auto', padding: '1.6rem'}}>
-                                        {
-                                            this.renderGroup(
-                                                gettext('Enabled webhooks'),
-                                                webhooks.filter((webhook) => webhook.enabled !== false),
-                                                gettext('There are no enabled webhooks'),
-                                            )
-                                        }
-                                        {
-                                            this.renderGroup(
-                                                gettext('Disabled webhooks'),
-                                                webhooks.filter((webhook) => webhook.enabled === false),
-                                                gettext('There are no disabled webhooks'),
-                                            )
-                                        }
-                                    </div>
-                                    {
-                                        editorOpen && (
-                                            <div
-                                                style={{
-                                                    width: '36rem',
-                                                    flexShrink: 0,
-                                                    borderInlineStart: '1px solid var(--sd-colour-line--medium)',
-                                                    background: 'var(--sd-colour-panel-bg--000)',
+                                <Layout.LayoutContainer fullHeight>
+                                    <Layout.HeaderPanel>
+                                        <SubNav>
+                                            <SearchBar
+                                                placeholder={gettext('Search')}
+                                                onSubmit={(value: string) => {
+                                                    this.setState({searchString: value});
                                                 }}
-                                            >
+                                                searchOptions={{searchOnType: true, searchDelay: 300}}
+                                            />
+                                            <ButtonGroup align="end" spaces="no-space">
+                                                <Dropdown
+                                                    items={[{
+                                                        type: 'group',
+                                                        label: gettext('Filter'),
+                                                        items: [
+                                                            'divider',
+                                                            ...FILTERS.map((filterOption) => ({
+                                                                label: getFilterLabel(filterOption),
+                                                                active: filterOption === filter,
+                                                                onSelect: () => {
+                                                                    this.setState({filter: filterOption});
+                                                                },
+                                                            })),
+                                                        ],
+                                                    }]}
+                                                >
+                                                    <NavButton
+                                                        text={getFilterLabel(filter)}
+                                                        onClick={() => false}
+                                                    />
+                                                </Dropdown>
+                                                <CreateButton
+                                                    ariaValue={gettext('Create new webhook')}
+                                                    onClick={() => {
+                                                        this.setState({editorOpen: true, selectedWebhook: null});
+                                                    }}
+                                                />
+                                            </ButtonGroup>
+                                        </SubNav>
+                                    </Layout.HeaderPanel>
+                                    <Layout.MainPanel>
+                                        {
+                                            visibleWebhooks.length < 1
+                                                ? (
+                                                    <EmptyState
+                                                        size="small"
+                                                        title={gettext('There are no webhooks yet')}
+                                                    />
+                                                )
+                                                : (
+                                                    <BoxedList>
+                                                        {
+                                                            visibleWebhooks.map((webhook) => (
+                                                                <WebhookItem
+                                                                    key={webhook._id}
+                                                                    webhook={webhook}
+                                                                    selected={
+                                                                        editorOpen
+                                                                        && selectedWebhook?._id === webhook._id
+                                                                    }
+                                                                    onEdit={
+                                                                        editorOpen
+                                                                            ? null
+                                                                            : () => {
+                                                                                this.setState({
+                                                                                    editorOpen: true,
+                                                                                    selectedWebhook: webhook,
+                                                                                });
+                                                                            }
+                                                                    }
+                                                                    onDelete={() => {
+                                                                        this.removeWebhook(webhook);
+                                                                    }}
+                                                                />
+                                                            ))
+                                                        }
+                                                    </BoxedList>
+                                                )
+                                        }
+                                    </Layout.MainPanel>
+                                    <Layout.RightPanel open={editorOpen}>
+                                        {
+                                            editorOpen && (
                                                 <EditWebhookPanel
                                                     key={selectedWebhook?._id ?? 'new'}
                                                     webhook={selectedWebhook}
@@ -176,10 +242,10 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                                                     }}
                                                     onSaved={this.reload}
                                                 />
-                                            </div>
-                                        )
-                                    }
-                                </div>
+                                            )
+                                        }
+                                    </Layout.RightPanel>
+                                </Layout.LayoutContainer>
                             )
                     }
                 </div>

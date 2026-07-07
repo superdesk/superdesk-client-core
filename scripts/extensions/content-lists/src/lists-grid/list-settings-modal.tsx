@@ -83,34 +83,40 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
                 )}
             >
                 <div data-test-id="content-list-settings">
-                    <Input
-                        type="text"
-                        label={gettext('Name')}
-                        value={name}
-                        required={true}
-                        onChange={(value) => {
-                            this.setState({name: value});
-                        }}
-                        data-test-id="content-list-settings--name"
-                    />
-                    <Input
-                        type="number"
-                        label={gettext('Number of articles limit')}
-                        value={limit ?? undefined}
-                        onChange={(value) => {
-                            this.setState({limit: Number.isFinite(value) && value > 0 ? value : null});
-                        }}
-                        data-test-id="content-list-settings--limit"
-                    />
-                    <Input
-                        type="text"
-                        label={gettext('Description')}
-                        value={description}
-                        onChange={(value) => {
-                            this.setState({description: value});
-                        }}
-                        data-test-id="content-list-settings--description"
-                    />
+                    <div className="form__row">
+                        <Input
+                            type="text"
+                            label={gettext('Name')}
+                            value={name}
+                            required={true}
+                            onChange={(value) => {
+                                this.setState({name: value});
+                            }}
+                            data-test-id="content-list-settings--name"
+                        />
+                    </div>
+                    <div className="form__row">
+                        <Input
+                            type="number"
+                            label={gettext('Number of articles limit')}
+                            value={limit ?? undefined}
+                            onChange={(value) => {
+                                this.setState({limit: Number.isFinite(value) && value > 0 ? value : null});
+                            }}
+                            data-test-id="content-list-settings--limit"
+                        />
+                    </div>
+                    <div className="form__row">
+                        <Input
+                            type="text"
+                            label={gettext('Description')}
+                            value={description}
+                            onChange={(value) => {
+                                this.setState({description: value});
+                            }}
+                            data-test-id="content-list-settings--description"
+                        />
+                    </div>
                 </div>
             </Modal>
         );

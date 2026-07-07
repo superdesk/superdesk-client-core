@@ -1,4 +1,4 @@
-import {test, expect, Page} from '@playwright/test';
+import {test, expect, Page, Locator} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from '../../utils';
 import {createContentList, createWebhook} from './api-helpers';
 
@@ -9,6 +9,11 @@ async function openWebhooksModal(page: Page): Promise<void> {
     await expect(page.locator(s('manage-webhooks'))).toBeVisible();
 }
 
+// the row element; hover actions live outside the content wrapper carrying the test id
+function webhookRow(page: Page, url: string): Locator {
+    return page.locator('li').filter({has: page.locator(s(`webhook-item=${url}`))});
+}
+
 test.describe('content lists webhooks', () => {
     test('adding a webhook via the modal', async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -16,7 +21,7 @@ test.describe('content lists webhooks', () => {
 
         await openWebhooksModal(page);
 
-        await page.getByRole('button', {name: 'Add New Webhook'}).click();
+        await page.getByRole('button', {name: 'Create new webhook'}).click();
 
         const panel = page.locator(s('webhook-edit-panel'));
 
@@ -31,34 +36,43 @@ test.describe('content lists webhooks', () => {
         await expect(page.locator(s('webhook-item=https://example.com/hook'))).toBeVisible();
     });
 
-    test('webhooks are grouped by enabled state', async ({page}) => {
+    test('disabled webhooks are labeled', async ({page}) => {
         await restoreDatabaseSnapshot();
         await createWebhook({url: 'https://example.com/enabled', enabled: true});
         await createWebhook({url: 'https://example.com/disabled', enabled: false});
 
         await openWebhooksModal(page);
 
-        await expect(page.getByText('Enabled webhooks')).toBeVisible();
-        await expect(page.getByText('Disabled webhooks')).toBeVisible();
-
         await expect(
-            page.locator(s('webhook-item=https://example.com/enabled')).getByText('enabled', {exact: true}),
+            page.locator(s('webhook-item=https://example.com/disabled')).getByText('Disabled', {exact: true}),
         ).toBeVisible();
+        await expect(page.locator(s('webhook-item=https://example.com/enabled'))).toBeVisible();
         await expect(
-            page.locator(s('webhook-item=https://example.com/disabled')).getByText('disabled', {exact: true}),
-        ).toBeVisible();
+            page.locator(s('webhook-item=https://example.com/enabled')).getByText('Disabled', {exact: true}),
+        ).toHaveCount(0);
     });
 
-    test('editing a webhook', async ({page}) => {
+    test('filtering webhooks by enabled state', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await createWebhook({url: 'https://example.com/enabled', enabled: true});
+        await createWebhook({url: 'https://example.com/disabled', enabled: false});
+
+        await openWebhooksModal(page);
+
+        await page.locator(s('manage-webhooks')).getByRole('button', {name: 'All'}).click();
+        await page.getByRole('button', {name: 'Enabled', exact: true}).click();
+
+        await expect(page.locator(s('webhook-item=https://example.com/enabled'))).toBeVisible();
+        await expect(page.locator(s('webhook-item=https://example.com/disabled'))).toHaveCount(0);
+    });
+
+    test('editing a webhook by clicking the item', async ({page}) => {
         await restoreDatabaseSnapshot();
         await createWebhook({url: 'https://example.com/initial', enabled: true});
 
         await openWebhooksModal(page);
 
-        await page
-            .locator(s('webhook-item=https://example.com/initial'))
-            .getByRole('button', {name: 'Edit'})
-            .click();
+        await page.locator(s('webhook-item=https://example.com/initial')).click();
 
         const panel = page.locator(s('webhook-edit-panel'));
 
@@ -75,11 +89,13 @@ test.describe('content lists webhooks', () => {
 
         await openWebhooksModal(page);
 
-        const item = page.locator(s('webhook-item=https://example.com/doomed'));
+        const row = webhookRow(page, 'https://example.com/doomed');
 
-        await item.getByRole('button', {name: 'Remove'}).click();
+        await row.hover();
+        await row.getByRole('button', {name: 'Actions'}).click();
+        await page.getByRole('button', {name: 'Remove', exact: true}).click();
         await page.locator(s('confirmation-modal')).getByRole('button', {name: 'Confirm'}).click();
 
-        await expect(item).toHaveCount(0);
+        await expect(row).toHaveCount(0);
     });
 });
