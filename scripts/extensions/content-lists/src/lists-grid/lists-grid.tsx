@@ -103,7 +103,6 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                             this.setState({searchString: value});
                         }}
                         searchOptions={{searchOnType: true, searchDelay: 300}}
-                        boxed
                     />
                     <ButtonGroup align="end" spaces="no-space">
                         <span data-test-id="content-lists--settings-menu">
@@ -113,6 +112,7 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                         type: 'group',
                                         label: gettext('Settings'),
                                         items: [
+                                            'divider',
                                             {
                                                 icon: 'link',
                                                 label: gettext('Webhooks'),
