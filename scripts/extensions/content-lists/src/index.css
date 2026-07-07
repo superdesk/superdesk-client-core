@@ -7,9 +7,17 @@
     border-block-end: 1px solid var(--sd-colour-line--x-light);
 }
 
-.sd-grid-item__header-title {
+/* h3 element selector is needed to out-specify the ui-framework rule
+   `.sd-grid-item .sd-grid-item__title` which sets margin-block-end */
+.sd-grid-item__header h3.sd-grid-item__header-title {
     margin: 0;
     flex-grow: 1;
+}
+
+/* attribute selector because the class belongs to the ui-framework component
+   and a plain class selector would get the extension prefix at build time */
+[data-test-id="content-list-card"] [class*="sd-grid-item__footer-block--right"] {
+    padding-inline-end: 0.8rem;
 }
 
 /* pin/remove buttons are rendered as a regular always-visible column;

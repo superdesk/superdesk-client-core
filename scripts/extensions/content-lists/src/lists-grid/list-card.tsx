@@ -94,15 +94,16 @@ export class ListCard extends React.PureComponent<IProps, IState> {
             <div data-test-id="content-list-card" data-test-value={list.name}>
                 <GridItem>
                     <div className={getClass('sd-grid-item__header')}>
-                        <h4
+                        <h3
                             className={`sd-grid-item__title ${getClass('sd-grid-item__header-title')}`}
                             data-test-id="content-list-card--name"
                         >
                             {list.name}
-                        </h4>
+                        </h3>
                         <span data-test-id="content-list-card--edit">
                             <Button
                                 text={gettext('Edit')}
+                                type="primary"
                                 size="small"
                                 onClick={() => {
                                     this.props.onOpenList(list._id);
