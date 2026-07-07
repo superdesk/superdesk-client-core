@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Input, Modal} from 'superdesk-ui-framework/react';
+import {Button, Input, Modal, Switch} from 'superdesk-ui-framework/react';
 import {updateList} from '../api';
 import {IContentList} from '../interfaces';
 import {superdesk} from '../superdesk';
@@ -17,6 +17,7 @@ interface IState {
     name: string;
     limit: number | null;
     description: string;
+    enabled: boolean;
     saving: boolean;
 }
 
@@ -28,6 +29,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
             name: props.list.name,
             limit: props.list.limit ?? null,
             description: props.list.description ?? '',
+            enabled: props.list.enabled !== false,
             saving: false,
         };
 
@@ -35,7 +37,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
     }
 
     save() {
-        const {name, limit, description} = this.state;
+        const {name, limit, description, enabled} = this.state;
 
         if (name.trim().length < 1) {
             return;
@@ -47,6 +49,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
             name: name.trim(),
             limit: limit != null && limit > 0 ? limit : null,
             description,
+            enabled,
         })
             .then(() => this.props.onSaved())
             .then(() => {
@@ -59,7 +62,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {name, limit, description, saving} = this.state;
+        const {name, limit, description, enabled, saving} = this.state;
 
         return (
             <Modal
@@ -115,6 +118,15 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
                                 this.setState({description: value});
                             }}
                             data-test-id="content-list-settings--description"
+                        />
+                    </div>
+                    <div className="form__row" data-test-id="content-list-settings--enabled">
+                        <Switch
+                            label={{content: gettext('Active')}}
+                            value={enabled}
+                            onChange={(nextValue) => {
+                                this.setState({enabled: nextValue});
+                            }}
                         />
                     </div>
                 </div>
