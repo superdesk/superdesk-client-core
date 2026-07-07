@@ -31,6 +31,7 @@ function toListEntry(article: IArticle): IListEntry {
         thumbnailUrl: getThumbnailUrl(article),
         sticky: false,
         stickyPosition: null,
+        dangling: false,
     };
 }
 

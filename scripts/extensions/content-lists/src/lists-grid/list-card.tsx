@@ -60,7 +60,11 @@ export class ListCard extends React.PureComponent<IProps, IState> {
         fetchListItems(this.props.list._id, {maxResults: PREVIEW_ITEMS_COUNT})
             .then((response) => {
                 this.setState({
-                    previewTitles: response._items.map((item) => item.article_content?.title ?? ''),
+                    previewTitles: response._items.map(
+                        (item) => item.article_content == null
+                            ? gettext('Article no longer available')
+                            : item.article_content.title,
+                    ),
                     itemsTotal: response._meta.total,
                 });
             })

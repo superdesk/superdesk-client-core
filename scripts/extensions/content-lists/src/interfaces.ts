@@ -72,4 +72,7 @@ export interface IListEntry {
     thumbnailUrl: string | null;
     sticky: boolean;
     stickyPosition: number | null;
+
+    // the referenced article no longer resolves (`article_content: null` from the backend)
+    dangling: boolean;
 }

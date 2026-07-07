@@ -92,11 +92,20 @@ export class ArticleRow extends React.PureComponent<IProps> {
         itemColum.push({
             itemRow: [
                 {
-                    content: (
-                        <span className="sd-overflow-ellipsis sd-list-item__text-strong">
-                            {entry.title}
-                        </span>
-                    ),
+                    content: entry.dangling
+                        ? (
+                            <em
+                                className="sd-overflow-ellipsis sd-text--light"
+                                data-test-id="content-list-item--dangling"
+                            >
+                                {gettext('Article no longer available')}
+                            </em>
+                        )
+                        : (
+                            <span className="sd-overflow-ellipsis sd-list-item__text-strong">
+                                {entry.title}
+                            </span>
+                        ),
                 },
                 {
                     content: (

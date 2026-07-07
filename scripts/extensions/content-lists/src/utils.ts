@@ -157,5 +157,6 @@ export function listItemToEntry(item: IContentListItem): IListEntry {
         thumbnailUrl: getItemThumbnailUrl(item),
         sticky: item.sticky === true,
         stickyPosition: item.sticky === true ? item.position : null,
+        dangling: item.article_content == null,
     };
 }
