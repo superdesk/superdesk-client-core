@@ -40,6 +40,12 @@
     margin: 0 0 0 0.8rem;
 }
 
+/* the new-list name field hides its label, but .sd-input still reserves a
+   label-height grid row, misaligning the field next to the icon buttons */
+[data-test-id="content-lists--new-list"] [class~="sd-input"] {
+    grid-template-rows: none;
+}
+
 /* a rotated pin marks a pinned row (instead of a "pinned" pill) */
 .pin-toggle--pinned i {
     display: inline-block;
