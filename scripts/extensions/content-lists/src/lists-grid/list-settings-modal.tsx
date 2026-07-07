@@ -14,6 +14,7 @@ interface IProps {
 }
 
 interface IState {
+    name: string;
     limit: number | null;
     description: string;
     saving: boolean;
@@ -24,6 +25,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
+            name: props.list.name,
             limit: props.list.limit ?? null,
             description: props.list.description ?? '',
             saving: false,
@@ -33,11 +35,16 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
     }
 
     save() {
-        const {limit, description} = this.state;
+        const {name, limit, description} = this.state;
+
+        if (name.trim().length < 1) {
+            return;
+        }
 
         this.setState({saving: true});
 
         updateList(this.props.list, {
+            name: name.trim(),
             limit: limit != null && limit > 0 ? limit : null,
             description,
         })
@@ -52,7 +59,7 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {limit, description, saving} = this.state;
+        const {name, limit, description, saving} = this.state;
 
         return (
             <Modal
@@ -69,13 +76,23 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
                         <Button
                             text={gettext('Save')}
                             type="primary"
-                            disabled={saving}
+                            disabled={saving || name.trim().length < 1}
                             onClick={this.save}
                         />
                     </React.Fragment>
                 )}
             >
                 <div data-test-id="content-list-settings">
+                    <Input
+                        type="text"
+                        label={gettext('Name')}
+                        value={name}
+                        required={true}
+                        onChange={(value) => {
+                            this.setState({name: value});
+                        }}
+                        data-test-id="content-list-settings--name"
+                    />
                     <Input
                         type="number"
                         label={gettext('Number of articles limit')}

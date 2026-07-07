@@ -1,0 +1,14 @@
+.sd-grid-item__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.4rem 0.4rem 1.2rem;
+    min-height: 4rem;
+    border-block-end: 1px solid var(--sd-colour-line--x-light);
+}
+
+.sd-grid-item__header-title {
+    margin: 0;
+    flex-grow: 1;
+}

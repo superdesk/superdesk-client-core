@@ -93,7 +93,7 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
 
         return (
             <div
-                style={{display: 'flex', flexDirection: 'column', height: '100%'}}
+                style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%'}}
                 data-test-id="content-lists--grid"
             >
                 <SubNav>
@@ -149,7 +149,7 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                 />
                             )
                             : (
-                                <GridList size="medium" gap="medium" margin="3">
+                                <GridList size="large" gap="medium" margin="3">
                                     {
                                         newListName != null && (
                                             <GridItem>

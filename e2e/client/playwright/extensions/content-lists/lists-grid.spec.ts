@@ -20,7 +20,7 @@ test.describe('content lists grid', () => {
         ).toBeVisible();
     });
 
-    test('renaming a list inline', async ({page}) => {
+    test('renaming a list via settings', async ({page}) => {
         await restoreDatabaseSnapshot();
         await createContentList('sports');
 
@@ -28,9 +28,11 @@ test.describe('content lists grid', () => {
 
         const card = page.locator(s('content-list-card=sports'));
 
-        await card.locator(s('content-list-card--name')).click();
-        await card.locator(s('content-list-card--name-input')).fill('sports updated');
-        await card.getByRole('button', {name: 'Save name'}).click();
+        await card.getByRole('button', {name: 'Actions'}).click();
+        await page.getByRole('button', {name: 'Settings'}).click();
+
+        await page.locator(s('content-list-settings--name')).fill('sports updated');
+        await page.getByRole('button', {name: 'Save', exact: true}).click();
 
         await expect(page.locator(s('content-list-card=sports updated'))).toBeVisible();
     });
