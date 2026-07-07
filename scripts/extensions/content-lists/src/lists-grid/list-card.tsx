@@ -127,7 +127,6 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                             <Button
                                 text={gettext('Edit')}
                                 type="primary"
-                                size="small"
                                 onClick={() => {
                                     this.props.onOpenList(list._id);
                                 }}
