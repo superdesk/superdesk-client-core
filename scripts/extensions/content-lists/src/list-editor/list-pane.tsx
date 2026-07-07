@@ -47,13 +47,6 @@ export class ListPane extends React.PureComponent<IProps> {
                             this.props.onBack();
                         }}
                     />
-                    <SearchBar
-                        placeholder={gettext('Search in list')}
-                        onSubmit={(value: string) => {
-                            this.props.onSearch(value);
-                        }}
-                        searchOptions={{searchOnType: true, searchDelay: 300}}
-                    />
                     <Dropdown
                         items={[{
                             type: 'group',
@@ -73,7 +66,14 @@ export class ListPane extends React.PureComponent<IProps> {
                             onClick={() => false}
                         />
                     </Dropdown>
-                    <div style={{marginInlineStart: 'auto', paddingInlineEnd: '1rem'}}>
+                    <SearchBar
+                        placeholder={gettext('Search in list')}
+                        onSubmit={(value: string) => {
+                            this.props.onSearch(value);
+                        }}
+                        searchOptions={{searchOnType: true, searchDelay: 300}}
+                    />
+                    <div style={{marginInlineStart: 'auto', paddingInlineStart: '1rem', paddingInlineEnd: '1rem'}}>
                         <Button
                             text={gettext('Save')}
                             type="primary"

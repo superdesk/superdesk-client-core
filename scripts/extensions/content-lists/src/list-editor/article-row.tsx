@@ -133,9 +133,37 @@ export class ArticleRow extends React.PureComponent<IProps> {
                     ),
                 },
             ],
-            border: false,
+            border: showExtras === true,
             fullwidth: true,
         });
+
+        // rendered as a column rather than via the `action` prop,
+        // so the buttons stay visible without hovering
+        if (showExtras === true) {
+            itemColum.push({
+                itemRow: [{
+                    content: (
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <IconButton
+                                icon="pin"
+                                ariaValue={entry.sticky ? gettext('Unpin') : gettext('Pin')}
+                                onClick={() => {
+                                    this.props.onPinUnpin?.();
+                                }}
+                            />
+                            <IconButton
+                                icon="trash"
+                                ariaValue={gettext('Remove')}
+                                onClick={() => {
+                                    this.props.onRemove?.();
+                                }}
+                            />
+                        </div>
+                    ),
+                }],
+                border: false,
+            });
+        }
 
         return (
             <div
@@ -146,28 +174,6 @@ export class ArticleRow extends React.PureComponent<IProps> {
                 <ContentListItem
                     itemColum={itemColum}
                     locked={entry.sticky}
-                    action={
-                        showExtras === true
-                            ? (
-                                <React.Fragment>
-                                    <IconButton
-                                        icon="pin"
-                                        ariaValue={entry.sticky ? gettext('Unpin') : gettext('Pin')}
-                                        onClick={() => {
-                                            this.props.onPinUnpin?.();
-                                        }}
-                                    />
-                                    <IconButton
-                                        icon="trash"
-                                        ariaValue={gettext('Remove')}
-                                        onClick={() => {
-                                            this.props.onRemove?.();
-                                        }}
-                                    />
-                                </React.Fragment>
-                            )
-                            : undefined
-                    }
                 />
             </div>
         );
