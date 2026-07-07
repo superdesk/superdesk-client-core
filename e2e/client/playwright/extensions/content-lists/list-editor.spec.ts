@@ -18,10 +18,10 @@ test.describe('content list editor', () => {
         await page.locator(s('content-list-card=editor test', 'content-list-card--edit')).click();
 
         await expect(page.locator(s('content-list--editor'))).toBeVisible();
-        await expect(page).toHaveURL(new RegExp(`#/content-lists/${list._id}$`));
+        await expect(page).toHaveURL(new RegExp(`#/content-lists\\?list=${list._id}$`));
 
         // deep link
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
         await expect(page.locator(s('content-list--editor'))).toBeVisible();
 
         // back navigation returns to the grid
@@ -34,7 +34,7 @@ test.describe('content list editor', () => {
 
         const list = await createContentList('drag target');
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         await expect(page.getByText('Drag your articles here')).toBeVisible();
 
@@ -77,7 +77,7 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         const itemsPane = page.locator(s('content-list--items-pane'));
         const saveButton = itemsPane.getByRole('button', {name: 'Save'});
@@ -113,7 +113,7 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         const firstItem = page
             .locator(s('content-list--items'))
@@ -141,7 +141,7 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         await expect(page.locator(s('content-list--limit-notification'))).toBeVisible();
         await expect(
@@ -156,7 +156,7 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id]);
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         // make a local change
         await page

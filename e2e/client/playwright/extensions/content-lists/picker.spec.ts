@@ -8,7 +8,7 @@ test.describe('content list editor article picker', () => {
 
         const list = await createContentList('picker test');
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         const results = page.locator(s('content-list--picker-results'));
 
@@ -25,7 +25,7 @@ test.describe('content list editor article picker', () => {
 
         const list = await createContentList('picker source test');
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         await page.locator(s('content-list--picker-pane')).getByRole('button', {name: 'Published'}).click();
         await page.getByRole('button', {name: 'In progress'}).click();
@@ -45,7 +45,7 @@ test.describe('content list editor article picker', () => {
 
         const list = await createContentList('picker search test');
 
-        await page.goto(`/#/content-lists/${list._id}`);
+        await page.goto(`/#/content-lists?list=${list._id}`);
 
         const pickerPane = page.locator(s('content-list--picker-pane'));
         const results = page.locator(s('content-list--picker-results'));

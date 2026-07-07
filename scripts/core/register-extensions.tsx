@@ -36,6 +36,10 @@ export function registerExtensions(
             template: '<sd-extension-page '
                 + 'data-setup-full-width-capability="setupFullWidthCapability">'
                 + '</sd-extension-page>',
+
+            // allow pages to store state in query parameters
+            // without the route (and the entire view) reloading
+            reloadOnSearch: false,
         };
 
         if (page.addToMainMenu ?? true) {

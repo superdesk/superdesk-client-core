@@ -27,15 +27,6 @@ const extension: IExtension = {
                                 order: 1010,
                             },
                         },
-                        {
-                            title: gettext('Content lists'),
-                            url: `${CONTENT_LISTS_PAGE_URL}/:id`,
-                            component: ContentListsPage,
-
-                            showTopMenu: false,
-                            showSideMenu: true,
-                            addToMainMenu: false,
-                        },
                     ],
                 },
             }

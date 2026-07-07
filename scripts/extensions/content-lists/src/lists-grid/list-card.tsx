@@ -43,9 +43,20 @@ export class ListCard extends React.PureComponent<IProps, IState> {
         };
 
         this.removeList = this.removeList.bind(this);
+        this.loadPreview = this.loadPreview.bind(this);
     }
 
     componentDidMount() {
+        this.loadPreview();
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (prevProps.list.content_list_items_updated_at !== this.props.list.content_list_items_updated_at) {
+            this.loadPreview();
+        }
+    }
+
+    loadPreview() {
         fetchListItems(this.props.list._id, {maxResults: PREVIEW_ITEMS_COUNT})
             .then((response) => {
                 this.setState({
