@@ -5,6 +5,7 @@ import {superdesk} from '../superdesk';
 import {formatArticleTime} from '../utils';
 
 const {gettext} = superdesk.localization;
+const {getClass} = superdesk.utilities.CSS;
 
 function isPublishedState(state: string): boolean {
     return state === 'published' || state === 'corrected';
@@ -124,11 +125,6 @@ export class ArticleRow extends React.PureComponent<IProps> {
                                         <Label text={getStateLabel(entry)} type="warning" style="hollow" />
                                     )
                             }
-                            {
-                                entry.sticky && (
-                                    <Label text={gettext('pinned')} type="alert" style="hollow" />
-                                )
-                            }
                         </React.Fragment>
                     ),
                 },
@@ -144,13 +140,15 @@ export class ArticleRow extends React.PureComponent<IProps> {
                 itemRow: [{
                     content: (
                         <div style={{display: 'flex', alignItems: 'center'}}>
-                            <IconButton
-                                icon="pin"
-                                ariaValue={entry.sticky ? gettext('Unpin') : gettext('Pin')}
-                                onClick={() => {
-                                    this.props.onPinUnpin?.();
-                                }}
-                            />
+                            <span className={entry.sticky ? getClass('pin-toggle--pinned') : undefined}>
+                                <IconButton
+                                    icon="pin"
+                                    ariaValue={entry.sticky ? gettext('Unpin') : gettext('Pin')}
+                                    onClick={() => {
+                                        this.props.onPinUnpin?.();
+                                    }}
+                                />
+                            </span>
                             <IconButton
                                 icon="trash"
                                 ariaValue={gettext('Remove')}
