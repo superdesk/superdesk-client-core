@@ -57,6 +57,15 @@
     height: 100%;
 }
 
+/* contains the Loader's absolute full-inset overlay (.sd-loader) within the
+   page content area — without a positioned ancestor it covers the viewport,
+   flashing over the top menu */
+.loader-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
 .webhook-item {
     display: flex;
     align-items: center;

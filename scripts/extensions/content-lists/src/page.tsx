@@ -10,6 +10,8 @@ import {ListsGrid} from './lists-grid/lists-grid';
 import {addContentListsChangeListener} from './live-updates';
 import {superdesk} from './superdesk';
 
+const {getClass} = superdesk.utilities.CSS;
+
 type IProps = React.ComponentProps<IPage['component']>;
 
 interface IState {
@@ -78,7 +80,11 @@ export class ContentListsPage extends React.PureComponent<IProps, IState> {
         const selectedListId = getSelectedListId();
 
         if (lists == null) {
-            return <Loader overlay />;
+            return (
+                <div className={getClass('loader-container')}>
+                    <Loader overlay />
+                </div>
+            );
         }
 
         if (selectedListId != null) {

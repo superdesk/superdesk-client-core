@@ -13,6 +13,7 @@ import {PickerPane} from './picker-pane';
 
 const {gettext} = superdesk.localization;
 const {notify} = superdesk.ui;
+const {getClass} = superdesk.utilities.CSS;
 
 const LIST_ITEMS_MAX = 500;
 
@@ -364,7 +365,11 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
         const {list, entries, changesRecord, listSearchString, source, articles, saving} = this.state;
 
         if (list == null || entries == null) {
-            return <Loader overlay />;
+            return (
+                <div className={getClass('loader-container')}>
+                    <Loader overlay />
+                </div>
+            );
         }
 
         return (
