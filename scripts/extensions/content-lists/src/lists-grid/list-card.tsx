@@ -198,9 +198,9 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                         </GridItemFooterBlock>
                         <GridItemFooterBlock align="right">
                             {
-                                list.enabled !== false && (
-                                    <Label text={gettext('active')} type="success" style="translucent" />
-                                )
+                                list.enabled !== false
+                                    ? <Label text={gettext('active')} type="success" style="translucent" />
+                                    : <Label text={gettext('disabled')} type="alert" style="translucent" />
                             }
                         </GridItemFooterBlock>
                     </GridItemFooter>
