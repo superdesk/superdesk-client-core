@@ -27,6 +27,9 @@ interface IProps {
     entries: Array<IListEntry>;
     loading: boolean;
     hasMore: boolean;
+
+    // contentIds of articles already in the list (left pane), used to dim results
+    listContentIds: Set<string>;
     onSourceChange(source: IArticleSource): void;
     onSearch(searchString: string): void;
     onLoadMore(): void;
@@ -120,7 +123,12 @@ export class PickerPane extends React.PureComponent<IProps> {
                                                         cursor: 'grab',
                                                     }}
                                                 >
-                                                    <ArticleRow entry={entry} />
+                                                    <ArticleRow
+                                                        entry={entry}
+                                                        alreadyInList={
+                                                            this.props.listContentIds.has(entry.contentId)
+                                                        }
+                                                    />
                                                 </div>
                                             )}
                                         </Draggable>

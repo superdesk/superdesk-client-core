@@ -364,6 +364,9 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
     render() {
         const {list, entries, changesRecord, listSearchString, source, articles, saving} = this.state;
 
+        // contentIds already in the list, so the picker can dim matching results
+        const listContentIds = new Set((entries ?? []).map((entry) => entry.contentId));
+
         if (list == null || entries == null) {
             return (
                 <div className={getClass('loader-container')}>
@@ -415,6 +418,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
                             entries={articles.entries}
                             loading={articles.loading}
                             hasMore={articles.entries.length < articles.total}
+                            listContentIds={listContentIds}
                             onSourceChange={(nextSource) => {
                                 this.loadArticles(nextSource, this.state.articleSearchString, true);
                             }}
