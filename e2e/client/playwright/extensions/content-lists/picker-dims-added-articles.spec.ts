@@ -35,7 +35,21 @@ test.describe('content list editor article picker', () => {
         const saveButton = page.getByTestId('content-list--items-pane').getByRole('button', {name: 'Save'});
 
         await expect(saveButton).toBeEnabled();
+
+        // Saving PATCHes the items, then the editor reloads them (a GET on the
+        // same path) which is what clears the unsaved-changes state. Wait for
+        // that reload before navigating away: clicking Back while the save is
+        // still in flight trips the "unsaved changes will be lost" confirmation,
+        // which blocks navigation back to the grid.
+        const itemsReloaded = page.waitForResponse(
+            (response) =>
+                response.url().includes(`content_lists/${list._id}/items`)
+                && response.request().method() === 'GET'
+                && response.ok(),
+        );
+
         await saveButton.click();
+        await itemsReloaded;
 
         // Navigate off the list and reopen it, so the picker re-fetches published
         // articles and can mark the ones already in the list.
