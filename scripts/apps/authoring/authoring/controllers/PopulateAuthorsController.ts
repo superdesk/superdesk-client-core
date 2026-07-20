@@ -15,7 +15,8 @@ interface IScope extends ng.IScope {
 }
 
 const isNewItem = (item: IArticle): boolean =>
-    item._current_version === 0 || (item.authors || []).length === 0;
+    item._current_version === 0 ||
+    (item.assignment_id != null && (item.authors || []).length === 0);
 
 /**
  * It will populate item.authors with current user when item is opened for authoring.
