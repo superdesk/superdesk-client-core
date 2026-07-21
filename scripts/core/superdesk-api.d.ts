@@ -1875,7 +1875,7 @@ declare module 'superdesk-api' {
             editor3?: boolean; // only for body_html
             required?: boolean;
             readonly?: boolean;
-            sdWidth?: 'full' | 'half' | 'quarter';
+            sdWidth?: 'full' | 'half' | 'third' | 'quarter';
             minlength?: number;
             maxlength?: number;
             hideDate?: boolean;
@@ -3802,7 +3802,7 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             customEditorFeatures?: ICustomEditorFeatures;
-            timeToRead?: any;
+            timeToRead?: boolean;
             lineLength?: number;
             preview?: {
                 hideContentLabels: boolean;

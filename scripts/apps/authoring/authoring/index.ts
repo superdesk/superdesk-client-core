@@ -13,7 +13,6 @@ import {AuthoringCustomField} from './authoring-custom-field';
 import {PreviewCustomField} from './preview-custom-field';
 import {ValidateCharacters} from './ValidateCharacters';
 
-import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
@@ -138,15 +137,6 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
-
-    .component('sdLineCount',
-        reactToAngular1(
-            LineCount,
-            ['html'],
-            [],
-            'display:contents',
-        ),
-    )
 
     .component('sdArticleUrlFields',
         reactToAngular1(

@@ -76,20 +76,24 @@ function canPublish(item: IArticle): boolean {
         return false;
     }
 
-    if (sdApi.navigation.isPersonalSpace() && appConfig?.features?.publishFromPersonal !== true) {
+    if (sdApi.navigation.isPersonalSpace()) {
+        if (appConfig?.features?.publishFromPersonal !== true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const deskId = item?.task?.desk;
+
+    if (deskId == null) {
         return false;
-    } else {
-        const deskId = item?.task?.desk;
+    }
 
-        if (deskId == null) {
-            return false;
-        }
+    const desk = sdApi.desks.getAllDesks().get(deskId);
 
-        const desk = sdApi.desks.getAllDesks().get(deskId);
-
-        if (desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk === true) {
-            return false;
-        }
+    if (desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk === true) {
+        return false;
     }
 
     return true;
