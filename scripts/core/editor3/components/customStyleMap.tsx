@@ -8,8 +8,14 @@ export function applyCustomEditorTagStyles(element: HTMLElement, tagId: string):
     const style = customEditorTagStyleMap[tagId];
 
     if (style != null) {
-        element.style.display = 'inline-block';
         for (const [prop, value] of Object.entries(style)) {
+            // Keep the span inline: under the preview's default white-space, an
+            // inline-block box trims edge whitespace and would drop a trailing space
+            // that is part of the styled range. The border renders fine inline.
+            if (prop === 'display') {
+                continue;
+            }
+
             element.style[prop] = value as string;
         }
     }
