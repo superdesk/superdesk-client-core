@@ -13,8 +13,8 @@ import {StatusInfo} from 'apps/search/components/fields/state';
 
 const defaultToolbarItems: Array<ITopBarWidget<IArticle>> = [{
     availableOffline: true,
-    component: () => (
-        <StatusInfo item={item} clickable={false} />
+    component: ({entity}) => (
+        <StatusInfo item={entity} clickable={false} />
     ),
     group: 'start',
     priority: 0,
