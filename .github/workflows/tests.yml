@@ -33,43 +33,13 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    - name: Resolve base Docker images
-      run: echo "BASE_IMAGES_FILE=${{ github.workspace }}/e2e/server/base-images.txt" >> "$GITHUB_ENV"
-
-    - name: Cache base Docker images
-      uses: actions/cache@v5
-      with:
-        path: /tmp/base-docker-images.tar
-        key: base-docker-images-${{ hashFiles('e2e/server/base-images.txt') }}
-        restore-keys: |
-          base-docker-images-
-
-    - name: Load or pull base Docker images
-      run: |
-        mapfile -t base_images < "$BASE_IMAGES_FILE"
-
-        if [ -f /tmp/base-docker-images.tar ]; then
-          echo "Loading base images from cache"
-          docker load -i /tmp/base-docker-images.tar
-        else
-          echo "Pulling base images and saving to cache"
-          while IFS= read -r image; do
-            [ -n "$image" ] || continue
-            docker pull "$image"
-          done < "$BASE_IMAGES_FILE"
-          docker save "${base_images[@]}" -o /tmp/base-docker-images.tar
-        fi
-
     - name: Build superdesk server
       run: docker build -t superdesk-client-core-e2e-server:ci .
       working-directory: e2e/server
 
     - name: Archive e2e server images
       run: |
-        mapfile -t base_images < "$BASE_IMAGES_FILE"
-
         docker save \
-          "${base_images[@]}" \
           superdesk-client-core-e2e-server:ci | gzip > /tmp/e2e-server-images.tar.gz
 
     - name: Upload e2e server images
@@ -138,6 +108,17 @@ jobs:
     defaults:
       run:
         working-directory: e2e/client
+
+    services:
+      redis:
+        image: redis:alpine
+      mongo:
+        image: mongo:6
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
+      mailcrab:
+        image: marlonb/mailcrab:latest
+
     steps:
     - uses: actions/checkout@v7
     - uses: actions/setup-node@v6
