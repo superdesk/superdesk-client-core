@@ -44,6 +44,34 @@ export class Authoring {
         }
     }
 
+    /**
+     * Clicks the authoring-react topbar Save button and waits for the save to
+     * settle (the button disables once there are no unsaved changes).
+     */
+    async saveInAuthoringReact(): Promise<void> {
+        const saveButton = this.page.getByTestId('authoring').getByRole('button', {name: 'Save', exact: true});
+
+        await saveButton.click();
+        await expect(saveButton).toBeDisabled();
+    }
+
+    /**
+     * Opens the "Send to / Publish" side widget and confirms publish.
+     * authoring-react exposes publish through the right-rail side widget
+     * (interactive-article-actions-widget), not the legacy topbar pane that
+     * {@link publish} drives.
+     */
+    async publishInAuthoringReact(): Promise<void> {
+        const {page} = this;
+
+        await page.getByTestId('widget-icon')
+            .and(page.locator('[data-test-value="interactive-article-actions-widget"]'))
+            .click();
+
+        // Publish tab is active by default in the panel.
+        await page.getByTestId('publish').click();
+    }
+
     async sendTo(destination: {desk: string; stage: string}): Promise<void> {
         const {page} = this;
 
