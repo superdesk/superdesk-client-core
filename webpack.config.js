@@ -299,7 +299,7 @@ module.exports = function makeConfig(grunt) {
                             },
                         },
                         {
-                            loader: 'sass-loader',
+                            loader: require.resolve('sass-loader'),
                             options: {
                                 sassOptions: {
                                     loadPaths: [
