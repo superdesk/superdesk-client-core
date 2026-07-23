@@ -109,16 +109,6 @@ jobs:
       run:
         working-directory: e2e/client
 
-    services:
-      redis:
-        image: redis:alpine
-      mongo:
-        image: mongo:6
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
-      mailcrab:
-        image: marlonb/mailcrab:latest
-
     steps:
     - uses: actions/checkout@v7
     - uses: actions/setup-node@v6
