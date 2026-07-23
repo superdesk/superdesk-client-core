@@ -11,8 +11,8 @@ import {ISuperdeskGlobalConfig} from 'superdesk-api';
  * Spellcheck module
  */
 SpellcheckService.$inject =
-    ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService', 'editorResolver'];
-function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService, editorResolver) {
+    ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService', '$injector'];
+function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService, $injector) {
     var PREFERENCES_KEY = 'spellchecker:status',
         lang = userInterfaceLanguage,
         dict = {} as any,
@@ -514,7 +514,11 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      */
     this.toggleSpellcheckerStatus = function toggleSpellcheckerStatus(explicit) {
         const enabled = explicit != null ? explicit : !self.isAutoSpellchecker;
-        const editor = editorResolver.get();
+
+        // Resolved lazily so the spellcheck service does not hard-depend on the editor3 module
+        // (editor3 already depends on spellcheck; a constructor dependency would be circular).
+        const editorResolver = $injector.has('editorResolver') ? $injector.get('editorResolver') : null;
+        const editor = editorResolver != null ? editorResolver.get() : null;
 
         if (editor != null) {
             editor.setSettings({spellcheck: enabled, language: lang});
