@@ -10,8 +10,9 @@ import {ISuperdeskGlobalConfig} from 'superdesk-api';
 /**
  * Spellcheck module
  */
-SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
-function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
+SpellcheckService.$inject =
+    ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService', 'editorResolver'];
+function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService, editorResolver) {
     var PREFERENCES_KEY = 'spellchecker:status',
         lang = userInterfaceLanguage,
         dict = {} as any,
@@ -505,6 +506,24 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
         };
 
         preferencesService.update(updates, PREFERENCES_KEY);
+    };
+
+    /**
+     * Toggle the spell checker on/off, re-render the current editor and persist the status.
+     * Shared by the authoring header toggle, the keyboard shortcut and the "..." menu switch.
+     */
+    this.toggleSpellcheckerStatus = function toggleSpellcheckerStatus(explicit) {
+        const enabled = explicit != null ? explicit : !self.isAutoSpellchecker;
+        const editor = editorResolver.get();
+
+        if (editor != null) {
+            editor.setSettings({spellcheck: enabled, language: lang});
+            editor.render();
+        }
+
+        self.setSpellcheckerStatus(enabled);
+
+        return enabled;
     };
 
     this.getInitialSpellcheckerStatus(lang).then((status) => {

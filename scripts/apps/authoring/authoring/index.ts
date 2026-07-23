@@ -17,6 +17,7 @@ import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
+import {getSpellcheckShortcutLabel} from 'core/spellcheck/spellcheck-shortcut';
 import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
@@ -470,6 +471,6 @@ angular.module('superdesk.apps.authoring', [
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + l',
             gettext('Preview formatted article, when previewFormats feature configured'));
-        keyboardManager.register('Authoring', 'ctrl + shift + y',
-            gettext('Instant Spellchecking, when automatic spellchecking turned off'));
+        keyboardManager.register('Authoring', getSpellcheckShortcutLabel(),
+            gettext('Toggle the spell checker on/off'));
     }]);
