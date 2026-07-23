@@ -2,10 +2,10 @@
 
 @use "sass:color";
 @use "sass:math";
-@import '~mixins.scss';
-@import '~variables/_typography.scss';
-@import '~variables/_colors.scss';
-@import '~draft-js/dist/Draft.css';
+@import 'mixins.scss';
+@import 'variables/_typography.scss';
+@import 'variables/_colors.scss';
+@import 'draft-js/dist/Draft.css';
 
 // colors
 $editor-neutral-border: 			var(--sd-editor-colour__controls-border);

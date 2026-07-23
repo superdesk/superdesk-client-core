@@ -1,8 +1,8 @@
 // world-clock.scss
 // Styling for ingest widget
 // ----------------------------------------------------------------------------------------
-@import '~mixins.scss';
-@import '~variables.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
 .sd-widget {
     &.ingest, &.archive, &.related-item, &.aggregate, &.package-manager, &.packages, &.user-activity {
         .widget-header {

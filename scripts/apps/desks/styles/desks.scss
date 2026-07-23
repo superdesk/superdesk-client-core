@@ -2,9 +2,9 @@
 // Styling for the superdesk desk module
 // ----------------------------------------------------------------------------------------
 @use "sass:color";
-@import '~mixins.scss';
-@import '~variables.scss';
-@import '~labels.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
+@import 'labels.scss';
 
 
 $main-desk-color:  #ffffff;
