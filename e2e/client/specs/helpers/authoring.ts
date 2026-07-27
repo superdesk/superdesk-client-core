@@ -662,7 +662,7 @@ class Authoring {
 
         this.toggleAutoSpellCheck = function() {
             openAuthoringDropdown();
-            element(by.model('spellcheckMenu.isAuto')).click();
+            element(by.model('spellcheck.isAutoSpellchecker')).click();
         };
 
         this.openLiveSuggest = function() {

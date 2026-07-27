@@ -329,7 +329,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 1);
 
         browser.wait(ECE.attributeEquals(
-            element(by.model('spellcheckMenu.isAuto')),
+            element(by.model('spellcheck.isAutoSpellchecker')),
             'checked',
             'true',
         ));
@@ -337,7 +337,7 @@ describe('authoring', () => {
         authoring.toggleAutoSpellCheck();
 
         browser.wait(ECE.attributeEquals(
-            element(by.model('spellcheckMenu.isAuto')),
+            element(by.model('spellcheck.isAutoSpellchecker')),
             'checked',
             null,
         ));
@@ -347,7 +347,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 2);
 
         browser.wait(ECE.attributeEquals(
-            element(by.model('spellcheckMenu.isAuto')),
+            element(by.model('spellcheck.isAutoSpellchecker')),
             'checked',
             null,
         ));

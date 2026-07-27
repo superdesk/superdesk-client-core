@@ -109,7 +109,7 @@ describe('send', () => {
 
         // Skip spell check
         authoring.toggleAutoSpellCheck();
-        expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
+        expect(element(by.model('spellcheck.isAutoSpellchecker')).getAttribute('checked')).toBeFalsy();
 
         authoring.writeText('Text, that not saved yet');
         authoring.sendTo('Sports Desk', null, true);
