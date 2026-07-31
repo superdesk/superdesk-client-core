@@ -4,7 +4,6 @@ import {gettext} from 'core/utils';
 import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {canPrintPreview} from 'apps/search/helpers';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
-import {closedIntentionally} from 'apps/authoring/widgets/widgets';
 
 AuthoringEmbeddedDirective.$inject = ['superdeskFlags', 'api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter) {
@@ -30,9 +29,13 @@ export function AuthoringEmbeddedDirective(superdeskFlags, api, notify, $filter)
             scope.canPrintPreview = canPrintPreview;
             scope.fullWidth = superdeskFlags.flags.hideMonitoring;
             scope.setFullWidth = () => {
-                closedIntentionally.value = true;
                 scope.hideMonitoring(true, new Event('click'));
             };
+
+            // The directive is no longer re-linked on toggle, so mirror the flag instead.
+            scope.$watch(() => superdeskFlags.flags.hideMonitoring, (value) => {
+                scope.fullWidth = value;
+            });
 
             // This function is duplicated from the directive `WorkspaceSidenavDirective.ts`.
             scope.hideMonitoring = function(state, e) {

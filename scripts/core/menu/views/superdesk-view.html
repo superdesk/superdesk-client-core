@@ -16,20 +16,22 @@
 
 <div class="loading" ng-if="loading"></div>
 
+<!--
+    `renderMonitoring` gates only the monitoring parts. Gating `#main-container` would
+    destroy and rebuild authoring on every full width toggle, losing unsaved changes.
+    It cannot be `!popup` either: popups open a workspace route with `renderMonitoring`
+    false, so that would render nothing at all.
+-->
 <div
     id="main-container"
     ng-class="superdesk.flags"
-    ng-if="renderMonitoring && superdesk.flags.workspace === true"
+    ng-if="superdesk.flags.workspace === true"
 >
-    <div id="workspace-container" ng-view sd-splitter-widget></div>
-    <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
-    <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
+    <div id="workspace-container" ng-if="renderMonitoring" ng-view sd-splitter-widget></div>
+    <div id="authoring-container" ng-show="superdesk.flags.authoring" sd-authoring-container></div>
+    <div id="superdesk-workqueue" ng-if="renderMonitoring && superdesk.flags.workqueue === true" sd-workqueue></div>
 
     <div ng-if="itemsForExport != null" sd-export></div>
-</div>
-
-<div id="main-container" ng-class="superdesk.flags" ng-if="!renderMonitoring">
-    <div id="authoring-container" sd-authoring-container></div>
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="renderMonitoring && superdesk.flags.workspace === false" ng-view></div>
