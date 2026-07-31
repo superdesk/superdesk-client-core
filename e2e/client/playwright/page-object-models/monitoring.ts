@@ -110,6 +110,11 @@ export class Monitoring {
         }
     }
 
+    async createArticleFromDefaultTemplate(): Promise<void> {
+        await this.page.getByTestId('content-create').click();
+        await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
+    }
+
     async openMediaUploadView(): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'Upload media'}).click();
