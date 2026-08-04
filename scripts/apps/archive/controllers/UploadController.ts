@@ -9,7 +9,7 @@ import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
 import {getMetadata} from 'apps/archive/parse-metadata';
-import {COMPANION_FIELD_IDS, FIELD_ID_TO_STORED_FIELD} from 'apps/authoring-react/data-layer';
+import {COMPANION_FIELD_IDS, FIELD_ID_TO_STORED_FIELD} from 'apps/authoring-react/data-layer-constants';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
