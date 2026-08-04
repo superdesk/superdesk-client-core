@@ -53,7 +53,7 @@ jobs:
           docker load -i /tmp/base-docker-images.tar
         else
           echo "Pulling base images and saving to cache"
-          while IFS= read -r image; do
+          while IFS= read -r image || [ -n "$image" ]; do
             [ -n "$image" ] || continue
             docker pull "$image"
           done < "$BASE_IMAGES_FILE"
