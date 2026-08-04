@@ -53,6 +53,8 @@ import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@sourcefabric/common';
+import {notify} from 'core/notify/notify';
+import {isHttpApiError} from 'core/helpers/network';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
@@ -1096,6 +1098,41 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
                     return item;
                 });
+            })
+            .catch((error) => {
+                if (this._mounted) {
+                    // setting `loading` to false is the only state change the setState guard allows while loading
+                    this.setLoadingState(state, false);
+
+                    /**
+                     * `cancelAutosave` above already deleted the autosaved version,
+                     * so re-arm autosave to keep a server-side copy of the unsaved changes.
+                     */
+                    this.props.authoringStorage.autosave.schedule(
+                        () => this.computeLatestEntity({preferIncomplete: true}),
+                        (autosaved) => {
+                            if (this.state.initialized) {
+                                this.setState({
+                                    ...this.state,
+                                    itemAutosaved: autosaved,
+                                });
+                            }
+                        },
+                        null,
+                    );
+                }
+
+                const serverMessage = isHttpApiError(error)
+                    ? error._issues?.['validator exception'] ?? error._error?.message
+                    : null;
+
+                notify.error(
+                    serverMessage != null
+                        ? gettext('Error. Item not updated: {{message}}', {message: serverMessage})
+                        : gettext('Error. Item not updated.'),
+                );
+
+                return Promise.reject(error);
             });
     }
 
