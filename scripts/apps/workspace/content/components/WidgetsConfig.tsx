@@ -3,6 +3,7 @@ import ng from 'core/services/ng';
 import {IWidget} from 'superdesk-interfaces/Widget';
 import {IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {getCanonicalWidgetId} from 'apps/authoring/widgets/widget-id-compatibility';
 
 interface IProps {
     initialWidgetsConfig: IContentProfile['widgets_config'];
@@ -23,7 +24,10 @@ export const isWidgetVisibleForContentProfile = (
         return defaultOption;
     }
 
-    const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId);
+    // An entry saved under a removed authoring-react id still applies: ignoring it would fall back
+    // to the default and silently un-hide a widget an admin hid. Current id wins.
+    const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId)
+        ?? widgetsConfig.find((config) => getCanonicalWidgetId(config.widget_id) === widgetId);
 
     return widgetConfig == null ? defaultOption : widgetConfig.is_displayed;
 };
@@ -51,6 +55,11 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
     render() {
         const authoringWidgets: Array<IWidget> = ng.get('authoringWidgets');
 
+        // registered once per implementation under the same id; one config entry covers both
+        const uniqueWidgets = authoringWidgets.filter(
+            (widget, i) => authoringWidgets.findIndex(({_id}) => _id === widget._id) === i,
+        );
+
         return (
             <div>
                 <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginBlockStart: 20}}>
@@ -58,8 +67,8 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
                 </div>
                 <ul className="sd-list-item-group sd-shadow--z2">
                     {
-                        authoringWidgets.map((widget, i) => (
-                            <li className="sd-list-item" key={i}>
+                        uniqueWidgets.map((widget) => (
+                            <li className="sd-list-item" key={widget._id}>
                                 <span className="sd-list-item__column">
                                     <input
                                         type="checkbox"

@@ -12,7 +12,7 @@ import {Label} from 'superdesk-ui-framework';
 import {TranslationsBody} from './TranslationsBody';
 
 const getLabel = () => gettext('Translations');
-const TRANSLATIONS_WIDGET_ID = 'translation-widget';
+const TRANSLATIONS_WIDGET_ID = 'translations';
 
 class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {

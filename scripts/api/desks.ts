@@ -24,7 +24,8 @@ function waitTilReady(): Promise<void> {
 function getAllDesks(): OrderedMap<IDesk['_id'], IDesk> {
     let desksMap: OrderedMap<IDesk['_id'], IDesk> = OrderedMap();
 
-    for (const desk of ng.get('desks').desks._items) {
+    // may be called before `desks.initialize()` has resolved
+    for (const desk of ng.get('desks').desks?._items ?? []) {
         desksMap = desksMap.set(desk._id, desk);
     }
 
@@ -38,7 +39,9 @@ function getCurrentUserDesks(): Array<IDesk> {
 function getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage> {
     let stagesMap: OrderedMap<IStage['_id'], IStage> = OrderedMap();
 
-    for (const stage of ng.get('desks').deskStages[deskId]) {
+    // `deskStages` is empty until `desks.initialize()` resolves, and has no entry
+    // for a desk the current user can not see
+    for (const stage of ng.get('desks').deskStages?.[deskId] ?? []) {
         stagesMap = stagesMap.set(stage._id, stage);
     }
 
