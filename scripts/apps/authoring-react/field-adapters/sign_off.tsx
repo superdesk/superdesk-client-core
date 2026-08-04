@@ -123,11 +123,13 @@ export const sign_off: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'sign_off',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
+        retrieveStoredValueEditor3Generic(
+            'sign_off',
+            item,
+            authoringStorage,
+            config,
+        ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

@@ -25,11 +25,13 @@ export const byline: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'byline',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
+        retrieveStoredValueEditor3Generic(
+            'byline',
+            item,
+            authoringStorage,
+            config,
+        ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

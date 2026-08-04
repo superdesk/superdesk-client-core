@@ -25,11 +25,16 @@ export const ednote: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'ednote',
-        item,
-        authoringStorage,
-    ),
+    // `plainTextInMultiLineMode` must match `storeValue` below, otherwise reading and
+    // writing disagree about whether the stored string is plain text or HTML.
+    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
+        retrieveStoredValueEditor3Generic(
+            'ednote',
+            item,
+            authoringStorage,
+            config,
+            true,
+        ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(
