@@ -2,9 +2,9 @@
 // Styling for search page, and search functionalities
 // ----------------------------------------------------------------------------------------
 @use "sass:math";
-@import '~mixins.scss';
-@import '~variables.scss';
-@import '~animation.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
+@import 'animation.scss';
 
 .search-page-container {
     .archive-content {

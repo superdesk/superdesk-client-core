@@ -2,8 +2,8 @@
 // Styling for the superdesk profiling module
 // ----------------------------------------------------------------------------------------
 
-@import '~mixins.scss';
-@import '~variables.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
 
 .profiling-data {
     inset-block-start: $subnav-height;

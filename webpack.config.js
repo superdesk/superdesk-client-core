@@ -298,7 +298,18 @@ module.exports = function makeConfig(grunt) {
                                 modules: 'global',
                             },
                         },
-                        {loader: 'sass-loader'},
+                        {
+                            loader: require.resolve('sass-loader'),
+                            options: {
+                                sassOptions: {
+                                    loadPaths: [
+                                        path.join(__dirname, 'styles', 'sass'),
+                                        path.join(__dirname, 'node_modules'),
+                                        path.join(process.cwd(), 'node_modules'),
+                                    ],
+                                },
+                            },
+                        },
                     ],
                 },
                 {

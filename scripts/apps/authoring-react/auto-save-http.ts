@@ -1,4 +1,5 @@
 import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
+import {logger} from 'core/services/logger';
 import {Cancelable, throttle} from 'lodash';
 import {IArticle, IAuthoringAutoSave} from 'superdesk-api';
 import {omitFields} from './data-layer';
@@ -19,6 +20,9 @@ export class AutoSaveHttp implements IAuthoringAutoSave<IArticle> {
                 }).then((res) => {
                     this.autosavePromise = null;
                     callback(res);
+                }).catch((error) => {
+                    this.autosavePromise = null;
+                    logger.error(new Error('Autosave request failed.'), error);
                 });
             },
             delay,

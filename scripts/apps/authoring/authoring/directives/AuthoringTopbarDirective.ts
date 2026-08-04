@@ -8,7 +8,6 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 import {sdApi} from 'api';
-import {closedIntentionally} from 'apps/authoring/widgets/widgets';
 import {partition} from 'lodash';
 
 /**
@@ -167,7 +166,6 @@ export function AuthoringTopbarDirective(
 
             scope.setFullWidth = () => {
                 scope.$applyAsync(() => {
-                    closedIntentionally.value = true;
                     scope.hideMonitoring(true, new Event('click'));
                 });
             };

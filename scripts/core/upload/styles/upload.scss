@@ -1,9 +1,9 @@
 // uploader.scss
 // Styling for the superdesk upload submodule (avatar upload, media upload)
 // ----------------------------------------------------------------------------------------
-@import '~mixins.scss';
-@import '~variables.scss';
-@import "~sf-additional.scss";
+@import 'mixins.scss';
+@import 'variables.scss';
+@import "sf-additional.scss";
 
 @mixin generic-upload-progress($height:2px) {
     position: absolute;
