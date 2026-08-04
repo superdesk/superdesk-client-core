@@ -48,6 +48,7 @@ import {
     CancelAuthoringComponent,
     UpdateActionComponent,
     SendKillActionComponent,
+    SendTakedownActionComponent,
     UnspikeComponent,
     DescheduleComponent,
     DeskAndStageComponent,
@@ -156,6 +157,13 @@ const sendKillAction: ITopBarWidget<IArticle> = {
     group: 'end',
     priority: 0.1,
     component: SendKillActionComponent,
+    availableOffline: false,
+};
+
+const sendTakedownAction: ITopBarWidget<IArticle> = {
+    group: 'end',
+    priority: 0.1,
+    component: SendTakedownActionComponent,
     availableOffline: false,
 };
 
@@ -297,7 +305,7 @@ function getLockInfoWidget(exposed: IExposedFromAuthoring<IArticle>): ITopBarWid
     };
 }
 
-function getInlineToolbarActions(
+export function getInlineToolbarActions(
     options: IExposedFromAuthoring<IArticle>,
     action?: IAuthoringActionType,
     setFullWidth?: () => void,
@@ -347,6 +355,13 @@ function getInlineToolbarActions(
         return withContext({
             readOnly: false,
             actions: [toggleFullWidthButton, sendKillAction, closeIconButton, minimizeButton],
+        });
+    }
+
+    if (action === 'takedown') {
+        return withContext({
+            readOnly: false,
+            actions: [toggleFullWidthButton, sendTakedownAction, closeIconButton, minimizeButton],
         });
     }
 

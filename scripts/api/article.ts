@@ -464,7 +464,10 @@ function edit(
     }
 }
 
-function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle> {
+function getItemPatchWithKillOrTakedownTemplate(
+    item: IArticle,
+    action: IAuthoringActionType,
+): Promise<Partial<IArticle>> {
     const itemForTemplate = {
         template_name: action,
         item: pick(
@@ -479,7 +482,13 @@ function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthori
         payload: itemForTemplate,
     }).then((result: IArticle) => {
         return {
-            ...result,
+            /**
+             * Only content fields may be taken from the response. It is a POST response,
+             * so it carries its own `_etag` and other metadata which would break
+             * the item if applied to it (publishing would fail with a 412 for one).
+             * Legacy does the same in AuthoringEmbeddedDirective.
+             */
+            ...(pick(result, keys(CONTENT_FIELDS_DEFAULTS)) as Partial<IArticle>),
             ...(action === 'kill' ? {operation: 'kill'} : {}),
             state: ITEM_STATE.PUBLISHED,
         };
@@ -634,7 +643,7 @@ interface IArticleApi {
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IAuthoringActionType): Promise<boolean>;
 
-    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle>;
+    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<Partial<IArticle>>;
 
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(

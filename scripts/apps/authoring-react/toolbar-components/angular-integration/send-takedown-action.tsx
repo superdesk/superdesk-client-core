@@ -5,13 +5,13 @@ import {gettext} from 'core/utils';
 import {sdApi} from 'api';
 import {useInlineToolbarContext} from './inline-toolbar-context';
 
-export const SendKillActionComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => {
+export const SendTakedownActionComponent: React.ComponentType<{entity: IArticle}> = ({entity}) => {
     const {exposed} = useInlineToolbarContext<IArticle>();
 
     return (
         <Button
-            data-test-id="send-kill"
-            text={gettext('Send kill')}
+            data-test-id="send-takedown"
+            text={gettext('Send takedown')}
             style="filled"
             type="primary"
             onClick={() => {
@@ -19,7 +19,7 @@ export const SendKillActionComponent: React.ComponentType<{entity: IArticle}> = 
                     .then(() => sdApi.article.publishItem(
                         exposed?.item,
                         entity,
-                        'kill',
+                        'takedown',
                     ))
                     .then(() => exposed?.initiateClosing());
             }}
