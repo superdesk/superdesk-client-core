@@ -44,7 +44,6 @@ import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
-import {getCanonicalWidgetId} from 'apps/authoring/widgets/widget-id-compatibility';
 import {findWidgetById, getWidgetsFromExtensions} from './side-widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -362,7 +361,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
     private loadWidgetFromPreferences() {
         const pinnedWidgetPreference = sdApi.preferences.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS);
-        const pinnedWidgetId = getCanonicalWidgetId(pinnedWidgetPreference?._id ?? null);
+        const pinnedWidgetId = pinnedWidgetPreference?._id ?? null;
 
         if (pinnedWidgetId != null) {
             this.setState({

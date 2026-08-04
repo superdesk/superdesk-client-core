@@ -3,7 +3,6 @@ import ng from 'core/services/ng';
 import {IWidget} from 'superdesk-interfaces/Widget';
 import {IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {getCanonicalWidgetId} from 'apps/authoring/widgets/widget-id-compatibility';
 
 interface IProps {
     initialWidgetsConfig: IContentProfile['widgets_config'];
@@ -24,10 +23,7 @@ export const isWidgetVisibleForContentProfile = (
         return defaultOption;
     }
 
-    // An entry saved under a removed authoring-react id still applies: ignoring it would fall back
-    // to the default and silently un-hide a widget an admin hid. Current id wins.
-    const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId)
-        ?? widgetsConfig.find((config) => getCanonicalWidgetId(config.widget_id) === widgetId);
+    const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId);
 
     return widgetConfig == null ? defaultOption : widgetConfig.is_displayed;
 };
@@ -56,9 +52,16 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
         const authoringWidgets: Array<IWidget> = ng.get('authoringWidgets');
 
         // registered once per implementation under the same id; one config entry covers both
-        const uniqueWidgets = authoringWidgets.filter(
-            (widget, i) => authoringWidgets.findIndex(({_id}) => _id === widget._id) === i,
-        );
+        const seenIds = new Set<IWidget['_id']>();
+        const uniqueWidgets = authoringWidgets.filter((widget) => {
+            if (seenIds.has(widget._id)) {
+                return false;
+            }
+
+            seenIds.add(widget._id);
+
+            return true;
+        });
 
         return (
             <div>
