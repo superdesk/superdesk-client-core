@@ -27,6 +27,18 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
+/**
+ * Same two rules as the legacy dropdown (`apps/translations/directives/TranslationDropdown.ts`):
+ * destinations only, and not the language the article is already in. Legacy renders that one disabled
+ * rather than omitting it, which is not possible here because `Option` takes no `disabled` prop.
+ */
+export function getTranslationTargetLanguages(
+    languages: Array<ITranslation>,
+    currentLanguage: string,
+): Array<ITranslation> {
+    return languages.filter((language) => language.destination === true && language.language !== currentLanguage);
+}
+
 export class TranslateModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -92,6 +104,11 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
             return null;
         }
 
+        const targetLanguages = getTranslationTargetLanguages(
+            state.availableLanguages ?? [],
+            this.props.article.language,
+        );
+
         return (
             <Modal
                 visible
@@ -106,10 +123,11 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                             selectedLanguage: value,
                         })}
                         label={gettext('Available languages')}
+                        data-test-id="translate-modal--languages"
                     >
                         <Option />
                         {
-                            state.availableLanguages.map((lang) => {
+                            targetLanguages.map((lang) => {
                                 return (
                                     <Option key={lang._id} value={lang.language}>
                                         {gettext(lang.label)}
