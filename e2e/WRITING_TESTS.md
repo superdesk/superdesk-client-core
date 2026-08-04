@@ -171,7 +171,7 @@ set, this is not exhaustive):
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
-`editor3-tables`, `custom-blocks`, `availability-management`.
+`editor3-tables`, `custom-blocks`, `availability-management`, `related-items`.
 
 ### Adding fixture data
 

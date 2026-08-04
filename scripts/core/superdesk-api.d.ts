@@ -1348,6 +1348,8 @@ declare module 'superdesk-api' {
         lock_session: any;
         rewritten_by?: IArticle['_id'];
         rewrite_of?: IArticle['_id'];
+        /** item whose metadata was associated with this one via the related items widget */
+        related_to?: IArticle['_id'];
         profile: string;
         word_count?: number;
         lines_count?: number;
