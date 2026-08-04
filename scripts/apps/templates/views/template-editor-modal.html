@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div style="height: 100%;" ng-if="authoringReactViewEnabled && item != null && item.profile != null">
+                <div style="height: 100%;" ng-if="authoringReactViewEnabled && item != null && (item.profile != null || template.template_type === 'kill')">
                     <sd-edit-template style="height: 100%;" data-scope-apply="setDirtyFromReact" data-template="template"></sd-edit-template>
                 </div>
 

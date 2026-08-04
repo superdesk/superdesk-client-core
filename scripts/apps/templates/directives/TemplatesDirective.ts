@@ -301,9 +301,21 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                if ($scope.item != null) {
-                    content.setupAuthoring(profile, $scope, $scope.item);
+                if ($scope.item == null) {
+                    return;
                 }
+
+                if (profile == null) {
+                    // kill templates never have a content profile and `setupAuthoring` throws without one.
+                    // Clearing keeps the previously opened template's fields from being reused for this one.
+                    $scope.schema = {};
+                    $scope.editor = {};
+                    $scope.fields = [];
+
+                    return;
+                }
+
+                content.setupAuthoring(profile, $scope, $scope.item);
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {

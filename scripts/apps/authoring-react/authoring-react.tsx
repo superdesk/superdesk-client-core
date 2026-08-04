@@ -1420,7 +1420,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             };
         }
 
-        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions.actions ?? [];
+        const primaryToolbarWidgets: Array<ITopBarWidget<T>> = authoringOptions?.actions ?? [];
 
         if (authoringActions.length > 0) {
             primaryToolbarWidgets.push({

@@ -33,11 +33,9 @@ export const genre: IFieldAdapter<IArticle> = {
     retrieveStoredValue: (article) => {
         const multiple = isMultipleV2('genre');
 
-        if (multiple) {
-            return article.genre.map(({qcode}) => qcode);
-        } else {
-            return article.genre.map(({qcode}) => qcode)[0];
-        }
+        const qcodes = (article.genre ?? []).map(({qcode}) => qcode);
+
+        return multiple ? qcodes : qcodes[0];
     },
     storeValue: (val: IDropdownValue, article) => {
         const vocabulary = sdApi.vocabularies.getAll().get('genre');

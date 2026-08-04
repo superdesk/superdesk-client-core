@@ -89,11 +89,9 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
             retrieveStoredValue: (article) => {
                 const multiple = isMultiple('locators');
 
-                if (multiple) {
-                    return article.place.map(({qcode}) => qcode);
-                } else {
-                    return article.place.map(({qcode}) => qcode)[0];
-                }
+                const qcodes = (article.place ?? []).map(({qcode}) => qcode);
+
+                return multiple ? qcodes : qcodes[0];
             },
             storeValue: (val: IDropdownValue, article) => {
                 const vocabulary = sdApi.vocabularies.getAll().get('locators');
