@@ -28,6 +28,16 @@ import {description_text} from './field-adapters/description_text';
 import {formatDateTime} from 'core/get-superdesk-api-implementation';
 
 /**
+ * Content-profile field ids that don't map 1:1 to a stored article field. They can be enabled in
+ * profiles but are not part of the `archive` resource schema, so they must not be sent verbatim in
+ * a PATCH or the server rejects the request with "unknown field".
+ */
+// companion/unused fields with no backing data of their own; drop them before saving
+export const COMPANION_FIELD_IDS = ['footer', 'media_description'];
+// profile field id -> the article field its value is actually stored in
+export const FIELD_ID_TO_STORED_FIELD: {[fieldId: string]: keyof IArticle} = {sms: 'sms_message'};
+
+/**
  * Field `section` ('header' | 'content') is an authoring-react concept. Profiles created before it
  * (e.g. the stock "Text" profile) have none, and treating that as an error stopped authoring-react
  * from opening or switching to them. Default to "content" (legacy just rendered such fields) and warn.
@@ -65,14 +75,8 @@ export function getArticleContentProfile<T>(
      * and this restructuring code dropped.
      */
     function adjustId(fieldId: string): string {
-        switch (fieldId) {
-            case 'sms':
-            // in content profile the field ID is "sms"
-            // but value is written to `IArticle['sms_message']`
-                return 'sms_message';
-            default:
-                return fieldId;
-        }
+        // some profile field ids (e.g. "sms") store their value under a different article field
+        return FIELD_ID_TO_STORED_FIELD[fieldId] ?? fieldId;
     }
 
     return Promise.all([
@@ -97,20 +101,12 @@ export function getArticleContentProfile<T>(
             };
         }
 
-        const fieldsToOmit = [
-            /**
-             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
-             * authoring-react doesn't support companion fields like 'footer' that don't have data on
-             * their own but simply modify the data of other fields.
-             */
-            'footer',
-
-            /**
-             * `media_description` isn't used anywhere. It might still be present in content profiles, so
-             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
-             */
-            'media_description',
-        ];
+        /**
+         * Companion fields (e.g. 'footer', 'media_description') have no data of their own and would
+         * otherwise need unnecessary adapters / crash authoring-react while rendering. See
+         * COMPANION_FIELD_IDS for the shared list.
+         */
+        const fieldsToOmit = COMPANION_FIELD_IDS;
 
         const fieldsOrdered =
             Object.keys(editor)
