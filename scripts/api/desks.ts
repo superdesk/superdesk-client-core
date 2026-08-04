@@ -36,8 +36,14 @@ function getCurrentUserDesks(): Array<IDesk> {
     return ng.get('desks').userDesks;
 }
 
-function getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage> {
+function getDeskStages(deskId: IDesk['_id'] | null | undefined): OrderedMap<IStage['_id'], IStage> {
     let stagesMap: OrderedMap<IStage['_id'], IStage> = OrderedMap();
+
+    // callers reach this with no desk (a personal-space item has no `task.desk`); without the
+    // early return the lookup would be `deskStages['null']`
+    if (deskId == null) {
+        return stagesMap;
+    }
 
     // `deskStages` is empty until `desks.initialize()` resolves, and has no entry
     // for a desk the current user can not see
@@ -67,7 +73,7 @@ interface IDesksApi {
     waitTilReady(): Promise<void>;
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
     getDeskById(id: IDesk['_id']): IDesk ;
-    getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
+    getDeskStages(deskId: IDesk['_id'] | null | undefined): OrderedMap<IStage['_id'], IStage>;
     getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
     getDeskMembers(deskId: IDesk['_id']): Array<IUser>; // members of the desk
     getStageById(id: IStage['_id']): IStage;

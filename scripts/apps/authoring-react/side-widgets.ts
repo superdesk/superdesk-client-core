@@ -13,7 +13,10 @@ export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideW
  * widget that is not registered or not allowed for this article. Callers must handle `null`:
  * rendering an unresolved widget takes the whole authoring view down.
  */
-export function findWidgetById(article: IArticle, widgetId: string | null): IArticleSideWidget | null {
+export function findWidgetById(
+    article: IArticle,
+    widgetId: string | null | undefined,
+): IArticleSideWidget | null {
     if (widgetId == null) {
         return null;
     }
