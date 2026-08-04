@@ -59,7 +59,7 @@ import {
     ConfigureThemeButton,
     CreatedModifiedInfoWidget,
     ContentProfileDropdownWidget,
-    HeaderWordCountSourceWidget,
+    HeaderGeneralInfoWidget,
 } from './toolbar-components/integration-wrapper';
 
 const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
@@ -70,7 +70,7 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
         priority: 1,
     },
     {
-        component: HeaderWordCountSourceWidget,
+        component: HeaderGeneralInfoWidget,
         availableOffline: false,
         group: 'start',
         priority: 2,
