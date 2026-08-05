@@ -281,7 +281,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
-                $scope.template.data = $scope.origTemplate.data || defaultTemplate;
+                // `template.data` is edited in place, so a new template gets a copy of the
+                // defaults rather than the shared module level object.
+                $scope.template.data = $scope.origTemplate.data || {...defaultTemplate};
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
                     $scope.template.template_desks[0] : '';

@@ -29,7 +29,10 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
                     sidebarMode="hidden"
                     authoringStorage={getTemplateEditViewAuthoringStorage(this.props.template.data as IArticle)}
                     onFieldChange={(_fieldId, fieldsData, computeLatestEntity) => {
-                        this.props.template.data = computeLatestEntity();
+                        // Angular aliases this same object as `$scope.item` and edits it in place,
+                        // and authoring-react captured it once on mount. Reassigning would leave
+                        // both of them pointing at an object nothing writes to any more.
+                        Object.assign(this.props.template.data, computeLatestEntity());
                         this.props.scopeApply();
 
                         return fieldsData;

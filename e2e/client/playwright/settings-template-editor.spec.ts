@@ -2,10 +2,14 @@ import {test, expect, type Locator, type Page} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
 import {setEditor3FieldValue} from './utils/editor3';
 import {getStorageState} from './utils/storage-state';
+import {TreeSelectDriver} from './utils/tree-select-driver';
 
 test.use({
     storageState: getStorageState({}, {authoringReact: true}),
 });
+
+// A snapshot restore plus a save/reopen round trip does not fit in the default 30s budget.
+test.setTimeout(90000);
 
 /**
  * SDESK-7822. The Settings > Templates editor rendered an empty body under authoring-react for
@@ -22,13 +26,64 @@ test.describe('settings template editor (authoring-react)', () => {
     async function openTemplateEditor(page: Page, templateName: string): Promise<void> {
         await page.goto('/#/settings/templates');
 
-        await page.getByTestId('template-content')
-            .getByTestId('content-template')
-            .and(page.locator(`[data-test-value="${templateName}"]`))
-            .getByTestId('template-actions')
-            .click();
+        const editView = page.getByTestId('template-edit-view');
 
-        await page.getByTestId('template-actions--options').getByRole('button', {name: 'Edit'}).click();
+        // Saving refetches the template list, so the row and its actions popover can be swapped out
+        // from under the click. Retry the whole open until the modal is actually up.
+        await expect(async () => {
+            if (!await editView.isVisible()) {
+                await page.getByTestId('template-content')
+                    .getByTestId('content-template')
+                    .and(page.locator(`[data-test-value="${templateName}"]`))
+                    .getByTestId('template-actions')
+                    .click({timeout: 5000});
+
+                await page.getByTestId('template-actions--options')
+                    .getByRole('button', {name: 'Edit'})
+                    .click({timeout: 5000});
+            }
+
+            await expect(editView).toBeVisible({timeout: 5000});
+        }).toPass({timeout: 30000});
+    }
+
+    function saveButton(page: Page): Locator {
+        return page.getByTestId('template-edit-view').getByRole('button', {name: 'Save'});
+    }
+
+    /**
+     * The metadata box is a `sd-toggle-box`; its header comes from the ui framework and carries no
+     * test id, and its content is not in the DOM until it is expanded. Clicking the header toggles,
+     * so only click when it is still collapsed.
+     */
+    async function expandMetadataBox(page: Page): Promise<Locator> {
+        const metadata = page.getByTestId('template-metadata');
+        const usageTerms = metadata.getByTestId('usage-terms');
+
+        if (!await usageTerms.isVisible()) {
+            await metadata.getByText('Metadata').click();
+        }
+
+        await expect(usageTerms).toBeVisible();
+
+        return metadata;
+    }
+
+    /**
+     * Typing before authoring-react finishes initializing updates the DOM but not its state,
+     * leaving the modal clean and Save disabled. Retry the first edit of a freshly opened
+     * template until Save enables; that is the only signal that the editor is live. Later edits
+     * in the same modal can use `setBody`, since the form is dirty and the signal is gone.
+     */
+    async function setBodyOnceEditorIsLive(page: Page, value: string): Promise<void> {
+        await expect(async () => {
+            await setBody(page, value);
+            await expect(saveButton(page)).toBeEnabled({timeout: 1000});
+        }).toPass({timeout: 15000});
+    }
+
+    async function setBody(page: Page, value: string): Promise<void> {
+        await setEditor3FieldValue(templateField(page, 'body_html').getByRole('textbox'), value);
     }
 
     test('kill template editor renders its stored field values', async ({page}) => {
@@ -48,20 +103,11 @@ test.describe('settings template editor (authoring-react)', () => {
         await restoreDatabaseSnapshot();
         await openTemplateEditor(page, 'takedown');
 
-        const body = templateField(page, 'body_html');
+        await expect(templateField(page, 'body_html')).toContainText('FIXME');
 
-        await expect(body).toContainText('FIXME');
+        await setBodyOnceEditorIsLive(page, editedBody);
 
-        const saveButton = page.getByTestId('template-edit-view').getByRole('button', {name: 'Save'});
-
-        // Typing before authoring-react finishes initializing updates the DOM but not its
-        // state, leaving the modal clean and Save disabled. Retry the edit until it registers.
-        await expect(async () => {
-            await setEditor3FieldValue(body.getByRole('textbox'), editedBody);
-            await expect(saveButton).toBeEnabled({timeout: 1000});
-        }).toPass({timeout: 15000});
-
-        await saveButton.click();
+        await saveButton(page).click();
         await expect(page.getByTestId('template-edit-view')).toBeHidden();
 
         await openTemplateEditor(page, 'takedown');
@@ -82,5 +128,63 @@ test.describe('settings template editor (authoring-react)', () => {
 
         // Only profile-less templates fall back to the fixed kill-template field set.
         await expect(templateField(page, 'anpa_take_key')).toBeHidden();
+    });
+
+    /**
+     * The react editor and the angular metadata panel both write to `template.data`. Whichever of
+     * them replaced that object last used to win the save, silently discarding the other's edits.
+     */
+    test('metadata edited after a react field edit is saved', async ({page}) => {
+        const editedBody = 'Body edited in the react editor.';
+        const usageTerms = 'Editorial use only';
+
+        await restoreDatabaseSnapshot();
+        await openTemplateEditor(page, 'story 2');
+
+        await setBodyOnceEditorIsLive(page, editedBody);
+
+        await (await expandMetadataBox(page)).getByTestId('usage-terms').fill(usageTerms);
+
+        await saveButton(page).click();
+        await expect(page.getByTestId('template-edit-view')).toBeHidden();
+
+        await openTemplateEditor(page, 'story 2');
+
+        await expect(templateField(page, 'body_html')).toContainText(editedBody);
+        await expect((await expandMetadataBox(page)).getByTestId('usage-terms')).toHaveValue(usageTerms);
+    });
+
+    test('a react field edited after target subscribers were set is saved', async ({page}) => {
+        const editedBody = 'Body edited after targeting.';
+
+        await restoreDatabaseSnapshot();
+        await openTemplateEditor(page, 'story 2');
+
+        async function selectedSubscribers(): Promise<Locator> {
+            return (await expandMetadataBox(page)).getByTestId('target-subscribers').getByTestId('item');
+        }
+
+        // Establishes that the react editor is live before the angular write, so the edit that
+        // follows it is known to register.
+        await setBodyOnceEditorIsLive(page, 'Body edited before targeting.');
+
+        await new TreeSelectDriver(
+            page,
+            (await expandMetadataBox(page)).getByTestId('target-subscribers'),
+        ).addValues('Subscriber 1');
+
+        // Counting the selected chips rather than reading their labels: the server does not
+        // necessarily round-trip the subscriber name, only whether the targeting survived matters.
+        await expect(await selectedSubscribers()).toHaveCount(1);
+
+        await setBody(page, editedBody);
+
+        await saveButton(page).click();
+        await expect(page.getByTestId('template-edit-view')).toBeHidden();
+
+        await openTemplateEditor(page, 'story 2');
+
+        await expect(templateField(page, 'body_html')).toContainText(editedBody);
+        await expect(await selectedSubscribers()).toHaveCount(1);
     });
 });

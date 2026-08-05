@@ -99,7 +99,7 @@
                         </div>
                     </div>
 
-                    <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata" data-style="circle">
+                    <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata" data-style="circle" data-test-id="template-metadata">
                         <div class="form__row form__row--s-padding">
                             <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label translate>Not For Publication</label>
                         </div>
@@ -111,7 +111,7 @@
                         <div class="form__row form__row--s-padding">
                             <div class="sd-line-input">
                                 <label class="sd-line-input__label" translate>Usage terms</label>
-                                <input class="sd-line-input__input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
+                                <input class="sd-line-input__input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)" data-test-id="usage-terms">
                             </div>
                         </div>
                         <div class="form__row form__row--s-padding">
