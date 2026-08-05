@@ -136,9 +136,8 @@ module.exports = function(grunt) {
     // gettext
     grunt.registerTask('gettext:extract', ['nggettext_extract']);
 
-    // Escape hatch for a corrupted or stale persistent webpack cache.
-    // The cache lives under the consuming repo's node_modules, so run this
-    // from wherever the build runs (superdesk/client for the root repo).
+    // Escape hatch for a stale or corrupted webpack cache; run it from the repo
+    // the build runs in (superdesk/client for the root repo).
     grunt.registerTask('clear-cache', 'Delete the persistent webpack build cache', () => {
         var fs = require('fs');
         var cacheDir = path.join(process.cwd(), 'node_modules', '.cache', 'webpack');
@@ -147,16 +146,26 @@ module.exports = function(grunt) {
         grunt.log.writeln('Removed ' + cacheDir);
     });
 
-    // Production webpack build. Runs webpack directly instead of via grunt-webpack
-    // because grunt-webpack never calls compiler.close(), and webpack only persists
-    // its filesystem cache on close; without it every build would start cold.
+    // Runs webpack directly instead of via grunt-webpack: grunt-webpack never calls
+    // compiler.close(), and webpack only persists its filesystem cache on close.
     grunt.registerTask('webpack-build', 'Run the production webpack build', function() {
         var done = this.async();
-        // resolve webpack the same way webpack.config.js does (consumer first)
-        // so the compiler and the config's plugins share one webpack copy
+        // same consumer-first resolution as webpack.config.js, so the compiler
+        // and the config's plugins share one webpack copy
         var webpack = require(require.resolve('webpack', {paths: [process.cwd(), __dirname]}));
         var makeConfig = require(path.join(__dirname, 'webpack.config.js'));
         var webpackConfig = Object.assign({mode: 'production'}, makeConfig(grunt));
+
+        // Opt-in for release builds: hidden-source-map emits .map files the bundles
+        // don't reference; keep them out of what's deployed to browsers. The separate
+        // cache space matters: the cache doesn't track this runtime devtool change,
+        // and without it cached map-less modules are reused and no maps come out.
+        if (process.env.SUPERDESK_SOURCE_MAPS === 'true') {
+            webpackConfig.devtool = 'hidden-source-map';
+            webpackConfig.cache = Object.assign(
+                {}, webpackConfig.cache, {version: 'with-source-maps'}
+            );
+        }
 
         var compiler = webpack(webpackConfig);
 
