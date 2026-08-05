@@ -143,7 +143,85 @@ module.exports = function makeConfig(grunt) {
             ? uiFrameworkInsideClientCore
             : getModuleDir('superdesk-ui-framework');
 
+    const sassLoadPaths = [
+        path.join(__dirname, 'styles', 'sass'),
+        path.join(__dirname, 'node_modules'),
+        path.join(process.cwd(), 'node_modules'),
+    ];
+
+    const transpilationExcludes = function(absolutePath) {
+        // don't exclude anything outside node_modules
+        if (absolutePath.indexOf('node_modules') === -1) {
+            return false;
+        }
+
+        // Exclude these packages - they are pre-built ESM modules
+        if (
+            absolutePath.includes('/@babel/runtime/')
+            || absolutePath.includes('/react-resizable-panels/')
+        ) {
+            return true;
+        }
+
+        if (
+            // date-fns uses optional chaining and nullish coalescing
+            absolutePath.includes('/node_modules/date-fns/')
+
+            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
+            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+
+            || absolutePath.includes('/@sourcefabric/common/')
+        ) {
+            return false;
+        }
+
+        // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
+        // but is not its dependency.
+        // For example, `superdesk-planning/node_modules/**/*` will be excluded.
+        const exclude = !validModules.some(
+            (app) =>
+                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
+        );
+
+        return exclude;
+    };
+
+    // Mirrors what ts-loader produced via scripts/tsconfig.json:
+    // ES5 output, classic JSX, CommonJS modules, babel-style interop.
+    // isModule "unknown" matches tsc: files without import/export are left
+    // as scripts, so legacy sloppy-mode code doesn't get "use strict" forced on it.
+    const swcOptions = (parser) => ({
+        isModule: 'unknown',
+        module: {type: 'commonjs'},
+        jsc: {
+            target: 'es5',
+            parser: parser,
+            transform: {react: {runtime: 'classic'}},
+        },
+    });
+
+    // node_modules content is normally assumed immutable per package version, but:
+    // - superdesk app packages are installed from git branches (or symlinked)
+    //   and change without a version bump
+    // - immutable is patched in place by patch-package (currently type-declaration
+    //   changes only, but a future runtime patch must not be served stale from cache)
+    // Exclude them (negative lookahead) so content edits invalidate the cache.
+    const managedPathsPattern =
+        /^(.+?[\\/]node_modules[\\/](?!superdesk|planning[\\/]|immutable[\\/])(@[^\\/]+[\\/])?(?!@)[^\\/]+)[\\/]/;
+
     return {
+        // Persistent cache: cold data is written on first run, warm starts
+        // then skip transform/resolution work for unchanged modules.
+        cache: {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename, appConfigPath],
+            },
+        },
+
+        snapshot: {
+            managedPaths: [managedPathsPattern],
+        },
         entry: {
             init: path.join(__dirname, 'scripts', 'init'),
             app: path.join(__dirname, 'scripts', 'index'),
@@ -153,6 +231,7 @@ module.exports = function makeConfig(grunt) {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
             chunkFilename: '[id].bundle.js',
+            pathinfo: false,
         },
 
         plugins: [
@@ -233,47 +312,16 @@ module.exports = function makeConfig(grunt) {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx)$/,
-                    exclude: function(absolutePath) {
-                        // don't exclude anything outside node_modules
-                        if (absolutePath.indexOf('node_modules') === -1) {
-                            return false;
-                        }
-
-                        // Exclude these packages from ts-loader - they are pre-built ESM modules
-                        if (
-                            absolutePath.includes('/@babel/runtime/')
-                            || absolutePath.includes('/react-resizable-panels/')
-                        ) {
-                            return true;
-                        }
-
-                        if (
-                            // date-fns uses optional chaining and nullish coalescing
-                            absolutePath.includes('/node_modules/date-fns/')
-
-                            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
-                            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
-
-                            || absolutePath.includes('/@sourcefabric/common/')
-                        ) {
-                            return false;
-                        }
-
-                        // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
-                        // but is not its dependency.
-                        // For example, `superdesk-planning/node_modules/**/*` will be excluded.
-                        const exclude = !validModules.some(
-                            (app) =>
-                                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
-                        );
-
-                        return exclude;
-                    },
-                    loader: 'ts-loader',
-                    options: {
-                        transpileOnly: true,
-                    },
+                    test: /\.tsx?$/,
+                    exclude: transpilationExcludes,
+                    loader: require.resolve('swc-loader'),
+                    options: swcOptions({syntax: 'typescript', tsx: true}),
+                },
+                {
+                    test: /\.jsx?$/,
+                    exclude: transpilationExcludes,
+                    loader: require.resolve('swc-loader'),
+                    options: swcOptions({syntax: 'ecmascript', jsx: true}),
                 },
                 {
                     test: /\.html$/,
@@ -304,12 +352,13 @@ module.exports = function makeConfig(grunt) {
                         {
                             loader: require.resolve('sass-loader'),
                             options: {
+                                // sass-embedded with a shared compiler process
+                                // is several times faster than the pure-js sass package
+                                implementation: require.resolve('sass-embedded'),
+                                api: 'modern-compiler',
                                 sassOptions: {
-                                    loadPaths: [
-                                        path.join(__dirname, 'styles', 'sass'),
-                                        path.join(__dirname, 'node_modules'),
-                                        path.join(process.cwd(), 'node_modules'),
-                                    ],
+                                    loadPaths: sassLoadPaths,
+                                    quietDeps: true,
                                 },
                             },
                         },
@@ -327,7 +376,7 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.wasm$/,
-                    type: 'asset/resource'
+                    type: 'asset/resource',
                 },
             ],
         },

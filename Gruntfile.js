@@ -123,6 +123,46 @@ module.exports = function(grunt) {
     // gettext
     grunt.registerTask('gettext:extract', ['nggettext_extract']);
 
+    // Escape hatch for a corrupted or stale persistent webpack cache.
+    // The cache lives under the consuming repo's node_modules, so run this
+    // from wherever the build runs (superdesk/client for the root repo).
+    grunt.registerTask('clear-cache', 'Delete the persistent webpack build cache', () => {
+        var fs = require('fs');
+        var cacheDir = path.join(process.cwd(), 'node_modules', '.cache', 'webpack');
+
+        fs.rmSync(cacheDir, {recursive: true, force: true});
+        grunt.log.writeln('Removed ' + cacheDir);
+    });
+
+    // Production webpack build. Runs webpack directly instead of via grunt-webpack
+    // because grunt-webpack never calls compiler.close(), and webpack only persists
+    // its filesystem cache on close; without it every build would start cold.
+    grunt.registerTask('webpack-build', 'Run the production webpack build', function() {
+        var done = this.async();
+        // resolve webpack the same way webpack.config.js does (consumer first)
+        // so the compiler and the config's plugins share one webpack copy
+        var webpack = require(require.resolve('webpack', {paths: [process.cwd(), __dirname]}));
+        var makeConfig = require(path.join(__dirname, 'webpack.config.js'));
+        var webpackConfig = Object.assign({mode: 'production'}, makeConfig(grunt));
+
+        var compiler = webpack(webpackConfig);
+
+        compiler.run((err, stats) => {
+            if (err) {
+                done(err);
+                return;
+            }
+
+            grunt.log.writeln(stats.toString({preset: 'errors-warnings', colors: true}));
+
+            var hasErrors = stats.hasErrors();
+
+            compiler.close((closeErr) => {
+                done(closeErr || !hasErrors);
+            });
+        });
+    });
+
     // Production build
     grunt.registerTask('build', '', () => {
         grunt.task.run([
@@ -149,7 +189,7 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'nggettext_compile',
-            'webpack:build',
+            'webpack-build',
             'filerev',
             'usemin',
         ]);

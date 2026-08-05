@@ -95,6 +95,15 @@ class FullPreviewMultiple extends React.PureComponent<IProps, IState> {
  * TAG: AUTHORING-ANGULAR This is used from angular based authoring - leave it as it is for compatibility
  * and build a new one for authoring-react
  */
+/**
+ * Compiled module exports are non-configurable getters that jasmine's spyOn
+ * can't replace; unit-tested consumers call previewItems through this object
+ * so specs can spy on it.
+ */
+export const fullPreview = {
+    previewItems: (articles: Array<IArticle>) => previewItems(articles),
+};
+
 export function previewItems(articles: Array<IArticle>) {
     Promise.all(
         articles.map((article) => getProfile(article).then(({editor, fields}) => ({article, editor, fields}))),
