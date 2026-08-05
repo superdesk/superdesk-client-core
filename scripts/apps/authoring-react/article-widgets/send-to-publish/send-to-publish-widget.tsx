@@ -90,6 +90,8 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
     ) {
         return (
             <AuthoringWidgetLayout
+                theme="dark"
+                data-test-id="interactive-actions-widget"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID}
@@ -111,44 +113,6 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                 bodyPadding="small"
             />
         );
-    }
-
-    renderActiveTabContent(): {body: JSX.Element; footer: JSX.Element} {
-        const {activeTab} = this.state;
-
-        if (activeTab === 'send_to') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else if (activeTab === 'publish') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else if (activeTab === 'correct') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else if (activeTab === 'duplicate_to') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else if (activeTab === 'unspike') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else if (activeTab === 'fetch_to') {
-            return {
-                body: null,
-                footer: null,
-            };
-        } else {
-            assertNever(activeTab);
-        }
     }
 
     render() {

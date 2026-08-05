@@ -735,6 +735,13 @@ declare module 'superdesk-api' {
         // only works react based authoring
         background?: 'light' | 'grey';
         bodyPadding?: 'none' | 'small' | 'medium'; // default is 'medium'
+
+        /**
+         * Sets `data-theme` on the panel container so the design tokens
+         * of that theme inherit to the entire widget subtree. Defaults to 'light'.
+         */
+        theme?: 'light' | 'dark';
+        'data-test-id'?: string;
     }
 
     export interface IGenericSidebarComponentProps<T> {
