@@ -7,6 +7,8 @@ var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const fs = require('fs');
 
 function getModuleDir(moduleName) {
@@ -186,10 +188,9 @@ module.exports = function makeConfig(grunt) {
         return exclude;
     };
 
-    // Mirrors what ts-loader produced via scripts/tsconfig.json:
-    // ES5 output, classic JSX, CommonJS modules, babel-style interop.
-    // isModule "unknown" matches tsc: files without import/export are left
-    // as scripts, so legacy sloppy-mode code doesn't get "use strict" forced on it.
+    // Mirrors scripts/tsconfig.json: ES5, classic JSX, CommonJS. isModule "unknown"
+    // leaves files without import/export as scripts, like tsc, so legacy sloppy-mode
+    // code doesn't get "use strict" forced on it.
     const swcOptions = (parser) => ({
         isModule: 'unknown',
         module: {type: 'commonjs'},
@@ -200,18 +201,14 @@ module.exports = function makeConfig(grunt) {
         },
     });
 
-    // node_modules content is normally assumed immutable per package version, but:
-    // - superdesk app packages are installed from git branches (or symlinked)
-    //   and change without a version bump
-    // - immutable is patched in place by patch-package (currently type-declaration
-    //   changes only, but a future runtime patch must not be served stale from cache)
-    // Exclude them (negative lookahead) so content edits invalidate the cache.
+    // node_modules is normally trusted by package version, but superdesk app packages
+    // come from git branches (or symlinks) and change without a version bump, and
+    // patch-package edits immutable in place. Exclude them so content changes
+    // invalidate the cache.
     const managedPathsPattern =
         /^(.+?[\\/]node_modules[\\/](?!superdesk|planning[\\/]|immutable[\\/])(@[^\\/]+[\\/])?(?!@)[^\\/]+)[\\/]/;
 
     return {
-        // Persistent cache: cold data is written on first run, warm starts
-        // then skip transform/resolution work for unchanged modules.
         cache: {
             type: 'filesystem',
             buildDependencies: {
@@ -221,6 +218,29 @@ module.exports = function makeConfig(grunt) {
 
         snapshot: {
             managedPaths: [managedPathsPattern],
+        },
+
+        // Production only (minimize is off in development). swc minifies several times
+        // faster than Terser with equivalent output. esbuild would be faster still, but
+        // at target es5 it errors on the ES2015+ syntax that prebuilt packages like
+        // @hello-pangea/dnd ship, and higher targets would widen the browser floor.
+        optimization: {
+            minimizer: [
+                new TerserPlugin({
+                    minify: TerserPlugin.swcMinify,
+                    // terser-only feature; license comments stay in the bundle instead
+                    extractComments: false,
+                    terserOptions: {
+                        compress: true,
+                        mangle: true,
+                        format: {comments: 'some'},
+                        ecma: 5,
+                    },
+                }),
+                new CssMinimizerPlugin({
+                    minify: CssMinimizerPlugin.esbuildMinify,
+                }),
+            ],
         },
         entry: {
             init: path.join(__dirname, 'scripts', 'init'),
@@ -232,6 +252,20 @@ module.exports = function makeConfig(grunt) {
             filename: '[name].bundle.js',
             chunkFilename: '[id].bundle.js',
             pathinfo: false,
+
+            // Without this webpack's own runtime helpers use const/arrow functions,
+            // undermining the ES5 output the application code is compiled to.
+            environment: {
+                arrowFunction: false,
+                bigIntLiteral: false,
+                const: false,
+                destructuring: false,
+                dynamicImport: false,
+                forOf: false,
+                module: false,
+                optionalChaining: false,
+                templateLiteral: false,
+            },
         },
 
         plugins: [
@@ -352,8 +386,7 @@ module.exports = function makeConfig(grunt) {
                         {
                             loader: require.resolve('sass-loader'),
                             options: {
-                                // sass-embedded with a shared compiler process
-                                // is several times faster than the pure-js sass package
+                                // several times faster than the pure-js sass package
                                 implementation: require.resolve('sass-embedded'),
                                 api: 'modern-compiler',
                                 sassOptions: {

@@ -97,8 +97,7 @@ class FullPreviewMultiple extends React.PureComponent<IProps, IState> {
  */
 /**
  * Compiled module exports are non-configurable getters that jasmine's spyOn
- * can't replace; unit-tested consumers call previewItems through this object
- * so specs can spy on it.
+ * can't replace; specs spy on previewItems through this object instead.
  */
 export const fullPreview = {
     previewItems: (articles: Array<IArticle>) => previewItems(articles),
