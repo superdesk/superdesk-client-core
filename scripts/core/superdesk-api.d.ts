@@ -793,6 +793,13 @@ declare module 'superdesk-api' {
          * Will prompt user to save changes. The promise will get rejected if user cancels saving.
          */
         handleUnsavedChanges(): Promise<IArticle>;
+
+        /**
+         * Lets a widget mark authoring fields as invalid, for example when the server
+         * rejects publishing because of a field that is not filled in.
+         */
+        getValidationErrors?(): IAuthoringValidationErrors;
+        setValidationErrors?(validationErrors: IAuthoringValidationErrors): void;
     }
 
     export interface IArticleSideWidget {

@@ -7,7 +7,6 @@ import {UnspikeAction} from './unspike-action';
 interface IProps {
     items: Array<IArticle>;
     closeUnspikeView(): void;
-    markupV2: boolean;
 }
 
 /**
@@ -15,7 +14,7 @@ interface IProps {
  */
 export class UnspikeTab extends React.PureComponent<IProps> {
     render() {
-        const {items, markupV2, closeUnspikeView} = this.props;
+        const {items, closeUnspikeView} = this.props;
 
         return (
             <UnspikeAction
@@ -24,10 +23,10 @@ export class UnspikeTab extends React.PureComponent<IProps> {
             >
                 {({body, footer}) => (
                     <>
-                        <PanelContent markupV2={markupV2}>
+                        <PanelContent>
                             {body}
                         </PanelContent>
-                        <PanelFooter markupV2={markupV2}>
+                        <PanelFooter>
                             {footer}
                         </PanelFooter>
                     </>

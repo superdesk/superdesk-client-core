@@ -11,7 +11,6 @@ interface IProps {
      */
     location: 'authoring' | 'list-view';
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
-    markupV2?: boolean;
     onError: (error: IPanelError) => void;
     onDataChange: (item: IArticle) => void;
 }
@@ -33,7 +32,6 @@ export class InteractiveArticleActionsPanelCombined extends React.PureComponent<
                             tabs={state.tabs}
                             activeTab={state.activeTab}
                             handleUnsavedChanges={this.props.handleUnsavedChanges}
-                            markupV2={this.props.markupV2}
                             onClose={actions.closePanel}
                         />
                     );

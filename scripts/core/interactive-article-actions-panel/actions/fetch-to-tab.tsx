@@ -7,7 +7,6 @@ import {FetchToAction} from './fetch-to-action';
 interface IProps {
     items: Array<IArticle>;
     closeFetchToView(): void;
-    markupV2: boolean;
     handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
 }
 
@@ -16,7 +15,7 @@ interface IProps {
  */
 export class FetchToTab extends React.PureComponent<IProps> {
     render() {
-        const {items, markupV2, closeFetchToView, handleUnsavedChanges} = this.props;
+        const {items, closeFetchToView, handleUnsavedChanges} = this.props;
 
         return (
             <FetchToAction
@@ -26,10 +25,10 @@ export class FetchToTab extends React.PureComponent<IProps> {
             >
                 {({body, footer}) => (
                     <>
-                        <PanelContent markupV2={markupV2}>
+                        <PanelContent>
                             {body}
                         </PanelContent>
-                        <PanelFooter markupV2={markupV2}>
+                        <PanelFooter>
                             {footer}
                         </PanelFooter>
                     </>

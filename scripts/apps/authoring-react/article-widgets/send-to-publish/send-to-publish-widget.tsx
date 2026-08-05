@@ -72,7 +72,10 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
 
     handleError(error: IPanelError) {
         if (error.kind === 'publishing-error') {
-            // The parent handles validation errors through the widget props if needed
+            this.props.setValidationErrors?.({
+                ...(this.props.getValidationErrors?.() ?? {}),
+                ...error.fields,
+            });
         } else {
             assertNever(error.kind);
         }

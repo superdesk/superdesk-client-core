@@ -8,7 +8,6 @@ interface IProps {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
-    markupV2: boolean;
     onDataChange(changes: IArticle): void;
 }
 
@@ -17,7 +16,7 @@ interface IProps {
  */
 export class SendCorrectionTab extends React.Component<IProps> {
     render() {
-        const {item, markupV2, closePublishView, handleUnsavedChanges, onDataChange} = this.props;
+        const {item, closePublishView, handleUnsavedChanges, onDataChange} = this.props;
 
         return (
             <SendCorrectionAction
@@ -28,10 +27,10 @@ export class SendCorrectionTab extends React.Component<IProps> {
             >
                 {({body, footer}) => (
                     <>
-                        <PanelContent markupV2={markupV2}>
+                        <PanelContent>
                             {body}
                         </PanelContent>
-                        <PanelFooter markupV2={markupV2}>
+                        <PanelFooter>
                             {footer}
                         </PanelFooter>
                     </>

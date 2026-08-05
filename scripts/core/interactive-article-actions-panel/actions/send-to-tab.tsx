@@ -9,7 +9,6 @@ import {SendToAction} from './send-to-action';
 interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
-    markupV2: boolean;
     handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
 }
 
@@ -18,7 +17,7 @@ interface IProps {
  */
 export class SendToTab extends React.PureComponent<IProps> {
     render() {
-        const {items, markupV2, closeSendToView, handleUnsavedChanges} = this.props;
+        const {items, closeSendToView, handleUnsavedChanges} = this.props;
 
         return (
             <SendToAction
@@ -45,10 +44,10 @@ export class SendToTab extends React.PureComponent<IProps> {
 
                     return (
                         <>
-                            <PanelContent markupV2={markupV2}>
+                            <PanelContent>
                                 {body}
                             </PanelContent>
-                            <PanelFooter markupV2={markupV2}>
+                            <PanelFooter>
                                 {footer}
                             </PanelFooter>
                         </>

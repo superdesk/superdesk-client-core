@@ -9,7 +9,6 @@ interface IProps extends IPropsHocInteractivePanelTab {
     item: IArticle;
     closePublishView(): void;
     handleUnsavedChanges(): Promise<IArticle>;
-    markupV2: boolean;
     onError: (error: IPanelError) => void;
     onDataChange: (item: IArticle) => void;
     action?: 'publish' | 'correct';
@@ -22,7 +21,7 @@ interface IProps extends IPropsHocInteractivePanelTab {
  */
 export class WithPublishTab extends React.PureComponent<IProps> {
     render() {
-        const {item, markupV2, closePublishView, handleUnsavedChanges, onError, onDataChange, action} = this.props;
+        const {item, closePublishView, handleUnsavedChanges, onError, onDataChange, action} = this.props;
 
         return (
             <PublishAction
@@ -42,10 +41,10 @@ export class WithPublishTab extends React.PureComponent<IProps> {
                         columnCount,
                         content: (
                             <>
-                                <PanelContent markupV2={markupV2}>
+                                <PanelContent>
                                     {body}
                                 </PanelContent>
-                                <PanelFooter markupV2={markupV2}>
+                                <PanelFooter>
                                     {footer}
                                 </PanelFooter>
                             </>

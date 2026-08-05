@@ -6,7 +6,7 @@ import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
-import {authoringReactViewEnabled, appConfig} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {DuplicateToTab} from './actions/duplicate-to-tab';
 import {WithPublishTab} from './actions/publish-tab';
 import {logger} from 'core/services/logger';
@@ -25,7 +25,6 @@ export interface IPropsInteractiveArticleActionsPanelStateless extends IPanelAct
      * `location` is added in order to be able to determine which one should be activated.
      */
     handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
-    markupV2?: boolean;
     onClose(): void;
     onDataChange?(item: IArticle): void;
 }
@@ -53,11 +52,10 @@ export class InteractiveArticleActionsPanel
     render() {
         const {items, tabs, onClose, onError, onDataChange} = this.props;
         const {activeTab} = this.state;
-        const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
         const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
 
         const panelHeader = (
-            <PanelHeader markupV2={markupV2}>
+            <PanelHeader>
                 <div className="space-between" style={{width: '100%', paddingInlineEnd: 10}}>
                     <ActionTabs
                         tabs={tabs}
@@ -87,7 +85,6 @@ export class InteractiveArticleActionsPanel
             return (
                 <Panel
                     width={`${singleColumnWidthRem * columnCount}rem`}
-                    markupV2={markupV2}
                     data-test-id="interactive-actions-panel"
                 >
                     {panelHeader}
@@ -117,7 +114,6 @@ export class InteractiveArticleActionsPanel
                     onError={onError}
                     item={item}
                     closePublishView={onClose}
-                    markupV2={markupV2}
                     handleUnsavedChanges={
                         () => handleUnsavedChanges([item]).then((res) => res[0])
                     }
@@ -150,7 +146,6 @@ export class InteractiveArticleActionsPanel
                     onError={onError}
                     item={item}
                     closePublishView={onClose}
-                    markupV2={markupV2}
                     handleUnsavedChanges={
                         () => handleUnsavedChanges([item]).then((res) => res[0])
                     }
@@ -170,7 +165,6 @@ export class InteractiveArticleActionsPanel
                         items={items}
                         closeSendToView={onClose}
                         handleUnsavedChanges={handleUnsavedChanges}
-                        markupV2={markupV2}
                     />
                 </PanelWithHeader>
             );
@@ -181,7 +175,6 @@ export class InteractiveArticleActionsPanel
                         items={items}
                         closeFetchToView={onClose}
                         handleUnsavedChanges={handleUnsavedChanges}
-                        markupV2={markupV2}
                     />
                 </PanelWithHeader>
             );
@@ -191,7 +184,6 @@ export class InteractiveArticleActionsPanel
                     <DuplicateToTab
                         items={items}
                         closeDuplicateToView={onClose}
-                        markupV2={markupV2}
                     />
                 </PanelWithHeader>
             );
@@ -201,7 +193,6 @@ export class InteractiveArticleActionsPanel
                     <UnspikeTab
                         items={items}
                         closeUnspikeView={onClose}
-                        markupV2={markupV2}
                     />
                 </PanelWithHeader>
             );

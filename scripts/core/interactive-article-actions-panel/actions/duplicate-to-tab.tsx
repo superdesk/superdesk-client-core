@@ -7,7 +7,6 @@ import {DuplicateToAction} from './duplicate-to-action';
 interface IProps {
     items: Array<IArticle>;
     closeDuplicateToView(): void;
-    markupV2: boolean;
 }
 
 /**
@@ -15,7 +14,7 @@ interface IProps {
  */
 export class DuplicateToTab extends React.PureComponent<IProps> {
     render() {
-        const {items, markupV2, closeDuplicateToView} = this.props;
+        const {items, closeDuplicateToView} = this.props;
 
         return (
             <DuplicateToAction
@@ -24,10 +23,10 @@ export class DuplicateToTab extends React.PureComponent<IProps> {
             >
                 {({body, footer}) => (
                     <>
-                        <PanelContent markupV2={markupV2}>
+                        <PanelContent>
                             {body}
                         </PanelContent>
-                        <PanelFooter markupV2={markupV2}>
+                        <PanelFooter>
                             {footer}
                         </PanelFooter>
                     </>

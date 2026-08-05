@@ -24,10 +24,6 @@ import {
     authoringStorageIArticleCorrect,
     getAuthoringStorageIArticleKillOrTakedown,
 } from './data-layer';
-import {
-    IStateInteractiveActionsPanelHOC,
-    IActionsInteractiveActionsPanelHOC,
-} from 'core/interactive-article-actions-panel/index-hoc';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {getSendAndDuplicateTarget} from 'apps/authoring/authoring/get-send-and-duplicate-target';
