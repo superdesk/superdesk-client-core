@@ -131,6 +131,45 @@ test.describe('settings template editor (authoring-react)', () => {
     });
 
     /**
+     * A template is embedded JSON, not a stored article. Authoring chrome that addresses the entity
+     * by `_id`, or writes back through a path the template editor does not read, has no business
+     * rendering here: it either does nothing or discards what the user did.
+     */
+    test('article chrome that cannot apply to a template is not rendered', async ({page}) => {
+        const requestsForUndefinedIds: Array<string> = [];
+
+        page.on('request', (request) => {
+            const url = request.url();
+
+            if (url.includes('/api/') && url.includes('undefined')) {
+                requestsForUndefinedIds.push(url);
+            }
+        });
+
+        await restoreDatabaseSnapshot();
+        await openTemplateEditor(page, 'story 2');
+
+        const editView = page.getByTestId('template-edit-view');
+
+        // Hard gates: these widgets sit in the same two react toolbars as the chrome asserted
+        // absent below, so they make those assertions about what was left out rather than about
+        // what had not rendered yet.
+        await expect(editView.getByTestId('authoring-header-word-count')).toBeVisible();
+        await expect(editView.getByRole('button', {name: 'Print preview'})).toBeVisible();
+
+        // Soft, so that one piece of chrome coming back does not hide the state of the others.
+        await expect.soft(editView.getByLabel('Content Profile')).toBeVisible();
+
+        // The angular header keeps the working control; the react one wrote the switch through
+        // `reinitialize`, which never reaches `template.data`.
+        await expect.soft(editView.getByTestId('content-profile-select')).toHaveCount(0);
+
+        await expect.soft(editView.getByRole('button', {name: 'Actions menu'})).toHaveCount(0);
+
+        expect.soft(requestsForUndefinedIds).toEqual([]);
+    });
+
+    /**
      * The react editor and the angular metadata panel both write to `template.data`. Whichever of
      * them replaced that object last used to win the save, silently discarding the other's edits.
      */

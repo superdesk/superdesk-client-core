@@ -71,6 +71,13 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     },
 ];
 
+/**
+ * Word count still applies to embedded JSON; switching the content profile does not, because
+ * the switch goes through `reinitialize` and is never written back to the payload.
+ */
+const headerToolbarWidgetsEmbedded: Array<ITopBarWidget<IArticle>> = headerToolbarWidgetsStable
+    .filter(({component}) => component !== ContentProfileDropdownWidget);
+
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
         .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
@@ -314,6 +321,13 @@ interface IPropsWrapper extends IProps {
     ): IFieldsData;
 
     autoFocus?: boolean; // defaults to true
+
+    /**
+     * Set when authoring renders over embedded JSON (the settings template editor) instead of a
+     * stored article. Item level chrome is suppressed: those controls address the entity by `_id`,
+     * which embedded JSON does not have, or write through paths that never reach the payload.
+     */
+    embeddedEntity?: boolean;
 }
 
 /**
@@ -462,7 +476,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         }}
                         headerToolbar={() => {
                             // Context is provided by AuthoringReact, so no need to update refs here
-                            return headerToolbarWidgetsStable;
+                            return this.props.embeddedEntity === true
+                                ? headerToolbarWidgetsEmbedded
+                                : headerToolbarWidgetsStable;
                         }}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
@@ -483,6 +499,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             storageAdapter,
                             spellchecker,
                         }) => {
+                            if (this.props.embeddedEntity === true) {
+                                // Every action below addresses a stored article: comparing versions,
+                                // exporting, translating, marking for desks. Embedded JSON has no
+                                // `_id`, so they request `undefined` and quietly do nothing.
+                                return [];
+                            }
+
                             const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
                                 contentProfile,
@@ -705,7 +728,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         getSecondaryToolbarWidgets={(exposed) => {
                             // Context is provided by AuthoringReact, so no need to update refs here
                             return [
-                                ...secondaryToolbarWidgetsStable,
+                                // Created/modified info looks the author up by `original_creator`,
+                                // which embedded JSON does not carry, so it requests `undefined` on
+                                // every open and then renders nothing. The theme and preview
+                                // controls below apply either way.
+                                ...(this.props.embeddedEntity === true ? [] : secondaryToolbarWidgetsStable),
                                 ...secondaryToolbarWidgetsFromExtensions,
                                 ...getAuthoringCosmeticActions(exposed),
                             ];
