@@ -25,6 +25,73 @@ function countOccurrences(_string, substring) {
     return _string.split(substring).length - 1;
 }
 
+/**
+ * Replacements for TerserPlugin.swcMinify and CssMinimizerPlugin.esbuildMinify.
+ * The built-in ones require('@swc/core') / require('esbuild') from wherever npm
+ * hoisted the plugin, which fails when the package is nested under
+ * superdesk-core in a consuming repo. These are self-contained (the plugins
+ * stringify them for worker threads, so no closures) and receive the resolved
+ * module path through the minimizer options instead.
+ */
+function swcMinify(input, sourceMap, minimizerOptions) {
+    const {swcCorePath, ...swcOptions} = minimizerOptions;
+    const swc = require(swcCorePath);
+    const [[filename, code]] = Object.entries(input);
+
+    if (swcOptions.compress === true) {
+        swcOptions.compress = {};
+    }
+
+    // swc can otherwise emit arrow functions while compressing an ecma 5
+    // bundle (https://github.com/webpack/webpack/issues/16135)
+    if (swcOptions.compress && swcOptions.ecma === 5 && swcOptions.compress.arrows === undefined) {
+        swcOptions.compress.arrows = false;
+    }
+
+    if (sourceMap) {
+        swcOptions.sourceMap = true;
+    }
+
+    return swc.minify(code, swcOptions).then((result) => {
+        let map;
+
+        if (result.map) {
+            map = JSON.parse(result.map);
+            map.sources = [filename];
+            delete map.sourcesContent;
+        }
+
+        return {code: result.code, map: map};
+    });
+}
+
+function esbuildCssMinify(input, sourceMap, minimizerOptions) {
+    const esbuild = require(minimizerOptions.esbuildPath);
+    const [[filename, code]] = Object.entries(input);
+    const options = {
+        loader: 'css',
+        minify: true,
+        legalComments: 'inline',
+        sourcefile: filename,
+        sourcemap: false,
+    };
+
+    if (sourceMap) {
+        options.sourcemap = true;
+        options.sourcesContent = false;
+    }
+
+    return esbuild.transform(code, options).then((result) => ({
+        code: result.code,
+        map: result.map ? JSON.parse(result.map) : undefined,
+        warnings: result.warnings.map((item) => ({message: item.text})),
+    }));
+}
+
+// esbuild runs its own service process; spawning it once per worker thread
+// would only add overhead, so keep this minifier on the main thread
+esbuildCssMinify.supportsWorkerThreads = () => false;
+
 function applyDefaults(appConfig) {
     if (appConfig.startingDay == null) {
         appConfig.startingDay = '0'; // sunday
@@ -236,7 +303,7 @@ module.exports = function makeConfig(grunt) {
         optimization: {
             minimizer: [
                 new TerserPlugin({
-                    minify: TerserPlugin.swcMinify,
+                    minify: swcMinify,
                     // terser-only feature; license comments stay in the bundle instead
                     extractComments: false,
                     terserOptions: {
@@ -244,10 +311,14 @@ module.exports = function makeConfig(grunt) {
                         mangle: true,
                         format: {comments: 'some'},
                         ecma: 5,
+                        swcCorePath: require.resolve('@swc/core'),
                     },
                 }),
                 new CssMinimizerPlugin({
-                    minify: CssMinimizerPlugin.esbuildMinify,
+                    minify: esbuildCssMinify,
+                    minimizerOptions: {
+                        esbuildPath: require.resolve('esbuild'),
+                    },
                 }),
             ],
         },
