@@ -1,5 +1,8 @@
 var path = require('path');
-var webpack = require('webpack');
+// Resolve webpack from the consumer so this config builds plugins with the same copy the
+// compiler uses. In a linked dev setup the consumer and this repo have separate installs,
+// and webpack >= 5.107 rejects a compilation created by a different copy.
+var webpack = require(require.resolve('webpack', {paths: [process.cwd(), __dirname]}));
 var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
