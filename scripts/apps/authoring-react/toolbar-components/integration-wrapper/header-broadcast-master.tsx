@@ -57,13 +57,19 @@ export class HeaderBroadcastMaster extends React.PureComponent<IProps> {
                     )}
                 </span>
                 {' '}
+                {/* no `href`: an empty one resolves to the base URL and drops the hash route */}
                 <a
                     className="open-item"
-                    href=""
-                    onClick={(event) => {
-                        event.preventDefault();
-                        this.previewMasterStory();
+                    role="button"
+                    tabIndex={0}
+                    onClick={this.previewMasterStory}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            this.previewMasterStory();
+                        }
                     }}
+                    style={{cursor: 'pointer'}}
                     title={gettext('Preview master story')}
                     aria-label={gettext('Preview master story')}
                     data-test-id="authoring-header-preview-master"

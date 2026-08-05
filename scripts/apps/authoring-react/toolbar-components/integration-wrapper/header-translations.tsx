@@ -129,12 +129,18 @@ export class HeaderTranslations extends React.PureComponent<IProps, IState> {
                         )
                 }
                 {' '}
+                {/* no `href`: an empty one resolves to the base URL and drops the hash route */}
                 <a
-                    href=""
-                    onClick={(event) => {
-                        event.preventDefault();
-                        onOpenTranslationsWidget();
+                    role="button"
+                    tabIndex={0}
+                    onClick={onOpenTranslationsWidget}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            onOpenTranslationsWidget();
+                        }
                     }}
+                    style={{cursor: 'pointer'}}
                     aria-label={gettext('Open translations')}
                     data-test-id="authoring-header-translations-count"
                     data-test-value={translationsInfo.count.toString()}
