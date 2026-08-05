@@ -50,16 +50,29 @@ module.exports = function(grunt) {
     ]);
 
     // Compile PO files to runtime JSON catalogs (gettext.js flat format with metadata under "" key).
-    // Used by scripts/init.ts and scripts/reload-language.ts. Production build runs the equivalent
-    // step via build-tools' build-root-repo command; this grunt task lets `grunt server` produce
-    // them too. Invokes gettext.js's shipped po2json CLI directly so we don't have to depend on
-    // @superdesk/build-tools at runtime (it's a devDependency and may not be installed when this
-    // Gruntfile is consumed from another project).
+    // Used by scripts/init.ts and scripts/reload-language.ts. Prefers build-tools' in-process
+    // converter, which also validates translation placeholders; falls back to spawning
+    // gettext.js's po2json per file when build-tools isn't installed (it's a devDependency
+    // and may be missing when this Gruntfile is consumed from another project).
     grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', () => {
         var fs = require('fs');
         var distDir = grunt.config.get('distDir');
         var poDir = path.join(__dirname, 'po');
         var jsonDir = path.join(process.cwd(), distDir, 'languages');
+
+        var poToJson = null;
+
+        try {
+            poToJson = require('@superdesk/build-tools/src/po-to-json');
+        } catch (err) {
+            // build-tools not installed; use the fallback below
+        }
+
+        if (poToJson != null) {
+            poToJson(poDir, jsonDir);
+            return;
+        }
+
         var po2json = path.join(
             path.dirname(require.resolve('gettext.js/package.json')),
             'bin',
