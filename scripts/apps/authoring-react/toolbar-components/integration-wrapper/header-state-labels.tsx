@@ -23,11 +23,16 @@ export class HeaderStateLabels extends React.PureComponent<IProps, IState> {
     private mounted: boolean;
     private refreshMissingLink: (() => void) & {cancel(): void};
 
+    // componentDidUpdate re-queries whenever the item changes, so several requests can be in flight
+    // at once and resolve out of order. Only the newest one may write state.
+    private latestRequest: number;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {missingLink: false};
         this.mounted = false;
+        this.latestRequest = 0;
         this.refreshMissingLink = debounce(() => this.updateMissingLink(), 800);
     }
 
@@ -59,6 +64,7 @@ export class HeaderStateLabels extends React.PureComponent<IProps, IState> {
 
     private updateMissingLink(): void {
         const item = this.props.item;
+        const request = ++this.latestRequest;
 
         if (!shouldQueryRelatedItems(item)) {
             this.setMissingLink(false);
@@ -68,6 +74,10 @@ export class HeaderStateLabels extends React.PureComponent<IProps, IState> {
 
         ng.get('archiveService').getRelatedItems(item, getRelatedItemsFromDateTime())
             .then((relatedItems) => {
+                if (request !== this.latestRequest) {
+                    return;
+                }
+
                 const hasRelatedItems = (relatedItems?._items?.length ?? 0) > 0;
 
                 this.setMissingLink(
@@ -75,6 +85,10 @@ export class HeaderStateLabels extends React.PureComponent<IProps, IState> {
                 );
             })
             .catch(() => {
+                if (request !== this.latestRequest) {
+                    return;
+                }
+
                 this.setMissingLink(false);
             });
     }

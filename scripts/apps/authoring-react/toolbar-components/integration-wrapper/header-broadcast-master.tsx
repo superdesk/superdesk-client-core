@@ -59,9 +59,13 @@ export class HeaderBroadcastMaster extends React.PureComponent<IProps> {
                 {' '}
                 <a
                     className="open-item"
-                    onClick={this.previewMasterStory}
-                    style={{cursor: 'pointer'}}
+                    href=""
+                    onClick={(event) => {
+                        event.preventDefault();
+                        this.previewMasterStory();
+                    }}
                     title={gettext('Preview master story')}
+                    aria-label={gettext('Preview master story')}
                     data-test-id="authoring-header-preview-master"
                 >
                     <i className="icon-external" />

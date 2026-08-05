@@ -4,6 +4,8 @@ import {IArticle, IExposedFromAuthoring} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {ToolbarContextProvider} from '../toolbar-context';
 import {HeaderGeneralInfoWidget} from '../header-general-info-widget';
+import {HeaderStateLabels} from '../header-state-labels';
+import {HeaderTranslations} from '../header-translations';
 import {TRANSLATIONS_WIDGET_ID} from 'apps/authoring-react/article-widgets/translations/constants';
 
 interface IAngularStubs {
@@ -439,6 +441,95 @@ describe('authoring-react header general info row', () => {
             await settle(wrapper);
 
             expect(wrapper.find('[data-test-id="authoring-header-translations"]').exists()).toBe(false);
+        });
+    });
+
+    // The header stays mounted while the open item changes, so both of these blocks can have a
+    // request in flight for the previous item. They are mounted directly here because the switch
+    // has to happen through props.
+    describe('switching to another item while a request is in flight', () => {
+        // The debounce on componentDidUpdate has to be driven forward. `mockDate` is required as
+        // well as `install`: lodash compares `Date.now()` to decide whether to invoke, so with a
+        // real clock it just reschedules and the call never lands.
+        // Uninstalling in afterEach matters, because a clock left installed by a failing
+        // assertion times out every later async spec in the run.
+        beforeEach(() => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate();
+        });
+        afterEach(() => jasmine.clock().uninstall());
+
+        it('ignores a related-items response belonging to the previous item', async () => {
+            const resolvers: Array<(value: {_items: Array<Partial<IArticle>>}) => void> = [];
+
+            spyOn(ng, 'get').and.callFake((name: string) => {
+                switch (name) {
+                    case 'archiveService':
+                        return {getRelatedItems: () => new Promise((resolve) => resolvers.push(resolve))};
+                    case 'authoringWorkspace':
+                        return {getAction: () => 'edit'};
+                    default:
+                        throw new Error(`unexpected ng.get('${name}') in test`);
+                }
+            });
+
+            const wrapper = mount(
+                <HeaderStateLabels item={{_id: 'first', type: 'text', slugline: 'one', flags: {}} as IArticle} />,
+            );
+
+            wrapper.setProps({item: {_id: 'second', type: 'text', slugline: 'two', flags: {}} as IArticle});
+            jasmine.clock().tick(800);
+
+            expect(resolvers.length).toBe(2);
+
+            // the current item has a sibling, so the label shows
+            resolvers[1]({_items: [{_id: 'sibling'}]});
+            await settle(wrapper);
+            expect(wrapper.find('[data-test-id="authoring-header-missing-link"]').exists()).toBe(true);
+
+            // the previous item's request lands late with a different answer and must be discarded
+            resolvers[0]({_items: []});
+            await settle(wrapper);
+            expect(wrapper.find('[data-test-id="authoring-header-missing-link"]').exists()).toBe(true);
+
+            jasmine.clock().uninstall();
+        });
+
+        it('re-fetches translations for the new item instead of showing the previous count', async () => {
+            const translationsByItem: {[id: string]: Array<Partial<IArticle>>} = {
+                first: [{_id: 'a', translated_from: 'first'}],
+                second: [{_id: 'b', translated_from: 'second'}, {_id: 'c', translated_from: 'second'}],
+            };
+
+            spyOn(ng, 'get').and.callFake((name: string) => {
+                if (name !== 'TranslationService') {
+                    throw new Error(`unexpected ng.get('${name}') in test`);
+                }
+
+                return {
+                    translationsEnabled: () => true,
+                    getTranslations: (item: IArticle) => Promise.resolve({_items: translationsByItem[item._id]}),
+                };
+            });
+
+            const wrapper = mount(
+                <HeaderTranslations
+                    item={{_id: 'first', type: 'text'} as IArticle}
+                    onOpenTranslationsWidget={() => undefined}
+                />,
+            );
+
+            await settle(wrapper);
+            expect(
+                wrapper.find('[data-test-id="authoring-header-translations-count"]').prop('data-test-value'),
+            ).toBe('1');
+
+            wrapper.setProps({item: {_id: 'second', type: 'text'} as IArticle});
+            await settle(wrapper);
+
+            expect(
+                wrapper.find('[data-test-id="authoring-header-translations-count"]').prop('data-test-value'),
+            ).toBe('2');
         });
     });
 });

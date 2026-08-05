@@ -28,7 +28,10 @@ export const HeaderGeneralInfoWidget: React.ComponentType<{entity: IArticle}> = 
     const item = exposed.getLatestItem();
 
     const wordCountEnabled = (appConfig.ui?.authoring?.firstLine?.wordCount ?? true) && item.type === 'text';
-    const wordCount = countWords(helpers.cleanHtml(item.body_html ?? ''));
+
+    // this re-renders on every keystroke to keep the count live, so do not walk the body when the
+    // count is not displayed
+    const wordCount = wordCountEnabled ? countWords(helpers.cleanHtml(item.body_html ?? '')) : 0;
     const source = item.source ?? '';
     const signals = item.signal ?? [];
     const correctionSequence = item.correction_sequence ?? 0;

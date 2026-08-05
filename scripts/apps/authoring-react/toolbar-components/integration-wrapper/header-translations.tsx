@@ -26,17 +26,40 @@ interface IState {
 export class HeaderTranslations extends React.PureComponent<IProps, IState> {
     private mounted: boolean;
 
+    // the header stays mounted while the open item changes, so several fetches can be in flight at
+    // once and resolve out of order. Only the newest one may write state.
+    private latestRequest: number;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {translationsInfo: null};
         this.mounted = false;
+        this.latestRequest = 0;
     }
 
     componentDidMount(): void {
         this.mounted = true;
+        this.loadTranslations();
+    }
 
+    componentDidUpdate(prevProps: IProps): void {
+        if (
+            prevProps.item._id !== this.props.item._id
+            || prevProps.item.translation_id !== this.props.item.translation_id
+            || prevProps.item.translated_from !== this.props.item.translated_from
+        ) {
+            this.loadTranslations();
+        }
+    }
+
+    componentWillUnmount(): void {
+        this.mounted = false;
+    }
+
+    private loadTranslations(): void {
         const translationService = ng.get('TranslationService');
+        const request = ++this.latestRequest;
 
         if (translationService.translationsEnabled() !== true) {
             return;
@@ -44,7 +67,7 @@ export class HeaderTranslations extends React.PureComponent<IProps, IState> {
 
         translationService.getTranslations(this.props.item)
             .then((translations) => {
-                if (!this.mounted) {
+                if (!this.mounted || request !== this.latestRequest) {
                     return;
                 }
 
@@ -60,12 +83,14 @@ export class HeaderTranslations extends React.PureComponent<IProps, IState> {
                 });
             })
             .catch(() => {
-                // no translations for this item, the block stays hidden
-            });
-    }
+                if (!this.mounted || request !== this.latestRequest) {
+                    return;
+                }
 
-    componentWillUnmount(): void {
-        this.mounted = false;
+                // this item is not in a translation chain; clearing matters on an item switch,
+                // otherwise the previous item's translations would stay on screen
+                this.setState({translationsInfo: null});
+            });
     }
 
     render(): React.ReactNode {
@@ -105,8 +130,12 @@ export class HeaderTranslations extends React.PureComponent<IProps, IState> {
                 }
                 {' '}
                 <a
-                    onClick={onOpenTranslationsWidget}
-                    style={{cursor: 'pointer'}}
+                    href=""
+                    onClick={(event) => {
+                        event.preventDefault();
+                        onOpenTranslationsWidget();
+                    }}
+                    aria-label={gettext('Open translations')}
                     data-test-id="authoring-header-translations-count"
                     data-test-value={translationsInfo.count.toString()}
                 >
