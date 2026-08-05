@@ -485,6 +485,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
         });
     }
 
+    private computeEntity(state: IStateLoaded<T>, options?: {preferIncomplete?: IStoreValueIncomplete}): T {
+        const allFields = state.profile.header.merge(state.profile.content);
+
+        return serializeFieldsDataAndApplyOnEntity(
+            state.itemWithChanges,
+            allFields,
+            state.fieldsDataWithChanges,
+            state.userPreferencesForFields,
+            this.props.fieldsAdapter,
+            this.props.storageAdapter,
+            options?.preferIncomplete ?? false,
+        );
+    }
+
     /**
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
@@ -496,19 +510,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             throw new Error('Authoring not initialized');
         }
 
-        const allFields = state.profile.header.merge(state.profile.content);
-
-        const itemWithFieldsApplied = serializeFieldsDataAndApplyOnEntity(
-            state.itemWithChanges,
-            allFields,
-            state.fieldsDataWithChanges,
-            state.userPreferencesForFields,
-            this.props.fieldsAdapter,
-            this.props.storageAdapter,
-            options?.preferIncomplete ?? false,
-        );
-
-        return itemWithFieldsApplied;
+        return this.computeEntity(state, options);
     }
 
     handleFieldChange(fieldId: string, data: unknown) {
@@ -525,7 +527,13 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             ...state,
             fieldsDataWithChanges: onFieldChange == null
                 ? fieldsDataUpdated
-                : onFieldChange(fieldId, fieldsDataUpdated, this.computeLatestEntity),
+                : onFieldChange(
+                    fieldId,
+                    fieldsDataUpdated,
+                    // `this.state` still holds the previous value at this point, so
+                    // `computeLatestEntity` would hand the consumer an entity one edit behind.
+                    (options) => this.computeEntity({...state, fieldsDataWithChanges: fieldsDataUpdated}, options),
+                ),
         });
     }
 
