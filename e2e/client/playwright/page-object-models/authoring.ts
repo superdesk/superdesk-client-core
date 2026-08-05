@@ -71,6 +71,18 @@ export class Authoring {
         await this.page.waitForTimeout(2000);
     }
 
+    /**
+     * Opens an authoring-react side widget from the sidebar.
+     * The sidebar buttons all share the `widget-icon` test id and are told apart by
+     * `data-test-value`, which carries the widget id.
+     */
+    async openSideWidget(widgetId: string): Promise<void> {
+        await this.page
+            .getByTestId('widget-icon')
+            .and(this.page.locator(`[data-test-value="${widgetId}"]`))
+            .click();
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
