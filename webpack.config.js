@@ -151,7 +151,10 @@ module.exports = function makeConfig(grunt) {
         path.join(process.cwd(), 'node_modules'),
     ];
 
-    const transpilationExcludes = function(absolutePath) {
+    const transpilationExcludes = function(rawPath) {
+        // Windows paths use backslashes; the checks below assume "/"
+        const absolutePath = rawPath.split(path.sep).join('/');
+
         // don't exclude anything outside node_modules
         if (absolutePath.indexOf('node_modules') === -1) {
             return false;
