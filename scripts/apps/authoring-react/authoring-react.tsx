@@ -1070,56 +1070,47 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
         return this.setLoadingState(state, true)
             .then(() => this.cancelAutosave())
-            .then(() => {
-                return authoringStorage.saveEntity(
-                    this.computeLatestEntity(),
-                    state.itemOriginal,
-                ).then((item: T) => {
-                    // `cancelAutosave()` above deleted the autosave document, so there is no
-                    // autosave to reference anymore. Passing it here would leave `itemAutosaved`
-                    // pointing at a non-existent resource and make the next autosave fail.
-                    const nextState = getInitialState(
-                        {saved: item, autosaved: null},
-                        state.profile,
-                        state.userPreferencesForFields,
-                        state.spellcheckerEnabled,
-                        this.props.fieldsAdapter,
-                        this.props.authoringStorage,
-                        this.props.storageAdapter,
-                        this.props.getLanguage(item),
-                        {}, // clear validation errors
-                        state.allThemes.default,
-                        state.allThemes.proofreading,
-                    );
-
-                    if (this._mounted) {
-                        this.setState(nextState);
-                    }
-
-                    return item;
-                });
-            })
+            .then(() => authoringStorage.saveEntity(
+                this.computeLatestEntity(),
+                state.itemOriginal,
+            ))
             .catch((error) => {
+                /**
+                 * The catch sits before the state rebuilding below on purpose,
+                 * so a failure to rebuild the state after a successful save
+                 * is not reported as the item not being saved.
+                 */
                 if (this._mounted) {
-                    // setting `loading` to false is the only state change the setState guard allows while loading
-                    this.setLoadingState(state, false);
+                    /**
+                     * `cancelAutosave` above already deleted the autosaved version, so it must not be
+                     * carried over. Restoring the captured state verbatim would leave `itemAutosaved`
+                     * pointing at a deleted resource, and every path that cancels autosave afterwards
+                     * (a retried save, closing while discarding changes) would ask for it to be deleted
+                     * again, with no handler for the rejection if the server refuses.
+                     *
+                     * Setting `loading` to false is the only state change the setState guard allows while loading.
+                     */
+                    this.setLoadingState({...state, itemAutosaved: null}, false);
 
                     /**
-                     * `cancelAutosave` above already deleted the autosaved version,
-                     * so re-arm autosave to keep a server-side copy of the unsaved changes.
+                     * Re-arm autosave to keep a server-side copy of the unsaved changes,
+                     * under the same conditions `componentDidUpdate` uses. There is nothing
+                     * worth autosaving when the lock is gone or when there are no changes left.
                      */
-                    this.props.authoringStorage.autosave.schedule(
-                        () => this.computeLatestEntity({preferIncomplete: true}),
-                        (autosaved) => {
-                            if (this.state.initialized) {
-                                this.setState({
-                                    ...this.state,
-                                    itemAutosaved: autosaved,
-                                });
-                            }
-                        },
-                        null,
-                    );
+                    if (authoringStorage.isLockedInCurrentSession(state.itemOriginal) && this.hasUnsavedChanges()) {
+                        authoringStorage.autosave.schedule(
+                            () => this.computeLatestEntity({preferIncomplete: true}),
+                            (autosaved) => {
+                                if (this.state.initialized) {
+                                    this.setState({
+                                        ...this.state,
+                                        itemAutosaved: autosaved,
+                                    });
+                                }
+                            },
+                            null,
+                        );
+                    }
                 }
 
                 const serverMessage = isHttpApiError(error)
@@ -1133,6 +1124,46 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 );
 
                 return Promise.reject(error);
+            })
+            .then((item: T) => {
+                let nextState: IStateLoaded<T>;
+
+                try {
+                    // `cancelAutosave()` above deleted the autosave document, so there is no
+                    // autosave to reference anymore. Passing it here would leave `itemAutosaved`
+                    // pointing at a non-existent resource and make the next autosave fail.
+                    nextState = getInitialState(
+                        {saved: item, autosaved: null},
+                        state.profile,
+                        state.userPreferencesForFields,
+                        state.spellcheckerEnabled,
+                        this.props.fieldsAdapter,
+                        this.props.authoringStorage,
+                        this.props.storageAdapter,
+                        this.props.getLanguage(item),
+                        {}, // clear validation errors
+                        state.allThemes.default,
+                        state.allThemes.proofreading,
+                    );
+                } catch (error) {
+                    // the item is saved; only the editor state could not be rebuilt for it,
+                    // and the editor holds an outdated etag from here on
+                    if (this._mounted) {
+                        this.setLoadingState({...state, itemAutosaved: null}, false);
+                    }
+
+                    notify.error(
+                        gettext('Item was saved, but the editor could not be updated. Please reload the page.'),
+                    );
+
+                    throw error;
+                }
+
+                if (this._mounted) {
+                    this.setState(nextState);
+                }
+
+                return item;
             });
     }
 
