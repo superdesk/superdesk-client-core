@@ -193,14 +193,20 @@ module.exports = function makeConfig(grunt) {
 
     // Mirrors scripts/tsconfig.json: ES5, classic JSX, CommonJS. isModule "unknown"
     // leaves files without import/export as scripts, like tsc, so legacy sloppy-mode
-    // code doesn't get "use strict" forced on it.
+    // code doesn't get "use strict" forced on it. useDefineForClassFields matches
+    // tsc's default at target es5: without it, declaration-only class fields
+    // (`scope: any;`) are defined as undefined after super() returns, wiping
+    // values that parent constructors assigned.
     const swcOptions = (parser) => ({
         isModule: 'unknown',
         module: {type: 'commonjs'},
         jsc: {
             target: 'es5',
             parser: parser,
-            transform: {react: {runtime: 'classic'}},
+            transform: {
+                react: {runtime: 'classic'},
+                useDefineForClassFields: false,
+            },
         },
     });
 
