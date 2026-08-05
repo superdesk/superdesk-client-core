@@ -6,6 +6,7 @@ import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {isHttpApiError} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -56,7 +57,7 @@ function getProfileSchema(article: IArticle): {[field: string]: unknown} | null 
     return (sdApi.contentProfiles.get(article.profile)?.schema as {[field: string]: unknown}) ?? null;
 }
 
-class RelatedItemsWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
+export class RelatedItemsWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
     private mounted: boolean;
 
     constructor(props: IArticleSideWidgetComponentType) {
@@ -157,10 +158,20 @@ class RelatedItemsWidget extends React.Component<IArticleSideWidgetComponentType
         const {article} = this.props;
         const patch = getMetadataToCopy(target, getProfileSchema(article));
 
-        sdApi.article.patch(article, patch, {patchDirectlyAndOverwriteAuthoringValues: true})
+        // `patch` swallows rejections, so the editor would be updated and success reported
+        // even when nothing was persisted
+        sdApi.article.patchThrowing(article, patch, {patchDirectlyAndOverwriteAuthoringValues: true})
             .then(() => {
                 dispatchInternalEvent('replaceAuthoringDataWithChanges', patch);
                 notify.success(gettext('item metadata associated.'));
+            }, (error) => {
+                if (isHttpApiError(error)) {
+                    notify.error(
+                        gettext('Failed to associate metadata: {{message}}', {message: error._error.message}),
+                    );
+                } else {
+                    notify.error(gettext('There is an error. Failed to associate metadata.'));
+                }
             });
     }
 
