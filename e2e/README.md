@@ -8,6 +8,31 @@
 * run `npm install` if needed
 * run `npx grunt server`
 
+Alternatively, `./e2e/scripts/e2e-up.sh` (from the repo root) brings up the whole stack with health checks and is idempotent; `./e2e/scripts/e2e-down.sh` tears it down.
+
+### Parallel instances (slots)
+
+Several e2e instances can run on one machine at the same time, for example when multiple agents author specs concurrently, each from its own git worktree. A slot shares elasticsearch, redis and mailcrab with every other slot but gets its own backend container, its own mongod (databases keep their default names, which the snapshot restore requires), an elastic index prefix, a redis DB, a client build and ports.
+
+```
+./e2e/scripts/e2e-up.sh --slot auto    # claim the first free slot (1-5) and bring it up
+./e2e/scripts/e2e-up.sh --slot 3       # bring up slot 3 specifically
+./e2e/scripts/e2e-down.sh --slot 3     # tear down slot 3 and release it
+./e2e/scripts/e2e-down.sh --all        # tear down all slots, the default stack and shared services
+```
+
+Slot N uses api `:501N`, websocket `:511N`, client `:901N`, mongo on `:2701<7+N>`, and elastic indices prefixed `sd_e2e_s<N>`, all disjoint from the default stack (`:5002` / `:9000` / `:27017` / `superdesk_e2e`), so a manually started stack keeps working alongside slots. Claims are lock directories under `/tmp/superdesk-e2e`, and re-running `e2e-up.sh --slot auto` from the same checkout re-enters its slot.
+
+On success the slot's environment is written to `e2e/client/.e2e-slot.env` (gitignored). `playwright.config.ts` auto-loads it, so `npx playwright test` from that checkout targets the slot without further setup. The file also points `storageState` at an origin-rewritten copy of the committed auth state, since localStorage is origin-scoped and each slot's client runs on a different port.
+
+Notes for running several slots:
+
+* One slot per checkout/worktree. The client build bakes the slot's backend URLs into `dist/`, and the slot env file lives in the checkout, so sharing a checkout between slots would clobber both.
+* To seed a fresh worktree's dependencies quickly, clone them from the main checkout with a copy-on-write copy: `cp -Rc` on macOS (APFS), `cp -a --reflink=auto` on Linux (btrfs/XFS; falls back to a regular copy elsewhere). `npm ci` works everywhere but is much slower.
+* Docker Desktop needs enough VM memory for the shared services plus one backend container (~0.8 GB) per active slot. For 4-5 slots, ~8 GB and a bigger elasticsearch heap (`ES_JAVA_OPTS` in `docker-compose.yml`) are recommended; every test run triggers a mongo-to-elastic reindex per slot.
+* Recording snapshots (`storage:dump` / `storage:record`) writes to the shared `dump/` directory; do that from one slot at a time.
+* Concurrent Chromium runs compete for CPU; parallel spec writing is free, but keep simultaneous test runs to 2-3 or expect timeout flakiness.
+
 ### Running tests
 
 `npm run playwright` - runs all tests in headless mode

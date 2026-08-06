@@ -18,6 +18,10 @@ e2e/client/test-results/
 e2e/client/playwright-report/
 e2e/client/playwright/.cache/
 
+# e2e slots (generated per-checkout by e2e-up.sh --slot)
+e2e/client/.e2e-slot.env
+e2e/client/playwright/.auth/user.slot.json
+
 .env
 npm-debug.log
 index.html
