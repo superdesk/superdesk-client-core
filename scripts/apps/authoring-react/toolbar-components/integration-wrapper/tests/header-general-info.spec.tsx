@@ -491,8 +491,6 @@ describe('authoring-react header general info row', () => {
             resolvers[0]({_items: []});
             await settle(wrapper);
             expect(wrapper.find('[data-test-id="authoring-header-missing-link"]').exists()).toBe(true);
-
-            jasmine.clock().uninstall();
         });
 
         it('re-fetches translations for the new item instead of showing the previous count', async () => {
