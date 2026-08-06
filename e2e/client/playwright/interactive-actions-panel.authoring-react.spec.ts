@@ -285,10 +285,21 @@ test.describe('interactive article actions panel wider than the authoring column
         });
     }
 
+    /** `boundingBox()` is nullable for a detached or hidden element; that is a test failure here. */
+    async function requireBox(locator: Locator, what: string) {
+        const box = await locator.boundingBox();
+
+        if (box == null) {
+            throw new Error(`expected ${what} to be visible and have a bounding box`);
+        }
+
+        return box;
+    }
+
     async function expectPanelToBeUnclipped(panel: Locator): Promise<void> {
         await getSettledWidth(panel);
 
-        const panelBox = await panel.boundingBox();
+        const panelBox = await requireBox(panel, 'the actions panel');
 
         // it overlays what is beside the editor rather than being pushed off the screen
         expect(panelBox.x).toBeGreaterThanOrEqual(0);
@@ -301,8 +312,10 @@ test.describe('interactive article actions panel wider than the authoring column
 
         await expect(publishingColumns(panel)).toHaveCount(2);
 
-        const panelBox = await panel.boundingBox();
-        const frameBox = await authoringFrame(page).boundingBox();
+        await getSettledWidth(panel);
+
+        const panelBox = await requireBox(panel, 'the actions panel');
+        const frameBox = await requireBox(authoringFrame(page), 'the authoring frame');
 
         // the premise of the test: a panel that fits inside the editor would prove nothing
         expect(panelBox.width).toBeGreaterThan(frameBox.width);
