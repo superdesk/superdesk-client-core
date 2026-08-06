@@ -44,7 +44,13 @@ import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
-import {findWidgetById, getWidgetsFromExtensions} from './side-widgets';
+import {
+    SIDE_WIDGET_STORAGE_KEY,
+    findWidgetById,
+    getStoredStateForWidget,
+    getWidgetsFromExtensions,
+    readStoredSideWidget,
+} from './side-widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {
@@ -325,12 +331,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     constructor(props: IPropsWrapper) {
         super(props);
 
-        const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
-
         // the stored value is an `IOpenSideWidget`, not a bare id
-        const widgetId: string | null = localStorageWidget != null
-            ? JSON.parse(localStorageWidget)?.id ?? null
-            : null;
+        const widgetId: string | null = readStoredSideWidget()?.id ?? null;
 
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
@@ -642,12 +644,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         <WidgetComponent
                                             ref={widgetRef}
                                             initialState={(() => {
-                                                const localStorageWidgetState =
-                                                    JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+                                                const localStorageWidgetState = readStoredSideWidget();
+                                                const storedState = getStoredStateForWidget(
+                                                    item,
+                                                    resolvedWidget,
+                                                    localStorageWidgetState,
+                                                );
 
-                                                if (localStorageWidgetState?.id != null) {
-                                                    const initialState = localStorageWidgetState?.initialState;
-
+                                                if (storedState != null) {
                                                     sdApi.preferences.update(
                                                         PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
                                                         {type: 'string', _id: resolvedWidget._id},
@@ -658,11 +662,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                     // than once. To prevent wrong widget state its
                                                     // deleted after 5 seconds.
                                                     setTimeout(() => {
-                                                        localStorage.removeItem('SIDE_WIDGET');
+                                                        localStorage.removeItem(SIDE_WIDGET_STORAGE_KEY);
                                                     }, 5000);
 
                                                     closedIntentionally.value = false;
-                                                    return initialState;
+                                                    return storedState.initialState;
                                                 }
 
                                                 if (
