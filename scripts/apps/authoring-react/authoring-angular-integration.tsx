@@ -558,10 +558,7 @@ function getPublishToolbarWidget(
     return publishWidgetButton;
 }
 
-export function getAuthoringPrimaryToolbarWidgets(
-    panelState: IStateInteractiveActionsPanelHOC,
-    panelActions: IActionsInteractiveActionsPanelHOC,
-) {
+function getExtensionTopbarWidgets(): Array<ITopBarWidget<IArticle>> {
     return Object.values(extensions)
         .flatMap(({activationResult}) =>
             activationResult?.contributions?.authoringTopbarWidgets ?? [],
@@ -575,8 +572,26 @@ export function getAuthoringPrimaryToolbarWidgets(
                     <Component entity={props.entity} />
                 ),
             };
-        })
+        });
+}
+
+export function getAuthoringPrimaryToolbarWidgets(
+    panelState: IStateInteractiveActionsPanelHOC,
+    panelActions: IActionsInteractiveActionsPanelHOC,
+) {
+    return getExtensionTopbarWidgets()
         .concat([getPublishToolbarWidget(panelState, panelActions)]);
+}
+
+/**
+ * Multi-edit gets the extension widgets but not the send to / publish control.
+ *
+ * Publishing from a multi-edit board is not supported. The angular board offers only Remove item
+ * and Save, and the react one could not route the panel anyway: `applicationState.articleInEditMode`
+ * holds a single id, so only one of the open editors would ever respond to the panel event.
+ */
+export function getMultiEditPrimaryToolbarWidgets(): Array<ITopBarWidget<IArticle>> {
+    return getExtensionTopbarWidgets();
 }
 
 export interface IProps {
