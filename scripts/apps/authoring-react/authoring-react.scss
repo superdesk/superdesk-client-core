@@ -13,6 +13,15 @@
     padding: 1rem;
 }
 
+/**
+ * `.side-panel__content-block` is auto height, which leaves `height: 100%` inside a
+ * widget body unresolvable. Widgets that lay their body out against the full panel
+ * height opt into a definite height here.
+ */
+.sd-authoring-widget-body--fill-height {
+    height: 100%;
+}
+
 .authoring-toolbar-1 {
     display: flex;
     width: 100%;

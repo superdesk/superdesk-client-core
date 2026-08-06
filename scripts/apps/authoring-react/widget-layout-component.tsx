@@ -20,7 +20,7 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
             <Layout.Panel
                 side="right"
                 open={true}
-                size="x-small"
+                size={this.props.width == null ? 'x-small' : {custom: this.props.width}}
                 background={this.props.background ?? 'light'}
                 theme={this.props.theme}
                 data-test-id={this.props['data-test-id']}
@@ -28,7 +28,15 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
                 {header && <React.Fragment>{header}</React.Fragment>}
 
                 <Layout.PanelContent>
-                    <Layout.PanelContentBlock flex={bodyPadding === 'none'} padding={paddingMap[bodyPadding]}>
+                    <Layout.PanelContentBlock
+                        flex={bodyPadding === 'none'}
+                        padding={paddingMap[bodyPadding]}
+                        className={
+                            this.props.fillBodyHeight === true
+                                ? 'sd-authoring-widget-body--fill-height'
+                                : undefined
+                        }
+                    >
                         {body}
                     </Layout.PanelContentBlock>
                 </Layout.PanelContent>

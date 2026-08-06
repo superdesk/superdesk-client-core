@@ -11,12 +11,22 @@ import {SendToAction} from 'core/interactive-article-actions-panel/actions/send-
 import {DuplicateToAction} from 'core/interactive-article-actions-panel/actions/duplicate-to-action';
 import {UnspikeAction} from 'core/interactive-article-actions-panel/actions/unspike-action';
 import {FetchToAction} from 'core/interactive-article-actions-panel/actions/fetch-to-action';
-import {PublishAction} from 'core/interactive-article-actions-panel/actions/publish-action';
+import {PublishAction, singleColumnWidthRem} from 'core/interactive-article-actions-panel/actions/publish-action';
 import {Text} from 'superdesk-ui-framework/react';
 
 export const INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID = 'interactive-article-actions-widget';
 
 const getLabel = () => gettext('Send to / Publish');
+
+/**
+ * This widget hosts the actions that the standalone panel hosts in authoring-angular,
+ * and sizes itself the same way so the two stay visually equivalent: one column budget
+ * per section contributed through the `publishingSections` extension point. Only the
+ * publishing tabs are adaptive; every other tab has a single column.
+ */
+export function getWidgetWidth(columnCount: number): string {
+    return `${singleColumnWidthRem * columnCount}rem`;
+}
 
 interface IState {
     tabs: Array<IArticleActionInteractive>;
@@ -90,10 +100,18 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
         footer: JSX.Element,
         tabs: Array<IArticleActionInteractive>,
         activeTab: IArticleActionInteractive,
+        columnCount: number = 1,
     ) {
         return (
             <AuthoringWidgetLayout
                 theme="dark"
+                width={getWidgetWidth(columnCount)}
+
+                /**
+                 * The action bodies lay their columns out against the full height,
+                 * the same way the standalone panel does.
+                 */
+                fillBodyHeight
                 data-test-id="interactive-actions-widget"
                 header={(
                     <AuthoringWidgetHeading
@@ -157,11 +175,11 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     onError={this.handleError}
                     onDataChange={this.handleDataChange}
                 >
-                    {({body, footer, loading}) => {
+                    {({body, footer, columnCount, loading}) => {
                         if (loading) {
                             return this.renderWithLayout(null, null, tabs, activeTab);
                         }
-                        return this.renderWithLayout(body, footer, tabs, activeTab);
+                        return this.renderWithLayout(body, footer, tabs, activeTab, columnCount);
                     }}
                 </PublishAction>
             );
@@ -175,12 +193,12 @@ export class SendToPublishWidget extends React.Component<IArticleSideWidgetCompo
                     onDataChange={this.handleDataChange}
                     action="correct"
                 >
-                    {({body, footer, loading}) => {
+                    {({body, footer, columnCount, loading}) => {
                         if (loading) {
                             return this.renderWithLayout(null, null, tabs, activeTab);
                         }
 
-                        return this.renderWithLayout(body, footer, tabs, activeTab);
+                        return this.renderWithLayout(body, footer, tabs, activeTab, columnCount);
                     }}
                 </PublishAction>
             );

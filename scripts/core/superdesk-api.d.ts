@@ -741,6 +741,19 @@ declare module 'superdesk-api' {
          * of that theme inherit to the entire widget subtree. Defaults to 'light'.
          */
         theme?: 'light' | 'dark';
+
+        /**
+         * Overrides the default side widget width, for widgets whose content is
+         * adaptive. Any CSS width. Defaults to the standard side widget width.
+         */
+        width?: React.CSSProperties['width'];
+
+        /**
+         * Gives the body a definite height instead of letting it size to its content,
+         * so that body content laid out with `height: 100%` resolves against the panel.
+         */
+        fillBodyHeight?: boolean;
+
         'data-test-id'?: string;
     }
 

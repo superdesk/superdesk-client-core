@@ -14,8 +14,7 @@ import {FetchToTab} from './actions/fetch-to-tab';
 import {UnspikeTab} from './actions/unspike-tab';
 import {IArticleActionInteractive, IPanelAction} from './interfaces';
 import {ActionTabs} from './action-tabs';
-
-const singleColumnWidthRem = 40; // rem
+import {singleColumnWidthRem} from './actions/publish-action';
 
 const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
 

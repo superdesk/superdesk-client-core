@@ -27,6 +27,12 @@ import {PreviewModal} from 'apps/publish-preview/previewModal';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 
+/**
+ * Width budget of a single publishing column. `columnCount` below says how many
+ * of them there are, so every host of this action sizes itself the same way.
+ */
+export const singleColumnWidthRem = 40;
+
 export interface IPublishConfig {
     item: IArticle;
     closePublishView(): void;
