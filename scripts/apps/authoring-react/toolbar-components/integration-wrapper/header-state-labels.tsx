@@ -42,11 +42,23 @@ export class HeaderStateLabels extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: IProps): void {
+        const itemChanged = prevProps.item._id !== this.props.item._id;
+
         if (
-            prevProps.item._id !== this.props.item._id
+            itemChanged
             || prevProps.item.slugline !== this.props.item.slugline
             || prevProps.item.type !== this.props.item.type
         ) {
+            // invalidate here rather than inside the debounced query. Otherwise a response for the
+            // previous item still matches `latestRequest` during the 800ms window and gets applied.
+            this.latestRequest++;
+
+            // only when the item itself changed: the slugline changes on every keystroke, and
+            // clearing there would make the label flicker while the user types
+            if (itemChanged) {
+                this.setMissingLink(false);
+            }
+
             this.refreshMissingLink();
         }
     }

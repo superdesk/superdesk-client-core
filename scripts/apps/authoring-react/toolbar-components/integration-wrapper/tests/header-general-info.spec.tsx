@@ -493,6 +493,40 @@ describe('authoring-react header general info row', () => {
             expect(wrapper.find('[data-test-id="authoring-header-missing-link"]').exists()).toBe(true);
         });
 
+        // The guard above only covers two issued requests racing. This covers the window before the
+        // debounced re-query has even fired, where the previous item's response would otherwise
+        // still match the current request number.
+        it('ignores a previous item response that lands before the new query is issued', async () => {
+            const resolvers: Array<(value: {_items: Array<Partial<IArticle>>}) => void> = [];
+
+            spyOn(ng, 'get').and.callFake((name: string) => {
+                switch (name) {
+                    case 'archiveService':
+                        return {getRelatedItems: () => new Promise((resolve) => resolvers.push(resolve))};
+                    case 'authoringWorkspace':
+                        return {getAction: () => 'edit'};
+                    default:
+                        throw new Error(`unexpected ng.get('${name}') in test`);
+                }
+            });
+
+            const wrapper = mount(
+                <HeaderStateLabels item={{_id: 'first', type: 'text', slugline: 'one', flags: {}} as IArticle} />,
+            );
+
+            expect(resolvers.length).toBe(1);
+
+            // switch items without letting the debounce fire, so no second request exists yet
+            wrapper.setProps({item: {_id: 'second', type: 'text', slugline: 'two', flags: {}} as IArticle});
+            expect(resolvers.length).toBe(1);
+
+            // the first item's request resolves inside that window and must not label the new item
+            resolvers[0]({_items: [{_id: 'sibling'}]});
+            await settle(wrapper);
+
+            expect(wrapper.find('[data-test-id="authoring-header-missing-link"]').exists()).toBe(false);
+        });
+
         it('re-fetches translations for the new item instead of showing the previous count', async () => {
             const translationsByItem: {[id: string]: Array<Partial<IArticle>>} = {
                 first: [{_id: 'a', translated_from: 'first'}],
