@@ -7,9 +7,9 @@ import {Panel} from '../panel/panel-main';
  * so an unscoped selector would match the props handed to the ui-framework component
  * whether or not they reach the DOM.
  */
-function renderPanel(markupV2: boolean) {
+function renderPanel(markupV2: boolean, width?: string) {
     return mount(
-        <Panel markupV2={markupV2} data-test-id="interactive-actions-panel">
+        <Panel markupV2={markupV2} width={width} data-test-id="interactive-actions-panel">
             <div />
         </Panel>,
     );
@@ -37,5 +37,20 @@ describe('interactive article actions panel markup', () => {
 
         expect(wrapper.find('div[data-theme="dark-ui"]').exists()).toBe(true);
         expect(wrapper.find('div.side-panel--dark-ui').exists()).toBe(true);
+    });
+
+    /**
+     * `InteractiveArticleActionsPanel` widens the publish tab by handing down
+     * `singleColumnWidthRem * columnCount`. That only reaches the user if the width
+     * lands on the element the panel is actually sized by.
+     */
+    it('sizes the authoring-react panel by the width it is given, like the legacy one', () => {
+        const markupV2 = renderPanel(true, '80rem');
+        const legacy = renderPanel(false, '80rem');
+
+        expect(markupV2.find('div[data-test-id="interactive-actions-panel"]').prop('style'))
+            .toEqual(jasmine.objectContaining({width: '80rem'}));
+        expect(legacy.find('div[data-test-id="interactive-actions-panel"]').prop('style'))
+            .toEqual(jasmine.objectContaining({width: '80rem'}));
     });
 });
