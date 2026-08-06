@@ -44,6 +44,44 @@ describe('sdApi.desks.getDeskStages', () => {
     });
 });
 
+describe('sdApi.desks.getDeskDefaultIncomingStageId', () => {
+    it('returns the id of the stage flagged as default incoming', () => {
+        mockDesksService({
+            deskStages: {
+                desk1: [{_id: 'stage1'}, {_id: 'stage2', default_incoming: true}],
+            },
+            desks: {_items: [{_id: 'desk1', incoming_stage: 'stage-from-the-desk-record'}]},
+        });
+
+        expect(desks.getDeskDefaultIncomingStageId('desk1')).toBe('stage2');
+    });
+
+    it('falls back to the desk record when no stage is flagged', () => {
+        mockDesksService({
+            deskStages: {desk1: [{_id: 'stage1'}]},
+            desks: {_items: [{_id: 'desk1', incoming_stage: 'stage-from-the-desk-record'}]},
+        });
+
+        expect(desks.getDeskDefaultIncomingStageId('desk1')).toBe('stage-from-the-desk-record');
+    });
+
+    it('falls back to the desk record when the stages are not loaded yet', () => {
+        mockDesksService({
+            deskStages: undefined,
+            desks: {_items: [{_id: 'desk1', incoming_stage: 'stage-from-the-desk-record'}]},
+        });
+
+        expect(desks.getDeskDefaultIncomingStageId('desk1')).toBe('stage-from-the-desk-record');
+    });
+
+    it('returns null when neither the stages nor the desk are available', () => {
+        mockDesksService({deskStages: undefined, desks: {}});
+
+        expect(desks.getDeskDefaultIncomingStageId('desk1')).toBe(null);
+        expect(desks.getDeskDefaultIncomingStageId(null)).toBe(null);
+    });
+});
+
 describe('sdApi.desks.getAllDesks', () => {
     it('returns the loaded desks', () => {
         mockDesksService({desks: {_items: [{_id: 'desk1', name: 'Sports'}]}});

@@ -29,6 +29,26 @@ interface IProps extends IFetchToConfig {
     children(args: IRenderArgs): JSX.Element;
 }
 
+export function canFetchToDestination(destination: ISendToDestination): boolean {
+    if (destination.type === 'personal-space') {
+        throw new Error('fetching to personal space is not supported');
+    } else if (destination.type === 'desk') {
+        const destinationStage = sdApi.desks.getDeskStages(destination.desk).get(destination.stage);
+
+        // an unresolvable stage (desks store still loading, or a desk the user can not see) can
+        // not be shown to be visible, so it falls back to the desk membership check
+        if (destinationStage?.is_visible === true) {
+            return true;
+        } else {
+            return sdApi.desks.getCurrentUserDesks()
+                .map(({_id}) => _id)
+                .includes(destination.desk);
+        }
+    } else {
+        return assertNever(destination);
+    }
+}
+
 /**
  * Fetch To action - provides body and footer as render props.
  * This allows the parent to compose them into either the standalone panel or widget layout.
@@ -59,25 +79,7 @@ export class FetchToAction extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const canFetch: boolean = (() => {
-            if (this.state.selectedDestination.type === 'personal-space') {
-                throw new Error('fetching to personal space is not supported');
-            } else if (this.state.selectedDestination.type === 'desk') {
-                const destinationStage = sdApi.desks.getDeskStages(
-                    this.state.selectedDestination.desk,
-                ).get(this.state.selectedDestination.stage);
-
-                if (destinationStage.is_visible) {
-                    return true;
-                } else {
-                    return sdApi.desks.getCurrentUserDesks()
-                        .map(({_id}) => _id)
-                        .includes(this.state.selectedDestination.desk);
-                }
-            } else {
-                return assertNever(this.state.selectedDestination);
-            }
-        })();
+        const canFetch: boolean = canFetchToDestination(this.state.selectedDestination);
 
         const body = (
             <ToggleBox variant="simple" title={gettext('Destination')} initiallyOpen>

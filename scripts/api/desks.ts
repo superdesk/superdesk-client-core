@@ -58,6 +58,21 @@ function getDeskById(id: IDesk['_id']): IDesk {
     return getAllDesks().get(id);
 }
 
+/**
+ * The stage list carries `default_incoming` and the desk record carries `incoming_stage`. They
+ * agree, but the stage list is empty until the desks store resolves and for desks the current user
+ * can not see, so the desk record is used as the fallback before giving up.
+ */
+function getDeskDefaultIncomingStageId(deskId: IDesk['_id'] | null | undefined): IStage['_id'] | null {
+    if (deskId == null) {
+        return null;
+    }
+
+    const defaultIncomingStage = getDeskStages(deskId).find((stage) => stage.default_incoming === true);
+
+    return defaultIncomingStage?._id ?? getDeskById(deskId)?.incoming_stage ?? null;
+}
+
 function getDeskMembers(deskId: IDesk['_id']): Array<IUser> {
     return ng.get('desks').deskMembers[deskId] ?? [];
 }
@@ -74,6 +89,9 @@ interface IDesksApi {
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
     getDeskById(id: IDesk['_id']): IDesk ;
     getDeskStages(deskId: IDesk['_id'] | null | undefined): OrderedMap<IStage['_id'], IStage>;
+
+    /** `null` when the desk, or the desks store itself, is not available */
+    getDeskDefaultIncomingStageId(deskId: IDesk['_id'] | null | undefined): IStage['_id'] | null;
     getCurrentUserDesks(): Array<IDesk>; // desks that current user has access to
     getDeskMembers(deskId: IDesk['_id']): Array<IUser>; // members of the desk
     getStageById(id: IStage['_id']): IStage;
@@ -86,6 +104,7 @@ export const desks: IDesksApi = {
     getAllDesks,
     getDeskById,
     getDeskStages,
+    getDeskDefaultIncomingStageId,
     getCurrentUserDesks,
     getDeskMembers,
     getStageById,

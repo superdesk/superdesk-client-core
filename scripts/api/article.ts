@@ -205,6 +205,13 @@ function sendItemToNextStage(item: IArticle): Promise<void> {
     const stageId = item.task.stage;
     const deskStages = sdApi.desks.getDeskStages(deskId).toArray();
     const currentStage = deskStages.find(({_id}) => _id === stageId);
+
+    // without this the item would silently be sent to the first stage, because `indexOf` of a
+    // stage that was not found is -1 and the next index after -1 is 0
+    if (currentStage == null) {
+        throw new Error(`can not send to next stage: stage "${stageId}" is not a stage of desk "${deskId}"`);
+    }
+
     const currentStageIndex = deskStages.indexOf(currentStage);
     const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
 
