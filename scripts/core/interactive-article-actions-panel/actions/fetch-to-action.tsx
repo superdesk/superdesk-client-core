@@ -33,6 +33,13 @@ export function canFetchToDestination(destination: ISendToDestination): boolean 
     if (destination.type === 'personal-space') {
         throw new Error('fetching to personal space is not supported');
     } else if (destination.type === 'desk') {
+        // no stage at all is a different state from a stage that can not be resolved yet:
+        // `getInitialDestination` reports it as `stage: null`, the fetch endpoint needs a stage
+        // id, and `fetchItems` below swallows the resulting server error
+        if (destination.stage == null) {
+            return false;
+        }
+
         const destinationStage = sdApi.desks.getDeskStages(destination.desk).get(destination.stage);
 
         // an unresolvable stage (desks store still loading, or a desk the user can not see) can

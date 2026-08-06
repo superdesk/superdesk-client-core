@@ -22,6 +22,13 @@ describe('canFetchToDestination', () => {
         expect(canFetchToDestination(destination)).toBe(true);
     });
 
+    it('does not allow fetching with no stage selected, even on a desk the user is a member of', () => {
+        spyOn(sdApi.desks, 'getDeskStages').and.returnValue(OrderedMap());
+        spyOn(sdApi.desks, 'getCurrentUserDesks').and.returnValue([{_id: 'desk1'} as IDesk]);
+
+        expect(canFetchToDestination({type: 'desk', desk: 'desk1', stage: null})).toBe(false);
+    });
+
     it('does not allow fetching when the stage can not be resolved and the user is not a member', () => {
         spyOn(sdApi.desks, 'getDeskStages').and.returnValue(OrderedMap());
         spyOn(sdApi.desks, 'getCurrentUserDesks').and.returnValue([{_id: 'another-desk'} as IDesk]);
