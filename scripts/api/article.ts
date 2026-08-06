@@ -197,8 +197,10 @@ function unlock(itemId: IArticle['_id']): Promise<IArticle> {
  * i.e. can't be in personal space.
  */
 function sendItemToNextStage(item: IArticle): Promise<void> {
+    // rejecting rather than throwing, so that a caller holding the promise can catch it;
+    // `AuthoringDirective` calls this directly rather than from inside a `then` callback
     if (sdApi.article.isPersonal(item)) {
-        throw new Error('can not send personal item to next stage');
+        return Promise.reject(new Error('can not send personal item to next stage'));
     }
 
     const deskId = item.task.desk;
@@ -209,7 +211,9 @@ function sendItemToNextStage(item: IArticle): Promise<void> {
     // without this the item would silently be sent to the first stage, because `indexOf` of a
     // stage that was not found is -1 and the next index after -1 is 0
     if (currentStage == null) {
-        throw new Error(`can not send to next stage: stage "${stageId}" is not a stage of desk "${deskId}"`);
+        return Promise.reject(
+            new Error(`can not send to next stage: stage "${stageId}" is not a stage of desk "${deskId}"`),
+        );
     }
 
     const currentStageIndex = deskStages.indexOf(currentStage);
