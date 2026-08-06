@@ -30,6 +30,7 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
+import {ActionsPanelOverlay} from './actions-panel-overlay';
 
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@sourcefabric/common';
@@ -587,23 +588,24 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
                                 : undefined
                         }
-                        getSidePanel={({
-                            item,
-                            getLatestItem,
-                            contentProfile,
-                            fieldsData,
-                            handleFieldsDataChange,
-                            fieldsAdapter,
-                            storageAdapter,
-                            authoringStorage,
+                        /**
+                         * Send to / publish overlays the editor instead of sitting beside it,
+                         * so it is handed to the overlay slot rather than the side widget one.
+                         * The widget slots are sized for widgets and clip anything wider than
+                         * the editor column; see `actions-panel-overlay.tsx`.
+                         */
+                        getOverlayPanel={({
                             handleUnsavedChanges,
-                            sideWidget,
                             onItemChange,
                             getValidationErrors,
                             setValidationErrors,
-                        }, readOnly) => {
-                            if (panelState.active === true) {
-                                return (
+                        }) => {
+                            if (panelState.active !== true) {
+                                return null;
+                            }
+
+                            return (
+                                <ActionsPanelOverlay>
                                     <InteractiveArticleActionsPanel
                                         items={panelState.items}
                                         tabs={panelState.tabs}
@@ -627,9 +629,22 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         }}
                                         markupV2
                                     />
-                                );
-                            }
-
+                                </ActionsPanelOverlay>
+                            );
+                        }}
+                        getSidePanel={({
+                            item,
+                            getLatestItem,
+                            contentProfile,
+                            fieldsData,
+                            handleFieldsDataChange,
+                            fieldsAdapter,
+                            storageAdapter,
+                            authoringStorage,
+                            handleUnsavedChanges,
+                            sideWidget,
+                            onItemChange,
+                        }, readOnly) => {
                             if (sideWidget == null) {
                                 return null;
                             }

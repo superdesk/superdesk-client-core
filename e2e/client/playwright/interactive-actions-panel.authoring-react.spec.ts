@@ -33,9 +33,58 @@ async function openForEditing(page: Page, title: string): Promise<Locator> {
     return article;
 }
 
-// scoped to authoring: the monitoring instance of this panel renders the legacy markup
+/**
+ * Scoped to the authoring host: the monitoring instance of this panel is a separate mount
+ * that renders the legacy markup. The host is not inside `[data-test-id=authoring]`,
+ * because the panel is deliberately rendered outside the editor it belongs to.
+ */
 function panelInAuthoring(page: Page): Locator {
-    return page.getByTestId('authoring').getByTestId('interactive-actions-panel');
+    return page.getByTestId('authoring-actions-panel-overlay').getByTestId('interactive-actions-panel');
+}
+
+function authoringFrame(page: Page): Locator {
+    return page.getByTestId('authoring').locator('.sd-editor-grid');
+}
+
+async function openPublishTab(page: Page): Promise<Locator> {
+    await restoreDatabaseSnapshot();
+    await openForEditing(page, 'test sports story');
+
+    await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+
+    const panel = panelInAuthoring(page);
+
+    await expect(panel.getByTestId('panel-footer').getByTestId('publish')).toBeVisible();
+
+    return panel;
+}
+
+function publishingColumns(panel: Locator): Locator {
+    return panel.getByTestId('publishing-section').locator('> div');
+}
+
+/**
+ * The panel container animates its width, so a measurement taken right after it opens or
+ * after a tab change can land mid-transition.
+ */
+async function getSettledWidth(locator: Locator): Promise<number> {
+    let previous = NaN;
+
+    await expect.poll(async () => {
+        const box = await locator.boundingBox();
+
+        if (box == null) {
+            return false;
+        }
+
+        const settled = box.width === previous;
+
+        previous = box.width;
+
+        return settled;
+    }).toBe(true);
+
+    return previous;
 }
 
 /**
@@ -156,47 +205,6 @@ test.describe('interactive article actions panel with a contributed publishing s
         viewport: {width: 1920, height: 1080},
     });
 
-    /**
-     * The panel container animates its width, so a measurement taken right after it opens or
-     * after a tab change can land mid-transition.
-     */
-    async function getSettledWidth(locator: Locator): Promise<number> {
-        let previous = NaN;
-
-        await expect.poll(async () => {
-            const box = await locator.boundingBox();
-
-            if (box == null) {
-                return false;
-            }
-
-            const settled = box.width === previous;
-
-            previous = box.width;
-
-            return settled;
-        }).toBe(true);
-
-        return previous;
-    }
-
-    async function openPublishTab(page: Page): Promise<Locator> {
-        await restoreDatabaseSnapshot();
-        await openForEditing(page, 'test sports story');
-
-        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
-
-        const panel = panelInAuthoring(page);
-
-        await expect(panel.getByTestId('panel-footer').getByTestId('publish')).toBeVisible();
-
-        return panel;
-    }
-
-    function publishingColumns(panel: Locator): Locator {
-        return panel.getByTestId('publishing-section').locator('> div');
-    }
-
     test('renders the contributed section beside the standard publishing options', async ({page}) => {
         const panel = await openPublishTab(page);
 
@@ -239,5 +247,110 @@ test.describe('interactive article actions panel with a contributed publishing s
 
         // the reported symptom: two columns squeezed into a single column width overflow it
         expect(overflow).toBeLessThanOrEqual(1);
+    });
+});
+
+/**
+ * At the default viewport the two column publish tab is wider than the authoring column,
+ * which is the case the panel used to be rendered wrongly for: hosted in one of the frame's
+ * side widget slots it was cut off along its inline-start edge, taking the labels and inputs
+ * of the first column with it. Authoring-angular has never done this, because it renders the
+ * same panel outside the editor.
+ *
+ * These tests are deliberately not run at a viewport wide enough for the panel to fit inside
+ * the authoring column, since that is what hid the defect from the rest of this file.
+ */
+test.describe('interactive article actions panel wider than the authoring column', () => {
+    test.use({storageState: getStorageState({}, {authoringReact: true, publishingSections: true})});
+
+    /**
+     * Clipping by an ancestor does not shrink `getBoundingClientRect`, so no measurement of
+     * the panel itself can see it. Hit testing can: wherever something between the panel and
+     * the viewport cuts it off, the point inside the panel is painted by whatever does the
+     * cutting instead. The probes run down the inline-start edge, which is the edge the user
+     * lost, and the one every clip in this layout eats into first.
+     */
+    function getUnpaintedInlineStartProbes(panel: Locator): Promise<Array<number>> {
+        return panel.evaluate((element) => {
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + 2;
+
+            return [0.1, 0.5, 0.9]
+                .map((fraction) => rect.top + (rect.height * fraction))
+                .filter((y) => {
+                    const painted = document.elementFromPoint(x, y);
+
+                    return painted == null || element.contains(painted) !== true;
+                });
+        });
+    }
+
+    async function expectPanelToBeUnclipped(panel: Locator): Promise<void> {
+        await getSettledWidth(panel);
+
+        const panelBox = await panel.boundingBox();
+
+        // it overlays what is beside the editor rather than being pushed off the screen
+        expect(panelBox.x).toBeGreaterThanOrEqual(0);
+
+        expect(await getUnpaintedInlineStartProbes(panel)).toEqual([]);
+    }
+
+    test('renders unclipped with no side widget pinned', async ({page}) => {
+        const panel = await openPublishTab(page);
+
+        await expect(publishingColumns(panel)).toHaveCount(2);
+
+        const panelBox = await panel.boundingBox();
+        const frameBox = await authoringFrame(page).boundingBox();
+
+        // the premise of the test: a panel that fits inside the editor would prove nothing
+        expect(panelBox.width).toBeGreaterThan(frameBox.width);
+
+        // like the angular panel, it reaches past the editor over what is beside it
+        expect(panelBox.x).toBeLessThan(frameBox.x);
+
+        await expectPanelToBeUnclipped(panel);
+    });
+
+    /**
+     * Pinning resizes the monitoring list, so the editor is not reliably narrower than the
+     * panel here and this test makes no claim about their relative widths. What it does
+     * claim is that the panel comes up whole, which is what the pinned track used to deny.
+     */
+    test('renders unclipped with a side widget pinned', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openForEditing(page, 'test sports story');
+
+        const authoring = page.getByTestId('authoring');
+
+        // any pinnable widget will do; metadata is registered unconditionally
+        await authoring.getByTestId('widget-icon')
+            .and(page.locator('[data-test-value="metadata-widget"]'))
+            .click();
+        await authoring.getByRole('button', {name: 'Pin'}).click();
+
+        /**
+         * Pinning moves the side widget into a different grid column from the unpinned one,
+         * and that column sets `overflow-x: hidden`. A panel routed into it is clipped
+         * whatever the viewport, which is how this reached the user.
+         */
+        await expect(
+            authoring.locator('.sd-editor-grid__sidetabs-content-pinned.sidetab-content-pinned--open'),
+        ).toBeVisible();
+
+        await authoring.getByTestId('open-send-publish-pane').click();
+
+        const panel = panelInAuthoring(page);
+
+        await expect(panel.getByTestId('panel-footer').getByTestId('publish')).toBeVisible();
+        await expect(publishingColumns(panel)).toHaveCount(2);
+
+        // the pinned widget keeps its place; the panel is no longer competing for the slot
+        await expect(
+            authoring.locator('.sd-editor-grid__sidetabs-content-pinned.sidetab-content-pinned--open'),
+        ).toBeVisible();
+
+        await expectPanelToBeUnclipped(panel);
     });
 });

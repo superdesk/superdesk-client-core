@@ -1588,6 +1588,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                 sideBar={this.props.getSidebar?.(exposed)}
                             />
                         </WithKeyBindings>
+
+                        {/*
+                          * Deliberately outside the frame. The frame routes everything it is
+                          * given into a side widget slot, and those slots clip: the overlay
+                          * track is a zero-width column and the pinned track sets
+                          * `overflow-x: hidden`.
+                          */}
+                        {this.props.getOverlayPanel?.(exposed)}
                     </div>
                 </ToolbarContextProvider>
             </InlineToolbarContextProvider>
