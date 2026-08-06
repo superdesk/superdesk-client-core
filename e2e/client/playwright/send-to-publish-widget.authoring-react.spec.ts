@@ -118,3 +118,118 @@ test('Send to from the monitoring list opens the widget for the article being ed
     await expect(widget).toBeVisible();
     await expect(widget.getByTestId('tabs').getByRole('tab', {name: 'Send to', selected: true})).toBeVisible();
 });
+
+/**
+ * The publishing body is adaptive: it grows a column for every section contributed
+ * through the `publishingSections` extension point. No extension in this repository
+ * contributes one, so these tests enable a test extension that does. Without it the
+ * column count is always 1 and the adaptive layout cannot be observed.
+ */
+test.describe('with a contributed publishing section', () => {
+    test.use({
+        storageState: getStorageState({}, {authoringReact: true, publishingSections: true}),
+
+        // two columns need more than the default 1280px, as they would in a real deployment
+        viewport: {width: 1920, height: 1080},
+    });
+
+    async function getBox(locator: Locator): Promise<{width: number, height: number}> {
+        const box = await locator.boundingBox();
+
+        if (box == null) {
+            throw new Error('cannot measure an element that is not rendered');
+        }
+
+        return box;
+    }
+
+    /**
+     * The panel container transitions its width, so a measurement taken right after the
+     * widget opens or the tab changes can land mid-animation.
+     */
+    async function getSettledWidth(locator: Locator): Promise<number> {
+        let previous = NaN;
+
+        await expect.poll(async () => {
+            const {width} = await getBox(locator);
+            const settled = width === previous;
+
+            previous = width;
+
+            return settled;
+        }).toBe(true);
+
+        return previous;
+    }
+
+    async function openPublishTab(page: Page): Promise<Locator> {
+        const authoring = new Authoring(page);
+
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+        await authoring.openSideWidget(SEND_TO_PUBLISH_WIDGET_ID);
+
+        const widget = sendToPublishWidget(page);
+
+        await expect(widget.getByTestId('publish')).toBeVisible();
+        await getSettledWidth(widget);
+
+        return widget;
+    }
+
+    function publishingColumns(widget: Locator): Locator {
+        return widget.getByTestId('publishing-section').locator('> div');
+    }
+
+    test('the section is rendered next to the standard publishing options', async ({page}) => {
+        const widget = await openPublishTab(page);
+
+        await expect(publishingColumns(widget)).toHaveCount(2);
+
+        // proves the contribution point hands the section the article being published
+        await expect(widget.getByTestId('extra-publishing-section--slugline'))
+            .toHaveText('test sports story');
+    });
+
+    test('the publish tab is substantially wider than the send to tab', async ({page}) => {
+        const widget = await openPublishTab(page);
+        const publishTabWidth = await getSettledWidth(widget);
+
+        await widget.getByTestId('tabs').getByRole('tab', {name: 'Send to'}).click();
+        await expect(widget.getByTestId('send')).toBeVisible();
+
+        // send to contributes no sections, so it stays at a single column
+        const sendToTabWidth = await getSettledWidth(sendToPublishWidget(page));
+
+        /**
+         * One contributed section means two columns against send to's one. Comparing the
+         * two tabs rather than a pixel width keeps this tied to the behaviour: it survives
+         * a change to the column width, and still fails when the widget ignores
+         * `columnCount`, which leaves both tabs exactly the same width.
+         */
+        expect(publishTabWidth / sendToTabWidth).toBeGreaterThan(1.6);
+    });
+
+    test('the publish tab does not scroll horizontally', async ({page}) => {
+        const widget = await openPublishTab(page);
+
+        await expect(publishingColumns(widget)).toHaveCount(2);
+
+        const overflow = await widget.locator('.side-panel__content').evaluate(
+            (element) => element.scrollWidth - element.clientWidth,
+        );
+
+        // the reported symptom: columns squeezed into a single column width overflow it
+        expect(overflow).toBeLessThanOrEqual(1);
+    });
+
+    test('the contributed column fills the height of the panel', async ({page}) => {
+        const widget = await openPublishTab(page);
+
+        const contentHeight = (await getBox(widget.locator('.side-panel__content'))).height;
+        const sectionHeight = (await getBox(widget.getByTestId('extra-publishing-section'))).height;
+
+        // the section asks for `height: 100%`, which only resolves if the body has a definite height
+        expect(sectionHeight).toBeGreaterThan(contentHeight * 0.9);
+    });
+});
