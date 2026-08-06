@@ -637,6 +637,15 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             const WidgetComponent = getWidgetsFromExtensions(item)
                                 .find((widget) => sideWidget === widget._id)?.component;
 
+                            /**
+                             * The active widget is restored from a user preference, which outlives
+                             * the widget itself: a user who pinned the send to / publish widget
+                             * before SDESK-7804 removed it still has its id stored server-side.
+                             */
+                            if (WidgetComponent == null) {
+                                return null;
+                            }
+
                             return (
                                 <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
                                     {(widgetRef) => (

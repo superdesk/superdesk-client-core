@@ -10,7 +10,13 @@ type StorageState = BrowserContextOptions['storageState'];
  */
 export function getStorageState(
     appConfigPatch: Partial<ISuperdeskGlobalConfig>,
-    otherOptions?: {authoringReact?: boolean, publishingSections?: boolean},
+    otherOptions?: {
+        authoringReact?: boolean,
+        publishingSections?: boolean,
+
+        // for scenarios that depend on state the app persisted in an earlier session
+        localStorageEntries?: Array<{name: string, value: string}>,
+    },
 ): StorageState {
     const storageStateCopy = JSON.parse(JSON.stringify(storageState));
 
@@ -22,6 +28,10 @@ export function getStorageState(
 
     if (otherOptions?.publishingSections === true) {
         storageStateCopy['origins'][0].localStorage.push({name: PUBLISHING_SECTIONS_ENABLED, value: 'true'});
+    }
+
+    for (const entry of otherOptions?.localStorageEntries ?? []) {
+        storageStateCopy['origins'][0].localStorage.push(entry);
     }
 
     return storageStateCopy;

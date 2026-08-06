@@ -108,6 +108,30 @@ test.describe('interactive article actions panel in authoring-react', () => {
 });
 
 /**
+ * The active side widget is restored from state the app persisted in an earlier session, and
+ * that state outlives the widget: anyone who selected the send to / publish widget before it
+ * was removed still carries its id. Authoring has to survive the upgrade.
+ */
+test.describe('authoring-react opened with the removed widget still selected', () => {
+    test.use({
+        storageState: getStorageState({}, {
+            authoringReact: true,
+            localStorageEntries: [
+                {name: 'SIDE_WIDGET', value: JSON.stringify('interactive-article-actions-widget')},
+            ],
+        }),
+    });
+
+    test('opens the editor instead of failing on the missing widget', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openForEditing(page, 'test sports story');
+
+        await expect(page.getByTestId('authoring')).toBeVisible();
+        await expect(page.getByTestId('authoring').getByTestId('open-send-publish-pane')).toBeVisible();
+    });
+});
+
+/**
  * The publishing body is adaptive: it grows a column for every section contributed through
  * the `publishingSections` extension point, and the panel widens to match. No extension in
  * this repository contributes one, so these tests enable a test extension that does.
