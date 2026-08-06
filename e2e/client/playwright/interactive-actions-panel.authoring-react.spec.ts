@@ -101,8 +101,19 @@ test.describe('interactive article actions panel in authoring-react', () => {
         await restoreDatabaseSnapshot();
         await openForEditing(page, 'test sports story');
 
-        // the rail is where SDESK-7447 hosted these actions
-        await expect(page.getByTestId('interactive-article-actions-widget')).toHaveCount(0);
+        /**
+         * The rail is where SDESK-7447 hosted these actions. Each entry is a `widget-icon`
+         * carrying the widget id in `data-test-value`; the id is never a test id of its own,
+         * so matching on it directly would pass whether or not the widget is registered.
+         */
+        await expect(
+            page.getByTestId('widget-icon')
+                .and(page.locator('[data-test-value="interactive-article-actions-widget"]')),
+        ).toHaveCount(0);
+
+        // the rail still renders, so the assertion above is about this widget and not an empty page
+        await expect(page.getByTestId('widget-icon').first()).toBeVisible();
+
         await expect(page.getByTestId('authoring').getByTestId('open-send-publish-pane')).toHaveCount(1);
     });
 });
