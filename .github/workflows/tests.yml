@@ -26,7 +26,7 @@ jobs:
 
     # must come after npm ci, which deletes node_modules
     - name: Cache webpack build cache
-      uses: actions/cache@v5.0.5
+      uses: actions/cache@v6.1.0
       with:
         path: node_modules/.cache
         key: webpack-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('package-lock.json', 'webpack.config.js') }}
@@ -92,7 +92,7 @@ jobs:
 
     # must come after npm ci, which deletes node_modules
     - name: Cache webpack build cache
-      uses: actions/cache@v5.0.5
+      uses: actions/cache@v6.1.0
       with:
         path: e2e/client/node_modules/.cache
         key: webpack-e2e-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('e2e/client/package-lock.json', 'webpack.config.js') }}
@@ -164,7 +164,7 @@ jobs:
 
     - name: Cache Playwright browsers
       id: playwright-cache
-      uses: actions/cache@v5.0.5
+      uses: actions/cache@v6.1.0
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
