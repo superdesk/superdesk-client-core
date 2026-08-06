@@ -372,13 +372,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                     .some((widget) => widget._id === INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID);
 
                 if (widgetAvailable && items[0]._id === this.props.itemId) {
-                    this.setState({
+                    // keeps whatever the pinned state is when a pin change is still pending
+                    this.setState((previousState) => ({
                         interactiveActionsWidgetState: {tabs, activeTab},
                         sideWidget: {
-                            ...this.state.sideWidget,
+                            ...previousState.sideWidget,
                             activeId: INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID,
                         },
-                    });
+                    }));
 
                     closedIntentionally.value = false;
                 }
@@ -415,14 +416,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     }
 
     private setSideWidget(sideWidget: ISideWidget | null) {
-        this.setState({
+        this.setState((previousState) => ({
             sideWidget,
 
             // the pending action only applies to the widget it was requested for
             interactiveActionsWidgetState: sideWidget?.activeId === INTERACTIVE_ARTICLE_ACTIONS_WIDGET_ID
-                ? this.state.interactiveActionsWidgetState
+                ? previousState.interactiveActionsWidgetState
                 : null,
-        });
+        }));
 
         closedIntentionally.value = false;
     }
