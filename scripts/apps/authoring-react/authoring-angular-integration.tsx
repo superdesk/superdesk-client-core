@@ -498,6 +498,19 @@ function getInlineToolbarActions(
     }
 }
 
+/**
+ * Killed and recalled items have no onward transition left, and an archived item that
+ * cannot be published cannot be sent either. The side widget this button replaces
+ * declined to render in those cases; the panel host keeps that behaviour.
+ */
+export function canOpenInteractiveActions(article: IArticle): boolean {
+    if (article.state === ITEM_STATE.KILLED || article.state === ITEM_STATE.RECALLED) {
+        return false;
+    }
+
+    return sdApi.article.canPublish(article) || article._type !== 'archived';
+}
+
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
@@ -506,7 +519,7 @@ function getPublishToolbarWidget(
         priority: 99,
         availableOffline: false,
         group: 'end',
-        component: (props: {entity: IArticle}) => (
+        component: (props: {entity: IArticle}) => !canOpenInteractiveActions(props.entity) ? null : (
             <ButtonGroup align="end">
                 <ButtonGroup subgroup={true} spaces="no-space">
                     <NavButton
