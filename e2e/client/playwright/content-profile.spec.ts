@@ -59,6 +59,14 @@ async function openTemplateEdit(page: Page, name: string): Promise<void> {
 
 test(
     'content profile auto-creates matching template; deleting blanks template profile',
+    {
+        annotation: [
+            // Create new content profile (Mikayel) - PASS 13.10 (AUTOMATED)
+            {type: 'confluence', description: '1308524961 complete'},
+            // Use content profile in a template - PASS - Mikayel 20.10
+            {type: 'confluence', description: '1311834555 complete'},
+        ],
+    },
     async ({page}) => {
         const PROFILE_NAME = 'Simple';
 
@@ -108,7 +116,12 @@ test(
     },
 );
 
-test('content profile required field blocks publish', async ({page}) => {
+test('content profile required field blocks publish', {
+    annotation: [
+        // Edit content profile header fields - PASS Mikayel 13.10
+        {type: 'confluence', description: '1311834983 complete'},
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

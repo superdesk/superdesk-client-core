@@ -2,7 +2,12 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('spiking and unspiking an article', async ({page}) => {
+test('spiking and unspiking an article', {
+    annotation: [
+        {type: 'confluence', description: '1311834144 complete'}, // Unspike item (AUTOMATED)
+        {type: 'confluence', description: '1308524774 complete'}, // Spike item (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

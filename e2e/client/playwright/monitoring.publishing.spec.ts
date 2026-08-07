@@ -3,7 +3,12 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
-test('publishing an article from a different desk', async ({page}) => {
+test('publishing an article from a different desk', {
+    annotation: [
+        // Sending items between desks_ (PASS 20.10) (AUTOMATED)
+        {type: 'confluence', description: '1344443827 complete'},
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
