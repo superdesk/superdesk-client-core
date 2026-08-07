@@ -23,7 +23,7 @@ Several e2e instances can run on one machine at the same time, for example when 
 
 Slot N uses api `:501N`, websocket `:511N`, client `:901N`, mongo on `:2701<7+N>`, and elastic indices prefixed `sd_e2e_s<N>`, all disjoint from the default stack (`:5002` / `:9000` / `:27017` / `superdesk_e2e`), so a manually started stack keeps working alongside slots. Claims are lock directories under `/tmp/superdesk-e2e`, and re-running `e2e-up.sh --slot auto` from the same checkout re-enters its slot.
 
-On success the slot's environment is written to `e2e/client/.e2e-slot.env` (gitignored). `playwright.config.ts` auto-loads it, so `npx playwright test` from that checkout targets the slot without further setup. The file also points `storageState` at an origin-rewritten copy of the committed auth state, since localStorage is origin-scoped and each slot's client runs on a different port.
+On success the slot's environment is written to `e2e/client/playwright/.cache/e2e-slot.env` (a path every branch already ignores, so slot artifacts can never be committed accidentally). `playwright.config.ts` auto-loads it, so `npx playwright test` from that checkout targets the slot without further setup. The file also points `storageState` at an origin-rewritten copy of the committed auth state, since localStorage is origin-scoped and each slot's client runs on a different port.
 
 Notes for running several slots:
 

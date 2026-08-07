@@ -9,7 +9,7 @@ import path from 'path';
  * file. Workers inherit process.env from this process, so setting values here
  * also covers playwright/utils (SUPERDESK_URL).
  */
-const slotEnvPath = path.join(__dirname, '.e2e-slot.env');
+const slotEnvPath = path.join(__dirname, './playwright/.cache/e2e-slot.env');
 
 if (fs.existsSync(slotEnvPath)) {
     for (const line of fs.readFileSync(slotEnvPath, 'utf-8').split('\n')) {

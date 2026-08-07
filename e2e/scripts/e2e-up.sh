@@ -25,7 +25,8 @@
 #   `--slot auto` re-enters a slot already claimed by this checkout, else
 #   picks the first free one. Release with ./e2e/scripts/e2e-down.sh --slot N.
 #
-#   On success the slot environment is written to e2e/client/.e2e-slot.env.
+#   On success the slot environment is written to
+#   e2e/client/playwright/.cache/e2e-slot.env.
 #   playwright.config.ts auto-loads that file, so `npx playwright test` run
 #   from this checkout targets the slot with no extra setup.
 #
@@ -366,29 +367,34 @@ if [ -n "$SLOT" ]; then
     # The committed storageState keeps the admin session in localStorage keyed
     # to the origin http://localhost:9000. A slot client is a different origin,
     # so write a copy with the origin rewritten or every spec starts logged out.
+    # Everything generated for a slot lives under playwright/.cache/, which
+    # develop has ignored for years, so a checkout of any branch (with or
+    # without slot support) can never accidentally commit these. The auth
+    # copy in particular carries a session token.
+    mkdir -p "$E2E_CLIENT/playwright/.cache"
     (cd "$E2E_CLIENT" && SLOT_ORIGIN="$CLIENT_URL" node -e '
         const fs = require("fs");
         const data = JSON.parse(fs.readFileSync("playwright/.auth/user.json", "utf-8"));
         for (const origin of data.origins || []) {
             origin.origin = origin.origin.replace("http://localhost:9000", process.env.SLOT_ORIGIN);
         }
-        fs.writeFileSync("playwright/.auth/user.slot.json", JSON.stringify(data, null, 4) + "\n");
+        fs.writeFileSync("playwright/.cache/user.slot.json", JSON.stringify(data, null, 4) + "\n");
     ')
 
-    cat > "$E2E_CLIENT/.e2e-slot.env" <<EOF
+    cat > "$E2E_CLIENT/playwright/.cache/e2e-slot.env" <<EOF
 E2E_SLOT=$SLOT
 SUPERDESK_URL=$SUPERDESK_URL
 SUPERDESK_WS_URL=$SUPERDESK_WS_URL
 CLIENT_URL=$CLIENT_URL
 CLIENT_PORT=$CLIENT_PORT
-PLAYWRIGHT_STORAGE_STATE=playwright/.auth/user.slot.json
+PLAYWRIGHT_STORAGE_STATE=playwright/.cache/user.slot.json
 PLAYWRIGHT_HTML_OPEN=never
 EOF
-    log "slot environment written to e2e/client/.e2e-slot.env (auto-loaded by playwright.config.ts)"
+    log "slot environment written to e2e/client/playwright/.cache/e2e-slot.env (auto-loaded by playwright.config.ts)"
 else
     # A leftover slot env file would silently redirect playwright at a slot
     # stack; the default stack must not inherit it.
-    rm -f "$E2E_CLIENT/.e2e-slot.env"
+    rm -f "$E2E_CLIENT/playwright/.cache/e2e-slot.env"
 fi
 
 log "ready"

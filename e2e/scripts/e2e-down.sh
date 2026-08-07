@@ -85,7 +85,7 @@ down_slot() {
     # The lock lives under world-writable /tmp, so only trust the recorded
     # path if it actually looks like a checkout of this repo.
     if [ -n "$owner" ] && [ -f "$owner/e2e/scripts/e2e-up.sh" ]; then
-        rm -f "$owner/e2e/client/.e2e-slot.env"
+        rm -f "$owner/e2e/client/playwright/.cache/e2e-slot.env"
     fi
     rm -rf "${SLOT_LOCK_ROOT:?}/slot-$n.lock"
 }
