@@ -196,7 +196,20 @@ wait_until_reachable() {
 
 ensure_deps() {
     local dir="$1"
-    if [ "$REINSTALL" = true ] || [ ! -d "$dir/node_modules" ]; then
+    local stale=false
+
+    # npm writes node_modules/.package-lock.json on every install. A repo
+    # lockfile newer than that marker means the installed tree predates it,
+    # which surfaces as misleading build failures (missing modules deep in
+    # webpack) rather than anything naming the real cause.
+    if [ ! -d "$dir/node_modules" ]; then
+        stale=true
+    elif [ "$dir/package-lock.json" -nt "$dir/node_modules/.package-lock.json" ]; then
+        log "dependencies in $dir are older than package-lock.json; reinstalling"
+        stale=true
+    fi
+
+    if [ "$REINSTALL" = true ] || [ "$stale" = true ]; then
         log "installing dependencies in $dir"
         (cd "$dir" && npm ci)
     fi
