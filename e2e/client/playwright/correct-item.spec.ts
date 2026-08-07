@@ -2,7 +2,11 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('can correct published item', async ({page}) => {
+test('can correct published item', {
+    annotation: [
+        {type: 'confluence', description: '1310851139 complete'}, // 🤖 Correct item (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

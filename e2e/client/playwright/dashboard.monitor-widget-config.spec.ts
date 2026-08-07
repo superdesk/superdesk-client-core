@@ -35,7 +35,11 @@ async function selectDesk(page: Page, deskName: string) {
         .click();
 }
 
-test('configures a custom label for a monitor widget', async ({page}) => {
+test('configures a custom label for a monitor widget', {
+    annotation: [
+        {type: 'confluence', description: '1308524881 complete'}, // Monitoring Widget Settings
+    ],
+}, async ({page}) => {
     await selectDesk(page, 'Politic Desk');
     await addMonitorWidget(page);
 
