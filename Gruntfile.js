@@ -50,16 +50,29 @@ module.exports = function(grunt) {
     ]);
 
     // Compile PO files to runtime JSON catalogs (gettext.js flat format with metadata under "" key).
-    // Used by scripts/init.ts and scripts/reload-language.ts. Production build runs the equivalent
-    // step via build-tools' build-root-repo command; this grunt task lets `grunt server` produce
-    // them too. Invokes gettext.js's shipped po2json CLI directly so we don't have to depend on
-    // @superdesk/build-tools at runtime (it's a devDependency and may not be installed when this
-    // Gruntfile is consumed from another project).
+    // Used by scripts/init.ts and scripts/reload-language.ts. Prefers build-tools' in-process
+    // converter, which also validates translation placeholders; falls back to spawning
+    // gettext.js's po2json per file when build-tools isn't installed (it's a devDependency
+    // and may be missing when this Gruntfile is consumed from another project).
     grunt.registerTask('po-to-json', 'Compile po/*.po to dist/languages/*.json', () => {
         var fs = require('fs');
         var distDir = grunt.config.get('distDir');
         var poDir = path.join(__dirname, 'po');
         var jsonDir = path.join(process.cwd(), distDir, 'languages');
+
+        var poToJson = null;
+
+        try {
+            poToJson = require('@superdesk/build-tools/src/po-to-json');
+        } catch (err) {
+            // build-tools not installed; use the fallback below
+        }
+
+        if (poToJson != null) {
+            poToJson(poDir, jsonDir);
+            return;
+        }
+
         var po2json = path.join(
             path.dirname(require.resolve('gettext.js/package.json')),
             'bin',
@@ -123,6 +136,55 @@ module.exports = function(grunt) {
     // gettext
     grunt.registerTask('gettext:extract', ['nggettext_extract']);
 
+    // Escape hatch for a stale or corrupted webpack cache; run it from the repo
+    // the build runs in (superdesk/client for the root repo).
+    grunt.registerTask('clear-cache', 'Delete the persistent webpack build cache', () => {
+        var fs = require('fs');
+        var cacheDir = path.join(process.cwd(), 'node_modules', '.cache', 'webpack');
+
+        fs.rmSync(cacheDir, {recursive: true, force: true});
+        grunt.log.writeln('Removed ' + cacheDir);
+    });
+
+    // Runs webpack directly instead of via grunt-webpack: grunt-webpack never calls
+    // compiler.close(), and webpack only persists its filesystem cache on close.
+    grunt.registerTask('webpack-build', 'Run the production webpack build', function() {
+        var done = this.async();
+        // same consumer-first resolution as webpack.config.js, so the compiler
+        // and the config's plugins share one webpack copy
+        var webpack = require(require.resolve('webpack', {paths: [process.cwd(), __dirname]}));
+        var makeConfig = require(path.join(__dirname, 'webpack.config.js'));
+        var webpackConfig = Object.assign({mode: 'production'}, makeConfig(grunt));
+
+        // Opt-in for release builds: hidden-source-map emits .map files the bundles
+        // don't reference; keep them out of what's deployed to browsers. The separate
+        // cache space matters: the cache doesn't track this runtime devtool change,
+        // and without it cached map-less modules are reused and no maps come out.
+        if (process.env.SUPERDESK_SOURCE_MAPS === 'true') {
+            webpackConfig.devtool = 'hidden-source-map';
+            webpackConfig.cache = Object.assign(
+                {}, webpackConfig.cache, {version: 'with-source-maps'}
+            );
+        }
+
+        var compiler = webpack(webpackConfig);
+
+        compiler.run((err, stats) => {
+            if (err) {
+                done(err);
+                return;
+            }
+
+            grunt.log.writeln(stats.toString({preset: 'errors-warnings', colors: true}));
+
+            var hasErrors = stats.hasErrors();
+
+            compiler.close((closeErr) => {
+                done(closeErr || !hasErrors);
+            });
+        });
+    });
+
     // Production build
     grunt.registerTask('build', '', () => {
         grunt.task.run([
@@ -149,7 +211,7 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'nggettext_compile',
-            'webpack:build',
+            'webpack-build',
             'filerev',
             'usemin',
         ]);
