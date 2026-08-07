@@ -66,9 +66,9 @@ export class Dashboard {
     /**
      * Drags a widget by whole grid steps.
      *
-     * gridster listens for raw mousedown/mousemove/mouseup on the grid, so
-     * page.dragTo() (which fires HTML5 drag events) does not move a widget.
-     * The first mousemove past gridster's 1px threshold only starts the drag;
+     * The drop target is an empty grid cell, which has no element for
+     * `locator.dragTo()` to aim at, so the mouse events are driven by hand.
+     * The first mousemove past gridster's drag threshold only starts the drag;
      * the drop cell is recomputed on the moves after it, hence `steps`.
      */
     async dragWidget(widgetId: string, steps: {columns: number; rows: number}): Promise<void> {
