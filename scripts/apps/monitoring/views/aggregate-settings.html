@@ -63,7 +63,7 @@
          data-hide="shouldHideStep('searches')">
         <div class="content">
             <div class="legend" translate>Select saved searches for view</div>
-            <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true">
+            <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true" data-test-id="global-saved-searches">
                 <div
                     class="desk"
                     ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'"
@@ -86,11 +86,22 @@
                     </div>
                 </div>
             </div>
-            <div sd-toggle-box data-title="{{ :: 'Private saved searches' | translate}}" data-style="circle" data-open="true" ng-if="showPrivateSavedSearches">
-                <div class="desk" ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'" ng-if="showPrivateSavedSearches">
+            <div sd-toggle-box data-title="{{ :: 'Private saved searches' | translate}}" data-style="circle" data-open="true" ng-if="showPrivateSavedSearches" data-test-id="private-saved-searches">
+                <div
+                    class="desk"
+                    ng-repeat="search in privateSavedSearches track by search._id | orderBy: 'name'"
+                    ng-if="showPrivateSavedSearches"
+                    data-test-id="saved-search"
+                    data-test-value="{{search.name}}"
+                >
                     <div class="desk-title desk-title--saved-search">
                         <div class="switch">
-                            <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
+                            <span
+                                sd-switch
+                                ng-model="editGroups[search._id].selected"
+                                ng-click="setSearchInfo(search._id)"
+                                data-test-id="toggle"
+                            ></span>
                         </div>
                         <div class="desk-title__text">
                             {{:: search.name}}
@@ -152,8 +163,8 @@
 </div>
 
 <div class="modal__footer" data-test-id="footer">
-    <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
-    <button class="btn" ng-click="cancel()" translate>Cancel</button>
+    <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate data-test-id="previous">Previous</button>
+    <button class="btn" ng-click="cancel()" translate data-test-id="cancel">Cancel</button>
     <button class="btn btn--primary" ng-click="save()" translate data-test-id="done">Done</button>
-    <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
+    <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate data-test-id="next">Next</button>
 </div>
