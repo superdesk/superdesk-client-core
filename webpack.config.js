@@ -264,6 +264,14 @@ module.exports = function makeConfig(grunt) {
     // tsc's default at target es5: without it, declaration-only class fields
     // (`scope: any;`) are defined as undefined after super() returns, wiping
     // values that parent constructors assigned.
+    //
+    // @swc/helpers is declared in dependencies although nothing imports it directly
+    // (swc only emits imports of it with externalHelpers enabled, which is not used
+    // here). Repos that consume superdesk-core as a git dependency get @swc/helpers
+    // in their tree anyway through @swc/core's optional peer dependency, and
+    // Dependabot's lockfile regeneration drops optional-peer entries, leaving a lock
+    // that fails `npm ci` there. A regular dependency stays a hard lock entry that
+    // survives regeneration. Do not remove it as unused.
     const swcOptions = (parser) => ({
         isModule: 'unknown',
         module: {type: 'commonjs'},
