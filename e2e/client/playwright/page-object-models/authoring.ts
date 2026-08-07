@@ -64,6 +64,109 @@ export class Authoring {
     }
 
     /**
+     * Opens a side widget by its label and returns the widget panel.
+     *
+     * Both the tab and the panel carry the label in `data-test-value` while their
+     * visible content is an icon, so they are matched on the attribute.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-widget')
+            .and(page.locator(`[data-test-value="${label}"]`))
+            .click();
+
+        const panel = page.getByTestId('authoring-widget-panel')
+            .and(page.locator(`[data-test-value="${label}"]`));
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
+     * Saves from the topbar and waits for the save to land.
+     *
+     * The Save button is disabled while the item is clean, so it going back to
+     * disabled is the completion signal; without it the next assertion can run
+     * against a not-yet-persisted item.
+     */
+    async save(): Promise<void> {
+        const saveButton = this.page.getByTestId('authoring-topbar').getByTestId('save');
+
+        await saveButton.click();
+        await expect(saveButton).toBeDisabled();
+    }
+
+    /**
+     * Closes the article, discarding an autosave record if one is pending.
+     *
+     * Fields that autosave on a debounce can land a record after the item was
+     * saved, and the item then still counts as unsaved on the next close even
+     * if nothing was touched since. That makes the "Save changes?" prompt
+     * genuinely optional here, so it is answered only when it shows up.
+     */
+    async close(): Promise<void> {
+        const {page} = this;
+        const topbar = page.getByTestId('authoring-topbar');
+        const unsavedChanges = page.getByTestId('unsaved-changes-dialog');
+
+        await topbar.getByTestId('close').click();
+
+        await expect(async () => {
+            if (await unsavedChanges.isVisible()) {
+                await unsavedChanges.getByRole('button', {name: 'Ignore', exact: true}).click();
+            }
+
+            await expect(topbar).toBeHidden({timeout: 1000});
+        }).toPass({timeout: 20000});
+    }
+
+    /**
+     * Closes an article that has pending edits, answering the "Save changes?"
+     * prompt with Save.
+     *
+     * Use this instead of `save()` + `close()` after editing fields that
+     * autosave on a debounce: the debounced autosave can land after the topbar
+     * save, which raises the prompt anyway and leaves `close()` hanging on an
+     * article that never closes.
+     */
+    async closeAndSave(): Promise<void> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await page.getByTestId('unsaved-changes-dialog')
+            .getByRole('button', {name: 'Save', exact: true})
+            .click();
+
+        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+    }
+
+    /**
+     * Opens the send/publish pane and returns it. Which tabs it offers depends on
+     * the article, so the caller decides what to assert or click.
+     */
+    async openSendPublishPane(): Promise<Locator> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('open-send-publish-pane').click();
+
+        const panel = page.getByTestId('interactive-actions-panel');
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    async closeSendPublishPane(): Promise<void> {
+        const panel = this.page.getByTestId('interactive-actions-panel');
+
+        await panel.getByTestId('close').click();
+        await expect(panel).toBeHidden();
+    }
+
+    /**
      * editor3 field takes quite some time to initialize in authoring-react.
      * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
      */
