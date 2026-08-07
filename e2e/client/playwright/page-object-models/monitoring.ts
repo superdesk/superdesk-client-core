@@ -26,6 +26,21 @@ export class Monitoring {
     }
 
     /**
+     * Opens the 3-dot menu for an article and returns it, for tests that assert on
+     * which actions are offered instead of executing one.
+     */
+    async openArticleActionsMenu(item: Locator): Promise<Locator> {
+        await item.hover();
+        await item.getByTestId('context-menu-button').click();
+
+        const menu = this.page.getByTestId('context-menu');
+
+        await expect(menu).toBeVisible();
+
+        return menu;
+    }
+
+    /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
     async executeActionOnMonitoringItem(item: Locator, ...actionPath: Array<string>): Promise<void> {
