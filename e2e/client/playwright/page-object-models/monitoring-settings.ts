@@ -90,7 +90,7 @@ export class MonitoringSettings {
     }
 
     savedSearch(toggleBox: Locator, name: string): Locator {
-        return toggleBox.getByTestId('saved-search').and(this.page.locator(`[data-test-value="${name}"]`));
+        return toggleBox.getByTestId('saved-search').filter({hasText: name});
     }
 
     /**

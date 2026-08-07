@@ -45,7 +45,7 @@ async function createPrivateSavedSearch(page: Page, name: string): Promise<void>
     // The panel closes on both success and failure (SaveSearch.ts), so confirm the search was
     // really persisted: only a successful save switches the side panel to the "Saved" tab.
     await expect(
-        page.getByTestId('user-saved-searches').getByTestId('saved-search').filter({hasText: name}),
+        page.getByTestId('saved-searches-panel--user').getByTestId('saved-search').filter({hasText: name}),
     ).toHaveCount(1);
 }
 
