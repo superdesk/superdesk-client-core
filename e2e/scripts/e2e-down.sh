@@ -60,7 +60,9 @@ kill_port() {
 }
 
 active_slots() {
-    ls "$SLOT_LOCK_ROOT" 2>/dev/null | sed -n 's/^slot-\([0-9][0-9]*\)\.lock$/\1/p' | sort -n
+    # || true: under pipefail a missing lock root would fail the ls and, via
+    # set -e at the call site, abort the whole teardown before it does anything.
+    ls "$SLOT_LOCK_ROOT" 2>/dev/null | sed -n 's/^slot-\([0-9][0-9]*\)\.lock$/\1/p' | sort -n || true
 }
 
 down_slot() {
