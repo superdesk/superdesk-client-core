@@ -1,16 +1,16 @@
-<div class="main-list" ng-class="{wrap: selected, 'existing-items': !options.searchEnabled}" sd-loading="loading">
+<div class="main-list" ng-class="{wrap: selected, 'existing-items': !options.searchEnabled}" sd-loading="loading" data-test-id="related-items-widget">
 
-    <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
+    <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled" data-test-id="related-items-search">
         <i class="icon-search search-box__icon"></i>
         <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
-            ng-model="itemListOptions.keyword">
-        <button id="search-related-items" type="button" class="btn btn--small search-box__btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
+            ng-model="itemListOptions.keyword" data-test-id="related-items-search-input">
+        <button id="search-related-items" type="button" class="btn btn--small search-box__btn" ng-click="refresh()" ng-disabled="!hasKeywords()" data-test-id="related-items-search-button" translate>Search</button>
     </div>
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
         <div sd-shadow>
-            <ul class="boxed-list sd-margin-all--2 sd-padding-b--4">
-                <li ng-repeat="item in processedItems track by $index" class="boxed-list__item boxed-list__item--clickable boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': item._id === options.item._id}" ng-if="canDisplayItem(item)">
+            <ul class="boxed-list sd-margin-all--2 sd-padding-b--4" data-test-id="related-items-list">
+                <li ng-repeat="item in processedItems track by $index" class="boxed-list__item boxed-list__item--clickable boxed-list__item--comfortable" ng-class="{'boxed-list__item--selected': item._id === options.item._id}" ng-if="canDisplayItem(item)" data-test-id="related-items-list-item" data-test-value="{{item.slugline}}">
                     <div class="boxed-list__item-media" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>
                     </div>
