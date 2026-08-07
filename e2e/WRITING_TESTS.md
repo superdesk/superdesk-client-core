@@ -164,6 +164,11 @@ test('sends an article to another desk', async ({page}) => {
 The base snapshot is small. Commonly used data (read existing specs for the full
 set, this is not exhaustive):
 
+- **Users:** `admin` (password `admin`, the default administrator, display name
+  "John Doe"), `janedoe` (an author, password not documented) and `marktwain`
+  (password `marktwain`). `marktwain` is the second user with a known password,
+  for specs that must log in as somebody other than the admin, for example
+  asserting that a disabled account is refused at the login form.
 - **Desks:** Sports (the default in most specs), Education, Finance, Politic Desk.
 - **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
 - **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
