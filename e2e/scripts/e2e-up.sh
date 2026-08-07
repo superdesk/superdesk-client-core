@@ -227,7 +227,7 @@ preflight_check_port() {
         # Filter out our own e2e containers if they're already running.
         local pids
         pids=$(lsof -ti:"$port" 2>/dev/null)
-        if docker compose -p "$project" ps -q 2>/dev/null | grep -q .; then
+        if docker ps -q --filter "label=com.docker.compose.project=$project" 2>/dev/null | grep -q .; then
             return 0  # our stack is already up; this is fine
         fi
         cat >&2 <<EOF

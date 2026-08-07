@@ -80,7 +80,9 @@ down_slot() {
     # is not necessarily the one this script runs from).
     local owner
     owner="$(head -n 1 "$SLOT_LOCK_ROOT/slot-$n.lock/owner" 2>/dev/null || true)"
-    if [ -n "$owner" ]; then
+    # The lock lives under world-writable /tmp, so only trust the recorded
+    # path if it actually looks like a checkout of this repo.
+    if [ -n "$owner" ] && [ -f "$owner/e2e/scripts/e2e-up.sh" ]; then
         rm -f "$owner/e2e/client/.e2e-slot.env"
     fi
     rm -rf "${SLOT_LOCK_ROOT:?}/slot-$n.lock"
@@ -105,6 +107,7 @@ if [ -n "$SLOT" ]; then
     case "$SLOT" in
         ''|*[!0-9]*) echo "--slot must be 1-$MAX_SLOTS, got: $SLOT" >&2; exit 2 ;;
     esac
+    { [ "$SLOT" -ge 1 ] && [ "$SLOT" -le "$MAX_SLOTS" ]; } || { echo "--slot must be 1-$MAX_SLOTS, got: $SLOT" >&2; exit 2; }
     down_slot "$SLOT"
     log "done"
     exit 0
