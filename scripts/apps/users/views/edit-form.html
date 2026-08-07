@@ -64,7 +64,7 @@
                             <div class="button-group button-group--center button-group--compact sd-margin-b--2 sd-flex--wrap sd-flex--justify-center">
                                 <div class="tag-label" ng-if="roles[user.role]" translate>{{roles[user.role].name}}</div>
                                 <div class="tag-label" ng-show="user.is_author" translate>Author</div>
-                                <div class="tag-label tag-label--highlight1" ng-show="user.user_type == 'administrator'" translate>Administrator</div>
+                                <div class="tag-label tag-label--highlight1" ng-show="user.user_type == 'administrator'" translate data-test-id="administrator-label">Administrator</div>
                             </div>
                         </div>
                         <div class="field__full_name form__group form__group--default form__group--mb-3" sd-info-item ng-show="user._id">
@@ -166,7 +166,7 @@
                         </div>
 
                         <div sd-info-item class="user_type sd-check__group-new sd-check__group-new--vertical" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
-                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type" ng-if="currentSessionUser.user_type === 'administrator'">{{ :: 'Administrator'|translate }}</sd-check>
+                            <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type" ng-if="currentSessionUser.user_type === 'administrator'" data-test-id="field--user_type">{{ :: 'Administrator'|translate }}</sd-check>
                             <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
                             <sd-check ng-if="user.is_author" ng-model="user.private" name="user_private" id="user_private">{{'Private' | translate }}</sd-check>
                         </div>
