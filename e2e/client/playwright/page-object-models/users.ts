@@ -25,6 +25,12 @@ export class Users {
         // The list opens on a filtered subset; "All" makes the lookup independent
         // of whether the user under test is active, disabled or pending.
         await this.page.getByTestId('user-filter').selectOption('All');
+
+        // Both the route change and the filter change fetch the list, and until a
+        // fetch lands the table holds no rows at all. A negative assertion made
+        // against an empty table passes for the wrong reason, so hold every caller
+        // here until there is something to assert on.
+        await expect(this.page.getByTestId('users-list').getByTestId('users-list-item')).not.toHaveCount(0);
     }
 
     async openFullProfile(displayName: string): Promise<void> {

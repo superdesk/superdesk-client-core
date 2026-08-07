@@ -74,9 +74,10 @@ test.describe('editing another user profile', {
         const users = new Users(page);
         const administratorTag = users.detailsForm.getByTestId('administrator-label');
         const administratorCheckbox = users.detailsForm.getByTestId('field--user_type');
-        // The crown the avatar renders for administrators; it carries no test id
-        // of its own because it comes from superdesk-ui-framework.
-        const administratorCrown = () => users.getListItem('Jane Doe').getByTitle('Administrator');
+        // The indicator superdesk-ui-framework's AvatarWrapper overlays on the
+        // avatar of an administrator: a cog glyph with no test id of its own,
+        // only title="Administrator".
+        const administratorIndicator = () => users.getListItem('Jane Doe').getByTitle('Administrator');
 
         await users.openList();
         await users.openFullProfile('Jane Doe');
@@ -91,7 +92,7 @@ test.describe('editing another user profile', {
         await expect(administratorTag).toBeVisible();
 
         await users.openList();
-        await expect(administratorCrown()).toBeVisible();
+        await expect(administratorIndicator()).toBeVisible();
 
         await users.openFullProfile('Jane Doe');
         await administratorCheckbox.click();
@@ -99,9 +100,16 @@ test.describe('editing another user profile', {
         await expect(administratorTag).toBeHidden();
 
         await page.reload();
+
+        // `page.reload()` resolves on the load event, well before Angular has
+        // rendered the form. `toBeHidden` passes on a locator that resolves to no
+        // nodes, so without waiting for the form the assertion below would pass
+        // against a blank page whatever the server stored.
+        await expect(users.detailsForm).toBeVisible();
         await expect(administratorTag).toBeHidden();
 
         await users.openList();
-        await expect(administratorCrown()).toBeHidden();
+        await expect(users.getListItem('Jane Doe')).toBeVisible();
+        await expect(administratorIndicator()).toBeHidden();
     });
 });
