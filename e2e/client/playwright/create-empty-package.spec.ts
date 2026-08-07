@@ -36,10 +36,17 @@ test.describe('creating a new empty package', {
     const HEADLINE = 'empty package headline';
     const SLUGLINE = 'empty-package-slugline';
 
+    // Sports carries five items in the `main` snapshot. Pinning the number is
+    // what lets the discard test prove nothing was left behind: a locator
+    // matched on HEADLINE cannot see an untitled leftover.
+    const SPORTS_ITEM_COUNT = 5;
+
+    function monitoringItems(page: Page): Locator {
+        return page.getByTestId('monitoring-view').getByTestId('article-item');
+    }
+
     function monitoringItem(page: Page): Locator {
-        return page.getByTestId('monitoring-view')
-            .getByTestId('article-item')
-            .and(page.locator(`[data-test-value="${HEADLINE}"]`));
+        return monitoringItems(page).and(page.locator(`[data-test-value="${HEADLINE}"]`));
     }
 
     function packageHeadline(page: Page): Locator {
@@ -50,17 +57,22 @@ test.describe('creating a new empty package', {
         return page.getByTestId('authoring').getByTestId('field-slugline');
     }
 
-    /**
-     * Opens an empty package from the "+" menu on the Sports desk and fills the
-     * two fields the package editor exposes: Headline (the package header) and
-     * Slugline (the authoring header).
-     */
-    async function createAndFillPackage(page: Page): Promise<void> {
+    async function openSportsMonitoring(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
-        await monitoring.createEmptyPackage();
+
+        await expect(monitoringItems(page)).toHaveCount(SPORTS_ITEM_COUNT);
+    }
+
+    /**
+     * Opens an empty package from the "+" menu and fills the two fields the
+     * package editor exposes: Headline (the package header) and Slugline (the
+     * authoring header).
+     */
+    async function createAndFillPackage(page: Page): Promise<void> {
+        await new Monitoring(page).createEmptyPackage();
 
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(packageHeadline(page)).toBeVisible();
@@ -89,6 +101,7 @@ test.describe('creating a new empty package', {
 
     test('Cancel returns to the package and Ignore discards it without creating anything', async ({page}) => {
         await restoreDatabaseSnapshot();
+        await openSportsMonitoring(page);
         await createAndFillPackage(page);
 
         const topbar = page.getByTestId('authoring-topbar');
@@ -107,6 +120,7 @@ test.describe('creating a new empty package', {
         await prompt.getByRole('button', {name: 'Ignore', exact: true}).click();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
+        await expect(monitoringItems(page)).toHaveCount(SPORTS_ITEM_COUNT);
         await expect(monitoringItem(page)).toHaveCount(0);
 
         await runGlobalSearch(page, HEADLINE);
@@ -115,6 +129,7 @@ test.describe('creating a new empty package', {
 
     test('Save in the unsaved changes dialog creates the package and closes it', async ({page}) => {
         await restoreDatabaseSnapshot();
+        await openSportsMonitoring(page);
         await createAndFillPackage(page);
 
         const prompt = page.getByTestId('unsaved-changes-dialog');
@@ -130,6 +145,7 @@ test.describe('creating a new empty package', {
 
     test('the topbar Save keeps the package open, deactivates Save and persists the fields', async ({page}) => {
         await restoreDatabaseSnapshot();
+        await openSportsMonitoring(page);
         await createAndFillPackage(page);
 
         const topbar = page.getByTestId('authoring-topbar');
@@ -147,9 +163,14 @@ test.describe('creating a new empty package', {
         await expect(page.getByTestId('unsaved-changes-dialog')).toHaveCount(0);
 
         await runGlobalSearch(page, HEADLINE);
-        await expect(
-            page.getByTestId('article-item').and(page.locator(`[data-test-value="${HEADLINE}"]`)),
-        ).toHaveCount(1);
+
+        const results = page.getByTestId('article-item');
+
+        // The unfiltered listing already holds the package, so "one item with
+        // this Headline is present" is true before the query is applied. Only
+        // the whole result list being that single item proves the search ran.
+        await expect(results).toHaveCount(1);
+        await expect(results).toHaveAttribute('data-test-value', HEADLINE);
 
         // Reopening is the last step on purpose: a reopened package intermittently
         // reports itself dirty with no edit made, so closing it again raises the
