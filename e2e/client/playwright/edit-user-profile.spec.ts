@@ -1,12 +1,13 @@
-import {test, expect} from '@playwright/test';
-import {restoreDatabaseSnapshot} from './utils';
+import {test, expect, Page} from '@playwright/test';
+import {restoreDatabaseSnapshot, setPasswordThroughResetEmail} from './utils';
 import {Users} from './page-object-models/users';
 
 /**
  * QA case "Edit user profile" (Confluence 1311834348, User management).
  *
  * An administrator edits another user's profile from the users list, and revokes
- * that user's administrator status so the application stops marking them as one.
+ * that user's administrator status so both the application and the user
+ * themselves stop treating them as one.
  *
  * Documented expected results not covered here, and why:
  *
@@ -14,11 +15,6 @@ import {Users} from './page-object-models/users';
  *   role). The `main` snapshot ships an empty `roles` collection, so the Role
  *   select renders no options and no role tag is ever shown. Blocked on a
  *   fixture with roles.
- * - Observing the downgraded user's own effective privileges (what they can
- *   still do once they are no longer an administrator). That needs a session as
- *   that user, and no non-administrator account in the snapshot has a known
- *   password; the admin UI can only trigger a reset-password email, not set one.
- *   Blocked on a fixture with a non-administrator user whose password is known.
  */
 test.describe('editing another user profile', {
     annotation: [
@@ -112,4 +108,75 @@ test.describe('editing another user profile', {
         await expect(users.getListItem('Jane Doe')).toBeVisible();
         await expect(administratorIndicator()).toBeHidden();
     });
+
+    test('the user loses the administrator privileges once the status is revoked', async ({page}) => {
+        await restoreDatabaseSnapshot();
+
+        const users = new Users(page);
+        const profileSections = page.getByTestId('page-sections');
+
+        // Jane has no password anyone knows, so the test gives her one. It lives
+        // only until the next snapshot restore.
+        const janePassword = 'janedoe123.';
+
+        await toggleAdministrator(users);
+
+        await signOut(page);
+        await setPasswordThroughResetEmail(page, {email: 'janedoe@example.com', password: janePassword});
+        await signIn(page, {username: 'janedoe', password: janePassword});
+
+        // The Privileges tab of a profile is only offered to someone holding the
+        // `users` privilege, which nothing but the administrator flag grants in
+        // this snapshot (no roles, no per-user privileges), so it stands for
+        // "what this user may do" as the user themselves sees it.
+        await openOwnProfile(page, 'Jane Doe');
+        await expect(profileSections).toContainText('Privileges');
+
+        await signOut(page);
+        await signIn(page, {username: 'admin', password: 'admin'});
+
+        await toggleAdministrator(users);
+
+        await signOut(page);
+        await signIn(page, {username: 'janedoe', password: janePassword});
+
+        await openOwnProfile(page, 'Jane Doe');
+        await expect(profileSections).not.toContainText('Privileges');
+    });
 });
+
+async function toggleAdministrator(users: Users): Promise<void> {
+    await users.openList();
+    await users.openFullProfile('Jane Doe');
+    await users.detailsForm.getByTestId('field--user_type').click();
+    await users.saveProfile();
+}
+
+async function signOut(page: Page): Promise<void> {
+    await page.getByTestId('my-profile').click();
+    await page.getByTestId('my-profile-dropdown').getByRole('button', {name: 'Sign out'}).click();
+
+    await expect(page.getByTestId('login-page')).toBeVisible();
+}
+
+async function signIn(page: Page, {username, password}: {username: string; password: string}): Promise<void> {
+    const loginPage = page.getByTestId('login-page');
+
+    await loginPage.getByTestId('username').fill(username);
+    await loginPage.getByTestId('password').fill(password);
+    await loginPage.getByTestId('submit').click();
+
+    await expect(page.getByTestId('top-menu')).toBeVisible();
+}
+
+/**
+ * Opens the profile of whoever is signed in, checking on the way that it belongs
+ * to `displayName` and that its section tabs have rendered. Asserting a tab is
+ * absent before they render would pass for the wrong reason.
+ */
+async function openOwnProfile(page: Page, displayName: string): Promise<void> {
+    await page.goto('/#/profile');
+
+    await expect(page.getByTestId('page-nav-title')).toContainText(displayName);
+    await expect(page.getByTestId('page-sections')).toBeVisible();
+}

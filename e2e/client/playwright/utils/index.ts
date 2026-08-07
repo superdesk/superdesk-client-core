@@ -47,6 +47,93 @@ export async function login(page: Page) {
     await expect(page.locator(s('dashboard'))).toBeVisible();
 }
 
+const MAILCRAB_URL = 'http://localhost:1080';
+
+interface IMailcrabMessage {
+    id: string;
+    subject: string;
+    date: string;
+    to: Array<{email: string}>;
+}
+
+/**
+ * Gives the account owning `email` a password by driving the "Forgot password?"
+ * flow and reading the token out of MailCrab. Must be called while signed out;
+ * it leaves the browser on the login form.
+ *
+ * The `main` snapshot stores only bcrypt hashes and documents a plaintext
+ * password for the admin alone, so this is the only way to get a session as any
+ * other user. There is no API to set a password directly: the admin UI can only
+ * trigger this same email.
+ *
+ * MailCrab is shared by every e2e slot on the machine, so a message only counts
+ * when it is addressed to `email`, was absent from the inbox before the request,
+ * and links back to the client origin this run is driving.
+ */
+export async function setPasswordThroughResetEmail(
+    page: Page,
+    {email, password}: {email: string; password: string},
+): Promise<void> {
+    const readInbox = () => page.request.get(`${MAILCRAB_URL}/api/messages`)
+        .then((response) => response.json() as Promise<Array<IMailcrabMessage>>);
+
+    await page.goto('/#/reset-password/');
+
+    const resetPage = page.getByTestId('reset-password-page');
+
+    await resetPage.getByTestId('email').fill(email);
+
+    const knownMessageIds = new Set((await readInbox()).map((message) => message.id));
+
+    // The click posts to /api/reset_user_password. A page.request call issued
+    // while that is in flight cancels it and no email is ever sent, so the
+    // polling below must not start before the response lands.
+    const tokenRequest = page.waitForResponse(
+        (response) => response.url().includes('/api/reset_user_password')
+            && response.request().method() === 'POST',
+    );
+
+    await resetPage.getByTestId('get-token').click();
+    await tokenRequest;
+
+    const clientOrigin = new URL(page.url()).origin;
+    let resetLink = '';
+
+    await expect.poll(async () => {
+        const candidates = (await readInbox())
+            .filter((message) => !knownMessageIds.has(message.id))
+            .filter((message) => message.subject === 'Reset password')
+            .filter((message) => message.to.some((recipient) => recipient.email === email))
+            .sort((a, b) => b.date.localeCompare(a.date));
+
+        for (const candidate of candidates) {
+            const body = await page.request.get(`${MAILCRAB_URL}/api/message/${candidate.id}`)
+                .then((response) => response.json() as Promise<{text: string}>);
+            const link = body.text.match(/(https?:\/\/[^\s]+reset-password[^\s]+)/)?.[1];
+
+            if (link != null && link.startsWith(clientOrigin)) {
+                resetLink = link;
+                break;
+            }
+        }
+
+        return resetLink;
+    }, {timeout: 20000, message: `No reset-password email for ${email} arrived in MailCrab`}).not.toBe('');
+
+    await page.goto(resetLink);
+
+    const newPassword = resetPage.getByTestId('password');
+
+    // The controller only reveals this form (flowStep 3) once it has validated
+    // the token against the server, which is an extra round trip after load.
+    await expect(newPassword).toBeVisible();
+    await newPassword.fill(password);
+    await resetPage.getByTestId('password-confirm').fill(password);
+    await resetPage.getByTestId('submit').click();
+
+    await expect(page.getByTestId('login-page')).toBeVisible();
+}
+
 /**
  * Test-side workaround for the "Your session has expired" overlay race that
  * only reproduces under the `legacy` DB snapshot.
