@@ -42,11 +42,18 @@ interface IProps {
     willBeTrimmed?: boolean;
     onPinUnpin?(): void;
     onRemove?(): void;
+
+    // picker-pane extra; true when this article is already in the list (left pane)
+    alreadyInList?: boolean;
 }
 
 export class ArticleRow extends React.PureComponent<IProps> {
     render() {
-        const {entry, index, showExtras, isDuplicate, willBeTrimmed} = this.props;
+        const {entry, index, showExtras, isDuplicate, willBeTrimmed, alreadyInList} = this.props;
+
+        // Dim the row when it will be trimmed (list pane) or when it is already
+        // in the list (picker pane), so already-added articles read as unavailable.
+        const dimmed = willBeTrimmed === true || alreadyInList === true;
 
         const itemColum: Array<{
             itemRow: Array<{content: React.ReactNode}>;
@@ -174,7 +181,8 @@ export class ArticleRow extends React.PureComponent<IProps> {
 
         return (
             <div
-                style={{opacity: willBeTrimmed === true ? 0.5 : 1}}
+                style={{opacity: dimmed ? 0.5 : 1}}
+                title={alreadyInList === true ? gettext('Already in this list') : undefined}
                 data-test-id="content-list-item"
                 data-test-value={entry.contentId}
             >

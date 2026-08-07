@@ -1,7 +1,12 @@
 import {request, APIRequestContext, Page, Locator} from '@playwright/test';
 import storageState from '../../.auth/user.json';
 
-const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/$/, '');
+// Ensure exactly one trailing slash. Playwright's APIRequestContext resolves
+// request paths against baseURL using WHATWG URL semantics, where a
+// leading-slash path (e.g. '/content_lists') replaces the base path entirely
+// and drops '/api'. Keeping the trailing slash here + relative request paths
+// below makes resolution preserve the '/api' segment.
+const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/?$/, '/');
 
 /**
  * Article ids baked into the "main" database snapshot
@@ -55,7 +60,7 @@ export function createContentList(
     extra: {[key: string]: unknown} = {},
 ): Promise<{_id: string; _etag: string}> {
     return withApiContext(async (api) => {
-        const response = await api.post('/content_lists', {data: {name, type: 'manual', ...extra}});
+        const response = await api.post('content_lists', {data: {name, type: 'manual', ...extra}});
 
         await assertOk(response, `creating content list "${name}"`);
 
@@ -69,7 +74,7 @@ export function createContentList(
  */
 export function addListItems(listId: string, contentIds: Array<string>): Promise<void> {
     return withApiContext(async (api) => {
-        const response = await api.patch(`/content_lists/${listId}/items`, {
+        const response = await api.patch(`content_lists/${listId}/items`, {
             data: {
                 updatedAt: null,
                 items: contentIds.map((contentId, index) => ({action: 'add', contentId, position: index})),
@@ -82,13 +87,13 @@ export function addListItems(listId: string, contentIds: Array<string>): Promise
 
 export function updateListItems(listId: string, items: Array<{[key: string]: unknown}>): Promise<void> {
     return withApiContext(async (api) => {
-        const listResponse = await api.get(`/content_lists/${listId}`);
+        const listResponse = await api.get(`content_lists/${listId}`);
 
         await assertOk(listResponse, `fetching content list ${listId}`);
 
         const list = await listResponse.json();
 
-        const response = await api.patch(`/content_lists/${listId}/items`, {
+        const response = await api.patch(`content_lists/${listId}/items`, {
             data: {
                 updatedAt: list.content_list_items_updated_at ?? null,
                 items,
@@ -101,7 +106,7 @@ export function updateListItems(listId: string, items: Array<{[key: string]: unk
 
 export function createWebhook(payload: {[key: string]: unknown}): Promise<{_id: string; _etag: string}> {
     return withApiContext(async (api) => {
-        const response = await api.post('/content_list_webhooks', {data: payload});
+        const response = await api.post('content_list_webhooks', {data: payload});
 
         await assertOk(response, 'creating webhook');
 
