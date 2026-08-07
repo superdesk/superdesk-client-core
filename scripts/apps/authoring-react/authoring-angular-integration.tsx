@@ -4,6 +4,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {
     ButtonGroup,
     NavButton,
+    Tooltip,
 } from 'superdesk-ui-framework/react';
 import {
     IArticle,
@@ -522,34 +523,39 @@ function getPublishToolbarWidget(
         component: (props: {entity: IArticle}) => !canOpenInteractiveActions(props.entity) ? null : (
             <ButtonGroup align="end">
                 <ButtonGroup subgroup={true} spaces="no-space">
-                    <NavButton
-                        type="highlight"
-                        icon="send-to"
-                        iconSize="big"
-                        text={gettext('Send to / Publish')}
-                        data-test-id="open-send-publish-pane"
-                        onClick={() => {
-                            if (panelState.active) {
-                                panelActions.closePanel();
-                            } else {
-                                const availableTabs: Array<IArticleActionInteractive> = [
-                                    'send_to',
-                                ];
+                    {/* `NavButton` renders `text` visibly only when it has no icon, so on its own
+                        this control is named for screen readers but has no hover tooltip. Angular
+                        sets both (`aria-label` and `sd-tooltip`, `authoring-topbar.html`). */}
+                    <Tooltip text={gettext('Send to / Publish')} flow="left">
+                        <NavButton
+                            type="highlight"
+                            icon="send-to"
+                            iconSize="big"
+                            text={gettext('Send to / Publish')}
+                            data-test-id="open-send-publish-pane"
+                            onClick={() => {
+                                if (panelState.active) {
+                                    panelActions.closePanel();
+                                } else {
+                                    const availableTabs: Array<IArticleActionInteractive> = [
+                                        'send_to',
+                                    ];
 
-                                const canPublish = sdApi.article.canPublish(props.entity);
+                                    const canPublish = sdApi.article.canPublish(props.entity);
 
-                                if (canPublish) {
-                                    availableTabs.push('publish');
+                                    if (canPublish) {
+                                        availableTabs.push('publish');
+                                    }
+
+                                    dispatchInternalEvent('interactiveArticleActionStart', {
+                                        items: [props.entity],
+                                        tabs: availableTabs,
+                                        activeTab: canPublish ? 'publish' : availableTabs[0],
+                                    });
                                 }
-
-                                dispatchInternalEvent('interactiveArticleActionStart', {
-                                    items: [props.entity],
-                                    tabs: availableTabs,
-                                    activeTab: canPublish ? 'publish' : availableTabs[0],
-                                });
-                            }
-                        }}
-                    />
+                            }}
+                        />
+                    </Tooltip>
                 </ButtonGroup>
             </ButtonGroup>
         ),
