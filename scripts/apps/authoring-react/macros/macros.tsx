@@ -235,7 +235,7 @@ function getMacroProcessor(
     }
 }
 
-const MACROS_WIDGET_ID = 'macros-widget';
+const MACROS_WIDGET_ID = 'macros';
 
 class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {

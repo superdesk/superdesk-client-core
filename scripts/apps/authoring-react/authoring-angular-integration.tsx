@@ -333,10 +333,13 @@ function getInlineToolbarActions(
             actions.push(archivedFromWidget);
         }
 
-        if (
-            item._type !== 'archived'
-            && sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage).local_readonly
-        ) {
+        // `task` is absent on personal-space items, and the stage may not be resolvable
+        // yet while the desks store is still loading
+        const stage = item.task?.desk == null
+            ? null
+            : sdApi.desks.getDeskStages(item.task.desk).get(item.task.stage);
+
+        if (item._type !== 'archived' && stage?.local_readonly === true) {
             actions.push(readOnlyWidget);
         }
 

@@ -29,7 +29,7 @@ function openPackage(packageItem: IArticle): void {
     }
 }
 
-const PACKAGES_WIDGET_ID = 'packages-widget';
+const PACKAGES_WIDGET_ID = 'packages';
 
 class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
     constructor(props) {
