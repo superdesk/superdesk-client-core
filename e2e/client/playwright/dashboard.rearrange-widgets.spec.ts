@@ -16,12 +16,21 @@ import {restoreDatabaseSnapshot} from './utils';
  *    to fill the space" -> third test, which drops the widget a row lower than
  *    the top of a free column and asserts it lands back on row 1.
  *  - "Click x for each widget you'd like to delete" -> fourth test.
+ *  - "then select and drag a widget to the desired area of your Dashboard to
+ *    place it" -> not covered, and there is no behaviour to cover it with: the
+ *    add-widget modal has no drag-to-place, its widget list is click-only and
+ *    the widget is placed by the "Add This Widget" button
+ *    (scripts/apps/dashboard/views/workspace.html).
  *
  * The workspace fixture ships a single Monitor widget, so each test adds a
  * World Clock through the (single-action) add-widget flow to get a second
  * widget to rearrange against.
  */
-test.describe('rearranging dashboard widgets', () => {
+test.describe('rearranging dashboard widgets', {
+    annotation: [
+        {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
+    ],
+}, () => {
     const MONITOR = 'aggregate';
     const WORLD_CLOCK = 'world-clock';
 
@@ -45,11 +54,7 @@ test.describe('rearranging dashboard widgets', () => {
         return dashboard;
     }
 
-    test('rearrange mode reveals a remove control on every widget and resize arrows on hover', {
-        annotation: [
-            {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
-        ],
-    }, async ({page}) => {
+    test('rearrange mode reveals a remove control on every widget and resize arrows on hover', async ({page}) => {
         const dashboard = await openDashboardWithTwoWidgets(page);
         const monitor = dashboard.getWidget(MONITOR);
         const worldClock = dashboard.getWidget(WORLD_CLOCK);
@@ -82,11 +87,7 @@ test.describe('rearranging dashboard widgets', () => {
         await expect(monitor.getByTestId('widget-resize-right')).toHaveCSS('opacity', '0');
     });
 
-    test('resize arrows grow and shrink a widget and the new size is kept after accepting', {
-        annotation: [
-            {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
-        ],
-    }, async ({page}) => {
+    test('resize arrows grow and shrink a widget and the new size is kept after accepting', async ({page}) => {
         const dashboard = await openDashboardWithTwoWidgets(page);
         const worldClock = dashboard.getWidget(WORLD_CLOCK);
 
@@ -109,11 +110,7 @@ test.describe('rearranging dashboard widgets', () => {
         await expect(dashboard.getWidget(WORLD_CLOCK)).toHaveAttribute('data-sizex', '2');
     });
 
-    test('a widget dragged to a free column moves there and floats up to fill the gap above it', {
-        annotation: [
-            {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
-        ],
-    }, async ({page}) => {
+    test('a widget dragged to a free column moves there and floats up to fill the gap above it', async ({page}) => {
         const dashboard = await openDashboardWithTwoWidgets(page);
         const worldClock = dashboard.getWidget(WORLD_CLOCK);
 
@@ -135,11 +132,7 @@ test.describe('rearranging dashboard widgets', () => {
         await expect(dashboard.getWidget(WORLD_CLOCK)).toHaveAttribute('data-row', '1');
     });
 
-    test('the x control deletes a widget and the deletion is kept after accepting', {
-        annotation: [
-            {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
-        ],
-    }, async ({page}) => {
+    test('the x control deletes a widget and the deletion is kept after accepting', async ({page}) => {
         const dashboard = await openDashboardWithTwoWidgets(page);
 
         await dashboard.startRearranging();

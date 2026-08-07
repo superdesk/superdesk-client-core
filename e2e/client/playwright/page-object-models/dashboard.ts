@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 
 /**
  * The dashboard widget grid is driven by gridster.js. A widget's placement and
@@ -30,15 +30,35 @@ export class Dashboard {
             .and(this.page.locator(`[data-test-value="${widgetId}"]`));
     }
 
+    /**
+     * Adding a widget and accepting a rearrange both persist the dashboard the
+     * same way: a background `PATCH /workspaces/<id>` fired after the click.
+     * Every action that triggers one has to wait for the response, otherwise a
+     * following reload aborts the request and the change silently reverts, and
+     * a second PATCH sent while the first is in flight carries a stale
+     * `If-Match` etag and is rejected with 412.
+     */
+    private waitForLayoutPersisted(): Promise<Response> {
+        return this.page.waitForResponse(
+            (response) => /\/workspaces\/[^/]+$/.test(response.url())
+                && response.request().method() === 'PATCH'
+                && response.ok(),
+        );
+    }
+
     async addWidget(widgetId: string): Promise<void> {
         const modal = this.page.getByTestId('widget-modal');
 
         await this.page.getByRole('button', {name: 'Add widget'}).click();
         await modal.getByTestId('widget-item').and(this.page.locator(`[data-test-value="${widgetId}"]`)).click();
+
+        const layoutPersisted = this.waitForLayoutPersisted();
+
         await modal.getByRole('button', {name: 'Add This Widget'}).click();
         await modal.getByRole('button', {name: 'Done'}).click();
 
         await expect(this.getWidget(widgetId)).toBeVisible();
+        await layoutPersisted;
     }
 
     async startRearranging(): Promise<void> {
@@ -46,17 +66,8 @@ export class Dashboard {
         await expect(this.page.getByTestId('accept-rearrange')).toBeVisible();
     }
 
-    /**
-     * Accepting leaves rearrange mode synchronously but persists the layout with
-     * a background PATCH of the workspace. Wait for that response, otherwise a
-     * following reload aborts the request and the layout silently reverts.
-     */
     async acceptRearranging(): Promise<void> {
-        const layoutPersisted = this.page.waitForResponse(
-            (response) => /\/workspaces\/[^/]+$/.test(response.url())
-                && response.request().method() !== 'GET'
-                && response.ok(),
-        );
+        const layoutPersisted = this.waitForLayoutPersisted();
 
         await this.page.getByTestId('accept-rearrange').click();
         await expect(this.page.getByTestId('rearrange-widgets')).toBeVisible();
