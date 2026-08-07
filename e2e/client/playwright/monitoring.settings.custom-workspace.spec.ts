@@ -10,9 +10,14 @@ import {restoreDatabaseSnapshot} from './utils';
  * step also lists the user's private saved searches.
  *
  * Steps 3-5 of the case delegate to the per-tab QA cases ("Desks tab", "Reorder sections
- * tab", "Items count tab"), which are automated under their own Confluence ids; this spec
- * covers the case's own expected result, i.e. reaching the dialog from a custom workspace
- * and the set of tabs it offers.
+ * tab", "Items count tab"). Those are separate Confluence cases with their own expected
+ * results and are out of scope here. Of the three, only the Desks tab case (1315934713)
+ * has a spec today (`monitoring.settings.spec.ts`, annotated partial, and it exercises the
+ * desk entry point rather than the custom-workspace one); the Reorder sections and Items
+ * count cases are not automated yet.
+ *
+ * This spec covers the case's own expected result, i.e. reaching the dialog from a custom
+ * workspace and the set of tabs it offers.
  */
 test.describe('monitoring settings of a custom workspace', () => {
     const TAB_TITLES = ['Desks', 'Saved Searches', 'Reorder Sections', 'Items Count'];
