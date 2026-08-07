@@ -17,7 +17,7 @@ const getLabel = () => gettext('Versions and item history');
 interface IState {
     selectedTab: 'versions' | 'history';
 }
-const VERSIONS_AND_HISTORY_WIDGET_ID = 'versions-and-item-history';
+const VERSIONS_AND_HISTORY_WIDGET_ID = 'versioning';
 
 class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidgetComponentType, IState> {
     constructor(props: IArticleSideWidgetComponentType) {
