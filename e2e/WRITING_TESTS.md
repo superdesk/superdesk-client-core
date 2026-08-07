@@ -141,17 +141,17 @@ mark-for-user flow, or a permission check. It is the only non-admin account with
 a known password, and the only one on a desk, so it is the only one that can
 reach the Sports monitoring view.
 
-`frodobaggins` has `user_type: "user"` and neither a `role` nor a `privileges`
-field, so it holds **no** privileges at all. Both have to stay absent for that
-to hold: superdesk-core's `get_privileges` returns the user's own privileges
-when there is no role, and merges the user's over the role's when there is one,
-so adding either one grants something. The empty state is deliberate, it is what
-makes the account usable for the negative half of a privilege test, for example
-asserting that a user without `unlock` sees no Unlock button on an item another
-user locked. If a future spec needs a user that holds some privileges but not
-others, add a separate user carrying a role or its own `privileges` rather than
-granting anything here, or the negative cases that rely on this account will
-start passing for the wrong reason.
+`frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
+field, so it holds **no** privileges at all. Keep it that way: do not assign a
+role and do not add a `privileges` field. superdesk-core's `get_privileges`
+returns the user's own privileges when there is no role, and merges the user's
+over the role's when there is one, so either change grants something. The empty
+state is deliberate, it is what makes the account usable for the negative half
+of a privilege test, for example asserting that a user without `unlock` sees no
+Unlock button on an item another user locked. If a future spec needs a user that
+holds some privileges but not others, add a separate user carrying a role or its
+own `privileges` rather than granting anything here, or the negative cases that
+rely on this account will start passing for the wrong reason.
 
 ## State reset
 
