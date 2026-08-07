@@ -6,11 +6,15 @@ import {getStorageState} from './utils/storage-state';
 
 test.use({storageState: getStorageState({}, {authoringReact: true})});
 
-function articleInWorkingStage(page: Page, title: string): Locator {
+function articleInGroup(page: Page, group: string, title: string): Locator {
     return page.getByTestId('monitoring-group')
-        .and(page.locator('[data-test-value="Sports / Working Stage"]'))
+        .and(page.locator(`[data-test-value="${group}"]`))
         .getByTestId('article-item')
         .filter({hasText: title});
+}
+
+function articleInWorkingStage(page: Page, title: string): Locator {
+    return articleInGroup(page, 'Sports / Working Stage', title);
 }
 
 /**
@@ -151,6 +155,30 @@ test.describe('interactive article actions panel in authoring-react', () => {
         await expect(panel).toHaveCount(0);
     });
 
+    /**
+     * The panel stays mounted between requests, and it takes its active tab from the props it
+     * was constructed with, so a request arriving while it is already open has to be able to
+     * move it. Reaching this needs two sources: the toolbar opens it, monitoring redirects it.
+     */
+    test('follows a later request instead of staying on the tab it opened with', async ({page}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot();
+
+        const article = await openForEditing(page, 'test sports story');
+        const panel = panelInAuthoring(page);
+        const footer = panel.getByTestId('panel-footer');
+
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+
+        await expect(footer.getByTestId('publish')).toBeVisible();
+
+        await monitoring.executeActionOnMonitoringItem(article, 'Send to');
+
+        await expect(footer.getByTestId('send')).toBeVisible();
+        await expect(footer.getByTestId('publish')).toHaveCount(0);
+    });
+
     test('offers no send to / publish entry in the side widget rail', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openForEditing(page, 'test sports story');
@@ -169,6 +197,43 @@ test.describe('interactive article actions panel in authoring-react', () => {
         await expect(page.getByTestId('widget-icon').first()).toBeVisible();
 
         await expect(page.getByTestId('authoring').getByTestId('open-send-publish-pane')).toHaveCount(1);
+    });
+});
+
+/**
+ * An item in a correction has to be sent through the correction API, not the publish one, so
+ * the panel opens on the correct tab. Authoring-angular decides this in its own toolbar
+ * (`AuthoringTopbarDirective.ts`), and the two hosts drive the same panel, so they have to
+ * agree on which tabs an item gets.
+ */
+test.describe('interactive article actions panel for an item being corrected', () => {
+    test.use({storageState: getStorageState({corrections_workflow: true}, {authoringReact: true})});
+
+    test('opens on the correction action rather than ordinary publishing', async ({page}) => {
+        const monitoring = new Monitoring(page);
+        const authoring = new Authoring(page);
+
+        await restoreDatabaseSnapshot();
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        await monitoring.executeActionOnMonitoringItem(
+            articleInGroup(page, 'Sports desk output', 'Story 5'),
+            'Publishing actions',
+            'Correct item',
+        );
+
+        await authoring.waitForAuthoringReactToInitialize();
+        await expect(articleInWorkingStage(page, 'Story 5').getByText('Correction', {exact: true})).toBeVisible();
+
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+
+        /**
+         * Both tabs are labelled "Publish", so the tab strip cannot tell them apart. The footer
+         * action can, and it is the one that reaches the correction API.
+         */
+        await expect(panelInAuthoring(page).getByTestId('panel-footer').getByTestId('publish'))
+            .toHaveText('Send correction');
     });
 });
 

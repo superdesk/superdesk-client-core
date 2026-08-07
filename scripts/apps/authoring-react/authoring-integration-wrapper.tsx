@@ -607,6 +607,19 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             return (
                                 <ActionsPanelOverlay>
                                     <InteractiveArticleActionsPanel
+                                        /**
+                                         * The panel copies `activeTab` into its own state in the
+                                         * constructor, so a second `interactiveArticleActionStart`
+                                         * arriving while it is already open would leave it
+                                         * rendering the previous tab under the new tab list. The
+                                         * key forces a remount for a request that differs from
+                                         * what is on screen.
+                                         */
+                                        key={[
+                                            ...panelState.items.map(({_id}) => _id),
+                                            ...panelState.tabs,
+                                            panelState.activeTab,
+                                        ].join('|')}
                                         items={panelState.items}
                                         tabs={panelState.tabs}
                                         activeTab={panelState.activeTab}

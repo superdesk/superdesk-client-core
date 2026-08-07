@@ -500,11 +500,35 @@ function getInlineToolbarActions(
 }
 
 /**
+ * True while the item is being corrected through the corrections workflow, as opposed to the
+ * `correct` authoring action, which opens a separate editor. Mirrors `scope.isCorrection` in
+ * `AuthoringTopbarDirective.ts`.
+ */
+function isCorrectionInProgress(article: IArticle, action?: IAuthoringActionType): boolean {
+    return appConfig?.corrections_workflow === true
+        && article.state === ITEM_STATE.CORRECTION
+        && action === 'edit';
+}
+
+/**
  * Killed and recalled items have no onward transition left, and an archived item that
  * cannot be published cannot be sent either. The side widget this button replaces
  * declined to render in those cases; the panel host keeps that behaviour.
+ *
+ * Kill is the one authoring action with no send to / publish step of its own: the kill editor
+ * carries its own Send kill button, so angular hides this control there
+ * (`authoring-topbar.html`) and so do we. Correction is the opposite case, it is allowed
+ * through explicitly because the panel is how a correction is sent.
  */
-export function canOpenInteractiveActions(article: IArticle): boolean {
+export function canOpenInteractiveActions(article: IArticle, action?: IAuthoringActionType): boolean {
+    if (action === 'correct' || isCorrectionInProgress(article, action)) {
+        return true;
+    }
+
+    if (action === 'kill') {
+        return false;
+    }
+
     if (article.state === ITEM_STATE.KILLED || article.state === ITEM_STATE.RECALLED) {
         return false;
     }
@@ -512,15 +536,42 @@ export function canOpenInteractiveActions(article: IArticle): boolean {
     return sdApi.article.canPublish(article) || article._type !== 'archived';
 }
 
+/**
+ * An item in a correction must be sent through the correction API rather than the publish one,
+ * so the panel offers the correct tab instead of publish and opens on it. Mirrors
+ * `getAvailableTabs` / `getActiveTab` in `AuthoringTopbarDirective.ts`; the two must agree,
+ * because both hosts open the same panel.
+ */
+export function getInteractiveActionsTabs(
+    article: IArticle,
+    action?: IAuthoringActionType,
+): {tabs: Array<IArticleActionInteractive>; activeTab: IArticleActionInteractive} {
+    if (action === 'correct' || isCorrectionInProgress(article, action)) {
+        return {tabs: ['send_to', 'correct'], activeTab: 'correct'};
+    }
+
+    const tabs: Array<IArticleActionInteractive> = ['send_to'];
+
+    if (sdApi.article.canPublish(article)) {
+        tabs.push('publish');
+    }
+
+    return {
+        tabs,
+        activeTab: tabs.includes('publish') ? 'publish' : tabs[0],
+    };
+}
+
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
+    action?: IAuthoringActionType,
 ): ITopBarWidget<IArticle> {
     const publishWidgetButton: ITopBarWidget<IArticle> = {
         priority: 99,
         availableOffline: false,
         group: 'end',
-        component: (props: {entity: IArticle}) => !canOpenInteractiveActions(props.entity) ? null : (
+        component: (props: {entity: IArticle}) => !canOpenInteractiveActions(props.entity, action) ? null : (
             <ButtonGroup align="end">
                 <ButtonGroup subgroup={true} spaces="no-space">
                     {/* `NavButton` renders `text` visibly only when it has no icon, so on its own
@@ -537,20 +588,12 @@ function getPublishToolbarWidget(
                                 if (panelState.active) {
                                     panelActions.closePanel();
                                 } else {
-                                    const availableTabs: Array<IArticleActionInteractive> = [
-                                        'send_to',
-                                    ];
-
-                                    const canPublish = sdApi.article.canPublish(props.entity);
-
-                                    if (canPublish) {
-                                        availableTabs.push('publish');
-                                    }
+                                    const {tabs, activeTab} = getInteractiveActionsTabs(props.entity, action);
 
                                     dispatchInternalEvent('interactiveArticleActionStart', {
                                         items: [props.entity],
-                                        tabs: availableTabs,
-                                        activeTab: canPublish ? 'publish' : availableTabs[0],
+                                        tabs,
+                                        activeTab,
                                     });
                                 }
                             }}
@@ -584,9 +627,10 @@ function getExtensionTopbarWidgets(): Array<ITopBarWidget<IArticle>> {
 export function getAuthoringPrimaryToolbarWidgets(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
+    action?: IAuthoringActionType,
 ) {
     return getExtensionTopbarWidgets()
-        .concat([getPublishToolbarWidget(panelState, panelActions)]);
+        .concat([getPublishToolbarWidget(panelState, panelActions, action)]);
 }
 
 /**
@@ -613,7 +657,13 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
             <div className="sd-authoring-react" data-test-id="authoring">
                 <AuthoringIntegrationWrapper
                     sidebarMode={true}
-                    getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
+                    getAuthoringPrimaryToolbarWidgets={
+                        (panelState, panelActions) => getAuthoringPrimaryToolbarWidgets(
+                            panelState,
+                            panelActions,
+                            this.props.action,
+                        )
+                    }
                     itemId={this.props.itemId}
                     onClose={onClose}
                     getInlineToolbarActions={(exposed) => getInlineToolbarActions(
