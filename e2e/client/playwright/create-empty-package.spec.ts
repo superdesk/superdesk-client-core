@@ -13,14 +13,9 @@ import {restoreDatabaseSnapshot} from './utils';
  * rather than on the test:
  *
  * - "Packages can be created in Monitoring view and Personal space". Personal
- *   space has no package creation entry point. `InitialView` renders the
+ *   space has no package creation entry point: `InitialView` renders the
  *   "Create package" option behind `!sdApi.navigation.isPersonalSpace()`
- *   (scripts/core/ui/components/content-create-dropdown/initial-view.tsx), and
- *   on top of that the whole "+" dropdown fails to render there: its
- *   componentDidMount reads `getCurrentDesk().default_content_template` and
- *   `getCurrentDesk()` is null in personal space, so the popup stays empty.
- *   That second half is a live regression which also fails the existing
- *   `monitoring.personal-space.spec.ts` "creating an article" test on develop.
+ *   (scripts/core/ui/components/content-create-dropdown/initial-view.tsx).
  * - "Packages cannot be created in Custom Workspace". The option is offered in a
  *   custom workspace exactly as it is on a desk, and clicking it opens a package
  *   editor. The documented restriction does not exist in the product, and
@@ -35,11 +30,6 @@ test.describe('creating a new empty package', {
 }, () => {
     const HEADLINE = 'empty package headline';
     const SLUGLINE = 'empty-package-slugline';
-
-    // Sports carries five items in the `main` snapshot. Pinning the number is
-    // what lets the discard test prove nothing was left behind: a locator
-    // matched on HEADLINE cannot see an untitled leftover.
-    const SPORTS_ITEM_COUNT = 5;
 
     function monitoringItems(page: Page): Locator {
         return page.getByTestId('monitoring-view').getByTestId('article-item');
@@ -57,13 +47,21 @@ test.describe('creating a new empty package', {
         return page.getByTestId('authoring').getByTestId('field-slugline');
     }
 
-    async function openSportsMonitoring(page: Page): Promise<void> {
+    /**
+     * Opens Monitoring on the Sports desk and returns how many items it lists.
+     * The discard test compares against that number: `createEmptyPackage` saves
+     * the package with an empty headline, so a leftover could never be matched
+     * by a HEADLINE locator and only the total can show it.
+     */
+    async function openSportsMonitoring(page: Page): Promise<number> {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await expect(monitoringItems(page)).toHaveCount(SPORTS_ITEM_COUNT);
+        await expect(monitoringItems(page).first()).toBeVisible();
+
+        return monitoringItems(page).count();
     }
 
     /**
@@ -83,14 +81,22 @@ test.describe('creating a new empty package', {
         await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
     }
 
-    // The global search bar carries no data-test-id; #search-input plus ENTER is
-    // the established way to drive it (search.spec.ts, monitoring.misc.spec.ts).
-    async function runGlobalSearch(page: Page, query: string): Promise<void> {
+    function globalSearchItems(page: Page): Locator {
+        return page.getByTestId('article-item');
+    }
+
+    async function openGlobalSearch(page: Page): Promise<void> {
         await page.goto('/#/search');
 
         // Assert the unfiltered result list first: without it a search that never
         // ran is indistinguishable from a search that returned nothing.
-        await expect(page.getByTestId('article-item').first()).toBeVisible();
+        await expect(globalSearchItems(page).first()).toBeVisible();
+    }
+
+    // The global search bar carries no data-test-id; #search-input plus ENTER is
+    // the established way to drive it (search.spec.ts, monitoring.misc.spec.ts).
+    async function runGlobalSearch(page: Page, query: string): Promise<void> {
+        await openGlobalSearch(page);
 
         const input = page.locator('#search-input');
 
@@ -101,7 +107,12 @@ test.describe('creating a new empty package', {
 
     test('Cancel returns to the package and Ignore discards it without creating anything', async ({page}) => {
         await restoreDatabaseSnapshot();
-        await openSportsMonitoring(page);
+
+        await openGlobalSearch(page);
+
+        const searchItemsBefore = await globalSearchItems(page).count();
+        const monitoringItemsBefore = await openSportsMonitoring(page);
+
         await createAndFillPackage(page);
 
         const topbar = page.getByTestId('authoring-topbar');
@@ -120,11 +131,17 @@ test.describe('creating a new empty package', {
         await prompt.getByRole('button', {name: 'Ignore', exact: true}).click();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
-        await expect(monitoringItems(page)).toHaveCount(SPORTS_ITEM_COUNT);
+        await expect(monitoringItems(page)).toHaveCount(monitoringItemsBefore);
         await expect(monitoringItem(page)).toHaveCount(0);
 
+        // The unfiltered total is what proves nothing was persisted; a query for
+        // HEADLINE cannot, since the headline only ever reached the autosave
+        // record that Ignore drops.
+        await openGlobalSearch(page);
+        await expect(globalSearchItems(page)).toHaveCount(searchItemsBefore);
+
         await runGlobalSearch(page, HEADLINE);
-        await expect(page.getByTestId('article-item')).toHaveCount(0);
+        await expect(globalSearchItems(page)).toHaveCount(0);
     });
 
     test('Save in the unsaved changes dialog creates the package and closes it', async ({page}) => {
@@ -152,6 +169,11 @@ test.describe('creating a new empty package', {
 
         await topbar.getByTestId('save').click();
 
+        // `saveTopbarLoading` disables Save on its own for the length of the
+        // request (authoring-topbar.html), so a disabled Save only means the
+        // package is clean once the spinner has gone.
+        await expect(topbar.getByTestId('save').getByTestId('loading-indicator')).toBeVisible();
+        await expect(topbar.getByTestId('save').getByTestId('loading-indicator')).toBeHidden();
         await expect(topbar.getByTestId('save')).toBeDisabled();
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(monitoringItem(page)).toBeVisible();
@@ -164,7 +186,7 @@ test.describe('creating a new empty package', {
 
         await runGlobalSearch(page, HEADLINE);
 
-        const results = page.getByTestId('article-item');
+        const results = globalSearchItems(page);
 
         // The unfiltered listing already holds the package, so "one item with
         // this Headline is present" is true before the query is applied. Only
