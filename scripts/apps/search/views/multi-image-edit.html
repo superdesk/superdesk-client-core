@@ -44,6 +44,7 @@
                 <div class="sd-photo-preview__thumb-strip">
                     <div class="sd-grid-list">
                         <div class="sd-grid-item sd-grid-item--with-click"
+                             data-test-id="media-grid-item"
                              ng-click="handleItemClick($event, image)"
                              ng-repeat="image in images track by image._id"
                              ng-class="{'sd-grid-item--selected' : image.selected}"
