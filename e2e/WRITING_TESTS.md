@@ -141,14 +141,17 @@ mark-for-user flow, or a permission check. It is the only non-admin account with
 a known password, and the only one on a desk, so it is the only one that can
 reach the Sports monitoring view.
 
-`frodobaggins` has `user_type: "user"` and no role, and superdesk-core derives
-privileges from the role alone for non-administrators, so it holds **no**
-privileges at all. That is deliberate: it is what makes the account usable for
-the negative half of a privilege test, for example asserting that a user without
-`unlock` sees no Unlock button on an item another user locked. If a future spec
-needs a user that holds some privileges but not others, add a role rather than
-granting them on this account, or the negative cases that rely on it will start
-passing for the wrong reason.
+`frodobaggins` has `user_type: "user"` and neither a `role` nor a `privileges`
+field, so it holds **no** privileges at all. Both have to stay absent for that
+to hold: superdesk-core's `get_privileges` returns the user's own privileges
+when there is no role, and merges the user's over the role's when there is one,
+so adding either one grants something. The empty state is deliberate, it is what
+makes the account usable for the negative half of a privilege test, for example
+asserting that a user without `unlock` sees no Unlock button on an item another
+user locked. If a future spec needs a user that holds some privileges but not
+others, add a separate user carrying a role or its own `privileges` rather than
+granting anything here, or the negative cases that rely on this account will
+start passing for the wrong reason.
 
 ## State reset
 
@@ -209,7 +212,11 @@ Other datasets are separate and loaded with
 - "Rivendell picture" - a picture with all renditions, for image editing (crop,
   rotate, flip) and for the picture branch of the media widgets.
 - "Moria graphic" - a graphic. `graphic` is a distinct item type in the UI and
-  the type filters treat it separately from `picture`.
+  the type filters treat it separately from `picture`. It is a picture whose
+  `type` was flipped in mongo, and it keeps `profile: "picture"` because the
+  snapshot carries no graphic content profile. Type filtering therefore behaves
+  as documented, but graphic-specific authoring behaviour is not represented: a
+  spec that needs real graphic authoring must not rely on this item.
 - "Isengard video" and "Lothlorien audio".
 - "Shire package" - a plain package (no `highlight`) containing the picture.
   `main`'s only package belongs to a highlight, so package behaviour that must
