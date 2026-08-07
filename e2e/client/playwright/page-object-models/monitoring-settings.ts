@@ -38,9 +38,14 @@ export class MonitoringSettings {
      * The wizard marks the selected step on the `<li>` wrapping the tab button
      * (`template/wizard.html` in superdesk-ui-framework); the button itself carries no state,
      * and the template lives in a dependency so it cannot get a test id of its own.
+     *
+     * The `has` locator is resolved inside each `<li>`, so it must start at the page root
+     * rather than reuse `tab()`, which is already scoped to the modal.
      */
     tabWrapper(title: IMonitoringSettingsTab): Locator {
-        return this.tab(title).locator('xpath=..');
+        return this.modal
+            .locator('li.nav-tabs__tab')
+            .filter({has: this.page.getByTestId(`wizard--${title}`)});
     }
 
     async expectActiveTab(title: IMonitoringSettingsTab): Promise<void> {

@@ -4,7 +4,9 @@ import {MonitoringSettings} from './page-object-models/monitoring-settings';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * Saved searches tab in the Monitoring settings of a custom workspace.
+ * Saved searches tab in the Monitoring settings of a custom workspace (confluence 1318323123).
+ * All three tests in this file cover that one case; the annotation sits on the first of them,
+ * because the suite keeps one annotation per case id.
  *
  * The desk variant of the same wizard (confluence 1315934715) is covered by
  * `monitoring.settings.spec.ts`; it reaches the wizard from `/#/settings/desks` and only
@@ -28,23 +30,23 @@ function monitoringGroup(page: Page, name: string): Locator {
  * `Save Search` is gated on `searching()`, which is just "the URL carries query params"
  * (SearchPanel.ts), so a `q` parameter is enough to reveal it. That same `q` also opens the
  * filters panel (`flags.facets` in SearchContainer.ts), so the panel must not be toggled here.
- * The search panel markup predates `data-test-id`s and is addressed by element id, the
- * same way `saved-search.spec.ts` does.
  */
 async function createPrivateSavedSearch(page: Page, name: string): Promise<void> {
     await page.goto('/#/search?q=story');
-    await expect(page.locator('#advanced_search_filters')).toBeVisible();
-    await page.locator('#save_search_init').click();
+    await expect(page.getByTestId('advanced-search-panel')).toBeVisible();
+    await page.getByTestId('save-search').click();
 
-    const panel = page.locator('.save-search-panel');
+    const panel = page.getByTestId('save-search-panel');
 
     await expect(panel).toBeVisible();
-    await panel.locator('#search_name').fill(name);
-    await panel.locator('#search_save').click();
+    await panel.getByTestId('search-name').fill(name);
+    await panel.getByTestId('save').click();
 
     // The panel closes on both success and failure (SaveSearch.ts), so confirm the search was
     // really persisted: only a successful save switches the side panel to the "Saved" tab.
-    await expect(page.locator('[ng-repeat^="search in userSavedSearches"]').filter({hasText: name})).toHaveCount(1);
+    await expect(
+        page.getByTestId('user-saved-searches').getByTestId('saved-search').filter({hasText: name}),
+    ).toHaveCount(1);
 }
 
 async function openWorkspaceMonitoringSettings(page: Page): Promise<MonitoringSettings> {
@@ -119,13 +121,9 @@ test('saved searches tab groups global and private saved searches', {
     await expect(privateSearches.getByTestId('saved-search')).toHaveCount(1);
 });
 
-test('wizard navigation preserves saved search selection and Done applies it', {
-    annotation: [
-        // Saved searches tab in Monitoring settings of custom workspace
-        {type: 'confluence', description: '1318323123 complete'},
-    ],
-}, async ({page}) => {
+test('wizard navigation preserves saved search selection and Done applies it', async ({page}) => {
     await restoreDatabaseSnapshot();
+    await createPrivateSavedSearch(page, PRIVATE_SEARCH);
 
     const monitoring = new Monitoring(page);
     const settings = await openWorkspaceMonitoringSettings(page);
@@ -138,9 +136,12 @@ test('wizard navigation preserves saved search selection and Done applies it', {
     await expect(settings.previousButton).toBeVisible();
 
     const malaysiaToggle = settings.savedSearchToggle(settings.globalSavedSearches, 'Malaysia');
+    const privateToggle = settings.savedSearchToggle(settings.privateSavedSearches, PRIVATE_SEARCH);
 
     await malaysiaToggle.click();
     await expect(malaysiaToggle).toHaveClass(/checked/);
+    await privateToggle.click();
+    await expect(privateToggle).toHaveClass(/checked/);
 
     await settings.previousButton.click();
     await settings.expectActiveTab('Desks');
@@ -149,6 +150,8 @@ test('wizard navigation preserves saved search selection and Done applies it', {
     await settings.nextButton.click();
     await settings.expectActiveTab('Saved Searches');
     await expect(settings.savedSearchToggle(settings.globalSavedSearches, 'Malaysia')).toHaveClass(/checked/);
+    await expect(settings.savedSearchToggle(settings.privateSavedSearches, PRIVATE_SEARCH))
+        .toHaveClass(/checked/);
 
     await settings.nextButton.click();
     await settings.expectActiveTab('Reorder Sections');
@@ -166,14 +169,10 @@ test('wizard navigation preserves saved search selection and Done applies it', {
     await monitoring.selectDeskOrWorkspace(WORKSPACE);
 
     await expect(monitoringGroup(page, 'Malaysia')).toBeVisible();
+    await expect(monitoringGroup(page, PRIVATE_SEARCH)).toBeVisible();
 });
 
-test('cancelling monitoring settings discards the saved search selection', {
-    annotation: [
-        // Saved searches tab in Monitoring settings of custom workspace
-        {type: 'confluence', description: '1318323123 complete'},
-    ],
-}, async ({page}) => {
+test('cancelling monitoring settings discards the saved search selection', async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
