@@ -1,5 +1,15 @@
 import {IContentListItem, IItemChange, IItemChangeAction, IListEntry} from './interfaces';
 
+function findLastIndex<T>(items: Array<T>, predicate: (item: T) => boolean): number {
+    for (let i = items.length - 1; i >= 0; i--) {
+        if (predicate(items[i])) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 export function reorder<T>(list: Array<T>, startIndex: number, endIndex: number): Array<T> {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -47,6 +57,12 @@ export function fixPinnedItemsPosition(entries: Array<IListEntry>): Array<IListE
  * Appends a change for the entry at `index` (or the removed entry's id for
  * deletes) and rewrites the recorded positions of all non-delete changes
  * from the entries' current indices.
+ *
+ * Deleting an entry that was added during this editing session (its `add`
+ * is still pending) cancels the pending `add` and its follow-up `move`s
+ * instead of recording a `delete` - the entry never existed on the server,
+ * and sending `add` + `delete` for the same content would be rejected as a
+ * duplicate when the content is already in the list.
  */
 export function recordChange(
     changesRecord: Array<IItemChange>,
@@ -55,6 +71,21 @@ export function recordChange(
     entries: Array<IListEntry>,
     sticky?: boolean,
 ): Array<IItemChange> {
+    if (action === 'delete') {
+        const lastAddIndex = findLastIndex(
+            changesRecord,
+            (change) => change.action === 'add' && change.contentId === contentId,
+        );
+
+        if (lastAddIndex !== -1) {
+            const pruned = changesRecord.filter((change, index) =>
+                index !== lastAddIndex
+                && !(index > lastAddIndex && change.action === 'move' && change.contentId === contentId));
+
+            return updatePositions(pruned, entries);
+        }
+    }
+
     const change: IItemChange = {action, contentId};
 
     if (action !== 'delete') {

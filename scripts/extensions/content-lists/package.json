@@ -2,16 +2,22 @@
   "private": true,
   "main": "src/extension.ts",
   "scripts": {
-    "compile-e2e": "echo 'No end-to-end tests defined'"
+    "compile-e2e": "echo 'No end-to-end tests defined'",
+    "test": "mocha",
+    "debug-tests": "mocha --inspect-brk"
   },
   "dependencies": {
     "react-beautiful-dnd": "13.1.1"
   },
   "devDependencies": {
     "@types/lodash": "4.14.117",
+    "@types/mocha": "9.1.1",
+    "@types/node": "18.19.0",
     "@types/react": "16.9.44",
     "@types/react-beautiful-dnd": "13.1.8",
+    "mocha": "11.7.5",
     "superdesk-code-style": "1.3.0",
+    "ts-node": "10.9.1",
     "typescript": "~4.9.5"
   }
 }
