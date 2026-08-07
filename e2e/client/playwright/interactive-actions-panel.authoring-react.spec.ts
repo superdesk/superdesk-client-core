@@ -125,7 +125,12 @@ test.describe('interactive article actions panel in authoring-react', () => {
         await expect(panel).not.toBeVisible();
     });
 
-    test('opens from the authoring toolbar and closes on a second click', async ({page}) => {
+    /**
+     * Closing is done from the panel, not by clicking the toolbar control again. The panel is
+     * anchored to the viewport and covers that control while it is open, which is how the angular
+     * panel behaves too, so its own close button is the way out of both.
+     */
+    test('opens from the authoring toolbar and closes from the panel', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openForEditing(page, 'test sports story');
 
@@ -141,7 +146,7 @@ test.describe('interactive article actions panel in authoring-react', () => {
         await expect(panel.getByTestId('panel-footer').getByTestId('publish')).toBeVisible();
         await expect.poll(() => getBackgroundLuminance(panel)).toBeLessThan(0.5);
 
-        await toolbarButton.click();
+        await panel.getByTestId('close').click();
 
         await expect(panel).toHaveCount(0);
     });
