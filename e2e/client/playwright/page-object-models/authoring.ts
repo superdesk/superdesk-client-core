@@ -68,16 +68,19 @@ export class Authoring {
      *
      * Both the tab and the panel carry the label in `data-test-value` while their
      * visible content is an icon, so they are matched on the attribute.
+     *
+     * The tab toggles rather than opens: clicking it while its widget is active
+     * closes the panel. The tab is therefore only clicked when the panel is not
+     * already showing, so that calling this on an open widget is a no-op.
      */
     async openWidget(label: string): Promise<Locator> {
         const {page} = this;
+        const withLabel = page.locator(`[data-test-value="${label}"]`);
+        const panel = page.getByTestId('authoring-widget-panel').and(withLabel);
 
-        await page.getByTestId('authoring-widget')
-            .and(page.locator(`[data-test-value="${label}"]`))
-            .click();
-
-        const panel = page.getByTestId('authoring-widget-panel')
-            .and(page.locator(`[data-test-value="${label}"]`));
+        if (!await panel.isVisible()) {
+            await page.getByTestId('authoring-widget').and(withLabel).click();
+        }
 
         await expect(panel).toBeVisible();
 
@@ -87,14 +90,18 @@ export class Authoring {
     /**
      * Saves from the topbar and waits for the save to land.
      *
-     * The Save button is disabled while the item is clean, so it going back to
-     * disabled is the completion signal; without it the next assertion can run
-     * against a not-yet-persisted item.
+     * The Save button is also disabled while the save is in flight, so it being
+     * disabled says nothing about the item having been persisted. The spinner
+     * inside the button is the completion signal: it is bound to the same flag
+     * the save promise clears when it settles.
      */
     async save(): Promise<void> {
         const saveButton = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const spinner = saveButton.getByTestId('loading-indicator');
 
         await saveButton.click();
+        await expect(spinner).toBeVisible();
+        await expect(spinner).toBeHidden();
         await expect(saveButton).toBeDisabled();
     }
 

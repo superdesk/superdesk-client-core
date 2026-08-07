@@ -104,7 +104,11 @@ test.describe('Info widget in authoring', () => {
         await expect(
             infoWidget.getByTestId('guid').locator('input, select, textarea, [contenteditable="true"]'),
         ).toHaveCount(0);
-        await expect(infoWidget.getByTestId('pubstatus')).toContainText('usable');
+        // The documented values are "usable" and "unusable", so a substring match
+        // on "usable" would accept both. The test id sits on the whole list item,
+        // whose text is the label glued to the value ("Pubstatususable"), hence
+        // the label in the pattern.
+        await expect(infoWidget.getByTestId('pubstatus')).toHaveText(/^Pubstatus\s*usable$/);
         await expect(infoWidget.getByTestId('state')).toContainText(/in progress/i);
 
         await infoWidget.getByTestId('usage-terms').fill(USAGE_TERMS);
