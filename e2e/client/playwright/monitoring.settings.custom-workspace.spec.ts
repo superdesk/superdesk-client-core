@@ -9,15 +9,17 @@ import {restoreDatabaseSnapshot} from './utils';
  * monitoring toolbar rather than from the desks settings page, and their Saved Searches
  * step also lists the user's private saved searches.
  *
- * Steps 3-5 of the case delegate to the per-tab QA cases ("Desks tab", "Reorder sections
- * tab", "Items count tab"). Those are separate Confluence cases with their own expected
- * results and are out of scope here. Of the three, only the Desks tab case (1315934713)
- * has a spec today (`monitoring.settings.spec.ts`, annotated partial, and it exercises the
- * desk entry point rather than the custom-workspace one); the Reorder sections and Items
- * count cases are not automated yet.
+ * Covered here: steps 1-2 (the settings button sits to the left of the "+" menu and opens
+ * the dialog), step 6 (the Saved Searches tab also offers private saved searches, unlike a
+ * desk's) and the case's single documented expected result, i.e. the dialog offering the
+ * Desks, Saved searches, Reorder sections and Items count tabs.
  *
- * This spec covers the case's own expected result, i.e. reaching the dialog from a custom
- * workspace and the set of tabs it offers.
+ * BLOCKER: steps 3-5 ask the tester to run the per-tab cases 1315934713 (Desks tab),
+ * 1315934717 (Reorder sections tab) and 1315934719 (Items count tab) starting from a custom
+ * workspace, which is where the monitoring view actually gets configured. None of that is
+ * automated for this entry point: 1315934713 has a spec (`monitoring.settings.spec.ts`,
+ * itself partial) that only exercises the desk entry point, and 1315934717 / 1315934719 have
+ * no spec at all. Those steps still have to be run manually, hence the partial annotation.
  */
 test.describe('monitoring settings of a custom workspace', () => {
     const TAB_TITLES = ['Desks', 'Saved Searches', 'Reorder Sections', 'Items Count'];
@@ -25,7 +27,7 @@ test.describe('monitoring settings of a custom workspace', () => {
     test('open from the toolbar and expose the desks, saved searches, reorder and items count tabs', {
         annotation: [
             // Configure personal Monitoring view in custom workspace
-            {type: 'confluence', description: '1318323011 complete'},
+            {type: 'confluence', description: '1318323011 partial'},
         ],
     }, async ({page}) => {
         const monitoring = new Monitoring(page);
