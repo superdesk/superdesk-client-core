@@ -3,7 +3,9 @@ import {s} from '.';
 
 /**
  * Class editor3 puts on a toolbar button whose style is active for the current
- * selection. Matched as a pattern because the class is hashed by CSS modules.
+ * selection. A pattern rather than a string because `toHaveClass` given a string
+ * requires the whole `class` attribute to match, and the button always carries
+ * `Editor3-styleButton` next to the active marker.
  */
 export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
 
@@ -21,9 +23,9 @@ export function getEditor3Field(page: Page, fieldId: string): Locator {
 /**
  * A toolbar button of the editor3 `field`, addressed by the Superdesk formatting-option
  * id `StyleButton` puts in `data-test-value` (`bold`, `h2`, `quote`, ...). That id is not
- * the tag the block ends up rendered as: `quote` renders `blockquote` and `pre` comes
- * from the `code-block` option (see `blockStyles` in
- * scripts/core/editor3/components/toolbar/BlockStyleButtons.tsx).
+ * the tag the block ends up rendered as: the `quote` option renders `blockquote`, and the
+ * `pre` option maps to the `code-block` Draft block type, which happens to render as `pre`
+ * (see `blockStyles` in scripts/core/editor3/components/toolbar/BlockStyleButtons.tsx).
  */
 export function getEditor3FormattingOptionButton(field: Locator, option: string): Locator {
     return field.getByTestId('toolbar')
