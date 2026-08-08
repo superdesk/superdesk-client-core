@@ -71,6 +71,83 @@ export class Authoring {
         await this.page.waitForTimeout(2000);
     }
 
+    /**
+     * Saves through the topbar Save button and waits for the save to finish, leaving the
+     * article open and clean.
+     *
+     * Reach for it before closing when the last edit was made in an editor3 field. editor3
+     * pushes a field change into the authoring model on a debounce (100ms by default), and
+     * a close that beats the debounce closes the article as it was before that edit. The
+     * Save button is enabled only while the model carries unsaved changes, and the topbar's
+     * own `saveTopbar()` handler (`AuthoringTopbarDirective`) waits 600ms before saving the
+     * item, which outlasts the debounce.
+     */
+    async save(): Promise<void> {
+        const save = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const saving = save.getByTestId('loading-indicator');
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        await expect(saving).toBeVisible();
+        await expect(saving).toBeHidden();
+        await expect(save).toBeDisabled();
+    }
+
+    /**
+     * Closes an article that holds no unsaved changes, so closing raises no "Save changes?"
+     * prompt. Pair it with `save()`, which leaves the article in exactly that state.
+     */
+    async close(): Promise<void> {
+        const topbar = this.page.getByTestId('authoring-topbar');
+
+        await topbar.getByTestId('close').click();
+        await expect(topbar).toBeHidden();
+    }
+
+    /**
+     * Persists the open article and closes it.
+     *
+     * It saves through the topbar first so that closing raises no "Save changes?" prompt.
+     * Answering that prompt is not reliable under load: the click can be taken while the
+     * article stays open, and on an article that has never been saved every accepted
+     * prompt creates the item again.
+     */
+    async closeAndSave(): Promise<void> {
+        await this.save();
+        await this.close();
+    }
+
+    /**
+     * Opens a widget in the authoring sidebar by its label and returns its panel.
+     *
+     * The tab and the panel are keyed by the same label (`widget.label` lands in
+     * `data-test-value` on both in `authoring-widgets.html`), so a caller never has to
+     * name the widget twice.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const panel = this.page.locator(s(`authoring-widget-panel=${label}`));
+
+        await this.page.locator(s(`authoring-widget=${label}`)).click();
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
+     * Closes the open authoring sidebar widget by clicking its tab again.
+     *
+     * The panel is behind an `ng-if` on the active widget, so closing removes it from the
+     * DOM entirely; the tab strip is asserted first so the check cannot pass against an
+     * authoring view that never rendered.
+     */
+    async closeWidget(label: string): Promise<void> {
+        await this.page.locator(s(`authoring-widget=${label}`)).click();
+
+        await expect(this.page.locator(s('navigation-tabs'))).toBeVisible();
+        await expect(this.page.locator(s('authoring-widget-panel'))).toHaveCount(0);
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
