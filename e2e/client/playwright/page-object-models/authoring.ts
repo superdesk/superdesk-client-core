@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -61,6 +61,76 @@ export class Authoring {
             .check();
 
         await page.locator(s('interactive-actions-panel', 'send')).click();
+    }
+
+    /**
+     * Opens a side widget by its label and returns the widget panel.
+     *
+     * Both the tab and the panel carry the label in `data-test-value` while their
+     * visible content is an icon, so they are matched on the attribute.
+     *
+     * The tab toggles rather than opens: clicking it while its widget is active
+     * closes the panel. The tab is therefore only clicked when the panel is not
+     * already showing, so that calling this on an open widget is a no-op.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const {page} = this;
+        const withLabel = page.locator(`[data-test-value="${label}"]`);
+        const panel = page.getByTestId('authoring-widget-panel').and(withLabel);
+
+        if (!await panel.isVisible()) {
+            await page.getByTestId('authoring-widget').and(withLabel).click();
+        }
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
+     * Saves through the topbar Save button and waits for the save to finish, leaving the
+     * article open and clean.
+     *
+     * Reach for it before closing when the last edit was made in an editor3 field. editor3
+     * pushes a field change into the authoring model on a debounce (100ms by default), and
+     * a close that beats the debounce closes the article as it was before that edit. The
+     * Save button is enabled only while the model carries unsaved changes, and the topbar's
+     * own `saveTopbar()` handler (`AuthoringTopbarDirective`) waits 600ms before saving the
+     * item, which outlasts the debounce.
+     */
+    async save(): Promise<void> {
+        const save = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const saving = save.getByTestId('loading-indicator');
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        await expect(saving).toBeVisible();
+        await expect(saving).toBeHidden();
+        await expect(save).toBeDisabled();
+    }
+
+    /**
+     * Runs a macro from the already open Macros widget and resolves with the server's reply.
+     *
+     * Macros execute on the backend (`POST /api/macros`) and the widget reports the outcome
+     * only once that request settled, so waiting for the response is what makes a following
+     * assertion about the outcome meaningful. The status is deliberately not checked here:
+     * a macro that reports errors answers with an error status, which is a normal result.
+     */
+    async runMacro(macroLabel: string): Promise<Response> {
+        const {page} = this;
+        const macro = page.getByTestId('authoring-widget-panel')
+            .getByTestId('macro-item')
+            .filter({hasText: macroLabel});
+
+        const [response] = await Promise.all([
+            page.waitForResponse((res) =>
+                res.url().includes('/macros') && res.request().method() === 'POST'),
+            macro.click(),
+        ]);
+
+        return response;
     }
 
     /**
