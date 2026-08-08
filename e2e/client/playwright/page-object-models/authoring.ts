@@ -71,6 +71,22 @@ export class Authoring {
         await this.page.waitForTimeout(2000);
     }
 
+    /**
+     * Closes the article and saves through the "Save changes?" prompt that closing an
+     * edited article raises, which both persists the changes and closes the article.
+     * The prompt's Save is scoped to the dialog so it does not collide with the topbar
+     * Save button.
+     */
+    async closeAndSave(): Promise<void> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+        await page.getByTestId('unsaved-changes-dialog')
+            .getByRole('button', {name: 'Save', exact: true})
+            .click();
+        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }

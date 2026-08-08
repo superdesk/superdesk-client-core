@@ -1,5 +1,7 @@
-import {Locator, expect} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 import {s} from '.';
+import {Authoring} from '../page-object-models/authoring';
+import {Monitoring} from '../page-object-models/monitoring';
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
     return field.locator('.DraftEditor-root')
@@ -67,6 +69,149 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
 
     await expect(embedBlocks).toHaveCount(countBefore + 1);
     await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
+}
+
+const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
+
+/**
+ * Locates an editor3 authoring field by the field id it is registered under, e.g.
+ * `body_html`. The id is a `data-test-value`, not part of the test id itself.
+ */
+export function getEditor3Field(page: Page, fieldId: string): Locator {
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${fieldId}"]`));
+}
+
+/**
+ * Locates a toolbar button of an editor3 field by the formatting option it toggles,
+ * e.g. `bold`, `underline`, `italic`.
+ */
+export function getEditor3FormattingButton(field: Locator, styleName: string): Locator {
+    return field.getByTestId('toolbar')
+        .getByTestId('formatting-option-button')
+        .and(field.page().locator(`[data-test-value="${styleName}"]`));
+}
+
+/**
+ * Locates the Draft.js leaf holding a run of equally styled characters. Draft renders
+ * each run as a span that carries the inline style and wraps the node carrying
+ * `data-text`. Assertions read the leaf rather than the text node because a
+ * text-level property such as `text-decoration` does not inherit.
+ */
+export function getEditor3TextRun(field: Locator, text: string): Locator {
+    return field.locator('[data-text="true"]').filter({hasText: text}).locator('xpath=..');
+}
+
+async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
+    for (let i = 0; i < times; i++) {
+        await page.keyboard.press(key);
+    }
+}
+
+// Each stretch of text is typed as two halves, so "select part of the text" is a fixed
+// number of Shift+Arrow presses and each half is addressable on its own.
+const STYLED_HEAD = 'alpha';
+const STYLED_TAIL = 'bravo';
+const REGULAR_HEAD = 'charlie';
+const REGULAR_TAIL = 'delta';
+
+export interface Editor3InlineStyleScenario {
+    /** `data-test-value` of the toolbar formatting button under test, e.g. `underline`. */
+    styleName: string;
+
+    /** Headline of the article the scenario creates; keep it unique per spec. */
+    headline: string;
+
+    /**
+     * Asserts the style is present or absent on one run of text. The locator passed in
+     * is the Draft.js leaf, which is the element the inline style is applied to.
+     */
+    expectStyled: (run: Locator, styled: boolean) => Promise<void>;
+}
+
+/**
+ * Drives the toolbar inline-style case shared by every per-style QA case: toggle the
+ * style on and type, toggle it off and type, then toggle it over selections of
+ * already-typed text in both directions, and verify the result survives a save and
+ * reopen.
+ *
+ * Bold, underline, italic, strikethrough, sub- and superscript all exercise this same
+ * choreography and differ only in which toolbar button they press and how the style is
+ * read back off the DOM, so the flow lives here and each spec supplies just those two.
+ */
+export async function runEditor3InlineStyleToggleScenario(
+    page: Page,
+    {styleName, headline, expectStyled}: Editor3InlineStyleScenario,
+): Promise<void> {
+    const monitoring = new Monitoring(page);
+    const authoring = new Authoring(page);
+
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+    await monitoring.createArticleFromDefaultTemplate();
+
+    const headlineField = page.getByTestId('field--headline').getByRole('textbox');
+
+    await expect(headlineField).toBeVisible();
+    await headlineField.fill(headline);
+    await expect(headlineField).toHaveText(headline);
+
+    const body = getEditor3Field(page, 'body_html');
+    const bodyInput = body.getByRole('textbox');
+    const styleButton = getEditor3FormattingButton(body, styleName);
+    const styledText = STYLED_HEAD + STYLED_TAIL;
+    const regularText = REGULAR_HEAD + REGULAR_TAIL;
+    const run = (text: string) => getEditor3TextRun(body, text);
+
+    await expect(bodyInput).toBeVisible();
+    await bodyInput.click();
+
+    await expect(styleButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+    await styleButton.click();
+    await expect(styleButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+
+    await page.keyboard.type(styledText);
+    await expectStyled(run(styledText), true);
+
+    await styleButton.click();
+    await expect(styleButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+
+    await page.keyboard.type(regularText);
+    await expectStyled(run(regularText), false);
+    await expectStyled(run(styledText), true);
+
+    // The caret sits at the end of the regular run; select its second half.
+    await pressRepeatedly(page, 'Shift+ArrowLeft', REGULAR_TAIL.length);
+
+    await styleButton.click();
+    await expect(styleButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+    await expectStyled(run(REGULAR_TAIL), true);
+    await expectStyled(run(REGULAR_HEAD), false);
+
+    // Collapse the selection to its start, walk back over the regular run and select
+    // the second half of the styled run. Counted arrow presses rather than Home/End,
+    // which do not move the caret on macOS.
+    await page.keyboard.press('ArrowLeft');
+    await pressRepeatedly(page, 'ArrowLeft', REGULAR_HEAD.length);
+    await pressRepeatedly(page, 'Shift+ArrowLeft', STYLED_TAIL.length);
+
+    await expect(styleButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+    await styleButton.click();
+    await expect(styleButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+    await expectStyled(run(STYLED_TAIL), false);
+    await expectStyled(run(STYLED_HEAD), true);
+
+    await authoring.closeAndSave();
+
+    await monitoring.getArticleLocator(headline).dblclick();
+    await expect(bodyInput).toBeVisible();
+
+    await expect(headlineField).toHaveText(headline);
+    await expectStyled(run(STYLED_HEAD), true);
+    await expectStyled(run(STYLED_TAIL), false);
+    await expectStyled(run(REGULAR_HEAD), false);
+    await expectStyled(run(REGULAR_TAIL), true);
 }
 
 export async function setEditor3FieldValue(locator: Locator, value: string) {
