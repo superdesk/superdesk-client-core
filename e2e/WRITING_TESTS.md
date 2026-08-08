@@ -310,12 +310,13 @@ The toggle is a `StyleButton` like bold or italic, so it is found the same way, 
 suggestions mode is on.
 
 It also carries "story with suggestions" on the Sports desk, an article whose body
-reads `alpha bravo charlie delta echo foxtrot` with `bravo` and `foxtrot` as
-insertion suggestions and `delta` as a deletion suggestion, all made by `admin` and
-all unresolved. Reach for it whenever a case starts from an article that already has
-suggestions rather than from making them. A suggestion is draft.js editor state under
-`fields_meta`, not markup, so it is recorded like any other field the browser writes;
-there is nothing special about putting one in a snapshot.
+reads `alphabravocharliedeltaechofoxtrot`: six words run together with no separators
+between them, with `bravo` and `foxtrot` as insertion suggestions and `delta` as a
+deletion suggestion, all made by `admin` and all unresolved. Assert on the individual
+words, not on a spaced sentence. Reach for it whenever a case starts from an article
+that already has suggestions rather than from making them. A suggestion is draft.js
+editor state under `fields_meta`, not markup, so it is recorded like any other field
+the browser writes; there is nothing special about putting one in a snapshot.
 
 Three things about suggestions themselves are worth knowing before writing a spec:
 

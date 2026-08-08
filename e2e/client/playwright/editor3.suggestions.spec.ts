@@ -1,12 +1,13 @@
 import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
+import {restoreDatabaseSnapshot} from './utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
     getEditor3Field,
-    getEditor3FormattingButton,
+    getEditor3FormattingOptionButton,
     getEditor3TextRun,
+    pressRepeatedly,
 } from './utils/editor3';
 
 /**
@@ -200,8 +201,9 @@ test.describe('editor3 suggestions mode', () => {
 
     /**
      * The article the snapshot carries with suggestions already in its body, and the words its
-     * body is made of: `alpha [bravo] charlie <delta> echo [foxtrot]`, where `[...]` is an
-     * insertion suggestion and `<...>` a deletion suggestion.
+     * body is made of: `alpha[bravo]charlie<delta>echo[foxtrot]`, where `[...]` is an insertion
+     * suggestion and `<...>` a deletion suggestion. The words run together with no separators
+     * between them, so the body text is the single string `alphabravocharliedeltaechofoxtrot`.
      *
      * Words rather than letters, so a run stays wide enough to click reliably and so
      * `getEditor3TextRun`'s substring match cannot pick the wrong leaf.
@@ -271,7 +273,7 @@ test.describe('editor3 suggestions mode', () => {
 
         const body = getEditor3Field(page, 'body_html');
         const bodyInput = body.getByRole('textbox');
-        const toggle = getEditor3FormattingButton(body, 'suggestions');
+        const toggle = getEditor3FormattingOptionButton(body, 'suggestions');
         const colours = await getSuggestionColours(body);
 
         await expect(bodyInput).toBeVisible();
@@ -336,7 +338,7 @@ test.describe('editor3 suggestions mode', () => {
 
         const custom = getEditor3Field(page, CUSTOM_FIELD);
         const customInput = custom.getByRole('textbox');
-        const customToggle = getEditor3FormattingButton(custom, 'suggestions');
+        const customToggle = getEditor3FormattingOptionButton(custom, 'suggestions');
 
         await expect(customInput).toBeVisible();
         await customInput.click();

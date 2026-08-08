@@ -83,13 +83,26 @@ export function getEditor3Field(page: Page, fieldId: string): Locator {
 }
 
 /**
- * Locates a toolbar button of an editor3 field by the formatting option it toggles,
- * e.g. `bold`, `underline`, `italic`.
+ * A toolbar button of the editor3 `field`, addressed by the Superdesk formatting-option
+ * id `StyleButton` puts in `data-test-value` (`bold`, `h2`, `quote`, ...). That id is not
+ * the tag the block ends up rendered as: the `quote` option renders `blockquote`, and the
+ * `pre` option maps to the `code-block` Draft block type, which happens to render as `pre`
+ * (see `blockStyles` in scripts/core/editor3/components/toolbar/BlockStyleButtons.tsx).
  */
-export function getEditor3FormattingButton(field: Locator, styleName: string): Locator {
+export function getEditor3FormattingOptionButton(field: Locator, option: string): Locator {
     return field.getByTestId('toolbar')
         .getByTestId('formatting-option-button')
-        .and(field.page().locator(`[data-test-value="${styleName}"]`));
+        .and(field.page().locator(`[data-test-value="${option}"]`));
+}
+
+/**
+ * Presses `key` `times` times. Editor3 specs move and extend the selection with counted
+ * arrow presses because Home/End do not move the caret on macOS.
+ */
+export async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
+    for (let i = 0; i < times; i++) {
+        await page.keyboard.press(key);
+    }
 }
 
 /**
