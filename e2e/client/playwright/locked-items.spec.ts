@@ -118,35 +118,49 @@ async function openLockedArticleAs(
     actor: {username: string; password: string},
 ): Promise<ISecondActorSession> {
     const context = await browser.newContext({storageState: undefined});
-    const page = await context.newPage();
 
-    await loginAs(page, actor.username, actor.password);
+    /*
+     * The caller can only close this context once the session is handed back, so
+     * anything that throws before the return has to close it here. Contexts made
+     * from the `browser` fixture are not auto-closed until the worker ends, and a
+     * leaked one means a live second Superdesk session autosaving through every
+     * retry and every later spec in the run.
+     */
+    try {
+        const page = await context.newPage();
 
-    const monitoring = new Monitoring(page);
+        await loginAs(page, actor.username, actor.password);
 
-    await page.goto('/#/workspace/monitoring');
-    await monitoring.selectDeskOrWorkspace('Sports');
+        const monitoring = new Monitoring(page);
 
-    const item = monitoring.getArticleLocator(ARTICLE);
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
 
-    await expect(item).toBeVisible();
-    await expect(item.getByTestId('article-item-locked')).toHaveCount(1);
+        const item = monitoring.getArticleLocator(ARTICLE);
 
-    await item.dblclick();
+        await expect(item).toBeVisible();
+        await expect(item.getByTestId('article-item-locked')).toHaveCount(1);
 
-    const topbar = page.getByTestId('authoring-topbar');
-    const lockedInfo = topbar.getByTestId('locked-info');
+        await item.dblclick();
 
-    await expect(page.getByTestId('authoring')).toBeVisible();
-    await expect(lockedInfo).toBeVisible();
+        const topbar = page.getByTestId('authoring-topbar');
+        const lockedInfo = topbar.getByTestId('locked-info');
 
-    // The avatar is wrapped in react-lazyload, so wait for it to render before
-    // reading anything else out of the panel.
-    await expect(lockedInfo.getByTestId('user-avatar')).toBeVisible();
-    await expect(lockedInfo).toContainText(`Locked by ${LOCK_OWNER_NAME}`);
-    await expect(topbar.getByTestId('save')).toHaveCount(0);
+        await expect(page.getByTestId('authoring')).toBeVisible();
+        await expect(lockedInfo).toBeVisible();
 
-    return {context, page, topbar, lockedInfo};
+        // The avatar is wrapped in react-lazyload, so wait for it to render before
+        // reading anything else out of the panel.
+        await expect(lockedInfo.getByTestId('user-avatar')).toBeVisible();
+        await expect(lockedInfo).toContainText(`Locked by ${LOCK_OWNER_NAME}`);
+        await expect(topbar.getByTestId('save')).toHaveCount(0);
+
+        return {context, page, topbar, lockedInfo};
+    } catch (error) {
+        await context.close();
+
+        throw error;
+    }
 }
 
 /**
@@ -338,11 +352,12 @@ test.describe('unlocking an item locked by another user', () => {
         }
     });
 
-    test('a user whose role withholds the privilege is offered no Unlock button', {
-        annotation: [
-            {type: 'confluence', description: '1311834225 complete'}, // Unlock item
-        ],
-    }, async ({page, browser}) => {
+    /*
+     * Deliberately unannotated: this is the inverse of case 1311834225, whose
+     * prerequisite is that the observing user holds Unlock content. The case
+     * itself is covered by the first test.
+     */
+    test('a user whose role withholds the privilege is offered no Unlock button', async ({page, browser}) => {
         await restoreDatabaseSnapshot();
 
         await lockArticleAsAdmin(page);
@@ -360,4 +375,24 @@ test.describe('unlocking an item locked by another user', () => {
             await observer.context.close();
         }
     });
+});
+
+/*
+ * Placeholder so the parked publishing/correcting cases of this batch are
+ * machine-readable next to the ones that are covered, instead of living only in
+ * the file docstring. See that docstring for why they cannot be asserted.
+ */
+test.fixme('publishing or correcting an item that has a locked association', {
+    annotation: [
+        {type: 'confluence', description: '1328906265 blocker'}, // Publishing article with related locked item
+        {type: 'confluence', description: '1328906267 blocker'}, // Correcting article with related locked item
+        {type: 'confluence', description: '1328906291 blocker'}, // Publishing package with locked item
+        {type: 'confluence', description: '1328906297 blocker'}, // Publishing article with locked item in Feature media
+        {type: 'confluence', description: '1328906307 blocker'}, // Publishing gallery with locked item
+        {type: 'confluence', description: '1328906312 blocker'}, // Correcting package with locked item
+        {type: 'confluence', description: '1328906320 blocker'}, // Correcting gallery with locked item
+    ],
+}, async () => {
+    // PUBLISH_ASSOCIATED_ITEMS is off in `e2e/server/settings.py`, so the
+    // behaviour these cases describe does not exist on this stack.
 });
