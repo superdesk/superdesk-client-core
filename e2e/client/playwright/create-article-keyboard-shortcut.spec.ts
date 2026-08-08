@@ -1,7 +1,7 @@
 import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot} from './utils';
+import {restoreDatabaseSnapshot, SUPERDESK_API_URL} from './utils';
 import {setEditor3FieldValue} from './utils/editor3';
 
 /**
@@ -18,8 +18,6 @@ import {setEditor3FieldValue} from './utils/editor3';
  * therefore checked against the `archive` resource, which is the only place a
  * surviving stub would show.
  */
-
-const API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/$/, '');
 
 interface IArticleFields {
     slugline: string;
@@ -117,7 +115,7 @@ async function recordStatus(page: Page, resource: string, articleId: string): Pr
         throw new Error('no session token in localStorage');
     }
 
-    const response = await page.request.get(`${API_URL}/${resource}/${articleId}`, {
+    const response = await page.request.get(`${SUPERDESK_API_URL}/${resource}/${articleId}`, {
         headers: {Authorization: token},
         failOnStatusCode: false,
     });
