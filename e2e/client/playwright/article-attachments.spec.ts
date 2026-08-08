@@ -2,7 +2,7 @@ import {test, expect, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {AttachmentsPane} from './page-object-models/attachments';
-import {dismissSessionExpiry, login, restoreDatabaseSnapshot} from './utils';
+import {dismissSessionExpiry, getCellValueByColumTitle, login, restoreDatabaseSnapshot} from './utils';
 
 /**
  * Article attachments: adding, downloading, editing, removing, and linking body text
@@ -48,11 +48,12 @@ import {dismissSessionExpiry, login, restoreDatabaseSnapshot} from './utils';
  *   says; the product's label is asserted.
  * - The internal marker's text is "internal", uppercased by the label style rather
  *   than written as "Internal"; the assertion is case-insensitive on the real text.
- * - "Attachments in NINJS output" (1326285069) is parked, not covered here: no
- *   snapshot carries a subscriber whose destination format is NINJS ("Subscriber 1"
- *   in `main` is the only one and it formats as `email`), so neither expected result
- *   ("only public attachments are sent", "internal attachments are not sent out") is
- *   reachable. It needs a NINJS subscriber in a fixture first.
+ * - "Attachments in NINJS output" (1326285069) is asserted on the payload the
+ *   subscriber is actually sent. `legacy` ships one active subscriber, "Public API",
+ *   whose only destination formats as `ninjs`, and its product ("all") carries no
+ *   content filter, so publishing any item there queues exactly one NINJS
+ *   transmission. That payload is read back through the item history's transmission
+ *   details, which render the queue entry's `formatted_item` verbatim.
  */
 
 // Every test builds its own attachments through the upload dialog and most of them
@@ -76,6 +77,11 @@ const INTERNAL_ATTACHMENT = {
     description: 'an internal attachment',
     internal: true,
 };
+
+/** Only the part of the NINJS payload this file asserts on. */
+interface INinjsOutput {
+    attachments: Array<{title: string}>;
+}
 
 interface IOpenedArticle {
     authoring: Authoring;
@@ -385,6 +391,64 @@ test.describe('article attachments', () => {
         await expect(reopened.field.title(keptAttachment.title)).toBeVisible();
         await expect(reopened.field.list.getByTestId('attachment-title')).toHaveCount(1);
     });
+
+    test('the NINJS sent to the subscriber carries the public attachments only', {
+        annotation: [
+            {type: 'confluence', description: '1326285069 complete'}, // Attachments in NINJS output
+        ],
+    }, async ({page}) => {
+        const {authoring, widget, useWidget} = await openArticle(page);
+
+        await useWidget();
+        await widget.attach([PUBLIC_ATTACHMENT, INTERNAL_ATTACHMENT]);
+
+        await authoring.save();
+        await dismissSessionExpiry(page);
+
+        // no subscriber is picked: the item goes to every subscriber whose products
+        // match it, which under `legacy` is "Public API" and nothing else
+        await authoring.publish({subscribers: []});
+        await dismissSessionExpiry(page);
+
+        await page.goto('/#/publish_queue');
+
+        const queueTable = page.getByTestId('publish-queue-table');
+        const queuedRow = queueTable.getByTestId('publish-queue-item')
+            .and(page.locator('[data-test-value="item5"]'));
+
+        /*
+         * Publishing does not enqueue: the backend's `publish:enqueue` job does, on a
+         * 10s beat. The queue list is only populated when the view loads, so the entry
+         * can land after this page was rendered and has to be refreshed in.
+         */
+        await expect(async () => {
+            await page.getByTestId('refresh').click();
+            await expect(queuedRow).toBeVisible({timeout: 2000});
+        }).toPass({timeout: 60000});
+
+        expect(await getCellValueByColumTitle(queueTable, queuedRow, 'Subscriber')).toBe('Public API');
+
+        await queuedRow.click();
+
+        const preview = page.getByTestId('authoring-preview');
+
+        await preview.getByRole('tab', {name: 'Item history'}).click();
+        await preview.getByTestId('toggle-transmission-details').click();
+        await preview.getByTestId('queued-item')
+            .and(page.locator('[data-test-value="HTTP Push"]'))
+            .click();
+
+        // the transmitted payload is rendered into a modal that is moved out of the
+        // preview and onto the body, so it is addressed from the page
+        const transmitted = page.getByTestId('transmitted-item');
+
+        await expect(transmitted).toBeVisible();
+
+        const ninjs: INinjsOutput = JSON.parse((await transmitted.innerText()).trim());
+
+        expect(ninjs.attachments.map((attachment) => attachment.title))
+            .toEqual([PUBLIC_ATTACHMENT.title]);
+    });
 });
 
 test.describe('linking article body text to an attachment', () => {
@@ -490,17 +554,4 @@ test.describe('linking article body text to an attachment', () => {
         await expect(body.locator('a[data-attachment]'))
             .toHaveAttribute('title', PUBLIC_ATTACHMENT.title);
     });
-});
-
-/*
- * Placeholder so the parked case of this batch is machine-readable next to the ones
- * that are covered, instead of living only in the file docstring. See that docstring
- * for why it cannot be asserted.
- */
-test.fixme('attachments in NINJS output', {
-    annotation: [
-        {type: 'confluence', description: '1326285069 blocker'}, // Attachments in NINJS output
-    ],
-}, async () => {
-    // No snapshot carries a subscriber whose destination format is NINJS.
 });
