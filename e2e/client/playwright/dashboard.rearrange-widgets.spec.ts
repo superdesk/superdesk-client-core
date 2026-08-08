@@ -28,7 +28,7 @@ import {restoreDatabaseSnapshot} from './utils';
  */
 test.describe('rearranging dashboard widgets', {
     annotation: [
-        {type: 'confluence', description: '1308524872 complete'}, // Rearrange widgets
+        {type: 'confluence', description: '1308524872 partial'}, // Rearrange widgets
     ],
 }, () => {
     const MONITOR = 'aggregate';

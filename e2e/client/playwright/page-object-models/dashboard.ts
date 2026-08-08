@@ -37,13 +37,23 @@ export class Dashboard {
      * following reload aborts the request and the change silently reverts, and
      * a second PATCH sent while the first is in flight carries a stale
      * `If-Match` etag and is rejected with 412.
+     *
+     * The predicate matches on URL and method only. Filtering on the status
+     * here would leave a failed save unmatched, so the helper would hang until
+     * the `waitForResponse` timeout instead of reporting the status; the status
+     * is checked in `expectLayoutPersisted` once the response has arrived.
      */
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
             (response) => /\/workspaces\/[^/]+$/.test(response.url())
-                && response.request().method() === 'PATCH'
-                && response.ok(),
+                && response.request().method() === 'PATCH',
         );
+    }
+
+    private async expectLayoutPersisted(layoutPersisted: Promise<Response>): Promise<void> {
+        const response = await layoutPersisted;
+
+        expect(response.ok(), `saving the dashboard layout failed with ${response.status()}`).toBe(true);
     }
 
     async addWidget(widgetId: string): Promise<void> {
@@ -58,7 +68,7 @@ export class Dashboard {
         await modal.getByRole('button', {name: 'Done'}).click();
 
         await expect(this.getWidget(widgetId)).toBeVisible();
-        await layoutPersisted;
+        await this.expectLayoutPersisted(layoutPersisted);
     }
 
     async startRearranging(): Promise<void> {
@@ -71,7 +81,7 @@ export class Dashboard {
 
         await this.page.getByTestId('accept-rearrange').click();
         await expect(this.page.getByTestId('rearrange-widgets')).toBeVisible();
-        await layoutPersisted;
+        await this.expectLayoutPersisted(layoutPersisted);
     }
 
     /**
