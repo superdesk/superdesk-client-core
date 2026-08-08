@@ -76,6 +76,16 @@ export class Authoring {
     }
 
     /**
+     * Closes the opened article and waits for the editor to be gone, so that a following
+     * interaction with the monitoring list underneath does not race the closing pane.
+     */
+    async close(): Promise<void> {
+        await this.page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await expect(this.page.getByTestId('authoring')).toBeHidden();
+    }
+
+    /**
      * Opens the authoring-react "Save as template" modal, fills the name and saves.
      * Menu items render in a portal outside the actions wrapper, so locate them by
      * role/text rather than a test-id chain.
