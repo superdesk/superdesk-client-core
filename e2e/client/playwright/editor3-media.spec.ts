@@ -38,13 +38,18 @@ import {addEditor3MediaByDrag, setEditor3FieldValue} from './utils/editor3';
  *   snapshot's "Isengard video" is `video/quicktime`, which Chromium will not decode,
  *   so it never selects the `<source>` and playback cannot start. The audio case does
  *   assert real playback.
+ * - "Add image to Editor3" (1310851187) step 6: selecting several images at once and
+ *   closing the Edit crops page that opens for each of them in turn, and with it the
+ *   plural form of expected results 6 and 8. Staging several files and then driving one
+ *   crop dialog per file is a loop of UI actions, which e2e/WRITING_TESTS.md rules out,
+ *   so only the single-image path is automated.
+ *
+ * Deviations from the cases that leave no expected result uncovered:
+ *
  * - "Image preview" (1327759422): the case's prerequisite asks for several images in
  *   the Body. Building several through the UI needs a loop of insertions, which
  *   e2e/WRITING_TESTS.md rules out, and every expected result is per-image, so one
  *   image is used.
- *
- * Product wording that diverges from the cases:
- *
  * - "Add image to Editor3" step 5 asks for Save on the Edit crops page before Upload
  *   on the Upload media page. The product runs the other way round: Upload creates the
  *   items first, then opens Edit Crops for each one, which closes with "Done".
