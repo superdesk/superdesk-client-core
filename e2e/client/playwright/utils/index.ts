@@ -47,7 +47,10 @@ export async function login(page: Page) {
     await expect(page.locator(s('dashboard'))).toBeVisible();
 }
 
-const MAILCRAB_URL = 'http://localhost:1080';
+// One MailCrab instance serves every e2e slot on the machine, so unlike the
+// backend and client URLs it is not per slot; the env var is only an escape
+// hatch for a machine that publishes it on another port.
+const MAILCRAB_URL = (process.env.MAILCRAB_URL || 'http://localhost:1080').replace(/\/$/, '');
 
 interface IMailcrabMessage {
     id: string;
@@ -64,7 +67,9 @@ interface IMailcrabMessage {
  * The `main` snapshot stores only bcrypt hashes and documents a plaintext
  * password for the admin alone, so this is the only way to get a session as any
  * other user. There is no API to set a password directly: the admin UI can only
- * trigger this same email.
+ * trigger this same email. It doubles as the "reset password" flow itself, so
+ * keep it as the single encoding of the MailCrab contract rather than inlining
+ * a second copy in a spec.
  *
  * MailCrab is shared by every e2e slot on the machine, so a message only counts
  * when it is addressed to `email`, was absent from the inbox before the request,

@@ -35,9 +35,9 @@ test.describe('editing another user profile', {
         await form.getByTestId('field--first_name').fill('Janet');
         await form.getByTestId('field--last_name').fill('Roe');
         await form.getByTestId('field--email').fill('janet.roe@example.com');
-        await form.getByLabel('phone number').fill('123456789');
+        await form.getByTestId('field--phone').fill('123456789');
         await form.getByTestId('field--sign_off').fill('JR');
-        await form.getByLabel('Byline').fill('Janet Roe');
+        await form.getByTestId('field--byline').fill('Janet Roe');
 
         await users.saveProfile();
 
@@ -46,9 +46,9 @@ test.describe('editing another user profile', {
         await expect(form.getByTestId('field--first_name')).toHaveValue('Janet');
         await expect(form.getByTestId('field--last_name')).toHaveValue('Roe');
         await expect(form.getByTestId('field--email')).toHaveValue('janet.roe@example.com');
-        await expect(form.getByLabel('phone number')).toHaveValue('123456789');
+        await expect(form.getByTestId('field--phone')).toHaveValue('123456789');
         await expect(form.getByTestId('field--sign_off')).toHaveValue('JR');
-        await expect(form.getByLabel('Byline')).toHaveValue('Janet Roe');
+        await expect(form.getByTestId('field--byline')).toHaveValue('Janet Roe');
 
         // The username is not editable here, so it stays the handle the row is
         // still identified by after the rename.
@@ -105,7 +105,11 @@ test.describe('editing another user profile', {
         await expect(administratorTag).toBeHidden();
 
         await users.openList();
-        await expect(users.getListItem('Jane Doe')).toBeVisible();
+
+        // The indicator sits inside the avatar, which UserAvatar.tsx renders
+        // through react-lazyload, so the row exists before the avatar does and
+        // waiting on the row alone would let `toBeHidden` pass on nothing.
+        await expect(users.getListItem('Jane Doe').getByTestId('user-avatar')).toBeVisible();
         await expect(administratorIndicator()).toBeHidden();
     });
 

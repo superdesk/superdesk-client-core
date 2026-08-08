@@ -22,14 +22,25 @@ export class Users {
     async openList(): Promise<void> {
         await this.page.goto('/#/users');
 
+        // UserListController.fetchUsers assigns the rows only once its query
+        // resolves and never clears them first, so the rows of the previous
+        // filter stay on screen while a new one loads: waiting on the rows alone
+        // would read the list the route opened on. Only the "All" filter leaves
+        // `is_active` out of its `where` clause, which is what tells its response
+        // apart from that initial fetch.
+        const allUsersFetched = this.page.waitForResponse(
+            (response) => response.url().includes('/api/users?')
+                && response.request().method() === 'GET'
+                && !decodeURIComponent(response.url()).includes('is_active'),
+        );
+
         // The list opens on a filtered subset; "All" makes the lookup independent
         // of whether the user under test is active, disabled or pending.
         await this.page.getByTestId('user-filter').selectOption('All');
+        await allUsersFetched;
 
-        // Both the route change and the filter change fetch the list, and until a
-        // fetch lands the table holds no rows at all. A negative assertion made
-        // against an empty table passes for the wrong reason, so hold every caller
-        // here until there is something to assert on.
+        // A negative assertion made against an empty table passes for the wrong
+        // reason, so hold every caller here until there is something to assert on.
         await expect(this.page.getByTestId('users-list').getByTestId('users-list-item')).not.toHaveCount(0);
     }
 
