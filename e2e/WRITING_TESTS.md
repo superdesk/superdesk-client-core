@@ -357,7 +357,7 @@ rather than on the fact that a publish happened.
 
 The payload is read back through the item history's transmission details, which
 render the queue entry's `formatted_item` verbatim: publish, open the item from
-Settings > Publish > Publish Queue (`publish-queue-table` /
+the Publish Queue page (`/#/publish_queue`, `publish-queue-table` /
 `publish-queue-item`), then *Item history* and expand the transmission details.
 That panel (`versioning/history/views/publish_queue.html`) carries no
 `data-test-id` on develop; the attachments branch adds the ones a spec needs.
@@ -375,11 +375,13 @@ Three things to know before using it:
   `state: "success"`. `legacy`'s "Public API" pushes to `http://localhost:5050`,
   which nothing in the stack answers, so its entries never leave `retrying`. Only
   reach for `legacy` if a spec needs the rest of that dataset.
-- **The queue view does not live-update.** Enqueueing is synchronous with
-  publishing on this stack (`CELERY_ALWAYS_EAGER`), but `/#/publish_queue` only
-  reads the queue when it loads, so a spec that navigates there straight after
-  publishing should reload inside an `expect(...).toPass()` rather than assert
-  once.
+- **The queue view does not live-update.** `/#/publish_queue` reads the queue
+  only when it loads, so a spec already sitting on that page when a publish
+  happens will not see the new row without navigating again. Navigating there
+  after publishing needs no retry loop: transmission runs inline on this stack
+  (`CELERY_ALWAYS_EAGER`), so the row and its final state already exist by the
+  time the publish request returns, which is why `publishing.spec.ts` and
+  `publish-queue.spec.ts` both assert once.
 
 ### Publishing an item that has associations
 
