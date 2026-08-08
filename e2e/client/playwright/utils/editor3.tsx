@@ -69,6 +69,29 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
     await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
 }
 
+/**
+ * Inserts an archive item that already exists (e.g. one of the `media-items`
+ * snapshot's media items) into an editor3 field by dragging it out of the
+ * monitoring list, and waits for the resulting media block to render.
+ *
+ * Drag and drop is the only route for an existing item: the toolbar's Media
+ * button dispatches `insertMedia`, which opens the upload dialog and can only
+ * add files coming from disk.
+ *
+ * `field` is the editor3 field locator (e.g. the body_html authoring-field).
+ * The drop lands on the field's own Draft.js editable, addressed as the first
+ * textbox in the field, because a media block that is already present adds a
+ * second one (its caption editor).
+ */
+export async function addEditor3MediaByDrag(field: Locator, monitoringItem: Locator): Promise<void> {
+    const mediaBlocks = field.getByTestId('media-block');
+    const countBefore = await mediaBlocks.count();
+
+    await monitoringItem.dragTo(field.getByRole('textbox').first());
+
+    await expect(mediaBlocks).toHaveCount(countBefore + 1);
+}
+
 export async function setEditor3FieldValue(locator: Locator, value: string) {
     for (let i = 0; i < 10; i++) {
         await locator.clear();

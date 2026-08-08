@@ -12,7 +12,7 @@
     <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
+        <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate data-test-id="multi-image-edit--cancel-upload">Cancel</button>
         <div ng-transclude="select-desk"></div>
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length || schemaLoading === true" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
@@ -44,6 +44,7 @@
                 <div class="sd-photo-preview__thumb-strip">
                     <div class="sd-grid-list">
                         <div class="sd-grid-item sd-grid-item--with-click"
+                             data-test-id="media-grid-item"
                              ng-click="handleItemClick($event, image)"
                              ng-repeat="image in images track by image._id"
                              ng-class="{'sd-grid-item--selected' : image.selected}"
