@@ -103,12 +103,23 @@ export class MediaEditor {
         return this.adjustColours.getByTestId(`${control}-value`);
     }
 
-    cropWidth(): Locator {
+    /** Bound to the crop's right edge rather than to a width, so it is empty until jCrop reports a selection. */
+    get cropWidth(): Locator {
         return this.controlsPanel.getByTestId('crop-width');
     }
 
-    cropHeight(): Locator {
+    /** Bound to the crop's bottom edge rather than to a height, so it is empty until jCrop reports a selection. */
+    get cropHeight(): Locator {
         return this.controlsPanel.getByTestId('crop-height');
+    }
+
+    /** Copy metadata / Paste metadata, rendered only on the Details / Metadata tab. */
+    get copyMetadataButton(): Locator {
+        return this.body.getByTestId('copy-metadata');
+    }
+
+    get pasteMetadataButton(): Locator {
+        return this.body.getByTestId('paste-metadata');
     }
 
     ratioButton(ratio: 'original' | '16:9' | '4:3' | '3:2'): Locator {
@@ -124,7 +135,7 @@ export class MediaEditor {
      * and resize handles have to be addressed by the class names it hard-codes.
      * The selection box is jCrop's first child; its size is the crop in preview pixels.
      */
-    cropSelection(): Locator {
+    get cropSelection(): Locator {
         return this.cropPreview.locator('.jcrop-holder > div').first();
     }
 
@@ -135,11 +146,6 @@ export class MediaEditor {
      */
     async resizeCrop(dx: number, dy: number): Promise<void> {
         await this.dragBy(this.cropPreview.locator('.jcrop-holder .ord-se.jcrop-handle'), dx, dy);
-    }
-
-    /** Moves the crop without resizing it by dragging the selection itself. */
-    async moveCrop(dx: number, dy: number): Promise<void> {
-        await this.dragBy(this.cropPreview.locator('.jcrop-holder .jcrop-tracker').first(), dx, dy);
     }
 
     /** Sets the point of interest by clicking the overlay of the Edit crops preview. */

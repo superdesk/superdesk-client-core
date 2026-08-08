@@ -1,8 +1,8 @@
-import {test, expect, type Page} from '@playwright/test';
+import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {MediaEditor} from './page-object-models/media-editor';
 import {PictureAuthoring} from './page-object-models/authoring';
-import {dismissSessionExpiry, restoreDatabaseSnapshot} from './utils';
+import {restoreDatabaseSnapshot} from './utils';
 
 /**
  * QA cases for the media editor of a picture item: opening it, cropping the
@@ -45,31 +45,24 @@ test.describe('image editing', () => {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
-
-        /*
-         * Restoring a snapshot sometimes leaves the first request of the fresh page
-         * unauthenticated: the auth interceptor then covers monitoring with the
-         * "session has expired" overlay, and the re-login that clears it can raise
-         * the first-run "Welcome to Superdesk" modal on top of it, because the
-         * phone_home flag is read while the backend is still settling. Both only
-         * ever show up on this first navigation, and both swallow every click until
-         * dismissed, so wait for a monitoring view with no modal over it.
-         */
-        await expect(async () => {
-            await dismissSessionExpiry(page);
-
-            const skipWelcome = page.getByRole('button', {name: 'Skip', exact: true});
-
-            if (await skipWelcome.isVisible()) {
-                await skipWelcome.click();
-            }
-
-            await expect(page.locator('.modal__backdrop')).toHaveCount(0);
-            await expect(page.getByTestId('monitoring--selected-desk')).toBeVisible({timeout: 5000});
-        }).toPass({timeout: 90000});
-
+        await monitoring.waitUntilReady();
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.getArticleLocator('Rivendell picture').dblclick();
+    }
+
+    /**
+     * The `src` of a rendition, to compare against after an edit. Throws rather than
+     * falling back to an empty string, which would turn every later "the renditions
+     * were regenerated" assertion into one that passes against any src at all.
+     */
+    async function sourceOf(image: Locator): Promise<string> {
+        const source = await image.getAttribute('src');
+
+        if (source == null) {
+            throw new Error('the rendition has no src to compare against');
+        }
+
+        return source;
     }
 
     /*
@@ -123,6 +116,10 @@ test.describe('image editing', () => {
         await expect(mediaEditor.controlsPanel).toBeVisible();
         await expect(mediaEditor.preview).toBeVisible();
 
+        // Copy / Paste metadata are rendered under the Details / Metadata tab only.
+        await expect(mediaEditor.copyMetadataButton).toBeHidden();
+        await expect(mediaEditor.pasteMetadataButton).toBeHidden();
+
         for (const [control, tooltip] of [
             ['crop', 'Crop'],
             ['rotate-left', 'Rotate left'],
@@ -150,6 +147,8 @@ test.describe('image editing', () => {
 
         await mediaEditor.tab('view').click();
         await expect(mediaEditor.metadataField('headline')).toBeVisible();
+        await expect(mediaEditor.copyMetadataButton).toBeVisible();
+        await expect(mediaEditor.pasteMetadataButton).toBeVisible();
         await expect(mediaEditor.controlsPanel).toBeHidden();
 
         await mediaEditor.tab('crop').click();
@@ -227,7 +226,7 @@ test.describe('image editing', () => {
 
         await openPicture(page);
 
-        const sourceBefore = await picture.previewImage.getAttribute('src');
+        const sourceBefore = await sourceOf(picture.previewImage);
 
         await picture.openImageEditor();
 
@@ -259,12 +258,12 @@ test.describe('image editing', () => {
         // A flip keeps the dimensions, so the only visible trace of it is that the
         // renditions were regenerated and now point at newly stored media.
         await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore ?? '');
+        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
         await reopenPicture(page);
         await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
         await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore ?? '');
+        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
     });
 
     test('colour scales drive the preview, Cancel restores them and Apply recentres them', {
@@ -279,7 +278,7 @@ test.describe('image editing', () => {
 
         await openPicture(page);
 
-        const sourceBefore = await picture.previewImage.getAttribute('src');
+        const sourceBefore = await sourceOf(picture.previewImage);
 
         await picture.openImageEditor();
 
@@ -314,11 +313,11 @@ test.describe('image editing', () => {
         await mediaEditor.doneButton.click();
         await expect(mediaEditor.header).toBeHidden();
 
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore ?? '');
+        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
         await reopenPicture(page);
         await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore ?? '');
+        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
     });
 
     test('cropping the original with the crop tool and the ratio buttons', {
@@ -356,17 +355,29 @@ test.describe('image editing', () => {
         await mediaEditor.control('crop').click();
         await expect(mediaEditor.cropToolbar).toBeVisible();
 
-        const fullSelection = await mediaEditor.cropSelection().boundingBox();
+        const fullSelection = await mediaEditor.cropSelection.boundingBox();
+        const cropWidth = mediaEditor.cropWidth;
+        const cropHeight = mediaEditor.cropHeight;
+
+        await expect(cropWidth).toHaveValue('');
+        await expect(cropHeight).toHaveValue('');
 
         await mediaEditor.resizeCrop(-160, -80);
 
         // Dragging the crop is the only interaction that marks it changed.
         await expect(mediaEditor.cropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
-        expect((await mediaEditor.cropSelection().boundingBox())?.width)
+        expect((await mediaEditor.cropSelection.boundingBox())?.width)
             .toBeLessThan(fullSelection?.width ?? 0);
 
-        const cropWidth = mediaEditor.cropWidth();
-        const cropHeight = mediaEditor.cropHeight();
+        // The two fields follow the mouse: jCrop reports the dragged corner through
+        // `onSelect`, which writes it into `CropRight` / `CropBottom`. Dragging the
+        // bottom-right handle inwards therefore leaves both inside the original.
+        await expect(async () => {
+            expect(Number(await cropWidth.inputValue())).toBeGreaterThan(0);
+            expect(Number(await cropWidth.inputValue())).toBeLessThan(2100);
+            expect(Number(await cropHeight.inputValue())).toBeGreaterThan(0);
+            expect(Number(await cropHeight.inputValue())).toBeLessThan(1050);
+        }).toPass();
 
         // The ratio buttons letterbox the 2100 x 1050 original: 16:9, 4:3 and 3:2 are
         // all taller than it is, so each keeps the full height and narrows the width.
@@ -386,11 +397,11 @@ test.describe('image editing', () => {
         await expect(cropWidth).toHaveValue('1750');
         await expect(cropHeight).toHaveValue('1050');
 
-        const ratioSelection = await mediaEditor.cropSelection().boundingBox();
+        const ratioSelection = await mediaEditor.cropSelection.boundingBox();
 
         await cropWidth.fill('1200');
         await expect(async () => {
-            expect((await mediaEditor.cropSelection().boundingBox())?.width)
+            expect((await mediaEditor.cropSelection.boundingBox())?.width)
                 .toBeLessThan(ratioSelection?.width ?? 0);
         }).toPass();
 
@@ -425,7 +436,7 @@ test.describe('image editing', () => {
 
         await expect(picture.crop('FIXME')).toBeVisible();
 
-        const cropSourceBefore = await picture.crop('FIXME').locator('img').getAttribute('src');
+        const cropSourceBefore = await sourceOf(picture.crop('FIXME').locator('img'));
 
         await picture.openCropsEditor();
 
@@ -463,10 +474,10 @@ test.describe('image editing', () => {
         await expect(mediaEditor.header).toBeHidden();
 
         await expect(picture.crop('FIXME')).toBeVisible();
-        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore ?? '');
+        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
 
         await reopenPicture(page);
         await expect(picture.crop('FIXME').locator('img')).toBeVisible();
-        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore ?? '');
+        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
     });
 });

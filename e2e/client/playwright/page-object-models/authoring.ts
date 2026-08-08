@@ -95,11 +95,6 @@ export class Authoring {
 }
 
 export class PictureAuthoring extends Authoring {
-    async openMetadataEditor(): Promise<void> {
-        await this.page.locator(s('authoring-field=media', 'image-overlay')).hover();
-        await this.page.locator(s('authoring-field=media', 'edit-metadata')).click();
-    }
-
     /** The media field of a picture item, holding the preview and its hover actions. */
     get mediaField(): Locator {
         return this.page.getByTestId('authoring-field').and(this.page.locator('[data-test-value="media"]'));
@@ -121,6 +116,11 @@ export class PictureAuthoring extends Authoring {
     /** Reveals the Edit metadata / Edit image / Edit crops actions over the preview. */
     async hoverMedia(): Promise<void> {
         await this.mediaField.getByTestId('image-overlay').hover();
+    }
+
+    async openMetadataEditor(): Promise<void> {
+        await this.hoverMedia();
+        await this.mediaField.getByTestId('edit-metadata').click();
     }
 
     async openImageEditor(): Promise<void> {

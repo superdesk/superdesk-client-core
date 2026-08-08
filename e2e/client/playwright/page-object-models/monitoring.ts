@@ -1,11 +1,37 @@
 import {Page, Locator, expect} from '@playwright/test';
-import {s} from '../utils';
+import {dismissSessionExpiry, s} from '../utils';
 
 export class Monitoring {
     private page: Page;
 
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /**
+     * Waits for a monitoring view that accepts clicks.
+     *
+     * Restoring a snapshot sometimes leaves the first request of the fresh page
+     * unauthenticated: the auth interceptor then covers monitoring with the
+     * "session has expired" overlay, and the re-login that clears it can raise the
+     * first-run "Welcome to Superdesk" modal on top of it, because the phone_home
+     * flag is read while the backend is still settling. Both only ever show up on
+     * the first navigation after a restore, and both swallow every click until
+     * dismissed, so retry until neither is in the way.
+     */
+    async waitUntilReady(): Promise<void> {
+        await expect(async () => {
+            await dismissSessionExpiry(this.page);
+
+            const skipWelcome = this.page.getByRole('button', {name: 'Skip', exact: true});
+
+            if (await skipWelcome.isVisible()) {
+                await skipWelcome.click();
+            }
+
+            await expect(this.page.locator('.modal__backdrop')).toHaveCount(0);
+            await expect(this.page.getByTestId('monitoring--selected-desk')).toBeVisible({timeout: 5000});
+        }).toPass({timeout: 90000});
     }
 
     async selectDeskOrWorkspace(deskName: string): Promise<void> {
