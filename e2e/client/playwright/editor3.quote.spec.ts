@@ -1,6 +1,8 @@
-import {test, expect, type Locator, type Page} from '@playwright/test';
+import {test, expect, type Locator} from '@playwright/test';
+import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot} from './utils';
+import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
+import {EDITOR3_ACTIVE_BUTTON, getEditor3Field, getEditor3FormattingButton} from './utils/editor3';
 
 test.describe('quote formatting in the article body', () => {
     const HEADLINE = 'quote formatting test';
@@ -18,9 +20,6 @@ test.describe('quote formatting in the article body', () => {
     const TO_QUOTE_TEXT = TO_QUOTE_HEAD + TO_QUOTE_TAIL;
     const TO_REGULAR_TEXT = TO_REGULAR_HEAD + TO_REGULAR_TAIL;
 
-    const ACTIVE_BUTTON = /Editor3-activeButton/;
-    const ITALIC = 'italic';
-
     /**
      * Draft.js renders every block as the element its block type maps to, tagged with
      * `data-block`. Quote blocks map to `blockquote`, everything typed here otherwise
@@ -34,34 +33,27 @@ test.describe('quote formatting in the article body', () => {
         return body.locator('blockquote[data-block="true"]');
     }
 
-    // Regular text is asserted as "not italic" rather than a literal font style: the editor's
-    // base font style is a theme value, while a quote block always computes to italic.
+    // The italic comes from `.Editor3-editor .Editor3-blockquote`, so it is asserted
+    // alongside the tag name: the tag alone would still pass if that rule were dropped
+    // and the quote stopped reading as one.
     async function expectQuote(body: Locator, text: string, quoted: boolean): Promise<void> {
         const block = blockFor(body, text);
 
         await expect(block).toHaveCount(1);
         await expect(block).toHaveJSProperty('tagName', quoted ? 'BLOCKQUOTE' : 'DIV');
-
-        if (quoted) {
-            await expect(block).toHaveCSS('font-style', ITALIC);
-        } else {
-            await expect(block).not.toHaveCSS('font-style', ITALIC);
-        }
-    }
-
-    async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-        for (let i = 0; i < times; i++) {
-            await page.keyboard.press(key);
-        }
+        await expect(block).toHaveCSS('font-style', quoted ? 'italic' : 'normal');
     }
 
     test('toolbar toggle quotes typed text and a selection, and the result survives reopen', {
         annotation: [
-            {type: 'confluence', description: '1313669353 complete'}, // Quote
+            // Partial: only body_html is covered. The case's purpose also names custom text fields,
+            // which no snapshot puts on the Story content profile.
+            {type: 'confluence', description: '1313669353 partial'}, // Quote
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
 
+        const authoring = new Authoring(page);
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
@@ -74,22 +66,18 @@ test.describe('quote formatting in the article body', () => {
         await headline.fill(HEADLINE);
         await expect(headline).toHaveText(HEADLINE);
 
-        const body = page.getByTestId('authoring')
-            .getByTestId('authoring-field')
-            .and(page.locator('[data-test-value="body_html"]'));
+        const body = getEditor3Field(page, 'body_html');
         const bodyInput = body.getByRole('textbox');
-        const quoteButton = body.getByTestId('toolbar')
-            .getByTestId('formatting-option-button')
-            .and(page.locator('[data-test-value="quote"]'));
+        const quoteButton = getEditor3FormattingButton(body, 'quote');
 
         await expect(bodyInput).toBeVisible();
         await bodyInput.click();
 
-        await expect(quoteButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expect(quoteBlocks(body)).toHaveCount(0);
 
         await quoteButton.click();
-        await expect(quoteButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expect(quoteBlocks(body)).toHaveCount(1);
 
         // Typed without repositioning the caret: the text landing in the quote block is
@@ -98,11 +86,11 @@ test.describe('quote formatting in the article body', () => {
         await expectQuote(body, QUOTE_TEXT, true);
 
         await page.keyboard.press('Enter');
-        await expect(quoteButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expect(quoteBlocks(body)).toHaveCount(2);
 
         await quoteButton.click();
-        await expect(quoteButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expect(quoteBlocks(body)).toHaveCount(1);
 
         await page.keyboard.type(REGULAR_TEXT);
@@ -113,12 +101,13 @@ test.describe('quote formatting in the article body', () => {
         await page.keyboard.type(TO_QUOTE_TEXT);
         await expectQuote(body, TO_QUOTE_TEXT, false);
 
-        // The caret sits at the end of the paragraph; select its second half.
+        // The caret sits at the end of the paragraph; select its second half. Counted
+        // arrow presses rather than Home/End, which do not move the caret on macOS.
         await pressRepeatedly(page, 'Shift+ArrowLeft', TO_QUOTE_TAIL.length);
 
-        await expect(quoteButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await quoteButton.click();
-        await expect(quoteButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectQuote(body, TO_QUOTE_TEXT, true);
         await expectQuote(body, REGULAR_TEXT, false);
 
@@ -131,20 +120,13 @@ test.describe('quote formatting in the article body', () => {
 
         await pressRepeatedly(page, 'Shift+ArrowLeft', TO_REGULAR_TAIL.length);
 
-        await expect(quoteButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await quoteButton.click();
-        await expect(quoteButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(quoteButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectQuote(body, TO_REGULAR_TEXT, false);
         await expectQuote(body, TO_QUOTE_TEXT, true);
 
-        // Closing an edited article raises the "Save changes?" prompt; saving from
-        // there both persists the body and closes the article. Its Save is scoped to
-        // the dialog so it does not collide with the topbar Save button.
-        await page.getByTestId('authoring-topbar').getByTestId('close').click();
-        await page.getByTestId('unsaved-changes-dialog')
-            .getByRole('button', {name: 'Save', exact: true})
-            .click();
-        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+        await authoring.closeAndSave();
 
         await monitoring.getArticleLocator(HEADLINE).dblclick();
         await expect(bodyInput).toBeVisible();

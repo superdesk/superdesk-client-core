@@ -1,5 +1,32 @@
-import {Locator, expect} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 import {s} from '.';
+
+/**
+ * Class an editor3 toolbar button carries while its style is active at the caret.
+ * Matched as a regex because it is one of several classes on the button.
+ */
+export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
+
+/**
+ * The authoring field wrapper of an editor3 field, addressed by field id
+ * (`body_html`, `abstract`, ...). Wraps the whole field, toolbar included, not
+ * just its editable area.
+ */
+export function getEditor3Field(page: Page, fieldId: string): Locator {
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${fieldId}"]`));
+}
+
+/**
+ * A button in an editor3 field's toolbar, addressed by the style it applies
+ * (`bold`, `quote`, ...) rather than by its icon or its position in the toolbar.
+ */
+export function getEditor3FormattingButton(field: Locator, style: string): Locator {
+    return field.getByTestId('toolbar')
+        .getByTestId('formatting-option-button')
+        .and(field.page().locator(`[data-test-value="${style}"]`));
+}
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
     return field.locator('.DraftEditor-root')

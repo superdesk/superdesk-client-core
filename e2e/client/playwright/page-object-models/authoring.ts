@@ -76,6 +76,21 @@ export class Authoring {
     }
 
     /**
+     * Closes an edited article through the "Save changes?" prompt that closing raises,
+     * which both persists the changes and closes the article. The prompt's Save is
+     * scoped to the dialog so it does not collide with the topbar Save button.
+     */
+    async closeAndSave(): Promise<void> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+        await page.getByTestId('unsaved-changes-dialog')
+            .getByRole('button', {name: 'Save', exact: true})
+            .click();
+        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+    }
+
+    /**
      * Opens the authoring-react "Save as template" modal, fills the name and saves.
      * Menu items render in a portal outside the actions wrapper, so locate them by
      * role/text rather than a test-id chain.
