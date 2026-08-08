@@ -4,7 +4,14 @@
             <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{vocabulary.display_name}}
             </h3>
             <h3 class="modal__heading" ng-show="!vocabulary._id"><span translate>Create</span></h3>
-            <a href="" class="icn-btn close-modal" ng-click="cancel()" data-test-id="vocabulary-edit-modal--close"><i class="icon-close-small"></i></a>
+            <a
+                href=""
+                class="icn-btn close-modal"
+                ng-click="cancel()"
+                data-test-id="vocabulary-edit-modal--close"
+            >
+                <i class="icon-close-small"></i>
+            </a>
         </div>
         <div class="modal__body modal__body--with-navigation" data-test-id="vocabulary-edit-content">
             <ul class="modal__navigation" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)" data-test-id="vocabulary-tabs">
