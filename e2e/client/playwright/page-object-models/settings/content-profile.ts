@@ -102,8 +102,15 @@ export class ContentProfileSettings {
      * back, or to open the field picker without adding anything.
      */
     async openEditor(contentProfile: string): Promise<void> {
-        await this.page.locator(s(`content-profile=${contentProfile}`, 'content-profile-actions')).click();
-        await this.page.locator(s('content-profile-actions--options')).getByRole('button', {name: 'Edit'}).click();
+        await this.page
+            .getByTestId('content-profile')
+            .and(this.page.locator(`[data-test-value="${contentProfile}"]`))
+            .getByTestId('content-profile-actions')
+            .click();
+        await this.page
+            .getByTestId('content-profile-actions--options')
+            .getByRole('button', {name: 'Edit'})
+            .click();
         await expect(this.page.getByTestId('content-profile-editing-modal')).toBeVisible();
     }
 
@@ -117,7 +124,10 @@ export class ContentProfileSettings {
     }
 
     getConfiguredField(fieldName: string): Locator {
-        return this.page.locator(s('content-profile-editing-modal', `content-profile-item=${fieldName}`));
+        return this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-item')
+            .and(this.page.locator(`[data-test-value="${fieldName}"]`));
     }
 
     /**
@@ -137,7 +147,7 @@ export class ContentProfileSettings {
          * TreeMenu) that only positions its content, so it never satisfies toBeVisible itself.
          * Wait on the options it renders instead.
          */
-        const popover = this.page.locator(s('tree-menu-popover'));
+        const popover = this.page.getByTestId('tree-menu-popover');
 
         await expect(popover.getByRole('treeitem').first()).toBeVisible();
 

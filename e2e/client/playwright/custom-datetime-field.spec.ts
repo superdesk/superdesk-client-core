@@ -1,5 +1,5 @@
 import {test, expect, Page} from '@playwright/test';
-import {restoreDatabaseSnapshot, s} from './utils';
+import {restoreDatabaseSnapshot} from './utils';
 import {MetadataSettings} from './page-object-models/settings/metadata';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {Monitoring} from './page-object-models/monitoring';
@@ -375,7 +375,10 @@ test('a custom datetime field on the content profile is editable and saved with 
     await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.createArticleFromTemplate('story');
 
-    const field = page.locator(s('authoring', `authoring-field=${FIELD_ID}`));
+    const field = page
+        .getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${FIELD_ID}"]`));
 
     await expect(field).toBeVisible();
     await expect(field.getByTestId('date-input')).toBeVisible();
@@ -389,7 +392,7 @@ test('a custom datetime field on the content profile is editable and saved with 
     await field.getByTestId('time-input').fill(FIELD_TIME);
     await expect(field.getByTestId('date-input')).toHaveValue(formatAsDateInput(new Date()));
 
-    const toolbar = page.getByTestId('authoring-toolbar-1').first();
+    const toolbar = page.getByTestId('authoring').getByTestId('authoring-toolbar-1');
 
     const [saveResponse] = await Promise.all([
         page.waitForResponse(
