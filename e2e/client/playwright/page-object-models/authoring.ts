@@ -82,6 +82,25 @@ export class Authoring {
     }
 
     /**
+     * Closes an article that has nothing left to save.
+     *
+     * There is no way to assert the "Save changes?" prompt stays away by looking
+     * for its absence, since it is absent for a moment either way. The topbar
+     * hiding is the assertion that carries it: while the prompt is up the article
+     * stays open, so a prompt here fails this method rather than being clicked
+     * away. Use `closeDiscardingChanges` when unsaved edits are expected.
+     */
+    async close(): Promise<void> {
+        const {page} = this;
+        const topbar = page.getByTestId('authoring-topbar');
+
+        await topbar.getByTestId('close').click();
+
+        await expect(topbar).toBeHidden();
+        await expect(page.getByTestId('unsaved-changes-dialog')).toBeHidden();
+    }
+
+    /**
      * Closes the article, discarding an autosave record if one is pending.
      *
      * Fields that autosave on a debounce can land a record after the item was
@@ -89,7 +108,7 @@ export class Authoring {
      * if nothing was touched since. That makes the "Save changes?" prompt
      * genuinely optional here, so it is answered only when it shows up.
      */
-    async close(): Promise<void> {
+    async closeDiscardingChanges(): Promise<void> {
         const {page} = this;
         const topbar = page.getByTestId('authoring-topbar');
         const unsavedChanges = page.getByTestId('unsaved-changes-dialog');

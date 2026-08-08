@@ -11,11 +11,15 @@ import {setEditor3FieldValue} from './utils/editor3';
  * content template and opens it for editing. The case is split by what happens to
  * that article: it is either thrown away (and then must exist nowhere) or kept.
  *
- * The article the shortcut creates already exists server-side before anything is
- * typed into it, so "not created" means the discard actually removed it; that is
- * why the discard test also queries global search rather than trusting the
- * monitoring list alone.
+ * The shortcut persists the article to `archive` before anything is typed into it,
+ * at version 0, and the typing that follows only reaches `archive_autosave`. Every
+ * monitoring and search query filters version-0 drafts out, so the article is
+ * missing from all lists whether or not the discard removed it. "Not created" is
+ * therefore checked against the `archive` resource, which is the only place a
+ * surviving stub would show.
  */
+
+const API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/$/, '');
 
 interface IArticleFields {
     slugline: string;
@@ -43,7 +47,7 @@ const UPDATED_ABSTRACT = 'saved shortcut abstract, edited';
 /** Main-snapshot article of the Sports desk, used as the "list has loaded" anchor. */
 const ANCHOR_ARTICLE = 'test sports story';
 
-/** Matches ANCHOR_ARTICLE and both headlines above, so one query covers anchor and subject. */
+/** Matches SAVED.headline, and snapshot articles besides, so the filtered list is never empty. */
 const SEARCH_TERM = 'story';
 
 /**
@@ -90,6 +94,37 @@ function sluglineField(page: Page): Locator {
     return page.getByTestId('authoring').getByTestId('field-slugline');
 }
 
+/** Id of the article authoring has open, from the `item` parameter opening one writes into the URL. */
+function openArticleId(page: Page): string {
+    const match = page.url().match(/[?&]item=([^&]+)/);
+
+    if (match == null) {
+        throw new Error(`no article is open in ${page.url()}`);
+    }
+
+    return decodeURIComponent(match[1]);
+}
+
+/**
+ * Response status of `<resource>/<articleId>`, so 200 means the record exists and 404
+ * means it is gone. Authenticated with the session token the client keeps in
+ * localStorage, already in the form the API expects as an Authorization header.
+ */
+async function recordStatus(page: Page, resource: string, articleId: string): Promise<number> {
+    const token = await page.evaluate(() => window.localStorage.getItem('sess:token'));
+
+    if (token == null) {
+        throw new Error('no session token in localStorage');
+    }
+
+    const response = await page.request.get(`${API_URL}/${resource}/${articleId}`, {
+        headers: {Authorization: token},
+        failOnStatusCode: false,
+    });
+
+    return response.status();
+}
+
 async function fillArticleFields(authoring: Authoring, page: Page, fields: IArticleFields): Promise<void> {
     await sluglineField(page).fill(fields.slugline);
     await setEditor3FieldValue(authoring.field('field--headline'), fields.headline);
@@ -119,7 +154,12 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
 
         await monitoring.createArticleWithKeyboardShortcut();
 
+        const articleId = openArticleId(page);
         const topbar = page.getByTestId('authoring-topbar');
+
+        // the article is already in archive at this point, which is what makes the
+        // absence check after Ignore mean something
+        expect(await recordStatus(page, 'archive', articleId)).toBe(200);
 
         // an article straight from the template has no edits of its own to persist
         await expect(topbar.getByTestId('save')).toBeDisabled();
@@ -145,17 +185,11 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await prompt.getByRole('button', {name: 'Ignore', exact: true}).click();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
-
         await expect(withLabel(monitoringItems(page), ANCHOR_ARTICLE)).toBeVisible();
-        await expect(withLabel(monitoringItems(page), DISCARDED.headline)).toHaveCount(0);
 
-        const results = await openGlobalSearch(page);
-
-        await page.locator('#search-input').fill(SEARCH_TERM);
-        await page.locator('#search-button').click();
-
-        await expect(withLabel(results, ANCHOR_ARTICLE)).toBeVisible();
-        await expect(withLabel(results, DISCARDED.headline)).toHaveCount(0);
+        // expected result 2 in full: Ignore took the stub back out of archive.
+        // Polled because the delete is still in flight while the view closes
+        await expect.poll(() => recordStatus(page, 'archive', articleId)).toBe(404);
     });
 
     test('a saved article is listed, searchable, and reopens with its data', async ({page}) => {
@@ -169,6 +203,9 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await openSportsMonitoring(page, monitoring);
 
         await monitoring.createArticleWithKeyboardShortcut();
+
+        const articleId = openArticleId(page);
+
         await fillArticleFields(authoring, page, SAVED);
 
         await authoring.save();
@@ -177,26 +214,45 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(withLabel(monitoringItems(page), SAVED.headline)).toBeVisible();
 
+        const abstractAutosaved = page.waitForRequest(
+            (request) => request.method() === 'POST' && request.url().includes('/archive_autosave'),
+        );
+
         await setEditor3FieldValue(authoring.field('authoring-field=abstract'), UPDATED_ABSTRACT);
 
         // Save re-enabling is the signal that the edit reached the article model,
         // which is what makes the "Save changes?" prompt appear on close
         await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
 
+        /*
+         * The edit also autosaves on a debounce. Waiting for that to fire before
+         * closing leaves nothing pending that could write a fresh autosave record
+         * after the prompt's Save has cleared the old one; such a record would make
+         * the article dirty the moment it is reopened, and the clean close at the
+         * end of this test is exactly what the case expects there.
+         */
+        await abstractAutosaved;
+
         await authoring.closeAndSave();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
         await expect(withLabel(monitoringItems(page), SAVED.headline)).toBeVisible();
+        await expect.poll(() => recordStatus(page, 'archive_autosave', articleId)).toBe(404);
 
         const results = await openGlobalSearch(page);
 
         await page.locator('#search-input').fill(SEARCH_TERM);
+        await page.locator('#search-button').click();
 
-        // the article reaches the search index asynchronously, so re-run the query
-        // instead of waiting for a list that will not update on its own
+        /*
+         * The article reaches the search index asynchronously and the results list
+         * refetches only when the search parameters change, so clicking the button
+         * again with the same query would do nothing. Reloading re-runs the query
+         * that is now in the URL, which is what lets the retry see the new item.
+         */
         await expect(async () => {
-            await page.locator('#search-button').click();
-            await expect(withLabel(results, SAVED.headline)).toBeVisible({timeout: 2000});
+            await page.reload();
+            await expect(withLabel(results, SAVED.headline)).toBeVisible({timeout: 5000});
         }).toPass({timeout: 30000});
 
         await openSportsMonitoring(page, monitoring);
