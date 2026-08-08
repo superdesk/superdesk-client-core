@@ -89,10 +89,6 @@ export class AttachmentsPane {
         return this.part('attachment-remove', attachmentTitle);
     }
 
-    titles(): Promise<Array<string>> {
-        return this.list.getByTestId('attachment-title').allInnerTexts();
-    }
-
     /** One card of the Attach files dialog, addressed by the file it was opened with. */
     uploadCard(file: string): Locator {
         return this.uploadDialog

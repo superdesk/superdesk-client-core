@@ -2,7 +2,7 @@ import {test, expect, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {AttachmentsPane} from './page-object-models/attachments';
-import {dismissSessionExpiry, login, restoreDatabaseSnapshot, s} from './utils';
+import {dismissSessionExpiry, login, restoreDatabaseSnapshot} from './utils';
 
 /**
  * Article attachments: adding, downloading, editing, removing, and linking body text
@@ -105,7 +105,7 @@ async function openArticle(page: Page): Promise<IOpenedArticle> {
     await monitoring.selectDeskOrWorkspace('Politic Desk');
 
     await monitoring.executeActionOnMonitoringItem(
-        page.locator(s('article-item=item5')).first(),
+        page.getByTestId('article-item').and(page.locator('[data-test-value="item5"]')).first(),
         'Edit',
     );
 
@@ -490,4 +490,17 @@ test.describe('linking article body text to an attachment', () => {
         await expect(body.locator('a[data-attachment]'))
             .toHaveAttribute('title', PUBLIC_ATTACHMENT.title);
     });
+});
+
+/*
+ * Placeholder so the parked case of this batch is machine-readable next to the ones
+ * that are covered, instead of living only in the file docstring. See that docstring
+ * for why it cannot be asserted.
+ */
+test.fixme('attachments in NINJS output', {
+    annotation: [
+        {type: 'confluence', description: '1326285069 blocker'}, // Attachments in NINJS output
+    ],
+}, async () => {
+    // No snapshot carries a subscriber whose destination format is NINJS.
 });
