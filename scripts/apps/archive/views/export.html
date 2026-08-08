@@ -1,4 +1,4 @@
-<div sd-modal data-model="true" data-close="closeExport()">
+<div sd-modal data-model="true" data-close="closeExport()" data-test-id="'export-modal'">
     <div class="modal__header">
         <a href="" class="modal__close pull-right" sd-hotkey="esc" ng-click="closeExport()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading" translate>Export</h3>
@@ -8,14 +8,15 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--is-select">
                 <label class="sd-line-input__label">{{ :: 'Formatters' | translate }}</label>
-                <select selected="selectedFormatter" ng-model="selectedFormatter" class="sd-line-input__select">
+                <select selected="selectedFormatter" ng-model="selectedFormatter" class="sd-line-input__select"
+                    data-test-id="formatter-select">
                     <option value="{{formatter}}" ng-repeat="formatter in exportFormatters">{{:: formatter.name}}</option>
                 </select>
             </div>
         </div>
         <div class="form__row">
             <label translate>Validate</label>
-            <span sd-switch ng-model="validate">{{ 'Validate' | translate }}</span>
+            <span sd-switch ng-model="validate" data-test-id="validate-switch">{{ 'Validate' | translate }}</span>
         </div>
 
         <div class="form__row">
@@ -29,7 +30,7 @@
         </div>
     </div>
     <div class="modal__footer">
-        <button class="btn btn--primary btn--pull-right" ng-disabled="!exportFormatters.length > 0" ng-click="exportFile(selectedFormatter, validate)" translate>Export</button>
-        <button class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button class="btn btn--primary btn--pull-right" ng-disabled="!exportFormatters.length > 0" ng-click="exportFile(selectedFormatter, validate)" data-test-id="export-submit" translate>Export</button>
+        <button class="btn" ng-click="cancel()" data-test-id="cancel" translate>Cancel</button>
     </div>
 </div>
