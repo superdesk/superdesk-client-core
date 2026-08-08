@@ -16,30 +16,43 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
+    /**
+     * Adds formatting options to one field of a content profile, keeping the options it already
+     * has. `sectionName` is a tab label ('Header fields', 'Content fields'), `fieldName` the
+     * field's display name ('Body HTML').
+     */
     public async addFormattingOptionToContentProfile(options: IOptions) {
-        await this.page.locator(s(`content-profile=${options.profileName}`))
-            .getByRole('button', {name: 'Actions'})
-            .click();
-        await this.page.locator(s('content-profile-actions-popover')).getByRole('button', {name: 'Edit'}).click();
+        const editModal = this.page.getByTestId('content-profile-editing-modal');
 
-        await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
-        await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
+        await this.page.getByTestId('content-profile')
+            .and(this.page.locator(`[data-test-value="${options.profileName}"]`))
+            .getByTestId('content-profile-actions')
+            .click();
+        await this.page.getByTestId('content-profile-actions--options')
+            .getByRole('button', {name: 'Edit'})
+            .click();
+
+        await editModal.getByTestId('content-profile-tabs')
+            .getByRole('tab', {name: options.sectionName})
+            .click();
+        await editModal.getByTestId('content-profile-fields')
+            .getByTestId('field')
+            .and(this.page.locator(`[data-test-value="${options.fieldName}"]`))
+            .click();
+
+        const fieldEdit = this.page.getByTestId('item-view-edit');
+
+        await expect(fieldEdit).toBeVisible();
 
         await new TreeSelectDriver(
             this.page,
-            this.page.locator(s('formatting-options-input')),
-        ).setValues(options.formattingOptionsToAdd);
+            fieldEdit.locator(s('formatting-options-input')),
+        ).addValues(...options.formattingOptionsToAdd);
 
-        // this is required for validation. TODO: update DB snapshot to make current items already valid
-        await this.page.locator(s('generic-list-page', 'item-view-edit', 'gform-input--sdWidth')).selectOption('Full');
+        await fieldEdit.getByTestId('item-view-edit--save').click();
+        await editModal.getByRole('button', {name: 'Save'}).click();
 
-        await this.page.locator(s('generic-list-page', 'item-view-edit', 'toolbar'))
-            .getByRole('button', {name: 'Apply'})
-            .click();
-
-        await this.page.locator(s('content-profile-edit-view--footer')).getByRole('button', {name: 'Save'}).click();
-
-        await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
+        await expect(editModal).not.toBeVisible();
     }
 
     async addFieldsToContentProfile(
