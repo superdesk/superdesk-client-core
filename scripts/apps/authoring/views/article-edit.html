@@ -292,7 +292,7 @@
     <div ng-if="item.type == 'picture' || item.type == 'graphic'" class="full-preview" sd-ratio-calc>
         <div class="media-item__item">
             <div class="item-association item-association--preview">
-                <div class="item-association__image-container" sd-item-rendition data-item="item" data-rendition="baseImage"></div>
+                <div class="item-association__image-container" sd-item-rendition data-item="item" data-rendition="baseImage" data-test-id="media-image"></div>
 
                 <div class="item-association__image-overlay" ng-if="_editable" data-test-id="image-overlay">
                     <div class="item-association__icons-block" data-test-id="image-overlay-actions">
@@ -303,7 +303,7 @@
                 </div>
             </div>
 
-            <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
+            <span class="media-item__item-label" data-test-id="original-size-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
 
             <sd-media-metadata-view
                 item="item"

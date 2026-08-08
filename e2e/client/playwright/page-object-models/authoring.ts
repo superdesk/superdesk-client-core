@@ -99,4 +99,37 @@ export class PictureAuthoring extends Authoring {
         await this.page.locator(s('authoring-field=media', 'image-overlay')).hover();
         await this.page.locator(s('authoring-field=media', 'edit-metadata')).click();
     }
+
+    /** The media field of a picture item, holding the preview and its hover actions. */
+    get mediaField(): Locator {
+        return this.page.getByTestId('authoring-field').and(this.page.locator('[data-test-value="media"]'));
+    }
+
+    /** "Original (W x H px)" under the preview, the only place the stored size is shown. */
+    get originalSizeLabel(): Locator {
+        return this.mediaField.getByTestId('original-size-label');
+    }
+
+    get previewImage(): Locator {
+        return this.mediaField.getByTestId('media-image').locator('img');
+    }
+
+    crop(name: string): Locator {
+        return this.mediaField.getByTestId('item-crop').and(this.page.locator(`[data-test-value="${name}"]`));
+    }
+
+    /** Reveals the Edit metadata / Edit image / Edit crops actions over the preview. */
+    async hoverMedia(): Promise<void> {
+        await this.mediaField.getByTestId('image-overlay').hover();
+    }
+
+    async openImageEditor(): Promise<void> {
+        await this.hoverMedia();
+        await this.mediaField.getByTestId('edit-image').click();
+    }
+
+    async openCropsEditor(): Promise<void> {
+        await this.hoverMedia();
+        await this.mediaField.getByTestId('crop').click();
+    }
 }
