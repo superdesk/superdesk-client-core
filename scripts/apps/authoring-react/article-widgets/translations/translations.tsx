@@ -38,7 +38,11 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
                         }
                         translationTemplate={({translation, getTranslatedFromLanguage}) => (
                             <Card key={translation._id}>
-                                <div onClick={() => openArticle(translation._id, 'edit')}>
+                                <div
+                                    onClick={() => openArticle(translation._id, 'edit')}
+                                    data-test-id="translation-item"
+                                    data-test-value={translation.language}
+                                >
                                     <div>
                                         <Spacer h gap="4" justifyContent="space-between" noWrap>
                                             <span className="label">{translation.language}</span>
