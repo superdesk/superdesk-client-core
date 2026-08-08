@@ -29,6 +29,8 @@ e2e/client/playwright/
 ├── <scenario>.spec.ts          <- specs are flat here, hyphenated names
 ├── page-object-models/
 │   └── <feature>.ts            <- Page Object classes (Authoring, Monitoring, ...)
+├── scenarios/
+│   └── <flow>.ts               <- multi-feature flows shared by several specs
 └── utils/
     ├── index.ts                <- restoreDatabaseSnapshot, login, helpers
     └── storage-state.ts        <- getStorageState
@@ -39,6 +41,12 @@ e2e/client/playwright/
   behaviour: `assign-coverage.spec.ts`, not `test1.spec.ts` or `bug-123.spec.ts`.
 - Page Objects live in `playwright/page-object-models/<feature>.ts`, one class
   per feature area, methods named after user-facing operations.
+- A flow that several specs drive end to end and that spans more than one
+  feature area (so it fits no single Page Object) goes in
+  `playwright/scenarios/<flow>.ts` as a function taking the `Page`. Scenarios
+  may import Page Objects and utils; nothing imports a scenario except a spec.
+  Keep the dependency direction one-way: specs -> scenarios -> Page Objects ->
+  utils. A util must never import a Page Object.
 - Import helpers and Page Objects with local relative paths:
   ```ts
   import {restoreDatabaseSnapshot} from './utils';

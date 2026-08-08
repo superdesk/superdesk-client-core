@@ -1,6 +1,5 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {s} from '.';
-import {Monitoring} from '../page-object-models/monitoring';
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
     return field.locator('.DraftEditor-root')
@@ -70,145 +69,37 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
     await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
 }
 
-const ACTIVE_TOOLBAR_BUTTON = /Editor3-activeButton/;
-
-// Each stretch of text is typed as two halves, so "select part of the text" is
-// a fixed number of Shift+Arrow presses and each half is addressable on its own.
-const STYLED_HEAD = 'alpha';
-const STYLED_TAIL = 'bravo';
-const REGULAR_HEAD = 'charlie';
-const REGULAR_TAIL = 'delta';
-
-const STYLED_TEXT = STYLED_HEAD + STYLED_TAIL;
-const REGULAR_TEXT = REGULAR_HEAD + REGULAR_TAIL;
+/** Class an editor3 toolbar button carries while the style it toggles is active. */
+export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
 
 /**
- * Draft.js renders each run of equally styled characters as its own leaf, whose
- * innermost node carries `data-text`. Inline styles sit on the leaf wrapper, so
- * the style computed on the text node reflects them through inheritance.
+ * Locates an editor3 authoring field by the field id it is registered under, e.g.
+ * `body_html`. The id is a `data-test-value`, not part of the test id itself.
  */
-export function getEditor3TextRun(field: Locator, text: string): Locator {
-    return field.locator('[data-text="true"]').filter({hasText: text});
+export function getEditor3Field(page: Page, fieldId: string): Locator {
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${fieldId}"]`));
 }
 
 /**
- * Toolbar button of a formatting option, addressed by the `data-test-value` that
- * StyleButton renders (`bold`, `italic`, `underline`, `h2`, `quote`, ...).
+ * Locates a toolbar button of an editor3 field by the formatting option it toggles,
+ * e.g. `bold`, `underline`, `italic`.
  */
-export function getEditor3FormattingOptionButton(field: Locator, styleValue: string): Locator {
+export function getEditor3FormattingButton(field: Locator, styleName: string): Locator {
     return field.getByTestId('toolbar')
         .getByTestId('formatting-option-button')
-        .and(field.page().locator(`[data-test-value="${styleValue}"]`));
-}
-
-async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-    for (let i = 0; i < times; i++) {
-        await page.keyboard.press(key);
-    }
-}
-
-export interface Editor3InlineStyleScenario {
-    /** `data-test-value` of the toolbar button under test, e.g. `italic`. */
-    styleValue: string;
-
-    /** Headline of the article the scenario creates; keep it unique per spec. */
-    headline: string;
-
-    /**
-     * Asserts that one run of text carries the style, or does not. Every style has its
-     * own computed-style signature, so the caller supplies the check.
-     */
-    expectStyled(run: Locator, styled: boolean): Promise<void>;
+        .and(field.page().locator(`[data-test-value="${styleName}"]`));
 }
 
 /**
- * Drives the inline-formatting QA flow on a new article's body: toggle the style on and
- * type, toggle it off and type again, then flip the style on a selected half of each run,
- * and re-assert all four runs after a save/close/reopen round-trip.
- *
- * Shared because every per-style case (bold, italic, underline, strikethrough, ...) walks
- * this same flow and differs only in the toolbar button and the style asserted, so a fix
- * to the caret arithmetic or the save path is made once here.
- *
- * The caller is responsible for `restoreDatabaseSnapshot()`.
+ * Locates the Draft.js leaf holding a run of equally styled characters. Draft renders
+ * each run as a span that carries the inline style and wraps the node carrying
+ * `data-text`. Assertions read the leaf rather than the text node because a
+ * text-level property such as `text-decoration` does not inherit.
  */
-export async function runEditor3InlineStyleScenario(
-    page: Page,
-    {styleValue, headline, expectStyled}: Editor3InlineStyleScenario,
-): Promise<void> {
-    const monitoring = new Monitoring(page);
-
-    await page.goto('/#/workspace/monitoring');
-    await monitoring.selectDeskOrWorkspace('Sports');
-    await monitoring.createArticleFromDefaultTemplate();
-
-    const headlineField = page.getByTestId('field--headline').getByRole('textbox');
-
-    await expect(headlineField).toBeVisible();
-    await headlineField.fill(headline);
-    await expect(headlineField).toHaveText(headline);
-
-    const body = page.getByTestId('authoring')
-        .getByTestId('authoring-field')
-        .and(page.locator('[data-test-value="body_html"]'));
-    const bodyInput = body.getByRole('textbox');
-    const styleButton = getEditor3FormattingOptionButton(body, styleValue);
-
-    await expect(bodyInput).toBeVisible();
-    await bodyInput.click();
-
-    await expect(styleButton).not.toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-    await styleButton.click();
-    await expect(styleButton).toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-
-    await page.keyboard.type(STYLED_TEXT);
-    await expectStyled(getEditor3TextRun(body, STYLED_TEXT), true);
-
-    await styleButton.click();
-    await expect(styleButton).not.toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-
-    await page.keyboard.type(REGULAR_TEXT);
-    await expectStyled(getEditor3TextRun(body, REGULAR_TEXT), false);
-    await expectStyled(getEditor3TextRun(body, STYLED_TEXT), true);
-
-    // The caret sits at the end of the regular run; select its second half.
-    await pressRepeatedly(page, 'Shift+ArrowLeft', REGULAR_TAIL.length);
-
-    await styleButton.click();
-    await expect(styleButton).toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-    await expectStyled(getEditor3TextRun(body, REGULAR_TAIL), true);
-    await expectStyled(getEditor3TextRun(body, REGULAR_HEAD), false);
-
-    // Collapse the selection to its start, walk back over the regular run and select the
-    // second half of the styled run. Counted arrow presses rather than Home/End, which do
-    // not move the caret on macOS.
-    await page.keyboard.press('ArrowLeft');
-    await pressRepeatedly(page, 'ArrowLeft', REGULAR_HEAD.length);
-    await pressRepeatedly(page, 'Shift+ArrowLeft', STYLED_TAIL.length);
-
-    await expect(styleButton).toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-    await styleButton.click();
-    await expect(styleButton).not.toHaveClass(ACTIVE_TOOLBAR_BUTTON);
-    await expectStyled(getEditor3TextRun(body, STYLED_TAIL), false);
-    await expectStyled(getEditor3TextRun(body, STYLED_HEAD), true);
-
-    // Closing an edited article raises the "Save changes?" prompt; saving from there both
-    // persists the body and closes the article. Its Save is scoped to the dialog so it does
-    // not collide with the topbar Save button.
-    await page.getByTestId('authoring-topbar').getByTestId('close').click();
-    await page.getByTestId('unsaved-changes-dialog')
-        .getByRole('button', {name: 'Save', exact: true})
-        .click();
-    await expect(page.getByTestId('authoring-topbar')).toBeHidden();
-
-    await monitoring.getArticleLocator(headline).dblclick();
-    await expect(bodyInput).toBeVisible();
-
-    await expect(headlineField).toHaveText(headline);
-    await expectStyled(getEditor3TextRun(body, STYLED_HEAD), true);
-    await expectStyled(getEditor3TextRun(body, STYLED_TAIL), false);
-    await expectStyled(getEditor3TextRun(body, REGULAR_HEAD), false);
-    await expectStyled(getEditor3TextRun(body, REGULAR_TAIL), true);
+export function getEditor3TextRun(field: Locator, text: string): Locator {
+    return field.locator('[data-text="true"]').filter({hasText: text}).locator('xpath=..');
 }
 
 export async function setEditor3FieldValue(locator: Locator, value: string) {

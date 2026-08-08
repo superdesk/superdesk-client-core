@@ -1,10 +1,8 @@
 import {test, expect, type Locator} from '@playwright/test';
+import {runEditor3InlineStyleToggleScenario} from './scenarios/editor3-inline-style';
 import {restoreDatabaseSnapshot} from './utils';
-import {runEditor3InlineStyleScenario} from './utils/editor3';
 
 test.describe('italic formatting in the article body', () => {
-    const HEADLINE = 'italic formatting test';
-
     async function expectItalic(run: Locator, italic: boolean): Promise<void> {
         await expect(run).toHaveCSS('font-style', italic ? 'italic' : 'normal');
     }
@@ -18,9 +16,9 @@ test.describe('italic formatting in the article body', () => {
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
 
-        await runEditor3InlineStyleScenario(page, {
-            styleValue: 'italic',
-            headline: HEADLINE,
+        await runEditor3InlineStyleToggleScenario(page, {
+            styleName: 'italic',
+            headline: 'italic formatting test',
             expectStyled: expectItalic,
         });
     });
