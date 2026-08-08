@@ -37,6 +37,13 @@ test.describe('ordered list in the article body', () => {
      * order, each with the text of its blocks, is what says where a list starts and ends and which
      * item is which.
      *
+     * The paragraph wrapper is conditional: editor3 only renders it when the field offers one of
+     * the formatting options that need a drop area ('media', 'multi-line quote', 'embed articles',
+     * 'custom blocks'), which the `main` snapshot's Story/body_html does through 'media'. Without
+     * one of those, Draft renders each unstyled block as a direct child of the contents element,
+     * so a child that is itself a block is read as a group holding only itself and the
+     * expectations below fail on a readable diff rather than on empty groups.
+     *
      * The visible "1." / "2." ordinals come from Draft's CSS counters on `::before`, and Chromium
      * reports `content` with the `counter()` unresolved, so they cannot be read back. An item's
      * position inside its own `<ol>` is the same fact expressed in the DOM.
@@ -45,8 +52,11 @@ test.describe('ordered list in the article body', () => {
         return getBody(page).locator('[data-contents="true"]').first().evaluate((contents) =>
             Array.from(contents.children).map((group) => ({
                 list: group.tagName === 'OL',
-                blocks: Array.from(group.querySelectorAll('[data-block="true"]'))
-                    .map((block) => block.textContent ?? ''),
+                blocks: (
+                    group.getAttribute('data-block') === 'true'
+                        ? [group]
+                        : Array.from(group.querySelectorAll('[data-block="true"]'))
+                ).map((block) => block.textContent ?? ''),
             })),
         );
     }

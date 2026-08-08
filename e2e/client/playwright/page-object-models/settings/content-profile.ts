@@ -46,10 +46,17 @@ export class ContentProfileSettings {
 
         await new TreeSelectDriver(
             this.page,
-            fieldEdit.locator(s('formatting-options-input')),
+            fieldEdit.getByTestId('formatting-options-input'),
         ).addValues(...options.formattingOptionsToAdd);
 
         await fieldEdit.getByTestId('item-view-edit--save').click();
+
+        // Applying a field edit is rejected silently when a field the form marks as required has
+        // no value (`sdWidth` is one). The panel leaving edit mode is the only signal that the
+        // edit was taken; without this check a rejected Apply surfaces one step later, as a
+        // timeout on the modal's Save button, which stays disabled while the form is not dirty.
+        await expect(fieldEdit.getByTestId('item-view-edit--save')).toBeHidden();
+
         await editModal.getByRole('button', {name: 'Save'}).click();
 
         await expect(editModal).not.toBeVisible();
