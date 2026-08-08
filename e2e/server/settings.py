@@ -47,10 +47,12 @@ MEDIA_PREFIXES_TO_FIX = None if MEDIA_PREFIX == canonical_media_prefix else [can
 DEFAULT_TIMEZONE = "Europe/London"
 
 # superdesk-core defaults this to False; its own test suite turns it on (superdesk/tests/__init__.py).
-# Two behaviours in apps/publish/content/common.py hang off it and the locked-item publishing QA cases
-# need both: _validate_associated_items only checks associated-item locks when it is on (the source of
-# "packaged item is locked by ..."), and _publish_associated_items only really publishes associations
-# when it is on. It cannot be scoped to one spec or one snapshot, because it is process-level app
+# The locked-item publishing QA cases need two of the behaviours it gates, both in
+# apps/publish/content/common.py: _validate_associated_items only checks associated-item locks when it
+# is on (the source of "packaged item is locked by ..."), and _publish_associated_items only really
+# publishes associations when it is on. Several other call sites read it as well, under apps/archive
+# and superdesk/archive_async, but every one of them also needs a non-empty `associations` dict before
+# it does anything. It cannot be scoped to one spec or one snapshot, because it is process-level app
 # config and there is no runtime override endpoint, so it applies to the whole suite. That is safe
 # today only because no item in any snapshot carries `associations`. The first spec that publishes an
 # item with feature media, a related item or a gallery will see the association published alongside it
