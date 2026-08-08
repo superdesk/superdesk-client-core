@@ -134,7 +134,8 @@ export class Monitoring {
 
     /**
      * The right-aligned button stack of the monitoring toolbar (refresh, monitoring
-     * settings, file type filters, create new item).
+     * settings, monitoring filter buttons, create new item). The file type filters are
+     * not in here, they live in the second subnav row.
      */
     getToolbarActions(): Locator {
         return this.page.getByTestId('monitoring-toolbar-actions');
