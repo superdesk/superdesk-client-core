@@ -235,7 +235,20 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`.
+`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`.
+
+### Publishing config in the `main` snapshot
+
+`main` ships one subscriber, "Subscriber 1", whose single destination
+("Destination 1") formats as `email` and delivers by email. Its product
+("Product 1") carries a *blocking* content filter on the sluglines `Football`
+and `Basketball`, so those two never reach it. The subscriber is targetable, so
+`Authoring.publish({subscribers: ['Subscriber 1']})` restricts a publish to it
+and produces exactly one queue entry; `publish({subscribers: []})` fans out to
+every subscriber whose products match.
+
+There is no NINJS destination in `main`. Use the `publishing` snapshot for
+anything that asserts on the payload a subscriber is actually sent.
 
 ### The `media-items` snapshot
 
@@ -333,6 +346,73 @@ It is a record rather than part of `main` because the monitoring-settings spec
 that covers the saved searches tab seeds its own private search through the UI
 and asserts the list holds exactly one. Once that spec switches to this snapshot
 and drops the seeding, the search can be promoted into `main`.
+
+### The `publishing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'publishing'})` gives you `main` plus a
+second subscriber, "Public API", and the unfiltered product it points at, "All
+content". Its one destination, "NINJS Email", formats as `ninjs`, so this is the
+snapshot to reach for when a spec asserts on the payload a subscriber is sent
+rather than on the fact that a publish happened.
+
+The payload is read back through the item history's transmission details, which
+render the queue entry's `formatted_item` verbatim: publish, open the item from
+the Publish Queue page (`/#/publish_queue`, `publish-queue-table` /
+`publish-queue-item`), then *Item history* and expand the transmission details.
+That panel (`versioning/history/views/publish_queue.html`) carries no
+`data-test-id` on develop; the attachments branch adds the ones a spec needs.
+
+Three things to know before using it:
+
+- **Two queue entries per publish.** Nothing here is targeted, so an untargeted
+  publish reaches "Subscriber 1" and "Public API" both. A queue locator keyed on
+  the headline alone therefore matches two rows, and a `toBeVisible()` on it
+  fails as a strict-mode violation. Narrow by the Subscriber or Destination
+  column.
+- **The transmission succeeds.** Delivery is by email into the stack's mailcrab,
+  not by HTTP push. The email transmitter sends `formatted_item` verbatim when it
+  is not email-formatted, so the body stays NINJS and the entry settles at
+  `state: "success"`. `legacy`'s "Public API" pushes to `http://localhost:5050`,
+  which nothing in the stack answers, so its entries never leave `retrying`. Only
+  reach for `legacy` if a spec needs the rest of that dataset.
+- **The queue view does not live-update.** `/#/publish_queue` reads the queue
+  only when it loads, so a spec already sitting on that page when a publish
+  happens will not see the new row without navigating again. Navigating there
+  after publishing needs no retry loop: transmission runs inline on this stack
+  (`CELERY_ALWAYS_EAGER`), so the row and its final state already exist by the
+  time the publish request returns, which is why `publishing.spec.ts` and
+  `publish-queue.spec.ts` both assert once.
+
+### Publishing an item that has associations
+
+`e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True`, which
+superdesk-core defaults to `False` (its own test suite turns it on). It is
+process-level app config with no runtime override, so it applies to every spec
+and every snapshot; it cannot be opted into per test. Two consequences to write
+against:
+
+- Publishing an item **publishes its associations too**. The associated item
+  moves to `published`, leaves the working stage for the desk output group and
+  gets its own publish queue entries. Any count assertion taken after publishing
+  an item that carries feature media, a related item or a gallery has to account
+  for that.
+- The "There are unpublished related items that won't be sent out..." publishing
+  warning **never appears**. `_raise_if_unpublished_related_items` returns early
+  when the setting is on, so there is no confirmation step to drive.
+
+In exchange, publishing validates the locks on associations, which is what the
+locked-item publishing cases need. Publishing an item whose association is locked
+fails with HTTP 400 and a validator exception naming the association:
+
+- locked by someone else:
+  `<headline>: packaged item is locked by another user`
+- locked by the publisher:
+  `<headline>: packaged item is locked by you. Unlock it and try again`
+
+Both were verified at the API level against the `publishing` snapshot. No item in
+any committed snapshot carries `associations`, so a spec that needs one has to
+build it (attach feature media or a related item through authoring) before
+publishing.
 
 ### Adding fixture data
 
