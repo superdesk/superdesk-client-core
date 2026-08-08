@@ -1,7 +1,7 @@
 import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {ContentProfileSettings} from './page-object-models/settings/content-profile';
-import {restoreDatabaseSnapshot} from './utils';
+import {ACTIVE_FORMATTING_BUTTON, Authoring} from './page-object-models/authoring';
+import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 
 test.describe('ordered list in the article body', () => {
     const ITEM_ONE = 'alpha';
@@ -12,23 +12,17 @@ test.describe('ordered list in the article body', () => {
     const PARAGRAPH_TWO = 'echo';
     const PARAGRAPH_THREE = 'foxtrot';
 
-    const ACTIVE_BUTTON = /Editor3-activeButton/;
-
     interface IBlockGroup {
         list: boolean;
         blocks: Array<string>;
     }
 
     function getBody(page: Page): Locator {
-        return page.getByTestId('authoring')
-            .getByTestId('authoring-field')
-            .and(page.locator('[data-test-value="body_html"]'));
+        return new Authoring(page).fieldContainer('body_html');
     }
 
     function getListButton(page: Page): Locator {
-        return getBody(page).getByTestId('toolbar')
-            .getByTestId('formatting-option-button')
-            .and(page.locator('[data-test-value="ordered list"]'));
+        return new Authoring(page).formattingOptionButton('body_html', 'ordered list');
     }
 
     /**
@@ -39,10 +33,10 @@ test.describe('ordered list in the article body', () => {
      *
      * The paragraph wrapper is conditional: editor3 only renders it when the field offers one of
      * the formatting options that need a drop area ('media', 'multi-line quote', 'embed articles',
-     * 'custom blocks'), which the `main` snapshot's Story/body_html does through 'media'. Without
-     * one of those, Draft renders each unstyled block as a direct child of the contents element,
-     * so a child that is itself a block is read as a group holding only itself and the
-     * expectations below fail on a readable diff rather than on empty groups.
+     * 'custom blocks'), which the Story/body_html profile does through 'media'. Without one of
+     * those, Draft renders each unstyled block as a direct child of the contents element, so a
+     * child that is itself a block is read as a group holding only itself and the expectations
+     * below fail on a readable diff rather than on empty groups.
      *
      * The visible "1." / "2." ordinals come from Draft's CSS counters on `::before`, and Chromium
      * reports `content` with the `counter()` unresolved, so they cannot be read back. An item's
@@ -63,26 +57,6 @@ test.describe('ordered list in the article body', () => {
 
     async function expectBody(page: Page, expected: Array<IBlockGroup>): Promise<void> {
         await expect.poll(() => readBody(page)).toEqual(expected);
-    }
-
-    async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-        for (let i = 0; i < times; i++) {
-            await page.keyboard.press(key);
-        }
-    }
-
-    /**
-     * The `main` snapshot's Story profile does not offer "ordered list" on body_html, so the
-     * toolbar button the case drives has to be enabled on the content profile first.
-     */
-    async function enableOrderedListOnBody(page: Page): Promise<void> {
-        await page.goto('/#/settings/content-profiles');
-        await new ContentProfileSettings(page).addFormattingOptionToContentProfile({
-            profileName: 'Story',
-            sectionName: 'Content fields',
-            fieldName: 'Body HTML',
-            formattingOptionsToAdd: ['ordered list'],
-        });
     }
 
     async function createArticle(page: Page, headline: string): Promise<void> {
@@ -112,9 +86,9 @@ test.describe('ordered list in the article body', () => {
     async function typeThreeItemList(page: Page): Promise<void> {
         const listButton = getListButton(page);
 
-        await expect(listButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).not.toHaveClass(ACTIVE_FORMATTING_BUTTON);
         await listButton.click();
-        await expect(listButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).toHaveClass(ACTIVE_FORMATTING_BUTTON);
         await expectBody(page, [{list: true, blocks: ['']}]);
 
         await page.keyboard.type(ITEM_ONE);
@@ -130,20 +104,11 @@ test.describe('ordered list in the article body', () => {
         await page.keyboard.type(ITEM_THREE);
         await expectBody(page, [{list: true, blocks: [ITEM_ONE, ITEM_TWO, ITEM_THREE]}]);
 
-        await expect(listButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).toHaveClass(ACTIVE_FORMATTING_BUTTON);
     }
 
-    /**
-     * Closing an edited article raises the "Save changes?" prompt; saving from there both persists
-     * the body and closes the article. Its Save is scoped to the dialog so it does not collide
-     * with the topbar Save button.
-     */
     async function saveCloseAndReopen(page: Page, headline: string): Promise<void> {
-        await page.getByTestId('authoring-topbar').getByTestId('close').click();
-        await page.getByTestId('unsaved-changes-dialog')
-            .getByRole('button', {name: 'Save', exact: true})
-            .click();
-        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+        await new Authoring(page).closeSavingChanges();
 
         await new Monitoring(page).getArticleLocator(headline).dblclick();
         await expect(getBody(page).getByRole('textbox')).toBeVisible();
@@ -156,11 +121,14 @@ test.describe('ordered list in the article body', () => {
         {type: 'confluence', description: '1313669357 partial'}, // Ordered list
     ];
 
+    // 'ordered list' is not among the formatting options `main` gives Story/body_html, so these
+    // tests run on the `ordered-list` record, which is `main` plus that one option.
+    const SNAPSHOT = {snapshotName: 'ordered-list'};
+
     test('toolbar toggle starts a list, Enter adds items, toggling off drops the last one', {
         annotation: ANNOTATION,
     }, async ({page}) => {
-        await restoreDatabaseSnapshot();
-        await enableOrderedListOnBody(page);
+        await restoreDatabaseSnapshot(SNAPSHOT);
 
         const headline = 'ordered list typing test';
 
@@ -170,7 +138,7 @@ test.describe('ordered list in the article body', () => {
         const listButton = getListButton(page);
 
         await listButton.click();
-        await expect(listButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).not.toHaveClass(ACTIVE_FORMATTING_BUTTON);
 
         const split: Array<IBlockGroup> = [
             {list: true, blocks: [ITEM_ONE, ITEM_TWO]},
@@ -186,8 +154,7 @@ test.describe('ordered list in the article body', () => {
     test('toggling the list off on a middle item splits it into two lists', {
         annotation: ANNOTATION,
     }, async ({page}) => {
-        await restoreDatabaseSnapshot();
-        await enableOrderedListOnBody(page);
+        await restoreDatabaseSnapshot(SNAPSHOT);
 
         const headline = 'ordered list split test';
 
@@ -197,13 +164,12 @@ test.describe('ordered list in the article body', () => {
         const listButton = getListButton(page);
 
         // The caret sits at the end of the third item. Counted arrow presses walk it back over
-        // that item and across the block boundary into the second one; Home does not move the
-        // caret on macOS.
+        // that item and across the block boundary into the second one.
         await pressRepeatedly(page, 'ArrowLeft', ITEM_THREE.length + 1);
 
-        await expect(listButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).toHaveClass(ACTIVE_FORMATTING_BUTTON);
         await listButton.click();
-        await expect(listButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).not.toHaveClass(ACTIVE_FORMATTING_BUTTON);
 
         // The third item ends up alone in a second <ol>, so it renumbers as that list's first item.
         const split: Array<IBlockGroup> = [
@@ -221,8 +187,7 @@ test.describe('ordered list in the article body', () => {
     test('backspace leaves an empty item, and a paragraph selection converts to a list', {
         annotation: ANNOTATION,
     }, async ({page}) => {
-        await restoreDatabaseSnapshot();
-        await enableOrderedListOnBody(page);
+        await restoreDatabaseSnapshot(SNAPSHOT);
 
         const headline = 'ordered list backspace test';
 
@@ -231,7 +196,7 @@ test.describe('ordered list in the article body', () => {
         const listButton = getListButton(page);
 
         await listButton.click();
-        await expect(listButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).toHaveClass(ACTIVE_FORMATTING_BUTTON);
 
         await page.keyboard.type(ITEM_ONE);
         await page.keyboard.press('Enter');
@@ -240,7 +205,7 @@ test.describe('ordered list in the article body', () => {
         await expectBody(page, [{list: true, blocks: [ITEM_ONE, ITEM_TWO, '']}]);
 
         await page.keyboard.press('Backspace');
-        await expect(listButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).not.toHaveClass(ACTIVE_FORMATTING_BUTTON);
         await expectBody(page, [
             {list: true, blocks: [ITEM_ONE, ITEM_TWO]},
             {list: false, blocks: ['']},
@@ -256,14 +221,14 @@ test.describe('ordered list in the article body', () => {
             {list: true, blocks: [ITEM_ONE, ITEM_TWO]},
             {list: false, blocks: [PARAGRAPH_ONE, PARAGRAPH_TWO, PARAGRAPH_THREE]},
         ]);
-        await expect(listButton).not.toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).not.toHaveClass(ACTIVE_FORMATTING_BUTTON);
 
         // Select the last two paragraphs backwards from the caret: over the third one, one press
         // to cross the block boundary, then over the second one.
         await pressRepeatedly(page, 'Shift+ArrowLeft', PARAGRAPH_THREE.length + 1 + PARAGRAPH_TWO.length);
 
         await listButton.click();
-        await expect(listButton).toHaveClass(ACTIVE_BUTTON);
+        await expect(listButton).toHaveClass(ACTIVE_FORMATTING_BUTTON);
 
         const converted: Array<IBlockGroup> = [
             {list: true, blocks: [ITEM_ONE, ITEM_TWO]},

@@ -16,50 +16,30 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
-    /**
-     * Adds formatting options to one field of a content profile, keeping the options it already
-     * has. `sectionName` is a tab label ('Header fields', 'Content fields'), `fieldName` the
-     * field's display name ('Body HTML').
-     */
     public async addFormattingOptionToContentProfile(options: IOptions) {
-        const editModal = this.page.getByTestId('content-profile-editing-modal');
-
-        await this.page.getByTestId('content-profile')
-            .and(this.page.locator(`[data-test-value="${options.profileName}"]`))
-            .getByTestId('content-profile-actions')
+        await this.page.locator(s(`content-profile=${options.profileName}`))
+            .getByRole('button', {name: 'Actions'})
             .click();
-        await this.page.getByTestId('content-profile-actions--options')
-            .getByRole('button', {name: 'Edit'})
-            .click();
+        await this.page.locator(s('content-profile-actions-popover')).getByRole('button', {name: 'Edit'}).click();
 
-        await editModal.getByTestId('content-profile-tabs')
-            .getByRole('tab', {name: options.sectionName})
-            .click();
-        await editModal.getByTestId('content-profile-fields')
-            .getByTestId('field')
-            .and(this.page.locator(`[data-test-value="${options.fieldName}"]`))
-            .click();
-
-        const fieldEdit = this.page.getByTestId('item-view-edit');
-
-        await expect(fieldEdit).toBeVisible();
+        await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
+        await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
         await new TreeSelectDriver(
             this.page,
-            fieldEdit.getByTestId('formatting-options-input'),
-        ).addValues(...options.formattingOptionsToAdd);
+            this.page.locator(s('formatting-options-input')),
+        ).setValues(options.formattingOptionsToAdd);
 
-        await fieldEdit.getByTestId('item-view-edit--save').click();
+        // this is required for validation. TODO: update DB snapshot to make current items already valid
+        await this.page.locator(s('generic-list-page', 'item-view-edit', 'gform-input--sdWidth')).selectOption('Full');
 
-        // Applying a field edit is rejected silently when a field the form marks as required has
-        // no value (`sdWidth` is one). The panel leaving edit mode is the only signal that the
-        // edit was taken; without this check a rejected Apply surfaces one step later, as a
-        // timeout on the modal's Save button, which stays disabled while the form is not dirty.
-        await expect(fieldEdit.getByTestId('item-view-edit--save')).toBeHidden();
+        await this.page.locator(s('generic-list-page', 'item-view-edit', 'toolbar'))
+            .getByRole('button', {name: 'Apply'})
+            .click();
 
-        await editModal.getByRole('button', {name: 'Save'}).click();
+        await this.page.locator(s('content-profile-edit-view--footer')).getByRole('button', {name: 'Save'}).click();
 
-        await expect(editModal).not.toBeVisible();
+        await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
     }
 
     async addFieldsToContentProfile(
