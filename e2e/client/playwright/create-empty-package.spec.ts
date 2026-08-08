@@ -31,12 +31,25 @@ test.describe('creating a new empty package', {
     const HEADLINE = 'empty package headline';
     const SLUGLINE = 'empty-package-slugline';
 
+    /**
+     * Everything the Sports desk lists in Monitoring on the `main` snapshot:
+     * four items in the Working Stage plus the published one in the desk output
+     * group. The Incoming Stage group is empty.
+     */
+    const SPORTS_MONITORING_ITEMS = [
+        'test sports story',
+        'story 2',
+        'Story 3',
+        'Package Highlight 1',
+        'Story 5',
+    ];
+
     function monitoringItems(page: Page): Locator {
         return page.getByTestId('monitoring-view').getByTestId('article-item');
     }
 
-    function monitoringItem(page: Page): Locator {
-        return monitoringItems(page).and(page.locator(`[data-test-value="${HEADLINE}"]`));
+    function monitoringItem(page: Page, label: string): Locator {
+        return monitoringItems(page).and(page.locator(`[data-test-value="${label}"]`));
     }
 
     function packageHeadline(page: Page): Locator {
@@ -48,20 +61,27 @@ test.describe('creating a new empty package', {
     }
 
     /**
-     * Opens Monitoring on the Sports desk and returns how many items it lists.
-     * The discard test compares against that number: `createEmptyPackage` saves
-     * the package with an empty headline, so a leftover could never be matched
-     * by a HEADLINE locator and only the total can show it.
+     * Opens Monitoring on the Sports desk and waits for the listing to be
+     * complete, not merely started.
+     *
+     * Every `sd-monitoring-group` runs its own debounced query
+     * (scripts/apps/monitoring/directives/MonitoringGroup.ts) and a desk switch
+     * leaves the previous desk's items in the DOM until the new groups answer,
+     * so the first visible item says nothing about the rest of the list.
+     * Waiting for each expected item and then for the exact total is what makes
+     * the discard test's count assertion mean anything.
      */
-    async function openSportsMonitoring(page: Page): Promise<number> {
+    async function openSportsMonitoring(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await expect(monitoringItems(page).first()).toBeVisible();
+        for (const label of SPORTS_MONITORING_ITEMS) {
+            await expect(monitoringItem(page, label)).toBeVisible();
+        }
 
-        return monitoringItems(page).count();
+        await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
     }
 
     /**
@@ -111,8 +131,8 @@ test.describe('creating a new empty package', {
         await openGlobalSearch(page);
 
         const searchItemsBefore = await globalSearchItems(page).count();
-        const monitoringItemsBefore = await openSportsMonitoring(page);
 
+        await openSportsMonitoring(page);
         await createAndFillPackage(page);
 
         const topbar = page.getByTestId('authoring-topbar');
@@ -131,8 +151,15 @@ test.describe('creating a new empty package', {
         await prompt.getByRole('button', {name: 'Ignore', exact: true}).click();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
-        await expect(monitoringItems(page)).toHaveCount(monitoringItemsBefore);
-        await expect(monitoringItem(page)).toHaveCount(0);
+
+        // `createEmptyPackage` posts the package with an empty headline, so a
+        // leftover could never be matched by a HEADLINE locator. The total is
+        // the guard: the discarded package stays at `version: 0`, which
+        // apps/archive/resource.py filters out of every archive query, so the
+        // listing can only grow if the product starts persisting it as a real
+        // version.
+        await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
+        await expect(monitoringItem(page, HEADLINE)).toHaveCount(0);
 
         // The unfiltered total is what proves nothing was persisted; a query for
         // HEADLINE cannot, since the headline only ever reached the autosave
@@ -157,7 +184,7 @@ test.describe('creating a new empty package', {
         await prompt.getByRole('button', {name: 'Save', exact: true}).click();
 
         await expect(page.getByTestId('authoring')).toBeHidden();
-        await expect(monitoringItem(page)).toBeVisible();
+        await expect(monitoringItem(page, HEADLINE)).toBeVisible();
     });
 
     test('the topbar Save keeps the package open, deactivates Save and persists the fields', async ({page}) => {
@@ -176,7 +203,7 @@ test.describe('creating a new empty package', {
         await expect(topbar.getByTestId('save').getByTestId('loading-indicator')).toBeHidden();
         await expect(topbar.getByTestId('save')).toBeDisabled();
         await expect(page.getByTestId('authoring')).toBeVisible();
-        await expect(monitoringItem(page)).toBeVisible();
+        await expect(monitoringItem(page, HEADLINE)).toBeVisible();
 
         // A saved package is no longer dirty, so Close must go through without
         // raising the unsaved-changes dialog.
@@ -199,7 +226,7 @@ test.describe('creating a new empty package', {
         // unsaved-changes dialog. Nothing needs asserting past this point, so the
         // test ends with the package open instead of racing that dialog.
         await page.goto('/#/workspace/monitoring');
-        await monitoringItem(page).dblclick();
+        await monitoringItem(page, HEADLINE).dblclick();
 
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(packageHeadline(page)).toHaveValue(HEADLINE);
