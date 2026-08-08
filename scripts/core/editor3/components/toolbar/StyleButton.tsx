@@ -96,6 +96,8 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
         return (
             <span
                 className={cx}
+                data-test-id="formatting-option-button"
+                data-test-value={getEditor3RichTextFormattingOptions()[label]}
                 data-sd-tooltip={styleTooltips[label]}
                 data-flow={'down'}
                 onMouseDown={this.onToggle}

@@ -1,4 +1,4 @@
-import {Locator, expect} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 import {s} from '.';
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
@@ -67,6 +67,42 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
 
     await expect(embedBlocks).toHaveCount(countBefore + 1);
     await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
+}
+
+/** Class an editor3 toolbar button carries while the style it toggles is active. */
+export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
+
+/**
+ * Locates an editor3 authoring field by the field id it is registered under, e.g.
+ * `body_html`. The id is a `data-test-value`, not part of the test id itself.
+ */
+export function getEditor3Field(page: Page, fieldId: string): Locator {
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${fieldId}"]`));
+}
+
+/**
+ * Locates a toolbar button of an editor3 field by the formatting option it toggles,
+ * e.g. `bold`, `underline`, `italic`.
+ */
+export function getEditor3FormattingButton(field: Locator, styleName: string): Locator {
+    return field.getByTestId('toolbar')
+        .getByTestId('formatting-option-button')
+        .and(field.page().locator(`[data-test-value="${styleName}"]`));
+}
+
+/**
+ * Locates the Draft.js leaf holding a run of equally styled characters. Draft renders
+ * each run as a span that carries the inline style and wraps the node carrying
+ * `data-text`. Assertions read the leaf rather than the text node because a
+ * text-level property such as `text-decoration` does not inherit.
+ *
+ * `data-offset-key` is also on the block element, which is excluded by requiring a
+ * direct `data-text` child: a block's direct children are leaf spans, not text nodes.
+ */
+export function getEditor3TextRun(field: Locator, text: string): Locator {
+    return field.locator('[data-offset-key]:has(> [data-text="true"])').filter({hasText: text});
 }
 
 export async function setEditor3FieldValue(locator: Locator, value: string) {

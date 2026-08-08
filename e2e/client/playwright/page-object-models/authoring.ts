@@ -71,6 +71,38 @@ export class Authoring {
         await this.page.waitForTimeout(2000);
     }
 
+    /**
+     * Closes the article and saves through the "Save changes?" prompt that closing an
+     * edited article raises, which both persists the changes and closes the article.
+     * The prompt's Save is scoped to the dialog so it does not collide with the topbar
+     * Save button.
+     *
+     * Answering the prompt is retried as a unit because a debounced autosave can land
+     * around it: the prompt is then raised a second time after the save, or the close is
+     * swallowed and the article stays open with no prompt left to answer.
+     */
+    async closeAndSave(): Promise<void> {
+        const {page} = this;
+        const topbar = page.getByTestId('authoring-topbar');
+        const unsavedChanges = page.getByTestId('unsaved-changes-dialog');
+
+        await topbar.getByTestId('close').click();
+
+        await expect(async () => {
+            if (await unsavedChanges.isVisible()) {
+                await unsavedChanges.getByRole('button', {name: 'Save', exact: true}).click();
+
+                // The prompt has to be gone before this is evaluated again: answering it
+                // twice on an article that was never saved creates the article twice.
+                await expect(unsavedChanges).toBeHidden();
+            } else if (await topbar.isVisible()) {
+                await topbar.getByTestId('close').click();
+            }
+
+            await expect(topbar).toBeHidden({timeout: 5000});
+        }).toPass({timeout: 45000});
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
