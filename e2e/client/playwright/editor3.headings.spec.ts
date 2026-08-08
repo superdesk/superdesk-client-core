@@ -37,11 +37,10 @@ test.describe('heading formatting in the article body', () => {
 
     test('toolbar toggle makes typed text and a selection a heading, and the result survives reopen', {
         annotation: [
-            // Partial: this test drives H2, the only heading level the `main` snapshot enables on
-            // the Story profile's body_html. The other five are covered by the test below, which
-            // enables them first. The case's purpose also names custom text fields, which no
-            // snapshot puts on the Story content profile.
-            {type: 'confluence', description: '1313669351 partial'}, // Headings H1-H6
+            // Drives the full toggle cycle (steps 2-7) for H2, the only level the `main` snapshot
+            // enables; the test below applies the other five levels but does not repeat the
+            // off-toggle and selection steps for them.
+            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
         ],
     }, async ({page}) => {
         const HEADLINE = 'heading formatting test';
@@ -141,9 +140,9 @@ test.describe('heading formatting in the article body', () => {
 
     test('every heading level H1-H6 applies its own tag, and the result survives reopen', {
         annotation: [
-            // Partial: covers the six heading levels only. The case's purpose also names custom
-            // text fields, which no snapshot puts on the Story content profile.
-            {type: 'confluence', description: '1313669351 partial'}, // Headings H1-H6
+            // Covers applying each of the six heading levels and its persistence; the off-toggle
+            // and selection-based steps are covered for H2 only, in the test above.
+            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
         ],
     }, async ({page}) => {
         const HEADLINE = 'heading levels test';
