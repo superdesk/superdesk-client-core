@@ -309,7 +309,15 @@ The toggle is a `StyleButton` like bold or italic, so it is found the same way, 
 `data-test-value="suggestions"`, and it carries `Editor3-activeButton` while
 suggestions mode is on.
 
-Two things about suggestions themselves are worth knowing before writing a spec:
+It also carries "story with suggestions" on the Sports desk, an article whose body
+reads `alpha bravo charlie delta echo foxtrot` with `bravo` and `foxtrot` as
+insertion suggestions and `delta` as a deletion suggestion, all made by `admin` and
+all unresolved. Reach for it whenever a case starts from an article that already has
+suggestions rather than from making them. A suggestion is draft.js editor state under
+`fields_meta`, not markup, so it is recorded like any other field the browser writes;
+there is nothing special about putting one in a snapshot.
+
+Three things about suggestions themselves are worth knowing before writing a spec:
 
 - An insertion suggestion that directly touches a deletion suggestion is reported as
   a single "Replace X with Y" suggestion, and accepting or rejecting it resolves both
@@ -318,6 +326,9 @@ Two things about suggestions themselves are worth knowing before writing a spec:
   re-rendered only when the caret *moves* (`HighlightsPopup.shouldComponentUpdate`).
   A click that lands where the caret already sits, which is where accepting or
   rejecting one leaves it, shows nothing, so park the caret on plain text first.
+- The same re-render tears the popup down again, so a popup that was found open can
+  be gone by the time the next assertion runs. Retry the opening clicks and the
+  assertions on the popup as one `toPass` unit, not the clicks alone.
 
 ### The `authoring-extras` snapshot
 

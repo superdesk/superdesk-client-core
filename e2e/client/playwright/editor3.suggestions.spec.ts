@@ -21,22 +21,19 @@ import {
  * field, and every case's prerequisite asks for a profile that has it on the body plus a
  * custom text field.
  *
- * The accept and reject cases start from "an article with existing suggestions". No snapshot
- * can carry those cheaply (a suggestion is draft.js editor state inside `fields_meta`, not
- * markup), so each test makes its own through the same toolbar flow the first case covers.
- * That is a precondition built through the UI, which "State reset" in WRITING_TESTS.md allows
- * only for a single atomic action; here it is the shortest path to the documented starting
- * state and it is the one flow this spec has already proven on its own.
+ * The accept and reject cases start from "an article with existing suggestions", which the
+ * snapshot carries as "story with suggestions": suggestions live in `fields_meta` as draft.js
+ * editor state, and a record captures whatever the browser writes to mongo, so they survive a
+ * restore like any other field.
  *
  * Only the toggle case drives the custom text field ("Sample rich text"). The accept and
  * reject cases name it in their prerequisites but their steps and expected results speak of
  * the Body field alone.
  */
 
-// Three tests, each creating an article and driving one or two full save/close/reopen
-// round-trips, which does not fit the default per-test budget. The budget is well clear of
-// the assertion timeouts inside those steps, so a slow step fails on its own assertion
-// rather than as a generic test timeout.
+// Three tests, each driving one or two full save/close/reopen round-trips, which does not fit
+// the default per-test budget. The budget is well clear of the assertion timeouts inside those
+// steps, so a slow step fails on its own assertion rather than as a generic test timeout.
 test.setTimeout(150000);
 
 test.describe('editor3 suggestions mode', () => {
@@ -134,15 +131,14 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Opens the Sports monitoring view on a restored database, and leaves it ready for an
-     * article with `headline` to be created.
+     * Creates an article with `headline` on the Sports desk from the default template.
      *
      * A restore lands in the search index asynchronously, so a rerun of the same test can
      * still be served the article the previous run created, and would then edit that one
      * instead of a fresh article. Waiting for a fixture item to be listed and for the
      * headline to be absent gates on the restore being visible.
      */
-    async function openMonitoring(page: Page, headline: string): Promise<void> {
+    async function createArticle(page: Page, headline: string): Promise<void> {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
@@ -150,12 +146,7 @@ test.describe('editor3 suggestions mode', () => {
 
         await expect(monitoring.getArticleLocator('test sports story')).toBeVisible();
         await expect(monitoring.getArticleLocator(headline)).toHaveCount(0);
-    }
 
-    async function createArticle(page: Page, headline: string): Promise<void> {
-        const monitoring = new Monitoring(page);
-
-        await openMonitoring(page, headline);
         await monitoring.createArticleFromDefaultTemplate();
 
         const headlineField = getHeadlineField(page);
@@ -166,38 +157,39 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Clicks a suggestion's text run to open its detail popup, and returns the popup's
-     * content block.
+     * Opens a suggestion's detail popup by clicking its text run, and asserts every part the
+     * accept and reject cases list on it: the author's avatar and name, the date, the
+     * description, and the two resolution buttons. The popup is left open.
      *
      * The caret is parked on `caretPark` (a run that is not a suggestion) before every
      * attempt, because `HighlightsPopup` re-renders only when the caret moves: a click that
      * lands where the caret already sits, which is where accepting or rejecting leaves it,
-     * would show nothing. The pair is retried because a single click does not always leave
-     * the caret inside the run, and the popup then never appears.
+     * would show nothing.
+     *
+     * The clicks and the assertions are retried as one unit rather than the clicks alone,
+     * because the popup is torn down on any re-render that moves the caret: a single click
+     * does not always leave the caret inside the run, and one that did can still be undone
+     * while the assertions that follow it are running.
      */
-    async function openSuggestionDetail(field: Locator, options: {
+    async function expectSuggestionDetail(field: Locator, options: {
         text: string;
         caretPark: string;
-    }): Promise<Locator> {
-        const detail = field.page().getByTestId('suggestion-text');
+        description: string;
+    }): Promise<void> {
+        const page = field.page();
+        const timeout = 3000;
 
         await expect(async () => {
             await getEditor3TextRun(field, options.caretPark).click();
             await getEditor3TextRun(field, options.text).click();
-            await expect(detail).toBeVisible({timeout: 3000});
+
+            await expect(page.getByTestId('suggestion-header').getByTestId('user-avatar')).toBeVisible({timeout});
+            await expect(page.getByTestId('suggestion-author')).toHaveText('John Doe', {timeout});
+            await expect(page.getByTestId('suggestion-date')).toHaveText(POPUP_DATE, {timeout});
+            await expect(page.getByTestId('suggestion-text')).toHaveText(options.description, {timeout});
+            await expect(page.getByTestId('suggestion-accept')).toBeVisible({timeout});
+            await expect(page.getByTestId('suggestion-reject')).toBeVisible({timeout});
         }).toPass({timeout: 30000});
-
-        return detail;
-    }
-
-    /** Asserts the parts of a suggestion detail every accept/reject case lists. */
-    async function expectSuggestionDetail(page: Page, description: string): Promise<void> {
-        await expect(page.getByTestId('suggestion-header').getByTestId('user-avatar')).toBeVisible();
-        await expect(page.getByTestId('suggestion-author')).toHaveText('John Doe');
-        await expect(page.getByTestId('suggestion-date')).toHaveText(POPUP_DATE);
-        await expect(page.getByTestId('suggestion-text')).toHaveText(description);
-        await expect(page.getByTestId('suggestion-accept')).toBeVisible();
-        await expect(page.getByTestId('suggestion-reject')).toBeVisible();
     }
 
     /** Resolves the open suggestion detail, which closes it. */
@@ -206,54 +198,28 @@ test.describe('editor3 suggestions mode', () => {
         await expect(page.getByTestId('suggestion-text')).toHaveCount(0);
     }
 
-    // Words rather than letters, so a run stays wide enough to click reliably and so
-    // `getEditor3TextRun`'s substring match cannot pick the wrong leaf.
+    /**
+     * The article the snapshot carries with suggestions already in its body, and the words its
+     * body is made of: `alpha [bravo] charlie <delta> echo [foxtrot]`, where `[...]` is an
+     * insertion suggestion and `<...>` a deletion suggestion.
+     *
+     * Words rather than letters, so a run stays wide enough to click reliably and so
+     * `getEditor3TextRun`'s substring match cannot pick the wrong leaf.
+     *
+     * Every suggestion is separated from the next by plain text on purpose. An insertion
+     * directly next to a deletion is reported as one "Replace" suggestion and is accepted or
+     * rejected as a unit, which is a different case from the two these cases resolve.
+     *
+     * `foxtrot` is the suggestion no test touches, so that the reopened article still has one
+     * to preserve after the other two have been resolved.
+     */
+    const SEEDED_HEADLINE = 'story with suggestions';
     const PLAIN_HEAD = 'alpha';
     const INSERTED = 'bravo';
     const PLAIN_MIDDLE = 'charlie';
     const DELETED = 'delta';
     const PLAIN_TAIL = 'echo';
     const UNTOUCHED = 'foxtrot';
-
-    /**
-     * Types the body the accept and reject cases start from, through the toolbar toggle:
-     * `alpha [bravo] charlie <delta> echo [foxtrot]`, where `[...]` is an insertion
-     * suggestion and `<...>` a deletion suggestion.
-     *
-     * Every suggestion is separated from the next by plain text on purpose. An insertion
-     * directly next to a deletion is reported as one "Replace" suggestion and is accepted or
-     * rejected as a unit, which is a different case from the two this seeds.
-     *
-     * `foxtrot` is the suggestion no test touches, so that the reopened article still has one
-     * to preserve after the other two have been resolved.
-     */
-    async function seedSuggestions(page: Page, field: Locator): Promise<void> {
-        const input = field.getByRole('textbox');
-        const toggle = getEditor3FormattingButton(field, 'suggestions');
-
-        await expect(input).toBeVisible();
-        await input.click();
-
-        await page.keyboard.type(PLAIN_HEAD);
-
-        await toggle.click();
-        await expect(toggle).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await page.keyboard.type(INSERTED);
-
-        await toggle.click();
-        await expect(toggle).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await page.keyboard.type(PLAIN_MIDDLE + DELETED + PLAIN_TAIL);
-
-        await toggle.click();
-        await expect(toggle).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await page.keyboard.type(UNTOUCHED);
-
-        // The caret sits at the end of the block; walk it back to the end of `delta` and
-        // select the word backwards, so deleting it is a deletion suggestion on plain text.
-        await pressRepeatedly(page, 'ArrowLeft', UNTOUCHED.length + PLAIN_TAIL.length);
-        await pressRepeatedly(page, 'Shift+ArrowLeft', DELETED.length);
-        await page.keyboard.press('Backspace');
-    }
 
     const SEEDED_RUNS: Array<IRun> = [
         {text: PLAIN_HEAD, kind: 'plain'},
@@ -263,6 +229,22 @@ test.describe('editor3 suggestions mode', () => {
         {text: PLAIN_TAIL, kind: 'plain'},
         {text: UNTOUCHED, kind: 'add'},
     ];
+
+    /** Opens `story with suggestions` from Sports monitoring and returns its Body field. */
+    async function openSeededArticle(page: Page): Promise<Locator> {
+        const monitoring = new Monitoring(page);
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+        await monitoring.getArticleLocator(SEEDED_HEADLINE).dblclick();
+        await expect(getHeadlineField(page)).toHaveText(SEEDED_HEADLINE);
+
+        const body = getEditor3Field(page, 'body_html');
+
+        await expect(body.getByRole('textbox')).toBeVisible();
+
+        return body;
+    }
 
     /** Saves and closes the open article, then reopens it from monitoring. */
     async function saveAndReopen(page: Page, headline: string): Promise<void> {
@@ -338,12 +320,14 @@ test.describe('editor3 suggestions mode', () => {
 
         await expectRuns(body, colours, afterEditing);
 
-        const detail = await openSuggestionDetail(body, {text: SUGGESTED, caretPark: REGULAR});
-
-        await expect(detail).toHaveText(`Add: ${SUGGESTED}`);
+        await expectSuggestionDetail(body, {
+            text: SUGGESTED,
+            caretPark: REGULAR,
+            description: `Add: ${SUGGESTED}`,
+        });
 
         await getEditor3TextRun(body, REGULAR).click();
-        await expect(detail).toHaveCount(0);
+        await expect(page.getByTestId('suggestion-text')).toHaveCount(0);
 
         await saveAndReopen(page, headline);
 
@@ -376,20 +360,19 @@ test.describe('editor3 suggestions mode', () => {
             {type: 'confluence', description: '1313669234 complete'}, // Accept suggestion
         ],
     }, async ({page}) => {
-        const headline = 'accept suggestion test';
-
         await restoreDatabaseSnapshot(SNAPSHOT);
-        await createArticle(page, headline);
 
-        const body = getEditor3Field(page, 'body_html');
+        const body = await openSeededArticle(page);
         const bodyInput = body.getByRole('textbox');
         const colours = await getSuggestionColours(body);
 
-        await seedSuggestions(page, body);
         await expectRuns(body, colours, SEEDED_RUNS);
 
-        await openSuggestionDetail(body, {text: INSERTED, caretPark: PLAIN_HEAD});
-        await expectSuggestionDetail(page, `Add: ${INSERTED}`);
+        await expectSuggestionDetail(body, {
+            text: INSERTED,
+            caretPark: PLAIN_HEAD,
+            description: `Add: ${INSERTED}`,
+        });
         await actOnSuggestion(page, 'accept');
 
         // The accepted insertion is plain text now, so it and the plain runs around it are
@@ -403,8 +386,11 @@ test.describe('editor3 suggestions mode', () => {
 
         await expectRuns(body, colours, afterAcceptingInsertion);
 
-        await openSuggestionDetail(body, {text: DELETED, caretPark: PLAIN_HEAD});
-        await expectSuggestionDetail(page, `Remove: ${DELETED}`);
+        await expectSuggestionDetail(body, {
+            text: DELETED,
+            caretPark: PLAIN_HEAD,
+            description: `Remove: ${DELETED}`,
+        });
         await actOnSuggestion(page, 'accept');
 
         const afterAcceptingDeletion: Array<IRun> = [
@@ -414,7 +400,7 @@ test.describe('editor3 suggestions mode', () => {
 
         await expectRuns(body, colours, afterAcceptingDeletion);
 
-        await saveAndReopen(page, headline);
+        await saveAndReopen(page, SEEDED_HEADLINE);
 
         await expect(bodyInput).toBeVisible();
         await expectRuns(body, colours, afterAcceptingDeletion);
@@ -425,20 +411,19 @@ test.describe('editor3 suggestions mode', () => {
             {type: 'confluence', description: '1313669236 complete'}, // Reject suggestion
         ],
     }, async ({page}) => {
-        const headline = 'reject suggestion test';
-
         await restoreDatabaseSnapshot(SNAPSHOT);
-        await createArticle(page, headline);
 
-        const body = getEditor3Field(page, 'body_html');
+        const body = await openSeededArticle(page);
         const bodyInput = body.getByRole('textbox');
         const colours = await getSuggestionColours(body);
 
-        await seedSuggestions(page, body);
         await expectRuns(body, colours, SEEDED_RUNS);
 
-        await openSuggestionDetail(body, {text: INSERTED, caretPark: PLAIN_HEAD});
-        await expectSuggestionDetail(page, `Add: ${INSERTED}`);
+        await expectSuggestionDetail(body, {
+            text: INSERTED,
+            caretPark: PLAIN_HEAD,
+            description: `Add: ${INSERTED}`,
+        });
         await actOnSuggestion(page, 'reject');
 
         const afterRejectingInsertion: Array<IRun> = [
@@ -450,8 +435,11 @@ test.describe('editor3 suggestions mode', () => {
 
         await expectRuns(body, colours, afterRejectingInsertion);
 
-        await openSuggestionDetail(body, {text: DELETED, caretPark: PLAIN_HEAD});
-        await expectSuggestionDetail(page, `Remove: ${DELETED}`);
+        await expectSuggestionDetail(body, {
+            text: DELETED,
+            caretPark: PLAIN_HEAD,
+            description: `Remove: ${DELETED}`,
+        });
         await actOnSuggestion(page, 'reject');
 
         const afterRejectingDeletion: Array<IRun> = [
@@ -461,7 +449,7 @@ test.describe('editor3 suggestions mode', () => {
 
         await expectRuns(body, colours, afterRejectingDeletion);
 
-        await saveAndReopen(page, headline);
+        await saveAndReopen(page, SEEDED_HEADLINE);
 
         await expect(bodyInput).toBeVisible();
         await expectRuns(body, colours, afterRejectingDeletion);
