@@ -235,7 +235,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`.
+`editor3-formats`, `editor3-suggestions`, `authoring-extras`,
+`saved-search-private`.
 
 ### The `media-items` snapshot
 
@@ -295,6 +296,28 @@ are a different component again, found with `getByRole('button', {name})`.
 
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
+
+### The `editor3-suggestions` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-suggestions'})` gives you the same
+toolbar as `editor3-formats` with `suggestions` added, on `body_html` and on the
+custom text field alike. It is the only snapshot that offers the option at all:
+`main` and `editor3-formats` enable it on no field, so suggestions mode is
+unreachable under either.
+
+The toggle is a `StyleButton` like bold or italic, so it is found the same way, by
+`data-test-value="suggestions"`, and it carries `Editor3-activeButton` while
+suggestions mode is on.
+
+Two things about suggestions themselves are worth knowing before writing a spec:
+
+- An insertion suggestion that directly touches a deletion suggestion is reported as
+  a single "Replace X with Y" suggestion, and accepting or rejecting it resolves both
+  halves at once. Leave plain text between them if you want two.
+- The detail popup renders only while the caret sits inside a suggestion, and it is
+  re-rendered only when the caret *moves* (`HighlightsPopup.shouldComponentUpdate`).
+  A click that lands where the caret already sits, which is where accepting or
+  rejecting one leaves it, shows nothing, so park the caret on plain text first.
 
 ### The `authoring-extras` snapshot
 
