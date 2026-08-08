@@ -21,11 +21,13 @@ import {
  * - Toggling the option off does not move the caret out of the preformatted block and
  *   start a new paragraph. It converts the block the caret is in back to unstyled, so
  *   the text typed into it stops being preformatted (SDESK-4253, linked from the case).
- * - Preformatted text does not render in a courier face. The monospace family is
- *   declared on the wrapper editor3 puts around preformatted blocks, and a global
- *   `:not([class^="icon-"], ...)` font reset in the app stylesheet re-declares Arial on
- *   every descendant, so the block and its text runs compute Arial. Only the wrapper is
- *   asserted to carry the family.
+ * - The courier face the case asks for cannot be verified under the e2e harness. editor3
+ *   declares the monospace family on the wrapper it puts around preformatted blocks, and
+ *   `e2e/client/index.js` injects a `*:not([class^="icon-"], ...) {font-family: Arial}`
+ *   override to keep the app font-stable for screenshots. That override outranks the
+ *   editor3 rule on every descendant of the wrapper, so only the wrapper itself is
+ *   asserted to carry the family. In the product both the block and its runs are
+ *   monospace.
  */
 
 // Every test restores a snapshot, boots the app and drives two full save/close/reopen

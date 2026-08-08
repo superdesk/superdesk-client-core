@@ -1,7 +1,7 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {Authoring} from '../page-object-models/authoring';
 import {Monitoring} from '../page-object-models/monitoring';
-import {pressRepeatedly} from '../utils';
+import {dismissSessionExpiry, pressRepeatedly} from '../utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
     getEditor3Field,
@@ -58,6 +58,7 @@ export async function runEditor3InlineStyleToggleScenario(
 
     if (alreadyOnMonitoring !== true) {
         await page.goto('/#/workspace/monitoring');
+        await dismissSessionExpiry(page);
         await monitoring.selectDeskOrWorkspace('Sports');
     }
 
