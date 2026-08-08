@@ -110,6 +110,24 @@ export class Monitoring {
         }
     }
 
+    /**
+     * Opens the create-item dropdown and switches it to the full template list,
+     * returning the dropdown so the caller can read or click the options in it.
+     *
+     * The list is what the backend and `sdApi.templates.getUserTemplates` between them
+     * leave visible to the logged-in user, which is why a spec about who may use a
+     * template inspects it rather than creating an article from it.
+     */
+    async openMoreTemplates(): Promise<Locator> {
+        const dropdown = this.page.getByTestId('content-create-dropdown');
+
+        await this.page.getByTestId('content-create').click();
+        await expect(dropdown).toBeVisible();
+        await dropdown.getByRole('button', {name: 'More templates...'}).click();
+
+        return dropdown;
+    }
+
     async createArticleFromDefaultTemplate(): Promise<void> {
         await this.page.getByTestId('content-create').click();
         await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
