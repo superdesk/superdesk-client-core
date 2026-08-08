@@ -76,8 +76,27 @@ test.describe('image editing', () => {
 
         if (await close.isVisible()) {
             await close.click({timeout: 15000});
+            await expect(page.getByTestId('authoring-topbar')).toBeHidden();
         }
     });
+
+    /**
+     * Closes the media editor and waits for the edit to reach the server. The editor
+     * persists nothing itself: resolving it makes ArticleEditDirective.editMedia()
+     * call `scope.save()`, and nothing in the UI blocks on that PATCH. The scope is
+     * never marked dirty on this path either, so a Close issued meanwhile unlocks the
+     * item and the in-flight save is rejected. Only call this when the editor holds a
+     * change: with an empty diff `authoring.save()` issues no request at all.
+     */
+    async function applyMediaEdits(page: Page, mediaEditor: MediaEditor): Promise<void> {
+        const saved = page.waitForResponse(
+            (response) => response.request().method() === 'PATCH' && response.url().includes('/archive/'),
+        );
+
+        await mediaEditor.doneButton.click();
+        await expect(mediaEditor.header).toBeHidden();
+        await saved;
+    }
 
     async function reopenPicture(page: Page): Promise<void> {
         await page.getByTestId('authoring-topbar').getByTestId('close').click();
@@ -204,8 +223,7 @@ test.describe('image editing', () => {
         await expect(mediaEditor.controlsToolbar).toBeHidden();
         await expect(mediaEditor.preview).toHaveAttribute('style', /rotateZ\(0deg\)/);
 
-        await mediaEditor.doneButton.click();
-        await expect(mediaEditor.header).toBeHidden();
+        await applyMediaEdits(page, mediaEditor);
 
         // A quarter turn swaps the stored dimensions of the original rendition.
         await expect(picture.originalSizeLabel).toHaveText('Original (1050 x 2100 px)');
@@ -252,8 +270,7 @@ test.describe('image editing', () => {
         await expect(mediaEditor.controlsToolbar).toBeHidden();
         await expect(mediaEditor.preview).toHaveAttribute('style', /rotateY\(0deg\) rotateX\(0deg\)/);
 
-        await mediaEditor.doneButton.click();
-        await expect(mediaEditor.header).toBeHidden();
+        await applyMediaEdits(page, mediaEditor);
 
         // A flip keeps the dimensions, so the only visible trace of it is that the
         // renditions were regenerated and now point at newly stored media.
@@ -310,8 +327,7 @@ test.describe('image editing', () => {
             await expect(mediaEditor.slider(control)).toHaveValue('1');
         }
 
-        await mediaEditor.doneButton.click();
-        await expect(mediaEditor.header).toBeHidden();
+        await applyMediaEdits(page, mediaEditor);
 
         await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
@@ -346,6 +362,9 @@ test.describe('image editing', () => {
         for (const control of ['rotate-left', 'rotate-right', 'flip-horizontal', 'flip-vertical'] as const) {
             await expect(mediaEditor.control(control)).toBeDisabled();
         }
+        // Crop stays enabled: it is only disabled while a rotate, flip or colour
+        // change is pending, which crop mode makes unreachable anyway.
+        await expect(mediaEditor.control('crop')).toBeEnabled();
         await expect(mediaEditor.adjustColours).toBeHidden();
 
         await mediaEditor.cropToolbar.getByTestId('cancel').click();
@@ -412,8 +431,7 @@ test.describe('image editing', () => {
         await expect(mediaEditor.cropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
-        await mediaEditor.doneButton.click();
-        await expect(mediaEditor.header).toBeHidden();
+        await applyMediaEdits(page, mediaEditor);
 
         // 4:3 of a 2100 x 1050 original keeps the height and takes 1400 of the width.
         await expect(picture.originalSizeLabel).toHaveText('Original (1400 x 1050 px)');
@@ -470,8 +488,7 @@ test.describe('image editing', () => {
         await mediaEditor.cropsToolbar.getByTestId('save').click();
         await expect(mediaEditor.cropsToolbar).toBeHidden();
 
-        await mediaEditor.doneButton.click();
-        await expect(mediaEditor.header).toBeHidden();
+        await applyMediaEdits(page, mediaEditor);
 
         await expect(picture.crop('FIXME')).toBeVisible();
         await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
