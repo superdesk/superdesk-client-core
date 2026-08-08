@@ -6,6 +6,7 @@ import {EDITOR3_ACTIVE_BUTTON, getEditor3Field, getEditor3FormattingButton} from
 
 test.describe('quote formatting in the article body', () => {
     const HEADLINE = 'quote formatting test';
+    const ITALIC = 'italic';
 
     // Quote is a block style, so a partial selection converts the whole paragraph. Each
     // paragraph that the case selects "part of" is typed as two halves, so the selection
@@ -33,15 +34,24 @@ test.describe('quote formatting in the article body', () => {
         return body.locator('blockquote[data-block="true"]');
     }
 
-    // The italic comes from `.Editor3-editor .Editor3-blockquote`, so it is asserted
-    // alongside the tag name: the tag alone would still pass if that rule were dropped
-    // and the quote stopped reading as one.
+    /**
+     * The italic the case asks for comes from superdesk-ui-framework's
+     * `.main-article .Editor3-root .DraftEditor-editorContainer blockquote`, not from this
+     * repo. It is asserted alongside the tag name because the tag alone would still pass if
+     * the block stopped rendering as a quote. Regular text is asserted as "not italic"
+     * rather than a literal font style: the editor's base font style is a theme value.
+     */
     async function expectQuote(body: Locator, text: string, quoted: boolean): Promise<void> {
         const block = blockFor(body, text);
 
         await expect(block).toHaveCount(1);
         await expect(block).toHaveJSProperty('tagName', quoted ? 'BLOCKQUOTE' : 'DIV');
-        await expect(block).toHaveCSS('font-style', quoted ? 'italic' : 'normal');
+
+        if (quoted) {
+            await expect(block).toHaveCSS('font-style', ITALIC);
+        } else {
+            await expect(block).not.toHaveCSS('font-style', ITALIC);
+        }
     }
 
     test('toolbar toggle quotes typed text and a selection, and the result survives reopen', {
