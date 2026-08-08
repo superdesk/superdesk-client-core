@@ -2,6 +2,9 @@ import {Locator, Page, expect} from '@playwright/test';
 
 export type IMonitoringSettingsTab = 'Desks' | 'Saved Searches' | 'Reorder Sections' | 'Items Count';
 
+/** `PREFERENCES_KEY` in `scripts/apps/monitoring/directives/AggregateSettings.ts`. */
+const MONITORING_PREFERENCE_KEY = 'agg:view';
+
 /**
  * Drives the "Monitoring settings" wizard modal
  * (`scripts/apps/monitoring/views/aggregate-settings.html`).
@@ -102,8 +105,20 @@ export class MonitoringSettings {
         return this.savedSearch(toggleBox, name).getByTestId('toggle');
     }
 
+    /**
+     * On a workspace the wizard closes the modal without waiting for the write it started:
+     * `AggregateSettings.save()` calls `onclose()` synchronously while `preferencesService.update()`
+     * is still only scheduled on `$applyAsync`. Anything that leaves the page right after the modal
+     * disappears can therefore cancel the PATCH and drop the configuration, so wait for the write.
+     */
     async closeWithDone(): Promise<void> {
-        await this.doneButton.click();
+        await Promise.all([
+            this.page.waitForResponse((response) => response.url().includes('/preferences/')
+                && response.request().method() === 'PATCH'
+                && (response.request().postData() ?? '').includes(MONITORING_PREFERENCE_KEY)),
+            this.doneButton.click(),
+        ]);
+
         await expect(this.modal).not.toBeVisible();
     }
 
