@@ -1,5 +1,45 @@
-import {Locator, expect} from '@playwright/test';
+import {Locator, Page, expect} from '@playwright/test';
 import {s} from '.';
+
+/**
+ * Class editor3 puts on a toolbar button whose style is active for the current
+ * selection. Matched as a pattern because the class is hashed by CSS modules.
+ */
+export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
+
+/**
+ * The editor3 authoring field for `fieldId` (`body_html`, `abstract`, ...). The field
+ * id rides in `data-test-value`, not in a test id, so it cannot be reached by chaining
+ * `getByTestId` alone.
+ */
+export function getEditor3Field(page: Page, fieldId: string): Locator {
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${fieldId}"]`));
+}
+
+/**
+ * A toolbar button of the editor3 `field`, addressed by the Superdesk formatting-option
+ * id `StyleButton` puts in `data-test-value` (`bold`, `h2`, `quote`, ...). That id is not
+ * the tag the block ends up rendered as: `quote` renders `blockquote` and `pre` comes
+ * from the `code-block` option (see `blockStyles` in
+ * scripts/core/editor3/components/toolbar/BlockStyleButtons.tsx).
+ */
+export function getEditor3FormattingOptionButton(field: Locator, option: string): Locator {
+    return field.getByTestId('toolbar')
+        .getByTestId('formatting-option-button')
+        .and(field.page().locator(`[data-test-value="${option}"]`));
+}
+
+/**
+ * Presses `key` `times` times. Editor3 specs move and extend the selection with counted
+ * arrow presses because Home/End do not move the caret on macOS.
+ */
+export async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
+    for (let i = 0; i < times; i++) {
+        await page.keyboard.press(key);
+    }
+}
 
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
     return field.locator('.DraftEditor-root')
