@@ -2,20 +2,20 @@
     <div class="sd-page__header">
         <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
         <span class="sd-page__element-grow"></span>
-        <button class="btn btn--primary" ng-click="edit({})">
+        <button class="btn btn--primary" ng-click="edit({})" data-test-id="add-role">
             <i class="icon-plus-sign icon--white"></i> {{:: 'Add New' | translate}}
         </button>
     </div>
 
     <div class="sd-page__content user-roles-settings">
         <ul class="pills-list">
-            <li ng-repeat="role in roles | filter: query" class="clearfix">
+            <li ng-repeat="role in roles | filter: query" class="clearfix" data-test-id="role-item" data-test-value="{{role.name}}">
                 <div class="header">
                     <h6>{{role.name}}</h6>
-                    <span class="label label--primary label--hollow" ng-if="role.is_default" translate>default</span>
+                    <span class="label label--primary label--hollow" ng-if="role.is_default" data-test-id="role-default-label" translate>default</span>
                     <div class="actions">
-                        <button ng-click="edit(role)" title="{{:: 'Edit role' | translate }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(role)" title="{{:: 'Remove role' | translate }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(role)" data-test-id="role-edit" title="{{:: 'Edit role' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(role)" data-test-id="role-remove" title="{{:: 'Remove role' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -23,7 +23,7 @@
         </ul>
     </div>
 
-    <div sd-modal data-model="editRole">
+    <div sd-modal data-model="editRole" data-test-id="'role-modal'">
         <div class="modal__header modal__header--flex">
             
             <h3 class="modal__heading" ng-show="editRole._id" translate>Edit Role</h3>
@@ -36,14 +36,14 @@
                     <div class="form__row">
                         <div class="sd-line-input" ng-class="{'sd-line-input--invalid': roleForm.$error.unique}">
                             <label class="sd-line-input__label">{{ 'Role Name'|translate }}</label>
-                            <input class="sd-line-input__input" type="text" ng-model="editRole.name" required sd-role-unique>
+                            <input class="sd-line-input__input" type="text" ng-model="editRole.name" required sd-role-unique data-test-id="field--name">
                             <div class="sd-line-input__message" ng-show="roleForm.$error.unique" sd-valid-error translate>Sorry, this role name already exists.</div>
                         </div>
                     </div>
                     <div class="form__row">
                         <div class="sd-line-input">
                             <label class="sd-line-input__label">{{ 'Role Description'|translate }}</label>
-                            <textarea class="sd-line-input__input" sd-auto-height ng-model="editRole.description"></textarea>
+                            <textarea class="sd-line-input__input" sd-auto-height ng-model="editRole.description" data-test-id="field--description"></textarea>
                         </div>
                     </div>
                     <div class="form__row">
@@ -84,8 +84,8 @@
             </form>
         </div>
         <div class="modal__footer">
-            <button class="btn" ng-click="cancel()" translate>Cancel</button>
-            <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid || !roleForm.$dirty" translate>Ok</button>
+            <button class="btn" ng-click="cancel()" data-test-id="cancel" translate>Cancel</button>
+            <button class="btn btn--primary" ng-click="save(editRole)" data-test-id="save" ng-disabled="!roleForm.$valid || !roleForm.$dirty" translate>Ok</button>
         </div>
     </div>
 </div>
