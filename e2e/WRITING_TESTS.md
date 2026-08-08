@@ -128,6 +128,68 @@ Exceptions that do need an explicit login:
   code. If you write a new spec that needs a fresh login, prefer driving the
   login form with `getByTestId` directly rather than extending the legacy helper.
 
+### Users in the `main` snapshot
+
+| username       | password       | display name  | notes                                           |
+| -------------- | -------------- | ------------- | ----------------------------------------------- |
+| `admin`        | `admin`        | John Doe      | administrator, the committed `storageState`     |
+| `frodobaggins` | `frodobaggins` | Frodo Baggins | ordinary user, member of the Sports desk        |
+| `samgamgee`    | `samgamgee`    | Sam Gamgee    | Sports desk member with the `Sub Editor` role   |
+| `janedoe`      | (unknown)      | Jane Doe      | ordinary user, no desk, password never recorded |
+
+Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
+two-user lock or mark-for-user flow, or a permission check. Both have a known
+password (the password is the username) and both are members of the Sports desk.
+What separates them is privileges: `frodobaggins` holds none at all, which is
+what makes it the negative half of a privilege test, while `samgamgee` carries
+the `Sub Editor` role and so holds *some*, but not `send_to_personal` or
+`unlock`. Only `samgamgee` can open the Sports monitoring view:
+`/workspace/monitoring` is declared with `privileges: {monitoring_view: 1}`
+(`scripts/apps/monitoring/config.ts`), which `frodobaggins` lacks, so that
+account is limited to routes with no privilege gate, `/workspace/personal` and
+`/settings/templates` among them.
+
+`frodobaggins` also cannot create or edit any article: the archive resource
+declares `privileges = {"POST": "archive", "PATCH": "archive", ...}`
+(`apps/archive/archive.py` in superdesk-core), so every write answers 403 and no
+authoring view ever opens for it. Any scenario that needs an article in the
+editor under a user lacking some other privilege needs a new snapshot user that
+holds `archive` and not that privilege.
+
+`frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
+field, so it holds **no** privileges at all. Keep it that way: do not assign a
+role and do not add a `privileges` field. superdesk-core's `get_privileges`
+returns the user's own privileges when there is no role, and merges the user's
+over the role's when there is one, so either change grants something. The empty
+state is deliberate, it is what makes the account usable for the negative half
+of a privilege test, for example asserting that a user without `unlock` sees no
+Unlock button on an item another user locked. If a future spec needs a user that
+holds some privileges but not others, add a separate user carrying a role or its
+own `privileges` rather than granting anything here, or the negative cases that
+rely on this account will start passing for the wrong reason.
+
+`samgamgee` is that separate user: same shape as `frodobaggins`, plus the
+`Sub Editor` role, a default `desk` of Sports and a `workspace:active` preference
+pointing at it (which is also a second reason the Sports desk cannot be deleted).
+It is the account to reach for when a spec needs a user that holds *some*
+privileges. Its `active_privileges` are exactly the role's, and
+`send_to_personal` and `unlock` are set to `0` there on purpose, so it covers the
+negative branch of those two while still being able to open the Sports monitoring
+view and edit items.
+
+### Roles in the `main` snapshot
+
+| role           | privileges                                                          |
+| -------------- | ------------------------------------------------------------------- |
+| `Administrator`| every privilege set to `1`, for asserting an admin-level assignment  |
+| `Sub Editor`   | desk editing, with `send_to_personal` and `unlock` set to `0`        |
+
+Neither role is `is_default`, so users created through the API or the UI still
+get no role. Only `samgamgee` is assigned one.
+
+To read the privileges a user actually ends up with, `GET /api/preferences/<session id>`
+and look at `active_privileges`. `GET /api/users/<id>` does not expose the field.
+
 ## State reset
 
 If a test creates, edits, or deletes server data, restore the base snapshot
@@ -168,6 +230,12 @@ set, this is not exhaustive):
 - **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
 - **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
   "Package Highlight 1" there too, and "Story 5" published in Sports desk output.
+- **Users:** `admin`, `frodobaggins`, `samgamgee`, `janedoe` (see "Users in the
+  `main` snapshot" under Authentication).
+- **Roles:** `Administrator` and `Sub Editor`, neither of them the default role.
+- **Content templates:** `story`, `story 2` and `story 3`, all public and all
+  owned by `admin`, plus the `kill` and `takedown` kill templates. There is no
+  personal (`is_public: false`) template; a spec that needs one makes it in-test.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
