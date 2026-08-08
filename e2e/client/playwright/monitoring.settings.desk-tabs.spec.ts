@@ -47,7 +47,10 @@ const WORKING_STAGE_GROUP = `${DESK} / Working Stage`;
 const INCOMING_STAGE_GROUP = `${DESK} / Incoming Stage`;
 const DESK_OUTPUT_GROUP = `${DESK} desk output`;
 
-/** Sports / Working Stage holds this many unspiked items in the `main` snapshot. */
+/**
+ * Number of items the Sports / Working Stage group lists in the `main` snapshot. The stage holds
+ * more than this in `archive`; its spiked, published and draft items are not listed.
+ */
 const WORKING_STAGE_ITEMS = 4;
 
 /**
