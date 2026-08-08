@@ -51,7 +51,7 @@ export class DeskRouting {
     routedFromItem(deskName: string): Locator {
         return this.routedFromList
             .getByTestId('desk-router-routed-from-item')
-            .and(this.page.locator(`[data-test-value="${deskName}"]`));
+            .filter({hasText: deskName});
     }
 
     /** The top-menu indicator, rendered next to the global menu on every route. */

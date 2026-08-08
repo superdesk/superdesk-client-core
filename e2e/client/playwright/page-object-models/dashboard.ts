@@ -23,8 +23,11 @@ export class Dashboard {
      * `If-Match` etag and is rejected with 412.
      *
      * A desk whose dashboard has never been saved has no workspace document
-     * yet, so the first write on it is a POST to the collection and every
-     * later one a PATCH on the document.
+     * yet (`WorkspaceService.getDeskWorkspace` hands back an unsaved
+     * `{desk, widgets: []}`), so the first write on it is a POST to the
+     * collection and every later one a PATCH on the document. Both have to be
+     * matched: narrowed to a PATCH on a document id, this never matches that
+     * first POST and the caller hangs until the `waitForResponse` timeout.
      *
      * The predicate matches on URL and method only. Filtering on the status
      * here would leave a failed save unmatched, so the helper would hang until
