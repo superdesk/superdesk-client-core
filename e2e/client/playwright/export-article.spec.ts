@@ -28,8 +28,9 @@ test.setTimeout(60000);
  *    tab rather than the current one; see `ExportDialog.submit`.
  *
  * The case's "Validate checkbox slide" expected result documents no behaviour beyond the
- * control itself, so the spec asserts the toggle's state and that its value reaches the
- * export request.
+ * control itself, so the spec asserts the toggle's own state and, separately, that the
+ * export request carries the default `validate: false`. What `validate: true` does to an
+ * export is not covered.
  *
  * "Export is available for text items only" needs a non-text item; the `main` snapshot's
  * only one is `Package Highlight 1` (type `composite`), in Sports / Working Stage next to
@@ -123,6 +124,9 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
         const requestPayload = response.request().postDataJSON();
 
         expect(requestPayload.format_type).toBe('NINJSFormatter');
+
+        // The toggle is left untouched here, so `false` is the directive's own default
+        // (Export.ts init()). This pins the default payload, not the toggle's wiring.
         expect(requestPayload.validate).toBe(false);
         expect(requestPayload.item_ids).toHaveLength(1);
 
