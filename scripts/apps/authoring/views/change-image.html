@@ -58,7 +58,7 @@
                          data-crop-data="areaOfInterestData"
                          data-on-change="enableSaveAreaOfInterest()"
                          ng-if="isAoISelectionModeEnabled && !loaderForAoI"
-                         data-test-id="crop-preview">
+                         data-test-id="aoi-crop-preview">
                     </div>
 
                     <sd-image-modify
@@ -76,13 +76,13 @@
                 </div>
             </div>
             <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'crop'">
-                <div class="modal__sliding-toolbar" ng-if="crops.isDirty" data-test-id="crops-toolbar">
+                <div class="modal__sliding-toolbar" ng-if="crops.isDirty" data-test-id="save-crops-toolbar">
                     <div class="sliding-toolbar__inner"></div>
                     <a class="btn" ng-click="cancelCrops()" data-test-id="cancel" translate>Cancel</a>
                     <a class="btn btn--primary" ng-click="saveCrops()" data-test-id="save" translate>Save</a>
                 </div>
 
-                <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition" data-test-id="crop-preview">
+                <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition" data-test-id="poi-preview">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-poi="data.poi"
@@ -97,7 +97,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="crop-area selected sd-photo-preview__image--with-strip" ng-if="selectedRendition" data-test-id="crop-preview">
+                <div class="crop-area selected sd-photo-preview__image--with-strip" ng-if="selectedRendition" data-test-id="rendition-crop-preview">
                     <div sd-image-crop
                          data-show-Min-Size-Error="true"
                          data-src="data.item.renditions.viewImage.href"
@@ -189,7 +189,7 @@
                 <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'" data-test-id="controls-panel">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
 
-                        <div class="modal__sliding-toolbar" ng-if="isAoISelectionModeEnabled && !loaderForAoI" data-test-id="crop-toolbar">
+                        <div class="modal__sliding-toolbar" ng-if="isAoISelectionModeEnabled && !loaderForAoI" data-test-id="confirm-crop-toolbar">
                             <div class="sliding-toolbar__inner"></div>
                             <a class="btn" ng-click="showAreaOfInterestView(false)" data-test-id="cancel" translate>Cancel</a>
                             <a class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" ng-disabled="!isAoIDirty" data-test-id="confirm-crop" translate>Confirm crop</a>
@@ -230,7 +230,7 @@
                             </div>
                         </div>
                         <div class="flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2">
-                            <button class="btn btn--hollow btn--large" ng-click="setRatio()" data-test-id="ratio" data-test-value="original" translate>Original</button>
+                            <button class="btn btn--hollow btn--large" ng-click="setRatio()" data-test-id="ratio" data-test-value="Original" translate>Original</button>
                             <button class="btn btn--hollow btn--large" ng-click="setRatio('16:9')" data-test-id="ratio" data-test-value="16:9">16 : 9</button>
                             <button class="btn btn--hollow btn--large" ng-click="setRatio('4:3')" data-test-id="ratio" data-test-value="4:3">4 : 3</button>
                             <button class="btn btn--hollow btn--large" ng-click="setRatio('3:2')" data-test-id="ratio" data-test-value="3:2">3 : 2</button>

@@ -55,13 +55,13 @@ export class MediaEditor {
     }
 
     /** Cancel / Confirm crop, shown while the original image is being cropped. */
-    get cropToolbar(): Locator {
-        return this.controlsPanel.getByTestId('crop-toolbar');
+    get confirmCropToolbar(): Locator {
+        return this.controlsPanel.getByTestId('confirm-crop-toolbar');
     }
 
     /** Cancel / Save, shown while a rendition crop or the point of interest is pending. */
-    get cropsToolbar(): Locator {
-        return this.body.getByTestId('crops-toolbar');
+    get saveCropsToolbar(): Locator {
+        return this.body.getByTestId('save-crops-toolbar');
     }
 
     /** The canvas the Edit image tab draws the live preview on. */
@@ -69,9 +69,22 @@ export class MediaEditor {
         return this.body.getByTestId('image-modify-canvas');
     }
 
-    /** The jCrop-driven image, both in crop mode and on the Edit crops tab. */
-    get cropPreview(): Locator {
-        return this.body.getByTestId('crop-preview');
+    /** The jCrop-driven image of the Edit image tab's crop mode (the area of interest). */
+    get areaOfInterestPreview(): Locator {
+        return this.body.getByTestId('aoi-crop-preview');
+    }
+
+    /**
+     * The Edit crops preview of the original, shown while no rendition is selected.
+     * It carries the point-of-interest overlay rather than a jCrop selection.
+     */
+    get pointOfInterestPreview(): Locator {
+        return this.body.getByTestId('poi-preview');
+    }
+
+    /** The jCrop-driven preview of the rendition selected on the Edit crops tab. */
+    get renditionCropPreview(): Locator {
+        return this.body.getByTestId('rendition-crop-preview');
     }
 
     get cropPreviewLabel(): Locator {
@@ -122,7 +135,7 @@ export class MediaEditor {
         return this.body.getByTestId('paste-metadata');
     }
 
-    ratioButton(ratio: 'original' | '16:9' | '4:3' | '3:2'): Locator {
+    ratioButton(ratio: 'Original' | '16:9' | '4:3' | '3:2'): Locator {
         return this.controlsPanel.getByTestId('ratio').and(this.page.locator(`[data-test-value="${ratio}"]`));
     }
 
@@ -135,22 +148,27 @@ export class MediaEditor {
      * and resize handles have to be addressed by the class names it hard-codes.
      * The selection box is jCrop's first child; its size is the crop in preview pixels.
      */
-    get cropSelection(): Locator {
-        return this.cropPreview.locator('.jcrop-holder > div').first();
+    get areaOfInterestSelection(): Locator {
+        return this.areaOfInterestPreview.locator('.jcrop-holder > div').first();
     }
 
     /**
-     * Resizes the crop by dragging the bottom-right jCrop handle. Only a drag that
-     * jCrop reports through its `onSelect` callback marks the crop dirty, which is
-     * why the ratio buttons and the width/height fields cannot stand in for it.
+     * Resizes the area of interest by dragging the bottom-right jCrop handle. Only a
+     * drag that jCrop reports through its `onSelect` callback marks the crop dirty,
+     * which is why the ratio buttons and the width/height fields cannot stand in for it.
      */
-    async resizeCrop(dx: number, dy: number): Promise<void> {
-        await this.dragBy(this.cropPreview.locator('.jcrop-holder .ord-se.jcrop-handle'), dx, dy);
+    async resizeAreaOfInterest(dx: number, dy: number): Promise<void> {
+        await this.dragBy(this.areaOfInterestPreview.locator('.jcrop-holder .ord-se.jcrop-handle'), dx, dy);
+    }
+
+    /** Resizes the selected rendition's crop by dragging its bottom-right jCrop handle. */
+    async resizeRenditionCrop(dx: number, dy: number): Promise<void> {
+        await this.dragBy(this.renditionCropPreview.locator('.jcrop-holder .ord-se.jcrop-handle'), dx, dy);
     }
 
     /** Sets the point of interest by clicking the overlay of the Edit crops preview. */
     async setPointOfInterest(fractionX: number, fractionY: number): Promise<void> {
-        const overlay = this.cropPreview.locator('.image-point__poi__overlay');
+        const overlay = this.pointOfInterestPreview.locator('.image-point__poi__overlay');
         const box = await overlay.boundingBox();
 
         if (box == null) {

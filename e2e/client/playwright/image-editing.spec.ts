@@ -86,7 +86,9 @@ test.describe('image editing', () => {
      * call `scope.save()`, and nothing in the UI blocks on that PATCH. The scope is
      * never marked dirty on this path either, so a Close issued meanwhile unlocks the
      * item and the in-flight save is rejected. Only call this when the editor holds a
-     * change: with an empty diff `authoring.save()` issues no request at all.
+     * change: with nothing dirty `done()` rejects the modal instead of resolving it,
+     * so `editMedia()`'s `.then()` is skipped, no save is issued and there is no PATCH
+     * to wait for.
      */
     async function applyMediaEdits(page: Page, mediaEditor: MediaEditor): Promise<void> {
         const saved = page.waitForResponse(
@@ -108,6 +110,9 @@ test.describe('image editing', () => {
     test('the media editor offers the three tabs, the image controls and the colour scales', {
         annotation: [
             {type: 'confluence', description: '1315931606 partial'}, // Open image in Edit image mode
+            // Adjust colours: only its first expected result, the range of the three
+            // scales. The rest of the case is covered by the colour test below.
+            {type: 'confluence', description: '1315931424 partial'},
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'media-items'});
@@ -275,6 +280,7 @@ test.describe('image editing', () => {
         // A flip keeps the dimensions, so the only visible trace of it is that the
         // renditions were regenerated and now point at newly stored media.
         await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
+        await expect(picture.previewImage).toBeVisible();
         await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
         await reopenPicture(page);
@@ -329,6 +335,7 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
+        await expect(picture.previewImage).toBeVisible();
         await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
 
         await reopenPicture(page);
@@ -351,11 +358,11 @@ test.describe('image editing', () => {
 
         await mediaEditor.control('crop').click();
 
-        await expect(mediaEditor.cropToolbar.getByTestId('cancel')).toBeVisible();
+        await expect(mediaEditor.confirmCropToolbar.getByTestId('cancel')).toBeVisible();
         // The toolbar buttons are anchors carrying ng-disabled, so the disabled
         // state is an attribute rather than the form-control state toBeDisabled reads.
-        await expect(mediaEditor.cropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
-        await expect(mediaEditor.cropPreview).toBeVisible();
+        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
+        await expect(mediaEditor.areaOfInterestPreview).toBeVisible();
 
         // Crop mode owns the whole image, so the other transforms and the colour
         // scales are out of reach until it is confirmed or cancelled.
@@ -367,25 +374,25 @@ test.describe('image editing', () => {
         await expect(mediaEditor.control('crop')).toBeEnabled();
         await expect(mediaEditor.adjustColours).toBeHidden();
 
-        await mediaEditor.cropToolbar.getByTestId('cancel').click();
-        await expect(mediaEditor.cropToolbar).toBeHidden();
+        await mediaEditor.confirmCropToolbar.getByTestId('cancel').click();
+        await expect(mediaEditor.confirmCropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
         await mediaEditor.control('crop').click();
-        await expect(mediaEditor.cropToolbar).toBeVisible();
+        await expect(mediaEditor.confirmCropToolbar).toBeVisible();
 
-        const fullSelection = await mediaEditor.cropSelection.boundingBox();
+        const fullSelection = await mediaEditor.areaOfInterestSelection.boundingBox();
         const cropWidth = mediaEditor.cropWidth;
         const cropHeight = mediaEditor.cropHeight;
 
         await expect(cropWidth).toHaveValue('');
         await expect(cropHeight).toHaveValue('');
 
-        await mediaEditor.resizeCrop(-160, -80);
+        await mediaEditor.resizeAreaOfInterest(-160, -80);
 
         // Dragging the crop is the only interaction that marks it changed.
-        await expect(mediaEditor.cropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
-        expect((await mediaEditor.cropSelection.boundingBox())?.width)
+        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
+        expect((await mediaEditor.areaOfInterestSelection.boundingBox())?.width)
             .toBeLessThan(fullSelection?.width ?? 0);
 
         // The two fields follow the mouse: jCrop reports the dragged corner through
@@ -400,7 +407,7 @@ test.describe('image editing', () => {
 
         // The ratio buttons letterbox the 2100 x 1050 original: 16:9, 4:3 and 3:2 are
         // all taller than it is, so each keeps the full height and narrows the width.
-        await mediaEditor.ratioButton('original').click();
+        await mediaEditor.ratioButton('Original').click();
         await expect(cropWidth).toHaveValue('2100');
         await expect(cropHeight).toHaveValue('1050');
 
@@ -416,19 +423,19 @@ test.describe('image editing', () => {
         await expect(cropWidth).toHaveValue('1750');
         await expect(cropHeight).toHaveValue('1050');
 
-        const ratioSelection = await mediaEditor.cropSelection.boundingBox();
+        const ratioSelection = await mediaEditor.areaOfInterestSelection.boundingBox();
 
         await cropWidth.fill('1200');
         await expect(async () => {
-            expect((await mediaEditor.cropSelection.boundingBox())?.width)
+            expect((await mediaEditor.areaOfInterestSelection.boundingBox())?.width)
                 .toBeLessThan(ratioSelection?.width ?? 0);
         }).toPass();
 
         await mediaEditor.ratioButton('4:3').click();
         await expect(cropWidth).toHaveValue('1750');
 
-        await mediaEditor.cropToolbar.getByTestId('confirm-crop').click();
-        await expect(mediaEditor.cropToolbar).toBeHidden();
+        await mediaEditor.confirmCropToolbar.getByTestId('confirm-crop').click();
+        await expect(mediaEditor.confirmCropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
         await applyMediaEdits(page, mediaEditor);
@@ -469,28 +476,29 @@ test.describe('image editing', () => {
         await mediaEditor.rendition('FIXME').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText('FIXME');
 
-        await mediaEditor.resizeCrop(-60, -45);
-        await expect(mediaEditor.cropsToolbar.getByTestId('cancel')).toBeVisible();
-        await expect(mediaEditor.cropsToolbar.getByTestId('save')).toBeVisible();
+        await mediaEditor.resizeRenditionCrop(-60, -45);
+        await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
+        await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
 
-        await mediaEditor.cropsToolbar.getByTestId('cancel').click();
-        await expect(mediaEditor.cropsToolbar).toBeHidden();
+        await mediaEditor.saveCropsToolbar.getByTestId('cancel').click();
+        await expect(mediaEditor.saveCropsToolbar).toBeHidden();
 
-        await mediaEditor.resizeCrop(-60, -45);
-        await mediaEditor.cropsToolbar.getByTestId('save').click();
-        await expect(mediaEditor.cropsToolbar).toBeHidden();
+        await mediaEditor.resizeRenditionCrop(-60, -45);
+        await mediaEditor.saveCropsToolbar.getByTestId('save').click();
+        await expect(mediaEditor.saveCropsToolbar).toBeHidden();
 
         await mediaEditor.rendition('Original').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
 
         await mediaEditor.setPointOfInterest(0.3, 0.3);
-        await expect(mediaEditor.cropsToolbar.getByTestId('save')).toBeVisible();
-        await mediaEditor.cropsToolbar.getByTestId('save').click();
-        await expect(mediaEditor.cropsToolbar).toBeHidden();
+        await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
+        await mediaEditor.saveCropsToolbar.getByTestId('save').click();
+        await expect(mediaEditor.saveCropsToolbar).toBeHidden();
 
         await applyMediaEdits(page, mediaEditor);
 
         await expect(picture.crop('FIXME')).toBeVisible();
+        await expect(picture.crop('FIXME').locator('img')).toBeVisible();
         await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
 
         await reopenPicture(page);
