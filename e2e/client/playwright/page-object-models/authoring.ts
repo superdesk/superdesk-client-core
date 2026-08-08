@@ -119,6 +119,17 @@ export class Authoring {
     }
 
     /**
+     * The sidebar tab of a widget, matched on the label in its `data-test-value`.
+     *
+     * The label is not the tab's text: the tab renders icons and a badge only and carries
+     * its label in `title` (`authoring-widgets.html`), so it cannot be filtered by text.
+     */
+    private widgetTab(label: string): Locator {
+        return this.page.getByTestId('authoring-widget')
+            .and(this.page.locator(`[data-test-value="${label}"]`));
+    }
+
+    /**
      * Opens a widget in the authoring sidebar by its label and returns its panel.
      *
      * The tab and the panel are keyed by the same label (`widget.label` lands in
@@ -126,9 +137,10 @@ export class Authoring {
      * name the widget twice.
      */
     async openWidget(label: string): Promise<Locator> {
-        const panel = this.page.locator(s(`authoring-widget-panel=${label}`));
+        const panel = this.page.getByTestId('authoring-widget-panel')
+            .and(this.page.locator(`[data-test-value="${label}"]`));
 
-        await this.page.locator(s(`authoring-widget=${label}`)).click();
+        await this.widgetTab(label).click();
         await expect(panel).toBeVisible();
 
         return panel;
@@ -142,10 +154,10 @@ export class Authoring {
      * authoring view that never rendered.
      */
     async closeWidget(label: string): Promise<void> {
-        await this.page.locator(s(`authoring-widget=${label}`)).click();
+        await this.widgetTab(label).click();
 
-        await expect(this.page.locator(s('navigation-tabs'))).toBeVisible();
-        await expect(this.page.locator(s('authoring-widget-panel'))).toHaveCount(0);
+        await expect(this.page.getByTestId('navigation-tabs')).toBeVisible();
+        await expect(this.page.getByTestId('authoring-widget-panel')).toHaveCount(0);
     }
 
     field(field: string): Locator {

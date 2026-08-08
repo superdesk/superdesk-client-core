@@ -1,7 +1,7 @@
 import {Locator, Page, expect, test} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {pressRepeatedly, restoreDatabaseSnapshot, s} from './utils';
+import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {getEditor3Field, getEditor3TextRun} from './utils/editor3';
 
 /**
@@ -155,15 +155,24 @@ async function addComment(page: Page, body: Locator, message: string): Promise<v
 }
 
 /**
- * Opens the detail popup of the comment on the trailing word by clicking that word.
+ * Clicks the uncommented half of the body and then the commented word, which is the pair
+ * that brings the comment popup up.
  *
  * On an article that was just opened, clicking the commented word does not bring the
  * popup up on its own, however many times it is clicked; the caret has to land elsewhere
  * in the field first, so that the click on the commented word moves it onto the
  * highlight. Placing the caret on the uncommented half every time keeps the helper
  * working in that state and in an article whose body was just typed.
+ */
+async function clickCommentedText(body: Locator): Promise<void> {
+    await getEditor3TextRun(body, PLAIN_TEXT).click();
+    await getEditor3TextRun(body, COMMENTED_TEXT).click();
+}
+
+/**
+ * Opens the detail popup of the comment on the trailing word.
  *
- * The pair is retried because the popup can also be taken down again a moment after it
+ * The click pair is retried because the popup can be taken down again a moment after it
  * opens: `HighlightsPopup` unmounts it from `componentDidUpdate` whenever the caret it
  * then sees is not on a highlight, and the editor3 field re-renders on its own for a
  * while after an edit.
@@ -172,12 +181,30 @@ async function openCommentPopup(page: Page, body: Locator): Promise<Locator> {
     const popup = getCommentPopup(page);
 
     await expect(async () => {
-        await getEditor3TextRun(body, PLAIN_TEXT).click();
-        await getEditor3TextRun(body, COMMENTED_TEXT).click();
+        await clickCommentedText(body);
         await expect(popup).toBeVisible({timeout: 2000});
     }).toPass({timeout: 30000});
 
     return popup;
+}
+
+/**
+ * Asserts the message of the comment on the trailing word, reopening the popup as often
+ * as it takes.
+ *
+ * Reach for it on an article that was just reopened, where `openCommentPopup` alone is
+ * not enough: editor3 resets its selection once more while it initializes, which drops
+ * the caret off the highlight and unmounts a popup that had already come up, so an
+ * assertion made after the helper returned finds it gone. Retrying the open together with
+ * the assertion is what survives that.
+ */
+async function expectCommentText(page: Page, body: Locator, message: string): Promise<void> {
+    const popup = getCommentPopup(page);
+
+    await expect(async () => {
+        await clickCommentedText(body);
+        await expect(popup.getByTestId('comment-text')).toHaveText(message, {timeout: 2000});
+    }).toPass({timeout: 30000});
 }
 
 /**
@@ -277,14 +304,16 @@ async function createArticleWithComment(page: Page, headline: string): Promise<L
 }
 
 async function loginAs(page: Page, username: string): Promise<void> {
+    const loginPage = page.getByTestId('login-page');
+
     await page.goto('/');
 
     // every user in the `main` snapshot with a known password uses the username as one
-    await page.locator(s('login-page', 'username')).fill(username);
-    await page.locator(s('login-page', 'password')).fill(username);
-    await page.locator(s('login-page', 'submit')).click();
+    await loginPage.getByTestId('username').fill(username);
+    await loginPage.getByTestId('password').fill(username);
+    await loginPage.getByTestId('submit').click();
 
-    await expect(page.locator(s('dashboard'))).toBeVisible();
+    await expect(page.getByTestId('dashboard')).toBeVisible();
 }
 
 test('adding an inline comment to the body, and the comment surviving a reopen', {
@@ -357,9 +386,7 @@ test('adding an inline comment to the body, and the comment surviving a reopen',
     await expect(getEditor3TextRun(body, COMMENTED_TEXT)).toHaveCSS('background-color', highlightColor);
     await expect(getEditor3TextRun(body, PLAIN_TEXT)).toHaveCSS('background-color', NO_BACKGROUND);
 
-    const reopenedPopup = await openCommentPopup(page, body);
-
-    await expect(reopenedPopup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT);
+    await expectCommentText(page, body, COMMENT_TEXT);
 });
 
 test('editing an inline comment from its detail popup, and the edit surviving a reopen', {
@@ -410,9 +437,7 @@ test('editing an inline comment from its detail popup, and the edit surviving a 
 
     await monitoring.getArticleLocator(headline).dblclick();
 
-    const reopenedPopup = await openCommentPopup(page, body);
-
-    await expect(reopenedPopup.getByTestId('comment-text')).toHaveText(EDITED_COMMENT_TEXT);
+    await expectCommentText(page, body, EDITED_COMMENT_TEXT);
 });
 
 test('deleting an inline comment through its confirmation dialog', {
@@ -576,11 +601,22 @@ test('listing inline comments in the widget, and resolving one moving it across 
     await expect(reopenedWidget.getByTestId('inline-comments-group')).toHaveCount(1);
     await expect(resolved).toHaveCount(1);
     await expect(resolved).toContainText(COMMENT_TEXT);
+    await expect(resolved.getByTestId('inline-comment-reply')).toHaveCount(1);
+    await expect(resolved.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
     await expect(resolved.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
     await expect(resolved.getByTestId('resolution')).toContainText('Resolved by John Doe');
 
     await reopenedWidget.getByTestId('filter-unresolved').click();
     await expect(reopenedWidget.getByTestId('no-comments')).toBeVisible();
+
+    // back through the Resolved control itself: the assertions above reach the resolved
+    // list through the filter the controller seeds, never through the radio
+    await reopenedWidget.getByTestId('filter-resolved').click();
+    await expect(resolved).toHaveCount(1);
+    await expect(resolved).toContainText(COMMENT_TEXT);
+    await expect(resolved.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
+    await expect(resolved.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
+    await expect(resolved.getByTestId('resolution')).toContainText('Resolved by John Doe');
 
     await authoring.close();
 
@@ -609,7 +645,7 @@ test('notifying a user mentioned in an inline comment, who opens the article and
 
     await expect(headlineField).toBeVisible();
     await headlineField.fill(headline);
-    await page.locator(s('authoring', 'field-slugline')).fill(slugline);
+    await page.getByTestId('authoring').getByTestId('field-slugline').fill(slugline);
 
     const body = await typeBody(page);
     const dialog = getCommentDialog(page);

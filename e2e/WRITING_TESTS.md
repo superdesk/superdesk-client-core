@@ -235,7 +235,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`.
+`editor3-formats`, `editor3-comments`, `authoring-extras`,
+`saved-search-private`.
 
 ### The `media-items` snapshot
 
@@ -295,6 +296,20 @@ are a different component again, found with `getByRole('button', {name})`.
 
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
+
+### The `editor3-comments` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-comments'})` gives you `main`
+plus `comments` in the Story profile's `body_html` format options, which is what
+puts the Comment button on the editor3 toolbar and makes inline comments
+reachable at all. Nothing else changes, so item counts and every other profile
+match `main`.
+
+Reach for it for any spec about inline comments: adding, editing, replying,
+resolving, the Inline comments widget, the mention notification. No content
+profile in `main` or in any other record based on it enables the option, and the
+only other snapshot that does is `legacy`, whose separate user database rules out
+a two-user flow.
 
 ### The `authoring-extras` snapshot
 
