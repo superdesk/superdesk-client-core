@@ -28,9 +28,11 @@ import {
  *   asserted to carry the family.
  */
 
-// Every test drives two full save/close/reopen round-trips, one for the body and one for
-// the custom field, which does not fit the default per-test budget.
-test.setTimeout(90000);
+// Every test restores a snapshot, boots the app and drives two full save/close/reopen
+// round-trips, one for the body and one for the custom field, which does not fit the default
+// per-test budget. The budget is well clear of the assertion timeouts inside those steps, so
+// that a slow step fails on its own assertion rather than as a generic test timeout.
+test.setTimeout(150000);
 
 test.describe('editor3 formatting styles', () => {
     const SNAPSHOT = {snapshotName: 'editor3-formats'};
@@ -136,13 +138,8 @@ test.describe('editor3 formatting styles', () => {
         await page.keyboard.type(CUSTOM_TEXT);
         await expectStyled(field, CUSTOM_TEXT, true);
 
-        // editor3 pushes a field change into the authoring model on a debounce, and the
-        // rendered text is ahead of it. Closing before it lands closes the article outright,
-        // with neither the "Save changes?" prompt nor the change. The topbar Save button
-        // leaving its disabled state is that model update becoming observable.
-        await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
-
-        await authoring.closeAndSave();
+        await authoring.save();
+        await authoring.close();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(input).toBeVisible();
@@ -158,7 +155,12 @@ test.describe('editor3 formatting styles', () => {
 
         await restoreDatabaseSnapshot(SNAPSHOT);
         await openMonitoring(page, headline);
-        await runEditor3InlineStyleToggleScenario(page, {styleName, headline, expectStyled});
+        await runEditor3InlineStyleToggleScenario(page, {
+            styleName,
+            headline,
+            expectStyled,
+            alreadyOnMonitoring: true,
+        });
         await toggleStyleOnCustomField(page, {
             styleName,
             headline,
@@ -295,7 +297,8 @@ test.describe('editor3 formatting styles', () => {
         await expect(preButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectPreformatted(body, PRE_HEAD + PRE_TAIL, false);
 
-        await authoring.closeAndSave();
+        await authoring.save();
+        await authoring.close();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();
@@ -411,7 +414,8 @@ test.describe('editor3 formatting styles', () => {
         // the body's own marks as they were.
         await expectFormattingMarks(body, PARAGRAPHS.length, true);
 
-        await authoring.closeAndSave();
+        await authoring.save();
+        await authoring.close();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();

@@ -72,6 +72,40 @@ export class Authoring {
     }
 
     /**
+     * Saves through the topbar Save button and waits for the save to finish, leaving the
+     * article open and clean.
+     *
+     * Reach for it before closing when the last edit was made in an editor3 field. editor3
+     * pushes a field change into the authoring model on a debounce (100ms by default), and
+     * a close that beats the debounce closes the article as it was before that edit. The
+     * Save button is enabled only while the model carries unsaved changes, and `saveTopbar()`
+     * waits 600ms before reading the item, which outlasts the debounce.
+     */
+    async save(): Promise<void> {
+        const save = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const saving = save.getByTestId('loading-indicator');
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        await expect(saving).toBeVisible();
+        await expect(saving).toBeHidden();
+        await expect(save).toBeDisabled();
+    }
+
+    /**
+     * Closes an article that holds no unsaved changes, so closing raises no "Save changes?"
+     * prompt. Pair it with `save()`, which leaves the article in exactly that state; on an
+     * edited article use `closeAndSave()` instead.
+     */
+    async close(): Promise<void> {
+        const topbar = this.page.getByTestId('authoring-topbar');
+
+        await topbar.getByTestId('close').click();
+        await expect(topbar).toBeHidden();
+    }
+
+    /**
      * Closes the article and saves through the "Save changes?" prompt that closing an
      * edited article raises, which both persists the changes and closes the article.
      * The prompt's Save is scoped to the dialog so it does not collide with the topbar
