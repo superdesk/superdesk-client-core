@@ -31,15 +31,16 @@ test.setTimeout(60000);
  * control itself, so the spec asserts the toggle's state and that its value reaches the
  * export request.
  *
- * `media-items` rather than `main`, because "Export is available for text items only"
- * needs a non-text item and `main` carries none.
+ * "Export is available for text items only" needs a non-text item; the `main` snapshot's
+ * only one is `Package Highlight 1` (type `composite`), in Sports / Working Stage next to
+ * the text item this case exports.
  */
 test('exporting a text item as NINJS from the monitoring 3-dot menu', {
     annotation: [
         {type: 'confluence', description: '1311835225 complete'}, // Export article (AUTOMATED)
     ],
 }, async ({page}) => {
-    await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+    await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
     const exportDialog = new ExportDialog(page);
@@ -56,19 +57,21 @@ test('exporting a text item as NINJS from the monitoring 3-dot menu', {
 
     const workingStage = page.getByTestId('monitoring-group')
         .and(page.locator('[data-test-value="Sports / Working Stage"]'));
-    const textItem = workingStage.getByTestId('article-item').filter({hasText: 'test sports story'});
-    const pictureItem = workingStage.getByTestId('article-item').filter({hasText: 'Rivendell picture'});
+    const textItem = workingStage.getByTestId('article-item')
+        .and(page.locator('[data-test-value="test sports story"]'));
+    const packageItem = workingStage.getByTestId('article-item')
+        .and(page.locator('[data-test-value="Package Highlight 1"]'));
 
     await expect(textItem).toBeVisible();
-    await expect(pictureItem).toBeVisible();
+    await expect(packageItem).toBeVisible();
 
-    await test.step('Export is offered on the text item and withheld from the picture', async () => {
-        const pictureMenu = await monitoring.openActionsMenu(pictureItem);
+    await test.step('Export is offered on the text item and withheld from the package', async () => {
+        const packageMenu = await monitoring.openActionsMenu(packageItem);
 
         // toHaveCount(0) would pass just as well on a mis-targeted locator, so anchor
-        // on an action the picture does offer before asserting that Export is absent.
-        await expect(pictureMenu.getByRole('button', {name: 'Edit', exact: true})).toBeVisible();
-        await expect(pictureMenu.getByRole('button', {name: 'Export', exact: true})).toHaveCount(0);
+        // on an action the package does offer before asserting that Export is absent.
+        await expect(packageMenu.getByRole('button', {name: 'Edit', exact: true})).toBeVisible();
+        await expect(packageMenu.getByRole('button', {name: 'Export', exact: true})).toHaveCount(0);
 
         await monitoring.closeActionsMenu();
 
