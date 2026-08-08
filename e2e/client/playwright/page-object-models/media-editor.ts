@@ -18,7 +18,7 @@ export class MediaEditor {
      * `sd-line-input--required` class that draws the red star on the label.
      */
     fieldContainer(field: string): Locator {
-        return this.page.locator(s('media-metadata-editor', field));
+        return this.page.getByTestId('media-metadata-editor').getByTestId(field);
     }
 
     async saveMetadata(): Promise<void> {

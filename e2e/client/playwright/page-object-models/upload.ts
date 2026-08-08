@@ -12,10 +12,10 @@ const TEST_FILE_DIR = path.resolve(__dirname, '..', '..', 'test-files');
 
 /**
  * Repo-root `fixtures/` is the Karma unit-test asset directory (`karma.conf.js`
- * serves `fixtures/**` to the unit tests), and the only place in the repo holding
- * non-image media: `empty_metadata.mov` and `audio.wav` live there, while
- * `test-files` carries images. Non-image upload sources are taken from it rather
- * than copied into a second directory.
+ * serves `fixtures/**` to the unit tests). It already carries image and video
+ * sources with and without embedded metadata, so the upload specs read those from
+ * here rather than copying a second set into `test-files`. Anything the specs need
+ * that is not already there belongs in `test-files`, not in this directory.
  */
 const FIXTURE_DIR = path.resolve(__dirname, '..', '..', '..', '..', 'fixtures');
 

@@ -1,10 +1,17 @@
 import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
-import {MediaUpload, IUploadFile, mediaFixture, testFile} from './page-object-models/upload';
+import {MediaUpload} from './page-object-models/upload';
 import {MediaEditor} from './page-object-models/media-editor';
 import {restoreDatabaseSnapshot} from './utils';
 import {setEditor3FieldValue} from './utils/editor3';
 import {
+    AUDIO_FILE,
+    AUDIO_FILES,
+    IMAGE_FILES,
+    MIXED_FILES,
+    NOT_MEDIA_FILE,
+    VIDEO_FILE,
+    VIDEO_FILES,
     expectEmptyUploadScreen,
     expectErrorNotification,
     expectFilesReadyToUpload,
@@ -33,6 +40,12 @@ import {
  * The per-file progress circle is covered in the mixed-media test, which is why the
  * other five cases are annotated on it too.
  *
+ * A case id therefore appears on several tests at two levels, and the level is a
+ * statement about the case across all of them rather than about the test it is
+ * written on: `complete` marks the one test that adds what the case still needed,
+ * `partial` every other test that contributes to it. No single test here covers all
+ * of a case's expected results on its own.
+ *
  * "Upload a single image by drag and drop" (1315931215) is covered by
  * upload-media-drag-and-drop.spec.ts and is not repeated here.
  *
@@ -46,36 +59,6 @@ import {
  */
 
 test.setTimeout(120000);
-
-const IMAGE_FILES = [
-    testFile('image-red.jpg', 'image/jpeg'),
-    testFile('image-green.jpg', 'image/jpeg'),
-];
-
-/**
- * The repo ships one audio file and one metadata-free video. Two payloads over the
- * same fixture, named apart, are what makes a drop a multi-file drop: the screen
- * keeps one item per name.
- */
-const AUDIO_FILES = ['first-audio.wav', 'second-audio.wav']
-    .map((name) => mediaFixture('audio.wav', 'audio/wav', name));
-
-const VIDEO_FILES = ['first-video.mov', 'second-video.mov']
-    .map((name) => mediaFixture('empty_metadata.mov', 'video/quicktime', name));
-
-/**
- * One file per media type the upload screen accepts. The fixtures without embedded
- * metadata are used throughout: `metadata.jpg` and `metadata.mov` carry IPTC/XMP
- * that the screen maps onto headline and description, which would both prefill the
- * editor and hide the refusal of an empty required field.
- */
-const MIXED_FILES: Array<IUploadFile> = [
-    mediaFixture('empty_metadata.jpg', 'image/jpeg'),
-    mediaFixture('audio.wav', 'audio/wav'),
-    mediaFixture('empty_metadata.mov', 'video/quicktime'),
-];
-
-const NOT_MEDIA_FILE = testFile('not-a-media-file.txt', 'text/plain');
 
 const DRAG_AND_DROP_CASES = [
     {type: 'confluence', description: '1315931217 partial'}, // Upload multiple images by drag and drop
@@ -234,7 +217,7 @@ test('uploads a single dropped audio file to the selected desk', {
     await openUploadScreen(page);
     await expectEmptyUploadScreen(page);
 
-    await new MediaUpload(page).dropFiles([mediaFixture('audio.wav', 'audio/wav')]);
+    await new MediaUpload(page).dropFiles([AUDIO_FILE]);
 
     await expectFilesReadyToUpload(page, 1);
     await expectPendingItemTypes(page, {'icon-audio': 1});
@@ -255,7 +238,7 @@ test('uploads a single dropped video file to the selected desk', {
     await openUploadScreen(page);
     await expectEmptyUploadScreen(page);
 
-    await new MediaUpload(page).dropFiles([mediaFixture('empty_metadata.mov', 'video/quicktime')]);
+    await new MediaUpload(page).dropFiles([VIDEO_FILE]);
 
     await expectFilesReadyToUpload(page, 1);
     await expectPendingItemTypes(page, {'icon-video': 1});

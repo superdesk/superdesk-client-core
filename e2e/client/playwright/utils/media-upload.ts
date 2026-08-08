@@ -1,16 +1,50 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {Monitoring} from '../page-object-models/monitoring';
-import {MediaUpload} from '../page-object-models/upload';
+import {IUploadFile, MediaUpload, mediaFixture, testFile} from '../page-object-models/upload';
 import {MediaEditor} from '../page-object-models/media-editor';
 import {Authoring} from '../page-object-models/authoring';
 import {setEditor3FieldValue} from './editor3';
 
 /**
- * Helpers shared by the two media upload specs. The QA cases behind them document
- * one and the same set of expected results for every media type and for both ways
- * of adding files, so everything except adding the files themselves is written
- * once here and the specs stay a list of what each case adds.
+ * Helpers and upload payloads shared by the two media upload specs. The QA cases
+ * behind them document one and the same set of expected results for every media
+ * type and for both ways of adding files, so everything except adding the files
+ * themselves is written once here and the specs stay a list of what each case adds.
  */
+
+/**
+ * The upload sources without embedded metadata are used throughout: `metadata.jpg`
+ * and `metadata.mov` carry IPTC/XMP that the screen maps onto headline and
+ * description, which would both prefill the editor and hide the refusal of an empty
+ * required field.
+ */
+export const AUDIO_FILE = testFile('audio.wav', 'audio/wav');
+export const VIDEO_FILE = mediaFixture('empty_metadata.mov', 'video/quicktime');
+
+export const IMAGE_FILES = [
+    testFile('image-red.jpg', 'image/jpeg'),
+    testFile('image-green.jpg', 'image/jpeg'),
+];
+
+/**
+ * The repo ships one audio file and one metadata-free video. Two payloads over the
+ * same source, named apart, are what makes a set of files a multi-file upload: the
+ * screen keeps one item per name.
+ */
+export const AUDIO_FILES = ['first-audio.wav', 'second-audio.wav']
+    .map((name) => testFile('audio.wav', 'audio/wav', name));
+
+export const VIDEO_FILES = ['first-video.mov', 'second-video.mov']
+    .map((name) => mediaFixture('empty_metadata.mov', 'video/quicktime', name));
+
+/** One file per media type the upload screen accepts. */
+export const MIXED_FILES: Array<IUploadFile> = [
+    mediaFixture('empty_metadata.jpg', 'image/jpeg'),
+    AUDIO_FILE,
+    VIDEO_FILE,
+];
+
+export const NOT_MEDIA_FILE = testFile('not-a-media-file.txt', 'text/plain');
 
 /** The desk the Upload media screen is opened from, and which nothing is uploaded to. */
 const SOURCE_DESK = 'Sports';
@@ -301,9 +335,20 @@ async function uploadWithProgressCircles(page: Page, fileCount: number): Promise
     const releaseUploads = await upload.holdArchiveRequests('POST', fileCount);
     const releaseMetadataUpdates = await upload.holdArchiveRequests('PATCH', fileCount);
 
-    await upload.startUpload();
+    /*
+     * `startUpload` returns on the click, and the screen then goes through
+     * validation and an async `api.archive.getUrl()` before the first file leaves
+     * the page. Waiting for that request is what makes the assertion below say
+     * something: an upload is under way and, because every response is held, not one
+     * item has left zero progress yet.
+     */
+    const firstUploadSent = page.waitForRequest(
+        (request) => request.method() === 'POST' && request.url().includes('/api/archive'),
+    );
 
-    // no file has been answered yet, so no item has left zero progress
+    await upload.startUpload();
+    await firstUploadSent;
+
     await expect(upload.getProgressIndicators()).toHaveCount(0);
 
     for (const index of Array(fileCount).keys()) {
