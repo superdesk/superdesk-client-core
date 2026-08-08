@@ -2,7 +2,7 @@ import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {runEditor3InlineStyleToggleScenario} from './scenarios/editor3-inline-style';
-import {dismissSessionExpiry, pressRepeatedly, restoreDatabaseSnapshot} from './utils';
+import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
     getEditor3Field,
@@ -93,10 +93,9 @@ test.describe('editor3 formatting styles', () => {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');
-        await dismissSessionExpiry(page);
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        await expect(monitoring.getArticleLocator('test sports story').first()).toBeVisible();
+        await expect(monitoring.getArticleLocator('test sports story')).toBeVisible();
         await expect(monitoring.getArticleLocator(headline)).toHaveCount(0);
     }
 
@@ -140,8 +139,7 @@ test.describe('editor3 formatting styles', () => {
         await page.keyboard.type(CUSTOM_TEXT);
         await expectStyled(field, CUSTOM_TEXT, true);
 
-        await authoring.save();
-        await authoring.close();
+        await authoring.closeAndSave();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(input).toBeVisible();
@@ -156,13 +154,7 @@ test.describe('editor3 formatting styles', () => {
         const {styleName, headline, expectStyled} = options;
 
         await restoreDatabaseSnapshot(SNAPSHOT);
-        await openMonitoring(page, headline);
-        await runEditor3InlineStyleToggleScenario(page, {
-            styleName,
-            headline,
-            expectStyled,
-            alreadyOnMonitoring: true,
-        });
+        await runEditor3InlineStyleToggleScenario(page, {styleName, headline, expectStyled});
         await toggleStyleOnCustomField(page, {
             styleName,
             headline,
@@ -299,8 +291,7 @@ test.describe('editor3 formatting styles', () => {
         await expect(preButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectPreformatted(body, PRE_HEAD + PRE_TAIL, false);
 
-        await authoring.save();
-        await authoring.close();
+        await authoring.closeAndSave();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();
@@ -332,7 +323,27 @@ test.describe('editor3 formatting styles', () => {
     // in `--sd-colour-interactive`, the blue the case names. Pseudo-elements are not
     // locatable, so their computed style is read in the page.
     const MARKER_GLYPH = '"\uE690"';
-    const MARKER_COLOUR = 'rgb(64, 153, 191)';
+
+    /**
+     * Resolves `--sd-colour-interactive` to the `rgb()` form a computed style reports, by
+     * painting a probe element with it and letting the browser convert. The token is
+     * declared as `hsla()` in superdesk-ui-framework, so a literal in the spec would be a
+     * manual conversion that a token change turns into an opaque colour mismatch.
+     */
+    function getInteractiveColour(page: Page): Promise<string> {
+        return page.evaluate(() => {
+            const probe = document.createElement('span');
+
+            probe.style.color = 'var(--sd-colour-interactive)';
+            document.body.appendChild(probe);
+
+            const colour = window.getComputedStyle(probe).color;
+
+            probe.remove();
+
+            return colour;
+        });
+    }
 
     function getBlockMarkers(field: Locator): Promise<Array<string>> {
         return field.locator('[data-block="true"]').evaluateAll(
@@ -374,10 +385,12 @@ test.describe('editor3 formatting styles', () => {
         await expect(marksButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectFormattingMarks(body, 1, false);
 
+        const interactiveColour = await getInteractiveColour(page);
+
         await marksButton.click();
         await expect(marksButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectFormattingMarks(body, 1, true);
-        await expect.poll(() => getBlockMarkerColour(body)).toBe(MARKER_COLOUR);
+        await expect.poll(() => getBlockMarkerColour(body)).toBe(interactiveColour);
 
         for (const [index, paragraph] of PARAGRAPHS.entries()) {
             if (index > 0) {
@@ -416,8 +429,7 @@ test.describe('editor3 formatting styles', () => {
         // the body's own marks as they were.
         await expectFormattingMarks(body, PARAGRAPHS.length, true);
 
-        await authoring.save();
-        await authoring.close();
+        await authoring.closeAndSave();
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();

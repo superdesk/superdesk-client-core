@@ -105,6 +105,19 @@ export class Authoring {
         await expect(topbar).toBeHidden();
     }
 
+    /**
+     * Persists the open article and closes it.
+     *
+     * It saves through the topbar first so that closing raises no "Save changes?" prompt.
+     * Answering that prompt is not reliable under load: the click can be taken while the
+     * article stays open, and on an article that has never been saved every accepted
+     * prompt creates the item again.
+     */
+    async closeAndSave(): Promise<void> {
+        await this.save();
+        await this.close();
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }

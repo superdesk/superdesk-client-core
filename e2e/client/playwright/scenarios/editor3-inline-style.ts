@@ -1,7 +1,7 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {Authoring} from '../page-object-models/authoring';
 import {Monitoring} from '../page-object-models/monitoring';
-import {dismissSessionExpiry, pressRepeatedly} from '../utils';
+import {pressRepeatedly} from '../utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
     getEditor3Field,
@@ -28,12 +28,6 @@ export interface Editor3InlineStyleScenario {
      * is the Draft.js leaf, which is the element the inline style is applied to.
      */
     expectStyled: (run: Locator, styled: boolean) => Promise<void>;
-
-    /**
-     * Set when the caller has already opened the Sports monitoring view, so the scenario
-     * starts from creating the article instead of loading the app a second time.
-     */
-    alreadyOnMonitoring?: boolean;
 }
 
 /**
@@ -44,24 +38,20 @@ export interface Editor3InlineStyleScenario {
  *
  * Every per-style case (italic, underline, strikethrough, ...) walks this same
  * choreography and differs only in which toolbar button it presses and how the style is
- * read back off the DOM, so a spec supplies just those two. Per-style specs written
- * before this module carry their own inline copy of the flow.
+ * read back off the DOM, so a spec supplies just those two. `editor3.bold.spec.ts`
+ * predates this module and still carries its own inline copy of the flow.
  *
  * The caller is responsible for `restoreDatabaseSnapshot()`.
  */
 export async function runEditor3InlineStyleToggleScenario(
     page: Page,
-    {styleName, headline, expectStyled, alreadyOnMonitoring}: Editor3InlineStyleScenario,
+    {styleName, headline, expectStyled}: Editor3InlineStyleScenario,
 ): Promise<void> {
     const authoring = new Authoring(page);
     const monitoring = new Monitoring(page);
 
-    if (alreadyOnMonitoring !== true) {
-        await page.goto('/#/workspace/monitoring');
-        await dismissSessionExpiry(page);
-        await monitoring.selectDeskOrWorkspace('Sports');
-    }
-
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.createArticleFromDefaultTemplate();
 
     const headlineField = page.getByTestId('field--headline').getByRole('textbox');
@@ -115,8 +105,7 @@ export async function runEditor3InlineStyleToggleScenario(
     await expectStyled(run(STYLED_TAIL), false);
     await expectStyled(run(STYLED_HEAD), true);
 
-    await authoring.save();
-    await authoring.close();
+    await authoring.closeAndSave();
 
     await monitoring.getArticleLocator(headline).dblclick();
     await expect(bodyInput).toBeVisible();
