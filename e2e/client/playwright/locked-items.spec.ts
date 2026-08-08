@@ -1,12 +1,14 @@
 import {Browser, BrowserContext, Locator, Page, expect, test} from '@playwright/test';
+import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {Users} from './page-object-models/users';
 import {UserRolesSettings} from './page-object-models/settings/user-roles';
 import {loginAs, restoreDatabaseSnapshot} from './utils';
+import {dropArticle} from './utils/drag-and-drop';
 
 /**
- * QA cases about locked items: who may unlock one, and how the Unlock content
- * privilege is granted.
+ * QA cases about locked items: who may unlock one, how the Unlock content privilege
+ * is granted, and what publishing does when an item's association is locked.
  *
  * The base "Lock item" case (1308524847) is covered by `lock-item.spec.ts` and
  * is not repeated here. That spec could not reach the privilege branch of the
@@ -32,34 +34,74 @@ import {loginAs, restoreDatabaseSnapshot} from './utils';
  * reach the item at all. Using the same account either side of the grant also
  * makes the two positive tests harder to pass for the wrong reason.
  *
- * Parked: the seven publishing/correcting cases in this batch (1328906265,
- * 1328906267, 1328906291, 1328906297, 1328906307, 1328906312, 1328906320).
+ * The publishing and correcting cases in this batch all rest on one server-side
+ * gate. `e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True` (the
+ * `PUBLISH_ASSOCIATIONS=true` those cases ask for), which is what makes
+ * `_validate_associated_items` (`apps/publish/content/common.py`) check the locks on
+ * an item's associations and, for a package being published, on its members. It
+ * words the refusal by who holds the lock:
  *
- * Every one of them lists `PUBLISH_ASSOCIATIONS=true` as a prerequisite. The
- * setting is called `PUBLISH_ASSOCIATED_ITEMS` in superdesk-core, it defaults to
- * `False` in `superdesk/default_settings.py`, and `e2e/server/settings.py` does
- * not override it. The only publish-time lock validation in the backend is the
- * block guarded by `if get_config(bool, "PUBLISH_ASSOCIATED_ITEMS")` inside
- * `_validate_associated_items` (`apps/publish/content/common.py`), which is what
- * emits "packaged item is locked by ...". With the flag off, publishing or
- * correcting an item whose association is locked simply succeeds, so neither the
- * error message nor the documented "publishing does not go thru" outcome exists
- * to assert. Turning the flag on is not a spec-level change: it lives in the e2e
- * server settings that this branch's fixture base owns, and it would also switch
- * off `_raise_if_unpublished_related_items` for the whole suite.
+ * - held by anyone but the publisher: "<headline>: packaged item is locked by
+ *   another user"
+ * - held by the publisher: "<headline>: packaged item is locked by you. Unlock it
+ *   and try again"
  *
- * The feature-media and gallery cases additionally claim that a locked item
- * cannot be added to those fields. Neither drop handler
- * (`RelatedItemsDirective`, `ItemAssociationDirective`) inspects the lock, so
- * that guard does not exist in this client either.
+ * Only the first of those is reachable from the authoring UI, and it is what both
+ * tests assert. Case 1328906291 is the one that asks for the second: it wants an item
+ * "locked by you or another user", and the by-you half is refused the same way. The
+ * validator compares the association's `lock_user` against the *publishing item's*
+ * `lock_user`, and the client releases that lock before it sends the publish request:
+ * the send/publish pane routes through `$scope.beforeSend`, whose own docstring is
+ * "makes sure to unlock the item" (`AuthoringDirective`). The publishing item therefore
+ * always arrives unlocked, and any locked association compares unequal. The package
+ * test takes the lock as the publisher precisely to pin that down.
+ *
+ * The backend returns those in `_issues['validator exception']`; `scripts/api/article.ts`
+ * strips the brackets, splits on commas and raises one error notification per piece.
+ * No case quotes that wording. They quote a heading ("The following items that you
+ * are trying to publish are locked:") and, for the related-item cases, a footer
+ * ("Unlock them first and then continue."). Neither string exists in this client or
+ * in superdesk-core, so the tests assert what the product actually says.
+ *
+ * Case 1328906297 stays `partial` over one expected result: it claims the scenario
+ * works the same whether the image was uploaded from a folder or dragged in from
+ * Superdesk, and only the drag is driven here. The upload entry point itself belongs
+ * to case 1310851132.
+ *
+ * Still parked, one reason per case:
+ *
+ * - 1328906265 and 1328906267 (related items) need a related-content custom field.
+ *   No committed snapshot has one: `main` carries no vocabulary with a `field_type`
+ *   at all, and its Story profile has no related-content entry, so the field cannot
+ *   render.
+ * - 1328906307 and 1328906320 (gallery) need the same kind of field with
+ *   `multiple_items` enabled. The only one in the committed snapshots is "Image
+ *   gallery 33" on `legacy`'s editor3 profile, and `legacy` has neither of the
+ *   second actors these tests lock with.
+ * - 1328906312 (correcting a package) describes behaviour the product does not
+ *   have. A package keeps its members in `groups`, not in `associations`, and
+ *   `_validate_associated_items` only adds `get_residrefs(original_item)` to the
+ *   items it checks when `self.publish_type == ITEM_PUBLISH`, so a correction of a
+ *   package whose member is locked is not refused.
  */
 
-// Two Superdesk sessions plus a snapshot restore do not fit the 30s default.
-test.setTimeout(120000);
+// Two Superdesk sessions plus a snapshot restore do not fit the 30s default, and the
+// publishing tests add several lock and publish round trips on top of that.
+test.setTimeout(180000);
 
 const ARTICLE = 'test sports story';
+const PICTURE = 'Rivendell picture';
+const PACKAGE = 'Package Highlight 1';
+const PACKAGED_STORY = 'Story 3';
+const SPORTS_DESK_OUTPUT = 'Sports desk output';
 const LOCK_OWNER_NAME = 'John Doe';
 const UNLOCK_PRIVILEGE = 'unlock';
+
+/**
+ * Clicking a notification that has already removed itself is an accepted outcome, so
+ * the click is given just enough time to land rather than a full assertion budget.
+ */
+const NOTIFICATION_CLICK_TIMEOUT_MS = 2000;
 
 /**
  * `samgamgee` holds the `Sub Editor` role, which grants `archive` but sets
@@ -377,22 +419,332 @@ test.describe('unlocking an item locked by another user', () => {
     });
 });
 
-/*
- * Placeholder so the parked publishing/correcting cases of this batch are
- * machine-readable next to the ones that are covered, instead of living only in
- * the file docstring. See that docstring for why they cannot be asserted.
+interface ILockingSession {
+    context: BrowserContext;
+    lock: () => Promise<void>;
+    unlock: () => Promise<void>;
+}
+
+/**
+ * A second Superdesk session that can take and release the lock on `headline`, which
+ * is the state every publish attempt below is refused over.
+ *
+ * Without an `actor` the context keeps the committed storageState and so locks as the
+ * same user the test publishes as. Passing an actor forces a clean context that
+ * authenticates as somebody else. Both end up refused as "locked by another user";
+ * see the file docstring for why the lock owner makes no difference here.
  */
-test.fixme('publishing or correcting an item that has a locked association', {
+async function openLockingSession(
+    browser: Browser,
+    headline: string,
+    actor?: {username: string; password: string},
+): Promise<ILockingSession> {
+    const context = actor == null
+        ? await browser.newContext()
+        : await browser.newContext({storageState: undefined});
+
+    /*
+     * The caller can only close this context once the session is handed back, so
+     * anything that throws before the return has to close it here. Contexts made from
+     * the `browser` fixture are not auto-closed until the worker ends, and a leaked one
+     * means a live second Superdesk session holding a lock into every later test.
+     */
+    try {
+        const page = await context.newPage();
+        const monitoring = new Monitoring(page);
+
+        if (actor != null) {
+            await loginAs(page, actor.username, actor.password);
+        }
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const item = monitoring.getArticleLocator(headline);
+
+        await expect(item).toBeVisible();
+
+        // the list item's DOM id is the article id, which is what the lock and unlock
+        // requests are matched on below
+        const itemId = await item.evaluate((element) => element.id);
+
+        return {
+            context,
+            lock: async () => {
+                // the lock is what the publishing session has to see, so the request
+                // that takes it is awaited rather than the editor it opens
+                const [response] = await Promise.all([
+                    page.waitForResponse((r) => r.request().method() === 'POST'
+                        && new URL(r.url()).pathname.endsWith(`/archive/${itemId}/lock`)),
+                    monitoring.executeActionOnMonitoringItem(item, 'Edit'),
+                ]);
+
+                expect(response.status()).toBe(201);
+            },
+            unlock: async () => {
+                const [response] = await Promise.all([
+                    page.waitForResponse((r) => r.request().method() === 'POST'
+                        && new URL(r.url()).pathname.endsWith(`/archive/${itemId}/unlock`)),
+                    page.getByTestId('authoring-topbar').getByTestId('close').click(),
+                ]);
+
+                expect(response.status()).toBe(201);
+            },
+        };
+    } catch (error) {
+        await context.close();
+
+        throw error;
+    }
+}
+
+/**
+ * Asserts an error notification came up, then waits for it to be gone.
+ *
+ * Only the first assertion states product behaviour. The rest is synchronisation:
+ * notifications stack in the top right corner, over the send/publish pane, where they
+ * can swallow the next click on Publish. Clicking one removes it (`removeMessage` in
+ * scripts/core/notify/notify.tsx); the product removes an error notification on its
+ * own after 8 seconds, so a click that finds nothing left is the same outcome.
+ */
+async function expectErrorNotification(page: Page, message: string): Promise<void> {
+    const notification = page.getByTestId('notifications').getByTestId('notification--error')
+        .filter({hasText: message});
+
+    await expect(notification).toBeVisible();
+
+    await notification.click({timeout: NOTIFICATION_CLICK_TIMEOUT_MS}).catch(() => undefined);
+
+    await expect(notification).toBeHidden();
+}
+
+/**
+ * Opens the send/publish pane of the article on screen and hands back the panel, so a
+ * test can click Publish more than once without the second click toggling the pane
+ * shut instead.
+ */
+async function openPublishPane(page: Page): Promise<Locator> {
+    const authoring = page.getByTestId('authoring');
+
+    await authoring.getByTestId('open-send-publish-pane').click();
+
+    const panel = authoring.getByTestId('interactive-actions-panel');
+
+    await expect(panel.getByTestId('publish')).toBeEnabled();
+
+    return panel;
+}
+
+function deskOutputGroup(page: Page): Locator {
+    return page.getByTestId('monitoring-group')
+        .and(page.locator(`[data-test-value="${SPORTS_DESK_OUTPUT}"]`));
+}
+
+test.describe('publishing an item whose association is locked', () => {
+    test('an article whose Feature media item is locked by another user', {
+        annotation: [
+            // Publishing article with locked item in Feature media
+            {type: 'confluence', description: '1328906297 partial'},
+        ],
+    }, async ({page, browser}) => {
+        const authoring = new Authoring(page);
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const picture = monitoring.getArticleLocator(PICTURE);
+        const article = monitoring.getArticleLocator(ARTICLE);
+
+        await expect(picture).toBeVisible();
+
+        /*
+         * A list item's DOM id is the article id. The drop payload needs no more than
+         * that and the type, because `ContentService.dropItem` re-fetches the item from
+         * the API; the article's id is what its own save is matched on further down.
+         */
+        const pictureId = await picture.evaluate((element) => element.id);
+        const articleId = await article.evaluate((element) => element.id);
+        const lockOwner = await openLockingSession(browser, PICTURE, GRANTEE);
+
+        try {
+            await lockOwner.lock();
+
+            await monitoring.executeActionOnMonitoringItem(article, 'Edit');
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            const featureMedia = authoring.associationField('feature_media');
+            const placeholder = featureMedia.getByTestId('upload-placeholder');
+
+            await expect(placeholder).toBeVisible();
+
+            await dropArticle(placeholder, {_id: pictureId, type: 'picture'});
+
+            await expectErrorNotification(page, 'Item is locked. Cannot associate media item.');
+            await expect(featureMedia.getByTestId('association-image')).toHaveCount(0);
+            await expect(placeholder).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await dropArticle(placeholder, {_id: pictureId, type: 'picture'});
+
+            await expect(featureMedia.getByTestId('association-image')).toBeVisible();
+
+            /*
+             * `AssociationController.addAssociation` passes `autosave` on for a dropped
+             * archive item, so the field's own write only reaches `archive_autosave`.
+             * The article is saved explicitly here so the association is on the item
+             * itself, which is what the publish below is validated against.
+             */
+            const saveButton = page.getByTestId('authoring-topbar').getByTestId('save');
+
+            await expect(saveButton).toBeEnabled();
+
+            const [articleSaved] = await Promise.all([
+                page.waitForResponse((r) => r.request().method() === 'PATCH'
+                    && new URL(r.url()).pathname.endsWith(`/archive/${articleId}`)),
+                saveButton.click(),
+            ]);
+
+            expect(articleSaved.status()).toBe(200);
+
+            await lockOwner.lock();
+
+            const publishPane = await openPublishPane(page);
+
+            await publishPane.getByTestId('publish').click();
+
+            await expectErrorNotification(page, `${PICTURE}: packaged item is locked by another user`);
+
+            // a publish that goes through closes authoring (`article.ts` calls
+            // `authoringWorkspace.close`), so the editor still being up is the refusal
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await publishPane.getByTestId('publish').click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+
+            /*
+             * The association is published alongside the article, which is what
+             * PUBLISH_ASSOCIATED_ITEMS buys in exchange for the lock validation: the
+             * picture leaves the working stage for the desk output group on its own.
+             * It does not get a publish queue entry of its own here, so only the
+             * article's is asserted below.
+             */
+            await expect(deskOutputGroup(page).getByTestId('article-item')
+                .filter({hasText: ARTICLE})).toHaveCount(1);
+            await expect(deskOutputGroup(page).getByTestId('article-item')
+                .filter({hasText: PICTURE})).toHaveCount(1);
+
+            await page.goto('/#/publish_queue');
+
+            await expect(page.getByTestId('publish-queue-item').filter({hasText: ARTICLE})).toHaveCount(1);
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
+
+    test('a package whose item the publisher has locked in a second session', {
+        annotation: [
+            {type: 'confluence', description: '1328906291 complete'}, // Publishing package with locked item
+        ],
+    }, async ({page, browser}) => {
+        const authoring = new Authoring(page);
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot();
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const packageItem = monitoring.getArticleLocator(PACKAGE);
+
+        await expect(packageItem).toBeVisible();
+
+        const packageId = await packageItem.evaluate((element) => element.id);
+
+        await monitoring.executeActionOnMonitoringItem(packageItem, 'Edit');
+        await expect(page.getByTestId('authoring')).toBeVisible();
+
+        await monitoring.executeSubmenuAction(
+            monitoring.getArticleLocator(ARTICLE),
+            'Add to current',
+            'main',
+            {innerByTestId: 'add-to-package-group=main'},
+        );
+
+        await expect(
+            page.getByTestId('authoring').getByTestId('package-items')
+                .and(page.locator(`[data-test-value="${ARTICLE}"]`)),
+        ).toBeVisible();
+
+        const [packageSaved] = await Promise.all([
+            page.waitForResponse((r) => r.request().method() === 'PATCH'
+                && new URL(r.url()).pathname.endsWith(`/archive/${packageId}`)),
+            page.getByTestId('authoring-topbar').getByTestId('save').click(),
+        ]);
+
+        expect(packageSaved.status()).toBe(200);
+
+        await authoring.close();
+
+        const lockOwner = await openLockingSession(browser, ARTICLE);
+
+        try {
+            await lockOwner.lock();
+
+            await monitoring.executeActionOnMonitoringItem(monitoring.getArticleLocator(PACKAGE), 'Edit');
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            const publishPane = await openPublishPane(page);
+
+            await publishPane.getByTestId('publish').click();
+
+            /*
+             * The lock is held by the publishing user, which is the case's own
+             * "locked by you" wording, and the product still says "another user":
+             * `beforeSend` released the package's own lock before the request, so the
+             * validator has nothing to recognise the lock owner as the publisher by.
+             */
+            await expectErrorNotification(page, `${ARTICLE}: packaged item is locked by another user`);
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await publishPane.getByTestId('publish').click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+
+            await expect(deskOutputGroup(page).getByTestId('article-item')
+                .filter({hasText: PACKAGE})).toHaveCount(1);
+            await expect(deskOutputGroup(page).getByTestId('article-item')
+                .filter({hasText: ARTICLE})).toHaveCount(1);
+            await expect(deskOutputGroup(page).getByTestId('article-item')
+                .filter({hasText: PACKAGED_STORY})).toHaveCount(1);
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
+});
+
+/*
+ * Placeholder so the cases of this batch that stay uncovered are machine-readable next
+ * to the ones that are covered, instead of living only in the file docstring. See that
+ * docstring for the reason behind each id.
+ */
+test.fixme('publishing or correcting related items, galleries and package corrections', {
     annotation: [
         {type: 'confluence', description: '1328906265 blocker'}, // Publishing article with related locked item
         {type: 'confluence', description: '1328906267 blocker'}, // Correcting article with related locked item
-        {type: 'confluence', description: '1328906291 blocker'}, // Publishing package with locked item
-        {type: 'confluence', description: '1328906297 blocker'}, // Publishing article with locked item in Feature media
         {type: 'confluence', description: '1328906307 blocker'}, // Publishing gallery with locked item
         {type: 'confluence', description: '1328906312 blocker'}, // Correcting package with locked item
         {type: 'confluence', description: '1328906320 blocker'}, // Correcting gallery with locked item
     ],
 }, async () => {
-    // PUBLISH_ASSOCIATED_ITEMS is off in `e2e/server/settings.py`, so the
-    // behaviour these cases describe does not exist on this stack.
+    // No snapshot carries a related-content or gallery field, and package members are
+    // not lock-validated on a correction.
 });

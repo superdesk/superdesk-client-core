@@ -76,6 +76,30 @@ export class Authoring {
     }
 
     /**
+     * An association field of the opened article (Feature media), addressed by the id
+     * the content profile knows it under.
+     *
+     * Association fields hold a placeholder button, a media figure and metadata
+     * inputs rather than a single control, so unlike `field` this returns the field
+     * itself and leaves picking what is inside it to the caller.
+     */
+    associationField(fieldId: string): Locator {
+        return this.page.getByTestId('authoring')
+            .getByTestId('authoring-field')
+            .and(this.page.locator(`[data-test-value="${fieldId}"]`));
+    }
+
+    /**
+     * Closes the opened article and waits for the editor to be gone, so that a following
+     * interaction with the monitoring list underneath does not race the closing pane.
+     */
+    async close(): Promise<void> {
+        await this.page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await expect(this.page.getByTestId('authoring')).toBeHidden();
+    }
+
+    /**
      * Opens the authoring-react "Save as template" modal, fills the name and saves.
      * Menu items render in a portal outside the actions wrapper, so locate them by
      * role/text rather than a test-id chain.

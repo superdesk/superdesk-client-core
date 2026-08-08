@@ -103,7 +103,9 @@
      sd-validation-error="error.feature_media"
      order="{{editor.feature_media.order}}"
      ng-attr-title="{{schema.feature_media.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.feature_media.required">
+     data-required="schema.feature_media.required"
+     data-test-id="authoring-field"
+     data-test-value="feature_media">
     <label class="field__label">{{label('feature_media')}}</label>
     <div sd-item-association
          ng-class="{'item-association--marg-b10': editor.feature_media.showCrops}"
