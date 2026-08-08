@@ -137,10 +137,13 @@ Exceptions that do need an explicit login:
 | `samgamgee`    | `samgamgee`    | Sam Gamgee    | Sports desk member with the `Sub Editor` role   |
 | `janedoe`      | (unknown)      | Jane Doe      | ordinary user, no desk, password never recorded |
 
-Use `frodobaggins` for anything that needs a second actor: a two-user lock or
-mark-for-user flow, or a permission check. It is the only non-admin account with
-a known password, and the only one on a desk, so it is the only one that can
-reach the Sports monitoring view.
+Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
+two-user lock or mark-for-user flow, or a permission check. Both have a known
+password (the password is the username) and both are members of the Sports desk,
+so both can reach the Sports monitoring view. What separates them is privileges:
+`frodobaggins` holds none at all, which is what makes it the negative half of a
+privilege test, while `samgamgee` carries the `Sub Editor` role and so holds
+*some*, but not `send_to_personal` or `unlock`.
 
 `frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
 field, so it holds **no** privileges at all. Keep it that way: do not assign a
@@ -154,9 +157,11 @@ holds some privileges but not others, add a separate user carrying a role or its
 own `privileges` rather than granting anything here, or the negative cases that
 rely on this account will start passing for the wrong reason.
 
-`samgamgee` is that separate user: same shape as `frodobaggins`, but it carries
-the `Sub Editor` role, so it is the account to reach for when a spec needs a user
-that holds *some* privileges. Its `active_privileges` are exactly the role's, and
+`samgamgee` is that separate user: same shape as `frodobaggins`, plus the
+`Sub Editor` role, a default `desk` of Sports and a `workspace:active` preference
+pointing at it (which is also a second reason the Sports desk cannot be deleted).
+It is the account to reach for when a spec needs a user that holds *some*
+privileges. Its `active_privileges` are exactly the role's, and
 `send_to_personal` and `unlock` are set to `0` there on purpose, so it covers the
 negative branch of those two while still being able to open the Sports monitoring
 view and edit items.
@@ -273,9 +278,16 @@ Format option names are the `RICH_FORMATTING_OPTION` strings from
 `scripts/core/superdesk-api.d.ts`, and several contain spaces: `ordered list`,
 `unordered list`, `formatting marks`. Preformatted text is `pre`.
 
-Toolbar buttons carry `data-test-id="formatting-option"` with the option name in
-`data-test-value`, so `s('editor3', 'formatting-option=strikethrough')` finds
-them. The formatting-marks button is the exception: the toolbar passes it the
+A toolbar button exposes two handles. The legacy one is
+`data-test-id="formatting-option"` with the option name in `data-test-value`, so
+`s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
+inner `<i>` icon rather than on the outer `<span>` that carries the click
+handler. The open editor3 campaign branches add
+`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
+that outer span and standardise on it in their `getFormattingOptionButton`
+helpers. Prefer that handle once those branches land.
+
+The formatting-marks button is the exception: the toolbar passes it the
 internal label `invisibles`, which has no entry in the option map, so
 `data-test-value` is absent and it has to be found by its
 `data-sd-tooltip="Toggle formatting marks"`. `link`, `embed`, `media` and `table`
@@ -294,6 +306,18 @@ only the spiked items have an expiry, so neither line is reachable there on an
 editable item. The date is far future on purpose: snapshot dates are absolute and
 are never relativised at restore, and an item past its expiry is a candidate for
 the content-expiry job.
+
+The keywords row is not labelled "Keywords". `metadata-widget.html` gives it the
+"Word Count" label, an upstream mislabel, and the row directly above it carries
+the same label under `ng-if="item.word_count"` and is the real word count, which
+`main` already renders. Locate the keywords row by position or by its content,
+never by its label.
+
+The recorded API write also re-versioned the item: `versioncreated` moved to
+2026-08-08 and `_current_version` went from 2 to 3. Under this snapshot "test
+sports story" therefore sorts to the top of Sports / Working Stage (monitoring
+sorts `versioncreated:desc`) and shows one version more than it does under
+`main`.
 
 Note that `expiry` is not writable through the archive API, it is derived from
 desk settings server-side. The value in this snapshot was set in mongo directly.
