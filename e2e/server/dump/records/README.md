@@ -1,6 +1,7 @@
 # Can easily be ported to main snapshot:
 
 * editor3-tables - adds tables formatting option to story content profile.
+* ordered-list - adds the `ordered list` formatting option to story/body_html content profile. A single `content_types` update event on top of `main`, so it does not carry the auth/activity churn a UI recording picks up.
 * custom-blocks - adds custom blocks to story/body_html content profile. Creates a new custom block vocabulary.
 * compare-fields - adds urls/boolean/manual-entry-dropdown custom fields and a populated dateline to the Story profile, with two article versions carrying differing values. Used to exercise the compare-versions and print-preview field rendering.
 * editor3-formats - the full editor3 toolbar on the Story profile. `body_html` gains every heading level, `strikethrough`, `subscript`, `superscript`, `pre`, `unordered list`, `ordered list` and `formatting marks` on top of the nine options `main` ships, and a custom editor3 text field "Sample rich text" (vocabulary `sample_rich_text`, `field_type: "text"`) is added to the content section with the same list. `main` carries no custom text field at all, so this is the only snapshot in which a formatting case can be repeated against one. Kept out of `main` for now because open specs assert `main`'s toolbar contents.

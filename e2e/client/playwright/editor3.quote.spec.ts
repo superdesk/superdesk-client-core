@@ -137,7 +137,7 @@ test.describe('quote formatting in the article body', () => {
         await expectQuote(body, TO_REGULAR_TEXT, false);
         await expectQuote(body, TO_QUOTE_TEXT, true);
 
-        await authoring.closeAndSave();
+        await authoring.closeSavingChanges();
 
         await monitoring.getArticleLocator(HEADLINE).dblclick();
         await expect(bodyInput).toBeVisible();
