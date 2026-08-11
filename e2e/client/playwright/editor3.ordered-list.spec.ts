@@ -115,8 +115,9 @@ test.describe('ordered list in the article body', () => {
         await expect(page.getByTestId('field--headline').getByRole('textbox')).toHaveText(headline);
     }
 
-    // Partial: only body_html is covered. The case's description also names custom text fields,
-    // which no snapshot puts on the Story content profile.
+    // Partial: only body_html is covered here. The case's description also names custom text
+    // fields; the `editor3-formats` snapshot provides one ("Sample rich text"), and that half
+    // belongs to the consolidated formatting-styles spec (#5327), not this file.
     const ANNOTATION = [
         {type: 'confluence', description: '1313669357 partial'}, // Ordered list
     ];
