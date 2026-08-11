@@ -102,14 +102,20 @@ const Annotation: React.FC<IAnnotationProps> = ({
 
     return (
         <HighlightsPopupPositioner editorNode={editorNode}>
-            <FluidRows>
+            <FluidRows data-test-id="annotation">
                 <FluidRow scrollable={false}>
                     <EditorHighlightsHeader availableActions={availableActions}>
                         <div className="sd-display--flex sd-gap--small">
                             <UserAvatarFromUserId userId={authorId} />
                             <div>
-                                <p className="editor-popup__author-name">{author}</p>
-                                <time className="editor-popup__time" title={relativeDateString}>
+                                <p className="editor-popup__author-name" data-test-id="annotation-author">
+                                    {author}
+                                </p>
+                                <time
+                                    className="editor-popup__time"
+                                    title={relativeDateString}
+                                    data-test-id="annotation-date"
+                                >
                                     {absoluteDateString}
                                 </time>
                             </div>
@@ -118,14 +124,18 @@ const Annotation: React.FC<IAnnotationProps> = ({
 
                     <div className="editor-popup__content-block">
                         <div className="editor-popup__info-bar">
-                            <span className="label">{gettext('Annotation')}</span>
+                            <span className="label" data-test-id="annotation-label">{gettext('Annotation')}</span>
                         </div>
 
-                        <div><b>{gettext('Annotation type')}: </b>{type}</div>
+                        <div data-test-id="annotation-type"><b>{gettext('Annotation type')}: </b>{type}</div>
                     </div>
                 </FluidRow>
 
-                <FluidRow scrollable={true} className="editor-popup__secondary-content">
+                <FluidRow
+                    scrollable={true}
+                    className="editor-popup__secondary-content"
+                    data-test-id="annotation-body"
+                >
                     <div className="editor-popup__content-block">
                         <div dangerouslySetInnerHTML={{__html: html}} />
                     </div>
