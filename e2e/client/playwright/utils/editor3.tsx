@@ -128,9 +128,12 @@ export function getEditor3FormattingButton(field: Locator, styleName: string): L
  * each run as a span that carries the inline style and wraps the node carrying
  * `data-text`. Assertions read the leaf rather than the text node because a
  * text-level property such as `text-decoration` does not inherit.
+ *
+ * `data-offset-key` is also on the block element, which is excluded by requiring a
+ * direct `data-text` child: a block's direct children are leaf spans, not text nodes.
  */
 export function getEditor3TextRun(field: Locator, text: string): Locator {
-    return field.locator('[data-text="true"]').filter({hasText: text}).locator('xpath=..');
+    return field.locator('[data-offset-key]:has(> [data-text="true"])').filter({hasText: text});
 }
 
 // Each stretch of text is typed as two halves, so "select part of the text" is a fixed
