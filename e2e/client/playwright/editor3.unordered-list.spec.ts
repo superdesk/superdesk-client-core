@@ -31,10 +31,13 @@ test.describe('unordered list in the article body', () => {
     }
 
     function readBlocks(body: Locator): Promise<Array<IBlock>> {
-        return body.evaluate((field) => {
-            const lists = Array.from(field.querySelectorAll('ul'));
+        // Anchored on Draft's contents element so only editor content is read; the
+        // surrounding field container also holds the toolbar, whose popovers could
+        // otherwise contribute `ul` elements and shift the indexes.
+        return body.locator('[data-contents="true"]').first().evaluate((contents) => {
+            const lists = Array.from(contents.querySelectorAll('ul'));
 
-            return Array.from(field.querySelectorAll('[data-block="true"]')).map((block) => {
+            return Array.from(contents.querySelectorAll('[data-block="true"]')).map((block) => {
                 const list = block.closest('ul');
 
                 return {
