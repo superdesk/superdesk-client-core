@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {Button, Dropdown, NavButton, SearchBar, SubNav} from 'superdesk-ui-framework/react';
+import {Button, Dropdown, NavButton, SearchBar, SubNav, Text} from 'superdesk-ui-framework/react';
 import {IContentList, IListEntry} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {getDuplicateContentIds} from '../utils';
@@ -8,6 +8,7 @@ import {ArticleRow} from './article-row';
 import {LimitNotification} from './limit-notification';
 
 const {gettext} = superdesk.localization;
+const {getClass} = superdesk.utilities.CSS;
 
 interface IProps {
     list: IContentList;
@@ -36,7 +37,8 @@ export class ListPane extends React.PureComponent<IProps> {
 
         return (
             <div
-                style={{display: 'flex', flexDirection: 'column', height: '100%'}}
+                style={{height: '100%'}}
+                className="d-flex flex-col"
                 data-test-id="content-list--items-pane"
             >
                 <SubNav>
@@ -84,14 +86,12 @@ export class ListPane extends React.PureComponent<IProps> {
                         />
                     </div>
                 </SubNav>
-                <div style={{flexGrow: 1, overflowY: 'auto'}} data-test-id="content-list--items">
+                <div className="flex-grow overflow-y-auto" data-test-id="content-list--items">
                     {
                         entries.length < 1 && !loading && (
-                            <div className="sd-margin--2" style={{textAlign: 'center'}}>
-                                <h2 className="sd-text__center sd-text--light">
-                                    {gettext('Drag your articles here')}
-                                </h2>
-                            </div>
+                            <Text align="center" weight="medium" size="large" color="lighter" className="mb-0 mt-4">
+                                {gettext('Drag your articles here')}
+                            </Text>
                         )
                     }
                     <Droppable droppableId="contentList">
@@ -99,12 +99,14 @@ export class ListPane extends React.PureComponent<IProps> {
                             <div
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
-                                style={{minHeight: '100%', padding: '0.8rem'}}
+                                className="p-2"
+                                style={{minHeight: '100%'}}
                             >
                                 {
                                     entries.map((entry, index) => {
                                         const hiddenBySearch = filtering
                                             && !entry.title.toLowerCase().includes(searchStringLowercase);
+                                        const willBeTrimmed = limit != null && limit > 0 && index >= limit;
 
                                         return (
                                             <React.Fragment key={entry.uid}>
@@ -123,6 +125,11 @@ export class ListPane extends React.PureComponent<IProps> {
                                                             ref={draggableProvided.innerRef}
                                                             {...draggableProvided.draggableProps}
                                                             {...draggableProvided.dragHandleProps}
+                                                            className={
+                                                                willBeTrimmed
+                                                                    ? getClass('article-row--dimmed')
+                                                                    : undefined
+                                                            }
                                                             style={{
                                                                 ...draggableProvided.draggableProps.style,
                                                                 display: hiddenBySearch ? 'none' : undefined,
@@ -134,9 +141,7 @@ export class ListPane extends React.PureComponent<IProps> {
                                                                 index={index}
                                                                 showExtras={true}
                                                                 isDuplicate={duplicateContentIds.has(entry.contentId)}
-                                                                willBeTrimmed={
-                                                                    limit != null && limit > 0 && index >= limit
-                                                                }
+                                                                willBeTrimmed={willBeTrimmed}
                                                                 onPinUnpin={() => {
                                                                     this.props.onPinUnpin(entry.uid);
                                                                 }}

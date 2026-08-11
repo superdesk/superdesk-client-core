@@ -2,9 +2,9 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 1.2rem;
-    border-block-end: 1px solid var(--sd-colour-line--x-light);
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-1-5);
+    border-block-end: 1px solid var(--color-line-x-light);
 }
 
 /* h3 element selector is needed to out-specify the ui-framework rule
@@ -17,7 +17,7 @@
 /* attribute selector because the class belongs to the ui-framework component
    and a plain class selector would get the extension prefix at build time */
 [data-test-id="content-list-card"] [class*="sd-grid-item__footer-block--right"] {
-    padding-inline-end: 0.8rem;
+    padding-inline-end: var(--space-1);
 }
 
 /* thumbnail column in the available-items (picker) pane:
@@ -37,7 +37,7 @@
 }
 
 [data-test-id="content-list--items"] img[class*="sd-list-item__thumbnail"] {
-    margin: 0 0 0 0.8rem;
+    margin: 0 0 0 var(--space-1);
 }
 
 /* the new-list name field hides its label, but .sd-input still reserves a
@@ -53,9 +53,28 @@
 }
 
 /* pin/remove buttons are rendered as a regular always-visible column;
-   hide the empty hover-expanding action-menu slot so rows don't shift on mouse over */
+   hide the empty hover-expanding action-menu slot so rows don't shift on mouse over.
+   attribute selectors: framework classes would get the extension prefix if written as .class */
 [data-test-id="content-list-item"] [class*="sd-list-item__action-menu"] {
-    display: none;
+    display: none !important;
+    width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+}
+
+/* keep row background/cursor stable on hover (framework uses hover Bg + cursor:pointer).
+   match the exact class token so columns/rows aren't targeted */
+[data-test-id="content-list-item"] [class~="sd-list-item"],
+[data-test-id="content-list-item"] [class~="sd-list-item"]:hover {
+    background-color: var(--sd-item__main-Bg) !important;
+    cursor: grab !important;
+}
+
+/* dimmed = already in list (picker) or past the trim limit (list pane) */
+.article-row--dimmed [class~="sd-list-item"],
+.article-row--dimmed [class~="sd-list-item"]:hover {
+    cursor: not-allowed !important;
 }
 
 .manage-webhooks {
