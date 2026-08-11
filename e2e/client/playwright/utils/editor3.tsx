@@ -45,33 +45,6 @@ export async function pressRepeatedly(page: Page, key: string, times: number): P
     }
 }
 
-/**
- * Class an editor3 toolbar button carries while its style is active at the caret.
- * Matched as a regex because it is one of several classes on the button.
- */
-export const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
-
-/**
- * The authoring field wrapper of an editor3 field, addressed by field id
- * (`body_html`, `abstract`, ...). Wraps the whole field, toolbar included, not
- * just its editable area.
- */
-export function getEditor3Field(page: Page, fieldId: string): Locator {
-    return page.getByTestId('authoring')
-        .getByTestId('authoring-field')
-        .and(page.locator(`[data-test-value="${fieldId}"]`));
-}
-
-/**
- * A button in an editor3 field's toolbar, addressed by the style it applies
- * (`bold`, `quote`, ...) rather than by its icon or its position in the toolbar.
- */
-export function getEditor3FormattingButton(field: Locator, style: string): Locator {
-    return field.getByTestId('toolbar')
-        .getByTestId('formatting-option-button')
-        .and(field.page().locator(`[data-test-value="${style}"]`));
-}
-
 export function getEditor3Paragraphs(field: Locator): Promise<Array<string>> {
     return field.locator('.DraftEditor-root')
         .first() // there might be multiple roots when working with nested blocks e.g. multi-line-quote
@@ -140,18 +113,6 @@ export async function addEditor3Embed(field: Locator, url: string): Promise<void
     await expect(embedBlocks.locator('iframe[height]')).toHaveCount(countBefore + 1);
 }
 
-const EDITOR3_ACTIVE_BUTTON = /Editor3-activeButton/;
-
-/**
- * Locates an editor3 authoring field by the field id it is registered under, e.g.
- * `body_html`. The id is a `data-test-value`, not part of the test id itself.
- */
-export function getEditor3Field(page: Page, fieldId: string): Locator {
-    return page.getByTestId('authoring')
-        .getByTestId('authoring-field')
-        .and(page.locator(`[data-test-value="${fieldId}"]`));
-}
-
 /**
  * Locates a toolbar button of an editor3 field by the formatting option it toggles,
  * e.g. `bold`, `underline`, `italic`.
@@ -170,12 +131,6 @@ export function getEditor3FormattingButton(field: Locator, styleName: string): L
  */
 export function getEditor3TextRun(field: Locator, text: string): Locator {
     return field.locator('[data-text="true"]').filter({hasText: text}).locator('xpath=..');
-}
-
-async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-    for (let i = 0; i < times; i++) {
-        await page.keyboard.press(key);
-    }
 }
 
 // Each stretch of text is typed as two halves, so "select part of the text" is a fixed
