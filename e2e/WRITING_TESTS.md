@@ -128,6 +128,57 @@ Exceptions that do need an explicit login:
   code. If you write a new spec that needs a fresh login, prefer driving the
   login form with `getByTestId` directly rather than extending the legacy helper.
 
+### Users in the `main` snapshot
+
+| username       | password       | display name  | notes                                           |
+| -------------- | -------------- | ------------- | ----------------------------------------------- |
+| `admin`        | `admin`        | John Doe      | administrator, the committed `storageState`     |
+| `frodobaggins` | `frodobaggins` | Frodo Baggins | ordinary user, member of the Sports desk        |
+| `samgamgee`    | `samgamgee`    | Sam Gamgee    | Sports desk member with the `Sub Editor` role   |
+| `janedoe`      | (unknown)      | Jane Doe      | ordinary user, no desk, password never recorded |
+
+Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
+two-user lock or mark-for-user flow, or a permission check. Both have a known
+password (the password is the username) and both are members of the Sports desk,
+so both can reach the Sports monitoring view. What separates them is privileges:
+`frodobaggins` holds none at all, which is what makes it the negative half of a
+privilege test, while `samgamgee` carries the `Sub Editor` role and so holds
+*some*, but not `send_to_personal` or `unlock`.
+
+`frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
+field, so it holds **no** privileges at all. Keep it that way: do not assign a
+role and do not add a `privileges` field. superdesk-core's `get_privileges`
+returns the user's own privileges when there is no role, and merges the user's
+over the role's when there is one, so either change grants something. The empty
+state is deliberate, it is what makes the account usable for the negative half
+of a privilege test, for example asserting that a user without `unlock` sees no
+Unlock button on an item another user locked. If a future spec needs a user that
+holds some privileges but not others, add a separate user carrying a role or its
+own `privileges` rather than granting anything here, or the negative cases that
+rely on this account will start passing for the wrong reason.
+
+`samgamgee` is that separate user: same shape as `frodobaggins`, plus the
+`Sub Editor` role, a default `desk` of Sports and a `workspace:active` preference
+pointing at it (which is also a second reason the Sports desk cannot be deleted).
+It is the account to reach for when a spec needs a user that holds *some*
+privileges. Its `active_privileges` are exactly the role's, and
+`send_to_personal` and `unlock` are set to `0` there on purpose, so it covers the
+negative branch of those two while still being able to open the Sports monitoring
+view and edit items.
+
+### Roles in the `main` snapshot
+
+| role           | privileges                                                          |
+| -------------- | ------------------------------------------------------------------- |
+| `Administrator`| every privilege set to `1`, for asserting an admin-level assignment  |
+| `Sub Editor`   | desk editing, with `send_to_personal` and `unlock` set to `0`        |
+
+Neither role is `is_default`, so users created through the API or the UI still
+get no role. Only `samgamgee` is assigned one.
+
+To read the privileges a user actually ends up with, `GET /api/preferences/<session id>`
+and look at `active_privileges`. `GET /api/users/<id>` does not expose the field.
+
 ## State reset
 
 If a test creates, edits, or deletes server data, restore the base snapshot
@@ -168,10 +219,200 @@ set, this is not exhaustive):
 - **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
 - **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
   "Package Highlight 1" there too, and "Story 5" published in Sports desk output.
+- **Users:** `admin`, `frodobaggins`, `samgamgee`, `janedoe` (see "Users in the
+  `main` snapshot" under Authentication).
+- **Roles:** `Administrator` and `Sub Editor`, neither of them the default role.
+- **Saved searches:** "Malaysia" and "Technology", both global, both owned by
+  `admin`. There is no private one; use the `saved-search-private` snapshot.
+- **Story profile `body_html` toolbar:** `h2`, bold, italic, underline, quote,
+  link, embed, media, table. Nothing else; use the `editor3-formats` snapshot
+  for the rest.
+
+Every article in `main` is text, apart from "Package Highlight 1", which is a
+package attached to a highlight. There is no picture, graphic, video or audio
+item, and no plain package; use the `media-items` snapshot for those.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
-`editor3-tables`, `custom-blocks`, `availability-management`.
+`editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
+`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`.
+
+### Publishing config in the `main` snapshot
+
+`main` ships one subscriber, "Subscriber 1", whose single destination
+("Destination 1") formats as `email` and delivers by email. Its product
+("Product 1") carries a *blocking* content filter on the sluglines `Football`
+and `Basketball`, so those two never reach it. The subscriber is targetable, so
+`Authoring.publish({subscribers: ['Subscriber 1']})` restricts a publish to it
+and produces exactly one queue entry; `publish({subscribers: []})` fans out to
+every subscriber whose products match.
+
+There is no NINJS destination in `main`. Use the `publishing` snapshot for
+anything that asserts on the payload a subscriber is actually sent.
+
+### The `media-items` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'media-items'})` gives you everything in
+`main` plus one item of each media type, all in Sports / Working Stage:
+
+- "Rivendell picture" - a picture with all renditions, for image editing (crop,
+  rotate, flip) and for the picture branch of the media widgets.
+- "Moria graphic" - a graphic. `graphic` is a distinct item type in the UI and
+  the type filters treat it separately from `picture`. It is a picture whose
+  `type` was flipped in mongo, and it keeps `profile: "picture"` because the
+  snapshot carries no graphic content profile. Type filtering therefore behaves
+  as documented, but graphic-specific authoring behaviour is not represented: a
+  spec that needs real graphic authoring must not rely on this item.
+- "Isengard video" and "Lothlorien audio".
+- "Shire package" - a plain package (no `highlight`) containing the picture.
+  `main`'s only package belongs to a highlight, so package behaviour that must
+  not depend on highlights needs this one.
+
+Reach for it when a spec asserts something about a non-text item: the monitoring
+type filter buttons, media metadata, the crop/rotate editor, the media carousel.
+Do not reach for it otherwise, because it also shifts every item count in the
+Sports groups relative to `main`.
+
+### The `editor3-formats` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-formats'})` gives you `main`
+plus the full editor3 toolbar on the Story profile. Two things change:
+
+- `body_html` gets every heading level, strikethrough, subscript, superscript,
+  `pre`, both list types and the formatting-marks toggle on top of the nine
+  options `main` ships. Reach for it for any spec about a format `main`'s
+  toolbar does not offer.
+- A custom editor3 text field, "Sample rich text" (vocabulary id
+  `sample_rich_text`, `field_type: "text"`), is added to the content section with
+  the same format options. `main` has no custom text field at all, so this is the
+  only snapshot where a formatting case can be repeated against one.
+
+Format option names are the `RICH_FORMATTING_OPTION` strings from
+`scripts/core/superdesk-api.d.ts`, and several contain spaces: `ordered list`,
+`unordered list`, `formatting marks`. Preformatted text is `pre`.
+
+A toolbar button exposes two handles. The legacy one is
+`data-test-id="formatting-option"` with the option name in `data-test-value`, so
+`s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
+inner `<i>` icon rather than on the outer `<span>` that carries the click
+handler. The open editor3 campaign branches add
+`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
+that outer span and standardise on it in their `getFormattingOptionButton`
+helpers. Prefer that handle once those branches land.
+
+The formatting-marks button is the exception: the toolbar passes it the
+internal label `invisibles`, which has no entry in the option map, so
+`data-test-value` is absent and it has to be found by its
+`data-sd-tooltip="Toggle formatting marks"`. `link`, `embed`, `media` and `table`
+are a different component again, found with `getByRole('button', {name})`.
+
+The Angular authoring view keys custom fields by display name, so the field is
+`s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
+
+### The `authoring-extras` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'authoring-extras'})` gives you `main`
+with "test sports story" carrying `keywords` (`Rivendell`, `Mordor`) and an
+`expiry` of 2099-12-31. The Info widget renders both lines only when the item has
+the values (`ng-if="item.expiry"`, `ng-if="item.keywords.length"`), and in `main`
+only the spiked items have an expiry, so neither line is reachable there on an
+editable item. The date is far future on purpose: snapshot dates are absolute and
+are never relativised at restore, and an item past its expiry is a candidate for
+the content-expiry job.
+
+The keywords row is not labelled "Keywords". `metadata-widget.html` gives it the
+"Word Count" label, an upstream mislabel, and the row directly above it carries
+the same label under `ng-if="item.word_count"` and is the real word count, which
+`main` already renders. Locate the keywords row by position or by its content,
+never by its label.
+
+The recorded API write also re-versioned the item: `versioncreated` moved to
+2026-08-08 and `_current_version` went from 2 to 3. Under this snapshot "test
+sports story" therefore sorts to the top of Sports / Working Stage (monitoring
+sorts `versioncreated:desc`) and shows one version more than it does under
+`main`.
+
+Note that `expiry` is not writable through the archive API, it is derived from
+desk settings server-side. The value in this snapshot was set in mongo directly.
+
+### The `saved-search-private` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'saved-search-private'})` gives you
+`main` plus "Shire drafts", a saved search with `is_global: false` owned by
+`admin`, so the private saved-search list is not empty for the default session.
+`main` ships two global searches and no private one.
+
+It is a record rather than part of `main` because the monitoring-settings spec
+that covers the saved searches tab seeds its own private search through the UI
+and asserts the list holds exactly one. Once that spec switches to this snapshot
+and drops the seeding, the search can be promoted into `main`.
+
+### The `publishing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'publishing'})` gives you `main` plus a
+second subscriber, "Public API", and the unfiltered product it points at, "All
+content". Its one destination, "NINJS Email", formats as `ninjs`, so this is the
+snapshot to reach for when a spec asserts on the payload a subscriber is sent
+rather than on the fact that a publish happened.
+
+The payload is read back through the item history's transmission details, which
+render the queue entry's `formatted_item` verbatim: publish, open the item from
+the Publish Queue page (`/#/publish_queue`, `publish-queue-table` /
+`publish-queue-item`), then *Item history* and expand the transmission details.
+That panel (`versioning/history/views/publish_queue.html`) carries no
+`data-test-id` on develop; the attachments branch adds the ones a spec needs.
+
+Three things to know before using it:
+
+- **Two queue entries per publish.** Nothing here is targeted, so an untargeted
+  publish reaches "Subscriber 1" and "Public API" both. A queue locator keyed on
+  the headline alone therefore matches two rows, and a `toBeVisible()` on it
+  fails as a strict-mode violation. Narrow by the Subscriber or Destination
+  column.
+- **The transmission succeeds.** Delivery is by email into the stack's mailcrab,
+  not by HTTP push. The email transmitter sends `formatted_item` verbatim when it
+  is not email-formatted, so the body stays NINJS and the entry settles at
+  `state: "success"`. `legacy`'s "Public API" pushes to `http://localhost:5050`,
+  which nothing in the stack answers, so its entries never leave `retrying`. Only
+  reach for `legacy` if a spec needs the rest of that dataset.
+- **The queue view does not live-update.** `/#/publish_queue` reads the queue
+  only when it loads, so a spec already sitting on that page when a publish
+  happens will not see the new row without navigating again. Navigating there
+  after publishing needs no retry loop: transmission runs inline on this stack
+  (`CELERY_ALWAYS_EAGER`), so the row and its final state already exist by the
+  time the publish request returns, which is why `publishing.spec.ts` and
+  `publish-queue.spec.ts` both assert once.
+
+### Publishing an item that has associations
+
+`e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True`, which
+superdesk-core defaults to `False` (its own test suite turns it on). It is
+process-level app config with no runtime override, so it applies to every spec
+and every snapshot; it cannot be opted into per test. Two consequences to write
+against:
+
+- Publishing an item **publishes its associations too**. The associated item
+  moves to `published`, leaves the working stage for the desk output group and
+  gets its own publish queue entries. Any count assertion taken after publishing
+  an item that carries feature media, a related item or a gallery has to account
+  for that.
+- The "There are unpublished related items that won't be sent out..." publishing
+  warning **never appears**. `_raise_if_unpublished_related_items` returns early
+  when the setting is on, so there is no confirmation step to drive.
+
+In exchange, publishing validates the locks on associations, which is what the
+locked-item publishing cases need. Publishing an item whose association is locked
+fails with HTTP 400 and a validator exception naming the association:
+
+- locked by someone else:
+  `<headline>: packaged item is locked by another user`
+- locked by the publisher:
+  `<headline>: packaged item is locked by you. Unlock it and try again`
+
+Both were verified at the API level against the `publishing` snapshot. No item in
+any committed snapshot carries `associations`, so a spec that needs one has to
+build it (attach feature media or a related item through authoring) before
+publishing.
 
 ### Adding fixture data
 
