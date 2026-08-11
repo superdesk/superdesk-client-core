@@ -128,6 +128,31 @@ Exceptions that do need an explicit login:
   code. If you write a new spec that needs a fresh login, prefer driving the
   login form with `getByTestId` directly rather than extending the legacy helper.
 
+### Users in the `main` snapshot
+
+| username       | password       | display name  | notes                                           |
+| -------------- | -------------- | ------------- | ----------------------------------------------- |
+| `admin`        | `admin`        | John Doe      | administrator, the committed `storageState`     |
+| `frodobaggins` | `frodobaggins` | Frodo Baggins | ordinary user, member of the Sports desk        |
+| `janedoe`      | (unknown)      | Jane Doe      | ordinary user, no desk, password never recorded |
+
+Use `frodobaggins` for anything that needs a second actor: a two-user lock or
+mark-for-user flow, or a permission check. It is the only non-admin account with
+a known password, and the only one on a desk, so it is the only one that can
+reach the Sports monitoring view.
+
+`frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
+field, so it holds **no** privileges at all. Keep it that way: do not assign a
+role and do not add a `privileges` field. superdesk-core's `get_privileges`
+returns the user's own privileges when there is no role, and merges the user's
+over the role's when there is one, so either change grants something. The empty
+state is deliberate, it is what makes the account usable for the negative half
+of a privilege test, for example asserting that a user without `unlock` sees no
+Unlock button on an item another user locked. If a future spec needs a user that
+holds some privileges but not others, add a separate user carrying a role or its
+own `privileges` rather than granting anything here, or the negative cases that
+rely on this account will start passing for the wrong reason.
+
 ## State reset
 
 If a test creates, edits, or deletes server data, restore the base snapshot
@@ -168,10 +193,39 @@ set, this is not exhaustive):
 - **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
 - **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
   "Package Highlight 1" there too, and "Story 5" published in Sports desk output.
+- **Users:** `admin`, `frodobaggins`, `janedoe` (see "Users in the `main`
+  snapshot" under Authentication).
+
+Every article in `main` is text, apart from "Package Highlight 1", which is a
+package attached to a highlight. There is no picture, graphic, video or audio
+item, and no plain package; use the `media-items` snapshot for those.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
-`editor3-tables`, `custom-blocks`, `availability-management`.
+`editor3-tables`, `custom-blocks`, `availability-management`, `media-items`.
+
+### The `media-items` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'media-items'})` gives you everything in
+`main` plus one item of each media type, all in Sports / Working Stage:
+
+- "Rivendell picture" - a picture with all renditions, for image editing (crop,
+  rotate, flip) and for the picture branch of the media widgets.
+- "Moria graphic" - a graphic. `graphic` is a distinct item type in the UI and
+  the type filters treat it separately from `picture`. It is a picture whose
+  `type` was flipped in mongo, and it keeps `profile: "picture"` because the
+  snapshot carries no graphic content profile. Type filtering therefore behaves
+  as documented, but graphic-specific authoring behaviour is not represented: a
+  spec that needs real graphic authoring must not rely on this item.
+- "Isengard video" and "Lothlorien audio".
+- "Shire package" - a plain package (no `highlight`) containing the picture.
+  `main`'s only package belongs to a highlight, so package behaviour that must
+  not depend on highlights needs this one.
+
+Reach for it when a spec asserts something about a non-text item: the monitoring
+type filter buttons, media metadata, the crop/rotate editor, the media carousel.
+Do not reach for it otherwise, because it also shifts every item count in the
+Sports groups relative to `main`.
 
 ### Adding fixture data
 
