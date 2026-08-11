@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {Draggable, Droppable} from 'react-beautiful-dnd';
-import {Dropdown, Loader, NavButton, SearchBar, SubNav} from 'superdesk-ui-framework/react';
+import {Dropdown, Loader, NavButton, SearchBar, SubNav, Text} from 'superdesk-ui-framework/react';
 import {IArticleSource, IListEntry} from '../interfaces';
 import {superdesk} from '../superdesk';
 import {ArticleRow} from './article-row';
 
 const {gettext} = superdesk.localization;
+const {getClass} = superdesk.utilities.CSS;
 
 const SCROLL_THRESHOLD_PX = 100;
 
@@ -57,7 +58,8 @@ export class PickerPane extends React.PureComponent<IProps> {
 
         return (
             <div
-                style={{display: 'flex', flexDirection: 'column', height: '100%'}}
+                style={{height: '100%'}}
+                className="d-flex flex-col"
                 data-test-id="content-list--picker-pane"
             >
                 <SubNav>
@@ -97,47 +99,58 @@ export class PickerPane extends React.PureComponent<IProps> {
                             <div
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
-                                style={{minHeight: '100%', padding: '0.8rem'}}
+                                className="p-2"
+                                style={{minHeight: '100%'}}
                             >
                                 {
                                     entries.length < 1 && !loading && (
-                                        <div className="sd-margin--2" style={{textAlign: 'center'}}>
-                                            <h3 className="sd-text--light">{gettext('No results')}</h3>
-                                        </div>
+                                        <Text
+                                            align="center"
+                                            weight="medium"
+                                            size="large"
+                                            color="lighter"
+                                            className="mb-0 mt-4"
+                                        >
+                                            {gettext('No results')}
+                                        </Text>
                                     )
                                 }
                                 {
-                                    entries.map((entry, index) => (
-                                        <Draggable
-                                            key={entry.uid}
-                                            draggableId={entry.uid}
-                                            index={index}
-                                        >
-                                            {(draggableProvided) => (
-                                                <div
-                                                    ref={draggableProvided.innerRef}
-                                                    {...draggableProvided.draggableProps}
-                                                    {...draggableProvided.dragHandleProps}
-                                                    style={{
-                                                        ...draggableProvided.draggableProps.style,
-                                                        cursor: 'grab',
-                                                    }}
-                                                >
-                                                    <ArticleRow
-                                                        entry={entry}
-                                                        alreadyInList={
-                                                            this.props.listContentIds.has(entry.contentId)
+                                    entries.map((entry, index) => {
+                                        const alreadyInList = this.props.listContentIds.has(entry.contentId);
+
+                                        return (
+                                            <Draggable
+                                                key={entry.uid}
+                                                draggableId={entry.uid}
+                                                index={index}
+                                                isDragDisabled={alreadyInList}
+                                            >
+                                                {(draggableProvided) => (
+                                                    <div
+                                                        ref={draggableProvided.innerRef}
+                                                        {...draggableProvided.draggableProps}
+                                                        {...draggableProvided.dragHandleProps}
+                                                        className={
+                                                            alreadyInList
+                                                                ? getClass('article-row--dimmed')
+                                                                : undefined
                                                         }
-                                                    />
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))
+                                                    >
+                                                        <ArticleRow
+                                                            entry={entry}
+                                                            alreadyInList={alreadyInList}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })
                                 }
                                 {provided.placeholder}
                                 {
                                     loading && (
-                                        <div style={{position: 'relative', height: '3rem'}}>
+                                        <div className="p-relative" style={{height: 'var(--space-3)'}}>
                                             <Loader />
                                         </div>
                                     )

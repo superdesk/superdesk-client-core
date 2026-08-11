@@ -93,7 +93,8 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
 
         return (
             <div
-                style={{display: 'flex', flexDirection: 'column', height: '100%', width: '100%'}}
+                className="d-flex flex-col"
+                style={{height: '100%', width: '100%'}}
                 data-test-id="content-lists--grid"
             >
                 <SubNav>
@@ -155,7 +156,7 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                             <GridItem>
                                                 <GridItemContent>
                                                     <div
-                                                        style={{display: 'flex', alignItems: 'center', gap: '4px'}}
+                                                        className="d-flex items-center gap-0-5"
                                                         data-test-id="content-lists--new-list"
                                                     >
                                                         <Input

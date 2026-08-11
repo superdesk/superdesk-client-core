@@ -23,7 +23,7 @@ const extension: IExtension = {
                             addToMainMenu: false,
 
                             addToSideMenu: {
-                                icon: 'create-list',
+                                icon: 'add-to-list',
                                 order: 1010,
                             },
                         },
