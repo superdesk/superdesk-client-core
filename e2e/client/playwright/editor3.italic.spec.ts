@@ -1,5 +1,5 @@
 import {test, expect, type Locator} from '@playwright/test';
-import {runEditor3InlineStyleToggleScenario} from './scenarios/editor3-inline-style';
+import {runEditor3InlineStyleToggleScenario} from './utils/editor3';
 import {restoreDatabaseSnapshot} from './utils';
 
 test.describe('italic formatting in the article body', () => {

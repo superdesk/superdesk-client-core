@@ -37,6 +37,17 @@ const getTestSelector = (...testIds: Array<string>) => {
 
 export const s = getTestSelector;
 
+/**
+ * Presses a key `times` in a row. Counted arrow presses are how a spec moves the caret inside
+ * editor3: Home/End do not move it on macOS, and a character offset is the only address a
+ * contenteditable exposes to the keyboard.
+ */
+export async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
+    for (let i = 0; i < times; i++) {
+        await page.keyboard.press(key);
+    }
+}
+
 export async function login(page: Page) {
     await page.goto('/');
 
@@ -99,16 +110,6 @@ export async function dismissSessionExpiry(page: Page): Promise<void> {
     await page.locator(s('login-page', 'password')).fill('admin');
     await page.locator(s('login-page', 'submit')).click();
     await expect(page.locator('.login-screen')).toBeHidden();
-}
-
-/**
- * Presses a key a fixed number of times, e.g. to walk the caret over, or extend a
- * selection across, a known number of characters.
- */
-export async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-    for (let i = 0; i < times; i++) {
-        await page.keyboard.press(key);
-    }
 }
 
 export function sleep(ms: number): Promise<void> {
