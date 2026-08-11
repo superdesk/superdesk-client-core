@@ -134,12 +134,16 @@ Exceptions that do need an explicit login:
 | -------------- | -------------- | ------------- | ----------------------------------------------- |
 | `admin`        | `admin`        | John Doe      | administrator, the committed `storageState`     |
 | `frodobaggins` | `frodobaggins` | Frodo Baggins | ordinary user, member of the Sports desk        |
+| `samgamgee`    | `samgamgee`    | Sam Gamgee    | Sports desk member with the `Sub Editor` role   |
 | `janedoe`      | (unknown)      | Jane Doe      | ordinary user, no desk, password never recorded |
 
-Use `frodobaggins` for anything that needs a second actor: a two-user lock or
-mark-for-user flow, or a permission check. It is the only non-admin account with
-a known password, and the only one on a desk, so it is the only one that can
-reach the Sports monitoring view.
+Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
+two-user lock or mark-for-user flow, or a permission check. Both have a known
+password (the password is the username) and both are members of the Sports desk,
+so both can reach the Sports monitoring view. What separates them is privileges:
+`frodobaggins` holds none at all, which is what makes it the negative half of a
+privilege test, while `samgamgee` carries the `Sub Editor` role and so holds
+*some*, but not `send_to_personal` or `unlock`.
 
 `frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
 field, so it holds **no** privileges at all. Keep it that way: do not assign a
@@ -152,6 +156,28 @@ Unlock button on an item another user locked. If a future spec needs a user that
 holds some privileges but not others, add a separate user carrying a role or its
 own `privileges` rather than granting anything here, or the negative cases that
 rely on this account will start passing for the wrong reason.
+
+`samgamgee` is that separate user: same shape as `frodobaggins`, plus the
+`Sub Editor` role, a default `desk` of Sports and a `workspace:active` preference
+pointing at it (which is also a second reason the Sports desk cannot be deleted).
+It is the account to reach for when a spec needs a user that holds *some*
+privileges. Its `active_privileges` are exactly the role's, and
+`send_to_personal` and `unlock` are set to `0` there on purpose, so it covers the
+negative branch of those two while still being able to open the Sports monitoring
+view and edit items.
+
+### Roles in the `main` snapshot
+
+| role           | privileges                                                          |
+| -------------- | ------------------------------------------------------------------- |
+| `Administrator`| every privilege set to `1`, for asserting an admin-level assignment  |
+| `Sub Editor`   | desk editing, with `send_to_personal` and `unlock` set to `0`        |
+
+Neither role is `is_default`, so users created through the API or the UI still
+get no role. Only `samgamgee` is assigned one.
+
+To read the privileges a user actually ends up with, `GET /api/preferences/<session id>`
+and look at `active_privileges`. `GET /api/users/<id>` does not expose the field.
 
 ## State reset
 
@@ -193,8 +219,14 @@ set, this is not exhaustive):
 - **Sports monitoring groups:** Working Stage, Incoming Stage, desk output.
 - **Articles:** "test sports story" and "story 2" in Sports / Working Stage,
   "Package Highlight 1" there too, and "Story 5" published in Sports desk output.
-- **Users:** `admin`, `frodobaggins`, `janedoe` (see "Users in the `main`
-  snapshot" under Authentication).
+- **Users:** `admin`, `frodobaggins`, `samgamgee`, `janedoe` (see "Users in the
+  `main` snapshot" under Authentication).
+- **Roles:** `Administrator` and `Sub Editor`, neither of them the default role.
+- **Saved searches:** "Malaysia" and "Technology", both global, both owned by
+  `admin`. There is no private one; use the `saved-search-private` snapshot.
+- **Story profile `body_html` toolbar:** `h2`, bold, italic, underline, quote,
+  link, embed, media, table. Nothing else; use the `editor3-formats` snapshot
+  for the rest.
 
 Every article in `main` is text, apart from "Package Highlight 1", which is a
 package attached to a highlight. There is no picture, graphic, video or audio
@@ -202,7 +234,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
-`editor3-tables`, `custom-blocks`, `availability-management`, `media-items`.
+`editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
+`editor3-formats`, `authoring-extras`, `saved-search-private`.
 
 ### The `media-items` snapshot
 
@@ -226,6 +259,80 @@ Reach for it when a spec asserts something about a non-text item: the monitoring
 type filter buttons, media metadata, the crop/rotate editor, the media carousel.
 Do not reach for it otherwise, because it also shifts every item count in the
 Sports groups relative to `main`.
+
+### The `editor3-formats` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-formats'})` gives you `main`
+plus the full editor3 toolbar on the Story profile. Two things change:
+
+- `body_html` gets every heading level, strikethrough, subscript, superscript,
+  `pre`, both list types and the formatting-marks toggle on top of the nine
+  options `main` ships. Reach for it for any spec about a format `main`'s
+  toolbar does not offer.
+- A custom editor3 text field, "Sample rich text" (vocabulary id
+  `sample_rich_text`, `field_type: "text"`), is added to the content section with
+  the same format options. `main` has no custom text field at all, so this is the
+  only snapshot where a formatting case can be repeated against one.
+
+Format option names are the `RICH_FORMATTING_OPTION` strings from
+`scripts/core/superdesk-api.d.ts`, and several contain spaces: `ordered list`,
+`unordered list`, `formatting marks`. Preformatted text is `pre`.
+
+A toolbar button exposes two handles. The legacy one is
+`data-test-id="formatting-option"` with the option name in `data-test-value`, so
+`s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
+inner `<i>` icon rather than on the outer `<span>` that carries the click
+handler. The open editor3 campaign branches add
+`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
+that outer span and standardise on it in their `getFormattingOptionButton`
+helpers. Prefer that handle once those branches land.
+
+The formatting-marks button is the exception: the toolbar passes it the
+internal label `invisibles`, which has no entry in the option map, so
+`data-test-value` is absent and it has to be found by its
+`data-sd-tooltip="Toggle formatting marks"`. `link`, `embed`, `media` and `table`
+are a different component again, found with `getByRole('button', {name})`.
+
+The Angular authoring view keys custom fields by display name, so the field is
+`s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
+
+### The `authoring-extras` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'authoring-extras'})` gives you `main`
+with "test sports story" carrying `keywords` (`Rivendell`, `Mordor`) and an
+`expiry` of 2099-12-31. The Info widget renders both lines only when the item has
+the values (`ng-if="item.expiry"`, `ng-if="item.keywords.length"`), and in `main`
+only the spiked items have an expiry, so neither line is reachable there on an
+editable item. The date is far future on purpose: snapshot dates are absolute and
+are never relativised at restore, and an item past its expiry is a candidate for
+the content-expiry job.
+
+The keywords row is not labelled "Keywords". `metadata-widget.html` gives it the
+"Word Count" label, an upstream mislabel, and the row directly above it carries
+the same label under `ng-if="item.word_count"` and is the real word count, which
+`main` already renders. Locate the keywords row by position or by its content,
+never by its label.
+
+The recorded API write also re-versioned the item: `versioncreated` moved to
+2026-08-08 and `_current_version` went from 2 to 3. Under this snapshot "test
+sports story" therefore sorts to the top of Sports / Working Stage (monitoring
+sorts `versioncreated:desc`) and shows one version more than it does under
+`main`.
+
+Note that `expiry` is not writable through the archive API, it is derived from
+desk settings server-side. The value in this snapshot was set in mongo directly.
+
+### The `saved-search-private` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'saved-search-private'})` gives you
+`main` plus "Shire drafts", a saved search with `is_global: false` owned by
+`admin`, so the private saved-search list is not empty for the default session.
+`main` ships two global searches and no private one.
+
+It is a record rather than part of `main` because the monitoring-settings spec
+that covers the saved searches tab seeds its own private search through the UI
+and asserts the list holds exactly one. Once that spec switches to this snapshot
+and drops the seeding, the search can be promoted into `main`.
 
 ### Adding fixture data
 
