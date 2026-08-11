@@ -151,7 +151,6 @@ export class Authoring {
         await modal.getByRole('button', {name: 'Save'}).click();
         await expect(modal).not.toBeVisible();
     }
-
 }
 
 export class PictureAuthoring extends Authoring {
