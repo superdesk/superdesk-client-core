@@ -31,6 +31,19 @@ CONTENTAPI_ELASTICSEARCH_INDEX = os.environ.get('CONTENTAPI_ELASTICSEARCH_INDEX'
 
 LEGAL_ARCHIVE = True
 
+# Rendition hrefs are absolute and are stored in the database, so the committed snapshots carry
+# whichever prefix the recording backend used. superdesk-core derives MEDIA_PREFIX from
+# SUPERDESK_URL, which is unset in the container, so that baked-in prefix is always
+# http://localhost:5000/api/upload-raw. CI serves the backend on 5000 and matches it; a local
+# stack (5002) or a slot (501N) does not, and the client loads renditions straight from the href,
+# so every thumbnail would point at a port nothing listens on. MEDIA_PREFIXES_TO_FIX makes the
+# backend rewrite the stored prefix to the one this instance actually answers on. Snapshots must
+# keep being recorded with the canonical prefix below, or they will not be rewritten.
+# Lowercase so it stays a module local: only uppercase names in here become app config.
+canonical_media_prefix = 'http://localhost:5000/api/upload-raw'
+MEDIA_PREFIX = os.environ.get('MEDIA_PREFIX', '%s://%s/%s/upload-raw' % (URL_PROTOCOL, SERVER_NAME, URL_PREFIX))
+MEDIA_PREFIXES_TO_FIX = None if MEDIA_PREFIX == canonical_media_prefix else [canonical_media_prefix]
+
 DEFAULT_TIMEZONE = "Europe/London"
 
 VALIDATOR_MEDIA_METADATA = {
