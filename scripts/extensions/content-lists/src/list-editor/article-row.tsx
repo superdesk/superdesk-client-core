@@ -117,7 +117,7 @@ export class ArticleRow extends React.PureComponent<IProps> {
                 {
                     content: (
                         <React.Fragment>
-                            <span className="sd-overflow-ellipsis sd-list-item--element-grow">
+                            <span className="sd-list-item--element-grow">
                                 {
                                     entry.updated != null && (
                                         <time
@@ -135,10 +135,10 @@ export class ArticleRow extends React.PureComponent<IProps> {
                             {
                                 isPublishedState(entry.state)
                                     ? entry.category != null && (
-                                        <Label text={entry.category} type="success" style="hollow" />
+                                        <Label text={entry.category} type="success" style="translucent" />
                                     )
                                     : entry.state.length > 0 && (
-                                        <Label text={getStateLabel(entry)} type="warning" style="hollow" />
+                                        <Label text={getStateLabel(entry)} type="warning" style="translucent" />
                                     )
                             }
                         </React.Fragment>

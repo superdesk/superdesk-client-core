@@ -2,13 +2,16 @@ import * as React from 'react';
 import {
     Button,
     Dropdown,
+    EmptyState,
     GridItem,
     GridItemContent,
     GridItemFooter,
     GridItemFooterBlock,
-    GridItemText,
     IconButton,
     Label,
+    SimpleList,
+    SimpleListItem,
+    Text,
 } from 'superdesk-ui-framework/react';
 import {debounce} from 'lodash';
 import {deleteList, fetchListItems} from '../api';
@@ -126,7 +129,8 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                         <span data-test-id="content-list-card--edit">
                             <Button
                                 text={gettext('Edit')}
-                                type="primary"
+                                type="tertiary"
+                                size="small"
                                 onClick={() => {
                                     this.props.onOpenList(list._id);
                                 }}
@@ -160,22 +164,29 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                             previewTitles != null && (
                                 previewTitles.length < 1
                                     ? (
-                                        <GridItemText>{gettext('No articles in this list')}</GridItemText>
+                                        <EmptyState
+                                            size="small"
+                                            title={gettext('No articles in this list')}
+                                        />
                                     )
                                     : (
                                         <React.Fragment>
-                                            {previewTitles.map((title, i) => (
-                                                <GridItemText key={i}>{title}</GridItemText>
-                                            ))}
+                                            <SimpleList density="compact" className="pb-0-5">
+                                                {previewTitles.map((title, i) => (
+                                                    <SimpleListItem key={i}>
+                                                        <Text className="mb-0">{title}</Text>
+                                                    </SimpleListItem>
+                                                ))}
+                                            </SimpleList>
                                             {
                                                 itemsTotal > PREVIEW_ITEMS_COUNT && (
-                                                    <GridItemText>
+                                                    <Text color="lighter" className="mb-0">
                                                         {
                                                             gettext('+{{n}} more', {
                                                                 n: itemsTotal - PREVIEW_ITEMS_COUNT,
                                                             })
                                                         }
-                                                    </GridItemText>
+                                                    </Text>
                                                 )
                                             }
                                         </React.Fragment>
