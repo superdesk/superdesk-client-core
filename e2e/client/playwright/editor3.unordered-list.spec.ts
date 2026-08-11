@@ -5,9 +5,9 @@ import {TreeSelectDriver} from './utils/tree-select-driver';
 
 /**
  * Covers Confluence 1313669355 for `body_html` only. The case also asks for the
- * same checks on custom text fields, which no snapshot can provide: `main` holds
- * no custom field vocabulary, so there is no custom text field to put on the
- * Story content profile.
+ * same checks on custom text fields; the `editor3-formats` snapshot provides one
+ * ("Sample rich text"), and that half belongs to the consolidated
+ * formatting-styles spec (#5327), not this file.
  */
 test.describe('unordered list in the article body', () => {
     const FORMAT_OPTION = 'unordered list';
