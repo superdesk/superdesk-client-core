@@ -6,7 +6,8 @@
         ng-if="editable && associations.isMediaEditable() && !related"
         ng-click="upload()"
         ng-class="{'item-association--loading': loading}"
-        class="item-association">
+        class="item-association"
+        data-test-id="upload-placeholder">
         <span class="item-association__text-label">
             {{'Drop items here or click to upload' | translate}}
         </span>
@@ -86,7 +87,8 @@
                 </div>
                 <img ng-src="{{ related.renditions.viewImage.href}}"
                     ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
-                    ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
+                    ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"
+                    data-test-id="association-image">
             </div>
     </figure>
     <!-- if/else end -->
