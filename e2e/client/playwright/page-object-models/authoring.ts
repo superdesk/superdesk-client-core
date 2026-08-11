@@ -151,22 +151,6 @@ export class Authoring {
         await modal.getByRole('button', {name: 'Save'}).click();
         await expect(modal).not.toBeVisible();
     }
-
-    /**
-     * Closes an edited article through the topbar and saves from the "Save changes?"
-     * prompt that the close raises, which both persists the changes and closes the
-     * article. The prompt's Save is scoped to the dialog so it does not collide with
-     * the topbar Save button.
-     */
-    async closeSavingChanges(): Promise<void> {
-        const {page} = this;
-
-        await page.getByTestId('authoring-topbar').getByTestId('close').click();
-        await page.getByTestId('unsaved-changes-dialog')
-            .getByRole('button', {name: 'Save', exact: true})
-            .click();
-        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
-    }
 }
 
 export class PictureAuthoring extends Authoring {
