@@ -4,7 +4,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('sending an article', async () => {
-    test('sending an article to another desk', async ({page}) => {
+    test('sending an article to another desk', {
+        annotation: [
+            {type: 'confluence', description: '1308524834 complete'}, // 🤖 Send item to another desk (AUTOMATED)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 
@@ -28,7 +32,11 @@ test.describe('sending an article', async () => {
         ).toBeVisible();
     });
 
-    test('sending an article to another stage of the same desk', async ({page}) => {
+    test('sending an article to another stage of the same desk', {
+        annotation: [
+            {type: 'confluence', description: '1308524832 complete'}, // 🤖 Send item to another stage (AUTOMATED)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 

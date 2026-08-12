@@ -10,7 +10,11 @@ test.use({
 
 test.setTimeout(60000);
 
-test('can correct published item using corrections workflow', async ({page}) => {
+test('can correct published item using corrections workflow', {
+    annotation: [
+        {type: 'confluence', description: '1344443358 partial'}, // 🤖 Corrections workflow (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

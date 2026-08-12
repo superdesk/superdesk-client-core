@@ -3,7 +3,12 @@ import {restoreDatabaseSnapshot, s} from './utils';
 
 const TEMPLATE_NAME = 'Auto Created Template';
 
-test('creating an automatic-item-creation template persists schedule on reload', async ({page}) => {
+test('creating an automatic-item-creation template persists schedule on reload', {
+    annotation: [
+        {type: 'confluence', description: '1311835102 complete'}, // Automatically create item
+        {type: 'confluence', description: '1311835104 complete'}, // Add new schedule
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/templates');
 
