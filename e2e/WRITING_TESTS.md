@@ -356,6 +356,8 @@ standard Sports items: publishing with an empty headline fails with
 "HEADLINE empty values not allowed". Saving is unaffected; required fields only
 gate publishing.
 
+### The `saved-search-private` snapshot
+
 `restoreDatabaseSnapshot({snapshotName: 'saved-search-private'})` gives you
 `main` plus "Shire drafts", a saved search with `is_global: false` owned by
 `admin`, so the private saved-search list is not empty for the default session.
