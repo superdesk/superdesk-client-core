@@ -770,7 +770,8 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
                         .then(() => $scope.save())
-                        .then(() => lock.unlock($scope.origItem))
+                        .then(() => lock.unlock($scope.origItem)
+                            .catch(() => $scope.origItem)) // ignore failed unlock, e.g. item not locked
                         .catch(() => $q.reject());
                 }
 
