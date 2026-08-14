@@ -98,6 +98,20 @@ export class Authoring {
     }
 
     /**
+     * Replaces the content of an editor3 (Draft.js) field. A single `fill` sometimes
+     * applies only part of the replacement to a Draft.js field, so the result is verified
+     * and the fill retried until the field holds exactly the requested text. Typing via
+     * real key events is not an alternative: with the send/publish panel open, keystrokes
+     * do not reach the editor, while `fill` forces focus on the field itself.
+     */
+    async replaceEditor3FieldText(field: Locator, text: string): Promise<void> {
+        await expect(async () => {
+            await field.fill(text);
+            await expect(field).toHaveText(text, {timeout: 1000});
+        }).toPass();
+    }
+
+    /**
      * The whole authoring field for a schema field id ('body_html'), as opposed to `field()`
      * which returns the editable element inside it. An editor3 field renders its toolbar and its
      * rendered blocks as siblings of that element, so anything but plain typing needs the wrapper.
