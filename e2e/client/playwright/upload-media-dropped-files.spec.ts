@@ -46,8 +46,10 @@ import {
  * `partial` every other test that contributes to it. No single test here covers all
  * of a case's expected results on its own.
  *
- * "Upload a single image by drag and drop" (1315931215) is covered by
- * upload-media-drag-and-drop.spec.ts and is not repeated here.
+ * "Upload a single image by drag and drop" (1315931215) has its own walk in
+ * upload-media-drag-and-drop.spec.ts, which carries it as complete; it documents the
+ * same screen behaviours as its siblings, so it is annotated on the shared tests here
+ * too and its walk is not repeated in this file.
  *
  * Two expected results are asserted against the wording the product renders rather
  * than the wording the cases quote:
@@ -61,6 +63,7 @@ import {
 test.setTimeout(120000);
 
 const DRAG_AND_DROP_CASES = [
+    {type: 'confluence', description: '1315931215 partial'}, // Upload a single image by drag and drop
     {type: 'confluence', description: '1315931217 partial'}, // Upload multiple images by drag and drop
     {type: 'confluence', description: '1315931235 partial'}, // Upload a single audio file by drag and drop
     {type: 'confluence', description: '1315931237 partial'}, // Upload multiple audio files by drag and drop
