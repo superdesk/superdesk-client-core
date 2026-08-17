@@ -61,11 +61,7 @@ test.describe('sending an article', async () => {
         ).toBeVisible();
     });
 
-    test('sending an article with unsaved changes releases its lock', {
-        annotation: [
-            {type: 'jira', description: 'STT-1525'},
-        ],
-    }, async ({page}) => {
+    test('sending an article with unsaved changes releases its lock', async ({page}) => {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 

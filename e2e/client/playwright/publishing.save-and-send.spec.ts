@@ -5,11 +5,7 @@ import {restoreDatabaseSnapshot} from './utils';
 
 test.setTimeout(60000);
 
-test('publishing with a single "Save and send" after fixing a validation error', {
-    annotation: [
-        {type: 'jira', description: 'SDESK-7993'},
-    ],
-}, async ({page}) => {
+test('publishing with a single "Save and send" after fixing a validation error', async ({page}) => {
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);
 
