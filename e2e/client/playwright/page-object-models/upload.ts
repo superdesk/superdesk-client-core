@@ -144,6 +144,12 @@ export class MediaUpload {
      * bytes cross the boundary base64-encoded because `evaluateHandle` arguments
      * are JSON-serialised. ng-file-upload's `ngf-drop` reads
      * `dataTransfer.items`, which is what `DataTransfer.items.add(file)` fills.
+     *
+     * The dispatch is fire-and-forget at one specific DOM node, and the event is
+     * lost with no observable difference from success when the drop area is
+     * re-rendered around it. The drop is therefore verified by the item count and
+     * dispatched again, only for as long as no file of this drop has landed:
+     * re-dispatching after a merely slow drop would duplicate every item.
      */
     async dropFiles(files: Array<IUploadFile>): Promise<void> {
         const payload = files.map(({name, mimeType, buffer}) => ({
@@ -151,6 +157,12 @@ export class MediaUpload {
             name,
             type: mimeType,
         }));
+
+        // a non-media file is refused with a notification instead of becoming an item
+        const mediaCount = files
+            .filter(({mimeType}) => /^(image|video|audio)\//.test(mimeType))
+            .length;
+        const countBefore = await this.getItems().count();
 
         const dataTransfer = await this.page.evaluateHandle((entries) => {
             const transfer = new DataTransfer();
@@ -164,7 +176,13 @@ export class MediaUpload {
             return transfer;
         }, payload);
 
-        await this.getDropArea().dispatchEvent('drop', {dataTransfer});
+        await expect(async () => {
+            if (await this.getItems().count() === countBefore) {
+                await this.getDropArea().dispatchEvent('drop', {dataTransfer});
+            }
+
+            await expect(this.getItems()).toHaveCount(countBefore + mediaCount, {timeout: 3000});
+        }).toPass();
 
         await dataTransfer.dispose();
     }
