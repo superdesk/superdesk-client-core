@@ -243,7 +243,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`.
+`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
+`required-headline`.
 
 ### Publishing config in the `main` snapshot
 
@@ -342,6 +343,18 @@ sorts `versioncreated:desc`) and shows one version more than it does under
 
 Note that `expiry` is not writable through the archive API, it is derived from
 desk settings server-side. The value in this snapshot was set in mongo directly.
+
+### The `required-headline` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'required-headline'})` gives you `main`
+with one change: the Story content profile marks `headline` as required and
+non-empty (schema and editor both). In `main` the Story profile requires
+nothing, so no publish-validation failure is reachable there; the `validators`
+collection does not apply because every item carries a profile. Reach for this
+snapshot when a spec needs publishing to be blocked by a missing field on the
+standard Sports items: publishing with an empty headline fails with
+"HEADLINE empty values not allowed". Saving is unaffected; required fields only
+gate publishing.
 
 ### The `saved-search-private` snapshot
 
