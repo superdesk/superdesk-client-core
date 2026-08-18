@@ -93,6 +93,16 @@ export class Authoring {
         await expect(page.getByTestId('authoring-topbar')).toBeHidden();
     }
 
+    /**
+     * Closes the opened article and waits for the editor to be gone, so that a following
+     * interaction with the monitoring list underneath does not race the closing pane.
+     */
+    async close(): Promise<void> {
+        await this.page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await expect(this.page.getByTestId('authoring')).toBeHidden();
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
