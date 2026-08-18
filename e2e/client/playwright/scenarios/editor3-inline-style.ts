@@ -1,5 +1,4 @@
 import {Locator, Page, expect} from '@playwright/test';
-import {Authoring} from '../page-object-models/authoring';
 import {Monitoring} from '../page-object-models/monitoring';
 import {pressRepeatedly} from '../utils';
 import {
@@ -8,6 +7,33 @@ import {
     getEditor3FormattingButton,
     getEditor3TextRun,
 } from '../utils/editor3';
+
+/**
+ * Closes the article after an edit, making sure the edit survives.
+ *
+ * Two races are absorbed here. editor3 pushes an edit into the authoring model on a
+ * debounce, and a close that beats it silently discards the edit, so the close waits
+ * for the topbar Save button to enable first, which is the model acknowledging the
+ * change; when the button stays disabled the change was already persisted (autosave
+ * runs a few seconds after an edit) and there is nothing to wait for. The close then
+ * either raises the "Save changes?" prompt, whose Save persists and closes, or, when
+ * autosave won, closes cleanly with no prompt. `Authoring.closeAndSave` requires the
+ * prompt and hangs on an autosaved close.
+ */
+export async function closeSavingAnyChanges(page: Page): Promise<void> {
+    const topbar = page.getByTestId('authoring-topbar');
+
+    await expect(topbar.getByTestId('save')).toBeEnabled({timeout: 2000}).catch(() => undefined);
+
+    await topbar.getByTestId('close').click();
+
+    await page.getByTestId('unsaved-changes-dialog')
+        .getByRole('button', {name: 'Save', exact: true})
+        .click({timeout: 5000})
+        .catch(() => undefined);
+
+    await expect(topbar).toBeHidden();
+}
 
 // Each stretch of text is typed as two halves, so "select part of the text" is a fixed
 // number of Shift+Arrow presses and each half is addressable on its own.
@@ -47,7 +73,6 @@ export async function runEditor3InlineStyleToggleScenario(
     page: Page,
     {styleName, headline, expectStyled}: Editor3InlineStyleScenario,
 ): Promise<void> {
-    const authoring = new Authoring(page);
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -105,7 +130,7 @@ export async function runEditor3InlineStyleToggleScenario(
     await expectStyled(run(STYLED_TAIL), false);
     await expectStyled(run(STYLED_HEAD), true);
 
-    await authoring.closeAndSave();
+    await closeSavingAnyChanges(page);
 
     await monitoring.getArticleLocator(headline).dblclick();
     await expect(bodyInput).toBeVisible();

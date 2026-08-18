@@ -1,7 +1,6 @@
 import {test, expect, type Locator, type Page} from '@playwright/test';
-import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {runEditor3InlineStyleToggleScenario} from './scenarios/editor3-inline-style';
+import {closeSavingAnyChanges, runEditor3InlineStyleToggleScenario} from './scenarios/editor3-inline-style';
 import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
@@ -123,7 +122,6 @@ test.describe('editor3 formatting styles', () => {
         expectStyled: ExpectTextStyled;
     }): Promise<void> {
         const {styleName, headline, expectStyled} = options;
-        const authoring = new Authoring(page);
         const monitoring = new Monitoring(page);
         const field = getEditor3Field(page, CUSTOM_FIELD);
         const input = field.getByRole('textbox');
@@ -139,7 +137,7 @@ test.describe('editor3 formatting styles', () => {
         await page.keyboard.type(CUSTOM_TEXT);
         await expectStyled(field, CUSTOM_TEXT, true);
 
-        await authoring.closeAndSave();
+        await closeSavingAnyChanges(page);
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(input).toBeVisible();
@@ -199,6 +197,136 @@ test.describe('editor3 formatting styles', () => {
     });
 
     /**
+     * The custom-field halves of the six formatting cases whose `body_html` walks live in
+     * their own specs (editor3.bold.spec.ts and siblings). Each case's purpose names custom
+     * text fields alongside the body and only this snapshot provides one, so the test here
+     * is the `complete` marker of its case and the standalone spec contributes the body
+     * half as `partial`.
+     */
+    async function runCustomFieldOnlyCase(page: Page, options: {
+        styleName: string;
+        headline: string;
+        expectStyled: ExpectTextStyled;
+    }): Promise<void> {
+        await restoreDatabaseSnapshot(SNAPSHOT);
+        await createArticle(page, options.headline);
+        await toggleStyleOnCustomField(page, options);
+    }
+
+    const expectBold: ExpectRunStyled = (run, bold) =>
+        bold
+            ? expect(run).toHaveCSS('font-weight', '700')
+            : expect(run).not.toHaveCSS('font-weight', '700');
+
+    const expectItalic: ExpectRunStyled = (run, italic) =>
+        italic
+            ? expect(run).toHaveCSS('font-style', 'italic')
+            : expect(run).not.toHaveCSS('font-style', 'italic');
+
+    const expectUnderline: ExpectRunStyled = (run, underlined) =>
+        expect(run).toHaveCSS('text-decoration-line', underlined ? 'underline' : 'none');
+
+    /**
+     * Block styles convert the whole block the caret is in, so they are asserted on the
+     * block's tag rather than on a styled text run, the same way the standalone specs
+     * read them: Draft renders a quote block as `blockquote` and a list item as `li`
+     * inside its list element, an unstyled block as `div`.
+     */
+    const expectQuoteBlock: ExpectTextStyled = async (field, text, quoted) => {
+        const block = field.locator('[data-block="true"]').filter({hasText: text});
+
+        await expect(block).toHaveCount(1);
+        await expect(block).toHaveJSProperty('tagName', quoted ? 'BLOCKQUOTE' : 'DIV');
+    };
+
+    function expectListItem(listTag: 'ul' | 'ol'): ExpectTextStyled {
+        return async (field, text, listed) => {
+            const block = field.locator('[data-block="true"]').filter({hasText: text});
+
+            await expect(block).toHaveCount(1);
+            await expect(block).toHaveJSProperty('tagName', listed ? 'LI' : 'DIV');
+
+            if (listed) {
+                await expect(
+                    field.locator(`${listTag} li[data-block="true"]`).filter({hasText: text}),
+                ).toHaveCount(1);
+            }
+        };
+    }
+
+    test('bold toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669361 complete'}, // Bold
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'bold',
+            headline: 'bold custom field test',
+            expectStyled: onTextRun(expectBold),
+        });
+    });
+
+    test('italic toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669363 complete'}, // Italic
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'italic',
+            headline: 'italic custom field test',
+            expectStyled: onTextRun(expectItalic),
+        });
+    });
+
+    test('underline toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669372 complete'}, // Underline
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'underline',
+            headline: 'underline custom field test',
+            expectStyled: onTextRun(expectUnderline),
+        });
+    });
+
+    test('quote toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669353 complete'}, // Quote
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'quote',
+            headline: 'quote custom field test',
+            expectStyled: expectQuoteBlock,
+        });
+    });
+
+    test('unordered list toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669355 complete'}, // Unordered list
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'unordered list',
+            headline: 'unordered list custom field test',
+            expectStyled: expectListItem('ul'),
+        });
+    });
+
+    test('ordered list toggles in the custom text field', {
+        annotation: [
+            {type: 'confluence', description: '1313669357 complete'}, // Ordered list
+        ],
+    }, async ({page}) => {
+        await runCustomFieldOnlyCase(page, {
+            styleName: 'ordered list',
+            headline: 'ordered list custom field test',
+            expectStyled: expectListItem('ol'),
+        });
+    });
+
+    /**
      * Tag of the editor3 block the caret sits in, or `undefined` when it sits outside one.
      * Read in the page because a collapsed selection has no DOM node Playwright can locate.
      */
@@ -232,7 +360,6 @@ test.describe('editor3 formatting styles', () => {
         await restoreDatabaseSnapshot(SNAPSHOT);
         await createArticle(page, headline);
 
-        const authoring = new Authoring(page);
         const monitoring = new Monitoring(page);
         const body = getEditor3Field(page, 'body_html');
         const bodyInput = body.getByRole('textbox');
@@ -291,7 +418,7 @@ test.describe('editor3 formatting styles', () => {
         await expect(preButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
         await expectPreformatted(body, PRE_HEAD + PRE_TAIL, false);
 
-        await authoring.closeAndSave();
+        await closeSavingAnyChanges(page);
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();
@@ -373,7 +500,6 @@ test.describe('editor3 formatting styles', () => {
         await restoreDatabaseSnapshot(SNAPSHOT);
         await createArticle(page, headline);
 
-        const authoring = new Authoring(page);
         const monitoring = new Monitoring(page);
         const body = getEditor3Field(page, 'body_html');
         const bodyInput = body.getByRole('textbox');
@@ -429,7 +555,7 @@ test.describe('editor3 formatting styles', () => {
         // the body's own marks as they were.
         await expectFormattingMarks(body, PARAGRAPHS.length, true);
 
-        await authoring.closeAndSave();
+        await closeSavingAnyChanges(page);
 
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(bodyInput).toBeVisible();
