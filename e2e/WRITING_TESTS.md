@@ -304,10 +304,12 @@ A toolbar button exposes two handles. The legacy one is
 `data-test-id="formatting-option"` with the option name in `data-test-value`, so
 `s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
 inner `<i>` icon rather than on the outer `<span>` that carries the click
-handler. The open editor3 campaign branches add
-`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
-that outer span and standardise on it in their `getFormattingOptionButton`
-helpers. Prefer that handle once those branches land.
+handler. The outer span carries `data-test-id="formatting-option-button"` with
+the same `data-test-value`, and that is the handle to use: reach for it through
+`getEditor3FormattingButton(field, 'strikethrough')` in
+`playwright/utils/editor3.tsx`, alongside `getEditor3Field(page, 'body_html')`
+for the field itself and `getEditor3TextRun(field, text)` for the Draft.js leaf
+an inline style lands on.
 
 The formatting-marks button is the exception: the toolbar passes it the
 internal label `invisibles`, which has no entry in the option map, so

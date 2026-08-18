@@ -103,6 +103,28 @@ export class Authoring {
         await expect(this.page.getByTestId('authoring')).toBeHidden();
     }
 
+    /**
+     * Saves through the topbar Save button and waits for the write to finish.
+     *
+     * Reach for it before closing when the last edit was made in an editor3 field. editor3
+     * pushes a field change into the authoring model on a debounce (100ms by default), and
+     * a close that beats the debounce closes the article as it was before that edit. The
+     * Save button is enabled only while the model carries unsaved changes, and the topbar's
+     * own `saveTopbar()` handler (`AuthoringTopbarDirective`) waits 600ms before saving the
+     * item, which outlasts the debounce.
+     */
+    async save(): Promise<void> {
+        const save = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const saving = save.getByTestId('loading-indicator');
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        await expect(saving).toBeVisible();
+        await expect(saving).toBeHidden();
+        await expect(save).toBeDisabled();
+    }
+
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
