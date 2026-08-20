@@ -25,4 +25,12 @@ export class MediaEditor {
         await this.page.locator(s('media-editor', 'apply-metadata-button')).click();
         await this.page.locator(s('change-image', 'done')).click();
     }
+
+    get header(): Locator {
+        return this.page.getByTestId('change-image');
+    }
+
+    get doneButton(): Locator {
+        return this.header.getByTestId('done');
+    }
 }
