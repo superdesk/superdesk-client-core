@@ -29,6 +29,8 @@ e2e/client/playwright/
 ├── <scenario>.spec.ts          <- specs are flat here, hyphenated names
 ├── page-object-models/
 │   └── <feature>.ts            <- Page Object classes (Authoring, Monitoring, ...)
+├── scenarios/
+│   └── <flow>.ts               <- multi-feature flows shared by several specs
 └── utils/
     ├── index.ts                <- restoreDatabaseSnapshot, login, helpers
     └── storage-state.ts        <- getStorageState
@@ -39,6 +41,12 @@ e2e/client/playwright/
   behaviour: `assign-coverage.spec.ts`, not `test1.spec.ts` or `bug-123.spec.ts`.
 - Page Objects live in `playwright/page-object-models/<feature>.ts`, one class
   per feature area, methods named after user-facing operations.
+- A flow that several specs drive end to end and that spans more than one
+  feature area (so it fits no single Page Object) goes in
+  `playwright/scenarios/<flow>.ts` as a function taking the `Page`. Scenarios
+  may import Page Objects and utils; nothing imports a scenario except a spec.
+  Keep the dependency direction one-way: specs -> scenarios -> Page Objects ->
+  utils. A util must never import a Page Object.
 - Import helpers and Page Objects with local relative paths:
   ```ts
   import {restoreDatabaseSnapshot} from './utils';
@@ -235,7 +243,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`.
+`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
+`required-headline`.
 
 ### Publishing config in the `main` snapshot
 
@@ -295,10 +304,12 @@ A toolbar button exposes two handles. The legacy one is
 `data-test-id="formatting-option"` with the option name in `data-test-value`, so
 `s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
 inner `<i>` icon rather than on the outer `<span>` that carries the click
-handler. The open editor3 campaign branches add
-`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
-that outer span and standardise on it in their `getFormattingOptionButton`
-helpers. Prefer that handle once those branches land.
+handler. The outer span carries `data-test-id="formatting-option-button"` with
+the same `data-test-value`, and that is the handle to use: reach for it through
+`getEditor3FormattingButton(field, 'strikethrough')` in
+`playwright/utils/editor3.tsx`, alongside `getEditor3Field(page, 'body_html')`
+for the field itself and `getEditor3TextRun(field, text)` for the Draft.js leaf
+an inline style lands on.
 
 The formatting-marks button is the exception: the toolbar passes it the
 internal label `invisibles`, which has no entry in the option map, so
@@ -334,6 +345,18 @@ sorts `versioncreated:desc`) and shows one version more than it does under
 
 Note that `expiry` is not writable through the archive API, it is derived from
 desk settings server-side. The value in this snapshot was set in mongo directly.
+
+### The `required-headline` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'required-headline'})` gives you `main`
+with one change: the Story content profile marks `headline` as required and
+non-empty (schema and editor both). In `main` the Story profile requires
+nothing, so no publish-validation failure is reachable there; the `validators`
+collection does not apply because every item carries a profile. Reach for this
+snapshot when a spec needs publishing to be blocked by a missing field on the
+standard Sports items: publishing with an empty headline fails with
+"HEADLINE empty values not allowed". Saving is unaffected; required fields only
+gate publishing.
 
 ### The `saved-search-private` snapshot
 
