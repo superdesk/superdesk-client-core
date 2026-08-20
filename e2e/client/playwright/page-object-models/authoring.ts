@@ -70,6 +70,23 @@ export class Authoring {
     }
 
     /**
+     * Opens a right-side widget from the authoring-angular widget bar by its label and
+     * returns the opened panel. authoring-react renders the same bar differently
+     * (`widget-icon` keyed by widget id), so this is not usable there.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-widget').and(page.locator(`[data-test-value="${label}"]`)).click();
+
+        const panel = page.getByTestId('authoring-widget-panel').and(page.locator(`[data-test-value="${label}"]`));
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
      * editor3 field takes quite some time to initialize in authoring-react.
      * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
      */
