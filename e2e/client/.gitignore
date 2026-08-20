@@ -1,0 +1,2 @@
+coverage-report/
+playwright/*.covspec.ts

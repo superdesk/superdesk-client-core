@@ -293,6 +293,10 @@ module.exports = function makeConfig(grunt) {
         /^(.+?[\\/]node_modules[\\/](?!superdesk|planning[\\/]|immutable[\\/])(@[^\\/]+[\\/])?(?!@)[^\\/]+)[\\/]/;
 
     return {
+        // full source maps so V8 coverage collected in e2e runs can be mapped back to
+        // scripts/; opt-in because generating them slows the build considerably
+        devtool: process.env.E2E_COVERAGE_SOURCEMAP ? 'source-map' : undefined,
+
         cache: {
             type: 'filesystem',
             buildDependencies: {
