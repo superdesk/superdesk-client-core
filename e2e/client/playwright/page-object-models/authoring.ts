@@ -155,10 +155,11 @@ export class Authoring {
     }
 
     /**
-     * The authoring field of a media association ('field--feature-media', or the id the
-     * content profile knows it under). Association fields hold a placeholder button, a
-     * media figure and metadata inputs rather than a single control, so unlike `field`
-     * this returns the field itself and leaves picking what is inside it to the caller.
+     * The authoring field of a media association, addressed by its `data-test-value`:
+     * the schema id for built-in fields ('feature_media'), the display name for custom
+     * ones ('Shire gallery'). Association fields hold a placeholder button, a media
+     * figure and metadata inputs rather than a single control, so unlike `field` this
+     * returns the field itself and leaves picking what is inside it to the caller.
      * Same element as `fieldContainer`; the name states what the callers read it as.
      */
     associationField(fieldId: string): Locator {

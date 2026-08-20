@@ -346,13 +346,14 @@ three pictures share one set of renditions, so they render the same image.
 
 Two things to know before writing against the fields:
 
-- **Only the gallery field has a `data-test-id`.** `article-edit.html` marks the
-  media block with `data-test-id="authoring-field"` and the display name in
-  `data-test-value`, and the carousel inside it exposes
+- **Address both fields by display name, drop on the inner element.** `article-edit.html`
+  marks the media and related-content blocks alike with `data-test-id="authoring-field"`
+  and the display name in `data-test-value`. The gallery carousel inside exposes
   `media-gallery--upload-placeholder`, `media-gallery-image` and
-  `media-gallery-image--remove`. The related-content block carries none, so
-  address it through the `[sd-related_items]` directive attribute and count its
-  rows by the `field--slugline` each row renders.
+  `media-gallery-image--remove`. The related-content block's inner drop zone (the
+  `[sd-related_items]` element, which is where the drop listener binds) has no test id
+  of its own: descend to it from the block for drops, and count its rows by the
+  `field--slugline` each row renders.
 - **Drop one item at a time.** Both fields derive a new association key from the
   ones already on the item, asynchronously, so two drops in a row compute the
   same key and the second replaces the first. Wait for each dropped item to
