@@ -567,13 +567,15 @@ function deskOutputGroup(page: Page): Locator {
 /**
  * The related-content field of the open article, which is also its drop zone.
  *
- * The related-content block in `article-edit.html` carries no `data-test-id`, unlike the media
- * and urls blocks next to it, so the directive attribute AngularJS leaves on the element is the
- * only stable handle. It is the element `RelatedItemsDirective` binds `drop` to, and it stays
- * put whether the field is empty or already holds items.
+ * The block is addressed by display name through the shared authoring-field test id, and the
+ * locator then descends to the inner element, because that is the one `RelatedItemsDirective`
+ * binds `drop` to: a drop dispatched on the outer block fires beside the listener and is lost.
  */
 function relatedItemsField(page: Page): Locator {
-    return page.getByTestId('authoring').locator('[sd-related_items]');
+    return page.getByTestId('authoring')
+        .getByTestId('authoring-field')
+        .and(page.locator('[data-test-value="Shire related items"]'))
+        .locator('[sd-related_items]');
 }
 
 /**
