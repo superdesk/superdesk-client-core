@@ -14,7 +14,7 @@
             <li class="basic-list__item" ng-if="_isInProductionStates">
                 <label class="basic-list__item-label" ng-if="_editable" translate>Not For Publication</label>
                 <span class="basic-list__item-data" ng-if="_editable">
-                    <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_not_publication"></span>
+                    <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_not_publication" data-test-id="not-for-publication"></span>
                 </span>
                 <span ng-if="!_editable">
                     <span class="state-label not-for-publication" ng-show="item.flags.marked_for_not_publication" translate>Not For Publication</span>
@@ -25,7 +25,7 @@
             <li class="basic-list__item" ng-if="_isInProductionStates">
                 <label class="basic-list__item-label" ng-if="_editable" translate>Legal</label>
                 <span class="basic-list__item-data" ng-if="_editable">
-                    <span sd-switch ng-model="item.flags.marked_for_legal"></span>
+                    <span sd-switch ng-model="item.flags.marked_for_legal" data-test-id="legal"></span>
                 </span>
                 <span ng-if="!_editable">
                     <span class="state-label legal" ng-show="item.flags.marked_for_legal" translate>Legal</span>
@@ -33,7 +33,7 @@
             </li>
 
             <li sd-metadata-list-item data-label="'Usage terms' | translate" ng-if="!isRemovedField('usageterms')">
-                <input class="basic-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
+                <input class="basic-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)" data-test-id="usage-terms">
             </li>
 
             <li class="basic-list__item basic-list__item--stacked" ng-if="$root.config.features.alchemy">
@@ -49,11 +49,12 @@
                     data-key="qcode"
                     data-list="metadata.languages"
                     ng-disabled="!_editable"
-                    data-change="autosave(item)">
+                    data-change="autosave(item)"
+                    data-test-id="language">
                 </div>
             </li>
 
-            <li sd-metadata-list-item data-label="'Pubstatus' | translate" ng-if="item.pubstatus">
+            <li sd-metadata-list-item data-label="'Pubstatus' | translate" ng-if="item.pubstatus" data-test-id="pubstatus">
                 {{ item.pubstatus }}
             </li>
 
@@ -73,7 +74,7 @@
                 {{ item.creditline }}
             </li>
 
-            <li sd-metadata-list-item data-label="'State' | translate">
+            <li sd-metadata-list-item data-label="'State' | translate" data-test-id="state">
                 <span sd-item-state data-state=item.state data-embargo=item.embargo data-test-id="item-state"></span>
                 <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
                 <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
@@ -189,13 +190,13 @@
 
             <li class="basic-list__item basic-list__item--stacked">
                 <label class="basic-list__item-label basic-list__item-label--block" translate>GUID</label>
-                <div class="basic-list__item-data" id="guid">
+                <div class="basic-list__item-data" id="guid" data-test-id="guid">
                     {{item.guid}}
                 </div>
             </li>
 
             <li sd-metadata-list-item data-label="'Unique name' | translate">
-                <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
+                <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable" data-test-id="unique-name">
             </li>
 
             <li sd-metadata-list-item data-label="'Type' | translate">
