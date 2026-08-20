@@ -216,6 +216,12 @@ async function unlock(session: ISecondActorSession): Promise<void> {
 
     await expect(session.topbar.getByTestId('save')).toBeVisible();
     await expect(session.topbar.getByTestId('locked-info')).toHaveCount(0);
+
+    // The topbar settles before the editable form paints; asserting a field proves the
+    // reopen produced an editor rather than bare chrome over a blank pane.
+    await expect(
+        session.page.getByTestId('authoring').getByTestId('authoring-field').first(),
+    ).toBeVisible();
 }
 
 test.describe('unlocking an item locked by another user', () => {
