@@ -70,6 +70,30 @@ export class Authoring {
     }
 
     /**
+     * Opens a side widget by its label and returns the widget panel.
+     *
+     * Both the tab and the panel carry the label in `data-test-value` while their
+     * visible content is an icon, so they are matched on the attribute.
+     *
+     * The tab toggles rather than opens: clicking it while its widget is active
+     * closes the panel. The tab is therefore only clicked when the panel is not
+     * already showing, so that calling this on an open widget is a no-op.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const {page} = this;
+        const withLabel = page.locator(`[data-test-value="${label}"]`);
+        const panel = page.getByTestId('authoring-widget-panel').and(withLabel);
+
+        if (!await panel.isVisible()) {
+            await page.getByTestId('authoring-widget').and(withLabel).click();
+        }
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
      * editor3 field takes quite some time to initialize in authoring-react.
      * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
      */
