@@ -70,6 +70,64 @@ export class Authoring {
     }
 
     /**
+     * Saves from the topbar and waits for the save to land.
+     *
+     * The Save button is also disabled while the save is in flight, so it being
+     * disabled says nothing about the item having been persisted. The spinner
+     * inside the button is the completion signal: it is bound to the same flag
+     * the save promise clears when it settles.
+     */
+    async save(): Promise<void> {
+        const saveButton = this.page.getByTestId('authoring-topbar').getByTestId('save');
+        const spinner = saveButton.getByTestId('loading-indicator');
+
+        await saveButton.click();
+        await expect(spinner).toBeVisible();
+        await expect(spinner).toBeHidden();
+        await expect(saveButton).toBeDisabled();
+    }
+
+    /**
+     * Closes an article that has nothing left to save.
+     *
+     * There is no way to assert the "Save changes?" prompt stays away by looking
+     * for its absence, since it is absent for a moment either way. The topbar
+     * hiding is the assertion that carries it: while the prompt is up the article
+     * stays open, so a prompt here fails this method rather than being clicked
+     * away.
+     */
+    async close(): Promise<void> {
+        const {page} = this;
+        const topbar = page.getByTestId('authoring-topbar');
+
+        await topbar.getByTestId('close').click();
+
+        await expect(topbar).toBeHidden();
+        await expect(page.getByTestId('unsaved-changes-dialog')).toBeHidden();
+    }
+
+    /**
+     * Closes an article that has pending edits, answering the "Save changes?"
+     * prompt with Save.
+     *
+     * Use this instead of `save()` + `close()` after editing fields that
+     * autosave on a debounce: the debounced autosave can land after the topbar
+     * save, which raises the prompt anyway and leaves `close()` hanging on an
+     * article that never closes.
+     */
+    async closeAndSave(): Promise<void> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await page.getByTestId('unsaved-changes-dialog')
+            .getByRole('button', {name: 'Save', exact: true})
+            .click();
+
+        await expect(page.getByTestId('authoring-topbar')).toBeHidden();
+    }
+
+    /**
      * editor3 field takes quite some time to initialize in authoring-react.
      * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
      */
