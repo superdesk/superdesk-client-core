@@ -46,38 +46,44 @@ import {dropArticle} from './utils/drag-and-drop';
  * - held by the publisher: "<headline>: packaged item is locked by you. Unlock it
  *   and try again"
  *
- * Only the first of those is reachable from the authoring UI, and it is what both
- * tests assert. Case 1328906291 is the one that asks for the second: it wants an item
- * "locked by you or another user", and the by-you half is refused the same way. The
+ * Which of the two a test gets depends on the button, not on who holds the lock. The
  * validator compares the association's `lock_user` against the *publishing item's*
- * `lock_user`, and the client releases that lock before it sends the publish request:
- * the send/publish pane routes through `$scope.beforeSend`, whose own docstring is
- * "makes sure to unlock the item" (`AuthoringDirective`). The publishing item therefore
- * always arrives unlocked, and any locked association compares unequal. The package
- * test takes the lock as the publisher precisely to pin that down.
+ * `lock_user`, and the send/publish pane routes through `$scope.beforeSend`, whose own
+ * docstring is "makes sure to unlock the item" (`AuthoringDirective`). Everything
+ * published through that pane therefore arrives unlocked, and any locked association
+ * compares unequal: the publish tests below all get "another user", including the
+ * package one, which takes the lock as the publisher precisely to pin that down. That
+ * is also the half case 1328906291 asks for when it wants an item "locked by you or
+ * another user".
+ *
+ * Send Correction is a topbar button that calls `$scope.publish()` with nothing in
+ * between, so a correction keeps its own lock and the by-you wording is what the two
+ * correction tests get. Their locking session holds the lock as the same user.
  *
  * The backend returns those in `_issues['validator exception']`; `scripts/api/article.ts`
  * strips the brackets, splits on commas and raises one error notification per piece.
- * No case quotes that wording. They quote a heading ("The following items that you
- * are trying to publish are locked:") and, for the related-item cases, a footer
- * ("Unlock them first and then continue."). Neither string exists in this client or
- * in superdesk-core, so the tests assert what the product actually says.
+ * Every case wraps that in a heading it never gets ("The following items that you are
+ * trying to publish are locked:"), and the related-item and package cases add a footer
+ * ("Unlock them first and then continue."); neither string exists in this client or in
+ * superdesk-core. The two gallery cases quote the per-item half almost verbatim
+ * ("Packaged item is locked by XX. Unlock it and try again"), which is the by-you message
+ * with a capital P. The tests assert what the product actually says.
  *
- * Case 1328906297 stays `partial` over one expected result: it claims the scenario
- * works the same whether the image was uploaded from a folder or dragged in from
- * Superdesk, and only the drag is driven here. The upload entry point itself belongs
- * to case 1310851132.
+ * Cases 1328906297, 1328906307 and 1328906320 stay `partial` over one expected result
+ * they share: each claims the scenario works the same whether the image was uploaded
+ * from a folder or dragged in from Superdesk, and only the drag is driven here. The
+ * upload entry point itself belongs to case 1310851132. The two gallery cases also
+ * expect a locked item to be refused by the field itself, which the publishing test
+ * drives and the correcting one does not.
  *
- * Still parked, one reason per case:
+ * The related-item and gallery cases run against the `association-fields` snapshot,
+ * which is `main` plus the two fields they need on the Story profile ("Shire related
+ * items", a related-content field, and "Shire gallery", a media field with multiple
+ * items enabled) and the text and picture items to drop into them. `main` carries no
+ * vocabulary with a `field_type` at all, so neither field can render under it.
  *
- * - 1328906265 and 1328906267 (related items) need a related-content custom field.
- *   No committed snapshot has one: `main` carries no vocabulary with a `field_type`
- *   at all, and its Story profile has no related-content entry, so the field cannot
- *   render.
- * - 1328906307 and 1328906320 (gallery) need the same kind of field with
- *   `multiple_items` enabled. The only one in the committed snapshots is "Image
- *   gallery 33" on `legacy`'s editor3 profile, and `legacy` has neither of the
- *   second actors these tests lock with.
+ * Still parked:
+ *
  * - 1328906312 (correcting a package) describes behaviour the product does not
  *   have. A package keeps its members in `groups`, not in `associations`, and
  *   `_validate_associated_items` only adds `get_residrefs(original_item)` to the
@@ -96,6 +102,18 @@ const PACKAGED_STORY = 'Story 3';
 const SPORTS_DESK_OUTPUT = 'Sports desk output';
 const LOCK_OWNER_NAME = 'John Doe';
 const UNLOCK_PRIVILEGE = 'unlock';
+
+/**
+ * The snapshot carrying the two association fields the related-item and gallery cases need,
+ * plus the text and picture items to put in them. See `e2e/server/dump/records/README.md`.
+ */
+const ASSOCIATION_FIELDS = 'association-fields';
+
+const GALLERY_FIELD = 'Shire gallery';
+const RELATED_ITEMS = ['Bree bulletin', 'Rohan dispatch'];
+const CORRECTION_RELATED_ITEM = 'Weathertop note';
+const GALLERY_PICTURES = ['Gondor picture', 'Mirkwood picture'];
+const CORRECTION_PICTURE = 'Fangorn picture';
 
 /**
  * Clicking a notification that has already removed itself is an accepted outcome, so
@@ -546,6 +564,111 @@ function deskOutputGroup(page: Page): Locator {
         .and(page.locator(`[data-test-value="${SPORTS_DESK_OUTPUT}"]`));
 }
 
+/**
+ * The related-content field of the open article, which is also its drop zone.
+ *
+ * The related-content block in `article-edit.html` carries no `data-test-id`, unlike the media
+ * and urls blocks next to it, so the directive attribute AngularJS leaves on the element is the
+ * only stable handle. It is the element `RelatedItemsDirective` binds `drop` to, and it stays
+ * put whether the field is empty or already holds items.
+ */
+function relatedItemsField(page: Page): Locator {
+    return page.getByTestId('authoring').locator('[sd-related_items]');
+}
+
+/**
+ * One row per item in the related-content field. The rows carry no id of their own
+ * (`related-items.html` puts the same `id` on all of them), so they are counted through the
+ * slugline their React list item renders.
+ */
+function relatedItemRows(page: Page): Locator {
+    return relatedItemsField(page).getByTestId('field--slugline');
+}
+
+/**
+ * The gallery field's carousel, which is the element `ItemCarouselDirective` binds `drop` to.
+ * The upload placeholder inside it is only rendered while the gallery is empty, so a test that
+ * adds a second item has to drop on the carousel itself.
+ */
+function galleryField(page: Page): Locator {
+    return page.getByTestId('authoring').getByTestId('authoring-field')
+        .and(page.locator(`[data-test-value="${GALLERY_FIELD}"]`))
+        .locator('[sd-item-carousel]');
+}
+
+function galleryImages(page: Page): Locator {
+    return galleryField(page).getByTestId('media-gallery-image');
+}
+
+/**
+ * Saves the open article and waits for the write.
+ *
+ * Every association field in `article-edit.html` reports a change through a `data-onchange` that
+ * calls `autosave`, so a dropped item only reaches `archive_autosave` until the article is saved,
+ * and publishing validates the archive item rather than the autosave.
+ */
+async function saveOpenArticle(page: Page, articleId: string): Promise<void> {
+    const saveButton = page.getByTestId('authoring-topbar').getByTestId('save');
+
+    await expect(saveButton).toBeEnabled();
+
+    const [saved] = await Promise.all([
+        page.waitForResponse((r) => r.request().method() === 'PATCH'
+            && new URL(r.url()).pathname.endsWith(`/archive/${articleId}`)),
+        saveButton.click(),
+    ]);
+
+    expect(saved.status()).toBe(200);
+}
+
+function deskOutputItem(page: Page, headline: string): Locator {
+    return deskOutputGroup(page).getByTestId('article-item').filter({hasText: headline});
+}
+
+/**
+ * Opens a published item for correction from the desk output group.
+ */
+async function openCorrection(page: Page, headline: string): Promise<void> {
+    const monitoring = new Monitoring(page);
+
+    await monitoring.executeActionOnMonitoringItem(
+        deskOutputItem(page, headline),
+        'Publishing actions',
+        'Correct item',
+    );
+
+    await expect(page.getByTestId('authoring')).toBeVisible();
+    await expect(sendCorrection(page)).toBeVisible();
+}
+
+/**
+ * Unlike Publish, Send Correction is a topbar button rather than an entry in the send/publish
+ * pane, and it calls `$scope.publish()` straight away: nothing releases the correcting session's
+ * own lock first, which is what makes the "locked by you" half of the refusal reachable here.
+ */
+function sendCorrection(page: Page): Locator {
+    return page.getByTestId('authoring-topbar').getByRole('button', {name: 'Send Correction'});
+}
+
+/**
+ * Drops the given articles into `field` one at a time, waiting for each to appear in `rows`.
+ *
+ * Both fields key a new association off the ones already on the item
+ * (`RelatedItemsDirective.getNextKeyAndOrder`, `InitializeMediaService`), and the drop that puts
+ * one there resolves asynchronously. Two drops in a row therefore compute the same key and the
+ * second overwrites the first.
+ */
+async function dropAssociations(
+    field: Locator,
+    rows: Locator,
+    articles: Array<{_id: string; type: string}>,
+): Promise<void> {
+    for (const [index, article] of articles.entries()) {
+        await dropArticle(field, article);
+        await expect(rows).toHaveCount(index + 1);
+    }
+}
+
 test.describe('publishing an item whose association is locked', () => {
     test('an article whose Feature media item is locked by another user', {
         annotation: [
@@ -598,23 +721,7 @@ test.describe('publishing an item whose association is locked', () => {
 
             await expect(featureMedia.getByTestId('association-image')).toBeVisible();
 
-            /*
-             * `AssociationController.addAssociation` passes `autosave` on for a dropped
-             * archive item, so the field's own write only reaches `archive_autosave`.
-             * The article is saved explicitly here so the association is on the item
-             * itself, which is what the publish below is validated against.
-             */
-            const saveButton = page.getByTestId('authoring-topbar').getByTestId('save');
-
-            await expect(saveButton).toBeEnabled();
-
-            const [articleSaved] = await Promise.all([
-                page.waitForResponse((r) => r.request().method() === 'PATCH'
-                    && new URL(r.url()).pathname.endsWith(`/archive/${articleId}`)),
-                saveButton.click(),
-            ]);
-
-            expect(articleSaved.status()).toBe(200);
+            await saveOpenArticle(page, articleId);
 
             await lockOwner.lock();
 
@@ -735,22 +842,324 @@ test.describe('publishing an item whose association is locked', () => {
             await lockOwner.context.close();
         }
     });
+
+    test('an article one of whose related items is locked', {
+        annotation: [
+            // Publishing article with related locked item
+            {type: 'confluence', description: '1328906265 complete'},
+        ],
+    }, async ({page, browser}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const article = monitoring.getArticleLocator(ARTICLE);
+
+        await expect(article).toBeVisible();
+
+        const articleId = await article.evaluate((element) => element.id);
+        const relatedIds: Array<string> = [];
+
+        for (const headline of RELATED_ITEMS) {
+            relatedIds.push(await monitoring.getArticleLocator(headline).evaluate((element) => element.id));
+        }
+
+        await monitoring.executeActionOnMonitoringItem(article, 'Edit');
+        await expect(page.getByTestId('authoring')).toBeVisible();
+
+        await dropAssociations(
+            relatedItemsField(page),
+            relatedItemRows(page),
+            relatedIds.map((_id) => ({_id, type: 'text'})),
+        );
+
+        await saveOpenArticle(page, articleId);
+
+        const lockOwner = await openLockingSession(browser, RELATED_ITEMS[1]);
+
+        try {
+            await lockOwner.lock();
+
+            const publishPane = await openPublishPane(page);
+
+            await publishPane.getByTestId('publish').click();
+
+            await expectErrorNotification(page, `${RELATED_ITEMS[1]}: packaged item is locked by another user`);
+
+            // a publish that goes through closes authoring (`article.ts` calls
+            // `authoringWorkspace.close`), so the editor still being up is the refusal
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await publishPane.getByTestId('publish').click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+
+            /*
+             * PUBLISH_ASSOCIATED_ITEMS publishes the related items along with the article,
+             * so all three leave the working stage for the desk output group.
+             */
+            await expect(deskOutputItem(page, ARTICLE)).toHaveCount(1);
+
+            for (const headline of RELATED_ITEMS) {
+                await expect(deskOutputItem(page, headline)).toHaveCount(1);
+            }
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
+
+    test('an article whose gallery holds a locked picture', {
+        annotation: [
+            // Publishing gallery with locked item
+            {type: 'confluence', description: '1328906307 partial'},
+        ],
+    }, async ({page, browser}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const article = monitoring.getArticleLocator(ARTICLE);
+        const picture = monitoring.getArticleLocator(GALLERY_PICTURES[0]);
+
+        await expect(picture).toBeVisible();
+
+        const articleId = await article.evaluate((element) => element.id);
+        const pictureId = await picture.evaluate((element) => element.id);
+        const lockOwner = await openLockingSession(browser, GALLERY_PICTURES[0]);
+
+        try {
+            await lockOwner.lock();
+
+            await monitoring.executeActionOnMonitoringItem(article, 'Edit');
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            const gallery = galleryField(page);
+
+            await expect(gallery.getByTestId('media-gallery--upload-placeholder')).toBeVisible();
+
+            await dropArticle(gallery, {_id: pictureId, type: 'picture'});
+
+            await expectErrorNotification(page, 'Item is locked. Cannot associate media item.');
+
+            // the placeholder only renders while the gallery is empty, so it still being
+            // there is the picture not having been added
+            await expect(gallery.getByTestId('media-gallery--upload-placeholder')).toBeVisible();
+            await expect(galleryImages(page)).toHaveCount(0);
+
+            await lockOwner.unlock();
+
+            await dropArticle(gallery, {_id: pictureId, type: 'picture'});
+
+            await expect(galleryImages(page)).toHaveCount(1);
+
+            await saveOpenArticle(page, articleId);
+
+            await lockOwner.lock();
+
+            const publishPane = await openPublishPane(page);
+
+            await publishPane.getByTestId('publish').click();
+
+            await expectErrorNotification(
+                page,
+                `${GALLERY_PICTURES[0]}: packaged item is locked by another user`,
+            );
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await publishPane.getByTestId('publish').click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+            await expect(deskOutputItem(page, ARTICLE)).toHaveCount(1);
+            await expect(deskOutputItem(page, GALLERY_PICTURES[0])).toHaveCount(1);
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
+});
+
+test.describe('correcting an item whose association is locked', () => {
+    test('an article gaining a locked related item in the correction', {
+        annotation: [
+            // Correcting article with related locked item
+            {type: 'confluence', description: '1328906267 complete'},
+        ],
+    }, async ({page, browser}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const article = monitoring.getArticleLocator(ARTICLE);
+
+        await expect(article).toBeVisible();
+
+        const articleId = await article.evaluate((element) => element.id);
+        const relatedIds: Array<string> = [];
+
+        for (const headline of RELATED_ITEMS) {
+            relatedIds.push(await monitoring.getArticleLocator(headline).evaluate((element) => element.id));
+        }
+
+        const correctionId = await monitoring.getArticleLocator(CORRECTION_RELATED_ITEM)
+            .evaluate((element) => element.id);
+
+        await monitoring.executeActionOnMonitoringItem(article, 'Edit');
+        await expect(page.getByTestId('authoring')).toBeVisible();
+
+        await dropAssociations(
+            relatedItemsField(page),
+            relatedItemRows(page),
+            relatedIds.map((_id) => ({_id, type: 'text'})),
+        );
+
+        await saveOpenArticle(page, articleId);
+
+        const publishPane = await openPublishPane(page);
+
+        await publishPane.getByTestId('publish').click();
+
+        await expect(page.getByTestId('authoring')).toBeHidden();
+        await expect(deskOutputItem(page, ARTICLE)).toHaveCount(1);
+
+        await openCorrection(page, ARTICLE);
+
+        await dropArticle(relatedItemsField(page), {_id: correctionId, type: 'text'});
+
+        /*
+         * Not saved before sending: a correction has no Save button (`itemActions.save` is off
+         * for a published item), and it needs none. Send Correction posts the in-memory item,
+         * so the association added here travels with the correction request.
+         */
+        await expect(relatedItemRows(page)).toHaveCount(RELATED_ITEMS.length + 1);
+
+        const lockOwner = await openLockingSession(browser, CORRECTION_RELATED_ITEM);
+
+        try {
+            await lockOwner.lock();
+
+            await sendCorrection(page).click();
+
+            /*
+             * The lock is held by the correcting user in a second session and the correction
+             * keeps its own lock, so the validator recognises the lock owner as the publisher
+             * and words the refusal the other way round than the publish tests above do.
+             */
+            await expectErrorNotification(
+                page,
+                `${CORRECTION_RELATED_ITEM}: packaged item is locked by you. Unlock it and try again`,
+            );
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await sendCorrection(page).click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+            await expect(deskOutputItem(page, CORRECTION_RELATED_ITEM)).toHaveCount(1);
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
+
+    test('an article gaining a locked gallery picture in the correction', {
+        annotation: [
+            // Correcting gallery with locked item
+            {type: 'confluence', description: '1328906320 partial'},
+        ],
+    }, async ({page, browser}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: ASSOCIATION_FIELDS});
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        const article = monitoring.getArticleLocator(ARTICLE);
+
+        await expect(article).toBeVisible();
+
+        const articleId = await article.evaluate((element) => element.id);
+        const pictureIds: Array<string> = [];
+
+        for (const headline of GALLERY_PICTURES) {
+            pictureIds.push(await monitoring.getArticleLocator(headline).evaluate((element) => element.id));
+        }
+
+        const correctionId = await monitoring.getArticleLocator(CORRECTION_PICTURE)
+            .evaluate((element) => element.id);
+
+        await monitoring.executeActionOnMonitoringItem(article, 'Edit');
+        await expect(page.getByTestId('authoring')).toBeVisible();
+
+        await dropAssociations(
+            galleryField(page),
+            galleryImages(page),
+            pictureIds.map((_id) => ({_id, type: 'picture'})),
+        );
+
+        await saveOpenArticle(page, articleId);
+
+        const publishPane = await openPublishPane(page);
+
+        await publishPane.getByTestId('publish').click();
+
+        await expect(page.getByTestId('authoring')).toBeHidden();
+        await expect(deskOutputItem(page, ARTICLE)).toHaveCount(1);
+
+        await openCorrection(page, ARTICLE);
+
+        await dropArticle(galleryField(page), {_id: correctionId, type: 'picture'});
+
+        // See the related-items correction test: a correction has no Save button, and the
+        // association added here travels with the Send Correction request.
+        await expect(galleryImages(page)).toHaveCount(GALLERY_PICTURES.length + 1);
+
+        const lockOwner = await openLockingSession(browser, CORRECTION_PICTURE);
+
+        try {
+            await lockOwner.lock();
+
+            await sendCorrection(page).click();
+
+            await expectErrorNotification(
+                page,
+                `${CORRECTION_PICTURE}: packaged item is locked by you. Unlock it and try again`,
+            );
+            await expect(page.getByTestId('authoring')).toBeVisible();
+
+            await lockOwner.unlock();
+
+            await sendCorrection(page).click();
+
+            await expect(page.getByTestId('authoring')).toBeHidden();
+            await expect(deskOutputItem(page, CORRECTION_PICTURE)).toHaveCount(1);
+        } finally {
+            await lockOwner.context.close();
+        }
+    });
 });
 
 /*
- * Placeholder so the cases of this batch that stay uncovered are machine-readable next
- * to the ones that are covered, instead of living only in the file docstring. See that
- * docstring for the reason behind each id.
+ * Placeholder so the case of this batch that stays uncovered is machine-readable next to the
+ * ones that are covered, instead of living only in the file docstring. See that docstring for
+ * the reason.
  */
-test.fixme('publishing or correcting related items, galleries and package corrections', {
+test.fixme('correcting a package whose member is locked', {
     annotation: [
-        {type: 'confluence', description: '1328906265 blocker'}, // Publishing article with related locked item
-        {type: 'confluence', description: '1328906267 blocker'}, // Correcting article with related locked item
-        {type: 'confluence', description: '1328906307 blocker'}, // Publishing gallery with locked item
         {type: 'confluence', description: '1328906312 blocker'}, // Correcting package with locked item
-        {type: 'confluence', description: '1328906320 blocker'}, // Correcting gallery with locked item
     ],
 }, async () => {
-    // No snapshot carries a related-content or gallery field, and package members are
-    // not lock-validated on a correction.
+    // Package members are not lock-validated on a correction.
 });
