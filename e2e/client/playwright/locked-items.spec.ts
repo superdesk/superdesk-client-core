@@ -18,77 +18,51 @@ import {dropArticle} from './utils/drag-and-drop';
  *
  * Product wording that diverges from the cases, asserted as the product renders it:
  *
- * - Both privilege cases quote the toast as "Privileges updated"; the product
- *   notifies "Privileges updated." with a full stop.
- * - Case 1311834225 quotes one message, "Item Unlocked: Item <headline> was
- *   unlocked by <User2>". The product splits it into a dialog title
- *   ("Item Unlocked") and a body ("Item <headline> was unlocked by <username>.").
- * - Case 1311834225 has the observer click the lock owner's avatar to reveal the
- *   lock owner and the Unlock button. The authoring topbar renders that whole
- *   block (`locked-info`) inline, so there is nothing to click open.
+ * - The privilege cases quote "Privileges updated"; the product adds a full stop.
+ * - Case 1311834225 quotes one message ("Item Unlocked: Item <headline> was unlocked
+ *   by <User2>"); the product splits it into a dialog title and body, and renders the
+ *   Unlock button inline in the topbar's `locked-info` block rather than behind the
+ *   avatar click the case describes.
+ * - The publish/correct cases wrap the refusals in a heading ("The following items
+ *   that you are trying to publish are locked:") and footer ("Unlock them first and
+ *   then continue.") that exist nowhere in this client or in superdesk-core. What the
+ *   product raises is one error notification per locked association: the backend's
+ *   `_issues['validator exception']`, split up by `scripts/api/article.ts`.
  *
- * The negative half of the privilege gate uses `samgamgee` before the grant
- * rather than the privilege-free `frodobaggins`: the monitoring route is
- * registered with `privileges: {monitoring_view: 1}`
- * (`scripts/apps/monitoring/config.ts`), so an account holding nothing cannot
- * reach the item at all. Using the same account either side of the grant also
- * makes the two positive tests harder to pass for the wrong reason.
+ * The refusal wording depends on the button, not on who holds the lock.
+ * `_validate_associated_items` (`apps/publish/content/common.py`, active because
+ * `e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True`) compares each
+ * association's `lock_user` against the publishing item's own `lock_user`:
  *
- * The publishing and correcting cases in this batch all rest on one server-side
- * gate. `e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True` (the
- * `PUBLISH_ASSOCIATIONS=true` those cases ask for), which is what makes
- * `_validate_associated_items` (`apps/publish/content/common.py`) check the locks on
- * an item's associations and, for a package being published, on its members. It
- * words the refusal by who holds the lock:
+ * - Publish routes through `$scope.beforeSend`, which unlocks the publishing item
+ *   first, so publishes always get "<headline>: packaged item is locked by another
+ *   user", even when the publisher holds the lock, which the package test takes the
+ *   lock itself to pin down.
+ * - Send Correction calls `$scope.publish()` directly and releases nothing, so the
+ *   correction tests get "<headline>: packaged item is locked by you. Unlock it and
+ *   try again", the half of case 1328906291 that asks for "locked by you".
  *
- * - held by anyone but the publisher: "<headline>: packaged item is locked by
- *   another user"
- * - held by the publisher: "<headline>: packaged item is locked by you. Unlock it
- *   and try again"
+ * The negative half of the privilege gate uses `samgamgee` before the grant rather
+ * than the privilege-free `frodobaggins`: the monitoring route requires
+ * `monitoring_view` (`scripts/apps/monitoring/config.ts`), so an account holding
+ * nothing cannot reach the item at all, and using one account either side of the
+ * grant keeps the positive tests from passing for the wrong reason.
  *
- * Which of the two a test gets depends on the button, not on who holds the lock. The
- * validator compares the association's `lock_user` against the *publishing item's*
- * `lock_user`, and the send/publish pane routes through `$scope.beforeSend`, whose own
- * docstring is "makes sure to unlock the item" (`AuthoringDirective`). Everything
- * published through that pane therefore arrives unlocked, and any locked association
- * compares unequal: the publish tests below all get "another user", including the
- * package one, which takes the lock as the publisher precisely to pin that down. That
- * is also the half case 1328906291 asks for when it wants an item "locked by you or
- * another user".
+ * The related-item and gallery cases run against the `association-fields` snapshot
+ * ("Shire related items" and "Shire gallery" on the Story profile, plus the items to
+ * drop into them; see `e2e/server/dump/records/README.md`), because `main` carries no
+ * vocabulary with a `field_type` at all.
  *
- * Send Correction is a topbar button that calls `$scope.publish()` with nothing in
- * between, so a correction keeps its own lock and the by-you wording is what the two
- * correction tests get. Their locking session holds the lock as the same user.
+ * Cases 1328906297, 1328906307 and 1328906320 stay `partial` over one shared result:
+ * each claims the scenario works the same for an image uploaded from a folder as for
+ * the drag driven here (the upload entry point belongs to case 1310851132). The
+ * gallery pair also expects the field itself to refuse a locked item, which only the
+ * publishing test drives.
  *
- * The backend returns those in `_issues['validator exception']`; `scripts/api/article.ts`
- * strips the brackets, splits on commas and raises one error notification per piece.
- * Every case wraps that in a heading it never gets ("The following items that you are
- * trying to publish are locked:"), and the related-item and package cases add a footer
- * ("Unlock them first and then continue."); neither string exists in this client or in
- * superdesk-core. The two gallery cases quote the per-item half almost verbatim
- * ("Packaged item is locked by XX. Unlock it and try again"), which is the by-you message
- * with a capital P. The tests assert what the product actually says.
- *
- * Cases 1328906297, 1328906307 and 1328906320 stay `partial` over one expected result
- * they share: each claims the scenario works the same whether the image was uploaded
- * from a folder or dragged in from Superdesk, and only the drag is driven here. The
- * upload entry point itself belongs to case 1310851132. The two gallery cases also
- * expect a locked item to be refused by the field itself, which the publishing test
- * drives and the correcting one does not.
- *
- * The related-item and gallery cases run against the `association-fields` snapshot,
- * which is `main` plus the two fields they need on the Story profile ("Shire related
- * items", a related-content field, and "Shire gallery", a media field with multiple
- * items enabled) and the text and picture items to drop into them. `main` carries no
- * vocabulary with a `field_type` at all, so neither field can render under it.
- *
- * Still parked:
- *
- * - 1328906312 (correcting a package) describes behaviour the product does not
- *   have. A package keeps its members in `groups`, not in `associations`, and
- *   `_validate_associated_items` only adds `get_residrefs(original_item)` to the
- *   items it checks when `self.publish_type == ITEM_PUBLISH`, so a correction of a
- *   package whose member is locked is not refused.
+ * Still parked: 1328906312 (correcting a package) describes behaviour the product
+ * does not have. A package keeps its members in `groups`, not `associations`, and
+ * `_validate_associated_items` only checks `get_residrefs` on `ITEM_PUBLISH`, so a
+ * correction of a package with a locked member is not refused.
  */
 
 // Two Superdesk sessions plus a snapshot restore do not fit the 30s default, and the
