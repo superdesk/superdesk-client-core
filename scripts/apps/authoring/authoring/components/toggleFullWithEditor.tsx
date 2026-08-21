@@ -23,6 +23,7 @@ export class ToggleFullWidth extends React.Component<IProps> {
                 <button
                     className={classes}
                     onClick={this.props.setFullWidth}
+                    data-test-id="toggle-full-width"
                 >
                     <Icon name="chevron-left-thin" />
                 </button>

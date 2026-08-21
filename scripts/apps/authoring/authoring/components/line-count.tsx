@@ -1,24 +1,24 @@
 import React from 'react';
-import {stripHtmlTags, gettextPlural} from 'core/utils';
+import {gettextPlural} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 
 interface IProps {
-    html: string;
+    text: string;
 }
 
 /**
- * Count lines in given html.
+ * Count lines in given text.
  */
 export class LineCount extends React.PureComponent<IProps> {
     render() {
-        const lines = getLinesCount(stripHtmlTags(this.props.html));
+        const lines = getLinesCount(this.props.text);
 
         if (lines == null) {
             return null;
         }
 
-        return <span className="char-count lines">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
+        return <span className="char-count__base">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
     }
 }
 

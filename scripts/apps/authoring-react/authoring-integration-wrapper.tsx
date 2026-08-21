@@ -5,7 +5,6 @@ import React from 'react';
 import {
     IArticle,
     IAuthoringAction,
-    IArticleSideWidget,
     ITopBarWidget,
     IExposedFromAuthoring,
     IAuthoringStorage,
@@ -45,6 +44,13 @@ import {MarkForDesksModal} from './toolbar/mark-for-desks/mark-for-desks-modal';
 import {TemplateModal} from './toolbar/template-modal';
 import {WidgetStatePersistenceHOC, widgetState} from './widget-persistance-hoc';
 import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/authoring/widgets/widgets';
+import {
+    SIDE_WIDGET_STORAGE_KEY,
+    findWidgetById,
+    getStoredStateForWidget,
+    getWidgetsFromExtensions,
+    readStoredSideWidget,
+} from './side-widgets';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {
@@ -53,7 +59,7 @@ import {
     ConfigureThemeButton,
     CreatedModifiedInfoWidget,
     ContentProfileDropdownWidget,
-    HeaderWordCountSourceWidget,
+    HeaderGeneralInfoWidget,
 } from './toolbar-components/integration-wrapper';
 
 const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
@@ -64,19 +70,12 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
         priority: 1,
     },
     {
-        component: HeaderWordCountSourceWidget,
+        component: HeaderGeneralInfoWidget,
         availableOffline: false,
         group: 'start',
         priority: 2,
     },
 ];
-
-export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
-    return Object.values(extensions)
-        .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-        .filter((widget) => widget.isAllowed?.(article) ?? true)
-        .sort((a, b) => a.order - b.order);
-}
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -332,8 +331,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
     constructor(props: IPropsWrapper) {
         super(props);
 
-        const localStorageWidget = localStorage.getItem('SIDE_WIDGET');
-        const widgetId = localStorageWidget != null ? JSON.parse(localStorageWidget) : null;
+        // the stored value is an `IOpenSideWidget`, not a bare id
+        const widgetId: string | null = readStoredSideWidget()?.id ?? null;
 
         this.state = {
             sidebarMode: this.props.sidebarMode === 'hidden' ? 'hidden' : (this.props.sidebarMode ?? false),
@@ -364,12 +363,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
 
     private loadWidgetFromPreferences() {
         const pinnedWidgetPreference = sdApi.preferences.get(PINNED_WIDGET_USER_PREFERENCE_SETTINGS);
+        const pinnedWidgetId = pinnedWidgetPreference?._id ?? null;
 
-        if (pinnedWidgetPreference?._id != null) {
+        if (pinnedWidgetId != null) {
             this.setState({
                 sideWidget: {
-                    pinnedId: pinnedWidgetPreference._id,
-                    activeId: pinnedWidgetPreference._id,
+                    pinnedId: pinnedWidgetId,
+                    activeId: pinnedWidgetId,
                 },
             });
         }
@@ -630,28 +630,31 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 );
                             }
 
-                            if (sideWidget == null) {
+                            const resolvedWidget = findWidgetById(item, sideWidget ?? null);
+
+                            if (resolvedWidget == null) {
                                 return null;
                             }
 
-                            const WidgetComponent = getWidgetsFromExtensions(item)
-                                .find((widget) => sideWidget === widget._id)?.component;
+                            const WidgetComponent = resolvedWidget.component;
 
                             return (
-                                <WidgetStatePersistenceHOC sideWidgetId={sideWidget}>
+                                <WidgetStatePersistenceHOC sideWidgetId={resolvedWidget._id}>
                                     {(widgetRef) => (
                                         <WidgetComponent
                                             ref={widgetRef}
                                             initialState={(() => {
-                                                const localStorageWidgetState =
-                                                    JSON.parse(localStorage.getItem('SIDE_WIDGET') ?? 'null');
+                                                const localStorageWidgetState = readStoredSideWidget();
+                                                const storedState = getStoredStateForWidget(
+                                                    item,
+                                                    resolvedWidget,
+                                                    localStorageWidgetState,
+                                                );
 
-                                                if (localStorageWidgetState?.id != null) {
-                                                    const initialState = localStorageWidgetState?.initialState;
-
+                                                if (storedState != null) {
                                                     sdApi.preferences.update(
                                                         PINNED_WIDGET_USER_PREFERENCE_SETTINGS,
-                                                        {type: 'string', _id: localStorageWidgetState?.id},
+                                                        {type: 'string', _id: resolvedWidget._id},
                                                     );
 
                                                     // Once a user switches the widget, authoring gets
@@ -659,11 +662,11 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                                     // than once. To prevent wrong widget state its
                                                     // deleted after 5 seconds.
                                                     setTimeout(() => {
-                                                        localStorage.removeItem('SIDE_WIDGET');
+                                                        localStorage.removeItem(SIDE_WIDGET_STORAGE_KEY);
                                                     }, 5000);
 
                                                     closedIntentionally.value = false;
-                                                    return initialState;
+                                                    return storedState.initialState;
                                                 }
 
                                                 if (

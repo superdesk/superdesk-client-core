@@ -2,8 +2,8 @@
 // Styling for notifications displayed on top of the page
 // ----------------------------------------------------------------------------------------
 @use "sass:math";
-@import '~mixins.scss';
-@import '~variables.scss';
+@import 'mixins.scss';
+@import 'variables.scss';
 
 
 $notif-holder-w : 340px;

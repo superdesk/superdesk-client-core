@@ -220,4 +220,17 @@
          sd-associated-item-metadata
          data-association="item.associations.featuremedia" data-title="Feature Media">
     </div>
+
+    <div class="metadata-view__content-block"
+        ng-if="item.lifecycle_timing && (item.lifecycle_timing.ingest_processing_ms != null || item.lifecycle_timing.lifecycle_to_first_publish_ms != null)">
+        <h4 translate>Timing</h4>
+        <dl ng-if="item.lifecycle_timing.ingest_processing_ms != null">
+            <dt translate>Ingest processing</dt>
+            <dd class="align-right">{{ item.lifecycle_timing.ingest_processing_ms | humanizeMilliseconds }}</dd>
+        </dl>
+        <dl ng-if="item.lifecycle_timing.lifecycle_to_first_publish_ms != null">
+            <dt translate>Time to publish</dt>
+            <dd class="align-right">{{ item.lifecycle_timing.lifecycle_to_first_publish_ms | humanizeMilliseconds }}</dd>
+        </dl>
+    </div>
 </div>

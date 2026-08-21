@@ -3,7 +3,11 @@ import {restoreDatabaseSnapshot, s} from './utils';
 
 test.use({storageState: {cookies: [], origins: []}});
 
-test.describe('internal destinations - CRUD, preview & sort', () => {
+test.describe('internal destinations - CRUD, preview & sort', {
+    annotation: [
+        {type: 'confluence', description: '1332117815 complete'}, // Internal destinations
+    ],
+}, () => {
     test.beforeEach(async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'legacy'});
 

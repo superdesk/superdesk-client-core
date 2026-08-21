@@ -10,29 +10,22 @@ import {ModifiedInfo} from './modified-info';
 import {AuthoringToolbar} from 'apps/authoring-react/subcomponents/authoring-toolbar';
 import {StatusInfo} from 'apps/search/components/fields/state';
 
-const getDefaultToolbarItems = (item: IArticle): Array<ITopBarWidget<IArticle>> => [{
+
+const defaultToolbarItems: Array<ITopBarWidget<IArticle>> = [{
     availableOffline: true,
-    component: () => (
-        <StatusInfo item={item} clickable={false} />
+    component: ({entity}) => (
+        <StatusInfo item={entity} clickable={false} />
     ),
     group: 'start',
     priority: 0,
 }, {
     availableOffline: true,
-    component: () => (
-        <CreatedInfo
-            entity={item}
-        />
-    ),
+    component: CreatedInfo,
     group: 'start',
     priority: 1,
 }, {
     availableOffline: true,
-    component: () => (
-        <ModifiedInfo
-            entity={item}
-        />
-    ),
+    component: ModifiedInfo,
     group: 'start',
     priority: 2,
 }];
@@ -80,33 +73,12 @@ export class AuthoringTopbar2React extends React.Component<IProps, IState> {
             this.fetchArticleFromServer();
         }
     }
-
-    shouldComponentUpdate(nextProps: IProps, nextState: IState) {
-        for (const key of Object.keys(this.props)) {
-            if (key === 'children') continue;
-
-            if (this.props[key] !== nextProps[key]) {
-                return true;
-            }
-        }
-
-        const stateKeys = new Set([...Object.keys(this.state), ...Object.keys(nextState)]);
-
-        for (const key of Array.from(stateKeys)) {
-            if (this.state[key] !== nextState[key]) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
             return null; // fetching article from the server
         }
 
-        const articleDisplayWidgets = getDefaultToolbarItems(this.props.article).concat(
+        const articleDisplayWidgets = defaultToolbarItems.concat(
             flatMap(
                 Object.values(extensions),
                 (extension) => extension.activationResult?.contributions?.authoringTopbar2Widgets ?? [],

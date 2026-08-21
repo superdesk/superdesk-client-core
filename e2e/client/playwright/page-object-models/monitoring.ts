@@ -1,11 +1,34 @@
 import {Page, Locator, expect} from '@playwright/test';
-import {s} from '../utils';
+import {dismissSessionExpiry, s} from '../utils';
 
 export class Monitoring {
     private page: Page;
 
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /**
+     * Waits for a monitoring view that accepts clicks. On the first navigation
+     * after a snapshot restore, an unauthenticated first request can cover
+     * monitoring with the "session has expired" overlay, and the re-login that
+     * clears it can raise the first-run "Welcome to Superdesk" modal (the
+     * phone_home flag is read while the backend is still settling). Both swallow
+     * every click until dismissed, so retry until neither is in the way.
+     */
+    async waitUntilReady(): Promise<void> {
+        await expect(async () => {
+            await dismissSessionExpiry(this.page);
+
+            const skipWelcome = this.page.getByRole('button', {name: 'Skip', exact: true});
+
+            if (await skipWelcome.isVisible()) {
+                await skipWelcome.click();
+            }
+
+            await expect(this.page.locator('.modal__backdrop')).toHaveCount(0);
+            await expect(this.page.getByTestId('monitoring--selected-desk')).toBeVisible({timeout: 5000});
+        }).toPass({timeout: 90000});
     }
 
     async selectDeskOrWorkspace(deskName: string): Promise<void> {
@@ -108,6 +131,11 @@ export class Monitoring {
                 s('authoring', 'authoring-field=body_html'),
             ).getByRole('textbox').fill(options.body_html);
         }
+    }
+
+    async createArticleFromDefaultTemplate(): Promise<void> {
+        await this.page.getByTestId('content-create').click();
+        await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
     }
 
     async openMediaUploadView(): Promise<void> {

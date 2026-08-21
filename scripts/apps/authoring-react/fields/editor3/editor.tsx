@@ -332,6 +332,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                 text={this.props.value.contentState.getPlainText()}
                                 language={this.props.language}
                                 limit={this.props.config.maxLength}
+                                singleLine={config.singleLine ?? false}
                             />
                         )
                     }

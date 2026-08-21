@@ -47,3 +47,4 @@ function runTests(context) {
 // selecting specific folders to avoid importing extensions
 runTests(require.context('scripts/core', true, /.spec.(ts|tsx)$/));
 runTests(require.context('scripts/apps', true, /.spec.(ts|tsx)$/));
+runTests(require.context('scripts/api', true, /.spec.(ts|tsx)$/));

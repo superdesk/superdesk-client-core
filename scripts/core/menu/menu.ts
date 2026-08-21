@@ -110,7 +110,15 @@ angular.module('superdesk.core.menu', [
                 }
 
                 this.currentRoute = route;
-                this.flags.workspace = !!route.sideTemplateUrl;
+
+                const isWorkspaceRoute = !!route.sideTemplateUrl;
+
+                // Leaving a workspace route with full width still on would render no container at all.
+                if (!isWorkspaceRoute) {
+                    this.flags.hideMonitoring = false;
+                }
+
+                this.flags.workspace = isWorkspaceRoute;
                 this.flags.workqueue = this.flags.workqueue || true;
             });
 

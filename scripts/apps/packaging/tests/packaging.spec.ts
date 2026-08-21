@@ -62,10 +62,10 @@ describe('packaging', () => {
         }));
 
         it('can preview item', inject(($rootScope) => {
-            spyOn(fullPreviewMultiple, 'previewItems');
+            spyOn(fullPreviewMultiple.fullPreview, 'previewItems');
             scope.preview(item);
             $rootScope.$apply();
-            expect(fullPreviewMultiple.previewItems).toHaveBeenCalledWith([item]);
+            expect(fullPreviewMultiple.fullPreview.previewItems).toHaveBeenCalledWith([item]);
         }));
 
         it('can open item', inject(($rootScope, $q, authoringWorkspace: AuthoringWorkspaceService) => {

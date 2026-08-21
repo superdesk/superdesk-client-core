@@ -61,7 +61,11 @@ test.describe('removing an embed from the article body', () => {
         return EMBEDS.find((embed) => srcdoc.includes(embed.marker))!.marker;
     }
 
-    test('removing one embed deletes only it and preserves the other across reopen', async ({page}) => {
+    test('removing one embed deletes only it and preserves the other across reopen', {
+        annotation: [
+            {type: 'confluence', description: '1327759390 complete'}, // Remove embed (AUTOMATED)
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
         await stubIframely(page);
 

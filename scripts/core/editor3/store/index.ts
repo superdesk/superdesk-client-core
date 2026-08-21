@@ -80,7 +80,7 @@ export interface IEditorStore {
     readOnly: boolean;
     locked: boolean;
     showToolbar: any;
-    singleLine: any;
+    singleLine?: boolean;
     plainText: boolean;
     tabindex: any;
     showTitle: any;

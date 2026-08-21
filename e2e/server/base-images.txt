@@ -1,4 +1,0 @@
-redis:alpine
-mongo:6
-docker.elastic.co/elasticsearch/elasticsearch:7.17.22
-marlonb/mailcrab:latest

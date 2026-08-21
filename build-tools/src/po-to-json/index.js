@@ -1,11 +1,14 @@
 var fs = require('fs');
 var path = require('path');
-var execSync = require('child_process').execSync;
 const {isDirectory} = require('../utils');
 
 function getModuleDir(moduleName) {
     return path.join(require.resolve(moduleName + '/package.json'), '../');
 }
+
+// po2json is a dependency of gettext.js; resolve it from there so it's found
+// no matter where build-tools itself is installed
+const po2json = require(require.resolve('po2json', {paths: [getModuleDir('gettext.js')]}));
 
 function escapeRegExp(string) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -35,12 +38,10 @@ the translation is considered invalid and will not be outputted to JSON.
 
 */
 
-function removeInvalidTranslations(jsonFilePath, filename) {
-    var translations = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
-
+function removeInvalidTranslations(translations, filename) {
     const KEY_REGEX = /{{ ?(.+?) ?}}/g;
 
-    const validTranslations = Object.keys(translations).filter((key) => {
+    return Object.keys(translations).filter((key) => {
         if (key === '') { // metadata object added by gettext.js
             return true;
         }
@@ -73,37 +74,53 @@ function removeInvalidTranslations(jsonFilePath, filename) {
 
         return acc;
     }, {});
+}
 
-    fs.writeFileSync(jsonFilePath, JSON.stringify(validTranslations), 'utf8');
+// Mirrors gettext.js's bin/po2json output: keep only language and plural-forms
+// from the po headers and drop untranslated keys.
+function parsePoFile(poFile) {
+    const jsonData = po2json.parse(fs.readFileSync(poFile));
+    const json = {};
+
+    for (const key of Object.keys(jsonData)) {
+        if (key === '') {
+            json[''] = {
+                'language': jsonData['']['language'],
+                'plural-forms': jsonData['']['plural-forms'],
+            };
+
+            continue;
+        }
+
+        if (jsonData[key][1] !== '') {
+            json[key] = jsonData[key].length === 2 ? jsonData[key][1] : jsonData[key].slice(1);
+        }
+    }
+
+    return json;
 }
 
 function compileTranslationsPoToJson(translationsPoDir, translationsJsonDir) {
     if (fs.existsSync(translationsJsonDir) !== true) {
-        fs.mkdirSync(translationsJsonDir);
+        fs.mkdirSync(translationsJsonDir, {recursive: true});
     }
 
-    var files = fs.readdirSync(translationsPoDir);
+    var files = fs.readdirSync(translationsPoDir).filter((filename) =>
+        filename.endsWith('.po') && isDirectory(path.join(translationsPoDir, filename)) !== true
+    );
 
     files.forEach((filename) => {
-        if (isDirectory(path.join(translationsPoDir, filename))) {
-            return;
-        }
+        var translations = parsePoFile(path.join(translationsPoDir, filename));
+        var validTranslations = removeInvalidTranslations(translations, filename);
 
-        if (filename.endsWith('.po') !== true) {
-            return;
-        }
-
-        var po2json = `${getModuleDir('gettext.js')}/bin/po2json`;
-        var poFile = `${translationsPoDir}/${filename}`;
-        var jsonFile = `${translationsJsonDir}/${filename.replace('.po', '.json')}`;
-
-        execSync(
-            `${po2json} ${poFile} ${jsonFile}`,
-            {stdio: 'inherit'}
+        fs.writeFileSync(
+            path.join(translationsJsonDir, filename.replace('.po', '.json')),
+            JSON.stringify(validTranslations),
+            'utf8'
         );
-
-        removeInvalidTranslations(jsonFile, filename);
     });
+
+    console.info(`Compiled ${files.length} translation file(s) to ${translationsJsonDir}`);
 }
 
 module.exports = compileTranslationsPoToJson;
