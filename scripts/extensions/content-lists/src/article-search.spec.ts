@@ -39,7 +39,7 @@ describe('searchArticles', () => {
                                 must: [{term: {type: 'text'}}],
                                 must_not: [
                                     {term: {last_published_version: false}},
-                                    {terms: {state: ['killed', 'recalled']}},
+                                    {terms: {state: ['killed', 'recalled', 'scheduled']}},
                                 ],
                             },
                         },
@@ -88,10 +88,8 @@ describe('searchArticles', () => {
                     repo: 'archive',
                     source: {
                         query: {
-                            filtered: {
-                                filter: {
-                                    and: [{term: {state: 'in_progress'}}, {term: {type: 'text'}}],
-                                },
+                            bool: {
+                                must: [{term: {state: 'in_progress'}}, {term: {type: 'text'}}],
                             },
                         },
                         from: 0,
@@ -108,22 +106,46 @@ describe('searchArticles', () => {
     it('adds a query string filter to archive searches', (done) => {
         const httpSpy = respondWith([], 0);
 
-        searchArticles('scheduled', 'sports', 1).then(() => {
+        searchArticles('in_progress', 'sports', 1).then(() => {
             const request = httpSpy.calls.mostRecent().args[0];
             const source = request.urlParams?.source as {
                 from: number;
-                query: {filtered: {filter: {}; query?: {}}};
+                query: {bool: {must: Array<{}>}};
             };
 
             expect(source.from).toBe(20);
-            expect(source.query.filtered.filter).toEqual({
-                and: [{term: {state: 'scheduled'}}, {term: {type: 'text'}}],
-            });
-            expect(source.query.filtered.query).toEqual({
+            expect(source.query.bool.must).toContain({term: {state: 'in_progress'}});
+            expect(source.query.bool.must).toContain({
                 query_string: {
                     query: 'sports',
                     lenient: true,
                     default_operator: 'AND',
+                },
+            });
+
+            done();
+        });
+    });
+
+    it('searches the published collection for scheduled articles', (done) => {
+        const httpSpy = respondWith([], 0);
+
+        searchArticles('scheduled', '', 0).then(() => {
+            expect(httpSpy).toHaveBeenCalledWith({
+                method: 'GET',
+                path: '/published',
+                urlParams: {
+                    source: {
+                        query: {
+                            bool: {
+                                must: [{term: {type: 'text'}}, {term: {state: 'scheduled'}}],
+                                must_not: [{term: {last_published_version: false}}],
+                            },
+                        },
+                        from: 0,
+                        size: 20,
+                        sort: [{versioncreated: 'desc'}],
+                    },
                 },
             });
 

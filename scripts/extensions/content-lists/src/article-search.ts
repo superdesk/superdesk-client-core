@@ -46,16 +46,28 @@ function getQueryStringFilter(searchString: string): {} {
 }
 
 /**
- * The /published collection keeps every published version of a story (the
- * original plus each correction), and a correction's state becomes "corrected"
- * rather than "published" — so filtering on state === 'published' would only
- * match stale originals. Instead, superseded versions are dropped via
- * last_published_version and killed/recalled are excluded, yielding one
- * current entry per story. A plain bool query is required (the `filtered`
- * query was removed in ES5).
+ * Scheduled items are a published state (see PUBLISHED_STATES in core), so they
+ * live in the /published collection and never appear in the archive repo.
+ * Both the published and the scheduled tab therefore query /published.
+ *
+ * That collection keeps every published version of a story (the original plus
+ * each correction), and a correction's state becomes "corrected" rather than
+ * "published" — so filtering on state === 'published' would only match stale
+ * originals. Instead, superseded versions are dropped via last_published_version,
+ * yielding one current entry per story.
+ *
+ * The published tab then excludes the states that are not "currently published":
+ * killed and recalled, plus scheduled, which belongs to its own tab.
  */
-function getPublishedQuery(searchString: string, from: number): {} {
+function getPublishedQuery(source: 'published' | 'scheduled', searchString: string, from: number): {} {
     const must: Array<{}> = [{term: {type: 'text'}}];
+    const mustNot: Array<{}> = [{term: {last_published_version: false}}];
+
+    if (source === 'scheduled') {
+        must.push({term: {state: 'scheduled'}});
+    } else {
+        mustNot.push({terms: {state: ['killed', 'recalled', 'scheduled']}});
+    }
 
     if (searchString.length > 0) {
         must.push(getQueryStringFilter(searchString));
@@ -65,10 +77,7 @@ function getPublishedQuery(searchString: string, from: number): {} {
         query: {
             bool: {
                 must,
-                must_not: [
-                    {term: {last_published_version: false}},
-                    {terms: {state: ['killed', 'recalled']}},
-                ],
+                must_not: mustNot,
             },
         },
         from,
@@ -77,24 +86,18 @@ function getPublishedQuery(searchString: string, from: number): {} {
     };
 }
 
-function getArchiveQuery(state: 'in_progress' | 'scheduled', searchString: string, from: number): {} {
-    interface IFilteredQuery {
-        filter: {};
-        query?: {};
-    }
-
-    const filtered: IFilteredQuery = {
-        filter: {
-            and: [{term: {state}}, {term: {type: 'text'}}],
-        },
-    };
+/**
+ * A plain bool query is required here too — the `filtered` query was removed in ES5.
+ */
+function getArchiveQuery(state: 'in_progress', searchString: string, from: number): {} {
+    const must: Array<{}> = [{term: {state}}, {term: {type: 'text'}}];
 
     if (searchString.length > 0) {
-        filtered.query = getQueryStringFilter(searchString);
+        must.push(getQueryStringFilter(searchString));
     }
 
     return {
-        query: {filtered},
+        query: {bool: {must}},
         from,
         size: PAGE_SIZE,
         sort: [{versioncreated: 'desc'}],
@@ -108,16 +111,16 @@ export function searchArticles(
 ): Promise<IArticleSearchResult> {
     const from = page * PAGE_SIZE;
 
-    const request = source === 'published'
+    const request = source === 'in_progress'
         ? httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-            method: 'GET',
-            path: '/published',
-            urlParams: {source: getPublishedQuery(searchString, from)},
-        })
-        : httpRequestJsonLocal<IRestApiResponse<IArticle>>({
             method: 'GET',
             path: '/search',
             urlParams: {repo: 'archive', source: getArchiveQuery(source, searchString, from)},
+        })
+        : httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+            method: 'GET',
+            path: '/published',
+            urlParams: {source: getPublishedQuery(source, searchString, from)},
         });
 
     return request.then((response) => ({
