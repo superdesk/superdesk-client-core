@@ -378,7 +378,8 @@ test('adding an inline comment to the body, and the comment surviving a reopen',
     await getEditor3TextRun(body, PLAIN_TEXT).click();
     await expect(popup).toBeHidden();
 
-    await authoring.closeAndSave();
+    await authoring.save();
+    await authoring.close();
 
     await monitoring.getArticleLocator(headline).dblclick();
     await expect(headlineField).toHaveText(headline);
@@ -433,7 +434,8 @@ test('editing an inline comment from its detail popup, and the edit surviving a 
     await expect(commentBody.getByTestId('comment-textarea')).toBeHidden();
     await expect(commentBody).toHaveText(EDITED_COMMENT_TEXT);
 
-    await authoring.closeAndSave();
+    await authoring.save();
+    await authoring.close();
 
     await monitoring.getArticleLocator(headline).dblclick();
 
@@ -478,7 +480,8 @@ test('deleting an inline comment through its confirmation dialog', {
     // the commented word is no longer a leaf of its own once the highlight is gone
     await expect(getEditor3TextRun(body, BODY_TEXT)).toHaveCSS('background-color', NO_BACKGROUND);
 
-    await authoring.closeAndSave();
+    await authoring.save();
+    await authoring.close();
 
     await monitoring.getArticleLocator(headline).dblclick();
 
@@ -673,7 +676,8 @@ test('notifying a user mentioned in an inline comment, who opens the article and
 
     await expect(popup.getByTestId('comment-text').getByRole('link')).toHaveText('Sam Gamgee');
 
-    await authoring.closeAndSave();
+    await authoring.save();
+    await authoring.close();
 
     const mentionedContext = await browser.newContext({storageState: {cookies: [], origins: []}});
     const mentionedPage = await mentionedContext.newPage();
