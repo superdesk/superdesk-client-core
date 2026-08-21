@@ -9,30 +9,28 @@ import {restoreDatabaseSnapshot} from './utils';
  * original, rotating, flipping, adjusting colours and editing rendition crops.
  *
  * Every test works on "Rivendell picture" from the `media-items` snapshot, the
- * only fixture picture that carries a full set of renditions. Its original is
- * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop, FIXME
- * (800 x 600), so the Edit crops tab lists exactly Original and FIXME.
+ * only fixture picture with a full set of renditions. Its original is
+ * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop size whose
+ * name really is "FIXME" (800 x 600), so the Edit crops tab lists exactly
+ * Original and FIXME.
  *
  * Assertions are on state, never on pixels: the live preview is checked through
- * the CSS transform the preview canvas carries, and a change that reached the
- * server is checked through the stored original size and the rendition URLs.
+ * the CSS transform on the preview canvas, and a change that reached the server
+ * through the stored original size and the rendition URLs.
  *
  * Uncovered expected results:
  *
  * - "Open image in Edit image mode" (1315931606) also expects the dialog to be
- *   reachable from a picture inserted in an editor3 body. No snapshot carries an
- *   article with an embedded picture and building one needs the upload flow, so
- *   only the authoring entry point is covered.
+ *   reachable from a picture embedded in an editor3 body; no snapshot carries
+ *   one and building it needs the upload flow.
  * - "Crop image" (1315931417) expects the Width and Height fields to default to
- *   the original size, to keep their values while the crop is moved, and the
- *   ratio buttons to activate Confirm crop. None of the three holds: the fields
- *   are bound to `CropRight` / `CropBottom` rather than to a width and a height,
- *   they start empty because `areaOfInterestData` is initialised to `{}`, and
- *   `isAoIDirty` is only ever set from jCrop's `onSelect`, which `setRatio()`
- *   suppresses. The test covers the behaviour that does hold.
+ *   the original size and to hold while the crop moves, and the ratio buttons
+ *   to activate Confirm crop. None of the three holds: the fields are bound to
+ *   `CropRight` / `CropBottom`, start empty, and only a jCrop drag sets
+ *   `isAoIDirty` (`setRatio()` refreshes jCrop with its events disabled).
  * - "Edit crops" (1311834326) expects a red message in place of a rendition the
- *   original is too small to produce. Rivendell picture is larger than the only
- *   configured crop and no fixture picture is smaller, so it is unreachable.
+ *   original is too small to produce; no fixture picture is smaller than the
+ *   only configured crop.
  */
 // Every Apply and every confirmed crop is a round trip through the server-side
 // image processing, and several tests do more than one.
@@ -51,9 +49,9 @@ test.describe('image editing', () => {
     }
 
     /**
-     * The `src` of a rendition, to compare against after an edit. Throws rather than
-     * falling back to an empty string, which would turn every later "the renditions
-     * were regenerated" assertion into one that passes against any src at all.
+     * The `src` of a rendition, to compare against after an edit. Throws rather
+     * than falling back to '', which would make every later "the renditions were
+     * regenerated" assertion pass vacuously.
      */
     async function sourceOf(image: Locator): Promise<string> {
         const source = await image.getAttribute('src');
@@ -66,10 +64,10 @@ test.describe('image editing', () => {
     }
 
     /*
-     * Every test leaves the picture open in authoring, which keeps it locked for
-     * the session. restoreDatabaseSnapshot() resolves even when the restore call
-     * fails, so a test that inherited a stale lock would fail on an unrelated
-     * assertion; closing the item makes each test independent of that.
+     * Every test leaves the picture open in authoring and therefore locked.
+     * restoreDatabaseSnapshot() resolves even when the restore fails, so a test
+     * inheriting a stale lock would fail on an unrelated assertion; closing the
+     * item keeps each test independent.
      */
     test.afterEach(async ({page}) => {
         const close = page.getByTestId('authoring-topbar').getByTestId('close');
@@ -81,13 +79,12 @@ test.describe('image editing', () => {
     });
 
     /**
-     * Closes the media editor and waits for the edit to reach the server. The editor
-     * persists nothing itself: resolving it makes ArticleEditDirective.editMedia()
-     * call `scope.save()`, and nothing in the UI blocks on that PATCH. The scope is
-     * never marked dirty on this path either, so a Close issued meanwhile unlocks the
-     * item and the in-flight save is rejected. Only call this when the editor holds a
-     * change: with nothing dirty `done()` rejects the modal instead of resolving it,
-     * so `editMedia()`'s `.then()` is skipped, no save is issued and there is no PATCH
+     * Closes the media editor and waits for the edit to reach the server. The
+     * editor persists nothing itself: resolving it makes ArticleEditDirective's
+     * editMedia() call `scope.save()`, and nothing in the UI blocks on that
+     * PATCH, so a Close issued meanwhile unlocks the item and the in-flight save
+     * is rejected. Only call this when the editor holds a change: with nothing
+     * dirty `done()` rejects the modal, no save is issued and there is no PATCH
      * to wait for.
      */
     async function applyMediaEdits(page: Page, mediaEditor: MediaEditor): Promise<void> {

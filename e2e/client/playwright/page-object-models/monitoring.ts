@@ -9,15 +9,12 @@ export class Monitoring {
     }
 
     /**
-     * Waits for a monitoring view that accepts clicks.
-     *
-     * Restoring a snapshot sometimes leaves the first request of the fresh page
-     * unauthenticated: the auth interceptor then covers monitoring with the
-     * "session has expired" overlay, and the re-login that clears it can raise the
-     * first-run "Welcome to Superdesk" modal on top of it, because the phone_home
-     * flag is read while the backend is still settling. Both only ever show up on
-     * the first navigation after a restore, and both swallow every click until
-     * dismissed, so retry until neither is in the way.
+     * Waits for a monitoring view that accepts clicks. On the first navigation
+     * after a snapshot restore, an unauthenticated first request can cover
+     * monitoring with the "session has expired" overlay, and the re-login that
+     * clears it can raise the first-run "Welcome to Superdesk" modal (the
+     * phone_home flag is read while the backend is still settling). Both swallow
+     * every click until dismissed, so retry until neither is in the way.
      */
     async waitUntilReady(): Promise<void> {
         await expect(async () => {
