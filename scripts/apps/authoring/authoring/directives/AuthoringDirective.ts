@@ -770,7 +770,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
                         .then(() => $scope.save())
-                        .then(() => lock.unlock($scope.origItem))
+
+                        // $scope.save handles its own rejections and fulfills with undefined on
+                        // failure, so the result has to be checked to avoid sending a stale item
+                        .then((saved) => saved == null
+                            ? $q.reject()
+                            : lock.unlock($scope.origItem)
+                                .catch(() => $scope.origItem)) // ignore failed unlock, e.g. item not locked
                         .catch(() => $q.reject());
                 }
 
