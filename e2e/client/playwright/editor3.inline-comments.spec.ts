@@ -1,7 +1,7 @@
 import {Locator, Page, expect, test} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
+import {loginAs, pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {getEditor3Field, getEditor3TextRun} from './utils/editor3';
 
 /**
@@ -10,22 +10,20 @@ import {getEditor3Field, getEditor3TextRun} from './utils/editor3';
  *
  * Where the product's wording differs from the QA cases, the assertions follow the
  * product:
- * - the comment field's placeholder is "Type your comment..."; the cases write
- *   "Type your comment".
- * - the case for editing calls the two buttons of the open editor "Submit" and "Cancel".
- *   The product renders them as icon-only buttons (`icon-ok` and `icon-close-small`,
- *   `Comment.tsx`), so they are located by test id, not by name.
- * - "the default text is hidden as you start typing" is native `placeholder` behaviour
- *   and has no DOM counterpart, so it is covered by asserting the attribute is set and
- *   that the field value changes from empty to the typed text.
- * - the Inline comments widget opens on **Resolved**, not on Unresolved:
- *   `InlineCommentsCtrl` seeds `$scope.resolvedFilter = 'RESOLVED'`
- *   (`scripts/apps/authoring/track-changes/inline-comments.ts`).
- * - STT-1425, which the notification case records as discovered: the notification link
- *   names the item and opens the article, not the comment inside it. The spec asserts
- *   that behaviour and then locates the comment through the Inline comments widget,
- *   which is what the case's own last step describes. The article it creates is given a
- *   slugline, since that is what the link is named after.
+ * - the comment field's placeholder is "Type your comment..."; the cases write it
+ *   without the dots.
+ * - the editing case calls the two buttons "Submit" and "Cancel"; the product renders
+ *   icon-only buttons (`icon-ok`, `icon-close-small` in `Comment.tsx`), so they're
+ *   located by test id.
+ * - "the default text is hidden as you start typing" is native placeholder behaviour
+ *   with no DOM counterpart; covered by asserting the attribute is set and the value
+ *   goes from empty to the typed text.
+ * - the Inline comments widget opens on Resolved, not Unresolved: `InlineCommentsCtrl`
+ *   seeds `$scope.resolvedFilter = 'RESOLVED'` (track-changes/inline-comments.ts).
+ * - STT-1425, which the notification case records: the notification link names the
+ *   item and opens the article, not the comment inside it. The spec asserts that and
+ *   then finds the comment through the widget, which is what the case's last step
+ *   describes anyway. The article gets a slugline because the link is named after it.
  */
 
 /**
@@ -37,9 +35,9 @@ test.describe.configure({timeout: 120000});
 const SNAPSHOT = 'editor3-comments';
 
 /**
- * Body text of every article this spec creates, split so that "select the text to
- * comment on" is a fixed number of Shift+Arrow presses over the trailing word and each
- * half stays addressable as its own Draft.js leaf once the comment splits the block.
+ * Body text of every article the spec creates, split in two so "select the text to
+ * comment on" is a fixed number of Shift+Arrow presses and each half stays its own
+ * Draft.js leaf once the comment splits the block.
  */
 const PLAIN_TEXT = 'alpha';
 const COMMENTED_TEXT = 'bravo';
@@ -54,12 +52,9 @@ const EDITED_REPLY_TEXT = 'still agreed on bravo';
 const NO_BACKGROUND = 'rgba(0, 0, 0, 0)';
 
 /**
- * The toolbar Comment button, narrowed to the inner `span`.
- *
- * `SelectionButton` (`scripts/core/editor3/components/toolbar/SelectionButton.tsx`)
- * carries no test id: the accessible name comes from the tooltip on the outer element,
- * while both the click handler and the `inactive` class that marks "no selection, so
- * nothing to comment on" sit on the span inside it.
+ * The toolbar Comment button, narrowed to the inner `span`. `SelectionButton` carries
+ * no test id: the accessible name comes from the tooltip on the outer element, while
+ * the click handler and the `inactive` ("nothing selected") class sit on the span.
  */
 function getCommentButton(body: Locator): Locator {
     return body.getByTestId('toolbar')
@@ -69,22 +64,18 @@ function getCommentButton(body: Locator): Locator {
 
 /**
  * The comment detail popup. `HighlightsPopup` renders it into the global
- * `#react-placeholder` element rather than inside the editor, so it is looked up on the
- * page and not under the body field.
+ * `#react-placeholder`, not inside the editor, so it's looked up on the page.
  */
 function getCommentPopup(page: Page): Locator {
     return page.getByTestId('comment');
 }
 
 /**
- * Resolves the colour a commented run is highlighted in.
- *
- * The COMMENT highlight is applied as an inline
- * `background-color: var(--sd-editor-colour__comment-bg)`
- * (`scripts/core/editor3/highlightsConfig.ts`). That token is defined on the authoring
- * `.theme-container`, not on `:root`, and holds an `hsl()` value that the browser reports
- * back in `rgb()` form, so it is read through a probe mounted inside the field instead of
- * being hardcoded here.
+ * The colour a commented run is highlighted in. The COMMENT highlight is an inline
+ * `background-color: var(--sd-editor-colour__comment-bg)` (highlightsConfig.ts); the
+ * token lives on the authoring `.theme-container`, not `:root`, and holds an `hsl()`
+ * value the browser reports back as `rgb()`, so it's read through a probe mounted
+ * inside the field instead of being hardcoded.
  */
 function getCommentHighlightColor(body: Locator): Promise<string> {
     return body.evaluate((element) => {
@@ -114,11 +105,9 @@ async function typeBody(page: Page): Promise<Locator> {
 }
 
 /**
- * Puts the caret at the end of the body and extends the selection back over the trailing
- * word, which is the state the Comment button needs to leave its inactive state.
- *
- * The caret is walked to the end with counted ArrowRight presses (they stop at the end of
- * the last block) rather than End, which does not move the caret on macOS.
+ * Puts the caret at the end of the body and extends the selection back over the
+ * trailing word, which is what lets the Comment button leave its inactive state.
+ * Counted ArrowRight presses rather than End, which doesn't move the caret on macOS.
  */
 async function selectCommentTarget(page: Page, body: Locator): Promise<void> {
     await getEditor3TextRun(body, COMMENTED_TEXT).click();
@@ -127,11 +116,9 @@ async function selectCommentTarget(page: Page, body: Locator): Promise<void> {
 }
 
 /**
- * The comment entry popup opened by the toolbar Comment button.
- *
- * Visibility is asserted on the field inside it, never on the returned element: the
- * element is only a scope, its single child is the absolutely positioned dropdown that
- * holds the popup, so the element itself has no size of its own.
+ * The comment entry popup opened by the toolbar Comment button. Assert visibility on
+ * the field inside it, never on this element: it's only a scope whose single child is
+ * an absolutely positioned dropdown, so the element itself has no size.
  */
 function getCommentDialog(page: Page): Locator {
     return page.getByTestId('comment-input');
@@ -155,14 +142,11 @@ async function addComment(page: Page, body: Locator, message: string): Promise<v
 }
 
 /**
- * Clicks the uncommented half of the body and then the commented word, which is the pair
- * that brings the comment popup up.
- *
- * On an article that was just opened, clicking the commented word does not bring the
- * popup up on its own, however many times it is clicked; the caret has to land elsewhere
- * in the field first, so that the click on the commented word moves it onto the
- * highlight. Placing the caret on the uncommented half every time keeps the helper
- * working in that state and in an article whose body was just typed.
+ * Clicks the uncommented half of the body, then the commented word: the pair that
+ * brings the popup up. On a freshly opened article, clicking the commented word alone
+ * never opens it, however often; the caret has to land elsewhere first so the second
+ * click moves it onto the highlight. Going through the uncommented half every time
+ * works both there and in an article whose body was just typed.
  */
 async function clickCommentedText(body: Locator): Promise<void> {
     await getEditor3TextRun(body, PLAIN_TEXT).click();
@@ -170,12 +154,10 @@ async function clickCommentedText(body: Locator): Promise<void> {
 }
 
 /**
- * Opens the detail popup of the comment on the trailing word.
- *
- * The click pair is retried because the popup can be taken down again a moment after it
- * opens: `HighlightsPopup` unmounts it from `componentDidUpdate` whenever the caret it
- * then sees is not on a highlight, and the editor3 field re-renders on its own for a
- * while after an edit.
+ * Opens the detail popup of the comment on the trailing word. The click pair is
+ * retried because the popup can be taken down again right after it opens:
+ * `HighlightsPopup` unmounts it whenever the caret it sees isn't on a highlight, and
+ * the field keeps re-rendering on its own for a while after an edit.
  */
 async function openCommentPopup(page: Page, body: Locator): Promise<Locator> {
     const popup = getCommentPopup(page);
@@ -189,14 +171,11 @@ async function openCommentPopup(page: Page, body: Locator): Promise<Locator> {
 }
 
 /**
- * Asserts the message of the comment on the trailing word, reopening the popup as often
- * as it takes.
- *
- * Reach for it on an article that was just reopened, where `openCommentPopup` alone is
- * not enough: editor3 resets its selection once more while it initializes, which drops
- * the caret off the highlight and unmounts a popup that had already come up, so an
- * assertion made after the helper returned finds it gone. Retrying the open together with
- * the assertion is what survives that.
+ * Asserts the message of the comment on the trailing word, reopening the popup as
+ * often as it takes. Needed on a just-reopened article, where `openCommentPopup` alone
+ * isn't enough: editor3 resets its selection once more while initializing, dropping
+ * the caret off the highlight and closing a popup that had already come up. Retrying
+ * the open together with the assertion survives that.
  */
 async function expectCommentText(page: Page, body: Locator, message: string): Promise<void> {
     const popup = getCommentPopup(page);
@@ -208,25 +187,20 @@ async function expectCommentText(page: Page, body: Locator, message: string): Pr
 }
 
 /**
- * Clicks a control inside the comment popup.
- *
- * The popup does not hold still: `HighlightsPopup` re-renders it by unmounting and
- * mounting it again (`renderCustom`), and `HighlightsPopupPositioner` re-measures and
- * moves it after every document click and after every update. Playwright's actionability
- * checks lose that race, reporting the target as unstable and then as detached.
- * Dispatching the event waits only for the element to be attached; React 16 listens at
- * the document, so its handler still receives the event.
+ * Clicks a control inside the comment popup. The popup doesn't hold still:
+ * `HighlightsPopup` re-renders it by unmounting and remounting, and the positioner
+ * moves it after every document click, so Playwright's actionability checks lose the
+ * race (unstable, then detached). Dispatching the event only waits for attachment,
+ * and React 16 listens at the document, so its handler still gets the click.
  */
 function clickInPopup(target: Locator): Promise<void> {
     return target.dispatchEvent('click');
 }
 
 /**
- * An entry of the 3-dots action menu of a comment or of one of its replies.
- *
- * The entries are matched on their text and not on their accessible name: each one
- * renders an icon element before its label (`Comment.tsx` builds them that way), and
- * Chrome folds that icon's glyph into the name.
+ * An entry of a comment's (or reply's) 3-dots menu, matched on text rather than
+ * accessible name: each entry renders an icon before its label (`Comment.tsx`) and
+ * Chrome folds the icon's glyph into the name.
  */
 function getCommentAction(menu: Locator, action: string): Locator {
     return menu.getByRole('button').filter({hasText: action});
@@ -250,11 +224,10 @@ async function submitEditedMessage(target: Locator, message: string): Promise<vo
 }
 
 /**
- * Focuses the reply field, which is what renders the Reply/Cancel toolbar underneath it
- * (`CommentPopup` keeps a `replyFieldFocused` flag).
- *
- * The blur matters: Cancel clears that flag while the field keeps DOM focus, so focusing
- * an already focused field would raise no focus event and the toolbar would stay away.
+ * Focuses the reply field, which is what renders the Reply/Cancel toolbar under it
+ * (`CommentPopup` keeps a `replyFieldFocused` flag). The blur first matters: Cancel
+ * clears the flag while the field keeps DOM focus, and focusing an already-focused
+ * field raises no focus event, so the toolbar would stay away.
  */
 async function focusReplyField(popup: Locator): Promise<void> {
     const addReply = popup.getByTestId('add-reply');
@@ -276,11 +249,10 @@ async function addReply(popup: Locator, message: string): Promise<void> {
 
 /**
  * Creates an article from the desk's default template, gives it a headline and a body,
- * comments on the body's trailing word and saves. Every case but "Add inline comment"
- * starts from a saved article that already carries a comment, and no snapshot ships one.
- *
- * The save is also the point at which the editor3 field is known to have handed its
- * change over to the authoring model, so what follows is not racing that hand-over.
+ * comments on the trailing word and saves. Every case but "Add inline comment" starts
+ * from a saved article that already carries a comment, and no snapshot ships one. The
+ * save also marks the point where editor3 has handed its change to the authoring
+ * model, so what follows isn't racing that hand-over.
  */
 async function createArticleWithComment(page: Page, headline: string): Promise<Locator> {
     const authoring = new Authoring(page);
@@ -301,19 +273,6 @@ async function createArticleWithComment(page: Page, headline: string): Promise<L
     await authoring.save();
 
     return body;
-}
-
-async function loginAs(page: Page, username: string): Promise<void> {
-    const loginPage = page.getByTestId('login-page');
-
-    await page.goto('/');
-
-    // every user in the `main` snapshot with a known password uses the username as one
-    await loginPage.getByTestId('username').fill(username);
-    await loginPage.getByTestId('password').fill(username);
-    await loginPage.getByTestId('submit').click();
-
-    await expect(page.getByTestId('dashboard')).toBeVisible();
 }
 
 test('adding an inline comment to the body, and the comment surviving a reopen', {
@@ -683,7 +642,8 @@ test('notifying a user mentioned in an inline comment, who opens the article and
     const mentionedPage = await mentionedContext.newPage();
 
     try {
-        await loginAs(mentionedPage, 'samgamgee');
+        // fixture users with a known password use the username as one
+        await loginAs(mentionedPage, 'samgamgee', 'samgamgee');
 
         // the badge has no test id, and the authoring sidebar reuses the same element id
         // for its comment count, so it is taken from the top menu by position
