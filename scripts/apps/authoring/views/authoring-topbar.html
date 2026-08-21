@@ -12,7 +12,7 @@
       on-change="handleArticleChange"
     ></sd-authoring-topbar-react>
 
-    <div ng-if="isLocked()" class="locked-info">
+    <div ng-if="isLocked()" class="locked-info" data-test-id="locked-info">
 
       <div class="locked-info__avatar">
         <sd-user-avatar data-user="item.lock_user"></sd-user-avatar>
@@ -26,6 +26,7 @@
         ng-disabled="unlockClicked"
         sd-hotkey="ctrl+shift+u"
         sd-hotkey-options="{global: true}"
+        data-test-id="unlock"
         translate>
         Unlock
       </button>
