@@ -10,9 +10,8 @@ import {restoreDatabaseSnapshot} from './utils';
  *
  * Every test works on "Rivendell picture" from the `media-items` snapshot, the
  * only fixture picture with a full set of renditions. Its original is
- * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop size whose
- * name really is "FIXME" (800 x 600), so the Edit crops tab lists exactly
- * Original and FIXME.
+ * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop size,
+ * "4-3" (800 x 600), so the Edit crops tab lists exactly Original and 4-3.
  *
  * Assertions are on state, never on pixels: the live preview is checked through
  * the CSS transform on the preview canvas, and a change that reached the server
@@ -456,22 +455,22 @@ test.describe('image editing', () => {
 
         await openPicture(page);
 
-        await expect(picture.crop('FIXME')).toBeVisible();
+        await expect(picture.crop('4-3')).toBeVisible();
 
-        const cropSourceBefore = await sourceOf(picture.crop('FIXME').locator('img'));
+        const cropSourceBefore = await sourceOf(picture.crop('4-3').locator('img'));
 
         await picture.openCropsEditor();
 
         await expect(mediaEditor.header.getByRole('heading')).toHaveText('Edit Crops');
         await expect(mediaEditor.renditions).toHaveCount(2);
         await expect(mediaEditor.rendition('Original')).toBeVisible();
-        await expect(mediaEditor.rendition('FIXME')).toBeVisible();
+        await expect(mediaEditor.rendition('4-3')).toBeVisible();
 
         // The original is previewed until a rendition is picked.
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
 
-        await mediaEditor.rendition('FIXME').click();
-        await expect(mediaEditor.cropPreviewLabel).toHaveText('FIXME');
+        await mediaEditor.rendition('4-3').click();
+        await expect(mediaEditor.cropPreviewLabel).toHaveText('4-3');
 
         await mediaEditor.resizeRenditionCrop(-60, -45);
         await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
@@ -494,12 +493,12 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        await expect(picture.crop('FIXME')).toBeVisible();
-        await expect(picture.crop('FIXME').locator('img')).toBeVisible();
-        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
+        await expect(picture.crop('4-3')).toBeVisible();
+        await expect(picture.crop('4-3').locator('img')).toBeVisible();
+        await expect(picture.crop('4-3').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
 
         await reopenPicture(page);
-        await expect(picture.crop('FIXME').locator('img')).toBeVisible();
-        await expect(picture.crop('FIXME').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
+        await expect(picture.crop('4-3').locator('img')).toBeVisible();
+        await expect(picture.crop('4-3').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
     });
 });
