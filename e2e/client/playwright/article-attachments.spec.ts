@@ -23,7 +23,9 @@ import {dismissSessionExpiry, getCellValueByColumTitle, login, restoreDatabaseSn
  * `legacy` dataset's "Plain text" profile enables the field and every text item there
  * uses it, so the two-entry-point tests run under `legacy`. The link test needs an
  * editor3 body toolbar, which "Plain text" does not have (`editor3: false`), so it
- * runs under `main`.
+ * runs under `main`. The NINJS-output test publishes, so it runs under `publishing`,
+ * whose "Public API" subscriber delivers into the stack's mailcrab and reaches
+ * `success`, unlike `legacy`'s, whose HTTP push has no listener and retries forever.
  *
  * Preconditions
  * -------------
@@ -49,11 +51,10 @@ import {dismissSessionExpiry, getCellValueByColumTitle, login, restoreDatabaseSn
  * - The internal marker's text is "internal", uppercased by the label style rather
  *   than written as "Internal"; the assertion is case-insensitive on the real text.
  * - "Attachments in NINJS output" (1326285069) is asserted on the payload the
- *   subscriber is actually sent. `legacy` ships one active subscriber, "Public API",
- *   whose only destination formats as `ninjs`, and its product ("all") carries no
- *   content filter, so publishing any item there queues exactly one NINJS
- *   transmission. That payload is read back through the item history's transmission
- *   details, which render the queue entry's `formatted_item` verbatim.
+ *   subscriber is actually sent: `publishing`'s "Public API" subscriber's only
+ *   destination ("NINJS Email") formats as `ninjs`. The payload is read back
+ *   through the item history's transmission details, which render the queue
+ *   entry's `formatted_item` verbatim.
  */
 
 // Every test builds its own attachments through the upload dialog and most of them
@@ -391,35 +392,45 @@ test.describe('article attachments', () => {
         await expect(reopened.field.title(keptAttachment.title)).toBeVisible();
         await expect(reopened.field.list.getByTestId('attachment-title')).toHaveCount(1);
     });
+});
 
+test.describe('attachments in the NINJS output', () => {
     test('the NINJS sent to the subscriber carries the public attachments only', {
         annotation: [
             {type: 'confluence', description: '1326285069 complete'}, // Attachments in NINJS output
         ],
     }, async ({page}) => {
-        const {authoring, widget, useWidget} = await openArticle(page);
+        await restoreDatabaseSnapshot({snapshotName: 'publishing'});
 
-        await useWidget();
+        const monitoring = new Monitoring(page);
+        const authoring = new Authoring(page);
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+        await monitoring.getArticleLocator('test sports story').dblclick();
+
+        const widget = new AttachmentsPane(
+            (await authoring.openWidget('Attachments')).getByTestId('attachments-pane'),
+        );
+
         await widget.attach([PUBLIC_ATTACHMENT, INTERNAL_ATTACHMENT]);
 
         await authoring.save();
-        await dismissSessionExpiry(page);
 
-        // no subscriber is picked: the item goes to every subscriber whose products
-        // match it, which under `legacy` is "Public API" and nothing else
+        // no subscriber is picked: the item fans out to "Subscriber 1" and
+        // "Public API" both, and only the latter's destination formats as NINJS
         await authoring.publish({subscribers: []});
-        await dismissSessionExpiry(page);
 
         await page.goto('/#/publish_queue');
 
         const queueTable = page.getByTestId('publish-queue-table');
         const queuedRow = queueTable.getByTestId('publish-queue-item')
-            .and(page.locator('[data-test-value="item5"]'));
+            .and(page.locator('[data-test-value="test sports story"]'))
+            .filter({hasText: 'Public API'});
 
         /*
-         * Publishing does not enqueue: the backend's `publish:enqueue` job does, on a
-         * 10s beat. The queue list is only populated when the view loads, so the entry
-         * can land after this page was rendered and has to be refreshed in.
+         * The queue list is only read when the view loads, so the entry can land
+         * after this page was rendered and has to be refreshed in.
          */
         await expect(async () => {
             await page.getByTestId('refresh').click();
@@ -435,7 +446,7 @@ test.describe('article attachments', () => {
         await preview.getByRole('tab', {name: 'Item history'}).click();
         await preview.getByTestId('toggle-transmission-details').click();
         await preview.getByTestId('queued-item')
-            .and(page.locator('[data-test-value="HTTP Push"]'))
+            .and(page.locator('[data-test-value="NINJS Email"]'))
             .click();
 
         // the transmitted payload is rendered into a modal that is moved out of the
