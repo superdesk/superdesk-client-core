@@ -31,6 +31,12 @@ jobs:
       env:
         TZ: "Europe/Prague"
 
+    - name: Run content-lists extension unit tests
+      run: npm run test
+      working-directory: scripts/extensions/content-lists
+      env:
+        TZ: "Europe/Prague"
+
   prepare-e2e-server:
     runs-on: ubuntu-latest
     steps:
