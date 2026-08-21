@@ -124,7 +124,12 @@ function getCommentDialog(page: Page): Locator {
     return page.getByTestId('comment-input');
 }
 
-/** Adds a comment on the trailing word of the body through the toolbar Comment flow. */
+/**
+ * Adds a comment on the trailing word of the body through the toolbar Comment flow.
+ * The fill is verified and retried as one unit: the entry popup can re-render right
+ * after it opens and drop what was just typed (same behaviour `addEditor3Embed`
+ * documents for `EmbedInput`).
+ */
 async function addComment(page: Page, body: Locator, message: string): Promise<void> {
     const dialog = getCommentDialog(page);
     const input = dialog.getByTestId('comment-textarea').getByRole('textbox');
@@ -134,8 +139,10 @@ async function addComment(page: Page, body: Locator, message: string): Promise<v
     await getCommentButton(body).click();
 
     await expect(input).toBeVisible();
-    await input.fill(message);
-    await expect(input).toHaveValue(message);
+    await expect(async () => {
+        await input.fill(message);
+        await expect(input).toHaveValue(message, {timeout: 1000});
+    }).toPass();
 
     await dialog.getByTestId('submit').click();
     await expect(dialog).toHaveCount(0);
@@ -313,8 +320,11 @@ test('adding an inline comment to the body, and the comment surviving a reopen',
     await expect(dialogInput).toHaveValue('');
     await expect(dialog.getByTestId('submit')).toBeDisabled();
 
-    await dialogInput.fill('discarded by Cancel');
-    await expect(dialogInput).toHaveValue('discarded by Cancel');
+    // fill+verify as one retried unit: the popup can re-render and drop the value
+    await expect(async () => {
+        await dialogInput.fill('discarded by Cancel');
+        await expect(dialogInput).toHaveValue('discarded by Cancel', {timeout: 1000});
+    }).toPass();
     await expect(dialog.getByTestId('submit')).toBeEnabled();
 
     await dialog.getByTestId('cancel').click();
