@@ -18,6 +18,33 @@ function rootModule(moduleName) {
     return path.join(ROOT, 'node_modules', moduleName);
 }
 
+function excludeFromTranspilation(absolutePath) {
+    if (absolutePath.indexOf('node_modules') === -1) {
+        return false;
+    }
+
+    // shipped untranspiled; the main webpack config transpiles it too
+    return !absolutePath.includes('/@sourcefabric/common/');
+}
+
+// mirrors the root webpack config, which transpiles with swc rather than
+// typescript; types are checked separately by the root `npm run typecheck`.
+// target matches the "es6" in superdesk-code-style/tsconfig-strict.
+function swcOptions(parser) {
+    return {
+        isModule: 'unknown',
+        module: {type: 'commonjs'},
+        jsc: {
+            target: 'es2015',
+            parser: parser,
+            transform: {
+                react: {runtime: 'classic'},
+                useDefineForClassFields: false,
+            },
+        },
+    };
+}
+
 var webpackConfig = {
     mode: 'development',
     devtool: 'eval',
@@ -41,24 +68,16 @@ var webpackConfig = {
     module: {
         rules: [
             {
-                test: /\.(ts|tsx|js|jsx)$/,
-                exclude: function(absolutePath) {
-                    if (absolutePath.indexOf('node_modules') === -1) {
-                        return false;
-                    }
-
-                    // shipped untranspiled; the main webpack config transpiles it too
-                    return !absolutePath.includes('/@sourcefabric/common/');
-                },
-                loader: 'ts-loader',
-                options: {
-                    transpileOnly: true,
-                    configFile: path.join(__dirname, 'tsconfig.json'),
-                    compilerOptions: {
-                        declaration: false,
-                        outDir: undefined,
-                    },
-                },
+                test: /\.tsx?$/,
+                exclude: excludeFromTranspilation,
+                loader: require.resolve('swc-loader'),
+                options: swcOptions({syntax: 'typescript', tsx: true}),
+            },
+            {
+                test: /\.jsx?$/,
+                exclude: excludeFromTranspilation,
+                loader: require.resolve('swc-loader'),
+                options: swcOptions({syntax: 'ecmascript', jsx: true}),
             },
             {
                 // css-loader without style-loader: styles become inert JS
@@ -68,7 +87,18 @@ var webpackConfig = {
             },
             {
                 test: /\.scss$/i,
-                use: ['css-loader', 'sass-loader'],
+                use: [
+                    'css-loader',
+                    {
+                        loader: require.resolve('sass-loader'),
+                        options: {
+                            // several times faster than the pure-js sass package
+                            implementation: require.resolve('sass-embedded'),
+                            api: 'modern-compiler',
+                            sassOptions: {quietDeps: true},
+                        },
+                    },
+                ],
             },
             {
                 test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg|mov)(\?.*$|$)/,
