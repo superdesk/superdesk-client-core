@@ -17,7 +17,7 @@ export class AttachmentsList extends React.PureComponent<IProps> {
         const {attachments} = this.props;
 
         return (
-            <div className="attachments-list">
+            <div className="attachments-list" data-test-id="attachments-list">
                 {!!attachments.length && (
                     <ul>
                         {attachments.map((attachment) => (

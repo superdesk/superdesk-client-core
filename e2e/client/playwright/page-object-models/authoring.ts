@@ -70,6 +70,46 @@ export class Authoring {
     }
 
     /**
+     * Opens a side widget by its label and returns the widget panel.
+     *
+     * Both the tab and the panel carry the label in `data-test-value` while their
+     * visible content is an icon, so they are matched on the attribute.
+     *
+     * The tab toggles rather than opens: clicking it while its widget is active
+     * closes the panel. The tab is therefore only clicked when the panel is not
+     * already showing, so that calling this on an open widget is a no-op.
+     */
+    async openWidget(label: string): Promise<Locator> {
+        const {page} = this;
+        const withLabel = page.locator(`[data-test-value="${label}"]`);
+        const panel = page.getByTestId('authoring-widget-panel').and(withLabel);
+
+        if (!await panel.isVisible()) {
+            await page.getByTestId('authoring-widget').and(withLabel).click();
+        }
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    /**
+     * Closes an open side widget. The panel is an overlay above the article body, so
+     * anything that has to reach a body field needs it closed first.
+     */
+    async closeWidget(label: string): Promise<void> {
+        const {page} = this;
+        const withLabel = page.locator(`[data-test-value="${label}"]`);
+        const panel = page.getByTestId('authoring-widget-panel').and(withLabel);
+
+        if (await panel.isVisible()) {
+            await page.getByTestId('authoring-widget').and(withLabel).click();
+        }
+
+        await expect(panel).toBeHidden();
+    }
+
+    /**
      * editor3 field takes quite some time to initialize in authoring-react.
      * Until it initializes - typing inside it doesn't update `fieldsData` in authoring-react state.
      */
@@ -96,11 +136,23 @@ export class Authoring {
     /**
      * Closes the opened article and waits for the editor to be gone, so that a following
      * interaction with the monitoring list underneath does not race the closing pane.
+     * Fields that autosave on a debounce can land a record after the item was saved, and
+     * the item then counts as unsaved on close even when nothing was touched since, so
+     * the "Save changes?" prompt is genuinely optional and is discarded only if it shows.
      */
     async close(): Promise<void> {
-        await this.page.getByTestId('authoring-topbar').getByTestId('close').click();
+        const {page} = this;
+        const unsavedChanges = page.getByTestId('unsaved-changes-dialog');
 
-        await expect(this.page.getByTestId('authoring')).toBeHidden();
+        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+
+        await expect(async () => {
+            if (await unsavedChanges.isVisible()) {
+                await unsavedChanges.getByRole('button', {name: 'Ignore', exact: true}).click();
+            }
+
+            await expect(page.getByTestId('authoring')).toBeHidden({timeout: 1000});
+        }).toPass({timeout: 20000});
     }
 
     /**
