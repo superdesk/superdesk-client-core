@@ -1,4 +1,5 @@
 import {appConfig} from 'appConfig';
+import {withPlatform} from 'core/tests/withPlatform';
 import {
     getSpellcheckShortcut,
     getSpellcheckShortcutLabel,
@@ -31,14 +32,18 @@ describe('spellcheck-shortcut', () => {
         appConfig.spellchecking = {};
 
         expect(getSpellcheckShortcut()).toEqual({key: 's', modifiers: ['alt']});
-        expect(getSpellcheckShortcutLabel()).toBe('Alt+S');
+        withPlatform(false, () => {
+            expect(getSpellcheckShortcutLabel()).toBe('Alt+S');
+        });
     });
 
     it('uses the configured shortcut when present', () => {
         appConfig.spellchecking = {shortcut: {key: 's', modifiers: ['alt', 'shift']}};
 
         expect(getSpellcheckShortcut()).toEqual({key: 's', modifiers: ['alt', 'shift']});
-        expect(getSpellcheckShortcutLabel()).toBe('Alt+Shift+S');
+        withPlatform(false, () => {
+            expect(getSpellcheckShortcutLabel()).toBe('Alt+Shift+S');
+        });
     });
 
     it('matches the default Alt+S event', () => {

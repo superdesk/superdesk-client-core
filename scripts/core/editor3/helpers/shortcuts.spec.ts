@@ -1,4 +1,5 @@
 import {IShortcutConfig} from 'superdesk-api';
+import {withPlatform} from 'core/tests/withPlatform';
 import {
     physicalKeyToChar,
     shortcutToKey,
@@ -16,25 +17,6 @@ function keyEvent(overrides: Partial<KeyboardEvent>): KeyboardEvent {
         shiftKey: false,
         ...overrides,
     } as unknown as KeyboardEvent;
-}
-
-// karma runs in Chrome on Linux, so isMacOS() is false by default. Shadow
-// navigator.userAgent to exercise the macOS branches, restoring afterwards.
-function withPlatform(mac: boolean, fn: () => void): void {
-    const original = navigator.userAgent;
-
-    Object.defineProperty(window.navigator, 'userAgent', {
-        value: mac
-            ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
-            : 'Mozilla/5.0 (X11; Linux x86_64)',
-        configurable: true,
-    });
-
-    try {
-        fn();
-    } finally {
-        Object.defineProperty(window.navigator, 'userAgent', {value: original, configurable: true});
-    }
 }
 
 describe('editor3 shortcut helpers', () => {
