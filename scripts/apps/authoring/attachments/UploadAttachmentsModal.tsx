@@ -121,6 +121,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 position="center"
                 onHide={this.state.saving ? noop : this.props.closeModal}
                 headerTemplate={gettext('Attach files')}
+                data-test-id="attach-files-modal"
                 footerTemplate={
                     (
                         <Spacer h gap="8" alignItems="center" justifyContent="end" noGrow>
@@ -131,12 +132,14 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                     type="default"
                                     onClick={this.props.closeModal}
                                     disabled={this.state.saving}
+                                    data-test-id="cancel"
                                 />
                                 <Button
                                     text={gettext('Upload')}
                                     type="primary"
                                     onClick={this.save}
                                     disabled={this.disableUploadButton()}
+                                    data-test-id="upload"
                                 />
                             </ButtonGroup>
                         </Spacer>
@@ -147,10 +150,19 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                     <div className="upload-edit">
                         <ul className={ulClass}>
                             {this.state.items.map((item, index) => (
-                                <li className="flex-grid__item sd-shadow--z3 sd-card" key={item.file.name}>
-                                    <div className="thumb sd-card__thumbnail">
+                                <li
+                                    className="flex-grid__item sd-shadow--z3 sd-card"
+                                    key={item.file.name}
+                                    data-test-id="upload-attachment"
+                                    data-test-value={item.file.name}
+                                >
+                                    <div className="thumb sd-card__thumbnail" data-test-id="file-preview">
                                         <div className="holder"><i className="big-icon--text" /></div>
-                                        <span className="remove" onClick={() => this.cancelItem(index)}>
+                                        <span
+                                            className="remove"
+                                            onClick={() => this.cancelItem(index)}
+                                            data-test-id="remove-file"
+                                        >
                                             <i className="icon-close-small" />
                                         </span>
                                     </div>
@@ -181,6 +193,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                         this.updateItemMeta(index, 'title', value);
                                                     }}
                                                     disabled={this.state.saving}
+                                                    data-test-id="title"
                                                 />
                                             </div>
                                             <div className="form__row">
@@ -193,6 +206,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                         this.updateItemMeta(index, 'description', value);
                                                     }}
                                                     disabled={this.state.saving}
+                                                    data-test-id="description"
                                                 />
                                             </div>
                                             <div className="form__row">
@@ -203,6 +217,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                     value={item.file.name}
                                                     onChange={() => false}
                                                     disabled={true}
+                                                    data-test-id="filename"
                                                 />
                                             </div>
                                             <div className="form__row">
@@ -213,6 +228,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                     value={item.file.size.toString()}
                                                     onChange={() => false}
                                                     disabled={true}
+                                                    data-test-id="filesize"
                                                 />
                                             </div>
                                         </div>
