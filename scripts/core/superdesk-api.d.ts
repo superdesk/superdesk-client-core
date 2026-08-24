@@ -3974,6 +3974,9 @@ declare module 'superdesk-api' {
                     runningMode?: 'remember-user-preference' | 'initially-disabled';
                 };
             };
+
+            // toggles the spell checker on/off; defaults to Alt+S
+            shortcut?: IShortcutConfig;
         }
 
         iMatricsFields: {
