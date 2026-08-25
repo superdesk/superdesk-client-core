@@ -320,8 +320,7 @@ six==1.17.0
     #   flask-oidc-ex
     #   oauth2client
     #   python-dateutil
-# TODO: revert to superdesk/superdesk-core@develop once the content-lists API branch is merged
-superdesk-core @ git+https://github.com/IvanJelicSF/superdesk-core.git@feature/content-lists-with-develop
+superdesk-core @ git+https://github.com/superdesk/superdesk-core.git@develop
     # via -r requirements.in
 taskgroup==0.2.2
     # via hypercorn
