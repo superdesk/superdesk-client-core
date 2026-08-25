@@ -61,6 +61,10 @@ test.describe('content list editor', () => {
         await expect(saveButton).toBeEnabled();
         await saveButton.click();
 
+        // the button goes back to disabled once the save resolves; reloading
+        // before that aborts the in-flight request
+        await expect(saveButton).toBeDisabled();
+
         // persisted after reload
         await page.reload();
         await expect(
@@ -100,6 +104,8 @@ test.describe('content list editor', () => {
 
         await saveButton.click();
 
+        await expect(saveButton).toBeDisabled();
+
         await page.reload();
         await expect(
             page.locator(s('content-list--items')).locator(s('content-list-item')),
@@ -124,7 +130,10 @@ test.describe('content list editor', () => {
         // a pinned row is marked by the pin toggle flipping to "Unpin"
         await expect(firstItem.getByRole('button', {name: 'Unpin'})).toBeVisible();
 
-        await page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'}).click();
+        const saveButton = page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'});
+
+        await saveButton.click();
+        await expect(saveButton).toBeDisabled();
 
         await page.reload();
         await expect(

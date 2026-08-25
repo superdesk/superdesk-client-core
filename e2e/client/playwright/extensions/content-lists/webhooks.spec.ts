@@ -5,7 +5,10 @@ import {createContentList, createWebhook} from './api-helpers';
 async function openWebhooksModal(page: Page): Promise<void> {
     await page.goto('/#/content-lists');
     await page.locator(s('content-lists--settings-menu')).locator('button').click();
-    await page.getByRole('menuitem', {name: 'Webhooks', exact: true}).click();
+
+    // not an exact match: the item's icon is a font glyph rendered through a
+    // ::before pseudo-element, and Chromium folds it into the accessible name
+    await page.getByRole('menuitem', {name: 'Webhooks'}).click();
     await expect(page.locator(s('manage-webhooks'))).toBeVisible();
 }
 
@@ -93,7 +96,7 @@ test.describe('content lists webhooks', () => {
 
         await row.hover();
         await row.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('menuitem', {name: 'Remove', exact: true}).click();
+        await page.getByRole('menuitem', {name: 'Remove'}).click();
         await page.locator(s('confirmation-modal')).getByRole('button', {name: 'Confirm'}).click();
 
         await expect(row).toHaveCount(0);

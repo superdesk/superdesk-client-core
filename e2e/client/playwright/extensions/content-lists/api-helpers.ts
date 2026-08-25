@@ -135,6 +135,7 @@ export async function dragAndDrop(page: Page, source: Locator, target: Locator):
 
     // small initial movement so react-beautiful-dnd starts the drag
     await page.mouse.move(from.x + 5, from.y + 5, {steps: 3});
+    await page.waitForTimeout(50);
 
     const steps = 15;
 
@@ -147,6 +148,15 @@ export async function dragAndDrop(page: Page, source: Locator, target: Locator):
         // eslint-disable-next-line no-await-in-loop
         await page.waitForTimeout(20);
     }
+
+    /*
+     * rbd throttles mouse moves through requestAnimationFrame, so the last
+     * move of the loop may still be unprocessed when the button is released --
+     * the drop then lands on the previous position, outside the target. Repeat
+     * the final position and give it a frame or two to be picked up.
+     */
+    await page.mouse.move(to.x, to.y);
+    await page.waitForTimeout(100);
 
     await page.mouse.up();
 }
