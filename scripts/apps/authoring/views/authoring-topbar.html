@@ -368,20 +368,17 @@
                     <li ng-if="!useTansaProofing()" class="dropdown__menu-item--no-link">
                       <span class="pull-right"
                           sd-switch
-                          ng-model="spellcheckMenu.isAuto"
-                          ng-change="spellcheckMenu.pushSettings()"
+                          ng-model="spellcheck.isAutoSpellchecker"
+                          ng-change="spellcheck.toggleSpellcheckerStatus(spellcheck.isAutoSpellchecker)"
                           ng-hide="getSpellchecker(item.language) == null"
-                          tooltip="{{ spellcheckMenu.isAuto ? 'Spell checking ON' : 'Spell checking OFF'  | translate }}"
+                          tooltip="{{ spellcheck.isAutoSpellchecker ? 'Spell checking ON' : 'Spell checking OFF'  | translate }}"
                           tooltip-placement="left"></span>
                       <span translate>Run automatically</span>
                     </li>
                     <li ng-if="!useTansaProofing()">
                         <button type="button"
                             ng-click="spellcheckMenu.runSpellchecker()"
-                            ng-disabled="spellcheckMenu.isAuto"
-                            sd-hotkey="ctrl+shift+y"
-                            sd-hotkey-options="{global: true}">
-                              <span class="shortcut pull-right">Ctrl+Shift+Y</span>
+                            ng-disabled="spellcheck.isAutoSpellchecker">
                               <span translate>Check spelling</span>
                         </button>
                     </li>
