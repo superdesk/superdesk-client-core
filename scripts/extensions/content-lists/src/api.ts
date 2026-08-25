@@ -8,17 +8,28 @@ const CONTENT_LISTS_RESOURCE = '/content_lists';
 const WEBHOOKS_RESOURCE = '/content_list_webhooks';
 
 interface IApiError {
+    // Eve resource routes wrap the status in `_error`
     _error?: {
         code?: number;
         message?: string;
     };
+
+    // endpoints served by the async core framework (e.g. the bulk items PATCH)
+    // are serialized by SuperdeskApiError.to_dict(), which has no `_error`;
+    // the status is appended as `internal_error` instead
+    internal_error?: number;
+
     _status?: string;
 }
 
 export function isConflictError(error: unknown): boolean {
-    return typeof error === 'object'
-        && error != null
-        && (error as IApiError)._error?.code === 409;
+    if (typeof error !== 'object' || error == null) {
+        return false;
+    }
+
+    const apiError = error as IApiError;
+
+    return apiError._error?.code === 409 || apiError.internal_error === 409;
 }
 
 export function fetchLists(): Promise<Array<IContentList>> {

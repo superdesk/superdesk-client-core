@@ -29,7 +29,7 @@ test.describe('content lists grid', () => {
         const card = page.locator(s('content-list-card=sports'));
 
         await card.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('button', {name: 'Settings'}).click();
+        await page.getByRole('menuitem', {name: 'Settings'}).click();
 
         await page.locator(s('content-list-settings--name')).fill('sports updated');
         await page.getByRole('button', {name: 'Save', exact: true}).click();
@@ -46,7 +46,7 @@ test.describe('content lists grid', () => {
         const card = page.locator(s('content-list-card=politics'));
 
         await card.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('button', {name: 'Settings'}).click();
+        await page.getByRole('menuitem', {name: 'Settings'}).click();
 
         await page.locator(s('content-list-settings--limit')).fill('2');
         await page.locator(s('content-list-settings--description')).fill('top political stories');
@@ -54,7 +54,7 @@ test.describe('content lists grid', () => {
 
         // re-open to verify persistence
         await card.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('button', {name: 'Settings'}).click();
+        await page.getByRole('menuitem', {name: 'Settings'}).click();
 
         await expect(page.locator(s('content-list-settings--limit'))).toHaveValue('2');
         await expect(page.locator(s('content-list-settings--description'))).toHaveValue('top political stories');
@@ -69,7 +69,7 @@ test.describe('content lists grid', () => {
         const card = page.locator(s('content-list-card=to delete'));
 
         await card.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('button', {name: 'Remove'}).click();
+        await page.getByRole('menuitem', {name: 'Remove'}).click();
         await page.locator(s('confirmation-modal')).getByRole('button', {name: 'Confirm'}).click();
 
         await expect(card).toHaveCount(0);

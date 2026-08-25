@@ -307,7 +307,12 @@ describe('ListEditor', () => {
 
     it('notifies about a conflict and reloads when another user modified the list', async () => {
         stubHttp({
-            'PATCH /content_lists/list-1/items': () => Promise.reject({_error: {code: 409}}),
+            // the real body the bulk items PATCH rejects with (no `_error` wrapper)
+            'PATCH /content_lists/list-1/items': () => Promise.reject({
+                _status: 'ERR',
+                _message: 'Content list items have been modified',
+                internal_error: 409,
+            }),
         });
         const notifyErrorSpy = spyOn(superdeskMock, 'notifyError');
 

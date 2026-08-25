@@ -61,12 +61,23 @@ function respondWith(items: Array<{}>, total?: number): jasmine.Spy {
 }
 
 describe('isConflictError', () => {
-    it('recognizes a 409 error payload', () => {
+    it('recognizes a 409 error payload from an Eve resource route', () => {
         expect(isConflictError({_error: {code: 409, message: 'conflict'}})).toBe(true);
+    });
+
+    it('recognizes a 409 error payload from an async core framework endpoint', () => {
+        // exact body the bulk items PATCH returns; SuperdeskApiError.to_dict()
+        // has no `_error`, the status arrives as `internal_error`
+        expect(isConflictError({
+            _status: 'ERR',
+            _message: 'Content list items have been modified',
+            internal_error: 409,
+        })).toBe(true);
     });
 
     it('rejects other errors', () => {
         expect(isConflictError({_error: {code: 412}})).toBe(false);
+        expect(isConflictError({_status: 'ERR', _message: 'nope', internal_error: 400})).toBe(false);
         expect(isConflictError({})).toBe(false);
         expect(isConflictError(null)).toBe(false);
         expect(isConflictError('conflict')).toBe(false);

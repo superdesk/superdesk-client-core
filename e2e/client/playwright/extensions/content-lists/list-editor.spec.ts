@@ -40,7 +40,7 @@ test.describe('content list editor', () => {
 
         // switch the picker to "In progress" articles
         await page.locator(s('content-list--picker-pane')).getByRole('button', {name: 'Published'}).click();
-        await page.getByRole('button', {name: 'In progress'}).click();
+        await page.getByRole('menuitem', {name: 'In progress'}).click();
 
         const pickerArticle = page
             .locator(s('content-list--picker-results'))
@@ -121,7 +121,8 @@ test.describe('content list editor', () => {
 
         await firstItem.getByRole('button', {name: 'Pin'}).click();
 
-        await expect(firstItem.getByText('pinned')).toBeVisible();
+        // a pinned row is marked by the pin toggle flipping to "Unpin"
+        await expect(firstItem.getByRole('button', {name: 'Unpin'})).toBeVisible();
 
         await page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'}).click();
 
@@ -130,7 +131,7 @@ test.describe('content list editor', () => {
             page
                 .locator(s('content-list--items'))
                 .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`))
-                .getByText('pinned'),
+                .getByRole('button', {name: 'Unpin'}),
         ).toBeVisible();
     });
 

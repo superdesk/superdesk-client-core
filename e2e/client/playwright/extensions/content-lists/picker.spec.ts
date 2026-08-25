@@ -28,7 +28,7 @@ test.describe('content list editor article picker', () => {
         await page.goto(`/#/content-lists?list=${list._id}`);
 
         await page.locator(s('content-list--picker-pane')).getByRole('button', {name: 'Published'}).click();
-        await page.getByRole('button', {name: 'In progress'}).click();
+        await page.getByRole('menuitem', {name: 'In progress'}).click();
 
         const results = page.locator(s('content-list--picker-results'));
 

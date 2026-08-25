@@ -5,7 +5,7 @@ import {createContentList, createWebhook} from './api-helpers';
 async function openWebhooksModal(page: Page): Promise<void> {
     await page.goto('/#/content-lists');
     await page.locator(s('content-lists--settings-menu')).locator('button').click();
-    await page.getByRole('button', {name: 'Webhooks', exact: true}).click();
+    await page.getByRole('menuitem', {name: 'Webhooks', exact: true}).click();
     await expect(page.locator(s('manage-webhooks'))).toBeVisible();
 }
 
@@ -60,7 +60,7 @@ test.describe('content lists webhooks', () => {
         await openWebhooksModal(page);
 
         await page.locator(s('manage-webhooks')).getByRole('button', {name: 'All'}).click();
-        await page.getByRole('button', {name: 'Enabled', exact: true}).click();
+        await page.getByRole('menuitem', {name: 'Enabled', exact: true}).click();
 
         await expect(page.locator(s('webhook-item=https://example.com/enabled'))).toBeVisible();
         await expect(page.locator(s('webhook-item=https://example.com/disabled'))).toHaveCount(0);
@@ -93,7 +93,7 @@ test.describe('content lists webhooks', () => {
 
         await row.hover();
         await row.getByRole('button', {name: 'Actions'}).click();
-        await page.getByRole('button', {name: 'Remove', exact: true}).click();
+        await page.getByRole('menuitem', {name: 'Remove', exact: true}).click();
         await page.locator(s('confirmation-modal')).getByRole('button', {name: 'Confirm'}).click();
 
         await expect(row).toHaveCount(0);
