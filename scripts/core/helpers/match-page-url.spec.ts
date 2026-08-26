@@ -17,6 +17,11 @@ describe('matchesPageUrl', () => {
         expect(matchesPageUrl('/content-lists/:id', '/content-lists/abc123/extra')).toBe(false);
     });
 
+    it('does not match an empty parameter segment', () => {
+        expect(matchesPageUrl('/content-lists/:id', '/content-lists/')).toBe(false);
+        expect(matchesPageUrl('/a/:b/c', '/a//c')).toBe(false);
+    });
+
     it('does not match when a static segment differs', () => {
         expect(matchesPageUrl('/content-lists/:id', '/other-page/abc123')).toBe(false);
     });

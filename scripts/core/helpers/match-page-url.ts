@@ -8,6 +8,8 @@ export function matchesPageUrl(pageUrl: string, currentUrl: string): boolean {
 
     return pageSegments.length === currentSegments.length
         && pageSegments.every(
-            (segment, i) => segment.startsWith(':') || segment === currentSegments[i],
+            (segment, i) => segment.startsWith(':')
+                ? currentSegments[i].length > 0 // a param has to match something
+                : segment === currentSegments[i],
         );
 }
