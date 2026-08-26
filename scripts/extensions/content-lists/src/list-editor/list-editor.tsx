@@ -9,6 +9,7 @@ import {addArticleChangesListener, addListItemsChangeListener} from '../live-upd
 import {superdesk} from '../superdesk';
 import {fixPinnedItemsPosition, listItemToEntry, moveBetween, recordChange, reorder} from '../utils';
 import {ListPane} from './list-pane';
+import {registerNavigationGuard} from './navigation-guard';
 import {PickerPane} from './picker-pane';
 
 const {gettext} = superdesk.localization;
@@ -48,6 +49,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
     private articleRequestId: number;
     private _mounted: boolean;
     private removeListenerFunctions: Array<() => void>;
+    private removeNavigationGuard: (() => void) | null;
     private refreshFromServerDebounced: () => void;
     private refreshArticlesDebounced: () => void;
 
@@ -70,7 +72,10 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
         this.articleRequestId = 0;
         this._mounted = false;
         this.removeListenerFunctions = [];
+        this.removeNavigationGuard = null;
 
+        this.hasUnsavedChanges = this.hasUnsavedChanges.bind(this);
+        this.confirmDiscardingChanges = this.confirmDiscardingChanges.bind(this);
         this.reloadListItems = this.reloadListItems.bind(this);
 
         // Refreshes triggered by websocket events are skipped while dragging
@@ -101,6 +106,13 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
         this.reloadListItems();
         this.loadArticles(this.state.source, this.state.articleSearchString, true);
 
+        // the back / list-switch buttons confirm on their own; this covers
+        // leaving via the side menu, the browser back button or a reload
+        this.removeNavigationGuard = registerNavigationGuard(
+            this.hasUnsavedChanges,
+            this.confirmDiscardingChanges,
+        );
+
         this.removeListenerFunctions = [
             addListItemsChangeListener(this.props.listId, () => {
                 this.refreshFromServerDebounced();
@@ -119,6 +131,8 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
     componentWillUnmount() {
         this._mounted = false;
         this.removeListenerFunctions.forEach((removeListener) => removeListener());
+        this.removeNavigationGuard?.();
+        this.removeNavigationGuard = null;
     }
 
     hasUnsavedChanges(): boolean {
