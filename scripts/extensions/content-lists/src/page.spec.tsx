@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Loader} from 'superdesk-ui-framework/react';
+import {Loader} from 'superdesk-ui-framework/react';
 import {LIST_ID_URL_PARAM} from './constants';
 import {ListEditor} from './list-editor/list-editor';
 import {ListsGrid} from './lists-grid/lists-grid';
@@ -90,8 +90,7 @@ describe('ContentListsPage', () => {
 
         httpSpy.and.returnValue(Promise.resolve({_items: [list('list-1')], _meta: {total: 1}}));
 
-        (wrapper.find(Button).filterWhere((button) => button.prop('text') === 'Retry')
-            .prop('onClick') as () => void)();
+        (wrapper.find('Button[text="Retry"]').prop('onClick') as () => void)();
 
         await flushPromises();
         wrapper.update();

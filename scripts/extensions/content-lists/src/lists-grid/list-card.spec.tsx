@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
+import {Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
 import {IContentList, IContentListItem} from '../interfaces';
 import {flushPromises, mountWithCleanup} from '../tests/helpers';
 import {dispatchWebsocketEvent, superdeskMock} from '../tests/superdesk-mock';
@@ -271,8 +271,7 @@ describe('ListCard', () => {
         // retrying loads the preview again
         httpSpy.and.returnValue(Promise.resolve({_items: [listItem('one', 1)], _meta: {total: 1}}));
 
-        (wrapper.find(Button).filterWhere((button) => button.prop('text') === 'Retry')
-            .prop('onClick') as () => void)();
+        (wrapper.find('Button[text="Retry"]').prop('onClick') as () => void)();
 
         await flushPromises();
         wrapper.update();

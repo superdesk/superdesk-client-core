@@ -42,7 +42,7 @@ export function registerNavigationGuard(
         let confirmedUrl: string | null = null;
         let confirmationPending = false;
 
-        const removeAngularListener = rootScope.$on('$locationChangeStart', (event: {preventDefault(): void}, nextUrl: string) => {
+        const onLocationChangeStart = (event: {preventDefault(): void}, nextUrl: string) => {
             if (!hasUnsavedChanges()) {
                 return;
             }
@@ -73,9 +73,9 @@ export function registerNavigationGuard(
                     window.location.href = nextUrl;
                 }
             });
-        });
+        };
 
-        removeListenerFunctions.push(removeAngularListener);
+        removeListenerFunctions.push(rootScope.$on('$locationChangeStart', onLocationChangeStart));
     }
 
     return () => removeListenerFunctions.forEach((removeListener) => removeListener());
