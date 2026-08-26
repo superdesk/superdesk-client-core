@@ -1,0 +1,110 @@
+.sd-grid-item__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-1-5);
+    border-block-end: 1px solid var(--color-line-x-light);
+}
+
+/* h3 element selector is needed to out-specify the ui-framework rule
+   `.sd-grid-item .sd-grid-item__title` which sets margin-block-end */
+.sd-grid-item__header h3.sd-grid-item__header-title {
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* attribute selector because the class belongs to the ui-framework component
+   and a plain class selector would get the extension prefix at build time */
+[data-test-id="content-list-card"] [class*="sd-grid-item__footer-block--right"] {
+    padding-inline-end: var(--space-1);
+}
+
+/* thumbnail column in the available-items (picker) pane:
+   drop the framework column padding and hug the image to the row edge */
+[data-test-id="content-list--picker-results"] [class*="sd-list-item__column"]:has(> img[class*="sd-list-item__thumbnail"]) {
+    padding: 0;
+}
+
+[data-test-id="content-list--picker-results"] img[class*="sd-list-item__thumbnail"] {
+    margin: 0 0 0 0.2rem;
+}
+
+/* same treatment for the list (left) pane */
+[data-test-id="content-list--items"] [class*="sd-list-item__column"]:has(> img[class*="sd-list-item__thumbnail"]) {
+    padding: 0;
+    margin: 0 0 0 0.2rem;
+}
+
+[data-test-id="content-list--items"] img[class*="sd-list-item__thumbnail"] {
+    margin: 0 0 0 var(--space-1);
+}
+
+/* the new-list name field hides its label, but .sd-input still reserves a
+   label-height grid row, misaligning the field next to the icon buttons */
+[data-test-id="content-lists--new-list"] [class~="sd-input"] {
+    grid-template-rows: none;
+}
+
+/* a rotated pin marks a pinned row (instead of a "pinned" pill) */
+.pin-toggle--pinned i {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+/* pin/remove buttons are rendered as a regular always-visible column;
+   hide the empty hover-expanding action-menu slot so rows don't shift on mouse over.
+   attribute selectors: framework classes would get the extension prefix if written as .class */
+[data-test-id="content-list-item"] [class*="sd-list-item__action-menu"] {
+    display: none !important;
+    width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+}
+
+/* keep row background/cursor stable on hover (framework uses hover Bg + cursor:pointer).
+   match the exact class token so columns/rows aren't targeted */
+[data-test-id="content-list-item"] [class~="sd-list-item"],
+[data-test-id="content-list-item"] [class~="sd-list-item"]:hover {
+    background-color: var(--sd-item__main-Bg) !important;
+    cursor: grab !important;
+}
+
+/* dimmed = already in list (picker) or past the trim limit (list pane) */
+.article-row--dimmed [class~="sd-list-item"],
+.article-row--dimmed [class~="sd-list-item"]:hover {
+    cursor: not-allowed !important;
+}
+
+.manage-webhooks {
+    position: relative;
+    height: 100%;
+}
+
+/* contains the Loader's absolute full-inset overlay (.sd-loader) within the
+   page content area — without a positioned ancestor it covers the viewport,
+   flashing over the top menu */
+.loader-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.webhook-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.webhook-item-url {
+    font-weight: 500;
+}
+
+.webhook-updated-time {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    color: var(--sd-colour-text-light);
+    font-size: 1.2rem;
+}

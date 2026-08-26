@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "main": "src/extension.ts",
+  "scripts": {
+    "compile-e2e": "echo 'No end-to-end tests defined'",
+    "test": "node ../../../node_modules/karma/bin/karma start --single-run",
+    "debug-tests": "node ../../../node_modules/karma/bin/karma start --reporters=progress --browsers=Chrome"
+  },
+  "dependencies": {
+    "react-beautiful-dnd": "13.1.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.117",
+    "@types/node": "18.19.0",
+    "@types/react": "16.9.44",
+    "@types/react-beautiful-dnd": "13.1.8",
+    "superdesk-code-style": "1.3.0",
+    "typescript": "~4.9.5"
+  }
+}

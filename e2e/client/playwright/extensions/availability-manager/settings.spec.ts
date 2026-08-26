@@ -1,6 +1,7 @@
 import path from 'path';
 import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from '../../utils';
+import {getStorageStateFromFile} from '../../utils/storage-state';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
 export async function openAvailabilitySettings(page: Page) {
@@ -12,7 +13,7 @@ export async function openAvailabilitySettings(page: Page) {
 }
 
 test.describe('availability manager settings', async () => {
-    test.use({storageState: path.join(__dirname, './user-michael.json')});
+    test.use({storageState: getStorageStateFromFile(path.join(__dirname, './user-michael.json'))});
 
     test('main view', async ({page}) => {
         await openAvailabilitySettings(page);
@@ -136,7 +137,7 @@ test.describe('availability manager settings', async () => {
 
 test.describe('first use', async () => {
     /** Andy is a newly created user who hasn't enabled availability settings previously */
-    test.use({storageState: path.join(__dirname, './user-andy.json')});
+    test.use({storageState: getStorageStateFromFile(path.join(__dirname, './user-andy.json'))});
 
     test('enabling settings page for the first time and setting availability', async ({page}) => {
         await openAvailabilitySettings(page);
