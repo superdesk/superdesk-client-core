@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Loader} from 'superdesk-ui-framework/react';
+import {Button, Loader} from 'superdesk-ui-framework/react';
 import {LIST_ID_URL_PARAM} from './constants';
 import {ListEditor} from './list-editor/list-editor';
 import {ListsGrid} from './lists-grid/lists-grid';
@@ -72,6 +72,49 @@ describe('ContentListsPage', () => {
         wrapper.update();
 
         expect(wrapper.find(ListsGrid).length).toBe(1);
+        expect(wrapper.find(ListsGrid).prop('lists').length).toBe(1);
+    });
+
+    it('shows an error with a retry instead of an endless loader when loading fails', async () => {
+        const httpSpy = spyOn(superdeskMock, 'httpRequestJsonLocal').and.returnValue(
+            Promise.reject(new Error('server error')),
+        );
+
+        const wrapper = mountWithCleanup(<ContentListsPage {...pageProps} />);
+
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find(Loader).length).toBe(0);
+        expect(wrapper.find('[data-test-id="content-lists--load-error"]').length).toBeGreaterThan(0);
+
+        httpSpy.and.returnValue(Promise.resolve({_items: [list('list-1')], _meta: {total: 1}}));
+
+        (wrapper.find(Button).filterWhere((button) => button.prop('text') === 'Retry')
+            .prop('onClick') as () => void)();
+
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find(ListsGrid).length).toBe(1);
+    });
+
+    it('notifies without dropping the rendered lists when a refresh fails', async () => {
+        const httpSpy = stubHttp();
+        const notifyErrorSpy = spyOn(superdeskMock, 'notifyError');
+
+        const wrapper = mountWithCleanup(<ContentListsPage {...pageProps} />);
+
+        await flushPromises();
+        wrapper.update();
+
+        httpSpy.and.returnValue(Promise.reject(new Error('server error')));
+
+        (wrapper.find(ListsGrid).prop('refreshLists') as () => Promise<void>)();
+        await flushPromises();
+        wrapper.update();
+
+        expect(notifyErrorSpy).toHaveBeenCalledWith('Could not refresh the content lists.');
         expect(wrapper.find(ListsGrid).prop('lists').length).toBe(1);
     });
 
