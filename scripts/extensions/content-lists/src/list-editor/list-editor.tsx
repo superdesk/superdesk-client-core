@@ -45,6 +45,7 @@ interface IState {
 export class ListEditor extends React.PureComponent<IProps, IState> {
     public isDragging: boolean;
     private uidSequence: number;
+    private articleRequestId: number;
     private _mounted: boolean;
     private removeListenerFunctions: Array<() => void>;
     private refreshFromServerDebounced: () => void;
@@ -66,6 +67,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
 
         this.isDragging = false;
         this.uidSequence = 0;
+        this.articleRequestId = 0;
         this._mounted = false;
         this.removeListenerFunctions = [];
 
@@ -148,11 +150,17 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
     loadArticles(source: IArticleSource, searchString: string, reset: boolean): void {
         const {articles} = this.state;
 
-        if (articles.loading) {
+        // a reset (source change, new search, refresh) supersedes whatever is
+        // in flight; only repeated pagination requests are suppressed
+        if (articles.loading && !reset) {
             return;
         }
 
         const nextPage = reset ? 0 : articles.nextPage;
+
+        this.articleRequestId += 1;
+
+        const requestId = this.articleRequestId;
 
         this.setState({
             source,
@@ -171,7 +179,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
                     }
 
                     // ignore stale responses
-                    if (this.state.source !== source || this.state.articleSearchString !== searchString) {
+                    if (this.articleRequestId !== requestId) {
                         return;
                     }
 
@@ -187,7 +195,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
                     });
                 })
                 .catch(() => {
-                    if (!this._mounted) {
+                    if (!this._mounted || this.articleRequestId !== requestId) {
                         return;
                     }
 
