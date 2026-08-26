@@ -41,6 +41,9 @@ interface IState {
 export class ListCard extends React.PureComponent<IProps, IState> {
     private removeArticleChangesListener: (() => void) | null;
     private loadPreviewDebounced: () => void;
+    // article ids currently shown in the preview; kept out of the state
+    // because rendering doesn't depend on them
+    private previewContentIds: Set<string>;
 
     constructor(props: IProps) {
         super(props);
@@ -51,6 +54,7 @@ export class ListCard extends React.PureComponent<IProps, IState> {
         };
 
         this.removeArticleChangesListener = null;
+        this.previewContentIds = new Set();
 
         this.removeList = this.removeList.bind(this);
         this.loadPreview = this.loadPreview.bind(this);
@@ -62,9 +66,17 @@ export class ListCard extends React.PureComponent<IProps, IState> {
 
         // preview titles are resolved at read time on the backend; an article
         // change doesn't touch content_list_items_updated_at, so re-fetch on
-        // the public content:update event
-        this.removeArticleChangesListener = addArticleChangesListener(() => {
-            this.loadPreviewDebounced();
+        // the public content:update event. That event is global, so only the
+        // cards actually previewing a changed article refetch - otherwise a
+        // single article change would cost one request per rendered card.
+        this.removeArticleChangesListener = addArticleChangesListener((changedArticleIds) => {
+            const previewed = Array.from(changedArticleIds).some(
+                (articleId) => this.previewContentIds.has(articleId),
+            );
+
+            if (previewed) {
+                this.loadPreviewDebounced();
+            }
         });
     }
 
@@ -81,6 +93,8 @@ export class ListCard extends React.PureComponent<IProps, IState> {
     loadPreview() {
         fetchListItems(this.props.list._id, {maxResults: PREVIEW_ITEMS_COUNT})
             .then((response) => {
+                this.previewContentIds = new Set(response._items.map((item) => item.content));
+
                 this.setState({
                     previewTitles: response._items.map(
                         (item) => item.article_content == null
@@ -91,6 +105,7 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                 });
             })
             .catch(() => {
+                this.previewContentIds = new Set();
                 this.setState({previewTitles: []});
             });
     }

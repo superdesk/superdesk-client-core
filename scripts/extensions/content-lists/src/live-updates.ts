@@ -38,6 +38,17 @@ export function addListItemsChangeListener(listId: string, handler: () => void):
     );
 }
 
-export function addArticleChangesListener(handler: () => void): () => void {
-    return superdesk.addWebsocketMessageListener('content:update', handler);
+/**
+ * `content:update` is a public event fired for every article change in the
+ * system. The handler receives the ids of the changed articles so that
+ * listeners can ignore changes to articles they don't display; the set is
+ * empty when the event carries no item ids.
+ */
+export function addArticleChangesListener(handler: (changedArticleIds: Set<string>) => void): () => void {
+    return superdesk.addWebsocketMessageListener(
+        'content:update',
+        (event: CustomEvent<IWebsocketMessage<{items?: {[itemId: string]: 1}}>>) => {
+            handler(new Set(Object.keys(event.detail.extra?.items ?? {})));
+        },
+    );
 }

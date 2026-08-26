@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
 import {IContentList, IContentListItem} from '../interfaces';
 import {flushPromises, mountWithCleanup} from '../tests/helpers';
-import {superdeskMock} from '../tests/superdesk-mock';
+import {dispatchWebsocketEvent, superdeskMock} from '../tests/superdesk-mock';
 import {ListCard} from './list-card';
 
 function list(overrides: Partial<IContentList> = {}): IContentList {
@@ -253,5 +253,32 @@ describe('ListCard', () => {
         wrapper.setProps({list: list({content_list_items_updated_at: '2024-06-01T00:00:00+0000'})});
 
         expect(httpSpy).toHaveBeenCalled();
+    });
+
+    it('reloads the preview only for article changes it displays', async () => {
+        const httpSpy = stubItems([listItem('one', 1)]);
+
+        mountCard();
+
+        await flushPromises();
+
+        jasmine.clock().install();
+        jasmine.clock().mockDate();
+
+        try {
+            httpSpy.calls.reset();
+
+            dispatchWebsocketEvent('content:update', {items: {'content-2': 1}});
+            jasmine.clock().tick(1000);
+
+            expect(httpSpy).not.toHaveBeenCalled();
+
+            dispatchWebsocketEvent('content:update', {items: {'content-1': 1, 'content-2': 1}});
+            jasmine.clock().tick(1000);
+
+            expect(httpSpy).toHaveBeenCalledTimes(1);
+        } finally {
+            jasmine.clock().uninstall();
+        }
     });
 });

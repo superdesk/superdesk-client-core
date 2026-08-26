@@ -75,13 +75,24 @@ describe('addListItemsChangeListener', () => {
 });
 
 describe('addArticleChangesListener', () => {
-    it('fires on the public content update event', () => {
+    it('fires on the public content update event with the changed article ids', () => {
+        const handler = jasmine.createSpy('handler');
+
+        addArticleChangesListener(handler);
+
+        dispatchWebsocketEvent('content:update', {items: {'article-1': 1, 'article-2': 1}});
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(new Set(['article-1', 'article-2']));
+    });
+
+    it('passes an empty set when the event carries no item ids', () => {
         const handler = jasmine.createSpy('handler');
 
         addArticleChangesListener(handler);
 
         dispatchWebsocketEvent('content:update');
 
-        expect(handler).toHaveBeenCalledTimes(1);
+        expect(handler).toHaveBeenCalledWith(new Set());
     });
 });
