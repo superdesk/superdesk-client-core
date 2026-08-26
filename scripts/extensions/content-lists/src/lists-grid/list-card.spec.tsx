@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
+import {Button, Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
 import {IContentList, IContentListItem} from '../interfaces';
 import {flushPromises, mountWithCleanup} from '../tests/helpers';
 import {dispatchWebsocketEvent, superdeskMock} from '../tests/superdesk-mock';
@@ -253,6 +253,32 @@ describe('ListCard', () => {
         wrapper.setProps({list: list({content_list_items_updated_at: '2024-06-01T00:00:00+0000'})});
 
         expect(httpSpy).toHaveBeenCalled();
+    });
+
+    it('shows an error instead of the empty state when the preview fails to load', async () => {
+        const httpSpy = spyOn(superdeskMock, 'httpRequestJsonLocal').and.returnValue(
+            Promise.reject(new Error('server error')),
+        );
+
+        const wrapper = mountCard();
+
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find('[data-test-id="content-list-card--preview-error"]').length).toBeGreaterThan(0);
+        expect(wrapper.find(EmptyState).prop('title')).toBe('Could not load the preview');
+
+        // retrying loads the preview again
+        httpSpy.and.returnValue(Promise.resolve({_items: [listItem('one', 1)], _meta: {total: 1}}));
+
+        (wrapper.find(Button).filterWhere((button) => button.prop('text') === 'Retry')
+            .prop('onClick') as () => void)();
+
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find('[data-test-id="content-list-card--preview-error"]').length).toBe(0);
+        expect(wrapper.text()).toContain('one');
     });
 
     it('reloads the preview only for article changes it displays', async () => {

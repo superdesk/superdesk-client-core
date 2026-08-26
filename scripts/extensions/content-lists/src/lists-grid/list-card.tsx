@@ -36,6 +36,7 @@ interface IProps {
 interface IState {
     previewTitles: Array<string> | null;
     itemsTotal: number;
+    previewFailed: boolean;
 }
 
 export class ListCard extends React.PureComponent<IProps, IState> {
@@ -51,6 +52,7 @@ export class ListCard extends React.PureComponent<IProps, IState> {
         this.state = {
             previewTitles: null,
             itemsTotal: 0,
+            previewFailed: false,
         };
 
         this.removeArticleChangesListener = null;
@@ -102,11 +104,14 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                             : item.article_content.title,
                     ),
                     itemsTotal: response._meta.total,
+                    previewFailed: false,
                 });
             })
             .catch(() => {
+                // a failed request says nothing about the list contents, so
+                // the preview must not fall back to the empty state
                 this.previewContentIds = new Set();
-                this.setState({previewTitles: []});
+                this.setState({previewFailed: true});
             });
     }
 
@@ -127,7 +132,7 @@ export class ListCard extends React.PureComponent<IProps, IState> {
 
     render() {
         const {list} = this.props;
-        const {previewTitles, itemsTotal} = this.state;
+        const {previewTitles, itemsTotal, previewFailed} = this.state;
 
         const itemsUpdatedAt = list.content_list_items_updated_at;
 
@@ -176,37 +181,54 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                     </div>
                     <GridItemContent>
                         {
-                            previewTitles != null && (
-                                previewTitles.length < 1
-                                    ? (
+                            previewFailed
+                                ? (
+                                    <div data-test-id="content-list-card--preview-error">
                                         <EmptyState
                                             size="small"
-                                            title={gettext('No articles in this list')}
+                                            title={gettext('Could not load the preview')}
                                         />
-                                    )
-                                    : (
-                                        <React.Fragment>
-                                            <SimpleList density="compact" className="pb-0-5">
-                                                {previewTitles.map((title, i) => (
-                                                    <SimpleListItem key={i}>
-                                                        <Text className="mb-0">{title}</Text>
-                                                    </SimpleListItem>
-                                                ))}
-                                            </SimpleList>
-                                            {
-                                                itemsTotal > PREVIEW_ITEMS_COUNT && (
-                                                    <Text color="lighter" className="mb-0">
-                                                        {
-                                                            gettext('+{{n}} more', {
-                                                                n: itemsTotal - PREVIEW_ITEMS_COUNT,
-                                                            })
-                                                        }
-                                                    </Text>
-                                                )
-                                            }
-                                        </React.Fragment>
-                                    )
-                            )
+                                        <div className="sd-display--flex sd-flex--justify-center">
+                                            <Button
+                                                text={gettext('Retry')}
+                                                type="default"
+                                                size="small"
+                                                onClick={this.loadPreview}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                                : previewTitles != null && (
+                                    previewTitles.length < 1
+                                        ? (
+                                            <EmptyState
+                                                size="small"
+                                                title={gettext('No articles in this list')}
+                                            />
+                                        )
+                                        : (
+                                            <React.Fragment>
+                                                <SimpleList density="compact" className="pb-0-5">
+                                                    {previewTitles.map((title, i) => (
+                                                        <SimpleListItem key={i}>
+                                                            <Text className="mb-0">{title}</Text>
+                                                        </SimpleListItem>
+                                                    ))}
+                                                </SimpleList>
+                                                {
+                                                    itemsTotal > PREVIEW_ITEMS_COUNT && (
+                                                        <Text color="lighter" className="mb-0">
+                                                            {
+                                                                gettext('+{{n}} more', {
+                                                                    n: itemsTotal - PREVIEW_ITEMS_COUNT,
+                                                                })
+                                                            }
+                                                        </Text>
+                                                    )
+                                                }
+                                            </React.Fragment>
+                                        )
+                                )
                         }
                     </GridItemContent>
                     <GridItemFooter>
