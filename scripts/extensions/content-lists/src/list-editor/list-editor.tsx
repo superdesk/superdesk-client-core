@@ -7,7 +7,7 @@ import {searchArticles} from '../article-search';
 import {IArticleSource, IContentList, IItemChange, IListEntry} from '../interfaces';
 import {addArticleChangesListener, addListItemsChangeListener} from '../live-updates';
 import {superdesk} from '../superdesk';
-import {fixPinnedItemsPosition, listItemToEntry, moveBetween, recordChange, reorder} from '../utils';
+import {fixPinnedItemsPosition, listItemToEntry, recordChange, reorder} from '../utils';
 import {ListPane} from './list-pane';
 import {registerNavigationGuard} from './navigation-guard';
 import {PickerPane} from './picker-pane';
@@ -259,20 +259,26 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
                 ),
             });
         } else if (source.droppableId === 'articles' && destination.droppableId === 'contentList') {
-            const moved = moveBetween(this.state.articles.entries, entries, source.index, destination.index);
+            const articleEntry = this.state.articles.entries[source.index];
+
+            if (articleEntry == null) {
+                return;
+            }
 
             this.uidSequence += 1;
 
-            const uid = `added-${this.uidSequence}`;
-            const addedEntry = {...moved.destination[destination.index], uid};
+            // the article is copied, not moved - it stays in the picker, where
+            // it is dimmed as already added, so it can be added again after an
+            // unsaved add is removed
+            const addedEntry = {...articleEntry, uid: `added-${this.uidSequence}`};
+            const withAddedEntry = Array.from(entries);
 
-            moved.destination[destination.index] = addedEntry;
+            withAddedEntry.splice(destination.index, 0, addedEntry);
 
-            const updatedEntries = fixPinnedItemsPosition(moved.destination);
+            const updatedEntries = fixPinnedItemsPosition(withAddedEntry);
 
             this.setState({
                 entries: updatedEntries,
-                articles: {...this.state.articles, entries: moved.source},
                 changesRecord: recordChange(
                     this.state.changesRecord,
                     'add',

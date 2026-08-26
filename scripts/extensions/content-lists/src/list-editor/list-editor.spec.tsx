@@ -199,8 +199,21 @@ describe('ListEditor', () => {
         expect((editor.state.entries ?? [])[1].uid).toBe('added-1');
         expect(editor.state.changesRecord).toEqual([{action: 'add', contentId: 'x', position: 1}]);
 
-        // removed from the picker results
-        expect(editor.state.articles.entries.map(({contentId}) => contentId)).toEqual(['y']);
+        // kept in the picker results, where it is dimmed as already added
+        expect(editor.state.articles.entries.map(({contentId}) => contentId)).toEqual(['x', 'y']);
+    });
+
+    it('can add the same article again after an unsaved add is removed', async () => {
+        stubHttp();
+
+        const {editor} = await mountEditor();
+
+        editor.onDragEnd(dragEnd({droppableId: 'articles', index: 0}, {droppableId: 'contentList', index: 0}, 'x'));
+        editor.removeEntry('added-1');
+        editor.onDragEnd(dragEnd({droppableId: 'articles', index: 0}, {droppableId: 'contentList', index: 0}, 'x'));
+
+        expect((editor.state.entries ?? []).map(({contentId}) => contentId)).toEqual(['x', 'a', 'b', 'c']);
+        expect(editor.state.changesRecord).toEqual([{action: 'add', contentId: 'x', position: 0}]);
     });
 
     it('keeps pinned entries in place when other entries move', async () => {

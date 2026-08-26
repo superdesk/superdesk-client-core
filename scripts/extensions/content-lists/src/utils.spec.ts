@@ -4,7 +4,6 @@ import {
     formatArticleTime,
     getDuplicateContentIds,
     listItemToEntry,
-    moveBetween,
     recordChange,
     reorder,
     updatePositions,
@@ -35,20 +34,6 @@ describe('reorder', () => {
         expect(reorder(input, 0, 2)).toEqual(['b', 'c', 'a', 'd']);
         expect(reorder(input, 3, 0)).toEqual(['d', 'a', 'b', 'c']);
         expect(input).toEqual(['a', 'b', 'c', 'd']);
-    });
-});
-
-describe('moveBetween', () => {
-    it('moves an item from one list to another without mutating the inputs', () => {
-        const source = ['a', 'b'];
-        const destination = ['c', 'd'];
-
-        expect(moveBetween(source, destination, 0, 1)).toEqual({
-            source: ['b'],
-            destination: ['c', 'a', 'd'],
-        });
-        expect(source).toEqual(['a', 'b']);
-        expect(destination).toEqual(['c', 'd']);
     });
 });
 

@@ -20,24 +20,6 @@ export function reorder<T>(list: Array<T>, startIndex: number, endIndex: number)
 }
 
 /**
- * Moves an item from one list to another list.
- */
-export function moveBetween<T>(
-    source: Array<T>,
-    destination: Array<T>,
-    sourceIndex: number,
-    destinationIndex: number,
-): {source: Array<T>; destination: Array<T>} {
-    const sourceClone = Array.from(source);
-    const destinationClone = Array.from(destination);
-    const [removed] = sourceClone.splice(sourceIndex, 1);
-
-    destinationClone.splice(destinationIndex, 0, removed);
-
-    return {source: sourceClone, destination: destinationClone};
-}
-
-/**
  * Re-inserts every pinned entry at its recorded sticky position
  * after any mutation of the list.
  */
