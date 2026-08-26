@@ -200,6 +200,33 @@ describe('ManageWebhooksModal', () => {
         });
     });
 
+    it('closes the editor when the webhook being edited is deleted', async () => {
+        stubWebhooks([webhook('w1'), webhook('w2')]);
+
+        spyOn(superdeskMock, 'confirm').and.returnValue(Promise.resolve(true));
+        spyOn(superdeskMock, 'httpRequestVoidLocal').and.returnValue(Promise.resolve());
+
+        const wrapper = await mountModal();
+
+        (wrapper.find(WebhookItem).at(0).prop('onEdit') as () => void)();
+        wrapper.update();
+
+        expect(wrapper.find(EditWebhookPanel).prop('webhook')?._id).toBe('w1');
+
+        // deleting another webhook keeps the editor open
+        wrapper.find(WebhookItem).at(1).prop('onDelete')();
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find(EditWebhookPanel).prop('webhook')?._id).toBe('w1');
+
+        wrapper.find(WebhookItem).at(0).prop('onDelete')();
+        await flushPromises();
+        wrapper.update();
+
+        expect(wrapper.find(EditWebhookPanel).length).toBe(0);
+    });
+
     it('does not delete a webhook when the confirmation is declined', async () => {
         stubWebhooks([webhook('w1')]);
 

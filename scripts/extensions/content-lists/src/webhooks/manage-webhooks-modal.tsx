@@ -89,7 +89,15 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                 }
 
                 deleteWebhook(webhook)
-                    .then(() => this.reload())
+                    .then(() => {
+                        // the editor would otherwise stay bound to the deleted
+                        // webhook and patch it on the next save
+                        if (this.state.selectedWebhook?._id === webhook._id) {
+                            this.setState({editorOpen: false, selectedWebhook: null});
+                        }
+
+                        return this.reload();
+                    })
                     .catch(() => {
                         notify.error(gettext('Could not delete the webhook.'));
                     });
