@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Alert} from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
 
-const {gettext} = superdesk.localization;
+const {gettextPlural} = superdesk.localization;
 
 interface IProps {
     limit: number;
@@ -18,7 +18,9 @@ export class LimitNotification extends React.PureComponent<IProps> {
                     margin="small"
                 >
                     {
-                        gettext(
+                        gettextPlural(
+                            this.props.limit,
+                            'This list is limited to {{n}} item. Articles below will be removed.',
                             'This list is limited to {{n}} items. Articles below will be removed.',
                             {n: this.props.limit},
                         )

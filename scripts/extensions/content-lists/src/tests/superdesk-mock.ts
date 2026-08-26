@@ -82,11 +82,21 @@ function gettextMock(text: string, params?: {[key: string]: string | number}): s
     );
 }
 
+function gettextPluralMock(
+    count: number,
+    singular: string,
+    plural: string,
+    params?: {[key: string]: string | number},
+): string {
+    return gettextMock(count === 1 ? singular : plural, params);
+}
+
 const instance = {
     httpRequestJsonLocal: (options: IHttpRequestOptions) => superdeskMock.httpRequestJsonLocal(options),
     httpRequestVoidLocal: (options: IHttpRequestOptions) => superdeskMock.httpRequestVoidLocal(options),
     localization: {
         gettext: gettextMock,
+        gettextPlural: gettextPluralMock,
         getRelativeOrAbsoluteDateTime: (dateString: string, format: string) => `${dateString}|${format}`,
     },
     ui: {

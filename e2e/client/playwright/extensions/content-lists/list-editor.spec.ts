@@ -155,7 +155,7 @@ test.describe('content list editor', () => {
 
         await expect(page.locator(s('content-list--limit-notification'))).toBeVisible();
         await expect(
-            page.getByText('This list is limited to 1 items. Articles below will be removed.'),
+            page.getByText('This list is limited to 1 item. Articles below will be removed.'),
         ).toBeVisible();
     });
 

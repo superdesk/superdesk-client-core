@@ -8,4 +8,10 @@ describe('LimitNotification', () => {
 
         expect(wrapper.text()).toContain('This list is limited to 10 items. Articles below will be removed.');
     });
+
+    it('uses the singular form for a limit of one', () => {
+        const wrapper = mountWithCleanup(<LimitNotification limit={1} />);
+
+        expect(wrapper.text()).toContain('This list is limited to 1 item. Articles below will be removed.');
+    });
 });
