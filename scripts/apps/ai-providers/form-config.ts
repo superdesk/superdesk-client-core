@@ -1,6 +1,8 @@
 import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import type {ISelectAsyncParameters} from 'core/ui/components/generic-form/input-types/select_async';
 import {gettext} from 'core/utils';
 import type {IFormField, IFormGroup} from 'superdesk-api';
+import {getProviderModels} from './api';
 import type {IAIProvider, IAIProviderType} from './interfaces';
 
 /**
@@ -71,6 +73,29 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
             },
         ];
 
+    /*
+        Listing the models needs the stored key, so the picker is only offered once the provider
+        is saved. When the provider cannot be reached the picker falls back to a text input holding
+        the stored model, so an unreachable provider blocks neither editing the rest nor setting a
+        model id by hand.
+    */
+    const modelPickerParameters: ISelectAsyncParameters = {
+        getOptions: (formValues) => getProviderModels(formValues._id),
+    };
+
+    const defaultModelField: IFormField<IAIProvider> = isExistingProvider
+        ? {
+            label: gettext('Default model'),
+            type: GenericFormFieldType.selectAsync,
+            field: 'default_model',
+            component_parameters: modelPickerParameters,
+        }
+        : {
+            label: gettext('Default model'),
+            type: GenericFormFieldType.plainText,
+            field: 'default_model',
+        };
+
     return {
         direction: 'vertical',
         type: 'inline',
@@ -98,11 +123,7 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
                 },
             },
             ...secretFields,
-            {
-                label: gettext('Default model'),
-                type: GenericFormFieldType.plainText,
-                field: 'default_model',
-            },
+            defaultModelField,
         ],
     };
 }

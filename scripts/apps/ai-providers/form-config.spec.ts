@@ -1,6 +1,8 @@
 import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field';
+import ng from 'core/services/ng';
 import type {IFormField, IFormFieldAlert} from 'superdesk-api';
+import {toModelOptions} from './api';
 import {AI_PROVIDER_TYPES, getAiProviderFormConfig} from './form-config';
 import type {IAIProvider} from './interfaces';
 
@@ -62,6 +64,44 @@ describe('ai providers form config', () => {
         );
         expect(providerTypeField.component_parameters.options).toEqual([
             {id: 'openai_compatible', label: 'OpenAI compatible'},
+        ]);
+    });
+
+    it('types the default model by hand when creating a provider', () => {
+        const defaultModelField = getFields().find(({field}) => field === 'default_model');
+
+        expect(defaultModelField.type).toBe(GenericFormFieldType.plainText);
+    });
+
+    it('picks the default model from the provider models when editing a saved provider', () => {
+        const defaultModelField = getFields({_id: 'provider-1'})
+            .find(({field}) => field === 'default_model');
+
+        expect(defaultModelField.type).toBe(GenericFormFieldType.selectAsync);
+        expect(typeof defaultModelField.component_parameters.getOptions).toBe('function');
+    });
+
+    it('lists the models of the provider identified by `_id`', async () => {
+        const fetchSpy = spyOn(window, 'fetch').and.returnValue(Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({models: []}),
+        } as unknown as Response));
+
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
+
+        const item: Partial<IAIProvider> = {_id: 'abc123', name: 'nope'};
+        const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
+
+        await defaultModelField.component_parameters.getOptions(item);
+
+        expect(fetchSpy.calls.mostRecent().args[0])
+            .toBe('http://localhost:5000/ai_providers/abc123/models');
+    });
+
+    it('turns the model ids the server returns into picker options', () => {
+        expect(toModelOptions(['gpt-4o', 'gpt-4o-mini'])).toEqual([
+            {id: 'gpt-4o', label: 'gpt-4o'},
+            {id: 'gpt-4o-mini', label: 'gpt-4o-mini'},
         ]);
     });
 

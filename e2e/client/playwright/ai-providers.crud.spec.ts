@@ -165,6 +165,95 @@ test.describe('AI providers settings', () => {
         ).toBeVisible();
     });
 
+    test('offers the models of the provider as the default model', async ({page}) => {
+        const modelsRequestUrls: Array<string> = [];
+
+        // The provider is not reachable from the test environment; the picker is fed the answer
+        // the backend would relay.
+        await page.route('**/ai_providers/*/models', (route) => {
+            modelsRequestUrls.push(route.request().url());
+
+            return route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: JSON.stringify({models: ['gpt-4o-mini', 'gpt-4o']}),
+            });
+        });
+
+        const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
+
+        const providerId = await createProvider(page, {
+            name: 'Local OpenAI',
+            baseUrl: 'https://example.test/v1',
+            apiKey: 'secret-key',
+        });
+
+        await expect(items).toHaveCount(1);
+
+        const firstItem = items.first();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        const form = page.getByTestId('list-page--view-edit');
+
+        await expect(form.getByTestId('gform-input--default_model').locator('option'))
+            .toHaveText(['', 'gpt-4o-mini', 'gpt-4o']);
+
+        // The picker has to ask for the models of this provider, not of some other value
+        // carried by the form.
+        expect(modelsRequestUrls.length).toBeGreaterThan(0);
+        expect(modelsRequestUrls[0]).toContain(`/ai_providers/${providerId}/models`);
+
+        await form.getByTestId('gform-input--default_model').selectOption('gpt-4o');
+        await form.getByTestId('item-view-edit--save').click();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        await expect(form.getByTestId('gform-input--default_model')).toHaveValue('gpt-4o');
+    });
+
+    test('keeps editing possible when the models cannot be listed', async ({page}) => {
+        await page.route('**/ai_providers/*/models', (route) => route.fulfill({
+            status: 500,
+            contentType: 'application/json',
+            body: JSON.stringify({_error: {message: 'provider unreachable'}}),
+        }));
+
+        const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
+
+        const providerId = await createProvider(page, {
+            name: 'Local OpenAI',
+            baseUrl: 'https://example.test/v1',
+            apiKey: 'secret-key',
+        });
+
+        await expect(items).toHaveCount(1);
+
+        const firstItem = items.first();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        const form = page.getByTestId('list-page--view-edit');
+
+        await expect(form.getByTestId('gform-message--default_model')).toBeVisible();
+
+        // With the models out of reach the picker becomes a text input, so a model id known to
+        // the operator can still be set.
+        await form.getByTestId('gform-input--default_model').fill('hand-typed-model');
+        await form.getByTestId('gform-input--name').fill('Renamed provider');
+
+        const patchRequest = waitForProviderPatch(page, providerId);
+
+        await form.getByTestId('item-view-edit--save').click();
+
+        expect((await patchRequest).postDataJSON().default_model).toBe('hand-typed-model');
+
+        await expect(firstItem.getByTestId('gform-output--name')).toHaveText('Renamed provider');
+    });
+
     test('deletes a provider', async ({page}) => {
         const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
 
