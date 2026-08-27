@@ -20,6 +20,16 @@ export enum GenericFormFieldType {
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
     select = 'select',
+
+    /**
+     * Single value picked from options fetched when the field mounts.
+     * `component_parameters` must match `ISelectAsyncParameters`
+     * (`input-types/select_async.tsx`): `getOptions(formValues)` and optional `dependentFields`.
+     * When `getOptions` rejects, the field falls back to a text input holding the current value,
+     * so the value can still be typed by hand and the form saved.
+     */
+    selectAsync = 'selectAsync',
+
     selectMultiple = 'selectMultiple',
     alert = 'alert',
     readonlyCopyableText = 'readonlyCopyableText',

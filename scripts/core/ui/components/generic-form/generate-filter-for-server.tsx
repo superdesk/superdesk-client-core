@@ -16,6 +16,7 @@ export function generateFilterForServer(type: GenericFormFieldType, value: any):
         case GenericFormFieldType.stageSingleValue:
         case GenericFormFieldType.macroSingleValue:
         case GenericFormFieldType.select:
+        case GenericFormFieldType.selectAsync:
         case GenericFormFieldType.selectMultiple:
         case GenericFormFieldType.number:
         case GenericFormFieldType.duration:
