@@ -1,7 +1,14 @@
 import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum GenericFormFieldType {
+    /**
+     * Free text. Optional `component_parameters`: `multiline` renders a textarea,
+     * `password` masks the input, `info` is a persistent hint shown below the input
+     * while the field has no error. `multiline` wins when `multiline` and `password`
+     * are both set.
+     */
     plainText = 'plainText',
+
     duration = 'duration',
     textEditor3 = 'textEditor3',
     number = 'number',
