@@ -51,7 +51,6 @@ describe('ai providers form config', () => {
             const info = fields.find(({field}) => field === 'base_url').component_parameters?.info;
 
             expect(info).toContain('https://openrouter.ai/api/v1');
-            expect(info).toContain('/chat/completions');
         });
     });
 

@@ -116,10 +116,7 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
                 component_parameters: {
                     // Pasting a full completions endpoint here is the common mistake, and it
                     // surfaces as a 404 from a doubled path rather than as a validation error.
-                    info: gettext(
-                        'The API base URL only, for example https://openrouter.ai/api/v1. '
-                        + 'Superdesk adds /chat/completions and /models itself.',
-                    ),
+                    info: gettext('The API base URL only, for example https://openrouter.ai/api/v1.'),
                 },
             },
             ...secretFields,
