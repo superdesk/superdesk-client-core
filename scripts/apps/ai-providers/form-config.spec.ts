@@ -80,6 +80,57 @@ describe('ai providers form config', () => {
         expect(typeof defaultModelField.component_parameters.getOptions).toBe('function');
     });
 
+    it('picks the available models from the provider models when editing a saved provider', () => {
+        const availableModelsField = getFields({_id: 'provider-1'})
+            .find(({field}) => field === 'available_models');
+
+        expect(availableModelsField.type).toBe(GenericFormFieldType.selectMultipleAsync);
+        expect(typeof availableModelsField.component_parameters.getOptions).toBe('function');
+        expect(availableModelsField.component_parameters.info.length).toBeGreaterThan(0);
+    });
+
+    it('offers no available models when creating a provider, since listing them needs a stored key', () => {
+        expect(getFieldNames().includes('available_models')).toBe(false);
+    });
+
+    it('offers the available models as the default model when the provider is restricted to some', async () => {
+        const fetchSpy = spyOn(window, 'fetch');
+
+        const item: Partial<IAIProvider> = {_id: 'provider-1', available_models: ['gpt-4o', 'o1-mini']};
+        const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
+
+        expect(await defaultModelField.component_parameters.getOptions(item)).toEqual([
+            {id: 'gpt-4o', label: 'gpt-4o'},
+            {id: 'o1-mini', label: 'o1-mini'},
+        ]);
+        expect(fetchSpy).not.toHaveBeenCalled();
+    });
+
+    it('offers every model the provider lists as the default model when no available models are set', async () => {
+        spyOn(window, 'fetch').and.returnValue(Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({models: ['gpt-4o', 'o1-mini', 'o3']}),
+        } as unknown as Response));
+
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
+
+        const item: Partial<IAIProvider> = {_id: 'provider-1', available_models: []};
+        const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
+
+        expect(await defaultModelField.component_parameters.getOptions(item)).toEqual([
+            {id: 'gpt-4o', label: 'gpt-4o'},
+            {id: 'o1-mini', label: 'o1-mini'},
+            {id: 'o3', label: 'o3'},
+        ]);
+    });
+
+    it('re-reads the default model options when the available models change', () => {
+        const defaultModelField = getFields({_id: 'provider-1'})
+            .find(({field}) => field === 'default_model');
+
+        expect(defaultModelField.component_parameters.dependentFields).toEqual(['available_models']);
+    });
+
     it('lists the models of the provider identified by `_id`', async () => {
         const fetchSpy = spyOn(window, 'fetch').and.returnValue(Promise.resolve({
             ok: true,
@@ -89,9 +140,14 @@ describe('ai providers form config', () => {
         spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
 
         const item: Partial<IAIProvider> = {_id: 'abc123', name: 'nope'};
-        const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
+        const fields = getFields(item);
 
-        await defaultModelField.component_parameters.getOptions(item);
+        await fields.find(({field}) => field === 'default_model').component_parameters.getOptions(item);
+
+        expect(fetchSpy.calls.mostRecent().args[0])
+            .toBe('http://localhost:5000/ai_providers/abc123/models');
+
+        await fields.find(({field}) => field === 'available_models').component_parameters.getOptions(item);
 
         expect(fetchSpy.calls.mostRecent().args[0])
             .toBe('http://localhost:5000/ai_providers/abc123/models');

@@ -10,7 +10,7 @@ import {restoreDatabaseSnapshot} from './utils';
  */
 async function createProvider(
     page: Page,
-    provider: {name: string; baseUrl: string; apiKey: string},
+    provider: {name: string; baseUrl: string; apiKey: string; defaultModel?: string},
 ): Promise<string> {
     await page.getByTestId('list-page--add-item').click();
 
@@ -20,6 +20,11 @@ async function createProvider(
     await form.getByTestId('gform-input--provider_type').selectOption('openai_compatible');
     await form.getByTestId('gform-input--base_url').fill(provider.baseUrl);
     await form.getByTestId('gform-input--api_key').fill(provider.apiKey);
+
+    if (provider.defaultModel != null) {
+        // the create form has a plain text input here: listing the models needs the stored key
+        await form.getByTestId('gform-input--default_model').fill(provider.defaultModel);
+    }
 
     const [createResponse] = await Promise.all([
         page.waitForResponse((response) => response.request().method() === 'POST'
@@ -211,6 +216,120 @@ test.describe('AI providers settings', () => {
 
         await popover.getByTestId('option').filter({hasText: /^gpt-4o$/}).click();
         await form.getByTestId('item-view-edit--save').click();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+    });
+
+    test('offers only the available models as the default model once some are picked', async ({page}) => {
+        // The provider is not reachable from the test environment; the pickers are fed the answer
+        // the backend would relay.
+        await page.route('**/ai_providers/*/models', (route) => route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({models: ['gpt-4o-mini', 'gpt-4o', 'o1-mini']}),
+        }));
+
+        const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
+
+        const providerId = await createProvider(page, {
+            name: 'Local OpenAI',
+            baseUrl: 'https://example.test/v1',
+            apiKey: 'secret-key',
+        });
+
+        await expect(items).toHaveCount(1);
+
+        const firstItem = items.first();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        const form = page.getByTestId('list-page--view-edit');
+        const availableModels = form.getByTestId('gform-input--available_models');
+        const defaultModel = form.getByTestId('gform-input--default_model');
+        const popover = page.getByTestId('tree-select-popover');
+
+        for (const model of ['gpt-4o-mini', 'o1-mini']) {
+            await availableModels.getByTestId('open-popover').click();
+            await popover.getByTestId('option').filter({hasText: new RegExp(`^${model}$`)}).click();
+        }
+
+        await expect(availableModels.getByTestId('item')).toHaveText(['gpt-4o-mini', 'o1-mini']);
+
+        await defaultModel.getByTestId('open-popover').click();
+
+        // `gpt-4o` is listed by the provider but was not made available, so it is not offered.
+        await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'o1-mini']);
+
+        await popover.getByTestId('option').filter({hasText: /^gpt-4o-mini$/}).click();
+
+        const patchRequest = waitForProviderPatch(page, providerId);
+
+        await form.getByTestId('item-view-edit--save').click();
+
+        const payload = (await patchRequest).postDataJSON();
+
+        expect(payload.available_models).toEqual(['gpt-4o-mini', 'o1-mini']);
+        expect(payload.default_model).toBe('gpt-4o-mini');
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        await expect(availableModels.getByTestId('item')).toHaveText(['gpt-4o-mini', 'o1-mini']);
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o-mini');
+    });
+
+    test('keeps the stored default model while the available models are edited', async ({page}) => {
+        await page.route('**/ai_providers/*/models', (route) => route.fulfill({
+            status: 200,
+            contentType: 'application/json',
+            body: JSON.stringify({models: ['gpt-4o-mini', 'gpt-4o', 'o1-mini']}),
+        }));
+
+        const items = page.getByTestId('list-page--items').getByTestId('ai-providers-item');
+
+        const providerId = await createProvider(page, {
+            name: 'Local OpenAI',
+            baseUrl: 'https://example.test/v1',
+            apiKey: 'secret-key',
+            defaultModel: 'gpt-4o',
+        });
+
+        await expect(items).toHaveCount(1);
+
+        const firstItem = items.first();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        const form = page.getByTestId('list-page--view-edit');
+        const availableModels = form.getByTestId('gform-input--available_models');
+        const defaultModel = form.getByTestId('gform-input--default_model');
+        const popover = page.getByTestId('tree-select-popover');
+
+        await availableModels.getByTestId('open-popover').click();
+        await popover.getByTestId('option').filter({hasText: /^o1-mini$/}).click();
+
+        // Restricting the available models re-reads the default model options, which now hold
+        // `o1-mini` alone. The stored default model is not one of them and is kept all the same.
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+
+        await availableModels.getByTestId('remove').click();
+        await expect(availableModels.getByTestId('item')).toHaveCount(0);
+
+        const patchRequest = waitForProviderPatch(page, providerId);
+
+        await form.getByTestId('item-view-edit--save').click();
+
+        const payload = (await patchRequest).postDataJSON();
+
+        // Taking the restriction back off leaves the default model untouched, so the patch that
+        // lifts it carries no `default_model` at all.
+        expect(payload.available_models).toEqual([]);
+        expect(payload.default_model).toBeUndefined();
 
         await firstItem.hover();
         await firstItem.getByTestId('edit').click();

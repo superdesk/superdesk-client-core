@@ -29,6 +29,11 @@ export interface ISelectAsyncParameters {
      * when the refreshed options no longer offer them; the values the field mounted with are kept.
      */
     dependentFields?: Array<string>;
+
+    /**
+     * Hint shown below the field while it has no error.
+     */
+    info?: string;
 }
 
 type IProps = IInputType<any>;
@@ -221,7 +226,9 @@ function getSelectAsync(allowMultiple: boolean) {
                                     label={label}
                                     labelHidden={!label}
                                     required={required}
+                                    disabled={this.props.disabled}
                                     error={this.props.issues[0]}
+                                    info={getParameters(this.props).info}
                                     getId={(option: ISelectAsyncOption) => option.id}
                                     getLabel={(option: ISelectAsyncOption) => option.label}
                                     getOptions={() => []}
@@ -239,6 +246,7 @@ function getSelectAsync(allowMultiple: boolean) {
                                     required={required}
                                     disabled={this.props.disabled}
                                     error={this.props.issues[0]}
+                                    info={getParameters(this.props).info}
                                     data-test-id={`gform-input--${field}`}
                                 />
                             )
@@ -270,6 +278,7 @@ function getSelectAsync(allowMultiple: boolean) {
                         required={required}
                         disabled={this.props.disabled}
                         error={this.props.issues[0]}
+                        info={getParameters(this.props).info}
                         getId={(option: ISelectAsyncOption) => option.id}
                         getLabel={(option: ISelectAsyncOption) => option.label}
                         getOptions={() => options.map((option) => ({value: option}))}

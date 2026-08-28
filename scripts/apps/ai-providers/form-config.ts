@@ -2,7 +2,7 @@ import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/f
 import type {ISelectAsyncParameters} from 'core/ui/components/generic-form/input-types/select_async';
 import {gettext} from 'core/utils';
 import type {IFormField, IFormGroup} from 'superdesk-api';
-import {getProviderModels} from './api';
+import {getProviderModels, toModelOptions} from './api';
 import type {IAIProvider, IAIProviderType} from './interfaces';
 
 /**
@@ -74,13 +74,38 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
         ];
 
     /*
-        Listing the models needs the stored key, so the picker is only offered once the provider
-        is saved. When the provider cannot be reached the picker falls back to a text input holding
-        the stored model, so an unreachable provider blocks neither editing the rest nor setting a
-        model id by hand.
+        Listing the models needs the stored key, so the pickers are only offered once the provider
+        is saved. When the provider cannot be reached they degrade instead of blocking: the default
+        model becomes a text input holding the stored model, and the available models are shown
+        read only and saved back untouched.
+    */
+    const availableModelsParameters: ISelectAsyncParameters = {
+        getOptions: (formValues) => getProviderModels(formValues._id),
+        info: gettext('Leave empty to allow every model the provider lists.'),
+    };
+
+    const availableModelsField: IFormField<IAIProvider> = {
+        label: gettext('Available models'),
+        type: GenericFormFieldType.selectMultipleAsync,
+        field: 'available_models',
+        component_parameters: availableModelsParameters,
+    };
+
+    /*
+        The server rejects a `default_model` that the non-empty `available_models` does not contain,
+        so the picker offers the restriction when there is one. It is only the option list: the rule
+        itself stays on the server, which answers a form that breaks it with an error naming both
+        fields.
     */
     const modelPickerParameters: ISelectAsyncParameters = {
-        getOptions: (formValues) => getProviderModels(formValues._id),
+        getOptions: (formValues) => {
+            const availableModels: IAIProvider['available_models'] = formValues.available_models ?? [];
+
+            return availableModels.length > 0
+                ? Promise.resolve(toModelOptions(availableModels))
+                : getProviderModels(formValues._id);
+        },
+        dependentFields: ['available_models'],
     };
 
     const defaultModelField: IFormField<IAIProvider> = isExistingProvider
@@ -120,6 +145,7 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
                 },
             },
             ...secretFields,
+            ...(isExistingProvider ? [availableModelsField] : []),
             defaultModelField,
         ],
     };

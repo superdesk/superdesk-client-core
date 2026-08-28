@@ -13,6 +13,11 @@ export interface IAIProvider extends IBaseRestApiResponse {
      */
     api_key?: string;
 
+    /**
+     * Models the provider may be used with. Empty puts no restriction on it.
+     */
+    available_models?: Array<string>;
+
     default_model?: string;
     active: boolean;
     config?: {[key: string]: any};
