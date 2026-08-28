@@ -29,6 +29,7 @@ export function hasValue<T extends object>(fieldConfig: IFormField<T>, value: an
             return typeof value === 'string' && value.trim().length > 0;
 
         case GenericFormFieldType.selectMultiple:
+        case GenericFormFieldType.selectMultipleAsync:
             return Array.isArray(value) && value.length > 0;
 
         case GenericFormFieldType.yesNo:

@@ -30,6 +30,13 @@ export enum GenericFormFieldType {
      */
     selectAsync = 'selectAsync',
 
+    /**
+     * Several values picked from the same options as `selectAsync`, with the same
+     * `component_parameters`. When `getOptions` rejects, the stored values are shown read only
+     * and saved back untouched.
+     */
+    selectMultipleAsync = 'selectMultipleAsync',
+
     selectMultiple = 'selectMultiple',
     alert = 'alert',
     readonlyCopyableText = 'readonlyCopyableText',

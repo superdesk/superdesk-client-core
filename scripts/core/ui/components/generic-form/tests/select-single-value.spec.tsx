@@ -10,12 +10,10 @@ function countOccurrences(haystack: string, needle: string): number {
     return haystack.split(needle).length - 1;
 }
 
-function mountField(editableWhenItemsUnavailable?: boolean) {
+function mountField() {
     const Component = getSelectSingleValue(
         () => Promise.resolve(null),
         UNAVAILABLE_MESSAGE,
-        undefined,
-        editableWhenItemsUnavailable,
     );
 
     return mount(
@@ -35,26 +33,13 @@ function mountField(editableWhenItemsUnavailable?: boolean) {
 }
 
 describe('selectSingleValue form field', () => {
-    it('shows the unavailable message once when the select is kept', (done) => {
+    it('shows the unavailable message once when the items cannot be fetched', (done) => {
         const wrapper = mountField();
 
         setTimeout(() => {
             wrapper.update();
 
             expect(wrapper.find('select').length).toBe(1);
-            expect(countOccurrences(wrapper.html(), UNAVAILABLE_MESSAGE)).toBe(1);
-
-            done();
-        });
-    });
-
-    it('shows the unavailable message once when falling back to a text input', (done) => {
-        const wrapper = mountField(true);
-
-        setTimeout(() => {
-            wrapper.update();
-
-            expect(wrapper.find('input').length).toBe(1);
             expect(countOccurrences(wrapper.html(), UNAVAILABLE_MESSAGE)).toBe(1);
 
             done();

@@ -20,6 +20,7 @@ const reworkedComponents = [
     GenericFormFieldType.yesNo,
     GenericFormFieldType.select,
     GenericFormFieldType.selectAsync,
+    GenericFormFieldType.selectMultipleAsync,
     GenericFormFieldType.macroSingleValue,
 ];
 
@@ -53,6 +54,7 @@ function getTestFieldConfig(type: GenericFormFieldType): IFormField<any> {
                 },
             };
         case GenericFormFieldType.selectAsync:
+        case GenericFormFieldType.selectMultipleAsync:
             return {
                 type: type,
                 field: 'test-field',

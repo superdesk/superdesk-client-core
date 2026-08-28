@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {gettext} from 'core/utils';
-import {Input, Option, Select} from 'superdesk-ui-framework';
+import {Option, Select} from 'superdesk-ui-framework';
 
 type ISelectSingleValueItems = Array<{id: string; label: string}>;
 
@@ -15,15 +15,8 @@ interface IState {
 
 export function getSelectSingleValue(
     getItems: (props: IProps) => Promise<ISelectSingleValueItems>,
-    itemsUnavailableMessage?: string | (() => string),
+    itemsUnavailableMessage?: string,
     getDependentFields?: (props: IProps) => Array<string>,
-
-    /**
-     * Renders a text input instead of the select when the items could not be fetched, so the value
-     * can still be set by hand. Only for fields whose values are free-form identifiers; a field
-     * backed by a registry of ids the user cannot know must keep the select.
-     */
-    editableWhenItemsUnavailable?: boolean,
 ) {
     return class SelectSingleValue extends React.Component<IProps, IState> {
         dependentFields: Array<string>;
@@ -90,53 +83,15 @@ export function getSelectSingleValue(
                 return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
             }
 
-            const unavailableMessage = typeof itemsUnavailableMessage === 'function'
-                ? itemsUnavailableMessage()
-                : itemsUnavailableMessage;
-
             const extraIssueElements = (this.props.issues ?? []).slice(1).map((str, i) => (
                 <div key={i} className="sd-line-input__message">{str}</div>
             ));
-
-            if (this.state.items == null && editableWhenItemsUnavailable === true) {
-                return (
-                    <div className={classNames('d-flex', 'flex-col')}>
-                        <Input
-                            type="text"
-                            value={this.props.value ?? ''}
-                            onChange={this.props.onChange}
-                            label={this.props.formField.label}
-                            labelHidden={!this.props.formField.label}
-                            required={this.props.formField.required}
-                            disabled={this.props.disabled}
-                            error={this.props.issues[0]}
-                            data-test-id={`gform-input--${this.props.formField.field}`}
-                        />
-                        {
-                            /*
-                                Only this branch shows the message below the input. The select
-                                branch below already carries it as its first option, and rendering
-                                it in both places displays it twice.
-                            */
-                            unavailableMessage == null ? null : (
-                                <div
-                                    className="sd-line-input__message"
-                                    data-test-id={`gform-message--${this.props.formField.field}`}
-                                >
-                                    {unavailableMessage}
-                                </div>
-                            )
-                        }
-                        {extraIssueElements}
-                    </div>
-                );
-            }
 
             /*
                 A value that no item matches still has to be listed, otherwise the native select
                 would display an unrelated item while the form keeps the original value.
                 It happens when a stored value is no longer offered, and when the items could not
-                be fetched for a field that does not fall back to a text input.
+                be fetched at all.
             */
             const valueMissingFromItems = this.props.value != null
                 && this.props.value !== ''
@@ -144,7 +99,7 @@ export function getSelectSingleValue(
 
             const getFirstItemMessage = () => {
                 if (this.state.items == null) {
-                    return unavailableMessage != null ? unavailableMessage : '';
+                    return itemsUnavailableMessage != null ? itemsUnavailableMessage : '';
                 } else if (this.state.items.length < 1) {
                     return gettext('No items available');
                 } else {

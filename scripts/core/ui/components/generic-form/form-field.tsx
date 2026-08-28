@@ -16,7 +16,7 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 import {SelectMultipleValues} from './input-types/select_multiple_values';
 import {NumberComponent} from './input-types/number';
 import {Select} from './input-types/select';
-import {SelectAsync} from './input-types/select_async';
+import {SelectAsync, SelectMultipleAsync} from './input-types/select_async';
 import {DurationComponent} from './input-types/duration';
 import {AlertInput} from './input-types/alert';
 import {ReadonlyCopyableText} from './input-types/readonly-copiable-text';
@@ -49,6 +49,8 @@ export function getFormFieldComponent(type: GenericFormFieldType): React.Compone
             return Select;
         case GenericFormFieldType.selectAsync:
             return SelectAsync;
+        case GenericFormFieldType.selectMultipleAsync:
+            return SelectMultipleAsync;
         case GenericFormFieldType.selectMultiple:
             return SelectMultipleValues;
         case GenericFormFieldType.alert:

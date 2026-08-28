@@ -196,22 +196,26 @@ test.describe('AI providers settings', () => {
         await firstItem.getByTestId('edit').click();
 
         const form = page.getByTestId('list-page--view-edit');
+        const defaultModel = form.getByTestId('gform-input--default_model');
 
-        await expect(form.getByTestId('gform-input--default_model').locator('option'))
-            .toHaveText(['', 'gpt-4o-mini', 'gpt-4o']);
+        await defaultModel.getByTestId('open-popover').click();
+
+        const popover = page.getByTestId('tree-select-popover');
+
+        await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'gpt-4o']);
 
         // The picker has to ask for the models of this provider, not of some other value
         // carried by the form.
         expect(modelsRequestUrls.length).toBeGreaterThan(0);
         expect(modelsRequestUrls[0]).toContain(`/ai_providers/${providerId}/models`);
 
-        await form.getByTestId('gform-input--default_model').selectOption('gpt-4o');
+        await popover.getByTestId('option').filter({hasText: /^gpt-4o$/}).click();
         await form.getByTestId('item-view-edit--save').click();
 
         await firstItem.hover();
         await firstItem.getByTestId('edit').click();
 
-        await expect(form.getByTestId('gform-input--default_model')).toHaveValue('gpt-4o');
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
     });
 
     test('keeps editing possible when the models cannot be listed', async ({page}) => {

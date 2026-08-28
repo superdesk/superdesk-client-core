@@ -31,6 +31,7 @@ function getFieldTypeForFiltering(type: GenericFormFieldType): GenericFormFieldT
         case GenericFormFieldType.select:
             return GenericFormFieldType.select;
         case GenericFormFieldType.selectAsync:
+        case GenericFormFieldType.selectMultipleAsync:
         // the options are fetched for the item being edited, which filtering has none of
             return GenericFormFieldType.plainText;
         case GenericFormFieldType.selectMultiple:
