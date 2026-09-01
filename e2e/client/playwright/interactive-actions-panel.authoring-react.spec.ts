@@ -247,7 +247,7 @@ test.describe('authoring-react opened with the removed widget still selected', (
         storageState: getStorageState({}, {
             authoringReact: true,
             localStorageEntries: [
-                {name: 'SIDE_WIDGET', value: JSON.stringify('interactive-article-actions-widget')},
+                {name: 'SIDE_WIDGET', value: JSON.stringify({id: 'interactive-article-actions-widget'})},
             ],
         }),
     });

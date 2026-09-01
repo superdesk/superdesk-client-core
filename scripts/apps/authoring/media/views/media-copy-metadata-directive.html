@@ -1,5 +1,5 @@
 <div class="btn-group--flex">
-    <button type="button" class="btn btn--hollow btn--primary btn--expanded" ng-click="copyMetadata(metadata)" translate>Copy metadata</button>
-    <button type="button" class="btn btn--hollow btn--expanded" ng-click="pasteMetadata()" ng-disabled="!metadataFromStorage" translate>Paste metadata</button>
+    <button type="button" class="btn btn--hollow btn--primary btn--expanded" ng-click="copyMetadata(metadata)" data-test-id="copy-metadata" translate>Copy metadata</button>
+    <button type="button" class="btn btn--hollow btn--expanded" ng-click="pasteMetadata()" ng-disabled="!metadataFromStorage" data-test-id="paste-metadata" translate>Paste metadata</button>
 </div>
 <a ng-click="clearSavedMetadata()" class="text-link text-link--white pull-right" ng-show="metadataFromStorage" translate>Clear saved metadata</a>

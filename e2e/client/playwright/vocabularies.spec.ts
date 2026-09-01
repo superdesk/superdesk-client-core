@@ -1,7 +1,15 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('can restore vocabulary data when editing is cancelled', async ({page}) => {
+test('can restore vocabulary data when editing is cancelled', {
+    annotation: [
+        {type: 'confluence', description: '1311835056 partial'}, // Edit custom date field (AUTOMATED)
+        {type: 'confluence', description: '1311835064 partial'}, // Edit custom embed field (AUTOMATED)
+        {type: 'confluence', description: '1311835072 partial'}, // Edit related content field (AUTOMATED)
+        {type: 'confluence', description: '1311835046 partial'}, // Edit custom text field (AUTOMATED)
+        {type: 'confluence', description: '1311835042 partial'}, // Edit vocabulary (AUTOMATED)
+    ],
+}, async ({page}) => {
     const originalName = 'Categories';
     const updatedName = 'Categories test';
     const originalVocabularyItemSelector = s('metadata-content', `vocabulary-item=${originalName}`);

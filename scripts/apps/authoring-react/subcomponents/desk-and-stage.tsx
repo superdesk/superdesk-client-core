@@ -19,6 +19,11 @@ export class DeskAndStage extends React.PureComponent<IProps> {
         const desk = sdApi.desks.getAllDesks().get(deskId);
         const stage = sdApi.desks.getDeskStages(deskId).get(stageId);
 
+        // the desks store may still be loading, and it never holds a desk the user can not see
+        if (desk == null || stage == null) {
+            return null;
+        }
+
         return (
             <div className="desk-and-stage" title={`${desk.name} / ${stage.name}`}>
                 <span className="desk-and-stage--desk">{desk.name}</span>

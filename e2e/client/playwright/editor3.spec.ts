@@ -4,7 +4,11 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {getEditor3FormattingOptions, getEditor3Paragraphs} from './utils/editor3';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
-test('can add embeds', async ({page}) => {
+test('can add embeds', {
+    annotation: [
+        {type: 'confluence', description: '1308524917 complete'}, // Add embed (AUTOMATED)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
@@ -122,7 +126,11 @@ test('adding word marked as a spellchecker issue to dictionary', async ({page}) 
  * FYI undo/redo isn't working the same as in the main editor outside tables
  * and it's not great that it's character based.
  */
-test('tables maintaining cursor position at the start when executing "undo" action', async ({page}) => {
+test('tables maintaining cursor position at the start when executing "undo" action', {
+    annotation: [
+        {type: 'confluence', description: '1308524921 partial'}, // Add table
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot({snapshotName: 'editor3-tables'});

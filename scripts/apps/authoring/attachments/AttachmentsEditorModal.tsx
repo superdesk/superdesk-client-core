@@ -39,6 +39,7 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
                 position="top"
                 onHide={this.props.closeEdit}
                 headerTemplate={gettext('Edit Attachment')}
+                data-test-id="edit-attachment-modal"
                 footerTemplate={
                     (
                         <ButtonGroup align="end">
@@ -46,12 +47,14 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
                                 text={gettext('Cancel')}
                                 type="default"
                                 onClick={this.props.closeEdit}
+                                data-test-id="cancel"
                             />
                             <Button
                                 text={gettext('Update')}
                                 type="primary"
                                 onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
                                 disabled={!this.state.title}
+                                data-test-id="update"
                             />
                         </ButtonGroup>
                     )
@@ -64,6 +67,7 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
                         value={this.state.title}
                         onChange={this.update}
                         required
+                        data-test-id="title"
                     />
                 </div>
 
@@ -73,6 +77,7 @@ export class AttachmentsEditorModal extends React.Component<IProps, IState> {
                         field="description"
                         value={this.state.description}
                         onChange={this.update}
+                        data-test-id="description"
                     />
                 </div>
             </Modal>

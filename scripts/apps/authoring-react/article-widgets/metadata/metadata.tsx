@@ -17,7 +17,7 @@ import {AnnotationsPreview} from './AnnotationsPreview';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Metadata');
-const METADATA_WIDGET_ID = 'metadata-widget';
+const METADATA_WIDGET_ID = 'metadata';
 
 interface IState {
     languages: Array<ILanguage>;
