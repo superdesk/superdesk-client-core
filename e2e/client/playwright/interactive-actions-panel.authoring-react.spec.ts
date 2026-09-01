@@ -409,7 +409,7 @@ test.describe('interactive article actions panel wider than the authoring column
 
         // any pinnable widget will do; metadata is registered unconditionally
         await authoring.getByTestId('widget-icon')
-            .and(page.locator('[data-test-value="metadata-widget"]'))
+            .and(page.locator('[data-test-value="metadata"]'))
             .click();
         await authoring.getByRole('button', {name: 'Pin'}).click();
 
