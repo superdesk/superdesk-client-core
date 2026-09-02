@@ -29,6 +29,7 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
+import {ActionsPanelOverlay} from './actions-panel-overlay';
 
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@sourcefabric/common';
@@ -587,24 +588,38 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
                                 : undefined
                         }
-                        getSidePanel={({
-                            item,
-                            getLatestItem,
-                            contentProfile,
-                            fieldsData,
-                            handleFieldsDataChange,
-                            fieldsAdapter,
-                            storageAdapter,
-                            authoringStorage,
+                        /**
+                         * Send to / publish overlays the editor instead of sitting beside it,
+                         * so it is handed to the overlay slot rather than the side widget one.
+                         * The widget slots are sized for widgets and clip anything wider than
+                         * the editor column; see `actions-panel-overlay.tsx`.
+                         */
+                        getOverlayPanel={({
                             handleUnsavedChanges,
-                            sideWidget,
                             onItemChange,
                             getValidationErrors,
                             setValidationErrors,
-                        }, readOnly) => {
-                            if (panelState.active === true) {
-                                return (
+                        }) => {
+                            if (panelState.active !== true) {
+                                return null;
+                            }
+
+                            return (
+                                <ActionsPanelOverlay>
                                     <InteractiveArticleActionsPanel
+                                        /**
+                                         * The panel copies `activeTab` into its own state in the
+                                         * constructor, so a second `interactiveArticleActionStart`
+                                         * arriving while it is already open would leave it
+                                         * rendering the previous tab under the new tab list. The
+                                         * key forces a remount for a request that differs from
+                                         * what is on screen.
+                                         */
+                                        key={[
+                                            ...panelState.items.map(({_id}) => _id),
+                                            ...panelState.tabs,
+                                            panelState.activeTab,
+                                        ].join('|')}
                                         items={panelState.items}
                                         tabs={panelState.tabs}
                                         activeTab={panelState.activeTab}
@@ -627,9 +642,22 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         }}
                                         markupV2
                                     />
-                                );
-                            }
-
+                                </ActionsPanelOverlay>
+                            );
+                        }}
+                        getSidePanel={({
+                            item,
+                            getLatestItem,
+                            contentProfile,
+                            fieldsData,
+                            handleFieldsDataChange,
+                            fieldsAdapter,
+                            storageAdapter,
+                            authoringStorage,
+                            handleUnsavedChanges,
+                            sideWidget,
+                            onItemChange,
+                        }, readOnly) => {
                             const resolvedWidget = findWidgetById(item, sideWidget ?? null);
 
                             if (resolvedWidget == null) {
