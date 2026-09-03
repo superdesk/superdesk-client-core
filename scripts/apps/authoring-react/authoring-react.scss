@@ -9,6 +9,22 @@
     background: $white;
 }
 
+/**
+ * The send to / publish panel is portalled to the document body (see
+ * `actions-panel-overlay.tsx`), so it needs its own box. The block insets are the ones
+ * `.sd-authoring-react` above is laid out with, which keeps the panel aligned with the
+ * editor without being clipped by it: `.sd-authoring-react` scrolls, so anything
+ * rendered inside it is cut off at the authoring column's inline-start edge.
+ */
+.authoring-actions-panel-overlay {
+    position: fixed;
+    inset-inline-end: 0;
+    inset-block-start: $nav-height;
+    inset-block-end: $authoring-opened-articles;
+    z-index: $zindexSlidePane;
+    display: flex;
+}
+
 .sd-authoring-react-template-edit-view {
     padding: 1rem;
 }

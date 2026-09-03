@@ -33,7 +33,7 @@ test('configuring spellchecker to be disabled until user enables it manually', a
     await expect(page.locator(s('authoring', 'authoring-field=body_html', 'spellchecker-warning'))).toHaveCount(0);
 
     await page.locator(s('authoring-topbar', 'actions-button')).click();
-    await page.locator(s('actions-list')).getByRole('button', {name: 'Ctrl+Shift+Y Check spelling'}).click();
+    await page.locator(s('actions-list')).getByRole('button', {name: 'Check spelling'}).click();
 
     await expect(page.locator(s('authoring', 'authoring-field=body_html', 'spellchecker-warning'))).toHaveCount(2);
 });
