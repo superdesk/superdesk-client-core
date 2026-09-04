@@ -1067,8 +1067,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             }
         }
 
-        // the catch below cannot tell which step rejected, and only a completed deletion
-        // means the autosaved version is really gone
+        // the catch cannot tell which step rejected, and only a finished deletion really deletes
         let autosaveDeleted = false;
 
         return this.setLoadingState(state, true)
@@ -1082,36 +1081,29 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 );
             })
             .catch((error) => {
-                /**
-                 * The catch sits before the state rebuilding below on purpose,
-                 * so a failure to rebuild the state after a successful save
-                 * is not reported as the item not being saved.
-                 */
+                // placed before the state rebuilding below, so a failure to rebuild after a
+                // successful save is not reported as the item not being saved
                 if (this._mounted) {
                     /**
-                     * A deleted autosave must not be carried over: the reference would point at
-                     * nothing, and every later path that cancels autosave (a retried save, closing
-                     * while discarding changes) would ask for it again, with nothing handling the
-                     * rejection on the discard path.
+                     * Carrying over a deleted autosave would leave the reference pointing at
+                     * nothing, and the next cancel (a retried save, or closing while discarding)
+                     * would ask for it again. Nothing handles that rejection on the discard path.
                      *
-                     * Setting `loading` to false is the only state change the setState guard allows while loading.
+                     * Clearing `loading` is the only change the setState guard allows while loading.
                      */
                     this.setLoadingState({
                         ...state,
                         itemAutosaved: autosaveDeleted ? null : state.itemAutosaved,
                     }, false);
 
-                    /**
-                     * Re-arm autosave to keep a server-side copy of the unsaved changes,
-                     * under the same conditions `componentDidUpdate` uses. There is nothing
-                     * worth autosaving when the lock is gone or when there are no changes left.
-                     */
+                    // same conditions `componentDidUpdate` uses: nothing is worth autosaving
+                    // once the lock is gone or there are no changes left
                     if (authoringStorage.isLockedInCurrentSession(state.itemOriginal) && this.hasUnsavedChanges()) {
                         authoringStorage.autosave.schedule(
                             () => this.computeLatestEntity({preferIncomplete: true}),
                             (autosaved) => {
-                                // the object form is required: this class overrides `setState` and
-                                // reads `args[0]['loading']`, which an updater function defeats
+                                // the object form is required: this class overrides `setState`
+                                // and reads `args[0]['loading']` off it
                                 if (this.state.initialized) {
                                     this.setState({
                                         ...this.state,
