@@ -1067,12 +1067,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             }
         }
 
+        // the catch below cannot tell which step rejected, and only a completed deletion
+        // means the autosaved version is really gone
+        let autosaveDeleted = false;
+
         return this.setLoadingState(state, true)
             .then(() => this.cancelAutosave())
-            .then(() => authoringStorage.saveEntity(
-                this.computeLatestEntity(),
-                state.itemOriginal,
-            ))
+            .then(() => {
+                autosaveDeleted = true;
+
+                return authoringStorage.saveEntity(
+                    this.computeLatestEntity(),
+                    state.itemOriginal,
+                );
+            })
             .catch((error) => {
                 /**
                  * The catch sits before the state rebuilding below on purpose,
@@ -1081,15 +1089,17 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                  */
                 if (this._mounted) {
                     /**
-                     * `cancelAutosave` above already deleted the autosaved version, so it must not be
-                     * carried over. Restoring the captured state verbatim would leave `itemAutosaved`
-                     * pointing at a deleted resource, and every path that cancels autosave afterwards
-                     * (a retried save, closing while discarding changes) would ask for it to be deleted
-                     * again, with no handler for the rejection if the server refuses.
+                     * A deleted autosave must not be carried over: the reference would point at
+                     * nothing, and every later path that cancels autosave (a retried save, closing
+                     * while discarding changes) would ask for it again, with nothing handling the
+                     * rejection on the discard path.
                      *
                      * Setting `loading` to false is the only state change the setState guard allows while loading.
                      */
-                    this.setLoadingState({...state, itemAutosaved: null}, false);
+                    this.setLoadingState({
+                        ...state,
+                        itemAutosaved: autosaveDeleted ? null : state.itemAutosaved,
+                    }, false);
 
                     /**
                      * Re-arm autosave to keep a server-side copy of the unsaved changes,
@@ -1100,9 +1110,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         authoringStorage.autosave.schedule(
                             () => this.computeLatestEntity({preferIncomplete: true}),
                             (autosaved) => {
-                                this.setState((prevState) => prevState.initialized
-                                    ? {...prevState, itemAutosaved: autosaved}
-                                    : prevState);
+                                // the object form is required: this class overrides `setState` and
+                                // reads `args[0]['loading']`, which an updater function defeats
+                                if (this.state.initialized) {
+                                    this.setState({
+                                        ...this.state,
+                                        itemAutosaved: autosaved,
+                                    });
+                                }
                             },
                             null,
                         );

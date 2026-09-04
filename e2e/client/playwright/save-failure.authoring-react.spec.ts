@@ -16,6 +16,7 @@ const HEADLINE_EDITED = 'test sports story edited';
 
 const ARCHIVE_ITEM = '**/api/archive/*';
 const AUTOSAVE_CREATE = '**/api/archive_autosave';
+const AUTOSAVE_DELETE = '**/api/archive_autosave/*';
 
 function getSaveButton(page: Page) {
     return page.getByTestId('authoring').getByRole('button', {name: 'Save', exact: true});
@@ -144,6 +145,43 @@ test.describe('recovering from a failed save (authoring-react)', () => {
         // a successful save resets unsaved changes, which disables the save button
         await expect(getSaveButton(page)).toBeDisabled();
         await expect(monitoring.getGroupedArticleLocator(GROUP, HEADLINE_EDITED)).toBeVisible();
+    });
+
+    /**
+     * The mirror image of the two tests above: there the deletion succeeded and the save failed,
+     * here the deletion itself fails, so the document is still on the server and the editor has
+     * to keep pointing at it. Both land in the same `catch`.
+     */
+    test('keeps the autosave reference when it is the deletion that failed', async ({page}) => {
+        await openArticleAndAutosaveHeadline(page);
+
+        await page.route(AUTOSAVE_DELETE, (route) => route.fulfill({
+            status: 500,
+            contentType: 'application/json',
+            body: JSON.stringify({_status: 'ERR', _error: {code: 500, message: 'Internal Server Error'}}),
+        }));
+
+        await getSaveButton(page).click();
+
+        await expect(
+            page.getByTestId('notification--error').filter({hasText: 'Item not updated'}),
+        ).toBeVisible();
+        await expect(page.getByTestId('authoring').locator('.sd-loader')).toHaveCount(0);
+
+        await page.unroute(AUTOSAVE_DELETE);
+
+        const autosaveDeletions = recordAutosaveDeletions(page);
+
+        const savePatch = page.waitForRequest(
+            (request) => request.method() === 'PATCH' && request.url().includes('/api/archive/'),
+        );
+
+        await getSaveButton(page).click();
+        await savePatch;
+
+        // the document was never deleted, so the retry has to ask again; dropping the
+        // reference would leave it orphaned on the server
+        expect(autosaveDeletions.length).toBe(1);
     });
 
     test('closing and discarding the changes after a failure unlocks and closes the item', async ({page}) => {

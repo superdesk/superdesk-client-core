@@ -7,6 +7,16 @@ import {
 } from './data-layer';
 
 describe('kill / correct / takedown authoring storage', () => {
+    let overrideEdnoteInitial: boolean;
+
+    beforeEach(() => {
+        overrideEdnoteInitial = appConfig.override_ednote_for_corrections;
+    });
+
+    afterEach(() => {
+        appConfig.override_ednote_for_corrections = overrideEdnoteInitial;
+    });
+
     it('autosave.get resolves with null so the saved item is used for initialization', (done) => {
         Promise.all([
             authoringStorageIArticleCorrect.autosave.get('item-id'),
