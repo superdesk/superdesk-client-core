@@ -87,7 +87,7 @@
         </dl>
         <dl ng-if="item.firstcreated">
             <dt translate>Created</dt>
-            <dd sd-reldate-complex datetime="item.firstcreated"></dd>
+            <dd sd-reldate-complex datetime="item.firstcreated" data-test-id="metadata-created"></dd>
         </dl>
         <dl ng-if="item.versioncreated">
             <dt translate>Last updated</dt>
@@ -96,7 +96,7 @@
 
         <dl ng-if="item.expiry">
             <dt translate>Expiry</dt>
-            <dd sd-reldate-complex datetime="item.expiry"></dd>
+            <dd sd-reldate-complex datetime="item.expiry" data-test-id="metadata-expiry"></dd>
         </dl>
         <dl ng-if="item.original_id">
             <dt translate>Original ID</dt>
