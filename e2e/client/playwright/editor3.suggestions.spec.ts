@@ -193,9 +193,42 @@ test.describe('editor3 suggestions mode', () => {
         }).toPass({timeout: 30000});
     }
 
-    /** Resolves the open suggestion detail, which closes it. */
-    async function actOnSuggestion(page: Page, action: 'accept' | 'reject'): Promise<void> {
-        await page.getByTestId(`suggestion-${action}`).click();
+    /**
+     * Resolves the suggestion whose detail `expectSuggestionDetail` just opened, which
+     * closes the popup. The popup is torn down by any re-render that moves the caret, so
+     * it can already be gone again by the time this runs: when the button is missing, the
+     * popup is reopened the same way and the click retried with it. The click itself is
+     * done in one page-side evaluate: the popup remounts on every caret move, so an
+     * element handle resolved on the driver side (a `click()` or even a
+     * `dispatchEvent`) can be detached before its event reaches the page, while an
+     * in-page query-and-click cannot be interleaved by a remount. A click that lands
+     * ends the retry, so a resolved suggestion is never reopened and acted on twice.
+     */
+    async function actOnSuggestion(field: Locator, action: 'accept' | 'reject', reopen: {
+        text: string;
+        caretPark: string;
+    }): Promise<void> {
+        const page = field.page();
+        const button = page.getByTestId(`suggestion-${action}`);
+
+        await expect(async () => {
+            if (!await button.isVisible()) {
+                await getEditor3TextRun(field, reopen.caretPark).click();
+                await getEditor3TextRun(field, reopen.text).click();
+                await expect(button).toBeVisible({timeout: 2000});
+            }
+
+            await page.evaluate((testId) => {
+                const el: HTMLElement | null = document.querySelector(`[data-test-id="${testId}"]`);
+
+                if (el == null) {
+                    throw new Error(`${testId} is not in the DOM`);
+                }
+
+                el.click();
+            }, `suggestion-${action}`);
+        }).toPass({timeout: 20000});
+
         await expect(page.getByTestId('suggestion-text')).toHaveCount(0);
     }
 
@@ -349,6 +382,14 @@ test.describe('editor3 suggestions mode', () => {
         await customToggle.click();
         await expect(customToggle).toHaveClass(EDITOR3_ACTIVE_BUTTON);
 
+        // Toggling suggestions re-renders the editor and can drop the focus the click
+        // above established; keys typed then go nowhere. The field is empty, so clicking
+        // again is caret-safe; repeat until focus sticks.
+        await expect(async () => {
+            await customInput.click();
+            await expect(customInput).toBeFocused({timeout: 1000});
+        }).toPass();
+
         await page.keyboard.type(CUSTOM_TEXT);
         await expectRuns(custom, colours, [{text: CUSTOM_TEXT, kind: 'add'}]);
 
@@ -377,7 +418,7 @@ test.describe('editor3 suggestions mode', () => {
             caretPark: PLAIN_HEAD,
             description: `Add: ${INSERTED}`,
         });
-        await actOnSuggestion(page, 'accept');
+        await actOnSuggestion(body, 'accept', {text: INSERTED, caretPark: PLAIN_HEAD});
 
         // The accepted insertion is plain text now, so it and the plain runs around it are
         // one run of equally styled characters.
@@ -395,7 +436,7 @@ test.describe('editor3 suggestions mode', () => {
             caretPark: PLAIN_HEAD,
             description: `Remove: ${DELETED}`,
         });
-        await actOnSuggestion(page, 'accept');
+        await actOnSuggestion(body, 'accept', {text: DELETED, caretPark: PLAIN_HEAD});
 
         const afterAcceptingDeletion: Array<IRun> = [
             {text: PLAIN_HEAD + INSERTED + PLAIN_MIDDLE + PLAIN_TAIL, kind: 'plain'},
@@ -428,7 +469,7 @@ test.describe('editor3 suggestions mode', () => {
             caretPark: PLAIN_HEAD,
             description: `Add: ${INSERTED}`,
         });
-        await actOnSuggestion(page, 'reject');
+        await actOnSuggestion(body, 'reject', {text: INSERTED, caretPark: PLAIN_HEAD});
 
         const afterRejectingInsertion: Array<IRun> = [
             {text: PLAIN_HEAD + PLAIN_MIDDLE, kind: 'plain'},
@@ -444,7 +485,7 @@ test.describe('editor3 suggestions mode', () => {
             caretPark: PLAIN_HEAD,
             description: `Remove: ${DELETED}`,
         });
-        await actOnSuggestion(page, 'reject');
+        await actOnSuggestion(body, 'reject', {text: DELETED, caretPark: PLAIN_HEAD});
 
         const afterRejectingDeletion: Array<IRun> = [
             {text: PLAIN_HEAD + PLAIN_MIDDLE + DELETED + PLAIN_TAIL, kind: 'plain'},
