@@ -1100,12 +1100,9 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         authoringStorage.autosave.schedule(
                             () => this.computeLatestEntity({preferIncomplete: true}),
                             (autosaved) => {
-                                if (this.state.initialized) {
-                                    this.setState({
-                                        ...this.state,
-                                        itemAutosaved: autosaved,
-                                    });
-                                }
+                                this.setState((prevState) => prevState.initialized
+                                    ? {...prevState, itemAutosaved: autosaved}
+                                    : prevState);
                             },
                             null,
                         );
