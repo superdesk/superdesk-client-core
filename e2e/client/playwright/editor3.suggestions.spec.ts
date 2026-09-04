@@ -251,8 +251,10 @@ test.describe('editor3 suggestions mode', () => {
     /** Saves and closes the open article, then reopens it from monitoring. */
     async function saveAndReopen(page: Page, headline: string): Promise<void> {
         const monitoring = new Monitoring(page);
+        const authoring = new Authoring(page);
 
-        await new Authoring(page).closeAndSave();
+        await authoring.save();
+        await authoring.close();
         await monitoring.getArticleLocator(headline).dblclick();
         await expect(getHeadlineField(page)).toHaveText(headline);
     }

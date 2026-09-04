@@ -1,47 +1,47 @@
-<div class="sd-padding-all--2 widget-content__main" ng-controller="InlineCommentsCtrl">
+<div class="sd-padding-all--2 widget-content__main" ng-controller="InlineCommentsCtrl" data-test-id="inline-comments-widget">
     <div class="form__row">
-        <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside">{{ :: 'Unresolved' | translate }}</sd-check>
-        <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside">{{ :: 'Resolved' | translate }}</sd-check>
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside" data-test-id="filter-unresolved">{{ :: 'Unresolved' | translate }}</sd-check>
+        <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside" data-test-id="filter-resolved">{{ :: 'Resolved' | translate }}</sd-check>
     </div>
     <ul ng-class="{ 'notification-list--empty' : items[resolvedFilter].length === 0 }">
-        <li ng-repeat="commentObj in items[resolvedFilter]">
+        <li ng-repeat="commentObj in items[resolvedFilter]" data-test-id="inline-comments-group" data-test-value="{{commentObj.fieldName}}">
             <h4 class="label">{{commentObj.fieldName}}</h4>
             <ul class="notification-list sd-margin-all--0 sd-margin-b--2">
-                <li ng-repeat="item in commentObj.comments" class="item">
+                <li ng-repeat="item in commentObj.comments" class="item" data-test-id="inline-comment">
                     <div class="flex-row sibling-spacer-10">
                         <sd-user-avatar data-user="users[item.data.authorId]"></sd-user-avatar>
                         <div>
-                            <b>{{users[item.data.authorId].display_name}}:</b>
+                            <b data-test-id="author">{{users[item.data.authorId].display_name}}:</b>
                             <sd-text-with-mentions message="item.data.msg"></sd-text-with-mentions>
-                            <span class="date" sd-absdate datetime="item.data.date"></span>
+                            <span class="date" sd-absdate datetime="item.data.date" data-test-id="date"></span>
                         </div>
                     </div>
 
                     <ul>
-                        <li class="small" ng-repeat="reply in item.data.replies">
+                        <li class="small" ng-repeat="reply in item.data.replies" data-test-id="inline-comment-reply">
                             <div class="flex-row sibling-spacer-10">
                                 <sd-user-avatar data-user="users[reply.authorId]"></sd-user-avatar>
                                 <div>
-                                    <b>{{users[reply.authorId].display_name}}:</b>
+                                    <b data-test-id="author">{{users[reply.authorId].display_name}}:</b>
                                     <sd-text-with-mentions message="reply.msg"></sd-text-with-mentions>
-                                    <span class="date" sd-absdate datetime="reply.date"></span>
+                                    <span class="date" sd-absdate datetime="reply.date" data-test-id="date"></span>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                    <div class="commented-text">
+                    <div class="commented-text" data-test-id="commented-text">
                         <div translate>Selected text:</div>
                         <span class="text" title="{{ item.data.commentedText }}">
                             "{{ item.data.commentedText }}"
                         </span>
                     </div>
-                    <div class="resolution" ng-if="item.data.resolutionInfo">
+                    <div class="resolution" ng-if="item.data.resolutionInfo" data-test-id="resolution">
                         <span>{{ :: 'Resolved by' | translate }} {{ users[item.data.resolutionInfo.resolverUserId].display_name || users[item.data.resolutionInfo.resolverUserId].username }} <span class="date" sd-absdate datetime="item.data.resolutionInfo.date"></span></span>
                     </div>
                 </li>
             </ul>
         </li>
-        <li class="no-comments" ng-show="items[resolvedFilter].length === 0">
+        <li class="no-comments" ng-show="items[resolvedFilter].length === 0" data-test-id="no-comments">
             <div class="round-box">
                 <i class="big-icon--comments"></i>
             </div>

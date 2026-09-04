@@ -29,6 +29,8 @@ e2e/client/playwright/
 ├── <scenario>.spec.ts          <- specs are flat here, hyphenated names
 ├── page-object-models/
 │   └── <feature>.ts            <- Page Object classes (Authoring, Monitoring, ...)
+├── scenarios/
+│   └── <flow>.ts               <- multi-feature flows shared by several specs
 └── utils/
     ├── index.ts                <- restoreDatabaseSnapshot, login, helpers
     └── storage-state.ts        <- getStorageState
@@ -39,6 +41,12 @@ e2e/client/playwright/
   behaviour: `assign-coverage.spec.ts`, not `test1.spec.ts` or `bug-123.spec.ts`.
 - Page Objects live in `playwright/page-object-models/<feature>.ts`, one class
   per feature area, methods named after user-facing operations.
+- A flow that several specs drive end to end and that spans more than one
+  feature area (so it fits no single Page Object) goes in
+  `playwright/scenarios/<flow>.ts` as a function taking the `Page`. Scenarios
+  may import Page Objects and utils; nothing imports a scenario except a spec.
+  Keep the dependency direction one-way: specs -> scenarios -> Page Objects ->
+  utils. A util must never import a Page Object.
 - Import helpers and Page Objects with local relative paths:
   ```ts
   import {restoreDatabaseSnapshot} from './utils';
@@ -236,7 +244,21 @@ Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
 `editor3-formats`, `editor3-suggestions`, `authoring-extras`,
-`saved-search-private`.
+`saved-search-private`, `publishing`, `required-headline`,
+`association-fields`, `editor3-comments`.
+
+### Publishing config in the `main` snapshot
+
+`main` ships one subscriber, "Subscriber 1", whose single destination
+("Destination 1") formats as `email` and delivers by email. Its product
+("Product 1") carries a *blocking* content filter on the sluglines `Football`
+and `Basketball`, so those two never reach it. The subscriber is targetable, so
+`Authoring.publish({subscribers: ['Subscriber 1']})` restricts a publish to it
+and produces exactly one queue entry; `publish({subscribers: []})` fans out to
+every subscriber whose products match.
+
+There is no NINJS destination in `main`. Use the `publishing` snapshot for
+anything that asserts on the payload a subscriber is actually sent.
 
 ### The `media-items` snapshot
 
@@ -283,10 +305,12 @@ A toolbar button exposes two handles. The legacy one is
 `data-test-id="formatting-option"` with the option name in `data-test-value`, so
 `s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
 inner `<i>` icon rather than on the outer `<span>` that carries the click
-handler. The open editor3 campaign branches add
-`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
-that outer span and standardise on it in their `getFormattingOptionButton`
-helpers. Prefer that handle once those branches land.
+handler. The outer span carries `data-test-id="formatting-option-button"` with
+the same `data-test-value`, and that is the handle to use: reach for it through
+`getEditor3FormattingButton(field, 'strikethrough')` in
+`playwright/utils/editor3.tsx`, alongside `getEditor3Field(page, 'body_html')`
+for the field itself and `getEditor3TextRun(field, text)` for the Draft.js leaf
+an inline style lands on.
 
 The formatting-marks button is the exception: the toolbar passes it the
 internal label `invisibles`, which has no entry in the option map, so
@@ -330,6 +354,57 @@ Three things about suggestions themselves are worth knowing before writing a spe
 - The same re-render tears the popup down again, so a popup that was found open can
   be gone by the time the next assertion runs. Retry the opening clicks and the
   assertions on the popup as one `toPass` unit, not the clicks alone.
+### The `association-fields` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'association-fields'})` gives you `main`
+plus two association fields on the Story content profile and the items to put in
+them:
+
+- **"Shire related items"** - vocabulary `shire_related_items`,
+  `field_type: "related_content"`, accepting text and picture items.
+- **"Shire gallery"** - vocabulary `shire_gallery`, `field_type: "media"`,
+  accepting pictures.
+
+Both allow in-progress and published items and up to five items each. `main`
+carries no vocabulary with a `field_type` at all, so neither kind of field can
+render under it; the only comparable one anywhere else is "Image gallery 33" on
+`legacy`'s editor3 profile.
+
+The content is three text items ("Bree bulletin", "Rohan dispatch",
+"Weathertop note") and three pictures ("Gondor picture", "Mirkwood picture",
+"Fangorn picture"), all in Sports / Working Stage. The text items are here
+because the publish-time refusal for a locked association is worded
+`<headline>: ...`, and `main`'s other Sports items carry only a `slugline`, so a
+refusal naming one of them reads as a raw item id or as an empty string. The
+three pictures share one set of renditions, so they render the same image.
+
+Two things to know before writing against the fields:
+
+- **Address both fields by display name, drop on the inner element.** `article-edit.html`
+  marks the media and related-content blocks alike with `data-test-id="authoring-field"`
+  and the display name in `data-test-value`. The gallery carousel inside exposes
+  `media-gallery--upload-placeholder`, `media-gallery-image` and
+  `media-gallery-image--remove`. The related-content block's inner drop zone (the
+  `[sd-related_items]` element, which is where the drop listener binds) has no test id
+  of its own: descend to it from the block for drops, and count its rows by the
+  `field--slugline` each row renders.
+- **Drop one item at a time.** Both fields derive a new association key from the
+  ones already on the item, asynchronously, so two drops in a row compute the
+  same key and the second replaces the first. Wait for each dropped item to
+  appear before dropping the next.
+### The `editor3-comments` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-comments'})` gives you `main`
+plus `comments` in the Story profile's `body_html` format options, which is what
+puts the Comment button on the editor3 toolbar and makes inline comments
+reachable at all. Nothing else changes, so item counts and every other profile
+match `main`.
+
+Reach for it for any spec about inline comments: adding, editing, replying,
+resolving, the Inline comments widget, the mention notification. No content
+profile in `main` or in any other record based on it enables the option, and the
+only other snapshot that does is `legacy`, whose separate user database rules out
+a two-user flow.
 
 ### The `authoring-extras` snapshot
 
@@ -357,6 +432,18 @@ sorts `versioncreated:desc`) and shows one version more than it does under
 Note that `expiry` is not writable through the archive API, it is derived from
 desk settings server-side. The value in this snapshot was set in mongo directly.
 
+### The `required-headline` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'required-headline'})` gives you `main`
+with one change: the Story content profile marks `headline` as required and
+non-empty (schema and editor both). In `main` the Story profile requires
+nothing, so no publish-validation failure is reachable there; the `validators`
+collection does not apply because every item carries a profile. Reach for this
+snapshot when a spec needs publishing to be blocked by a missing field on the
+standard Sports items: publishing with an empty headline fails with
+"HEADLINE empty values not allowed". Saving is unaffected; required fields only
+gate publishing.
+
 ### The `saved-search-private` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'saved-search-private'})` gives you
@@ -368,6 +455,81 @@ It is a record rather than part of `main` because the monitoring-settings spec
 that covers the saved searches tab seeds its own private search through the UI
 and asserts the list holds exactly one. Once that spec switches to this snapshot
 and drops the seeding, the search can be promoted into `main`.
+
+### The `publishing` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'publishing'})` gives you `main` plus a
+second subscriber, "Public API", and the unfiltered product it points at, "All
+content". Its one destination, "NINJS Email", formats as `ninjs`, so this is the
+snapshot to reach for when a spec asserts on the payload a subscriber is sent
+rather than on the fact that a publish happened.
+
+The payload is read back through the item history's transmission details, which
+render the queue entry's `formatted_item` verbatim: publish, open the item from
+the Publish Queue page (`/#/publish_queue`, `publish-queue-table` /
+`publish-queue-item`), then *Item history* and expand the transmission details.
+That panel (`versioning/history/views/publish_queue.html`) carries no
+`data-test-id` on develop; the attachments branch adds the ones a spec needs.
+
+Three things to know before using it:
+
+- **Two queue entries per publish.** Nothing here is targeted, so an untargeted
+  publish reaches "Subscriber 1" and "Public API" both. A queue locator keyed on
+  the headline alone therefore matches two rows, and a `toBeVisible()` on it
+  fails as a strict-mode violation. Narrow by the Subscriber or Destination
+  column.
+- **The transmission succeeds.** Delivery is by email into the stack's mailcrab,
+  not by HTTP push. The email transmitter sends `formatted_item` verbatim when it
+  is not email-formatted, so the body stays NINJS and the entry settles at
+  `state: "success"`. `legacy`'s "Public API" pushes to `http://localhost:5050`,
+  which nothing in the stack answers, so its entries never leave `retrying`. Only
+  reach for `legacy` if a spec needs the rest of that dataset.
+- **The queue view does not live-update.** `/#/publish_queue` reads the queue
+  only when it loads, so a spec already sitting on that page when a publish
+  happens will not see the new row without navigating again. Navigating there
+  after publishing needs no retry loop: transmission runs inline on this stack
+  (`CELERY_ALWAYS_EAGER`), so the row and its final state already exist by the
+  time the publish request returns, which is why `publishing.spec.ts` and
+  `publish-queue.spec.ts` both assert once.
+
+### Publishing an item that has associations
+
+`e2e/server/settings.py` sets `PUBLISH_ASSOCIATED_ITEMS = True`, which
+superdesk-core defaults to `False` (its own test suite turns it on). It is
+process-level app config with no runtime override, so it applies to every spec
+and every snapshot; it cannot be opted into per test. Two consequences to write
+against:
+
+- Publishing an item **publishes its associations too**. The associated item
+  moves to `published`, leaves the working stage for the desk output group and
+  gets its own publish queue entries. Any count assertion taken after publishing
+  an item that carries feature media, a related item or a gallery has to account
+  for that.
+- The "There are unpublished related items that won't be sent out..." publishing
+  warning **never appears**. `_raise_if_unpublished_related_items` returns early
+  when the setting is on, so there is no confirmation step to drive.
+
+In exchange, publishing validates the locks on associations, which is what the
+locked-item publishing cases need. Publishing an item whose association is locked
+fails with HTTP 400 and a validator exception naming the association:
+
+- locked by someone else:
+  `<headline>: packaged item is locked by another user`
+- locked by the publisher:
+  `<headline>: packaged item is locked by you. Unlock it and try again`
+
+Which of the two you get depends on the button, not on who holds the lock. The
+validator compares the association's `lock_user` with the *publishing item's*,
+and the send/publish pane releases the publishing item's lock first
+(`$scope.beforeSend`), so anything published through that pane is refused as
+"locked by another user" even when the tester holds the lock themselves. Send
+Correction is a topbar button that publishes without releasing anything, so a
+correction is the only route to the "locked by you" wording.
+
+No item in any committed snapshot carries `associations`, so a spec that needs
+one has to build it (attach feature media, a related item or a gallery item
+through authoring) before publishing. The `association-fields` snapshot carries
+the related-content and gallery fields to build it in.
 
 ### Adding fixture data
 
