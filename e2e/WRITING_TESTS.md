@@ -243,8 +243,9 @@ item, and no plain package; use the `media-items` snapshot for those.
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
-`editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`, `association-fields`, `editor3-comments`.
+`editor3-formats`, `editor3-suggestions`, `authoring-extras`,
+`saved-search-private`, `publishing`, `required-headline`,
+`association-fields`, `editor3-comments`.
 
 ### Publishing config in the `main` snapshot
 
@@ -320,6 +321,39 @@ are a different component again, found with `getByRole('button', {name})`.
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
 
+### The `editor3-suggestions` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-suggestions'})` gives you the same
+toolbar as `editor3-formats` with `suggestions` added, on `body_html` and on the
+custom text field alike. It is the only snapshot that offers the option at all:
+`main` and `editor3-formats` enable it on no field, so suggestions mode is
+unreachable under either.
+
+The toggle is a `StyleButton` like bold or italic, so it is found the same way, by
+`data-test-value="suggestions"`, and it carries `Editor3-activeButton` while
+suggestions mode is on.
+
+It also carries "story with suggestions" on the Sports desk, an article whose body
+reads `alphabravocharliedeltaechofoxtrot`: six words run together with no separators
+between them, with `bravo` and `foxtrot` as insertion suggestions and `delta` as a
+deletion suggestion, all made by `admin` and all unresolved. Assert on the individual
+words, not on a spaced sentence. Reach for it whenever a case starts from an article
+that already has suggestions rather than from making them. A suggestion is draft.js
+editor state under `fields_meta`, not markup, so it is recorded like any other field
+the browser writes; there is nothing special about putting one in a snapshot.
+
+Three things about suggestions themselves are worth knowing before writing a spec:
+
+- An insertion suggestion that directly touches a deletion suggestion is reported as
+  a single "Replace X with Y" suggestion, and accepting or rejecting it resolves both
+  halves at once. Leave plain text between them if you want two.
+- The detail popup renders only while the caret sits inside a suggestion, and it is
+  re-rendered only when the caret *moves* (`HighlightsPopup.shouldComponentUpdate`).
+  A click that lands where the caret already sits, which is where accepting or
+  rejecting one leaves it, shows nothing, so park the caret on plain text first.
+- The same re-render tears the popup down again, so a popup that was found open can
+  be gone by the time the next assertion runs. Retry the opening clicks and the
+  assertions on the popup as one `toPass` unit, not the clicks alone.
 ### The `association-fields` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'association-fields'})` gives you `main`

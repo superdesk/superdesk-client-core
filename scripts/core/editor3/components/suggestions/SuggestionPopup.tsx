@@ -128,11 +128,20 @@ class Suggestion extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={[]}>
-                            <div className="sd-display--flex sd-gap--small">
+                            <div className="sd-display--flex sd-gap--small" data-test-id="suggestion-header">
                                 <UserAvatar user={author} />
                                 <div>
-                                    <p className="editor-popup__author-name">{author.display_name}</p>
-                                    <time className="editor-popup__time" title={relativeDateString}>
+                                    <p
+                                        className="editor-popup__author-name"
+                                        data-test-id="suggestion-author"
+                                    >
+                                        {author.display_name}
+                                    </p>
+                                    <time
+                                        className="editor-popup__time"
+                                        title={relativeDateString}
+                                        data-test-id="suggestion-date"
+                                    >
                                         {absoluteDateString}
                                     </time>
                                 </div>
@@ -141,7 +150,7 @@ class Suggestion extends React.Component<any, any> {
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className="editor-popup__content-block">
+                        <div className="editor-popup__content-block" data-test-id="suggestion-text">
                             {content}
                         </div>
                     </FluidRow>
@@ -156,10 +165,18 @@ class Suggestion extends React.Component<any, any> {
                                 'sd-padding--2',
                             ].join(' ')}
                         >
-                            <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
+                            <button
+                                className="btn btn--small btn--hollow"
+                                onClick={this.onAccept}
+                                data-test-id="suggestion-accept"
+                            >
                                 {gettext('Accept')}
                             </button>
-                            <button className="btn btn--small btn--hollow" onClick={this.onReject}>
+                            <button
+                                className="btn btn--small btn--hollow"
+                                onClick={this.onReject}
+                                data-test-id="suggestion-reject"
+                            >
                                 {gettext('Reject')}
                             </button>
                         </div>
