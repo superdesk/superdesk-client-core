@@ -177,48 +177,6 @@ export class Authoring {
         await expect(save).toBeDisabled();
     }
 
-    /**
-     * The sidebar tab of a widget, matched on the label in its `data-test-value`.
-     *
-     * The label is not the tab's text: the tab renders icons and a badge only and carries
-     * its label in `title` (`authoring-widgets.html`), so it cannot be filtered by text.
-     */
-    private widgetTab(label: string): Locator {
-        return this.page.getByTestId('authoring-widget')
-            .and(this.page.locator(`[data-test-value="${label}"]`));
-    }
-
-    /**
-     * Opens a widget in the authoring sidebar by its label and returns its panel.
-     *
-     * The tab and the panel are keyed by the same label (`widget.label` lands in
-     * `data-test-value` on both in `authoring-widgets.html`), so a caller never has to
-     * name the widget twice.
-     */
-    async openWidget(label: string): Promise<Locator> {
-        const panel = this.page.getByTestId('authoring-widget-panel')
-            .and(this.page.locator(`[data-test-value="${label}"]`));
-
-        await this.widgetTab(label).click();
-        await expect(panel).toBeVisible();
-
-        return panel;
-    }
-
-    /**
-     * Closes the open authoring sidebar widget by clicking its tab again.
-     *
-     * The panel is behind an `ng-if` on the active widget, so closing removes it from the
-     * DOM entirely; the tab strip is asserted first so the check cannot pass against an
-     * authoring view that never rendered.
-     */
-    async closeWidget(label: string): Promise<void> {
-        await this.widgetTab(label).click();
-
-        await expect(this.page.getByTestId('navigation-tabs')).toBeVisible();
-        await expect(this.page.getByTestId('authoring-widget-panel')).toHaveCount(0);
-    }
-
     field(field: string): Locator {
         return this.page.locator(s('authoring', field)).getByRole('textbox');
     }
