@@ -244,7 +244,7 @@ Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
 `editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`.
+`required-headline`, `association-fields`.
 
 ### Publishing config in the `main` snapshot
 
@@ -304,10 +304,12 @@ A toolbar button exposes two handles. The legacy one is
 `data-test-id="formatting-option"` with the option name in `data-test-value`, so
 `s('editor3', 'formatting-option=strikethrough')` finds it, but it sits on the
 inner `<i>` icon rather than on the outer `<span>` that carries the click
-handler. The open editor3 campaign branches add
-`data-test-id="formatting-option-button"` (with the same `data-test-value`) to
-that outer span and standardise on it in their `getFormattingOptionButton`
-helpers. Prefer that handle once those branches land.
+handler. The outer span carries `data-test-id="formatting-option-button"` with
+the same `data-test-value`, and that is the handle to use: reach for it through
+`getEditor3FormattingButton(field, 'strikethrough')` in
+`playwright/utils/editor3.tsx`, alongside `getEditor3Field(page, 'body_html')`
+for the field itself and `getEditor3TextRun(field, text)` for the Draft.js leaf
+an inline style lands on.
 
 The formatting-marks button is the exception: the toolbar passes it the
 internal label `invisibles`, which has no entry in the option map, so
@@ -317,6 +319,45 @@ are a different component again, found with `getByRole('button', {name})`.
 
 The Angular authoring view keys custom fields by display name, so the field is
 `s('authoring', 'authoring-field=Sample rich text')`, not by its vocabulary id.
+
+### The `association-fields` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'association-fields'})` gives you `main`
+plus two association fields on the Story content profile and the items to put in
+them:
+
+- **"Shire related items"** - vocabulary `shire_related_items`,
+  `field_type: "related_content"`, accepting text and picture items.
+- **"Shire gallery"** - vocabulary `shire_gallery`, `field_type: "media"`,
+  accepting pictures.
+
+Both allow in-progress and published items and up to five items each. `main`
+carries no vocabulary with a `field_type` at all, so neither kind of field can
+render under it; the only comparable one anywhere else is "Image gallery 33" on
+`legacy`'s editor3 profile.
+
+The content is three text items ("Bree bulletin", "Rohan dispatch",
+"Weathertop note") and three pictures ("Gondor picture", "Mirkwood picture",
+"Fangorn picture"), all in Sports / Working Stage. The text items are here
+because the publish-time refusal for a locked association is worded
+`<headline>: ...`, and `main`'s other Sports items carry only a `slugline`, so a
+refusal naming one of them reads as a raw item id or as an empty string. The
+three pictures share one set of renditions, so they render the same image.
+
+Two things to know before writing against the fields:
+
+- **Address both fields by display name, drop on the inner element.** `article-edit.html`
+  marks the media and related-content blocks alike with `data-test-id="authoring-field"`
+  and the display name in `data-test-value`. The gallery carousel inside exposes
+  `media-gallery--upload-placeholder`, `media-gallery-image` and
+  `media-gallery-image--remove`. The related-content block's inner drop zone (the
+  `[sd-related_items]` element, which is where the drop listener binds) has no test id
+  of its own: descend to it from the block for drops, and count its rows by the
+  `field--slugline` each row renders.
+- **Drop one item at a time.** Both fields derive a new association key from the
+  ones already on the item, asynchronously, so two drops in a row compute the
+  same key and the second replaces the first. Wait for each dropped item to
+  appear before dropping the next.
 
 ### The `authoring-extras` snapshot
 
@@ -430,10 +471,18 @@ fails with HTTP 400 and a validator exception naming the association:
 - locked by the publisher:
   `<headline>: packaged item is locked by you. Unlock it and try again`
 
-Both were verified at the API level against the `publishing` snapshot. No item in
-any committed snapshot carries `associations`, so a spec that needs one has to
-build it (attach feature media or a related item through authoring) before
-publishing.
+Which of the two you get depends on the button, not on who holds the lock. The
+validator compares the association's `lock_user` with the *publishing item's*,
+and the send/publish pane releases the publishing item's lock first
+(`$scope.beforeSend`), so anything published through that pane is refused as
+"locked by another user" even when the tester holds the lock themselves. Send
+Correction is a topbar button that publishes without releasing anything, so a
+correction is the only route to the "locked by you" wording.
+
+No item in any committed snapshot carries `associations`, so a spec that needs
+one has to build it (attach feature media, a related item or a gallery item
+through authoring) before publishing. The `association-fields` snapshot carries
+the related-content and gallery fields to build it in.
 
 ### Adding fixture data
 

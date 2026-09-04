@@ -11,12 +11,16 @@ import {setEditor3FieldValue} from './utils/editor3';
  *
  * Opens the Upload media screen from the Monitoring create menu, drops one image
  * on the drop area, retargets the upload at another desk, fills metadata and
- * uploads. The image must end up on the desk that was picked, with the metadata
- * entered before the upload preserved.
+ * uploads. The image must end up on the desk that was picked, findable in global
+ * search, with the metadata entered before the upload preserved.
+ *
+ * Complete together with the shared screen-behaviour tests in
+ * upload-media-dropped-files.spec.ts (non-media refusal, required metadata, Cancel,
+ * progress circle), which carry this case id as partial contributions.
  */
 test('uploading a single image by drag and drop', {
     annotation: [
-        {type: 'confluence', description: '1315931215 partial'}, // Upload a single image by drag and drop
+        {type: 'confluence', description: '1315931215 complete'}, // Upload a single image by drag and drop
     ],
 }, async ({page}) => {
     const HEADLINE = 'dropped image';
@@ -72,4 +76,12 @@ test('uploading a single image by drag and drop', {
 
     await expect(pictureAuthoring.field('field--headline')).toHaveText(HEADLINE);
     await expect(pictureAuthoring.field('field--description_text')).toHaveText(DESCRIPTION);
+
+    await pictureAuthoring.close();
+
+    await page.goto('/#/search');
+
+    await expect(
+        page.getByTestId('article-item').filter({hasText: HEADLINE}),
+    ).toBeVisible();
 });
