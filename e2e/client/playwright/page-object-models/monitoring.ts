@@ -49,6 +49,36 @@ export class Monitoring {
     }
 
     /**
+     * Opens the monitoring view on a desk and waits for its groups to render.
+     *
+     * `AggregateCtrl.getDefaultGroups` reads `desks.getCurrentDesk()._id`, and the
+     * workspace watcher that calls it sometimes fires before the current desk is
+     * resolved. The resulting TypeError aborts the digest, leaving the view with a
+     * working subnav but no groups and no item query, and nothing re-runs that
+     * query later, so reloading is the only recovery.
+     *
+     * The retry budget has to stay well under the caller's test timeout: `toPass` cannot
+     * interrupt an attempt that is already running, so a budget equal to the test timeout would
+     * be spent inside the last attempt and surface as a bare test timeout instead of this
+     * assertion, with no time left for the test body.
+     */
+    async openMonitoringForDesk(deskName: string): Promise<void> {
+        let loaded = false;
+
+        await expect(async () => {
+            if (loaded) {
+                await this.page.reload();
+            } else {
+                await this.page.goto('/#/workspace/monitoring');
+                loaded = true;
+            }
+
+            await this.selectDeskOrWorkspace(deskName);
+            await expect(this.page.getByTestId('monitoring-group').first()).toBeVisible({timeout: 10000});
+        }).toPass({timeout: 45000});
+    }
+
+    /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
     async executeActionOnMonitoringItem(item: Locator, ...actionPath: Array<string>): Promise<void> {
@@ -145,6 +175,33 @@ export class Monitoring {
 
     getArticleLocator(headline: string): Locator {
         return this.page.locator(s('article-item=' + headline));
+    }
+
+    /**
+     * All article items currently listed in the monitoring groups.
+     */
+    getListedArticles(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('article-item');
+    }
+
+    getListedArticle(label: string): Locator {
+        return this.getListedArticles().and(this.page.locator(`[data-test-value="${label}"]`));
+    }
+
+    /**
+     * All item type toggles in the monitoring subnav, in render order.
+     */
+    getFileTypeFilterButtons(): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(/^file-type-filter--/);
+    }
+
+    /**
+     * One of the item type toggles in the monitoring subnav.
+     * `fileType` is the internal type, not the label: all, text, picture,
+     * graphic, composite (package), highlight-pack, video, audio.
+     */
+    getFileTypeFilterButton(fileType: string): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(`file-type-filter--${fileType}`);
     }
 
     getPreviewPane(): Locator {
