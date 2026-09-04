@@ -15,12 +15,12 @@ export const SendTakedownActionComponent: React.ComponentType<{entity: IArticle}
             style="filled"
             type="primary"
             onClick={() => {
-                exposed?.handleUnsavedChanges()
-                    .then(() => sdApi.article.publishItem(
-                        exposed?.item,
-                        entity,
-                        'takedown',
-                    ))
+                /**
+                 * Takes the edited notice straight from the editor rather than going through
+                 * `handleUnsavedChanges`, whose Save option would hang: takedown storage
+                 * implements `saveEntity` as a promise that never resolves (`data-layer.ts`).
+                 */
+                sdApi.article.publishItem(entity, exposed?.getLatestItem(), 'takedown')
                     .then(() => exposed?.initiateClosing());
             }}
         />
