@@ -270,7 +270,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
         return (
             <SmoothLoader loading={this.state.loading}>
-                <div style={style}>
+                <div style={style} data-test-id="item-list-viewport">
                     <ItemList
                         itemsList={this.state.itemsList}
                         itemsById={this.state.itemsById}
