@@ -154,4 +154,56 @@ export class Monitoring {
     async openPreviewTab(name: string): Promise<void> {
         await this.getPreviewPane().getByRole('tab', {name, exact: true}).click();
     }
+
+    /**
+     * The right-aligned button stack of the monitoring toolbar (refresh, monitoring
+     * settings, monitoring filter buttons, create new item). The file type filters are
+     * not in here, they live in the second subnav row.
+     */
+    getToolbarActions(): Locator {
+        return this.page.getByTestId('monitoring-toolbar-actions');
+    }
+
+    /**
+     * Only rendered while a custom workspace is the active selection; on a desk the
+     * monitoring settings are reached from the desks settings page instead
+     * (see `monitoring-view.html`, `aggregate.settings.type === 'workspace'`).
+     */
+    getMonitoringSettingsButton(): Locator {
+        return this.getToolbarActions().getByTestId('monitoring-settings-button');
+    }
+
+    getCreateItemButton(): Locator {
+        return this.getToolbarActions().getByTestId('content-create');
+    }
+
+    /**
+     * One template backs both entry points into the monitoring settings, so the
+     * dialog carries the desk-flavoured test id even in a custom workspace.
+     */
+    getMonitoringSettingsDialog(): Locator {
+        return this.page.getByTestId('desk--monitoring-settings');
+    }
+
+    async openMonitoringSettings(): Promise<void> {
+        await this.getMonitoringSettingsButton().click();
+        await expect(this.getMonitoringSettingsDialog()).toBeVisible();
+    }
+
+    /**
+     * Tab titles come from the wizard step titles, e.g. `Desks`, `Saved Searches`,
+     * `Reorder Sections`, `Items Count`.
+     */
+    getMonitoringSettingsTabs(): Locator {
+        return this.getMonitoringSettingsDialog().getByTestId(/^wizard--/);
+    }
+
+    async openMonitoringSettingsTab(title: string): Promise<void> {
+        await this.getMonitoringSettingsDialog().getByTestId(`wizard--${title}`).click();
+    }
+
+    async closeMonitoringSettings(): Promise<void> {
+        await this.getMonitoringSettingsDialog().getByRole('button', {name: 'Cancel'}).click();
+        await expect(this.getMonitoringSettingsDialog()).toBeHidden();
+    }
 }
