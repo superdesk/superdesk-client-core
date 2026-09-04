@@ -244,7 +244,7 @@ Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
 `editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`, `association-fields`.
+`required-headline`, `association-fields`, `editor3-comments`.
 
 ### Publishing config in the `main` snapshot
 
@@ -358,6 +358,19 @@ Two things to know before writing against the fields:
   ones already on the item, asynchronously, so two drops in a row compute the
   same key and the second replaces the first. Wait for each dropped item to
   appear before dropping the next.
+### The `editor3-comments` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'editor3-comments'})` gives you `main`
+plus `comments` in the Story profile's `body_html` format options, which is what
+puts the Comment button on the editor3 toolbar and makes inline comments
+reachable at all. Nothing else changes, so item counts and every other profile
+match `main`.
+
+Reach for it for any spec about inline comments: adding, editing, replying,
+resolving, the Inline comments widget, the mention notification. No content
+profile in `main` or in any other record based on it enables the option, and the
+only other snapshot that does is `legacy`, whose separate user database rules out
+a two-user flow.
 
 ### The `authoring-extras` snapshot
 
