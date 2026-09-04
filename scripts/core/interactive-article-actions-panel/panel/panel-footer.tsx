@@ -7,7 +7,10 @@ export class PanelFooter extends React.PureComponent<IPropsSendToPanel> {
         if (this.props.markupV2) {
             return (
                 <Layout.PanelFooter>
-                    <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}>
+                    <div
+                        style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}
+                        data-test-id="panel-footer"
+                    >
                         {this.props.children}
                     </div>
                 </Layout.PanelFooter>
@@ -15,7 +18,10 @@ export class PanelFooter extends React.PureComponent<IPropsSendToPanel> {
         } else {
             return (
                 <div className="side-panel__footer side-panel__footer--button-box-large">
-                    <div style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}>
+                    <div
+                        style={{width: '100%', display: 'flex', flexDirection: 'column', gap: 8}}
+                        data-test-id="panel-footer"
+                    >
                         {this.props.children}
                     </div>
                 </div>

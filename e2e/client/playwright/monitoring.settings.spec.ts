@@ -15,7 +15,12 @@ import {restoreDatabaseSnapshot, s} from './utils';
  * rendered when a desk is the active selection. The per-desk entry point lives on the
  * desks settings page (`desk-actions--monitoring-settings`).
  */
-test('enabling a global saved search shows it on the monitoring view', async ({page}) => {
+test('enabling a global saved search shows it on the monitoring view', {
+    annotation: [
+        // Saved searches tab in Monitoring settings of the desk
+        {type: 'confluence', description: '1315934715 partial'},
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -60,7 +65,11 @@ test('enabling a global saved search shows it on the monitoring view', async ({p
  * behaviour after switching desks is what users care about and what `main` supports
  * without extra fixture work.)
  */
-test('switching between desks shows the selected desk monitoring groups', async ({page}) => {
+test('switching between desks shows the selected desk monitoring groups', {
+    annotation: [
+        {type: 'confluence', description: '1315934713 partial'}, // Desks tab in Monitoring settings
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

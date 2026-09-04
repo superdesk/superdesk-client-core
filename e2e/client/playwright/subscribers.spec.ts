@@ -7,7 +7,13 @@ test.describe('subscribers', () => {
         await page.goto('/#/settings/publish');
     });
 
-    test('lists the default subscriber', async ({page}) => {
+    test('lists the default subscriber', {
+        annotation: [
+            {type: 'confluence', description: '1311834381 complete'}, // Subscribers
+            {type: 'confluence', description: '1344443887 complete'}, // Creating Subscribers and Associating Products
+            {type: 'confluence', description: '1344444319 partial'}, // Subscribers_ PASS
+        ],
+    }, async ({page}) => {
         const subscriberItems = page.locator(s('subscriber-item'));
 
         await expect(subscriberItems).toHaveCount(1);

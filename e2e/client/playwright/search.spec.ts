@@ -51,7 +51,12 @@ test.describe('global search (legacy snapshot)', () => {
         await openGlobalSearchListView(page);
     });
 
-    test('searches by free-text, byline, slugline, creator and ingest provider', async ({page}) => {
+    test('searches by free-text, byline, slugline, creator and ingest provider', {
+        annotation: [
+            {type: 'confluence', description: '1308524892 partial'}, // Advanced Search (Alice)
+            {type: 'confluence', description: '1308524890 partial'}, // Search function
+        ],
+    }, async ({page}) => {
         await expect(items(page)).toHaveCount(16);
 
         await page.locator('#search-input').click();

@@ -26,6 +26,7 @@ import {gettext} from 'core/utils';
 import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 import {description_text} from './field-adapters/description_text';
 import {formatDateTime} from 'core/get-superdesk-api-implementation';
+import {COMPANION_FIELD_IDS, FIELD_ID_TO_STORED_FIELD} from './data-layer-constants';
 
 /**
  * Field `section` ('header' | 'content') is an authoring-react concept. Profiles created before it
@@ -65,14 +66,8 @@ export function getArticleContentProfile<T>(
      * and this restructuring code dropped.
      */
     function adjustId(fieldId: string): string {
-        switch (fieldId) {
-            case 'sms':
-            // in content profile the field ID is "sms"
-            // but value is written to `IArticle['sms_message']`
-                return 'sms_message';
-            default:
-                return fieldId;
-        }
+        // some profile field ids (e.g. "sms") store their value under a different article field
+        return FIELD_ID_TO_STORED_FIELD[fieldId] ?? fieldId;
     }
 
     return Promise.all([
@@ -97,20 +92,12 @@ export function getArticleContentProfile<T>(
             };
         }
 
-        const fieldsToOmit = [
-            /**
-             * Avoid having unnecessary adapters for fields to which we do not write data e.g. 'footer'.
-             * authoring-react doesn't support companion fields like 'footer' that don't have data on
-             * their own but simply modify the data of other fields.
-             */
-            'footer',
-
-            /**
-             * `media_description` isn't used anywhere. It might still be present in content profiles, so
-             * I'm omitting it here to prevent authoring-react from crashing trying to render it.
-             */
-            'media_description',
-        ];
+        /**
+         * Companion fields (e.g. 'footer', 'media_description') have no data of their own and would
+         * otherwise need unnecessary adapters / crash authoring-react while rendering. See
+         * COMPANION_FIELD_IDS for the shared list.
+         */
+        const fieldsToOmit = COMPANION_FIELD_IDS;
 
         const fieldsOrdered =
             Object.keys(editor)

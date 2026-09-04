@@ -1,9 +1,14 @@
 var path = require('path');
-var webpack = require('webpack');
+// Resolve webpack from the consumer so this config builds plugins with the same copy the
+// compiler uses. In a linked dev setup the consumer and this repo have separate installs,
+// and webpack >= 5.107 rejects a compilation created by a different copy.
+var webpack = require(require.resolve('webpack', {paths: [process.cwd(), __dirname]}));
 var lodash = require('lodash');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const fs = require('fs');
 
 function getModuleDir(moduleName) {
@@ -19,6 +24,73 @@ function getModuleDir(moduleName) {
 function countOccurrences(_string, substring) {
     return _string.split(substring).length - 1;
 }
+
+/**
+ * Replacements for TerserPlugin.swcMinify and CssMinimizerPlugin.esbuildMinify.
+ * The built-in ones require('@swc/core') / require('esbuild') from wherever npm
+ * hoisted the plugin, which fails when the package is nested under
+ * superdesk-core in a consuming repo. These are self-contained (the plugins
+ * stringify them for worker threads, so no closures) and receive the resolved
+ * module path through the minimizer options instead.
+ */
+function swcMinify(input, sourceMap, minimizerOptions) {
+    const {swcCorePath, ...swcOptions} = minimizerOptions;
+    const swc = require(swcCorePath);
+    const [[filename, code]] = Object.entries(input);
+
+    if (swcOptions.compress === true) {
+        swcOptions.compress = {};
+    }
+
+    // swc can otherwise emit arrow functions while compressing an ecma 5
+    // bundle (https://github.com/webpack/webpack/issues/16135)
+    if (swcOptions.compress && swcOptions.ecma === 5 && swcOptions.compress.arrows === undefined) {
+        swcOptions.compress.arrows = false;
+    }
+
+    if (sourceMap) {
+        swcOptions.sourceMap = true;
+    }
+
+    return swc.minify(code, swcOptions).then((result) => {
+        let map;
+
+        if (result.map) {
+            map = JSON.parse(result.map);
+            map.sources = [filename];
+            delete map.sourcesContent;
+        }
+
+        return {code: result.code, map: map};
+    });
+}
+
+function esbuildCssMinify(input, sourceMap, minimizerOptions) {
+    const esbuild = require(minimizerOptions.esbuildPath);
+    const [[filename, code]] = Object.entries(input);
+    const options = {
+        loader: 'css',
+        minify: true,
+        legalComments: 'inline',
+        sourcefile: filename,
+        sourcemap: false,
+    };
+
+    if (sourceMap) {
+        options.sourcemap = true;
+        options.sourcesContent = false;
+    }
+
+    return esbuild.transform(code, options).then((result) => ({
+        code: result.code,
+        map: result.map ? JSON.parse(result.map) : undefined,
+        warnings: result.warnings.map((item) => ({message: item.text})),
+    }));
+}
+
+// esbuild runs its own service process; spawning it once per worker thread
+// would only add overhead, so keep this minifier on the main thread
+esbuildCssMinify.supportsWorkerThreads = () => false;
 
 function applyDefaults(appConfig) {
     if (appConfig.startingDay == null) {
@@ -140,7 +212,124 @@ module.exports = function makeConfig(grunt) {
             ? uiFrameworkInsideClientCore
             : getModuleDir('superdesk-ui-framework');
 
+    const sassLoadPaths = [
+        path.join(__dirname, 'styles', 'sass'),
+        path.join(__dirname, 'node_modules'),
+        path.join(process.cwd(), 'node_modules'),
+    ];
+
+    const transpilationExcludes = function(rawPath) {
+        // Windows paths use backslashes; the checks below assume "/"
+        const absolutePath = rawPath.split(path.sep).join('/');
+
+        // don't exclude anything outside node_modules
+        if (absolutePath.indexOf('node_modules') === -1) {
+            return false;
+        }
+
+        // Exclude these packages - they are pre-built ESM modules
+        if (
+            absolutePath.includes('/@babel/runtime/')
+            || absolutePath.includes('/react-resizable-panels/')
+        ) {
+            return true;
+        }
+
+        if (
+            // date-fns uses optional chaining and nullish coalescing
+            absolutePath.includes('/node_modules/date-fns/')
+
+            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
+            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
+
+            || absolutePath.includes('/@sourcefabric/common/')
+        ) {
+            return false;
+        }
+
+        // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
+        // but is not its dependency.
+        // For example, `superdesk-planning/node_modules/**/*` will be excluded.
+        const exclude = !validModules.some(
+            (app) =>
+                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
+        );
+
+        return exclude;
+    };
+
+    // Mirrors scripts/tsconfig.json: ES5, classic JSX, CommonJS. isModule "unknown"
+    // leaves files without import/export as scripts, like tsc, so legacy sloppy-mode
+    // code doesn't get "use strict" forced on it. useDefineForClassFields matches
+    // tsc's default at target es5: without it, declaration-only class fields
+    // (`scope: any;`) are defined as undefined after super() returns, wiping
+    // values that parent constructors assigned.
+    //
+    // @swc/helpers is declared in dependencies although nothing imports it directly
+    // (swc only emits imports of it with externalHelpers enabled, which is not used
+    // here). Repos that consume superdesk-core as a git dependency get @swc/helpers
+    // in their tree anyway through @swc/core's optional peer dependency, and
+    // Dependabot's lockfile regeneration drops optional-peer entries, leaving a lock
+    // that fails `npm ci` there. A regular dependency stays a hard lock entry that
+    // survives regeneration. Do not remove it as unused.
+    const swcOptions = (parser) => ({
+        isModule: 'unknown',
+        module: {type: 'commonjs'},
+        jsc: {
+            target: 'es5',
+            parser: parser,
+            transform: {
+                react: {runtime: 'classic'},
+                useDefineForClassFields: false,
+            },
+        },
+    });
+
+    // node_modules is normally trusted by package version, but superdesk app packages
+    // come from git branches (or symlinks) and change without a version bump, and
+    // patch-package edits immutable in place. Exclude them so content changes
+    // invalidate the cache.
+    const managedPathsPattern =
+        /^(.+?[\\/]node_modules[\\/](?!superdesk|planning[\\/]|immutable[\\/])(@[^\\/]+[\\/])?(?!@)[^\\/]+)[\\/]/;
+
     return {
+        cache: {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename, appConfigPath],
+            },
+        },
+
+        snapshot: {
+            managedPaths: [managedPathsPattern],
+        },
+
+        // Production only (minimize is off in development). swc minifies several times
+        // faster than Terser with equivalent output. esbuild would be faster still, but
+        // at target es5 it errors on the ES2015+ syntax that prebuilt packages like
+        // @hello-pangea/dnd ship, and higher targets would widen the browser floor.
+        optimization: {
+            minimizer: [
+                new TerserPlugin({
+                    minify: swcMinify,
+                    // terser-only feature; license comments stay in the bundle instead
+                    extractComments: false,
+                    terserOptions: {
+                        compress: true,
+                        mangle: true,
+                        format: {comments: 'some'},
+                        ecma: 5,
+                        swcCorePath: require.resolve('@swc/core'),
+                    },
+                }),
+                new CssMinimizerPlugin({
+                    minify: esbuildCssMinify,
+                    minimizerOptions: {
+                        esbuildPath: require.resolve('esbuild'),
+                    },
+                }),
+            ],
+        },
         entry: {
             init: path.join(__dirname, 'scripts', 'init'),
             app: path.join(__dirname, 'scripts', 'index'),
@@ -150,6 +339,21 @@ module.exports = function makeConfig(grunt) {
             path: path.join(process.cwd(), 'dist'),
             filename: '[name].bundle.js',
             chunkFilename: '[id].bundle.js',
+            pathinfo: false,
+
+            // Without this webpack's own runtime helpers use const/arrow functions,
+            // undermining the ES5 output the application code is compiled to.
+            environment: {
+                arrowFunction: false,
+                bigIntLiteral: false,
+                const: false,
+                destructuring: false,
+                dynamicImport: false,
+                forOf: false,
+                module: false,
+                optionalChaining: false,
+                templateLiteral: false,
+            },
         },
 
         plugins: [
@@ -230,47 +434,16 @@ module.exports = function makeConfig(grunt) {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx|js|jsx)$/,
-                    exclude: function(absolutePath) {
-                        // don't exclude anything outside node_modules
-                        if (absolutePath.indexOf('node_modules') === -1) {
-                            return false;
-                        }
-
-                        // Exclude these packages from ts-loader - they are pre-built ESM modules
-                        if (
-                            absolutePath.includes('/@babel/runtime/')
-                            || absolutePath.includes('/react-resizable-panels/')
-                        ) {
-                            return true;
-                        }
-
-                        if (
-                            // date-fns uses optional chaining and nullish coalescing
-                            absolutePath.includes('/node_modules/date-fns/')
-
-                            // @sourcefabric/date-fns-tz uses logical OR assignment operator ||=
-                            || absolutePath.includes('/@sourcefabric/date-fns-tz/')
-
-                            || absolutePath.includes('/@sourcefabric/common/')
-                        ) {
-                            return false;
-                        }
-
-                        // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
-                        // but is not its dependency.
-                        // For example, `superdesk-planning/node_modules/**/*` will be excluded.
-                        const exclude = !validModules.some(
-                            (app) =>
-                                absolutePath.includes(app) && countOccurrences(absolutePath, '/node_modules/') === 1
-                        );
-
-                        return exclude;
-                    },
-                    loader: 'ts-loader',
-                    options: {
-                        transpileOnly: true,
-                    },
+                    test: /\.tsx?$/,
+                    exclude: transpilationExcludes,
+                    loader: require.resolve('swc-loader'),
+                    options: swcOptions({syntax: 'typescript', tsx: true}),
+                },
+                {
+                    test: /\.jsx?$/,
+                    exclude: transpilationExcludes,
+                    loader: require.resolve('swc-loader'),
+                    options: swcOptions({syntax: 'ecmascript', jsx: true}),
                 },
                 {
                     test: /\.html$/,
@@ -301,12 +474,12 @@ module.exports = function makeConfig(grunt) {
                         {
                             loader: require.resolve('sass-loader'),
                             options: {
+                                // several times faster than the pure-js sass package
+                                implementation: require.resolve('sass-embedded'),
+                                api: 'modern-compiler',
                                 sassOptions: {
-                                    loadPaths: [
-                                        path.join(__dirname, 'styles', 'sass'),
-                                        path.join(__dirname, 'node_modules'),
-                                        path.join(process.cwd(), 'node_modules'),
-                                    ],
+                                    loadPaths: sassLoadPaths,
+                                    quietDeps: true,
                                 },
                             },
                         },
@@ -324,7 +497,7 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.wasm$/,
-                    type: 'asset/resource'
+                    type: 'asset/resource',
                 },
             ],
         },

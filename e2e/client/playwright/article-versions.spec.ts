@@ -3,7 +3,14 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('article versions', async () => {
-    test('reverting to a previous article version', async ({page}) => {
+    test('reverting to a previous article version', {
+        annotation: [
+            {type: 'confluence', description: '1310294128 partial'}, // Versioning
+            {type: 'confluence', description: '1308524923 partial'}, // Item versions (Mikayel)
+            {type: 'confluence', description: '1308524925 partial'}, // Check item history
+            {type: 'confluence', description: '1308524929 partial'}, // Revert to a previous version
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();

@@ -31,7 +31,11 @@ async function clickBulkAction(page: import('@playwright/test').Page, label: str
     }
 }
 
-test('can spike item from personal workspace', async ({page}) => {
+test('can spike item from personal workspace', {
+    annotation: [
+        {type: 'confluence', description: '1311835214 partial'}, // Spike item from Personal space
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/personal');
 

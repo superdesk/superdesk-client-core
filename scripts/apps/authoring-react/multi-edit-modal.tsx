@@ -8,7 +8,7 @@ import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {authoringStorageIArticle} from './data-layer';
-import {getAuthoringPrimaryToolbarWidgets} from './authoring-angular-integration';
+import {getMultiEditPrimaryToolbarWidgets} from './authoring-angular-integration';
 import {
     handleMultiItemUnsavedChanges,
 } from 'apps/authoring/authoring/services/MultiEditUnsavedChangesService';
@@ -254,7 +254,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                         }
                                         <div style={{width: '100%'}}>
                                             <AuthoringIntegrationWrapper
-                                                getAuthoringPrimaryToolbarWidgets={getAuthoringPrimaryToolbarWidgets}
+                                                getAuthoringPrimaryToolbarWidgets={getMultiEditPrimaryToolbarWidgets}
                                                 authoringStorage={authoringStorageIArticle}
                                                 sidebarMode={true}
                                                 ref={(component) => {

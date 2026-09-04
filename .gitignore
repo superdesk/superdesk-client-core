@@ -18,6 +18,7 @@ e2e/client/test-results/
 e2e/client/playwright-report/
 e2e/client/playwright/.cache/
 
+
 .env
 npm-debug.log
 index.html

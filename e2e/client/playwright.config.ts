@@ -1,11 +1,25 @@
 import {defineConfig, devices} from '@playwright/test';
+import fs from 'fs';
 import path from 'path';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
+ * e2e-up.sh --slot writes the slot's environment (backend URL, client URL,
+ * storage state path) to .e2e-slot.env so tests run from this checkout target
+ * that slot without any manual setup. Real environment variables win over the
+ * file. Workers inherit process.env from this process, so setting values here
+ * also covers playwright/utils (SUPERDESK_URL).
  */
-// require('dotenv').config();
+const slotEnvPath = path.join(__dirname, './playwright/.cache/e2e-slot.env');
+
+if (fs.existsSync(slotEnvPath)) {
+    for (const line of fs.readFileSync(slotEnvPath, 'utf-8').split('\n')) {
+        const match = line.match(/^([A-Z_]+)=(.*)$/);
+
+        if (match != null && process.env[match[1]] == null) {
+            process.env[match[1]] = match[2];
+        }
+    }
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -24,7 +38,7 @@ export default defineConfig({
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: 'http://localhost:9000',
+        baseURL: process.env.CLIENT_URL || 'http://localhost:9000',
 
         /*
          * Superdesk emits `data-test-id` attributes. Playwright's getByTestId
@@ -56,7 +70,15 @@ export default defineConfig({
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: path.join(__dirname, './playwright/.auth/user.json'),
+                /*
+                 * The committed storageState keeps the session in localStorage
+                 * keyed to the origin http://localhost:9000. Slots serve the
+                 * client from a different origin, so e2e-up.sh --slot writes
+                 * an origin-rewritten copy and points at it via env.
+                 */
+                storageState: process.env.PLAYWRIGHT_STORAGE_STATE
+                    ? path.resolve(__dirname, process.env.PLAYWRIGHT_STORAGE_STATE)
+                    : path.join(__dirname, './playwright/.auth/user.json'),
 
                 launchOptions: {
                     args: [

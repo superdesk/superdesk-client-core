@@ -36,8 +36,25 @@ const testConfig: Partial<ISuperdeskGlobalConfig> = {
     },
 };
 
+const baselineConfig = structuredClone(appConfig);
+
+// specs run in a random order; printing the seed makes a failure reproducible
+// with `JASMINE_SEED=<seed> npm run unit`. The generated seed is only exposed
+// to reporters, `configuration()` still reports the unset value.
+jasmine.getEnv().addReporter({
+    jasmineStarted: (info) => {
+        console.info(`jasmine seed: ${info.order.seed}`);
+    },
+});
+
 beforeEach(() => { // reset config before each test
-    Object.assign(appConfig, testConfig);
+    // a merge is not enough: specs write arbitrary keys and jasmine runs specs
+    // in random order, so anything left behind lands on an unrelated spec
+    for (const key of Object.keys(appConfig)) {
+        delete (appConfig as unknown as Record<string, unknown>)[key];
+    }
+
+    Object.assign(appConfig, structuredClone(baselineConfig), structuredClone(testConfig));
 });
 
 function runTests(context) {
@@ -47,3 +64,4 @@ function runTests(context) {
 // selecting specific folders to avoid importing extensions
 runTests(require.context('scripts/core', true, /.spec.(ts|tsx)$/));
 runTests(require.context('scripts/apps', true, /.spec.(ts|tsx)$/));
+runTests(require.context('scripts/api', true, /.spec.(ts|tsx)$/));

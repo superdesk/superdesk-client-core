@@ -5,19 +5,11 @@ import {testArticle} from 'test-data/test-article';
 import {testVocabulary} from 'test-data/test-vocabulary';
 import {getBaseFieldsAdapter} from '.';
 
-let getAllVocabulariesOriginal = sdApi.vocabularies.getAll;
-
-const vocabulariesToRestore: Partial<typeof sdApi.vocabularies> = {
-    getAll: getAllVocabulariesOriginal,
-};
+const configOriginal = sdApi.config;
+const vocabulariesOriginal = sdApi.vocabularies;
 
 describe('field adapters', () => {
     beforeEach(() => {
-        Object.assign(sdApi, {
-            ...sdApi,
-            vocabularies: {},
-        });
-
         const vocabulariesStub: Partial<typeof sdApi.vocabularies> = {
             getAll: () => {
                 let testVocabularies = OrderedMap<string, IVocabulary>();
@@ -66,11 +58,19 @@ describe('field adapters', () => {
             getVocabularyItemLabel: (term) => term.name,
         };
 
-        Object.assign(sdApi.vocabularies, vocabulariesStub);
+        /**
+         * `featureEnabled` reads the angular injector, which only exists once
+         * some other spec has created one. Stub it so this spec does not depend
+         * on jasmine's random order.
+         */
+        sdApi.config = {...configOriginal, featureEnabled: () => false};
+
+        sdApi.vocabularies = {...vocabulariesOriginal, ...vocabulariesStub};
     });
 
     afterEach(() => {
-        Object.assign(sdApi.vocabularies, vocabulariesToRestore);
+        sdApi.config = configOriginal;
+        sdApi.vocabularies = vocabulariesOriginal;
     });
 
     it('dropdown adapters can handle `null` as value', () => {
