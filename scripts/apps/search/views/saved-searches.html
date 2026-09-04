@@ -5,8 +5,8 @@
 
 <div class="list saved-searches">
     <div class="saved-searches__group-title" translate>My Saved Searches</div>
-    <ul>
-        <li ng-repeat="search in userSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}">
+    <ul data-test-id="saved-searches-panel--user">
+        <li ng-repeat="search in userSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}" data-test-id="saved-search">
             <div class="search-item">
                 <div class="search-name">{{:: search.name }} <i ng-if="search.is_global" translate>[Global]</i></div>
                 <div class="search-description">{{:: search.description }}</div>
@@ -34,8 +34,8 @@
         </li>
     </ul>
     <div class="saved-searches__group-title" translate>Global Saved Searches</div>
-    <ul>
-        <li ng-repeat="search in globalSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}">
+    <ul data-test-id="saved-searches-panel--global">
+        <li ng-repeat="search in globalSavedSearches | orderBy:'name' " ng-click="select(search)" class="saved-search-item" ng-class="{active: search == selected}" data-test-id="saved-search">
             <div class="search-item">
                 <div class="search-name">{{:: search.name }} <i>by {{:: userLookup[search.user].display_name }}</i></div>
                 <div class="search-description">{{:: search.description }}</div>
