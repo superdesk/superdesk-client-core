@@ -29,7 +29,11 @@ function packageGroupItems(page: Page, groupId: string): Locator {
 }
 
 test.describe('package', () => {
-    test('increment package version', async ({page}) => {
+    test('increment package version', {
+        annotation: [
+            {type: 'confluence', description: '1310294142 partial'}, // Add single item to existing package (AUTOMATED)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -93,7 +97,11 @@ test.describe('package', () => {
         ).toHaveCount(0);
     });
 
-    test('create package from multiple items via bulk action', async ({page}) => {
+    test('create package from multiple items via bulk action', {
+        annotation: [
+            {type: 'confluence', description: '1308524947 partial'}, // Create package from multiple items
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -133,7 +141,12 @@ test.describe('package', () => {
         await expect(packageGroupItems(page, 'main')).toHaveCount(2);
     });
 
-    test('add multiple items to the currently open package via bulk action', async ({page}) => {
+    test('add multiple items to the currently open package via bulk action', {
+        annotation: [
+            // Add multiple items to existing package (AUTOMATED)
+            {type: 'confluence', description: '1310294139 partial'},
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -160,7 +173,11 @@ test.describe('package', () => {
         await expect(page.locator(s('authoring', 'package-items=story 2'))).toBeVisible();
     });
 
-    test('create package from a published item via global search', async ({page}) => {
+    test('create package from a published item via global search', {
+        annotation: [
+            {type: 'confluence', description: '1310294136 partial'}, // Create a package from a single item
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/search?repo=published');
 

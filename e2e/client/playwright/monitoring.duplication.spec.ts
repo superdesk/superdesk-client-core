@@ -2,7 +2,11 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('duplicate in place action', async ({page}) => {
+test('duplicate in place action', {
+    annotation: [
+        {type: 'confluence', description: '1311835241 complete'}, // Duplicate article in place (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 

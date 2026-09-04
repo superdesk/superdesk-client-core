@@ -247,6 +247,13 @@ declare module 'superdesk-api' {
         // used for side widgets
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
 
+        /**
+         * Rendered outside the authoring frame, so it is bound by neither the frame's
+         * geometry nor the side widget slots. Used for panels that overlay the editor
+         * rather than sit beside it, such as send to / publish.
+         */
+        getOverlayPanel?(options: IExposedFromAuthoring<T>): React.ReactNode;
+
 
         headerToolbar?: (options: IExposedFromAuthoring<T>) => Array<ITopBarWidget<T>>;
 
@@ -3974,6 +3981,9 @@ declare module 'superdesk-api' {
                     runningMode?: 'remember-user-preference' | 'initially-disabled';
                 };
             };
+
+            // toggles the spell checker on/off; defaults to Alt+S
+            shortcut?: IShortcutConfig;
         }
 
         iMatricsFields: {

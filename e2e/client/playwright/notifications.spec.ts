@@ -7,7 +7,12 @@ import {login, restoreDatabaseSnapshot, s} from './utils';
 // so we override it and log in fresh.
 test.use({storageState: {cookies: [], origins: []}});
 
-test('user mention notifies the mentioned user and clearing the badge', async ({page, browser}) => {
+test('user mention notifies the mentioned user and clearing the badge', {
+    annotation: [
+        {type: 'confluence', description: '1344443904 partial'}, // Comments
+        {type: 'confluence', description: '1311834891 complete'}, // Comments
+    ],
+}, async ({page, browser}) => {
     await restoreDatabaseSnapshot({snapshotName: 'legacy'});
 
     // log in as the author and post a mention of admin1

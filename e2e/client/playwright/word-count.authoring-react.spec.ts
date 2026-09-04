@@ -36,3 +36,25 @@ test('header word count reflects the body and updates live (authoring-react)', a
     // retrying toHaveAttribute assertion absorbs that delay.
     await expect(wordCount).toHaveAttribute('data-test-value', '5');
 });
+
+test('header shows the source but no word count for a non-text item (authoring-react)', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    const monitoring = new Monitoring(page);
+
+    await page.goto('/#/workspace/monitoring');
+    await monitoring.selectDeskOrWorkspace('Sports');
+
+    // "Package Highlight 1" is the only non-text item in the main snapshot (type: composite).
+    await monitoring.executeActionOnMonitoringItem(
+        page
+            .getByTestId('monitoring-group')
+            .and(page.locator('[data-test-value="Sports / Working Stage"]'))
+            .getByTestId('article-item')
+            .and(page.locator('[data-test-value="Package Highlight 1"]')),
+        'Edit',
+    );
+
+    // Legacy renders SOURCE with no item-type condition, so it must survive on a package.
+    await expect(page.getByTestId('authoring-header-source')).toHaveAttribute('data-test-value', 'Superdesk');
+    await expect(page.getByTestId('authoring-header-word-count')).toHaveCount(0);
+});

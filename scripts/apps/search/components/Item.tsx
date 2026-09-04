@@ -484,6 +484,7 @@ export class Item extends React.Component<IProps, IState> {
             },
             (
                 <div
+                    data-test-id={isLocked ? 'article-item-locked' : undefined}
                     className={classNames(classes, {
                         active: itemSelected,
                         locked: isLocked,

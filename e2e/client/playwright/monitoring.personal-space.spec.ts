@@ -2,7 +2,13 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('creating an article in personal space', async ({page}) => {
+test('creating an article in personal space', {
+    annotation: [
+        {type: 'confluence', description: '1311835196 complete'}, // Create new article in Personal space (AUTOMATED)
+        // Create new article from a template in Personal space
+        {type: 'confluence', description: '1311835206 complete'},
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -13,7 +19,11 @@ test('creating an article in personal space', async ({page}) => {
     await expect(page.locator(s('monitoring-group=Personal Items', 'article-item=article 1'))).toBeVisible();
 });
 
-test('editing an article in personal space', async ({page}) => {
+test('editing an article in personal space', {
+    annotation: [
+        {type: 'confluence', description: '1311835208 complete'}, // Edit article in Personal space (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -33,7 +43,11 @@ test('editing an article in personal space', async ({page}) => {
     ).toBeVisible();
 });
 
-test('copying an article in personal space', async ({page}) => {
+test('copying an article in personal space', {
+    annotation: [
+        {type: 'confluence', description: '1311835212 complete'}, // Copy article in Personal space (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -49,7 +63,11 @@ test('copying an article in personal space', async ({page}) => {
     await expect(page.locator(s('article-item=personal space article 1'))).toHaveCount(2);
 });
 
-test('sending an item from personal space', async ({page}) => {
+test('sending an item from personal space', {
+    annotation: [
+        {type: 'confluence', description: '1311835216 complete'}, // Send item from Personal space (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
