@@ -33,10 +33,13 @@ export const genre: IFieldAdapter<IArticle> = {
     retrieveStoredValue: (article) => {
         const multiple = isMultipleV2('genre');
 
+        // null is a valid stored value; it is even the default in CONTENT_FIELDS_DEFAULTS
+        const qcodes = (article.genre ?? []).map(({qcode}) => qcode);
+
         if (multiple) {
-            return article.genre.map(({qcode}) => qcode);
+            return qcodes;
         } else {
-            return article.genre.map(({qcode}) => qcode)[0];
+            return qcodes[0] ?? null;
         }
     },
     storeValue: (val: IDropdownValue, article) => {

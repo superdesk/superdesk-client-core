@@ -147,6 +147,18 @@ export class Monitoring {
         return this.page.locator(s('article-item=' + headline));
     }
 
+    /**
+     * Locates an article in a specific monitoring group by its exact label.
+     * Attribute matching is used instead of `filter({hasText})` because labels
+     * of distinct items may share a prefix (e.g. "Story 5" and "Story 5.1").
+     */
+    getGroupedArticleLocator(groupName: string, articleLabel: string): Locator {
+        return this.page.getByTestId('monitoring-group')
+            .and(this.page.locator(`[data-test-value="${groupName}"]`))
+            .getByTestId('article-item')
+            .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
+    }
+
     getPreviewPane(): Locator {
         return this.page.getByTestId('authoring-preview');
     }

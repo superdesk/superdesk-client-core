@@ -57,7 +57,8 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
                 return fieldV2;
             },
             retrieveStoredValue: (article) => {
-                return article.place;
+                // null is a valid stored value; the kill template applies it to clear the field
+                return article.place ?? [];
             },
             storeValue: (val: Array<ISubject>, article) => {
                 return {
@@ -89,10 +90,13 @@ export function getPlaceAdapter(): IFieldAdapter<IArticle> {
             retrieveStoredValue: (article) => {
                 const multiple = isMultiple('locators');
 
+                // null is a valid stored value; the kill template applies it to clear the field
+                const qcodes = (article.place ?? []).map(({qcode}) => qcode);
+
                 if (multiple) {
-                    return article.place.map(({qcode}) => qcode);
+                    return qcodes;
                 } else {
-                    return article.place.map(({qcode}) => qcode)[0];
+                    return qcodes[0] ?? null;
                 }
             },
             storeValue: (val: IDropdownValue, article) => {
