@@ -1,4 +1,4 @@
-<div class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui">
+<div class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui" data-test-id="notification-pane">
     <div class="notification-pane__header" ng-if="flags.notifications">
         <h3 class="notification-pane__title" translate>Notifications</h3>
         <button class="icn-btn" ng-click="toggleNotifications()"><i class="icon-close-small"></i></button>
@@ -19,7 +19,7 @@
         <section class="module">
             <div class="notification-list">
                 <ul>
-                    <li ng-repeat="notification in notifications._items track by notification._id" ng-class="{unread: notification._unread}" sd-mark-as-read>
+                    <li ng-repeat="notification in notifications._items track by notification._id" ng-class="{unread: notification._unread}" sd-mark-as-read data-test-id="notification">
                         
                         <div class="sibling-spacer-10" style="display: flex;">
                             <div style="margin-right: -40px">
@@ -33,7 +33,7 @@
                                 <div class="content" ng-if="notification.name === 'user:mention'">
                                     <time sd-datetime data-date="notification._created"></time>
                                     <p class="text"><b>{{:: notification.user_name }}</b> <span translate>mentioned you</span> <i>
-                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">
+                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)" data-test-id="open-article">
                                             {{:: notification.item_slugline}}
                                         </a></i>:<br>{{:: notification.data.comment }}</p>
                                 </div>
