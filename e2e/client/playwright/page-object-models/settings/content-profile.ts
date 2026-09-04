@@ -1,4 +1,4 @@
-import {Page, expect} from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 import {s} from '../../utils';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
@@ -81,5 +81,84 @@ export class ContentProfileSettings {
         }
 
         await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
+    }
+
+    /**
+     * `addFieldsToContentProfile` returns as soon as Save is clicked, so a caller that re-reads
+     * the profile straight after can race the PATCH that click triggers. This variant waits for
+     * that write and for the editor to close.
+     */
+    async addFieldsToContentProfileAndWait(
+        contentProfile: string,
+        fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
+    ): Promise<void> {
+        await Promise.all([
+            this.page.waitForResponse(
+                (response) => response.url().includes('/api/content_types/')
+                    && response.request().method() === 'PATCH',
+            ),
+            this.addFieldsToContentProfile(contentProfile, fields),
+        ]);
+
+        // sd-modal keeps its element in the DOM once opened, so closure shows as hidden, not absent.
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeHidden();
+    }
+
+    /**
+     * Opens a content profile's field editor from the profile list. `addFieldsToContentProfile`
+     * does the same inline; this exists for tests that only need to read the configured fields
+     * back, or to open the field picker without adding anything.
+     */
+    async openEditor(contentProfile: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile')
+            .and(this.page.locator(`[data-test-value="${contentProfile}"]`))
+            .getByTestId('content-profile-actions')
+            .click();
+        await this.page
+            .getByTestId('content-profile-actions--options')
+            .getByRole('button', {name: 'Edit'})
+            .click();
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeVisible();
+    }
+
+    /** `sectionName` is the tab label without the " fields" suffix, e.g. 'Header' or 'Content'. */
+    async openSection(sectionName: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-tabs')
+            .getByRole('tab', {name: `${sectionName} fields`})
+            .click();
+    }
+
+    getConfiguredField(fieldName: string): Locator {
+        return this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-item')
+            .and(this.page.locator(`[data-test-value="${fieldName}"]`));
+    }
+
+    /**
+     * Opens the "Add new field" picker and returns its popover. The picker only lists fields that
+     * are allowed in the open section and not configured on it yet, so it is also how a test
+     * checks that a field is no longer available at all.
+     */
+    async openFieldPicker(): Promise<Locator> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByRole('button', {name: 'Add new field'})
+            .first()
+            .click();
+
+        /*
+         * The popover is a zero-size portal wrapper (WithPortal in superdesk-ui-framework's
+         * TreeMenu) that only positions its content, so it never satisfies toBeVisible itself.
+         * Wait on the options it renders instead.
+         */
+        const popover = this.page.getByTestId('tree-menu-popover');
+
+        await expect(popover.getByRole('treeitem').first()).toBeVisible();
+
+        return popover;
     }
 }
