@@ -13,7 +13,7 @@ angular.module('superdesk.apps.ai-providers', [])
                 label: gettext('AI Providers'),
                 template: require('./views/settings.html'),
                 category: superdeskProvider.MENU_SETTINGS,
-                settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
+                settings_menu_group: coreMenuGroups.CONTENT_FLOW,
                 privileges: {ai_studio: 1},
             });
     }]);
