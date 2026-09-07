@@ -308,8 +308,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 }
 
                 if (profile == null) {
-                    // kill templates never have a content profile and `setupAuthoring` throws without one.
-                    // Clearing keeps the previously opened template's fields from being reused for this one.
+                    // kill templates have no content profile and `setupAuthoring` throws without
+                    // one; clearing stops the previous template's fields being reused here
                     $scope.schema = {};
                     $scope.editor = {};
                     $scope.fields = [];

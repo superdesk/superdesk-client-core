@@ -28,8 +28,8 @@ test.describe('settings template editor (authoring-react)', () => {
 
         const editView = page.getByTestId('template-edit-view');
 
-        // Saving refetches the template list, so the row and its actions popover can be swapped out
-        // from under the click. Retry the whole open until the modal is actually up.
+        // saving refetches the list, so the row and its popover can be swapped out mid-click;
+        // retry the whole open until the modal is up
         await expect(async () => {
             if (!await editView.isVisible()) {
                 await page.getByTestId('template-content')
@@ -52,9 +52,9 @@ test.describe('settings template editor (authoring-react)', () => {
     }
 
     /**
-     * The metadata box is a `sd-toggle-box`; its header comes from the ui framework and carries no
-     * test id, and its content is not in the DOM until it is expanded. Clicking the header toggles,
-     * so only click when it is still collapsed.
+     * The metadata box is a `sd-toggle-box`: the ui framework header carries no test id, and the
+     * content is absent from the DOM until expanded. Clicking toggles, so only click while
+     * collapsed.
      */
     async function expandMetadataBox(page: Page): Promise<Locator> {
         const metadata = page.getByTestId('template-metadata');
@@ -70,10 +70,10 @@ test.describe('settings template editor (authoring-react)', () => {
     }
 
     /**
-     * Typing before authoring-react finishes initializing updates the DOM but not its state,
-     * leaving the modal clean and Save disabled. Retry the first edit of a freshly opened
-     * template until Save enables; that is the only signal that the editor is live. Later edits
-     * in the same modal can use `setBody`, since the form is dirty and the signal is gone.
+     * Typing before authoring-react has initialized reaches the DOM but not its state, so the
+     * modal stays clean and Save stays disabled. Save enabling is the only signal the editor is
+     * live, so retry the first edit until it does. Later edits can use `setBody`: the form is
+     * already dirty by then, and the signal is gone.
      */
     async function setBodyOnceEditorIsLive(page: Page, value: string): Promise<void> {
         await expect(async () => {
@@ -131,11 +131,11 @@ test.describe('settings template editor (authoring-react)', () => {
     });
 
     /**
-     * A template is embedded JSON, not a stored article. Authoring chrome that addresses the entity
-     * by `_id`, or writes back through a path the template editor does not read, has no business
-     * rendering here: it either does nothing or discards what the user did.
+     * A template is JSON inside a template record, not a stored article, so it has no `_id`.
+     * Controls that look the item up by id do nothing, and controls that write back through a
+     * path the template editor never reads throw the user's edit away.
      */
-    test('article chrome that cannot apply to a template is not rendered', async ({page}) => {
+    test('article controls that cannot apply to a template are not rendered', async ({page}) => {
         const requestsForUndefinedIds: Array<string> = [];
 
         page.on('request', (request) => {
@@ -151,17 +151,16 @@ test.describe('settings template editor (authoring-react)', () => {
 
         const editView = page.getByTestId('template-edit-view');
 
-        // Hard gates: these widgets sit in the same two react toolbars as the chrome asserted
-        // absent below, so they make those assertions about what was left out rather than about
-        // what had not rendered yet.
+        // these two share the toolbars with everything asserted absent below, so they prove the
+        // toolbars rendered; without them "not present" could just mean "not painted yet"
         await expect(editView.getByTestId('authoring-header-word-count')).toBeVisible();
         await expect(editView.getByRole('button', {name: 'Print preview'})).toBeVisible();
 
-        // Soft, so that one piece of chrome coming back does not hide the state of the others.
+        // soft from here on, so one control coming back does not hide the state of the rest
         await expect.soft(editView.getByLabel('Content Profile')).toBeVisible();
 
-        // The angular header keeps the working control; the react one wrote the switch through
-        // `reinitialize`, which never reaches `template.data`.
+        // the angular header keeps the working control; the react one wrote the switch through
+        // `reinitialize`, which never reaches `template.data`
         await expect.soft(editView.getByTestId('content-profile-select')).toHaveCount(0);
 
         await expect.soft(editView.getByRole('button', {name: 'Actions menu'})).toHaveCount(0);
@@ -203,8 +202,7 @@ test.describe('settings template editor (authoring-react)', () => {
             return (await expandMetadataBox(page)).getByTestId('target-subscribers').getByTestId('item');
         }
 
-        // Establishes that the react editor is live before the angular write, so the edit that
-        // follows it is known to register.
+        // proves the react editor is live before the angular write, so the edit after it counts
         await setBodyOnceEditorIsLive(page, 'Body edited before targeting.');
 
         await new TreeSelectDriver(
@@ -212,8 +210,8 @@ test.describe('settings template editor (authoring-react)', () => {
             (await expandMetadataBox(page)).getByTestId('target-subscribers'),
         ).addValues('Subscriber 1');
 
-        // Counting the selected chips rather than reading their labels: the server does not
-        // necessarily round-trip the subscriber name, only whether the targeting survived matters.
+        // counting chips rather than reading labels: the server may not round-trip the subscriber
+        // name, and only whether the targeting survived matters
         await expect(await selectedSubscribers()).toHaveCount(1);
 
         await setBody(page, editedBody);

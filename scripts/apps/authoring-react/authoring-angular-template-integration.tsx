@@ -30,9 +30,9 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
                     sidebarMode="hidden"
                     authoringStorage={getTemplateEditViewAuthoringStorage(this.props.template.data as IArticle)}
                     onFieldChange={(_fieldId, fieldsData, computeLatestEntity) => {
-                        // Angular aliases this same object as `$scope.item` and edits it in place,
-                        // and authoring-react captured it once on mount. Reassigning would leave
-                        // both of them pointing at an object nothing writes to any more.
+                        // angular holds this same object as `$scope.item` and edits it in place,
+                        // and authoring-react captured it on mount; reassigning would leave both
+                        // pointing at an object nothing writes to any more
                         Object.assign(this.props.template.data, computeLatestEntity());
                         this.props.scopeApply();
 
@@ -46,9 +46,9 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
 }
 
 /**
- * Kill/takedown templates can never have a content profile, so there is nothing to derive their
- * fields from. This is the field set the server seeds them with, split into header and content the
- * way angular based authoring places those same fields.
+ * Kill and takedown templates never have a content profile, so there is nothing to derive their
+ * fields from. This is what the server seeds them with, split into header and content the way
+ * angular authoring places the same fields.
  */
 const profilelessTemplateFieldIds: {header: Array<string>; content: Array<string>} = {
     header: ['anpa_take_key', 'ednote'],
@@ -60,8 +60,8 @@ function getProfilelessTemplateContentProfile(fieldsAdapter: IFieldsAdapter<IArt
         (acc, fieldId) => {
             const field = fieldsAdapter[fieldId].getFieldV2({}, {}, () => false);
 
-            // `AuthoringSection` renders each field as `width: <width>%`, so it has to be set here;
-            // `getArticleContentProfile` gets it from the content profile's `sdWidth`.
+            // `AuthoringSection` renders each field at `width: <width>%`, so it has to be set
+            // here; with a profile it comes from `sdWidth`
             return acc.set(field.id, {...field, fieldConfig: {width: 100, ...field.fieldConfig}});
         },
         OrderedMap<string, IAuthoringFieldV2>(),

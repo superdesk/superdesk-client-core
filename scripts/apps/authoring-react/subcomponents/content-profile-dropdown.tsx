@@ -27,8 +27,8 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
     }
 
     render() {
-        // Kill/takedown templates can not have a content profile, so there is nothing to switch
-        // between, and offering one would write a profile the server never expects.
+        // kill and takedown templates have no content profile, so there is nothing to switch
+        // between, and offering one would write a profile the server never expects
         if ((this.props.item as IArticle)?.profile == null) {
             return null;
         }

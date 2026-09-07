@@ -21,8 +21,8 @@ export function TemplateEditorModal() {
             };
 
             scope.onChangeData = (item: ITemplate['data']) => {
-                // Same object identity requirement as in `authoring-angular-template-integration`:
-                // `$scope.item` and authoring-react both hold a reference to `template.data`.
+                // `$scope.item` and authoring-react both reference `template.data`, so it has to
+                // be edited in place here too (see `authoring-angular-template-integration`)
                 Object.assign(scope.template.data, item);
 
                 scope.setDirtyFromReact();

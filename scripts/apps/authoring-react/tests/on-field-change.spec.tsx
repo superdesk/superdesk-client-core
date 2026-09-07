@@ -61,8 +61,8 @@ function createAuthoring(
         storageAdapter,
     } as unknown as IPropsAuthoring<IArticle>);
 
-    // Assigning instead of `setState` keeps the component out of the react lifecycle; the unit under
-    // test is `handleFieldChange`, and rendering would drag in the whole authoring frame.
+    // assigning rather than `setState` keeps the component out of the react lifecycle; the unit
+    // under test is `handleFieldChange`, and rendering would drag in the whole authoring frame
     (authoring as any).state = {
         initialized: true,
         loading: false,
@@ -96,9 +96,9 @@ describe('authoring-react onFieldChange', () => {
     });
 
     /**
-     * `onFieldChange` runs while the `setState` argument is being built, so `this.state` still holds
-     * the previous field values. A consumer that writes the computed entity straight to storage (the
-     * settings template editor does) would persist an item one edit behind.
+     * `onFieldChange` runs while the `setState` argument is being built, so `this.state` still
+     * holds the previous field values. A consumer that writes the computed item straight to
+     * storage, as the settings template editor does, would save an item one edit behind.
      */
     it('computes an entity that includes the change being applied', () => {
         let computed: IArticle | null = null;

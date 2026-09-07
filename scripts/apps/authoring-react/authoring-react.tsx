@@ -531,8 +531,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 : onFieldChange(
                     fieldId,
                     fieldsDataUpdated,
-                    // `this.state` still holds the previous value at this point, so
-                    // `computeLatestEntity` would hand the consumer an entity one edit behind.
+                    // `this.state` still holds the previous value here, so `computeLatestEntity`
+                    // would hand the consumer an item one edit behind
                     (options) => this.computeEntity({...state, fieldsDataWithChanges: fieldsDataUpdated}, options),
                 ),
         });
