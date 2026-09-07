@@ -7,15 +7,10 @@ export interface IAIProvider extends IBaseRestApiResponse {
     provider_type: IAIProviderType;
     base_url: string;
 
-    /**
-     * Write-only. The server never returns it, so it is only ever set from the create form
-     * or from an edit where the operator re-typed it.
-     */
+    /** Write-only. The server never returns it, so it is only ever set from a form. */
     api_key?: string;
 
-    /**
-     * Models the provider may be used with. Empty puts no restriction on it.
-     */
+    /** Models the provider may be used with. Empty means no restriction. */
     available_models?: Array<string>;
 
     default_model?: string;

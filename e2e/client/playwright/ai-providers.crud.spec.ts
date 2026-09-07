@@ -2,11 +2,8 @@ import {test, expect, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * The `main` snapshot carries no `ai_providers`, and the resource has no fixture, so every
- * test that needs a provider creates one through the form first.
- *
- * Resolves with the `_id` the server assigned, which the tests that assert on request URLs and
- * payloads need.
+ * The `main` snapshot has no `ai_providers` and the resource has no fixture, so tests create one
+ * through the form. Resolves with the server-assigned `_id`, which the URL assertions need.
  */
 async function createProvider(
     page: Page,
@@ -83,8 +80,7 @@ test.describe('AI providers settings', () => {
 
         const form = page.getByTestId('list-page--view-edit');
 
-        // The stored key is write-only on the server, so the edit form starts with an empty input
-        // even though the provider was created with a key.
+        // The key is write-only, so the edit form starts empty even though one was set.
         await expect(form.getByTestId('gform-input--api_key')).toHaveValue('');
         await expect(form.getByTestId('gform-alert--api_key_alert')).toBeVisible();
 
@@ -96,8 +92,7 @@ test.describe('AI providers settings', () => {
 
         await form.getByTestId('item-view-edit--save').click();
 
-        // The typed key has to reach the server; the list cannot show whether it did, since the
-        // server never returns a stored key.
+        // Asserted on the request: the server never returns a stored key, so the list cannot show it.
         expect((await patchRequest).postDataJSON().api_key).toBe('rotated-key');
 
         await expect(firstItem.getByTestId('gform-output--name')).toHaveText('Renamed provider');
@@ -108,8 +103,7 @@ test.describe('AI providers settings', () => {
     test('reports a successful connection test', async ({page}) => {
         const testRequestUrls: Array<string> = [];
 
-        // The provider is not reachable from the test environment; only the client handling
-        // of the backend's answer is under test here.
+        // The provider is unreachable from the test environment, only the client handling is tested.
         await page.route('**/ai_providers/*/test', (route) => {
             testRequestUrls.push(route.request().url());
 
@@ -139,7 +133,7 @@ test.describe('AI providers settings', () => {
             page.getByTestId('notification--success').filter({hasText: 'Models available: 3'}),
         ).toBeVisible();
 
-        // The row action has to test this provider, not some other value the row carries.
+        // The row action must test this provider, not another value the row carries.
         expect(testRequestUrls.length).toBeGreaterThan(0);
         expect(testRequestUrls[0]).toContain(`/ai_providers/${providerId}/test`);
     });
@@ -173,8 +167,7 @@ test.describe('AI providers settings', () => {
     test('offers the models of the provider as the default model', async ({page}) => {
         const modelsRequestUrls: Array<string> = [];
 
-        // The provider is not reachable from the test environment; the picker is fed the answer
-        // the backend would relay.
+        // The provider is unreachable here, so the picker is fed the answer the backend would relay.
         await page.route('**/ai_providers/*/models', (route) => {
             modelsRequestUrls.push(route.request().url());
 
@@ -209,8 +202,7 @@ test.describe('AI providers settings', () => {
 
         await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'gpt-4o']);
 
-        // The picker has to ask for the models of this provider, not of some other value
-        // carried by the form.
+        // The picker must ask for this provider's models, not another value on the form.
         expect(modelsRequestUrls.length).toBeGreaterThan(0);
         expect(modelsRequestUrls[0]).toContain(`/ai_providers/${providerId}/models`);
 
@@ -224,8 +216,7 @@ test.describe('AI providers settings', () => {
     });
 
     test('offers only the available models as the default model once some are picked', async ({page}) => {
-        // The provider is not reachable from the test environment; the pickers are fed the answer
-        // the backend would relay.
+        // The provider is unreachable here, so the pickers are fed the answer the backend would relay.
         await page.route('**/ai_providers/*/models', (route) => route.fulfill({
             status: 200,
             contentType: 'application/json',
@@ -261,7 +252,7 @@ test.describe('AI providers settings', () => {
 
         await defaultModel.getByTestId('open-popover').click();
 
-        // `gpt-4o` is listed by the provider but was not made available, so it is not offered.
+        // `gpt-4o` is offered by the provider but not in `available_models`, so it is not listed.
         await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'o1-mini']);
 
         await popover.getByTestId('option').filter({hasText: /^gpt-4o-mini$/}).click();
@@ -313,8 +304,8 @@ test.describe('AI providers settings', () => {
         await availableModels.getByTestId('open-popover').click();
         await popover.getByTestId('option').filter({hasText: /^o1-mini$/}).click();
 
-        // Restricting the available models re-reads the default model options, which now hold
-        // `o1-mini` alone. The stored default model is not one of them and is kept all the same.
+        // Restricting the models re-reads the options, now `o1-mini` alone. The stored default is
+        // not among them and is kept regardless.
         await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
 
         await availableModels.getByTestId('remove').click();
@@ -326,8 +317,7 @@ test.describe('AI providers settings', () => {
 
         const payload = (await patchRequest).postDataJSON();
 
-        // Taking the restriction back off leaves the default model untouched, so the patch that
-        // lifts it carries no `default_model` at all.
+        // Lifting the restriction leaves the default untouched, so the patch carries no `default_model`.
         expect(payload.available_models).toEqual([]);
         expect(payload.default_model).toBeUndefined();
 
@@ -363,8 +353,7 @@ test.describe('AI providers settings', () => {
 
         await expect(form.getByTestId('gform-message--default_model')).toBeVisible();
 
-        // With the models out of reach the picker becomes a text input, so a model id known to
-        // the operator can still be set.
+        // With the models out of reach the picker becomes a text input, so an id can still be typed.
         await form.getByTestId('gform-input--default_model').fill('hand-typed-model');
         await form.getByTestId('gform-input--name').fill('Renamed provider');
 

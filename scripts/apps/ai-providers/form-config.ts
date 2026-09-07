@@ -5,10 +5,7 @@ import type {IFormField, IFormGroup} from 'superdesk-api';
 import {getProviderModels, toModelOptions} from './api';
 import type {IAIProvider, IAIProviderType} from './interfaces';
 
-/**
- * Labels are lazy so `gettext` runs after translations are loaded, and so the extractor
- * still sees a literal.
- */
+/** Labels are lazy so `gettext` runs after translations load, and the extractor still sees a literal. */
 export const AI_PROVIDER_TYPES: Array<{id: IAIProviderType; getLabel: () => string}> = [
     {id: 'openai_compatible', getLabel: () => gettext('OpenAI compatible')},
 ];
@@ -23,9 +20,8 @@ export function getNameField(): IFormField<IAIProvider> {
 }
 
 /**
- * `api_key` is required when creating a provider and optional when editing one, where it doubles
- * as key rotation: the server never returns the stored key and reads an omitted or empty `api_key`
- * in a PATCH as "keep the stored one".
+ * `api_key` is required on create and optional on edit, where it doubles as key rotation: the
+ * server reads an omitted or empty `api_key` in a PATCH as "keep the stored one".
  */
 export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup<IAIProvider> {
     const isExistingProvider = item?._id != null;
@@ -57,8 +53,8 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
                 label: gettext('API key'),
                 type: GenericFormFieldType.plainText,
                 field: 'api_key',
-                // The field starts empty because the server never returns the key. Typing and then
-                // clearing it sends an empty string, which the server also reads as "keep the key".
+                // Starts empty because the server never returns the key. Clearing it after typing
+                // sends an empty string, which the server also reads as "keep the key".
                 required: false,
                 component_parameters: {password: true},
             },
@@ -139,8 +135,8 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
                 field: 'base_url',
                 required: true,
                 component_parameters: {
-                    // Pasting a full completions endpoint here is the common mistake, and it
-                    // surfaces as a 404 from a doubled path rather than as a validation error.
+                    // Pasting a full completions endpoint is the common mistake, and it surfaces
+                    // as a 404 from a doubled path rather than a validation error.
                     info: gettext('The API base URL only, for example https://openrouter.ai/api/v1.'),
                 },
             },

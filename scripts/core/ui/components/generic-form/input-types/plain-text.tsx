@@ -13,9 +13,9 @@ export class PlainText extends React.Component<IInputType<string>> {
 
     componentDidMount() {
         /*
-            The framework `Input` forwards no autocomplete attribute, so it has to be set on the
-            rendered input directly. Without it a browser may autofill a saved password into an
-            empty key field, and saving the form would then silently rotate the stored key.
+            The framework `Input` forwards no autocomplete attribute, so it is set on the rendered
+            input directly. Without it a browser can autofill an empty key field, and saving the
+            form would then silently rotate the stored key.
         */
         const input = this.passwordContainer.current?.querySelector('input');
 
@@ -94,9 +94,9 @@ export class PlainText extends React.Component<IInputType<string>> {
         };
 
         /*
-            `type` is part of the Input props union, so each variant has to be spelled out;
-            a computed `type` would not narrow to a single member of that union.
-            The password variant is wrapped so its rendered input can be reached from a ref.
+            `type` is part of the Input props union, so each variant is spelled out: a computed
+            `type` would not narrow to one member. The password variant is wrapped so its
+            rendered input can be reached from a ref.
         */
         if (this.isPasswordField()) {
             return (

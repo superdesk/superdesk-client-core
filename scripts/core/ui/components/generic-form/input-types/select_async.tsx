@@ -18,21 +18,14 @@ export interface ISelectAsyncOption {
  */
 export interface ISelectAsyncParameters {
     /**
-     * Called with the values of the form being edited. Rejecting is a supported outcome: the field
-     * then degrades so the stored value stays readable and saveable while the options are out of
-     * reach.
+     * Rejecting is supported: the field degrades so the stored value stays readable and saveable.
      */
     getOptions: (formValues: {readonly [key: string]: any}) => Promise<Array<ISelectAsyncOption>>;
 
-    /**
-     * Fields whose change re-runs `getOptions`. Values picked since the field mounted are dropped
-     * when the refreshed options no longer offer them; the values the field mounted with are kept.
-     */
+    /** Fields whose change re-runs `getOptions`. */
     dependentFields?: Array<string>;
 
-    /**
-     * Hint shown below the field while it has no error.
-     */
+    /** Hint shown below the field while it has no error. */
     info?: string;
 }
 
@@ -58,16 +51,12 @@ function getOptionsLoadingMessage(): string {
 function getSelectAsync(allowMultiple: boolean) {
     return class SelectAsync extends React.Component<IProps, IState> {
         /**
-         * Bumped for every fetch and once more on unmount. A fetch captures it and gives up when it
-         * is no longer the latest: `getOptions` calls started for successive values of a dependent
-         * field can resolve out of order, and the slower earlier one would otherwise leave the field
-         * offering the options of the value that is no longer selected.
+         * Bumped per fetch and on unmount. Fetches for successive values of a dependent field can
+         * resolve out of order, so one that is no longer the latest discards its result.
          */
         private latestFetchSequence: number;
 
-        /**
-         * The values the field mounted with, which are the ones the item holds.
-         */
+        /** The values the field mounted with, which are the ones the item holds. */
         private storedIds: Array<string>;
 
         constructor(props: IProps) {
@@ -100,11 +89,8 @@ function getSelectAsync(allowMultiple: boolean) {
         }
 
         /**
-         * A value the options do not offer is kept whenever it is one of the values the field
-         * mounted with, on the initial fetch and after a dependent field changed alike: it is what
-         * the item holds, and dropping it writes an empty field back to the server the next time
-         * the form is saved. Only a value picked since the field mounted is dropped, because it
-         * was picked from the options of the previous state of the dependent field.
+         * A stored value the options no longer offer is kept, since dropping it would write an
+         * empty field back on the next save. Only values picked since mounting are dropped.
          */
         fetchOptions(dropValuesMissingFromOptions: boolean) {
             const sequence = ++this.latestFetchSequence;
@@ -152,9 +138,8 @@ function getSelectAsync(allowMultiple: boolean) {
         }
 
         /**
-         * Stands in for the picker while `getOptions` is in flight, on the first fetch and on
-         * every refetch. It carries no control at all, so there is nothing to click, nothing to
-         * type into and no value that can be changed before the options that define it are known.
+         * Replaces the picker while `getOptions` is in flight. It carries no control, so nothing
+         * can be changed before the options that define it are known.
          */
         renderLoading(): JSX.Element {
             const {field, label, required} = this.props.formField;
@@ -187,10 +172,8 @@ function getSelectAsync(allowMultiple: boolean) {
             const {field, label, required} = this.props.formField;
 
             if (this.state.loading) {
-                /*
-                    A preview shows values, never controls. Rendering nothing until the options
-                    arrive keeps it from flashing the raw ids before they resolve to labels.
-                */
+                // A preview shows values, not controls, and rendering nothing until the options
+                // arrive avoids flashing raw ids before they resolve to labels.
                 return this.props.previewOutput ? null : this.renderLoading();
             }
 
@@ -213,9 +196,8 @@ function getSelectAsync(allowMultiple: boolean) {
                     <div className={classNames('d-flex', 'flex-col')}>
                         {
                             /*
-                                A single value is a free-form identifier that can be typed from
-                                memory, so it stays editable. A list of them is not worth
-                                hand-editing, so it is only displayed and saved back untouched.
+                                A single id can be typed from memory, so it stays editable.
+                                A list of them is not worth hand-editing, so it is read only.
                             */
                             allowMultiple ? (
                                 <TreeSelect

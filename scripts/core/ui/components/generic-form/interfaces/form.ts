@@ -2,10 +2,8 @@ import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum GenericFormFieldType {
     /**
-     * Free text. Optional `component_parameters`: `multiline` renders a textarea,
-     * `password` masks the input, `info` is a persistent hint shown below the input
-     * while the field has no error. `multiline` wins when `multiline` and `password`
-     * are both set.
+     * Free text. Optional `component_parameters`: `multiline` renders a textarea, `password`
+     * masks the input, `info` is a hint below it. `multiline` wins over `password`.
      */
     plainText = 'plainText',
 
@@ -22,18 +20,15 @@ export enum GenericFormFieldType {
     select = 'select',
 
     /**
-     * Single value picked from options fetched when the field mounts.
-     * `component_parameters` must match `ISelectAsyncParameters`
-     * (`input-types/select_async.tsx`): `getOptions(formValues)` and optional `dependentFields`.
-     * When `getOptions` rejects, the field falls back to a text input holding the current value,
-     * so the value can still be typed by hand and the form saved.
+     * Single value picked from options fetched when the field mounts. `component_parameters` must
+     * match `ISelectAsyncParameters` in `input-types/select_async.tsx`. When `getOptions` rejects,
+     * the field falls back to a text input so the value can still be typed and saved.
      */
     selectAsync = 'selectAsync',
 
     /**
-     * Several values picked from the same options as `selectAsync`, with the same
-     * `component_parameters`. When `getOptions` rejects, the stored values are shown read only
-     * and saved back untouched.
+     * Several values from the same options as `selectAsync`. When `getOptions` rejects, the stored
+     * values are shown read only.
      */
     selectMultipleAsync = 'selectMultipleAsync',
 

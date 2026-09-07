@@ -88,10 +88,9 @@ export function getSelectSingleValue(
             ));
 
             /*
-                A value that no item matches still has to be listed, otherwise the native select
-                would display an unrelated item while the form keeps the original value.
-                It happens when a stored value is no longer offered, and when the items could not
-                be fetched at all.
+                A value no item matches is still listed, otherwise the native select would show an
+                unrelated item while the form keeps the original value. Happens when a stored value
+                is no longer offered, or the items could not be fetched.
             */
             const valueMissingFromItems = this.props.value != null
                 && this.props.value !== ''
