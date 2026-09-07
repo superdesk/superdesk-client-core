@@ -114,6 +114,16 @@ export class Monitoring {
         await this.page.locator(s('multi-action-bar', 'multi-actions-inline', action)).click();
     }
 
+    async confirmExport(): Promise<void> {
+        // sd-modal moves the visible dialog out of its [sd-modal] host, so the
+        // host stays hidden; drive the dialog's own controls instead.
+        const confirm = this.page.getByTestId('export-confirm');
+
+        await expect(confirm).toBeVisible();
+        await this.page.getByTestId('export-formatter').selectOption({index: 0});
+        await confirm.click();
+    }
+
     async createArticleFromTemplate(template: string, options?: {slugline?:string, body_html?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
