@@ -78,6 +78,17 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
     const availableModelsParameters: ISelectAsyncParameters = {
         getOptions: (formValues) => getProviderModels(formValues._id),
         info: gettext('Leave empty to allow every model the provider lists.'),
+
+        // The server rejects a `default_model` a non-empty `available_models` does not contain,
+        // so a shortlist that leaves the default out gets it back rather than a 400 on save.
+        adjustValue: (ids, formValues) => {
+            // An untouched picker holds an empty string, which is no default rather than one to keep
+            const defaultModel: IAIProvider['default_model'] = formValues.default_model;
+
+            return ids.length > 0 && defaultModel != null && defaultModel !== '' && !ids.includes(defaultModel)
+                ? [...ids, defaultModel]
+                : ids;
+        },
     };
 
     const availableModelsField: IFormField<IAIProvider> = {
@@ -87,12 +98,7 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
         component_parameters: availableModelsParameters,
     };
 
-    /*
-        The server rejects a `default_model` that the non-empty `available_models` does not contain,
-        so the picker offers the restriction when there is one. It is only the option list: the rule
-        itself stays on the server, which answers a form that breaks it with an error naming both
-        fields.
-    */
+    // Restricted to the shortlist when there is one, so the picker offers only what can be saved.
     const modelPickerParameters: ISelectAsyncParameters = {
         getOptions: (formValues) => {
             const availableModels: IAIProvider['available_models'] = formValues.available_models ?? [];

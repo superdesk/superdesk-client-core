@@ -25,6 +25,12 @@ export interface ISelectAsyncParameters {
     /** Fields whose change re-runs `getOptions`. */
     dependentFields?: Array<string>;
 
+    /**
+     * Last say over the ids the field writes, for a value that other fields constrain. Called with
+     * what the operator picked and the rest of the form.
+     */
+    adjustValue?: (ids: Array<string>, formValues: {readonly [key: string]: any}) => Array<string>;
+
     /** Hint shown below the field while it has no error. */
     info?: string;
 }
@@ -130,7 +136,10 @@ function getSelectAsync(allowMultiple: boolean) {
         }
 
         emitChange(ids: Array<string>) {
-            this.props.onChange(allowMultiple ? ids : (ids[0] ?? ''));
+            const {adjustValue} = getParameters(this.props);
+            const nextIds = adjustValue == null ? ids : adjustValue(ids, this.props.formValues);
+
+            this.props.onChange(allowMultiple ? nextIds : (nextIds[0] ?? ''));
         }
 
         toOption(id: string): ISelectAsyncOption {

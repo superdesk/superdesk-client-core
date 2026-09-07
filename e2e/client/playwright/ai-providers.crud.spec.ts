@@ -304,22 +304,41 @@ test.describe('AI providers settings', () => {
         await availableModels.getByTestId('open-popover').click();
         await popover.getByTestId('option').filter({hasText: /^o1-mini$/}).click();
 
-        // Restricting the models re-reads the options, now `o1-mini` alone. The stored default is
-        // not among them and is kept regardless.
+        // The server rejects a default the shortlist does not carry, so picking a shortlist without
+        // it adds it back rather than composing a state that cannot be saved.
+        await expect(availableModels.getByTestId('item')).toHaveText(['o1-mini', 'gpt-4o']);
         await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
 
-        await availableModels.getByTestId('remove').click();
-        await expect(availableModels.getByTestId('item')).toHaveCount(0);
-
-        const patchRequest = waitForProviderPatch(page, providerId);
+        const restrictRequest = waitForProviderPatch(page, providerId);
 
         await form.getByTestId('item-view-edit--save').click();
 
-        const payload = (await patchRequest).postDataJSON();
+        const restrictPayload = (await restrictRequest).postDataJSON();
+
+        expect(restrictPayload.available_models).toEqual(['o1-mini', 'gpt-4o']);
+        expect(restrictPayload.default_model).toBeUndefined();
+
+        await firstItem.hover();
+        await firstItem.getByTestId('edit').click();
+
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+
+        await availableModels.getByTestId('remove').first().click();
+        await expect(availableModels.getByTestId('item')).toHaveText(['gpt-4o']);
+
+        // Emptying the shortlist lifts the restriction, so the default is not added back
+        await availableModels.getByTestId('remove').first().click();
+        await expect(availableModels.getByTestId('item')).toHaveCount(0);
+
+        const liftRequest = waitForProviderPatch(page, providerId);
+
+        await form.getByTestId('item-view-edit--save').click();
+
+        const liftPayload = (await liftRequest).postDataJSON();
 
         // Lifting the restriction leaves the default untouched, so the patch carries no `default_model`.
-        expect(payload.available_models).toEqual([]);
-        expect(payload.default_model).toBeUndefined();
+        expect(liftPayload.available_models).toEqual([]);
+        expect(liftPayload.default_model).toBeUndefined();
 
         await firstItem.hover();
         await firstItem.getByTestId('edit').click();
