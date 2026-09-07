@@ -78,6 +78,11 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
     },
 ];
 
+// word count still means something for a template; the profile switcher does not, because the
+// switch goes through `reinitialize` and never reaches the payload
+const headerToolbarWidgetsEmbedded: Array<ITopBarWidget<IArticle>> = headerToolbarWidgetsStable
+    .filter(({component}) => component !== ContentProfileDropdownWidget);
+
 interface IProps {
     itemId: IArticle['_id'];
 }
@@ -314,6 +319,13 @@ interface IPropsWrapper extends IProps {
     ): IFieldsData;
 
     autoFocus?: boolean; // defaults to true
+
+    /**
+     * Set when authoring renders over JSON held inside another record (the settings template
+     * editor) rather than a stored article. Controls that look the item up by `_id`, or write
+     * through a path that never reaches the payload, are left out.
+     */
+    embeddedEntity?: boolean;
 }
 
 /**
@@ -463,7 +475,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         }}
                         headerToolbar={() => {
                             // Context is provided by AuthoringReact, so no need to update refs here
-                            return headerToolbarWidgetsStable;
+                            return this.props.embeddedEntity === true
+                                ? headerToolbarWidgetsEmbedded
+                                : headerToolbarWidgetsStable;
                         }}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
@@ -484,6 +498,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             storageAdapter,
                             spellchecker,
                         }) => {
+                            if (this.props.embeddedEntity === true) {
+                                // every action here needs a stored article: compare versions,
+                                // export, translate, mark for desks. With no `_id` they request
+                                // `undefined` and quietly do nothing
+                                return [];
+                            }
+
                             const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
                                 contentProfile,
@@ -736,7 +757,10 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         getSecondaryToolbarWidgets={(exposed) => {
                             // Context is provided by AuthoringReact, so no need to update refs here
                             return [
-                                ...secondaryToolbarWidgetsStable,
+                                // created/modified info looks the author up by `original_creator`,
+                                // which a template does not carry, so it requests `undefined` and
+                                // renders nothing. Theme and preview below apply either way
+                                ...(this.props.embeddedEntity === true ? [] : secondaryToolbarWidgetsStable),
                                 ...secondaryToolbarWidgetsFromExtensions,
                                 ...getAuthoringCosmeticActions(exposed),
                             ];
