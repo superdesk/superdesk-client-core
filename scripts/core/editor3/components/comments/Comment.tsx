@@ -65,17 +65,22 @@ export class Comment extends React.Component<any, any> {
         ];
 
         return (
-            <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
+            <FluidRows
+                onClick={this.props.onClick}
+                className={isReply ? 'comment-box__reply-item' : null}
+                data-test-id={isReply ? 'comment-reply' : 'comment'}
+            >
                 <FluidRow scrollable={false}>
                     <EditorHighlightsHeader availableActions={availableActions}>
                         <div className="sd-display--flex sd-gap--small">
                             <UserAvatarFromUserId userId={authorId} />
                             <div>
-                                <p className="editor-popup__author-name">{author}</p>
+                                <p className="editor-popup__author-name" data-test-id="comment-author">{author}</p>
                                 <time
                                     className="editor-popup__time"
                                     title={relativeDateString}
                                     style={{display: 'block'}}
+                                    data-test-id="comment-date"
                                 >
                                     {absoluteDateString}
                                 </time>
@@ -87,7 +92,7 @@ export class Comment extends React.Component<any, any> {
                         isReply !== false ? null : (
                             <div className="editor-popup__content-block" style={{paddingBlockEnd: 0}}>
                                 <div className="space-between editor-popup__info-bar">
-                                    <span className="label">{gettext('Comment')}</span>
+                                    <span className="label" data-test-id="comment-label">{gettext('Comment')}</span>
                                     {this.props.inlineActions || null}
                                 </div>
                             </div>
@@ -95,7 +100,11 @@ export class Comment extends React.Component<any, any> {
                     }
                 </FluidRow>
 
-                <FluidRow className="editor-popup__content-block" scrollable={!this.state.editMode}>
+                <FluidRow
+                    className="editor-popup__content-block"
+                    scrollable={!this.state.editMode}
+                    data-test-id="comment-text"
+                >
                     {
                         this.state.editMode === true ?
                             (
@@ -120,6 +129,7 @@ export class Comment extends React.Component<any, any> {
                                                 this.cancelEditing(event);
                                             }}
                                             className="btn btn--icon-only btn--hollow"
+                                            data-test-id="cancel"
                                         >
                                             <i className="icon-close-small" />
                                         </button>
@@ -129,6 +139,7 @@ export class Comment extends React.Component<any, any> {
                                                 this.cancelEditing();
                                             }}
                                             className="btn btn--primary btn--icon-only"
+                                            data-test-id="submit"
                                         >
                                             <i className="icon-ok" />
                                         </button>

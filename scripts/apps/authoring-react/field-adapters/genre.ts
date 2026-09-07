@@ -33,9 +33,14 @@ export const genre: IFieldAdapter<IArticle> = {
     retrieveStoredValue: (article) => {
         const multiple = isMultipleV2('genre');
 
+        // null is a valid stored value; it is even the default in CONTENT_FIELDS_DEFAULTS
         const qcodes = (article.genre ?? []).map(({qcode}) => qcode);
 
-        return multiple ? qcodes : qcodes[0];
+        if (multiple) {
+            return qcodes;
+        } else {
+            return qcodes[0] ?? null;
+        }
     },
     storeValue: (val: IDropdownValue, article) => {
         const vocabulary = sdApi.vocabularies.getAll().get('genre');

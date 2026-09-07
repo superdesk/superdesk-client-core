@@ -5,7 +5,12 @@ import {restoreDatabaseSnapshot, s} from './utils';
 const defaultPriorityValue = '6';
 const defaultUrgencyValue = '3';
 
-test('applying "populate abstract" macro', async ({page}) => {
+test('applying "populate abstract" macro', {
+    annotation: [
+        {type: 'confluence', description: '1332117825 complete'}, // Populate Abstract
+        {type: 'confluence', description: '1344443792 complete'}, // Macros
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const monitoring = new Monitoring(page);
@@ -42,7 +47,13 @@ test('applying "populate abstract" macro', async ({page}) => {
     ).toHaveText('test sport story body');
 });
 
-test('cancel and ignore buttons from unsaved changes modal', async ({page}) => {
+test('cancel and ignore buttons from unsaved changes modal', {
+    annotation: [
+        {type: 'confluence', description: '1310851153 complete'}, // Create new article (AUTOMATED)
+        {type: 'confluence', description: '1310851164 partial'}, // Create, save and close new article
+        {type: 'confluence', description: '1308524765 partial'}, // Edit existing item
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -83,7 +94,12 @@ test('save button from unsaved changes modal', async ({page}) => {
     await expect(page.locator(s('monitoring-view', 'article-item=new article'))).toBeVisible();
 });
 
-test('setting embargo', async ({page}) => {
+test('setting embargo', {
+    annotation: [
+        {type: 'confluence', description: '1308524955 partial'}, // Set embargo (Nareg)
+        {type: 'confluence', description: '1344443874 complete'}, // Setting embargo (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

@@ -17,14 +17,25 @@ async function startNewSchemeWithFetchPublishRule(page: Page, schemeName: string
     await page.locator(s('rule-handler--desk_fetch_publish')).click();
 }
 
-test.describe('ingest_settings', () => {
+test.describe('ingest_settings', {
+    annotation: [
+        {type: 'confluence', description: '1311834968 partial'}, // Add new routing scheme
+    ],
+}, () => {
     test.beforeEach(async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'legacy'});
         await login(page);
         await openRoutingTab(page);
     });
 
-    test('contains the Schedule tab for editing routing schedules', async ({page}) => {
+    test('contains the Schedule tab for editing routing schedules', {
+        annotation: [
+            {type: 'confluence', description: '1315934696 complete'}, // Add new rule
+            {type: 'confluence', description: '1315934702 complete'}, // Add Fetch action
+            {type: 'confluence', description: '1315934704 complete'}, // Add Publish action
+            {type: 'confluence', description: '1315934706 complete'}, // Schedule
+        ],
+    }, async ({page}) => {
         await startNewSchemeWithFetchPublishRule(page, 'My Routing Scheme');
 
         await page.locator('[placeholder="Rule name"]').fill('Routing Rule 1');

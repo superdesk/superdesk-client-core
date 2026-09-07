@@ -10,9 +10,9 @@ import {Card} from 'core/ui/components/Card';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {Label} from 'superdesk-ui-framework';
 import {TranslationsBody} from './TranslationsBody';
+import {TRANSLATIONS_WIDGET_ID} from './constants';
 
 const getLabel = () => gettext('Translations');
-const TRANSLATIONS_WIDGET_ID = 'translation-widget';
 
 class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
@@ -30,8 +30,11 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
                         initialState={this.props.initialState}
                         item={this.props.article}
                         wrapperTemplate={
-                            ({children}) =>
-                                <Spacer v gap="16" justifyContent="start">{children}</Spacer>
+                            ({children}) => (
+                                <Spacer v gap="16" justifyContent="start" data-test-id="translations-widget">
+                                    {children}
+                                </Spacer>
+                            )
                         }
                         translationTemplate={({translation, getTranslatedFromLanguage}) => (
                             <Card key={translation._id}>

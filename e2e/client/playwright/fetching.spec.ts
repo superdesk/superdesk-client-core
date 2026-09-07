@@ -48,7 +48,12 @@ test('fetching an article to selected desk', async ({page}) => {
     ).toBeVisible();
 });
 
-test('fetching an article', async ({page}) => {
+test('fetching an article', {
+    annotation: [
+        {type: 'confluence', description: '1308524853 partial'}, // Fetch item (AUTOMATED)
+        {type: 'confluence', description: '1311834953 complete'}, // Go to items from ingest source
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

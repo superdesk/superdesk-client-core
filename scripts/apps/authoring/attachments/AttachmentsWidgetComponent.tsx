@@ -86,6 +86,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 className="attachments-pane"
                 onDragOver={this.onDragFiles}
                 onDrop={this.onDropFiles}
+                data-test-id="attachments-pane"
             >
                 <AttachmentsList
                     attachments={this.props.attachments}
@@ -108,6 +109,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                             className="btn btn--hollow"
                             disabled={this.props.readOnly}
                             onClick={this.showFileUploadModal}
+                            data-test-id="attach-files"
                         >
                             {gettext('Attach files')}
                         </button>
@@ -119,6 +121,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                         className="item-association"
                         disabled={this.props.readOnly}
                         onClick={this.showFileUploadModal}
+                        data-test-id="attach-files"
                     >
                         <div className="subtext">
                             <i className="icon-attachment-large" />

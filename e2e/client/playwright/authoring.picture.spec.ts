@@ -11,7 +11,14 @@ import {setEditor3FieldValue} from './utils/editor3';
  * edit metadata
  * test metadata changes from modal are visible in the editor
  */
-test('media metadata editor', async ({page}) => {
+test('media metadata editor', {
+    annotation: [
+        {type: 'confluence', description: '1311834322 partial'}, // Edit image metadata
+        {type: 'confluence', description: '1315931673 partial'}, // Edit values in metadata fields
+        {type: 'confluence', description: '1315931211 partial'}, // Upload a single image by selecting from folder
+        {type: 'confluence', description: '1311835200 partial'}, // Upload image to Personal space
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     const upload = new MediaUpload(page);

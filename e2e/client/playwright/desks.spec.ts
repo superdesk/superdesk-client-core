@@ -2,7 +2,12 @@ import {test, expect, Page} from '@playwright/test';
 import {login, restoreDatabaseSnapshot, s, withTestContext} from './utils';
 import {Monitoring} from './page-object-models/monitoring';
 
-test('adding a desk', async ({page}) => {
+test('adding a desk', {
+    annotation: [
+        {type: 'confluence', description: '1311834267 partial'}, // Add new desk (AUTOMATED)
+        {type: 'confluence', description: '1344443818 complete'}, // Desks and stages
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/settings/desks');
@@ -21,7 +26,11 @@ test('adding a desk', async ({page}) => {
     await expect(page.locator(s('desk--desk 7'))).toBeVisible();
 });
 
-test('deleting a desk', async ({page}) => {
+test('deleting a desk', {
+    annotation: [
+        {type: 'confluence', description: '1311834334 complete'}, // Deleting desk (AUTOMATED)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/settings/desks');
@@ -103,7 +112,12 @@ test('desk notifications', async ({page}) => {
     ).toContainText('1');
 });
 
-test('can mark/unmark for desk', async ({page}) => {
+test('can mark/unmark for desk', {
+    annotation: [
+        {type: 'confluence', description: '1315931720 complete'}, // Unmark item from desk (AUTOMATED)
+        {type: 'confluence', description: '1311835247 partial'}, // Mark article for desk from the list view (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -141,7 +155,11 @@ test('can mark/unmark for desk', async ({page}) => {
     ).not.toBeVisible();
 });
 
-test('Switching between desks', async ({page}) => {
+test('Switching between desks', {
+    annotation: [
+        {type: 'confluence', description: '1344443825 complete'}, // Desk switching (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -232,7 +250,13 @@ test.describe('desks - legacy snapshot', () => {
         await expiryRow.locator('input[ng-model="contentExpiry.minutes"]').fill(String(minutes));
     }
 
-    test('edit desk', async ({page}) => {
+    test('edit desk', {
+        annotation: [
+            {type: 'confluence', description: '1311834275 complete'}, // Edit general desk settings
+            {type: 'confluence', description: '1311834273 partial'}, // Edit stage
+            {type: 'confluence', description: '1335329041 complete'}, // Remove stage
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'legacy'});
         await login(page);
         await openDesksSettings(page);
@@ -337,7 +361,11 @@ test.describe('desks - legacy snapshot', () => {
         await closeDeskModal(page);
     });
 
-    test('can set stage macro for new desk', async ({page}) => {
+    test('can set stage macro for new desk', {
+        annotation: [
+            {type: 'confluence', description: '1311834271 partial'}, // Create new stage
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'legacy'});
         await login(page);
         await openDesksSettings(page);
@@ -407,7 +435,11 @@ test.describe('desks - legacy snapshot', () => {
         await closeDeskModal(page);
     });
 
-    test('can enforce incoming, outgoing and onstage rules', async ({page}) => {
+    test('can enforce incoming, outgoing and onstage rules', {
+        annotation: [
+            {type: 'confluence', description: '1311834259 partial'}, // Assign user to a desk
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
         const deskName = `Rule Desk ${Date.now()}`;
 

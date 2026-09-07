@@ -2,7 +2,11 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s, login} from './utils';
 import {Monitoring} from './page-object-models/monitoring';
 
-test.describe('legal archive', () => {
+test.describe('legal archive', {
+    annotation: [
+        {type: 'confluence', description: '1311834385 complete'}, // Legal archive
+    ],
+}, () => {
     test('shows Legal Archive entry in the hamburger menu', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.goto('/#/workspace/monitoring');

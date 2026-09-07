@@ -9,7 +9,13 @@ async function openAddDictionaryMenu(page: Page): Promise<void> {
     await expect(page.locator(s('create-personal-dictionary'))).toBeVisible();
 }
 
-test('create, edit, add and remove a word in, and delete a dictionary', async ({page}) => {
+test('create, edit, add and remove a word in, and delete a dictionary', {
+    annotation: [
+        {type: 'confluence', description: '1311835017 complete'}, // Remove global dictionary
+        {type: 'confluence', description: '1311835015 complete'}, // Edit global dictionary
+        {type: 'confluence', description: '1311834994 complete'}, // Add new global dictionary
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/dictionaries');
 
@@ -53,7 +59,11 @@ test('create, edit, add and remove a word in, and delete a dictionary', async ({
     await expect(page.locator(s('dictionary-row=Test Dict 2'))).not.toBeVisible();
 });
 
-test('create a personal dictionary', async ({page}) => {
+test('create a personal dictionary', {
+    annotation: [
+        {type: 'confluence', description: '1311834997 complete'}, // Add new personal dictionary
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/dictionaries');
 

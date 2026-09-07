@@ -59,6 +59,13 @@ module.exports = function(config) {
             moduleName: 'superdesk.templates-cache',
         },
 
+        client: {
+            jasmine: {
+                // set to the seed a failing run printed to replay that spec order
+                seed: process.env.JASMINE_SEED,
+            },
+        },
+
         // test results reporter to use
         // options: 'progress', 'dots', 'spec'(via "karma-spec-reporter" package)
         reporters: ['spec'],

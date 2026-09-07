@@ -6,6 +6,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {showModal} from '@sourcefabric/common';
 import {IModalSimpleAction, ModalSimple} from 'core/ui/components/modal-simple';
 import {gettext, gettextPlural} from 'core/utils';
+import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 
 function fetchFromIngest(item: IArticle, destination: ISendToDestinationDesk): Promise<IArticle> {
@@ -157,17 +158,24 @@ export function fetchItems(
     });
 }
 
-export function fetchItemsToCurrentDesk(items: Array<IArticle>) {
+export function fetchItemsToCurrentDesk(items: Array<IArticle>): Promise<Array<IArticle>> {
     const currentDeskId = sdApi.desks.getCurrentDeskId();
+    const stageId = sdApi.desks.getDeskDefaultIncomingStageId(currentDeskId);
+
+    // there is nowhere to fetch to without an incoming stage, and the server rejects a
+    // destination without one, so tell the user instead of building an invalid destination
+    if (stageId == null) {
+        notify.error(gettext('Nothing was fetched: the current desk has no incoming stage.'));
+
+        return Promise.reject(new Error(`no incoming stage for desk "${currentDeskId}"`));
+    }
 
     return fetchItems(
         items,
         {
             type: 'desk',
             desk: currentDeskId,
-            stage: sdApi.desks.getDeskStages(currentDeskId).find(
-                (stage) => stage.default_incoming === true,
-            )._id,
+            stage: stageId,
         },
     );
 }

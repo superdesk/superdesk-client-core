@@ -129,7 +129,16 @@ test.describe('content filters', () => {
         await login(page);
     });
 
-    test('can manage filter conditions', async ({page}) => {
+    test('can manage filter conditions', {
+        annotation: [
+            {type: 'confluence', description: '1311834375 complete'}, // Content filters (AUTOMATED)
+            // Defining Publishing routes (Mikayel) - BEING AUTOMATED SDESK-7561
+            {type: 'confluence', description: '1344443878 partial'},
+            {type: 'confluence', description: '1311835278 partial'}, // Add new filter condition
+            {type: 'confluence', description: '1311835310 complete'}, // Remove filter condition
+            {type: 'confluence', description: '1344444313 complete'}, // Content filters_PASS
+        ],
+    }, async ({page}) => {
         await openFilterConditionsTab(page);
 
         await addFilterCondition(page, {
@@ -196,7 +205,11 @@ test.describe('content filters', () => {
         ).toBeVisible();
     });
 
-    test('can contain complex statements', async ({page}) => {
+    test('can contain complex statements', {
+        annotation: [
+            {type: 'confluence', description: '1311835280 complete'}, // Add new filter
+        ],
+    }, async ({page}) => {
         await openFilterConditionsTab(page);
 
         await addFilterCondition(page, {

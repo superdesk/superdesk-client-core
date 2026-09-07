@@ -3,7 +3,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
 test.describe('highlights', async () => {
-    test('creating a global highlight', async ({page}) => {
+    test('creating a global highlight', {
+        annotation: [
+            {type: 'confluence', description: '1311834311 complete'}, // 🤖 Add a new (automated)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -25,7 +29,11 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('workspace-navigation')).getByRole('button', {name: 'Highlight 2'})).toBeVisible();
     });
 
-    test('creating a desk highlight', async ({page}) => {
+    test('creating a desk highlight', {
+        annotation: [
+            {type: 'confluence', description: '1311834309 complete'}, // 🤖 Test desk-specific highlights (automated)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -49,7 +57,11 @@ test.describe('highlights', async () => {
         ).not.toBeVisible();
     });
 
-    test('adding an item to a highlights list', async ({page}) => {
+    test('adding an item to a highlights list', {
+        annotation: [
+            {type: 'confluence', description: '1311834313 complete'}, // 🤖 Add item to highlight list (automated)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -69,7 +81,11 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('articles-list', 'article-item=test sports story'))).toBeVisible();
     });
 
-    test('creating a highlights package', async ({page}) => {
+    test('creating a highlights package', {
+        annotation: [
+            {type: 'confluence', description: '1311834315 complete'}, // 🤖 Create highlights package (automated)
+        ],
+    }, async ({page}) => {
         // requires an article created on today's date for highlight inclusion
 
         const monitoring = new Monitoring(page);
@@ -105,7 +121,14 @@ test.describe('highlights', async () => {
         await expect(page.locator(s('monitoring-view', 'article-item=Package Highlight 2'))).toBeVisible();
     });
 
-    test('publishing a highlights package', async ({page}) => {
+    test('publishing a highlights package', {
+        annotation: [
+            {type: 'confluence', description: '1328906283 complete'}, // Publishing package
+            // Check Publishing a package (Nareg) - BEING AUTOMATED SDESK-7596
+            {type: 'confluence', description: '1344443870 partial'},
+            {type: 'confluence', description: '1311834317 complete'}, // 🤖 Publish highlights package (automated)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await restoreDatabaseSnapshot();
@@ -135,7 +158,11 @@ test.describe('highlights', async () => {
         ).toBeVisible();
     });
 
-    test('exporting a highlight', async ({page}) => {
+    test('exporting a highlight', {
+        annotation: [
+            {type: 'confluence', description: '1311834319 complete'}, // 🤖 Export highlights (automated)
+        ],
+    }, async ({page}) => {
         // requires an article created on today's date for highlight inclusion
 
         const monitoring = new Monitoring(page);

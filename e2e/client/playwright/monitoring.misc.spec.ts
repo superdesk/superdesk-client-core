@@ -72,7 +72,11 @@ test('open upload-media modal from the content-create menu', async ({page}) => {
 /**
  * Searching the monitoring list narrows results across all groups to matching items.
  */
-test('searching the monitoring list filters items across groups', async ({page}) => {
+test('searching the monitoring list filters items across groups', {
+    annotation: [
+        {type: 'confluence', description: '1308524885 complete'}, // Search field (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

@@ -86,8 +86,8 @@ module.exports = function installExtensions(clientDir) {
             const pkgPath = path.join(extensionRootPath, 'package.json');
             const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
-            // Extensions whose `main` points at TypeScript source are consumed
-            // directly by webpack's ts-loader. Skip compile and the legacy
+            // Extensions whose `main` points at TypeScript source are compiled
+            // by the webpack build itself. Skip compile and the legacy
             // `correct*` fixups. Still install runtime `dependencies` so webpack
             // can resolve them via the extension's nested node_modules walk.
             // (When workspaces land, this per-extension install goes away.)

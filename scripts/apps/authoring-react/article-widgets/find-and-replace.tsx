@@ -10,7 +10,7 @@ import {throttle} from 'lodash';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Find and Replace');
-const FIND_AND_REPLACE_WIDGET_ID = 'find-and-replace-widget';
+const FIND_AND_REPLACE_WIDGET_ID = 'find-replace';
 
 interface IState {
     findValue: string;

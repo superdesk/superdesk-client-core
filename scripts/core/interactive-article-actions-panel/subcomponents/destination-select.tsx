@@ -83,7 +83,9 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                                 this.props.onChange({
                                     type: 'desk',
                                     desk: deskId,
-                                    stage: nextStages.first()._id,
+                                    // a desk with no resolvable stages leaves the stage
+                                    // unselected, the same as `getInitialDestination` does
+                                    stage: nextStages.first()?._id ?? null,
                                 });
                             }
                         }}

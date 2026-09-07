@@ -16,7 +16,7 @@ import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Resolved suggestions');
-const SUGGESTIONS_WIDGET_ID = 'editor3-suggestions-widget';
+const SUGGESTIONS_WIDGET_ID = 'suggestions';
 
 interface ISuggestion {
     resolutionInfo: {

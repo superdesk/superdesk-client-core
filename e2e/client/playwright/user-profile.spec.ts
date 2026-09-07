@@ -19,7 +19,12 @@ test('switching system language', async ({page}) => {
     await expect(page.locator(s('page-title'))).toHaveText('Mein Profil');
 });
 
-test('can edit my profile', async ({page}) => {
+test('can edit my profile', {
+    annotation: [
+        {type: 'confluence', description: '1308524836 partial'}, // User profile (Mikayel)
+        {type: 'confluence', description: '1311834352 complete'}, // Profile settings
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/profile');
 
@@ -76,7 +81,11 @@ test('can disable a user', async ({page}) => {
     await expect(user).toBeVisible();
 });
 
-test('can reset password', async ({page}) => {
+test('can reset password', {
+    annotation: [
+        {type: 'confluence', description: '1311834356 complete'}, // Reset users password (pass 02.11)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/profile');
 

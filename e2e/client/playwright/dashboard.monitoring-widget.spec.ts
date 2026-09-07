@@ -1,7 +1,13 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('can add saved search to monitoring widget', async ({page}) => {
+test('can add saved search to monitoring widget', {
+    annotation: [
+        // Use private saved search in the Monitoring widget (only in workspace)
+        {type: 'confluence', description: '1318322990 partial'},
+        {type: 'confluence', description: '1318322988 partial'}, // Use global saved search in Monitoring widget
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace');
 

@@ -39,7 +39,6 @@ import {
     IUnsavedChangesActionWithSaving,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
 import {sdApi} from 'api';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
@@ -53,6 +52,8 @@ import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
 import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
 import {showModal} from '@sourcefabric/common';
+import {notify} from 'core/notify/notify';
+import {isHttpApiError} from 'core/helpers/network';
 import ng from 'core/services/ng';
 import {focusFirstChildInput} from 'utils/focus-first-child-input';
 import {EDITOR_3_FIELD_TYPE} from './fields/editor3';
@@ -1074,17 +1075,75 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
             }
         }
 
+        // the catch cannot tell which step rejected, and only a finished deletion really deletes
+        let autosaveDeleted = false;
+
         return this.setLoadingState(state, true)
             .then(() => this.cancelAutosave())
             .then(() => {
+                autosaveDeleted = true;
+
                 return authoringStorage.saveEntity(
                     this.computeLatestEntity(),
                     state.itemOriginal,
-                ).then((item: T) => {
+                );
+            })
+            .catch((error) => {
+                // placed before the state rebuilding below, so a failure to rebuild after a
+                // successful save is not reported as the item not being saved
+                if (this._mounted) {
+                    /**
+                     * Carrying over a deleted autosave would leave the reference pointing at
+                     * nothing, and the next cancel (a retried save, or closing while discarding)
+                     * would ask for it again. Nothing handles that rejection on the discard path.
+                     *
+                     * Clearing `loading` is the only change the setState guard allows while loading.
+                     */
+                    this.setLoadingState({
+                        ...state,
+                        itemAutosaved: autosaveDeleted ? null : state.itemAutosaved,
+                    }, false);
+
+                    // same conditions `componentDidUpdate` uses: nothing is worth autosaving
+                    // once the lock is gone or there are no changes left
+                    if (authoringStorage.isLockedInCurrentSession(state.itemOriginal) && this.hasUnsavedChanges()) {
+                        authoringStorage.autosave.schedule(
+                            () => this.computeLatestEntity({preferIncomplete: true}),
+                            (autosaved) => {
+                                // the object form is required: this class overrides `setState`
+                                // and reads `args[0]['loading']` off it
+                                if (this.state.initialized) {
+                                    this.setState({
+                                        ...this.state,
+                                        itemAutosaved: autosaved,
+                                    });
+                                }
+                            },
+                            null,
+                        );
+                    }
+                }
+
+                const serverMessage = isHttpApiError(error)
+                    ? error._issues?.['validator exception'] ?? error._error?.message
+                    : null;
+
+                notify.error(
+                    serverMessage != null
+                        ? gettext('Error. Item not updated: {{message}}', {message: serverMessage})
+                        : gettext('Error. Item not updated.'),
+                );
+
+                return Promise.reject(error);
+            })
+            .then((item: T) => {
+                let nextState: IStateLoaded<T>;
+
+                try {
                     // `cancelAutosave()` above deleted the autosave document, so there is no
                     // autosave to reference anymore. Passing it here would leave `itemAutosaved`
                     // pointing at a non-existent resource and make the next autosave fail.
-                    const nextState = getInitialState(
+                    nextState = getInitialState(
                         {saved: item, autosaved: null},
                         state.profile,
                         state.userPreferencesForFields,
@@ -1097,13 +1156,25 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         state.allThemes.default,
                         state.allThemes.proofreading,
                     );
-
+                } catch (error) {
+                    // the item is saved; only the editor state could not be rebuilt for it,
+                    // and the editor holds an outdated etag from here on
                     if (this._mounted) {
-                        this.setState(nextState);
+                        this.setLoadingState({...state, itemAutosaved: null}, false);
                     }
 
-                    return item;
-                });
+                    notify.error(
+                        gettext('Item was saved, but the editor could not be updated. Please reload the page.'),
+                    );
+
+                    throw error;
+                }
+
+                if (this._mounted) {
+                    this.setState(nextState);
+                }
+
+                return item;
             });
     }
 
@@ -1499,108 +1570,112 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                         {state.loading && (<Loader overlay />)}
 
                         <WithKeyBindings keyBindings={allKeyBindings}>
-                            <WithInteractiveArticleActionsPanel location="authoring">
-                                {() => (
-                                    <Layout.AuthoringFrame
-                                        header={allWidgets.length < 1 ? null : (
-                                            <AuthoringToolbar
-                                                entity={state.itemWithChanges}
-                                                widgets={allWidgets}
-                                                backgroundColor={authoringOptions?.toolbarBgColor}
-                                            />
-                                        )
-                                        }
-                                        main={(
-                                            <Layout.AuthoringMain
-                                                noPaddingForContent
-                                                hideCollapseButton={state.profile.content.count() < 1}
-                                                headerCollapsed={this.props.headerCollapsed}
-                                                toolbarCustom
-                                                toolBar={secondaryToolbarWidgets.length === 0 ? null : (
-                                                    <SubNav className="px-2">
-                                                        <AuthoringToolbar
-                                                            entity={state.itemWithChanges}
-                                                            widgets={secondaryToolbarWidgets}
-                                                            backgroundColor={authoringOptions?.toolbarBgColor}
-                                                        />
-                                                    </SubNav>
-                                                )}
-                                                headerPadding={{
-                                                    top: 8,
-                                                    bottom: state.profile.header.count() < 1 ? 8 : undefined,
-                                                    inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
-                                                    inlineStart: allWidgets.length === 1
-                                                        ? MIN_HEADER_PADDING
-                                                        : undefined,
-                                                }}
-                                                authoringHeader={(
-                                                    <div style={{width: '100%'}}>
-                                                        {this.props.headerToolbar != null && (
-                                                            <AuthoringToolbar
-                                                                entity={state.itemWithChanges}
-                                                                widgets={this.props.headerToolbar(exposed) ?? []}
-                                                                backgroundColor={authoringOptions?.toolbarBgColor}
-                                                            />
-                                                        )}
-                                                        <AuthoringSection
-                                                            fieldRefs={this.fieldRefs}
-                                                            fields={this.prepareHeaderFields(state.profile.header)}
-                                                            fieldsData={state.fieldsDataWithChanges}
-                                                            onChange={this.handleFieldChange}
-                                                            reinitialize={(item) => {
-                                                                this.reinitialize(state, item);
-                                                            }}
-                                                            language={getLanguage(state.itemWithChanges)}
-                                                            userPreferencesForFields={state.userPreferencesForFields}
-                                                            useHeaderLayout
-                                                            setUserPreferencesForFields={this.setUserPreferences}
-                                                            getVocabularyItems={this.getVocabularyItems}
-                                                            toggledFields={state.toggledFields}
-                                                            toggleField={this.toggleField}
-                                                            readOnly={readOnly}
-                                                            validationErrors={state.validationErrors}
-                                                            item={state.itemWithChanges}
-                                                            computeLatestEntity={this.computeLatestEntity}
-                                                            fieldTemplate={this.props.fieldTemplate}
-                                                        />
-                                                    </div>
-                                                )}
-                                            >
-                                                {state.profile.content.count() < 1 ? null : (
-                                                    <AuthoringSection
-                                                        fieldRefs={this.fieldRefs}
-                                                        uiTheme={uiTheme}
-                                                        padding="3.2rem 4rem 5.2rem 4rem"
-                                                        fields={state.profile.content}
-                                                        fieldsData={state.fieldsDataWithChanges}
-                                                        onChange={this.handleFieldChange}
-                                                        reinitialize={(item) => {
-                                                            this.reinitialize(state, item);
-                                                        }}
-                                                        language={getLanguage(state.itemWithChanges)}
-                                                        userPreferencesForFields={state.userPreferencesForFields}
-                                                        setUserPreferencesForFields={this.setUserPreferences}
-                                                        getVocabularyItems={this.getVocabularyItems}
-                                                        toggledFields={state.toggledFields}
-                                                        toggleField={this.toggleField}
-                                                        readOnly={readOnly}
-                                                        validationErrors={state.validationErrors}
-                                                        item={state.itemWithChanges}
-                                                        computeLatestEntity={this.computeLatestEntity}
-                                                        fieldTemplate={this.props.fieldTemplate}
+                            <Layout.AuthoringFrame
+                                header={allWidgets.length < 1 ? null : (
+                                    <AuthoringToolbar
+                                        entity={state.itemWithChanges}
+                                        widgets={allWidgets}
+                                        backgroundColor={authoringOptions?.toolbarBgColor}
+                                    />
+                                )
+                                }
+                                main={(
+                                    <Layout.AuthoringMain
+                                        noPaddingForContent
+                                        hideCollapseButton={state.profile.content.count() < 1}
+                                        headerCollapsed={this.props.headerCollapsed}
+                                        toolbarCustom
+                                        toolBar={secondaryToolbarWidgets.length === 0 ? null : (
+                                            <SubNav className="px-2">
+                                                <AuthoringToolbar
+                                                    entity={state.itemWithChanges}
+                                                    widgets={secondaryToolbarWidgets}
+                                                    backgroundColor={authoringOptions?.toolbarBgColor}
+                                                />
+                                            </SubNav>
+                                        )}
+                                        headerPadding={{
+                                            top: 8,
+                                            bottom: state.profile.header.count() < 1 ? 8 : undefined,
+                                            inlineEnd: allWidgets.length === 1 ? MIN_HEADER_PADDING : undefined,
+                                            inlineStart: allWidgets.length === 1
+                                                ? MIN_HEADER_PADDING
+                                                : undefined,
+                                        }}
+                                        authoringHeader={(
+                                            <div style={{width: '100%'}}>
+                                                {this.props.headerToolbar != null && (
+                                                    <AuthoringToolbar
+                                                        entity={state.itemWithChanges}
+                                                        widgets={this.props.headerToolbar(exposed) ?? []}
+                                                        backgroundColor={authoringOptions?.toolbarBgColor}
                                                     />
                                                 )}
-                                            </Layout.AuthoringMain>
+                                                <AuthoringSection
+                                                    fieldRefs={this.fieldRefs}
+                                                    fields={this.prepareHeaderFields(state.profile.header)}
+                                                    fieldsData={state.fieldsDataWithChanges}
+                                                    onChange={this.handleFieldChange}
+                                                    reinitialize={(item) => {
+                                                        this.reinitialize(state, item);
+                                                    }}
+                                                    language={getLanguage(state.itemWithChanges)}
+                                                    userPreferencesForFields={state.userPreferencesForFields}
+                                                    useHeaderLayout
+                                                    setUserPreferencesForFields={this.setUserPreferences}
+                                                    getVocabularyItems={this.getVocabularyItems}
+                                                    toggledFields={state.toggledFields}
+                                                    toggleField={this.toggleField}
+                                                    readOnly={readOnly}
+                                                    validationErrors={state.validationErrors}
+                                                    item={state.itemWithChanges}
+                                                    computeLatestEntity={this.computeLatestEntity}
+                                                    fieldTemplate={this.props.fieldTemplate}
+                                                />
+                                            </div>
                                         )}
-                                        sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                        sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
-                                        sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
-                                        sidePanelOpen={isPinned && OpenWidgetComponent != null}
-                                        sideBar={this.props.getSidebar?.(exposed)}
-                                    />
+                                    >
+                                        {state.profile.content.count() < 1 ? null : (
+                                            <AuthoringSection
+                                                fieldRefs={this.fieldRefs}
+                                                uiTheme={uiTheme}
+                                                padding="3.2rem 4rem 5.2rem 4rem"
+                                                fields={state.profile.content}
+                                                fieldsData={state.fieldsDataWithChanges}
+                                                onChange={this.handleFieldChange}
+                                                reinitialize={(item) => {
+                                                    this.reinitialize(state, item);
+                                                }}
+                                                language={getLanguage(state.itemWithChanges)}
+                                                userPreferencesForFields={state.userPreferencesForFields}
+                                                setUserPreferencesForFields={this.setUserPreferences}
+                                                getVocabularyItems={this.getVocabularyItems}
+                                                toggledFields={state.toggledFields}
+                                                toggleField={this.toggleField}
+                                                readOnly={readOnly}
+                                                validationErrors={state.validationErrors}
+                                                item={state.itemWithChanges}
+                                                computeLatestEntity={this.computeLatestEntity}
+                                                fieldTemplate={this.props.fieldTemplate}
+                                            />
+                                        )}
+                                    </Layout.AuthoringMain>
                                 )}
-                            </WithInteractiveArticleActionsPanel>
+                                sideOverlay={!isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
+                                sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
+                                sidePanelOpen={isPinned && OpenWidgetComponent != null}
+                                sideBar={this.props.getSidebar?.(exposed)}
+                            />
                         </WithKeyBindings>
+
+                        {/*
+                          * Deliberately outside the frame. The frame routes everything it is
+                          * given into a side widget slot, and those slots clip: the overlay
+                          * track is a zero-width column and the pinned track sets
+                          * `overflow-x: hidden`.
+                          */}
+                        {this.props.getOverlayPanel?.(exposed)}
                     </div>
                 </ToolbarContextProvider>
             </InlineToolbarContextProvider>

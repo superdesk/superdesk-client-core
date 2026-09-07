@@ -9,8 +9,29 @@ import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
 import {getMetadata} from 'apps/archive/parse-metadata';
+import {COMPANION_FIELD_IDS, FIELD_ID_TO_STORED_FIELD} from 'apps/authoring-react/data-layer-constants';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
+
+/**
+ * Drop synthetic/companion profile fields the archive schema rejects, mirroring `data-layer.ts`:
+ * COMPANION_FIELD_IDS have no backing field; FIELD_ID_TO_STORED_FIELD ids are stored elsewhere.
+ */
+function sanitizeUploadMeta(meta: Partial<IArticle>): Partial<IArticle> {
+    const sanitized: Record<string, any> = {...meta};
+
+    for (const [fieldId, storedField] of Object.entries(FIELD_ID_TO_STORED_FIELD)) {
+        if (sanitized[fieldId] != null && sanitized[storedField] == null) {
+            sanitized[storedField] = sanitized[fieldId];
+        }
+        delete sanitized[fieldId];
+    }
+    for (const fieldId of COMPANION_FIELD_IDS) {
+        delete sanitized[fieldId];
+    }
+
+    return sanitized;
+}
 
 /* eslint-disable complexity */
 
@@ -383,7 +404,7 @@ export function UploadController(
         return $scope.upload().then(() => {
             $q.all(_.map($scope.items, (item) => {
                 archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
-                return api.archive.update(item.model, item.meta);
+                return api.archive.update(item.model, sanitizeUploadMeta(item.meta));
             })).then((results) => {
                 $scope.resolve(results);
             });

@@ -5,7 +5,12 @@ module.exports = function(grunt) {
     var webpackConfig = makeConfig(grunt);
 
     return {
-        start: Object.assign({mode: 'development'}, webpackConfig),
+        // shows original TypeScript in browser devtools; not meaningfully slower
+        // than webpack's default (eval) once the filesystem cache is warm
+        start: Object.assign(
+            {mode: 'development', devtool: 'eval-cheap-module-source-map'},
+            webpackConfig
+        ),
 
         'ui-guide': {
             keepAlive: true,

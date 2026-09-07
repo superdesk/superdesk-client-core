@@ -1,0 +1,81 @@
+# One superdesk backend plus its own mongod for a numbered e2e slot (see
+# e2e/scripts/e2e-up.sh --slot). Elastic, redis and mail are shared with every
+# other slot (infra services from docker-compose.yml); mongo is per-slot
+# because the snapshot restore in superdesk-core looks up dump folders by
+# database name (restore_dir: `archive_path / db.name`), so the databases must
+# keep their default names and isolation has to come from a dedicated mongod
+# on a per-slot port instead. This also keeps bind-mounted files
+# (mongo-rs-initialize.js) out of the shared project: compose recreates a
+# service whose mount path changes, and worktree checkouts have different
+# absolute paths, so a shared mongo would get wiped whenever a second
+# checkout brought a slot up.
+#
+# Elastic isolation stays name-based via the ELASTICSEARCH_INDEX prefixes,
+# which the flush-and-reindex on every restore applies per configured prefix.
+#
+# Every value that differs between slots arrives via environment, and the
+# project name is set with `docker compose -p sd-e2e-s<N>` so slots never
+# collide with each other or with the default single-instance project.
+#
+# Not meant to be run by hand. e2e-up.sh exports the required variables; the
+# `:?` markers make a bare `docker compose up` fail loudly instead of
+# starting a server on the default ports.
+
+services:
+    mongo:
+        image: mongo:6
+        network_mode: "host"
+        tmpfs:
+            - /data/db
+        command: --replSet rs0 --port ${MONGO_PORT:?run via e2e-up.sh --slot}
+        # The replica set is initiated here, NOT via a docker-entrypoint-initdb.d
+        # script like the default stack: the mongo image's init phase runs a
+        # temporary server on the default port 27017 regardless of --port, so
+        # rs.initiate() there records 127.0.0.1:27017 as the member address and
+        # the real server on MONGO_PORT never elects a primary. The healthcheck
+        # initiates against the real server and only reports healthy once it is
+        # a writable primary, which also gates the backend via depends_on.
+        healthcheck:
+            test: ["CMD-SHELL", "mongosh --port ${MONGO_PORT} --quiet --eval 'try { rs.status() } catch (e) { rs.initiate() }; db.hello().isWritablePrimary' | grep -q true"]
+            interval: 3s
+            timeout: 10s
+            retries: 40
+            start_period: 3s
+
+    server:
+        image: superdesk-client-core-e2e-server:ci
+        # Built locally by e2e-up.sh; the name has no registry namespace,
+        # so any pull attempt is guaranteed to fail.
+        pull_policy: never
+        network_mode: "host"
+        depends_on:
+            mongo:
+                condition: service_healthy
+        environment:
+            - PORT=${PORT:?}
+            - SERVER_NAME=${SERVER_NAME:?}
+            - WSPORT=${WSPORT:?}
+            - WS_PORT=${WSPORT:?}
+            - CLIENT_URL=${CLIENT_URL:?}
+            - REDIS_URL=${REDIS_URL:?}
+            - ELASTICSEARCH_URL=http://localhost:9200
+            - ELASTICSEARCH_INDEX=${ELASTIC_PREFIX:?}
+            - CONTENTAPI_ELASTICSEARCH_INDEX=${ELASTIC_CAPI_PREFIX:?}
+            - MONGO_URI=mongodb://localhost:${MONGO_PORT}/superdesk_e2e
+            - ARCHIVED_URI=mongodb://localhost:${MONGO_PORT}/superdesk_e2e_archived
+            - LEGAL_ARCHIVE_URI=mongodb://localhost:${MONGO_PORT}/superdesk_e2e_legal_archive
+            - PUBLICAPI_MONGO_URI=mongodb://localhost:${MONGO_PORT}/publicapi_e2e
+            - CONTENTAPI_MONGO_URI=mongodb://localhost:${MONGO_PORT}/contentapi_e2e
+            - WEB_WORKERS=2
+            - WEB_TIMEOUT=30
+            - WEB_LOG_LEVEL=info
+            - CELERY_ALWAYS_EAGER=true
+            - MAIL_PORT=1025
+        volumes:
+          - ./dump:/opt/superdesk/dump:rw
+          # The image bakes settings.py in at build time (Dockerfile COPY),
+          # and prebuilt images may predate the env-driven settings that
+          # slots rely on. Mount the current file so slots never run against
+          # a stale copy.
+          - ./settings.py:/opt/superdesk/settings.py:ro
+        user: 1000:1000
