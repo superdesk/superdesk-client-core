@@ -97,4 +97,24 @@ describe('field adapters', () => {
             }
         }
     });
+
+    /**
+     * `null` is a valid stored value for article fields;
+     * the kill template applies it to clear fields like `place`.
+     */
+    it('dropdown adapters can read an article that stores `null` for their field', () => {
+        const baseAdapter = getBaseFieldsAdapter();
+        const dropdownAdapters =
+            Object.values(baseAdapter)
+                .map((adapter) => ({adapter, fieldV2: adapter.getFieldV2({}, {}, () => false)}))
+                .filter(({fieldV2}) => fieldV2.fieldType === 'dropdown');
+
+        for (const {adapter, fieldV2} of dropdownAdapters) {
+            if (adapter.retrieveStoredValue != null) {
+                expect(() => {
+                    adapter.retrieveStoredValue({...testArticle, [fieldV2.id]: null}, null, {});
+                }).not.toThrow();
+            }
+        }
+    });
 });
