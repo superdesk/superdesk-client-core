@@ -51,6 +51,18 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
     render() {
         const authoringWidgets: Array<IWidget> = ng.get('authoringWidgets');
 
+        // registered once per implementation under the same id; one config entry covers both
+        const seenIds = new Set<IWidget['_id']>();
+        const uniqueWidgets = authoringWidgets.filter((widget) => {
+            if (seenIds.has(widget._id)) {
+                return false;
+            }
+
+            seenIds.add(widget._id);
+
+            return true;
+        });
+
         return (
             <div>
                 <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginBlockStart: 20}}>
@@ -58,8 +70,8 @@ export class WidgetsConfig extends React.Component<IProps, IState> {
                 </div>
                 <ul className="sd-list-item-group sd-shadow--z2">
                     {
-                        authoringWidgets.map((widget, i) => (
-                            <li className="sd-list-item" key={i}>
+                        uniqueWidgets.map((widget) => (
+                            <li className="sd-list-item" key={widget._id}>
                                 <span className="sd-list-item__column">
                                     <input
                                         type="checkbox"

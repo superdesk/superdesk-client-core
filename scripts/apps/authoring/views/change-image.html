@@ -4,9 +4,9 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; toggleShowMetadata(true)" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="tabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata</button>
-        <button class="button-nav__btn" ng-click="nav = 'image-edit'; toggleShowMetadata(true)" ng-show="data.editable && tabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit image</button>
-        <button class="button-nav__btn" ng-click="nav = 'crop'; toggleShowMetadata(false)" ng-show="data.editable && tabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" translate>Edit crops</button>
+        <button class="button-nav__btn" ng-click="nav = 'view'; toggleShowMetadata(true)" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="tabs.includes('view')" ng-disabled="!isDoneEnabled()" data-test-id="nav-view" translate>Details / Metadata</button>
+        <button class="button-nav__btn" ng-click="nav = 'image-edit'; toggleShowMetadata(true)" ng-show="data.editable && tabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" data-test-id="nav-image-edit" translate>Edit image</button>
+        <button class="button-nav__btn" ng-click="nav = 'crop'; toggleShowMetadata(false)" ng-show="data.editable && tabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" data-test-id="nav-crop" translate>Edit crops</button>
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
@@ -57,7 +57,8 @@
                          data-original="data.item.renditions.original"
                          data-crop-data="areaOfInterestData"
                          data-on-change="enableSaveAreaOfInterest()"
-                         ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                         ng-if="isAoISelectionModeEnabled && !loaderForAoI"
+                         data-test-id="aoi-crop-preview">
                     </div>
 
                     <sd-image-modify
@@ -75,20 +76,20 @@
                 </div>
             </div>
             <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'crop'">
-                <div class="modal__sliding-toolbar" ng-if="crops.isDirty">
+                <div class="modal__sliding-toolbar" ng-if="crops.isDirty" data-test-id="save-crops-toolbar">
                     <div class="sliding-toolbar__inner"></div>
-                    <a class="btn" ng-click="cancelCrops()" translate>Cancel</a>
-                    <a class="btn btn--primary" ng-click="saveCrops()" translate>Save</a>
+                    <a class="btn" ng-click="cancelCrops()" data-test-id="cancel" translate>Cancel</a>
+                    <a class="btn btn--primary" ng-click="saveCrops()" data-test-id="save" translate>Save</a>
                 </div>
 
-                <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition">
+                <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition" data-test-id="poi-preview">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"
                         data-poi="data.poi"
                         data-on-change="crops.isDirty = true">
                     </sd-image-point>
                     <div>
-                        <label class="sd-photo-preview__label">
+                        <label class="sd-photo-preview__label" data-test-id="crop-preview-label">
                             <span translate>Original</span>
                             <span class="size">
                                 {{ data.item.renditions.original.width}} x {{ data.item.renditions.original.height}}
@@ -96,7 +97,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="crop-area selected sd-photo-preview__image--with-strip" ng-if="selectedRendition">
+                <div class="crop-area selected sd-photo-preview__image--with-strip" ng-if="selectedRendition" data-test-id="rendition-crop-preview">
                     <div sd-image-crop
                          data-show-Min-Size-Error="true"
                          data-src="data.item.renditions.viewImage.href"
@@ -106,14 +107,14 @@
                          data-on-change="onChange(renditionName, cropData)">
                     </div>
                     <div>
-                        <label class="sd-photo-preview__label">{{ selectedRendition.name}}</label>
+                        <label class="sd-photo-preview__label" data-test-id="crop-preview-label">{{ selectedRendition.name}}</label>
                     </div>
                 </div>
 
-                <div class="sd-photo-preview__thumb-strip">
+                <div class="sd-photo-preview__thumb-strip" data-test-id="renditions-strip">
                     <div class="sd-grid-list">
 
-                        <div class="sd-grid-item sd-grid-item--with-click" ng-click="selectRendition()" ng-class="{active: selectedRendition === null}">
+                        <div class="sd-grid-item sd-grid-item--with-click" ng-click="selectRendition()" ng-class="{active: selectedRendition === null}" data-test-id="rendition-item" data-test-value="Original">
                             <div class="sd-grid-item__thumb">
                                 <sd-image-point
                                     data-src="data.item.renditions.viewImage.href"
@@ -126,7 +127,7 @@
                             </div>
                         </div>
 
-                        <div class="sd-grid-item sd-grid-item--with-click sd-grid-item--overflow-v" ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}">
+                        <div class="sd-grid-item sd-grid-item--with-click sd-grid-item--overflow-v" ng-repeat="rendition in data.renditions track by rendition.name" ng-click="selectRendition(rendition)" ng-class="{active: rendition === selectedRendition}" data-test-id="rendition-item" data-test-value="{{rendition.name}}">
                             <div class="sd-grid-item__thumb">
                                 <div sd-image-crop
                                      data-show-Min-Size-Error="true"
@@ -185,28 +186,28 @@
                      >
                 </div>
 
-                <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'">
+                <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'" data-test-id="controls-panel">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
 
-                        <div class="modal__sliding-toolbar" ng-if="isAoISelectionModeEnabled && !loaderForAoI">
+                        <div class="modal__sliding-toolbar" ng-if="isAoISelectionModeEnabled && !loaderForAoI" data-test-id="confirm-crop-toolbar">
                             <div class="sliding-toolbar__inner"></div>
-                            <a class="btn" ng-click="showAreaOfInterestView(false)" translate>Cancel</a>
-                            <a class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" ng-disabled="!isAoIDirty" translate>Confirm crop</a>
+                            <a class="btn" ng-click="showAreaOfInterestView(false)" data-test-id="cancel" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="saveAreaOfInterest(areaOfInterestData)" ng-disabled="!isAoIDirty" data-test-id="confirm-crop" translate>Confirm crop</a>
                         </div>
 
-                        <div class="modal__sliding-toolbar" ng-if="controls.isDirty">
+                        <div class="modal__sliding-toolbar" ng-if="controls.isDirty" data-test-id="controls-toolbar">
                             <div class="sliding-toolbar__inner"></div>
-                            <a class="btn" ng-click="cancelImageChanges()" translate>Cancel</a>
-                            <a class="btn btn--primary" ng-click="applyImageChanges()" translate>Apply</a>
+                            <a class="btn" ng-click="cancelImageChanges()" data-test-id="cancel" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="applyImageChanges()" data-test-id="apply" translate>Apply</a>
                         </div>
 
                         <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b16" translate>Change image settings</h3>
                         <div class="form__row">
-                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="{{ 'Crop' | translate }}" ng-disabled="controls.isDirty"><i class="icon-crop icon--white"></i></button>
-                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="{{ 'Rotate left' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-left icon--white"></i></button>
-                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="{{ 'Rotate right' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-right icon--white"></i></button>
-                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="{{ 'Flip horizontal' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
-                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="{{ 'Flip vertical' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-vertical icon--white"></i></button>
+                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="{{ 'Crop' | translate }}" ng-disabled="controls.isDirty" data-test-id="crop-button"><i class="icon-crop icon--white"></i></button>
+                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="{{ 'Rotate left' | translate }}" ng-disabled="isAoISelectionModeEnabled" data-test-id="rotate-left-button"><i class="icon-rotate-left icon--white"></i></button>
+                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="{{ 'Rotate right' | translate }}" ng-disabled="isAoISelectionModeEnabled" data-test-id="rotate-right-button"><i class="icon-rotate-right icon--white"></i></button>
+                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="{{ 'Flip horizontal' | translate }}" ng-disabled="isAoISelectionModeEnabled" data-test-id="flip-horizontal-button"><i class="icon-flip-horizontal icon--white"></i></button>
+                            <button class="btn  btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="{{ 'Flip vertical' | translate }}" ng-disabled="isAoISelectionModeEnabled" data-test-id="flip-vertical-button"><i class="icon-flip-vertical icon--white"></i></button>
                         </div>
                     </div>
                     <div class="sd-slide-in-panel__content-block" ng-if="isAoISelectionModeEnabled">
@@ -215,7 +216,7 @@
                                 <div class="sd-line-input sd-line-input--boxed sd-line-input--indent-l30">
                                     <span class="sd-line-input__info-left">W</span>
                                     <label class="sd-line-input__label" translate>Image size</label>
-                                    <input ng-model="areaOfInterestData.CropRight" ng-change="resizeImage()" class="sd-line-input__input sd-line-input__input--center" type="number">
+                                    <input ng-model="areaOfInterestData.CropRight" ng-change="resizeImage()" class="sd-line-input__input sd-line-input__input--center" type="number" data-test-id="crop-width">
                                 </div>
                             </div>
                             <div class="form__row-item form__row-item--no-grow">
@@ -224,39 +225,39 @@
                             <div class="form__row-item">
                                 <div class="sd-line-input sd-line-input--boxed sd-line-input--indent-l30">
                                     <span class="sd-line-input__info-left">H</span>
-                                    <input ng-model="areaOfInterestData.CropBottom" class="sd-line-input__input sd-line-input__input--center" type="number">
+                                    <input ng-model="areaOfInterestData.CropBottom" class="sd-line-input__input sd-line-input__input--center" type="number" data-test-id="crop-height">
                                 </div>
                             </div>
                         </div>
                         <div class="flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2">
-                            <button class="btn btn--hollow btn--large" ng-click="setRatio()" translate>Original</button>
-                            <button class="btn btn--hollow btn--large" ng-click="setRatio('16:9')" >16 : 9</button>
-                            <button class="btn btn--hollow btn--large" ng-click="setRatio('4:3')" >4 : 3</button>
-                            <button class="btn btn--hollow btn--large" ng-click="setRatio('3:2')" >3 : 2</button>
+                            <button class="btn btn--hollow btn--large" ng-click="setRatio()" data-test-id="ratio" data-test-value="Original" translate>Original</button>
+                            <button class="btn btn--hollow btn--large" ng-click="setRatio('16:9')" data-test-id="ratio" data-test-value="16:9">16 : 9</button>
+                            <button class="btn btn--hollow btn--large" ng-click="setRatio('4:3')" data-test-id="ratio" data-test-value="4:3">4 : 3</button>
+                            <button class="btn btn--hollow btn--large" ng-click="setRatio('3:2')" data-test-id="ratio" data-test-value="3:2">3 : 2</button>
                         </div>
                     </div>
-                    <div class="sd-slide-in-panel__content-block" ng-if="!isAoISelectionModeEnabled">
+                    <div class="sd-slide-in-panel__content-block" ng-if="!isAoISelectionModeEnabled" data-test-id="adjust-colours">
                         <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b20" translate>Adjust colours</h3>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Brightness</label>
-                                <span class="form-label__info-block">{{controls.brightness * 100 - 100| number:0}}%</span>
+                                <span class="form-label__info-block" data-test-id="brightness-value">{{controls.brightness * 100 - 100| number:0}}%</span>
                             </div>
-                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.brightness" ng-dblclick="controls.brightness = 1" ng-change="controls.isDirty = true">
+                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.brightness" ng-dblclick="controls.brightness = 1" ng-change="controls.isDirty = true" data-test-id="brightness-slider">
                         </div>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Contrast</label>
-                                <span class="form-label__info-block">{{controls.contrast * 100 - 100| number:0}}%</span>
+                                <span class="form-label__info-block" data-test-id="contrast-value">{{controls.contrast * 100 - 100| number:0}}%</span>
                             </div>
-                            <input type="range" class="sd-slider__range" min=".5" max="1.5" step=".05" ng-model="controls.contrast" ng-dblclick="controls.contrast = 1" ng-change="controls.isDirty = true">
+                            <input type="range" class="sd-slider__range" min=".5" max="1.5" step=".05" ng-model="controls.contrast" ng-dblclick="controls.contrast = 1" ng-change="controls.isDirty = true" data-test-id="contrast-slider">
                         </div>
                         <div class="form__row form__row--small-padding">
                             <div class="form-label__container">
                                 <label class="form-label" translate>Saturation</label>
-                                <span class="form-label__info-block">{{controls.saturation * 100 - 100| number:0}}%</span>
+                                <span class="form-label__info-block" data-test-id="saturation-value">{{controls.saturation * 100 - 100| number:0}}%</span>
                             </div>
-                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.saturation" ng-dblclick="controls.saturation = 1" ng-change="controls.isDirty = true">
+                            <input type="range" class="sd-slider__range" min="0" max="2" step=".05" ng-model="controls.saturation" ng-dblclick="controls.saturation = 1" ng-change="controls.isDirty = true" data-test-id="saturation-slider">
                         </div>
                     </div>
                 </div>

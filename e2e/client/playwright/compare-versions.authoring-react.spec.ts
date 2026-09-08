@@ -8,7 +8,11 @@ test.use({
     storageState: getStorageState({}, {authoringReact: true}),
 });
 
-test('compare versions renders dateline and custom field differences (authoring-react)', async ({page}) => {
+test('compare versions renders dateline and custom field differences (authoring-react)', {
+    annotation: [
+        {type: 'confluence', description: '1308524931 partial'}, // Compare versions (AUTOMATED)
+    ],
+}, async ({page}) => {
     // `compare-fields` clones the default snapshot and adds urls/boolean/dropdown custom fields plus
     // a populated dateline on the Story profile, with two versions carrying differing values.
     await restoreDatabaseSnapshot({snapshotName: 'compare-fields'});

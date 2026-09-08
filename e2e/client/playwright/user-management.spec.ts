@@ -1,7 +1,11 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('creating a new user', async ({page}) => {
+test('creating a new user', {
+    annotation: [
+        {type: 'confluence', description: '1311834344 complete'}, // Add user (PASS 01.11.22)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
 
     await page.goto('/#/users');

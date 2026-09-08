@@ -2,7 +2,11 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('adding a widget to a dashboard', async ({page}) => {
+test('adding a widget to a dashboard', {
+    annotation: [
+        {type: 'confluence', description: '1308524869 partial'}, // Add widget to Dashboard of the desk
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

@@ -20,6 +20,15 @@ describe('spellcheck', () => {
         LANG = 'en-US',
         errors = [];
 
+    const createdParagraphs: Array<HTMLElement> = [];
+
+    // the paragraphs are contentEditable and stay in the shared karma page otherwise
+    afterEach(() => {
+        while (createdParagraphs.length > 0) {
+            createdParagraphs.pop().remove();
+        }
+    });
+
     beforeEach(() => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
             iframely: {key: '123'},
@@ -401,6 +410,7 @@ describe('spellcheck', () => {
         p.contentEditable = 'true';
         p.innerHTML = text;
         document.body.appendChild(p);
+        createdParagraphs.push(p);
         return p;
     }
 });

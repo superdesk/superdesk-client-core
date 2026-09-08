@@ -17,7 +17,13 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
         };
 
         return (
-            <Layout.Panel side="right" open={true} size="x-small" background={this.props.background ?? 'light'}>
+            <Layout.Panel
+                side="right"
+                open={true}
+                size="x-small"
+                background={this.props.background ?? 'light'}
+                data-test-id="authoring-widget-panel"
+            >
                 {header && <React.Fragment>{header}</React.Fragment>}
 
                 <Layout.PanelContent>

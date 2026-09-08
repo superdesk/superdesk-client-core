@@ -1,8 +1,10 @@
 <div>
-    <a ng-href="" ng-if="!show_transmission_details" ng-click="showOrHideTransmissionDetails()">
+    <a ng-href="" data-test-id="toggle-transmission-details"
+       ng-if="!show_transmission_details" ng-click="showOrHideTransmissionDetails()">
         <i class="icon-plus-small true"></i> {{ :: 'Show sent/queued items' | translate }}
     </a>
-    <a ng-href="" ng-if="show_transmission_details" ng-click="showOrHideTransmissionDetails()">
+    <a ng-href="" data-test-id="toggle-transmission-details"
+       ng-if="show_transmission_details" ng-click="showOrHideTransmissionDetails()">
         <i class="icon-minus-small true"></i> {{ :: 'Hide sent/queued items' | translate }}
     </a>
     <ul ng-if="show_transmission_details && queuedItems.length === 0">
@@ -11,7 +13,8 @@
         </li>
     </ul>
     <ul ng-if="show_transmission_details && queuedItems.length > 0">
-        <li ng-repeat="queuedItem in queuedItems track by queuedItem._id" ng-click="showFormattedItem(queuedItem)">
+        <li ng-repeat="queuedItem in queuedItems track by queuedItem._id" ng-click="showFormattedItem(queuedItem)"
+            data-test-id="queued-item" data-test-value="{{queuedItem.destination.name}}">
             <div ng-if="queuedItem.state !== 'error'">
                 {{ :: 'Sent/Queued as' | translate }} <b>{{ queuedItem.unique_name }}</b>
                 {{ :: 'on' | translate }} {{ queuedItem.destination.name }} {{ :: 'at' | translate }}
@@ -28,7 +31,7 @@
         <div class="modal__header"> <a href="" class="close" ng-click="hideFormattedItem()"><i class="icon-close-small"></i></a>
             <h3 translate>Item sent to Subscriber</h3>
         </div>
-        <div class="modal__body">
+        <div class="modal__body" data-test-id="transmitted-item">
             {{transmitted_item }}
         </div>
     </div>

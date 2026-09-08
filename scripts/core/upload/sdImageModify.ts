@@ -12,7 +12,7 @@ export default angular.module('superdesk.core.upload.imagemodify', [
             fliph: '=',
             flipv: '=',
         },
-        template: '<canvas id="image"></canvas>',
+        template: '<canvas id="image" data-test-id="image-modify-canvas"></canvas>',
         link: function(scope) {
             let canvas = document.getElementById('image') as HTMLCanvasElement,
                 context = canvas.getContext('2d'),

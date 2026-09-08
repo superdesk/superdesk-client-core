@@ -2,7 +2,11 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('creating a custom workspace', async ({page}) => {
+test('creating a custom workspace', {
+    annotation: [
+        {type: 'confluence', description: '1315930206 complete'}, // Create new custom workspace (AUTOMATED)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/workspace/monitoring');
 
@@ -35,7 +39,12 @@ test('cancelling creation of a custom workspace', async ({page}) => {
     ).not.toBeVisible();
 });
 
-test('creating an article from a custom workspace', async ({page}) => {
+test('creating an article from a custom workspace', {
+    annotation: [
+        // Create, save and close new article in custom workspace (AUTOMATED)
+        {type: 'confluence', description: '1318323005 partial'},
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

@@ -29,7 +29,11 @@ function priorityFilters(page: Page) {
     return page.locator('[ng-repeat="(key,value) in aggregations.priority"]');
 }
 
-test('can save a private search', async ({page}) => {
+test('can save a private search', {
+    annotation: [
+        {type: 'confluence', description: '1318322985 complete'}, // Create a new private saved search
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot({snapshotName: 'legacy'});
     await login(page);
     await openGlobalSearchListView(page);
@@ -57,7 +61,11 @@ test('can save a private search', async ({page}) => {
     await expect(userSavedSearches.first().locator('.search-name')).toContainText('A Search');
 });
 
-test('can save a global search and another user sees it', async ({browser, page}) => {
+test('can save a global search and another user sees it', {
+    annotation: [
+        {type: 'confluence', description: '1318322983 complete'}, // Create a new global saved search
+    ],
+}, async ({browser, page}) => {
     await restoreDatabaseSnapshot({snapshotName: 'legacy'});
     await login(page);
     await openGlobalSearchListView(page);

@@ -9,7 +9,11 @@ test.use({
     storageState: getStorageState({}, {authoringReact: true}),
 });
 
-test('mark for desks: per-action toggle via modal (authoring-react)', async ({page}) => {
+test('mark for desks: per-action toggle via modal (authoring-react)', {
+    annotation: [
+        {type: 'confluence', description: '1315931717 complete'}, // Mark open article for desk (AUTOMATED)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);

@@ -197,14 +197,25 @@ function unlock(itemId: IArticle['_id']): Promise<IArticle> {
  * i.e. can't be in personal space.
  */
 function sendItemToNextStage(item: IArticle): Promise<void> {
+    // rejecting rather than throwing, so that a caller holding the promise can catch it;
+    // `AuthoringDirective` calls this directly rather than from inside a `then` callback
     if (sdApi.article.isPersonal(item)) {
-        throw new Error('can not send personal item to next stage');
+        return Promise.reject(new Error('can not send personal item to next stage'));
     }
 
     const deskId = item.task.desk;
     const stageId = item.task.stage;
     const deskStages = sdApi.desks.getDeskStages(deskId).toArray();
     const currentStage = deskStages.find(({_id}) => _id === stageId);
+
+    // without this the item would silently be sent to the first stage, because `indexOf` of a
+    // stage that was not found is -1 and the next index after -1 is 0
+    if (currentStage == null) {
+        return Promise.reject(
+            new Error(`can not send to next stage: stage "${stageId}" is not a stage of desk "${deskId}"`),
+        );
+    }
+
     const currentStageIndex = deskStages.indexOf(currentStage);
     const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
 
@@ -464,7 +475,10 @@ function edit(
     }
 }
 
-function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle> {
+function getItemPatchWithKillOrTakedownTemplate(
+    item: IArticle,
+    action: IAuthoringActionType,
+): Promise<Partial<IArticle>> {
     const itemForTemplate = {
         template_name: action,
         item: pick(
@@ -479,7 +493,13 @@ function getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthori
         payload: itemForTemplate,
     }).then((result: IArticle) => {
         return {
-            ...result,
+            /**
+             * Only content fields may be taken from the response. It is a POST response,
+             * so it carries its own `_etag` and other metadata which would break
+             * the item if applied to it (publishing would fail with a 412 for one).
+             * Legacy does the same in AuthoringEmbeddedDirective.
+             */
+            ...(pick(result, keys(CONTENT_FIELDS_DEFAULTS)) as Partial<IArticle>),
             ...(action === 'kill' ? {operation: 'kill'} : {}),
             state: ITEM_STATE.PUBLISHED,
         };
@@ -643,7 +663,7 @@ interface IArticleApi {
     showPublishAndContinue(item: IArticle, dirty: boolean): boolean;
     publishItem_legacy(orig: IArticle, item: IArticle, $scope: any, action?: IAuthoringActionType): Promise<boolean>;
 
-    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<IArticle>;
+    getItemPatchWithKillOrTakedownTemplate(item: IArticle, action: IAuthoringActionType): Promise<Partial<IArticle>>;
 
     // `openArticle` - a similar function exists, TODO: in the future we'll have to unify these two somehow
     edit(

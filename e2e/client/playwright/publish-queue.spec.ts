@@ -5,7 +5,12 @@ import {getCellValueByColumTitle, restoreDatabaseSnapshot, s} from './utils';
 
 test.setTimeout(50000);
 
-test('item appearing in publish queue after publishing with subscriber', async ({page}) => {
+test('item appearing in publish queue after publishing with subscriber', {
+    annotation: [
+        {type: 'confluence', description: '1311834383 partial'}, // 🤖 Publish Queue (Nareg) (AUTOMATED)
+        {type: 'confluence', description: '1344443868 complete'}, // Check Publish Queue (Nareg) (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);
 

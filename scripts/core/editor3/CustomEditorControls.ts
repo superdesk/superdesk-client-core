@@ -1,54 +1,12 @@
 import React from 'react';
 import {appConfig} from 'appConfig';
-import {isMacOS} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {
     IShortcutConfig,
     ICustomInlineStyle,
     ICharacterInsertion,
-    KeyModifier,
 } from 'superdesk-api';
-
-const SPECIAL_KEY_LABELS: Record<string, string> = {
-    ' ': 'Space',
-    'arrowup': 'Up',
-    'arrowdown': 'Down',
-    'arrowleft': 'Left',
-    'arrowright': 'Right',
-};
-
-/**
- * Maps KeyboardEvent.code (physical key) to the base character the key
- * represents without modifiers. This is needed because on macOS, Alt/Option
- * modifies e.key to produce alternate characters (e.g. Option+- → '–'),
- * making e.key unreliable for shortcut matching when Alt is a modifier.
- */
-function physicalKeyToChar(code: string): string | null {
-    if (code.startsWith('Digit')) {
-        return code.charAt(5).toLowerCase();
-    }
-
-    if (code.startsWith('Key')) {
-        return code.charAt(3).toLowerCase();
-    }
-
-    const codeMap: Record<string, string> = {
-        Minus: '-',
-        Equal: '=',
-        Space: ' ',
-        BracketLeft: '[',
-        BracketRight: ']',
-        Backslash: '\\',
-        Semicolon: ';',
-        Quote: "'", // eslint-disable-line
-        Comma: ',',
-        Period: '.',
-        Slash: '/',
-        Backquote: '`',
-    };
-
-    return codeMap[code] ?? null;
-}
+import {eventToShortcutKeys, formatShortcut, shortcutToKey} from './helpers/shortcuts';
 
 export interface IEditorControl {
     id: string;
@@ -153,7 +111,7 @@ class CustomEditorControlsClass {
             return;
         }
 
-        const key = this.shortcutToKey(shortcut);
+        const key = shortcutToKey(shortcut);
 
         if (this.keyBindings.has(key)) {
             const existing = this.keyBindings.get(key);
@@ -164,15 +122,6 @@ class CustomEditorControlsClass {
         }
 
         this.keyBindings.set(key, control);
-    }
-
-    private shortcutToKey(shortcut: IShortcutConfig): string {
-        const normalizedModifiers = shortcut.modifiers
-            .map((m) => (m === 'primary' ? (isMacOS() ? 'cmd' : 'ctrl') : m))
-            .sort()
-            .join('+');
-
-        return `${normalizedModifiers}+${shortcut.key.toLowerCase()}`;
     }
 
     getAllFeatures(): Array<IEditorControl> {
@@ -201,36 +150,12 @@ class CustomEditorControlsClass {
     matchKeyBinding(e: KeyboardEvent | React.KeyboardEvent): IEditorControl | null {
         this.initialize();
 
-        const modifiers: Array<KeyModifier> = [];
+        for (const key of eventToShortcutKeys(e)) {
+            const match = this.keyBindings.get(key);
 
-        if (isMacOS()) {
-            if (e.metaKey) modifiers.push('cmd');
-            if (e.ctrlKey) modifiers.push('ctrl');
-        } else {
-            if (e.ctrlKey) modifiers.push('ctrl');
-            if (e.metaKey) modifiers.push('cmd');
-        }
-        if (e.altKey) modifiers.push('alt');
-        if (e.shiftKey) modifiers.push('shift');
-
-        const modifierPrefix = modifiers.sort().join('+');
-
-        // Try e.key first (the character produced by the keypress)
-        const match = this.keyBindings.get(`${modifierPrefix}+${e.key.toLowerCase()}`);
-
-        if (match) return match;
-
-        // On macOS, Alt/Option modifies e.key (e.g. Option+- → '–' instead of '-').
-        // Fall back to the physical key via e.code so shortcuts still match.
-        // React 16 SyntheticKeyboardEvent does not expose e.code, so we read it
-        // from the native event when available.
-        const code = (e as KeyboardEvent).code ?? (e as React.KeyboardEvent).nativeEvent?.code;
-        const physicalKey = code != null ? physicalKeyToChar(code) : null;
-
-        if (physicalKey != null) {
-            const physicalMatch = this.keyBindings.get(`${modifierPrefix}+${physicalKey}`);
-
-            if (physicalMatch) return physicalMatch;
+            if (match) {
+                return match;
+            }
         }
 
         return null;
@@ -261,28 +186,7 @@ class CustomEditorControlsClass {
     }
 
     formatShortcut(shortcut: IShortcutConfig): string {
-        const mac = isMacOS();
-
-        const parts = shortcut.modifiers.map((m) => {
-            switch (m) {
-                case 'primary':
-                    return mac ? 'Cmd' : 'Ctrl';
-                case 'alt':
-                    return mac ? 'Option' : 'Alt';
-                case 'shift':
-                    return 'Shift';
-                case 'ctrl':
-                    return 'Ctrl';
-                case 'cmd':
-                    return 'Cmd';
-                default:
-                    return m;
-            }
-        });
-
-        const keyLabel = SPECIAL_KEY_LABELS[shortcut.key] ?? shortcut.key.toUpperCase();
-
-        return [...parts, keyLabel].join('+');
+        return formatShortcut(shortcut);
     }
 }
 

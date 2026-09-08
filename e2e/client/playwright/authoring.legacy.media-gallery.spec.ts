@@ -52,7 +52,11 @@ test.describe('media gallery (legacy)', () => {
         await login(page);
     });
 
-    test('uploading an image with default crops adds it to the gallery', async ({page}) => {
+    test('uploading an image with default crops adds it to the gallery', {
+        annotation: [
+            {type: 'confluence', description: '1344444010 complete'}, // Media functionality for Body Editor3 (Mikayel)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');

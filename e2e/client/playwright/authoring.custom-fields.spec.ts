@@ -22,7 +22,16 @@ async function addFieldsToContentProfile(
     await contentProfileSettings.addFieldsToContentProfile('Story', fields);
 }
 
-test('creating a custom text field', async ({page}) => {
+test('creating a custom text field', {
+    annotation: [
+        {type: 'confluence', description: '1311835044 partial'}, // Add new custom text field (AUTOMATED)
+        {type: 'confluence', description: '1344443809 partial'}, // Custom text
+        // Edit content profile content fields - PASS Mikayel 13.10
+        {type: 'confluence', description: '1311834985 complete'},
+        // Create New Article utilizing new CP-template with custom fields added - PASS - 20.10
+        {type: 'confluence', description: '1344443857 complete'},
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 
@@ -36,7 +45,12 @@ test('creating a custom text field', async ({page}) => {
     await expectFieldToBeVisibleInAuthoring(page, 'custom text field 2');
 });
 
-test('creating a custom date field', async ({page}) => {
+test('creating a custom date field', {
+    annotation: [
+        {type: 'confluence', description: '1311835054 partial'}, // Add new custom date field (AUTOMATED)
+        {type: 'confluence', description: '1344443799 partial'}, // Custom date
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 
@@ -50,7 +64,12 @@ test('creating a custom date field', async ({page}) => {
     await expectFieldToBeVisibleInAuthoring(page, 'custom date field 2');
 });
 
-test('creating a custom embed field', async ({page}) => {
+test('creating a custom embed field', {
+    annotation: [
+        {type: 'confluence', description: '1311835062 partial'}, // Add new custom embed field (AUTOMATED)
+        {type: 'confluence', description: '1344443803 partial'}, // Custom embed
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 
@@ -64,7 +83,13 @@ test('creating a custom embed field', async ({page}) => {
     await expectFieldToBeVisibleInAuthoring(page, 'custom embed field 2');
 });
 
-test('creating a related content field', async ({page}) => {
+test('creating a related content field', {
+    annotation: [
+        {type: 'confluence', description: '1311835070 partial'}, // Add new related content field (AUTOMATED)
+        {type: 'confluence', description: '1344443805 partial'}, // Custom related content
+        {type: 'confluence', description: '1344443807 partial'}, // Custom related content (media gall)
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 
@@ -83,7 +108,12 @@ test('creating a related content field', async ({page}) => {
     await expectFieldToBeVisibleInAuthoring(page, 'related content field 2');
 });
 
-test('creating a custom URL field', async ({page}) => {
+test('creating a custom URL field', {
+    annotation: [
+        {type: 'confluence', description: '1311835079 partial'}, // Add new URL field (AUTOMATED)
+        {type: 'confluence', description: '1344443811 partial'}, // Custom URL
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 
@@ -100,7 +130,12 @@ test('creating a custom URL field', async ({page}) => {
     await expectFieldToBeVisibleInAuthoring(page, 'custom url field 2');
 });
 
-test('creating a field based on a vocabulary', async ({page}) => {
+test('creating a field based on a vocabulary', {
+    annotation: [
+        {type: 'confluence', description: '1311835040 partial'}, // Add new vocabulary (AUTOMATED)
+        {type: 'confluence', description: '10815143953 partial'}, // Vocabularies
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/vocabularies');
 

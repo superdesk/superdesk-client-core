@@ -43,7 +43,11 @@ test.describe('editing an embed in the article body', () => {
         });
     }
 
-    test('hover controls open the edit dialog; Cancel discards, Submit persists across reopen', async ({page}) => {
+    test('hover controls open the edit dialog; Cancel discards, Submit persists across reopen', {
+        annotation: [
+            {type: 'confluence', description: '1327759385 complete'}, // Edit embed (AUTOMATED)
+        ],
+    }, async ({page}) => {
         await restoreDatabaseSnapshot();
         await stubIframely(page);
 

@@ -6,7 +6,11 @@ import {restoreDatabaseSnapshot, s} from './utils';
 import {clearInput} from './utils/inputs';
 
 test.describe('Multiedit', async () => {
-    test('editing articles in multi-edit mode', async ({page}) => {
+    test('editing articles in multi-edit mode', {
+        annotation: [
+            {type: 'confluence', description: '1311834330 complete'}, // 🤖 Multiedit (AUTOMATED)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
         const multiedit = new MultiEdit(page);
 

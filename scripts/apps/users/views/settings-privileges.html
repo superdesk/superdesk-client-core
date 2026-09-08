@@ -1,17 +1,17 @@
 <div class="sd-page__flex-helper">
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
-        <button class="btn btn--primary" ng-click="saveAll(rolesForm)" ng-disabled="!rolesForm.$dirty" translate>Save</button>
+        <button class="btn btn--primary" ng-click="saveAll(rolesForm)" data-test-id="save-privileges" ng-disabled="!rolesForm.$dirty" translate>Save</button>
     </div>
 
     <div class="sd-page__content privileges-settings">
-        <form name="rolesForm">
+        <form name="rolesForm" data-test-id="roles-privileges-form">
             <table class="table table--fixed-header">
                 <thead>
                     <tr>
                         <th class="name"></th>
-                        <th ng-repeat="role in roles">
-                            <input type="checkbox" ng-click="toggleAll(role, selectAll)" ng-true-value="1" ng-false-value="0" ng-model="selectAll">
+                        <th ng-repeat="role in roles" data-test-id="role-column" data-test-value="{{role.name}}">
+                            <input type="checkbox" ng-click="toggleAll(role, selectAll)" ng-true-value="1" ng-false-value="0" ng-model="selectAll" data-test-id="toggle-all-privileges">
                             {{ :: role.name | translate }}
                             <span class="label label--primary" ng-if="role.is_default" translate>default</span>
                         </th>
@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="p in privileges">
+                    <tr ng-repeat="p in privileges" data-test-id="privilege-row" data-test-value="{{::p.name}}">
                         <td class="name">
                             <div>
                                 <span>{{ :: p.label | translate }}</span>
@@ -36,7 +36,8 @@
                             </div>
                         </td>
                         <td ng-repeat="role in roles">
-                            <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="role.privileges[p.name]">
+                            <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="role.privileges[p.name]"
+                                   data-test-id="privilege-checkbox" data-test-value="{{role.name}}">
                         </td>
                         <td class="blank-field"></td>
                     </tr>

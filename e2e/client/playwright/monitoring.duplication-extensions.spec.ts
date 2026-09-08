@@ -10,7 +10,11 @@ import {TreeSelectDriver} from './utils/tree-select-driver';
  * When the user duplicates it to Finance / Working Stage,
  * Then the article is visible in Finance / Working Stage.
  */
-test('duplicate to a different desk and stage', async ({page}) => {
+test('duplicate to a different desk and stage', {
+    annotation: [
+        {type: 'confluence', description: '1311835243 complete'}, // Duplicate article to another place (AUTOMATED)
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
     const articleSelector = s('monitoring-group=Sports / Working Stage', 'article-item=test sports story');
 

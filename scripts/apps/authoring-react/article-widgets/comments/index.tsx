@@ -65,7 +65,7 @@ class Component extends React.PureComponent<IArticleSideWidgetComponentType> {
 
 export function getCommentsWidget() {
     const widget: IArticleSideWidget = {
-        _id: 'comments-widget',
+        _id: 'comments',
         label: getLabel(),
         order: 3,
         icon: 'chat',

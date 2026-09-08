@@ -20,6 +20,7 @@ export {UnpublishActionComponent} from './unpublish-action';
 export {CancelAuthoringComponent} from './cancel-authoring';
 export {UpdateActionComponent} from './update-action';
 export {SendKillActionComponent} from './send-kill-action';
+export {SendTakedownActionComponent} from './send-takedown-action';
 export {UnspikeComponent} from './unspike';
 export {DescheduleComponent} from './deschedule';
 export {DeskAndStageComponent} from './desk-and-stage';

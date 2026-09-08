@@ -31,6 +31,10 @@ setTimeout(() => {
                 id: 'availability-manager',
                 load: () => import('superdesk-core/scripts/extensions/availability-manager'),
             },
+            {
+                id: 'publishing-sections',
+                load: () => import('./test-extensions/publishing-sections'),
+            },
         ],
         {}
     );

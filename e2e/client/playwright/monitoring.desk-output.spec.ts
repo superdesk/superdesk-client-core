@@ -57,7 +57,11 @@ test('article appears in destination desk working stage after Send to', async ({
  * When the user edits and publishes it,
  * Then the article shows up under Sports desk output.
  */
-test('published article appears in source desk output', async ({page}) => {
+test('published article appears in source desk output', {
+    annotation: [
+        {type: 'confluence', description: '1308524957 partial'}, // Publish article
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();

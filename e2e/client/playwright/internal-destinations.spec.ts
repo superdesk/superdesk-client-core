@@ -1,7 +1,12 @@
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test.describe('internal destinations', async () => {
+test.describe('internal destinations', {
+    annotation: [
+        // Internal Destination for a Smoke test (PASS 27.10.25)
+        {type: 'confluence', description: '10545135631 partial'},
+    ],
+}, async () => {
     test('display and removal of active filters', async ({page}) => {
         await restoreDatabaseSnapshot();
 

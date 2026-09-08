@@ -2,7 +2,8 @@ import React from 'react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {IArticle, IExposedFromAuthoring} from 'superdesk-api';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
-import {getWidgetsFromExtensions, ISideWidget} from './authoring-integration-wrapper';
+import {ISideWidget} from './authoring-integration-wrapper';
+import {getWidgetsFromExtensions} from './side-widgets';
 
 interface IProps {
     options: IExposedFromAuthoring<IArticle>;

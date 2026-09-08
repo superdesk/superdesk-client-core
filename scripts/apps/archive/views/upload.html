@@ -14,13 +14,13 @@
 >
     <sd-multi-edit-select-desk>
         <div ng-if="deskSelectionAllowed === true && desks !== null" class="dropdown dropdown--boxed" dropdown is-open="isOpen">
-            <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false">
+            <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false" data-test-id="upload-selected-desk">
                 <span class="dropdown__button-label">
                     Send to:</span> <span>{{selectedDesk.name}}</span>
                     <b class="dropdown__caret white"></b>
             </button>
             <!-- TODO: fix dropdown2 component so height adjusts according to available space-->
-            <ul class="dropdown__menu dropdown--align-right" style="max-height: 400px; overflow: auto;">
+            <ul class="dropdown__menu dropdown--align-right" style="max-height: 400px; overflow: auto;" data-test-id="upload-select-desk-options">
                 <li ng-repeat="desk in desks track by desk._id"><button ng-click="selectDesk(desk)">{{desk.name}}</button></li>
             </ul>
         </div>
@@ -28,13 +28,14 @@
 
     <sd-multi-edit-additional-content>
         <div class="drag-area"
+            data-test-id="drag-area"
             ngf-drop="addFiles($files)"
             ngf-multiple="!uniqueUpload"
             ngf-drag="drag($isDragging, $class, $event)">
             <div ng-if="isDragging" class="upload__target" style="display: block"></div>
             <div ng-if="(!items.length) && canUpload()" class="upload__info">
                 <div class="upload__info-icon"></div>
-                <h3 class="upload__info-heading" translate>Drag Your Files Here</h3>
+                <h3 class="upload__info-heading" translate data-test-id="drag-files-here">Drag Your Files Here</h3>
                 <div class="upload__info-label" translate>or</div>
                 <button ng-click="invokeImagesInput()" data-test-id="select-file-button" class="btn btn--hollow upload__info-button" translate>Select them from folder</button>
                 <input ng-if="uniqueUpload" id="images-input" type="file" ngf-select="addFiles($files)" class="hide" data-test-id="image-upload-input">

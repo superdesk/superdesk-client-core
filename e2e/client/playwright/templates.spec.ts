@@ -3,7 +3,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {Authoring} from './page-object-models/authoring';
 import {restoreDatabaseSnapshot, s} from './utils';
 
-test('creating new template', async ({page}) => {
+test('creating new template', {
+    annotation: [
+        {type: 'confluence', description: '1309835271 complete'}, // Create new template
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/templates');
 
@@ -22,7 +26,11 @@ test('creating new template', async ({page}) => {
     await expect(page.locator(s('template-content', 'content-template=template 1'))).toBeVisible();
 });
 
-test('editing template name', async ({page}) => {
+test('editing template name', {
+    annotation: [
+        {type: 'confluence', description: '1311835108 partial'}, // Edit template
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/templates');
 
@@ -34,7 +42,11 @@ test('editing template name', async ({page}) => {
     await expect(page.locator(s('template-content', 'content-template=story 1.1'))).toBeVisible();
 });
 
-test('removing template', async ({page}) => {
+test('removing template', {
+    annotation: [
+        {type: 'confluence', description: '1309835275 complete'}, // Remove template
+    ],
+}, async ({page}) => {
     await restoreDatabaseSnapshot();
     await page.goto('/#/settings/templates');
 
@@ -44,7 +56,11 @@ test('removing template', async ({page}) => {
     await expect(page.locator(s('template-content', 'content-template=story 2'))).not.toBeVisible();
 });
 
-test('assigning template to a desk', async ({page}) => {
+test('assigning template to a desk', {
+    annotation: [
+        {type: 'confluence', description: '1308524963 complete'}, // Assign template to a desk
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -135,7 +151,12 @@ test('legal-flag toggle on a template persists across edit', async ({page}) => {
     ).toHaveClass(/checked/);
 });
 
-test('default content template', async ({page}) => {
+test('default content template', {
+    annotation: [
+        {type: 'confluence', description: '10542284955 complete'}, // default value saved in templates Mikayel - PASS
+        {type: 'confluence', description: '1311834559 partial'}, // Default content template
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -153,7 +174,11 @@ test('default content template', async ({page}) => {
     await expect(page.locator(s('content-create-dropdown', 'default-desk-template'))).toHaveText('story 2');
 });
 
-test('new article prefilling with content set in template', async ({page}) => {
+test('new article prefilling with content set in template', {
+    annotation: [
+        {type: 'confluence', description: '1311834557 partial'}, // Prefill template
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
 
     await restoreDatabaseSnapshot();
@@ -165,7 +190,11 @@ test('new article prefilling with content set in template', async ({page}) => {
     await expect(page.locator(s('authoring', 'field-slugline'))).toHaveValue('article 1');
 });
 
-test('performing "save as" action on a template', async ({page}) => {
+test('performing "save as" action on a template', {
+    annotation: [
+        {type: 'confluence', description: '1308524933 partial'}, // Save as template
+    ],
+}, async ({page}) => {
     const monitoring = new Monitoring(page);
     const authoring = new Authoring(page);
 

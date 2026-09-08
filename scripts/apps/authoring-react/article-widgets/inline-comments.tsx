@@ -28,7 +28,7 @@ class InlineCommentsWidgetWrapper extends React.PureComponent<IArticleSideWidget
 
 export function getInlineCommentsWidget() {
     const metadataWidget: IArticleSideWidget = {
-        _id: 'inline-comments-widget',
+        _id: 'inline-comments',
         label: getLabel(),
         order: 2,
         icon: 'comments',

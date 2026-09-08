@@ -24,7 +24,13 @@ export class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
         });
 
         return (
-            <div key={attachment._id} className={className} onClick={() => this.props.onClick(attachment)}>
+            <div
+                key={attachment._id}
+                className={className}
+                onClick={() => this.props.onClick(attachment)}
+                data-test-id="link-attachment-item"
+                data-test-value={attachment.title}
+            >
                 <div className="sd-list-item__column sd-list-item__column--no-border">
                     <i className={fileicon} />
                 </div>

@@ -33,6 +33,13 @@
                                 title="{{:: 'Toggle theme' | translate}}">
                                 <i class="icon-adjust"></i>
                             </button>
+                            <button class="spellchecker-toggle icn-btn"
+                                ng-if="isSpellcheckerAvailable()"
+                                ng-class="{active: spellcheck.isAutoSpellchecker}"
+                                ng-click="toggleSpellchecker()"
+                                title="{{ (spellcheck.isAutoSpellchecker ? 'Spell checker on' : 'Spell checker off') | translate }} ({{spellcheckShortcutLabel}})">
+                                <i class="icon-font"></i>
+                            </button>
                             <span sd-theme-select
                                 ng-if="proofread"
                                 data-key="proofreadTheme"></span>

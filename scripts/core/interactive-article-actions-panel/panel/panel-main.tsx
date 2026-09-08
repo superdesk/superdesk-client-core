@@ -19,6 +19,11 @@ export class Panel extends React.PureComponent<IPropsSendToPanel> {
                 <Layout.Panel
                     side="right"
                     open={true}
+                    theme="dark"
+
+                    // `theme` only sets `data-theme`; the accessible and contrast themes key off the class
+                    className="side-panel--dark-ui"
+                    data-test-id={this.props['data-test-id']}
                     size={this.props.width == null ? 'x-small' : {custom: this.props.width}}
                 >
                     {this.props.children}

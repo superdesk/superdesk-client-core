@@ -14,14 +14,22 @@ import {restoreDatabaseSnapshot} from './utils';
  * has related items (see ItemPreview's showRelatedTab), which the snapshot's
  * "test sports story" does not have.
  */
-test.describe('opening an article in preview mode', () => {
+test.describe('opening an article in preview mode', {
+    annotation: [
+        {type: 'confluence', description: '1333690440 complete'}, // Item preview
+    ],
+}, () => {
     const ARTICLE = 'test sports story';
 
     test.beforeEach(async () => {
         await restoreDatabaseSnapshot();
     });
 
-    test('single click previews the item read-only and the close icon dismisses it', async ({page}) => {
+    test('single click previews the item read-only and the close icon dismisses it', {
+        annotation: [
+            {type: 'confluence', description: '1311835227 partial'}, // 🤖 Open article in preview mode (AUTOMATED)
+        ],
+    }, async ({page}) => {
         const monitoring = new Monitoring(page);
 
         await page.goto('/#/workspace/monitoring');

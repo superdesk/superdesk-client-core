@@ -68,7 +68,11 @@ test.describe('ingest provider', () => {
         await expect(page.locator(s('ingest-dashboard-list', 'ingest-dashboard-widget'))).toHaveCount(0);
     });
 
-    test('change settings for ingest provider widget', async ({page}) => {
+    test('change settings for ingest provider widget', {
+        annotation: [
+            {type: 'confluence', description: '1308524883 complete'}, // Ingest Widget Settings
+        ],
+    }, async ({page}) => {
         await addProviderToDashboard(page);
 
         const widget = page.locator(s('ingest-dashboard-list', `ingest-dashboard-widget=${PROVIDER_NAME}`));
@@ -92,7 +96,13 @@ test.describe('ingest provider', () => {
         await expect(page.locator(s('ingest-settings'))).toBeVisible();
     });
 
-    test('open edit source dialog from ingest settings', async ({page}) => {
+    test('open edit source dialog from ingest settings', {
+        annotation: [
+            {type: 'confluence', description: '1311834976 complete'}, // Add source
+            {type: 'confluence', description: '1311834949 complete'}, // Add ingest source
+            {type: 'confluence', description: '1311834951 complete'}, // Edit ingest source
+        ],
+    }, async ({page}) => {
         await addProviderToDashboard(page);
 
         const widget = page.locator(s('ingest-dashboard-list', `ingest-dashboard-widget=${PROVIDER_NAME}`));
