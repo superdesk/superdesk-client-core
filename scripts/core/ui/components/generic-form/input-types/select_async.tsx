@@ -19,17 +19,13 @@ export interface ISelectAsyncOption {
 export interface ISelectAsyncParameters {
     /**
      * Rejecting is supported: the field degrades so the stored value stays readable and saveable.
+     * Not called for a preview, which shows the stored ids, so a listing that costs a request is
+     * only paid for by a form that can act on it.
      */
     getOptions: (formValues: {readonly [key: string]: any}) => Promise<Array<ISelectAsyncOption>>;
 
     /** Fields whose change re-runs `getOptions`. */
     dependentFields?: Array<string>;
-
-    /**
-     * Last say over the ids the field writes, for a value that other fields constrain. Called with
-     * what the operator picked and the rest of the form.
-     */
-    adjustValue?: (ids: Array<string>, formValues: {readonly [key: string]: any}) => Array<string>;
 
     /** Hint shown below the field while it has no error. */
     info?: string;
@@ -70,7 +66,7 @@ function getSelectAsync(allowMultiple: boolean) {
 
             this.state = {
                 options: null,
-                loading: true,
+                loading: props.previewOutput !== true,
             };
 
             this.latestFetchSequence = 0;
@@ -99,6 +95,10 @@ function getSelectAsync(allowMultiple: boolean) {
          * empty field back on the next save. Only values picked since mounting are dropped.
          */
         fetchOptions(dropValuesMissingFromOptions: boolean) {
+            if (this.props.previewOutput) {
+                return;
+            }
+
             const sequence = ++this.latestFetchSequence;
 
             this.setState({loading: true});
@@ -136,10 +136,7 @@ function getSelectAsync(allowMultiple: boolean) {
         }
 
         emitChange(ids: Array<string>) {
-            const {adjustValue} = getParameters(this.props);
-            const nextIds = adjustValue == null ? ids : adjustValue(ids, this.props.formValues);
-
-            this.props.onChange(allowMultiple ? nextIds : (nextIds[0] ?? ''));
+            this.props.onChange(allowMultiple ? ids : (ids[0] ?? ''));
         }
 
         toOption(id: string): ISelectAsyncOption {
@@ -180,21 +177,19 @@ function getSelectAsync(allowMultiple: boolean) {
         render() {
             const {field, label, required} = this.props.formField;
 
-            if (this.state.loading) {
-                // A preview shows values, not controls, and rendering nothing until the options
-                // arrive avoids flashing raw ids before they resolve to labels.
-                return this.props.previewOutput ? null : this.renderLoading();
-            }
-
-            const selectedOptions = this.getSelectedIds().map((id) => this.toOption(id));
-
             if (this.props.previewOutput) {
                 return (
                     <div data-test-id={`gform-output--${field}`}>
-                        {selectedOptions.map(({label: optionLabel}) => optionLabel).join(', ')}
+                        {this.getSelectedIds().map((id) => this.toOption(id).label).join(', ')}
                     </div>
                 );
             }
+
+            if (this.state.loading) {
+                return this.renderLoading();
+            }
+
+            const selectedOptions = this.getSelectedIds().map((id) => this.toOption(id));
 
             const extraIssueElements = (this.props.issues ?? []).slice(1).map((issue, i) => (
                 <div key={i} className="sd-input__message">{issue}</div>

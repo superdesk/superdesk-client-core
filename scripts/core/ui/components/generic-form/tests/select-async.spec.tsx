@@ -17,6 +17,7 @@ interface IMountOptions {
     value?: any;
     onChange?: (value: any) => void;
     formValues?: {[key: string]: any};
+    previewOutput?: boolean;
 }
 
 let container: HTMLDivElement;
@@ -36,7 +37,7 @@ function mountField(options: IMountOptions): ReactWrapper {
             disabled={false}
             value={options.value}
             issues={[]}
-            previewOutput={false}
+            previewOutput={options.previewOutput ?? false}
             onChange={options.onChange ?? noop}
         />,
         {attachTo: container},
@@ -92,6 +93,10 @@ function getSelectedLabels(wrapper: ReactWrapper): Array<string> {
 
 function countLoadingIndicators(wrapper: ReactWrapper, field: string): number {
     return wrapper.find(`[data-test-id="gform-loading--${field}"]`).length;
+}
+
+function getPreviewText(wrapper: ReactWrapper, field: string): string {
+    return wrapper.find(`div[data-test-id="gform-output--${field}"]`).text();
 }
 
 /**
@@ -429,6 +434,21 @@ describe('selectAsync form field', () => {
             done();
         });
     });
+
+    it('previews the stored value without listing the options', () => {
+        const getOptions = jasmine.createSpy('getOptions').and.returnValue(Promise.resolve(MODELS));
+
+        const wrapper = mountField({
+            type: GenericFormFieldType.selectAsync,
+            field: 'default_model',
+            componentParameters: {getOptions},
+            value: 'gpt-4o',
+            previewOutput: true,
+        });
+
+        expect(getPreviewText(wrapper, 'default_model')).toBe('gpt-4o');
+        expect(getOptions).not.toHaveBeenCalled();
+    });
 });
 
 describe('selectMultipleAsync form field', () => {
@@ -529,5 +549,20 @@ describe('selectMultipleAsync form field', () => {
 
             done();
         });
+    });
+
+    it('previews the stored values without listing the options', () => {
+        const getOptions = jasmine.createSpy('getOptions').and.returnValue(Promise.resolve(MODELS));
+
+        const wrapper = mountField({
+            type: GenericFormFieldType.selectMultipleAsync,
+            field: 'available_models',
+            componentParameters: {getOptions},
+            value: ['gpt-4o', 'gpt-4o-mini'],
+            previewOutput: true,
+        });
+
+        expect(getPreviewText(wrapper, 'available_models')).toBe('gpt-4o, gpt-4o-mini');
+        expect(getOptions).not.toHaveBeenCalled();
     });
 });

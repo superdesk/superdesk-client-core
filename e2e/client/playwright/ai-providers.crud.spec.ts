@@ -215,7 +215,7 @@ test.describe('AI providers settings', () => {
         await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
     });
 
-    test('offers only the available models as the default model once some are picked', async ({page}) => {
+    test('offers every model as the default model, whatever the available models hold', async ({page}) => {
         // The provider is unreachable here, so the pickers are fed the answer the backend would relay.
         await page.route('**/ai_providers/*/models', (route) => route.fulfill({
             status: 200,
@@ -252,10 +252,11 @@ test.describe('AI providers settings', () => {
 
         await defaultModel.getByTestId('open-popover').click();
 
-        // `gpt-4o` is offered by the provider but not in `available_models`, so it is not listed.
-        await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'o1-mini']);
+        // The shortlist restricts the AI actions, not the fallback the provider hands them, so
+        // `gpt-4o` is still on offer here despite being left out of it.
+        await expect(popover.getByTestId('option')).toHaveText(['gpt-4o-mini', 'gpt-4o', 'o1-mini']);
 
-        await popover.getByTestId('option').filter({hasText: /^gpt-4o-mini$/}).click();
+        await popover.getByTestId('option').filter({hasText: /^gpt-4o$/}).click();
 
         const patchRequest = waitForProviderPatch(page, providerId);
 
@@ -264,16 +265,16 @@ test.describe('AI providers settings', () => {
         const payload = (await patchRequest).postDataJSON();
 
         expect(payload.available_models).toEqual(['gpt-4o-mini', 'o1-mini']);
-        expect(payload.default_model).toBe('gpt-4o-mini');
+        expect(payload.default_model).toBe('gpt-4o');
 
         await firstItem.hover();
         await firstItem.getByTestId('edit').click();
 
         await expect(availableModels.getByTestId('item')).toHaveText(['gpt-4o-mini', 'o1-mini']);
-        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o-mini');
+        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
     });
 
-    test('keeps the stored default model while the available models are edited', async ({page}) => {
+    test('clears the default model of a provider that has available models', async ({page}) => {
         await page.route('**/ai_providers/*/models', (route) => route.fulfill({
             status: 200,
             contentType: 'application/json',
@@ -304,46 +305,22 @@ test.describe('AI providers settings', () => {
         await availableModels.getByTestId('open-popover').click();
         await popover.getByTestId('option').filter({hasText: /^o1-mini$/}).click();
 
-        // The server rejects a default the shortlist does not carry, so picking a shortlist without
-        // it adds it back rather than composing a state that cannot be saved.
-        await expect(availableModels.getByTestId('item')).toHaveText(['o1-mini', 'gpt-4o']);
-        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+        await defaultModel.getByTestId('clear-value').click();
+        await expect(defaultModel.getByTestId('item')).toHaveCount(0);
 
-        const restrictRequest = waitForProviderPatch(page, providerId);
+        const patchRequest = waitForProviderPatch(page, providerId);
 
         await form.getByTestId('item-view-edit--save').click();
 
-        const restrictPayload = (await restrictRequest).postDataJSON();
-
-        expect(restrictPayload.available_models).toEqual(['o1-mini', 'gpt-4o']);
-        expect(restrictPayload.default_model).toBeUndefined();
+        // Emptying the picker is the only way the form can say "no default", so it sends an empty
+        // string and the server stores no model.
+        expect((await patchRequest).postDataJSON().default_model).toBe('');
 
         await firstItem.hover();
         await firstItem.getByTestId('edit').click();
 
-        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
-
-        await availableModels.getByTestId('remove').first().click();
-        await expect(availableModels.getByTestId('item')).toHaveText(['gpt-4o']);
-
-        // Emptying the shortlist lifts the restriction, so the default is not added back
-        await availableModels.getByTestId('remove').first().click();
-        await expect(availableModels.getByTestId('item')).toHaveCount(0);
-
-        const liftRequest = waitForProviderPatch(page, providerId);
-
-        await form.getByTestId('item-view-edit--save').click();
-
-        const liftPayload = (await liftRequest).postDataJSON();
-
-        // Lifting the restriction leaves the default untouched, so the patch carries no `default_model`.
-        expect(liftPayload.available_models).toEqual([]);
-        expect(liftPayload.default_model).toBeUndefined();
-
-        await firstItem.hover();
-        await firstItem.getByTestId('edit').click();
-
-        await expect(defaultModel.getByTestId('item')).toHaveText('gpt-4o');
+        await expect(availableModels.getByTestId('item')).toHaveText(['o1-mini']);
+        await expect(defaultModel.getByTestId('item')).toHaveCount(0);
     });
 
     test('keeps editing possible when the models cannot be listed', async ({page}) => {

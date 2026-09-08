@@ -2,7 +2,7 @@ import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/f
 import type {ISelectAsyncParameters} from 'core/ui/components/generic-form/input-types/select_async';
 import {gettext} from 'core/utils';
 import type {IFormField, IFormGroup} from 'superdesk-api';
-import {getProviderModels, toModelOptions} from './api';
+import {getProviderModels} from './api';
 import type {IAIProvider, IAIProviderType} from './interfaces';
 
 /** Labels are lazy so `gettext` runs after translations load, and the extractor still sees a literal. */
@@ -75,20 +75,17 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
         model becomes a text input holding the stored model, and the available models are shown
         read only and saved back untouched.
     */
+    const getModelOptions = (formValues: {readonly [key: string]: any}) => getProviderModels(formValues._id);
+
     const availableModelsParameters: ISelectAsyncParameters = {
-        getOptions: (formValues) => getProviderModels(formValues._id),
-        info: gettext('Leave empty to allow every model the provider lists.'),
+        getOptions: getModelOptions,
+        info: gettext('Leave empty to allow AI actions every model the provider lists.'),
+    };
 
-        // The server rejects a `default_model` a non-empty `available_models` does not contain,
-        // so a shortlist that leaves the default out gets it back rather than a 400 on save.
-        adjustValue: (ids, formValues) => {
-            // An untouched picker holds an empty string, which is no default rather than one to keep
-            const defaultModel: IAIProvider['default_model'] = formValues.default_model;
-
-            return ids.length > 0 && defaultModel != null && defaultModel !== '' && !ids.includes(defaultModel)
-                ? [...ids, defaultModel]
-                : ids;
-        },
+    // `available_models` restricts the actions, not this field, so the whole catalogue is on offer.
+    const defaultModelParameters: ISelectAsyncParameters = {
+        getOptions: getModelOptions,
+        info: gettext('Used by an AI action that names no model of its own.'),
     };
 
     const availableModelsField: IFormField<IAIProvider> = {
@@ -98,24 +95,12 @@ export function getAiProviderFormConfig(item?: Partial<IAIProvider>): IFormGroup
         component_parameters: availableModelsParameters,
     };
 
-    // Restricted to the shortlist when there is one, so the picker offers only what can be saved.
-    const modelPickerParameters: ISelectAsyncParameters = {
-        getOptions: (formValues) => {
-            const availableModels: IAIProvider['available_models'] = formValues.available_models ?? [];
-
-            return availableModels.length > 0
-                ? Promise.resolve(toModelOptions(availableModels))
-                : getProviderModels(formValues._id);
-        },
-        dependentFields: ['available_models'],
-    };
-
     const defaultModelField: IFormField<IAIProvider> = isExistingProvider
         ? {
             label: gettext('Default model'),
             type: GenericFormFieldType.selectAsync,
             field: 'default_model',
-            component_parameters: modelPickerParameters,
+            component_parameters: defaultModelParameters,
         }
         : {
             label: gettext('Default model'),

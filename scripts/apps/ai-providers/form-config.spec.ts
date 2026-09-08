@@ -78,6 +78,7 @@ describe('ai providers form config', () => {
 
         expect(defaultModelField.type).toBe(GenericFormFieldType.selectAsync);
         expect(typeof defaultModelField.component_parameters.getOptions).toBe('function');
+        expect(defaultModelField.component_parameters.info.length).toBeGreaterThan(0);
     });
 
     it('picks the available models from the provider models when editing a saved provider', () => {
@@ -93,20 +94,7 @@ describe('ai providers form config', () => {
         expect(getFieldNames().includes('available_models')).toBe(false);
     });
 
-    it('offers the available models as the default model when the provider is restricted to some', async () => {
-        const fetchSpy = spyOn(window, 'fetch');
-
-        const item: Partial<IAIProvider> = {_id: 'provider-1', available_models: ['gpt-4o', 'o1-mini']};
-        const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
-
-        expect(await defaultModelField.component_parameters.getOptions(item)).toEqual([
-            {id: 'gpt-4o', label: 'gpt-4o'},
-            {id: 'o1-mini', label: 'o1-mini'},
-        ]);
-        expect(fetchSpy).not.toHaveBeenCalled();
-    });
-
-    it('offers every model the provider lists as the default model when no available models are set', async () => {
+    it('offers every model the provider lists as the default model, shortlist or not', async () => {
         spyOn(window, 'fetch').and.returnValue(Promise.resolve({
             ok: true,
             json: () => Promise.resolve({models: ['gpt-4o', 'o1-mini', 'o3']}),
@@ -114,7 +102,7 @@ describe('ai providers form config', () => {
 
         spyOn(ng, 'getService').and.returnValue(Promise.resolve({token: 'token'}));
 
-        const item: Partial<IAIProvider> = {_id: 'provider-1', available_models: []};
+        const item: Partial<IAIProvider> = {_id: 'provider-1', available_models: ['gpt-4o']};
         const defaultModelField = getFields(item).find(({field}) => field === 'default_model');
 
         expect(await defaultModelField.component_parameters.getOptions(item)).toEqual([
@@ -122,13 +110,6 @@ describe('ai providers form config', () => {
             {id: 'o1-mini', label: 'o1-mini'},
             {id: 'o3', label: 'o3'},
         ]);
-    });
-
-    it('re-reads the default model options when the available models change', () => {
-        const defaultModelField = getFields({_id: 'provider-1'})
-            .find(({field}) => field === 'default_model');
-
-        expect(defaultModelField.component_parameters.dependentFields).toEqual(['available_models']);
     });
 
     it('lists the models of the provider identified by `_id`', async () => {
