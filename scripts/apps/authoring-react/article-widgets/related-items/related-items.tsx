@@ -370,6 +370,10 @@ export class RelatedItemsWidget
 
         return (
             <AuthoringWidgetLayout
+                // authoring-angular colours the list holder and insets the cards by less than the
+                // panel default
+                background="grey"
+                bodyPadding="small"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={RELATED_ITEMS_WIDGET_ID}
