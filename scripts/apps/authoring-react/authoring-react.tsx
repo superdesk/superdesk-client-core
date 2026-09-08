@@ -1490,7 +1490,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
 
         for (let i = 0; i < widgetsCount; i++) {
             widgetKeybindings[`ctrl+alt+${i + 1}`] = () => {
-                const nextWidgetId: string = this.props.getSideWidgetIdAtIndex(exposed.item, i);
+                const nextWidgetId = this.props.getSideWidgetIdAtIndex(exposed.item, i, readOnly);
+
+                // the widget refuses to open for this item; opening it would blank the panel
+                if (nextWidgetId == null) {
+                    return;
+                }
 
                 this.props.onSideWidgetChange({
                     activeId: nextWidgetId,
@@ -1665,7 +1670,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                 sideOverlayOpen={!isPinned && OpenWidgetComponent != null}
                                 sidePanel={isPinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sidePanelOpen={isPinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar?.(exposed)}
+                                sideBar={this.props.getSidebar?.(exposed, readOnly)}
                             />
                         </WithKeyBindings>
 

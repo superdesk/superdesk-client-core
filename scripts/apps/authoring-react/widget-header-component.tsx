@@ -5,7 +5,7 @@ import {IconButton, Rotate, ButtonGroup} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegrationComponentProps> {
-    getIconButtons(): Array<JSX.Element> | undefined {
+    getPinButtons(): Array<JSX.Element> | undefined {
         const {pinned, pinWidget} = this.props;
         const sidebarPinnedId = widgetReactIntegration.getPinnedWidget();
 
@@ -27,6 +27,28 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
                     }}
                 />
             </Rotate>,
+        ];
+    }
+
+    getIconButtons(): Array<JSX.Element> | undefined {
+        const {openConfiguration} = this.props;
+        const pinButtons = this.getPinButtons();
+
+        if (openConfiguration == null) {
+            return pinButtons;
+        }
+
+        return [
+            <div key="configuration" data-test-id="widget-configuration">
+                <IconButton
+                    icon="settings"
+                    ariaValue={gettext('Widget settings')}
+                    onClick={() => {
+                        openConfiguration();
+                    }}
+                />
+            </div>,
+            ...(pinButtons ?? []),
         ];
     }
 

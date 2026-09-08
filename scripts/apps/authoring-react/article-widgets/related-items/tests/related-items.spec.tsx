@@ -5,6 +5,7 @@ import {sdApi} from 'api';
 import {dataApi} from 'core/helpers/CrudManager';
 import {notify} from 'core/notify/notify';
 import {addInternalEventListener} from 'core/internal-events';
+import ng from 'core/services/ng';
 import {RelatedItemsWidget} from '../related-items';
 
 function article(overrides: Partial<IArticle>): IArticle {
@@ -83,5 +84,37 @@ describe('related items widget: associating metadata', () => {
             );
             done();
         });
+    });
+});
+
+describe('related items widget: searching', () => {
+    // the configuration is owned by the widget sidebar and handed down, so a widget that kept its
+    // own copy would search with stale settings
+    it('searches with the configuration it is given', () => {
+        const fetchRelatableItems = jasmine.createSpy('fetchRelatableItems')
+            .and.returnValue(Promise.resolve({_items: []}));
+
+        spyOn(ng, 'get').and.callFake(
+            (service: string) => service === 'familyService' ? {fetchRelatableItems} : null,
+        );
+
+        const props = {
+            article: article({}),
+            readOnly: false,
+            configuration: {sluglineMatch: 'PREFIX', modificationDateAfter: 'now-24h'},
+        } as IArticleSideWidgetComponentType;
+
+        const widget = shallow(<RelatedItemsWidget {...props} />, {disableLifecycleMethods: true})
+            .instance() as RelatedItemsWidget;
+
+        widget.setState({mode: 'search', keyword: 'destination slugline'});
+        widget.search();
+
+        expect(fetchRelatableItems).toHaveBeenCalledWith(
+            'destination slugline',
+            'PREFIX',
+            jasmine.anything(),
+            'now-24h',
+        );
     });
 });

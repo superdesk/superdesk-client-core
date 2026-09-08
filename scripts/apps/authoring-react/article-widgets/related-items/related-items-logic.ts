@@ -2,17 +2,43 @@ import moment from 'moment-timezone';
 import {IArticle} from 'superdesk-api';
 import {isPublished} from 'apps/archive/utils';
 import {appConfig} from 'appConfig';
+import {sdApi} from 'api';
 
 export const RELATED_ITEMS_WIDGET_ID = 'related-item';
 
+/**
+ * Authoring-angular stores the two settings under these bare keys. Keeping them means a user's
+ * setting carries over between the two authoring implementations.
+ */
 export const SLUGLINE_MATCH_STORAGE_KEY = 'sluglineMatch';
 export const MODIFICATION_DATE_AFTER_STORAGE_KEY = 'modificationDateAfter';
 
 export type ISluglineMatch = 'EXACT' | 'ANY' | 'PREFIX';
 export type IModificationDateAfter = 'now-6h' | 'now-12h' | 'today' | 'now-24h' | 'now-48h';
 
-export const DEFAULT_SLUGLINE_MATCH: ISluglineMatch = 'EXACT';
-export const DEFAULT_MODIFICATION_DATE_AFTER: IModificationDateAfter = 'today';
+export interface IRelatedItemsConfiguration {
+    sluglineMatch: ISluglineMatch;
+    modificationDateAfter: IModificationDateAfter;
+}
+
+export const DEFAULT_RELATED_ITEMS_CONFIGURATION: IRelatedItemsConfiguration = {
+    sluglineMatch: 'EXACT',
+    modificationDateAfter: 'today',
+};
+
+export function getStoredConfiguration(): IRelatedItemsConfiguration {
+    return {
+        sluglineMatch: sdApi.localStorage.getItem(SLUGLINE_MATCH_STORAGE_KEY)
+            ?? DEFAULT_RELATED_ITEMS_CONFIGURATION.sluglineMatch,
+        modificationDateAfter: sdApi.localStorage.getItem(MODIFICATION_DATE_AFTER_STORAGE_KEY)
+            ?? DEFAULT_RELATED_ITEMS_CONFIGURATION.modificationDateAfter,
+    };
+}
+
+export function storeConfiguration(configuration: IRelatedItemsConfiguration): void {
+    sdApi.localStorage.setItem(SLUGLINE_MATCH_STORAGE_KEY, configuration.sluglineMatch);
+    sdApi.localStorage.setItem(MODIFICATION_DATE_AFTER_STORAGE_KEY, configuration.modificationDateAfter);
+}
 
 /**
  * The metadata authoring-angular copies from the picked item onto the item being edited.
@@ -41,9 +67,12 @@ export function isRelatedItemsWidgetAllowed(
 ): boolean {
     const isLegal = article._type === 'legal_archive';
     const isArchived = article._type === 'archived';
-    const isPersonal = article.task?.user != null && article.task?.desk == null;
 
-    if (isLegal || isArchived || isPersonal) {
+    // angular's rule: assigned to a user and to no desk. `sdApi.article.isPersonal` asks a
+    // different question ("not on a desk and a stage"), so it is not a drop-in here
+    const isPersonalSpaceItem = article.task?.user != null && article.task?.desk == null;
+
+    if (isLegal || isArchived || isPersonalSpaceItem) {
         return false;
     }
 

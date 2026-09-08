@@ -1,7 +1,13 @@
 import React from 'react';
-import {Button, Input, Loader, Option, Select} from 'superdesk-ui-framework/react';
-import {IArticle, IArticleSideWidget, IArticleSideWidgetComponentType, IRestApiResponse} from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {Badge, Button, EmptyState, IconButton, Input, Loader, Menu} from 'superdesk-ui-framework/react';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IArticleSideWidgetComponentType,
+    IContentProfileV2,
+    IRestApiResponse,
+} from 'superdesk-api';
+import {gettext, getArticleLabel} from 'core/utils';
 import {notify} from 'core/notify/notify';
 import ng from 'core/services/ng';
 import {sdApi} from 'api';
@@ -10,22 +16,25 @@ import {isHttpApiError} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {Spacer} from 'core/ui/components/Spacer';
+import {ActionsMenu} from 'apps/search/components/actions-menu/ActionsMenu';
+import {getFieldsData} from '../../authoring-react';
+import {getArticleAdapter} from '../../article-adapter';
+import {previewAuthoringEntity} from '../../preview-article-modal';
+import {RelatedItem} from './related-item';
+import {RelatedItemsConfiguration} from './related-items-configuration';
 import {
     canAssociateAsUpdate,
     canAssociateMetadata,
-    DEFAULT_MODIFICATION_DATE_AFTER,
-    DEFAULT_SLUGLINE_MATCH,
+    DEFAULT_RELATED_ITEMS_CONFIGURATION,
     getMetadataToCopy,
     getModificationDateAfterQueryValue,
+    getStoredConfiguration,
     hasEnoughKeywords,
-    IModificationDateAfter,
-    ISluglineMatch,
+    IRelatedItemsConfiguration,
     isRelatedItemsWidgetAllowed,
-    MODIFICATION_DATE_AFTER_STORAGE_KEY,
     RELATED_ITEMS_WIDGET_ID,
-    SLUGLINE_MATCH_STORAGE_KEY,
+    storeConfiguration,
 } from './related-items-logic';
 
 const getLabel = () => gettext('Related Items');
@@ -40,9 +49,12 @@ interface IState {
     mode: IMode;
     items: Array<IArticle>;
     keyword: string;
-    sluglineMatch: ISluglineMatch;
-    modificationDateAfter: IModificationDateAfter;
     searching: boolean;
+
+    /**
+     * Tells an empty list apart from a search that has not run yet.
+     */
+    searched: boolean;
 }
 
 function openRelatedItem(item: IArticle): void {
@@ -57,23 +69,77 @@ function getProfileSchema(article: IArticle): {[field: string]: unknown} | null 
     return (sdApi.contentProfiles.get(article.profile)?.schema as {[field: string]: unknown}) ?? null;
 }
 
-export class RelatedItemsWidget extends React.Component<IArticleSideWidgetComponentType, IState> {
+/**
+ * The standard item actions menu, the same one monitoring puts on every item. It renders itself
+ * into a container appended to the body, so the narrow widget panel does not clip it.
+ */
+class StandardItemActions extends React.PureComponent<{item: IArticle}> {
+    render(): JSX.Element {
+        return (
+            <ActionsMenu
+                item={this.props.item}
+                onActioning={() => {
+                    // the actioning state greys out a monitoring row; there is nothing to grey here
+                }}
+                scopeApply={(callback) => {
+                    ng.get('$rootScope').$applyAsync(callback);
+                }}
+                template={(toggle, stopEvent) => (
+                    <div onClick={stopEvent} data-test-id="related-item-actions">
+                        <button className="icn-btn" onClick={toggle} aria-label={gettext('Item actions')}>
+                            <i className="icon-dots-vertical" />
+                        </button>
+                    </div>
+                )}
+            />
+        );
+    }
+}
+
+interface IItemActionsProps {
+    item: IArticle;
+    actions: React.ComponentProps<typeof Menu>['items'];
+}
+
+class RelatedItemActions extends React.PureComponent<IItemActionsProps> {
+    render(): JSX.Element {
+        return (
+            <div
+                onClick={(event) => event.stopPropagation()}
+                data-test-id="related-item-actions"
+            >
+                <Menu items={this.props.actions}>
+                    {(toggle) => (
+                        <IconButton
+                            icon="dots-vertical"
+                            ariaValue={gettext('Item actions')}
+                            onClick={(event) => {
+                                toggle(event);
+                            }}
+                        />
+                    )}
+                </Menu>
+            </div>
+        );
+    }
+}
+
+export class RelatedItemsWidget
+    extends React.Component<IArticleSideWidgetComponentType<IRelatedItemsConfiguration>, IState> {
     private mounted: boolean;
 
-    constructor(props: IArticleSideWidgetComponentType) {
+    constructor(props: IArticleSideWidgetComponentType<IRelatedItemsConfiguration>) {
         super(props);
 
         this.state = {
             mode: 'loading',
             items: [],
             keyword: props.article.slugline ?? '',
-            sluglineMatch: sdApi.localStorage.getItem(SLUGLINE_MATCH_STORAGE_KEY) ?? DEFAULT_SLUGLINE_MATCH,
-            modificationDateAfter:
-                sdApi.localStorage.getItem(MODIFICATION_DATE_AFTER_STORAGE_KEY) ?? DEFAULT_MODIFICATION_DATE_AFTER,
             ...(props.initialState ?? {}),
 
             // a request in flight when the widget was unmounted can not be resumed
             searching: false,
+            searched: false,
         };
 
         this.mounted = false;
@@ -83,6 +149,7 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
         this.associateAsUpdate = this.associateAsUpdate.bind(this);
         this.getActionsForItem = this.getActionsForItem.bind(this);
         this.setStateIfMounted = this.setStateIfMounted.bind(this);
+        this.previewItem = this.previewItem.bind(this);
     }
 
     componentWillUnmount(): void {
@@ -118,6 +185,16 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
             });
     }
 
+    componentDidUpdate(prevProps: IArticleSideWidgetComponentType<IRelatedItemsConfiguration>): void {
+        if (this.state.mode === 'search' && prevProps.configuration !== this.props.configuration) {
+            this.search();
+        }
+    }
+
+    getConfiguration(): IRelatedItemsConfiguration {
+        return this.props.configuration ?? DEFAULT_RELATED_ITEMS_CONFIGURATION;
+    }
+
     startSearchMode(): void {
         this.setStateIfMounted({mode: 'search'}, () => {
             if (this.state.keyword.length < 1) {
@@ -129,7 +206,8 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
     }
 
     search(): void {
-        const {keyword, sluglineMatch, modificationDateAfter} = this.state;
+        const {keyword} = this.state;
+        const {sluglineMatch, modificationDateAfter} = this.getConfiguration();
 
         if (!hasEnoughKeywords(keyword)) {
             return;
@@ -143,9 +221,9 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
             this.props.article,
             getModificationDateAfterQueryValue(modificationDateAfter),
         ).then((response: IRestApiResponse<IArticle>) => {
-            this.setStateIfMounted({items: response?._items ?? [], searching: false});
+            this.setStateIfMounted({items: response?._items ?? [], searching: false, searched: true});
         }, () => {
-            this.setStateIfMounted({searching: false});
+            this.setStateIfMounted({searching: false, searched: true});
         });
     }
 
@@ -196,19 +274,49 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
             });
     }
 
-    getActionsForItem(item: IArticle): React.ComponentProps<typeof ArticleItemConcise>['actionsMenu'] {
-        if (this.state.mode !== 'search') {
-            return [
-                {
-                    label: gettext('Open'),
-                    onClick: () => openRelatedItem(item),
-                },
-            ];
+    /**
+     * The list can hold items with no content profile, and `getContentProfile` throws for one,
+     * synchronously, where a rejection handler would not catch it. Such an item is previewed with
+     * the profile of the article being edited.
+     */
+    getProfileForPreview(item: IArticle): Promise<IContentProfileV2 | null> {
+        if (item.profile == null) {
+            return Promise.resolve(this.props.contentProfile ?? null);
         }
 
+        return this.props.authoringStorage.getContentProfile(item, this.props.fieldsAdapter);
+    }
+
+    previewItem(item: IArticle): void {
+        const {authoringStorage, fieldsAdapter, storageAdapter} = this.props;
+        const adapted = getArticleAdapter().toAuthoringReact(item);
+
+        this.getProfileForPreview(adapted).then((profile) => {
+            if (profile == null) {
+                notify.error(gettext('There is no content profile to preview this item with.'));
+                return;
+            }
+
+            const fieldsData = getFieldsData(
+                adapted,
+                profile.header.merge(profile.content).toOrderedMap(),
+                fieldsAdapter,
+                authoringStorage,
+                storageAdapter,
+                adapted.language,
+            );
+
+            previewAuthoringEntity(adapted, profile, fieldsData, getArticleLabel(adapted));
+        }, () => {
+            notify.error(gettext('There is an error. Failed to open the preview.'));
+        });
+    }
+
+    getActionsForItem(item: IArticle): React.ComponentProps<typeof Menu>['items'] {
         const actions = [];
 
-        // angular declares `needEditable` and `needUnlock`, which lock the whole widget
+        // `needEditable` already keeps the widget shut on a read-only item; this only guards
+        // against the item turning read-only while the widget is open
         const canModify = this.props.readOnly !== true;
 
         if (canModify && canAssociateMetadata(item)) {
@@ -233,6 +341,18 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
         return actions;
     }
 
+    getEmptyStateTitle(): string {
+        if (this.state.searching) {
+            return gettext('Searching');
+        }
+
+        if (this.state.mode === 'search' && !this.state.searched) {
+            return gettext('Search for an item to relate');
+        }
+
+        return gettext('No items found');
+    }
+
     canAssociateAsUpdate(target: IArticle): boolean {
         return canAssociateAsUpdate({
             currentItem: this.props.article,
@@ -255,6 +375,9 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
                         widgetId={RELATED_ITEMS_WIDGET_ID}
                         widgetName={searchMode ? gettext('Relate an item') : getLabel()}
                         editMode={false}
+
+                        // the settings only shape the search, which existing relations do not run
+                        configurable={searchMode}
                     />
                 )}
                 body={(
@@ -262,75 +385,87 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
                         {mode === 'loading' && <Loader overlay />}
                         {
                             searchMode && (
-                                <Spacer v gap="8" noWrap alignItems="stretch">
-                                    <Input
-                                        type="text"
-                                        label={gettext('Search')}
-                                        inlineLabel
-                                        labelHidden
-                                        value={this.state.keyword}
-                                        onChange={(value) => {
-                                            this.setState({keyword: value});
-                                        }}
-                                        data-test-id="related-items-search-input"
-                                    />
+                                // the ui-framework input takes no key handler, so Enter is caught
+                                // here, as it bubbles
+                                <div
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            this.search();
+                                        }
+                                    }}
+                                >
+                                    <Spacer h gap="8" noWrap alignItems="center" justifyContent="start">
+                                        <i className="icon-search" />
 
-                                    <Button
-                                        text={gettext('Search')}
-                                        onClick={this.search}
-                                        disabled={!hasEnoughKeywords(this.state.keyword) || searching}
-                                        data-test-id="related-items-search-button"
-                                    />
+                                        <Input
+                                            type="text"
+                                            label={gettext('Search')}
+                                            inlineLabel
+                                            labelHidden
+                                            placeholder={gettext('Search')}
+                                            value={this.state.keyword}
+                                            onChange={(value) => {
+                                                this.setState({keyword: value});
+                                            }}
+                                            data-test-id="related-items-search-input"
+                                        />
 
-                                    <Select
-                                        label={gettext('Slugline Match')}
-                                        value={this.state.sluglineMatch}
-                                        onChange={(value: ISluglineMatch) => {
-                                            sdApi.localStorage.setItem(SLUGLINE_MATCH_STORAGE_KEY, value);
-                                            this.setState({sluglineMatch: value}, this.search);
-                                        }}
-                                        data-test-id="related-items-slugline-match"
-                                    >
-                                        <Option value="EXACT">{gettext('Exact')}</Option>
-                                        <Option value="ANY">{gettext('Match Any')}</Option>
-                                        <Option value="PREFIX">{gettext('Match Prefix')}</Option>
-                                    </Select>
-
-                                    <Select
-                                        label={gettext('Last Updated')}
-                                        value={this.state.modificationDateAfter}
-                                        onChange={(value: IModificationDateAfter) => {
-                                            sdApi.localStorage.setItem(MODIFICATION_DATE_AFTER_STORAGE_KEY, value);
-                                            this.setState({modificationDateAfter: value}, this.search);
-                                        }}
-                                        data-test-id="related-items-last-updated"
-                                    >
-                                        <Option value="now-6h">{gettext('6 Hours')}</Option>
-                                        <Option value="now-12h">{gettext('12 Hours')}</Option>
-                                        <Option value="today">{gettext('Today')}</Option>
-                                        <Option value="now-24h">{gettext('24 Hours')}</Option>
-                                        <Option value="now-48h">{gettext('48 Hours')}</Option>
-                                    </Select>
-                                </Spacer>
+                                        <Button
+                                            text={gettext('Search')}
+                                            size="small"
+                                            onClick={this.search}
+                                            disabled={!hasEnoughKeywords(this.state.keyword) || searching}
+                                            data-test-id="related-items-search-button"
+                                        />
+                                    </Spacer>
+                                </div>
                             )
                         }
 
-                        <Spacer v gap="4" noWrap alignItems="stretch">
-                            {
-                                itemsToDisplay.map((item) => (
-                                    <div
-                                        key={item._id}
-                                        data-test-id="related-item"
-                                        data-test-value={item.slugline ?? item.headline}
-                                    >
-                                        <ArticleItemConcise
-                                            article={item}
-                                            actionsMenu={this.getActionsForItem(item)}
-                                        />
-                                    </div>
-                                ))
-                            }
-                        </Spacer>
+                        {
+                            itemsToDisplay.length < 1 && mode !== 'loading' ? (
+                                <div data-test-id="related-items-empty-state">
+                                    <EmptyState
+                                        title={this.getEmptyStateTitle()}
+                                        size="small"
+                                    />
+                                </div>
+                            ) : (
+                                <ul className="boxed-list">
+                                    {
+                                        itemsToDisplay.map((item) => (
+                                            <RelatedItem
+                                                key={item._id}
+                                                item={item}
+                                                current={item._id === this.props.article._id}
+                                                onClick={() => this.previewItem(item)}
+                                                badge={
+                                                    searchMode ? (
+                                                        <span
+                                                            title={gettext('Can be associated as an update')}
+                                                            data-test-id="related-item-update-badge"
+                                                            className="sd-margin-end--1"
+                                                        >
+                                                            <Badge text="U" type="success" shape="square" />
+                                                        </span>
+                                                    ) : undefined
+                                                }
+                                                actions={
+                                                    searchMode ? (
+                                                        <RelatedItemActions
+                                                            item={item}
+                                                            actions={this.getActionsForItem(item)}
+                                                        />
+                                                    ) : (
+                                                        <StandardItemActions item={item} />
+                                                    )
+                                                }
+                                            />
+                                        ))
+                                    }
+                                </ul>
+                            )
+                        }
                     </Spacer>
                 )}
             />
@@ -338,14 +473,21 @@ export class RelatedItemsWidget extends React.Component<IArticleSideWidgetCompon
     }
 }
 
-export function getRelatedItemsWidget(): IArticleSideWidget {
-    const relatedItemsWidget: IArticleSideWidget = {
+export function getRelatedItemsWidget(): IArticleSideWidget<IRelatedItemsConfiguration> {
+    const relatedItemsWidget: IArticleSideWidget<IRelatedItemsConfiguration> = {
         _id: RELATED_ITEMS_WIDGET_ID,
         label: getLabel(),
         order: 7,
         icon: 'related',
         component: RelatedItemsWidget,
         isAllowed: (article) => isRelatedItemsWidgetAllowed(article, getProfileSchema(article)),
+        needEditable: true,
+        needUnlock: true,
+        configuration: {
+            component: RelatedItemsConfiguration,
+            getInitialConfiguration: getStoredConfiguration,
+            onSave: storeConfiguration,
+        },
     };
 
     return relatedItemsWidget;

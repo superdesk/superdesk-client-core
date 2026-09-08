@@ -1,5 +1,7 @@
-import {IArticle, IArticleSideWidget, IOpenSideWidget} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, IOpenSideWidget, IUser} from 'superdesk-api';
 import {extensions} from 'appConfig';
+import {sdApi} from 'api';
+import ng from 'core/services/ng';
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
     return Object.values(extensions)
@@ -22,6 +24,59 @@ export function findWidgetById(
     }
 
     return getWidgetsFromExtensions(article).find((widget) => widget._id === widgetId) ?? null;
+}
+
+export interface ISideWidgetLockState {
+    /**
+     * The item is open for reading only: opened with a view action, or its lock is held elsewhere.
+     */
+    readOnly: boolean;
+
+    /**
+     * Someone else holds the lock and the user can not take it over.
+     */
+    lockedByAnotherUser: boolean;
+
+    readOnlyStage: boolean;
+}
+
+// a locked widget can not be opened at all, as in authoring-angular
+export function isSideWidgetLocked(
+    widget: Pick<IArticleSideWidget, 'needEditable' | 'needUnlock'>,
+    {readOnly, lockedByAnotherUser, readOnlyStage}: ISideWidgetLockState,
+): boolean {
+    if (widget.needUnlock === true && (lockedByAnotherUser || readOnlyStage)) {
+        return true;
+    }
+
+    return widget.needEditable === true && (readOnly || readOnlyStage);
+}
+
+/**
+ * `lock_user` holds either the id or the embedded user, depending on which endpoint served the
+ * item. Angular's lock service reads both; `sdApi.article.isLockedByCurrentUser` compares strings
+ * only and would report a lock held by the current user as somebody else's.
+ */
+function getLockedUserId(article: IArticle): IUser['_id'] | null {
+    const lockUser: IUser['_id'] | IUser | null = article.lock_user as IUser['_id'] | IUser | null;
+
+    if (lockUser == null) {
+        return null;
+    }
+
+    return typeof lockUser === 'string' ? lockUser : lockUser._id;
+}
+
+export function getSideWidgetLockState(article: IArticle, readOnly: boolean): ISideWidgetLockState {
+    const lockedByCurrentUser = getLockedUserId(article) === sdApi.user.getCurrentUserId();
+    const canUnlock = lockedByCurrentUser
+        || (article.state !== 'draft' && sdApi.user.hasPrivilege('unlock'));
+
+    return {
+        readOnly: readOnly,
+        lockedByAnotherUser: sdApi.article.isLockedInOtherSession(article) && !canUnlock,
+        readOnlyStage: article.task?.stage != null && ng.get('desks').isReadOnlyStage(article.task.stage) === true,
+    };
 }
 
 export const SIDE_WIDGET_STORAGE_KEY = 'SIDE_WIDGET';

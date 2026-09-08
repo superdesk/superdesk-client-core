@@ -2,6 +2,10 @@
 import React from 'react';
 import {IPropsWidgetHeading} from 'superdesk-api';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {
+    showSideWidgetConfigurationModal,
+    SideWidgetConfigurationContext,
+} from 'apps/authoring-react/side-widget-configuration';
 
 /**
  * This component is exposed to superdesk-api to enable extensions
@@ -13,10 +17,15 @@ import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
  * !!! Can't use React.PureComponent because it gets props from outside
  */
 export class AuthoringWidgetHeading extends React.Component<IPropsWidgetHeading> {
+    static contextType = SideWidgetConfigurationContext;
+    declare context: React.ContextType<typeof SideWidgetConfigurationContext>;
+
     render() {
         const widget = widgetReactIntegration.getActiveWidget();
         const pinned = widgetReactIntegration.getPinnedWidget() === this.props.widgetId;
         const {pinWidget, WidgetHeaderComponent} = widgetReactIntegration;
+        // a widget can declare a configuration that only applies in some of its states
+        const configuration = this.props.configurable === false ? null : this.context;
 
         return (
             <WidgetHeaderComponent
@@ -27,6 +36,11 @@ export class AuthoringWidgetHeading extends React.Component<IPropsWidgetHeading>
                 editMode={this.props.editMode}
                 closeWidget={() => widgetReactIntegration.closeActiveWidget()}
                 customContent={this.props.customContent}
+                openConfiguration={
+                    configuration == null
+                        ? undefined
+                        : () => showSideWidgetConfigurationModal(configuration)
+                }
             >
                 {this.props.children}
             </WidgetHeaderComponent>

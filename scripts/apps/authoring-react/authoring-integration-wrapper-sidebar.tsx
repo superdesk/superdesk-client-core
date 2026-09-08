@@ -2,12 +2,14 @@ import React from 'react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {IArticle, IExposedFromAuthoring} from 'superdesk-api';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
+import {gettext} from 'core/utils';
 import {ISideWidget} from './authoring-integration-wrapper';
-import {getWidgetsFromExtensions} from './side-widgets';
+import {getSideWidgetLockState, getWidgetsFromExtensions, isSideWidgetLocked} from './side-widgets';
 
 interface IProps {
     options: IExposedFromAuthoring<IArticle>;
     sideWidget: ISideWidget | null;
+    readOnly: boolean;
     setSideWidget(sideWidget: ISideWidget | null): void;
 }
 
@@ -54,17 +56,44 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
         });
     }
 
+    /**
+     * Recomputed on every render rather than kept in state: the item is not locked yet on the
+     * first one, so a widget that needs it editable would stay locked for the whole session.
+     */
+    getLockedWidgetIds(): Array<string> {
+        const lockState = getSideWidgetLockState(this.props.options.item, this.props.readOnly);
+
+        return getWidgetsFromExtensions(this.props.options.item)
+            .filter((widget) => isSideWidgetLocked(widget, lockState))
+            .map((widget) => widget._id);
+    }
+
     render() {
         if (this.state.sidebarTabs == null) {
             return null;
         }
 
         const {sideWidget, setSideWidget} = this.props;
+        const lockedWidgetIds = this.getLockedWidgetIds();
+        const tabs = this.state.sidebarTabs.map((tab) => lockedWidgetIds.includes(tab.id)
+            ? {
+                ...tab,
+                tooltip: gettext(
+                    '{{widget}} (not available while the item can not be edited)',
+                    {widget: tab.tooltip},
+                ),
+            }
+            : tab,
+        );
 
         return (
             <Nav.SideBarTabs
                 activeTab={sideWidget?.activeId}
                 onActiveTabChange={(nextWidgetId) => {
+                    if (nextWidgetId != null && lockedWidgetIds.includes(nextWidgetId)) {
+                        return;
+                    }
+
                     // active is closed, we set the pinned as active
                     if (nextWidgetId == null && sideWidget.pinnedId != null) {
                         setSideWidget({
@@ -79,7 +108,7 @@ export class AuthoringIntegrationWrapperSidebar extends React.PureComponent<IPro
                     }
                 }}
 
-                items={this.state.sidebarTabs}
+                items={tabs}
             />
         );
     }
