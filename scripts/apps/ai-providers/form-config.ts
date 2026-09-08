@@ -1,5 +1,5 @@
 import {GenericFormFieldType} from 'core/ui/components/generic-form/interfaces/form';
-import type {ISelectAsyncParameters} from 'core/ui/components/generic-form/input-types/select_async';
+import type {ISelectAsyncParameters} from 'core/ui/components/generic-form/input-types/select-async';
 import {gettext} from 'core/utils';
 import type {IFormField, IFormGroup} from 'superdesk-api';
 import {getProviderModels} from './api';

@@ -3,7 +3,7 @@ import {mount, ReactWrapper} from 'enzyme';
 import {noop} from 'lodash';
 import {GenericFormFieldType} from '../interfaces/form';
 import {getFormFieldComponent} from '../form-field';
-import {ISelectAsyncOption, ISelectAsyncParameters} from '../input-types/select_async';
+import {ISelectAsyncOption, ISelectAsyncParameters} from '../input-types/select-async';
 
 const MODELS: Array<ISelectAsyncOption> = [
     {id: 'gpt-4o', label: 'gpt-4o'},

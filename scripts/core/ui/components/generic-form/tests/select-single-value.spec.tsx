@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {noop} from 'lodash';
 import {GenericFormFieldType} from '../interfaces/form';
-import {getSelectSingleValue} from '../input-types/select_single_value';
+import {getSelectSingleValue} from '../input-types/select-single-value';
 
 const UNAVAILABLE_MESSAGE = 'Select a desk first';
 

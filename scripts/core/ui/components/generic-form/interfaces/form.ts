@@ -21,7 +21,7 @@ export enum GenericFormFieldType {
 
     /**
      * Single value picked from options fetched when the field mounts. `component_parameters` must
-     * match `ISelectAsyncParameters` in `input-types/select_async.tsx`. When `getOptions` rejects,
+     * match `ISelectAsyncParameters` in `input-types/select-async.tsx`. When `getOptions` rejects,
      * the field falls back to a text input so the value can still be typed and saved.
      */
     selectAsync = 'selectAsync',

@@ -1,4 +1,4 @@
-import {getSelectSingleValue} from './select_single_value';
+import {getSelectSingleValue} from './select-single-value';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IVocabulary} from 'superdesk-api';
 

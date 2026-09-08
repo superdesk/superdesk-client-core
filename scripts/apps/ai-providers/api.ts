@@ -1,5 +1,5 @@
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import type {ISelectAsyncOption} from 'core/ui/components/generic-form/input-types/select_async';
+import type {ISelectAsyncOption} from 'core/ui/components/generic-form/input-types/select-async';
 import type {IAIProvider} from './interfaces';
 
 interface IAIProviderModels {
