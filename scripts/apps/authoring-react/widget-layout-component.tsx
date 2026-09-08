@@ -27,7 +27,11 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
                 {header && <React.Fragment>{header}</React.Fragment>}
 
                 <Layout.PanelContent>
-                    <Layout.PanelContentBlock flex={bodyPadding === 'none'} padding={paddingMap[bodyPadding]}>
+                    <Layout.PanelContentBlock
+                        flex={bodyPadding === 'none'}
+                        padding={paddingMap[bodyPadding]}
+                        className={this.props.bodyClassName}
+                    >
                         {body}
                     </Layout.PanelContentBlock>
                 </Layout.PanelContent>

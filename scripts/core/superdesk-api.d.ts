@@ -746,6 +746,12 @@ declare module 'superdesk-api' {
         // only works react based authoring
         background?: 'light' | 'grey';
         bodyPadding?: 'none' | 'small' | 'medium'; // default is 'medium'
+
+        /**
+         * Class on the body container, for a widget whose body paints its own background: the
+         * panel `background` would take the header with it.
+         */
+        bodyClassName?: string;
     }
 
     export interface IGenericSidebarComponentProps<T> {
