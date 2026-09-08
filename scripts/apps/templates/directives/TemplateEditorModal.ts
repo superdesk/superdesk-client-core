@@ -21,7 +21,9 @@ export function TemplateEditorModal() {
             };
 
             scope.onChangeData = (item: ITemplate['data']) => {
-                scope.template.data = item;
+                // `$scope.item` and authoring-react both reference `template.data`, so it has to
+                // be edited in place here too (see `authoring-angular-template-integration`)
+                Object.assign(scope.template.data, item);
 
                 scope.setDirtyFromReact();
             };
