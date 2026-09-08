@@ -75,11 +75,26 @@ export function getSelectSingleValue(
                 return null;
             }
 
+            const items = this.state.items ?? [];
+
             if (this.props.previewOutput) {
-                let item = this.state.items.find(({id}) => id === this.props.value);
+                let item = items.find(({id}) => id === this.props.value);
 
                 return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
             }
+
+            const extraIssueElements = (this.props.issues ?? []).slice(1).map((str, i) => (
+                <div key={i} className="sd-line-input__message">{str}</div>
+            ));
+
+            /*
+                A value no item matches is still listed, otherwise the native select would show an
+                unrelated item while the form keeps the original value. Happens when a stored value
+                is no longer offered, or the items could not be fetched.
+            */
+            const valueMissingFromItems = this.props.value != null
+                && this.props.value !== ''
+                && items.every(({id}) => id !== this.props.value);
 
             const getFirstItemMessage = () => {
                 if (this.state.items == null) {
@@ -112,18 +127,17 @@ export function getSelectSingleValue(
                     >
                         <Option value="">{getFirstItemMessage()}</Option>
                         {
-                            this.state.items == null
-                                ? null
-                                : this.state.items.map(({id, label}, i) => (
-                                    <Option key={i} value={id}>{label}</Option>
-                                ))
+                            items.map(({id, label}, i) => (
+                                <Option key={i} value={id}>{label}</Option>
+                            ))
+                        }
+                        {
+                            valueMissingFromItems
+                                ? <Option value={this.props.value}>{this.props.value}</Option>
+                                : null
                         }
                     </Select>
-                    {
-                        (this.props.issues ?? []).slice(1).map((str, i) => (
-                            <div key={i} className="sd-line-input__message">{str}</div>
-                        ))
-                    }
+                    {extraIssueElements}
                 </div>
             );
         }

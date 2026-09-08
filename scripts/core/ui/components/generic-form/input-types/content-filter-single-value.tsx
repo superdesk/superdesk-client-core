@@ -1,6 +1,6 @@
 import {IContentFilter} from 'superdesk-interfaces/ContentFilter';
 import {dataApi} from 'core/helpers/CrudManager';
-import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
+import {getSelectSingleValueAutoComplete} from './select-single-value-autocomplete';
 
 export const ContentFilterSingleValue = getSelectSingleValueAutoComplete({
     query: (searchString: string) => {
