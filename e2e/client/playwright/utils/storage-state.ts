@@ -51,6 +51,14 @@ export function getStorageState(
         storageStateCopy['origins'][0].localStorage.push({name: 'auth-react', value: 'true'});
     }
 
+    if (otherOptions?.publishingSections === true) {
+        storageStateCopy['origins'][0].localStorage.push({name: PUBLISHING_SECTIONS_ENABLED, value: 'true'});
+    }
+
+    for (const entry of otherOptions?.localStorageEntries ?? []) {
+        storageStateCopy['origins'][0].localStorage.push(entry);
+    }
+
     return withSlotOrigin(storageStateCopy);
 }
 
@@ -61,13 +69,4 @@ export function getStorageState(
  */
 export function getStorageStateFromFile(filePath: string): StorageState {
     return withSlotOrigin(JSON.parse(fs.readFileSync(filePath, 'utf-8')));
-    if (otherOptions?.publishingSections === true) {
-        storageStateCopy['origins'][0].localStorage.push({name: PUBLISHING_SECTIONS_ENABLED, value: 'true'});
-    }
-
-    for (const entry of otherOptions?.localStorageEntries ?? []) {
-        storageStateCopy['origins'][0].localStorage.push(entry);
-    }
-
-    return storageStateCopy;
 }
