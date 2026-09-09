@@ -26,7 +26,7 @@ test.describe('related items widget in authoring-react', () => {
         return decoded.includes('/api/search') && decoded.includes(fragment);
     }
 
-    async function openWidgetFor(page: Page, articleTitle: string): Promise<Locator> {
+    async function openArticleFor(page: Page, articleTitle: string): Promise<void> {
         const monitoring = new Monitoring(page);
         const authoring = new Authoring(page);
 
@@ -34,6 +34,10 @@ test.describe('related items widget in authoring-react', () => {
         await monitoring.selectDeskOrWorkspace('Sports');
         await monitoring.executeActionOnMonitoringItem(articleInWorkingStage(page, articleTitle), 'Edit');
         await authoring.waitForAuthoringReactToInitialize();
+    }
+
+    async function openWidgetFor(page: Page, articleTitle: string): Promise<Locator> {
+        await openArticleFor(page, articleTitle);
 
         await page.getByTestId('widget-icon').and(page.locator('[data-test-value="related-item"]')).click();
 
@@ -154,6 +158,37 @@ test.describe('related items widget in authoring-react', () => {
 
         await expect(menu).toBeVisible();
         await expect(menu.getByRole('button', {name: 'Spike Item', exact: true})).toBeVisible();
+    });
+
+    test('drops and restores its tab as the article moves between content profiles', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'related-items'});
+
+        // the widget searches on the slugline, so a profile without one hides it. No two profiles
+        // in the snapshot differ that way, so the Text profile is stripped of its slugline here.
+        await page.route('**/api/content_types*', async (route) => {
+            const response = await route.fetch();
+            const body = await response.json();
+
+            for (const profile of body._items ?? []) {
+                if (profile._id === 'text') {
+                    delete profile.schema?.slugline;
+                }
+            }
+
+            await route.fulfill({response, json: body});
+        });
+
+        await openArticleFor(page, 'test sports story');
+
+        const tab = page.getByTestId('widget-icon').and(page.locator('[data-test-value="related-item"]'));
+
+        await expect(tab).toBeVisible();
+
+        await page.getByTestId('content-profile-select').selectOption('text');
+        await expect(tab).toHaveCount(0);
+
+        await page.getByTestId('content-profile-select').selectOption('655494fc71839faddb615a24');
+        await expect(tab).toBeVisible();
     });
 
     test('offers a slugline search when the article has no relations', async ({page}) => {
