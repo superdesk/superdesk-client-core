@@ -94,6 +94,29 @@ test.describe('related items widget in authoring-react', () => {
         await expect(page.getByTestId('print-preview-label')).toHaveText('related story fixture');
     });
 
+    test('previews a related item reached with the keyboard', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'related-items'});
+
+        const widget = await openWidgetFor(page, 'test sports story');
+
+        // tabbing on from the control before it must land on the row, not skip past it
+        await widget.getByTestId('related-item').first().getByTestId('related-item-actions')
+            .locator('button').focus();
+        await page.keyboard.press('Tab');
+
+        const focused = await page.evaluate(() => ({
+            testId: document.activeElement?.getAttribute('data-test-id') ?? null,
+            item: document.activeElement
+                ?.closest('[data-test-id="related-item"]')?.getAttribute('data-test-value') ?? null,
+        }));
+
+        expect(focused).toEqual({testId: 'related-item-content', item: 'related story fixture'});
+
+        await page.keyboard.press('Enter');
+
+        await expect(page.getByTestId('print-preview-label')).toHaveText('related story fixture');
+    });
+
     test('previews a related item that carries no content profile', async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'related-items'});
 

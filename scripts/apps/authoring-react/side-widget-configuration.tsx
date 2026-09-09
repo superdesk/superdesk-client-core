@@ -24,6 +24,7 @@ interface IProps {
 }
 
 interface IState {
+    widgetId: IArticleSideWidget['_id'];
     configuration: any;
 }
 
@@ -36,6 +37,20 @@ export class SideWidgetConfigurationProvider extends React.PureComponent<IProps,
         super(props);
 
         this.state = {
+            widgetId: props.widget._id,
+            configuration: props.widget.configuration.getInitialConfiguration(),
+        };
+    }
+
+    // switching between two configurable widgets reuses this instance, and the second one must
+    // not be handed the configuration of the first
+    static getDerivedStateFromProps(props: IProps, state: IState): IState | null {
+        if (props.widget._id === state.widgetId) {
+            return null;
+        }
+
+        return {
+            widgetId: props.widget._id,
             configuration: props.widget.configuration.getInitialConfiguration(),
         };
     }

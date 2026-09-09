@@ -52,7 +52,21 @@ export class RelatedItem extends React.PureComponent<IProps> {
                     />
                 </div>
 
-                <div className="boxed-list__item-content" onClick={onClick}>
+                <div
+                    className="boxed-list__item-content"
+                    data-test-id="related-item-content"
+                    role="button"
+                    tabIndex={0}
+                    onClick={onClick}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            // space would scroll the panel
+                            event.preventDefault();
+
+                            onClick();
+                        }
+                    }}
+                >
                     <div className="boxed-list__item-content-row boxed-list__item-content-row--fixed">
                         {badge}
 
