@@ -7,7 +7,7 @@ import {searchArticles} from '../article-search';
 import {IArticleSource, IContentList, IItemChange, IListEntry} from '../interfaces';
 import {addArticleChangesListener, addListItemsChangeListener} from '../live-updates';
 import {superdesk} from '../superdesk';
-import {fixPinnedItemsPosition, listItemToEntry, recordChange, reorder} from '../utils';
+import {fixPinnedItemsPosition, listItemToEntry, moveEntry, recordChange} from '../utils';
 import {ListPane} from './list-pane';
 import {registerNavigationGuard} from './navigation-guard';
 import {PickerPane} from './picker-pane';
@@ -242,7 +242,7 @@ export class ListEditor extends React.PureComponent<IProps, IState> {
                 return;
             }
 
-            const reordered = fixPinnedItemsPosition(reorder(entries, source.index, destination.index));
+            const reordered = moveEntry(entries, source.index, destination.index);
             const movedEntry = reordered.find((entry) => entry.uid === draggableId);
 
             if (movedEntry == null) {

@@ -4,6 +4,7 @@ import {
     formatArticleTime,
     getDuplicateContentIds,
     listItemToEntry,
+    moveEntry,
     recordChange,
     reorder,
     updatePositions,
@@ -58,6 +59,26 @@ describe('fixPinnedItemsPosition', () => {
         expect(fixPinnedItemsPosition(entries)).toEqual(entries);
     });
 
+    it('places pinned entries regardless of the order they appear in', () => {
+        const result = fixPinnedItemsPosition([
+            entry('s2', {sticky: true, stickyPosition: 2}),
+            entry('a'),
+            entry('s1', {sticky: true, stickyPosition: 1}),
+            entry('b'),
+        ]);
+
+        expect(result.map(({contentId}) => contentId)).toEqual(['a', 's1', 's2', 'b']);
+    });
+
+    it('does not mutate the input', () => {
+        const entries = [entry('b'), entry('a', {sticky: true, stickyPosition: 0})];
+        const copy = [...entries];
+
+        fixPinnedItemsPosition(entries);
+
+        expect(entries).toEqual(copy);
+    });
+
     it('ignores sticky entries without a recorded position', () => {
         const entries = [
             entry('b'),
@@ -65,6 +86,49 @@ describe('fixPinnedItemsPosition', () => {
         ];
 
         expect(fixPinnedItemsPosition(entries)).toEqual(entries);
+    });
+});
+
+describe('moveEntry', () => {
+    const ids = (entries: Array<IListEntry>) => entries.map(({contentId}) => contentId);
+    const pinnedPair = () => [
+        entry('a'),
+        entry('s1', {sticky: true, stickyPosition: 1}),
+        entry('s2', {sticky: true, stickyPosition: 2}),
+        entry('b'),
+    ];
+
+    it('moves an entry to the bottom past a pinned block', () => {
+        expect(ids(moveEntry(pinnedPair(), 0, 3))).toEqual(['b', 's1', 's2', 'a']);
+    });
+
+    it('drops an entry dragged down onto a pinned slot right below the pinned block', () => {
+        expect(ids(moveEntry(pinnedPair(), 0, 2))).toEqual(['b', 's1', 's2', 'a']);
+        expect(ids(moveEntry(pinnedPair(), 0, 1))).toEqual(['b', 's1', 's2', 'a']);
+    });
+
+    it('drops an entry dragged up onto a pinned slot right above the pinned block', () => {
+        expect(ids(moveEntry(pinnedPair(), 3, 2))).toEqual(['b', 's1', 's2', 'a']);
+        expect(ids(moveEntry(pinnedPair(), 3, 1))).toEqual(['b', 's1', 's2', 'a']);
+    });
+
+    it('keeps the order of the other unpinned entries', () => {
+        const entries = [
+            entry('a'),
+            entry('s1', {sticky: true, stickyPosition: 1}),
+            entry('b'),
+            entry('c'),
+            entry('d'),
+        ];
+
+        expect(ids(moveEntry(entries, 4, 0))).toEqual(['d', 's1', 'a', 'b', 'c']);
+        expect(ids(moveEntry(entries, 0, 3))).toEqual(['b', 's1', 'c', 'a', 'd']);
+    });
+
+    it('does not move pinned entries', () => {
+        const entries = pinnedPair();
+
+        expect(moveEntry(entries, 1, 3)).toBe(entries);
     });
 });
 

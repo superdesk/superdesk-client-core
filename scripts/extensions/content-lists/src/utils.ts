@@ -19,33 +19,70 @@ export function reorder<T>(list: Array<T>, startIndex: number, endIndex: number)
     return result;
 }
 
+function isPinned(entry: IListEntry): entry is IListEntry & {stickyPosition: number} {
+    return entry.sticky && entry.stickyPosition != null;
+}
+
 /**
  * Re-inserts every pinned entry at its recorded sticky position
  * after any mutation of the list.
+ *
+ * Mirrors how the server lays the list out: pinned entries occupy their
+ * absolute positions and the unpinned ones fill the remaining slots in
+ * order. Pinned entries are inserted from the lowest position up so each
+ * splice lands on an array that already holds every pinned entry before it;
+ * moving them one at a time within the full list instead shifts the ones not
+ * yet placed and puts adjacent pinned entries in the wrong order.
  */
 export function fixPinnedItemsPosition(entries: Array<IListEntry>): Array<IListEntry> {
-    let result = entries;
+    const result = entries.filter((entry) => !isPinned(entry));
 
-    result.forEach((entry, index) => {
-        if (entry.sticky && entry.stickyPosition != null) {
-            result = reorder(result, index, entry.stickyPosition);
-        }
-    });
+    entries
+        .filter(isPinned)
+        .sort((a, b) => a.stickyPosition - b.stickyPosition)
+        .forEach((entry) => {
+            result.splice(entry.stickyPosition, 0, entry);
+        });
 
     return result;
 }
 
 /**
- * Appends a change for the entry at `index` (or the removed entry's id for
- * deletes) and rewrites the recorded positions of all non-delete changes
- * from the entries' current indices.
+ * Moves the unpinned entry at `sourceIndex` to `destinationIndex` without
+ * disturbing pinned entries, which keep their absolute positions.
  *
- * Deleting an entry that was added during this editing session (its `add`
- * is still pending) cancels the pending `add` and its follow-up `move`s
- * instead of recording a `delete` - the entry never existed on the server,
- * and sending `add` + `delete` for the same content would be rejected as a
- * duplicate when the content is already in the list.
+ * A drop onto a slot a pinned entry owns cannot land there, so the moved
+ * entry continues in the direction of the drag to the nearest free slot:
+ * dragging an entry down past a pinned block puts it right below the block,
+ * dragging one up past it puts it right above. The remaining unpinned
+ * entries keep their order and fill the other free slots.
  */
+export function moveEntry(
+    entries: Array<IListEntry>,
+    sourceIndex: number,
+    destinationIndex: number,
+): Array<IListEntry> {
+    const moved = entries[sourceIndex];
+
+    if (moved == null || isPinned(moved)) {
+        return entries;
+    }
+
+    const pinnedPositions = new Set(entries.filter(isPinned).map((entry) => entry.stickyPosition));
+    const freeSlots = entries
+        .map((_entry, index) => index)
+        .filter((index) => !pinnedPositions.has(index));
+    const targetSlot = sourceIndex < destinationIndex
+        ? freeSlots.find((slot) => slot >= destinationIndex) ?? freeSlots[freeSlots.length - 1]
+        : [...freeSlots].reverse().find((slot) => slot <= destinationIndex) ?? freeSlots[0];
+
+    const unpinned = entries.filter((entry, index) => index !== sourceIndex && !isPinned(entry));
+
+    unpinned.splice(freeSlots.indexOf(targetSlot), 0, moved);
+
+    return fixPinnedItemsPosition([...unpinned, ...entries.filter(isPinned)]);
+}
+
 export function recordChange(
     changesRecord: Array<IItemChange>,
     action: IItemChangeAction,
