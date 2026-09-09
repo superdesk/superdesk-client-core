@@ -234,19 +234,6 @@ export class ContentLists {
         return this.webhooksModal.getByTestId('webhook-item').and(this.page.locator(`[data-test-value="${url}"]`));
     }
 
-    /**
-     * The whole row of a webhook. Its hover actions are rendered by the list
-     * item outside the content wrapper that carries the test id, so they are
-     * reached from the `li` containing that wrapper rather than from it.
-     */
-    getWebhookRow(url: string): Locator {
-        // `has` is matched relative to each `li`, so the inner locator must not
-        // be rooted at the modal (which is never inside the row).
-        const item = this.page.getByTestId('webhook-item').and(this.page.locator(`[data-test-value="${url}"]`));
-
-        return this.webhooksModal.locator('li').filter({has: item});
-    }
-
     async openWebhooksModal(): Promise<void> {
         await this.openGrid();
         await this.grid.getByTestId('content-lists--settings-menu-button').click();
@@ -276,10 +263,12 @@ export class ContentLists {
     }
 
     async removeWebhook(url: string): Promise<void> {
-        const row = this.getWebhookRow(url);
-
-        await row.hover();
-        await row.getByTestId('webhook-item--actions').click();
+        // the actions slide in on hovering the row
+        await this.getWebhookItem(url).hover();
+        await this.webhooksModal
+            .getByTestId('webhook-item--actions')
+            .and(this.page.locator(`[data-test-value="${url}"]`))
+            .click();
         await this.page.getByTestId('webhook-item--remove').click();
         await this.confirm();
     }

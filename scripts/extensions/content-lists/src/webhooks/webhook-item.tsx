@@ -51,7 +51,9 @@ export class WebhookItem extends React.PureComponent<IProps> {
                             },
                         ]}
                     >
-                        <span data-test-id="webhook-item--actions">
+                        {/* the row is rendered by BoxedListItem and carries no test id, so the
+                            actions are addressed by the webhook they belong to */}
+                        <span data-test-id="webhook-item--actions" data-test-value={webhook.url}>
                             <IconButton
                                 icon="dots-vertical"
                                 size="small"

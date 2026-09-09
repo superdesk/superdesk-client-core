@@ -80,6 +80,6 @@ test.describe('content lists webhooks', () => {
         await contentLists.openWebhooksModal();
         await contentLists.removeWebhook('https://example.com/doomed');
 
-        await expect(contentLists.getWebhookRow('https://example.com/doomed')).toHaveCount(0);
+        await expect(contentLists.getWebhookItem('https://example.com/doomed')).toHaveCount(0);
     });
 });
