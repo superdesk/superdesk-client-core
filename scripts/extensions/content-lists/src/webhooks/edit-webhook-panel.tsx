@@ -76,12 +76,14 @@ export class EditWebhookPanel extends React.PureComponent<IProps, IState> {
                                 onClick={() => {
                                     this.props.onClose();
                                 }}
+                                data-test-id="webhook-edit-panel--cancel"
                             />
                             <Button
                                 text={gettext('Save')}
                                 type="primary"
                                 disabled={url.trim().length < 1 || saving}
                                 onClick={this.save}
+                                data-test-id="webhook-edit-panel--save"
                             />
                         </ButtonGroup>
                     </Layout.PanelHeaderSlidingToolbar>

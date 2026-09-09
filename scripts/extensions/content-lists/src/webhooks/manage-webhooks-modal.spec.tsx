@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {CreateButton, Dropdown, EmptyState, SearchBar, SubNav} from 'superdesk-ui-framework/react';
 import {IWebhook} from '../interfaces';
-import {flushPromises, mountWithCleanup} from '../tests/helpers';
+import {flushPromises, getLabelText, mountWithCleanup} from '../tests/helpers';
 import {superdeskMock} from '../tests/superdesk-mock';
 import {EditWebhookPanel} from './edit-webhook-panel';
 import {ManageWebhooksModal} from './manage-webhooks-modal';
@@ -116,13 +116,13 @@ describe('ManageWebhooksModal', () => {
         // each WebhookItem renders its own actions dropdown; the filter
         // dropdown is the one inside the sub navigation
         const dropdownGroup = wrapper.find(SubNav).find(Dropdown).prop('items')[0] as {
-            items: Array<string | {label: string; onSelect: () => void}>;
+            items: Array<string | {label: React.ReactNode; onSelect: () => void}>;
         };
         const filterItems = dropdownGroup.items.filter(
-            (item): item is {label: string; onSelect: () => void} => typeof item !== 'string',
+            (item): item is {label: React.ReactNode; onSelect: () => void} => typeof item !== 'string',
         );
 
-        expect(filterItems.map(({label}) => label)).toEqual(['All', 'Enabled', 'Disabled']);
+        expect(filterItems.map(({label}) => getLabelText(label))).toEqual(['All', 'Enabled', 'Disabled']);
 
         filterItems[1].onSelect();
         wrapper.update();

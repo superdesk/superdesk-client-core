@@ -156,7 +156,11 @@ export class ArticleRow extends React.PureComponent<IProps> {
                 itemRow: [{
                     content: (
                         <div style={{display: 'flex', alignItems: 'center'}}>
-                            <span className={entry.sticky ? getClass('pin-toggle--pinned') : undefined}>
+                            <span
+                                className={entry.sticky ? getClass('pin-toggle--pinned') : undefined}
+                                data-test-id="content-list-item--pin"
+                                data-test-value={entry.sticky ? 'pinned' : 'unpinned'}
+                            >
                                 <IconButton
                                     icon="pin"
                                     ariaValue={entry.sticky ? gettext('Unpin') : gettext('Pin')}
@@ -165,13 +169,15 @@ export class ArticleRow extends React.PureComponent<IProps> {
                                     }}
                                 />
                             </span>
-                            <IconButton
-                                icon="trash"
-                                ariaValue={gettext('Remove')}
-                                onClick={() => {
-                                    this.props.onRemove?.();
-                                }}
-                            />
+                            <span data-test-id="content-list-item--remove">
+                                <IconButton
+                                    icon="trash"
+                                    ariaValue={gettext('Remove')}
+                                    onClick={() => {
+                                        this.props.onRemove?.();
+                                    }}
+                                />
+                            </span>
                         </div>
                     ),
                 }],

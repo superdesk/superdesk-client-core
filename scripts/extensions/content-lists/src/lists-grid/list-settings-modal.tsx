@@ -75,12 +75,14 @@ export class ListSettingsModal extends React.PureComponent<IProps, IState> {
                         <Button
                             text={gettext('Cancel')}
                             onClick={this.props.closeModal}
+                            data-test-id="content-list-settings--cancel"
                         />
                         <Button
                             text={gettext('Save')}
                             type="primary"
                             disabled={saving || name.trim().length < 1}
                             onClick={this.save}
+                            data-test-id="content-list-settings--save"
                         />
                     </React.Fragment>
                 )}

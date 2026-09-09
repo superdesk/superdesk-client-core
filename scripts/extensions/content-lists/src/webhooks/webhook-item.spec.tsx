@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {BoxedListItem, Dropdown, Label} from 'superdesk-ui-framework/react';
 import {IWebhook} from '../interfaces';
-import {mountWithCleanup} from '../tests/helpers';
+import {getLabelText, mountWithCleanup} from '../tests/helpers';
 import {WebhookItem} from './webhook-item';
 
 function webhook(overrides: Partial<IWebhook> = {}): IWebhook {
@@ -80,9 +80,9 @@ describe('WebhookItem', () => {
         const onDelete = jasmine.createSpy('onDelete');
         const wrapper = mountItem({onEdit, onDelete});
 
-        const items = wrapper.find(Dropdown).prop('items') as Array<{label: string; onSelect: () => void}>;
+        const items = wrapper.find(Dropdown).prop('items') as Array<{label: React.ReactNode; onSelect: () => void}>;
 
-        expect(items.map(({label}) => label)).toEqual(['Edit', 'Remove']);
+        expect(items.map(({label}) => getLabelText(label))).toEqual(['Edit', 'Remove']);
 
         items[0].onSelect();
         expect(onEdit).toHaveBeenCalled();
@@ -94,8 +94,8 @@ describe('WebhookItem', () => {
     it('offers only remove while the editor is open', () => {
         const wrapper = mountItem({onEdit: null});
 
-        const items = wrapper.find(Dropdown).prop('items') as Array<{label: string}>;
+        const items = wrapper.find(Dropdown).prop('items') as Array<{label: React.ReactNode}>;
 
-        expect(items.map(({label}) => label)).toEqual(['Remove']);
+        expect(items.map(({label}) => getLabelText(label))).toEqual(['Remove']);
     });
 });

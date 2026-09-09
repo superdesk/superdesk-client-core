@@ -98,13 +98,16 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                 data-test-id="content-lists--grid"
             >
                 <SubNav>
-                    <SearchBar
-                        placeholder={gettext('Search')}
-                        onSubmit={(value: string) => {
-                            this.setState({searchString: value});
-                        }}
-                        searchOptions={{searchOnType: true, searchDelay: 300}}
-                    />
+                    {/* `display: contents` keeps the search bar a direct flex child of the sub navigation */}
+                    <div style={{display: 'contents'}} data-test-id="content-lists--search">
+                        <SearchBar
+                            placeholder={gettext('Search')}
+                            onSubmit={(value: string) => {
+                                this.setState({searchString: value});
+                            }}
+                            searchOptions={{searchOnType: true, searchDelay: 300}}
+                        />
+                    </div>
                     <ButtonGroup align="end" spaces="no-space">
                         <span data-test-id="content-lists--settings-menu">
                             <Dropdown
@@ -116,7 +119,11 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                             'divider',
                                             {
                                                 icon: 'link',
-                                                label: gettext('Webhooks'),
+                                                label: (
+                                                    <span data-test-id="content-lists--webhooks">
+                                                        {gettext('Webhooks')}
+                                                    </span>
+                                                ),
                                                 onSelect: this.openWebhooksModal,
                                             },
                                         ],
@@ -126,17 +133,20 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                 <NavButton
                                     icon="settings"
                                     onClick={() => false}
+                                    data-test-id="content-lists--settings-menu-button"
                                 />
                             </Dropdown>
                         </span>
-                        <CreateButton
-                            ariaValue={gettext('Create new content list')}
-                            onClick={() => {
-                                if (this.state.newListName == null) {
-                                    this.setState({newListName: ''});
-                                }
-                            }}
-                        />
+                        <span data-test-id="content-lists--create">
+                            <CreateButton
+                                ariaValue={gettext('Create new content list')}
+                                onClick={() => {
+                                    if (this.state.newListName == null) {
+                                        this.setState({newListName: ''});
+                                    }
+                                }}
+                            />
+                        </span>
                     </ButtonGroup>
                 </SubNav>
                 <div style={{flexGrow: 1, overflowY: 'auto'}}>
@@ -171,18 +181,22 @@ export class ListsGrid extends React.PureComponent<IProps, IState> {
                                                             placeholder={gettext('List name')}
                                                             data-test-id="content-lists--new-list-name"
                                                         />
-                                                        <IconButton
-                                                            icon="ok"
-                                                            ariaValue={gettext('Create list')}
-                                                            onClick={this.createNewList}
-                                                        />
-                                                        <IconButton
-                                                            icon="close-small"
-                                                            ariaValue={gettext('Cancel')}
-                                                            onClick={() => {
-                                                                this.setState({newListName: null});
-                                                            }}
-                                                        />
+                                                        <span data-test-id="content-lists--new-list-confirm">
+                                                            <IconButton
+                                                                icon="ok"
+                                                                ariaValue={gettext('Create list')}
+                                                                onClick={this.createNewList}
+                                                            />
+                                                        </span>
+                                                        <span data-test-id="content-lists--new-list-cancel">
+                                                            <IconButton
+                                                                icon="close-small"
+                                                                ariaValue={gettext('Cancel')}
+                                                                onClick={() => {
+                                                                    this.setState({newListName: null});
+                                                                }}
+                                                            />
+                                                        </span>
                                                     </div>
                                                 </GridItemContent>
                                             </GridItem>

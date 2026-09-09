@@ -160,13 +160,16 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                                 <Layout.LayoutContainer fullHeight>
                                     <Layout.HeaderPanel>
                                         <SubNav>
-                                            <SearchBar
-                                                placeholder={gettext('Search')}
-                                                onSubmit={(value: string) => {
-                                                    this.setState({searchString: value});
-                                                }}
-                                                searchOptions={{searchOnType: true, searchDelay: 300}}
-                                            />
+                                            {/* `display: contents` keeps the search bar a direct flex child */}
+                                            <div style={{display: 'contents'}} data-test-id="manage-webhooks--search">
+                                                <SearchBar
+                                                    placeholder={gettext('Search')}
+                                                    onSubmit={(value: string) => {
+                                                        this.setState({searchString: value});
+                                                    }}
+                                                    searchOptions={{searchOnType: true, searchDelay: 300}}
+                                                />
+                                            </div>
                                             <ButtonGroup align="end" spaces="no-space">
                                                 <Dropdown
                                                     items={[{
@@ -175,7 +178,14 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                                                         items: [
                                                             'divider',
                                                             ...FILTERS.map((filterOption) => ({
-                                                                label: getFilterLabel(filterOption),
+                                                                label: (
+                                                                    <span
+                                                                        data-test-id="manage-webhooks--filter-option"
+                                                                        data-test-value={filterOption}
+                                                                    >
+                                                                        {getFilterLabel(filterOption)}
+                                                                    </span>
+                                                                ),
                                                                 active: filterOption === filter,
                                                                 onSelect: () => {
                                                                     this.setState({filter: filterOption});
@@ -187,14 +197,17 @@ export class ManageWebhooksModal extends React.PureComponent<IProps, IState> {
                                                     <NavButton
                                                         text={getFilterLabel(filter)}
                                                         onClick={() => false}
+                                                        data-test-id="manage-webhooks--filter"
                                                     />
                                                 </Dropdown>
-                                                <CreateButton
-                                                    ariaValue={gettext('Create new webhook')}
-                                                    onClick={() => {
-                                                        this.setState({editorOpen: true, selectedWebhook: null});
-                                                    }}
-                                                />
+                                                <span data-test-id="manage-webhooks--create">
+                                                    <CreateButton
+                                                        ariaValue={gettext('Create new webhook')}
+                                                        onClick={() => {
+                                                            this.setState({editorOpen: true, selectedWebhook: null});
+                                                        }}
+                                                    />
+                                                </span>
                                             </ButtonGroup>
                                         </SubNav>
                                     </Layout.HeaderPanel>

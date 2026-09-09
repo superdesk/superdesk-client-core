@@ -159,24 +159,34 @@ export class ListCard extends React.PureComponent<IProps, IState> {
                         <Dropdown
                             items={[
                                 {
-                                    label: gettext('Settings'),
+                                    label: (
+                                        <span data-test-id="content-list-card--settings">
+                                            {gettext('Settings')}
+                                        </span>
+                                    ),
                                     icon: 'settings',
                                     onSelect: () => {
                                         this.props.onOpenSettings();
                                     },
                                 },
                                 {
-                                    label: gettext('Remove'),
+                                    label: (
+                                        <span data-test-id="content-list-card--remove">
+                                            {gettext('Remove')}
+                                        </span>
+                                    ),
                                     icon: 'trash',
                                     onSelect: this.removeList,
                                 },
                             ]}
                         >
-                            <IconButton
-                                icon="dots-vertical"
-                                ariaValue={gettext('Actions')}
-                                onClick={() => false}
-                            />
+                            <span data-test-id="content-list-card--actions">
+                                <IconButton
+                                    icon="dots-vertical"
+                                    ariaValue={gettext('Actions')}
+                                    onClick={() => false}
+                                />
+                            </span>
                         </Dropdown>
                     </div>
                     <GridItemContent>

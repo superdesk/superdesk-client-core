@@ -1,5 +1,14 @@
+import * as React from 'react';
 import {mount, ReactWrapper} from 'enzyme';
 import * as ReactDOM from 'react-dom';
+
+/**
+ * Dropdown item labels are wrapped in an element carrying a test id, so
+ * specs asserting on the visible label read its text rather than the node.
+ */
+export function getLabelText(label: React.ReactNode): string {
+    return mount(React.createElement('div', null, label)).text();
+}
 
 /**
  * Waits until all promise callbacks queued so far (and those they queue in

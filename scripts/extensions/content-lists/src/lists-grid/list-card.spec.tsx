@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Dropdown, EmptyState, Label} from 'superdesk-ui-framework/react';
 import {IContentList, IContentListItem} from '../interfaces';
-import {flushPromises, mountWithCleanup} from '../tests/helpers';
+import {flushPromises, getLabelText, mountWithCleanup} from '../tests/helpers';
 import {dispatchWebsocketEvent, superdeskMock} from '../tests/superdesk-mock';
 import {ListCard} from './list-card';
 
@@ -166,9 +166,12 @@ describe('ListCard', () => {
         await flushPromises();
         wrapper.update();
 
-        const dropdownItems = wrapper.find(Dropdown).prop('items') as Array<{label: string; onSelect: () => void}>;
+        const dropdownItems = wrapper.find(Dropdown).prop('items') as Array<{
+            label: React.ReactNode;
+            onSelect: () => void;
+        }>;
 
-        expect(dropdownItems.map(({label}) => label)).toEqual(['Settings', 'Remove']);
+        expect(dropdownItems.map(({label}) => getLabelText(label))).toEqual(['Settings', 'Remove']);
 
         dropdownItems[0].onSelect();
 

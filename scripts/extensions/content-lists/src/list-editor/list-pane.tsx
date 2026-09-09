@@ -48,6 +48,7 @@ export class ListPane extends React.PureComponent<IProps> {
                         onClick={() => {
                             this.props.onBack();
                         }}
+                        data-test-id="content-list--back"
                     />
                     <Dropdown
                         items={[{
@@ -83,6 +84,7 @@ export class ListPane extends React.PureComponent<IProps> {
                             onClick={() => {
                                 this.props.onSave();
                             }}
+                            data-test-id="content-list--save"
                         />
                     </div>
                 </SubNav>

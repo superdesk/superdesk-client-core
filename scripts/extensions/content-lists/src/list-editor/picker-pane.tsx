@@ -68,7 +68,14 @@ export class PickerPane extends React.PureComponent<IProps> {
                             type: 'group',
                             label: gettext('Source'),
                             items: SOURCES.map((sourceOption) => ({
-                                label: getSourceLabel(sourceOption),
+                                label: (
+                                    <span
+                                        data-test-id="content-list--picker-source-option"
+                                        data-test-value={sourceOption}
+                                    >
+                                        {getSourceLabel(sourceOption)}
+                                    </span>
+                                ),
                                 active: sourceOption === source,
                                 onSelect: () => {
                                     this.props.onSourceChange(sourceOption);
@@ -79,15 +86,19 @@ export class PickerPane extends React.PureComponent<IProps> {
                         <NavButton
                             text={getSourceLabel(source)}
                             onClick={() => false}
+                            data-test-id="content-list--picker-source"
                         />
                     </Dropdown>
-                    <SearchBar
-                        placeholder={gettext('Search articles')}
-                        onSubmit={(value: string) => {
-                            this.props.onSearch(value);
-                        }}
-                        searchOptions={{searchOnType: true, searchDelay: 300}}
-                    />
+                    {/* `display: contents` keeps the search bar a direct flex child of the sub navigation */}
+                    <div style={{display: 'contents'}} data-test-id="content-list--picker-search">
+                        <SearchBar
+                            placeholder={gettext('Search articles')}
+                            onSubmit={(value: string) => {
+                                this.props.onSearch(value);
+                            }}
+                            searchOptions={{searchOnType: true, searchDelay: 300}}
+                        />
+                    </div>
                 </SubNav>
                 <div
                     style={{flexGrow: 1, overflowY: 'auto'}}

@@ -36,14 +36,14 @@ export class WebhookItem extends React.PureComponent<IProps> {
                     <Dropdown
                         items={[
                             ...(onEdit == null ? [] : [{
-                                label: gettext('Edit'),
+                                label: <span data-test-id="webhook-item--edit">{gettext('Edit')}</span>,
                                 icon: 'pencil',
                                 onSelect: () => {
                                     onEdit();
                                 },
                             }]),
                             {
-                                label: gettext('Remove'),
+                                label: <span data-test-id="webhook-item--remove">{gettext('Remove')}</span>,
                                 icon: 'trash',
                                 onSelect: () => {
                                     this.props.onDelete();
@@ -51,12 +51,14 @@ export class WebhookItem extends React.PureComponent<IProps> {
                             },
                         ]}
                     >
-                        <IconButton
-                            icon="dots-vertical"
-                            size="small"
-                            ariaValue={gettext('Actions')}
-                            onClick={() => false}
-                        />
+                        <span data-test-id="webhook-item--actions">
+                            <IconButton
+                                icon="dots-vertical"
+                                size="small"
+                                ariaValue={gettext('Actions')}
+                                onClick={() => false}
+                            />
+                        </span>
                     </Dropdown>
                 )}
             >

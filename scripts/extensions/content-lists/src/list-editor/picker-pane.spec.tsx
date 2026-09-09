@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ReactWrapper} from 'enzyme';
-import {mountWithCleanup} from '../tests/helpers';
+import {getLabelText, mountWithCleanup} from '../tests/helpers';
 import {DragDropContext, Draggable} from 'react-beautiful-dnd';
 import {Dropdown, Loader, NavButton, SearchBar} from 'superdesk-ui-framework/react';
 import {IArticleSource, IListEntry} from '../interfaces';
@@ -92,10 +92,10 @@ describe('PickerPane', () => {
 
         const dropdownGroup = wrapper.find(Dropdown).prop('items')[0] as {
             label: string;
-            items: Array<{label: string; active?: boolean; onSelect: () => void}>;
+            items: Array<{label: React.ReactNode; active?: boolean; onSelect: () => void}>;
         };
 
-        expect(dropdownGroup.items.map(({label}) => label))
+        expect(dropdownGroup.items.map(({label}) => getLabelText(label)))
             .toEqual(['Published', 'Scheduled', 'In progress']);
         expect(dropdownGroup.items[0].active).toBe(true);
 
