@@ -4,8 +4,14 @@ import {appConfig} from 'appConfig';
 import {TextStatistics} from './text-statistics';
 
 describe('TextStatistics', () => {
+    let previousAuthoringConfig: typeof appConfig.authoring;
+
+    beforeEach(() => {
+        previousAuthoringConfig = appConfig.authoring;
+    });
+
     afterEach(() => {
-        delete appConfig.authoring;
+        appConfig.authoring = previousAuthoringConfig;
     });
 
     it('shows reading time by default', () => {
