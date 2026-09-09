@@ -5,19 +5,11 @@ import {testArticle} from 'test-data/test-article';
 import {testVocabulary} from 'test-data/test-vocabulary';
 import {getBaseFieldsAdapter} from '.';
 
-let getAllVocabulariesOriginal = sdApi.vocabularies.getAll;
-
-const vocabulariesToRestore: Partial<typeof sdApi.vocabularies> = {
-    getAll: getAllVocabulariesOriginal,
-};
+const configOriginal = sdApi.config;
+const vocabulariesOriginal = sdApi.vocabularies;
 
 describe('field adapters', () => {
     beforeEach(() => {
-        Object.assign(sdApi, {
-            ...sdApi,
-            vocabularies: {},
-        });
-
         const vocabulariesStub: Partial<typeof sdApi.vocabularies> = {
             getAll: () => {
                 let testVocabularies = OrderedMap<string, IVocabulary>();
@@ -66,11 +58,19 @@ describe('field adapters', () => {
             getVocabularyItemLabel: (term) => term.name,
         };
 
-        Object.assign(sdApi.vocabularies, vocabulariesStub);
+        /**
+         * `featureEnabled` reads the angular injector, which only exists once
+         * some other spec has created one. Stub it so this spec does not depend
+         * on jasmine's random order.
+         */
+        sdApi.config = {...configOriginal, featureEnabled: () => false};
+
+        sdApi.vocabularies = {...vocabulariesOriginal, ...vocabulariesStub};
     });
 
     afterEach(() => {
-        Object.assign(sdApi.vocabularies, vocabulariesToRestore);
+        sdApi.config = configOriginal;
+        sdApi.vocabularies = vocabulariesOriginal;
     });
 
     it('dropdown adapters can handle `null` as value', () => {
@@ -93,6 +93,26 @@ describe('field adapters', () => {
             if (dropdownAdapter.storeValue != null) {
                 expect(() => {
                     dropdownAdapter.storeValue(null, testArticle, {}, false);
+                }).not.toThrow();
+            }
+        }
+    });
+
+    /**
+     * `null` is a valid stored value for article fields;
+     * the kill template applies it to clear fields like `place`.
+     */
+    it('dropdown adapters can read an article that stores `null` for their field', () => {
+        const baseAdapter = getBaseFieldsAdapter();
+        const dropdownAdapters =
+            Object.values(baseAdapter)
+                .map((adapter) => ({adapter, fieldV2: adapter.getFieldV2({}, {}, () => false)}))
+                .filter(({fieldV2}) => fieldV2.fieldType === 'dropdown');
+
+        for (const {adapter, fieldV2} of dropdownAdapters) {
+            if (adapter.retrieveStoredValue != null) {
+                expect(() => {
+                    adapter.retrieveStoredValue({...testArticle, [fieldV2.id]: null}, null, {});
                 }).not.toThrow();
             }
         }

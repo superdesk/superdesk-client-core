@@ -373,7 +373,8 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
 
 class AutoSaveKill implements IAuthoringAutoSave<IArticle> {
     get() {
-        return Promise.resolve({} as IArticle);
+        // null - not an empty object - is the contract for "no autosaved data"; see IAuthoringAutoSave
+        return Promise.resolve(null);
     }
 
     delete() {
@@ -444,7 +445,7 @@ export const authoringStorageIArticleCorrect: IAuthoringStorage<IArticle> = {
 
             delete newItem.fields_meta['ednote'];
 
-            return saved;
+            return newItem;
         });
     },
     saveEntity: () => new Promise(noop),

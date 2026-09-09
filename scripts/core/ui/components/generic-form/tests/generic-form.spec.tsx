@@ -19,6 +19,8 @@ const reworkedComponents = [
     GenericFormFieldType.vocabularySingleValue,
     GenericFormFieldType.yesNo,
     GenericFormFieldType.select,
+    GenericFormFieldType.selectAsync,
+    GenericFormFieldType.selectMultipleAsync,
     GenericFormFieldType.macroSingleValue,
 ];
 
@@ -49,6 +51,15 @@ function getTestFieldConfig(type: GenericFormFieldType): IFormField<any> {
                 field: 'test-field',
                 component_parameters: {
                     items: [],
+                },
+            };
+        case GenericFormFieldType.selectAsync:
+        case GenericFormFieldType.selectMultipleAsync:
+            return {
+                type: type,
+                field: 'test-field',
+                component_parameters: {
+                    getOptions: () => Promise.resolve([]),
                 },
             };
         case GenericFormFieldType.vocabularySingleValue:

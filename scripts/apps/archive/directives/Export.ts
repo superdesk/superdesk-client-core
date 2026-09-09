@@ -76,24 +76,57 @@ class LinkFunction {
         return this.api.save('export', {}, {item_ids: itemIdList, format_type: formatter.name, validate: validate})
             .then((item) => {
                 this.scope.failures = item.failures;
-                // Click the url to triger download of file
                 if (item.url) {
-                    let elem = $('#exportDownloadLink');
-
-                    if (elem[0]) {
-                        elem[0].href = item.url;
-                        elem[0].click();
-                    }
-
-                    if (this.scope.failures === 0) {
-                        this.scope.closeExport();
-                    }
+                    return this.downloadFile(item.url).then(() => {
+                        if (this.scope.failures === 0) {
+                            this.scope.closeExport();
+                        }
+                    });
                 }
             }, (error) => {
                 this.onError(error.data._message);
             })
             .finally(() => {
                 this.scope.loading = false;
+            });
+    }
+
+    /**
+     * @ngdoc method
+     * @name sdExport#downloadFile
+     * @private
+     * @param {string} url - url of the exported file
+     * @description Downloads the file as a blob to avoid a top-level navigation,
+     * which in Firefox tears down the notification websocket. Falls back to a
+     * direct link click if the file can't be fetched (e.g. cross-origin in dev).
+     * @return {Promise}
+     */
+    downloadFile(url) {
+        return fetch(url)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Export download failed');
+                }
+                return response.blob();
+            })
+            .then((blob) => {
+                const objectUrl = window.URL.createObjectURL(blob);
+                const elem = document.createElement('a');
+
+                elem.href = objectUrl;
+                elem.download = 'export.zip';
+                document.body.appendChild(elem);
+                elem.click();
+                document.body.removeChild(elem);
+                window.URL.revokeObjectURL(objectUrl);
+            })
+            .catch(() => {
+                const elem = $('#exportDownloadLink');
+
+                if (elem[0]) {
+                    elem[0].href = url;
+                    elem[0].click();
+                }
             });
     }
 

@@ -114,6 +114,16 @@ export class Monitoring {
         await this.page.locator(s('multi-action-bar', 'multi-actions-inline', action)).click();
     }
 
+    async confirmExport(): Promise<void> {
+        // sd-modal moves the visible dialog out of its [sd-modal] host, so the
+        // host stays hidden; drive the dialog's own controls instead.
+        const confirm = this.page.getByTestId('export-confirm');
+
+        await expect(confirm).toBeVisible();
+        await this.page.getByTestId('export-formatter').selectOption({index: 0});
+        await confirm.click();
+    }
+
     async createArticleFromTemplate(template: string, options?: {slugline?:string, body_html?: string}): Promise<void> {
         await this.page.locator(s('content-create')).click();
         await this.page.locator(s('content-create-dropdown')).getByRole('button', {name: 'More Templates...'}).click();
@@ -145,6 +155,18 @@ export class Monitoring {
 
     getArticleLocator(headline: string): Locator {
         return this.page.locator(s('article-item=' + headline));
+    }
+
+    /**
+     * Locates an article in a specific monitoring group by its exact label.
+     * Attribute matching is used instead of `filter({hasText})` because labels
+     * of distinct items may share a prefix (e.g. "Story 5" and "Story 5.1").
+     */
+    getGroupedArticleLocator(groupName: string, articleLabel: string): Locator {
+        return this.page.getByTestId('monitoring-group')
+            .and(this.page.locator(`[data-test-value="${groupName}"]`))
+            .getByTestId('article-item')
+            .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
     }
 
     getPreviewPane(): Locator {

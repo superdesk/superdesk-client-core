@@ -7,6 +7,15 @@ describe('keyboardManager', () => {
     var km, elem, $timeout,
         options = {inputDisabled: false};
 
+    const paragraphsToRemove: Array<HTMLElement> = [];
+
+    // the paragraph is contentEditable and stays in the shared karma page otherwise
+    afterEach(() => {
+        while (paragraphsToRemove.length > 0) {
+            paragraphsToRemove.pop().remove();
+        }
+    });
+
     function keydown(label) {
         var e = new $.Event('keydown');
 
@@ -118,6 +127,7 @@ describe('keyboardManager', () => {
 
         p.contentEditable = 'true';
         document.body.appendChild(p);
+        paragraphsToRemove.push(p);
         elemKeydown('t', true, false, p);
 
         var handle = jasmine.createSpy('handle');

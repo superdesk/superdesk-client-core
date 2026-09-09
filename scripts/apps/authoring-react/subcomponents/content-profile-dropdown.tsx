@@ -22,11 +22,17 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
 
         this.state = {
             profiles: allProfiles,
-            selectedProfileId: allProfiles.find((x) => x._id === (this.props.item as IArticle)?.profile)._id ?? '',
+            selectedProfileId: allProfiles.find((x) => x._id === (this.props.item as IArticle)?.profile)?._id ?? '',
         };
     }
 
     render() {
+        // kill and takedown templates have no content profile, so there is nothing to switch
+        // between, and offering one would write a profile the server never expects
+        if ((this.props.item as IArticle)?.profile == null) {
+            return null;
+        }
+
         return (
             <Spacer gap="4" h noGrow noWrap>
                 <span className="authoring-header__label">{gettext('PROFILE')}</span>
