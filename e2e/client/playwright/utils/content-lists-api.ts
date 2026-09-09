@@ -1,5 +1,5 @@
 import {request, APIRequestContext} from '@playwright/test';
-import storageState from '../../.auth/user.json';
+import storageState from '../.auth/user.json';
 
 // Ensure exactly one trailing slash. Playwright's APIRequestContext resolves
 // request paths against baseURL using WHATWG URL semantics, where a

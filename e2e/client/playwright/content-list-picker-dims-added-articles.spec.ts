@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
-import {restoreDatabaseSnapshot} from '../../utils';
-import {ContentLists} from '../../page-object-models/content-lists';
-import {FIXTURE_ARTICLES, createContentList} from './api-helpers';
+import {restoreDatabaseSnapshot} from './utils';
+import {ContentLists} from './page-object-models/content-lists';
+import {FIXTURE_ARTICLES, createContentList} from './utils/content-lists-api';
 
 const ALREADY_IN_LIST_TOOLTIP = 'Already in this list';
 

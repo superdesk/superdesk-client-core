@@ -1,12 +1,12 @@
 import {test, expect} from '@playwright/test';
-import {restoreDatabaseSnapshot} from '../../utils';
-import {ContentLists} from '../../page-object-models/content-lists';
+import {restoreDatabaseSnapshot} from './utils';
+import {ContentLists} from './page-object-models/content-lists';
 import {
     FIXTURE_ARTICLES,
     addListItems,
     createContentList,
     updateListItems,
-} from './api-helpers';
+} from './utils/content-lists-api';
 
 test.describe('content list editor', () => {
     test('opening a list via the Edit button and via a deep link', async ({page}) => {
