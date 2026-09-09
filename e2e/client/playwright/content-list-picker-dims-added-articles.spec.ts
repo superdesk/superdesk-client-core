@@ -16,7 +16,6 @@ test.describe('content list editor article picker', () => {
 
         await contentLists.openList(list._id);
 
-        // Before adding: the published article is offered normally.
         await expect(pickerArticle).toBeVisible();
         await expect(pickerArticle).toHaveCSS('opacity', '1');
         await expect(pickerArticle).not.toHaveAttribute('title', ALREADY_IN_LIST_TOOLTIP);
@@ -29,7 +28,6 @@ test.describe('content list editor article picker', () => {
         await contentLists.backToGrid();
         await contentLists.openList(list._id);
 
-        // After adding: the same article is dimmed and tooltipped in the picker.
         await expect(pickerArticle).toBeVisible();
         await expect(pickerArticle).toHaveCSS('opacity', '0.5');
         await expect(pickerArticle).toHaveAttribute('title', ALREADY_IN_LIST_TOOLTIP);

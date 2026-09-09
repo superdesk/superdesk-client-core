@@ -13,7 +13,6 @@ test.describe('content lists webhooks', () => {
         await contentLists.openWebhooksModal();
         await contentLists.openNewWebhookPanel();
 
-        // save is disabled while the URL is empty
         await expect(contentLists.webhookEditPanel.getByTestId('webhook-edit-panel--save')).toBeDisabled();
 
         await contentLists.fillWebhookUrl('https://example.com/hook');

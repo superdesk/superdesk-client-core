@@ -47,7 +47,6 @@ test.describe('content lists grid', () => {
             .fill('top political stories');
         await contentLists.saveListSettings();
 
-        // re-open to verify persistence
         await contentLists.openListSettings('politics');
 
         await expect(contentLists.settingsModal.getByTestId('content-list-settings--limit')).toHaveValue('2');

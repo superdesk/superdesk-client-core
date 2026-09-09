@@ -158,7 +158,6 @@ test.describe('content list editor', () => {
 
         await contentLists.openList(list._id);
 
-        // make a local change
         await contentLists.removeListedArticle(FIXTURE_ARTICLES.inProgress.id);
 
         // meanwhile the list is modified by "another user"
