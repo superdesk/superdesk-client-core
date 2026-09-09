@@ -19,6 +19,11 @@ export class TextStatistics extends React.PureComponent<IProps> {
     render() {
         const wordCount = countWords(this.props.text);
         const showLineCount = appConfig?.authoring?.lineLength != null && !this.props.singleLine;
+        const showReadingTime = this.props.hideReadingTime !== true && (
+            appConfig.authoring == null || appConfig.authoring.timeToRead == null
+                ? true
+                : appConfig.authoring.timeToRead
+        );
 
         return (
             <div className="char-count__wrapper">
@@ -34,7 +39,7 @@ export class TextStatistics extends React.PureComponent<IProps> {
                     item={this.props.text}
                 />
 
-                {this.props.hideReadingTime !== true && (
+                {showReadingTime && (
                     <span className="char-count__base">
                         {getReadingTimeText(this.props.text, this.props.language ?? '')}
                     </span>
