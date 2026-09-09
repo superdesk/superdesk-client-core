@@ -11,6 +11,7 @@ import {getTranslationsWidget} from './article-widgets/translations/translations
 import {getMacrosWidget} from './macros/macros';
 import {getPackagesWidget} from './packages';
 import {getMetadataWidget} from './article-widgets/metadata/metadata';
+import {getRelatedItemsWidget} from './article-widgets/related-items/related-items';
 
 export const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
@@ -22,6 +23,7 @@ export function registerAuthoringReactWidgets() {
         getMacrosWidget(),
         getPackagesWidget(),
         getMetadataWidget(),
+        getRelatedItemsWidget(),
     ];
 
     // comments order: 3

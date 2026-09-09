@@ -28,7 +28,7 @@ import {
 } from 'superdesk-api';
 import {duplicateItems} from './article-duplicate';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {patchArticle} from './article-patch';
+import {patchArticle, patchArticleThrowing} from './article-patch';
 import {sendItems} from './article-send';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
@@ -604,7 +604,16 @@ interface IArticleApi {
     isIngested(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
     getPackageItemIds(item: IArticle): Array<IArticle['_id']>;
+    /**
+     * Logs and swallows failures. Use `patchThrowing` when the outcome has to be reported.
+     */
     patch(
+        article: IArticle,
+        patch: Partial<IArticle>,
+        dangerousOptions?: IDangerousArticlePatchingOptions,
+    ): Promise<void>;
+
+    patchThrowing(
         article: IArticle,
         patch: Partial<IArticle>,
         dangerousOptions?: IDangerousArticlePatchingOptions,
@@ -715,6 +724,7 @@ export const article: IArticleApi = {
     isPersonal,
     getPackageItemIds,
     patch: patchArticle,
+    patchThrowing: patchArticleThrowing,
     doSpike,
     doUnspike,
     fetchItems,

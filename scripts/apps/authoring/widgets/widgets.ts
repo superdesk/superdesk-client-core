@@ -112,6 +112,12 @@ export interface IWidgetIntegrationComponentProps {
      * Required for displaying multiple sections for the same widget.
      */
     customContent?: JSX.Element;
+
+    /**
+     * Only available in authoring-react, and only for a widget that declares a configuration.
+     * When set, the header shows a settings button that calls it.
+     */
+    openConfiguration?(): void;
 }
 
 /**

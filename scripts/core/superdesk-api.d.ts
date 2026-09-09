@@ -241,7 +241,7 @@ declare module 'superdesk-api' {
 
         // positioned relatively; shown at the same time as getSidePanel
         // used for rendering icon buttons of available side widgets
-        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element | null;
+        getSidebar?(options: IExposedFromAuthoring<T>, readOnly: boolean): JSX.Element | null;
 
         // positioned absolutely; shown at the same time as getSidebar
         // used for side widgets
@@ -268,7 +268,11 @@ declare module 'superdesk-api' {
 
         fieldTemplate?: React.ComponentType<IPropsAuthoringFieldTemplate>;
 
-        getSideWidgetIdAtIndex(item: T, index: number): string;
+        /**
+         * `null` when there is no widget at that index, or when the one there can not be opened
+         * for this item.
+         */
+        getSideWidgetIdAtIndex(item: T, index: number, readOnly: boolean): string | null;
         onSideWidgetChange(openWidget: IPropsAuthoring<T>['sideWidget']): void;
 
         // Runs before re-render.
@@ -742,6 +746,12 @@ declare module 'superdesk-api' {
         // only works react based authoring
         background?: 'light' | 'grey';
         bodyPadding?: 'none' | 'small' | 'medium'; // default is 'medium'
+
+        /**
+         * Class on the body container, for a widget whose body paints its own background: the
+         * panel `background` would take the header with it.
+         */
+        bodyClassName?: string;
     }
 
     export interface IGenericSidebarComponentProps<T> {
@@ -771,12 +781,42 @@ declare module 'superdesk-api' {
         isAllowed: (entity: T) => boolean;
     }
 
-    export interface IArticleSideWidgetComponentType {
+    export interface ISideWidgetConfigurationProps<TConfiguration> {
+        configuration: TConfiguration;
+        onChange(configuration: TConfiguration): void;
+    }
+
+    /**
+     * Declaring this on a side widget puts a settings button in the widget header. The button opens
+     * `component` in a modal; saving it hands the new configuration to `onSave` and re-renders the
+     * widget with it.
+     */
+    export interface ISideWidgetConfiguration<TConfiguration> {
+        component: React.ComponentType<ISideWidgetConfigurationProps<TConfiguration>>;
+
+        /**
+         * Used until the user saves the panel for the first time. Return the persisted
+         * configuration here to have it survive a reload.
+         */
+        getInitialConfiguration(): TConfiguration;
+
+        /**
+         * Persist the configuration here. Nothing else stores it.
+         */
+        onSave?(configuration: TConfiguration): void;
+    }
+
+    export interface IArticleSideWidgetComponentType<TConfiguration = any> {
         article: IArticle;
 
         getLatestArticle: IExposedFromAuthoring<IArticle>['getLatestItem'];
 
         initialState?: any;
+
+        /**
+         * Current value of the configuration the widget declares. Absent when it declares none.
+         */
+        configuration?: TConfiguration;
 
         // other props below are specific to authoring-react implementation
 
@@ -795,13 +835,27 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<IArticle>;
     }
 
-    export interface IArticleSideWidget {
+    export interface IArticleSideWidget<TConfiguration = any> {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentClass<IArticleSideWidgetComponentType>;
+        component: React.ComponentClass<IArticleSideWidgetComponentType<TConfiguration>>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
+
+        configuration?: ISideWidgetConfiguration<TConfiguration>;
+
+        /**
+         * The widget can not be opened while the item is read-only, or while it sits on a
+         * read-only stage.
+         */
+        needEditable?: boolean;
+
+        /**
+         * The widget can not be opened while the item is locked by someone else and the user can
+         * not unlock it, or while it sits on a read-only stage.
+         */
+        needUnlock?: boolean;
 
         /**
          * Button type/color for the widget sidebar button.
@@ -1355,6 +1409,8 @@ declare module 'superdesk-api' {
         lock_session: any;
         rewritten_by?: IArticle['_id'];
         rewrite_of?: IArticle['_id'];
+        /** item whose metadata was associated with this one via the related items widget */
+        related_to?: IArticle['_id'];
         profile: string;
         word_count?: number;
         lines_count?: number;
@@ -2404,6 +2460,13 @@ declare module 'superdesk-api' {
 
         // will only work for authoring-react
         customContent?: JSX.Element;
+
+        /**
+         * Pass `false` from a widget whose configuration is only meaningful in some of its states,
+         * to hide the settings control in the others. Ignored when the widget declares no
+         * configuration. Defaults to `true`.
+         */
+        configurable?: boolean;
     }
 
     export interface IGridComponentProps {
