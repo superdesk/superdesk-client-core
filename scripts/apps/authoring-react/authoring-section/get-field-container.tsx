@@ -81,25 +81,24 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
             const {miniToolbar} = this.props;
 
             return (
-                <Spacer v gap="0">
+                <div className="authoring-header-field">
                     <span
+                        data-test-id="authoring-field-label"
                         className={classNames(
-                            'form-label',
+                            'authoring-header__item-label',
                             {'form-label--invalid': validationError != null},
                         )}
                     >
-                        <Spacer h gap="8" noGrow noWrap>
-                            <Spacer h gap="4" noGrow noWrap>
-                                {field.name}
-                                {field.fieldConfig.required && (
-                                    <RequiredIndicatorForHeader />
-                                )}
-                            </Spacer>
-                            <span>{toggle}</span>
-                        </Spacer>
+                        {field.name}
+                        {field.fieldConfig.required && (
+                            <RequiredIndicatorForHeader />
+                        )}
                     </span>
 
-                    <div style={{flexGrow: 1}}>
+                    <div className="authoring-header__input-holder" data-test-id="authoring-field-input">
+                        {/* the label column is a fixed width, so the toggle rides with the input */}
+                        {canBeToggled && <div>{toggle}</div>}
+
                         {this.props.children}
 
                         <Spacer h gap="8" justifyContent="end" noGrow noWrap>
@@ -116,7 +115,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                             }
                         </Spacer>
                     </div>
-                </Spacer>
+                </div>
             );
         }
     }
@@ -126,7 +125,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
             const {miniToolbar} = this.props;
 
             return (
-                <div>
+                <div className="authoring-section__field">
                     <div
                         style={{
                             display: 'flex',
@@ -137,6 +136,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         <Spacer h gap="8" noGrow>
                             <Spacer h gap="8" noGrow noWrap>
                                 <span
+                                    data-test-id="authoring-field-label"
                                     className={classNames(
                                         'field-label--base',
                                         {'field-label--base--invalid': validationError != null},

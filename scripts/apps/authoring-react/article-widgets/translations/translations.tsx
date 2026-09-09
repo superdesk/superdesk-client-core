@@ -18,6 +18,7 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={TRANSLATIONS_WIDGET_ID}

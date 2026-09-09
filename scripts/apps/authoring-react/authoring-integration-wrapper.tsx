@@ -62,6 +62,7 @@ import {
     ToggleThemeButton,
     ConfigureThemeButton,
     CreatedModifiedInfoWidget,
+    ItemStateWidget,
     ContentProfileDropdownWidget,
     HeaderGeneralInfoWidget,
 } from './toolbar-components/integration-wrapper';
@@ -128,6 +129,12 @@ function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): 
 }
 
 const secondaryToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
+    {
+        availableOffline: true,
+        component: ItemStateWidget,
+        group: 'start',
+        priority: 0,
+    },
     {
         availableOffline: true,
         component: CreatedModifiedInfoWidget,

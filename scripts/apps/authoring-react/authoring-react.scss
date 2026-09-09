@@ -5,7 +5,11 @@
     width: 100%;
     height: calc(100% - #{$nav-height} - #{$authoring-opened-articles});
     overflow-y: auto;
-    z-index: 100;
+
+    // Under the monitoring pane (z-index 100) so the shadow off its right edge falls across this
+    // column, which is where authoring-angular's edge comes from (`main-section` sits at 1 there).
+    // Still above the angular authoring view underneath, which carries no z-index of its own.
+    z-index: 1;
     background: $white;
 }
 
@@ -74,13 +78,104 @@
     @include text-semibold();
 }
 
-// Authoring-angular renders the related items on a coloured holder that fills the panel, and
-// insets the cards by less than the panel default.
+// Authoring-angular colours the widget body rather than the panel, which leaves the header white,
+// and insets the content by less than the panel default.
 // The panel's own padding rule is `.side-panel .side-panel__content-block--padding-3`, so this
 // has to carry one class more to win.
-.side-panel .side-panel__content-block.related-items-widget__body {
+.side-panel .side-panel__content-block.authoring-widget__body {
     background: var(--sd-colour-panel-bg--100);
     padding: 16px;
-    block-size: 100%;
+    min-block-size: 100%;
     box-sizing: border-box;
+}
+
+// Header fields put the label in a fixed column to the left of the input, as authoring-angular
+// does. Angular's own `.authoring-header__item` is not reused: it carries that view's row padding,
+// which would stack on the gaps `AuthoringSection` already sets.
+.authoring-header-field {
+    display: flex;
+    align-items: flex-start;
+
+    .authoring-header__item-label {
+        gap: var(--gap-0-5);
+    }
+
+    // `.authoring-header__item-label` is compiled after the framework's `.form-label--invalid` and
+    // has the same specificity, so the invalid colour has to be restated to survive.
+    .authoring-header__item-label.form-label--invalid {
+        color: var(--sd-colour-alert);
+    }
+}
+
+// Content field labels follow authoring-angular (`.main-article` in authoring/styles/themes.scss):
+// grey by default, darker while the pointer is anywhere over the article body, blue on the field
+// that has focus.
+.authoring-section {
+    .field-label--base {
+        opacity: 0.4;
+    }
+
+    &:hover .field-label--base {
+        opacity: 1;
+    }
+
+    .authoring-section__field:focus-within .field-label--base {
+        background: var(--sd-colour-interactive--active);
+        opacity: 1;
+    }
+}
+
+// The ui-framework collapses the header by transitioning `max-height` between a 1400px ceiling and
+// 0 over 120ms ease-in. The header is only about 400px tall, so nearly the whole transition is
+// spent above its real height: collapsing lands in a single frame and expanding is over in ~60ms.
+// Transition the grid row instead, which tracks the real height, over the same 150ms linear slide
+// authoring-angular runs (`slideUpDown` in core/ui/slide-up-down.ts).
+$authoring-header-collapse-duration: 150ms;
+
+.sd-editor-content__authoring-header.sd-editor-content__authoring-header--collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+    max-height: none;
+    transition:
+        grid-template-rows $authoring-header-collapse-duration linear,
+        padding-block-start $authoring-header-collapse-duration linear,
+        padding-block-end $authoring-header-collapse-duration linear;
+
+    > .authoring-header__holder {
+        height: auto;
+        min-height: 0;
+
+        // Header fields open their dropdowns inline, so the holder may only clip while the slide is
+        // running. `overflow` is a discrete property: the zero-length transition flips it in one
+        // step, and the delay puts that step at the end of the slide.
+        overflow: visible;
+        transition:
+            overflow 0s $authoring-header-collapse-duration allow-discrete,
+            opacity 0.4s 0.1s;
+    }
+
+    &.authoring-header--collapsed {
+        grid-template-rows: 0fr;
+        max-height: none;
+
+        > .authoring-header__holder {
+            height: auto;
+            overflow: hidden;
+            transition: opacity 0.4s 0.1s;
+        }
+    }
+}
+
+// The framework leaves the top bar slot transparent and flat. authoring-angular paints the same bar
+// and casts the seam under it (`.subnav--authoring` and `.subnav` in styles/sass/navs.scss).
+//
+// The bar has to be lifted for the shadow to show at all. It is a static grid item, so it paints
+// below every positioned box: the grid slot beneath it is `position: relative` and opaque, and so
+// are that slot's toolbar (z-index 3) and secondary subnav (z-index 5). 6 clears all three and
+// stays under the side tabs rail at 11.
+.sd-editor-grid__editor-subnav {
+    background-color: var(--sd-colour-panel-bg--200);
+    box-shadow: var(--sd-shadow__subnav);
+    position: relative;
+    z-index: 6;
 }

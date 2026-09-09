@@ -220,6 +220,7 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={COMMENTS_WIDGET_ID}
@@ -228,7 +229,6 @@ export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, ISta
                     />
                 )}
                 body={widgetBody}
-                background="grey"
             />
         );
     }
