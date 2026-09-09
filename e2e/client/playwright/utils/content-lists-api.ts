@@ -21,6 +21,14 @@ export const FIXTURE_ARTICLES = {
         id: 'urn:newsml:localhost:5000:2025-04-29T08:18:00.176925:d15f9b5a-55e1-4abb-9312-9224c7654ed6',
         headline: 'Story 5',
     },
+    inProgress2: {
+        id: 'urn:newsml:localhost:5000:2024-02-05T11:50:25.326226:ba8a185d-e556-497c-ae4b-8743f91e2d3a',
+        headline: 'story 2',
+    },
+    inProgress3: {
+        id: 'urn:newsml:localhost:5000:2024-03-07T17:16:53.401212:428f7b8a-7194-4678-b4d6-1f6edf560ed6',
+        headline: 'Story 3',
+    },
 };
 
 function getToken(): string {

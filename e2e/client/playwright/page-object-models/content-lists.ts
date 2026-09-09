@@ -103,6 +103,13 @@ export class ContentLists {
         return this.getArticleRow(this.pickerResults, contentId);
     }
 
+    /** Article ids of the listed rows, top to bottom. */
+    getListedOrder(): Promise<Array<string>> {
+        return this.items
+            .getByTestId('content-list-item')
+            .evaluateAll((rows) => rows.map((row) => row.getAttribute('data-test-value') ?? ''));
+    }
+
     async openList(listId: string): Promise<void> {
         await this.page.goto(`/#/content-lists?list=${listId}`);
         await expect(this.editor).toBeVisible();
