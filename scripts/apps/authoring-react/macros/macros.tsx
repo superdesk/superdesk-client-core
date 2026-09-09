@@ -306,6 +306,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
         if (this.state.macros == null) {
             return (
                 <AuthoringWidgetLayout
+                    bodyClassName="authoring-widget__body"
                     header={(
                         <AuthoringWidgetHeading
                             widgetId={MACROS_WIDGET_ID}
@@ -343,6 +344,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={MACROS_WIDGET_ID}

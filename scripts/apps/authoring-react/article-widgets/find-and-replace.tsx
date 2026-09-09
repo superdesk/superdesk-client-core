@@ -64,6 +64,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={FIND_AND_REPLACE_WIDGET_ID}

@@ -212,6 +212,7 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={SUGGESTIONS_WIDGET_ID}
@@ -220,7 +221,6 @@ class SuggestionsWidget extends React.PureComponent<IArticleSideWidgetComponentT
                     />
                 )}
                 body={widgetBody}
-                background="grey"
             />
         );
     }

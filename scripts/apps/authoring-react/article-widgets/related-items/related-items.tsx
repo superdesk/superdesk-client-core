@@ -370,9 +370,7 @@ export class RelatedItemsWidget
 
         return (
             <AuthoringWidgetLayout
-                // the list sits on its own background, which the body paints rather than the panel,
-                // whose own would take the header with it
-                bodyClassName="related-items-widget__body"
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={RELATED_ITEMS_WIDGET_ID}

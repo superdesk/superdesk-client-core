@@ -80,6 +80,7 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={PACKAGES_WIDGET_ID}

@@ -14,6 +14,7 @@ class DemoWidget extends React.PureComponent<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={DEMO_WIDGET_ID}
