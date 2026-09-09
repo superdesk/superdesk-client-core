@@ -1,10 +1,10 @@
 import {test, expect} from '@playwright/test';
-import {restoreDatabaseSnapshot, s} from '../../utils';
+import {restoreDatabaseSnapshot} from '../../utils';
+import {ContentLists} from '../../page-object-models/content-lists';
 import {
     FIXTURE_ARTICLES,
     addListItems,
     createContentList,
-    dragAndDrop,
     updateListItems,
 } from './api-helpers';
 
@@ -13,65 +13,34 @@ test.describe('content list editor', () => {
         await restoreDatabaseSnapshot();
 
         const list = await createContentList('editor test');
+        const contentLists = new ContentLists(page);
 
-        await page.goto('/#/content-lists');
-        await page.locator(s('content-list-card=editor test', 'content-list-card--edit')).click();
-
-        await expect(page.locator(s('content-list--editor'))).toBeVisible();
+        await contentLists.openGrid();
+        await contentLists.openListFromCard('editor test');
         await expect(page).toHaveURL(new RegExp(`#/content-lists\\?list=${list._id}$`));
 
-        // deep link
-        await page.goto(`/#/content-lists?list=${list._id}`);
-        await expect(page.locator(s('content-list--editor'))).toBeVisible();
-
-        // back navigation returns to the grid
-        await page.getByRole('button', {name: 'Back to content lists'}).click();
-        await expect(page.locator(s('content-lists--grid'))).toBeVisible();
+        await contentLists.openList(list._id);
+        await contentLists.backToGrid();
     });
 
     test('dragging an article into the list and saving', async ({page}) => {
         await restoreDatabaseSnapshot();
 
         const list = await createContentList('drag target');
+        const article = FIXTURE_ARTICLES.inProgress;
+        const contentLists = new ContentLists(page);
 
-        await page.goto(`/#/content-lists?list=${list._id}`);
-
+        await contentLists.openList(list._id);
         await expect(page.getByText('Drag your articles here')).toBeVisible();
 
-        // switch the picker to "In progress" articles
-        await page.locator(s('content-list--picker-pane')).getByRole('button', {name: 'Published'}).click();
-        await page.getByRole('menuitem', {name: 'In progress'}).click();
+        await contentLists.selectPickerSource('in_progress');
+        await expect(contentLists.getPickerArticle(article.id)).toBeVisible();
 
-        const pickerArticle = page
-            .locator(s('content-list--picker-results'))
-            .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`));
+        await contentLists.dragPickerArticleToList(article.id);
+        await contentLists.save(list._id);
 
-        await expect(pickerArticle).toBeVisible();
-
-        await dragAndDrop(page, pickerArticle, page.locator(s('content-list--items')));
-
-        const listedArticle = page
-            .locator(s('content-list--items'))
-            .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`));
-
-        await expect(listedArticle).toBeVisible();
-
-        const saveButton = page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'});
-
-        await expect(saveButton).toBeEnabled();
-        await saveButton.click();
-
-        // the button goes back to disabled once the save resolves; reloading
-        // before that aborts the in-flight request
-        await expect(saveButton).toBeDisabled();
-
-        // persisted after reload
         await page.reload();
-        await expect(
-            page
-                .locator(s('content-list--items'))
-                .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`)),
-        ).toBeVisible();
+        await expect(contentLists.getListedArticle(article.id)).toBeVisible();
     });
 
     test('save button is disabled without changes; removing an item enables it', async ({page}) => {
@@ -81,67 +50,46 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists?list=${list._id}`);
+        const contentLists = new ContentLists(page);
+        const listedArticles = contentLists.items.getByTestId('content-list-item');
 
-        const itemsPane = page.locator(s('content-list--items-pane'));
-        const saveButton = itemsPane.getByRole('button', {name: 'Save'});
+        await contentLists.openList(list._id);
 
-        await expect(
-            page.locator(s('content-list--items')).locator(s('content-list-item')),
-        ).toHaveCount(2);
-        await expect(saveButton).toBeDisabled();
+        await expect(listedArticles).toHaveCount(2);
+        await expect(contentLists.saveButton).toBeDisabled();
 
-        await page
-            .locator(s('content-list--items'))
-            .locator(s(`content-list-item=${FIXTURE_ARTICLES.published.id}`))
-            .getByRole('button', {name: 'Remove'})
-            .click();
+        await contentLists.removeListedArticle(FIXTURE_ARTICLES.published.id);
 
-        await expect(
-            page.locator(s('content-list--items')).locator(s('content-list-item')),
-        ).toHaveCount(1);
-        await expect(saveButton).toBeEnabled();
+        await expect(listedArticles).toHaveCount(1);
+        await expect(contentLists.saveButton).toBeEnabled();
 
-        await saveButton.click();
-
-        await expect(saveButton).toBeDisabled();
+        await contentLists.save(list._id);
 
         await page.reload();
-        await expect(
-            page.locator(s('content-list--items')).locator(s('content-list-item')),
-        ).toHaveCount(1);
+        await expect(listedArticles).toHaveCount(1);
     });
 
     test('pinning an item marks it and disables dragging it', async ({page}) => {
         await restoreDatabaseSnapshot();
 
         const list = await createContentList('pin test');
+        const article = FIXTURE_ARTICLES.inProgress;
 
-        await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
+        await addListItems(list._id, [article.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists?list=${list._id}`);
+        const contentLists = new ContentLists(page);
+        const pinToggle = contentLists.getListedArticle(article.id).getByTestId('content-list-item--pin');
 
-        const firstItem = page
-            .locator(s('content-list--items'))
-            .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`));
+        await contentLists.openList(list._id);
+        await contentLists.togglePin(article.id);
 
-        await firstItem.getByRole('button', {name: 'Pin'}).click();
+        await expect(pinToggle).toHaveAttribute('data-test-value', 'pinned');
+        await expect(pinToggle.getByRole('button', {name: 'Unpin'})).toBeVisible();
 
-        // a pinned row is marked by the pin toggle flipping to "Unpin"
-        await expect(firstItem.getByRole('button', {name: 'Unpin'})).toBeVisible();
-
-        const saveButton = page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'});
-
-        await saveButton.click();
-        await expect(saveButton).toBeDisabled();
+        await contentLists.save(list._id);
 
         await page.reload();
-        await expect(
-            page
-                .locator(s('content-list--items'))
-                .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`))
-                .getByRole('button', {name: 'Unpin'}),
-        ).toBeVisible();
+        await expect(pinToggle).toHaveAttribute('data-test-value', 'pinned');
     });
 
     test('limit notification is shown for items over the limit', async ({page}) => {
@@ -151,9 +99,9 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id, FIXTURE_ARTICLES.published.id]);
 
-        await page.goto(`/#/content-lists?list=${list._id}`);
+        await new ContentLists(page).openList(list._id);
 
-        await expect(page.locator(s('content-list--limit-notification'))).toBeVisible();
+        await expect(page.getByTestId('content-list--limit-notification')).toBeVisible();
         await expect(
             page.getByText('This list is limited to 1 item. Articles below will be removed.'),
         ).toBeVisible();
@@ -166,21 +114,20 @@ test.describe('content list editor', () => {
 
         await addListItems(list._id, [FIXTURE_ARTICLES.inProgress.id]);
 
-        await page.goto(`/#/content-lists?list=${list._id}`);
+        const contentLists = new ContentLists(page);
+
+        await contentLists.openList(list._id);
 
         // make a local change
-        await page
-            .locator(s('content-list--items'))
-            .locator(s(`content-list-item=${FIXTURE_ARTICLES.inProgress.id}`))
-            .getByRole('button', {name: 'Remove'})
-            .click();
+        await contentLists.removeListedArticle(FIXTURE_ARTICLES.inProgress.id);
 
         // meanwhile the list is modified by "another user"
         await updateListItems(list._id, [
             {action: 'add', contentId: FIXTURE_ARTICLES.published.id, position: 1},
         ]);
 
-        await page.locator(s('content-list--items-pane')).getByRole('button', {name: 'Save'}).click();
+        // the save is expected to fail, so there is no reload to wait for
+        await contentLists.saveButton.click();
 
         await expect(
             page.getByText('Cannot save. The list has been modified by another user.'),

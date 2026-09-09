@@ -1,4 +1,4 @@
-import {request, APIRequestContext, Page, Locator} from '@playwright/test';
+import {request, APIRequestContext} from '@playwright/test';
 import storageState from '../../.auth/user.json';
 
 // Ensure exactly one trailing slash. Playwright's APIRequestContext resolves
@@ -112,51 +112,4 @@ export function createWebhook(payload: {[key: string]: unknown}): Promise<{_id: 
 
         return response.json();
     });
-}
-
-/**
- * Drag & drop helper for react-beautiful-dnd. Playwright's dragTo doesn't
- * work with it reliably; rbd needs a sequence of distinct mouse events with
- * multiple move steps to pick the drag up.
- */
-export async function dragAndDrop(page: Page, source: Locator, target: Locator): Promise<void> {
-    const sourceBox = await source.boundingBox();
-    const targetBox = await target.boundingBox();
-
-    if (sourceBox == null || targetBox == null) {
-        throw new Error('dragAndDrop: element is not visible');
-    }
-
-    const from = {x: sourceBox.x + sourceBox.width / 2, y: sourceBox.y + sourceBox.height / 2};
-    const to = {x: targetBox.x + targetBox.width / 2, y: targetBox.y + targetBox.height / 2};
-
-    await page.mouse.move(from.x, from.y);
-    await page.mouse.down();
-
-    // small initial movement so react-beautiful-dnd starts the drag
-    await page.mouse.move(from.x + 5, from.y + 5, {steps: 3});
-    await page.waitForTimeout(50);
-
-    const steps = 15;
-
-    for (let i = 1; i <= steps; i++) {
-        await page.mouse.move(
-            from.x + ((to.x - from.x) * i) / steps,
-            from.y + ((to.y - from.y) * i) / steps,
-        );
-
-        // eslint-disable-next-line no-await-in-loop
-        await page.waitForTimeout(20);
-    }
-
-    /*
-     * rbd throttles mouse moves through requestAnimationFrame, so the last
-     * move of the loop may still be unprocessed when the button is released --
-     * the drop then lands on the previous position, outside the target. Repeat
-     * the final position and give it a frame or two to be picked up.
-     */
-    await page.mouse.move(to.x, to.y);
-    await page.waitForTimeout(100);
-
-    await page.mouse.up();
 }
