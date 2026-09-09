@@ -34,7 +34,7 @@ jobs:
           webpack-${{ runner.os }}-node${{ matrix.node-version }}-
 
     - name: Install content-lists extension dependencies
-      run: npm ci --legacy-peer-deps
+      run: npm ci
       working-directory: scripts/extensions/content-lists
 
     - run: npm run test
@@ -94,7 +94,7 @@ jobs:
     - name: Install root dependencies
       run: npm ci
     - name: Install content-lists extension dependencies
-      run: npm ci --legacy-peer-deps
+      run: npm ci
       working-directory: scripts/extensions/content-lists
     - name: Install build-tools dependencies
       run: npm ci
