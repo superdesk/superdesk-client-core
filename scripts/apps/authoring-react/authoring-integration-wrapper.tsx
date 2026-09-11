@@ -48,10 +48,13 @@ import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/
 import {
     SIDE_WIDGET_STORAGE_KEY,
     findWidgetById,
+    getSideWidgetLockState,
     getStoredStateForWidget,
     getWidgetsFromExtensions,
+    isSideWidgetLocked,
     readStoredSideWidget,
 } from './side-widgets';
+import {SideWidgetConfigurationProvider} from './side-widget-configuration';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {
@@ -685,9 +688,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 return null;
                             }
 
+                            if (isSideWidgetLocked(resolvedWidget, getSideWidgetLockState(item, readOnly))) {
+                                return null;
+                            }
+
                             const WidgetComponent = resolvedWidget.component;
 
-                            return (
+                            const renderWidget = (configuration?: any) => (
                                 <WidgetStatePersistenceHOC sideWidgetId={resolvedWidget._id}>
                                     {(widgetRef) => (
                                         <WidgetComponent
@@ -739,14 +746,26 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             readOnly={readOnly}
                                             handleUnsavedChanges={() => handleUnsavedChanges()}
                                             onItemChange={onItemChange}
+                                            configuration={configuration}
                                         />
                                     )}
                                 </WidgetStatePersistenceHOC>
                             );
+
+                            if (resolvedWidget.configuration == null) {
+                                return renderWidget();
+                            }
+
+                            return (
+                                <SideWidgetConfigurationProvider widget={resolvedWidget}>
+                                    {(configuration) => renderWidget(configuration)}
+                                </SideWidgetConfigurationProvider>
+                            );
                         }}
-                        getSidebar={this.state.sidebarMode !== true ? null : (options) => (
+                        getSidebar={this.state.sidebarMode !== true ? null : (options, readOnly) => (
                             <AuthoringIntegrationWrapperSidebar
                                 options={options}
+                                readOnly={readOnly}
                                 sideWidget={this.state.sideWidget}
                                 setSideWidget={(sideWidget) => {
                                     this.setState({sideWidget});
@@ -766,8 +785,17 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             ];
                         }}
                         validateBeforeSaving={false}
-                        getSideWidgetIdAtIndex={(article, index) => {
-                            return getWidgetsFromExtensions(article)[index]._id;
+                        getSideWidgetIdAtIndex={(article, index, readOnly) => {
+                            const widget = getWidgetsFromExtensions(article)[index];
+
+                            if (
+                                widget == null
+                                || isSideWidgetLocked(widget, getSideWidgetLockState(article, readOnly))
+                            ) {
+                                return null;
+                            }
+
+                            return widget._id;
                         }}
                         autoFocus={this.props.autoFocus}
                     />

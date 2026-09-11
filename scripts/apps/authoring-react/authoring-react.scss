@@ -73,3 +73,14 @@
     color: $grayDark;
     @include text-semibold();
 }
+
+// Authoring-angular renders the related items on a coloured holder that fills the panel, and
+// insets the cards by less than the panel default.
+// The panel's own padding rule is `.side-panel .side-panel__content-block--padding-3`, so this
+// has to carry one class more to win.
+.side-panel .side-panel__content-block.related-items-widget__body {
+    background: var(--sd-colour-panel-bg--100);
+    padding: 16px;
+    block-size: 100%;
+    box-sizing: border-box;
+}

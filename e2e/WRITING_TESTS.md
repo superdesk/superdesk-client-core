@@ -242,7 +242,8 @@ item, and no plain package; use the `media-items` snapshot for those.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
-`editor3-tables`, `custom-blocks`, `availability-management`, `media-items`,
+`editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
+`media-items`,
 `editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
 `required-headline`, `association-fields`, `editor3-comments`.
 

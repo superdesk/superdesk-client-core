@@ -1,10 +1,13 @@
-import {IArticle, IArticleSideWidget, IOpenSideWidget} from 'superdesk-api';
+import {IArticle, IArticleSideWidget, IOpenSideWidget, IUser} from 'superdesk-api';
 import {extensions} from 'appConfig';
+import ng from 'core/services/ng';
 import {
     SIDE_WIDGET_STORAGE_KEY,
     findWidgetById,
+    getSideWidgetLockState,
     getStoredStateForWidget,
     getWidgetsFromExtensions,
+    isSideWidgetLocked,
     readStoredSideWidget,
 } from './side-widgets';
 
@@ -61,6 +64,142 @@ describe('authoring-react side widget resolution', () => {
 
         expect(getWidgetsFromExtensions(article).length).toBe(0);
         expect(findWidgetById(article, 'comments')).toBe(null);
+    });
+});
+
+describe('locking a side widget', () => {
+    const unlockedAndEditable = {readOnly: false, lockedByAnotherUser: false, readOnlyStage: false};
+
+    it('leaves a widget that declares neither requirement open in every state', () => {
+        const plain = widget('comments');
+
+        expect(isSideWidgetLocked(plain, unlockedAndEditable)).toBe(false);
+        expect(isSideWidgetLocked(plain, {readOnly: true, lockedByAnotherUser: true, readOnlyStage: true}))
+            .toBe(false);
+    });
+
+    it('locks a widget that needs the item editable while the item is read only', () => {
+        const needsEditable = widget('related-item', {needEditable: true});
+
+        expect(isSideWidgetLocked(needsEditable, unlockedAndEditable)).toBe(false);
+        expect(isSideWidgetLocked(needsEditable, {...unlockedAndEditable, readOnly: true})).toBe(true);
+    });
+
+    it('locks a widget that needs the item unlocked while someone else holds the lock', () => {
+        const needsUnlock = widget('related-item', {needUnlock: true});
+
+        expect(isSideWidgetLocked(needsUnlock, unlockedAndEditable)).toBe(false);
+        expect(isSideWidgetLocked(needsUnlock, {...unlockedAndEditable, lockedByAnotherUser: true})).toBe(true);
+
+        // needUnlock looks at the lock only, not at whether the item is read only
+        expect(isSideWidgetLocked(needsUnlock, {...unlockedAndEditable, readOnly: true})).toBe(false);
+    });
+
+    it('locks either requirement on a read-only stage', () => {
+        const onReadOnlyStage = {...unlockedAndEditable, readOnlyStage: true};
+
+        expect(isSideWidgetLocked(widget('a', {needEditable: true}), onReadOnlyStage)).toBe(true);
+        expect(isSideWidgetLocked(widget('b', {needUnlock: true}), onReadOnlyStage)).toBe(true);
+        expect(isSideWidgetLocked(widget('c'), onReadOnlyStage)).toBe(false);
+    });
+});
+
+describe('the lock state a side widget is gated on', () => {
+    const currentSession = 'session-1';
+    const currentUser = 'user-1';
+
+    function stubAngularServices(
+        {unlockPrivilege = false, readOnlyStages = []}: {unlockPrivilege?: boolean, readOnlyStages?: Array<string>},
+    ) {
+        spyOn(ng, 'get').and.callFake((service: string) => {
+            switch (service) {
+                case 'session':
+                    return {sessionId: currentSession, identity: {_id: currentUser}};
+                case 'privileges':
+                    return {userHasPrivileges: (required) => required.unlock === 1 && unlockPrivilege};
+                case 'desks':
+                    return {isReadOnlyStage: (stageId) => readOnlyStages.includes(stageId)};
+                default:
+                    return null;
+            }
+        });
+    }
+
+    function lockedArticle(overrides: Partial<IArticle>): IArticle {
+        return {
+            _id: 'article1',
+            state: 'in_progress',
+            task: {desk: 'desk1', stage: 'stage1'},
+            lock_session: 'session-2',
+            lock_user: 'user-2',
+            ...overrides,
+        } as IArticle;
+    }
+
+    it('reports an unlocked item on a writable stage as open', () => {
+        stubAngularServices({});
+
+        expect(getSideWidgetLockState(lockedArticle({lock_session: null, lock_user: null}), false)).toEqual({
+            readOnly: false,
+            lockedByAnotherUser: false,
+            readOnlyStage: false,
+        });
+    });
+
+    it('passes the read-only state of the item through', () => {
+        stubAngularServices({});
+
+        expect(getSideWidgetLockState(lockedArticle({lock_session: null, lock_user: null}), true).readOnly).toBe(true);
+    });
+
+    it('reports a lock held elsewhere as another user holding it, when it can not be taken over', () => {
+        stubAngularServices({unlockPrivilege: false});
+
+        expect(getSideWidgetLockState(lockedArticle({}), true).lockedByAnotherUser).toBe(true);
+    });
+
+    it('does not, when the user holds the unlock privilege', () => {
+        stubAngularServices({unlockPrivilege: true});
+
+        expect(getSideWidgetLockState(lockedArticle({}), true).lockedByAnotherUser).toBe(false);
+    });
+
+    // a draft can not be unlocked by anyone but the user holding the lock, privilege or not
+    it('does, for a draft, even when the user holds the unlock privilege', () => {
+        stubAngularServices({unlockPrivilege: true});
+
+        expect(
+            getSideWidgetLockState(lockedArticle({state: 'draft' as IArticle['state']}), true).lockedByAnotherUser,
+        ).toBe(true);
+    });
+
+    it('does not, when the lock belongs to the current user but was taken in another session', () => {
+        stubAngularServices({unlockPrivilege: false});
+
+        expect(getSideWidgetLockState(lockedArticle({lock_user: currentUser}), true).lockedByAnotherUser).toBe(false);
+    });
+
+    // some endpoints embed the user in `lock_user` instead of sending its id
+    it('reads a lock held by the current user whether `lock_user` holds an id or an embedded user', () => {
+        stubAngularServices({unlockPrivilege: false});
+
+        const embedded = lockedArticle({lock_user: {_id: currentUser} as unknown as IUser['_id']});
+
+        expect(getSideWidgetLockState(embedded, true).lockedByAnotherUser).toBe(false);
+    });
+
+    it('reports a read-only stage', () => {
+        stubAngularServices({readOnlyStages: ['stage1']});
+
+        expect(getSideWidgetLockState(lockedArticle({}), false).readOnlyStage).toBe(true);
+    });
+
+    it('reports no read-only stage for an item that is on none', () => {
+        stubAngularServices({readOnlyStages: ['stage1']});
+
+        expect(
+            getSideWidgetLockState(lockedArticle({task: {desk: 'desk1'} as IArticle['task']}), false).readOnlyStage,
+        ).toBe(false);
     });
 });
 

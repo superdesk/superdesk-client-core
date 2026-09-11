@@ -17,7 +17,7 @@ export function previewAuthoringEntity(
             toolbar={(
                 <React.Fragment>
                     <div>
-                        {label != null && <div>{label}</div>}
+                        {label != null && <div data-test-id="print-preview-label">{label}</div>}
                     </div>
 
                     <div>
