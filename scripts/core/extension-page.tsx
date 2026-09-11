@@ -3,6 +3,7 @@ import {extensions} from 'appConfig';
 import {logger} from './services/logger';
 import {flatMap} from 'lodash';
 import {getUrlPage} from './helpers/url';
+import {matchesPageUrl} from './helpers/match-page-url';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 
 interface IProps {
@@ -18,7 +19,8 @@ export class ExtensionPage extends React.Component<IProps> {
             (extension) => extension.activationResult?.contributions?.pages ?? [],
         );
 
-        const currentPage = pages.find(({url}) => url === currentUrl);
+        const currentPage = pages.find(({url}) => url === currentUrl)
+            ?? pages.find(({url}) => matchesPageUrl(url, currentUrl));
 
         if (currentPage != null) {
             const Component = currentPage.component;

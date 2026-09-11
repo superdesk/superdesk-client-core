@@ -8,6 +8,15 @@ services:
     mongo:
         image: mongo:6
         network_mode: "host"
+        # The default container soft nofile limit is 1024. e2e specs call
+        # restore_record before each test, which drops and recreates every
+        # collection + index; WiredTiger keeps a file per collection/index, so
+        # over a full suite run the descriptors exhaust and mongod aborts with
+        # a WT_PANIC ("Too many open files"). MongoDB recommends >= 64000.
+        ulimits:
+            nofile:
+                soft: 64000
+                hard: 64000
         environment:
             - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:

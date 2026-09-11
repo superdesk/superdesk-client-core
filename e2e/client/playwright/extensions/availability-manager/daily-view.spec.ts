@@ -1,9 +1,10 @@
 import path from 'path';
 import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot, s} from '../../utils';
+import {getStorageStateFromFile} from '../../utils/storage-state';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
-test.use({storageState: path.join(__dirname, './user-michael.json')});
+test.use({storageState: getStorageStateFromFile(path.join(__dirname, './user-michael.json'))});
 
 test('filtering in daily view', async ({page}) => {
     await restoreDatabaseSnapshot({snapshotName: 'availability-management'});
