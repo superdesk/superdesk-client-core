@@ -70,6 +70,7 @@ export class AuthoringAttachmentsWidget extends React.PureComponent<IArticleSide
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={ATTACHMENTS_WIDGET_ID}

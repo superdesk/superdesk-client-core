@@ -224,6 +224,7 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={COMMENTS_WIDGET_GENERIC_ID}
@@ -232,7 +233,6 @@ class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
                     />
                 )}
                 body={widgetBody}
-                background="grey"
                 footer={widgetFooter}
             />
         );
