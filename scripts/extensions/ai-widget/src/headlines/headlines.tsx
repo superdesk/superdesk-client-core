@@ -13,6 +13,7 @@ import {
     Heading,
 } from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
+import {configuration} from '../configuration';
 import {OrderedMap} from 'immutable';
 import {convertToRaw, ContentState} from 'draft-js';
 
@@ -86,6 +87,8 @@ export default class HeadlinesBody extends React.Component<IProps> {
                                                 {key: 'headline', value: headline},
                                             );
                                         }
+
+                                        configuration.onAnswerApplied?.(article, 'headlines', i);
                                     }}
                                     type="default"
                                     style="hollow"

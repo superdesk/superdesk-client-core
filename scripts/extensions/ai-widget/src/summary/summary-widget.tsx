@@ -45,6 +45,8 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
             children,
             state: {error, loading, summary},
             setTabState,
+            fieldsData,
+            onFieldsDataChange,
         } = this.props;
 
         return children({
@@ -87,6 +89,8 @@ export default class SummaryWidget extends React.Component<ICommonProps<IStateSu
                     }}
                     summary={summary}
                     loading={loading}
+                    fieldsData={fieldsData}
+                    onFieldsDataChange={onFieldsDataChange}
                 />
             ),
             footer: (

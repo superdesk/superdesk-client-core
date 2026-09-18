@@ -13,6 +13,9 @@ import {
     Spacer,
 } from 'superdesk-ui-framework/react';
 import {superdesk} from '../superdesk';
+import {configuration} from '../configuration';
+import {OrderedMap} from 'immutable';
+import {convertToRaw, ContentState} from 'draft-js';
 
 interface IProps {
     article: IArticle;
@@ -20,6 +23,8 @@ interface IProps {
     loading: boolean;
     summary: string;
     generateSummary: () => void;
+    fieldsData?: OrderedMap<string, unknown>;
+    onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 }
 
 export default class SummaryBody extends React.Component<IProps> {
@@ -58,6 +63,33 @@ export default class SummaryBody extends React.Component<IProps> {
                     {summary}
                 </Text>
                 <ButtonGroup orientation="horizontal" align="center">
+                    <Button
+                        size="small"
+                        text={gettext('Apply')}
+                        onClick={() => {
+                            if (superdesk.instance.authoringReactViewEnabled) {
+                                const rawState = convertToRaw(ContentState.createFromText(summary));
+
+                                this.props.onFieldsDataChange?.(
+                                    this.props.fieldsData?.set(
+                                        'abstract',
+                                        superdesk.helpers.editor3ToOperationalFormat(
+                                            {rawContentState: rawState},
+                                            article.language,
+                                        ),
+                                    ));
+                            } else {
+                                superdesk.ui.article.applyFieldChangesToEditor(
+                                    article._id,
+                                    {key: 'abstract', value: summary},
+                                );
+                            }
+
+                            configuration.onAnswerApplied?.(article, 'summary', 0);
+                        }}
+                        type="default"
+                        style="hollow"
+                    />
                     <IconButton
                         ariaValue={gettext('Copy')}
                         icon="copy"
