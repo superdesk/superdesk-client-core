@@ -4,7 +4,7 @@ module.exports = function buildIndex(o) {
         <html class="no-js">
           <head>
             <meta charset="utf-8">
-            <title>Superdesk</title>
+            <title>Briefdesk</title>
             <meta name="description" content="">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

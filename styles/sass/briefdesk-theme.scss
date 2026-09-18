@@ -1,0 +1,87 @@
+// Briefdesk brand overlay.
+//
+// Imported last from scripts/index.ts so it lands after superdesk-ui-framework's
+// precompiled bundle and can redefine that bundle's custom properties. The framework
+// derives each colour ramp from a single hue/saturation pair, so rebranding costs a
+// handful of declarations rather than a fork of the design tokens.
+//
+// Demo-only hack. The real solution is a `branding` block in ISuperdeskGlobalConfig,
+// see BRIEFDESK_BRANDING.md at the repo root.
+//
+// Contrast ratios quoted below are WCAG 2.1 relative-luminance ratios.
+// The accessible-light-ui and contrast-light-ui themes are deliberately left alone:
+// their interactive ramp is tuned for contrast, not for brand.
+
+:root,
+[data-theme="light-ui"],
+[data-theme="dark-ui"] {
+    --briefdesk-navy: #10243e;
+    --briefdesk-navy--raised: #1a3556;
+    --briefdesk-green: #1fb57a;
+
+    // Filled buttons keep the framework's white label, and white on #1fb57a is
+    // 2.64:1, below AA. These two shades are 5.08:1 and 6.74:1 against white.
+    --briefdesk-green--deep: #007f49;
+    --briefdesk-green--deeper: #006a36;
+
+    // Ramp bases. Everything the framework calls "interactive", "primary" or
+    // "superdesk" (links, focus rings, selection, active states) follows from these.
+    --sd-colour-interactive-hs: 156, 71%;
+    --sd-colour-primary-hs: 156, 71%;
+    --sd-colour-superdesk-hs: 156, 71%;
+
+    // The ramp's default step is 50% lightness; the logo green sits at 42%.
+    --sd-colour-interactive-l--50: var(--sd-colour-interactive-hs), 42%;
+
+    --sd-colour-primary: var(--briefdesk-green--deep);
+    --sd-colour-primary--hover: var(--briefdesk-green--deeper);
+    --sd-colour-primary--active: var(--briefdesk-green--deeper);
+    --sd-colour-superdesk: var(--briefdesk-green--deep);
+    --sd-colour-superdesk--hover: var(--briefdesk-green--deeper);
+    --sd-colour-superdesk--active: var(--briefdesk-green--deeper);
+
+    // Newer design-token layer: every --brand-primary-NNN shade is derived from
+    // this one with relative lch(), so a single declaration moves the whole ramp.
+    --brand-primary: #1fb57a;
+
+    // Chrome. The top bar is dark in both themes already, so navy drops in.
+    // White on navy is 15.63:1.
+    --sd-colour-top-menu: var(--briefdesk-navy);
+    --sd-colour-top-menu__btn: var(--briefdesk-navy--raised);
+}
+
+// Left main menu. menu.scss paints it with --sd-colour-bg--02, which is shared with
+// panels and list items, so the background is set directly instead of via the token.
+#main-menu,
+.main-menu {
+    background: var(--briefdesk-navy);
+}
+
+// About modal header, so the white logo variant it carries stays legible.
+.modal__header--about {
+    background-color: var(--briefdesk-navy);
+}
+
+// Login, secure login and reset password all render .login-screen.
+// The two custom properties below are read by auth.scss rules on this element and
+// its inputs, so redefining them here avoids fighting those selectors' specificity.
+.login-screen {
+    --sd-colour-bg--02: var(--briefdesk-navy);
+    --sd-colour-bg--04: hsla(214, 45%, 22%, 1);
+
+    background-image: radial-gradient(circle at 50% 28%, hsla(156, 71%, 42%, 0.16), transparent 62%);
+
+    // On navy the full-strength logo green is the call to action. Its label is navy,
+    // not the framework's white: navy on #1fb57a is 5.91:1, white is 2.64:1.
+    .btn--sd-green {
+        --sd-btn-bg: var(--briefdesk-green);
+        --sd-btn-bg--hover: var(--briefdesk-green);
+        --sd-btn-bg--active: var(--briefdesk-green);
+        color: var(--briefdesk-navy);
+    }
+
+    .btn--sd-green .dot1,
+    .btn--sd-green .dot2 {
+        background-color: var(--briefdesk-navy);
+    }
+}

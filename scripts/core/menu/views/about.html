@@ -1,6 +1,6 @@
 <div sd-modal data-model="aboutActive" data-close="closeAbout()" class="modal modal--large modal--about">
   <div class="modal__header modal__header--about">
-    <h3 class="modal__header-sd-logo">Superdesk</h3>
+    <h3 class="modal__header-sd-logo">Briefdesk</h3>
     <div class="btn-group pull-right">
       <button ng-click="closeAbout()" title="{{ :: 'Close' | translate }}" class="modal__close"><i class="icon-close-small"></i></button>
     </div>
@@ -9,7 +9,7 @@
   <div class="modal__body">
     <div class="about-content">
       <span class="sf-logo"></span>
-      <h4>Superdesk {{ :: version }}</span></h4>
+      <h4>Briefdesk {{ :: version }}</h4>
 
       <h5 ng-repeat="module in modules track by module.name">
         {{ module.name }}: <a ng-href="{{ module.href }}" rel="noopener noreferrer">{{ module.version }}</a>
@@ -17,19 +17,15 @@
 
       <p class="date-released"><span ng-show="releaseDate">Released on</span> {{ :: releaseDate }}</p>
       <p>
-        <a href="https://www.superdesk.org" target="_blank"><b>Superdesk</b></a> is an open source end-to-end news creation, production, curation, distribution and publishing platform maintained by <a href="https://www.sourcefabric.org">Sourcefabric z.u.</a>, a nonprofit organisation whose primary purpose is to make the best possible software for journalism.
+        <b>Briefdesk</b>, by Halden Risk Intelligence (demo). A security and risk intelligence platform for analyst teams: source monitoring, alerts and briefs, two-person review, and targeted release to entitled client companies.
+      </p>
+      <p>
+        Built on <a href="https://www.superdesk.org" target="_blank">Superdesk</a>, the open-source platform by <a href="https://www.sourcefabric.org" target="_blank">Sourcefabric z.u.</a>
       </p>
       <p>
         Copyright (c) 2014 - {{ year }} Sourcefabric z.u. and contributors.<br>
         Superdesk is released under the <a href="https://www.gnu.org/licenses/agpl-3.0" target="_blank">open source license AGPLv3</a>.
-      </p>
-      <p>
-        Looking for help or support?<br>
-        <a href="https://forum.sourcefabric.org/categories/superdesk-dev" target="_blank">Forum</a>&nbsp;&nbsp; | &nbsp;
-        <a href="https://www.superdesk.org/attachment/13/superdeskmastermanual.pdf?g_download=1" target="_blank">User Manual</a>
-      </p>
-      <p>
-        Get in touch with us via direct email <a href="mailto:superdesk@sourcefabric.org">superdesk@sourcefabric.org</a>.
+        The source code is available at <a href="https://github.com/superdesk" target="_blank">github.com/superdesk</a>.
       </p>
     </div>
   </div>

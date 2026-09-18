@@ -27,7 +27,7 @@ export default function SearchMenuController(
 
     const SUPERDESK_PROVIDER = {
         _id: '',
-        name: 'Superdesk',
+        name: 'Briefdesk',
     };
 
     const getSearchParams = (provider) => {
