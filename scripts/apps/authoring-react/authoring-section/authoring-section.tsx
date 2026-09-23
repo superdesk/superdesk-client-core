@@ -74,11 +74,8 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
     return itemGroups;
 }
 
-/**
- * Percentage of the row the field asks for. A field with no configured width takes the whole row:
- * `getContentProfile` defaults it that way too, but profiles built in code (packages, the
- * description field on media items) leave it unset.
- */
+// A field with no configured width takes the whole row. `getContentProfile` defaults it that way
+// too, but profiles built in code (packages, the description field on media items) leave it unset.
 function getFieldWidth(field: IAuthoringFieldV2): number {
     return field.fieldConfig.width ?? 100;
 }
@@ -128,11 +125,9 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     const canBeToggled = toggledFields[field.id] != null;
                                     const toggledOn = toggledFields[field.id];
 
-                                    // the configured width is a basis rather than a fixed width, so
-                                    // fields stretch to fill a row the widths leave short. This is
-                                    // deliberately not angular's behaviour: `sd-width`
-                                    // (styles/sass/mixins.scss) sets flex-basis alone and leaves
-                                    // the gap at the end of the row.
+                                    // The width is a basis, so fields stretch to fill a row the
+                                    // widths leave short. Deliberately not angular's behaviour:
+                                    // `sd-width` sets the basis alone and leaves the gap.
                                     return (
                                         <div
                                             key={field.id}

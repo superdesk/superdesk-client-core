@@ -428,10 +428,9 @@ declare module 'superdesk-api' {
         color?: string;
 
         /**
-         * Short code to put inside the coloured badge, with `label` written beside it as text.
-         * Set it for a vocabulary whose items are codes with names ({qcode: 1, name: 'Urgent'}),
-         * so the name stays readable instead of being swallowed by the badge.
-         * Leave it out and the badge carries the label, which is what an option with no code wants.
+         * Short code for the coloured badge, with `label` written beside it as text. Set it for a
+         * vocabulary whose items are codes with names ({qcode: 1, name: 'Urgent'}), so the name is
+         * not swallowed by the badge. Left out, the badge carries the label.
          */
         badgeLabel?: string;
     }

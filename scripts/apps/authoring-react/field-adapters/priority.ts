@@ -20,10 +20,8 @@ export const priority: IFieldAdapter<IArticle> = {
         const fieldConfig: IDropdownConfigManualSource = {
             source: 'manual-entry',
             type: 'number',
-            // `short` then the qcode is the order authoring-angular reads the badge in
-            // (metadata-dropdown.html), and `defaultPriorityColors` mirrors `.priority-label--<n>`
-            // in styles/sass/labels.scss, which angular keys on the stored qcode rather than the
-            // name. The two only coincide while a vocabulary names its items after their codes.
+            // angular reads the badge as `short` then qcode, and keys the colour on the qcode
+            // rather than the item name (`.priority-label--<n>` in styles/sass/labels.scss).
             options: vocabulary.items.map(({name, qcode, color, short}) => {
                 const option: IDropdownConfigManualSource['options'][0] = {
                     id: qcode,

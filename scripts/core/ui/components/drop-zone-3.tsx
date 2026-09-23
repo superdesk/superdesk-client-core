@@ -16,12 +16,8 @@ const shellStylesOnDrag: React.CSSProperties = {
     borderRadius: 'var(--b-radius--small)',
 };
 
-/**
- * authoring-angular's empty drop zone is `.item-association` (apps/authoring/styles/authoring.scss):
- * at least 65px tall with its label centred, and the label itself dimmed to 0.4 by
- * `.item-association__text-label`. The whole box is the click target there, so the sizing goes on
- * this element rather than on the shell around it.
- */
+// Matches angular's empty `.item-association`: 65px tall, label centred and dimmed. The whole box
+// is the click target, so the sizing goes here rather than on the shell around it.
 const placeholderStyles: React.CSSProperties = {
     padding: 10,
     cursor: 'pointer',

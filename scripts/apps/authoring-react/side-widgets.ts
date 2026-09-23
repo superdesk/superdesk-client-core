@@ -5,12 +5,10 @@ import ng from 'core/services/ng';
 import {isInternalExtension} from 'core/helpers/register-internal-extension';
 
 /**
- * Core widgets first, then the ones extensions contribute, each group in registration order. The
- * sort below is stable, so this is what decides ties, and ties are unavoidable: an extension picks
- * its own `order` and several already collide with core widgets. authoring-angular resolves them
- * the same way, by building its list as `widgets.concat(widgetsFromExtensions)`
- * (`apps/authoring/widgets/widgets.ts`); without this the two rails disagree wherever a collision
- * exists, because extensions are registered before the core widgets are.
+ * Core widgets first, then extension ones, each group in registration order. The sort below is
+ * stable, so this decides ties, and ties are unavoidable: extensions pick their own `order` and
+ * several collide with core widgets. authoring-angular breaks them the same way, with
+ * `widgets.concat(widgetsFromExtensions)` in apps/authoring/widgets/widgets.ts.
  */
 function getRegisteredSideWidgets(): Array<IArticleSideWidget> {
     const core: Array<IArticleSideWidget> = [];

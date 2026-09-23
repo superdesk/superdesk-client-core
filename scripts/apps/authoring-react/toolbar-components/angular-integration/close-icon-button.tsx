@@ -4,10 +4,8 @@ import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {useInlineToolbarContext} from './inline-toolbar-context';
 
-/**
- * The icon-only close control. Square and hollow to sit beside the save button the way
- * authoring-angular's `#closeAuthoringBtn` does, rather than as a round icon button.
- */
+// Square and hollow rather than a round `IconButton`, so it sits beside the save button the way
+// angular's `#closeAuthoringBtn` does.
 export const CloseIconButtonComponent: React.ComponentType<{entity: IArticle}> = () => {
     const {exposed} = useInlineToolbarContext<IArticle>();
 

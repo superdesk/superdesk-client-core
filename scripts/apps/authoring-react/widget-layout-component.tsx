@@ -38,10 +38,9 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
                 </Layout.PanelContent>
 
                 {/*
-                    The footer markup is `Layout.PanelFooter`'s, inlined because that component
-                    takes no class name. The framework leaves the footer transparent, so a widget
-                    that paints its own body needs a way to keep the footer from showing the
-                    white panel through.
+                    `Layout.PanelFooter`'s markup, inlined because that component takes no class
+                    name. The framework leaves the footer transparent, so a widget that paints its
+                    own body needs a hook to stop the white panel showing through.
                 */}
                 {footer && (
                     <div

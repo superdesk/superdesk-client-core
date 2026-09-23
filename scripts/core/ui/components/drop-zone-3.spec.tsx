@@ -2,12 +2,8 @@ import React from 'react';
 import {mount} from 'enzyme';
 import {DropZone3} from './drop-zone-3';
 
-/**
- * The empty drop zone has to read like authoring-angular's `.item-association`
- * (apps/authoring/styles/authoring.scss): at least 65px tall, its label centred and dimmed to 0.4.
- * Every empty drop zone in authoring-react is this component - feature media and the other media
- * fields, related items and package items - so the box is asserted once, here.
- */
+// The empty drop zone has to read like angular's `.item-association`: 65px tall, label centred and
+// dimmed. Every empty drop zone in authoring-react is this component, so it is asserted once here.
 function renderEmpty() {
     return mount(
         <DropZone3

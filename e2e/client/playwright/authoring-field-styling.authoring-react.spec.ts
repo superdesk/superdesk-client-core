@@ -141,10 +141,8 @@ test.describe('authoring-react field styling', () => {
         await expect.poll(() => labelStyle(bylineLabel, 'opacity')).toBe('0.4');
     });
 
-    /**
-     * Every side widget paints its body rather than its panel, which is what keeps the header
-     * white. Read off the panel in one go: `PanelContentBlock` takes no test id.
-     */
+    // Every side widget paints its body rather than its panel, which is what keeps the header
+    // white. Read off the panel in one go: `PanelContentBlock` takes no test id.
     for (const widgetId of ['related-item', 'comments', 'suggestions', 'versioning']) {
         test(`paints the ${widgetId} widget body and leaves its header white`, async ({page}) => {
             await restoreDatabaseSnapshot();
@@ -187,11 +185,9 @@ test.describe('authoring-react field styling', () => {
     }
 });
 
-/**
- * The header collapse. authoring-angular runs a 150ms linear height slide from `slideUpDown`
- * (core/ui/slide-up-down.ts); the ui-framework transitions a `max-height` ceiling instead, which is
- * why this asserts the property as well as the timing.
- */
+// angular runs a 150ms linear height slide (`slideUpDown` in core/ui/slide-up-down.ts); the
+// ui-framework transitions a `max-height` ceiling instead, which is why the property is asserted
+// as well as the timing.
 test.describe('authoring-react header collapse', () => {
     function header(page: Page): Locator {
         return page.locator('.sd-editor-content__authoring-header');
@@ -289,10 +285,8 @@ test.describe('authoring-react item state badge', () => {
     });
 });
 
-/**
- * `sd-width` is a basis in authoring-angular (`[sd-width="quarter"] {flex-basis: 25%}` in
- * styles/sass/mixins.scss), on an item that grows, so a short row is filled by the fields on it.
- */
+// `sd-width` is a flex basis in angular, on an item that grows, so a short row is filled by the
+// fields on it.
 test.describe('authoring-react field row widths', () => {
     test('fills a header row that the configured widths leave short', async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -323,10 +317,8 @@ test.describe('authoring-react field row widths', () => {
         expect(Math.round(place.x + place.width)).toBe(Math.round(slugline.x + slugline.width));
     });
 
-    /**
-     * The packages profile is built in code and sets no width on its fields, so it is the reachable
-     * case for the missing fallback.
-     */
+    // The packages profile is built in code and sets no width on its fields, so it is the
+    // reachable case for the missing fallback.
     test('gives a field with no configured width the whole row', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openFromSports(page, {
@@ -394,11 +386,8 @@ test.describe('authoring-react top bar', () => {
         expect(secondary).not.toBe(SUBNAV_BG);
     });
 
-    /**
-     * authoring-angular swaps the close label for an icon once the top bar drops below 880px, via
-     * the `sd-media-query` directive on the bar itself. Both viewports here are far from that edge:
-     * the bar measures 691px at 1280 and 968px at 2200.
-     */
+    // angular swaps the close label for an icon once the bar itself, not the viewport, drops below
+    // 880px. Neither viewport here is near that edge: the bar is 691px at 1280 and 968px at 2200.
     test('swaps the close label for an icon when the top bar gets narrow', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.setViewportSize({width: 1280, height: 800});
@@ -444,12 +433,8 @@ test.describe('authoring-react top bar', () => {
         await expect(close).toHaveText('');
     });
 
-    /**
-     * authoring-angular ends the bar with two stacks (styles/sass/navs.scss): the text buttons in
-     * `.subnav__button-stack--default` (`margin: 0 4px` each), then
-     * `.subnav__button-stack--square-buttons` 16px later, whose 48px nav buttons carry no margins,
-     * so only their inline-start borders divide them.
-     */
+    // angular ends the bar with two stacks (styles/sass/navs.scss): text buttons spaced 4px each,
+    // then the square button stack 16px later, its members flush against each other.
     test('packs the square top bar buttons the way angular does', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openTestSportsStory(page);
@@ -486,12 +471,9 @@ test.describe('authoring-react top bar', () => {
         expect(publishPadding).toBe('9px');
     });
 
-    /**
-     * The framework's `Menu` renders a `.d-contents` host next to its trigger, which appears in the
-     * row the first time the actions menu is opened and stays there. It generates no box, so it is
-     * invisible to the layout but not to an adjacent-sibling rule: spacing the row with `+` used to
-     * drop the send to / publish button out of the square stack the moment the menu opened.
-     */
+    // The framework's `Menu` inserts a `.d-contents` host next to its trigger the first time the
+    // menu opens, and leaves it there. It generates no box, so the layout does not see it but an
+    // adjacent-sibling rule does: spacing the row with `+` moved the publish button on first open.
     test('does not move the top bar when the actions menu opens', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openTestSportsStory(page);
@@ -524,10 +506,7 @@ test.describe('authoring-react top bar', () => {
         expect(await seam()).toBe(0);
     });
 
-    /**
-     * Every icon-only control in angular's bar names itself on hover, through `title` on the
-     * minimize and more-actions buttons and `sd-tooltip` on send to / publish.
-     */
+    // Every icon-only control in angular's bar names itself on hover.
     test('names every icon-only top bar button on hover', async ({page}) => {
         await restoreDatabaseSnapshot();
         await page.setViewportSize({width: 1280, height: 800});
@@ -554,11 +533,8 @@ test.describe('authoring-react top bar', () => {
     });
 });
 
-/**
- * The scrollbar thumb is translucent (`--sd-colour__webkit-scrollbar-thumb`), so the column behind
- * the gutter decides how dark it reads. The framework paints the editor column `#D4CED0`
- * (layout/_editor.scss), which is what made authoring-react's scrollbars darker than angular's.
- */
+// The scrollbar thumb is translucent, so the column behind the gutter decides how dark it reads,
+// and the framework paints the editor column a mauve grey (layout/_editor.scss).
 test.describe('authoring-react article column', () => {
     test('keeps the column light behind the article scrollbar', async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -577,14 +553,9 @@ test.describe('authoring-react article column', () => {
     });
 });
 
-/**
- * A header field in authoring-angular is a plain `input.boxed-input`. Focused, `input.boxed-input`
- * and `input.boxed-input:focus` (styles/sass/forms.scss) give it a bottom-only accent border, a
- * second 1px accent line under it as a shadow, and an accent fill at 20%. authoring-react renders
- * the same fields with editor3, so all of that has to be reproduced on `.Editor3-root`.
- *
- * These are the values read off angular's focused SLUGLINE with getComputedStyle.
- */
+// A focused header field in angular is `input.boxed-input:focus`: bottom-only accent border, a 1px
+// accent line under it and an accent fill at 20%. The same fields are editor3 here, so the state
+// has to be reproduced on `.Editor3-root`. The values are angular's, read with getComputedStyle.
 test.describe('authoring-react header field focus', () => {
     test('gives a focused header field angular\'s boxed-input state', async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -622,11 +593,7 @@ test.describe('authoring-react header field focus', () => {
         await expect(editor).toHaveCSS('border-right-width', '0px');
     });
 
-    /**
-     * `.authoring-header__item input.slugline` (apps/authoring/styles/authoring.scss) colours the
-     * slugline value in every state, not on focus. It looked like a focus difference only because
-     * the two views were compared focused.
-     */
+    // angular colours the slugline value in every state, not on focus.
     test('paints the slugline value in the slugline colour, focused or not', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openTestSportsStory(page);
@@ -650,15 +617,10 @@ test.describe('authoring-react header field focus', () => {
     });
 });
 
-/**
- * authoring-angular's `sd-meta-dropdown` puts the item's code in the coloured badge and writes its
- * name beside it as plain text, for the two fields that set `data-icon`: priority and urgency.
- *
- * This snapshot's vocabularies name every item after its own qcode ({name: '6', qcode: 6}), so
- * both halves read "6" here and only the structure can be asserted. The case that matters,
- * {qcode: 1, name: 'Urgent'}, is covered by the unit tests on `DropdownItemTemplate` and the two
- * adapters, because proving it here would mean editing the seeded vocabulary.
- */
+// angular's `sd-meta-dropdown` puts the item's code in the coloured badge and its name beside it,
+// for priority and urgency. This snapshot names every item after its own qcode, so both halves
+// read "6" and only the structure can be asserted here; {qcode: 1, name: 'Urgent'} is covered by
+// the unit tests on `DropdownItemTemplate` and the two adapters.
 test.describe('authoring-react coded dropdown fields', () => {
     for (const fieldId of ['priority', 'urgency']) {
         test(`shows the ${fieldId} name beside its badge, not inside it`, async ({page}) => {
@@ -695,22 +657,16 @@ test.describe('authoring-react coded dropdown fields', () => {
             expect(rendered!.badgeBackground).not.toBe('rgba(0, 0, 0, 0)');
             expect(rendered!.badgeText.length).toBeGreaterThan(0);
 
-            // two separate elements, which is the whole point: the badge is keyed on the code and
-            // the name stands on its own
+            // two separate elements: the badge is keyed on the code, the name stands on its own
             expect(rendered!.nameText).toBe(rendered!.badgeText);
             expect(rendered!.badgeContainsName).toBe(false);
         });
     }
 });
 
-/**
- * authoring-angular styles several content fields by the field id it puts on the editor3 host
- * (`.main-article .headline .public-DraftEditor-content` and its siblings in
- * apps/authoring/styles/themes.scss). Without `authoring-field--<id>` none of that reaches
- * authoring-react and the whole article renders at `.Editor3-root`'s light 300.
- *
- * Every number here was read off angular with getComputedStyle on the same article.
- */
+// angular styles several content fields by the field id on the editor3 host; the hook here is
+// `authoring-field--<id>`. The numbers are angular's, read with getComputedStyle on the same
+// article.
 test.describe('authoring-react content field text', () => {
     function content(page: Page, fieldId: string): Locator {
         return field(page, fieldId).locator('.public-DraftEditor-content');
@@ -757,10 +713,7 @@ test.describe('authoring-react content field text', () => {
         await expect(byline).toHaveCSS('line-height', '24px');
     });
 
-    /**
-     * The article text colour is the editor theme's, not the app default. The token resolves the
-     * same in both views; only authoring-react was falling through to `--color-text`.
-     */
+    // The article text colour is the editor theme's, not the app default.
     test('paints the article in the editor text colour', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openTestSportsStory(page);
@@ -786,11 +739,9 @@ test.describe('authoring-react content field text', () => {
     });
 });
 
-/**
- * The shadow down the article column's left edge is not declared on the column. It is the monitoring
- * pane's own right-hand shadow falling across it, which is how authoring-angular gets the same edge,
- * so what has to hold is the painting order between the two.
- */
+// The shadow down the article column's left edge is not declared on the column: it is the
+// monitoring pane's own right-hand shadow falling across it, as in angular, so what has to hold is
+// the painting order between the two.
 test.describe('authoring-react column edge', () => {
     test('keeps the authoring root under the pane that casts the column shadow', async ({page}) => {
         await restoreDatabaseSnapshot();

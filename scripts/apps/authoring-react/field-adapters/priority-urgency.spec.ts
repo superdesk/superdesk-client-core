@@ -7,12 +7,9 @@ import {urgency} from './urgency';
 
 const vocabulariesOriginal = sdApi.vocabularies;
 
-/**
- * The e2e vocabulary names every item after its own qcode ({name: '6', qcode: 6}), which hides
- * every difference between the two: a renderer that drops the code, or the name, still reads
- * right there. A vocabulary that calls qcode 1 "Urgent" is the case that matters, and it is the
- * one these cover.
- */
+// The e2e vocabulary names every item after its own qcode ({name: '6', qcode: 6}), which hides a
+// renderer that drops the code or the name. The case that matters is one that calls qcode 1
+// "Urgent", so that is what these stub.
 function stubVocabularies(items: Array<Partial<IVocabularyItem>>): void {
     sdApi.vocabularies = {
         ...vocabulariesOriginal,
@@ -42,10 +39,8 @@ describe('priority and urgency adapters', () => {
         }
     });
 
-    /**
-     * `IVocabularyItem` types `qcode` as a string, but the seeded priority and urgency vocabularies
-     * store it as a number, so the adapters have to read either.
-     */
+    // `IVocabularyItem` types `qcode` as a string, but the seeded priority and urgency
+    // vocabularies store it as a number.
     it('reads a numeric qcode as well as a string one', () => {
         stubVocabularies([{qcode: 1 as unknown as string, name: 'Urgent'}]);
 
@@ -62,11 +57,8 @@ describe('priority and urgency adapters', () => {
         }
     });
 
-    /**
-     * `defaultPriorityColors` mirrors `.priority-label--<n>` in styles/sass/labels.scss, which
-     * authoring-angular keys on the stored qcode. Reading it by name gave no colour at all as soon
-     * as the names stopped being digits.
-     */
+    // The colour tables mirror `.priority-label--<n>` in styles/sass/labels.scss, which angular
+    // keys on the qcode. Reading them by name gives no colour once the names stop being digits.
     it('takes the fallback colour from the code rather than the name', () => {
         stubVocabularies([{qcode: '1', name: 'Urgent'}]);
 

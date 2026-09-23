@@ -4,12 +4,9 @@ import {Icon, Tooltip} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {useInlineToolbarContext} from './inline-toolbar-context';
 
-/**
- * The button `NavButton` would render, written out so the tooltip's handlers can sit on the button
- * itself: `NavButton` takes neither a tooltip nor event handlers, and the element `Tooltip` wraps a
- * plain child in is `display: contents`, which the top bar's spacing rules cannot hang a margin on.
- * `MoreActionsButton` (core/ui/components) is the same control written the same way.
- */
+// `NavButton` written out, because it takes neither a tooltip nor event handlers, and wrapping a
+// plain child in `Tooltip` adds a `display: contents` element that the top bar's spacing rules
+// cannot hang a margin on.
 export const MinimizeButtonComponent: React.ComponentType<{entity: IArticle}> = () => {
     const {exposed} = useInlineToolbarContext<IArticle>();
 

@@ -101,13 +101,11 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                     )}
 
                     {/*
-                        `sd-input-style` is what authoring-angular puts on this holder for a header
-                        field (`getTemplateForHeader` in core/editor3/directive.tsx). It is the only
-                        thing that makes an editor3 field in the header look like a boxed input:
-                        `.sd-input-style .Editor3-root` (core/editor3/styles.scss) replaces
-                        `.Editor3-root`'s four-sided border with a single bottom one, so the accent
-                        colour `.Editor3-root:not(.read-only):focus-within` sets on focus lands as
-                        an underline rather than a frame.
+                        `sd-input-style` is what angular puts on a header field's holder
+                        (`getTemplateForHeader` in core/editor3/directive.tsx), and the only thing
+                        that makes an editor3 field look like a boxed input: it cuts
+                        `.Editor3-root`'s border down to the bottom one, so focus reads as an
+                        underline rather than a frame.
                     */}
                     <div
                         className="authoring-header__input-holder sd-input-style"

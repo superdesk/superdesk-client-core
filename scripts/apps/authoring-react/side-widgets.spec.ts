@@ -109,11 +109,8 @@ describe('the order side widgets are listed in', () => {
     });
 });
 
-/**
- * Both rails sort on the same `order` numbers, so a widget whose number drifts from the one
- * authoring-angular gives it lands in a different place in authoring-react. authoring-angular is
- * the reference; these are the numbers its widgets are registered with.
- */
+// Both rails sort on the same `order` numbers, so a widget whose number drifts from angular's
+// lands in a different place here. These are the numbers angular registers its widgets with.
 describe('side widget order parity with authoring-angular', () => {
     const orderInAuthoringAngular = {
         metadata: 1,
@@ -163,11 +160,8 @@ describe('side widget order parity with authoring-angular', () => {
         expect(orders).toEqual(orderInAuthoringAngular);
     });
 
-    /**
-     * Related items and translations are both order 7 in authoring-angular, which resolves the tie
-     * by registration order: `superdesk.apps.archive` pulls in the related items widget before
-     * `superdesk.apps.authoring` pulls in translations.
-     */
+    // Related items and translations are both order 7 in angular, which breaks the tie by
+    // registration order: `superdesk.apps.archive` registers related items first.
     it('lists the widgets in the order authoring-angular shows them', () => {
         expect(getWidgetsFromExtensions(article).map((registered) => registered._id)).toEqual([
             'metadata',
