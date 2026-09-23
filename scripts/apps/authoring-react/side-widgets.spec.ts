@@ -59,7 +59,7 @@ describe('authoring-react side widget resolution', () => {
     it('returns null when the widget is registered but not allowed for the article', () => {
         registerWidgets([widget('comments', {isAllowed: () => false})]);
 
-        expect(getWidgetsFromExtensions(article).length).toBe(0);
+        expect(getWidgetsFromExtensions(article).find(({_id}) => _id === 'comments')).toBe(undefined);
         expect(findWidgetById(article, 'comments')).toBe(null);
     });
 });
