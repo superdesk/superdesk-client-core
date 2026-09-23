@@ -130,9 +130,9 @@ export function getQueryFieldsRecursive(q: ILogicalOperator | IComparison): Set<
 export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string} {
     interface IQuery {
         query?: {
-            filtered: {
-                filter?: {};
-                query?: {};
+            bool: {
+                filter?: Array<{}>;
+                must?: Array<{}>;
             };
         };
         sort: ISuperdeskQuery['sort'];
@@ -149,25 +149,25 @@ export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string}
     const filtered = {};
 
     if (q.filter != null) {
-        filtered['filter'] = toElasticFilter(q.filter);
+        filtered['filter'] = [toElasticFilter(q.filter)];
     }
 
     if (Object.keys(filtered).length > 0) {
-        query['query'] = {filtered: filtered};
+        query['query'] = {bool: filtered};
     }
 
     if (q.fullTextSearch) {
         if (query.query == null) {
-            query.query = {filtered: {}};
+            query.query = {bool: {}};
         }
 
-        query.query.filtered.query = {
+        query.query.bool.must = [{
             query_string: {
                 query: q.fullTextSearch,
                 lenient: true,
                 default_operator: 'AND',
             },
-        };
+        }];
     }
 
     const result: ReturnType<typeof toElasticQuery> = {
