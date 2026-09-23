@@ -9,8 +9,12 @@ test.use({
 });
 
 const PANEL_BG = 'rgb(243, 245, 246)'; // --sd-colour-panel-bg--100
+const INTERACTIVE = 'rgb(64, 153, 191)'; // --sd-colour-interactive
+const INTERACTIVE_ALPHA_20 = 'rgba(64, 153, 191, 0.2)'; // --sd-colour-interactive--alpha-20
+const SLUGLINE = 'rgb(0, 91, 128)'; // --sd-slugline-color
 const INTERACTIVE_ACTIVE = 'rgb(51, 122, 153)'; // --sd-colour-interactive--active
 const SUBNAV_BG = 'rgb(232, 234, 237)'; // --sd-colour-panel-bg--200
+const EDITOR_BG = 'rgb(255, 255, 255)'; // --sd-colour-panel-bg--000
 
 async function openFromSports(
     page: Page,
@@ -165,12 +169,20 @@ test.describe('authoring-react field styling', () => {
                     return {background: computed.backgroundColor, padding: computed.padding};
                 };
 
-                return {header: read('.side-panel__header'), body: read('.side-panel__content-block')};
+                return {
+                    header: read('.side-panel__header'),
+                    body: read('.side-panel__content-block'),
+                    footer: read('.side-panel__footer'),
+                };
             });
 
             expect(styles.header?.background).toBe('rgb(255, 255, 255)');
             expect(styles.body?.background).toBe(PANEL_BG);
             expect(styles.body?.padding).toBe('16px');
+
+            // comments is the only one of these with a footer, and it has to match the body rather
+            // than fall through to the white panel
+            expect(styles.footer?.background ?? null).toBe(widgetId === 'comments' ? PANEL_BG : null);
         });
     }
 });
@@ -430,6 +442,347 @@ test.describe('authoring-react top bar', () => {
 
         await expect(icon).toBeVisible();
         await expect(close).toHaveText('');
+    });
+
+    /**
+     * authoring-angular ends the bar with two stacks (styles/sass/navs.scss): the text buttons in
+     * `.subnav__button-stack--default` (`margin: 0 4px` each), then
+     * `.subnav__button-stack--square-buttons` 16px later, whose 48px nav buttons carry no margins,
+     * so only their inline-start borders divide them.
+     */
+    test('packs the square top bar buttons the way angular does', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const authoring = page.getByTestId('authoring');
+        const row = authoring.getByTestId('authoring-toolbar-1');
+        const save = authoring.getByRole('button', {name: 'Save'});
+        const minimize = authoring.getByTestId('minimize');
+        const actions = authoring.getByRole('button', {name: 'Actions menu'});
+        const publish = authoring.getByTestId('open-send-publish-pane');
+
+        await expect(publish).toBeVisible();
+
+        const box = async (locator: Locator) => (await locator.boundingBox())!;
+        const [rowBox, saveBox, minimizeBox, actionsBox, publishBox] = await Promise.all(
+            [row, save, minimize, actions, publish].map(box),
+        );
+
+        // 4px off the last text button plus the 16px stack margin
+        expect(Math.round(minimizeBox.x - (saveBox.x + saveBox.width))).toBe(20);
+
+        // and nothing between the square buttons themselves
+        expect(Math.round(actionsBox.x - (minimizeBox.x + minimizeBox.width))).toBe(0);
+        expect(Math.round(publishBox.x - (actionsBox.x + actionsBox.width))).toBe(0);
+
+        // the last one ends the row, as angular's stack has no inline-end margin
+        expect(Math.round(publishBox.x + publishBox.width)).toBe(Math.round(rowBox.x + rowBox.width));
+
+        // angular insets the send to arrow from the button's inline start rather than centring it
+        const publishPadding = await publish.evaluate(
+            (el) => window.getComputedStyle(el).paddingInlineStart,
+        );
+
+        expect(publishPadding).toBe('9px');
+    });
+
+    /**
+     * The framework's `Menu` renders a `.d-contents` host next to its trigger, which appears in the
+     * row the first time the actions menu is opened and stays there. It generates no box, so it is
+     * invisible to the layout but not to an adjacent-sibling rule: spacing the row with `+` used to
+     * drop the send to / publish button out of the square stack the moment the menu opened.
+     */
+    test('does not move the top bar when the actions menu opens', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const authoring = page.getByTestId('authoring');
+        const actions = authoring.getByRole('button', {name: 'Actions menu'});
+        const publish = authoring.getByTestId('open-send-publish-pane');
+
+        await expect(publish).toBeVisible();
+
+        const seam = async () => {
+            const [actionsBox, publishBox] = await Promise.all(
+                [actions, publish].map(async (l) => (await l.boundingBox())!),
+            );
+
+            return Math.round(publishBox.x - (actionsBox.x + actionsBox.width));
+        };
+
+        expect(await seam()).toBe(0);
+
+        await actions.click();
+        await expect(page.getByTestId('actions-list')).toBeVisible();
+
+        expect(await seam()).toBe(0);
+
+        // the `.d-contents` host outlives the menu, so the closed state has to hold too
+        await page.keyboard.press('Escape');
+        await expect(page.getByTestId('actions-list')).toBeHidden();
+
+        expect(await seam()).toBe(0);
+    });
+
+    /**
+     * Every icon-only control in angular's bar names itself on hover, through `title` on the
+     * minimize and more-actions buttons and `sd-tooltip` on send to / publish.
+     */
+    test('names every icon-only top bar button on hover', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await page.setViewportSize({width: 1280, height: 800});
+        await openTestSportsStory(page);
+
+        const authoring = page.getByTestId('authoring');
+        const tooltip = page.locator('.tooltip');
+
+        const controls: Array<[Locator, string]> = [
+            [authoring.getByTestId('close').locator('button'), 'Close'],
+            [authoring.getByTestId('minimize'), 'Minimize'],
+            [authoring.getByRole('button', {name: 'Actions menu'}), 'More actions'],
+            [authoring.getByTestId('open-send-publish-pane'), 'Send to / Publish'],
+        ];
+
+        for (const [control, text] of controls) {
+            await control.hover();
+            await expect(tooltip).toHaveText(text);
+
+            // move off so the next reading cannot pass on the previous tooltip
+            await page.mouse.move(5, 5);
+            await expect(tooltip).toHaveCount(0);
+        }
+    });
+});
+
+/**
+ * The scrollbar thumb is translucent (`--sd-colour__webkit-scrollbar-thumb`), so the column behind
+ * the gutter decides how dark it reads. The framework paints the editor column `#D4CED0`
+ * (layout/_editor.scss), which is what made authoring-react's scrollbars darker than angular's.
+ */
+test.describe('authoring-react article column', () => {
+    test('keeps the column light behind the article scrollbar', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const column = page.locator('.sd-editor-grid__editor-content');
+
+        await expect(column).toBeVisible();
+        await expect(column).toHaveCSS('background-color', EDITOR_BG);
+
+        // the scroller itself paints nothing, so the gutter is the column's background
+        const scroller = page.locator('.sd-editor-content__main-container');
+
+        await expect(scroller).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+        await expect(scroller).toHaveCSS('overflow-y', 'auto');
+    });
+});
+
+/**
+ * A header field in authoring-angular is a plain `input.boxed-input`. Focused, `input.boxed-input`
+ * and `input.boxed-input:focus` (styles/sass/forms.scss) give it a bottom-only accent border, a
+ * second 1px accent line under it as a shadow, and an accent fill at 20%. authoring-react renders
+ * the same fields with editor3, so all of that has to be reproduced on `.Editor3-root`.
+ *
+ * These are the values read off angular's focused SLUGLINE with getComputedStyle.
+ */
+test.describe('authoring-react header field focus', () => {
+    test('gives a focused header field angular\'s boxed-input state', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const slugline = field(page, 'slugline');
+        const holder = slugline.getByTestId('authoring-field-input');
+        const editor = holder.locator('.Editor3-root');
+
+        await expect(holder).toHaveClass(/\bsd-input-style\b/);
+        await expect(editor).toHaveCSS('border-top-width', '0px');
+        await expect(editor).toHaveCSS('border-bottom-width', '1px');
+        await expect(editor).toHaveCSS('border-radius', '2px 2px 0px 0px');
+
+        await slugline.locator('[contenteditable]').first().click();
+
+        // the box transitions into the focused state, so every reading has to be polled
+        const style = (property: string) => expect.poll(
+            () => editor.evaluate(
+                (el, prop) => window.getComputedStyle(el).getPropertyValue(prop),
+                property,
+            ),
+        );
+
+        await style('border-bottom-color').toBe(INTERACTIVE);
+        await style('background-color').toBe(INTERACTIVE_ALPHA_20);
+
+        // one solid accent underline: the 1px border plus a 1px shadow directly under it, rather
+        // than the translucent 3px ring `.Editor3-root:focus-within` draws on all four sides
+        await style('box-shadow').toBe(`${INTERACTIVE} 0px 1px 0px 0px`);
+
+        // focus must not bring a frame back with it
+        await expect(editor).toHaveCSS('border-top-width', '0px');
+        await expect(editor).toHaveCSS('border-left-width', '0px');
+        await expect(editor).toHaveCSS('border-right-width', '0px');
+    });
+
+    /**
+     * `.authoring-header__item input.slugline` (apps/authoring/styles/authoring.scss) colours the
+     * slugline value in every state, not on focus. It looked like a focus difference only because
+     * the two views were compared focused.
+     */
+    test('paints the slugline value in the slugline colour, focused or not', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const slugline = field(page, 'slugline');
+        const editor = slugline.getByTestId('authoring-field-input').locator('.Editor3-root');
+
+        await expect(slugline).toHaveClass(/\bauthoring-field--slugline\b/);
+        await expect(editor).toHaveCSS('color', SLUGLINE);
+        await expect(editor).toHaveCSS('font-weight', '500');
+
+        // the value element inherits both rather than carrying its own
+        const value = slugline.locator('.public-DraftEditor-content');
+
+        await expect(value).toHaveCSS('color', SLUGLINE);
+        await expect(value).toHaveCSS('font-weight', '500');
+
+        await slugline.locator('[contenteditable]').first().click();
+
+        await expect(editor).toHaveCSS('color', SLUGLINE);
+    });
+});
+
+/**
+ * authoring-angular's `sd-meta-dropdown` puts the item's code in the coloured badge and writes its
+ * name beside it as plain text, for the two fields that set `data-icon`: priority and urgency.
+ *
+ * This snapshot's vocabularies name every item after its own qcode ({name: '6', qcode: 6}), so
+ * both halves read "6" here and only the structure can be asserted. The case that matters,
+ * {qcode: 1, name: 'Urgent'}, is covered by the unit tests on `DropdownItemTemplate` and the two
+ * adapters, because proving it here would mean editing the seeded vocabulary.
+ */
+test.describe('authoring-react coded dropdown fields', () => {
+    for (const fieldId of ['priority', 'urgency']) {
+        test(`shows the ${fieldId} name beside its badge, not inside it`, async ({page}) => {
+            await restoreDatabaseSnapshot();
+            await openTestSportsStory(page);
+
+            const input = field(page, fieldId).getByTestId('authoring-field-input');
+
+            await expect(input).toBeVisible();
+
+            const rendered = await input.evaluate((el) => {
+                const spans = Array.from(el.querySelectorAll('span'))
+                    .filter((span) => (span.textContent ?? '').trim().length > 0);
+                const badge = spans.find(
+                    (span) => window.getComputedStyle(span).backgroundColor !== 'rgba(0, 0, 0, 0)',
+                );
+
+                if (badge == null) {
+                    return null;
+                }
+
+                // the name is written next to the badge rather than inside it
+                const sibling = badge.nextElementSibling;
+
+                return {
+                    badgeText: (badge.textContent ?? '').trim(),
+                    badgeBackground: window.getComputedStyle(badge).backgroundColor,
+                    nameText: sibling == null ? null : (sibling.textContent ?? '').trim(),
+                    badgeContainsName: badge.querySelector('span') != null,
+                };
+            });
+
+            expect(rendered).not.toBeNull();
+            expect(rendered!.badgeBackground).not.toBe('rgba(0, 0, 0, 0)');
+            expect(rendered!.badgeText.length).toBeGreaterThan(0);
+
+            // two separate elements, which is the whole point: the badge is keyed on the code and
+            // the name stands on its own
+            expect(rendered!.nameText).toBe(rendered!.badgeText);
+            expect(rendered!.badgeContainsName).toBe(false);
+        });
+    }
+});
+
+/**
+ * authoring-angular styles several content fields by the field id it puts on the editor3 host
+ * (`.main-article .headline .public-DraftEditor-content` and its siblings in
+ * apps/authoring/styles/themes.scss). Without `authoring-field--<id>` none of that reaches
+ * authoring-react and the whole article renders at `.Editor3-root`'s light 300.
+ *
+ * Every number here was read off angular with getComputedStyle on the same article.
+ */
+test.describe('authoring-react content field text', () => {
+    function content(page: Page, fieldId: string): Locator {
+        return field(page, fieldId).locator('.public-DraftEditor-content');
+    }
+
+    test('sets the headline in medium at angular\'s tighter leading', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const headline = content(page, 'headline');
+
+        await expect(headline).toBeVisible();
+        await expect(headline).toHaveCSS('font-weight', '500');
+
+        // 1.2 against the 28px the theme sets, rather than `.Editor3-editor`'s 1.4
+        await expect(headline).toHaveCSS('font-size', '28px');
+        await expect(headline).toHaveCSS('line-height', '33.6px');
+    });
+
+    test('sets the abstract in regular, and italic when the config asks for it', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const abstract = content(page, 'abstract');
+
+        await expect(abstract).toBeVisible();
+        await expect(abstract).toHaveCSS('font-weight', '400');
+
+        // `italicAbstract` is an app config flag; the class it sets is on an ancestor of both views
+        const italicConfigured = await page.locator('.italicAbstract').count() > 0;
+
+        await expect(abstract).toHaveCSS('font-style', italicConfigured ? 'italic' : 'normal');
+    });
+
+    test('gives the byline the leading angular sets on its input', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const byline = content(page, 'byline');
+
+        await expect(byline).toBeVisible();
+        await expect(byline).toHaveCSS('font-weight', '400');
+        await expect(byline).toHaveCSS('font-size', '16px');
+        await expect(byline).toHaveCSS('line-height', '24px');
+    });
+
+    /**
+     * The article text colour is the editor theme's, not the app default. The token resolves the
+     * same in both views; only authoring-react was falling through to `--color-text`.
+     */
+    test('paints the article in the editor text colour', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openTestSportsStory(page);
+
+        const body = page.locator('.sd-editor-content__authoring-body');
+        const resolved = await body.evaluate((el) => {
+            const probe = document.createElement('span');
+
+            probe.style.color = 'var(--sd-editor-colour__txt)';
+            el.appendChild(probe);
+
+            const value = window.getComputedStyle(probe).color;
+
+            probe.remove();
+
+            return value;
+        });
+
+        await expect(body).toHaveCSS('color', resolved);
+
+        // and it reaches the field text, which is what the reader actually sees
+        await expect(content(page, 'body_html')).toHaveCSS('color', resolved);
     });
 });
 

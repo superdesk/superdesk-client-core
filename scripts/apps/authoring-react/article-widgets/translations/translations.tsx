@@ -95,7 +95,7 @@ export function getTranslationsWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: TRANSLATIONS_WIDGET_ID,
         label: getLabel(),
-        order: 2,
+        order: 7,
         icon: 'web',
         component: Translations,
     };

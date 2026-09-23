@@ -1,6 +1,13 @@
 import {IArticle, IArticleSideWidget, IOpenSideWidget, IUser} from 'superdesk-api';
-import {extensions} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import ng from 'core/services/ng';
+import {
+    registerContributionsFromCustomFields,
+    registerInternalExtension,
+    unregisterInternalExtension,
+} from 'core/helpers/register-internal-extension';
+import {authoringReactWidgetsExtension, registerAuthoringReactWidgets} from './manage-widget-registration';
+import {getAttachmentsField} from './fields/attachments';
 import {
     SIDE_WIDGET_STORAGE_KEY,
     findWidgetById,
@@ -64,6 +71,117 @@ describe('authoring-react side widget resolution', () => {
 
         expect(getWidgetsFromExtensions(article).length).toBe(0);
         expect(findWidgetById(article, 'comments')).toBe(null);
+    });
+});
+
+describe('the order side widgets are listed in', () => {
+    afterEach(() => {
+        delete extensions['test-extension'];
+        unregisterInternalExtension('test-core-widgets');
+    });
+
+    it('is ascending by order', () => {
+        registerWidgets([widget('c', {order: 3}), widget('a', {order: 1}), widget('b', {order: 2})]);
+
+        expect(getWidgetsFromExtensions(article).map((w) => w._id)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('keeps registration order for widgets that share an order', () => {
+        registerWidgets([
+            widget('registered-first', {order: 7}),
+            widget('registered-second', {order: 7}),
+            widget('later', {order: 8}),
+        ]);
+
+        expect(getWidgetsFromExtensions(article).map((w) => w._id))
+            .toEqual(['registered-first', 'registered-second', 'later']);
+    });
+
+    // extensions pick their own numbers and collide with core widgets; authoring-angular puts
+    // core first on a tie, and extensions are registered before the core widgets are
+    it('puts a core widget before an extension widget that shares its order', () => {
+        registerWidgets([widget('from-an-extension', {order: 1})]);
+        registerInternalExtension('test-core-widgets', {
+            contributions: {authoringSideWidgets: [widget('core', {order: 1})]},
+        });
+
+        expect(getWidgetsFromExtensions(article).map((w) => w._id)).toEqual(['core', 'from-an-extension']);
+    });
+});
+
+/**
+ * Both rails sort on the same `order` numbers, so a widget whose number drifts from the one
+ * authoring-angular gives it lands in a different place in authoring-react. authoring-angular is
+ * the reference; these are the numbers its widgets are registered with.
+ */
+describe('side widget order parity with authoring-angular', () => {
+    const orderInAuthoringAngular = {
+        metadata: 1,
+        'find-replace': 2,
+        comments: 3,
+        versioning: 4,
+        packages: 5,
+        macros: 6,
+        'related-item': 7,
+        translations: 7,
+        attachments: 8,
+        'inline-comments': 9,
+        suggestions: 10,
+    };
+
+    let featuresBeforeSpec: typeof appConfig.features;
+
+    beforeEach(() => {
+        featuresBeforeSpec = appConfig.features;
+
+        // both are optional widgets; the rail is only comparable with angular's when they are on
+        appConfig.features = {
+            ...(appConfig.features ?? {}),
+            editorInlineComments: true,
+            editorSuggestions: true,
+        } as typeof appConfig.features;
+
+        registerAuthoringReactWidgets();
+
+        // attachments is contributed by the field, not by the widget registration
+        registerContributionsFromCustomFields([getAttachmentsField()]);
+    });
+
+    afterEach(() => {
+        unregisterInternalExtension(authoringReactWidgetsExtension);
+        unregisterInternalExtension('field-type--attachments');
+        appConfig.features = featuresBeforeSpec;
+    });
+
+    it('registers every widget with the order authoring-angular gives it', () => {
+        const orders: {[widgetId: string]: number} = {};
+
+        for (const registered of getWidgetsFromExtensions(article)) {
+            orders[registered._id] = registered.order;
+        }
+
+        expect(orders).toEqual(orderInAuthoringAngular);
+    });
+
+    /**
+     * Related items and translations are both order 7 in authoring-angular, which resolves the tie
+     * by registration order: `superdesk.apps.archive` pulls in the related items widget before
+     * `superdesk.apps.authoring` pulls in translations.
+     */
+    it('lists the widgets in the order authoring-angular shows them', () => {
+        expect(getWidgetsFromExtensions(article).map((registered) => registered._id)).toEqual([
+            'metadata',
+            'find-replace',
+            'comments',
+            'versioning',
+            'packages',
+            'macros',
+            'related-item',
+            'translations',
+            'attachments',
+            'inline-comments',
+            'suggestions',
+        ]);
     });
 });
 

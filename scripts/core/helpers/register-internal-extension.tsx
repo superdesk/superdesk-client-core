@@ -3,6 +3,10 @@ import {IExtensionActivationResult, ICustomFieldType} from 'superdesk-api';
 
 const prefix = '__internal__';
 
+export function isInternalExtension(extensionId: string): boolean {
+    return extensionId.startsWith(prefix);
+}
+
 // Allows providing middlewares / extension points from the core
 
 /**

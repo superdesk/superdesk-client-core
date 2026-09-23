@@ -95,10 +95,24 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         )}
                     </span>
 
-                    <div className="authoring-header__input-holder" data-test-id="authoring-field-input">
-                        {/* the label column is a fixed width, so the toggle rides with the input */}
-                        {canBeToggled && <div>{toggle}</div>}
+                    {/* the label column is a fixed width, so the toggle goes beside it, not in it */}
+                    {canBeToggled && (
+                        <div className="authoring-header-field__toggle">{toggle}</div>
+                    )}
 
+                    {/*
+                        `sd-input-style` is what authoring-angular puts on this holder for a header
+                        field (`getTemplateForHeader` in core/editor3/directive.tsx). It is the only
+                        thing that makes an editor3 field in the header look like a boxed input:
+                        `.sd-input-style .Editor3-root` (core/editor3/styles.scss) replaces
+                        `.Editor3-root`'s four-sided border with a single bottom one, so the accent
+                        colour `.Editor3-root:not(.read-only):focus-within` sets on focus lands as
+                        an underline rather than a frame.
+                    */}
+                    <div
+                        className="authoring-header__input-holder sd-input-style"
+                        data-test-id="authoring-field-input"
+                    >
                         {this.props.children}
 
                         <Spacer h gap="8" justifyContent="end" noGrow noWrap>

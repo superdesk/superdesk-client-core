@@ -51,8 +51,16 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
             fieldTemplate: this.props.fieldTemplate,
         });
 
+        // The field id is in the class list as well as the test id because a few fields are styled
+        // by name: authoring-angular gets the same hook from the input carrying the field id as a
+        // class (`input.slugline`).
         return (
-            <div ref={this.props.fieldRef} data-test-id="authoring-field" data-test-value={field.id}>
+            <div
+                ref={this.props.fieldRef}
+                className={'authoring-field authoring-field--' + field.id}
+                data-test-id="authoring-field"
+                data-test-value={field.id}
+            >
                 {canBeToggled && toggledOn === false ? (
                     <Container key={field.id} />
                 ) : (

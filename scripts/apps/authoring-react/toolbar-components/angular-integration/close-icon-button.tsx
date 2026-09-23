@@ -14,6 +14,7 @@ export const CloseIconButtonComponent: React.ComponentType<{entity: IArticle}> =
     return (
         <Button
             text={gettext('Close')}
+            tooltip={gettext('Close')}
             icon="close-small"
             iconOnly
             shape="square"

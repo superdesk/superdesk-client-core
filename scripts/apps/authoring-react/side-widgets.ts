@@ -2,10 +2,31 @@ import {IArticle, IArticleSideWidget, IOpenSideWidget, IUser} from 'superdesk-ap
 import {extensions} from 'appConfig';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
+import {isInternalExtension} from 'core/helpers/register-internal-extension';
+
+/**
+ * Core widgets first, then the ones extensions contribute, each group in registration order. The
+ * sort below is stable, so this is what decides ties, and ties are unavoidable: an extension picks
+ * its own `order` and several already collide with core widgets. authoring-angular resolves them
+ * the same way, by building its list as `widgets.concat(widgetsFromExtensions)`
+ * (`apps/authoring/widgets/widgets.ts`); without this the two rails disagree wherever a collision
+ * exists, because extensions are registered before the core widgets are.
+ */
+function getRegisteredSideWidgets(): Array<IArticleSideWidget> {
+    const core: Array<IArticleSideWidget> = [];
+    const fromExtensions: Array<IArticleSideWidget> = [];
+
+    for (const [extensionId, extension] of Object.entries(extensions)) {
+        const widgets = extension.activationResult?.contributions?.authoringSideWidgets ?? [];
+
+        (isInternalExtension(extensionId) ? core : fromExtensions).push(...widgets);
+    }
+
+    return core.concat(fromExtensions);
+}
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
-    return Object.values(extensions)
-        .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
+    return getRegisteredSideWidgets()
         .filter((widget) => widget.isAllowed?.(article) ?? true)
         .sort((a, b) => a.order - b.order);
 }

@@ -125,7 +125,7 @@ export function getPackagesWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: PACKAGES_WIDGET_ID,
         label: getLabel(),
-        order: 2,
+        order: 5,
         icon: 'package',
         component: PackagesWidget,
     };

@@ -12,7 +12,7 @@ import {HistoryTab} from './history-tab';
 import {VersionsTab} from './versions-tab';
 
 // Can't call `gettext` in the top level
-const getLabel = () => gettext('Versions and item history');
+const getLabel = () => gettext('Versions') + '/' + gettext('History');
 
 interface IState {
     selectedTab: 'versions' | 'history';

@@ -15,7 +15,7 @@ import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 
 // Can't call `gettext` in the top level
-const getLabel = () => gettext('Resolved suggestions');
+const getLabel = () => gettext('Suggestions');
 const SUGGESTIONS_WIDGET_ID = 'suggestions';
 
 interface ISuggestion {
@@ -230,7 +230,7 @@ export function getSuggestionsWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: SUGGESTIONS_WIDGET_ID,
         label: getLabel(),
-        order: 3,
+        order: 10,
         icon: 'suggestion',
         component: SuggestionsWidget,
         isAllowed: (item) => item._type !== 'legal_archive' && item._type !== 'archived',

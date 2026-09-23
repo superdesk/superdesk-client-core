@@ -19,11 +19,16 @@ export const urgency: IFieldAdapter<IArticle> = {
         const fieldConfig: IDropdownConfigManualSource = {
             source: 'manual-entry',
             type: 'number',
-            options: vocabulary.items.map(({name, qcode, color}) => {
+            // `short` then the qcode is the order authoring-angular reads the badge in
+            // (metadata-dropdown.html), and `defaultUrgencyColors` mirrors `.urgency-label--<n>`
+            // in styles/sass/labels.scss, which angular keys on the stored qcode rather than the
+            // name. The two only coincide while a vocabulary names its items after their codes.
+            options: vocabulary.items.map(({name, qcode, color, short}) => {
                 const option: IDropdownConfigManualSource['options'][0] = {
                     id: qcode,
                     label: name,
-                    color: color ?? defaultUrgencyColors[name] ?? undefined,
+                    badgeLabel: (short ?? '').toString().length > 0 ? short.toString() : qcode.toString(),
+                    color: color ?? defaultUrgencyColors[qcode] ?? undefined,
                 };
 
                 return option;

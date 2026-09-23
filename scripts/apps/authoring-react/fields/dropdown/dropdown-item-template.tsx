@@ -34,8 +34,24 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             whiteSpace: 'nowrap',
         };
 
+        /**
+         * An option that carries a code keeps the code in the badge and its name beside it, which
+         * is what authoring-angular's `sd-meta-dropdown` does whenever `data-icon` is set
+         * (metadata-dropdown.html; priority and urgency are the only two fields that set it).
+         * Folding both into the badge hides nothing while a vocabulary names its items after their
+         * codes, but drops the word entirely on an install that calls qcode 1 "Urgent".
+         */
+        if (option.badgeLabel == null) {
+            return (
+                <span style={itemStyle}>{option.label}</span>
+            );
+        }
+
         return (
-            <span style={itemStyle}>{option.label}</span>
+            <React.Fragment>
+                <span style={itemStyle}>{option.badgeLabel}</span>
+                <span style={{marginInlineStart: 'var(--gap-0-5)'}}>{option.label}</span>
+            </React.Fragment>
         );
     }
 }

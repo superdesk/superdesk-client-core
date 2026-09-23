@@ -10,9 +10,10 @@ const COMPACT_TOOLBAR_WIDTH = 880;
 const TOOLBAR_SELECTOR = '.sd-editor-grid__editor-subnav';
 
 /**
- * Whether the authoring top bar the element sits in is too narrow for button labels. Tracks the bar,
- * not the viewport: it is the article column that runs out of room, and it changes width on its own
- * when a side panel opens or the list is collapsed.
+ * Whether the authoring top bar the element sits in is too narrow for button labels. Tracks the bar
+ * rather than the viewport, as the angular directive does, so the window and the monitoring pane
+ * beside it both count. Opening a side panel does not: the bar spans the panel columns
+ * (`grid-column: 1 / 6`), so its own width is unchanged.
  */
 export function useCompactToolbar(ref: React.RefObject<HTMLElement>): boolean {
     const [compact, setCompact] = React.useState(false);

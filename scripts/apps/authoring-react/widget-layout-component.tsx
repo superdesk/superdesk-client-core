@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {IAuthoringWidgetLayoutProps} from 'superdesk-api';
 
@@ -36,7 +37,23 @@ export class AuthoringWidgetLayoutComponent extends React.PureComponent<IAuthori
                     </Layout.PanelContentBlock>
                 </Layout.PanelContent>
 
-                {footer && (<Layout.PanelFooter>{footer}</Layout.PanelFooter>)}
+                {/*
+                    The footer markup is `Layout.PanelFooter`'s, inlined because that component
+                    takes no class name. The framework leaves the footer transparent, so a widget
+                    that paints its own body needs a way to keep the footer from showing the
+                    white panel through.
+                */}
+                {footer && (
+                    <div
+                        className={classNames(
+                            'side-panel__footer',
+                            'side-panel__footer--button-box',
+                            this.props.footerClassName,
+                        )}
+                    >
+                        {footer}
+                    </div>
+                )}
             </Layout.Panel>
         );
     }

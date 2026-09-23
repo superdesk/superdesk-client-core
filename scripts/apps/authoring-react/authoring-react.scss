@@ -50,6 +50,50 @@
         &:first-child {
             overflow: hidden;
         }
+
+        // the end group: `AuthoringToolbar` always renders start, middle and end
+        &:last-child {
+            // authoring-angular ends the bar with two stacks (styles/sass/navs.scss):
+            // `.subnav__button-stack--default` spaces its text buttons with `margin: 0 4px`, and
+            // `.subnav__button-stack--square-buttons` follows `margin-inline-start: 16px` later
+            // with 48px nav buttons carrying no margins of their own, so nothing but their
+            // inline-start borders separates them. This row has a single 8px gap instead, which
+            // both spreads the square buttons apart and halves the seam in front of them.
+            //
+            // The gap stays and these adjust it, because a control can be wrapped in a
+            // `display: contents` element that would swallow a margin (`Tooltip` renders one).
+            //
+            // Both rules read the whole row with `~` rather than the control immediately before,
+            // because the row gains and loses siblings that generate no box: the framework's
+            // `Menu` renders a `.d-contents` host next to its trigger the first time the actions
+            // menu opens, and an adjacent-sibling rule would stop matching the moment it appears.
+            > .sd-navbtn,
+            > .button-group {
+                // 4px off the last text button plus the 16px stack margin, less the 8px gap
+                margin-inline-start: 12px;
+            }
+
+            // every square button after the first sits against the one before it
+            > .sd-navbtn ~ .sd-navbtn,
+            > .sd-navbtn ~ .button-group,
+            > .button-group ~ .sd-navbtn,
+            > .button-group ~ .button-group {
+                margin-inline-start: -8px;
+            }
+        }
+    }
+
+    // angular insets the send to / publish arrow from the inline start of its purple square
+    // (`.navbtn--highlighted { padding: 0 0 0 9px }` and `.navbtn .big-icon--send-to
+    // { margin-inline-start: 0.3rem }` in the framework's components/_subnav.scss), which leaves
+    // the icon 18px from the bar's inline end rather than the 24px a centred one gives.
+    // `.sd-navbtn--highlight` is the same button without either declaration.
+    .sd-navbtn.sd-navbtn--highlight {
+        padding-inline-start: 9px;
+
+        .big-icon--send-to {
+            margin-inline-start: 0.3rem;
+        }
     }
 }
 
@@ -80,10 +124,16 @@
 
 // Authoring-angular colours the widget body rather than the panel, which leaves the header white,
 // and insets the content by less than the panel default.
+// A widget with a footer has to paint that too: `.side-panel__footer--button-box` sets padding and
+// a top shadow but no background, so the footer would show the white panel through.
+.side-panel .side-panel__content-block.authoring-widget__body,
+.side-panel .side-panel__footer.authoring-widget__footer {
+    background: var(--sd-colour-panel-bg--100);
+}
+
 // The panel's own padding rule is `.side-panel .side-panel__content-block--padding-3`, so this
 // has to carry one class more to win.
 .side-panel .side-panel__content-block.authoring-widget__body {
-    background: var(--sd-colour-panel-bg--100);
     padding: 16px;
     min-block-size: 100%;
     box-sizing: border-box;
@@ -100,18 +150,95 @@
         gap: var(--gap-0-5);
     }
 
-    // `.authoring-header__item-label` is compiled after the framework's `.form-label--invalid` and
-    // has the same specificity, so the invalid colour has to be restated to survive.
+    // `.authoring-header__input-holder` is block flow, so a toggle placed inside it would take a
+    // row of its own and make the field taller. It sits between the label column and the input
+    // instead, centred on the label's line.
+    .authoring-header-field__toggle {
+        display: flex;
+        align-items: center;
+        min-height: var(--space--4);
+        padding-inline-end: var(--gap-0-5);
+    }
+
+    // `.form-label--invalid` already turns the label red, in $errorText. This restates it in
+    // `--sd-colour-alert` so it matches the required asterisk sitting right next to it
+    // (`RequiredIndicatorForHeader`), which is a different red.
     .authoring-header__item-label.form-label--invalid {
         color: var(--sd-colour-alert);
     }
 }
 
+// A focused header field in authoring-angular is `input.boxed-input:focus` (styles/sass/forms.scss):
+// the accent fills the box at 20% and a second 1px accent line lands under the border, which reads
+// as one solid underline. Header fields here are editor3 instead, and
+// `.Editor3-root:not(.read-only):focus-within` (core/editor3/styles.scss) leaves the box grey and
+// draws a translucent 3px ring on all four sides. `sd-input-style` on the input holder already cuts
+// the border down to the bottom one; this is the rest of that boxed-input focus state.
+//
+// Two classes more than the editor3 rule, which is compiled separately from this file, so load
+// order cannot be relied on. The same gap exists in authoring-angular's own editor3 header fields
+// (`data-header-styles="true"`), which is where a fix upstream would belong.
+.authoring-header-field .sd-input-style .Editor3-root:not(.read-only):focus-within {
+    background-color: var(--sd-colour-interactive--alpha-20);
+    box-shadow: 0 1px 0 0 var(--sd-colour-interactive);
+}
+
+// authoring-angular paints the slugline value itself, at every state rather than on focus
+// (`.authoring-header__item input.slugline {color: $sd-keyword; font-weight: 500}` in
+// apps/authoring/styles/authoring.scss). Neither of its selectors can reach here: the container is
+// `.authoring-header-field`, and the value is an editor3 block rather than an `input`.
+// The content element inherits both, so the root is the only place they have to be set.
+.authoring-field--slugline .authoring-header-field .Editor3-root {
+    color: var(--sd-slugline-color);
+    font-weight: 500;
+}
+
+// authoring-angular paints the article in the editor theme's own text colour, which is darker than
+// the app default (`.main-article {color: var(--sd-editor-colour__txt)}`, the framework's
+// editor/_editor-themes.scss). The token resolves the same here, react's body just never reads it
+// and falls through to `--color-text`. While a non-default editor theme is active
+// `Editor3Component` writes `uiTheme.textColor` inline, which still wins, so this only fills in the
+// case where the theme leaves the colour unset.
+.sd-editor-content__authoring-body {
+    color: var(--sd-editor-colour__txt);
+}
+
+// Several content fields carry their own weight and rhythm in authoring-angular, keyed on the field
+// id it puts on the editor3 host (`.main-article .headline .public-DraftEditor-content` and its
+// siblings in apps/authoring/styles/themes.scss). The equivalent hook here is
+// `authoring-field--<id>` on the field wrapper. Without these the whole article renders at
+// `.Editor3-root`'s light 300 and `.Editor3-editor`'s 1.4 leading.
+.authoring-field--headline .public-DraftEditor-content {
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.authoring-field--abstract .public-DraftEditor-content {
+    font-weight: 400;
+}
+
+// `italicAbstract` is an app config flag whose class lands on the workspace element, an ancestor of
+// both authoring views, so gating on it the way `.italicAbstract .abstract`
+// (styles/sass/type.scss) does keeps react in step with the same config.
+.italicAbstract .authoring-field--abstract .public-DraftEditor-content {
+    font-style: italic;
+}
+
+// `.main-article .byline` (themes.scss) sets the 150% leading; the weight is angular rendering the
+// byline as a plain `input`, which defaults to 400 rather than inheriting the editor's 300.
+.authoring-field--byline .public-DraftEditor-content {
+    font-weight: 400;
+    line-height: 1.5;
+}
+
 // Content field labels follow authoring-angular (`.main-article` in authoring/styles/themes.scss):
 // grey by default, darker while the pointer is anywhere over the article body, blue on the field
 // that has focus.
+// A label that failed validation is exempt from both: `.field-label--base--invalid` is the only
+// thing marking the error, so it has to stay red and fully opaque at every state. Angular never
+// applies that class, which is why it can dim every label unconditionally.
 .authoring-section {
-    .field-label--base {
+    .field-label--base:not(.field-label--base--invalid) {
         opacity: 0.4;
     }
 
@@ -119,7 +246,7 @@
         opacity: 1;
     }
 
-    .authoring-section__field:focus-within .field-label--base {
+    .authoring-section__field:focus-within .field-label--base:not(.field-label--base--invalid) {
         background: var(--sd-colour-interactive--active);
         opacity: 1;
     }
@@ -169,13 +296,28 @@ $authoring-header-collapse-duration: 150ms;
 // The framework leaves the top bar slot transparent and flat. authoring-angular paints the same bar
 // and casts the seam under it (`.subnav--authoring` and `.subnav` in styles/sass/navs.scss).
 //
-// The bar has to be lifted for the shadow to show at all. It is a static grid item, so it paints
-// below every positioned box: the grid slot beneath it is `position: relative` and opaque, and so
-// are that slot's toolbar (z-index 3) and secondary subnav (z-index 5). 6 clears all three and
-// stays under the side tabs rail at 11.
+// The shadow needs the bar lifted above the editor column below it. That column
+// (`.sd-editor-grid__editor-content`) is `position: relative` with no z-index, so it opens no
+// stacking context and its opaque children stack here directly: the toolbar at 3 and `.subnav`
+// at 5. 6 clears both.
+//
+// The shadow is still hidden over the side tabs rail (z-index 11) and over an open
+// `.sd-editor-grid__sidetabs-content-overlay` (10), because the bar spans those columns too.
 .sd-editor-grid__editor-subnav {
     background-color: var(--sd-colour-panel-bg--200);
     box-shadow: var(--sd-shadow__subnav);
-    position: relative;
     z-index: 6;
+}
+
+// The scrollbar thumb is translucent (`--sd-colour__webkit-scrollbar-thumb` is
+// `hsla(214, 13%, 70%, 0.32)`), so how dark it reads is decided by whatever is painted behind the
+// gutter. The article scrolls in `.sd-editor-content__main-container`, which sets no background of
+// its own, so the gutter falls through to this column, and the framework paints it `#D4CED0`
+// (layout/_editor.scss) — a mauve grey nothing else in the column uses. authoring-angular's
+// scroller sits over a near-white page instead, which is why the same thumb looks lighter there.
+// The child rows are opaque and cover the column, so this only ever shows in the gutter.
+// One class more than the framework's `.sd-editor-grid__editor-content`, which is needed because
+// this file is compiled before the framework bundle.
+.sd-editor-grid > .sd-editor-grid__editor-content {
+    background-color: var(--sd-colour-panel-bg--000);
 }
