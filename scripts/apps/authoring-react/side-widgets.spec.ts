@@ -109,10 +109,11 @@ describe('the order side widgets are listed in', () => {
     });
 });
 
-// Both rails sort on the same `order` numbers, so a widget whose number drifts from angular's
-// lands in a different place here. These are the numbers angular registers its widgets with.
-describe('side widget order parity with authoring-angular', () => {
-    const orderInAuthoringAngular = {
+// Both rails sort on the same `order` numbers. These were copied from the numbers angular
+// registered its widgets with, so they catch this rail drifting from that snapshot; a change made
+// on angular's side will not show up here.
+describe('side widget order', () => {
+    const orderCopiedFromAuthoringAngular = {
         metadata: 1,
         'find-replace': 2,
         comments: 3,
@@ -150,19 +151,19 @@ describe('side widget order parity with authoring-angular', () => {
         appConfig.features = featuresBeforeSpec;
     });
 
-    it('registers every widget with the order authoring-angular gives it', () => {
+    it('registers every widget with the order copied from authoring-angular', () => {
         const orders: {[widgetId: string]: number} = {};
 
         for (const registered of getWidgetsFromExtensions(article)) {
             orders[registered._id] = registered.order;
         }
 
-        expect(orders).toEqual(orderInAuthoringAngular);
+        expect(orders).toEqual(orderCopiedFromAuthoringAngular);
     });
 
     // Related items and translations are both order 7 in angular, which breaks the tie by
     // registration order: `superdesk.apps.archive` registers related items first.
-    it('lists the widgets in the order authoring-angular shows them', () => {
+    it('lists the widgets in the copied order, ties broken by registration', () => {
         expect(getWidgetsFromExtensions(article).map((registered) => registered._id)).toEqual([
             'metadata',
             'find-replace',

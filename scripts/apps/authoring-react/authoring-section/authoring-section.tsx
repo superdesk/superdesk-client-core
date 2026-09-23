@@ -126,8 +126,10 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     const toggledOn = toggledFields[field.id];
 
                                     // The width is a basis, so fields stretch to fill a row the
-                                    // widths leave short. Deliberately not angular's behaviour:
-                                    // `sd-width` sets the basis alone and leaves the gap.
+                                    // widths leave short. In the header that matches angular
+                                    // (`.authoring-header__item {flex-grow: 1}`). In the body it
+                                    // deliberately does not: angular's `sd-width` sets only the
+                                    // basis on `.field`, which does not grow, and leaves the gap.
                                     return (
                                         <div
                                             key={field.id}

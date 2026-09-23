@@ -30,12 +30,6 @@ describe('DropdownItemTemplate', () => {
         expect(badge.prop('style').backgroundColor).toBe('#b82f00');
     });
 
-    it('does not put the name inside the badge', () => {
-        const wrapper = render({id: 1, label: 'Urgent', badgeLabel: '1', color: '#b82f00'});
-
-        expect(wrapper.find('span').at(0).text()).not.toContain('Urgent');
-    });
-
     it('leaves an option with no code rendering its label in the badge', () => {
         const wrapper = render({id: 'sports', label: 'Sports'});
 

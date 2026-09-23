@@ -170,6 +170,23 @@
     font-weight: 500;
 }
 
+// angular's ED. NOTE is a `textarea.boxed-input.ed-note` with no `rows`, so it starts at the
+// browser's default two, and `sd-auto-height` keeps that first height as its floor. Its text is
+// 1.3rem at 1.4 leading under the 6px top inset `textarea.boxed-input` adds, in
+// `textarea.ed-note`'s colour (apps/authoring/styles/authoring.scss). As a single-line boxed input
+// (`.sd-input-style .Editor3-root`: 14px on a 30px line) it is one line tall and grows 30px a line.
+.authoring-field--ednote .authoring-header-field .Editor3-root {
+    font-size: 1.3rem;
+    line-height: 1.4;
+    font-weight: 400;
+    color: #d25932;
+
+    .public-DraftEditor-content {
+        padding-block-start: 6px;
+        min-height: calc(2 * 1.4em + 6px);
+    }
+}
+
 // The editor theme's text colour, which angular reads through `.main-article` and the react body
 // would otherwise fall through to `--color-text` for. Only applies under the default theme: any
 // other one is written inline by `Editor3Component` and still wins.
