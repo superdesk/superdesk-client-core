@@ -1,5 +1,5 @@
 import {authoringReactEnabledUserSelection, extensions, setAuthoringReact} from 'appConfig';
-import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
+import {AUTHORING_REACT_FIELDS, registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
 import {
     registerAuthoringReactWidgets,
     authoringReactWidgetsExtension,
@@ -42,7 +42,7 @@ export const setupAuthoringReact = (url: string) => {
     } else {
         setAuthoringReact(false);
         unregisterInternalExtension(authoringReactWidgetsExtension);
-        // Planning editors may still be mounted while the route changes, so field types must remain available.
+        unregisterInternalExtension(AUTHORING_REACT_FIELDS);
     }
 
     if (isNavigatingToAnExtensionPage) {
