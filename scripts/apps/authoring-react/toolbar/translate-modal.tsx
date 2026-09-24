@@ -27,11 +27,7 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
-/**
- * Same two rules as the legacy dropdown (`apps/translations/directives/TranslationDropdown.ts`):
- * destinations only, and not the language the article is already in. Legacy renders that one disabled
- * rather than omitting it, which is not possible here because `Option` takes no `disabled` prop.
- */
+// Legacy `TranslationDropdown` shows the current language disabled; `Option` has no `disabled` prop, so it is omitted.
 export function getTranslationTargetLanguages(
     languages: Array<ITranslation>,
     currentLanguage: string,
