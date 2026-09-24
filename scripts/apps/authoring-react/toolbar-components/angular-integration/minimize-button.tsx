@@ -7,6 +7,7 @@ import {useInlineToolbarContext} from './inline-toolbar-context';
 // `NavButton` written out, because it takes neither a tooltip nor event handlers, and wrapping a
 // plain child in `Tooltip` adds a `display: contents` element that the top bar's spacing rules
 // cannot hang a margin on.
+// TODO: add a `tooltip` prop to `NavButton` in superdesk-ui-framework, then go back to using the component here.
 export const MinimizeButtonComponent: React.ComponentType<{entity: IArticle}> = () => {
     const {exposed} = useInlineToolbarContext<IArticle>();
 
