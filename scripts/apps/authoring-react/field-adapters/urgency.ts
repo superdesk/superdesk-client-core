@@ -19,11 +19,14 @@ export const urgency: IFieldAdapter<IArticle> = {
         const fieldConfig: IDropdownConfigManualSource = {
             source: 'manual-entry',
             type: 'number',
-            options: vocabulary.items.map(({name, qcode, color}) => {
+            // angular reads the badge as `short` then qcode, and keys the colour on the qcode
+            // rather than the item name (`.urgency-label--<n>` in styles/sass/labels.scss).
+            options: vocabulary.items.map(({name, qcode, color, short}) => {
                 const option: IDropdownConfigManualSource['options'][0] = {
                     id: qcode,
                     label: name,
-                    color: color ?? defaultUrgencyColors[name] ?? undefined,
+                    badgeLabel: (short ?? '').toString().length > 0 ? short.toString() : qcode.toString(),
+                    color: color ?? defaultUrgencyColors[qcode] ?? undefined,
                 };
 
                 return option;

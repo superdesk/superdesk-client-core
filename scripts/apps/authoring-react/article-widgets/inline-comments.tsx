@@ -30,7 +30,7 @@ export function getInlineCommentsWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: 'inline-comments',
         label: getLabel(),
-        order: 2,
+        order: 9,
         icon: 'comments',
         component: InlineCommentsWidgetWrapper,
         isAllowed: (item) => item._type !== 'legal_archive',

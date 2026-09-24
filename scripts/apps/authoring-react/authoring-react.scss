@@ -5,17 +5,14 @@
     width: 100%;
     height: calc(100% - #{$nav-height} - #{$authoring-opened-articles});
     overflow-y: auto;
-    z-index: 100;
+
+    // below the monitoring pane (100), so its shadow falls across this column
+    z-index: 1;
     background: $white;
 }
 
-/**
- * The send to / publish panel is portalled to the document body (see
- * `actions-panel-overlay.tsx`), so it needs its own box. The block insets are the ones
- * `.sd-authoring-react` above is laid out with, which keeps the panel aligned with the
- * editor without being clipped by it: `.sd-authoring-react` scrolls, so anything
- * rendered inside it is cut off at the authoring column's inline-start edge.
- */
+// Portalled to the body so the scrolling `.sd-authoring-react` does not clip it; the insets keep it
+// aligned with that column.
 .authoring-actions-panel-overlay {
     position: fixed;
     inset-inline-end: 0;
@@ -34,17 +31,45 @@
     width: 100%;
     overflow: auto;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--gap-2);
     align-items: center;
 
     > * {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--gap-1);
 
         // allow desk/stage name to get truncated
         &:first-child {
             overflow: hidden;
+        }
+
+        // End group. Margins adjust the gap rather than replace it, since a control wrapped in a
+        // `display: contents` element is not a direct child and only gets the gap. `~` not `+`:
+        // `Menu` inserts a `display: contents` host once the actions menu opens. SDESK-8021.
+        &:last-child {
+            // 20px before the square buttons, as in angular
+            > .sd-navbtn,
+            > .button-group {
+                margin-inline-start: var(--gap-1-5);
+            }
+
+            // square buttons sit flush against each other
+            > .sd-navbtn ~ .sd-navbtn,
+            > .sd-navbtn ~ .button-group,
+            > .button-group ~ .sd-navbtn,
+            > .button-group ~ .button-group {
+                margin-inline-start: calc(-1 * var(--gap-1));
+            }
+        }
+    }
+
+    // angular sets the send to / publish arrow off-centre in its purple square
+    .sd-navbtn.sd-navbtn--highlight {
+        padding-inline-start: 9px;
+
+        .big-icon--send-to {
+            margin-inline-start: 0.3rem;
         }
     }
 }
@@ -74,13 +99,161 @@
     @include text-semibold();
 }
 
-// Authoring-angular renders the related items on a coloured holder that fills the panel, and
-// insets the cards by less than the panel default.
-// The panel's own padding rule is `.side-panel .side-panel__content-block--padding-3`, so this
-// has to carry one class more to win.
-.side-panel .side-panel__content-block.related-items-widget__body {
+// Body and footer are filled rather than the panel, so the header stays white as in angular.
+.side-panel .side-panel__content-block.authoring-widget__body,
+.side-panel .side-panel__footer.authoring-widget__footer {
     background: var(--sd-colour-panel-bg--100);
-    padding: 16px;
-    block-size: 100%;
+}
+
+// one class more than the panel's `.side-panel .side-panel__content-block--padding-3`
+.side-panel .side-panel__content-block.authoring-widget__body {
+    padding: var(--gap-2);
+    min-block-size: 100%;
     box-sizing: border-box;
+}
+
+// Label column left of the input, as in angular. `.authoring-header__item` is not reused because
+// its row padding would add to the gaps `AuthoringSection` sets.
+.authoring-header-field {
+    display: flex;
+    align-items: flex-start;
+
+    .authoring-header__item-label {
+        gap: var(--gap-0-5);
+    }
+
+    // outside the input holder, which is block flow and would put the toggle on its own row
+    .authoring-header-field__toggle {
+        display: flex;
+        align-items: center;
+        min-height: var(--space--4);
+        padding-inline-end: var(--gap-0-5);
+    }
+
+    // same red as the required asterisk beside it, not `.form-label--invalid`'s
+    .authoring-header__item-label.form-label--invalid {
+        color: var(--sd-colour-alert);
+    }
+}
+
+// angular's `input.boxed-input:focus`, in place of editor3's own four-sided focus ring
+.authoring-header-field .sd-input-style .Editor3-root:not(.read-only):focus-within {
+    background-color: var(--sd-colour-interactive--alpha-20);
+    box-shadow: 0 1px 0 0 var(--sd-colour-interactive);
+}
+
+// angular's `input.slugline` colour, which cannot reach an editor3 block
+.authoring-field--slugline .authoring-header-field .Editor3-root {
+    color: var(--sd-slugline-color);
+    font-weight: 500;
+}
+
+// angular's ED. NOTE is a textarea at the browser's default two rows, which `sd-auto-height`
+// keeps as its minimum height
+$ednote-line-height: 1.4;
+$ednote-inset: 6px;
+
+.authoring-field--ednote .authoring-header-field .Editor3-root {
+    font-size: 1.3rem;
+    line-height: $ednote-line-height;
+    font-weight: 400;
+    color: #d25932; // `textarea.ed-note` in apps/authoring/styles/authoring.scss
+
+    .public-DraftEditor-content {
+        padding-block-start: $ednote-inset;
+        min-height: calc(2 * #{$ednote-line-height}em + #{$ednote-inset});
+    }
+}
+
+// the editor theme's text colour; other themes are set inline by `Editor3Component` and still win
+.sd-editor-content__authoring-body {
+    color: var(--sd-editor-colour__txt);
+}
+
+// per-field text styles, from `.main-article .headline` and siblings in apps/authoring/styles/themes.scss
+.authoring-field--headline .public-DraftEditor-content {
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.authoring-field--abstract .public-DraftEditor-content {
+    font-weight: 400;
+}
+
+// `italicAbstract` app config flag
+.italicAbstract .authoring-field--abstract .public-DraftEditor-content {
+    font-style: italic;
+}
+
+// angular's byline is a plain `input`, so 400 rather than the editor's 300
+.authoring-field--byline .public-DraftEditor-content {
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+// Labels are grey, darker on hover and blue on focus, as in angular. Invalid labels are exempt: the
+// red is the only sign of the error.
+.authoring-section {
+    .field-label--base:not(.field-label--base--invalid) {
+        opacity: 0.4;
+    }
+
+    &:hover .field-label--base {
+        opacity: 1;
+    }
+
+    .authoring-section__field:focus-within .field-label--base:not(.field-label--base--invalid) {
+        background: var(--sd-colour-interactive--active);
+        opacity: 1;
+    }
+}
+
+// The framework animates `max-height` from a 1400px ceiling on a ~400px header, so the collapse
+// lands in one frame. The grid row follows the real height. Timing is angular's `slideUpDown`.
+$authoring-header-collapse-duration: 150ms;
+
+.sd-editor-content__authoring-header.sd-editor-content__authoring-header--collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+    max-height: none;
+    transition:
+        grid-template-rows $authoring-header-collapse-duration linear,
+        padding-block-start $authoring-header-collapse-duration linear,
+        padding-block-end $authoring-header-collapse-duration linear;
+
+    > .authoring-header__holder {
+        min-height: 0;
+
+        // dropdowns open inline, so only clip during the slide
+        overflow: visible;
+        transition:
+            overflow 0s $authoring-header-collapse-duration allow-discrete,
+            opacity 0.4s 0.1s;
+    }
+
+    // restated because the framework's collapsed rule would otherwise win
+    &.authoring-header--collapsed {
+        grid-template-rows: 0fr;
+        max-height: none;
+
+        > .authoring-header__holder {
+            height: auto;
+            overflow: hidden;
+            transition: opacity 0.4s 0.1s;
+        }
+    }
+}
+
+// Top bar colour and shadow, as in angular. z-index 6 lifts it over the editor column's toolbar (3)
+// and `.subnav` (5) so the shadow shows.
+.sd-editor-grid__editor-subnav {
+    background-color: var(--sd-colour-panel-bg--200);
+    box-shadow: var(--sd-shadow__subnav);
+    z-index: 6;
+}
+
+// The scrollbar thumb is translucent and the framework's grey here makes it read dark. Only shows
+// in the gutter. Needs the extra class: this file compiles before the framework.
+.sd-editor-grid > .sd-editor-grid__editor-content {
+    background-color: var(--sd-colour-panel-bg--000);
 }

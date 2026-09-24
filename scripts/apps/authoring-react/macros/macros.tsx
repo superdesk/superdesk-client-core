@@ -34,7 +34,7 @@ import {notify} from 'core/notify/notify';
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
 
-const getLabel = () => gettext('Macros widget');
+const getLabel = () => gettext('Macros');
 
 interface IState {
     macros: Array<IMacro> | null;
@@ -306,6 +306,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
         if (this.state.macros == null) {
             return (
                 <AuthoringWidgetLayout
+                    bodyClassName="authoring-widget__body"
                     header={(
                         <AuthoringWidgetHeading
                             widgetId={MACROS_WIDGET_ID}
@@ -343,6 +344,7 @@ class MacrosWidget extends React.PureComponent<IArticleSideWidgetComponentType, 
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={MACROS_WIDGET_ID}
@@ -406,7 +408,7 @@ export function getMacrosWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: MACROS_WIDGET_ID,
         label: getLabel(),
-        order: 2,
+        order: 6,
         icon: 'macro',
         component: MacrosWidget,
     };

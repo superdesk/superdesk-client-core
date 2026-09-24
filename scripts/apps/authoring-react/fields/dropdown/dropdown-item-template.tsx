@@ -34,8 +34,20 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             whiteSpace: 'nowrap',
         };
 
+        // An option with a code shows the code in the badge and the name beside it, as angular's
+        // `sd-meta-dropdown` does. Folding both into the badge looks identical while a vocabulary
+        // names its items after their codes, and drops the word on one that calls qcode 1 "Urgent".
+        if (option.badgeLabel == null) {
+            return (
+                <span style={itemStyle}>{option.label}</span>
+            );
+        }
+
         return (
-            <span style={itemStyle}>{option.label}</span>
+            <React.Fragment>
+                <span style={itemStyle}>{option.badgeLabel}</span>
+                <span style={{marginInlineStart: 'var(--gap-0-5)'}}>{option.label}</span>
+            </React.Fragment>
         );
     }
 }

@@ -426,6 +426,13 @@ declare module 'superdesk-api' {
         label: string;
         parent?: IDropdownOption['id'];
         color?: string;
+
+        /**
+         * Short code for the coloured badge, with `label` written beside it as text. Set it for a
+         * vocabulary whose items are codes with names ({qcode: 1, name: 'Urgent'}), so the name is
+         * not swallowed by the badge. Left out, the badge carries the label.
+         */
+        badgeLabel?: string;
     }
 
     export interface IDropdownConfigVocabulary extends ICommonFieldConfig {
@@ -752,6 +759,12 @@ declare module 'superdesk-api' {
          * panel `background` would take the header with it.
          */
         bodyClassName?: string;
+
+        /**
+         * Class on the footer container. The framework paints no background there, so a widget
+         * using `bodyClassName` needs this too or the footer shows the white panel through.
+         */
+        footerClassName?: string;
     }
 
     export interface IGenericSidebarComponentProps<T> {

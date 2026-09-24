@@ -12,7 +12,7 @@ import {HistoryTab} from './history-tab';
 import {VersionsTab} from './versions-tab';
 
 // Can't call `gettext` in the top level
-const getLabel = () => gettext('Versions and item history');
+const getLabel = () => gettext('Versions') + '/' + gettext('History');
 
 interface IState {
     selectedTab: 'versions' | 'history';
@@ -29,6 +29,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={VERSIONS_AND_HISTORY_WIDGET_ID}
@@ -61,7 +62,6 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IArticleSideWidge
                         assertNever(this.state.selectedTab);
                     }
                 })()}
-                background="grey"
             />
         );
     }

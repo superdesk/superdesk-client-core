@@ -1,5 +1,11 @@
 import React, {RefObject} from 'react';
-import {IAuthoringSectionTheme, IFieldsV2, IVocabularyItem, IAuthoringValidationErrors} from 'superdesk-api';
+import {
+    IAuthoringFieldV2,
+    IAuthoringSectionTheme,
+    IFieldsV2,
+    IVocabularyItem,
+    IAuthoringValidationErrors,
+} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
@@ -68,6 +74,12 @@ function groupItemsToRows<T>(items: Array<T>, getWidth: (item: T) => number) {
     return itemGroups;
 }
 
+// A field with no configured width takes the whole row. `getContentProfile` defaults it that way
+// too, but profiles built in code (packages, the description field on media items) leave it unset.
+function getFieldWidth(field: IAuthoringFieldV2): number {
+    return field.fieldConfig.width ?? 100;
+}
+
 /**
  * A variable is needed in order to use the same object reference
  * and allow PureComponent to skip re-renders.
@@ -92,10 +104,11 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const {toggledFields} = this.props;
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
-        const grouped = groupItemsToRows(this.props.fields.toArray(), (field) => field.fieldConfig.width ?? 100);
+        const grouped = groupItemsToRows(this.props.fields.toArray(), getFieldWidth);
 
         return (
             <div
+                className="authoring-section"
                 style={{
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',
@@ -112,8 +125,16 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
                                     const canBeToggled = toggledFields[field.id] != null;
                                     const toggledOn = toggledFields[field.id];
 
+                                    // The width is a basis, so fields stretch to fill a row the
+                                    // widths leave short. In the header that matches angular
+                                    // (`.authoring-header__item {flex-grow: 1}`). In the body it
+                                    // deliberately does not: angular's `sd-width` sets only the
+                                    // basis on `.field`, which does not grow, and leaves the gap.
                                     return (
-                                        <div key={field.id} style={{width: `${field.fieldConfig.width}%`}}>
+                                        <div
+                                            key={field.id}
+                                            style={{flex: `1 1 ${getFieldWidth(field)}%`}}
+                                        >
                                             <AuthoringSectionField
                                                 fieldRef={this.props.fieldRefs[field.id]}
                                                 uiTheme={themeApplies ? this.props.uiTheme : undefined}

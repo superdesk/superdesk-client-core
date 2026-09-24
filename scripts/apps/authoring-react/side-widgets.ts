@@ -2,10 +2,29 @@ import {IArticle, IArticleSideWidget, IOpenSideWidget, IUser} from 'superdesk-ap
 import {extensions} from 'appConfig';
 import {sdApi} from 'api';
 import ng from 'core/services/ng';
+import {isInternalExtension} from 'core/helpers/register-internal-extension';
+
+/**
+ * Core widgets first, then extension ones, each group in registration order. The sort below is
+ * stable, so this decides ties, and ties are unavoidable: extensions pick their own `order` and
+ * several collide with core widgets. authoring-angular breaks them the same way, with
+ * `widgets.concat(widgetsFromExtensions)` in apps/authoring/widgets/widgets.ts.
+ */
+function getRegisteredSideWidgets(): Array<IArticleSideWidget> {
+    const core: Array<IArticleSideWidget> = [];
+    const fromExtensions: Array<IArticleSideWidget> = [];
+
+    for (const [extensionId, extension] of Object.entries(extensions)) {
+        const widgets = extension.activationResult?.contributions?.authoringSideWidgets ?? [];
+
+        (isInternalExtension(extensionId) ? core : fromExtensions).push(...widgets);
+    }
+
+    return core.concat(fromExtensions);
+}
 
 export function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
-    return Object.values(extensions)
-        .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
+    return getRegisteredSideWidgets()
         .filter((widget) => widget.isAllowed?.(article) ?? true)
         .sort((a, b) => a.order - b.order);
 }

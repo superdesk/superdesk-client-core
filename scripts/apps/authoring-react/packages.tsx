@@ -80,6 +80,7 @@ class PackagesWidget extends React.Component<IArticleSideWidgetComponentType, IS
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={PACKAGES_WIDGET_ID}
@@ -124,7 +125,7 @@ export function getPackagesWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: PACKAGES_WIDGET_ID,
         label: getLabel(),
-        order: 2,
+        order: 5,
         icon: 'package',
         component: PackagesWidget,
     };

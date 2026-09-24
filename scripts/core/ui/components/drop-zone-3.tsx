@@ -6,12 +6,29 @@ const shellStyles: React.CSSProperties = {
     outline: '2px dashed silver',
     outlineOffset: '-2px',
     backgroundColor: 'rgba(150, 150, 150, 0.06)',
+    borderRadius: 'var(--b-radius--small)',
 };
 
 const shellStylesOnDrag: React.CSSProperties = {
     outline: '2px dashed rgba(94, 169, 200, 1)',
     outlineOffset: '2px',
     backgroundColor: 'rgba(94, 169, 200, 0.1)',
+    borderRadius: 'var(--b-radius--small)',
+};
+
+// Matches angular's empty `.item-association`: 65px tall, label centred and dimmed. The whole box
+// is the click target, so the sizing goes here rather than on the shell around it.
+const placeholderStyles: React.CSSProperties = {
+    padding: 10,
+    cursor: 'pointer',
+    boxSizing: 'border-box',
+    minHeight: 65,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    fontWeight: 500,
+    opacity: 0.4,
 };
 
 interface IState {
@@ -115,7 +132,8 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
                     childrenEmpty
                         ? (
                             <div
-                                style={{padding: 10, cursor: 'pointer'}}
+                                style={placeholderStyles}
+                                data-test-id="drop-zone-placeholder"
                                 onClick={() => {
                                     if (this.input.current != null) {
                                         this.input.current.click();

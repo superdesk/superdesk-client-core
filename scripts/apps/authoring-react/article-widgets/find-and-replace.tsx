@@ -64,6 +64,7 @@ class FindAndReplaceWidget extends React.PureComponent<IArticleSideWidgetCompone
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={FIND_AND_REPLACE_WIDGET_ID}
@@ -165,7 +166,7 @@ export function getFindAndReplaceWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: FIND_AND_REPLACE_WIDGET_ID,
         label: getLabel(),
-        order: 1,
+        order: 2,
         icon: 'find-replace',
         component: FindAndReplaceWidget,
     };

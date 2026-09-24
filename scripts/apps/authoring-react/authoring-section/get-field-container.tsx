@@ -81,25 +81,36 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
             const {miniToolbar} = this.props;
 
             return (
-                <Spacer v gap="0">
+                <div className="authoring-header-field">
                     <span
+                        data-test-id="authoring-field-label"
                         className={classNames(
-                            'form-label',
+                            'authoring-header__item-label',
                             {'form-label--invalid': validationError != null},
                         )}
                     >
-                        <Spacer h gap="8" noGrow noWrap>
-                            <Spacer h gap="4" noGrow noWrap>
-                                {field.name}
-                                {field.fieldConfig.required && (
-                                    <RequiredIndicatorForHeader />
-                                )}
-                            </Spacer>
-                            <span>{toggle}</span>
-                        </Spacer>
+                        {field.name}
+                        {field.fieldConfig.required && (
+                            <RequiredIndicatorForHeader />
+                        )}
                     </span>
 
-                    <div style={{flexGrow: 1}}>
+                    {/* the label column is a fixed width, so the toggle goes beside it, not in it */}
+                    {canBeToggled && (
+                        <div className="authoring-header-field__toggle">{toggle}</div>
+                    )}
+
+                    {/*
+                        `sd-input-style` is what angular puts on a header field's holder
+                        (`getTemplateForHeader` in core/editor3/directive.tsx), and the only thing
+                        that makes an editor3 field look like a boxed input: it cuts
+                        `.Editor3-root`'s border down to the bottom one, so focus reads as an
+                        underline rather than a frame.
+                    */}
+                    <div
+                        className="authoring-header__input-holder sd-input-style"
+                        data-test-id="authoring-field-input"
+                    >
                         {this.props.children}
 
                         <Spacer h gap="8" justifyContent="end" noGrow noWrap>
@@ -116,7 +127,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                             }
                         </Spacer>
                     </div>
-                </Spacer>
+                </div>
             );
         }
     }
@@ -126,7 +137,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
             const {miniToolbar} = this.props;
 
             return (
-                <div>
+                <div className="authoring-section__field">
                     <div
                         style={{
                             display: 'flex',
@@ -137,6 +148,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         <Spacer h gap="8" noGrow>
                             <Spacer h gap="8" noGrow noWrap>
                                 <span
+                                    data-test-id="authoring-field-label"
                                     className={classNames(
                                         'field-label--base',
                                         {'field-label--base--invalid': validationError != null},
