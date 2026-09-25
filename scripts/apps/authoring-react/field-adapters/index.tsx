@@ -107,11 +107,8 @@ function storeEditor3ValueGeneric(
     return articleUpdated;
 }
 
-/**
- * The string value is all there is on items that never went through editor3: ingested items,
- * items created through the API, legacy editor2 content, and items whose fields meta was reset
- * by multi-edit. Custom `text` fields keep it in {@link IArticle.extra}, the rest at the root.
- */
+// Items that never went through editor3 (ingested, API created, editor2, multi-edit) only have
+// the string value. Custom `text` fields keep it in `extra`, the rest at the root.
 export function getStoredStringValueEditor3(
     fieldId: string,
     article: IArticle,
@@ -132,15 +129,9 @@ export function getStoredStringValueEditor3(
     return '';
 }
 
-/**
- * Reading has to invert exactly what {@link computeEditor3Output} writes: plain text for single
- * line fields and for `plainTextInMultiLineMode` ones, HTML for the rest.
- *
- * Angular parses single line values as HTML too (`getInitialContent`, `core/editor3/store/index.ts`),
- * but that is not safe here. Fields like `byline` or `usageterms` are plain angular inputs whose
- * value is literal text, so parsing it would swallow characters like `<` and drop markup, and the
- * next save would write the mangled result back.
- */
+// The reverse of `computeEditor3Output`: plain text for single line and `plainTextInMultiLineMode`
+// fields, HTML for the rest. Angular parses single line values as HTML too, but fields like `byline`
+// hold literal text, so parsing would drop characters like `<` and the next save would keep the damage.
 export function getContentStateFromStoredStringEditor3(
     value: string,
     config: IEditor3Config | undefined,

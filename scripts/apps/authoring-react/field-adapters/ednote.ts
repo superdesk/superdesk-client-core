@@ -25,8 +25,7 @@ export const ednote: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    // `plainTextInMultiLineMode` must match `storeValue` below, otherwise reading and
-    // writing disagree about whether the stored string is plain text or HTML.
+    // Must match `storeValue` below, which saves ednote as plain text.
     retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
         retrieveStoredValueEditor3Generic(
             'ednote',

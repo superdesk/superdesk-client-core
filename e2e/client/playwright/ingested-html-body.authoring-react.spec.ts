@@ -8,11 +8,8 @@ test.use({
     storageState: getStorageState({}, {authoringReact: true}),
 });
 
-/**
- * SDESK-7819. Items that never went through editor3 (ingested, API created, legacy editor2)
- * carry `body_html` but no `fields_meta`. The stock `main` snapshot has no item of that shape,
- * which is why this went unnoticed; the `ingested-html` record adds one.
- */
+// Items that never went through editor3 (ingested, API created) have `body_html` but no
+// `fields_meta`. `main` has no such item, so this uses the `ingested-html` record.
 test.describe('an article whose body only has HTML (authoring-react)', () => {
     const ITEM_HEADLINE = 'Ingested HTML story';
     const BODY_TEXT = 'Ingested paragraph with bold text.';
@@ -34,8 +31,7 @@ test.describe('an article whose body only has HTML (authoring-react)', () => {
         await expect(editor).toContainText(BODY_TEXT);
         await expect(editor).not.toContainText('<b>');
 
-        // `<b>` becomes a draft-js BOLD inline style, rendered as a styled span rather
-        // than a tag, so assert the computed weight instead of the element.
+        // Bold renders as a styled span, not a `<b>` tag, so check the font weight.
         await expect(editor.getByText('bold', {exact: true})).toHaveCSS('font-weight', '700');
     }
 
@@ -58,8 +54,7 @@ test.describe('an article whose body only has HTML (authoring-react)', () => {
         await page.keyboard.press('ControlOrMeta+End');
         await page.keyboard.type(' Edited.');
 
-        // Guards the caret placement above: an edit landing mid-sentence would make the
-        // post-save assertions fail for a reason that has nothing to do with the fix.
+        // Make sure the text landed at the end before checking what was saved.
         await expect(editor).toContainText(`${BODY_TEXT} Edited.`);
 
         const save = authoring.getByTestId('save');
@@ -73,8 +68,7 @@ test.describe('an article whose body only has HTML (authoring-react)', () => {
 
         await openItem(page);
 
-        // The content state built on read is what the save writes back, so a bad conversion
-        // replaces the stored markup with its escaped form on the first save.
+        // A bad conversion on read would have saved the markup as escaped text.
         const reopenedEditor = getBodyEditor(page);
 
         await expectBodyRendered(reopenedEditor);

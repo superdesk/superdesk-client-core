@@ -17,8 +17,6 @@ import {headline} from './headline';
 
 const customTextFieldId = 'custom_text_field';
 
-// `IVocabulary` is a union discriminated on `field_type`; spreading a union-typed value
-// widens it past any single member, so the narrowed shape has to be asserted.
 const customTextVocabulary = {
     ...testVocabulary,
     _id: customTextFieldId,
@@ -34,8 +32,7 @@ function getConfig(singleLine: boolean): IEditor3Config {
 }
 
 describe('editor3 stored value retrieval', () => {
-    // `sdApi.vocabularies` is a shared singleton; snapshot it per test rather than at import
-    // time, so this spec restores what it actually found and cannot leak into its neighbours.
+    // Shared singleton: copy it per test and restore it afterwards so other specs are unaffected.
     let vocabulariesOriginal: typeof sdApi.vocabularies;
 
     beforeEach(inject(($injector) => {
@@ -146,10 +143,7 @@ describe('editor3 stored value retrieval', () => {
         });
     });
 
-    /**
-     * The retrieved content state is what gets written back on save and on autosave,
-     * so a bad conversion on read permanently replaces the stored markup.
-     */
+    // What is read here is written back on save and autosave, so a bad conversion loses the markup.
     describe('round trip through the persisted value', () => {
         it('keeps `body_html` markup intact', () => {
             const article: IArticle = {...testArticle, body_html: '<p>Hello <b>world</b></p>'};
