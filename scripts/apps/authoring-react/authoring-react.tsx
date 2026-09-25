@@ -80,7 +80,7 @@ export function getFieldsData<T>(
         })();
 
         const operationalValue = (() => {
-            if (fieldEditor.toOperationalFormat != null) {
+            if (fieldEditor?.toOperationalFormat != null) {
                 return fieldEditor.toOperationalFormat(
                     storageValue,
                     field.fieldConfig,
@@ -111,7 +111,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
         const valueOperational = fieldsData.get(field.id);
 
         const storageValue = (() => {
-            if (fieldEditor.toStorageFormat != null) {
+            if (fieldEditor?.toStorageFormat != null) {
                 return fieldEditor.toStorageFormat(
                     valueOperational,
                     field.fieldConfig,
