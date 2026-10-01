@@ -27,11 +27,13 @@ export const body_html: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'body_html',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
+        retrieveStoredValueEditor3Generic(
+            'body_html',
+            item,
+            authoringStorage,
+            config,
+        ),
 
     storeValue: (value: IEditor3ValueStorage, item, config, preferIncomplete) => {
         if (preferIncomplete) {
