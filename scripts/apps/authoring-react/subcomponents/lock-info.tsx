@@ -40,7 +40,7 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
         }
 
         return (
-            <div className="locked-info">
+            <div className="locked-info" data-test-id="locked-info">
                 <div className="locked-info__avatar">
                     <UserAvatar user={user} size="medium" />
                 </div>
@@ -51,6 +51,7 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
 
                 <button
                     className="locked-info__button"
+                    data-test-id="unlock"
                     onClick={() => {
                         this.props.unlock();
                     }}

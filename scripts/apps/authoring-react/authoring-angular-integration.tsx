@@ -417,7 +417,7 @@ export function getInlineToolbarActions(
                 actions.push(publishAndContinueWidget);
             }
 
-            if (action === 'view' && item._editable !== true) {
+            if (action === 'view' && sdApi.article.isLockedInCurrentSession(item) !== true) {
                 actions.push(editButtonWidget);
             }
 
