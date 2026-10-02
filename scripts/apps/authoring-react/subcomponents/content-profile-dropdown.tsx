@@ -27,9 +27,15 @@ export class ContentProfileDropdown<T> extends React.PureComponent<IProps<T>, IS
     }
 
     render() {
-        // kill and takedown templates have no content profile, so there is nothing to switch
-        // between, and offering one would write a profile the server never expects
-        if ((this.props.item as IArticle)?.profile == null) {
+        const item = this.props.item as IArticle;
+
+        // Kill and takedown templates have no profile. Picture, audio and video items are on a profile
+        // of their own type and cannot be moved onto a text one. Neither has anything to switch to.
+        const canSwitchProfile = item?.type === 'text'
+            || item?.type === 'preformatted'
+            || this.state.profiles.some((profile) => profile._id === item?.profile);
+
+        if (item?.profile == null || !canSwitchProfile) {
             return null;
         }
 
