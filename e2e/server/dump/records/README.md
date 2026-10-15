@@ -1,6 +1,7 @@
 # Can easily be ported to main snapshot:
 
 * editor3-tables - adds tables formatting option to story content profile.
+* editor3-annotations - adds the `annotation` formatting option to the Story profile's body_html field, which is what puts the Annotation button on the editor3 toolbar and makes annotations reachable at all. No content profile in `main` or in any other record based on it enables it; the only other snapshot that does is `legacy`, whose session-expiry quirk every spec using it has to work around. A single `content_types` update event on top of `main`, so it does not carry the auth/activity churn a UI recording picks up. The `annotation_types` vocabulary it relies on ("Regular" and "Remark") is already in `main`.
 * ordered-list - adds the `ordered list` formatting option to story/body_html content profile. A single `content_types` update event on top of `main`, so it does not carry the auth/activity churn a UI recording picks up.
 * editor3-comments - adds the `comments` formatting option to the Story profile's body_html field, which is what puts the Comment button on the editor3 toolbar and makes inline comments reachable at all. No content profile in `main` or in any other record based on it enables it; the only other snapshot that does is `legacy`, whose own user database rules out any two-user flow. A single `content_types` update event on top of `main`, so it does not carry the auth/activity churn a UI recording picks up.
 * custom-blocks - adds custom blocks to story/body_html content profile. Creates a new custom block vocabulary.
