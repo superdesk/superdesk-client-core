@@ -6,10 +6,10 @@
         <div class="sd-page__header">
             <ul class="nav nav-tabs">
                 <li ng-class="{active: rolesTab}">
-                    <button ng-click="rolesTab = true" translate>Roles</button>
+                    <button ng-click="rolesTab = true" data-test-id="roles-tab" translate>Roles</button>
                 </li>
                 <li ng-class="{active: !rolesTab}">
-                    <button ng-click="rolesTab = false" translate>Roles privileges</button>
+                    <button ng-click="rolesTab = false" data-test-id="roles-privileges-tab" translate>Roles privileges</button>
                 </li>
             </ul>
         </div>
