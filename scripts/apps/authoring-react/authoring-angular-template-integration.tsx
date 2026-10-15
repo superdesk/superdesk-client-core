@@ -1,6 +1,17 @@
 import ng from 'core/services/ng';
 import React from 'react';
-import {ITemplate, IArticle, IAuthoringStorage, IAuthoringAutoSave} from 'superdesk-api';
+import {OrderedMap} from 'immutable';
+import {
+    ITemplate,
+    IArticle,
+    IAuthoringStorage,
+    IAuthoringAutoSave,
+    IAuthoringFieldV2,
+    IContentProfileV2,
+    IFieldsAdapter,
+    IFieldsV2,
+} from 'superdesk-api';
+import {gettext} from 'core/utils';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {getArticleContentProfile} from './data-layer';
 
@@ -15,10 +26,14 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
             <div style={{padding: '1rem', height: '100%'}}>
                 <AuthoringIntegrationWrapper
                     itemId={null} // Id doesn't apply when editing embedded JSON.
+                    embeddedEntity
                     sidebarMode="hidden"
                     authoringStorage={getTemplateEditViewAuthoringStorage(this.props.template.data as IArticle)}
                     onFieldChange={(_fieldId, fieldsData, computeLatestEntity) => {
-                        this.props.template.data = computeLatestEntity();
+                        // angular holds this same object as `$scope.item` and edits it in place,
+                        // and authoring-react captured it on mount; reassigning would leave both
+                        // pointing at an object nothing writes to any more
+                        Object.assign(this.props.template.data, computeLatestEntity());
                         this.props.scopeApply();
 
                         return fieldsData;
@@ -28,6 +43,36 @@ export class AuthoringAngularTemplateIntegration extends React.PureComponent<IPr
             </div>
         );
     }
+}
+
+/**
+ * Kill and takedown templates never have a content profile, so there is nothing to derive their
+ * fields from. This is what the server seeds them with, split into header and content the way
+ * angular authoring places the same fields.
+ */
+const profilelessTemplateFieldIds: {header: Array<string>; content: Array<string>} = {
+    header: ['anpa_take_key', 'ednote'],
+    content: ['headline', 'abstract', 'body_html'],
+};
+
+function getProfilelessTemplateContentProfile(fieldsAdapter: IFieldsAdapter<IArticle>): IContentProfileV2 {
+    const toFields = (fieldIds: Array<string>): IFieldsV2 => fieldIds.reduce(
+        (acc, fieldId) => {
+            const field = fieldsAdapter[fieldId].getFieldV2({}, {}, () => false);
+
+            // `AuthoringSection` renders each field at `width: <width>%`, so it has to be set
+            // here; with a profile it comes from `sdWidth`
+            return acc.set(field.id, {...field, fieldConfig: {width: 100, ...field.fieldConfig}});
+        },
+        OrderedMap<string, IAuthoringFieldV2>(),
+    );
+
+    return {
+        id: 'template-without-content-profile',
+        name: gettext('Template without a content profile'),
+        header: toFields(profilelessTemplateFieldIds.header),
+        content: toFields(profilelessTemplateFieldIds.content),
+    };
 }
 
 function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStorage<IArticle> {
@@ -62,7 +107,9 @@ function getTemplateEditViewAuthoringStorage(article: IArticle): IAuthoringStora
         isLockedInCurrentSession: () => true,
         forceLock: (entity) => Promise.resolve(entity),
         saveEntity: (current) => Promise.resolve(current),
-        getContentProfile: (item, fieldsAdapter) => getArticleContentProfile(item, fieldsAdapter),
+        getContentProfile: (item, fieldsAdapter) => item.profile != null
+            ? getArticleContentProfile(item, fieldsAdapter)
+            : Promise.resolve(getProfilelessTemplateContentProfile(fieldsAdapter)),
         closeAuthoring: () => null, // no UI button; not possible to close since it's embedded in another view
         getUserPreferences: () => ng.get('preferencesService').get(),
     };

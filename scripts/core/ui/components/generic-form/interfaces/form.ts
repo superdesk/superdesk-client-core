@@ -1,7 +1,12 @@
 import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum GenericFormFieldType {
+    /**
+     * Free text. Optional `component_parameters`: `multiline` renders a textarea, `password`
+     * masks the input, `info` is a hint below it. `multiline` wins over `password`.
+     */
     plainText = 'plainText',
+
     duration = 'duration',
     textEditor3 = 'textEditor3',
     number = 'number',
@@ -13,6 +18,20 @@ export enum GenericFormFieldType {
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
     select = 'select',
+
+    /**
+     * Single value picked from options fetched when the field mounts. `component_parameters` must
+     * match `ISelectAsyncParameters` in `input-types/select-async.tsx`. When `getOptions` rejects,
+     * the field falls back to a text input so the value can still be typed and saved.
+     */
+    selectAsync = 'selectAsync',
+
+    /**
+     * Several values from the same options as `selectAsync`. When `getOptions` rejects, the stored
+     * values are shown read only.
+     */
+    selectMultipleAsync = 'selectMultipleAsync',
+
     selectMultiple = 'selectMultiple',
     alert = 'alert',
     readonlyCopyableText = 'readonlyCopyableText',
