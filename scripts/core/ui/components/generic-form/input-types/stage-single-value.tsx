@@ -1,7 +1,7 @@
 import {gettext} from 'core/utils';
 import {IStage} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
-import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
+import {getSelectSingleValueAutoComplete} from './select-single-value-autocomplete';
 
 export const StageSingleValue = getSelectSingleValueAutoComplete({
     query: (searchString: string, props) => {

@@ -1,5 +1,5 @@
 import {IDesk, IRestApiResponse} from 'superdesk-api';
-import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
+import {getSelectSingleValueAutoComplete} from './select-single-value-autocomplete';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 

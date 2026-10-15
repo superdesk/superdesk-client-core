@@ -1,6 +1,6 @@
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {getSelectSingleValue} from './select_single_value';
+import {getSelectSingleValue} from './select-single-value';
 import {IMacro} from 'superdesk-interfaces/Macro';
 import {IRestApiResponse} from 'superdesk-api';
 
