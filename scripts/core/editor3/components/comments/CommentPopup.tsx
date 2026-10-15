@@ -169,6 +169,7 @@ export class CommentPopup extends React.Component<any, any> {
                         <button
                             className="btn btn--hollow btn--small"
                             onClick={() => this.resolveComment()}
+                            data-test-id="resolve"
                         >
                             {gettext('Resolve')}
                         </button>
@@ -192,6 +193,7 @@ export class CommentPopup extends React.Component<any, any> {
                             ref={(el) => {
                                 this.addReplyEl = el;
                             }}
+                            data-test-id="add-reply"
                         >
                             <CommentTextArea
                                 className="comment-box__input"
@@ -214,10 +216,15 @@ export class CommentPopup extends React.Component<any, any> {
                                                 this.postReply(comment, this.state.reply);
                                             }}
                                             className="btn btn--primary"
+                                            data-test-id="submit"
                                         >
                                             {gettext('Reply')}
                                         </button>
-                                        <button onClick={() => this.resetReply()} className="btn">
+                                        <button
+                                            onClick={() => this.resetReply()}
+                                            className="btn"
+                                            data-test-id="cancel"
+                                        >
                                             {gettext('Cancel')}
                                         </button>
                                     </div>

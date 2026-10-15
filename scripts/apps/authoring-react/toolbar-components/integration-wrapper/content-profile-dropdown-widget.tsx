@@ -1,5 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
+import {gettext, translateArticleType} from 'core/utils';
 import {ContentProfileDropdown} from '../../subcomponents/content-profile-dropdown';
 import {useToolbarContext} from './toolbar-context';
 
@@ -8,6 +9,15 @@ export const ContentProfileDropdownWidget: React.ComponentType<{entity: IArticle
 
     return (
         <div className="authoring-header__general-info">
+            <div>
+                <i
+                    className={`filetype-icon-${entity.type}`}
+                    title={gettext('Article Type: {{type}}', {type: translateArticleType(entity.type)})}
+                    data-test-id="item-type-icon"
+                    data-test-value={entity.type}
+                />
+            </div>
+
             <ContentProfileDropdown
                 item={entity}
                 reinitialize={(itemWithNewProfile) => {

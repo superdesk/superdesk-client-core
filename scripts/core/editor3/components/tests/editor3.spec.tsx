@@ -43,16 +43,17 @@ const stubForHighlights = {
 };
 
 describe('editor3.component', () => {
-    beforeAll(() => {
-        ng.register({
-            get: (serviceName: string) => {
-                if (serviceName === 'session') {
-                    return {identity: {_id: 'test-user'}};
-                }
+    beforeEach(() => {
+        // spying rather than calling `ng.register` keeps the fake out of the
+        // other specs; `ng` is a singleton and there is no way to read back
+        // the injector it held before
+        spyOn(ng, 'get').and.callFake((serviceName: string) => {
+            if (serviceName === 'session') {
+                return {identity: {_id: 'test-user'}};
+            }
 
-                throw new Error(`Unexpected service requested: ${serviceName}`);
-            },
-        } as any);
+            throw new Error(`Unexpected service requested: ${serviceName}`);
+        });
     });
 
     it('should hide toolbar when disabled', () => {
@@ -221,6 +222,10 @@ describe('editor3.component', () => {
                 },
             });
 
+            resetcustomEditorControls();
+        });
+
+        afterEach(() => {
             resetcustomEditorControls();
         });
 

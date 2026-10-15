@@ -51,8 +51,15 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
             fieldTemplate: this.props.fieldTemplate,
         });
 
+        // The field id is a class as well as a test id: a few fields are styled by name, see the
+        // `authoring-field--*` rules in authoring-react.scss.
         return (
-            <div ref={this.props.fieldRef} data-test-id="authoring-field" data-test-value={field.id}>
+            <div
+                ref={this.props.fieldRef}
+                className={'authoring-field authoring-field--' + field.id}
+                data-test-id="authoring-field"
+                data-test-value={field.id}
+            >
                 {canBeToggled && toggledOn === false ? (
                     <Container key={field.id} />
                 ) : (

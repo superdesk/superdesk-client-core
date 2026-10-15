@@ -27,6 +27,14 @@ interface IStateLoaded {
 
 type IState = IStateLoaded | IStateLoading;
 
+// Legacy `TranslationDropdown` shows the current language disabled; `Option` has no `disabled` prop, so it is omitted.
+export function getTranslationTargetLanguages(
+    languages: Array<ITranslation>,
+    currentLanguage: string,
+): Array<ITranslation> {
+    return languages.filter((language) => language.destination === true && language.language !== currentLanguage);
+}
+
 export class TranslateModal extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -92,6 +100,11 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
             return null;
         }
 
+        const targetLanguages = getTranslationTargetLanguages(
+            state.availableLanguages ?? [],
+            this.props.article.language,
+        );
+
         return (
             <Modal
                 visible
@@ -106,10 +119,11 @@ export class TranslateModal extends React.PureComponent<IProps, IState> {
                             selectedLanguage: value,
                         })}
                         label={gettext('Available languages')}
+                        data-test-id="translate-modal--languages"
                     >
                         <Option />
                         {
-                            state.availableLanguages.map((lang) => {
+                            targetLanguages.map((lang) => {
                                 return (
                                     <Option key={lang._id} value={lang.language}>
                                         {gettext(lang.label)}
