@@ -188,6 +188,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                 }}
                 className="link-input"
                 onKeyUp={this.onKeyUp}
+                data-test-id="link-url"
             >
                 <div style={{padding: '3.2rem 1.6rem'}}>
                     <input
@@ -228,7 +229,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
 
     renderAttachment() {
         return (
-            <div>
+            <div data-test-id="link-attachments">
                 <div style={{height: '24rem', overflowY: 'scroll'}}>
                     <AttachmentList
                         item={this.props.item}
@@ -240,6 +241,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                     <button
                         className="btn btn--cancel"
                         onClick={this.props.hidePopups}
+                        data-test-id="cancel"
                     >
                         {gettext('Cancel')}
                     </button>
@@ -249,6 +251,7 @@ export class LinkInputComponent extends React.Component<IProps, any> {
                         onClick={() => {
                             this.onSubmit(linkTypes.attachement);
                         }}
+                        data-test-id="insert"
                     >
                         {gettext('Insert')}
                     </button>

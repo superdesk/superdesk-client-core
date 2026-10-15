@@ -26,11 +26,13 @@ export const slugline: IFieldAdapter<IArticle> = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
-        'slugline',
-        item,
-        authoringStorage,
-    ),
+    retrieveStoredValue: (item: IArticle, authoringStorage, config: IEditor3Config) =>
+        retrieveStoredValueEditor3Generic(
+            'slugline',
+            item,
+            authoringStorage,
+            config,
+        ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

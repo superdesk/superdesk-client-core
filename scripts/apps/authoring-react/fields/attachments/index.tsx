@@ -54,7 +54,7 @@ export function getAttachmentsField(): IAttachmentsField {
                     _id: ATTACHMENTS_WIDGET_ID,
                     label: getWidgetLabel(),
                     component: AuthoringAttachmentsWidget,
-                    order: 5,
+                    order: 8,
                     icon: 'attachment',
                 },
             ],
