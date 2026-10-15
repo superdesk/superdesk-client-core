@@ -1,5 +1,5 @@
 import {gettext} from 'core/utils';
-import {getSelectSingleValue} from './select_single_value';
+import {getSelectSingleValue} from './select-single-value';
 
 export const YesNo = getSelectSingleValue(
     () => Promise.resolve([
