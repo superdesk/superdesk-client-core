@@ -18,6 +18,7 @@ class Translations extends React.Component<IArticleSideWidgetComponentType> {
     render() {
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={TRANSLATIONS_WIDGET_ID}
@@ -94,7 +95,7 @@ export function getTranslationsWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: TRANSLATIONS_WIDGET_ID,
         label: getLabel(),
-        order: 2,
+        order: 7,
         icon: 'web',
         component: Translations,
     };

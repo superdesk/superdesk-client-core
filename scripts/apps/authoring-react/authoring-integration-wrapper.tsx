@@ -29,6 +29,7 @@ import {
     WithInteractiveArticleActionsPanel,
 } from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
+import {ActionsPanelOverlay} from './actions-panel-overlay';
 
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {showModal} from '@sourcefabric/common';
@@ -47,10 +48,13 @@ import {PINNED_WIDGET_USER_PREFERENCE_SETTINGS, closedIntentionally} from 'apps/
 import {
     SIDE_WIDGET_STORAGE_KEY,
     findWidgetById,
+    getSideWidgetLockState,
     getStoredStateForWidget,
     getWidgetsFromExtensions,
+    isSideWidgetLocked,
     readStoredSideWidget,
 } from './side-widgets';
+import {SideWidgetConfigurationProvider} from './side-widget-configuration';
 import {AuthoringIntegrationWrapperSidebar} from './authoring-integration-wrapper-sidebar';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {
@@ -58,6 +62,7 @@ import {
     ToggleThemeButton,
     ConfigureThemeButton,
     CreatedModifiedInfoWidget,
+    ItemStateWidget,
     ContentProfileDropdownWidget,
     HeaderGeneralInfoWidget,
 } from './toolbar-components/integration-wrapper';
@@ -76,6 +81,11 @@ const headerToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
         priority: 2,
     },
 ];
+
+// word count still means something for a template; the profile switcher does not, because the
+// switch goes through `reinitialize` and never reaches the payload
+const headerToolbarWidgetsEmbedded: Array<ITopBarWidget<IArticle>> = headerToolbarWidgetsStable
+    .filter(({component}) => component !== ContentProfileDropdownWidget);
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -119,6 +129,12 @@ function getAuthoringCosmeticActions(exposed: IExposedFromAuthoring<IArticle>): 
 }
 
 const secondaryToolbarWidgetsStable: Array<ITopBarWidget<IArticle>> = [
+    {
+        availableOffline: true,
+        component: ItemStateWidget,
+        group: 'start',
+        priority: 0,
+    },
     {
         availableOffline: true,
         component: CreatedModifiedInfoWidget,
@@ -313,6 +329,13 @@ interface IPropsWrapper extends IProps {
     ): IFieldsData;
 
     autoFocus?: boolean; // defaults to true
+
+    /**
+     * Set when authoring renders over JSON held inside another record (the settings template
+     * editor) rather than a stored article. Controls that look the item up by `_id`, or write
+     * through a path that never reaches the payload, are left out.
+     */
+    embeddedEntity?: boolean;
 }
 
 /**
@@ -462,7 +485,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         }}
                         headerToolbar={() => {
                             // Context is provided by AuthoringReact, so no need to update refs here
-                            return headerToolbarWidgetsStable;
+                            return this.props.embeddedEntity === true
+                                ? headerToolbarWidgetsEmbedded
+                                : headerToolbarWidgetsStable;
                         }}
                         getLanguage={(article) => article.language ?? 'en'}
                         onEditingStart={(article) => {
@@ -483,6 +508,13 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                             storageAdapter,
                             spellchecker,
                         }) => {
+                            if (this.props.embeddedEntity === true) {
+                                // every action here needs a stored article: compare versions,
+                                // export, translate, mark for desks. With no `_id` they request
+                                // `undefined` and quietly do nothing
+                                return [];
+                            }
+
                             const authoringActionsFromExtensions = getAuthoringActionsFromExtensions(
                                 item,
                                 contentProfile,
@@ -587,24 +619,38 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                 ? () => this.props.getAuthoringPrimaryToolbarWidgets(panelState, panelActions)
                                 : undefined
                         }
-                        getSidePanel={({
-                            item,
-                            getLatestItem,
-                            contentProfile,
-                            fieldsData,
-                            handleFieldsDataChange,
-                            fieldsAdapter,
-                            storageAdapter,
-                            authoringStorage,
+                        /**
+                         * Send to / publish overlays the editor instead of sitting beside it,
+                         * so it is handed to the overlay slot rather than the side widget one.
+                         * The widget slots are sized for widgets and clip anything wider than
+                         * the editor column; see `actions-panel-overlay.tsx`.
+                         */
+                        getOverlayPanel={({
                             handleUnsavedChanges,
-                            sideWidget,
                             onItemChange,
                             getValidationErrors,
                             setValidationErrors,
-                        }, readOnly) => {
-                            if (panelState.active === true) {
-                                return (
+                        }) => {
+                            if (panelState.active !== true) {
+                                return null;
+                            }
+
+                            return (
+                                <ActionsPanelOverlay>
                                     <InteractiveArticleActionsPanel
+                                        /**
+                                         * The panel copies `activeTab` into its own state in the
+                                         * constructor, so a second `interactiveArticleActionStart`
+                                         * arriving while it is already open would leave it
+                                         * rendering the previous tab under the new tab list. The
+                                         * key forces a remount for a request that differs from
+                                         * what is on screen.
+                                         */
+                                        key={[
+                                            ...panelState.items.map(({_id}) => _id),
+                                            ...panelState.tabs,
+                                            panelState.activeTab,
+                                        ].join('|')}
                                         items={panelState.items}
                                         tabs={panelState.tabs}
                                         activeTab={panelState.activeTab}
@@ -627,18 +673,35 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                         }}
                                         markupV2
                                     />
-                                );
-                            }
-
+                                </ActionsPanelOverlay>
+                            );
+                        }}
+                        getSidePanel={({
+                            item,
+                            getLatestItem,
+                            contentProfile,
+                            fieldsData,
+                            handleFieldsDataChange,
+                            fieldsAdapter,
+                            storageAdapter,
+                            authoringStorage,
+                            handleUnsavedChanges,
+                            sideWidget,
+                            onItemChange,
+                        }, readOnly) => {
                             const resolvedWidget = findWidgetById(item, sideWidget ?? null);
 
                             if (resolvedWidget == null) {
                                 return null;
                             }
 
+                            if (isSideWidgetLocked(resolvedWidget, getSideWidgetLockState(item, readOnly))) {
+                                return null;
+                            }
+
                             const WidgetComponent = resolvedWidget.component;
 
-                            return (
+                            const renderWidget = (configuration?: any) => (
                                 <WidgetStatePersistenceHOC sideWidgetId={resolvedWidget._id}>
                                     {(widgetRef) => (
                                         <WidgetComponent
@@ -690,14 +753,26 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                             readOnly={readOnly}
                                             handleUnsavedChanges={() => handleUnsavedChanges()}
                                             onItemChange={onItemChange}
+                                            configuration={configuration}
                                         />
                                     )}
                                 </WidgetStatePersistenceHOC>
                             );
+
+                            if (resolvedWidget.configuration == null) {
+                                return renderWidget();
+                            }
+
+                            return (
+                                <SideWidgetConfigurationProvider widget={resolvedWidget}>
+                                    {(configuration) => renderWidget(configuration)}
+                                </SideWidgetConfigurationProvider>
+                            );
                         }}
-                        getSidebar={this.state.sidebarMode !== true ? null : (options) => (
+                        getSidebar={this.state.sidebarMode !== true ? null : (options, readOnly) => (
                             <AuthoringIntegrationWrapperSidebar
                                 options={options}
+                                readOnly={readOnly}
                                 sideWidget={this.state.sideWidget}
                                 setSideWidget={(sideWidget) => {
                                     this.setState({sideWidget});
@@ -708,14 +783,26 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                         getSecondaryToolbarWidgets={(exposed) => {
                             // Context is provided by AuthoringReact, so no need to update refs here
                             return [
-                                ...secondaryToolbarWidgetsStable,
+                                // created/modified info looks the author up by `original_creator`,
+                                // which a template does not carry, so it requests `undefined` and
+                                // renders nothing. Theme and preview below apply either way
+                                ...(this.props.embeddedEntity === true ? [] : secondaryToolbarWidgetsStable),
                                 ...secondaryToolbarWidgetsFromExtensions,
                                 ...getAuthoringCosmeticActions(exposed),
                             ];
                         }}
                         validateBeforeSaving={false}
-                        getSideWidgetIdAtIndex={(article, index) => {
-                            return getWidgetsFromExtensions(article)[index]._id;
+                        getSideWidgetIdAtIndex={(article, index, readOnly) => {
+                            const widget = getWidgetsFromExtensions(article)[index];
+
+                            if (
+                                widget == null
+                                || isSideWidgetLocked(widget, getSideWidgetLockState(article, readOnly))
+                            ) {
+                                return null;
+                            }
+
+                            return widget._id;
                         }}
                         autoFocus={this.props.autoFocus}
                     />
