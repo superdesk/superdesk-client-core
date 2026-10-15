@@ -10,5 +10,6 @@ export const EditButtonComponent: React.ComponentType<{entity: IArticle}> = ({en
         onClick={() => sdApi.article.edit({_id: entity._id, _type: entity._type, state: entity.state})}
         text={gettext('Edit')}
         style="filled"
+        data-test-id="edit"
     />
 );

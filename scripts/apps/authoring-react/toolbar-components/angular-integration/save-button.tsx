@@ -14,6 +14,7 @@ export const SaveButtonComponent: React.ComponentType<{entity: IArticle}> = () =
             type="primary"
             disabled={!exposed?.hasUnsavedChanges()}
             onClick={() => exposed?.save()}
+            data-test-id="save"
         />
     );
 };
