@@ -80,7 +80,7 @@ class CommentInputBody extends React.Component<any, any> {
         const {msg} = this.state;
 
         return (
-            <div className="comment-input">
+            <div className="comment-input" data-test-id="comment-input">
                 <Dropdown open={true}>
                     <CommentTextArea
                         value={msg}
@@ -90,10 +90,19 @@ class CommentInputBody extends React.Component<any, any> {
                         className="button-group button-group--end button-group--comfort sd-flex--justify-end"
                         style={{paddingBlockStart: 20}}
                     >
-                        <button className="btn btn--cancel" onClick={(ev) => this.onCancel(ev)}>
+                        <button
+                            className="btn btn--cancel"
+                            onClick={(ev) => this.onCancel(ev)}
+                            data-test-id="cancel"
+                        >
                             {gettext('Cancel')}
                         </button>
-                        <button className="btn btn--primary" onClick={this.onSubmit} disabled={!msg}>
+                        <button
+                            className="btn btn--primary"
+                            onClick={this.onSubmit}
+                            disabled={!msg}
+                            data-test-id="submit"
+                        >
                             {gettext('Submit')}
                         </button>
                     </div>
