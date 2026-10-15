@@ -12,7 +12,7 @@
     <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
+        <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate data-test-id="multi-image-edit--cancel-upload">Cancel</button>
         <div ng-transclude="select-desk"></div>
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length || schemaLoading === true" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
@@ -44,6 +44,7 @@
                 <div class="sd-photo-preview__thumb-strip">
                     <div class="sd-grid-list">
                         <div class="sd-grid-item sd-grid-item--with-click"
+                             data-test-id="media-grid-item"
                              ng-click="handleItemClick($event, image)"
                              ng-repeat="image in images track by image._id"
                              ng-class="{'sd-grid-item--selected' : image.selected}"
@@ -63,13 +64,13 @@
                                     <i class="icon-close-small"></i>
                                 </a>
 
-                                <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle">
+                                <span ng-if="getProgress && getProgress(image) > 0" class="sd-grid-item__progress-circle" data-test-id="upload-progress-circle">
                                     <sd-circular-progress value="getProgress(image)" class="sd-circular-progress--m"></sd-circular-progress>
                                 </span>
                             </div>
                             <div class="sd-grid-item__content">
                                 <time sd-absdate datetime="image.versioncreated"></time>
-                                <p class="sd-grid-item__title">{{image.headline}}</p>
+                                <p class="sd-grid-item__title" data-test-id="media-grid-item-headline">{{image.headline}}</p>
                                 <p class="sd-grid-item--element-grow sd-grid-item__text-light">{{image.description_text}}</p>
                                 <div class="sd-grid-item__content-block">
                                     <span class="sd-grid-item__text-label" translate>Copyright:</span>
@@ -78,7 +79,7 @@
                             </div>
                             <div class="sd-grid-item__footer">
                                 <div class="sd-grid-item__footer-block sd-grid-item__footer-block--multi-l">
-                                    <i class="sd-grid-item__type-icn sd-grid-item__footer-block-item" ng-class="getIconForItemType(image)"></i>
+                                    <i class="sd-grid-item__type-icn sd-grid-item__footer-block-item" ng-class="getIconForItemType(image)" data-test-id="media-grid-item-type"></i>
                                 </div>
                             </div>
                         </div>
