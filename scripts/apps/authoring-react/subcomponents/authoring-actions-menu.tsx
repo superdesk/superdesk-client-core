@@ -145,6 +145,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
             return (
                 <MoreActionsButton
                     aria-label={gettext('Actions menu')}
+                    tooltip={gettext('More actions')}
                     onClick={this.getActions}
                 />
             );
@@ -154,6 +155,7 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
                     {(toggle) => (
                         <MoreActionsButton
                             aria-label={gettext('Actions menu')}
+                            tooltip={gettext('More actions')}
                             onClick={toggle}
                             buttonRef={(el) => {
                                 if (el != null) {
