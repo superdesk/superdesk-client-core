@@ -9,6 +9,8 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {isMediaType} from 'core/helpers/item';
 import {copyJson} from 'core/helpers/utils';
 import {addInternalEventListener} from 'core/internal-events';
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {getSpellcheckShortcutLabel, matchesSpellcheckShortcut} from 'core/spellcheck/spellcheck-shortcut';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
@@ -61,6 +63,7 @@ AuthoringDirective.$inject = [
     'embedService',
     '$injector',
     'autosave',
+    'spellcheck',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -88,6 +91,7 @@ export function AuthoringDirective(
     embedService,
     $injector,
     autosave,
+    spellcheck,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -149,6 +153,21 @@ export function AuthoringDirective(
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
+
+            $scope.spellcheck = spellcheck;
+            $scope.spellcheckShortcutLabel = getSpellcheckShortcutLabel();
+
+            $scope.isSpellcheckerAvailable = function() {
+                return $scope.item != null
+                    && !$scope.useTansaProofing()
+                    && getSpellchecker($scope.item.language) != null;
+            };
+
+            $scope.toggleSpellchecker = function() {
+                if ($scope.isSpellcheckerAvailable()) {
+                    spellcheck.toggleSpellcheckerStatus();
+                }
+            };
 
             /**
              * Get the Desk and Stage for the item.
@@ -770,7 +789,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     return confirm.confirmSendTo(action)
                         .then(() => $scope.save())
-                        .then(() => lock.unlock($scope.origItem))
+
+                        // $scope.save handles its own rejections and fulfills with undefined on
+                        // failure, so the result has to be checked to avoid sending a stale item
+                        .then((saved) => saved == null
+                            ? $q.reject()
+                            : lock.unlock($scope.origItem)
+                                .catch(() => $scope.origItem)) // ignore failed unlock, e.g. item not locked
                         .catch(() => $q.reject());
                 }
 
@@ -1134,6 +1159,21 @@ export function AuthoringDirective(
                         }
                     },
                 ),
+            );
+
+            const spellcheckShortcutHandler = (event: KeyboardEvent) => {
+                if (matchesSpellcheckShortcut(event) && $scope._editable && $scope.isSpellcheckerAvailable()) {
+                    // preventDefault so the combo (e.g. Alt+S) does not trigger the browser menu
+                    event.preventDefault();
+                    $scope.$apply(() => {
+                        spellcheck.toggleSpellcheckerStatus();
+                    });
+                }
+            };
+
+            window.addEventListener('keydown', spellcheckShortcutHandler);
+            $scope.eventListenersToRemoveOnUnmount.push(
+                () => window.removeEventListener('keydown', spellcheckShortcutHandler),
             );
 
             $scope.$on('$destroy', () => {

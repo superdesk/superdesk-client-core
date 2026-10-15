@@ -35,6 +35,7 @@ export function showConfirmationPrompt(
                             }}
                             text={primaryActionText ?? gettext('Confirm')}
                             type="primary"
+                            data-test-id="confirmation-modal--confirm"
                         />
                     </ButtonGroup>
                 )}

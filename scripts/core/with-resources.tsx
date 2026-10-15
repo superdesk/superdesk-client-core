@@ -102,9 +102,7 @@ class WithLiveResourcesComponent
             resources.map(({resource, ids}) => {
                 const query: ISuperdeskQuery = {
                     filter: {
-                        $and: [
-                            {_id: {$in: ids}},
-                        ],
+                        _id: {$in: ids},
                     },
                     sort: [{_updated: 'asc'}],
                     page: 1,
