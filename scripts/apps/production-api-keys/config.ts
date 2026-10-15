@@ -27,6 +27,7 @@ export function getProductionApiKeysFormConfig(): IFormGroup<IProductionApiKeyCo
                         {id: 'PLANNING_READ', label: gettext('Planning')},
                         {id: 'EVENTS_READ', label: gettext('Events')},
                         {id: 'ASSIGNMENTS_READ', label: gettext('Assignments')},
+                        {id: 'CONTENT_LISTS_READ', label: gettext('Content lists')},
                     ],
                     dataTestId: 'gform-input--scope',
                 },

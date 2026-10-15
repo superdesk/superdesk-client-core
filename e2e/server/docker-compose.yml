@@ -8,6 +8,15 @@ services:
     mongo:
         image: mongo:6
         network_mode: "host"
+        # The default container soft nofile limit is 1024. e2e specs call
+        # restore_record before each test, which drops and recreates every
+        # collection + index; WiredTiger keeps a file per collection/index, so
+        # over a full suite run the descriptors exhaust and mongod aborts with
+        # a WT_PANIC ("Too many open files"). MongoDB recommends >= 64000.
+        ulimits:
+            nofile:
+                soft: 64000
+                hard: 64000
         environment:
             - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:
@@ -53,4 +62,11 @@ services:
             - MAIL_PORT=1025
         volumes:
           - ./dump:/opt/superdesk/dump:rw
+          # The image bakes settings.py in at build time (Dockerfile COPY), and
+          # e2e-up.sh only builds the image when it is missing, so a prebuilt
+          # image keeps running a stale copy forever. Mount the current file so
+          # the stack always runs the env-driven settings: without it
+          # MEDIA_PREFIX keeps the port the snapshots were recorded on and
+          # every rendition 404s on a stack served from any other port.
+          - ./settings.py:/opt/superdesk/settings.py:ro
         user: 1000:1000
