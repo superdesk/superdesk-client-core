@@ -43,6 +43,7 @@ import {
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
+import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 import {computeEditor3Output} from './utilities/compute-editor3-output';
 import {package_items} from './package_items';
 import {LINKED_ITEMS_FIELD_TYPE} from '../fields/linked-items';
@@ -106,6 +107,44 @@ function storeEditor3ValueGeneric(
     return articleUpdated;
 }
 
+// Items that never went through editor3 (ingested, API created, editor2, multi-edit) only have
+// the string value. Custom `text` fields keep it in `extra`, the rest at the root.
+export function getStoredStringValueEditor3(
+    fieldId: string,
+    article: IArticle,
+    fieldsAdapter: IFieldsAdapter<IArticle>,
+): string {
+    if (fieldsAdapter[fieldId] == null) {
+        return '';
+    }
+
+    if (typeof article[fieldId] === 'string') {
+        return article[fieldId];
+    }
+
+    if (typeof article.extra?.[fieldId] === 'string') {
+        return article.extra[fieldId];
+    }
+
+    return '';
+}
+
+// The reverse of `computeEditor3Output`: plain text for single line and `plainTextInMultiLineMode`
+// fields, HTML for the rest. Angular parses single line values as HTML too, but fields like `byline`
+// hold literal text, so parsing would drop characters like `<` and the next save would keep the damage.
+export function getContentStateFromStoredStringEditor3(
+    value: string,
+    config: IEditor3Config | undefined,
+    associations?: IArticle['associations'],
+    plainTextInMultiLineMode?: boolean,
+): ContentState {
+    if (value.length < 1 || config?.singleLine === true || plainTextInMultiLineMode === true) {
+        return ContentState.createFromText(value);
+    }
+
+    return getContentStateFromHtml(value, associations ?? {});
+}
+
 /**
  * Universal function to retrieve stored values where field adapters are not present.
  */
@@ -113,27 +152,27 @@ export function retrieveStoredValueEditor3Generic(
     fieldId: string,
     article: IArticle,
     authoringStorage: IAuthoringStorage<IArticle>,
+    config?: IEditor3Config,
+    plainTextInMultiLineMode?: boolean,
 ) {
     const rawContentState: RawDraftContentState = (() => {
         const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState']?.[0] ?? null;
-        const fieldsAdapter = getFieldsAdapter(authoringStorage);
 
         if (fromFieldsMeta != null) {
             return fromFieldsMeta;
-        } else if (
-            fieldsAdapter[fieldId] != null
-            && typeof article[fieldId] === 'string'
-            && article[fieldId].length > 0
-        ) {
-            /**
-             * This is only for compatibility with angular based authoring.
-             * create raw content state in case only text value is present.
-             */
-
-            return convertToRaw(ContentState.createFromText(article[fieldId]));
-        } else {
-            return convertToRaw(ContentState.createFromText(''));
         }
+
+        const fieldsAdapter = getFieldsAdapter(authoringStorage);
+        const storedValue = getStoredStringValueEditor3(fieldId, article, fieldsAdapter);
+
+        return convertToRaw(
+            getContentStateFromStoredStringEditor3(
+                storedValue,
+                config,
+                article.associations,
+                plainTextInMultiLineMode,
+            ),
+        );
     })();
 
     const result: IEditor3ValueStorage = {
@@ -211,11 +250,13 @@ export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>):
 
                     return fieldV2;
                 },
-                retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
-                    fieldId,
-                    item,
-                    authoringStorage,
-                ),
+                retrieveStoredValue: (item: IArticle, _storage, config: IEditor3Config) =>
+                    retrieveStoredValueEditor3Generic(
+                        fieldId,
+                        item,
+                        authoringStorage,
+                        config,
+                    ),
                 storeValue: (value, article, config) => storeEditor3ValueGeneric(
                     fieldId,
                     value as IEditor3ValueStorage,
