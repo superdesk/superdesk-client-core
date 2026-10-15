@@ -93,6 +93,7 @@ class MetadataWidget extends React.PureComponent<IArticleSideWidgetComponentType
 
         return (
             <AuthoringWidgetLayout
+                bodyClassName="authoring-widget__body"
                 header={(
                     <AuthoringWidgetHeading
                         widgetId={METADATA_WIDGET_ID}
