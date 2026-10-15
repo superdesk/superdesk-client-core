@@ -23,6 +23,8 @@ function getInitialValueForFieldType<T extends object>(fieldConfig: IFormField<T
         case GenericFormFieldType.macroSingleValue:
         case GenericFormFieldType.yesNo:
         case GenericFormFieldType.select:
+        case GenericFormFieldType.selectAsync:
+        case GenericFormFieldType.selectMultipleAsync:
         case GenericFormFieldType.selectMultiple:
         case GenericFormFieldType.readonlyCopyableText:
         case GenericFormFieldType.number:

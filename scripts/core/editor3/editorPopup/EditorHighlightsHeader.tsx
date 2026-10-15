@@ -46,11 +46,16 @@ export class EditorHighlightsHeader extends React.Component<IProps, IState> {
                                 <button
                                     className="icn-btn dropdown__toggle"
                                     onClick={() => this.toggleActionsDropdown()}
+                                    data-test-id="highlight-actions-toggle"
                                 >
                                     <i className="icon-dots-vertical" />
                                 </button>
 
-                                <ul className="dropdown__menu" style={actionsDropdownStyles}>
+                                <ul
+                                    className="dropdown__menu"
+                                    style={actionsDropdownStyles}
+                                    data-test-id="highlight-actions-menu"
+                                >
                                     {
                                         availableActions.map((action, i) => (
                                             <li key={i}>
