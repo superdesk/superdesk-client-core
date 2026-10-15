@@ -56,25 +56,6 @@ export async function login(page: Page): Promise<void> {
  * Logs a named user in through the login form, for specs that need a second
  * actor alongside the committed admin `storageState`.
  *
- * Only the users documented in `e2e/WRITING_TESTS.md` have a known password;
- * the snapshot stores bcrypt hashes and there is no API to set one.
- */
-export async function loginAs(page: Page, username: string, password: string): Promise<void> {
-    await page.goto('/');
-
-    const loginPage = page.getByTestId('login-page');
-
-    await loginPage.getByTestId('username').fill(username);
-    await loginPage.getByTestId('password').fill(password);
-    await loginPage.getByTestId('submit').click();
-
-    await expect(page.getByTestId('dashboard')).toBeVisible();
-}
-
-/**
- * Logs a named user in through the login form, for specs that need a second
- * actor alongside the committed admin `storageState`.
- *
  * `login(page)` above fills `admin`/`admin` unconditionally, so it cannot be
  * reused here. Only the users documented in `e2e/WRITING_TESTS.md` have a known
  * password; the snapshot stores bcrypt hashes and there is no API to set one.
