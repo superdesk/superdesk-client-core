@@ -10,6 +10,7 @@ export const SendCorrectionComponent: React.ComponentType<{entity: IArticle}> = 
 
     return (
         <Button
+            data-test-id="send-correction"
             text={gettext('Send Correction')}
             style="filled"
             type="primary"

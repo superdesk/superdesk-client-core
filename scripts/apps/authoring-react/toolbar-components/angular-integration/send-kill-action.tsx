@@ -10,6 +10,7 @@ export const SendKillActionComponent: React.ComponentType<{entity: IArticle}> = 
 
     return (
         <Button
+            data-test-id="send-kill"
             text={gettext('Send kill')}
             style="filled"
             type="primary"
