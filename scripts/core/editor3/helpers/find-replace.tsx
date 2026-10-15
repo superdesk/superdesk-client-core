@@ -255,6 +255,16 @@ export function replaceAllForEachBlock(
     let result: ContentState = contentState;
 
     for (const block of contentState.getBlocksAsArray()) {
+        /**
+         * An atomic block holds no text of its own. Its only character is a placeholder space that
+         * carries the entity (table, media, embed, custom block, multi-line quote, article embed)
+         * and the actual content lives in the entity data. Replacing that space drops the entity,
+         * so the block exports as an empty `<figure>` and its content is lost.
+         */
+        if (block.getType() === 'atomic') {
+            continue;
+        }
+
         const blockKey = block.getKey();
 
         const matches: Array<{index: number; text: string}> =
