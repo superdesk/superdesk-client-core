@@ -125,16 +125,6 @@ export async function dismissSessionExpiry(page: Page): Promise<void> {
     await expect(page.locator('.login-screen')).toBeHidden();
 }
 
-/**
- * Presses a key a fixed number of times, e.g. to walk the caret over, or extend a
- * selection across, a known number of characters.
- */
-export async function pressRepeatedly(page: Page, key: string, times: number): Promise<void> {
-    for (let i = 0; i < times; i++) {
-        await page.keyboard.press(key);
-    }
-}
-
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
