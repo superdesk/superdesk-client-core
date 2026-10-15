@@ -16,6 +16,11 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
+    /**
+     * Sets the formatting options an editor3 field of a content profile offers. The list
+     * replaces whatever the field had, it is not merged into it, so pass every option the
+     * test needs on the field.
+     */
     public async addFormattingOptionToContentProfile(options: IOptions) {
         await this.page.locator(s(`content-profile=${options.profileName}`))
             .getByRole('button', {name: 'Actions'})
@@ -25,10 +30,13 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
         await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
+        // Spread, not passed as one array: an array argument is a nested path for
+        // TreeSelectDriver, and the tree-select popover closes after every pick, so all
+        // options but the first would be clicked against a popover that is no longer open.
         await new TreeSelectDriver(
             this.page,
             this.page.locator(s('formatting-options-input')),
-        ).setValues(options.formattingOptionsToAdd);
+        ).setValues(...options.formattingOptionsToAdd);
 
         // this is required for validation. TODO: update DB snapshot to make current items already valid
         await this.page.locator(s('generic-list-page', 'item-view-edit', 'gform-input--sdWidth')).selectOption('Full');

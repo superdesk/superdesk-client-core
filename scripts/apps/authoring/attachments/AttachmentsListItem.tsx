@@ -26,18 +26,32 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                 </Column>
                 <Column grow={true}>
                     <Row>
-                        <h4>{attachment.title}</h4>
+                        <h4 data-test-id="attachment-title" data-test-value={attachment.title}>{attachment.title}</h4>
                     </Row>
                     <Row>
-                        <h5>{attachment.filename} {`(${filesize(attachment.media.length)})`}</h5>
+                        <h5 data-test-id="attachment-filename" data-test-value={attachment.title}>
+                            {attachment.filename} {`(${filesize(attachment.media.length)})`}
+                        </h5>
                     </Row>
                     <Row>
-                        <div className="description">{attachment.description}</div>
+                        <div
+                            className="description"
+                            data-test-id="attachment-description"
+                            data-test-value={attachment.title}
+                        >
+                            {attachment.description}
+                        </div>
                     </Row>
                     {
                         attachment.internal === true && (
                             <Row>
-                                <span className="label label--orange2">internal</span>
+                                <span
+                                    className="label label--orange2"
+                                    data-test-id="attachment-internal-label"
+                                    data-test-value={attachment.title}
+                                >
+                                    internal
+                                </span>
                             </Row>
                         )
                     }
@@ -48,6 +62,8 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                         className="dropdown__toggle"
                         onClick={() => attachmentsApi.download(attachment)}
                         title={gettext('Download')}
+                        data-test-id="attachment-download"
+                        data-test-value={attachment.title}
                     >
                         <i className="icon-download" />
                     </button>
@@ -58,6 +74,8 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                                 className="dropdown__toggle"
                                 onClick={() => editAttachment(attachment)}
                                 title={gettext('Edit')}
+                                data-test-id="attachment-edit"
+                                data-test-value={attachment.title}
                             >
                                 <i className="icon-pencil" />
                             </button>
@@ -70,6 +88,8 @@ export class AttachmentsListItem extends React.PureComponent<IProps> {
                                 className="dropdown__toggle"
                                 onClick={() => removeAttachment(attachment)}
                                 title={gettext('Remove')}
+                                data-test-id="attachment-remove"
+                                data-test-value={attachment.title}
                             >
                                 <i className="icon-trash" />
                             </button>
