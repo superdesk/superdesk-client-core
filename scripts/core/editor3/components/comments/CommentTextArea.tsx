@@ -112,7 +112,7 @@ class CommentTextArea extends React.Component<any, any> {
             }};
 
         return (
-            <div className="comment-textarea">
+            <div className="comment-textarea" data-test-id="comment-textarea">
                 <MentionsInput
                     value={this.props.value}
                     onChange={this.props.onChange}
