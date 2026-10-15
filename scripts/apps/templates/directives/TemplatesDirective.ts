@@ -281,7 +281,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
-                $scope.template.data = $scope.origTemplate.data || defaultTemplate;
+                // `template.data` is edited in place, so a new template gets a copy of the
+                // defaults rather than the shared module level object.
+                $scope.template.data = $scope.origTemplate.data || {...defaultTemplate};
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
                     $scope.template.template_desks[0] : '';
@@ -301,9 +303,21 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                if ($scope.item != null) {
-                    content.setupAuthoring(profile, $scope, $scope.item);
+                if ($scope.item == null) {
+                    return;
                 }
+
+                if (profile == null) {
+                    // kill templates have no content profile and `setupAuthoring` throws without
+                    // one; clearing stops the previous template's fields being reused here
+                    $scope.schema = {};
+                    $scope.editor = {};
+                    $scope.fields = [];
+
+                    return;
+                }
+
+                content.setupAuthoring(profile, $scope, $scope.item);
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {

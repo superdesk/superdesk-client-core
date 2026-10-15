@@ -1,27 +1,33 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
 import {BrowserContextOptions} from '@playwright/test';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
-import committedStorageState from '../.auth/user.json';
+import storageState from '../.auth/user.json';
+import {PUBLISHING_SECTIONS_ENABLED} from '../../test-extensions/publishing-sections/extension';
 
 type StorageState = BrowserContextOptions['storageState'];
 
 /**
- * localStorage is keyed by origin, and the committed storage state is keyed to
- * http://localhost:9000. A slot serves the client from another port, so e2e-up.sh
- * writes an origin-rewritten copy and points `PLAYWRIGHT_STORAGE_STATE` at it
- * (playwright.config.ts resolves it relative to e2e/client). Patching the committed
- * copy instead would put both the session and the config patch under an origin the
- * browser never visits, leaving the test stuck on the login screen.
+ * The committed storage-state files key their localStorage to the origin the
+ * default stack serves the client from. A slot (see e2e/scripts/e2e-up.sh
+ * --slot) serves it from another port, where those entries -- the session
+ * token among them -- would never be applied, leaving the browser logged out.
+ * e2e-up rewrites the origin of the storageState it points the config at; the
+ * per-spec ones below have to do the same.
  */
-function getBaseStorageState(): {origins: Array<{origin: string; localStorage: Array<unknown>}>} {
-    const slotStorageState = process.env.PLAYWRIGHT_STORAGE_STATE;
+const COMMITTED_ORIGIN = 'http://localhost:9000';
 
-    if (slotStorageState != null && slotStorageState !== '') {
-        return JSON.parse(fs.readFileSync(path.resolve(__dirname, '../..', slotStorageState), 'utf-8'));
+function withSlotOrigin<T extends {origins?: Array<{origin: string}>}>(state: T): T {
+    const clientUrl = (process.env.CLIENT_URL ?? '').replace(/\/$/, '');
+
+    if (clientUrl.length < 1 || clientUrl === COMMITTED_ORIGIN) {
+        return state;
     }
 
-    return JSON.parse(JSON.stringify(committedStorageState));
+    for (const origin of state.origins ?? []) {
+        origin.origin = origin.origin.replace(COMMITTED_ORIGIN, clientUrl);
+    }
+
+    return state;
 }
 
 /**
@@ -29,9 +35,15 @@ function getBaseStorageState(): {origins: Array<{origin: string; localStorage: A
  */
 export function getStorageState(
     appConfigPatch: Partial<ISuperdeskGlobalConfig>,
-    otherOptions?: {authoringReact?: boolean},
+    otherOptions?: {
+        authoringReact?: boolean,
+        publishingSections?: boolean,
+
+        // for scenarios that depend on state the app persisted in an earlier session
+        localStorageEntries?: Array<{name: string, value: string}>,
+    },
 ): StorageState {
-    const storageStateCopy = getBaseStorageState();
+    const storageStateCopy = JSON.parse(JSON.stringify(storageState));
 
     storageStateCopy['origins'][0].localStorage.push({name: 'TEST_APP_CONFIG', value: JSON.stringify(appConfigPatch)});
 
@@ -39,5 +51,22 @@ export function getStorageState(
         storageStateCopy['origins'][0].localStorage.push({name: 'auth-react', value: 'true'});
     }
 
-    return storageStateCopy as StorageState;
+    if (otherOptions?.publishingSections === true) {
+        storageStateCopy['origins'][0].localStorage.push({name: PUBLISHING_SECTIONS_ENABLED, value: 'true'});
+    }
+
+    for (const entry of otherOptions?.localStorageEntries ?? []) {
+        storageStateCopy['origins'][0].localStorage.push(entry);
+    }
+
+    return withSlotOrigin(storageStateCopy);
+}
+
+/**
+ * Reads a committed storage-state file, for specs that run as another user.
+ * Use this instead of passing the path to `test.use({storageState})` so the
+ * state also works against a slot.
+ */
+export function getStorageStateFromFile(filePath: string): StorageState {
+    return withSlotOrigin(JSON.parse(fs.readFileSync(filePath, 'utf-8')));
 }
