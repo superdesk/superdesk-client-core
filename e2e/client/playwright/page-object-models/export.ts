@@ -16,7 +16,7 @@ export class ExportDialog {
     }
 
     get formatterSelect(): Locator {
-        return this.modal.getByTestId('formatter-select');
+        return this.modal.getByTestId('export-formatter');
     }
 
     get selectedFormatter(): Locator {
@@ -28,7 +28,7 @@ export class ExportDialog {
     }
 
     get exportButton(): Locator {
-        return this.modal.getByTestId('export-submit');
+        return this.modal.getByTestId('export-confirm');
     }
 
     get cancelButton(): Locator {

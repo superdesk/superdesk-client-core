@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="p in privileges track by p.name">
+                <tr ng-repeat="p in privileges track by p.name" data-test-id="privilege-row" data-test-value="{{::p.name}}">
                     <td class="name">
                         <div>
                             <span>{{ :: p.label | translate }}</span>
@@ -46,7 +46,7 @@
                                ng-disabled="true"
                                ng-if="role.privileges[p.name]" />
                     </td>
-                    <td><span ng-if="role.privileges[p.name]" class="label">{{:: role.name | translate }}</span></td>
+                    <td><span ng-if="role.privileges[p.name]" class="label" data-test-id="privilege-granted-by-role">{{:: role.name | translate }}</span></td>
                     <td class="blank-field"></td>
                 </tr>
             </tbody>
