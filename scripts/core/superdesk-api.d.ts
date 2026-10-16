@@ -978,6 +978,7 @@ declare module 'superdesk-api' {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
+            /** @deprecated metadata is now extracted by the server on upload; this hook is no longer called. */
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {

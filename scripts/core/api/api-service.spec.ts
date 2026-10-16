@@ -398,6 +398,30 @@ describe('API Provider', () => {
             $httpBackend.flush();
         }));
 
+        it('bypasses duplicate GET caching when cache is explicitly disabled', inject((api, $httpBackend) => {
+            spyOn(Date, 'now').and.returnValue(1000);
+            const snapshots = [];
+
+            $httpBackend.expectGET(USER_URL).respond(200, {status: 'processing'});
+            api.find('users', 1, {}, false).then((item) => snapshots.push(item.status));
+            $httpBackend.flush();
+            $httpBackend.expectGET(USER_URL).respond(200, {status: 'ready'});
+            api.find('users', 1, {}, false).then((item) => snapshots.push(item.status));
+            $httpBackend.flush();
+            expect(snapshots).toEqual(['processing', 'ready']);
+        }));
+
+        it('still deduplicates GET requests by default', inject((api, $httpBackend) => {
+            spyOn(Date, 'now').and.returnValue(1000);
+            const snapshots = [];
+
+            $httpBackend.expectGET(USER_URL).respond(200, {_id: 1});
+            api.find('users', 1).then((item) => snapshots.push(item));
+            api.find('users', 1).then((item) => snapshots.push(item));
+            $httpBackend.flush();
+            expect(snapshots).toEqual([{_id: 1}, {_id: 1}]);
+        }));
+
         it('can remove an item', inject((api, $httpBackend) => {
             var user = {_links: {self: {href: USER_PATH}}, _etag: ETAG};
 

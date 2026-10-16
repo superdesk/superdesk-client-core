@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {get} from 'lodash';
-import {uniq, pickBy, isEmpty, forEach} from 'lodash';
+import {forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
@@ -47,6 +47,7 @@ export function MultiImageEditController(
     content,
 ) {
     const saveHandler = $scope.saveHandler;
+    const editedMetadata: Record<string, unknown> = {};
     let unsavedChangesExist = false;
 
     $scope.images = [];
@@ -58,7 +59,7 @@ export function MultiImageEditController(
 
             return existingImage != null
                 ? existingImage
-                : {...image, ...pickBy($scope.metadata, (value) => !isEmpty(value))};
+                : {...image, ...angular.copy(editedMetadata)};
         });
 
         $scope.images = angular.copy(updatedImages);
@@ -123,6 +124,7 @@ export function MultiImageEditController(
 
         unsavedChangesExist = true;
         $scope.placeholder[field] = '';
+        editedMetadata[field] = angular.copy($scope.metadata?.[field]);
 
         $scope.images.forEach((item) => {
             if (item.selected) {
@@ -345,6 +347,7 @@ export function MultiImageEditDirective(asset, $sce) {
             getProgress: '=',
             onRemoveItem: '=',
             uploadInProgress: '=',
+            saveDisabled: '=?',
             validator: '=',
         },
         transclude: {

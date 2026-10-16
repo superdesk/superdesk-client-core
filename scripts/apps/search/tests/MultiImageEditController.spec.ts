@@ -42,4 +42,62 @@ describe('multi image edit controller', () => {
         $rootScope.$digest();
         expect($scope.isDirty()).toBe(false);
     }));
+
+    it('keeps embedded metadata separate when images arrive asynchronously', inject(($rootScope, $controller) => {
+        const $scope = $rootScope.$new();
+        const first = {_id: 1, headline: 'First image', byline: 'First photographer', extra: {location: 'Paris'}};
+        const second = {_id: 2, headline: 'Second image', byline: 'Second photographer', extra: {location: 'Prague'}};
+
+        $scope.imagesOriginal = [second];
+        $controller(MultiImageEditController, {$scope});
+        $rootScope.$digest();
+        expect($scope.metadata.headline).toBe('Second image');
+
+        $scope.imagesOriginal = [second, first];
+        $rootScope.$digest();
+        expect($scope.images[0].headline).toBe('Second image');
+        expect($scope.images[1]).toEqual({...first, selected: true});
+        expect($scope.placeholder.headline).toBe('(multiple values)');
+        expect($scope.isDirty()).toBe(false);
+    }));
+
+    it('applies only explicitly edited fields to images arriving later', inject(($rootScope, $controller) => {
+        const $scope = $rootScope.$new();
+
+        $scope.imagesOriginal = [{_id: 1, headline: 'First image', byline: 'First photographer'}];
+        $controller(MultiImageEditController, {$scope});
+        $rootScope.$digest();
+        $scope.metadata.headline = 'Shared headline';
+        $scope.onChange('headline');
+
+        $scope.imagesOriginal = [
+            ...$scope.imagesOriginal,
+            {_id: 2, headline: 'Second image', byline: 'Second photographer'},
+        ];
+        $rootScope.$digest();
+        expect($scope.images.map((image) => image.headline)).toEqual(['Shared headline', 'Shared headline']);
+        expect($scope.images.map((image) => image.byline)).toEqual(['First photographer', 'Second photographer']);
+    }));
+
+    it('preserves existing edits and copies explicit bulk edits without sharing nested data',
+        inject(($rootScope, $controller) => {
+            const $scope = $rootScope.$new();
+
+            $scope.imagesOriginal = [{_id: 1, headline: 'First image', extra: {location: 'Paris'}}];
+            $controller(MultiImageEditController, {$scope});
+            $rootScope.$digest();
+            $scope.metadata.headline = '';
+            $scope.onChange('headline');
+            $scope.metadata.extra = {location: 'Edited'};
+            $scope.onChange('extra');
+            $scope.imagesOriginal = [
+                ...$scope.imagesOriginal,
+                {_id: 2, headline: 'Second image', extra: {location: 'Prague'}},
+            ];
+            $rootScope.$digest();
+            expect($scope.images.map((image) => image.headline)).toEqual(['', '']);
+            expect($scope.images.map((image) => image.extra.location)).toEqual(['Edited', 'Edited']);
+            $scope.images[1].extra.location = 'Individual edit';
+            expect($scope.images[0].extra.location).toBe('Edited');
+        }));
 });
