@@ -249,6 +249,62 @@ describe('upload controller staging', () => {
         ]);
     });
 
+    [true, false].forEach((lateSuccess) => {
+        it(`waits for all archive requests after a failure (late success: ${lateSuccess})`, async () => {
+            const {scope, save, add} = setup();
+            const reason = {data: {_message: 'Creation failed'}};
+            const created = {_id: 'late-archive-id', _etag: 'created-etag'};
+            let finishLate: (model: typeof created) => void;
+            let failLate: (reason: unknown) => void;
+            const lateRequest = new Promise((resolve, reject) => {
+                finishLate = resolve;
+                failLate = reject;
+            });
+
+            await add(staged('ready'));
+            await add({...staged('ready'), _id: 'second-staged-id'});
+            let requestsStarted: () => void;
+            const started = new Promise<void>((resolve) => requestsStarted = resolve);
+
+            save.and.callFake((_model, metadata) => {
+                if (metadata.staged_id === 'second-staged-id') {
+                    return Promise.reject(reason);
+                }
+                requestsStarted();
+                return lateRequest;
+            });
+            let settled = false;
+            const saving = scope.save();
+            const rejected = expectAsync(saving).toBeRejectedWith(reason);
+
+            saving.then(() => settled = true, () => settled = true);
+            await started;
+            for (let i = 0; i < 10; i++) {
+                await Promise.resolve();
+            }
+            expect(settled).toBe(false);
+            expect(scope.saving).toBe(true);
+            await expectAsync(scope.save()).toBeRejected();
+            expect(save.calls.count()).toBe(2);
+
+            if (lateSuccess) {
+                finishLate(created);
+            } else {
+                failLate({data: {_message: 'Late failure'}});
+            }
+            await rejected;
+            expect(scope.saving).toBe(false);
+            expect(scope.resolve).not.toHaveBeenCalled();
+            expect(scope.items[1].model).toEqual(lateSuccess ? created : undefined);
+
+            save.and.callFake((model, metadata) => Promise.resolve({...model, ...metadata, _id: 'saved-id'}));
+            await scope.save();
+            expect(save.calls.argsFor(3)[0]).toEqual(lateSuccess ? created : {});
+            expect(save.calls.argsFor(3)[1].staged_id).toBe(lateSuccess ? undefined : 'staged-id');
+            expect(scope.resolve).toHaveBeenCalled();
+        });
+    });
+
     it('keeps an existing model retryable when its metadata update fails', async () => {
         const {scope, save, notify, add} = setup();
         const created = {_id: 'archive-id', _etag: 'created-etag'};
@@ -370,6 +426,7 @@ describe('upload controller staging', () => {
 
         api.find.and.returnValue(Promise.resolve(staged('awaiting_confirmation')));
         await add(staged('awaiting_confirmation'), 'video/mp4');
+        expect(scope.processing).toBe(false);
         timers[0].callback();
         expect(scope.failed).toBe(false);
         expect(scope.items[0].processingError).toBeUndefined();
@@ -394,6 +451,7 @@ describe('upload controller staging', () => {
         await scope.items[0].refresh;
         expect(api.update).toHaveBeenCalledWith('upload_staging', staged('awaiting_confirmation'), {confirmed: true});
         expect(scope.items[0].staged).toEqual(queued);
+        expect(scope.processing).toBe(true);
         expect(scope.saving).toBe(true);
         expect(timers.length).toBe(2);
         timers[1].callback();
@@ -428,6 +486,7 @@ describe('upload controller staging', () => {
         expect(scope.items[0].processingConfirmed).toBe(true);
         expect(scope.items[0].staged.confirmed).toBe(false);
         expect(scope.items[0].staged.status).toBe('awaiting_confirmation');
+        expect(scope.processing).toBe(true);
         expect(notify.warning).toHaveBeenCalledWith('Unable to check media processing status.');
         expect(scope.failed).toBe(false);
         expect(scope.saving).toBe(true);
@@ -442,6 +501,75 @@ describe('upload controller staging', () => {
         expect(notify.error).toHaveBeenCalled();
         expect(save).not.toHaveBeenCalled();
         expect(scope.resolve).not.toHaveBeenCalled();
+    });
+
+    it('retains fetched confirmation when a later snapshot is unconfirmed', async () => {
+        const {scope, api, add, event, timers} = setup();
+        const queued = {...staged('awaiting_confirmation'), confirmed: true};
+
+        api.find.and.returnValue(Promise.resolve(queued));
+        await add(queued, 'video/mp4');
+        expect(scope.items[0].processingConfirmed).toBe(true);
+        expect(scope.processing).toBe(true);
+        await event({...queued, confirmed: false});
+        expect(scope.items[0].processingConfirmed).toBe(true);
+        expect(scope.processing).toBe(true);
+
+        const saving = scope.save();
+
+        timers[0].callback();
+        await expectAsync(saving).toBeRejected();
+        expect(api.update).not.toHaveBeenCalled();
+        expect(scope.failed).toBe(true);
+        expect(scope.saving).toBe(false);
+    });
+
+    it('ignores a ready response arriving after the processing deadline', async () => {
+        const {scope, api, add, listeners, timers, notify} = setup();
+
+        await add(staged('processing'));
+        let finishRead: (response: ReturnType<typeof staged>) => void;
+        let readStarted: () => void;
+        const started = new Promise<void>((resolve) => readStarted = resolve);
+
+        api.find.and.callFake(() => {
+            readStarted();
+            return new Promise((resolve) => finishRead = resolve);
+        });
+        listeners['connected']();
+        await started;
+        timers[0].callback();
+        const error = scope.items[0].processingError;
+
+        finishRead(staged('ready'));
+        await scope.items[0].refresh;
+        expect(scope.items[0].staged.status).toBe('failed');
+        expect(scope.items[0].processingError).toBe(error);
+        expect(scope.failed).toBe(true);
+        await expectAsync(scope.items[0].ready.promise).toBeRejectedWithError(error);
+        await expectAsync(scope.save()).toBeRejected();
+        const reads = api.find.calls.count();
+
+        listeners['connected']();
+        await scope.items[0].refresh;
+        expect(api.find.calls.count()).toBe(reads);
+        expect(notify.error.calls.count()).toBe(1);
+    });
+
+    it('does not refresh a terminal server processing failure', async () => {
+        const {scope, api, add, event, notify} = setup();
+
+        await add();
+        await event({...staged('failed'), error: 'Worker failed'});
+        const reads = api.find.calls.count();
+
+        await event(staged('ready'));
+        expect(api.find.calls.count()).toBe(reads);
+        expect(scope.items[0].staged.status).toBe('failed');
+        expect(scope.items[0].processingError).toBe('Worker failed');
+        expect(scope.failed).toBe(true);
+        expect(notify.error.calls.count()).toBe(1);
+        await expectAsync(scope.items[0].ready.promise).toBeRejectedWithError('Worker failed');
     });
 
     it('recovers missed events on websocket reconnect', async () => {

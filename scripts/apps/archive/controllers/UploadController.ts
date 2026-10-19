@@ -105,9 +105,13 @@ export function UploadController(
         }
     };
 
+    const isAwaitingConfirmation = (item) =>
+        item.staged?.status === 'awaiting_confirmation' && !item.processingConfirmed;
+
     const updateProcessingState = () => {
         $scope.processing = $scope.items.some((item) => item.staged == null
-            || item.staged.status === 'pending' || item.staged.status === 'processing');
+            || item.staged.status === 'pending' || item.staged.status === 'processing'
+            || (item.staged.status === 'awaiting_confirmation' && !isAwaitingConfirmation(item)));
         $scope.metadataPending = $scope.items.some((item) => !item.metadataApplied);
         $scope.pendingItems = $scope.items.filter((item) => !item.metadataApplied);
         $scope.failed = $scope.items.some((item) => item.processingError != null);
@@ -177,6 +181,9 @@ export function UploadController(
     };
 
     const failProcessing = (item, message: string) => {
+        if (item.discarded || item.processingError != null) {
+            return;
+        }
         $timeout.cancel(item.processingTimeout);
         item.processingError = message;
         item.staged.status = 'failed';
@@ -186,10 +193,11 @@ export function UploadController(
     };
 
     const applyStaged = (item, staged: IStagedUpload) => {
-        if (item.discarded) {
+        if (item.discarded || item.processingError != null) {
             return;
         }
         item.staged = staged;
+        item.processingConfirmed = item.processingConfirmed || staged.confirmed === true;
         if (!item.metadataApplied && (staged.metadata_status !== 'pending' || staged.status === 'failed')) {
             Object.assign(item.meta, {byline: $scope.currentUser.byline}, staged.meta);
             item.metadataApplied = true;
@@ -215,10 +223,7 @@ export function UploadController(
     const startProcessingDeadline = (item) => {
         $timeout.cancel(item.processingTimeout);
         item.processingTimeout = $timeout(() => {
-            const awaitingConfirmation = item.staged.status === 'awaiting_confirmation'
-                && !item.staged.confirmed && !item.processingConfirmed;
-
-            if (item.staged.status !== 'ready' && !awaitingConfirmation && !item.discarded) {
+            if (item.staged.status !== 'ready' && !isAwaitingConfirmation(item) && !item.discarded) {
                 failProcessing(item, gettext('Media processing timed out. Remove the file and try again.'));
             }
         }, 10 * 60 * 1000);
@@ -245,7 +250,7 @@ export function UploadController(
     const refreshStaged = (item) => {
         // Serialize refreshes so an older response cannot overwrite a newer terminal status.
         item.refresh = (item.refresh || Promise.resolve()).then(() => {
-            if (item.discarded || item.staged.status === 'ready') {
+            if (item.discarded || item.processingError != null || item.staged.status === 'ready') {
                 return;
             }
             return readStaged(item.staged._id).then((staged) => {
@@ -510,7 +515,7 @@ export function UploadController(
         return Promise.all($scope.items.map((item) => item.staging)).then(() => {
             return Promise.all($scope.items.map(async (item) => {
                 if (item.cssType === 'video' && item.staged.status !== 'ready'
-                    && !item.staged.confirmed && !item.processingConfirmed) {
+                    && !item.processingConfirmed) {
                     await mutateStaged(item, (staged) => {
                         if (staged.confirmed || staged.status === 'ready') {
                             return Promise.resolve();
@@ -518,13 +523,15 @@ export function UploadController(
                         return api.update('upload_staging', staged, {confirmed: true});
                     });
                     item.processingConfirmed = true;
+                    $scope.$applyAsync(updateProcessingState);
                     startProcessingDeadline(item);
                     await refreshStaged(item);
                 }
                 await item.ready.promise;
             }));
         }).then(() => {
-            return $q.all($scope.items.map((item) => {
+            // Keep the dialog locked until every request finishes, including after a partial failure.
+            return Promise.allSettled($scope.items.map(async (item) => {
                 // meta._id is only a local pseudo-id used by the multi-edit form
                 const metadata = _.omit(sanitizeUploadMeta(item.meta), '_id');
 
@@ -537,6 +544,11 @@ export function UploadController(
                     item.model = model;
                     return model;
                 });
+            })).then((results) => results.map((result) => {
+                if (result.status === 'rejected') {
+                    throw result.reason;
+                }
+                return result.value;
             }));
         }).then((results) => {
             $scope.resolve(results);
