@@ -104,6 +104,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         }
                     }}
                     className="authoring-field-box"
+                    data-test-id="embed-code"
                     placeholder={gettext('Embed code')}
                     readOnly={readOnly}
                 />
@@ -119,6 +120,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                         });
                     }}
                     className="authoring-field-box"
+                    data-test-id="embed-description"
                     rows={1}
                     placeholder={gettext('Description')}
                     readOnly={readOnly}

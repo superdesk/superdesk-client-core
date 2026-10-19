@@ -39,6 +39,7 @@ export class Editor extends React.PureComponent<IProps> {
                     {urls.map((urlObj, i) => (
                         <div
                             key={i}
+                            data-test-id="url-item"
                             className={classNames(
                                 'authoring-urls-field__item',
                                 {'authoring-urls-field__item--read-only': readOnly},
@@ -47,6 +48,7 @@ export class Editor extends React.PureComponent<IProps> {
                             <input
                                 type="text"
                                 className="authoring-field-box"
+                                data-test-id="url"
                                 aria-label={gettext('URL')}
                                 placeholder={gettext('URL')}
                                 value={urlObj.url}
@@ -67,6 +69,7 @@ export class Editor extends React.PureComponent<IProps> {
                             {this.props.config.hideDescription !== true && (
                                 <textarea
                                     className="authoring-field-box"
+                                    data-test-id="url-description"
                                     rows={1}
                                     value={urlObj.description}
                                     onChange={(event) => {
