@@ -215,7 +215,9 @@ export function UploadController(
     const startProcessingDeadline = (item) => {
         $timeout.cancel(item.processingTimeout);
         item.processingTimeout = $timeout(() => {
-            if (!['ready', 'awaiting_confirmation'].includes(item.staged.status) && !item.discarded) {
+            const awaitingConfirmation = item.staged.status === 'awaiting_confirmation' && !item.staged.confirmed;
+
+            if (item.staged.status !== 'ready' && !awaitingConfirmation && !item.discarded) {
                 failProcessing(item, gettext('Media processing timed out. Remove the file and try again.'));
             }
         }, 10 * 60 * 1000);
@@ -253,9 +255,14 @@ export function UploadController(
             });
         }).catch((reason) => {
             if (!item.discarded) {
-                $scope.$applyAsync(() => {
-                    failProcessing(item, reason?.data?._message || gettext('Unable to check media processing status.'));
-                });
+                return new Promise<void>((resolve) => $scope.$applyAsync(() => {
+                    if (!item.discarded) {
+                        notify.warning(
+                            reason?.data?._message || gettext('Unable to check media processing status.'),
+                        );
+                    }
+                    resolve();
+                }));
             }
         });
         return item.refresh;
@@ -514,14 +521,13 @@ export function UploadController(
             }));
         }).then(() => {
             return $q.all($scope.items.map((item) => {
-                if (item.model != null) {
-                    return item.model;
-                }
-                archiveService.addTaskToArticle(item.meta, $scope.selectedDesk);
-
                 // meta._id is only a local pseudo-id used by the multi-edit form
-                return api('archive').save({}, {
-                    ..._.omit(sanitizeUploadMeta(item.meta), '_id'),
+                const metadata = _.omit(sanitizeUploadMeta(item.meta), '_id');
+
+                archiveService.addTaskToArticle(metadata, $scope.selectedDesk);
+
+                return api('archive').save(item.model || {}, item.model != null ? metadata : {
+                    ...metadata,
                     staged_id: item.staged._id,
                 }).then((model) => {
                     item.model = model;

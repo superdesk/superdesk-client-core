@@ -28,6 +28,7 @@ describe('upload controller staging', () => {
             save: null,
             cancel: null,
             onRemoveItem: null,
+            selectedDesk: undefined,
         };
         const timers = [];
         const timeout = Object.assign(
@@ -77,7 +78,9 @@ describe('upload controller staging', () => {
             },
         };
 
-        UploadController(scope, q, upload, api, {addTaskToArticle: jasmine.createSpy('addTaskToArticle')},
+        const archiveService = {addTaskToArticle: jasmine.createSpy('addTaskToArticle')};
+
+        UploadController(scope, q, upload, api, archiveService,
             {identity: {_id: 'user', byline: 'User'}}, {}, notify, {}, {}, timeout);
 
         async function add(
@@ -106,7 +109,7 @@ describe('upload controller staging', () => {
         }
 
         return {
-            scope, api, save, notify, timers, timeout, listeners, add, event,
+            scope, api, save, notify, timers, timeout, listeners, add, event, archiveService,
             progress: (loaded, total) => onProgress({loaded, total}),
         };
     }
@@ -182,6 +185,89 @@ describe('upload controller staging', () => {
         await saving;
         expect(save.calls.count()).toBe(1);
         expect(scope.resolve).toHaveBeenCalled();
+    });
+
+    it('updates edited metadata and desk on retry after a partial batch failure', async () => {
+        const {scope, api, save, notify, add, archiveService} = setup();
+        const firstDesk = {_id: 'first-desk', working_stage: 'first-stage'};
+        const retryDesk = {_id: 'retry-desk', working_stage: 'retry-stage'};
+        const created = {
+            _id: 'archive-id',
+            _etag: 'created-etag',
+            _links: {self: {href: '/archive/archive-id'}},
+        };
+        const reason = {data: {_message: 'Creation failed'}};
+
+        api.find.and.returnValue(Promise.resolve(staged('ready')));
+        await add(staged('ready', 'ready', {headline: 'First'}));
+        await add({...staged('ready', 'ready', {headline: 'Second'}), _id: 'second-staged-id'});
+        scope.items.reverse();
+        scope.imagesMetadata.reverse();
+        archiveService.addTaskToArticle.and.callFake((metadata, desk) => {
+            if (metadata.task?.desk == null) {
+                metadata.task = {desk: desk._id, stage: desk.working_stage, user: 'user'};
+            }
+        });
+        scope.selectedDesk = firstDesk;
+        save.and.callFake((model, metadata) => metadata.staged_id === 'second-staged-id'
+            ? Promise.reject(reason) : Promise.resolve(created));
+
+        await expectAsync(scope.save()).toBeRejectedWith(reason);
+        expect(scope.resolve).not.toHaveBeenCalled();
+        expect(notify.error).toHaveBeenCalledWith('Creation failed');
+        expect(scope.saving).toBe(false);
+        expect(scope.items[0].model).toBe(created);
+        expect(scope.items[1].model).toBeUndefined();
+
+        scope.imagesMetadata[0].headline = 'Edited first';
+        scope.imagesMetadata[0].source = 'Edited source';
+        scope.selectedDesk = retryDesk;
+        save.and.callFake((model, metadata) => Promise.resolve({
+            ...model,
+            ...metadata,
+            _id: model._id || 'second-archive-id',
+            _etag: 'updated-etag',
+        }));
+
+        await scope.save();
+        const task = {desk: 'retry-desk', stage: 'retry-stage', user: 'user'};
+
+        expect(save.calls.count()).toBe(4);
+        expect(save.calls.argsFor(2)).toEqual([
+            created,
+            {byline: 'User', headline: 'Edited first', source: 'Edited source', task},
+        ]);
+        expect(save.calls.argsFor(3)).toEqual([
+            {},
+            {byline: 'User', headline: 'Second', task, staged_id: 'second-staged-id'},
+        ]);
+        expect(scope.resolve).toHaveBeenCalledWith([
+            {...created, _etag: 'updated-etag', byline: 'User',
+                headline: 'Edited first', source: 'Edited source', task},
+            {_id: 'second-archive-id', _etag: 'updated-etag', byline: 'User',
+                headline: 'Second', task, staged_id: 'second-staged-id'},
+        ]);
+    });
+
+    it('keeps an existing model retryable when its metadata update fails', async () => {
+        const {scope, save, notify, add} = setup();
+        const created = {_id: 'archive-id', _etag: 'created-etag'};
+        const reason = {data: {_message: 'Update failed'}};
+
+        await add(staged('ready'));
+        scope.items[0].model = created;
+        save.and.returnValue(Promise.reject(reason));
+        await expectAsync(scope.save()).toBeRejectedWith(reason);
+        expect(scope.resolve).not.toHaveBeenCalled();
+        expect(notify.error).toHaveBeenCalledWith('Update failed');
+        expect(scope.saving).toBe(false);
+        expect(scope.items[0].model).toBe(created);
+
+        save.and.returnValue(Promise.resolve({...created, _etag: 'updated-etag'}));
+        await scope.save();
+        expect(save.calls.count()).toBe(2);
+        expect(save.calls.argsFor(1)[0]).toBe(created);
+        expect(scope.items[0].model._etag).toBe('updated-etag');
     });
 
     it('always requests uncached processing snapshots', async () => {
@@ -279,6 +365,48 @@ describe('upload controller staging', () => {
         expect(save.calls.count()).toBe(1);
     });
 
+    it('does not time out video that is still waiting for user confirmation', async () => {
+        const {scope, api, notify, timers, add} = setup();
+
+        api.find.and.returnValue(Promise.resolve(staged('awaiting_confirmation')));
+        await add(staged('awaiting_confirmation'), 'video/mp4');
+        timers[0].callback();
+        expect(scope.failed).toBe(false);
+        expect(scope.items[0].processingError).toBeUndefined();
+        expect(notify.error).not.toHaveBeenCalled();
+    });
+
+    it('times out confirmed video still queued in awaiting_confirmation and releases Save', async () => {
+        const {scope, api, save, notify, timers, add} = setup();
+        const queued = {...staged('awaiting_confirmation'), confirmed: true};
+
+        api.find.and.returnValue(Promise.resolve(staged('awaiting_confirmation')));
+        await add(staged('awaiting_confirmation'), 'video/mp4');
+        const refreshed = new Promise<void>((resolve) => {
+            api.find.and.callFake(() => {
+                resolve();
+                return Promise.resolve(queued);
+            });
+        });
+        const saving = scope.save();
+
+        await refreshed;
+        await scope.items[0].refresh;
+        expect(api.update).toHaveBeenCalledWith('upload_staging', staged('awaiting_confirmation'), {confirmed: true});
+        expect(scope.items[0].staged).toEqual(queued);
+        expect(scope.saving).toBe(true);
+        expect(timers.length).toBe(2);
+        timers[1].callback();
+
+        await expectAsync(saving).toBeRejectedWithError('Media processing timed out. Remove the file and try again.');
+        expect(scope.failed).toBe(true);
+        expect(scope.saving).toBe(false);
+        expect(scope.items[0].processingError).toBe('Media processing timed out. Remove the file and try again.');
+        expect(notify.error).toHaveBeenCalled();
+        expect(save).not.toHaveBeenCalled();
+        expect(scope.resolve).not.toHaveBeenCalled();
+    });
+
     it('recovers missed events on websocket reconnect', async () => {
         const {scope, add, event} = setup();
 
@@ -286,6 +414,71 @@ describe('upload controller staging', () => {
         await event(staged('ready', 'ready', {headline: 'Recovered'}), 'connected');
         expect(scope.imagesMetadata[0].headline).toBe('Recovered');
         expect(scope.processing).toBe(false);
+    });
+
+    [-1, 503].forEach((status) => {
+        it(`recovers pending metadata after an initial status GET fails with ${status}`, async () => {
+            const {scope, api, notify, timeout, timers, add, event} = setup();
+
+            api.find.and.callFake(() => Promise.reject({status}));
+            await add();
+            expect(notify.warning).toHaveBeenCalledWith('Unable to check media processing status.');
+            expect(notify.error).not.toHaveBeenCalled();
+            expect(scope.failed).toBe(false);
+            expect(scope.items[0].processingError).toBeUndefined();
+            expect(scope.items[0].staged.status).toBe('processing');
+            expect(scope.pendingItems.length).toBe(1);
+            expect(timers.length).toBe(1);
+            expect(timeout.cancel).not.toHaveBeenCalledWith(timers[0]);
+
+            await event(staged('ready', 'ready', {headline: 'Recovered'}), 'connected');
+            expect(scope.pendingItems.length).toBe(0);
+            expect(scope.imagesMetadata[0].headline).toBe('Recovered');
+            await scope.save();
+            expect(scope.resolve).toHaveBeenCalled();
+        });
+    });
+
+    it('keeps Upload pending through a status read failure until a later refresh is ready', async () => {
+        const {scope, api, save, notify, timeout, timers, listeners, add, event} = setup();
+
+        await add(staged('processing'));
+        const saving = scope.save();
+        const deadline = timers[0];
+
+        api.find.and.callFake(() => Promise.reject({status: 503, data: {_message: 'Service unavailable'}}));
+        listeners['upload_staging:updated']({}, {user: 'user', staged_id: 'staged-id'});
+        await scope.items[0].refresh;
+        expect(notify.warning).toHaveBeenCalledWith('Service unavailable');
+        expect(scope.saving).toBe(true);
+        expect(scope.failed).toBe(false);
+        expect(save).not.toHaveBeenCalled();
+        expect(timeout.cancel).not.toHaveBeenCalledWith(deadline);
+        expect(timers.length).toBe(1);
+
+        await event(staged('ready'), 'connected');
+        await saving;
+        expect(save.calls.count()).toBe(1);
+        expect(scope.resolve).toHaveBeenCalled();
+        expect(timeout.cancel).toHaveBeenCalledWith(deadline);
+    });
+
+    it('still fails at the original deadline after a status read failure', async () => {
+        const {scope, api, save, notify, timers, listeners, add} = setup();
+
+        await add(staged('processing'));
+        const saving = scope.save();
+
+        api.find.and.callFake(() => Promise.reject({status: 503}));
+        listeners['connected']();
+        await scope.items[0].refresh;
+        expect(scope.failed).toBe(false);
+        expect(timers.length).toBe(1);
+        timers[0].callback();
+        await expectAsync(saving).toBeRejected();
+        expect(scope.failed).toBe(true);
+        expect(notify.error).toHaveBeenCalled();
+        expect(save).not.toHaveBeenCalled();
     });
 
     it('allows manual entry after metadata failure', async () => {
