@@ -257,3 +257,51 @@ $authoring-header-collapse-duration: 150ms;
 .sd-editor-grid > .sd-editor-grid__editor-content {
     background-color: var(--sd-colour-panel-bg--000);
 }
+
+// The box editor3 draws around content fields like byline, for fields that edit plain text in an
+// input or textarea (urls, embed).
+.authoring-field-box {
+    display: block;
+    width: 100%;
+    padding: var(--space--2) var(--space--2) var(--space--1);
+    border: 1px solid var(--sd-editor-colour__controls-border);
+    border-radius: var(--b-radius--medium);
+    background: transparent;
+    color: inherit;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+
+    &:not([readonly]):focus {
+        outline: none;
+        border-color: var(--sd-colour-interactive);
+        box-shadow: 0 0 0 3px var(--sd-colour-interactive--alpha-30);
+    }
+}
+
+textarea.authoring-field-box {
+    resize: vertical;
+}
+
+.authoring-urls-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space--2);
+}
+
+// The remove button sits beside the url, and the description lines up under the url only.
+.authoring-urls-field__item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space--1);
+
+    > textarea {
+        grid-column: 1;
+    }
+}
+
+.authoring-urls-field__item--read-only {
+    grid-template-columns: 1fr;
+}

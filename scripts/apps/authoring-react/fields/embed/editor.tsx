@@ -103,9 +103,9 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             this.setState({previewEnabled: false});
                         }
                     }}
+                    className="authoring-field-box"
                     placeholder={gettext('Embed code')}
                     readOnly={readOnly}
-                    style={{resize: 'vertical'}}
                 />
 
                 <SpacerBlock v gap="8" />
@@ -118,9 +118,10 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             description: event.target.value,
                         });
                     }}
+                    className="authoring-field-box"
+                    rows={1}
                     placeholder={gettext('Description')}
                     readOnly={readOnly}
-                    style={{resize: 'vertical'}}
                 />
 
                 {
