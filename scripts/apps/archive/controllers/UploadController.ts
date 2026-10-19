@@ -215,7 +215,8 @@ export function UploadController(
     const startProcessingDeadline = (item) => {
         $timeout.cancel(item.processingTimeout);
         item.processingTimeout = $timeout(() => {
-            const awaitingConfirmation = item.staged.status === 'awaiting_confirmation' && !item.staged.confirmed;
+            const awaitingConfirmation = item.staged.status === 'awaiting_confirmation'
+                && !item.staged.confirmed && !item.processingConfirmed;
 
             if (item.staged.status !== 'ready' && !awaitingConfirmation && !item.discarded) {
                 failProcessing(item, gettext('Media processing timed out. Remove the file and try again.'));
@@ -337,6 +338,7 @@ export function UploadController(
             cssType: file.type.split('/')[0],
             thumbnailHtml: '',
             thumbnailUrl: '',
+            processingConfirmed: false,
             ready: $q.defer(),
         };
 
@@ -507,13 +509,15 @@ export function UploadController(
 
         return Promise.all($scope.items.map((item) => item.staging)).then(() => {
             return Promise.all($scope.items.map(async (item) => {
-                if (item.cssType === 'video' && item.staged.status !== 'ready' && !item.staged.confirmed) {
+                if (item.cssType === 'video' && item.staged.status !== 'ready'
+                    && !item.staged.confirmed && !item.processingConfirmed) {
                     await mutateStaged(item, (staged) => {
                         if (staged.confirmed || staged.status === 'ready') {
                             return Promise.resolve();
                         }
                         return api.update('upload_staging', staged, {confirmed: true});
                     });
+                    item.processingConfirmed = true;
                     startProcessingDeadline(item);
                     await refreshStaged(item);
                 }

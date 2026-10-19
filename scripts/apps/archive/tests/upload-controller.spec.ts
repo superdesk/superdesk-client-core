@@ -407,6 +407,43 @@ describe('upload controller staging', () => {
         expect(scope.resolve).not.toHaveBeenCalled();
     });
 
+    it('times out successfully confirmed video even when the following status GET fails', async () => {
+        const {scope, api, save, notify, timeout, timers, add} = setup();
+        const unconfirmed = {...staged('awaiting_confirmation'), confirmed: false};
+
+        api.find.and.returnValue(Promise.resolve(unconfirmed));
+        await add(unconfirmed, 'video/mp4');
+        expect(scope.items[0].processingConfirmed).toBe(false);
+        const refreshed = new Promise<void>((resolve) => {
+            api.find.and.callFake(() => {
+                resolve();
+                return Promise.reject({status: 503});
+            });
+        });
+        const saving = scope.save();
+
+        await refreshed;
+        await scope.items[0].refresh;
+        expect(api.update).toHaveBeenCalledWith('upload_staging', unconfirmed, {confirmed: true});
+        expect(scope.items[0].processingConfirmed).toBe(true);
+        expect(scope.items[0].staged.confirmed).toBe(false);
+        expect(scope.items[0].staged.status).toBe('awaiting_confirmation');
+        expect(notify.warning).toHaveBeenCalledWith('Unable to check media processing status.');
+        expect(scope.failed).toBe(false);
+        expect(scope.saving).toBe(true);
+        expect(timers.length).toBe(2);
+        expect(timeout.cancel).not.toHaveBeenCalledWith(timers[1]);
+
+        timers[1].callback();
+        await expectAsync(saving).toBeRejectedWithError('Media processing timed out. Remove the file and try again.');
+        expect(scope.failed).toBe(true);
+        expect(scope.saving).toBe(false);
+        expect(scope.items[0].processingError).toBe('Media processing timed out. Remove the file and try again.');
+        expect(notify.error).toHaveBeenCalled();
+        expect(save).not.toHaveBeenCalled();
+        expect(scope.resolve).not.toHaveBeenCalled();
+    });
+
     it('recovers missed events on websocket reconnect', async () => {
         const {scope, add, event} = setup();
 
