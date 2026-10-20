@@ -54,7 +54,8 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                 return (
                     <FieldTemplate
                         field={field}
-                        input={this.props.children}
+                        // templates have no slot for label actions; dropping a lock button would leave its field locked
+                        input={<>{this.props.labelActions}{this.props.children}</>}
                         validationError={validationError}
                         miniToolbar={this.props.miniToolbar}
                     />
@@ -78,7 +79,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, labelActions} = this.props;
 
             return (
                 <div className="authoring-header-field">
@@ -93,6 +94,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         {field.fieldConfig.required && (
                             <RequiredIndicatorForHeader />
                         )}
+                        {labelActions}
                     </span>
 
                     {/* the label column is a fixed width, so the toggle goes beside it, not in it */}
@@ -134,7 +136,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, labelActions} = this.props;
 
             return (
                 <div className="authoring-section__field">
@@ -160,6 +162,8 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                                 {field.fieldConfig.required && (
                                     <RequiredIndicatorForContent />
                                 )}
+
+                                {labelActions}
                             </Spacer>
 
                             <span>{toggle}</span>

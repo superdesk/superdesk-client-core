@@ -317,6 +317,23 @@ declare module 'superdesk-api' {
     export type IBooleanFieldValueStorage = IValueOperational;
     export type IBooleanFieldUserPreferences = never;
 
+    // AUTHORING-REACT FIELD TYPES - plain text
+    export type IPlainTextFieldValueOperational = string | null;
+    export type IPlainTextFieldValueStorage = IValueOperational;
+    export type IPlainTextFieldUserPreferences = never;
+    export interface IPlainTextFieldConfig extends ICommonFieldConfig {
+        maxLength?: number;
+
+        // shows the value as read-only text until the user unlocks it
+        lockable?: boolean;
+
+        // an alternative way of setting the value. Rendered only while the field is editable
+        helperComponent?: React.ComponentType<{
+            onChange: (value: string | null) => void;
+            readOnly: boolean;
+        }>;
+    }
+
     // AUTHORING-REACT FIELD TYPES - date
 
     export type IDateValueOperational = string;
@@ -4110,6 +4127,9 @@ declare module 'superdesk-api' {
          * (it will be rendered in different DOM locations depending if field is in header or content section)
          */
         miniToolbar?: JSX.Element;
+
+        // small controls shown right after the field's label, like the sign off padlock
+        labelActions?: JSX.Element;
     }
 
     export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {

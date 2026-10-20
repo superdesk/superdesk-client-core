@@ -359,6 +359,13 @@ Two things to know before writing against the fields:
   ones already on the item, asynchronously, so two drops in a row compute the
   same key and the second replaces the first. Wait for each dropped item to
   appear before dropping the next.
+
+### The `sign-off-stale` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'sign-off-stale'})` gives you `main` plus a stale `fields_meta.sign_off` draft copy (one unstyled block, text `ADM`) on "test sports story", whose `sign_off` is `ADM`. Authoring-react used to save sign off as an editor3 field, which left this copy on items saved with it.
+
+Reach for it to check that a save no longer sends the stale copy, so the server appends the saving user's sign off. Do not use it for anything else: no other item carries `fields_meta.sign_off`.
+
 ### The `editor3-comments` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'editor3-comments'})` gives you `main`
