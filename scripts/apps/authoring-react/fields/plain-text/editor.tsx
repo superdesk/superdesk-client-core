@@ -40,7 +40,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
             <Container labelActions={lockButton || undefined}>
                 {
                     showValueOnly
-                        ? <div data-test-id="plain-text-value">{value}</div>
+                        ? <div className="plain-text-field__value" data-test-id="plain-text-value">{value}</div>
                         : (
                             <Input
                                 inlineLabel

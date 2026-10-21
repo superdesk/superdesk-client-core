@@ -191,6 +191,15 @@ $ednote-inset: 6px;
     line-height: 1.5;
 }
 
+// angular's `.text-field__non-editable` in apps/authoring/styles/themes.scss
+.plain-text-field__value {
+    font-size: 1.6rem;
+    line-height: 150%;
+    min-height: 2.7rem;
+    padding: 2px 0 0 1px;
+    word-break: break-all;
+}
+
 // Labels are grey, darker on hover and blue on focus, as in angular. Invalid labels are exempt: the
 // red is the only sign of the error.
 .authoring-section {
