@@ -214,6 +214,9 @@ declare module 'superdesk-api' {
         input: React.ReactNode;
         validationError?: string;
         miniToolbar?: React.ReactNode;
+
+        // a field relying on these, like a lockable one, can not be unlocked unless the template renders them
+        labelActions?: React.ReactNode;
     }
 
     interface IPropsAuthoring<T> {

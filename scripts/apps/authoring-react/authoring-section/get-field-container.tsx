@@ -54,10 +54,10 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                 return (
                     <FieldTemplate
                         field={field}
-                        // templates have no slot for label actions; dropping a lock button would leave its field locked
-                        input={<>{this.props.labelActions}{this.props.children}</>}
+                        input={this.props.children}
                         validationError={validationError}
                         miniToolbar={this.props.miniToolbar}
+                        labelActions={this.props.labelActions}
                     />
                 );
             }
