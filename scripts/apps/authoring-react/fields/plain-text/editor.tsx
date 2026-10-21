@@ -18,7 +18,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
 
     render() {
         const Container = this.props.container;
-        const {config, readOnly, value} = this.props;
+        const {config, value} = this.props;
+        const readOnly = this.props.readOnly || config.readOnly === true;
         const lockable = config.lockable === true;
         const showValueOnly = readOnly || (lockable && this.state.locked);
         const HelperComponent = config.helperComponent;

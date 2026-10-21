@@ -2,7 +2,7 @@ import {test, expect, Page, Response} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {loginAs, restoreDatabaseSnapshot} from './utils';
-import {getStorageState} from './utils/storage-state';
+import {getLoggedOutStorageState, getStorageState} from './utils/storage-state';
 
 const ITEM_HEADLINE = 'test sports story';
 
@@ -39,49 +39,45 @@ test.describe('sign off (authoring-react)', () => {
     test('drops a stale draft copy on save, so the server appends the saving user\'s sign off', async ({browser}) => {
         await restoreDatabaseSnapshot({snapshotName: 'sign-off-stale'});
 
-        const context = await browser.newContext({
-            storageState: {
-                cookies: [],
-                origins: [{
-                    origin: 'http://localhost:9000',
-                    localStorage: [{name: 'auth-react', value: 'true'}],
-                }],
-            },
-        });
-        const page = await context.newPage();
+        const context = await browser.newContext({storageState: getLoggedOutStorageState({authoringReact: true})});
 
-        await loginAs(page, 'samgamgee', 'samgamgee');
+        // a context made from `browser` outlives a failed test, leaving a logged-in session that can autosave
+        try {
+            const page = await context.newPage();
 
-        const authoring = await openItem(page);
-        const saveButton = page.getByRole('button', {name: 'Save', exact: true});
-        const signOffValue = authoring.fieldContainer('sign_off').getByTestId('plain-text-value');
+            await loginAs(page, 'samgamgee', 'samgamgee');
 
-        await expect(signOffValue).toHaveText('ADM');
-        await expect(saveButton).toBeDisabled();
+            const authoring = await openItem(page);
+            const saveButton = page.getByRole('button', {name: 'Save', exact: true});
+            const signOffValue = authoring.fieldContainer('sign_off').getByTestId('plain-text-value');
 
-        await editBody(page, authoring, 'First edit');
+            await expect(signOffValue).toHaveText('ADM');
+            await expect(saveButton).toBeDisabled();
 
-        const first = await saveAndCapture(page);
+            await editBody(page, authoring, 'First edit');
 
-        expect(first.request).not.toHaveProperty('sign_off');
-        expect(first.request.fields_meta ?? {}).not.toHaveProperty('sign_off');
-        expect(first.response.sign_off).toBe('ADM/SG');
-        await expect(signOffValue).toHaveText('ADM/SG');
-        await expect(saveButton).toBeDisabled();
+            const first = await saveAndCapture(page);
 
-        // Reopened rather than edited in place: an edit typed within about a second of a save is not
-        // tracked (a separate bug). Reopening also shows the server's value is what loads.
-        await openItem(page);
-        await expect(signOffValue).toHaveText('ADM/SG');
+            expect(first.request).not.toHaveProperty('sign_off');
+            expect(first.request.fields_meta ?? {}).not.toHaveProperty('sign_off');
+            expect(first.response.sign_off).toBe('ADM/SG');
+            await expect(signOffValue).toHaveText('ADM/SG');
+            await expect(saveButton).toBeDisabled();
 
-        await editBody(page, authoring, 'Second edit');
+            // Reopened rather than edited in place: an edit typed within about a second of a save is not
+            // tracked (a separate bug). Reopening also shows the server's value is what loads.
+            await openItem(page);
+            await expect(signOffValue).toHaveText('ADM/SG');
 
-        const second = await saveAndCapture(page);
+            await editBody(page, authoring, 'Second edit');
 
-        expect(second.request).not.toHaveProperty('sign_off');
-        expect(second.response.sign_off).toBe('ADM/SG');
+            const second = await saveAndCapture(page);
 
-        await context.close();
+            expect(second.request).not.toHaveProperty('sign_off');
+            expect(second.response.sign_off).toBe('ADM/SG');
+        } finally {
+            await context.close();
+        }
     });
 
     test.describe('as admin', () => {
