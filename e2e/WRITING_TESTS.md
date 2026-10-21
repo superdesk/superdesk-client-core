@@ -360,6 +360,14 @@ Two things to know before writing against the fields:
   same key and the second replaces the first. Wait for each dropped item to
   appear before dropping the next.
 
+### The `custom-fields` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'custom-fields'})` gives you `compare-fields` (urls, boolean and dropdown custom fields on the Story profile) plus an embed field, "Sample embed" (`sample_embed`), and the field toggle on `slugline` and `abstract`. "test sports story" carries two links in `sample_urls` and nothing in `sample_embed`.
+
+A toggleable field starts switched on only when it has a value. "test sports story" has a slugline and no abstract, so abstract opens switched off and renders its label and toggle but no input. Switch it on through `getByTestId('field-toggle').getByRole('checkbox')` (the switch is a `role="checkbox"` span) before typing into it.
+
+The custom fields are React-only in this snapshot's sense: angular renders `urls`, `boolean` and `dropdown` (`field_type: 'custom'`) as a bare label, so specs against them belong in `*.authoring-react.spec.ts`. In authoring-react address a field by its vocabulary id (`fieldContainer('sample_urls')`); its controls carry `url-item`, `url`, `url-description`, `embed-code` and `embed-description`.
+
 ### The `sign-off-stale` snapshot
 
 `restoreDatabaseSnapshot({snapshotName: 'sign-off-stale'})` gives you `main` plus a stale `fields_meta.sign_off` draft copy (one unstyled block, text `ADM`) on "test sports story", whose `sign_off` is `ADM`. Authoring-react used to save sign off as an editor3 field, which left this copy on items saved with it.
