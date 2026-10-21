@@ -25,7 +25,7 @@ export const getPlainTextField = (): IPlainTextField => {
         editorComponent: Editor,
         previewComponent: Preview,
         differenceComponent: Difference,
-        hasValue: (val) => typeof val === 'string' && val.length > 0,
+        hasValue: (val) => typeof val === 'string' && val.trim().length > 0,
         getEmptyValue: () => null,
     };
 };
