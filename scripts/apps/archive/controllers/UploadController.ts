@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {IArticle, IPTCMetadata} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
 import {showModal} from '@sourcefabric/common';
 import {sdApi} from 'api';
@@ -16,6 +16,7 @@ interface IStagedUpload {
     metadata_error?: string;
     confirmed?: boolean;
     meta: Partial<IArticle>;
+    iptc_metadata?: Partial<IPTCMetadata>;
     error?: string;
 }
 
@@ -198,16 +199,50 @@ export function UploadController(
         }
         item.staged = staged;
         item.processingConfirmed = item.processingConfirmed || staged.confirmed === true;
-        if (!item.metadataApplied && (staged.metadata_status !== 'pending' || staged.status === 'failed')) {
-            Object.assign(item.meta, {byline: $scope.currentUser.byline}, staged.meta);
-            item.metadataApplied = true;
+        if (!item.metadataApplied && item.metadataMapping == null
+            && (staged.metadata_status !== 'pending' || staged.status === 'failed')) {
             if (staged.metadata_status === 'failed') {
                 const message = staged.metadata_error
                     || gettext('Metadata extraction failed. Enter metadata manually.');
 
                 notify.warning(message);
             }
-            $scope.imagesMetadata = $scope.items.filter((i) => i.metadataApplied).map((i) => i.meta);
+            const meta = {...item.meta, byline: $scope.currentUser.byline, ...staged.meta};
+            const hooks = Object.values(extensions)
+                .filter(({activationResult}) => activationResult.contributions?.iptcMapping != null);
+            const finishMapping = (mapped: Partial<IArticle>) => {
+                if (item.discarded || item.processingError != null) {
+                    return;
+                }
+                item.meta = {...mapped, _id: item.meta_id};
+                item.metadataApplied = true;
+                $scope.imagesMetadata = $scope.items.filter((i) => i.metadataApplied).map((i) => i.meta);
+                updateProcessingState();
+            };
+
+            if (hooks.length === 0) {
+                finishMapping(meta);
+            } else {
+                const iptc = {
+                    'By-line': $scope.currentUser.byline,
+                    ..._.pickBy(staged.iptc_metadata, (value) => value != null && value !== ''),
+                };
+
+                item.metadataMapping = hooks.reduce(
+                    (previous, {activationResult}) => previous.then((mapped) =>
+                        activationResult.contributions.iptcMapping(iptc, mapped, $scope.parent),
+                    ),
+                    Promise.resolve<Partial<IArticle>>(meta),
+                ).then((mapped) => {
+                    $scope.$applyAsync(() => finishMapping(
+                        _.pickBy(mapped, (value) => value != null && value !== ''),
+                    ));
+                }).catch((reason) => {
+                    $scope.$applyAsync(() => failProcessing(
+                        item, reason?.message || gettext('Unable to apply upload metadata.'),
+                    ));
+                });
+            }
         }
         if (staged.status === 'ready') {
             $timeout.cancel(item.processingTimeout);

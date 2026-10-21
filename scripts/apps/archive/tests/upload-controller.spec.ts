@@ -1,10 +1,27 @@
 import {UploadController} from '../controllers/UploadController';
 import {sdApi} from 'api';
+import {extensions} from 'appConfig';
+import {IExtensionActivationResult} from 'superdesk-api';
 
 describe('upload controller staging', () => {
     beforeEach(() => {
         spyOn(sdApi.navigation, 'isPersonalSpace').and.returnValue(true);
     });
+
+    afterEach(() => {
+        delete extensions.uploadMetadataTest;
+        delete extensions.uploadMetadataSecondTest;
+    });
+
+    function registerHook(name: string, hook: IExtensionActivationResult['contributions']['iptcMapping']) {
+        const activationResult = {contributions: {iptcMapping: hook}};
+
+        extensions[name] = {
+            activationResult,
+            extension: {activate: () => Promise.resolve(activationResult)},
+            configuration: {},
+        };
+    }
 
     function staged(status = 'processing', metadataStatus = 'ready', meta = {}) {
         return {_id: 'staged-id', _etag: 'etag', status, metadata_status: metadataStatus, meta};
@@ -21,6 +38,7 @@ describe('upload controller staging', () => {
             pendingItems: [],
             items: [],
             processing: false,
+            metadataPending: false,
             failed: false,
             saving: false,
             removing: false,
@@ -29,6 +47,7 @@ describe('upload controller staging', () => {
             cancel: null,
             onRemoveItem: null,
             selectedDesk: undefined,
+            parent: undefined,
         };
         const timers = [];
         const timeout = Object.assign(
@@ -126,6 +145,77 @@ describe('upload controller staging', () => {
         scope.imagesMetadata[0].headline = 'Edited';
         await event(staged('ready', 'ready', {headline: 'Embedded'}));
         expect(scope.imagesMetadata[0].headline).toBe('Edited');
+    });
+
+    it('waits for hooks, runs them sequentially once, and saves their result without overwriting edits', async () => {
+        let complete;
+        const first = jasmine.createSpy('first').and.callFake((iptc, item) => new Promise((resolve) => {
+            complete = () => resolve({...item, slugline: iptc.ObjectName});
+        }));
+        const second = jasmine.createSpy('second').and.callFake(async (_iptc, item) => ({
+            ...item, headline: item.slugline + ' mapped',
+        }));
+
+        registerHook('uploadMetadataTest', first);
+        registerHook('uploadMetadataSecondTest', second);
+        const {scope, add, event, save} = setup();
+        const parent = {language: 'it'};
+        const iptc = {ObjectName: 'Photo'};
+
+        scope.parent = parent;
+        await add();
+        await event({...staged('processing'), iptc_metadata: iptc});
+        expect(scope.imagesMetadata).toEqual([]);
+        await expectAsync(scope.save()).toBeRejected();
+        expect(save).not.toHaveBeenCalled();
+        expect(second).not.toHaveBeenCalled();
+        expect(first.calls.mostRecent().args[0]).toEqual({...iptc, 'By-line': 'User'});
+        expect(first.calls.mostRecent().args[2]).toBe(parent);
+        await event(staged('ready'));
+        await expectAsync(scope.save()).toBeRejected();
+        complete();
+        await scope.items[0].metadataMapping;
+        expect(scope.imagesMetadata[0].headline).toBe('Photo mapped');
+        scope.imagesMetadata[0].headline = 'Edited';
+        await event(staged('ready', 'ready', {headline: 'Embedded'}));
+        await scope.save();
+        expect(first.calls.count()).toBe(1);
+        expect(second.calls.count()).toBe(1);
+        expect(save.calls.mostRecent().args[1]).toEqual(jasmine.objectContaining({
+            headline: 'Edited', slugline: 'Photo',
+        }));
+    });
+
+    it('reports rejected hooks and prevents committing incomplete metadata', async () => {
+        registerHook('uploadMetadataTest', () => Promise.reject(new Error('Vocabulary unavailable')));
+        const {scope, api, add, notify, save} = setup();
+
+        api.find.and.returnValue(Promise.resolve(staged('ready')));
+        await add(staged('ready'));
+        await scope.items[0].metadataMapping;
+        expect(scope.failed).toBe(true);
+        expect(notify.error).toHaveBeenCalledWith('Upload Error: media: Vocabulary unavailable');
+        await expectAsync(scope.save()).toBeRejected();
+        expect(save).not.toHaveBeenCalled();
+    });
+
+    it('does not restore removed uploads when a hook finishes', async () => {
+        let complete;
+
+        registerHook('uploadMetadataTest', (_iptc, item) => new Promise((resolve) => {
+            complete = () => resolve(item);
+        }));
+        const {scope, add, event} = setup();
+
+        await add();
+        await event(staged('processing'));
+        const item = scope.items[0];
+
+        await scope.onRemoveItem(item.meta);
+        complete();
+        await item.metadataMapping;
+        expect(scope.items).toEqual([]);
+        expect(scope.imagesMetadata).toEqual([]);
     });
 
     it('shows upload progress then a pending metadata preview without initializing the editor', async () => {
