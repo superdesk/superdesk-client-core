@@ -47,7 +47,7 @@ export function MultiImageEditController(
     content,
 ) {
     const saveHandler = $scope.saveHandler;
-    const editedMetadata: Record<string, unknown> = {};
+    let selectionInitialized = false;
     let unsavedChangesExist = false;
 
     $scope.images = [];
@@ -59,7 +59,7 @@ export function MultiImageEditController(
 
             return existingImage != null
                 ? existingImage
-                : {...image, ...angular.copy(editedMetadata)};
+                : {...image, selected: false};
         });
 
         $scope.images = angular.copy(updatedImages);
@@ -107,7 +107,10 @@ export function MultiImageEditController(
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            $scope.selectAll();
+            if (!selectionInitialized) {
+                selectionInitialized = true;
+                $scope.selectAll();
+            }
             updateMetadata();
         }
     });
@@ -124,7 +127,6 @@ export function MultiImageEditController(
 
         unsavedChangesExist = true;
         $scope.placeholder[field] = '';
-        editedMetadata[field] = angular.copy($scope.metadata?.[field]);
 
         $scope.images.forEach((item) => {
             if (item.selected) {

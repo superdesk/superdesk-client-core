@@ -56,12 +56,14 @@ describe('multi image edit controller', () => {
         $scope.imagesOriginal = [second, first];
         $rootScope.$digest();
         expect($scope.images[0].headline).toBe('Second image');
-        expect($scope.images[1]).toEqual({...first, selected: true});
+        expect($scope.images[1]).toEqual({...first, selected: false});
+        expect($scope.metadata.headline).toBe('Second image');
+        $scope.selectAll();
         expect($scope.placeholder.headline).toBe('(multiple values)');
         expect($scope.isDirty()).toBe(false);
     }));
 
-    it('applies only explicitly edited fields to images arriving later', inject(($rootScope, $controller) => {
+    it('limits edits to the current selection when more images arrive', inject(($rootScope, $controller) => {
         const $scope = $rootScope.$new();
 
         $scope.imagesOriginal = [{_id: 1, headline: 'First image', byline: 'First photographer'}];
@@ -75,11 +77,22 @@ describe('multi image edit controller', () => {
             {_id: 2, headline: 'Second image', byline: 'Second photographer'},
         ];
         $rootScope.$digest();
-        expect($scope.images.map((image) => image.headline)).toEqual(['Shared headline', 'Shared headline']);
+        expect($scope.images.map((image) => image.headline)).toEqual(['Shared headline', 'Second image']);
         expect($scope.images.map((image) => image.byline)).toEqual(['First photographer', 'Second photographer']);
+        expect($scope.getSelectedImages().map((image) => image._id)).toEqual([1]);
+        $scope.metadata.headline = 'Continued typing';
+        $scope.onChange('headline');
+        expect($scope.images[1].headline).toBe('Second image');
+        $scope.selectAll();
+        expect($scope.placeholder.headline).toBe('(multiple values)');
+        $scope.metadata.headline = 'Intentional bulk edit';
+        $scope.onChange('headline');
+        expect($scope.images.map((image) => image.headline)).toEqual([
+            'Intentional bulk edit', 'Intentional bulk edit',
+        ]);
     }));
 
-    it('preserves existing edits and copies explicit bulk edits without sharing nested data',
+    it('preserves cleared and nested edits without applying them to later arrivals',
         inject(($rootScope, $controller) => {
             const $scope = $rootScope.$new();
 
@@ -95,9 +108,25 @@ describe('multi image edit controller', () => {
                 {_id: 2, headline: 'Second image', extra: {location: 'Prague'}},
             ];
             $rootScope.$digest();
-            expect($scope.images.map((image) => image.headline)).toEqual(['', '']);
-            expect($scope.images.map((image) => image.extra.location)).toEqual(['Edited', 'Edited']);
+            expect($scope.images.map((image) => image.headline)).toEqual(['', 'Second image']);
+            expect($scope.images.map((image) => image.extra.location)).toEqual(['Edited', 'Prague']);
             $scope.images[1].extra.location = 'Individual edit';
             expect($scope.images[0].extra.location).toBe('Edited');
+        }));
+
+    it('selects the first ready batch but preserves deselection when later images arrive',
+        inject(($rootScope, $controller) => {
+            const $scope = $rootScope.$new();
+
+            $scope.imagesOriginal = [];
+            $controller(MultiImageEditController, {$scope});
+            $rootScope.$digest();
+            $scope.imagesOriginal = [{_id: 1}, {_id: 2}];
+            $rootScope.$digest();
+            expect($scope.getSelectedImages().length).toBe(2);
+            $scope.unselectAll();
+            $scope.imagesOriginal = [...$scope.imagesOriginal, {_id: 3}];
+            $rootScope.$digest();
+            expect($scope.getSelectedImages()).toEqual([]);
         }));
 });
