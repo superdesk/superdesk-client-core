@@ -81,7 +81,7 @@ const appConfig: ISuperdeskGlobalConfig = window['appConfigLoaded'];
 //
 // SETTING UI LANGUAGE
 //
-const language = getUserLanguage();
+const language = getUserLanguage(appConfig);
 
 window['user-interface-language'] = language;
 
