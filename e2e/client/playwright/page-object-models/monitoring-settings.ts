@@ -9,9 +9,8 @@ const MONITORING_PREFERENCE_KEY = 'agg:view';
  * Drives the "Monitoring settings" wizard modal
  * (`scripts/apps/monitoring/views/aggregate-settings.html`).
  *
- * The same template backs the desk variant reached from `/#/settings/desks` and the
- * workspace variant reached from the monitoring toolbar, so the modal's test id reads
- * `desk--monitoring-settings` in both cases.
+ * The same template backs the desk and workspace variants, so the modal's test id reads
+ * `desk--monitoring-settings` in both.
  */
 export class MonitoringSettings {
     private page: Page;
@@ -24,10 +23,7 @@ export class MonitoringSettings {
         return this.page.getByTestId('desk--monitoring-settings');
     }
 
-    /**
-     * Opens the wizard from the monitoring toolbar. The toolbar button only renders while a
-     * custom workspace is selected; desks configure monitoring from the desk settings page.
-     */
+    // The toolbar button only renders while a custom workspace is selected.
     async open(): Promise<void> {
         await this.page.getByTestId('monitoring-settings-button').click();
         await expect(this.modal).toBeVisible();
@@ -39,8 +35,7 @@ export class MonitoringSettings {
 
     /**
      * The wizard marks the selected step on the `<li>` wrapping the tab button
-     * (`template/wizard.html` in superdesk-ui-framework); the button itself carries no state,
-     * and the template lives in a dependency so it cannot get a test id of its own.
+     * (`template/wizard.html` in superdesk-ui-framework), which cannot get a test id.
      *
      * The `has` locator is resolved inside each `<li>`, so it must start at the page root
      * rather than reuse `tab()`, which is already scoped to the modal.
@@ -84,10 +79,7 @@ export class MonitoringSettings {
         return this.modal.getByTestId('private-saved-searches');
     }
 
-    /**
-     * `sd-toggle-box` renders a React box whose header is the only element that toggles it;
-     * it comes from superdesk-ui-framework, so it is reachable by class only.
-     */
+    // `sd-toggle-box` comes from superdesk-ui-framework, so its header is reachable by class only.
     toggleBoxHeader(toggleBox: Locator): Locator {
         return toggleBox.locator('.toggle-box__header');
     }

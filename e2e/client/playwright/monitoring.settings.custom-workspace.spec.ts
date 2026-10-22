@@ -8,11 +8,10 @@ import {restoreDatabaseSnapshot} from './utils';
  * All three tests in this file cover that one case; the annotation sits on the first of them,
  * because the suite keeps one annotation per case id.
  *
- * The desk variant of the same wizard (confluence 1315934715) is covered by
- * `monitoring.settings.spec.ts`; it reaches the wizard from `/#/settings/desks` and only
- * asserts that an enabled global saved search shows up on the desk's monitoring view. The
- * workspace variant covered here uses the monitoring toolbar entry point, which is the only
- * one that offers private saved searches (`showPrivateSavedSearches` in AggregateSettings).
+ * The desk variant (confluence 1315934715) is covered by `monitoring.settings.spec.ts`, which
+ * only asserts that an enabled global saved search shows up on the desk's monitoring view.
+ * The workspace variant covered here is the only one that offers private saved searches
+ * (`showPrivateSavedSearches` in AggregateSettings).
  */
 
 const WORKSPACE = 'Workspace 1';
@@ -23,13 +22,12 @@ function monitoringGroup(page: Page, name: string): Locator {
 }
 
 /**
- * The `main` snapshot ships two global saved searches and no private one, so the private
- * list has to be seeded here. Saving a search is a single atomic flow (the narrow
- * in-test precondition allowed by e2e/WRITING_TESTS.md), not a loop of UI actions.
+ * The `main` snapshot has no private saved search, so one is seeded here through the UI
+ * (a narrow precondition allowed by e2e/WRITING_TESTS.md).
  *
  * `Save Search` is gated on `searching()`, which is just "the URL carries query params"
- * (SearchPanel.ts), so a `q` parameter is enough to reveal it. That same `q` also opens the
- * filters panel (`flags.facets` in SearchContainer.ts), so the panel must not be toggled here.
+ * (SearchPanel.ts), so a `q` parameter reveals it. That `q` also opens the filters panel
+ * (`flags.facets` in SearchContainer.ts), so do not toggle the panel.
  */
 async function createPrivateSavedSearch(page: Page, name: string): Promise<void> {
     await page.goto('/#/search?q=story');
@@ -42,8 +40,8 @@ async function createPrivateSavedSearch(page: Page, name: string): Promise<void>
     await panel.getByTestId('search-name').fill(name);
     await panel.getByTestId('save').click();
 
-    // The panel closes on both success and failure (SaveSearch.ts), so confirm the search was
-    // really persisted: only a successful save switches the side panel to the "Saved" tab.
+    // The panel closes on both success and failure (SaveSearch.ts); only a successful save
+    // switches the side panel to the "Saved" tab.
     await expect(
         page.getByTestId('saved-searches-panel--user').getByTestId('saved-search').filter({hasText: name}),
     ).toHaveCount(1);
@@ -55,11 +53,10 @@ async function openWorkspaceMonitoringSettings(page: Page): Promise<MonitoringSe
 
     await page.goto('/#/workspace/monitoring');
 
-    // Superdesk routes on the URL fragment, so arriving from another view never reboots the
-    // Angular app. SavedSearchService caches the whole saved-search list for the app's lifetime
-    // and only drops it on the `savedsearch:update` websocket event, whose arrival is not
-    // ordered against navigation, so a search created earlier in the test can be missing from
-    // the wizard. Reloading starts the app fresh on the monitoring view.
+    // SavedSearchService caches the saved-search list for the app's lifetime and only drops it
+    // on the `savedsearch:update` websocket event, which is not ordered against navigation, so
+    // a search created earlier in the test can be missing from the wizard. Navigating by URL
+    // fragment never reboots the app, hence the reload.
     await page.reload();
 
     await monitoring.selectDeskOrWorkspace(WORKSPACE);
@@ -162,9 +159,9 @@ test('wizard navigation preserves saved search selection and Done applies it', a
 
     await settings.closeWithDone();
 
-    // Saving kicks off the preference write and the in-place group refresh at the same time
-    // (AggregateSettings.save), so the still-open view can be one refresh behind. The QA case
-    // leaves and re-enters the monitoring view here, which is what this reload reproduces.
+    // Saving starts the preference write and the in-place group refresh at the same time
+    // (AggregateSettings.save), so the open view can be one refresh behind. The QA case leaves
+    // and re-enters the monitoring view here, which the reload reproduces.
     await page.reload();
     await monitoring.selectDeskOrWorkspace(WORKSPACE);
 
@@ -190,8 +187,8 @@ test('cancelling monitoring settings discards the saved search selection', async
     await page.reload();
     await monitoring.selectDeskOrWorkspace(WORKSPACE);
 
-    // the toolbar button only renders for a workspace selection, so it anchors the negative
-    // assertion below to a monitoring view that has actually finished rendering
+    // The toolbar button only renders for a workspace, so it shows the view has finished
+    // rendering before the negative assertion below.
     await expect(page.getByTestId('monitoring-settings-button')).toBeVisible();
     await expect(monitoringGroup(page, 'Technology')).toHaveCount(0);
 
