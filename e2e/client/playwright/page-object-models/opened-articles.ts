@@ -1,9 +1,8 @@
 import {Locator, Page, expect} from '@playwright/test';
 
 /**
- * The bar at the bottom of the workspace listing the articles the current user
- * has open, and the fullscreen "Currently working on" view its Open Items icon
- * opens.
+ * The bar listing the articles the current user has open, and the fullscreen
+ * "Currently working on" view opened by its Open Items icon.
  */
 export class OpenedArticles {
     private page: Page;

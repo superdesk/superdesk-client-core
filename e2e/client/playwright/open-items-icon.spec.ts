@@ -6,16 +6,11 @@ import {restoreDatabaseSnapshot} from './utils';
 /**
  * QA case "Open items icon" (1308524865).
  *
- * The Open Items icon in the opened-articles bar opens a fullscreen view listing
- * every article the user currently has open. Picking one there returns to the
- * workspace with that article in the editor; the X in the top right corner
- * leaves the view without changing what is open.
- *
  * The main snapshot already ships two articles locked by the admin, so they sit
  * in the opened-articles bar from the start. Neither has a headline, and the
- * dashboard cards are labelled by headline alone, so the spec opens
- * "test sports story" as the article it picks in the dashboard and uses one of
- * the snapshot ones only as the article the editor is switched away from.
+ * dashboard cards are labelled by headline alone, so the spec picks
+ * "test sports story" in the dashboard and uses one of the snapshot articles
+ * only as the one the editor is switched away from.
  */
 test.describe('open items icon', () => {
     const SELECTED_ARTICLE = 'test sports story';
@@ -42,8 +37,7 @@ test.describe('open items icon', () => {
         await expect(slugline).toHaveValue(SELECTED_ARTICLE);
         await expect(openedArticles.getBarItems()).toHaveCount(TOTAL_OPEN_ARTICLES);
 
-        // Leave the editor on a different article, so opening one from the
-        // dashboard has an observable effect.
+        // Switch the editor away first so that picking from the dashboard has an observable effect.
         await openedArticles.getBarItem(OTHER_ARTICLE).click();
         await expect(slugline).toHaveValue(OTHER_ARTICLE);
 
@@ -63,8 +57,7 @@ test.describe('open items icon', () => {
         await openedArticles.openDashboard();
         await openedArticles.closeDashboard();
 
-        // Leaving through the X only dismisses the view: nothing is closed and the
-        // editor keeps the article that was selected.
+        // The X only dismisses the view: nothing gets closed.
         await expect(slugline).toHaveValue(SELECTED_ARTICLE);
         await expect(openedArticles.getBarItems()).toHaveCount(TOTAL_OPEN_ARTICLES);
     });
