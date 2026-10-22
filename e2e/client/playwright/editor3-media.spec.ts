@@ -7,8 +7,8 @@ import {restoreDatabaseSnapshot} from './utils';
 import {addEditor3MediaByDrag, setEditor3FieldValue} from './utils/editor3';
 
 /**
- * Editor3 media QA cases: adding a picture, an audio file and a video to the
- * article Body, and the preview each of them renders inside the editor.
+ * Editor3 media QA cases: adding a picture, audio or video to the article Body and
+ * the preview each renders in the editor.
  *
  * Not covered, per case:
  *
@@ -108,10 +108,9 @@ test.describe('media in the article body', () => {
     }
 
     /**
-     * Leaves the article open on a media block that has already been saved once, which
-     * is the state every preview case starts from ("open the article for editing" with
-     * the Save button inactive). Inserting the block dirties the article, so it has to
-     * be saved and the article reopened before Save can be asserted inactive again.
+     * Leaves the article open on a media block that has already been saved once, the
+     * state every preview case starts from (Save inactive). Inserting the block dirties
+     * the article, so it is saved and reopened first.
      */
     async function openArticleWithMedia(
         page: Page,
