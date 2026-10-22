@@ -199,6 +199,7 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await authoring.save();
 
         await expect(page.getByTestId('authoring')).toBeVisible();
+        await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeDisabled();
         await expect(withLabel(monitoringItems(page), SAVED.headline)).toBeVisible();
 
         const abstractAutosaved = page.waitForRequest(
