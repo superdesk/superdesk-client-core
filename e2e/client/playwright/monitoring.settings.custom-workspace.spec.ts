@@ -125,6 +125,12 @@ test('wizard navigation preserves saved search selection and Done applies it', a
     const monitoring = new Monitoring(page);
     const settings = await openWorkspaceMonitoringSettings(page);
 
+    // Workspace 1 starts with the Sports desk groups only, so their presence shows the view
+    // behind the dialog has rendered before the absence checks.
+    await expect(page.getByTestId('monitoring-view').getByTestId('monitoring-group').first()).toBeVisible();
+    await expect(monitoringGroup(page, 'Malaysia')).toHaveCount(0);
+    await expect(monitoringGroup(page, PRIVATE_SEARCH)).toHaveCount(0);
+
     await settings.expectActiveTab('Desks');
     await expect(settings.previousButton).toBeHidden();
     await expect(settings.nextButton).toBeVisible();
@@ -143,6 +149,15 @@ test('wizard navigation preserves saved search selection and Done applies it', a
     await settings.previousButton.click();
     await settings.expectActiveTab('Desks');
     await expect(settings.previousButton).toBeHidden();
+
+    const cancelBox = await settings.cancelButton.boundingBox();
+    const nextBox = await settings.nextButton.boundingBox();
+
+    if (cancelBox == null || nextBox == null) {
+        throw new Error('monitoring settings footer buttons are not laid out');
+    }
+
+    expect(nextBox.x).toBeGreaterThanOrEqual(cancelBox.x + cancelBox.width);
 
     await settings.nextButton.click();
     await settings.expectActiveTab('Saved Searches');
@@ -167,6 +182,7 @@ test('wizard navigation preserves saved search selection and Done applies it', a
 
     await expect(monitoringGroup(page, 'Malaysia')).toBeVisible();
     await expect(monitoringGroup(page, PRIVATE_SEARCH)).toBeVisible();
+    await expect(monitoringGroup(page, 'Technology')).toHaveCount(0);
 });
 
 test('cancelling monitoring settings discards the saved search selection', async ({page}) => {
