@@ -48,13 +48,8 @@ const ANCHOR_ARTICLE = 'test sports story';
 /** Matches SAVED.headline, and snapshot articles besides, so the filtered list is never empty. */
 const SEARCH_TERM = 'story';
 
-/**
- * Narrows a list of `article-item`s to the one labelled `label`.
- *
- * The label is the item's headline (`getArticleLabel` in core/utils), exposed as
- * `data-test-value`, which is an attribute rather than text so it cannot be matched
- * with `filter({hasText})`.
- */
+// The label is the item's headline (`getArticleLabel` in core/utils), exposed as the
+// `data-test-value` attribute, so `filter({hasText})` cannot match it.
 function withLabel(items: Locator, label: string): Locator {
     return items.and(items.page().locator(`[data-test-value="${label}"]`));
 }
@@ -74,10 +69,7 @@ async function openSportsMonitoring(page: Page, monitoring: Monitoring): Promise
     await expect(withLabel(monitoringItems(page), ANCHOR_ARTICLE)).toBeVisible();
 }
 
-/**
- * Opens global search and returns its result items, with the unfiltered list
- * awaited for the same reason as in `openSportsMonitoring`.
- */
+// Waits for the unfiltered list, like `openSportsMonitoring`.
 async function openGlobalSearch(page: Page): Promise<Locator> {
     await page.goto('/#/search');
 
@@ -92,7 +84,7 @@ function sluglineField(page: Page): Locator {
     return page.getByTestId('authoring').getByTestId('field-slugline');
 }
 
-/** Id of the article authoring has open, from the `item` parameter opening one writes into the URL. */
+// Read from the `item` URL parameter that opening an article writes.
 function openArticleId(page: Page): string {
     const match = page.url().match(/[?&]item=([^&]+)/);
 
@@ -104,9 +96,9 @@ function openArticleId(page: Page): string {
 }
 
 /**
- * Response status of `<resource>/<articleId>`, so 200 means the record exists and 404
- * means it is gone. Authenticated with the session token the client keeps in
- * localStorage, already in the form the API expects as an Authorization header.
+ * Response status of `<resource>/<articleId>`: 200 means the record exists, 404 that it is
+ * gone. The session token in localStorage is already in the form the Authorization header
+ * expects.
  */
 async function recordStatus(page: Page, resource: string, articleId: string): Promise<number> {
     const token = await page.evaluate(() => window.localStorage.getItem('sess:token'));
@@ -155,8 +147,7 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         const articleId = openArticleId(page);
         const topbar = page.getByTestId('authoring-topbar');
 
-        // the article is already in archive at this point, which is what makes the
-        // absence check after Ignore mean something
+        // Without this, the absence check after Ignore would prove nothing.
         expect(await recordStatus(page, 'archive', articleId)).toBe(200);
 
         // an article straight from the template has no edits of its own to persist
@@ -185,8 +176,7 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await expect(page.getByTestId('authoring')).toBeHidden();
         await expect(withLabel(monitoringItems(page), ANCHOR_ARTICLE)).toBeVisible();
 
-        // expected result 2 in full: Ignore took the stub back out of archive.
-        // Polled because the delete is still in flight while the view closes
+        // Polled because the delete is still in flight while the view closes.
         await expect.poll(() => recordStatus(page, 'archive', articleId)).toBe(404);
     });
 
@@ -208,7 +198,6 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
 
         await authoring.save();
 
-        // saving from the topbar keeps the article open; only Close leaves it
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(withLabel(monitoringItems(page), SAVED.headline)).toBeVisible();
 
