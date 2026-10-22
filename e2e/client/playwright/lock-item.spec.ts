@@ -59,7 +59,7 @@ test.describe('locking an item that is open for editing', {
 
             await lockOwnerItem.dblclick();
 
-            // Save proves the item opened for editing rather than read-only.
+            // Save is only offered when the item opened for editing, not read-only.
             await expect(lockOwnerPage.getByTestId('authoring-topbar').getByTestId('save')).toBeVisible();
 
             // `article-item-locked` marks the red-striped list item, in the lock owner's list too.
@@ -92,8 +92,8 @@ test.describe('locking an item that is open for editing', {
             const body = authoring.getByTestId('authoring-field').and(page.locator('[data-test-value="body_html"]'));
             const slugline = authoring.getByTestId('field-slugline');
 
-            // Fields render with their values, and every editable surface is inert:
-            // editor3 fields drop to contenteditable="false", plain inputs are disabled.
+            // Every editable surface is inert: editor3 fields get contenteditable="false",
+            // plain inputs are disabled.
             await expect(headline).toContainText(ARTICLE);
             await expect(headline.getByTestId('editor3').locator('[contenteditable]'))
                 .toHaveAttribute('contenteditable', 'false');
@@ -120,7 +120,7 @@ test.describe('locking an item that is open for editing', {
             await topbar.getByTestId('close').click();
             await expect(authoring).toHaveCount(0);
 
-            // Double clicking a locked item reopens it read-only rather than for editing.
+            // A locked item reopens read-only on double click.
             await item.dblclick();
             await expect(authoring).toBeVisible();
             await expect(topbar.getByTestId('locked-info')).toBeVisible();
