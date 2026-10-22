@@ -1,7 +1,6 @@
-import {test, expect, type Locator} from '@playwright/test';
+import {test, expect, type Locator, type Page} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {restoreDatabaseSnapshot} from './utils';
 import {
     EDITOR3_ACTIVE_BUTTON,
@@ -10,205 +9,184 @@ import {
     pressRepeatedly,
 } from './utils/editor3';
 
-test.describe('heading formatting in the article body', () => {
+// Each test walks the full toggle cycle six times and then a save/close/reopen round-trip,
+// which does not fit the default per-test budget.
+test.setTimeout(120000);
+
+test.describe('heading formatting in editor3 fields', () => {
     type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
     // Draft.js renders every block as the element its block type maps to, tagged with
-    // `data-block`. Headings map to their own tag, an unstyled block to a `div`.
+    // `data-block`. Headings map to their own tag, an unstyled block to a `div`. For
+    // headings the formatting-option id on the toolbar button and the rendered tag coincide.
     type BlockTag = HeadingTag | 'div';
 
     const REGULAR_TAG: BlockTag = 'div';
 
-    // The formatting-option id the toolbar button carries in `data-test-value` and the tag
-    // the block is rendered as are separate namespaces that only coincide for headings, so
-    // they are kept as separate constants.
-    const HEADING_OPTION = 'h2';
-    const HEADING_TAG: BlockTag = 'h2';
-
     const HEADING_TAGS: Array<HeadingTag> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
-    function blockWithText(body: Locator, tag: BlockTag, text: string): Locator {
-        return body.locator(`${tag}[data-block="true"]`).filter({hasText: text});
+    // `editor3-formats` enables all six heading levels on the Story profile's body_html and
+    // on its custom editor3 text field, which the Angular authoring view keys by display name.
+    const SNAPSHOT = {snapshotName: 'editor3-formats'};
+    const CUSTOM_FIELD = 'Sample rich text';
+
+    function blockWithText(field: Locator, tag: BlockTag, text: string): Locator {
+        return field.locator(`${tag}[data-block="true"]`).filter({hasText: text});
     }
 
-    async function expectBlockTag(body: Locator, tag: BlockTag, text: string): Promise<void> {
-        await expect(blockWithText(body, tag, text)).toHaveCount(1);
+    async function expectBlockTag(field: Locator, tag: BlockTag, text: string): Promise<void> {
+        await expect(blockWithText(field, tag, text)).toHaveCount(1);
     }
 
-    test('toolbar toggle makes typed text and a selection a heading, and the result survives reopen', {
-        annotation: [
-            // Drives the full toggle cycle (steps 2-7) for H2, the only level the `main` snapshot
-            // enables; the test below applies the other five levels but does not repeat the
-            // off-toggle and selection steps for them.
-            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
-        ],
-    }, async ({page}) => {
-        const HEADLINE = 'heading formatting test';
+    // Each stretch of text is typed as two halves, so "select part of the text" is a fixed
+    // number of Shift+Arrow presses and each half is addressable on its own. The level is
+    // part of every text so the blocks of the six cycles stay distinguishable.
+    function textsFor(tag: HeadingTag) {
+        return {
+            typedHeading: `alpha${tag}`,
+            typedRegular: `bravo${tag}`,
+            regularHead: `charlie${tag}`,
+            regularTail: `delta${tag}`,
+            headingHead: `echo${tag}`,
+            headingTail: `foxtrot${tag}`,
+        };
+    }
 
-        // Each stretch of text is typed as two halves, so "select part of the text" is
-        // a fixed number of Shift+Arrow presses and each half is addressable on its own.
-        const TYPED_HEADING = 'alpha';
-        const TYPED_REGULAR = 'bravo';
-        const HEADING_HEAD = 'charlie';
-        const HEADING_TAIL = 'delta';
-        const REGULAR_HEAD = 'echo';
-        const REGULAR_TAIL = 'foxtrot';
+    /** The block tag every text of a level's cycle ends up with. */
+    function expectedTagsFor(tag: HeadingTag): Array<[BlockTag, string]> {
+        const texts = textsFor(tag);
 
-        await restoreDatabaseSnapshot();
+        return [
+            [REGULAR_TAG, texts.typedHeading],
+            [REGULAR_TAG, texts.typedRegular],
+            [tag, texts.regularHead],
+            [tag, texts.regularTail],
+            [REGULAR_TAG, texts.headingHead],
+            [REGULAR_TAG, texts.headingTail],
+        ];
+    }
 
-        const authoring = new Authoring(page);
-        const monitoring = new Monitoring(page);
+    /**
+     * Steps 2-7 of the case for one heading level, starting with the caret in an empty
+     * regular block of `field` and leaving it in a new empty regular block.
+     */
+    async function runHeadingCycle(page: Page, field: Locator, tag: HeadingTag): Promise<void> {
+        const button = getEditor3FormattingOptionButton(field, tag);
+        const texts = textsFor(tag);
 
-        await page.goto('/#/workspace/monitoring');
-        await monitoring.selectDeskOrWorkspace('Sports');
-        await monitoring.createArticleFromDefaultTemplate();
+        await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await button.click();
+        await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
 
-        const headline = page.getByTestId('field--headline').getByRole('textbox');
+        await page.keyboard.type(texts.typedHeading);
+        await expectBlockTag(field, tag, texts.typedHeading);
 
-        await expect(headline).toBeVisible();
-        await headline.fill(HEADLINE);
-        await expect(headline).toHaveText(HEADLINE);
+        // A heading is a block style, so turning it off converts the block the caret is in,
+        // including the text already typed into it.
+        await button.click();
+        await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
 
-        const body = getEditor3Field(page, 'body_html');
-        const bodyInput = body.getByRole('textbox');
-        const headingButton = getEditor3FormattingOptionButton(body, HEADING_OPTION);
-
-        await expect(bodyInput).toBeVisible();
-        await bodyInput.click();
-
-        await expect(headingButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await headingButton.click();
-        await expect(headingButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-
-        await page.keyboard.type(TYPED_HEADING);
-        await expectBlockTag(body, HEADING_TAG, TYPED_HEADING);
-
-        await headingButton.click();
-        await expect(headingButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
-
-        await page.keyboard.type(TYPED_REGULAR);
-        await expectBlockTag(body, REGULAR_TAG, TYPED_REGULAR);
-        await expect(body.locator(`${HEADING_TAG}[data-block="true"]`)).toHaveCount(0);
+        await page.keyboard.type(texts.typedRegular);
+        await expectBlockTag(field, REGULAR_TAG, texts.typedRegular);
+        await expect(field.locator(`${tag}[data-block="true"]`)).toHaveCount(0);
 
         await page.keyboard.press('Enter');
 
-        await headingButton.click();
-        await expect(headingButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await page.keyboard.type(texts.regularHead + texts.regularTail);
+        await expectBlockTag(field, REGULAR_TAG, texts.regularHead);
 
-        await page.keyboard.type(HEADING_HEAD + HEADING_TAIL);
-        await expectBlockTag(body, HEADING_TAG, HEADING_HEAD);
+        await pressRepeatedly(page, 'Shift+ArrowLeft', texts.regularTail.length);
 
-        // The caret sits at the end of the heading; select its second half. A heading is a
-        // block style, so toggling it off over that selection converts the whole paragraph.
-        await pressRepeatedly(page, 'Shift+ArrowLeft', HEADING_TAIL.length);
+        await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await button.click();
+        await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await expectBlockTag(field, tag, texts.regularTail);
+        await expectBlockTag(field, tag, texts.regularHead);
 
-        await expect(headingButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await headingButton.click();
-        await expect(headingButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await expectBlockTag(body, REGULAR_TAG, HEADING_TAIL);
-        await expectBlockTag(body, REGULAR_TAG, HEADING_HEAD);
-
-        // ArrowRight collapses the selection to its end, which is the end of the
-        // paragraph; Enter then starts a new one.
+        // ArrowRight collapses the selection to its end, which is the end of the heading;
+        // Enter then starts a new block that keeps the heading level.
         await page.keyboard.press('ArrowRight');
         await page.keyboard.press('Enter');
+        await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
 
-        await page.keyboard.type(REGULAR_HEAD + REGULAR_TAIL);
-        await expectBlockTag(body, REGULAR_TAG, REGULAR_HEAD);
+        await page.keyboard.type(texts.headingHead + texts.headingTail);
+        await expectBlockTag(field, tag, texts.headingHead);
 
-        await pressRepeatedly(page, 'Shift+ArrowLeft', REGULAR_TAIL.length);
+        await pressRepeatedly(page, 'Shift+ArrowLeft', texts.headingTail.length);
 
-        await expect(headingButton).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await headingButton.click();
-        await expect(headingButton).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-        await expectBlockTag(body, HEADING_TAG, REGULAR_TAIL);
-        await expectBlockTag(body, HEADING_TAG, REGULAR_HEAD);
+        await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await button.click();
+        await expect(button).not.toHaveClass(EDITOR3_ACTIVE_BUTTON);
+        await expectBlockTag(field, REGULAR_TAG, texts.headingTail);
+        await expectBlockTag(field, REGULAR_TAG, texts.headingHead);
 
-        await authoring.closeSavingChanges();
+        await page.keyboard.press('ArrowRight');
+        await page.keyboard.press('Enter');
+    }
 
-        await monitoring.getArticleLocator(HEADLINE).dblclick();
-        await expect(bodyInput).toBeVisible();
-
-        await expect(headline).toHaveText(HEADLINE);
-        await expectBlockTag(body, REGULAR_TAG, TYPED_HEADING);
-        await expectBlockTag(body, REGULAR_TAG, TYPED_REGULAR);
-        await expectBlockTag(body, REGULAR_TAG, HEADING_HEAD);
-        await expectBlockTag(body, REGULAR_TAG, HEADING_TAIL);
-        await expectBlockTag(body, HEADING_TAG, REGULAR_HEAD);
-        await expectBlockTag(body, HEADING_TAG, REGULAR_TAIL);
-    });
-
-    test('every heading level H1-H6 applies its own tag, and the result survives reopen', {
-        annotation: [
-            // Covers applying each of the six heading levels and its persistence; the off-toggle
-            // and selection-based steps are covered for H2 only, in the test above.
-            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
-        ],
-    }, async ({page}) => {
-        const HEADLINE = 'heading levels test';
-        const textFor = (tag: HeadingTag): string => `heading level ${tag}`;
-
-        await restoreDatabaseSnapshot();
+    /**
+     * Creates an article, runs the toggle cycle for every heading level in the editor3
+     * field `fieldId`, and checks every block's level again after a save/close/reopen.
+     */
+    async function runHeadingsCase(page: Page, fieldId: string, headline: string): Promise<void> {
+        await restoreDatabaseSnapshot(SNAPSHOT);
 
         const authoring = new Authoring(page);
         const monitoring = new Monitoring(page);
 
-        // `main` lists only h2 among the Story profile's body_html formatting options, so the
-        // other five heading buttons do not render until the profile is told to offer them.
-        await page.goto('/#/settings/content-profiles');
-        await new ContentProfileSettings(page).addFormattingOptionToContentProfile({
-            profileName: 'Story',
-            sectionName: 'Content fields',
-            fieldName: 'Body HTML',
-            formattingOptionsToAdd: [...HEADING_TAGS],
-        });
-
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
+
+        // The restore reaches the search index asynchronously; a rerun could otherwise be
+        // served the article the previous run created and edit that one.
+        await expect(monitoring.getArticleLocator('test sports story')).toBeVisible();
+        await expect(monitoring.getArticleLocator(headline)).toHaveCount(0);
+
         await monitoring.createArticleFromDefaultTemplate();
 
-        const headline = page.getByTestId('field--headline').getByRole('textbox');
+        const headlineInput = page.getByTestId('field--headline').getByRole('textbox');
 
-        await expect(headline).toBeVisible();
-        await headline.fill(HEADLINE);
-        await expect(headline).toHaveText(HEADLINE);
+        await expect(headlineInput).toBeVisible();
+        await headlineInput.fill(headline);
+        await expect(headlineInput).toHaveText(headline);
 
-        const body = getEditor3Field(page, 'body_html');
-        const bodyInput = body.getByRole('textbox');
+        const field = getEditor3Field(page, fieldId);
+        const input = field.getByRole('textbox');
 
-        await expect(bodyInput).toBeVisible();
-        await bodyInput.click();
+        await expect(input).toBeVisible();
+        await input.click();
 
         for (const tag of HEADING_TAGS) {
-            await expect(getEditor3FormattingOptionButton(body, tag)).toBeVisible();
-        }
-
-        for (let index = 0; index < HEADING_TAGS.length; index++) {
-            const tag = HEADING_TAGS[index];
-            const button = getEditor3FormattingOptionButton(body, tag);
-
-            if (index > 0) {
-                // Enter splits off a new block that keeps the previous heading level, so the
-                // click below switches level rather than turning a heading on from scratch.
-                await page.keyboard.press('Enter');
-            }
-
-            await button.click();
-            await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
-
-            await page.keyboard.type(textFor(tag));
-            await expectBlockTag(body, tag, textFor(tag));
+            await runHeadingCycle(page, field, tag);
         }
 
         await authoring.closeSavingChanges();
 
-        await monitoring.getArticleLocator(HEADLINE).dblclick();
-        await expect(bodyInput).toBeVisible();
+        await monitoring.getArticleLocator(headline).dblclick();
+        await expect(input).toBeVisible();
 
-        await expect(headline).toHaveText(HEADLINE);
+        await expect(headlineInput).toHaveText(headline);
 
         for (const tag of HEADING_TAGS) {
-            await expectBlockTag(body, tag, textFor(tag));
+            for (const [blockTag, text] of expectedTagsFor(tag)) {
+                await expectBlockTag(field, blockTag, text);
+            }
         }
+    }
+
+    test('every heading level H1-H6 toggles on typed text and a selection in the body, and survives reopen', {
+        annotation: [
+            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
+        ],
+    }, async ({page}) => {
+        await runHeadingsCase(page, 'body_html', 'heading formatting test');
+    });
+
+    test('every heading level H1-H6 toggles on typed text and a selection in a custom field, and survives reopen', {
+        annotation: [
+            {type: 'confluence', description: '1313669351 complete'}, // Headings H1-H6
+        ],
+    }, async ({page}) => {
+        await runHeadingsCase(page, CUSTOM_FIELD, 'heading custom field test');
     });
 });
