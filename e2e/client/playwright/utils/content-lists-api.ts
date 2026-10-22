@@ -41,7 +41,7 @@ function getToken(): string {
     return entry.value;
 }
 
-async function withApiContext<T>(callback: (api: APIRequestContext) => Promise<T>): Promise<T> {
+export async function withApiContext<T>(callback: (api: APIRequestContext) => Promise<T>): Promise<T> {
     const api = await request.newContext({
         baseURL: SUPERDESK_API_URL,
         extraHTTPHeaders: {
@@ -57,7 +57,7 @@ async function withApiContext<T>(callback: (api: APIRequestContext) => Promise<T
     }
 }
 
-async function assertOk(response: {ok(): boolean; status(): number; text(): Promise<string>}, action: string) {
+export async function assertOk(response: {ok(): boolean; status(): number; text(): Promise<string>}, action: string) {
     if (!response.ok()) {
         throw new Error(`${action} failed: ${response.status()} ${await response.text()}`);
     }

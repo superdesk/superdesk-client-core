@@ -2,18 +2,24 @@ import React from 'react';
 import {Select, Option, RadioButtonGroup} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Spacer} from 'core/ui/components/Spacer';
-import {getTextColor} from 'core/helpers/utils';
-import {IBackgroundColor, BackgroundColorSelector} from './theme-selector';
-import {IFontSizeOption, ITheme} from './proofreading-theme-modal';
+import {BackgroundColorSelector} from './theme-selector';
 import {getUiThemeFontSize, getUiThemeFontSizeHeading} from '../authoring-react';
-import classNames from 'classnames';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {
+    getEditorThemeColor,
+    getEditorThemeColors,
+    getEditorThemeFonts,
+    getEditorThemeStyle,
+    IEditorTheme,
+    IEditorThemeFont,
+    IFontSizeOption,
+} from 'apps/authoring/authoring/editor-theme';
 
 interface IPropsPanel {
-    theme: ITheme;
+    theme: IEditorTheme;
     title: string;
     badgeColor: 'green' | 'grey';
-    onChange: (val: ITheme) => void;
+    onChange: (val: IEditorTheme) => void;
 }
 
 interface IFontOption {
@@ -21,34 +27,10 @@ interface IFontOption {
     label: string;
 }
 
-export const availableThemes: Array<IBackgroundColor> = [
-    {name: 'default', color: '#ffffff', secondaryColor: '#f3f5f6'},
-    {name: 'dark', color: '#1b1e19', secondaryColor: '#23282e'},
-    {name: 'blue', color: '#06356a', secondaryColor: '#073e7d'},
-    {name: 'turquoise', color: '#00ced1', secondaryColor: '#5ebeba'},
-    {name: 'military', color: '#959f60', secondaryColor: '#909a5c'},
-    {name: 'natural', color: '#efe9c5', secondaryColor: '#ebe3b7'},
-];
-
-export const fontOptions: Array<IFontOption> = [
+const fontOptions: Array<IFontOption> = [
     {value: 'small', label: 'S'},
     {value: 'medium', label: 'M'},
     {value: 'large', label: 'L'},
-];
-
-export const availableFonts = [
-    {
-        label: 'Sans-serif (Roboto)',
-        fontFamily: '"Roboto", Helvetica, Arial, sans-serif',
-    },
-    {
-        label: 'Serif (Merriweather)',
-        fontFamily: '"Merriweather", Georgia, "Times New Roman", Times, serif',
-    },
-    {
-        label: 'Monospace (Roboto Mono)',
-        fontFamily: '"Roboto Mono", "Consolas", "monaco", monospace',
-    },
 ];
 
 export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
@@ -57,6 +39,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
         let headlineClasses = `${classes} proofreading-panel-content__text-field--headline`;
         let bodyClasses = `${classes} proofreading-panel-content__text-field--body`;
         let abstractClasses = `${classes} proofreading-panel-content__text-field--abstract`;
+        const themeStyle = getEditorThemeStyle(this.props.theme);
 
         return (
             <div className="proofreading-panel">
@@ -92,29 +75,27 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                         <div className="proofreading-panel__font-select">
                             <Select
                                 label={gettext('Font')}
-                                value={this.props.theme.fontFamily}
+                                value={this.props.theme.font}
                                 onChange={(value) => {
                                     this.props.onChange({
                                         ...this.props.theme,
-                                        fontFamily: value,
+                                        font: value as IEditorThemeFont,
                                     });
                                 }}
                             >
-                                {availableFonts.map((option, index) => {
-                                    return <Option key={index} value={option.fontFamily}>{option.label}</Option>;
+                                {getEditorThemeFonts().map((option) => {
+                                    return <Option key={option.key} value={option.key}>{option.label}</Option>;
                                 })}
                             </Select>
                         </div>
 
                         <BackgroundColorSelector
-                            value={availableThemes.find((theme) => theme.color === this.props.theme.theme)}
-                            options={availableThemes}
+                            value={getEditorThemeColor(this.props.theme)}
+                            options={getEditorThemeColors()}
                             onChange={(item) => {
                                 this.props.onChange({
                                     ...this.props.theme,
-                                    theme: item.color,
-                                    themeColorSecondary: item.secondaryColor,
-                                    textColor: getTextColor(item.color),
+                                    theme: item.key,
                                 });
                             }}
                         />
@@ -124,8 +105,8 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                 <div
                     className="proofreading-panel-content"
                     style={{
-                        backgroundColor: this.props.theme.theme,
-                        color: getTextColor(this.props.theme.theme),
+                        backgroundColor: themeStyle.backgroundColor,
+                        color: themeStyle.textColor,
                     }}
                 >
                     <Spacer v gap="16">
@@ -137,7 +118,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                             <div
                                 className={headlineClasses}
                                 style={{
-                                    fontFamily: this.props.theme.fontFamily,
+                                    fontFamily: themeStyle.fontFamily,
                                     fontSize: getUiThemeFontSizeHeading(this.props.theme.headline),
                                 }}
                             >
@@ -167,7 +148,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                             <div
                                 className={abstractClasses}
                                 style={{
-                                    fontFamily: this.props.theme.fontFamily,
+                                    fontFamily: themeStyle.fontFamily,
                                     fontSize: getUiThemeFontSize(this.props.theme.abstract),
                                 }}
                             >
@@ -199,7 +180,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                             <div
                                 className={bodyClasses}
                                 style={{
-                                    fontFamily: this.props.theme.fontFamily,
+                                    fontFamily: themeStyle.fontFamily,
                                     fontSize: getUiThemeFontSize(this.props.theme.body),
                                 }}
                             >
