@@ -13,9 +13,10 @@ import {restoreDatabaseSnapshot} from './utils';
  * 2100 x 1050 and the `crop_sizes` vocabulary defines a single crop size,
  * "4-3" (800 x 600), so the Edit crops tab lists exactly Original and 4-3.
  *
- * Assertions are on state, never on pixels: the live preview is checked through
- * the CSS transform on the preview canvas, and a change that reached the server
- * through the stored original size and the rendition URLs.
+ * The live preview is checked through the CSS transform on the preview canvas.
+ * A change that reached the server is checked through the stored original size,
+ * or, for flips and colours, which keep the size, by comparing a downscaled copy
+ * of the stored image with the one from before the edit.
  *
  * Uncovered expected results:
  *
@@ -24,12 +25,15 @@ import {restoreDatabaseSnapshot} from './utils';
  *   one and building it needs the upload flow.
  * - "Crop image" (1315931417) expects the Width and Height fields to default to
  *   the original size and to hold while the crop moves, and the ratio buttons
- *   to activate Confirm crop. None of the three holds: the fields are bound to
- *   `CropRight` / `CropBottom`, start empty, and only a jCrop drag sets
- *   `isAoIDirty` (`setRatio()` refreshes jCrop with its events disabled).
+ *   and typed Width / Height values to activate Confirm crop. None of these
+ *   holds: the fields are bound to `CropRight` / `CropBottom`, start empty, and
+ *   only a jCrop drag sets `isAoIDirty` (`setRatio()` refreshes jCrop with its
+ *   events disabled), so every confirmed cycle here starts with a drag.
  * - "Edit crops" (1311834326) expects a red message in place of a rendition the
  *   original is too small to produce; no fixture picture is smaller than the
- *   only configured crop.
+ *   only configured crop. Its Cancel after a point-of-interest change hides the
+ *   toolbar but leaves the point where it was moved (`cancelCrops()` restores
+ *   the crop data only), so only the rendition-crop Cancel is checked to revert.
  */
 // Every Apply and every confirmed crop is a round trip through the server-side
 // image processing, and several tests do more than one.
@@ -37,6 +41,9 @@ test.setTimeout(180000);
 
 test.describe('image editing', () => {
     const ORIGINAL_SIZE = 'Original (2100 x 1050 px)';
+
+    const THUMB_WIDTH = 16;
+    const THUMB_HEIGHT = 8;
 
     async function openPicture(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
@@ -94,6 +101,100 @@ test.describe('image editing', () => {
         await mediaEditor.doneButton.click();
         await expect(mediaEditor.header).toBeHidden();
         await saved;
+    }
+
+    /**
+     * The stored image at `url`, scaled down to a 16 x 8 grid of RGBA values. The
+     * scaling averages away JPEG re-encoding noise, so two grids differ only where
+     * the image content does. The bytes are fetched outside the page because the
+     * media server sends no CORS headers, and decoded inside it.
+     */
+    async function thumbnailPixels(page: Page, url: string): Promise<Array<number>> {
+        const response = await page.request.get(url);
+
+        expect(response.ok()).toBe(true);
+
+        const base64 = (await response.body()).toString('base64');
+
+        return page.evaluate(async ({encoded, width, height}) => {
+            const bytes = Uint8Array.from(atob(encoded), (char) => char.charCodeAt(0));
+            const bitmap = await createImageBitmap(new Blob([bytes]));
+            const context = new OffscreenCanvas(width, height).getContext('2d');
+
+            if (context == null) {
+                throw new Error('no 2d canvas context');
+            }
+
+            context.drawImage(bitmap, 0, 0, width, height);
+
+            return Array.from(context.getImageData(0, 0, width, height).data);
+        }, {encoded: base64, width: THUMB_WIDTH, height: THUMB_HEIGHT});
+    }
+
+    /** Mean per-channel difference between `after` and `before` read at `map(x, y)`. */
+    function meanDifference(
+        after: Array<number>,
+        before: Array<number>,
+        map: (x: number, y: number) => [number, number],
+    ): number {
+        let total = 0;
+
+        for (let y = 0; y < THUMB_HEIGHT; y++) {
+            for (let x = 0; x < THUMB_WIDTH; x++) {
+                const [beforeX, beforeY] = map(x, y);
+
+                for (let channel = 0; channel < 3; channel++) {
+                    total += Math.abs(
+                        after[(y * THUMB_WIDTH + x) * 4 + channel]
+                        - before[(beforeY * THUMB_WIDTH + beforeX) * 4 + channel],
+                    );
+                }
+            }
+        }
+
+        return total / (THUMB_WIDTH * THUMB_HEIGHT * 3);
+    }
+
+    /** Mean spread between the strongest and weakest colour channel; 0 for a grey image. */
+    function meanChroma(pixels: Array<number>): number {
+        let total = 0;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+            const rgb = pixels.slice(i, i + 3);
+
+            total += Math.max(...rgb) - Math.min(...rgb);
+        }
+
+        return total / (pixels.length / 4);
+    }
+
+    function meanLightness(pixels: Array<number>): number {
+        let total = 0;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+            total += (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+        }
+
+        return total / (pixels.length / 4);
+    }
+
+    /**
+     * Where the point-of-interest cursor of the Edit crops preview sits, as a fraction
+     * of the previewed image, which is how the item stores it (`poi.x`, `poi.y`).
+     */
+    async function pointOfInterest(mediaEditor: MediaEditor): Promise<{x: number; y: number}> {
+        const preview = mediaEditor.pointOfInterestPreview;
+        const cursor = await preview.locator('.image-point__poi__cursor').boundingBox();
+        const image = await preview.locator('.image-point__image').boundingBox();
+
+        if (cursor == null || image == null) {
+            throw new Error('the point of interest preview is not rendered');
+        }
+
+        return {
+            x: Math.round((cursor.x + cursor.width / 2 - image.x) / image.width * 100) / 100,
+            y: Math.round((cursor.y + cursor.height / 2 - image.y) / image.height * 100) / 100,
+        };
     }
 
     async function reopenPicture(page: Page): Promise<void> {
@@ -246,6 +347,7 @@ test.describe('image editing', () => {
         await openPicture(page);
 
         const sourceBefore = await sourceOf(picture.previewImage);
+        const pixelsBefore = await thumbnailPixels(page, sourceBefore);
 
         await picture.openImageEditor();
 
@@ -273,16 +375,25 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        // A flip keeps the dimensions, so the only visible trace of it is that the
-        // renditions were regenerated and now point at newly stored media.
-        await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
-        await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+        // Two horizontal flips cancel out, so what was applied is one vertical flip:
+        // the stored image matches the old one mirrored top to bottom, and not the
+        // old one as it was.
+        async function expectStoredFlippedVertically(): Promise<void> {
+            await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
+            await expect(picture.previewImage).toBeVisible();
+            await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+
+            const pixelsAfter = await thumbnailPixels(page, await sourceOf(picture.previewImage));
+
+            expect(meanDifference(pixelsAfter, pixelsBefore, (x, y) => [x, THUMB_HEIGHT - 1 - y]))
+                .toBeLessThan(10);
+            expect(meanDifference(pixelsAfter, pixelsBefore, (x, y) => [x, y])).toBeGreaterThan(30);
+        }
+
+        await expectStoredFlippedVertically();
 
         await reopenPicture(page);
-        await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
-        await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+        await expectStoredFlippedVertically();
     });
 
     test('colour scales drive the preview, Cancel restores them and Apply recentres them', {
@@ -298,6 +409,11 @@ test.describe('image editing', () => {
         await openPicture(page);
 
         const sourceBefore = await sourceOf(picture.previewImage);
+        const pixelsBefore = await thumbnailPixels(page, sourceBefore);
+
+        // the fixture is a colour photo, so a stored image without colour can only
+        // come from the saturation change below
+        expect(meanChroma(pixelsBefore)).toBeGreaterThan(20);
 
         await picture.openImageEditor();
 
@@ -315,10 +431,10 @@ test.describe('image editing', () => {
 
         await mediaEditor.slider('brightness').fill('1.5');
         await mediaEditor.slider('contrast').fill('1.25');
-        await mediaEditor.slider('saturation').fill('0.5');
+        await mediaEditor.slider('saturation').fill('0');
         await expect(mediaEditor.sliderValue('brightness')).toHaveText('50%');
         await expect(mediaEditor.sliderValue('contrast')).toHaveText('25%');
-        await expect(mediaEditor.sliderValue('saturation')).toHaveText('-50%');
+        await expect(mediaEditor.sliderValue('saturation')).toHaveText('-100%');
 
         await mediaEditor.controlsToolbar.getByTestId('apply').click();
         await expect(mediaEditor.controlsToolbar).toBeHidden();
@@ -331,21 +447,31 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+        // Saturation at -100% leaves a grey image; the added brightness lifts it.
+        async function expectStoredGreyAndBrighter(): Promise<void> {
+            await expect(picture.previewImage).toBeVisible();
+            await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+
+            const pixelsAfter = await thumbnailPixels(page, await sourceOf(picture.previewImage));
+
+            expect(meanChroma(pixelsAfter)).toBeLessThan(2);
+            expect(meanLightness(pixelsAfter)).toBeGreaterThan(meanLightness(pixelsBefore));
+        }
+
+        await expectStoredGreyAndBrighter();
 
         await reopenPicture(page);
-        await expect(picture.previewImage).toBeVisible();
-        await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
+        await expectStoredGreyAndBrighter();
     });
 
-    test('cropping the original with the crop tool and the ratio buttons', {
+    test('cropping the original twice with the crop tool and the ratio buttons', {
         annotation: [
             {type: 'confluence', description: '1315931417 partial'}, // Crop image
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'media-items'});
 
+        const CROPPED_SIZE = 'Original (1400 x 788 px)';
         const picture = new PictureAuthoring(page);
         const mediaEditor = new MediaEditor(page);
 
@@ -402,7 +528,10 @@ test.describe('image editing', () => {
         }).toPass();
 
         // The ratio buttons letterbox the 2100 x 1050 original: 16:9, 4:3 and 3:2 are
-        // all taller than it is, so each keeps the full height and narrows the width.
+        // all taller than it is, so each keeps the full height and narrows the width,
+        // centred. The Width field is bound to the crop's right edge, not its width,
+        // so it shows (2100 + width) / 2: 1983 for 16:9 (1867 wide), 1837 for 3:2
+        // (1575 wide) and 1750 for 4:3 (1400 wide, the size stored below).
         await mediaEditor.ratioButton('Original').click();
         await expect(cropWidth).toHaveValue('2100');
         await expect(cropHeight).toHaveValue('1050');
@@ -434,13 +563,24 @@ test.describe('image editing', () => {
         await expect(mediaEditor.confirmCropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
+        // A second crop of the result of the first: crop mode starts clean again, and
+        // 16:9 of the now 1400 x 1050 image keeps the width and narrows the height.
+        await mediaEditor.control('crop').click();
+        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
+
+        await mediaEditor.resizeAreaOfInterest(-80, -40);
+        await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).not.toHaveAttribute('disabled');
+
+        await mediaEditor.ratioButton('16:9').click();
+        await mediaEditor.confirmCropToolbar.getByTestId('confirm-crop').click();
+        await expect(mediaEditor.confirmCropToolbar).toBeHidden();
+
         await applyMediaEdits(page, mediaEditor);
 
-        // 4:3 of a 2100 x 1050 original keeps the height and takes 1400 of the width.
-        await expect(picture.originalSizeLabel).toHaveText('Original (1400 x 1050 px)');
+        await expect(picture.originalSizeLabel).toHaveText(CROPPED_SIZE);
 
         await reopenPicture(page);
-        await expect(picture.originalSizeLabel).toHaveText('Original (1400 x 1050 px)');
+        await expect(picture.originalSizeLabel).toHaveText(CROPPED_SIZE);
     });
 
     test('editing a rendition crop and the point of interest', {
@@ -472,12 +612,17 @@ test.describe('image editing', () => {
         await mediaEditor.rendition('4-3').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText('4-3');
 
+        const renditionSelection = mediaEditor.renditionCropPreview.locator('.jcrop-holder > div').first();
+        const storedSelection = await renditionSelection.boundingBox();
+
         await mediaEditor.resizeRenditionCrop(-60, -45);
         await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
         await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
+        expect((await renditionSelection.boundingBox())?.width).toBeLessThan(storedSelection?.width ?? 0);
 
         await mediaEditor.saveCropsToolbar.getByTestId('cancel').click();
         await expect(mediaEditor.saveCropsToolbar).toBeHidden();
+        await expect.poll(() => renditionSelection.boundingBox()).toEqual(storedSelection);
 
         await mediaEditor.resizeRenditionCrop(-60, -45);
         await mediaEditor.saveCropsToolbar.getByTestId('save').click();
@@ -486,7 +631,17 @@ test.describe('image editing', () => {
         await mediaEditor.rendition('Original').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
 
+        // the fixture has no point of interest of its own, so it sits in the centre
+        await expect.poll(() => pointOfInterest(mediaEditor)).toEqual({x: 0.5, y: 0.5});
+
         await mediaEditor.setPointOfInterest(0.3, 0.3);
+        await expect(mediaEditor.saveCropsToolbar.getByTestId('cancel')).toBeVisible();
+        await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
+
+        await mediaEditor.saveCropsToolbar.getByTestId('cancel').click();
+        await expect(mediaEditor.saveCropsToolbar).toBeHidden();
+
+        await mediaEditor.setPointOfInterest(0.7, 0.4);
         await expect(mediaEditor.saveCropsToolbar.getByTestId('save')).toBeVisible();
         await mediaEditor.saveCropsToolbar.getByTestId('save').click();
         await expect(mediaEditor.saveCropsToolbar).toBeHidden();
@@ -500,5 +655,12 @@ test.describe('image editing', () => {
         await reopenPicture(page);
         await expect(picture.crop('4-3').locator('img')).toBeVisible();
         await expect(picture.crop('4-3').locator('img')).not.toHaveAttribute('src', cropSourceBefore);
+
+        await picture.openCropsEditor();
+        await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
+        await expect.poll(() => pointOfInterest(mediaEditor)).toEqual({x: 0.7, y: 0.4});
+
+        await mediaEditor.doneButton.click();
+        await expect(mediaEditor.header).toBeHidden();
     });
 });
