@@ -63,8 +63,6 @@ export class TemplateSettings {
     }
 
     /**
-     * Opens a template card's 3-dot menu and clicks Edit.
-     *
      * The whole card list is one `ng-repeat` over `content_templates._items`, and
      * `fetchTemplates()` in TemplatesDirective reassigns that collection on every
      * `$scope.cancel()` and on every `template:update` websocket event, so the card
@@ -150,7 +148,6 @@ export class TemplateSettings {
         await expect(this.getEditor()).toBeHidden();
     }
 
-    /** Turns an existing public template into a personal one owned by the current user. */
     async makePersonal(templateName: string): Promise<void> {
         await this.openEditor(templateName);
         await this.toggleMakePublic();
