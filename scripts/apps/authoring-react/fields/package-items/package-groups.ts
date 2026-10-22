@@ -5,14 +5,9 @@ export interface IPackageItemPosition {
     index: number;
 }
 
-/**
- * Search results from other repositories carry the id of the record in that repository,
- * which is not always the id the server resolves `residRef` against.
- */
+// a published search result carries the id of the published record, not the archive id `residRef` needs
 function getResidRefAndLocation(item: IArticle): {residRef: string; location: string} {
-    if (item._type === 'ingest') {
-        return {residRef: item._id, location: 'ingest'};
-    } else if (item._type === 'published' && item.item_id != null) {
+    if (item._type === 'published' && item.item_id != null) {
         return {residRef: item.item_id, location: 'archive'};
     } else {
         return {residRef: item._id, location: 'archive'};
@@ -40,18 +35,21 @@ export function isInPackage(groups: IPackageItemsValueOperational, item: IArticl
 
 /**
  * Items are put in front of the group one by one, like angular does. A group the package
- * does not have yet is added at the end.
+ * does not have yet is added at the end. Ingest items are refused until fetched, as in angular.
  */
 export function addItemsToGroup(
     groups: IPackageItemsValueOperational,
     groupId: string,
     items: Array<IArticle>,
-): {groups: IPackageItemsValueOperational; duplicates: Array<IArticle>} {
+): {groups: IPackageItemsValueOperational; duplicates: Array<IArticle>; notFetched: Array<IArticle>} {
     const duplicates: Array<IArticle> = [];
+    const notFetched: Array<IArticle> = [];
     let next = groups.some(({id}) => id === groupId) ? groups : [...groups, {id: groupId, refs: []}];
 
     for (const item of items) {
-        if (isInPackage(next, item)) {
+        if (item._type === 'ingest') {
+            notFetched.push(item);
+        } else if (isInPackage(next, item)) {
             duplicates.push(item);
         } else {
             next = next.map((group) => group.id === groupId
@@ -61,7 +59,7 @@ export function addItemsToGroup(
         }
     }
 
-    return {groups: next, duplicates};
+    return {groups: next, duplicates, notFetched};
 }
 
 export function removeItem(groups: IPackageItemsValueOperational, groupId: string, residRef: string) {

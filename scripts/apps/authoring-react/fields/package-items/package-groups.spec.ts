@@ -37,13 +37,6 @@ describe('package groups', () => {
             }));
         });
 
-        it('points to the ingest item for an ingest search result', () => {
-            expect(getPackageItemRef(article('i', {_type: 'ingest'}))).toEqual(jasmine.objectContaining({
-                residRef: 'i',
-                location: 'ingest',
-            }));
-        });
-
         it('points to the archive item for a published search result', () => {
             expect(getPackageItemRef(article('p', {_type: 'published', item_id: 'a'}))).toEqual(
                 jasmine.objectContaining({residRef: 'a', location: 'archive'}),
@@ -64,6 +57,13 @@ describe('package groups', () => {
 
             expect(ids(result.groups)).toEqual([['x', 'a', 'b', 'c'], ['d'], []]);
             expect(result.duplicates.map(({_id}) => _id)).toEqual(['d']);
+        });
+
+        it('skips and reports ingest items, which have to be fetched first', () => {
+            const result = addItemsToGroup(groups, 'main', [article('i', {_type: 'ingest'}), article('x')]);
+
+            expect(ids(result.groups)).toEqual([['x', 'a', 'b', 'c'], ['d'], []]);
+            expect(result.notFetched.map(({_id}) => _id)).toEqual(['i']);
         });
 
         it('returns the same groups when every item is a duplicate', () => {

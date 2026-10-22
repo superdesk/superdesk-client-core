@@ -38,10 +38,14 @@ export class Editor extends React.PureComponent<IProps> {
     }
 
     addItems(groupId: IPackageGroup['id'], items: Array<IArticle>) {
-        const {groups, duplicates} = addItemsToGroup(this.getGroups(), groupId, items);
+        const {groups, duplicates, notFetched} = addItemsToGroup(this.getGroups(), groupId, items);
 
         if (duplicates.length > 0) {
             notify.error(gettext('Item is already in this package.'));
+        }
+
+        if (notFetched.length > 0) {
+            notify.error(gettext('Fetch ingest items before adding them to a package.'));
         }
 
         if (groups !== this.getGroups()) {
