@@ -147,11 +147,22 @@ Exceptions that do need an explicit login:
 
 Use `frodobaggins` or `samgamgee` for anything that needs a second actor: a
 two-user lock or mark-for-user flow, or a permission check. Both have a known
-password (the password is the username) and both are members of the Sports desk,
-so both can reach the Sports monitoring view. What separates them is privileges:
-`frodobaggins` holds none at all, which is what makes it the negative half of a
-privilege test, while `samgamgee` carries the `Sub Editor` role and so holds
-*some*, but not `send_to_personal` or `unlock`.
+password (the password is the username) and both are members of the Sports desk.
+What separates them is privileges: `frodobaggins` holds none at all, which is
+what makes it the negative half of a privilege test, while `samgamgee` carries
+the `Sub Editor` role and so holds *some*, but not `send_to_personal` or
+`unlock`. Only `samgamgee` can open the Sports monitoring view:
+`/workspace/monitoring` is declared with `privileges: {monitoring_view: 1}`
+(`scripts/apps/monitoring/config.ts`), which `frodobaggins` lacks, so that
+account is limited to routes with no privilege gate, `/workspace/personal` and
+`/settings/templates` among them.
+
+`frodobaggins` also cannot create or edit any article: the archive resource
+declares `privileges = {"POST": "archive", "PATCH": "archive", ...}`
+(`apps/archive/archive.py` in superdesk-core), so every write answers 403 and no
+authoring view ever opens for it. Any scenario that needs an article in the
+editor under a user lacking some other privilege needs a new snapshot user that
+holds `archive` and not that privilege.
 
 `frodobaggins` has `user_type: "user"`, a `role` of `null`, and no `privileges`
 field, so it holds **no** privileges at all. Keep it that way: do not assign a
@@ -230,6 +241,9 @@ set, this is not exhaustive):
 - **Users:** `admin`, `frodobaggins`, `samgamgee`, `janedoe` (see "Users in the
   `main` snapshot" under Authentication).
 - **Roles:** `Administrator` and `Sub Editor`, neither of them the default role.
+- **Content templates:** `story`, `story 2` and `story 3`, all public and all
+  owned by `admin`, plus the `kill` and `takedown` kill templates. There is no
+  personal (`is_public: false`) template; a spec that needs one makes it in-test.
 - **Saved searches:** "Malaysia" and "Technology", both global, both owned by
   `admin`. There is no private one; use the `saved-search-private` snapshot.
 - **Story profile `body_html` toolbar:** `h2`, bold, italic, underline, quote,
