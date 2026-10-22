@@ -8,9 +8,7 @@ import {restoreDatabaseSnapshot} from './utils';
  */
 const ACTIVE = /toggle-button--active/;
 
-/**
- * Internal item type and its button label, in the order the buttons are rendered.
- */
+/** Item type and button aria-label, in render order. */
 const ITEM_TYPES: Array<[string, string]> = [
     ['all', 'all'],
     ['text', 'text'],
@@ -43,7 +41,7 @@ const LISTED: Record<string, number> = {
 
 /**
  * Well above the default 30s: opening monitoring can cost a reload (see
- * `Monitoring.openMonitoringForDesk`) and each of the 14 filter changes below waits out the
+ * `Monitoring.openMonitoringForDesk`), and each of the 14 filter changes waits out the
  * group's 1s query debounce plus the round trip.
  */
 test.setTimeout(120000);
@@ -73,11 +71,11 @@ test.describe('monitoring item type filter buttons', {
     });
 
     /**
-     * Selecting a type does not re-render the list synchronously: the monitoring group schedules a
-     * debounced query (1s) and leaves the previously rendered items in the DOM until the new
-     * response lands. Asserting that an already visible item is still visible would therefore pass
-     * against the stale list, so each step below waits on the resulting item count, which can only
-     * settle once the filtered query has landed, before checking which items survived.
+     * Selecting a type does not re-render the list synchronously: the group schedules a debounced
+     * query (1s) and keeps the old items in the DOM until the response lands. Asserting that an
+     * already visible item is still visible would pass against the stale list, so each step waits
+     * on the item count (which only settles once the filtered query has landed) before checking
+     * which items survived.
      */
     test('the list is filtered by item type, with ALL selected by default', async ({page}) => {
         await restoreDatabaseSnapshot();
