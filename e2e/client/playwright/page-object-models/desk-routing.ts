@@ -31,7 +31,6 @@ export class DeskRouting {
         return this.widget.getByTestId('desk-router-destination');
     }
 
-    /** The selected option of the destination `<select>`; its text is the desk name. */
     get selectedDestination(): Locator {
         return this.destinationSelect.locator('option:checked');
     }
@@ -131,12 +130,7 @@ export class DeskRouting {
         await expect(this.widget).toBeVisible();
     }
 
-    /**
-     * Matches on URL and method only. A predicate that also required a 2xx
-     * would never match a rejected update, turning a reportable failure into an
-     * opaque `waitForResponse` timeout; the status is asserted once the
-     * response has arrived.
-     */
+    // URL and method only: filtering on status would turn a failed update into a timeout.
     private async expectDeskUpdated(trigger: Promise<unknown>): Promise<void> {
         const [response] = await Promise.all([
             this.page.waitForResponse(
@@ -163,7 +157,6 @@ export class DeskRouting {
         await expect(this.startButton).toBeVisible();
     }
 
-    /** Sets a destination and starts routing in one step, for preconditions. */
     async routeTo(sourceDesk: string, destinationDesk: string): Promise<void> {
         await this.openOn(sourceDesk);
         await this.selectDestination(destinationDesk);
