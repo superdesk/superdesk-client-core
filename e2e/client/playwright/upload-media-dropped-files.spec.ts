@@ -37,8 +37,6 @@ import {
  * of files that are not media, the required metadata fields, Cancel) is covered
  * once by the first three tests, which every case is annotated on, and each case
  * then has one test walking its own selection from the drop to the uploaded items.
- * The per-file progress circle is covered in the mixed-media test, which is why the
- * other five cases are annotated on it too.
  *
  * A case id therefore appears on several tests at two levels, and the level is a
  * statement about the case across all of them rather than about the test it is
@@ -321,12 +319,7 @@ test('uploads several dropped video files to the selected desk', {
     });
 });
 
-/**
- * The mixed drop is also where the per-file progress circle is covered, for every
- * drag-and-drop case rather than once per media type: the circles are what a
- * three-file upload shows one by one, and holding the archive responses back to
- * observe them is the same mechanism whatever the files are.
- */
+/** The mixed drop verifies image, audio and video can be committed together. */
 test('uploads a dropped image, audio file and video file in one go', {
     annotation: [
         {type: 'confluence', description: '1315931274 complete'}, // Upload different media types by drag and drop
@@ -355,6 +348,5 @@ test('uploads a dropped image, audio file and video file in one go', {
         fileCount: MIXED_FILES.length,
         itemTypes: ['picture', 'audio', 'video'],
         metadata,
-        withProgressCircles: true,
     });
 });
