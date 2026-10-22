@@ -159,6 +159,15 @@ test('Previous and Next walk the tabs, are hidden at the ends and keep pending e
     await settings.expectActiveTab('Saved Searches');
     await expect(settings.previousButton).toBeVisible();
 
+    const cancelBox = await settings.cancelButton.boundingBox();
+    const nextBox = await settings.nextButton.boundingBox();
+
+    if (cancelBox == null || nextBox == null) {
+        throw new Error('monitoring settings footer buttons are not laid out');
+    }
+
+    expect(nextBox.x).toBeGreaterThanOrEqual(cancelBox.x + cancelBox.width);
+
     await settings.nextButton.click();
     await settings.expectActiveTab('Reorder Sections');
     await expect(settings.previousButton).toBeVisible();
