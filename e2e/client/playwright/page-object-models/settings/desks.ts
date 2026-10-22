@@ -65,7 +65,6 @@ export class DeskSettings {
         await expect(this.modal).not.toBeVisible();
     }
 
-    /** Saves the General step and moves the wizard on to Stages. */
     async saveAndContinueToStages(): Promise<void> {
         const [response] = await Promise.all([
             this.page.waitForResponse(
@@ -82,7 +81,6 @@ export class DeskSettings {
         return this.stagesStep.getByTestId(`stage--${stageName}`);
     }
 
-    /** Selects a stage so its read-only Stage Details column renders. */
     async selectStage(stageName: string): Promise<void> {
         const row = this.getStageRow(stageName);
 
