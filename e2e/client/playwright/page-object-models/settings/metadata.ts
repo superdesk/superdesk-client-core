@@ -163,7 +163,7 @@ export class MetadataSettings {
         }
     }
 
-    /** The deletion confirmation shown for a field no content profile uses. */
+    /** The deletion confirmation for a field no content profile uses. */
     getDeletionModal(): Locator {
         return this.page.getByTestId('vocabulary-deletion-modal--can-delete');
     }
