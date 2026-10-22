@@ -1,8 +1,8 @@
 import {test, expect, Page} from '@playwright/test';
 import {PackageAuthoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
-import {restoreDatabaseSnapshot} from './utils';
-import {getStorageState} from './utils/storage-state';
+import {login, restoreDatabaseSnapshot} from './utils';
+import {getLoggedOutStorageState, getStorageState} from './utils/storage-state';
 
 test.use({
     storageState: getStorageState({}, {authoringReact: true}),
@@ -276,5 +276,19 @@ test.describe('package header (authoring-react)', () => {
         await expect(authoring.fieldContainer('slugline')).toBeVisible();
         await expect(authoring.fieldContainer('body_html')).toHaveCount(0);
         await expect(page.getByTestId('content-profile-select')).toHaveCount(0);
+    });
+});
+
+test.describe('after logging in through the login page (authoring-react)', () => {
+    test.use({storageState: getLoggedOutStorageState({authoringReact: true})});
+
+    // the subject field lists subject codes, which the app loads once a session starts
+    test('shows the subject field', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'packages'});
+        await login(page);
+
+        const {authoring} = await openPackage(page);
+
+        await expect(authoring.fieldContainer('subject').getByTestId('authoring-field-input')).toBeVisible();
     });
 });
