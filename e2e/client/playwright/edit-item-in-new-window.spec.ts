@@ -45,10 +45,6 @@ test.describe('editing an item in a new window', () => {
         return monitoring;
     }
 
-    /**
-     * Runs the documented entry point (3-dot menu > "Edit in new Window") and returns
-     * the window it opens, once the article is editable in it.
-     */
     async function editInNewWindow(page: Page, monitoring: Monitoring): Promise<Page> {
         const menu = await monitoring.openArticleActionsMenu(monitoring.getArticleLocator(ARTICLE));
         const action = menu.getByRole('button', {name: ACTION_LABEL, exact: true});
@@ -91,11 +87,8 @@ test.describe('editing an item in a new window', () => {
         await expect.poll(() => popup.isClosed(), {timeout: 30000}).toBe(true);
     }
 
-    /**
-     * Reopens the article in the window that started the flow. The lock indicator
-     * clearing is what tells us this window has processed the popup's unlock, so the
-     * reopen reads the item after the close finished rather than mid-flight.
-     */
+    // The lock indicator clearing shows this window has processed the popup's unlock, so
+    // the reopen reads the item after the close finished rather than mid-flight.
     async function reopenInOpener(page: Page, monitoring: Monitoring): Promise<void> {
         const item = monitoring.getArticleLocator(ARTICLE);
 
