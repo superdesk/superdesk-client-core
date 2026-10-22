@@ -31,11 +31,8 @@ test.describe('creating a new empty package', {
     const HEADLINE = 'empty package headline';
     const SLUGLINE = 'empty-package-slugline';
 
-    /**
-     * Everything the Sports desk lists in Monitoring on the `main` snapshot:
-     * four items in the Working Stage plus the published one in the desk output
-     * group. The Incoming Stage group is empty.
-     */
+    // Everything the Sports desk lists in Monitoring on the `main` snapshot: four
+    // items in the Working Stage plus the published one in the desk output group.
     const SPORTS_MONITORING_ITEMS = [
         'test sports story',
         'story 2',
@@ -60,17 +57,10 @@ test.describe('creating a new empty package', {
         return page.getByTestId('authoring').getByTestId('field-slugline');
     }
 
-    /**
-     * Opens Monitoring on the Sports desk and waits for the listing to be
-     * complete, not merely started.
-     *
-     * Every `sd-monitoring-group` runs its own debounced query
-     * (scripts/apps/monitoring/directives/MonitoringGroup.ts) and a desk switch
-     * leaves the previous desk's items in the DOM until the new groups answer,
-     * so the first visible item says nothing about the rest of the list.
-     * Waiting for each expected item and then for the exact total is what makes
-     * the discard test's count assertion mean anything.
-     */
+    // Waits for the whole listing, not just the first item: every
+    // `sd-monitoring-group` runs its own debounced query
+    // (scripts/apps/monitoring/directives/MonitoringGroup.ts) and a desk switch
+    // leaves the previous desk's items in the DOM until the new groups answer.
     async function openSportsMonitoring(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
 
@@ -84,11 +74,6 @@ test.describe('creating a new empty package', {
         await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
     }
 
-    /**
-     * Opens an empty package from the "+" menu and fills the two fields the
-     * package editor exposes: Headline (the package header) and Slugline (the
-     * authoring header).
-     */
     async function createAndFillPackage(page: Page): Promise<void> {
         await new Monitoring(page).createEmptyPackage();
 
@@ -108,13 +93,13 @@ test.describe('creating a new empty package', {
     async function openGlobalSearch(page: Page): Promise<void> {
         await page.goto('/#/search');
 
-        // Assert the unfiltered result list first: without it a search that never
-        // ran is indistinguishable from a search that returned nothing.
+        // Without the unfiltered list, a search that never ran looks the same as
+        // one that returned nothing.
         await expect(globalSearchItems(page).first()).toBeVisible();
     }
 
-    // The global search bar carries no data-test-id; #search-input plus ENTER is
-    // the established way to drive it (search.spec.ts, monitoring.misc.spec.ts).
+    // The global search bar has no test id; #search-input plus Enter is how
+    // search.spec.ts and monitoring.misc.spec.ts drive it.
     async function runGlobalSearch(page: Page, query: string): Promise<void> {
         await openGlobalSearch(page);
 
@@ -153,17 +138,14 @@ test.describe('creating a new empty package', {
         await expect(page.getByTestId('authoring')).toBeHidden();
 
         // `createEmptyPackage` posts the package with an empty headline, so a
-        // leftover could never be matched by a HEADLINE locator. The total is
-        // the guard: the discarded package stays at `version: 0`, which
-        // apps/archive/resource.py filters out of every archive query, so the
-        // listing can only grow if the product starts persisting it as a real
-        // version.
+        // leftover could never be matched by a HEADLINE locator. The total is the
+        // guard: a discarded package stays at `version: 0`, which
+        // apps/archive/resource.py filters out of every archive query.
         await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
         await expect(monitoringItem(page, HEADLINE)).toHaveCount(0);
 
-        // The unfiltered total is what proves nothing was persisted; a query for
-        // HEADLINE cannot, since the headline only ever reached the autosave
-        // record that Ignore drops.
+        // The unfiltered total proves nothing was persisted. A HEADLINE query
+        // cannot: the headline only reached the autosave record that Ignore drops.
         await openGlobalSearch(page);
         await expect(globalSearchItems(page)).toHaveCount(searchItemsBefore);
 
@@ -205,8 +187,6 @@ test.describe('creating a new empty package', {
         await expect(page.getByTestId('authoring')).toBeVisible();
         await expect(monitoringItem(page, HEADLINE)).toBeVisible();
 
-        // A saved package is no longer dirty, so Close must go through without
-        // raising the unsaved-changes dialog.
         await topbar.getByTestId('close').click();
         await expect(page.getByTestId('authoring')).toBeHidden();
         await expect(page.getByTestId('unsaved-changes-dialog')).toHaveCount(0);
@@ -215,16 +195,14 @@ test.describe('creating a new empty package', {
 
         const results = globalSearchItems(page);
 
-        // The unfiltered listing already holds the package, so "one item with
-        // this Headline is present" is true before the query is applied. Only
-        // the whole result list being that single item proves the search ran.
+        // The unfiltered listing already holds the package, so only the whole
+        // result list being that single item proves the query was applied.
         await expect(results).toHaveCount(1);
         await expect(results).toHaveAttribute('data-test-value', HEADLINE);
 
         // Reopening is the last step on purpose: a reopened package intermittently
         // reports itself dirty with no edit made, so closing it again raises the
-        // unsaved-changes dialog. Nothing needs asserting past this point, so the
-        // test ends with the package open instead of racing that dialog.
+        // unsaved-changes dialog.
         await page.goto('/#/workspace/monitoring');
         await monitoringItem(page, HEADLINE).dblclick();
 
