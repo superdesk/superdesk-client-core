@@ -11,30 +11,26 @@ import {
 } from './utils/editor3';
 
 /**
- * The suggestions-mode QA cases: making suggestions, and accepting or rejecting them.
+ * The suggestions-mode QA cases: making suggestions, then accepting or rejecting them.
  *
  * "Use suggestions mode" (1308524939) and "Toggle Suggestions Mode button" (1313669232) are
- * two page ids carrying the same document, down to the steps and the expected results, so
- * they are one test with both annotations rather than two copies.
+ * the same document under two page ids, so they are one test with both annotations.
  *
- * Every test restores the `editor3-suggestions` snapshot, which is the only one that offers
- * the `suggestions` option at all: neither `main` nor `editor3-formats` enables it on any
- * field, and every case's prerequisite asks for a profile that has it on the body plus a
- * custom text field.
+ * Every test restores `editor3-suggestions`, the only snapshot that enables the
+ * `suggestions` option on any field. The cases need it on the body and on a custom text
+ * field, which is what that snapshot provides.
  *
- * The accept and reject cases start from "an article with existing suggestions", which the
- * snapshot carries as "story with suggestions": suggestions live in `fields_meta` as draft.js
- * editor state, and a record captures whatever the browser writes to mongo, so they survive a
- * restore like any other field.
+ * The accept and reject cases start from "an article with existing suggestions"; the
+ * snapshot carries that as "story with suggestions". Suggestions are draft.js editor state
+ * in `fields_meta`, so they survive a restore like any other field.
  *
  * Only the toggle case drives the custom text field ("Sample rich text"). The accept and
- * reject cases name it in their prerequisites but their steps and expected results speak of
- * the Body field alone.
+ * reject cases name it in their prerequisites, but their steps only touch the Body field.
  */
 
-// Three tests, each driving one or two full save/close/reopen round-trips, which does not fit
-// the default per-test budget. The budget is well clear of the assertion timeouts inside those
-// steps, so a slow step fails on its own assertion rather than as a generic test timeout.
+// Each test does one or two full save/close/reopen round-trips, more than the default
+// per-test budget allows. The budget stays well above the assertion timeouts inside, so a
+// slow step fails on its own assertion rather than as a generic test timeout.
 test.setTimeout(150000);
 
 test.describe('editor3 suggestions mode', () => {
@@ -62,14 +58,13 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Resolves the four suggestion colour tokens to the form a computed style reports, by
-     * painting a probe element with each and letting the browser convert. They are design
-     * tokens declared in superdesk-ui-framework, so a literal in the spec would be a manual
-     * conversion that a token change turns into an opaque colour mismatch.
+     * Resolves the four suggestion colour tokens to what a computed style reports, by
+     * painting a probe element with each one. They are superdesk-ui-framework design tokens;
+     * a literal in the spec would turn a token change into an opaque colour mismatch.
      *
-     * The probe goes inside the editor3 field because the tokens are redeclared per editor
-     * theme (`.sd-editor--theme-default`, `.sd-editor--theme-dark`), so resolving them
-     * anywhere else can produce a different colour than the one the field is painted with.
+     * The probe sits inside the editor3 field because the tokens are redeclared per editor
+     * theme (`.sd-editor--theme-default`, `.sd-editor--theme-dark`); resolved elsewhere they
+     * can differ from what the field is painted with.
      */
     function getSuggestionColours(field: Locator): Promise<ISuggestionColours> {
         return field.evaluate((fieldElement) => {
@@ -102,14 +97,12 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Reads the field's draft.js leaves as a left-to-right list of `{text, kind}`, which is
-     * the whole body state in one value: what the text says, which stretches of it are
-     * suggestions, and where those sit relative to the rest.
+     * Reads the field's draft.js leaves left to right as `{text, kind}`: what the text says,
+     * which stretches are suggestions, and where they sit.
      *
-     * A leaf is one run of equally styled characters, and draft applies the suggestion
-     * colours to the leaf element, so the kind is read off the computed colour rather than
-     * off a class or a style attribute (the highlight style names are generated per
-     * suggestion and carry no stable hook).
+     * A leaf is one run of equally styled characters. Draft applies the suggestion colours
+     * to the leaf element, and the highlight style names are generated per suggestion with
+     * no stable hook, so the kind is read off the computed colour.
      */
     function getSuggestionRuns(field: Locator, colours: ISuggestionColours): Promise<Array<IRun>> {
         return field.locator('[data-offset-key]:has(> [data-text="true"])')
@@ -158,19 +151,17 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Opens a suggestion's detail popup by clicking its text run, and asserts every part the
-     * accept and reject cases list on it: the author's avatar and name, the date, the
-     * description, and the two resolution buttons. The popup is left open.
+     * Opens a suggestion's detail popup by clicking its text run and asserts everything the
+     * accept and reject cases list on it: avatar, author name, date, description and the two
+     * resolution buttons. The popup is left open.
      *
-     * The caret is parked on `caretPark` (a run that is not a suggestion) before every
-     * attempt, because `HighlightsPopup` re-renders only when the caret moves: a click that
-     * lands where the caret already sits, which is where accepting or rejecting leaves it,
-     * would show nothing.
+     * The caret is parked on `caretPark` (a plain-text run) before every attempt:
+     * `HighlightsPopup` re-renders only when the caret moves, and a click where the caret
+     * already sits (which is where accepting or rejecting leaves it) shows nothing.
      *
-     * The clicks and the assertions are retried as one unit rather than the clicks alone,
-     * because the popup is torn down on any re-render that moves the caret: a single click
-     * does not always leave the caret inside the run, and one that did can still be undone
-     * while the assertions that follow it are running.
+     * Clicks and assertions retry as one unit, because any re-render that moves the caret
+     * tears the popup down: one click does not always leave the caret inside the run, and
+     * even when it does the popup can vanish while the assertions run.
      */
     async function expectSuggestionDetail(field: Locator, options: {
         text: string;
@@ -194,14 +185,12 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * Resolves the suggestion whose detail `expectSuggestionDetail` just opened, which
-     * closes the popup. The popup is torn down by any re-render that moves the caret, so
-     * it can already be gone again by the time this runs: when the button is missing, the
-     * popup is reopened the same way and the click retried with it. The click itself is
-     * done in one page-side evaluate: the popup remounts on every caret move, so an
-     * element handle resolved on the driver side (a `click()` or even a
-     * `dispatchEvent`) can be detached before its event reaches the page, while an
-     * in-page query-and-click cannot be interleaved by a remount. A click that lands
+     * Resolves the suggestion whose detail `expectSuggestionDetail` just opened, closing the
+     * popup. Any caret move tears the popup down, so it can already be gone by the time this
+     * runs: a missing button reopens it the same way and retries. The click is one page-side
+     * evaluate because the popup remounts on every caret move: a handle resolved on the
+     * driver side (`click()` or even `dispatchEvent`) can be detached before its event lands,
+     * while an in-page query-and-click cannot be interleaved by a remount. A click that lands
      * ends the retry, so a resolved suggestion is never reopened and acted on twice.
      */
     async function actOnSuggestion(field: Locator, action: 'accept' | 'reject', reopen: {
@@ -233,20 +222,20 @@ test.describe('editor3 suggestions mode', () => {
     }
 
     /**
-     * The article the snapshot carries with suggestions already in its body, and the words its
-     * body is made of: `alpha[bravo]charlie<delta>echo[foxtrot]`, where `[...]` is an insertion
-     * suggestion and `<...>` a deletion suggestion. The words run together with no separators
-     * between them, so the body text is the single string `alphabravocharliedeltaechofoxtrot`.
+     * The snapshot article that already carries suggestions, and the words its body is made
+     * of: `alpha[bravo]charlie<delta>echo[foxtrot]`, `[...]` an insertion and `<...>` a
+     * deletion. The words run together with no separators, so the body text is the single
+     * string `alphabravocharliedeltaechofoxtrot`.
      *
-     * Words rather than letters, so a run stays wide enough to click reliably and so
-     * `getEditor3TextRun`'s substring match cannot pick the wrong leaf.
+     * Words rather than letters, so a run is wide enough to click and `getEditor3TextRun`'s
+     * substring match cannot pick the wrong leaf.
      *
-     * Every suggestion is separated from the next by plain text on purpose. An insertion
-     * directly next to a deletion is reported as one "Replace" suggestion and is accepted or
-     * rejected as a unit, which is a different case from the two these cases resolve.
+     * Plain text separates every suggestion from the next on purpose: an insertion right next
+     * to a deletion is reported as one "Replace" suggestion and resolved as a unit, which is
+     * not the case these tests cover.
      *
-     * `foxtrot` is the suggestion no test touches, so that the reopened article still has one
-     * to preserve after the other two have been resolved.
+     * `foxtrot` is the suggestion no test touches, so the reopened article still has one
+     * after the other two are resolved.
      */
     const SEEDED_HEADLINE = 'story with suggestions';
     const PLAIN_HEAD = 'alpha';
