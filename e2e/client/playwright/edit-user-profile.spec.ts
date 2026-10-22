@@ -81,8 +81,7 @@ test.describe('editing another user profile', {
         await expect(administratorTag).toBeHidden();
 
         // The logged-in admin is the only administrator in the snapshot and
-        // cannot demote itself, so the user under test is promoted first. The
-        // downgrade below is the behaviour under test.
+        // cannot demote itself, so Jane is promoted first.
         await administratorCheckbox.click();
         await users.saveProfile();
         await expect(administratorTag).toBeVisible();
@@ -97,18 +96,16 @@ test.describe('editing another user profile', {
 
         await page.reload();
 
-        // `page.reload()` resolves on the load event, well before Angular has
-        // rendered the form. `toBeHidden` passes on a locator that resolves to no
-        // nodes, so without waiting for the form the assertion below would pass
-        // against a blank page whatever the server stored.
+        // `reload()` resolves before Angular renders the form, and `toBeHidden`
+        // passes on a locator with no nodes, so wait for the form first.
         await expect(users.detailsForm).toBeVisible();
         await expect(administratorTag).toBeHidden();
 
         await users.openList();
 
-        // The indicator sits inside the avatar, which UserAvatar.tsx renders
-        // through react-lazyload, so the row exists before the avatar does and
-        // waiting on the row alone would let `toBeHidden` pass on nothing.
+        // UserAvatar.tsx renders the avatar through react-lazyload, so the row
+        // exists before the indicator can; wait for the avatar or `toBeHidden`
+        // passes on nothing.
         await expect(users.getListItem('Jane Doe').getByTestId('user-avatar')).toBeVisible();
         await expect(administratorIndicator()).toBeHidden();
     });
@@ -173,11 +170,8 @@ async function signIn(page: Page, {username, password}: {username: string; passw
     await expect(page.getByTestId('top-menu')).toBeVisible();
 }
 
-/**
- * Opens the profile of whoever is signed in, checking on the way that it belongs
- * to `displayName` and that its section tabs have rendered. Asserting a tab is
- * absent before they render would pass for the wrong reason.
- */
+// Waits for the section tabs to render, otherwise asserting a tab is absent
+// would pass for the wrong reason.
 async function openOwnProfile(page: Page, displayName: string): Promise<void> {
     await page.goto('/#/profile');
 
