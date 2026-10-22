@@ -1,4 +1,4 @@
-import {test, expect, Page} from '@playwright/test';
+import {test, expect, Locator, Page} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
 import {MetadataSettings} from './page-object-models/settings/metadata';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
@@ -105,6 +105,8 @@ const URL_FIELD_VALUES = {
     helperText: 'Paste a full URL',
 };
 
+const URL_FIELD_LABEL = 'Web links';
+
 /** How the content profile field picker labels the URL field: display name plus its type. */
 const URL_FIELD_PICKER_OPTION = `${URL_FIELD_NAME} (custom vocabulary)`;
 
@@ -118,6 +120,28 @@ const REMOVAL_CASE_ANNOTATIONS = REMOVABLE_FIELD_TYPES.map((fieldType) => ({
 }));
 
 test.describe.configure({timeout: 120000});
+
+/**
+ * The Edit and Remove buttons are always in the DOM, so `toBeVisible` alone does not show the
+ * hover. The menu wrapping them stays fully transparent until the list item is hovered
+ * (`.sd-list-item__action-menu` in superdesk-ui-framework, which has no test id).
+ */
+async function expectActionsShownOnHover(page: Page, item: Locator): Promise<void> {
+    const actions = item.locator('.sd-list-item__action-menu');
+
+    await page.mouse.move(0, 0);
+    await expect(actions).toHaveCSS('opacity', '0');
+
+    await item.hover();
+    await expect(actions).toHaveCSS('opacity', '1');
+    await expect(item.getByTestId('vocabulary-item--start-editing')).toBeVisible();
+    await expect(item.getByTestId('vocabulary-item--start-removing')).toBeVisible();
+}
+
+// The chips of the Label tag input (ngTagsInput, reachable by class only).
+function labelTags(dialog: Locator): Locator {
+    return dialog.locator('tags-input .tags-input__tag-item');
+}
 
 async function createCustomField(page: Page, fieldType: ICustomFieldType): Promise<void> {
     const metadata = new MetadataSettings(page);
@@ -144,9 +168,7 @@ for (const fieldType of REMOVABLE_FIELD_TYPES) {
         const item = metadata.getListItem(fieldType.name);
 
         await expect(item).toBeVisible();
-        await item.hover();
-        await expect(item.getByTestId('vocabulary-item--start-editing')).toBeVisible();
-        await expect(item.getByTestId('vocabulary-item--start-removing')).toBeVisible();
+        await expectActionsShownOnHover(page, item);
 
         await metadata.openDeletionModal(fieldType.name);
 
@@ -280,9 +302,7 @@ test('the edit dialog only persists changes to a custom URL field from its Save 
     const item = metadata.getListItem(URL_FIELD_NAME);
 
     await expect(item).toBeVisible();
-    await item.hover();
-    await expect(item.getByTestId('vocabulary-item--start-editing')).toBeVisible();
-    await expect(item.getByTestId('vocabulary-item--start-removing')).toBeVisible();
+    await expectActionsShownOnHover(page, item);
 
     await metadata.openEditDialog(URL_FIELD_NAME);
 
@@ -293,6 +313,7 @@ test('the edit dialog only persists changes to a custom URL field from its Save 
     await expect(page.getByTestId('vocabulary-edit-field--name')).toBeVisible();
     await expect(dialog.getByLabel('Description')).toBeVisible();
     await expect(dialog.getByRole('textbox', {name: 'Type to search or create a new label'})).toBeVisible();
+    await expect(labelTags(dialog)).toHaveCount(0);
     await expect(dialog.getByLabel('Helper text')).toBeVisible();
     await expect(dialog.getByTestId('vocabulary-edit-modal--cancel')).toBeVisible();
     await expect(dialog.getByTestId('vocabulary-edit-modal--close')).toBeVisible();
@@ -313,6 +334,13 @@ test('the edit dialog only persists changes to a custom URL field from its Save 
     expect((await metadata.readSharedDialogValues()).description).toEqual(URL_FIELD_VALUES.description);
 
     await metadata.fillDialog({name: 'Renamed URL field', helperText: 'Paste a shortened URL'});
+
+    const labelInput = dialog.getByRole('textbox', {name: 'Type to search or create a new label'});
+
+    await labelInput.fill(URL_FIELD_LABEL);
+    await labelInput.press('Enter');
+    await expect(labelTags(dialog)).toHaveText([URL_FIELD_LABEL]);
+
     await metadata.save();
 
     await expect(metadata.getListItem('Renamed URL field')).toBeVisible();
@@ -323,6 +351,7 @@ test('the edit dialog only persists changes to a custom URL field from its Save 
         description: URL_FIELD_VALUES.description,
         helperText: 'Paste a shortened URL',
     });
+    await expect(labelTags(dialog)).toHaveText([URL_FIELD_LABEL]);
 });
 
 test('a saved custom URL field is offered to the content profile content section only', {
