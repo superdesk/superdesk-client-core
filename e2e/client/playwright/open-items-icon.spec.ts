@@ -56,6 +56,7 @@ test.describe('open items icon', () => {
 
         await openedArticles.openDashboard();
         await openedArticles.closeDashboard();
+        await expect(openedArticles.getDashboard()).not.toBeVisible();
 
         // The X only dismisses the view: nothing gets closed.
         await expect(slugline).toHaveValue(SELECTED_ARTICLE);
