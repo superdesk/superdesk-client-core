@@ -268,8 +268,8 @@ function getPackageItemsField(): IAuthoringFieldV2 {
 }
 
 /**
- * Packages use the `composite` content profile whatever `item.profile` says.
- * All of its fields are header fields (SDESK-7719), and package items are the only content.
+ * Packages use the `composite` content profile whatever `item.profile` says. Its fields go to the
+ * header (SDESK-7719), apart from the headline, which is a content field in every profile.
  */
 export function getPackageContentProfile<T>(
     compositeProfile: IContentProfile | null,
@@ -291,10 +291,9 @@ export function getPackageContentProfile<T>(
         return {
             id: 'packages-profile',
             name: gettext('Packages profile'),
-            header: OrderedMap([
-                [headlineField.id, headlineField],
-            ]),
+            header: OrderedMap<string, IAuthoringFieldV2>(),
             content: OrderedMap([
+                [headlineField.id, headlineField],
                 [packageItemsField.id, packageItemsField],
             ]),
         };
@@ -308,20 +307,18 @@ export function getPackageContentProfile<T>(
             && fieldsAdapter.hasOwnProperty(adjustId(fieldId)),
     );
 
-    const {header} = getProfileFields(
+    const {header, content} = getProfileFields(
         {editor, schema: compositeProfile.schema ?? {}, customFields: []},
         fieldsAdapter,
         getLabelForFieldId,
-        () => 'header',
+        (fieldId) => fieldId === 'headline' ? 'content' : 'header',
     );
 
     return {
         id: compositeProfile._id,
         name: compositeProfile.label,
         header: header,
-        content: OrderedMap([
-            [packageItemsField.id, packageItemsField],
-        ]),
+        content: content.set(packageItemsField.id, packageItemsField),
     };
 }
 

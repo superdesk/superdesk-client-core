@@ -54,15 +54,15 @@ describe('package content profile', () => {
     it('puts the fields of the composite profile in the header, ordered as configured', () => {
         const profile = getPackageContentProfile(compositeProfile, fieldsAdapter, (id) => id);
 
-        expect(profile.header.keySeq().toArray()).toEqual(['slugline', 'genre', 'headline']);
+        expect(profile.header.keySeq().toArray()).toEqual(['slugline', 'genre']);
         expect(profile.header.get('genre').fieldConfig.width).toBe(50);
         expect(profile.header.get('slugline').fieldConfig.readOnly).toBe(true);
     });
 
-    it('has package items as the only content', () => {
+    it('puts the headline in the content, above the package items', () => {
         const profile = getPackageContentProfile(compositeProfile, fieldsAdapter, (id) => id);
 
-        expect(profile.content.keySeq().toArray()).toEqual(['groups']);
+        expect(profile.content.keySeq().toArray()).toEqual(['headline', 'groups']);
         expect(profile.content.get('groups').fieldType).toBe(PACKAGE_ITEMS_FIELD_ID);
     });
 
@@ -78,7 +78,7 @@ describe('package content profile', () => {
     it('falls back to the headline when there is no composite profile', () => {
         const profile = getPackageContentProfile(null, fieldsAdapter, (id) => id);
 
-        expect(profile.header.keySeq().toArray()).toEqual(['headline']);
-        expect(profile.content.keySeq().toArray()).toEqual(['groups']);
+        expect(profile.header.keySeq().toArray()).toEqual([]);
+        expect(profile.content.keySeq().toArray()).toEqual(['headline', 'groups']);
     });
 });
