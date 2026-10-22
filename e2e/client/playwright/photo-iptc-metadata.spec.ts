@@ -15,7 +15,8 @@ import {restoreDatabaseSnapshot} from './utils';
  * being findable in global search by a string that only its IPTC data carries.
  *
  * Case 1321173975 ingests over FTP and every one of its four expected results is
- * about that feed. None of them is reachable from a browser test here:
+ * about that feed. None of them is reachable from a browser test here, so the case
+ * is annotated as a blocker and this test is only related to it:
  *
  * - "All images are ingested successfully and are moved to the _PROCESSED folder
  *   on FTP server" and "Each image is ingested once": the case feeds from an
@@ -58,7 +59,7 @@ const IPTC_MARKER = 'ref2017.1';
 
 test('photo IPTC metadata becomes the item metadata and is searchable', {
     annotation: [
-        {type: 'confluence', description: '1321173975 partial'}, // Ingest of photos with IPTC metadata
+        {type: 'confluence', description: '1321173975 blocker'}, // Ingest of photos with IPTC metadata
     ],
 }, async ({page}) => {
     // The 30s default leaves no room: one run of this test boots the exiftool
