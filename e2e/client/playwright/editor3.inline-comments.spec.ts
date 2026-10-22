@@ -1,6 +1,7 @@
 import {Locator, Page, expect, test} from '@playwright/test';
 import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
+import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 import {loginAs, pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {getEditor3Field, getEditor3TextRun} from './utils/editor3';
 
@@ -75,21 +76,27 @@ function getCommentPopup(page: Page): Locator {
  * `background-color: var(--sd-editor-colour__comment-bg)` (highlightsConfig.ts); the
  * token lives on the authoring `.theme-container`, not `:root`, and holds an `hsl()`
  * value the browser reports back as `rgb()`, so it's read through a probe mounted
- * inside the field instead of being hardcoded.
+ * inside the field instead of being hardcoded. An unresolved token would read as
+ * NO_BACKGROUND and make every highlighted/not-highlighted check indistinguishable,
+ * so that is rejected here.
  */
-function getCommentHighlightColor(body: Locator): Promise<string> {
-    return body.evaluate((element) => {
+async function getCommentHighlightColor(body: Locator): Promise<string> {
+    const color = await body.evaluate((element) => {
         const probe = document.createElement('span');
 
         probe.style.backgroundColor = 'var(--sd-editor-colour__comment-bg)';
         element.appendChild(probe);
 
-        const color = window.getComputedStyle(probe).backgroundColor;
+        const probeColor = window.getComputedStyle(probe).backgroundColor;
 
         probe.remove();
 
-        return color;
+        return probeColor;
     });
+
+    expect(color).not.toBe(NO_BACKGROUND);
+
+    return color;
 }
 
 async function typeBody(page: Page): Promise<Locator> {
@@ -125,10 +132,10 @@ function getCommentDialog(page: Page): Locator {
 }
 
 /**
- * Adds a comment on the trailing word of the body through the toolbar Comment flow.
- * The fill is verified and retried as one unit: the entry popup can re-render right
- * after it opens and drop what was just typed (same behaviour `addEditor3Embed`
- * documents for `EmbedInput`).
+ * Adds a comment on the trailing word of the field through the toolbar Comment flow.
+ * Fill, check and Submit are retried as one unit: the entry popup can re-render right
+ * after it opens and drop what was just typed, even after the check saw it (same
+ * behaviour `addEditor3Embed` documents for `EmbedInput`), which leaves Submit disabled.
  */
 async function addComment(page: Page, body: Locator, message: string): Promise<void> {
     const dialog = getCommentDialog(page);
@@ -142,9 +149,9 @@ async function addComment(page: Page, body: Locator, message: string): Promise<v
     await expect(async () => {
         await input.fill(message);
         await expect(input).toHaveValue(message, {timeout: 1000});
+        await dialog.getByTestId('submit').click({timeout: 2000});
     }).toPass();
 
-    await dialog.getByTestId('submit').click();
     await expect(dialog).toHaveCount(0);
 }
 
@@ -462,13 +469,14 @@ test('deleting an inline comment through its confirmation dialog', {
     await expect(widget.getByTestId('no-comments')).toBeVisible();
 });
 
-test('replying to an inline comment, then editing and deleting the reply', {
+test('replying to an inline comment with and without a mention, and only the author editing or deleting it', {
     annotation: [
         {type: 'confluence', description: '1311834929 complete'}, // Reply to inline comment
     ],
-}, async ({page}) => {
+}, async ({page, browser}) => {
     await restoreDatabaseSnapshot({snapshotName: SNAPSHOT});
 
+    const authoring = new Authoring(page);
     const headline = 'Inline comment replied to';
 
     const body = await createArticleWithComment(page, headline);
@@ -512,9 +520,61 @@ test('replying to an inline comment, then editing and deleting the reply', {
 
     // with the reply gone the popup holds one message again, the comment's own
     await expect(popup.getByTestId('comment-text')).toHaveText(COMMENT_TEXT);
+
+    await focusReplyField(popup);
+    await replyInput.pressSequentially('@Sam');
+
+    const suggestions = page.locator('.mentions-input__suggestions');
+
+    await expect(suggestions).toBeVisible();
+    await suggestions.getByText('Sam Gamgee', {exact: true}).click();
+    await replyInput.pressSequentially('see this');
+    await clickInPopup(addReplyBox.getByTestId('submit'));
+
+    await expect(reply).toHaveCount(1);
+    await expect(reply.getByTestId('comment-text')).toHaveText('Sam Gamgee see this');
+    await expect(reply.getByTestId('comment-text').getByRole('link')).toHaveText('Sam Gamgee');
+
+    await authoring.save();
+    await authoring.close();
+
+    const otherContext = await browser.newContext({storageState: {cookies: [], origins: []}});
+    const otherPage = await otherContext.newPage();
+
+    try {
+        // fixture users with a known password use the username as one
+        await loginAs(otherPage, 'samgamgee', 'samgamgee');
+
+        const otherMonitoring = new Monitoring(otherPage);
+
+        await otherPage.goto('/#/workspace/monitoring');
+        await otherMonitoring.selectDeskOrWorkspace('Sports');
+        await otherMonitoring.getArticleLocator(headline).dblclick();
+
+        const otherBody = getEditor3Field(otherPage, 'body_html');
+        const otherPopup = await openCommentPopup(otherPage, otherBody);
+        const otherReplies = otherPopup.getByTestId('comment-reply');
+
+        await expect(otherReplies).toHaveCount(1);
+        await expect(otherReplies.getByTestId('comment-text')).toHaveText('Sam Gamgee see this');
+
+        // neither John Doe's comment nor his reply offers Sam Gamgee the Edit/Delete menu
+        await expect(otherPopup.getByTestId('highlight-actions-toggle')).toHaveCount(0);
+
+        await addReply(otherPopup, 'reply by Sam');
+
+        const ownReply = otherReplies.filter({hasText: 'reply by Sam'});
+
+        await expect(otherReplies).toHaveCount(2);
+        await expect(ownReply.getByTestId('comment-author')).toHaveText('Sam Gamgee');
+        await expect(ownReply.getByTestId('highlight-actions-toggle')).toHaveCount(1);
+        await expect(otherPopup.getByTestId('highlight-actions-toggle')).toHaveCount(1);
+    } finally {
+        await otherContext.close();
+    }
 });
 
-test('listing inline comments in the widget, and resolving one moving it across the filters', {
+test('listing inline comments in the widget grouped by field, and resolving one moving it across the filters', {
     annotation: [
         {type: 'confluence', description: '1311834927 complete'}, // Resolve inline comment
         {type: 'confluence', description: '1311834935 complete'}, // Inline comments in Editor Sidebar
@@ -525,6 +585,18 @@ test('listing inline comments in the widget, and resolving one moving it across 
     const authoring = new Authoring(page);
     const monitoring = new Monitoring(page);
     const headline = 'Inline comment resolved';
+    const abstractCommentText = 'first thoughts on the abstract';
+
+    // `editor3-comments` enables comments on the body only; the widget groups comments
+    // by field, which takes comments in a second field to show. The list replaces the
+    // abstract's options, so it repeats the ones the Story profile already has.
+    await page.goto('/#/settings/content-profiles');
+    await new ContentProfileSettings(page).addFormattingOptionToContentProfile({
+        profileName: 'Story',
+        sectionName: 'Content fields',
+        fieldName: 'Abstract',
+        formattingOptionsToAdd: ['bold', 'italic', 'underline', 'link', 'comments'],
+    });
 
     const body = await createArticleWithComment(page, headline);
     const popup = await openCommentPopup(page, body);
@@ -532,27 +604,42 @@ test('listing inline comments in the widget, and resolving one moving it across 
     await addReply(popup, REPLY_TEXT);
     await expect(popup.getByTestId('comment-reply')).toHaveCount(1);
 
+    const abstract = getEditor3Field(page, 'abstract');
+
+    await abstract.getByRole('textbox').click();
+    await page.keyboard.type(BODY_TEXT);
+    await expect(getEditor3TextRun(abstract, BODY_TEXT)).toBeVisible();
+    await addComment(page, abstract, abstractCommentText);
+
     await authoring.save();
 
     const widget = await authoring.openWidget('Inline comments');
-    const group = widget.getByTestId('inline-comments-group');
-    const listed = widget.getByTestId('inline-comment');
+    const groups = widget.getByTestId('inline-comments-group');
+    const bodyGroup = groups.and(page.locator('[data-test-value="Body HTML"]'));
+    const abstractGroup = groups.and(page.locator('[data-test-value="Abstract"]'));
+    const bodyComment = bodyGroup.getByTestId('inline-comment');
 
     // InlineCommentsCtrl seeds the filter with RESOLVED, so the widget opens on the
     // Resolved list rather than on Unresolved
     await expect(widget.getByTestId('no-comments')).toBeVisible();
 
     await widget.getByTestId('filter-unresolved').click();
-    await expect(group).toHaveCount(1);
-    await expect(group).toHaveAttribute('data-test-value', 'Body HTML');
-    await expect(listed).toHaveCount(1);
-    await expect(listed.getByTestId('author').first()).toHaveText('John Doe:');
-    await expect(listed.getByTestId('date').first()).not.toBeEmpty();
-    await expect(listed).toContainText(COMMENT_TEXT);
-    await expect(listed.getByTestId('inline-comment-reply')).toHaveCount(1);
-    await expect(listed.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
-    await expect(listed.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
-    await expect(listed.getByTestId('resolution')).toHaveCount(0);
+    await expect(groups).toHaveCount(2);
+    await expect(abstractGroup.getByTestId('inline-comment')).toHaveCount(1);
+    await expect(abstractGroup.getByTestId('inline-comment')).toContainText(abstractCommentText);
+    await expect(abstractGroup.getByTestId('inline-comment')).not.toContainText(COMMENT_TEXT);
+    await expect(bodyComment).toHaveCount(1);
+    await expect(bodyComment).not.toContainText(abstractCommentText);
+
+    // the author's avatar shows John Doe's initials
+    await expect(bodyComment.locator('sd-user-avatar').first()).toHaveText('JD');
+    await expect(bodyComment.getByTestId('author').first()).toHaveText('John Doe:');
+    await expect(bodyComment.getByTestId('date').first()).not.toBeEmpty();
+    await expect(bodyComment).toContainText(COMMENT_TEXT);
+    await expect(bodyComment.getByTestId('inline-comment-reply')).toHaveCount(1);
+    await expect(bodyComment.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
+    await expect(bodyComment.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
+    await expect(bodyComment.getByTestId('resolution')).toHaveCount(0);
 
     // the controller reads the item once per activation, so the widget has to be closed
     // before the comment is resolved and reopened afterwards to show the new state
@@ -570,25 +657,29 @@ test('listing inline comments in the widget, and resolving one moving it across 
     const reopenedWidget = await authoring.openWidget('Inline comments');
     const resolved = reopenedWidget.getByTestId('inline-comment');
 
-    await expect(reopenedWidget.getByTestId('inline-comments-group')).toHaveCount(1);
-    await expect(resolved).toHaveCount(1);
-    await expect(resolved).toContainText(COMMENT_TEXT);
-    await expect(resolved.getByTestId('inline-comment-reply')).toHaveCount(1);
-    await expect(resolved.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
-    await expect(resolved.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
-    await expect(resolved.getByTestId('resolution')).toContainText('Resolved by John Doe');
+    async function expectOnlyBodyCommentResolved(): Promise<void> {
+        await expect(groups).toHaveCount(1);
+        await expect(bodyGroup).toHaveCount(1);
+        await expect(resolved).toHaveCount(1);
+        await expect(resolved).toContainText(COMMENT_TEXT);
+        await expect(resolved.getByTestId('inline-comment-reply')).toHaveCount(1);
+        await expect(resolved.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
+        await expect(resolved.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
+        await expect(resolved.getByTestId('resolution')).toContainText('Resolved by John Doe');
+    }
 
+    await expectOnlyBodyCommentResolved();
+
+    // the abstract's comment was not resolved and stays alone on the Unresolved list
     await reopenedWidget.getByTestId('filter-unresolved').click();
-    await expect(reopenedWidget.getByTestId('no-comments')).toBeVisible();
+    await expect(groups).toHaveCount(1);
+    await expect(abstractGroup.getByTestId('inline-comment')).toHaveCount(1);
+    await expect(abstractGroup.getByTestId('inline-comment')).toContainText(abstractCommentText);
 
     // back through the Resolved control itself: the assertions above reach the resolved
     // list through the filter the controller seeds, never through the radio
     await reopenedWidget.getByTestId('filter-resolved').click();
-    await expect(resolved).toHaveCount(1);
-    await expect(resolved).toContainText(COMMENT_TEXT);
-    await expect(resolved.getByTestId('inline-comment-reply')).toContainText(REPLY_TEXT);
-    await expect(resolved.getByTestId('commented-text')).toContainText(COMMENTED_TEXT);
-    await expect(resolved.getByTestId('resolution')).toContainText('Resolved by John Doe');
+    await expectOnlyBodyCommentResolved();
 
     await authoring.close();
 
