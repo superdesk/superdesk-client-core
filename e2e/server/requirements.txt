@@ -242,6 +242,8 @@ pyasn1-modules==0.4.2
     # via oauth2client
 pycparser==2.23
     # via cffi
+pyexiftool==0.5.6
+    # via -r requirements.in
 pydantic==2.11.9
     # via superdesk-core
 pydantic-core==2.33.2

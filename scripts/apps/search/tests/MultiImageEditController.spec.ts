@@ -129,4 +129,27 @@ describe('multi image edit controller', () => {
             $rootScope.$digest();
             expect($scope.getSelectedImages()).toEqual([]);
         }));
+
+    it('selects upload items as they become ready until the selection changes',
+        inject(($rootScope, $controller) => {
+            const $scope = $rootScope.$new();
+
+            $scope.isUpload = true;
+            $scope.imagesOriginal = [];
+            $controller(MultiImageEditController, {$scope});
+            $rootScope.$digest();
+
+            $scope.imagesOriginal = [{_id: 1}];
+            $rootScope.$digest();
+            expect($scope.getSelectedImages().map((image) => image._id)).toEqual([1]);
+
+            $scope.imagesOriginal = [...$scope.imagesOriginal, {_id: 2}];
+            $rootScope.$digest();
+            expect($scope.getSelectedImages().map((image) => image._id)).toEqual([1, 2]);
+
+            $scope.unselectAll();
+            $scope.imagesOriginal = [...$scope.imagesOriginal, {_id: 3}];
+            $rootScope.$digest();
+            expect($scope.getSelectedImages()).toEqual([]);
+        }));
 });

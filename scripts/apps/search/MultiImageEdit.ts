@@ -7,6 +7,7 @@ import {gettext} from 'core/utils';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
+    isUpload: boolean;
     validator: any;
     images: any;
     imagesOriginal: any;
@@ -48,6 +49,7 @@ export function MultiImageEditController(
 ) {
     const saveHandler = $scope.saveHandler;
     let selectionInitialized = false;
+    let selectionChanged = false;
     let unsavedChangesExist = false;
 
     $scope.images = [];
@@ -70,6 +72,7 @@ export function MultiImageEditController(
     $scope.isDirty = () => unsavedChangesExist;
 
     $scope.selectAll = () => {
+        selectionChanged = true;
         if (Array.isArray($scope.images)) {
             $scope.images.forEach((image) => {
                 image.selected = true;
@@ -79,6 +82,7 @@ export function MultiImageEditController(
     };
 
     $scope.unselectAll = () => {
+        selectionChanged = true;
         if (Array.isArray($scope.images)) {
             $scope.images.forEach((image) => {
                 image.selected = false;
@@ -94,6 +98,7 @@ export function MultiImageEditController(
         Array.isArray($scope.images) && $scope.images.some((image) => image.selected === true);
 
     $scope.selectImage = (image) => {
+        selectionChanged = true;
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
@@ -109,7 +114,13 @@ export function MultiImageEditController(
         if (images != null && images.length) {
             if (!selectionInitialized) {
                 selectionInitialized = true;
-                $scope.selectAll();
+                $scope.images.forEach((image) => {
+                    image.selected = true;
+                });
+            } else if ($scope.isUpload === true && !selectionChanged) {
+                $scope.images.forEach((image) => {
+                    image.selected = true;
+                });
             }
             updateMetadata();
         }
