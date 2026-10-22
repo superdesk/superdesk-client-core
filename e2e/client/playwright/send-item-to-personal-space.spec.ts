@@ -20,7 +20,7 @@ import {getStorageState} from './utils/storage-state';
  *
  * Not covered:
  *  - the `send_to_personal` user privilege gate (SDANSA-424: "I expect to have a user privilege
- *    for Send items to personal space"). Blocker: missing fixture. The `main` snapshot ships no
+ *    for Send items to personal space"). Missing fixture: the `main` snapshot ships no
  *    roles and its only usable login is the administrator, who implicitly holds every privilege,
  *    so there is no way to log in as a user that has the ordinary authoring privileges but not
  *    `send_to_personal`.
@@ -90,7 +90,7 @@ test.describe('sending an item to the personal space', {
             await panel.selectDestination(PERSONAL_SPACE);
             await panel.send();
 
-            // sending the item that is currently open closes authoring
+            // sending the open item closes authoring
             await expect(page.getByTestId('authoring-topbar')).toBeHidden();
             await expect(articleInGroup(page, SPORTS_WORKING_STAGE, 'test sports story')).toBeHidden();
 

@@ -1,10 +1,8 @@
 import {Locator, Page, expect} from '@playwright/test';
 
 /**
- * Drives the interactive actions panel (Send to / Duplicate to / Fetch to).
- * The same markup is rendered whether the panel is opened from the authoring
- * topbar, from a monitoring item's context menu or from the multi action bar,
- * so one driver covers all three entry points.
+ * Drives the interactive actions panel (Send to / Duplicate to / Fetch to). The markup is the same
+ * from the authoring topbar, a monitoring context menu or the multi action bar.
  */
 export class InteractiveActionsPanel {
     private page: Page;
@@ -23,8 +21,8 @@ export class InteractiveActionsPanel {
     }
 
     /**
-     * Opens the destination dropdown and returns the option list. The list lives in a
-     * portal outside the panel, hence it is located from the page and not from `root`.
+     * Opens the destination dropdown and returns the option list. The list is rendered in a
+     * portal outside the panel, so it is located from the page, not from `root`.
      */
     async openDestinationOptions(): Promise<Locator> {
         await this.root.getByTestId('destination-select').getByTestId('open-popover').click();
