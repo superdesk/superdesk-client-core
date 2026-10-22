@@ -183,8 +183,18 @@ async function addAnnotation(page: Page, body: Locator, message: string): Promis
     await getAnnotationButton(body).click();
 
     await expect(getAnnotationBodyInput(dialog)).toBeVisible();
-    await dialog.getByTestId('annotation-type-select').selectOption({label: SECOND_TYPE.name});
+
+    // The dialog can still reset the select to its seeded first type right after it
+    // opens, so the choice is repeated until it holds.
+    const typeSelect = dialog.getByTestId('annotation-type-select');
+
+    await expect(async () => {
+        await typeSelect.selectOption({label: SECOND_TYPE.name});
+        await expect(typeSelect).toHaveValue(SECOND_TYPE.qcode, {timeout: 1000});
+    }).toPass({timeout: 10000});
+
     await writeAnnotationBody(dialog, message);
+    await expect(typeSelect).toHaveValue(SECOND_TYPE.qcode);
 
     await dialog.getByTestId('submit').click();
     await expect(dialog).toHaveCount(0);
@@ -225,8 +235,8 @@ async function openAnnotationPopup(page: Page, body: Locator): Promise<Locator> 
 }
 
 /**
- * Asserts the type and body of the annotation on the trailing word, reopening the popup
- * until they match.
+ * Asserts the type and body of the annotation on the trailing word, and with `bold` that the
+ * whole body is bold, reopening the popup until they match.
  *
  * For an article that was just reopened, where `openAnnotationPopup` alone is not enough:
  * editor3 resets its selection once more while it initializes, which drops the caret off the
@@ -237,7 +247,7 @@ async function openAnnotationPopup(page: Page, body: Locator): Promise<Locator> 
 async function expectReopenedAnnotation(
     page: Page,
     body: Locator,
-    expected: {type: string; message: string},
+    expected: {type: string; message: string; bold?: boolean},
 ): Promise<void> {
     const popup = getAnnotationPopup(page);
 
@@ -246,6 +256,11 @@ async function expectReopenedAnnotation(
         await expect(popup.getByTestId('annotation-type'))
             .toHaveText(`Annotation type: ${expected.type}`, {timeout: 2000});
         await expect(popup.getByTestId('annotation-body')).toHaveText(expected.message, {timeout: 2000});
+
+        if (expected.bold === true) {
+            await expect(popup.getByTestId('annotation-body').locator('b'))
+                .toHaveText(expected.message, {timeout: 2000});
+        }
     }).toPass({timeout: 30000});
 }
 
@@ -488,7 +503,7 @@ test('editing an annotation from its preview, and the edit surviving a reopen', 
 
     await expect(headlineField).toHaveText(headline);
     await expectAnnotatedRun(getEditor3TextRun(body, ANNOTATED_TEXT), underlineColor);
-    await expectReopenedAnnotation(page, body, {type: FIRST_TYPE.name, message: EDITED_ANNOTATION_TEXT});
+    await expectReopenedAnnotation(page, body, {type: FIRST_TYPE.name, message: EDITED_ANNOTATION_TEXT, bold: true});
 });
 
 test('deleting an annotation through its confirmation dialog', {
@@ -529,6 +544,10 @@ test('deleting an annotation through its confirmation dialog', {
 
     // the annotated word is no longer a leaf of its own once the highlight is gone
     await expectPlainRun(getEditor3TextRun(body, BODY_TEXT));
+
+    // Closing before the deletion reaches the article model skips the "Save changes?"
+    // prompt that closeAndSave answers.
+    await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
 
     await authoring.closeAndSave();
 
