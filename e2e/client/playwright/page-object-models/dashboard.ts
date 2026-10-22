@@ -2,18 +2,13 @@ import {Locator, Page, Response, expect} from '@playwright/test';
 
 /**
  * The dashboard widget grid is driven by gridster.js. A widget's placement and
- * size are not inline styles but the `data-col` / `data-row` / `data-sizex` /
- * `data-sizey` attributes gridster writes on the grid item; the pixel position
- * comes from a generated stylesheet keyed off those attributes. Assert on the
- * attributes, they are the state the dashboard also persists.
+ * size are the `data-col` / `data-row` / `data-sizex` / `data-sizey` attributes
+ * gridster writes on the grid item, not inline styles. Assert on the
+ * attributes: they are the state the dashboard persists.
  */
 export class Dashboard {
-    /**
-     * One grid step in pixels. gridster is configured in
-     * scripts/apps/dashboard/grid/grid.ts with widget_base_dimensions
-     * [320, 250] and widget_margins [20, 20]; a step is the base dimension
-     * plus a margin on each side.
-     */
+    // One grid step in pixels: gridster's widget_base_dimensions [320, 250] plus
+    // a [20, 20] margin on each side (scripts/apps/dashboard/grid/grid.ts).
     static readonly COLUMN_STEP = 360;
     static readonly ROW_STEP = 290;
 
@@ -31,17 +26,16 @@ export class Dashboard {
     }
 
     /**
-     * Adding a widget and accepting a rearrange both persist the dashboard the
-     * same way: a background `PATCH /workspaces/<id>` fired after the click.
-     * Every action that triggers one has to wait for the response, otherwise a
-     * following reload aborts the request and the change silently reverts, and
-     * a second PATCH sent while the first is in flight carries a stale
-     * `If-Match` etag and is rejected with 412.
+     * Adding a widget and accepting a rearrange both persist the dashboard with
+     * a background `PATCH /workspaces/<id>` fired after the click. Every action
+     * that triggers one has to wait for the response, otherwise a following
+     * reload aborts the request and the change silently reverts, and a second
+     * PATCH sent while the first is in flight carries a stale `If-Match` etag
+     * and is rejected with 412.
      *
-     * The predicate matches on URL and method only. Filtering on the status
-     * here would leave a failed save unmatched, so the helper would hang until
-     * the `waitForResponse` timeout instead of reporting the status; the status
-     * is checked in `expectLayoutPersisted` once the response has arrived.
+     * The predicate matches on URL and method only: filtering on status would
+     * leave a failed save unmatched and hang until the timeout. The status is
+     * checked in `expectLayoutPersisted`.
      */
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
@@ -85,12 +79,10 @@ export class Dashboard {
     }
 
     /**
-     * Drags a widget by whole grid steps.
-     *
-     * The drop target is an empty grid cell, which has no element for
-     * `locator.dragTo()` to aim at, so the mouse events are driven by hand.
-     * The first mousemove past gridster's drag threshold only starts the drag;
-     * the drop cell is recomputed on the moves after it, hence `steps`.
+     * Drags a widget by whole grid steps. The drop target is an empty grid cell,
+     * which `locator.dragTo()` has no element to aim at, so the mouse is driven
+     * by hand. The first mousemove past gridster's drag threshold only starts
+     * the drag; the drop cell is recomputed on the moves after it, hence `steps`.
      */
     async dragWidget(widgetId: string, steps: {columns: number; rows: number}): Promise<void> {
         const widget = this.getWidget(widgetId);
@@ -101,8 +93,8 @@ export class Dashboard {
         }
 
         // Grab the widget header: the remove and resize controls sit on the
-        // widget's edges and corners, and pressing one of them would fire its
-        // click handler on mouseup instead of moving the widget.
+        // edges and corners, and pressing one would fire its click handler
+        // instead of moving the widget.
         const fromX = box.x + box.width / 2;
         const fromY = box.y + 30;
 

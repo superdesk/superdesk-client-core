@@ -5,26 +5,13 @@ import {restoreDatabaseSnapshot} from './utils';
 /**
  * QA case "Rearrange widgets" (Workspace, Confluence 1308524872).
  *
- * The documented expected results and where they are covered:
- *  - "Click Rearrange Widgets and you'll see an x appear in the top-right
- *    corner of each widget" -> first test.
- *  - "resize widgets by clicking the grey arrows that appear at the edges of
- *    each widget when you hover over them" -> first test (the arrows only
- *    appear on hover) and second test (clicking them resizes).
- *  - "Click and drag the body of the widget to move it to a different spot" and
- *    "if there is a gap above one of the widgets, it will automatically move up
- *    to fill the space" -> third test, which drops the widget a row lower than
- *    the top of a free column and asserts it lands back on row 1.
- *  - "Click x for each widget you'd like to delete" -> fourth test.
- *  - "then select and drag a widget to the desired area of your Dashboard to
- *    place it" -> not covered, and there is no behaviour to cover it with: the
- *    add-widget modal has no drag-to-place, its widget list is click-only and
- *    the widget is placed by the "Add This Widget" button
- *    (scripts/apps/dashboard/views/workspace.html).
+ * Not covered: "select and drag a widget to the desired area of your Dashboard to
+ * place it". The add-widget modal has no drag-to-place: its widget list is
+ * click-only and the widget is placed by the "Add This Widget" button
+ * (scripts/apps/dashboard/views/workspace.html).
  *
  * The workspace fixture ships a single Monitor widget, so each test adds a
- * World Clock through the (single-action) add-widget flow to get a second
- * widget to rearrange against.
+ * World Clock to get a second widget to rearrange against.
  */
 test.describe('rearranging dashboard widgets', {
     annotation: [
@@ -44,8 +31,7 @@ test.describe('rearranging dashboard widgets', {
         await dashboard.addWidget(WORLD_CLOCK);
 
         // The fixture stores no position for the Monitor widget, so gridster
-        // packs both widgets into the first row. The rest of the spec moves and
-        // resizes against these coordinates.
+        // packs both widgets into the first row.
         await expect(dashboard.getWidget(MONITOR)).toHaveAttribute('data-col', '1');
         await expect(dashboard.getWidget(MONITOR)).toHaveAttribute('data-row', '1');
         await expect(dashboard.getWidget(WORLD_CLOCK)).toHaveAttribute('data-col', '2');
@@ -69,10 +55,9 @@ test.describe('rearranging dashboard widgets', {
         await expect(monitor.getByTestId('widget-remove')).toBeVisible();
         await expect(worldClock.getByTestId('widget-remove')).toBeVisible();
 
-        // The arrows are rendered as soon as rearrange mode starts but are
-        // fully transparent until the widget is hovered, which is the "appear
-        // when you hover over them" behaviour under test. Playwright treats a
-        // zero-opacity element as visible, so assert the computed opacity.
+        // The arrows are rendered but fully transparent until the widget is
+        // hovered. Playwright treats a zero-opacity element as visible, so
+        // assert the computed opacity.
         for (const arrow of ['widget-resize-left', 'widget-resize-right', 'widget-resize-up', 'widget-resize-down']) {
             await expect(worldClock.getByTestId(arrow)).toHaveCSS('opacity', '0');
         }
@@ -83,7 +68,6 @@ test.describe('rearranging dashboard widgets', {
             await expect(worldClock.getByTestId(arrow)).toHaveCSS('opacity', '0.5');
         }
 
-        // Only the hovered widget shows its arrows.
         await expect(monitor.getByTestId('widget-resize-right')).toHaveCSS('opacity', '0');
     });
 
@@ -116,9 +100,8 @@ test.describe('rearranging dashboard widgets', {
 
         await dashboard.startRearranging();
 
-        // Dropped one column to the right and one row down. The third column is
-        // empty, so gridster pulls the widget back up to the first row instead
-        // of leaving a gap above it.
+        // Dropped one column right and one row down. The third column is empty,
+        // so gridster pulls the widget back up to the first row.
         await dashboard.dragWidget(WORLD_CLOCK, {columns: 1, rows: 1});
 
         await expect(worldClock).toHaveAttribute('data-col', '3');
