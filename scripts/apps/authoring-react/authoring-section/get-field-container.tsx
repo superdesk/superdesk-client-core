@@ -57,6 +57,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         input={this.props.children}
                         validationError={validationError}
                         miniToolbar={this.props.miniToolbar}
+                        labelActions={this.props.labelActions}
                     />
                 );
             }
@@ -78,7 +79,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, labelActions} = this.props;
 
             return (
                 <div className="authoring-header-field">
@@ -93,6 +94,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                         {field.fieldConfig.required && (
                             <RequiredIndicatorForHeader />
                         )}
+                        {labelActions}
                     </span>
 
                     <div className="authoring-header-field__body">
@@ -135,7 +137,7 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
 
     class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
         render() {
-            const {miniToolbar} = this.props;
+            const {miniToolbar, labelActions} = this.props;
 
             return (
                 <div className="authoring-section__field">
@@ -160,6 +162,8 @@ export function getFieldContainer(options: IGetFieldContainerOptions) {
                             {field.fieldConfig.required && (
                                 <RequiredIndicatorForContent />
                             )}
+
+                            {labelActions}
                         </Spacer>
 
                         {
