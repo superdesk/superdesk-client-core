@@ -1,4 +1,4 @@
-<span ng-if="preview && contentExpiry.expire">
+<span ng-if="preview && contentExpiry.expire" data-test-id="content-expiry-summary">
     <span ng-if="!contentExpiry.actualExpiry">{{contentExpiry.header | translate}}
     {{ contentExpiry.days}} <span class="helper-text" translate>day</span>
     {{ contentExpiry.hours}} <span class="helper-text" translate>hr</span>
@@ -9,23 +9,25 @@
     </span>
 </span>
 
-<label ng-if="preview && !contentExpiry.expire">{{contentExpiry.header | translate}}
+<label ng-if="preview && !contentExpiry.expire"
+       data-test-id="content-expiry-summary">{{contentExpiry.header | translate}}
   {{contentExpiry.actualExpiry.text | translate}} {{contentExpiry.actualExpiry.expiry | translate}}
 </label>
 
-<div ng-if="!preview && contentExpiry.expire" class="form__row">
+<div ng-if="!preview && contentExpiry.expire" class="form__row" data-test-id="content-expiry">
     <div class="">
-        <span sd-switch ng-model="contentExpiry.expire"></span>
+        <span sd-switch ng-model="contentExpiry.expire" data-test-id="content-expiry--toggle"></span>
         <label class="inline-label">{{contentExpiry.header | translate}}
             <span class="label label--primary label--hollow"
                   ng-if="contentExpiry.actualExpiry"
+                  data-test-id="content-expiry--effective"
                   title="{{ contentExpiry.actualExpiry.expiry | translate}}">{{ contentExpiry.actualExpiry.text | translate }}</span>
         </label>
     </div>
     <div class="form__row form__row--flex form__row--no-padding">
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.days" min ="0" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.days" min ="0" required data-test-id="content-expiry--days">
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -33,7 +35,7 @@
         </div>
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.hours" min ="0" max="23" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.hours" min ="0" max="23" required data-test-id="content-expiry--hours">
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -41,7 +43,7 @@
         </div>
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.minutes" min ="0" max="59" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.minutes" min ="0" max="59" required data-test-id="content-expiry--minutes">
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -51,12 +53,13 @@
 </div>
 
 
-<div ng-if="!preview && !contentExpiry.expire" class="form__row">
+<div ng-if="!preview && !contentExpiry.expire" class="form__row" data-test-id="content-expiry">
     <div class="form__row-item" style="padding-bottom: 1.4rem;">
-        <span sd-switch ng-model="contentExpiry.expire"></span>
+        <span sd-switch ng-model="contentExpiry.expire" data-test-id="content-expiry--toggle"></span>
         <label class="inline-label">{{contentExpiry.header | translate}}
             <span class="label label--primary label--hollow"
                   ng-if="contentExpiry.actualExpiry"
+                  data-test-id="content-expiry--effective"
                   title="{{ contentExpiry.actualExpiry.expiry | translate}}">{{ contentExpiry.actualExpiry.text | translate }}</span>
         </label>
     </div>
