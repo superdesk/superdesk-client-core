@@ -7,17 +7,13 @@ import {setEditor3FieldValue} from './utils/editor3';
 /**
  * QA case "Find and replace" (Authoring widgets, 1310294123).
  *
- * The widget finds every occurrence of the text typed in Find, replaces the
- * currently selected one with the text typed in Replace with, and replaces the
- * remaining ones in a single step through Replace All.
- *
  * Every documented expected result is covered. Case sensitivity and the
  * previous/next match controls are not part of the documented scenario and are
  * left out on purpose.
  *
- * The widget is exercised in authoring-angular, the default implementation, which
- * is what the case describes: it selects the first match as soon as a search term
- * is typed, so Replace acts on it right away.
+ * Runs against authoring-angular, the default implementation, which is what the
+ * case describes: it selects the first match as soon as a search term is typed,
+ * so Replace acts on it right away.
  */
 test.describe('find and replace widget', () => {
     const WIDGET = 'Find and Replace';
