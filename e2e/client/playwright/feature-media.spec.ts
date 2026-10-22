@@ -41,9 +41,6 @@ import {setEditor3FieldValue} from './utils/editor3';
  * the case uses an image, so the allowed set is covered by refusing a file that is
  * none of the three and by the refusal naming all three, not by uploading one of
  * each into the field.
- *
- * The case id is on every test: `complete` on the one that walks the whole
- * documented flow, `partial` on the tests that add a single refusal each.
  */
 
 // Uploads run through a real POST plus the server-side rendition generation, and the
@@ -117,11 +114,8 @@ function featureMediaPlaceholder(page: Page): Locator {
 }
 
 /**
- * Opens Sports monitoring, waits for the list to hold the item the snapshot puts
- * there and creates an article from the desk's default template.
- *
- * The id comes off the response that created the article, and is what the article's
- * own writes are told apart from the uploaded image's further down.
+ * Creates an article from the desk's default template and returns its id, which is how
+ * the article's own writes are told apart from the uploaded image's further down.
  */
 async function createArticle(page: Page): Promise<string> {
     const monitoring = new Monitoring(page);
@@ -146,7 +140,6 @@ async function createArticle(page: Page): Promise<string> {
     return (await response.json())._id;
 }
 
-/** Types a headline into the opened article and saves it through the topbar. */
 async function nameAndSaveArticle(page: Page, articleId: string, headline: string): Promise<void> {
     const saveButton = page.getByTestId('authoring-topbar').getByTestId('save');
 
@@ -210,7 +203,6 @@ async function uploadImageToFeatureMedia(
     await expect(mediaEditor.header).toBeHidden();
 }
 
-/** The image sitting in the Feature media field, and the caption typed for it. */
 async function expectImageInFeatureMedia(page: Page, description: string): Promise<void> {
     const image = featureMedia(page).getByTestId('association-image');
 
@@ -224,10 +216,7 @@ async function expectImageInFeatureMedia(page: Page, description: string): Promi
     await expect(featureMediaPlaceholder(page)).toHaveCount(0);
 }
 
-/**
- * Asserts the article is reachable from global search. The article list is read as
- * it comes up, without querying by any search field.
- */
+/** The article list is read as it comes up, without querying by any search field. */
 async function expectInGlobalSearch(page: Page, headline: string): Promise<void> {
     await page.goto('/#/search');
 
