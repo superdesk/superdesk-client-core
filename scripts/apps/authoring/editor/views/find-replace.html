@@ -7,11 +7,13 @@
                 ng-model="from"
                 sd-autofocus
                 ng-trim="false"
+                data-test-id="find-replace-find"
                 ng-model-options="{debounce: 500}">
         </div>
         <div class="form__row">
             <label class="form-label form-label--marg-b10" for="find-replace-with" translate>Replace with</label>
-            <input type="text" class="basic-input form-control" id="find-replace-with" ng-model="to" ng-trim="false">
+            <input type="text" class="basic-input form-control" id="find-replace-with" ng-model="to" ng-trim="false"
+                data-test-id="find-replace-replace-with">
         </div>
 
         <div class="form__row">
@@ -25,8 +27,10 @@
             </div>
     
             <div class="btn-group ml-auto" role="group">
-                <button type="button" class="btn" ng-click="replace()" ng-disabled="!from" translate>Replace</button>
-                <button type="button" class="btn" ng-click="replaceAll()" ng-disabled="!from" translate>Replace All</button>
+                <button type="button" class="btn" ng-click="replace()" ng-disabled="!from"
+                    data-test-id="find-replace-replace" translate>Replace</button>
+                <button type="button" class="btn" ng-click="replaceAll()" ng-disabled="!from"
+                    data-test-id="find-replace-replace-all" translate>Replace All</button>
             </div>
         </div>
 
