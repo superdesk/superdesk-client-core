@@ -225,15 +225,14 @@ async function openAnnotationPopup(page: Page, body: Locator): Promise<Locator> 
 }
 
 /**
- * Asserts the type and the body of the annotation on the trailing word, reopening the popup
- * as often as it takes.
+ * Asserts the type and body of the annotation on the trailing word, reopening the popup
+ * until they match.
  *
- * Reach for it on an article that was just reopened, where `openAnnotationPopup` alone is
- * not enough: editor3 resets its selection once more while it initializes, which drops the
- * caret off the highlight and unmounts a popup that had already come up, so an assertion
- * made after the helper returned finds it gone. Retrying the open together with the
- * assertions is what survives that, and the inner timeouts are kept short so one popup that
- * went away again costs a retry rather than the whole budget.
+ * For an article that was just reopened, where `openAnnotationPopup` alone is not enough:
+ * editor3 resets its selection once more while it initializes, which drops the caret off the
+ * highlight and unmounts a popup that had already come up. Retrying the open together with
+ * the assertions survives that, and the short inner timeouts make a vanished popup cost a
+ * retry rather than the whole budget.
  */
 async function expectReopenedAnnotation(
     page: Page,
@@ -275,7 +274,6 @@ function getAnnotationAction(menu: Locator, action: string): Locator {
     return menu.getByRole('button').filter({hasText: action});
 }
 
-/** Opens the 3-dots action menu of the annotation preview and returns it. */
 async function openAnnotationActions(popup: Locator): Promise<Locator> {
     const menu = popup.getByTestId('highlight-actions-menu');
 
@@ -285,7 +283,6 @@ async function openAnnotationActions(popup: Locator): Promise<Locator> {
     return menu;
 }
 
-/** Picks an entry from the 3-dots action menu of the annotation preview. */
 async function executeAnnotationAction(popup: Locator, action: string): Promise<void> {
     const menu = await openAnnotationActions(popup);
 
@@ -317,9 +314,8 @@ async function expectAnnotationPreview(
 }
 
 /**
- * Creates an article from the desk's default template, gives it a headline and a body,
- * annotates the body's trailing word and saves. The edit and delete cases both start from a
- * saved article that already carries an annotation, and no snapshot ships one.
+ * Creates and saves an article whose body's trailing word is annotated. The edit and delete
+ * cases start from this, and no snapshot ships an annotated article.
  *
  * The save is also the point at which the editor3 field is known to have handed its change
  * over to the authoring model, so what follows is not racing that hand-over.
