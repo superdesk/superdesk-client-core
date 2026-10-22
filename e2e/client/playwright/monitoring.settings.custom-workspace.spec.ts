@@ -9,9 +9,9 @@ import {restoreDatabaseSnapshot} from './utils';
  * step 6 (the Saved Searches tab also offers private saved searches) and the case's single
  * documented expected result (the four tabs).
  *
- * Steps 3-5 delegate to the per-tab cases 1315934713 (Desks), 1315934717 (Reorder sections)
- * and 1315934719 (Items count). Only 1315934713 has a spec, `monitoring.settings.spec.ts`
- * (desk entry point).
+ * Not covered: steps 3-5 ask to run the per-tab cases 1315934713 (Desks), 1315934717 (Reorder
+ * sections) and 1315934719 (Items count) in this custom workspace. Here each tab is only opened
+ * and its heading checked; the one per-tab spec, `monitoring.settings.spec.ts`, uses a desk.
  */
 test.describe('monitoring settings of a custom workspace', () => {
     const TAB_TITLES = ['Desks', 'Saved Searches', 'Reorder Sections', 'Items Count'];
@@ -19,7 +19,7 @@ test.describe('monitoring settings of a custom workspace', () => {
     test('open from the toolbar and expose the desks, saved searches, reorder and items count tabs', {
         annotation: [
             // Configure personal Monitoring view in custom workspace
-            {type: 'confluence', description: '1318323011 complete'},
+            {type: 'confluence', description: '1318323011 partial'},
         ],
     }, async ({page}) => {
         const monitoring = new Monitoring(page);
