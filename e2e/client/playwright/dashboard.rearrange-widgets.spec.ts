@@ -96,17 +96,34 @@ test.describe('rearranging dashboard widgets', {
 
     test('a widget dragged to a free column moves there and floats up to fill the gap above it', async ({page}) => {
         const dashboard = await openDashboardWithTwoWidgets(page);
+        const monitor = dashboard.getWidget(MONITOR);
         const worldClock = dashboard.getWidget(WORLD_CLOCK);
 
         await dashboard.startRearranging();
 
-        // Dropped one column right and one row down. The third column is empty,
-        // so gridster pulls the widget back up to the first row.
-        await dashboard.dragWidget(WORLD_CLOCK, {columns: 1, rows: 1});
+        // The Monitor is made one row tall first so that the World Clock it pushes
+        // down stays inside the viewport, where the mouse can grab it.
+        await expect(monitor).toHaveAttribute('data-sizey', '2');
+        await monitor.getByTestId('widget-resize-up').click();
+        await expect(monitor).toHaveAttribute('data-sizey', '1');
+
+        // Widening the Monitor over the second column pushes the World Clock below it.
+        await monitor.getByTestId('widget-resize-right').click();
+        await expect(monitor).toHaveAttribute('data-sizex', '2');
+        await expect(worldClock).toHaveAttribute('data-col', '2');
+        await expect(worldClock).toHaveAttribute('data-row', '2');
+
+        // gridster animates the push, and the drag aims at where the widget is now.
+        // Hovering waits for the widget to stop moving.
+        await worldClock.hover();
+
+        // Dropped one column right on the row it was pushed to. The third column
+        // is empty above it, so gridster pulls the widget up to the first row.
+        await dashboard.dragWidget(WORLD_CLOCK, {columns: 1, rows: 0});
 
         await expect(worldClock).toHaveAttribute('data-col', '3');
         await expect(worldClock).toHaveAttribute('data-row', '1');
-        await expect(dashboard.getWidget(MONITOR)).toHaveAttribute('data-col', '1');
+        await expect(monitor).toHaveAttribute('data-col', '1');
 
         await dashboard.acceptRearranging();
 
