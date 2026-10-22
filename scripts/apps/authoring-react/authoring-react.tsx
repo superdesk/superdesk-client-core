@@ -1647,6 +1647,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                             <AuthoringSection
                                                 fieldRefs={this.fieldRefs}
                                                 uiTheme={uiTheme}
+                                                editorTheme={activeTheme}
                                                 padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}

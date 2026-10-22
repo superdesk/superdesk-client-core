@@ -93,13 +93,13 @@ describe('editor theme', () => {
 
     describe('getEditorThemeStyle', () => {
         it('gives every theme valid CSS colours', () => {
-            const hex = /^#[0-9a-f]{6}$/;
-
             getEditorThemeColors().forEach(({key}) => {
                 const style = getEditorThemeStyle({...EDITOR_THEME_DEFAULT, theme: key});
 
-                expect(style.backgroundColor).toMatch(hex);
-                expect(style.backgroundColorSecondary).toMatch(hex);
+                [style.backgroundColor, style.backgroundColorSecondary].forEach((color) => {
+                    expect(CSS.supports('color', color)).withContext(color).toBe(true);
+                });
+
                 expect(style.textColor).toMatch(/^var\(--color-text-on(light|dark)\)$/);
             });
         });

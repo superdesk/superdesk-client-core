@@ -11,7 +11,7 @@ interface IPropsThemeSelector {
 export class BackgroundColorSelector extends React.Component<IPropsThemeSelector> {
     render() {
         return (
-            <div className="color-selector__list">
+            <div className="color-selector__list" role="radiogroup">
                 {this.props.options.map((item) => {
                     const selected = this.props.value?.key === item.key;
                     const swatchClasses = classNames('color-selector__swatch', {
@@ -22,6 +22,9 @@ export class BackgroundColorSelector extends React.Component<IPropsThemeSelector
                         <div
                             key={item.key}
                             className={swatchClasses}
+                            role="radio"
+                            aria-checked={selected}
+                            aria-label={item.label}
                             data-test-id="theme-color"
                             data-test-value={item.key}
                         >

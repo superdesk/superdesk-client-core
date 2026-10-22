@@ -51,6 +51,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                 <Button
                     text={gettext('Save')}
                     type="primary"
+                    data-test-id="editor-themes-save"
                     onClick={() => {
                         const authThemes = ng.get('authThemes');
 
@@ -80,6 +81,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                 <div className="panel__wrapper" data-test-id="editor-themes-modal">
                     <ProofreadingThemePanel
                         theme={this.state.defaultTheme}
+                        slot="default"
                         title={gettext('Default Theme')}
                         badgeColor="green"
                         onChange={(theme: IEditorTheme) => {
@@ -88,6 +90,7 @@ export class ProofreadingThemeModal extends React.Component<IProps, IState> {
                     />
                     <ProofreadingThemePanel
                         theme={this.state.proofReadingTheme}
+                        slot="proofreading"
                         title={gettext('Proofreading Theme')}
                         badgeColor="grey"
                         onChange={(theme: IEditorTheme) => {

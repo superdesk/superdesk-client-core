@@ -16,6 +16,7 @@ import {
 } from 'apps/authoring/authoring/editor-theme';
 
 interface IPropsPanel {
+    slot: 'default' | 'proofreading';
     theme: IEditorTheme;
     title: string;
     badgeColor: 'green' | 'grey';
@@ -42,7 +43,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
         const themeStyle = getEditorThemeStyle(this.props.theme);
 
         return (
-            <div className="proofreading-panel">
+            <div className="proofreading-panel" data-test-id="proofreading-panel" data-test-value={this.props.slot}>
                 <div className="proofreading-panel-header">
                     <Spacer v gap="16">
                         <h2 className="proofreading-panel__heading">
@@ -129,6 +130,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                 <RadioButtonGroup
                                     value={this.props.theme.headline}
                                     group={{align: 'end'}}
+                                    data-test-id="theme-headline-size"
                                     options={fontOptions}
                                     onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({
@@ -161,6 +163,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                 <RadioButtonGroup
                                     value={this.props.theme.abstract}
                                     group={{align: 'end'}}
+                                    data-test-id="theme-abstract-size"
                                     options={fontOptions}
                                     onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({
@@ -193,6 +196,7 @@ export class ProofreadingThemePanel extends React.Component<IPropsPanel> {
                                 <RadioButtonGroup
                                     value={this.props.theme.body}
                                     group={{align: 'end'}}
+                                    data-test-id="theme-body-size"
                                     options={fontOptions}
                                     onChange={(value: IFontSizeOption) => {
                                         this.props.onChange({

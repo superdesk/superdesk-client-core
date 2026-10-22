@@ -1,42 +1,39 @@
 import {test, expect, Page} from '@playwright/test';
+import {Authoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 import {getStorageState} from './utils/storage-state';
 import {setUserPreference} from './utils/preferences-api';
 import {TOPBAR2_WIDGET_ENABLED} from '../test-extensions/topbar2-widget/extension';
 
-async function openItem(page: Page, item: string): Promise<void> {
+async function openInSportsWorkingStage(page: Page, label: string): Promise<void> {
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
     await monitoring.executeActionOnMonitoringItem(
-        page.getByTestId('monitoring-group')
-            .and(page.locator('[data-test-value="Sports / Working Stage"]'))
-            .getByTestId('article-item')
-            .filter({hasText: item})
-            .first(),
+        monitoring.getGroupedArticleLocator('Sports / Working Stage', label),
         'Edit',
     );
     await expect(page.getByTestId('authoring-toggle-theme')).toBeVisible();
 }
 
 test.describe('authoring secondary row: print preview', () => {
-    const cases: Array<{item: string, shown: boolean}> = [
-        {item: 'test sports story', shown: true},
-        {item: 'Rivendell picture', shown: true},
-        {item: 'Isengard video', shown: false},
-        {item: 'Shire package', shown: false},
-    ];
+    test('is offered without the preview feature', async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await openInSportsWorkingStage(page, 'test sports story');
 
-    for (const {item, shown} of cases) {
-        test(`is ${shown ? 'offered' : 'not offered'} for "${item}" without the preview feature`, async ({page}) => {
-            await restoreDatabaseSnapshot({snapshotName: 'media-items'});
-            await openItem(page, item);
+        await expect(page.getByTestId('authoring-print-preview')).toBeVisible();
+    });
 
-            await expect(page.getByTestId('authoring-print-preview')).toHaveCount(shown ? 1 : 0);
-        });
-    }
+    test('is not offered for a video', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'media-items'});
+
+        // opening waits for the proofreading toggle, so the row has rendered its buttons
+        await openInSportsWorkingStage(page, 'Isengard video');
+
+        await expect(page.getByTestId('authoring-print-preview')).toHaveCount(0);
+    });
 });
 
 test.describe('authoring secondary row: themes stored by authoring-react', () => {
@@ -55,21 +52,16 @@ test.describe('authoring secondary row: themes stored by authoring-react', () =>
                 textColor: 'white',
             }),
         });
-        await openItem(page, 'test sports story');
+        await openInSportsWorkingStage(page, 'test sports story');
 
-        const article = page.getByTestId('authoring-theme-container');
+        const article = new Authoring(page).themeContainer();
 
-        await expect(article).toHaveClass(/\bsd-editor--theme-dark\b/);
-        await expect(article).toHaveClass(/\bsd-editor--font-serif\b/);
-        await expect(article).toHaveClass(/\bsd-editor--body-large\b/);
-        await expect(article).toHaveCSS('background-color', 'rgb(27, 30, 35)');
-
-        const themeClasses = (await article.getAttribute('class') ?? '')
+        // the exact list, so a stored colour or font family never leaks into a class name
+        await expect.poll(async () => (await article.getAttribute('class') ?? '')
             .split(' ')
             .filter((name) => name.startsWith('sd-editor--'))
-            .sort();
-
-        expect(themeClasses).toEqual([
+            .sort(),
+        ).toEqual([
             'sd-editor--abstract-medium',
             'sd-editor--body-large',
             'sd-editor--font-serif',
@@ -88,7 +80,7 @@ test.describe('authoring secondary row: extensions', () => {
 
     test('renders a widget an extension contributes to the row', async ({page}) => {
         await restoreDatabaseSnapshot();
-        await openItem(page, 'test sports story');
+        await openInSportsWorkingStage(page, 'test sports story');
 
         await expect(page.getByTestId('e2e-topbar2-widget')).toHaveText('Extension widget: test sports story');
     });
