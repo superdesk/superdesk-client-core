@@ -8,12 +8,12 @@ import {restoreDatabaseSnapshot, waitForToastMessage} from './utils';
  *
  * - "When you select more than 3 clocks, you will have to adjust the size of your widget to display them all at
  *   the same time. This can be done on the Rearrange widgets settings page."
- *   Blocker: proving the fourth clock is clipped until the widget is resized needs a pixel-level layout check
- *   (no visual snapshots are allowed) and a gridster drag-resize, which is inherently flaky. The spec covers the
- *   data half of it: a fourth clock is added to the widget.
+ *   Proving the fourth clock is clipped until the widget is resized needs a pixel-level layout check
+ *   (no visual snapshots are allowed) and a flaky gridster drag-resize. The spec covers only the data half:
+ *   a fourth clock is added to the widget.
  *
  * - Test steps 7-8: a second user who is a member of the same desk sees the saved configuration.
- *   Blocker: missing fixture. The `main` snapshot has admin as the only member of every desk, and the one other
+ *   Missing fixture: the `main` snapshot has admin as the only member of every desk, and the one other
  *   user (janedoe) is not a desk member and has no password recorded anywhere in the repo.
  */
 
@@ -67,7 +67,7 @@ test.describe('world clock widget settings', {
         const widgetBox = await boxOf(widget);
         const settingsBox = await boxOf(settingsButton);
 
-        // "top right corner of the widget" from the QA case, asserted as geometry rather than a pixel baseline
+        // "top right corner of the widget" from the QA case, asserted as geometry (no pixel baselines)
         expect(settingsBox.x).toBeGreaterThan(widgetBox.x + widgetBox.width / 2);
         expect(settingsBox.y).toBeLessThan(widgetBox.y + widgetBox.height / 2);
 
@@ -245,7 +245,7 @@ test.describe('world clock widget settings', {
         await expectWidgetZones(widget, expectedZones);
         await expect(widget.getByTestId('analog-clock')).toHaveCount(0);
 
-        // the dashboard is stored server side, so a full reload proves it was persisted and not just kept in memory
+        // The dashboard is stored server side: a full reload proves it was persisted, not just kept in memory.
         await page.reload();
         await new Monitoring(page).selectDeskOrWorkspace('Sports');
 
