@@ -12,10 +12,6 @@ test.setTimeout(60000);
 /**
  * QA case "Export article" (1311835225).
  *
- * A text item is exported from Monitoring through its 3-dot menu: the Export dialog
- * preselects the NINJS formatter and offers a Validate toggle, Cancel closes it without
- * exporting, and Export downloads the item's NINJS rendition.
- *
  * Two points where the product does not match the case's wording. The spec asserts what
  * the product actually does:
  *  - the case calls the preselected formatter "NINJS". The select is filled from
