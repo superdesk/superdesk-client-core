@@ -60,11 +60,8 @@ test.describe('Info widget in authoring', () => {
         return authoring.openWidget('Info');
     }
 
-    /**
-     * The Advanced Search parameters live in the search view's filter panel.
-     * The panel toggle, the tab and the submit button have no test ids, so they
-     * are located the same way `search.spec.ts` already does it.
-     */
+    // The panel toggle, the parameters tab and the submit button have no test
+    // ids, so they are located the way `search.spec.ts` does it.
     async function searchByUniqueName(page: Page, uniqueName: string): Promise<void> {
         await page.goto('/#/search');
 
@@ -98,8 +95,7 @@ test.describe('Info widget in authoring', () => {
         const authoring = new Authoring(page);
         const infoWidget = await openArticleInfoWidget(page);
 
-        // The GUID is documented as not editable: it renders as plain text, with
-        // no form control and nothing content-editable inside it.
+        // The GUID is documented as not editable.
         await expect(infoWidget.getByTestId('guid')).toHaveText(/^urn:newsml:/);
         await expect(
             infoWidget.getByTestId('guid').locator('input, select, textarea, [contenteditable="true"]'),
