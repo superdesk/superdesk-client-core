@@ -105,6 +105,38 @@ export class Monitoring {
         }
     }
 
+    /**
+     * Ticks the multi-select checkbox of an item, which only shows while its type icon is hovered.
+     */
+    async multiSelect(item: Locator): Promise<void> {
+        await item.getByTestId('item-type-and-multi-select').hover();
+
+        const checkbox = item.getByTestId('multi-select-checkbox');
+
+        await checkbox.click();
+        await expect(checkbox).toHaveAttribute('aria-checked', 'true');
+    }
+
+    /**
+     * Runs an action of the multi-action bar, which lists actions inline when there is room for
+     * them and in a dropdown otherwise.
+     */
+    async executeMultiAction(action: string): Promise<void> {
+        const bar = this.page.getByTestId('multi-action-bar');
+        const inline = bar.getByTestId('multi-actions-inline').getByTestId(action);
+        const dropdownToggle = bar.getByTestId('multi-actions-dropdown').getByTestId('dropdown-toggle');
+
+        // the bar measures the room it has after rendering, so it can switch from one to the other
+        await expect(async () => {
+            if (await inline.isVisible()) {
+                await inline.click({timeout: 2000});
+            } else {
+                await dropdownToggle.click({timeout: 2000});
+                await bar.getByTestId('multi-actions-dropdown').getByTestId(action).click({timeout: 2000});
+            }
+        }).toPass({timeout: 30000});
+    }
+
     async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
         for (const selectedArticle of articleNames) {
             await this.page.locator(s(`article-item=${selectedArticle}`, 'item-type-and-multi-select')).hover();

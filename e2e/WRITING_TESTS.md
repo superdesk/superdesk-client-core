@@ -238,14 +238,15 @@ set, this is not exhaustive):
 
 Every article in `main` is text, apart from "Package Highlight 1", which is a
 package attached to a highlight. There is no picture, graphic, video or audio
-item, and no plain package; use the `media-items` snapshot for those.
+item, and no plain package; use the `media-items` snapshot for those, or the
+`packages` snapshot for a package with more than one group.
 
 Other datasets are separate and loaded with
 `restoreDatabaseSnapshot({snapshotName})`: `legacy`, `spellchecker`,
 `editor3-tables`, `custom-blocks`, `availability-management`, `related-items`,
 `media-items`,
 `editor3-formats`, `authoring-extras`, `saved-search-private`, `publishing`,
-`required-headline`, `association-fields`, `editor3-comments`.
+`required-headline`, `association-fields`, `editor3-comments`, `packages`.
 
 ### Publishing config in the `main` snapshot
 
@@ -282,6 +283,12 @@ Reach for it when a spec asserts something about a non-text item: the monitoring
 type filter buttons, media metadata, the crop/rotate editor, the media carousel.
 Do not reach for it otherwise, because it also shifts every item count in the
 Sports groups relative to `main`.
+
+### The `packages` snapshot
+
+`restoreDatabaseSnapshot({snapshotName: 'packages'})` gives you `main` plus "Fellowship package", a plain package on the `composite` profile with two groups: `main` holds "Hobbiton notice" and "Buckland notice", `story` holds "Bywater notice". All four items are in Sports / Working Stage, so the Sports item counts differ from `main`.
+
+Reach for it for anything that edits a package's items: a change to one group can only be told apart from a rewrite of all of them on a package that has more than one. In authoring-react the groups render under the `groups` field as `package-group` (group id in `data-test-value`) and each item as `package-items` (slugline in `data-test-value`); `PackageAuthoring` in `page-object-models/authoring.ts` wraps them, including dragging an item.
 
 ### The `editor3-formats` snapshot
 

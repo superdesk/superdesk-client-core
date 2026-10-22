@@ -302,3 +302,70 @@ export class PictureAuthoring extends Authoring {
         await this.mediaField.getByTestId('crop').click();
     }
 }
+
+export class PackageAuthoring extends Authoring {
+    group(groupId: string): Locator {
+        return this.fieldContainer('groups')
+            .getByTestId('package-group')
+            .and(this.page.locator(`[data-test-value="${groupId}"]`));
+    }
+
+    groupItems(groupId: string): Locator {
+        return this.group(groupId).getByTestId('package-items');
+    }
+
+    item(slugline: string): Locator {
+        return this.fieldContainer('groups')
+            .getByTestId('package-items')
+            .and(this.page.locator(`[data-test-value="${slugline}"]`));
+    }
+
+    private row(slugline: string): Locator {
+        return this.fieldContainer('groups')
+            .locator('[data-rfd-draggable-id]')
+            .filter({
+                has: this.page.getByTestId('package-items').and(this.page.locator(`[data-test-value="${slugline}"]`)),
+            });
+    }
+
+    /**
+     * Drops an item in front of another one, in any group. The list library lifts the item and
+     * makes room for it a frame late, so each step waits, or the drop lands where it started.
+     */
+    async dragItemBefore(slugline: string, targetSlugline: string): Promise<void> {
+        const {page} = this;
+        const dragged = this.row(slugline);
+        const target = this.row(targetSlugline);
+        const handle = dragged.getByTestId('package-item-drag-handle');
+
+        // the cards grow once the items they show have loaded, so their positions settle only then
+        await expect(dragged.getByTestId('package-item-state')).toBeVisible();
+        await expect(target.getByTestId('package-item-state')).toBeVisible();
+
+        // waits for the handle to stop moving, the editor slides in when it opens
+        await handle.hover();
+
+        const from = await getBox(handle, `drag handle of "${slugline}"`);
+
+        await page.mouse.down();
+        await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2 - 10, {steps: 5});
+        await expect(dragged).toHaveCSS('position', 'fixed');
+
+        const to = await getBox(target, `"${targetSlugline}"`);
+
+        await page.mouse.move(to.x + to.width / 2, to.y + to.height / 4, {steps: 20});
+        await expect(target).not.toHaveCSS('transform', 'none');
+
+        await page.mouse.up();
+    }
+}
+
+async function getBox(locator: Locator, name: string): Promise<{x: number; y: number; width: number; height: number}> {
+    const box = await locator.boundingBox();
+
+    if (box == null) {
+        throw new Error(`${name} is not visible`);
+    }
+
+    return box;
+}

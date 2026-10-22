@@ -308,8 +308,7 @@ test.describe('authoring-react field row widths', () => {
         expect(Math.round(place.x + place.width)).toBe(Math.round(slugline.x + slugline.width));
     });
 
-    // The packages profile is built in code and sets no width on its fields, so it is the
-    // reachable case for the missing fallback.
+    // the package headline has no configured width
     test('gives a field with no configured width the whole row', async ({page}) => {
         await restoreDatabaseSnapshot();
         await openFromSports(page, {

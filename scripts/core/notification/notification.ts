@@ -24,6 +24,7 @@ const publicWebsocketMessageNames: IPublicWebsocketMessages = {
 // implementing interface to be able to get keys at runtime
 const internalWebsocketMessageNames: IInternalWebsocketMessages = {
     'item:lock': undefined,
+    'item:unlock': undefined,
     'item:spike': undefined,
     'item:unspike': undefined,
     'item:highlights': undefined,
@@ -56,6 +57,10 @@ interface IInternalWebsocketMessages { // not exposed to client API
         lock_time: string;
         user: IUser['_id'];
         _etag: string;
+    }>;
+    'item:unlock': IWebsocketMessage<{
+        item: IArticle['_id'];
+        user: IUser['_id'];
     }>;
     'item:spike': IWebsocketMessage<never>;
     'item:unspike': IWebsocketMessage<never>;

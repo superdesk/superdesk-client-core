@@ -14,6 +14,18 @@ interface IInternalEvents {
     };
     replaceAuthoringDataWithChanges: Partial<unknown>;
 
+    // "Add to current package" and story labels, for a package open in authoring-react
+    addItemsToPackageInAuthoringReact: {
+        packageId: IArticle['_id'];
+        groupId: string;
+        items: Array<IArticle>;
+    };
+    setPackageItemLabelInAuthoringReact: {
+        packageId: IArticle['_id'];
+        itemId: IArticle['_id'];
+        label: string | null;
+    };
+
     /**
      * Unsaved changes will be lost.
      * Only applies to authoring-react.
