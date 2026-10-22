@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -91,6 +91,29 @@ export class Authoring {
         await expect(panel).toBeVisible();
 
         return panel;
+    }
+
+    /**
+     * Runs a macro from the already open Macros widget and resolves with the server's reply.
+     *
+     * Macros execute on the backend (`POST /api/macros`) and the widget reports the outcome
+     * only once that request settled, so waiting for the response is what makes a following
+     * assertion about the outcome meaningful. The status is deliberately not checked here:
+     * a macro that reports errors answers with an error status, which is a normal result.
+     */
+    async runMacro(macroLabel: string): Promise<Response> {
+        const {page} = this;
+        const macro = page.getByTestId('authoring-widget-panel')
+            .getByTestId('macro-item')
+            .filter({hasText: macroLabel});
+
+        const [response] = await Promise.all([
+            page.waitForResponse((res) =>
+                res.url().includes('/macros') && res.request().method() === 'POST'),
+            macro.click(),
+        ]);
+
+        return response;
     }
 
     /**
