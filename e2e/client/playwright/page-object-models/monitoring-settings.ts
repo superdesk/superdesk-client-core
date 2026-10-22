@@ -37,7 +37,6 @@ export class MonitoringSettings {
         return this.page.getByTestId(`desk--${deskName}`);
     }
 
-    /** Opens a desk card's 3-dot menu on `/#/settings/desks` and returns the menu itself. */
     async openDeskActions(deskName: string): Promise<Locator> {
         const card = this.deskCard(deskName);
 
@@ -93,7 +92,6 @@ export class MonitoringSettings {
             .filter({has: this.page.getByTestId(`wizard--${title}`)});
     }
 
-    /** Every tab in the order the wizard renders them, for asserting the set and its order. */
     get tabs(): Locator {
         return this.modal.locator('li.nav-tabs__tab');
     }

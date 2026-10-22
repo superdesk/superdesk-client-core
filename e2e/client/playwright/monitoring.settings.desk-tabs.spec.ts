@@ -252,7 +252,7 @@ test('Items count tab sets how many items a monitoring group shows before it scr
     await expect(workingStageMax).toHaveValue(String(DEFAULT_MAX_ITEMS));
     await expect(settings.maxItemsInput(SAVED_SEARCH)).toHaveValue(String(DEFAULT_MAX_ITEMS));
 
-    // the spinner arrows are not reachable from the DOM; the keyboard runs the same stepUp/stepDown
+    // Spinner arrows are not reachable from the DOM; ArrowUp/ArrowDown run the same stepUp/stepDown.
     await workingStageMax.press('ArrowUp');
     await expect(workingStageMax).toHaveValue('11');
     await workingStageMax.press('ArrowDown');
