@@ -1,4 +1,4 @@
-import {Locator, Page, expect} from '@playwright/test';
+import {Locator, Page, Response, expect} from '@playwright/test';
 import {s} from '../utils';
 import {TreeSelectDriver} from '../utils/tree-select-driver';
 
@@ -13,6 +13,18 @@ export class Authoring {
 
     constructor(page: Page) {
         this.page = page;
+    }
+
+    /** The angular editor's topbar or authoring-react's toolbars, which carry the same `save` and `close` ids. */
+    protected get topbar(): Locator {
+        return this.page.getByTestId('authoring-topbar')
+            .or(this.page.getByTestId('authoring').getByTestId('authoring-toolbar-1'));
+    }
+
+    // the open item's send / publish panel: angular renders it inside the editor, authoring-react outside
+    get interactiveActionsPanel(): Locator {
+        return this.page.getByTestId('authoring').getByTestId('interactive-actions-panel')
+            .or(this.page.getByTestId('authoring-actions-panel-overlay').getByTestId('interactive-actions-panel'));
     }
 
     async executeActionInEditor(...actionPath: Array<string>): Promise<void> {
@@ -33,20 +45,24 @@ export class Authoring {
 
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
+        const publish = this.interactiveActionsPanel.getByTestId('panel-footer').getByTestId('publish');
 
-        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
+
+        // the panel renders its buttons only once it has loaded the subscribers
+        await expect(publish).toBeEnabled();
 
         if (options.subscribers.length > 0) {
             await new TreeSelectDriver(
                 page,
-                page.locator(s('target-subscribers')),
+                page.getByTestId('target-subscribers'),
             ).setValues(options.subscribers);
         }
 
-        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+        await publish.click();
 
         if (options.subscribers.length > 0) {
-            await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+            await page.getByTestId('modal-confirm').getByRole('button', {name: 'save and send'}).click();
         }
     }
 
@@ -144,7 +160,7 @@ export class Authoring {
         const {page} = this;
         const unsavedChanges = page.getByTestId('unsaved-changes-dialog');
 
-        await page.getByTestId('authoring-topbar').getByTestId('close').click();
+        await this.topbar.getByTestId('close').click();
 
         await expect(async () => {
             if (await unsavedChanges.isVisible()) {
@@ -175,6 +191,24 @@ export class Authoring {
         await expect(saving).toBeVisible();
         await expect(saving).toBeHidden();
         await expect(save).toBeDisabled();
+    }
+
+    // saves in either editor and returns the PATCH request and response
+    async saveAndGetRequest(): Promise<{request: any; response: any}> {
+        const save = this.topbar.getByTestId('save');
+        const saved = this.page.waitForResponse(
+            (r: Response) => r.request().method() === 'PATCH' && r.url().includes('/api/archive/'),
+        );
+
+        await expect(save).toBeEnabled();
+        await save.click();
+
+        const response = await saved;
+
+        expect(response.ok()).toBe(true);
+        await expect(save).toBeDisabled();
+
+        return {request: response.request().postDataJSON(), response: await response.json()};
     }
 
     field(field: string): Locator {
@@ -322,7 +356,7 @@ export class PackageAuthoring extends Authoring {
 
     private row(slugline: string): Locator {
         return this.fieldContainer('groups')
-            .locator('[data-rfd-draggable-id]')
+            .getByTestId('package-item-row')
             .filter({
                 has: this.page.getByTestId('package-items').and(this.page.locator(`[data-test-value="${slugline}"]`)),
             });
@@ -341,6 +375,14 @@ export class PackageAuthoring extends Authoring {
         // the cards grow once the items they show have loaded, so their positions settle only then
         await expect(dragged.getByTestId('package-item-state')).toBeVisible();
         await expect(target.getByTestId('package-item-state')).toBeVisible();
+
+        // opening the editor puts the focus in its first field, which scrolls the editor back to the top
+        await expect(page.getByTestId('authoring').locator(':focus')).toHaveCount(1);
+
+        // the package header can push the items below the fold, and both ends of the drag have to be on screen
+        await target.scrollIntoViewIfNeeded();
+        await handle.scrollIntoViewIfNeeded();
+        await expect(target).toBeInViewport();
 
         // waits for the handle to stop moving, the editor slides in when it opens
         await handle.hover();

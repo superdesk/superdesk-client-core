@@ -55,6 +55,7 @@ test.describe('creating a package (authoring-react)', () => {
     test('from a published item found in global search', async ({page}) => {
         await restoreDatabaseSnapshot();
 
+        const monitoring = new Monitoring(page);
         const authoring = new PackageAuthoring(page);
 
         await page.goto('/#/search?repo=published');
@@ -62,9 +63,7 @@ test.describe('creating a package (authoring-react)', () => {
         const publishedItem = page.getByTestId('article-item').and(page.locator('[data-test-value="Story 5"]'));
 
         await expect(publishedItem).toBeVisible();
-        await publishedItem.hover();
-        await publishedItem.getByTestId('context-menu-button').click();
-        await page.getByTestId('context-menu').getByRole('button', {name: 'Create package', exact: true}).click();
+        await monitoring.executeActionOnMonitoringItem(publishedItem, 'Create package');
 
         await expect(authoring.groupItems('main')).toHaveCount(1);
         await expect(authoring.item('Story 5')).toBeVisible();

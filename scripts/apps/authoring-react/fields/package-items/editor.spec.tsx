@@ -60,7 +60,7 @@ function addItems(packageId: string, groupId: string, itemIds: Array<string>) {
 }
 
 describe('package items editor', () => {
-    it('adds items from "Add to current package" in front of the group', () => {
+    it('adds items from "Add to current package" to the group they were sent to', () => {
         const onChange = jasmine.createSpy('onChange');
         const wrapper = render(onChange);
 
@@ -69,8 +69,11 @@ describe('package items editor', () => {
         expect(onChange).toHaveBeenCalledTimes(1);
 
         const next: IPackageItemsValueOperational = onChange.calls.mostRecent().args[0];
+        const [main, story] = next.map((group) => group.refs.map(({residRef}) => residRef));
 
-        expect(next.map((group) => group.refs.map(({residRef}) => residRef))).toEqual([['a'], ['y', 'x', 'b']]);
+        // the order within the group is covered in package-groups.spec.ts
+        expect(main).toEqual(['a']);
+        expect(story).toEqual(jasmine.arrayWithExactContents(['x', 'y', 'b']));
 
         wrapper.unmount();
     });

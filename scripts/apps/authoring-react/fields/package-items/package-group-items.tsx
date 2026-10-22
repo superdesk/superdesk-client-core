@@ -54,6 +54,7 @@ export class PackageGroupItems extends React.PureComponent<IProps> {
                                                 gap: 8,
                                                 ...draggableProvided.draggableProps.style,
                                             }}
+                                            data-test-id="package-item-row"
                                         >
                                             {
                                                 !readOnly && (

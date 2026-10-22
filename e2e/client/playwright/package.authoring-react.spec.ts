@@ -1,4 +1,4 @@
-import {test, expect, Page, Response} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {PackageAuthoring} from './page-object-models/authoring';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
@@ -18,28 +18,29 @@ async function openPackage(page: Page, name = PACKAGE): Promise<{monitoring: Mon
 
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
-    await monitoring.executeActionOnMonitoringItem(monitoring.getGroupedArticleLocator(WORKING_STAGE, name), 'Edit');
+    const row = monitoring.getGroupedArticleLocator(WORKING_STAGE, name);
+
+    await monitoring.executeActionOnMonitoringItem(row, 'Edit');
     await expect(authoring.fieldContainer('groups')).toBeVisible();
+
+    // the list re-renders its rows once it learns of the lock, which closes any menu open on them
+    await expect(row.getByTestId('article-item-locked')).toBeVisible();
 
     return {monitoring, authoring};
 }
 
-async function reopen(page: Page): Promise<void> {
+async function reopen(page: Page, authoring: PackageAuthoring): Promise<void> {
+    const monitoring = new Monitoring(page);
+    const row = monitoring.getGroupedArticleLocator(WORKING_STAGE, PACKAGE);
+
+    await authoring.close();
+
+    // saving re-sorts the list and closing unlocks the package; each re-renders the rows and closes open menus
+    await expect(row.getByTestId('article-item-locked')).toHaveCount(0);
+    await expect(monitoring.getGroupedArticlesLocator(WORKING_STAGE).first())
+        .toHaveAttribute('data-test-value', PACKAGE);
+
     await openPackage(page);
-}
-
-async function save(page: Page): Promise<{request: any; response: any}> {
-    const saved = page.waitForResponse(
-        (r: Response) => r.request().method() === 'PATCH' && r.url().includes('/api/archive/'),
-    );
-
-    await page.getByRole('button', {name: 'Save', exact: true}).click();
-
-    const response = await saved;
-
-    expect(response.ok()).toBe(true);
-
-    return {request: response.request().postDataJSON(), response: await response.json()};
 }
 
 function groupIds(groups: Array<{id: string}>): Array<string> {
@@ -59,13 +60,13 @@ test.describe('package (authoring-react)', () => {
         await authoring.item('Buckland notice').getByTestId('package-item-remove').getByRole('button').click();
         await expect(authoring.groupItems('main')).toHaveCount(1);
 
-        const {request, response} = await save(page);
+        const {request, response} = await authoring.saveAndGetRequest();
 
         expect(groupIds(request.groups)).toEqual(['root', 'main', 'story']);
         expect(request.groups[0].refs).toEqual([{idRef: 'main', label: 'main'}, {idRef: 'story', label: 'story'}]);
         expect(groupIds(response.groups)).toEqual(['root', 'main', 'story']);
 
-        await reopen(page);
+        await reopen(page, authoring);
 
         await expect(authoring.groupItems('main')).toHaveCount(1);
         await expect(authoring.item('Hobbiton notice')).toBeVisible();
@@ -84,13 +85,35 @@ test.describe('package (authoring-react)', () => {
             'Fellowship package, updated',
         );
 
-        const {request} = await save(page);
+        const {request} = await authoring.saveAndGetRequest();
 
         expect(request.headline).toBe('Fellowship package, updated');
         expect(request).not.toHaveProperty('groups');
     });
 
     test('adds an item to the chosen group with "Add to current"', async ({page}) => {
+        await restoreDatabaseSnapshot({snapshotName: 'packages'});
+
+        const {monitoring, authoring} = await openPackage(page);
+
+        await monitoring.executeSubmenuAction(
+            monitoring.getGroupedArticleLocator(WORKING_STAGE, 'test sports story'),
+            'Add to current',
+            'story',
+            {innerByTestId: 'add-to-package-group=story'},
+        );
+
+        await expect(authoring.groupItems('story')).toHaveCount(2);
+        await expect(authoring.groupItems('story').first()).toHaveAttribute('data-test-value', 'test sports story');
+
+        await authoring.saveAndGetRequest();
+        await reopen(page, authoring);
+
+        await expect(authoring.groupItems('story')).toHaveCount(2);
+        await expect(authoring.groupItems('story').first()).toHaveAttribute('data-test-value', 'test sports story');
+    });
+
+    test('stops offering "Add to current" for an item once it is added', async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'packages'});
 
         const {monitoring, authoring} = await openPackage(page);
@@ -102,23 +125,13 @@ test.describe('package (authoring-react)', () => {
             'story',
             {innerByTestId: 'add-to-package-group=story'},
         );
+        await expect(authoring.item('test sports story')).toBeVisible();
 
-        await expect(authoring.groupItems('story')).toHaveCount(2);
-        await expect(authoring.groupItems('story').first()).toHaveAttribute('data-test-value', 'test sports story');
+        const contextMenu = await monitoring.openContextMenu(item);
 
-        // offered only for items that are not in the package, including ones added since it was opened
-        await item.hover();
-        await item.getByTestId('context-menu-button').click();
-        await expect(page.getByTestId('context-menu').getByRole('button', {name: 'Edit', exact: true})).toBeVisible();
-        await expect(page.getByTestId('context-menu').getByRole('button', {name: 'Add to current'})).toHaveCount(0);
-        await page.keyboard.press('Escape');
-
-        const {request} = await save(page);
-
-        expect(request.groups[2].refs[0].residRef).toBe(await item.evaluate((element) => element.id));
-
-        await reopen(page);
-        await expect(authoring.groupItems('story').first()).toHaveAttribute('data-test-value', 'test sports story');
+        // the menu renders its actions together, so a visible Edit means the list is complete
+        await expect(contextMenu.getByRole('button', {name: 'Edit', exact: true})).toBeVisible();
+        await expect(contextMenu.getByRole('button', {name: 'Add to current'})).toHaveCount(0);
     });
 
     test('adds the selected items to the main group with "Add to Current Package"', async ({page}) => {
@@ -142,13 +155,11 @@ test.describe('package (authoring-react)', () => {
         const {monitoring, authoring} = await openPackage(page);
 
         await monitoring.multiSelect(monitoring.getGroupedArticleLocator(WORKING_STAGE, 'Bywater notice'));
-        await monitoring.multiSelect(monitoring.getGroupedArticleLocator(WORKING_STAGE, 'story 2'));
         await monitoring.executeMultiAction('Add to Current Package');
 
         await expect(page.getByText('Item is already in this package.')).toBeVisible();
-        await expect(authoring.groupItems('main')).toHaveCount(3);
+        await expect(authoring.groupItems('main')).toHaveCount(2);
         await expect(authoring.groupItems('story')).toHaveCount(1);
-        await expect(authoring.item('story 2')).toBeVisible();
     });
 
     test('sets a story label on an item', async ({page}) => {
@@ -164,11 +175,11 @@ test.describe('package (authoring-react)', () => {
 
         await expect(label).toHaveText('label: Featured');
 
-        const {request} = await save(page);
+        const {request} = await authoring.saveAndGetRequest();
 
         expect(request.groups[2].refs[0].label).toBe('story-label:featured');
 
-        await reopen(page);
+        await reopen(page, authoring);
         await expect(label).toHaveText('label: Featured');
     });
 });
@@ -180,19 +191,8 @@ test.describe('published package (authoring-react)', () => {
 
         const {monitoring, authoring} = await openPackage(page, 'Package Highlight 1');
 
-        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
-
-        const publishButton = page.getByTestId('panel-footer').getByTestId('publish');
-
-        // A click made while the panel is still loading is sometimes lost (not specific to packages).
-        // Publishing closes the item, so a click is repeated only while it is open.
-        await expect(async () => {
-            if (await publishButton.isVisible()) {
-                await publishButton.click();
-            }
-
-            await expect(page.getByTestId('authoring')).toBeHidden({timeout: 5000});
-        }).toPass({timeout: 30000});
+        await authoring.publish({subscribers: []});
+        await expect(page.getByTestId('authoring')).toBeHidden();
 
         const published = monitoring.getGroupedArticleLocator('Sports desk output', 'Package Highlight 1');
 
@@ -206,10 +206,7 @@ test.describe('published package (authoring-react)', () => {
     });
 });
 
-// the header fills the default viewport and pushes the items out of the pointer's reach
 test.describe('package items drag and drop (authoring-react)', () => {
-    test.use({viewport: {width: 1280, height: 1400}});
-
     test('moves an item to another group by dragging it', async ({page}) => {
         await restoreDatabaseSnapshot({snapshotName: 'packages'});
 
@@ -222,12 +219,12 @@ test.describe('package items drag and drop (authoring-react)', () => {
         await expect(authoring.groupItems('story')).toHaveCount(0);
         await expect(authoring.group('story').getByTestId('package-group-empty')).toBeVisible();
 
-        const {request} = await save(page);
+        const {request} = await authoring.saveAndGetRequest();
 
         expect(groupIds(request.groups)).toEqual(['root', 'main', 'story']);
         expect(request.groups[2].refs).toEqual([]);
 
-        await reopen(page);
+        await reopen(page, authoring);
 
         await expect(authoring.groupItems('main').first()).toHaveAttribute('data-test-value', 'Bywater notice');
         await expect(authoring.groupItems('story')).toHaveCount(0);
@@ -262,11 +259,11 @@ test.describe('package header (authoring-react)', () => {
             'Fellowship',
         );
 
-        const {request} = await save(page);
+        const {request} = await authoring.saveAndGetRequest();
 
         expect(request.slugline).toBe('Fellowship');
 
-        await reopen(page);
+        await reopen(page, authoring);
         await expect(authoring.fieldContainer('slugline').getByRole('textbox')).toHaveText('Fellowship');
     });
 

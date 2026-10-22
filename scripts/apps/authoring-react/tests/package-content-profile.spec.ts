@@ -24,6 +24,7 @@ const fieldsAdapter: IFieldsAdapter<IArticle> = {
     keywords: getAdapter('keywords'),
     abstract: getAdapter('abstract'),
     groups: getAdapter('groups'),
+    sms_message: getAdapter('sms_message'),
 };
 
 // shaped like the `composite` profile superdesk-core creates, which has no `section` on any field
@@ -44,7 +45,7 @@ const compositeProfile = {
         genre: {order: 5, sdWidth: 'half', enabled: true},
         headline: {order: 15, formatOptions: [], enabled: true},
         abstract: {order: 17, editor3: true, enabled: true},
-        sms: {order: 16, enabled: true}, // no adapter
+        sms: {order: 16, enabled: true}, // has an adapter, but is not one of the package fields
         footer: null,
     },
 } as unknown as IContentProfile;
