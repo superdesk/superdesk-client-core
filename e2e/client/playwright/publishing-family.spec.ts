@@ -125,8 +125,6 @@ async function publishOpenArticle(page: Page, options: {publishSchedule?: Date})
 }
 
 /**
- * Saves the open article from the topbar and waits for the write to land.
- *
  * The Save button is disabled both while the request is in flight and once the article is
  * clean again, so waiting for the PATCH is what separates the two.
  */
@@ -143,8 +141,6 @@ async function saveOpenArticle(page: Page): Promise<void> {
 }
 
 /**
- * Types a date and a time into the Publish schedule fields of the open publish panel.
- *
  * The date field is a primereact calendar input that parses free text against
  * `view.dateformat`. The only runtime handle on that format is the input's placeholder,
  * which `DatePicker` derives from the configured format by lowercasing its tokens, so the
@@ -192,8 +188,6 @@ async function fillPublishSchedule(page: Page, when: Date): Promise<void> {
 }
 
 /**
- * Changes a desk's type from the desks settings and waits for the write to land.
- *
  * The modal closes on click regardless of the request, and the caller reloads to pick the
  * new desk type up, so without waiting for the PATCH the reload can read the old value.
  */
