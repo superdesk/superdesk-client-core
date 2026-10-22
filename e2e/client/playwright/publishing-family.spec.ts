@@ -29,13 +29,19 @@ test.setTimeout(90000);
  * - "When a scheduled article is reopened, all data that were filled in the fields are
  *   preserved": `scheduled` is in READONLY_STATES, so the item opens read-only and the
  *   publish panel that held the values cannot be reopened. That the entered schedule was
- *   persisted is asserted through the list row's scheduled time instead.
+ *   persisted is asserted through the date the list row shows instead. The hour is not
+ *   compared: the row shows it in the browser's time zone, while the panel's time is read in
+ *   the server's default time zone (Europe/London), so it shifts with the machine.
+ * - "Clear schedule button is shown when data is filled": the Clear button is rendered
+ *   whether or not a schedule is filled in, so only its presence with a schedule and what it
+ *   does are asserted.
  * - "publishing does not go through with required fields empty" is asserted by
  *   publishing.validation.spec.ts and not repeated here.
  * - "Scheduled or published article can be found in Global search" is not asserted.
- * - The unsaved-changes dialog is driven but its wording differs from the case: publishing
- *   from the panel goes through `beforeSend`, which raises `confirmSendTo` ("save and
- *   send"), not the "Save and publish" dialog the case describes.
+ * - The unsaved-changes dialog is driven, Cancel first and then the save button, but its
+ *   wording differs from the case: publishing from the panel goes through `beforeSend`,
+ *   which raises `confirmSendTo` ("Save and send"), not the "Save and publish" dialog the
+ *   case describes.
  *
  * 1308524959 Publish package
  * - `hightlights.spec.ts` ("publishing a highlights package") overlaps in part: it publishes
@@ -67,17 +73,15 @@ test.setTimeout(90000);
  *   committed snapshot carries `associations`, so an item with an image in its body would
  *   have to be built first, which this batch does not do.
  *
- * 1335328782 Handling publish updates for Talpa
+ * 1335328782 Handling publish updates for Talpa (blocker)
  * - The custom Talpa NINJS format is not registered in the e2e backend. Its formatters are
- *   superdesk-core's stock set and none of them emits an `original` field, so the case's
- *   expected results on `original` cannot hold as they stand: not for the root item, not
- *   for an update, and not for the duplicate branch (Case2) either. The spec asserts that
- *   `original` is absent from all three payloads, which pins the current gap rather than
- *   covering the case: those assertions are expected to fail once a Talpa-style format is
- *   registered, and both the spec and its annotation have to be updated then.
- * - What the stock NINJS formatter does emit for an update is `evolvedfrom`, set to
- *   `rewrite_of`, and that is asserted here: it shows the output pointing at the immediate
- *   parent rather than at the root of the chain, which is the gap the case asks to close.
+ *   superdesk-core's stock set and none of them emits an `original` field, so none of the
+ *   case's expected results can hold: not for updates of the root item (Case1) and not for
+ *   the duplicate branch (Case2), which is not driven at all. The case is declared by a
+ *   `test.fixme` at the end of this file.
+ * - A related test asserts what the stock NINJS formatter does emit for an update:
+ *   `evolvedfrom`, set to `rewrite_of`, which points at the immediate parent rather than at
+ *   the root of the chain.
  */
 
 function inTwoDaysAtTen(): Date {
@@ -287,7 +291,10 @@ test.describe('scheduled publishing', () => {
 
         await fillPublishSchedule(page, inTwoDaysAtTen());
 
-        await section.getByRole('button', {name: 'Clear'}).click();
+        const clear = section.getByRole('button', {name: 'Clear'});
+
+        await expect(clear).toBeVisible();
+        await clear.click();
 
         await expect(section.getByTestId('date-input')).toHaveValue('');
         await expect(section.getByTestId('time-input')).toHaveValue('');
@@ -309,7 +316,26 @@ test.describe('scheduled publishing', () => {
             'Edit',
         );
 
-        await publishOpenArticle(page, {publishSchedule: inTwoDaysAtTen()});
+        const authoring = page.getByTestId('authoring');
+        const dateInput = page.getByTestId('publish-schedule').getByTestId('date-input');
+
+        await authoring.getByTestId('open-send-publish-pane').click();
+        await fillPublishSchedule(page, inTwoDaysAtTen());
+
+        const enteredDate = await dateInput.inputValue();
+        const prompt = page.getByTestId('modal-confirm');
+
+        await publishPanel(page).getByTestId('publish').click();
+        await expect(prompt).toContainText('There are some unsaved changes');
+        await prompt.getByRole('button', {name: 'Cancel'}).click();
+
+        await expect(prompt).toBeHidden();
+        await expect(page.getByTestId('authoring-topbar')).toBeVisible();
+        await expect(dateInput).toHaveValue(enteredDate);
+
+        await publishPanel(page).getByTestId('publish').click();
+        await prompt.getByRole('button', {name: 'save and send'}).click();
+        await waitForToastMessage(page, 'success', 'Item published.');
 
         const deskOutput = page.getByTestId('monitoring-group')
             .and(page.locator('[data-test-value="Sports desk output"]'));
@@ -319,6 +345,7 @@ test.describe('scheduled publishing', () => {
         await expect(scheduled).toBeVisible();
         await expect(scheduled.getByText('Scheduled')).toBeVisible();
         await expect(scheduled.getByTitle(/^Article is scheduled for /)).toBeVisible();
+        await expect(scheduled.getByTitle(/^Article is scheduled for /)).toContainText(enteredDate);
 
         await scheduled.dblclick();
 
@@ -488,12 +515,7 @@ test('unpublishing returns a published item to the working stage', {
     await expect(published).toBeHidden();
 });
 
-test('the ninjs sent for an update points at the item the update was created from', {
-    annotation: [
-        // Handling publish updates for Talpa (custom NINJS format with original ID)
-        {type: 'confluence', description: '1335328782 partial'},
-    ],
-}, async ({page}) => {
+test('the ninjs sent for an update points at the item the update was created from', async ({page}) => {
     test.setTimeout(180000);
 
     const monitoring = new Monitoring(page);
@@ -544,11 +566,17 @@ test('the ninjs sent for an update points at the item the update was created fro
     // root of the chain, which is the `original` field the case asks for
     expect(secondUpdateNinjs.evolvedfrom).toBe(firstUpdateNinjs.guid);
     expect(secondUpdateNinjs.evolvedfrom).not.toBe(originalNinjs.guid);
+});
 
-    // no stock formatter emits `original`, so these three pin the gap the case is about and
-    // are expected to fail once a Talpa-style format is registered: the spec and the case
-    // annotation have to be updated then
-    expect(originalNinjs.original).toBeUndefined();
-    expect(firstUpdateNinjs.original).toBeUndefined();
-    expect(secondUpdateNinjs.original).toBeUndefined();
+/*
+ * Placeholder so the uncovered case is machine-readable next to the covered ones. See the
+ * file docstring for the reason.
+ */
+test.fixme('the ninjs sent for an update carries the guid of the root item as original', {
+    annotation: [
+        // Handling publish updates for Talpa (custom NINJS format with original ID)
+        {type: 'confluence', description: '1335328782 blocker'},
+    ],
+}, async () => {
+    // No formatter in the e2e backend emits `original`; the Talpa NINJS format is not registered.
 });
