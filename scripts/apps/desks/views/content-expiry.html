@@ -13,19 +13,20 @@
   {{contentExpiry.actualExpiry.text | translate}} {{contentExpiry.actualExpiry.expiry | translate}}
 </label>
 
-<div ng-if="!preview && contentExpiry.expire" class="form__row">
+<div ng-if="!preview && contentExpiry.expire" class="form__row" ng-form="expiryForm">
     <div class="">
         <span sd-switch ng-model="contentExpiry.expire"></span>
         <label class="inline-label">{{contentExpiry.header | translate}}
             <span class="label label--primary label--hollow"
                   ng-if="contentExpiry.actualExpiry"
+                  data-test-id="content-expiry--default-label"
                   title="{{ contentExpiry.actualExpiry.expiry | translate}}">{{ contentExpiry.actualExpiry.text | translate }}</span>
         </label>
     </div>
     <div class="form__row form__row--flex form__row--no-padding">
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.days" min ="0" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" name="days" ng-model="contentExpiry.days" min ="0" max="{{maxDays}}" required data-test-id="content-expiry--days">
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -47,6 +48,9 @@
         <div class="form__row-item form__row-item--no-grow">
             <span class="" translate>min</span>
         </div>
+    </div>
+    <div class="sd-line-input sd-line-input--invalid sd-line-input--no-margin" ng-if="expiryForm.days.$error.max">
+        <div class="sd-line-input__message" data-test-id="content-expiry--max-days-error" translate translate-params-max="maxDays">Content expiry can not be more than {{max}} days.</div>
     </div>
 </div>
 
