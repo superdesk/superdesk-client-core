@@ -388,7 +388,12 @@ export function getInlineToolbarActions(
             return withContext({
                 readOnly: false,
                 actions: [
-                    toggleFullWidthButton, closeButton, saveButton, minimizeButton, ...getReadOnlyAndArchivedFrom(),
+                    toggleFullWidthButton,
+                    closeButton,
+                    saveButton,
+                    minimizeButton,
+                    ...getReadOnlyAndArchivedFrom(),
+                    ...(sdApi.highlights.showHighlightExportButton(item) ? [exportHighlightWidget] : []),
                 ],
             });
 

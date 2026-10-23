@@ -48,20 +48,33 @@ export class Monitoring {
         }
     }
 
+    async openContextMenu(item: Locator): Promise<Locator> {
+        const contextMenu = this.page.getByTestId('context-menu');
+
+        // The button renders only while its row is hovered, and a row that re-renders forgets the hover.
+        // Only a click that never happened is retried, so an open menu is never clicked shut.
+        await expect(async () => {
+            await item.hover();
+            await item.getByTestId('context-menu-button').click({timeout: 2000});
+        }).toPass();
+        await expect(contextMenu).toBeVisible();
+
+        return contextMenu;
+    }
+
     /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
     async executeActionOnMonitoringItem(item: Locator, ...actionPath: Array<string>): Promise<void> {
-        await item.hover();
-        await item.locator(s('context-menu-button')).click();
+        const contextMenu = await this.openContextMenu(item);
 
         const actionsWithoutLast = actionPath.slice(0, actionPath.length - 1);
 
         for (const action of actionsWithoutLast) {
-            await this.page.locator(s('context-menu')).getByRole('button', {name: action, exact: true}).hover();
+            await contextMenu.getByRole('button', {name: action, exact: true}).hover();
         }
 
-        await this.page.locator(s('context-menu'))
+        await contextMenu
             .getByRole('button', {name: actionPath[actionPath.length - 1], exact: true})
             .click();
     }
@@ -81,10 +94,7 @@ export class Monitoring {
         innerLabel: string,
         opts?: {innerByTestId?: string},
     ): Promise<void> {
-        await item.hover();
-        await item.locator(s('context-menu-button')).click();
-
-        const contextMenu = this.page.locator(s('context-menu'));
+        const contextMenu = await this.openContextMenu(item);
         const parent = contextMenu.getByRole('button', {name: parentLabel, exact: true});
 
         await parent.hover();
@@ -103,6 +113,64 @@ export class Monitoring {
         } else {
             await contextMenu.getByText(innerLabel, {exact: true}).click();
         }
+    }
+
+    /**
+     * Ticks the multi-select checkbox of an item, which only shows while its type icon is hovered.
+     */
+    async multiSelect(item: Locator): Promise<void> {
+        await item.getByTestId('item-type-and-multi-select').hover();
+
+        const checkbox = item.getByTestId('multi-select-checkbox');
+
+        await checkbox.click();
+        await expect(checkbox).toHaveAttribute('aria-checked', 'true');
+    }
+
+    /**
+     * Runs an action of the multi-action bar, which lists actions inline when there is room for
+     * them and in a dropdown otherwise.
+     *
+     * Monitoring re-measures the bar 300ms after the editor opens or closes and marks nothing when
+     * done, so the form is read until two readings half a second apart agree.
+     */
+    async executeMultiAction(action: string): Promise<void> {
+        const bar = this.page.getByTestId('multi-action-bar');
+        const inline = bar.getByTestId('multi-actions-inline');
+        const dropdown = bar.getByTestId('multi-actions-dropdown');
+
+        await expect(inline.or(dropdown)).toBeVisible();
+
+        let previousForm: 'inline' | 'dropdown' | null = null;
+
+        await expect.poll(async () => {
+            const form = await inline.isVisible() ? 'inline' : 'dropdown';
+            const settled = form === previousForm;
+
+            previousForm = form;
+
+            return settled;
+        }, {intervals: [500]}).toBe(true);
+
+        if (previousForm === 'inline') {
+            await inline.getByTestId(action).click();
+        } else {
+            await dropdown.getByTestId('dropdown-toggle').click();
+            await dropdown.getByTestId(action).click();
+        }
+    }
+
+    // the side menu's Highlights entry lists the highlights on hover
+    async openHighlight(highlightName: string): Promise<void> {
+        await this.page.getByTestId('highlights-menu').hover();
+        await this.page.getByTestId('highlights-menu-item')
+            .and(this.page.locator(`[data-test-value="${highlightName}"]`))
+            .click();
+        await expect(this.page.getByTestId('articles-list--heading')).toHaveText(highlightName);
+    }
+
+    async createHighlightsPackage(): Promise<void> {
+        await this.page.getByTestId('articles-list--toolbar').getByTestId('create-highlights-package').click();
     }
 
     async executeBulkAction(action: string, articleNames: Array<string>): Promise<void> {
@@ -157,15 +225,20 @@ export class Monitoring {
         return this.page.locator(s('article-item=' + headline));
     }
 
+    /** Every article of a monitoring group, in the order the group lists them. */
+    getGroupedArticlesLocator(groupName: string): Locator {
+        return this.page.getByTestId('monitoring-group')
+            .and(this.page.locator(`[data-test-value="${groupName}"]`))
+            .getByTestId('article-item');
+    }
+
     /**
      * Locates an article in a specific monitoring group by its exact label.
      * Attribute matching is used instead of `filter({hasText})` because labels
      * of distinct items may share a prefix (e.g. "Story 5" and "Story 5.1").
      */
     getGroupedArticleLocator(groupName: string, articleLabel: string): Locator {
-        return this.page.getByTestId('monitoring-group')
-            .and(this.page.locator(`[data-test-value="${groupName}"]`))
-            .getByTestId('article-item')
+        return this.getGroupedArticlesLocator(groupName)
             .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
     }
 

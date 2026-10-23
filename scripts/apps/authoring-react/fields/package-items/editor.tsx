@@ -1,152 +1,140 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IconButton} from 'superdesk-ui-framework/react';
+import {DragDropContext, DropResult} from '@hello-pangea/dnd';
 import {
     IArticle,
     IEditorComponentProps,
+    IPackageGroup,
     IPackageItemsConfig,
     IPackageItemsUserPreferences,
     IPackageItemsValueOperational,
 } from 'superdesk-api';
-import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {DropZone3} from 'core/ui/components/drop-zone-3';
-import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
-import {openArticle} from 'core/get-superdesk-api-implementation';
-import {DragHandle} from 'core/ui/components/drag-handle';
-import {arrayMove, WithSortable} from '@sourcefabric/common';
-import {WithArticles} from 'core/with-articles';
-import {getDroppedItem} from 'utils/dragging';
+import {notify} from 'core/notify/notify';
+import {addInternalEventListener} from 'core/internal-events';
+import {PackageGroupItems} from './package-group-items';
+import {PackageGroupTitle} from './package-group-title';
+import {HighlightPreview} from './highlight-preview';
+import {addItemsToGroup, moveItem, removeItem, setItemLabel} from './package-groups';
+import {removeOpenPackageGroups, setOpenPackageGroups} from './open-packages';
 
 type IProps = IEditorComponentProps<IPackageItemsValueOperational, IPackageItemsConfig, IPackageItemsUserPreferences>;
 
-function getItemTemplate(that: Editor) {
-    return class SortableItemComponent extends React.PureComponent<{item: IArticle}> {
-        render() {
-            const {item} = this.props;
-            const {readOnly} = that.props;
-            const {removeItem} = that;
-
-            return (
-                <Spacer h gap="8" noWrap alignItems="center">
-                    {
-                        !readOnly && (
-                            <div>
-                                <DragHandle />
-                            </div>
-                        )
-                    }
-
-                    <div style={{flexGrow: 1}}>
-                        <ArticleItemConcise
-                            article={item}
-                            actionsMenu={[
-                                {
-                                    label: gettext('Edit'),
-                                    onClick: () => {
-                                        openArticle(item._id, 'edit');
-                                    },
-                                },
-                                {
-                                    label: gettext('Edit in new window'),
-                                    onClick: () => {
-                                        openArticle(item._id, 'edit-new-window');
-                                    },
-                                },
-                            ]}
-                        />
-                    </div>
-
-                    {
-                        !readOnly && (
-                            <div>
-                                <IconButton
-                                    icon="remove-sign"
-                                    ariaValue={gettext('Remove')}
-                                    onClick={() => {
-                                        removeItem(item._id);
-                                    }}
-                                />
-                            </div>
-                        )
-                    }
-                </Spacer>
-            );
-        }
-    };
-}
-
 export class Editor extends React.PureComponent<IProps> {
-    private itemTemplate: ReturnType<typeof getItemTemplate>;
+    private removeListeners: Array<() => void> = [];
 
     constructor(props: IProps) {
         super(props);
 
-        this.itemTemplate = getItemTemplate(this);
-        this.removeItem = this.removeItem.bind(this);
+        this.addItems = this.addItems.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this);
     }
 
-    removeItem(idToRemove: IArticle['_id']) {
-        const linkedItems = this.props.value ?? [];
+    private getGroups(): IPackageItemsValueOperational {
+        return this.props.value ?? [];
+    }
 
-        this.props.onChange(
-            linkedItems.filter(({guid}) => guid !== idToRemove),
+    private getPackageId(): IArticle['_id'] {
+        return (this.props.item as IArticle)._id;
+    }
+
+    addItems(groupId: IPackageGroup['id'], items: Array<IArticle>) {
+        const {groups, duplicates, notFetched} = addItemsToGroup(this.getGroups(), groupId, items);
+
+        if (duplicates.length > 0) {
+            notify.error(gettext('Item is already in this package.'));
+        }
+
+        if (notFetched.length > 0) {
+            notify.error(gettext('Fetch ingest items before adding them to a package.'));
+        }
+
+        if (groups !== this.getGroups()) {
+            this.props.onChange(groups);
+        }
+    }
+
+    onDragEnd(result: DropResult) {
+        if (result.destination == null) {
+            return;
+        }
+
+        this.props.onChange(moveItem(
+            this.getGroups(),
+            {groupId: result.source.droppableId, index: result.source.index},
+            {groupId: result.destination.droppableId, index: result.destination.index},
+        ));
+    }
+
+    componentDidMount() {
+        setOpenPackageGroups(this.getPackageId(), this.getGroups());
+
+        this.removeListeners.push(
+            addInternalEventListener('addItemsToPackageInAuthoringReact', (event) => {
+                const {packageId, groupId, items} = event.detail;
+
+                if (packageId === this.getPackageId() && !this.props.readOnly) {
+                    this.addItems(groupId, items);
+                }
+            }),
+            addInternalEventListener('setPackageItemLabelInAuthoringReact', (event) => {
+                const {packageId, itemId, label} = event.detail;
+
+                if (packageId === this.getPackageId() && !this.props.readOnly) {
+                    this.props.onChange(setItemLabel(this.getGroups(), itemId, label));
+                }
+            }),
         );
+    }
+
+    componentDidUpdate() {
+        setOpenPackageGroups(this.getPackageId(), this.getGroups());
+    }
+
+    componentWillUnmount() {
+        removeOpenPackageGroups(this.getPackageId());
+        this.removeListeners.forEach((removeListener) => removeListener());
     }
 
     render() {
         const Container = this.props.container;
-        const packageItems = (this.props.value ?? []);
-        const packageItemIds = packageItems.map(({guid}) => guid);
         const {readOnly} = this.props;
+        const groups = this.getGroups();
+        const item = this.props.item as IArticle;
 
         return (
             <Container>
-                <DropZone3
-                    canDrop={() => !readOnly}
-                    onDrop={(event) => {
-                        const item = getDroppedItem(event);
-
-                        if (item != null) {
-                            this.props.onChange(packageItems.concat(
-                                {
-                                    guid: item.guid,
-                                    type: item.type,
-                                    headline: item.headline,
-                                    residRef: item.guid,
-                                    location: 'archive',
-                                    slugline: item.slugline,
-                                    renditions: {},
-                                    itemClass: item.type ? 'icls:' + item.type : '',
-                                },
-                            ));
-                        }
-                    }}
-                >
+                <DragDropContext onDragEnd={this.onDragEnd}>
                     {
-                        packageItemIds.length > 0 && (
-                            <WithArticles ids={packageItemIds}>
-                                {
-                                    (items) => (
-                                        <WithSortable
-                                            items={items}
-                                            itemTemplate={this.itemTemplate}
-                                            getId={(item) => item._id}
-                                            options={{
-                                                shouldCancelStart: () => readOnly,
-                                                onSortEnd: ({oldIndex, newIndex}) => {
-                                                    this.props.onChange(arrayMove(packageItems, oldIndex, newIndex));
-                                                },
-                                                distance: 10,
-                                                helperClass: 'dragging-in-progress',
-                                            }}
-                                        />
-                                    )
-                                }
-                            </WithArticles>
-                        )
+                        groups.map((group) => (
+                            <div
+                                key={group.id}
+                                data-test-id="package-group"
+                                data-test-value={group.id}
+                                style={{marginBottom: 16}}
+                            >
+                                <PackageGroupTitle label={group.label || group.id} />
+
+                                <PackageGroupItems
+                                    group={group}
+                                    readOnly={readOnly}
+                                    onDropItem={(droppedItem) => this.addItems(group.id, [droppedItem])}
+                                    onRemove={(residRef) => {
+                                        this.props.onChange(removeItem(groups, group.id, residRef));
+                                    }}
+                                    onLabelChange={(residRef, label) => {
+                                        this.props.onChange(setItemLabel(groups, residRef, label));
+                                    }}
+                                />
+                            </div>
+                        ))
                     }
-                </DropZone3>
+                </DragDropContext>
+
+                {
+                    item.highlight != null && (
+                        <HighlightPreview packageId={item._id} />
+                    )
+                }
             </Container>
         );
     }
