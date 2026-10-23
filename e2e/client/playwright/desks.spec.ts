@@ -202,13 +202,11 @@ test('content expiry can not exceed 99999 days on a desk or a stage', async ({pa
     await expect(deskExpiry.locator(s('content-expiry--max-days-error'))).not.toBeVisible();
     await expect(deskSave).toBeEnabled();
     await deskSave.click();
-    await expect(deskSave).toBeDisabled();
-    await expect(deskExpiry.locator(s('content-expiry--days'))).toHaveValue('99999');
 
-    await modal.locator('[sd-wizard] .nav-tabs').getByRole('button', {name: 'Stages', exact: true}).click();
-
+    // The wizard only moves on to Stages once the save succeeds.
     const stageRow = modal.locator(s('stage--Working Stage'));
 
+    await expect(stageRow).toBeVisible();
     await stageRow.click();
     await stageRow.locator(s('stage-actions--edit')).click();
 
