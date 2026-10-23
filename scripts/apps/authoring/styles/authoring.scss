@@ -438,43 +438,30 @@ $authoring-toolbar-spacing: 10px;
 // Authoring Header
 // -------------------------------------------------
 
+// authoring-react's created and modified info, laid out like angular's `.authoring-sticky__detailed`,
+// where the whitespace between the inline boxes spaces them
 .created-modified-info {
     display: flex;
     align-items: center;
-
-    .created-modified-info--separator {
-        width: 1px;
-        height: 16px;
-        background-color: #DADADA;
-        margin-left: $authoring-toolbar-spacing;
-        margin-right: $authoring-toolbar-spacing;
-    }
+    gap: var(--gap-1);
 
     dl, dt, dd {
-        font-size: 12px;
-        line-height: 1;
-        margin-bottom: 0;
-        margin-top: 0;
-    }
-
-    dl {
-        display: flex;
-        align-items: center;
+        display: inline-block;
+        vertical-align: bottom;
+        padding: 0;
+        margin: 0;
     }
 
     dt {
-        color: $sd-gray-text;
+        font-size: 12px;
+        color: $sd-text-lighter;
     }
+
     dd {
         color: $sd-text;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-    }
-
-    dd + dt,
-    dt + dt {
-        margin-left: 8px;
     }
 }
 

@@ -160,6 +160,7 @@ declare module 'superdesk-api' {
          */
         getLatestItem(options?: {preferIncomplete?: IStoreValueIncomplete}): T;
         toggleTheme: () => void;
+        proofreadingEnabled: boolean;
         printPreview: () => void;
         configureTheme: () => void;
         toggleSideWidget(id: string | null): void;

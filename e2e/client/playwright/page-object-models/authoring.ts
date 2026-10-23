@@ -8,6 +8,14 @@ import {TreeSelectDriver} from '../utils/tree-select-driver';
  */
 export const ACTIVE_FORMATTING_BUTTON = /Editor3-activeButton/;
 
+export interface IEditorThemeKeys {
+    theme: string;
+    font: string;
+    headline: string;
+    abstract: string;
+    body: string;
+}
+
 export class Authoring {
     protected page: Page;
 
@@ -227,6 +235,61 @@ export class Authoring {
             .getByTestId('toolbar')
             .getByTestId('formatting-option-button')
             .and(this.page.locator(`[data-test-value="${option}"]`));
+    }
+
+    secondaryToolbar(): Locator {
+        return this.page.getByTestId('authoring-secondary-toolbar');
+    }
+
+    /**
+     * The content area the editor theme applies to. authoring-react exposes the active theme's keys
+     * on it as `data-editor-*` attributes; angular exposes them as `sd-editor--*` classes.
+     */
+    themeContainer(): Locator {
+        return this.page.getByTestId('authoring-theme-container');
+    }
+
+    async expectEditorTheme(theme: Partial<IEditorThemeKeys>): Promise<void> {
+        for (const [key, value] of Object.entries(theme)) {
+            await expect(this.themeContainer()).toHaveAttribute(`data-editor-${key}`, value);
+        }
+    }
+
+    /**
+     * What the theme paints, read once: poll it after anything that changes the theme. Colours come
+     * back as sRGB `r,g,b,a` so they compare whatever colour space the CSS declares them in.
+     */
+    readThemeAppearance(): Promise<{background: string; text: string; bodyFontSize: number}> {
+        return this.fieldContainer('body_html').getByRole('textbox').evaluate((textbox) => {
+            const container = textbox.closest('[data-test-id="authoring-theme-container"]');
+            const context = document.createElement('canvas').getContext('2d');
+
+            if (container == null || context == null) {
+                throw new Error('the body field is not inside a themed container');
+            }
+
+            const toRgba = (color: string): string => {
+                context.clearRect(0, 0, 1, 1);
+                context.fillStyle = color;
+                context.fillRect(0, 0, 1, 1);
+
+                return context.getImageData(0, 0, 1, 1).data.join(',');
+            };
+
+            const style = window.getComputedStyle(textbox);
+
+            return {
+                background: toRgba(window.getComputedStyle(container).backgroundColor),
+                text: toRgba(style.color),
+                bodyFontSize: parseFloat(style.fontSize),
+            };
+        });
+    }
+
+    editorThemesPanel(slot: 'default' | 'proofreading'): Locator {
+        return this.page.getByTestId('editor-themes-modal')
+            .getByTestId('proofreading-panel')
+            .and(this.page.locator(`[data-test-value="${slot}"]`));
     }
 
     /**

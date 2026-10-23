@@ -39,6 +39,10 @@ setTimeout(() => {
                 id: 'publishing-sections',
                 load: () => import('./test-extensions/publishing-sections'),
             },
+            {
+                id: 'topbar2-widget',
+                load: () => import('./test-extensions/topbar2-widget'),
+            },
         ],
         {}
     );

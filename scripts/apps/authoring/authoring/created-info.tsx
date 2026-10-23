@@ -45,14 +45,14 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
         }
 
         return (
-            <dl>
+            <dl data-test-id="created-info">
                 <dt>{gettext('Created')}</dt>
                 {' '}
-                <dd><TimeElem date={entity.firstcreated} /></dd>
+                <dd data-test-id="created-info--date"><TimeElem date={entity.firstcreated} /></dd>
                 {' '}
                 <dt>{gettext('by')}</dt>
                 {' '}
-                <dt>{user.display_name}</dt>
+                <dt data-test-id="created-info--user">{user.display_name}</dt>
             </dl>
         );
     }
