@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {arrayMove} from '@sourcefabric/common';
+import {isContentExpiryValid} from './ContentExpiry';
 
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
 export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
@@ -208,7 +209,8 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
 
             scope.enableSave = function() {
                 return scope.editStage && scope.editStage.name &&
-                    scope.editStage.name.length > 0 && !scope._errorLimits;
+                    scope.editStage.name.length > 0 && !scope._errorLimits &&
+                    isContentExpiryValid(scope.editStage.content_expiry);
             };
 
             function clearErrorMessages() {

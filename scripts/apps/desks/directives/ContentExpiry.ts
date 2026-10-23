@@ -1,4 +1,11 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
+
+export function isContentExpiryValid(minutes: number | null | undefined): boolean {
+    const max = appConfig.max_content_expiry_minutes;
+
+    return minutes == null || (Number.isFinite(minutes) && (max == null || minutes <= max));
+}
 
 /**
  * @ngdoc directive
@@ -20,6 +27,10 @@ export function ContentExpiry() {
         },
         link: function(scope, elem, attrs) {
             let expiryfield = attrs.expiryfield;
+
+            scope.maxDays = appConfig.max_content_expiry_minutes == null
+                ? null
+                : Math.floor(appConfig.max_content_expiry_minutes / (60 * 24));
 
             scope.contentExpiry = {
                 expire: true,
@@ -72,9 +83,11 @@ export function ContentExpiry() {
              */
             function getActualExpiry() {
                 // if desk or stage or ingest content expiry then don't calculate.
+                // An invalid input sets its value to undefined, which is not "use the default".
                 if (scope.contentExpiry.expire && (
                     scope.contentExpiry.days > 0 || scope.contentExpiry.hours > 0 ||
-                    scope.contentExpiry.minutes > 0)) {
+                    scope.contentExpiry.minutes > 0 ||
+                    !isContentExpiryValid(getTotalExpiryMinutes(scope.contentExpiry)))) {
                     scope.contentExpiry.actualExpiry = null;
                     return;
                 }

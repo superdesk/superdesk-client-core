@@ -3747,6 +3747,7 @@ declare module 'superdesk-api' {
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
+        max_content_expiry_minutes?: number;
         high_priority_queue_enabled: any;
         attachments_max_size: any;
         attachments_max_files: any;
