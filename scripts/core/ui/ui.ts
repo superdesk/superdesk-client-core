@@ -1280,6 +1280,7 @@ export default angular.module('superdesk.core.ui', [
     'superdesk.config',
     'superdesk.core.datetime',
     'superdesk.core.ui.autoheight',
+    'superdesk.core.ui.semantics',
     'superdesk.apps.spellcheck',
 ])
     .run(['$rootScope', '$location', ($rootScope, $location) => {
