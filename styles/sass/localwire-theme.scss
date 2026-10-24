@@ -1,0 +1,56 @@
+// Demo instance theme: an ink-blue accent on dark neutral chrome, replacing the default green.
+//
+// Imported from scripts/index.ts straight after superdesk-ui-framework's precompiled bundle so
+// it can redefine that bundle's custom properties. The framework derives each colour ramp from a
+// hue/saturation pair, so the palette moves with a handful of declarations.
+//
+// Contrast ratios below are WCAG relative-luminance ratios against white. The accent was chosen
+// so every filled button and link clears AA with room to spare; the default green with a white
+// label is 3.15:1 and fails it.
+
+:root,
+[data-theme="light-ui"],
+[data-theme="dark-ui"] {
+    --localwire-chrome: #1b222b;
+    --localwire-chrome--raised: #2a333e;
+    --localwire-ink: #24466b;         // 9.71:1 with white
+    --localwire-ink--deep: #1a3450;   // 12.72:1 with white
+
+    // Ramp bases: everything the framework calls interactive, primary or superdesk (links, focus
+    // rings, selection, active states) derives from these. The default step is 50% lightness.
+    --sd-colour-interactive-hs: 211, 50%;
+    --sd-colour-primary-hs: 211, 50%;
+    --sd-colour-superdesk-hs: 211, 50%;
+    --sd-colour-interactive-l--50: var(--sd-colour-interactive-hs), 28%;
+
+    --sd-colour-primary: var(--localwire-ink);
+    --sd-colour-primary--hover: var(--localwire-ink--deep);
+    --sd-colour-primary--active: var(--localwire-ink--deep);
+    --sd-colour-superdesk: var(--localwire-ink);
+    --sd-colour-superdesk--hover: var(--localwire-ink--deep);
+    --sd-colour-superdesk--active: var(--localwire-ink--deep);
+
+    // Newer token layer: every --brand-primary-NNN shade derives from this one.
+    --brand-primary: #24466b;
+}
+
+// The left main menu is painted with --sd-colour-bg--02, a token shared with panels and list
+// items, so its background is set directly.
+#main-menu,
+.main-menu {
+    background: var(--localwire-chrome);
+}
+
+// Login, secure login and reset password all render .login-screen. These two properties are read
+// by the auth rules on this element and its inputs.
+.login-screen {
+    --sd-colour-bg--02: var(--localwire-chrome);
+    --sd-colour-bg--04: var(--localwire-chrome--raised);
+
+    .btn--sd-green {
+        --sd-btn-bg: var(--localwire-ink);
+        --sd-btn-bg--hover: var(--localwire-ink--deep);
+        --sd-btn-bg--active: var(--localwire-ink--deep);
+        color: #fff;
+    }
+}
