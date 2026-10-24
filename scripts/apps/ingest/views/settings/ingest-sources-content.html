@@ -3,7 +3,7 @@
         <div class="flat-searchbar extended">
             <div class="search-handler" >
                 <label for="search-input" class="trigger-icon"><i class="icon-search"></i></label>
-                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
+                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" aria-label="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
             </div>
         </div>
         <div class="dropdown" dropdown>

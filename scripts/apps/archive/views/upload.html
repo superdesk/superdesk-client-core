@@ -15,8 +15,7 @@
     <sd-multi-edit-select-desk>
         <div ng-if="deskSelectionAllowed === true && desks !== null" class="dropdown dropdown--boxed" dropdown is-open="isOpen">
             <button class="dropdown__toggle dropdown__toggle--small dropdown__toggle--hollow dropdown-toggle" dropdown__toggle aria-haspopup="true" aria-expanded="false" data-test-id="upload-selected-desk">
-                <span class="dropdown__button-label">
-                    Send to:</span> <span>{{selectedDesk.name}}</span>
+                <span class="dropdown__button-label" translate>Send to:</span> <span>{{selectedDesk.name}}</span>
                     <b class="dropdown__caret white"></b>
             </button>
             <!-- TODO: fix dropdown2 component so height adjusts according to available space-->

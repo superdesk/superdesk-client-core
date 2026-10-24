@@ -40,7 +40,7 @@
                         <label>{{page | translate}}/{{maxPage | translate}}</label>
                         <button type="button" ng-disabled="page === maxPage" ng-click="page = page + 1">&gt;</i></button>
                     </span>
-                     <input type="text" placeholder="{{ :: 'Search' | translate }}"
+                     <input type="text" placeholder="{{ :: 'Search' | translate }}" aria-label="{{ :: 'Search' | translate }}"
                         ng-model="keyword"
                         ng-model-options="{debounce: 500}">
                 </div>

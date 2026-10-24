@@ -1,7 +1,7 @@
 <div class="content-search" ng-class="{extended: selected}" ng-controller="SearchWidgetCtrl">
     <div class="search-container">
         <div class="search-box">
-            <input type="text" placeholder="{{ 'Search'|translate }}" ng-model="query">
+            <input type="text" placeholder="{{ 'Search'|translate }}" aria-label="{{ 'Search'|translate }}" ng-model="query">
             <div ng-show="highlight" align="right" left sd-search-highlights data-highlight="highlight"></div>
         </div>
 

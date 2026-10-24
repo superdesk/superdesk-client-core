@@ -2,7 +2,7 @@
 
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
         <i class="icon-search search-box__icon"></i>
-        <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
+        <input type="text" placeholder="{{ :: 'Search' | translate }}" aria-label="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
             ng-model="itemListOptions.keyword">
         <button id="search-related-items" type="button" class="btn btn--small search-box__btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
     </div>
