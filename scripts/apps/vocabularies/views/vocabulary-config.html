@@ -82,25 +82,28 @@
                         <button
                           ng-click="downloadVocabulary(vocabulary)"
                           sd-tooltip="{{:: 'Download config' | translate }}"
+                          aria-label="{{:: 'Download config' | translate }} {{ vocabulary.display_name }}"
                           data-test-id="vocabulary-item--start-download"
                         >
-                          <i class="icon-download"></i>
+                          <i class="icon-download" aria-hidden="true"></i>
                         </button>
                       </div>
                         <button
                           ng-click="openVocabulary(vocabulary)"
                           sd-tooltip="{{:: 'Edit' | translate }}"
+                          aria-label="{{:: 'Edit' | translate }} {{ vocabulary.display_name }}"
                           data-test-id="vocabulary-item--start-editing"
                         >
-                          <i class="icon-pencil"></i>
+                          <i class="icon-pencil" aria-hidden="true"></i>
                         </button>
                         <button
                           ng-click="remove(vocabulary)"
                           ng-disabled="vocabulary.field_type === undefined"
                           sd-tooltip="{{:: vocabulary.field_type === undefined ? ('Can\'t delete system vocabularies' | translate) : ('Delete' | translate) }}"
+                          aria-label="{{:: 'Delete' | translate }} {{ vocabulary.display_name }}"
                           data-test-id="vocabulary-item--start-removing"
                         >
-                            <i class="icon-trash" ng-class="{'icon--disabled': vocabulary.field_type === undefined}"></i>
+                            <i class="icon-trash" aria-hidden="true" ng-class="{'icon--disabled': vocabulary.field_type === undefined}"></i>
                         </button>
                     </div>
                 </div>
