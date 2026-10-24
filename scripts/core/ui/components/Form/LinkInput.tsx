@@ -148,6 +148,7 @@ export class LinkInput extends React.Component<any, any> {
                                 href={this.getAbsoulteURL(value)}
                                 target="_blank"
                                 icon="icon-link"
+                                aria-label={gettext('Open link')}
                             />
                         )}
 
@@ -155,6 +156,7 @@ export class LinkInput extends React.Component<any, any> {
                             onClick={remove}
                             tabIndex={0}
                             icon="icon-trash"
+                            aria-label={gettext('Remove')}
                             enterKeyIsClick={true}
                         />
                     </span>

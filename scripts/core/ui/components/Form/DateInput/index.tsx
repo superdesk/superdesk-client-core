@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as momentAlias from 'moment';
 import {LineInput, Label, Input} from '../';
 import {IconButton} from '../../';
+import {gettext} from 'core/utils';
 import {DateInputPopup} from './DateInputPopup';
 import {KEYCODES} from '../../constants';
 import {onEventCapture} from '../../utils';
@@ -142,6 +143,7 @@ export class DateInput extends React.Component<any, any> {
                 <IconButton
                     className="sd-line-input__icon-right"
                     icon="icon-calendar"
+                    aria-label={gettext('Open calendar')}
                     onFocus={onFocus}
                     onClick={readOnly ? undefined : this.toggleOpenDatePicker}
                 />

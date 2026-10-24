@@ -113,6 +113,7 @@ export class FileInput extends React.Component<any, any> {
                                 onClick={this.onRemove.bind(null, index)}
                                 tabIndex={0}
                                 icon="icon-trash"
+                                aria-label={gettext('Remove')}
                                 enterKeyIsClick={true}
                             />
                         </span>

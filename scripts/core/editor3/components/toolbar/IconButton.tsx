@@ -21,19 +21,18 @@ export const IconButton: React.FunctionComponent<IProps> = ({onClick, iconName, 
     <div
         data-flow={'down'}
         data-sd-tooltip={tooltip}
-        aria-label={tooltip}
         className="Editor3-styleButton"
         style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
-        role="button"
     >
         <span
             role="button"
+            aria-label={tooltip}
             onMouseDown={(e) => {
                 e.preventDefault();
                 onClick(e);
             }}
         >
-            <i className={`icon-${iconName}`} />
+            <i className={`icon-${iconName}`} aria-hidden="true" />
         </span>
     </div>
 );

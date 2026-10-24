@@ -99,6 +99,9 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
                 data-test-value={label}
                 data-sd-tooltip={styleTooltips[label]}
                 data-flow={'down'}
+                role="button"
+                aria-pressed={!!active}
+                aria-label={iconClass ? styleTooltips[label] ?? label : undefined}
                 onMouseDown={this.onToggle}
                 style={this.props.uiTheme == null ? undefined : {color: this.props.uiTheme.textColor}}
             >
@@ -108,6 +111,7 @@ export default class StyleButton extends React.Component<IPropsStyleButton> {
                             data-test-id="formatting-option"
                             data-test-value={label}
                             className={iconClass}
+                            aria-hidden="true"
                         />
                     )
                     : <b>{label}</b>

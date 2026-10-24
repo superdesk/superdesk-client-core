@@ -42,13 +42,17 @@ const SelectionButtonComponent: React.StatelessComponent<IProps> = (
         <div
             data-flow={'down'}
             data-sd-tooltip={tooltip}
-            aria-label={tooltip}
             className="Editor3-styleButton"
             style={uiTheme == null ? undefined : {color: uiTheme.textColor}}
-            role="button"
         >
-            <span className={cx} onClick={clickHandler}>
-                <i className={`icon-${iconName}`} />
+            <span
+                className={cx}
+                onClick={clickHandler}
+                role="button"
+                aria-label={tooltip}
+                aria-disabled={inactive}
+            >
+                <i className={`icon-${iconName}`} aria-hidden="true" />
             </span>
         </div>
     );

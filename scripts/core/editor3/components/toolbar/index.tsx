@@ -292,7 +292,7 @@ class ToolbarComponent extends React.Component<IProps, IState> {
                     <IconButton
                         onClick={showPopup(PopupTypes.Embed)}
                         iconName="code"
-                        tooltip="Embed"
+                        tooltip={gettext('Embed')}
                         uiTheme={this.props.uiTheme}
                     />
                 )}

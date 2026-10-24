@@ -24,6 +24,7 @@ const Icon: React.StatelessComponent<any> = ({icon, doubleSize, big, className, 
                 color,
                 className,
             )}
+            aria-hidden={tooltip ? undefined : true}
         />
     );
 

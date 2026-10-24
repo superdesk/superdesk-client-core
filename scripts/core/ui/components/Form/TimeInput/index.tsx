@@ -4,6 +4,7 @@ import * as momentAlias from 'moment';
 import {LineInput, Label, Input} from '../';
 import {TimeInputPopup} from './TimeInputPopup';
 import {IconButton} from '../../';
+import {gettext} from 'core/utils';
 import {KEYCODES} from '../../constants';
 import './style.scss';
 
@@ -120,6 +121,7 @@ export class TimeInput extends React.Component<any, any> {
                 <IconButton
                     className="sd-line-input__icon-right"
                     icon="icon-time"
+                    aria-label={gettext('Open time picker')}
                     onFocus={onFocus}
                     onClick={!readOnly ? this.toggleOpenTimePicker : null}
                 />

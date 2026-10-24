@@ -46,6 +46,8 @@ const IconButton: React.StatelessComponent<any> = ({
             onFocus={onFocus}
             tabIndex={tabIndex}
             onKeyDown={enterKeyIsClick ? handleKeyDown : onKeyDown}
+            role={props.href == null ? 'button' : undefined}
+            aria-label={label ? undefined : props['data-sd-tooltip']}
             {...props}
         >
             <Icon icon={icon} />

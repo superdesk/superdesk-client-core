@@ -2,6 +2,7 @@ import * as React from 'react';
 import {NavButton, Spacer, TreeSelect, WithPopover} from 'superdesk-ui-framework/react';
 import {ITreeNode, Dictionary, IMonitoringListFilter} from 'superdesk-api';
 import {listFiltersConfig} from './utils';
+import {gettext} from 'core/utils';
 
 interface IProps {
     selectedValues: Dictionary<string, Array<string>>;
@@ -93,6 +94,7 @@ export class MonitoringCustomFiltersDropdown extends React.PureComponent<IProps>
                     <NavButton
                         type="default"
                         icon="filter-large"
+                        text={gettext('Filters')}
                         state="normal"
                         value="button"
                         onClick={(e) => {

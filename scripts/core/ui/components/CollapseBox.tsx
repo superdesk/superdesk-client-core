@@ -6,6 +6,7 @@ import {KEYCODES} from './constants';
 import {onEventCapture} from './utils';
 
 import {IconButton} from './';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc react
@@ -124,6 +125,7 @@ export class CollapseBox extends React.Component<any, any> {
                                 {this.props.tools}
                                 <IconButton
                                     icon="icon-chevron-up-thin"
+                                    aria-label={gettext('Collapse')}
                                     tabIndex={this.props.tabEnabled ? 0 : null}
                                     onClick={this.closeBox}
                                     onKeyDown={this.props.tabEnabled ? this.handleKeyDown : null}
