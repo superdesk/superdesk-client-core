@@ -290,6 +290,20 @@ angular.module('superdesk.core.menu', [
                         ctrl.flags.notifications = !ctrl.flags.notifications;
                     };
 
+                    scope.skipToMainContent = function() {
+                        const main = document.getElementById('main-container');
+
+                        if (main == null) {
+                            return;
+                        }
+
+                        // Focusable only for this jump, so mouse clicks inside the page keep
+                        // leaving focus where they did before.
+                        main.setAttribute('tabindex', '-1');
+                        main.addEventListener('blur', () => main.removeAttribute('tabindex'), {once: true});
+                        main.focus();
+                    };
+
                     scope.toggleBeta = function() {
                         betaService.toggleBeta();
                     };

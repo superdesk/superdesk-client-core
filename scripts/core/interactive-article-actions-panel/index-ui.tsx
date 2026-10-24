@@ -36,6 +36,9 @@ interface IState {
 
 export class InteractiveArticleActionsPanel
     extends React.PureComponent<IPropsInteractiveArticleActionsPanelStateless, IState> {
+    private containerRef = React.createRef<HTMLDivElement>();
+    private focusBeforeOpening: HTMLElement | null = null;
+
     constructor(props: IPropsInteractiveArticleActionsPanelStateless) {
         super(props);
 
@@ -50,7 +53,51 @@ export class InteractiveArticleActionsPanel
         };
     }
 
+    componentDidMount() {
+        // The panel opens over the editor, so focus moves into it and goes back on close.
+        this.focusBeforeOpening = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+        setTimeout(() => {
+            const container = this.containerRef.current;
+
+            if (container == null || container.contains(document.activeElement)) {
+                return;
+            }
+
+            container.querySelector<HTMLElement>(
+                'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), [tabindex="0"]',
+            )?.focus();
+        });
+    }
+
+    componentWillUnmount() {
+        const container = this.containerRef.current;
+        const focusWasInPanel = container?.contains(document.activeElement)
+            || document.activeElement === document.body;
+
+        if (focusWasInPanel && this.focusBeforeOpening?.isConnected) {
+            this.focusBeforeOpening.focus();
+        }
+    }
+
     render() {
+        return (
+            <div
+                ref={this.containerRef}
+                style={{display: 'contents'}}
+                onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                        event.stopPropagation();
+                        this.props.onClose();
+                    }
+                }}
+            >
+                {this.renderPanel()}
+            </div>
+        );
+    }
+
+    renderPanel() {
         const {items, tabs, onClose, onError, onDataChange} = this.props;
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;

@@ -35,6 +35,7 @@ import ng from 'core/services/ng';
 import {reactToAngular1} from 'superdesk-ui-framework';
 
 import {ExtensionPage} from './extension-page';
+import {decorateSdModalWithFocusManagement} from './ui/modal-focus';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -76,6 +77,7 @@ let core = angular.module('superdesk.core', [
 ]);
 
 core.constant('lodash', _);
+core.config(['$provide', decorateSdModalWithFocusManagement]);
 
 const styles = 'display: flex; height: 100%;';
 

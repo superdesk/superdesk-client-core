@@ -1,4 +1,4 @@
-<div class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui" data-test-id="notification-pane">
+<div id="notification-pane" class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui" data-test-id="notification-pane">
     <div class="notification-pane__header" ng-if="flags.notifications">
         <h3 class="notification-pane__title" translate>Notifications</h3>
         <button class="icn-btn" ng-click="toggleNotifications()" aria-label="{{ 'Close' | translate }}"><i class="icon-close-small" aria-hidden="true"></i></button>
@@ -33,14 +33,14 @@
                                 <div class="content" ng-if="notification.name === 'user:mention'">
                                     <time sd-datetime data-date="notification._created"></time>
                                     <p class="text"><b>{{:: notification.user_name }}</b> <span translate>mentioned you</span> <i>
-                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)" data-test-id="open-article">
+                                        <a href="" title="{{ notification.item_slugline }}" ng-click="openArticle(notification)" data-test-id="open-article">
                                             {{:: notification.item_slugline}}
                                         </a></i>:<br>{{:: notification.data.comment }}</p>
                                 </div>
                                 <div class="content" ng-if="notification.name === 'translated:changed'">
                                     <time sd-datetime data-date="notification._created"></time>
                                     <p class="text"><b>{{:: notification.user_name }}</b> <span translate>changed the following original item. Please make sure to update the corresponding translated item accordingly</span> <i>
-                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
+                                        <a href="" title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
                                     </p>
                                 </div>
                                 <div
@@ -57,7 +57,7 @@
                                     ng-click="onNotificationClick(notification)"
                                 >
                                     <time sd-datetime data-date="notification._created"></time>
-                                    <a class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
+                                    <a href="" class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
                                     <p class="text" ng-if="!notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
                                 </div>
                             </div>

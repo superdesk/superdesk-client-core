@@ -1,0 +1,119 @@
+// Keyboard focus indicator for the demo instance.
+//
+// One ring for every focusable element: a 2px ink line with a 2px white band between it and the
+// element. Ink is 9.7:1 against white panels and white is over 15:1 against the dark chrome, so
+// at least one band clears the 3:1 non-text contrast minimum on any background the app uses.
+// On the dark chrome the two colours swap so the outer band is the bright one.
+//
+// It is applied on :focus-visible only, so pointer clicks on buttons and links keep the
+// product's ring-free look, while text fields show it on any focus, as browsers do.
+//
+// Component styles across the app and superdesk-ui-framework set `outline: none` and
+// low-alpha box-shadows on :focus with higher specificity, hence `!important`.
+
+:root {
+    --localwire-focus-ring: #24466b;
+    --localwire-focus-gap: #fff;
+}
+
+// Dark chrome: top bar, main menu, sign-in screens, the bottom bar and any dark-ui theme scope.
+#top-menu,
+.main-menu,
+.login-screen,
+.opened-articles-bar,
+[data-theme="dark-ui"] {
+    --localwire-focus-ring: #fff;
+    --localwire-focus-gap: #1b222b;
+}
+
+// Light popups rendered inside the dark chrome (the profile and desk menus in the top bar).
+#top-menu .dropdown__menu,
+[data-theme="light-ui"] {
+    --localwire-focus-ring: #24466b;
+    --localwire-focus-gap: #fff;
+}
+
+@mixin localwire-focus-ring {
+    outline: 2px solid var(--localwire-focus-ring) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 2px var(--localwire-focus-gap) !important;
+}
+
+// Drawn inside the element's box, for elements that touch the viewport edge or sit in a
+// scrolling or clipping container that would cut an outer ring off.
+@mixin localwire-focus-ring--inset {
+    outline: 2px solid var(--localwire-focus-ring) !important;
+    outline-offset: -4px !important;
+    box-shadow: inset 0 0 0 2px var(--localwire-focus-gap) !important;
+}
+
+:focus-visible {
+    @include localwire-focus-ring;
+}
+
+#top-menu :focus-visible,
+.main-menu :focus-visible,
+.opened-articles-bar :focus-visible,
+.sd-list-item:focus-visible,
+.sd-list-item-group :focus-visible,
+.sd-collapse-box:focus-visible,
+.sd-page__sidebar :focus-visible,
+.sd-sidetab-menu :focus-visible,
+.users-table .table-body > li:focus-visible,
+#main-container:focus-visible {
+    @include localwire-focus-ring--inset;
+}
+
+// Monitoring and search rows paint their card (.media-box) over the row element, which would
+// hide a ring drawn on the row, so the ring goes on the card.
+.list-item-view:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+
+    > .media-box {
+        @include localwire-focus-ring--inset;
+    }
+}
+
+#top-menu .dropdown__menu :focus-visible {
+    @include localwire-focus-ring;
+}
+
+// The skip link: the first tab stop on every page, shown only while it has focus.
+.localwire-skip-link {
+    position: fixed;
+    inset-block-start: 8px;
+    inset-inline-start: 8px;
+    z-index: 10000;
+    padding: 8px 16px;
+    background: #fff;
+    color: #24466b;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+    border-radius: 2px;
+    transform: translateY(-200%);
+
+    &:focus,
+    &:focus-visible {
+        transform: none;
+        --localwire-focus-ring: #24466b;
+        --localwire-focus-gap: #fff;
+    }
+}
+
+// User list row actions are shown on hover only; keyboard users get them while the row or one of
+// the actions has focus.
+.users-table .table-body > li:focus-within > div.action .item-functions {
+    display: flex;
+    align-items: center;
+}
+
+// List item actions (vocabularies, content profiles and other settings lists) are collapsed to
+// zero width until hover; show them while focus is inside the item.
+.sd-list-item:focus-within .sd-list-item__action-menu {
+    padding: 0 0.6rem;
+    width: auto;
+    overflow: visible;
+    opacity: 1;
+}

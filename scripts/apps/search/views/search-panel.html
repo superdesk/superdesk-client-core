@@ -61,8 +61,8 @@
         <div sd-item-repo data-repo="repo" data-toggle-repo="toggleRepo" data-context="context"></div>
 
         <div class="tab-box" role="tablist">
-            <button role="tab" id="parameters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='parameters'}" ng-click="display('parameters')" translate>Parameters</button>
-            <button role="tab" id="filters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='filters'}" ng-click="display('filters')" translate>Filters</button>
+            <button role="tab" id="parameters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='parameters'}" aria-selected="{{innerTab === 'parameters'}}" ng-click="display('parameters')" translate>Parameters</button>
+            <button role="tab" id="filters-tab" type="button" class="tab-box__item" ng-class="{'tab-box__item--active': innerTab==='filters'}" aria-selected="{{innerTab === 'filters'}}" ng-click="display('filters')" translate>Filters</button>
         </div>
 
         <div sd-search-parameters ng-if="innerTab==='parameters'"

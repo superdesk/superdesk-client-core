@@ -136,23 +136,24 @@
 
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
-                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileFilter(fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
+                            <button type="button" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileFilter(fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" aria-pressed="{{aggregate.hasFileType(fileType.type) ? true : false}}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
                                 <span ng-if="fileType.type === 'all'" class="toggle-button__text toggle-button__text--all">{{ fileType.label }}</span>
                                 <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" aria-hidden="true"></i>
-                            </a>
+                            </button>
 
-                            <a
-                                href=""
+                            <button
+                                type="button"
                                 ng-repeat="profile in aggregate.activeProfiles"
                                 ng-if="profile.icon != null"
                                 ng-click="aggregate.toggleContentProfileFilter(profile)"
                                 class="toggle-button"
                                 ng-class="{'toggle-button--active': aggregate.isContentProfileFilterActive(profile._id)}"
+                                aria-pressed="{{aggregate.isContentProfileFilterActive(profile._id) ? true : false}}"
                                 title="{{ profile.label }}"
                                 aria-label="{{ profile.label }}"
                             >
                                 <i class="toggle-button__icon icon-{{profile.icon}}" aria-hidden="true"></i>
-                            </a>
+                            </button>
                         </div>
 
                         <div class="dropdown dropdown--align-left dropdown--compact-state" dropdown  ng-if="elementState === 'compact'" sd-tooltip="{{ 'Filter file types' | translate }}" flow="right">

@@ -25,6 +25,13 @@ export function UserListDirective(keyboardManager, usersService, asset, session)
                 bindKeys();
             };
 
+            scope.selectOnKey = function(event: KeyboardEvent, user) {
+                if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+                    event.preventDefault();
+                    scope.select(user);
+                }
+            };
+
             scope.$watch('selected', (selected) => {
                 if (_.isNil(selected)) {
                     bindKeys();

@@ -11,6 +11,7 @@ import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
 // Must stay after the ui-framework bundle: it overrides that bundle's custom properties.
 import 'localwire-theme.scss';
+import 'localwire-focus.scss';
 
 import 'vendor';
 import 'core';

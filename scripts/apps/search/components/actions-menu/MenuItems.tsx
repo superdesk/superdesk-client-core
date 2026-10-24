@@ -25,6 +25,37 @@ interface IState {
     actionsFromExtensions: Array<IAuthoringAction> | null;
 }
 
+/**
+ * Up and Down move focus between the enabled entries of the list that has focus
+ * (the actions menu or an open submenu), wrapping at either end.
+ * Tab and Shift+Tab keep working as before.
+ */
+function moveFocusWithArrowKeys(event: React.KeyboardEvent<HTMLUListElement>) {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+        return;
+    }
+
+    const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const list = active?.closest('ul') ?? event.currentTarget;
+    const entries = Array.from(list.querySelectorAll<HTMLButtonElement>('button:not([disabled])'))
+        .filter((button) => button.closest('ul') === list && !button.classList.contains('dropdown__menu-close'));
+
+    if (entries.length < 1) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const current = entries.indexOf(active as HTMLButtonElement);
+    const step = event.key === 'ArrowDown' ? 1 : -1;
+    const next = current === -1
+        ? (step === 1 ? 0 : entries.length - 1)
+        : (current + step + entries.length) % entries.length;
+
+    entries[next].focus();
+}
+
 export default class MenuItems extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
@@ -261,6 +292,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     }
                 }}
                 tabIndex={0}
+                onKeyDown={moveFocusWithArrowKeys}
                 onKeyUp={(event) => {
                     if (event.key === 'Escape') {
                         closeActionsMenu(this.props.item._id);
