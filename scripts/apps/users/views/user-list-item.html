@@ -1,5 +1,8 @@
 <li ng-repeat="user in users track by user._id"
     ng-click="select(user)"
+    ng-keydown="selectOnKey($event, user)"
+    tabindex="0"
+    ng-attr-aria-current="{{user._id === selected._id ? 'true' : undefined}}"
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
