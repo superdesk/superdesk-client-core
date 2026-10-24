@@ -9,9 +9,15 @@
     position: fixed;
     z-index: 9000;
     inset-inline-start: 0; inset-inline-end: 0; inset-block-end: 0; inset-block-start: 0;
+    overflow-y: auto;
     background-color: var(--sd-colour-bg--02);
     .logo-handler {
         margin-block-end: 60px;
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     }
     .login-form-container {
         width: 320px;
@@ -163,6 +169,19 @@
         }
     }
 
+    // The form is a fixed 600px box centred with negative margins, which pushes the logo and the
+    // lower links off screen on short or narrow viewports (zoomed or small windows).
+    @media (max-height: 640px), (max-width: 480px) {
+        .login-form-container {
+            box-sizing: border-box;
+            position: relative;
+            inset: auto;
+            margin: 0 auto;
+            height: auto;
+            max-width: 100%;
+            padding-block-end: 24px;
+        }
+    }
 
     .spinner {
       width: 20px;
