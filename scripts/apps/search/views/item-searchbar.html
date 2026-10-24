@@ -9,14 +9,13 @@
         placeholder="{{ 'Search'|translate }}"
         ng-keyup="searchOnEnter($event)"
         ng-model="query"
-        tabindex="1"
         ng-focus="focused = true">
 
     <button class="search-cancel" ng-click="cancel();" ng-if="query">
         <i class="icon-remove-sign"></i>
     </button>
 
-    <button id="search-button" ng-click="search();" class="search-start" aria-label="{{ 'Start search' | translate }}" ng-if="focused" tabindex="2">
+    <button id="search-button" ng-click="search();" class="search-start" aria-label="{{ 'Start search' | translate }}" ng-if="focused">
         <i class="icon-chevron-right-thin"></i>
     </button>
 

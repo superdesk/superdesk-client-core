@@ -13,28 +13,28 @@
         <div class="sd-page__header sd-page__header--white"  data-test-id="metadata-navigation">
             <ul class="nav nav-tabs" data-test-id="metadata-tabs">
                 <li ng-class="{active: tab === 'vocabularies'}">
-                    <button ng-click="tab = 'vocabularies'" translate>Vocabularies</button>
+                    <button ng-click="tab = 'vocabularies'" ng-attr-aria-current="{{tab === 'vocabularies' ? 'true' : undefined}}" translate>Vocabularies</button>
                 </li>
                 <li ng-class="{active: tab === 'text-fields'}">
-                    <button ng-click="tab = 'text-fields'" translate>Custom text fields</button>
+                    <button ng-click="tab = 'text-fields'" ng-attr-aria-current="{{tab === 'text-fields' ? 'true' : undefined}}" translate>Custom text fields</button>
                 </li>
                 <li ng-class="{active: tab === 'custom-editor-blocks'}">
-                    <button ng-click="tab = 'custom-editor-blocks'" translate>Custom blocks</button>
+                    <button ng-click="tab = 'custom-editor-blocks'" ng-attr-aria-current="{{tab === 'custom-editor-blocks' ? 'true' : undefined}}" translate>Custom blocks</button>
                 </li>
                 <li ng-class="{active: tab === 'date-fields'}">
-                    <button ng-click="tab = 'date-fields'" translate>Custom date fields</button>
+                    <button ng-click="tab = 'date-fields'" ng-attr-aria-current="{{tab === 'date-fields' ? 'true' : undefined}}" translate>Custom date fields</button>
                 </li>
                 <li ng-class="{active: tab === 'embed-fields'}">
-                    <button ng-click="tab = 'embed-fields'" translate>Custom embed fields</button>
+                    <button ng-click="tab = 'embed-fields'" ng-attr-aria-current="{{tab === 'embed-fields' ? 'true' : undefined}}" translate>Custom embed fields</button>
                 </li>
                 <li ng-class="{active: tab === 'related-content-fields'}">
-                    <button ng-click="tab = 'related-content-fields'" translate>Related content</button>
+                    <button ng-click="tab = 'related-content-fields'" ng-attr-aria-current="{{tab === 'related-content-fields' ? 'true' : undefined}}" translate>Related content</button>
                 </li>
                 <li ng-class="{active: tab === 'urls-fields'}">
-                    <button ng-click="tab = 'urls-fields'" translate>URLs</button>
+                    <button ng-click="tab = 'urls-fields'" ng-attr-aria-current="{{tab === 'urls-fields' ? 'true' : undefined}}" translate>URLs</button>
                 </li>
                 <li ng-class="{active: tab === 'custom-fields'}">
-                    <button ng-click="tab = 'custom-fields'" translate>Other fields</button>
+                    <button ng-click="tab = 'custom-fields'" ng-attr-aria-current="{{tab === 'custom-fields' ? 'true' : undefined}}" translate>Other fields</button>
                 </li>
             </ul>
         </div>
