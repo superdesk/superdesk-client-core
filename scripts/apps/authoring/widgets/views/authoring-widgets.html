@@ -11,6 +11,8 @@
             <li ng-repeat="widget in widgets | orderBy:'order'"
                 ng-class="{active: widget === active, pinned: widget.pinned}">
                 <a class="sd-sidetab-menu__btn" type="submit"
+                    href=""
+                    aria-expanded="{{widget === active}}"
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"

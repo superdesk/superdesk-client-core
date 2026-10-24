@@ -360,8 +360,16 @@ const onTab = (state: IEditorStore, e) => {
     let newState = editorState;
 
     if (['unordered-list-item', 'ordered-list-item'].includes(blockType)) {
-        // let draft-js handle the Tab event
-        newState = RichUtils.onTab(e, editorState, 4);
+        const maxDepth = 4;
+        const depth = block.getDepth();
+
+        // Draft-js swallows Tab in list items even when the depth cannot change. Where it cannot,
+        // the key is left to the browser so keyboard users can still move focus out of the editor.
+        const canChangeDepth = e.shiftKey ? depth > 0 : depth < maxDepth;
+
+        if (canChangeDepth) {
+            newState = RichUtils.onTab(e, editorState, maxDepth);
+        }
     } else if (!moreThanOneBlockSelected) {
         const tabOption = editorFormat.includes('tab') && !e.shiftKey;
         const spacesOption =
