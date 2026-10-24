@@ -1,3 +1,5 @@
+<a href="" class="localwire-skip-link" ng-click="skipToMainContent()" translate>Skip to main content</a>
+
 <div
     id="top-menu"
     ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}"
@@ -46,7 +48,9 @@
         <!-- <sd-authoring-switch style="margin-right: 16px""></sd-authoring-switch> -->
 
         <button class="navbtn dropdown__toggle" ng-click="toggleNotifications()"
-            aria-label="{{ 'View notifications' | translate }}">
+            aria-label="{{ 'View notifications' | translate }}"
+            aria-controls="notification-pane"
+            aria-expanded="{{flags.notifications ? true : false}}">
             <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{
                 notifications.unread }}</span>
             <i class="icon-bell" style="color: white"></i>
@@ -80,7 +84,15 @@
 
 <div id="side-menu" ng-class="{'menu-open': flags.menu}" ng-include="currentRoute.sideTemplateUrl"></div>
 
-<nav id="main-menu" data-theme="dark-ui" class="main-menu" aria-labelledby="main-menu_title" data-test-id="main-menu">
+<!-- The closed menu stays rendered underneath the page, so it is made inert to keep it out of the tab order. -->
+<nav
+    id="main-menu"
+    data-theme="dark-ui"
+    class="main-menu"
+    aria-labelledby="main-menu_title"
+    data-test-id="main-menu"
+    ng-attr-inert="{{flags.menu ? undefined : ''}}"
+>
     <div class="main-menu__header">
         <h2 id="main-menu_title" class="main-menu__heading" translate>Main menu</h2>
     </div>
@@ -116,7 +128,7 @@
     <div class="main-menu__footer">
         <span class="powered" translate>Powered by Superdesk technology</span>
         <i role="img" class="icon-superdesk" aria-label="{{ :: 'Superdesk logo' | translate }}"></i>
-        <span class="about"><a ng-click="openAbout()" translate>About Superdesk</a></span>
+        <span class="about"><a href="" ng-click="openAbout()" translate>About Superdesk</a></span>
     </div>
 </nav>
 
