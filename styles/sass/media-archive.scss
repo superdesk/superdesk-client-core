@@ -887,6 +887,11 @@ $rightfield-width:60px;
             }
             &.active {
                 border-inline-end: 2px solid var(--sd-colour-interactive--active) !important;
+
+                @media (forced-colors: active) {
+                    outline: 2px solid Highlight;
+                    outline-offset: -2px;
+                }
             }
         }
 
@@ -940,6 +945,12 @@ $rightfield-width:60px;
         .media-box {
             background-color: var(--sd-item__main-Bg--selected) !important;
             border-inline-end: 2px solid var(--sd-colour-interactive--active) !important;
+
+            @media (forced-colors: active) {
+                outline: 2px solid Highlight;
+                outline-offset: -2px;
+            }
+
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;

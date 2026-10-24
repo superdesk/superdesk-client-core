@@ -85,3 +85,48 @@
     }
 }
 
+// Windows high contrast and other forced-colours modes replace author backgrounds with Canvas and
+// turn transparent borders into CanvasText. Framework components that show state only through a
+// background lose it, and those that hide an inactive marker with a transparent border show it on
+// every item. System colours set here survive the forcing.
+@media (forced-colors: active) {
+    .toggle-button.toggle-button--active,
+    .toggle-button.toggle-button--active:hover,
+    .sd-sidebar-menu__btn--active,
+    .sd-sidebar-menu__btn--active:hover {
+        background-color: Highlight;
+        color: HighlightText;
+    }
+
+    .sd-sidebar-menu__btn--active .sd-sidebar-menu__main-icon {
+        color: HighlightText;
+    }
+
+    .nav-tabs__link {
+        border-block-end-color: Canvas;
+    }
+
+    .nav-tabs__tab--active .nav-tabs__link,
+    .nav-tabs__tab--active:hover .nav-tabs__link {
+        border-block-end-color: Highlight;
+    }
+
+    .sd-left-nav__btn {
+        border-inline-color: Canvas;
+    }
+
+    .sd-left-nav__btn--active {
+        border-inline-color: Highlight;
+    }
+
+    .btn {
+        border: 1px solid ButtonText;
+    }
+
+    // The logo is white artwork, which disappears on a light high-contrast canvas.
+    .login-screen .logo-handler {
+        forced-color-adjust: none;
+        background-color: var(--localwire-chrome);
+        border-radius: 4px;
+    }
+}

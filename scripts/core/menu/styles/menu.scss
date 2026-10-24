@@ -577,6 +577,10 @@
     li.active {
         .sd-sidebar-menu__btn {
             background-color: var(--sd-colour-interactive--active);
+
+            @media (forced-colors: active) {
+                background-color: Highlight;
+            }
         }
         
     }
@@ -707,6 +711,12 @@
                     text-decoration: none;
                     border-inline-start: 4px solid transparent;
                     transition: all 0.2s ease-in-out;
+
+                    // Forced colours turn the transparent marker into CanvasText on every entry.
+                    @media (forced-colors: active) {
+                        border-inline-start-color: Canvas;
+                    }
+
                     &:hover {
                         background: var(--sd-colour-interactive--alpha-20);
                         cursor: pointer;
@@ -723,6 +733,10 @@
                         background: var(--sd-colour-interactive--alpha-10);
                         color: var(--sd-colour-interactive--active);
                         border-inline-start: 4px solid var(--sd-colour-interactive--active);
+
+                        @media (forced-colors: active) {
+                            border-inline-start-color: Highlight;
+                        }
                     }
                 }
             }
