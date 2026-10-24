@@ -11,7 +11,7 @@ export const urgency: IFieldAdapter<IArticle> = {
             0: '#cccccc',
             1: '#01405b',
             2: '#005e84',
-            3: '#3684a4',
+            3: '#2f7a99',
             4: '#64a4bf',
             5: '#a1c6d8',
         };

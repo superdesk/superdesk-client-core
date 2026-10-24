@@ -119,7 +119,7 @@ $navbarLinkBackgroundActive:    $navbarBackground;
 
 // Form states and alerts
 // -------------------------
-$warningText:          #c09853;
+$warningText:          #7d6233;  // 5.37:1 on $warningBackground
 $warningBackground:    #fcf8e3;
 $warningBorder:        color.adjust(color.adjust($warningBackground, $hue: -10), $lightness: -3%);
 
@@ -131,11 +131,11 @@ $errorText:            var(--error-text-color);
 $errorBackground:      #f2dede;
 $errorBorder:          color.adjust(color.adjust($errorBackground, $hue: -10), $lightness: -3%);
 
-$successText:          #468847;
+$successText:          #3c763d;  // 4.57:1 on $successBackground
 $successBackground:    #dff0d8;
 $successBorder:        color.adjust(color.adjust($successBackground, $hue: -10), $lightness: -5%);
 
-$infoText:             #3a87ad;
+$infoText:             #31708f;  // 4.53:1 on $infoBackground
 $infoBackground:       #d9edf7;
 $infoBorder:           color.adjust(color.adjust($infoBackground, $hue: -10), $lightness: -7%);
 

@@ -886,7 +886,7 @@ $rightfield-width:60px;
                 opacity: 0.16;
             }
             &.active {
-                border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
+                border-inline-end: 2px solid var(--sd-colour-interactive--active) !important;
             }
         }
 
@@ -939,7 +939,7 @@ $rightfield-width:60px;
     .active:not(.selected) {
         .media-box {
             background-color: var(--sd-item__main-Bg--selected) !important;
-            border-inline-end: 2px solid rgba(94,169,200,0.75) !important;
+            border-inline-end: 2px solid var(--sd-colour-interactive--active) !important;
             &:hover {
                 .item-functions {
                     background-color: #eff7fa;

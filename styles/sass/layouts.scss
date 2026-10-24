@@ -777,7 +777,7 @@ $slide-pane-width: 400px;
 
 
 //color variables
-$main-item-color:           hsl(200, 18%, 46%);
+$main-item-color:           hsl(200, 18%, 41%);  // 5.32:1 with the white heading
 $main-item-color-inactive:  hsl(0, 0%, 67%);
 
 .card-box {
@@ -832,12 +832,12 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
                 font-size: 15px;
                 position: relative;
                 z-index: 2;
-                opacity: .4;
+                opacity: .7;
                 i {
                     color: $white;
                 }
                 &:hover {
-                    opacity: .7;
+                    opacity: 1;
                 }
             }
             &.open {
@@ -915,7 +915,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             background: transparent;
             padding: 10px 2px;
             color: $white;
-            opacity: 0.4;
+            opacity: 0.7;
             &:focus, &:hover {
                 box-shadow: none;
                 opacity: 1;
@@ -957,7 +957,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
                 padding: 3px 5px 0;
                 border-radius: 999px;
                 color: white;
-                background: hsla(0, 0%, 39%, 0.45);
+                background: #596473;  // 6.01:1 with the white count
                 font-size: 10px;
                 line-height: 100%;
                 letter-spacing: .06em;
@@ -1043,8 +1043,8 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
             }
         }
         .button__view-all {
-            border-block-end: 1px dotted #5598B4;
-            color: #5598B4;
+            border-block-end: 1px dotted currentColor;
+            color: var(--sd-colour-interactive--text);
             cursor: pointer;
         }
     }

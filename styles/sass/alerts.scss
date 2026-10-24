@@ -35,7 +35,7 @@
 .alert-error {
   background-color: $errorBackground;
   border-color: $errorBorder;
-  color: $errorText;
+  color: #a94442; // $errorText is 3.60:1 on $errorBackground
 }
 .alert-info {
   background-color: $infoBackground;
