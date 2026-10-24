@@ -26,7 +26,7 @@
     <div class="form__row form__row--flex form__row--no-padding">
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" name="days" ng-model="contentExpiry.days" min ="0" max="{{maxDays}}" required data-test-id="content-expiry--days">
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" name="days" aria-label="{{ contentExpiry.header | translate }}: {{:: 'days' | translate }}" ng-model="contentExpiry.days" min ="0" max="{{maxDays}}" required data-test-id="content-expiry--days">
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -34,7 +34,7 @@
         </div>
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.hours" min ="0" max="23" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" aria-label="{{ contentExpiry.header | translate }}: {{:: 'hr' | translate }}" ng-model="contentExpiry.hours" min ="0" max="23" required>
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">
@@ -42,7 +42,7 @@
         </div>
         <div class="form__row-item form__row-item--no-grow">
             <div class="sd-line-input sd-line-input--no-margin">
-                <input class="sd-line-input__input sd-line-input__input--mini" type="number" ng-model="contentExpiry.minutes" min ="0" max="59" required>
+                <input class="sd-line-input__input sd-line-input__input--mini" type="number" aria-label="{{ contentExpiry.header | translate }}: {{:: 'min' | translate }}" ng-model="contentExpiry.minutes" min ="0" max="59" required>
             </div>
         </div>
         <div class="form__row-item form__row-item--no-grow">

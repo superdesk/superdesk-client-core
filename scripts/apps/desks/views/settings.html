@@ -22,7 +22,7 @@
                 <div class="flex-item card-box" ng-repeat="desk in desks._items | filter:query track by desk._id" data-test-id="desk--{{desk.name}}">
                     <div class="card-box__header">
                         <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle data-test-id="desk-actions">
+                            <button aria-label="{{:: 'Actions' | translate }} {{ desk.name }}" class="dropdown__toggle" dropdown__toggle data-test-id="desk-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
                             <ul class="dropdown__menu more-activity-menu pull-right"  data-test-id="desk-actions--options">

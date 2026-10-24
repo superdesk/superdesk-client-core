@@ -2,7 +2,7 @@
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 class="modal__heading" ng-hide="template._id" translate>Add New Template</h3>
-        <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
+        <a aria-label="{{:: 'Close' | translate }}" href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
     <div class="modal__body sd-padding--0 ">

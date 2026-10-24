@@ -1,7 +1,7 @@
 <div class="subnav subnav--absolute">
     <h3 class="subnav__page-title" translate>Users</h3>
     <div class="subnav__button-stack--square-buttons" sd-tooltip="{{ :: 'Create user' | translate }}" flow="left">
-        <button class="navbtn sd-create-btn" ng-click="createUser()" data-test-id="create-user-button"></button>
+        <button class="navbtn sd-create-btn" ng-click="createUser()" aria-label="{{:: 'Create user' | translate }}" data-test-id="create-user-button"></button>
     </div>
 </div>
 
@@ -11,11 +11,12 @@
             <div class="subnav">
                 <div sd-searchbar></div>
                 <div class="button-list button-list--padded">
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}">{{:: 'All user types' | translate}}</button>
-                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}">{{:: 'Authors only' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': !authorOnlyFilter}" aria-pressed="{{ !authorOnlyFilter }}">{{:: 'All user types' | translate}}</button>
+                    <button type="button" class="toggle-button" ng-click="authorOnlyFilter=!authorOnlyFilter" ng-class="{'toggle-button--active': authorOnlyFilter}" aria-pressed="{{ !!authorOnlyFilter }}">{{:: 'Authors only' | translate}}</button>
                 </div>
                 <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin" style="min-width:100px; margin:0 40px;">
-                    <select class="sd-line-input__select" 
+                    <select class="sd-line-input__select"
+                        aria-label="{{:: 'User status' | translate }}"
                         ng-model="userFilter"
                         ng-options="filter.id as filter.label | translate for filter in filterOptions" data-test-id="user-filter">
                     </select>
@@ -65,7 +66,7 @@
             <div class="preview-pane" ng-if="selected.user">
                 <header>
                     <button ng-click="intent('detail', 'user', selected.user)" class="btn btn--small btn--hollow sd-margin-start--2" ng-show="selected.user._id" id="open-user-profile" data-test-id="view-full-profile" translate>View full profile</button>
-                    <button ng-click="selected.user = null" class="icn-btn close-preview"><i class="icon-close-small"></i></button>
+                    <button aria-label="{{:: 'Close' | translate }}" ng-click="selected.user = null" class="icn-btn close-preview"><i class="icon-close-small"></i></button>
                 </header>
                 <div sd-user-details-pane ng-if="selected.user">
                     <div sd-user-edit data-user="selected.user" data-onsave="render(user)" data-oncancel="closePreview()"></div>

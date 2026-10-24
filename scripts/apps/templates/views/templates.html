@@ -27,7 +27,7 @@
           <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks" data-test-id="content-template" data-test-value="{{template.template_name}}">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle data-test-id="template-actions">
+                      <button aria-label="{{:: 'Actions' | translate }} {{ template.template_name }}" class="dropdown__toggle" dropdown__toggle data-test-id="template-actions">
                           <i class="icon-dots-vertical"></i>
                       </button>
                       <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="template-actions--options">

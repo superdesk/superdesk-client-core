@@ -6,11 +6,13 @@
         <div class="sd-page__header">
             <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
 
-            <div class="sd-check-button__group sd-check-button__group--left" style="flex-wrap: nowrap;">
+            <div class="sd-check-button__group sd-check-button__group--left" style="flex-wrap: nowrap;" role="group" aria-label="{{:: 'Content Type' | translate }}">
                 <div class="sd-check__wrapper" ng-repeat="type in contentProfileTypes track by type.value">
                     <button class="sd-checkbox sd-checkbox--button-style sd-checkbox--radio"
                         ng-click="toggleContentProfileFilter(type.value)"
                         ng-class="{'checked': contentTypeFilter === type.value}"
+                        aria-label="{{ type.label }}"
+                        aria-pressed="{{ contentTypeFilter === type.value }}"
                     >
                         <i class="{{getContentProfileIconByProfileType(type.value)}}"></i>
                     </button>
@@ -38,13 +40,13 @@
                 >
                     <div class="card-box__header">
                         <div class="dropdown" dropdown data-test-id="content-profile-actions-popover">
-                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }}" data-test-id="content-profile-actions">
+                            <button class="dropdown__toggle" dropdown__toggle aria-label="{{:: 'Actions' | translate }} {{ type.label }}" data-test-id="content-profile-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
                             <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="content-profile-actions--options">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
-                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}" aria-label="Edit"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
+                                <li><button ng-click="ctrl.toggleEdit(type)" title="{{:: 'Edit Content Profile' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
                                 <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                             </ul>
                         </div>
@@ -77,13 +79,13 @@
 <div sd-modal class="modal--large" data-model="creating" data-close="ctrl.toggleCreate()">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate>Add New Content Profile</h3>
-        <a href="" class="icn-btn" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
+        <a aria-label="{{:: 'Close' | translate }}" href="" class="icn-btn" ng-click="ctrl.toggleCreate()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body">
         <form name="createForm">
             <div class="sd-alert__container">
                 <p class="sd-alert sd-alert--hollow sd-alert--small sd-alert--primary sd-margin-b--2" ng-class="{'sd-alert--hidden': !showInfoLabel}" translate>
-                    <button class="sd-alert__close" ng-click="showInfoLabel = false"></button>
+                    <button class="sd-alert__close" ng-click="showInfoLabel = false" aria-label="{{:: 'Close' | translate }}"></button>
                     Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached.
                 </p>
 
@@ -95,15 +97,17 @@
             <fieldset>
                 <div class="form__row sd-padding--0">
                     <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
-                        <label class="sd-line-input__label" translate>Content Type</label>
+                        <label class="sd-line-input__label" id="new-content-profile-type-label" translate>Content Type</label>
 
-                        <div class="sd-check-button__group sd-check-button__group--left">
+                        <div class="sd-check-button__group sd-check-button__group--left" role="group" aria-labelledby="new-content-profile-type-label">
                             <button
                                 ng-repeat="type in contentProfileTypes track by type.value"
                                 ng-click="$event.preventDefault(); new.type = type.value"
                                 ng-disabled="type.disabled === true"
                                 ng-class="{'btn--primary': type.value === new.type}"
                                 class="btn btn--icon-only"
+                                aria-label="{{ type.label }}"
+                                aria-pressed="{{ type.value === new.type }}"
                             >
                                 <i class="{{getContentProfileIconByProfileType(type.value)}}"></i>
                             </button>
@@ -136,7 +140,7 @@
 <div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()" data-test-id="'content-profile-editing-modal'">
     <div class="modal__header modal__header--flex">        
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
-        <a href="" class="modal__close icn-btn" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
+        <a aria-label="{{:: 'Close' | translate }}" href="" class="modal__close icn-btn" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
     </div>
     <div class="modal__body sd-padding--0 sd-padding-t--2" data-test-id="content-profile-edit-view">
         <form name="editForm">

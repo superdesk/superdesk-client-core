@@ -1,5 +1,5 @@
 <div class="stage-header">
-    <button class="stage-header__toggle"
+    <button aria-label="{{:: 'Toggle stage' | translate }} {{ group.header }} {{ group.subheader }}" aria-expanded="{{ agg.getExpandedState(group._id) ? 'true' : 'false' }}" class="stage-header__toggle"
             ng-if="agg.state.solo._id !== group._id"
             ng-class="{closed: !agg.getExpandedState(group._id)}"
             ng-click="agg.switchExpandedState(group._id)">
@@ -10,7 +10,7 @@
             <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </a>
         <span class="stage-header__name-part" ng-show="agg.state.solo._id === group._id">
-            <a ng-click="agg.setSoloGroup()" class="backlink"></a>
+            <a ng-click="agg.setSoloGroup()" class="backlink" href="" aria-label="{{:: 'Back' | translate }}"></a>
             <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </span>
     </h3>
