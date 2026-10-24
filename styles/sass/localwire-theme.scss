@@ -1,12 +1,12 @@
 // Demo instance theme: an ink-blue accent on dark neutral chrome, replacing the default green.
 //
 // Imported from scripts/index.ts straight after superdesk-ui-framework's precompiled bundle so
-// it can redefine that bundle's custom properties. The framework derives each colour ramp from a
-// hue/saturation pair, so the palette moves with a handful of declarations.
+// it can redefine that bundle's custom properties and override its component rules. The framework
+// derives each colour ramp from a hue/saturation pair, so the palette moves with a handful of
+// declarations.
 //
-// Contrast ratios below are WCAG relative-luminance ratios against white. The accent was chosen
-// so every filled button and link clears AA with room to spare; the default green with a white
-// label is 3.15:1 and fails it.
+// Contrast ratios below are WCAG 2 relative-luminance ratios. #f3f5f6 is the list and panel
+// background, #1b222b the dark chrome. The default green with a white label is 3.15:1 and fails AA.
 
 :root,
 [data-theme="light-ui"],
@@ -17,11 +17,10 @@
     --localwire-ink--deep: #1a3450;   // 12.72:1 with white
 
     // Ramp bases: everything the framework calls interactive, primary or superdesk (links, focus
-    // rings, selection, active states) derives from these. The default step is 50% lightness.
+    // rings, selection, active states) derives from these.
     --sd-colour-interactive-hs: 211, 50%;
     --sd-colour-primary-hs: 211, 50%;
     --sd-colour-superdesk-hs: 211, 50%;
-    --sd-colour-interactive-l--50: var(--sd-colour-interactive-hs), 28%;
 
     --sd-colour-primary: var(--localwire-ink);
     --sd-colour-primary--hover: var(--localwire-ink--deep);
@@ -34,6 +33,33 @@
     --brand-primary: #24466b;
 }
 
+// Light surfaces. The framework's hover step is lighter than the default (60%), which drops link
+// hover text and white labels on hovered buttons to about 3:1, so hover goes darker instead.
+:root,
+[data-theme="light-ui"] {
+    --sd-colour-interactive-l--50: var(--sd-colour-interactive-hs), 28%;  // 9.69:1 on white
+    --sd-colour-interactive--hover: var(--localwire-ink--deep);
+
+    // Placeholders, empty-state text, nav group headers and secondary labels. The framework's 60%
+    // is 2.96:1 on white.
+    --color-text-lighter: hsla(214, 13%, 42%, 1);  // 5.56:1 on white, 5.09:1 on #f3f5f6
+    --color-text-subdued: hsla(214, 13%, 42%, 1);
+
+    // Underline of line inputs; the framework's 0.2 alpha is 1.52:1.
+    --color-input-border: hsla(214, 13%, 10%, 0.6);  // 4.48:1 on #f3f5f6
+    --color-input-border-hover: hsla(214, 13%, 10%, 0.75);
+}
+
+// Dark surfaces (main menu, notification pane, dark side panels). Accent text sits on the chrome
+// here, so the ramp has to be light. The active step colours the current menu entry, which sits on
+// a tinted row (#222e3c). It is lighter than the default step, so a white label on it is 2.77:1.
+[data-theme="dark-ui"] {
+    --sd-colour-interactive-l--40: var(--sd-colour-interactive-hs), 63%;  // 4.97:1 on the active row
+    --sd-colour-interactive-l--50: var(--sd-colour-interactive-hs), 60%;  // 5.25:1
+    --sd-colour-interactive-l--60: var(--sd-colour-interactive-hs), 66%;  // 6.36:1
+    --color-input-border: hsla(214, 13%, 80%, 0.5);
+}
+
 // The left main menu is painted with --sd-colour-bg--02, a token shared with panels and list
 // items, so its background is set directly.
 #main-menu,
@@ -41,16 +67,66 @@
     background: var(--localwire-chrome);
 }
 
-// Login, secure login and reset password all render .login-screen. These two properties are read
-// by the auth rules on this element and its inputs.
+// Login, secure login and reset password all render .login-screen, which is dark but not inside
+// a dark-ui theme, so the light ramp would put ink on ink. Autofilled text uses the hover step and
+// the focus ring the 50% alphas.
 .login-screen {
     --sd-colour-bg--02: var(--localwire-chrome);
     --sd-colour-bg--04: var(--localwire-chrome--raised);
+    --sd-colour-interactive--hover: hsla(211, 50%, 66%, 1);  // 5.08:1 on the raised input
+    --sd-colour-interactive--alpha-50: hsla(211, 50%, 60%, 0.5);
+    --sd-colour-interactive--alpha-20: hsla(211, 50%, 60%, 0.2);
 
     .btn--sd-green {
         --sd-btn-bg: var(--localwire-ink);
         --sd-btn-bg--hover: var(--localwire-ink--deep);
         --sd-btn-bg--active: var(--localwire-ink--deep);
         color: #fff;
+    }
+}
+
+// Windows high contrast and other forced-colours modes replace author backgrounds with Canvas and
+// turn transparent borders into CanvasText. Framework components that show state only through a
+// background lose it, and those that hide an inactive marker with a transparent border show it on
+// every item. System colours set here survive the forcing.
+@media (forced-colors: active) {
+    .toggle-button.toggle-button--active,
+    .toggle-button.toggle-button--active:hover,
+    .sd-sidebar-menu__btn--active,
+    .sd-sidebar-menu__btn--active:hover {
+        background-color: Highlight;
+        color: HighlightText;
+    }
+
+    .sd-sidebar-menu__btn--active .sd-sidebar-menu__main-icon {
+        color: HighlightText;
+    }
+
+    .nav-tabs__link {
+        border-block-end-color: Canvas;
+    }
+
+    .nav-tabs__tab--active .nav-tabs__link,
+    .nav-tabs__tab--active:hover .nav-tabs__link {
+        border-block-end-color: Highlight;
+    }
+
+    .sd-left-nav__btn {
+        border-inline-color: Canvas;
+    }
+
+    .sd-left-nav__btn--active {
+        border-inline-color: Highlight;
+    }
+
+    .btn {
+        border: 1px solid ButtonText;
+    }
+
+    // The logo is white artwork, which disappears on a light high-contrast canvas.
+    .login-screen .logo-handler {
+        forced-color-adjust: none;
+        background-color: var(--localwire-chrome);
+        border-radius: 4px;
     }
 }
