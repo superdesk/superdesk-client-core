@@ -25,9 +25,10 @@
                 <div class="authoring-header__value" sd-item-profile data-profile="item.profile"></div>
             </div>
             <div ng-if="change_profile && content_types.length">
-                <span class="authoring-header__label" translate>PROFILE</span>
+                <span class="authoring-header__label" id="item-profile-label" translate>PROFILE</span>
                 <div class="authoring-header__value" >
                     <select id="item-profile"
+                            aria-labelledby="item-profile-label"
                             ng-model="item.profile"
                             ng-change="changeProfile(item)"
                             style="padding: 0px; height: 16px; font-size: 11px;"
@@ -574,7 +575,7 @@
                  sd-width="{{editor.ednote.sdWidth}}"
                  ng-attr-title="{{schema.ednote.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.ednote.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
+                <label class="authoring-header__item-label" for="ednote">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
                     <textarea id="ednote" class="boxed-input ed-note"
                               sd-auto-height

@@ -394,6 +394,7 @@ class Editor3Directive {
 
                         const editor3 = (
                             <Editor3
+                                ariaLabel={fieldName ?? undefined}
                                 scrollContainer={this.scrollContainer}
                                 singleLine={this.singleLine}
                                 cleanPastedHtml={this.cleanPastedHtml}

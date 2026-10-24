@@ -114,6 +114,7 @@ export function canDropMedia(e, editorConfig): undefined | boolean {
 }
 
 export interface IPropsEditor3Component {
+    ariaLabel?: string;
     readOnly?: boolean;
     locked?: boolean;
     loading?: boolean;
@@ -913,6 +914,7 @@ export class Editor3Component extends React.Component<IPropsEditor3Component, IS
                                 onChange(editorStateNext);
                             }}
                             tabIndex={tabindex}
+                            ariaLabel={this.props.ariaLabel}
                             handlePastedText={handlePastedText.bind(this)}
                             readOnly={locked || readOnly}
                             ref={(editor) => this.handleRefs(editor)}

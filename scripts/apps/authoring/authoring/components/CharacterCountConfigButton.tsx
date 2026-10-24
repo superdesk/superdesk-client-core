@@ -74,6 +74,7 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
         return (
             <button
                 className="char-count-config-button"
+                aria-label={gettext('Character limit settings')}
                 onClick={() => {
                     showModal((props) => (
                         <CharacterCountConfigModal
@@ -84,7 +85,7 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
                     ));
                 }}
             >
-                <i className="icon-settings" />
+                <i className="icon-settings" aria-hidden="true" />
             </button>
         );
     }

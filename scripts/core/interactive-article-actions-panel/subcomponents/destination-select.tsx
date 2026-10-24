@@ -90,6 +90,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                             }
                         }}
                         getLabel={(destination) => destination.label}
+                        label={gettext('Destination')}
                         required
                         data-test-id="destination-select"
                     />
