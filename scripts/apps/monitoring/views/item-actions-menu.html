@@ -14,7 +14,7 @@
         <li>
             <div class="dropdown__menu-label">
                 {{ :: 'Actions' | translate }}
-                <button class="dropdown__menu-close"><i class="icon-close-small"></i></button>
+                <button aria-label="{{:: 'Close' | translate }}" class="dropdown__menu-close"><i class="icon-close-small"></i></button>
             </div>
         </li>
         <li ng-repeat-start="group in menuGroups"></li>

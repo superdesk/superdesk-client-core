@@ -12,7 +12,7 @@
         tabindex="1"
         ng-focus="focused = true">
 
-    <button class="search-cancel" ng-click="cancel();" ng-if="query">
+    <button aria-label="{{:: 'Clear search' | translate }}" class="search-cancel" ng-click="cancel();" ng-if="query">
         <i class="icon-remove-sign"></i>
     </button>
 

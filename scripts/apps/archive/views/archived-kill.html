@@ -1,6 +1,6 @@
 <div sd-modal data-model="item">
     <div class="modal__header">
-        <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+        <a aria-label="{{:: 'Close' | translate }}" href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: action === 'kill' && 'Kill Item' || 'Takedown Item' | translate}}</h3>
     </div>
 

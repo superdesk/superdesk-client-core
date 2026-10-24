@@ -23,7 +23,7 @@
                     ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
                     ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()"
                 >
-                    <a
+                    <a aria-label="{{:: 'Remove' | translate }}"
                         ng-if="carouselItem[carouselItem.fieldId] && editable"
                         class="item-association__remove-item"
                         ng-click="remove(carouselItem); $event.stopPropagation()"

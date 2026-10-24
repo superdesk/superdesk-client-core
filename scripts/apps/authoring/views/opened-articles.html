@@ -12,7 +12,7 @@
                 <span ng-show="article.headline || article.slugline">{{ (article.headline || article.slugline) | stripHtmlTags }}</span>
                 <span ng-show="!article.headline && !article.slugline" translate>Untitled</span>
             </a>
-            <button class="opened-articles-bar__item-close" ng-click="closeItem(article)" data-test-id="close"><i class="icon-close-small icon--white"></i></button>
+            <button aria-label="{{:: 'Close' | translate }}" class="opened-articles-bar__item-close" ng-click="closeItem(article)" data-test-id="close"><i class="icon-close-small icon--white"></i></button>
         </li>
     </ul>
 
@@ -21,7 +21,7 @@
             <a ng-href="" class="opened-articles-bar__item-title" ng-click="openMulti()">
                 <span translate>Multiedit</span>
             </a>
-            <button class="opened-articles-bar__item-close" ng-click="closeMulti()"><i class="icon-close-small icon--white"></i></button>
+            <button aria-label="{{:: 'Close' | translate }}" class="opened-articles-bar__item-close" ng-click="closeMulti()"><i class="icon-close-small icon--white"></i></button>
         </li>
     </ul>
 

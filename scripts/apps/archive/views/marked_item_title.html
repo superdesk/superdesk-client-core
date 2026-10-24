@@ -11,7 +11,7 @@
     <ul class="dropdown dropdown__menu highlights-list-menu" ng-class="{open: open}" ng-click="$event.stopPropagation()">
         <li>
             <div class="dropdown__menu-label" translate>Marked For</div>
-            <button class="dropdown__menu-close" dropdown-toggle>
+            <button aria-label="{{:: 'Close' | translate }}" class="dropdown__menu-close" dropdown-toggle>
                 <i class="icon-close-small icon--white"></i>
             </button>
         </li>

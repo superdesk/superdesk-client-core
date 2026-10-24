@@ -15,7 +15,7 @@
         </div>
         <div class="dropdown__menu pull-right" sd-multiedit-dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk"></div>
         <div class="dropdown" dropdown ng-if="dashboard.current.name !== 'personal' && dashboard.current._id && !dashboard.current.desk">
-            <button class="navbtn dropdown__toggle" dropdown__toggle>
+            <button aria-label="{{:: 'More actions' | translate }}" class="navbtn dropdown__toggle" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
             </button>
             <div class="dropdown__menu pull-right">
@@ -67,7 +67,7 @@
 <div sd-modal data-model="dashboard.add" class="modal--large modal--x-large modal--tabs" data-test-id="'widget-modal'">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate>Add new widget</h3>
-        <button class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>
+        <button aria-label="{{:: 'Close' | translate }}" class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>
     </div>
 
     <div class="modal__body" ng-if="!dashboard.selectedWidget">

@@ -7,7 +7,7 @@
             {{desk.desk.name.substring(0,10)}}{{desk.desk.name.length>10 ? '...' : ''}}  ({{desk.count}})
         </span>
         <dd ng-if="desks.length>1" class="dropdown dropdown--dropup more-actions" dropdown-append-to-body dropdown>
-            <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots"></i></button>
+            <button aria-label="{{:: 'More actions' | translate }}" class="dropdown__toggle" dropdown__toggle><i class="icon-dots"></i></button>
             <div class="dropdown__menu">
                 <ul>
                     <li ng-repeat="desk in desks track by desk.desk._id">

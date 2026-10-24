@@ -1,11 +1,11 @@
-<button class="icn-btn" ng-click="modalEditorConfig = true">
+<button aria-label="{{:: 'Configure Editor themes' | translate }}" class="icn-btn" ng-click="modalEditorConfig = true">
     <i class="icon-switches"></i>
 </button>
 
 <!-- Editor configuration modal -->
 <div sd-modal data-model="modalEditorConfig" class="modal--x-large">
     <div class="modal__header">
-        <button class="modal__close pull-right icn-btn" ng-click="closeModal()"><i class="icon-close-small"></i></button>
+        <button aria-label="{{:: 'Close' | translate }}" class="modal__close pull-right icn-btn" ng-click="closeModal()"><i class="icon-close-small"></i></button>
         <h3 class="modal__heading">{{ :: 'Configure Editor themes' | translate }}</h3>
     </div>
     <div class="modal__body modal__body--no-padding">
