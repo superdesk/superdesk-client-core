@@ -10,8 +10,8 @@
         <ul class="navigation-tabs" data-test-id="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
                 ng-class="{active: widget === active, pinned: widget.pinned}">
-                <a class="sd-sidetab-menu__btn" type="submit"
-                    href=""
+                <button class="sd-sidetab-menu__btn" type="button"
+                    aria-label="{{widget.label}}"
                     aria-expanded="{{widget === active}}"
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
@@ -29,7 +29,7 @@
 
                     <i class="sd-sidetab-menu__main-icon big-icon--{{ :: widget.icon }}"></i>
                     <i class="sd-sidetab-menu__helper-icon icon-close-small"></i>
-                </a>
+                </button>
             </li>
         </ul>
     </div>
