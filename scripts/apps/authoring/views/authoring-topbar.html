@@ -54,7 +54,6 @@
                 class="btn sd-overflow-ellipsis btn--custom"
                 ng-disabled="!toDeskEnabled()"
                 ng-click="saveAndContinue(sendToNextStage, false)"
-                aria-label="{{ 'To Desk' | translate }}"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text sd-overflow-ellipsis" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
@@ -65,7 +64,6 @@
                 class="btn sd-overflow-ellipsis btn--custom"
                 ng-disabled="!closeAndContinueEnabled()"
                 ng-click="saveAndContinue(closeAndContinue, false)"
-                aria-label="{{ 'Close and Continue' | translate }}"
                 title="{{ 'Close and Continue' | translate }}">
                 <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
@@ -88,7 +86,7 @@
           class="btn sd-overflow-ellipsis btn--custom"
           ng-disabled="!sendAndDuplicateEnabled()"
           ng-click="sendAndDuplicate()"
-          aria-label="{{ :: 'Send and duplicate' | translate }}"
+          aria-label="{{ :: 'Send & duplicate' | translate }}"
           title="{{ 'Send and duplicate' | translate }}"
         >
           <span class="btn__text sd-overflow-ellipsis">{{ :: 'Send & duplicate' | translate }}</span>
@@ -100,7 +98,7 @@
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
                 ng-disabled="!publishAndContinueEnabled()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
-                aria-label="{{ :: 'Publish and Continue' | translate }}"
+                aria-label="{{ :: 'Publish & Continue' | translate }}"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text sd-overflow-ellipsis">{{ :: 'Publish & Continue' | translate }}</span>
                 <span class="btn__text--short">{{ :: 'P & C' | translate }}</span>
@@ -149,7 +147,6 @@
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({unpublish: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.unpublish"
         ng-click="openAction('unpublish')"
-        aria-label="{{ 'Unpublish' | translate }}"
         title="{{ 'Unpublish' | translate }}">
             <span class="btn__text" translate>Unpublish</span>
             <span class="btn__text--short" translate>UP</span>

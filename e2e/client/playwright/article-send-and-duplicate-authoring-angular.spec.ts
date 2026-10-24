@@ -31,7 +31,7 @@ test('duplicating an article to a pre-configured desk and stage', async ({page})
     await page.locator(s('authoring', 'field-slugline')).fill('story 2.1');
 
     await page.locator(s('authoring-topbar'))
-        .getByRole('button', {name: 'Send and duplicate'})
+        .getByRole('button', {name: 'Send & duplicate'})
         .click();
 
     await page.locator(s('unsaved-changes-dialog')).getByRole('button', {name: 'Save'}).click();
