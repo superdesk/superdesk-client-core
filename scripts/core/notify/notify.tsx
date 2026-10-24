@@ -105,12 +105,10 @@ class NotifyComponent extends React.Component<{}, IState> {
     }
 
     render() {
-        if (this.state.messages.length < 1) {
-            return null;
-        }
-
+        // The holder stays in the DOM even when empty so that screen readers
+        // have a live region to announce messages into when they appear.
         return (
-            <div className="notification-holder" data-test-id="notifications">
+            <div className="notification-holder" data-test-id="notifications" role="status" aria-live="polite">
                 {
                     this.state.messages.map((msg, i) => (
                         <div
@@ -138,6 +136,7 @@ class NotifyComponent extends React.Component<{}, IState> {
                                     msg.displayDuration === 'manual' && (
                                         <button
                                             className="btn btn--hollow btn--small btn--icon-only"
+                                            aria-label={gettext('Dismiss')}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 this.removeMessage(i);

@@ -12,8 +12,8 @@
 
             <form name="loginForm" ng-submit="authenticate()" ng-if="features.auth_db">
                 <fieldset class="inputs">
-                    <input type="text" id="login-username" ng-model="form.username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required data-test-id="username" />
-                    <input type="password" id="login-password" ng-model="form.password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required data-test-id="password" />
+                    <input type="text" id="login-username" ng-model="form.username" placeholder="{{ 'username'|translate }}" aria-label="{{ 'Username'|translate }}" autocomplete="username" class="fullwidth-input" ng-disabled="identity.Id" required data-test-id="username" />
+                    <input type="password" id="login-password" ng-model="form.password" placeholder="{{ 'password'|translate }}" aria-label="{{ 'Password'|translate }}" autocomplete="current-password" class="fullwidth-input login-pass" required data-test-id="password" />
                 </fieldset>
 
                 <fieldset class="buttons" ng-show="features.auth_db">
@@ -32,7 +32,7 @@
                 <a href="/#/reset-password/" class="text" ng-show="features.auth_db && features.reset_user_password" translate>Forgot password?</a>
             </div>
 
-            <div class="error-handler my-2" ng-switch on="loginError">
+            <div class="error-handler my-2" role="alert" ng-switch on="loginError">
                 <p class="error" data-test-id="login-error-401" ng-switch-when="401" translate>Oops! Invalid Username or Password.<br />Please try again.</p>
                 <p class="error" data-test-id="login-error-403" ng-switch-when="403" translate>Sorry, but your account has been suspended.</p>
                 <p class="error" data-test-id="login-error-404" ng-switch-when="404" translate>Sorry, user not found.</p>
@@ -72,10 +72,10 @@
             </div>
             <form name="changePasswordForm" ng-submit="changeUserPassword()">
                 <fieldset class="inputs">
-                    <input type="password" sd-password-strength name="password" ng-model="form.password" placeholder="{{ 'Enter new password'|translate }}" class="fullwidth-input" required />
+                    <input type="password" sd-password-strength name="password" ng-model="form.password" placeholder="{{ 'Enter new password'|translate }}" aria-label="{{ 'New password'|translate }}" autocomplete="new-password" class="fullwidth-input" required />
                 </fieldset>
                 <fieldset class="inputs">
-                    <input type="password" name="passwordConfirm" ng-model="form.passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" class="fullwidth-input" sd-password-confirm data-password="password" required />
+                    <input type="password" name="passwordConfirm" ng-model="form.passwordConfirm" placeholder="{{ 'Confirm new password'|translate }}" aria-label="{{ 'Confirm new password'|translate }}" autocomplete="new-password" class="fullwidth-input" sd-password-confirm data-password="password" required />
                     <i ng-show="changePasswordForm.passwordConfirm.$error.required" class="required-asteriks">*</i>
                     <div ng-show="changePasswordForm.passwordConfirm.$error.confirm" sd-valid-info>
                         <span translate>passwords must be same</span>
