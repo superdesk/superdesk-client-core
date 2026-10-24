@@ -323,6 +323,47 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
 
                     scope.flags = ctrl.flags;
 
+                    let focusBeforeOpening: HTMLElement | null = null;
+
+                    // Opening the pane moves focus into it, Escape closes it, and closing it returns
+                    // focus to where it was (the toggle button) unless focus has moved on elsewhere.
+                    scope.$watch('flags.notifications', (isOpen, wasOpen) => {
+                        if (isOpen === wasOpen) {
+                            return;
+                        }
+
+                        const pane: HTMLElement = elem[0].querySelector('.notification-pane');
+
+                        if (isOpen) {
+                            focusBeforeOpening = document.activeElement instanceof HTMLElement
+                                ? document.activeElement
+                                : null;
+
+                            // the header is rendered by ng-if in the same digest
+                            setTimeout(() => {
+                                pane?.querySelector<HTMLElement>('.notification-pane__header button')?.focus();
+                            });
+                        } else {
+                            const focusIsInPane = pane?.contains(document.activeElement)
+                                || document.activeElement === document.body;
+
+                            if (focusIsInPane && focusBeforeOpening?.isConnected) {
+                                focusBeforeOpening.focus();
+                            }
+
+                            focusBeforeOpening = null;
+                        }
+                    });
+
+                    elem.on('keydown', (event) => {
+                        if (event.key === 'Escape' && ctrl.flags.notifications) {
+                            event.stopPropagation();
+                            scope.$applyAsync(() => {
+                                ctrl.flags.notifications = false;
+                            });
+                        }
+                    });
+
                     scope.openArticle = function(notification) {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
                         authoringWorkspace.edit({_id: notification.item}, 'edit');
