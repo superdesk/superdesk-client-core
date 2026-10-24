@@ -8,6 +8,13 @@ export interface IConfigurationOptions {
         generateTranslations: (article: IArticle, language: string, abortSignal: AbortSignal) => Promise<string>;
         translateActionIntegration?: boolean;
     };
+
+    /**
+     * Called after a generated answer was written into the article, so that a host which logs its
+     * runs can record what was done with them. `index` is the position of the answer in the list
+     * the generate callback resolved with.
+     */
+    onAnswerApplied?: (article: IArticle, feature: 'headlines' | 'summary', index: number) => void;
 }
 
 export const configuration: IConfigurationOptions = {};
