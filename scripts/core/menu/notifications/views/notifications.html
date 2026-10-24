@@ -1,13 +1,13 @@
 <div class="notification-pane" ng-class="{show: flags.notifications}" data-theme="dark-ui" data-test-id="notification-pane">
     <div class="notification-pane__header" ng-if="flags.notifications">
         <h3 class="notification-pane__title" translate>Notifications</h3>
-        <button class="icn-btn" ng-click="toggleNotifications()"><i class="icon-close-small"></i></button>
+        <button class="icn-btn" ng-click="toggleNotifications()" aria-label="{{ 'Close' | translate }}"><i class="icon-close-small" aria-hidden="true"></i></button>
     </div>
     <div class="notification-pane__content" ng-if="flags.notifications">
         <div class="content-state__empty-container content-state__empty-container--absolute" ng-show="notifications._items.length === 0">
             <div class="content-state__empty-info">
                 <figure class="content-state__image content-state__image--small">
-                    <img src="{{emptyState}}" alt="Empty state illustration">
+                    <img src="{{emptyState}}" alt="">
                 </figure>
                 <h3 class="content-state__heading" translate>All good so far</h3>
                 <p class="content-state__description" translate>You don't have any notifications</p>
