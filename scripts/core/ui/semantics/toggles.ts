@@ -54,6 +54,42 @@ export function switchSemantics() {
     };
 }
 
+/**
+ * `sd-switch-inverted` (core directive, used for the ingest source Active/Closed toggle) renders the
+ * same `.sd-toggle` span as the framework switch but only listens for clicks, so it also needs the
+ * keyboard handling here. The `checked` class already reflects the visible (inverted) state.
+ */
+export function invertedSwitchSemantics() {
+    return {
+        restrict: 'EA',
+        link: (scope, element) => {
+            const el: HTMLElement = element[0];
+
+            el.setAttribute('role', 'switch');
+            el.setAttribute('tabindex', '0');
+
+            scope.$applyAsync(() => labelFromNextSibling(el));
+
+            const onKeyDown = (event: KeyboardEvent) => {
+                if (event.key === ' ' || event.key === 'Enter') {
+                    event.preventDefault();
+                    el.click();
+                }
+            };
+
+            el.addEventListener('keydown', onKeyDown);
+
+            scope.$watch(() => el.className, () => {
+                el.setAttribute('aria-checked', el.classList.contains('checked') ? 'true' : 'false');
+            });
+
+            scope.$on('$destroy', () => {
+                el.removeEventListener('keydown', onKeyDown);
+            });
+        },
+    };
+}
+
 export function checkSemantics() {
     return {
         restrict: 'EA',
