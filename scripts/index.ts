@@ -9,8 +9,7 @@ import 'jquery-ui/themes/smoothness/jquery-ui.css';
 import 'owl.carousel/dist/assets/owl.carousel.min.css';
 import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 
-// Must stay after the ui-framework bundle: it overrides that bundle's custom properties.
-import 'localwire-theme.scss';
+// Must stay after the ui-framework bundle so its focus ring wins.
 import 'localwire-focus.scss';
 
 import 'vendor';
