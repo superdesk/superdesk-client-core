@@ -45,3 +45,20 @@ gettext('World Clock'); gettext('Ingest Stats'); gettext('Monitoring'); gettext(
 gettext('World clock widget'); gettext('Displaying news ingest statistics. You can switch color themes or graph sources.');
 gettext('This widget allows you to create literally any content view you may need in Superdesk, be it production or ingest. All you need is to select a desk, its stages or a saved search. Name your view once you are done. Enjoy!');
 gettext('ABSTRACT is too long'); gettext('SLUGLINE is too long'); gettext('HEADLINE is too long');
+// Privilege labels are registered on the server and rendered through the `translate` filter on the roles screen.
+gettext('Archive Management'); gettext('Content export'); gettext('Create content');
+gettext('Highlights - read'); gettext('Ingest Feed Parsers'); gettext('Ingest Feed Services');
+gettext('Livesite Editor'); gettext('Manage Saved Searches'); gettext('Manage Saved Searches Subscriptions');
+gettext('Manage Saved Searches Subscriptions For Other Users'); gettext('Manage other user personal template'); gettext('Mark items for desks');
+gettext('Mark items for desks even if the user is not a member of the desk'); gettext('Mark items for users'); gettext('Monitoring view');
+gettext('Planning - Agenda Management'); gettext('Planning - Assignments'); gettext('Planning - Assignments desk');
+gettext('Planning - Create Event/Planning in the past'); gettext('Planning - Delete Agendas'); gettext('Planning - Edit Expired Items');
+gettext('Planning - Event Management'); gettext('Planning - Event Templates'); gettext('Planning - Events & Planning View Filters Management');
+gettext('Planning - Featured Stories'); gettext('Planning - Global Filters'); gettext('Planning - Manage Content Profiles');
+gettext('Planning - Manage Export Templates'); gettext('Planning - Manage locations'); gettext('Planning - Planning Item Management');
+gettext('Planning - Post Event Items'); gettext('Planning - Post Planning Items'); gettext('Planning - Spike Event Items');
+gettext('Planning - Spike Planning Items'); gettext('Planning - Unpost Event Items'); gettext('Planning - Unpost Planning Items');
+gettext('Planning - Unspike Event Items'); gettext('Planning - Unspike Planning Items'); gettext('Products Management');
+gettext('Profiling Service'); gettext('Resending Stories'); gettext('Send Content to Personal desk');
+gettext('Spike view'); gettext('System Message'); gettext('Take down');
+gettext('Translate Content within a Desk'); gettext('Unpublish');
