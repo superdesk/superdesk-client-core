@@ -4310,13 +4310,13 @@ msgstr "Coverage Provider:"
 #: ../superdesk-planning/client/components/fields/preview/index.ts:197
 #: ../superdesk-planning/client/utils/contentProfiles.ts:327
 msgid "Coverage Status"
-msgstr "Coverage Status"
+msgstr "Beitragsstatus"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddButton/CoveragesMenuPopup.tsx:51
 #: ../superdesk-planning/client/components/fields/editor/CoverageType.tsx:34
 #: ../superdesk-planning/client/components/fields/preview/index.ts:70
 msgid "Coverage Type"
-msgstr "Coverage Typ"
+msgstr "Beitragstyp"
 
 #: ../superdesk-planning/client/components/fields/editor/EventRelatedPlannings/AddNewCoverages.tsx:244
 msgid "Coverage Types"
@@ -6410,7 +6410,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/contentProfiles.ts:295
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:147
 msgid "Editorial Note"
-msgstr "Editorial Note"
+msgstr "Redaktionshinweis"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:33
 msgid "Editorial Note:"
@@ -12261,7 +12261,7 @@ msgstr "Orte:"
 #: scripts/extensions/broadcasting/dist/src/rundowns/components/rundown-items.js:40
 #: scripts/extensions/broadcasting/src/rundowns/components/rundown-items.tsx:128
 msgid "Planned"
-msgstr ""
+msgstr "Geplant"
 
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundown-items/content-profile.js:103
 #: scripts/extensions/broadcasting/dist/src/extensions/broadcasting/src/rundowns/components/airing-info-block.js:16
@@ -15870,7 +15870,7 @@ msgstr "Paragraph teilen"
 #: scripts/apps/workspace/content/constants.ts:45
 #: scripts/core/interactive-article-actions-panel/subcomponents/destination-select.tsx:87
 msgid "Stage"
-msgstr "Stage"
+msgstr "Stufe"
 
 #: scripts/apps/desks/views/desk-config-modal.html:299
 msgid "Stage Details"
@@ -15900,7 +15900,7 @@ msgstr "Stage mit Name"
 #: scripts/apps/monitoring/views/monitoring-view.html:23
 #: scripts/apps/monitoring/views/monitoring-view.html:66
 msgid "Stages"
-msgstr "Stages"
+msgstr "Stufen"
 
 #: ../superdesk-planning/client/components/UI/IconSelectButton/icons.ts:177
 msgid "Star"
@@ -16502,7 +16502,7 @@ msgstr "Ziel"
 #: scripts/apps/archive/views/metadata-view.html:151
 #: scripts/apps/products/views/products-config-modal.html:76
 msgid "Target Regions"
-msgstr "Target: Region"
+msgstr "Zielregionen"
 
 #: scripts/apps/archive/views/metadata-view.html:156
 msgid "Target Subscriber Types"
@@ -16511,7 +16511,7 @@ msgstr "Target: Abonnententyp"
 #: scripts/apps/archive/views/metadata-view.html:146
 #: scripts/apps/templates/views/template-editor-modal.html:135
 msgid "Target Subscribers"
-msgstr "Target: Abonnenten"
+msgstr "Zielabonnenten"
 
 #: scripts/apps/publish/views/subscribers.html:130
 msgid "Target Type"
@@ -16523,19 +16523,19 @@ msgstr "Target Typ:"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:67
 msgid "Target Types"
-msgstr "Target: Typ"
+msgstr "Zieltypen"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:131
 msgid "Target regions"
-msgstr ""
+msgstr "Zielregionen"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:106
 msgid "Target subscribers"
-msgstr ""
+msgstr "Zielabonnenten"
 
 #: scripts/core/interactive-article-actions-panel/subcomponents/publishing-target-select.tsx:148
 msgid "Target types"
-msgstr ""
+msgstr "Zieltypen"
 
 #: scripts/apps/publish/views/subscribers.html:163
 msgid "Targetable by users"
@@ -20598,7 +20598,7 @@ msgstr "In den Papierkorb verschoben. Die Verlinkung zu anderen Elementen wurde 
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "stage"
-msgstr "Stage"
+msgstr "Stufe"
 
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:10
 #: scripts/apps/authoring/versioning/versions/views/versions.html:14
@@ -21277,7 +21277,7 @@ msgstr "Korrektur gesendet"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.tsx:201
 msgid "Coverage type"
-msgstr "Coverage-Typ"
+msgstr "Beitragstyp"
 
 #: ../superdesk-planning/client/components/fields/editor/DatesGroup.tsx:80
 msgid "Creation date"
@@ -21679,3 +21679,15 @@ msgstr "Vorherige Seite"
 #: ../superdesk-planning/client/utils/upload.ts:77
 msgid "Upload timed out."
 msgstr "Zeitüberschreitung beim Hochladen."
+
+msgid "in progress"
+msgstr "in Bearbeitung"
+
+msgid "unpublished"
+msgstr "zurückgenommen"
+
+msgid "recalled"
+msgstr "zurückgerufen"
+
+msgid "being corrected"
+msgstr "in Korrektur"
