@@ -1072,6 +1072,10 @@ declare module 'superdesk-api' {
                     ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
+            /**
+             * Runs once per uploaded file, before editing, using server-extracted IPTC metadata.
+             * Hooks run sequentially on the mapped article, including the upload parent.
+             */
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {

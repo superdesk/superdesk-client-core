@@ -15,8 +15,8 @@ services:
         # a WT_PANIC ("Too many open files"). MongoDB recommends >= 64000.
         ulimits:
             nofile:
-                soft: 64000
-                hard: 64000
+                soft: 65536
+                hard: 65536
         environment:
             - MONGO_INITDB_DATABASE=superdesk_e2e
         tmpfs:

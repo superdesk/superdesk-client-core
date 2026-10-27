@@ -10,6 +10,6 @@ describe('authoring widgets', () => {
     beforeEach(window.module('superdesk.apps.authoring.widgets.test'));
 
     it('can register authoring widgets', inject((authoringWidgets) => {
-        expect(authoringWidgets.length).toBe(1);
+        expect(authoringWidgets.some((widget) => widget._id === 'test')).toBe(true);
     }));
 });

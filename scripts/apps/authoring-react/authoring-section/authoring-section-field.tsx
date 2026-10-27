@@ -41,6 +41,10 @@ export class AuthoringSectionField<T> extends React.PureComponent<IProps<T>> {
         const {field, fieldsData, canBeToggled, toggledOn} = this.props;
         const FieldEditorConfig = getField(field.fieldType);
 
+        if (FieldEditorConfig == null) {
+            return null;
+        }
+
         const Container = this.getFieldContainer({
             useHeaderLayout: this.props.useHeaderLayout,
             canBeToggled: canBeToggled,
