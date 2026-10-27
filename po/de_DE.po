@@ -2761,7 +2761,7 @@ msgstr "Inhalt"
 #: scripts/apps/workspace/content/constants.ts:15
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
-msgstr "Inhalt als HTML"
+msgstr "Text"
 
 #: scripts/apps/authoring-react/field-adapters/body_footer.ts:36
 #: scripts/apps/workspace/content/constants.ts:14
@@ -6036,7 +6036,7 @@ msgstr "Editorial Notiz"
 #: scripts/apps/authoring-react/field-adapters/ednote.ts:19
 #: scripts/apps/workspace/content/constants.ts:24
 msgid "Ed. Note"
-msgstr "Editorial Note"
+msgstr "Redaktionsnotiz"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/PreviewFilter.tsx:42
 #: ../superdesk-planning/client/components/ExportTemplates/ExportTemplateItem.tsx:29
@@ -6410,7 +6410,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/contentProfiles.ts:295
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:147
 msgid "Editorial Note"
-msgstr "Redaktionshinweis"
+msgstr "Redaktionsnotiz"
 
 #: ../superdesk-planning/client/components/Archive/ArchivePreview/ArchivePreviewMetadataList.tsx:33
 msgid "Editorial Note:"
@@ -6418,7 +6418,7 @@ msgstr "Redaktionshinweis:"
 
 #: scripts/apps/authoring-react/article-widgets/metadata/metadata.tsx:348
 msgid "Editorial note"
-msgstr "Redaktionshinweis"
+msgstr "Redaktionsnotiz"
 
 #: ../superdesk-planning/client/components/fields/preview/index.ts:245
 msgid "Ednote"
