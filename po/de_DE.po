@@ -4404,7 +4404,7 @@ msgstr "Die Coverage wurde abgesagt"
 #: ../superdesk-planning/client/planning-extension/src/authoring-react-fields/coverages/index.tsx:27
 #: ../superdesk-planning/client/utils/contentProfiles.ts:317
 msgid "Coverages"
-msgstr "Coverages"
+msgstr "Beiträge"
 
 #: ../superdesk-planning/client/api/planning.ts:237
 msgid "Coverages added to workflow."
@@ -8517,7 +8517,7 @@ msgstr ""
 #: scripts/extensions/broadcasting/dist/src/rundowns/rundown-view-edit.js:311
 #: scripts/extensions/broadcasting/src/rundowns/rundown-view-edit.tsx:501
 msgid "Headline"
-msgstr "Headline"
+msgstr "Überschrift"
 
 #: ../superdesk-analytics/client/user_activity_report/views/user-activity-report-tooltip.html:3
 msgid "Headline:"
@@ -10170,7 +10170,7 @@ msgstr ""
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/extension.js:44
 #: scripts/extensions/markForUser/src/extension.tsx:51
 msgid "Mark for User"
-msgstr ""
+msgstr "Für Benutzer markieren"
 
 #: scripts/apps/desks/index.ts:60 scripts/apps/monitoring/index.ts:130
 msgid "Mark for desk"
@@ -10184,7 +10184,7 @@ msgstr "Als Highlight kennzeichnen"
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:32
 msgid "Mark for other user"
-msgstr ""
+msgstr "Für anderen Benutzer markieren"
 
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-article-actions-bulk.js:24
 #: scripts/extensions/markForUser/dist/src/extensions/markForUser/src/get-article-actions.js:13
@@ -10199,7 +10199,7 @@ msgstr ""
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:61
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:91
 msgid "Mark for user"
-msgstr ""
+msgstr "Für Benutzer markieren"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Mark items for Highlights/Summary Lists"
@@ -10255,7 +10255,7 @@ msgstr "Für Highlight {{x}} markiert von {{user}}"
 #: scripts/extensions/markForUser/src/get-marked-for-me-component.tsx:140
 #: scripts/extensions/markForUser/src/get-marked-for-me-component.tsx:148
 msgid "Marked for me"
-msgstr ""
+msgstr "Für mich markiert"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:99
 msgid "Marked for this user"
@@ -10494,7 +10494,7 @@ msgstr "Beobachten"
 #: scripts/apps/monitoring/views/monitoring-view.html:3
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Monitoring"
-msgstr "Monitoring"
+msgstr "Übersicht"
 
 #: scripts/apps/desks/views/settings.html:43
 #: scripts/apps/desks/views/settings.html:47
@@ -16060,7 +16060,7 @@ msgstr "Story GUID"
 #: scripts/apps/legal-archive/views/legal_archive.html:78
 #: scripts/apps/search/views/search-parameters.html:31
 msgid "Story Text"
-msgstr "Story Text"
+msgstr "Text"
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:183
 msgid "Story is associated as update."

@@ -4,7 +4,7 @@
             <h2 class="sd-page__page-heading" translate>Content Profiles</h2>
         </div>
         <div class="sd-page__header">
-            <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
+            <sd-search-handler ng-model="query.label" data-debounce="200" data-label="{{:: 'Search' | translate}}"></sd-search-handler>
 
             <div class="sd-check-button__group sd-check-button__group--left" style="flex-wrap: nowrap;" role="group" aria-label="{{:: 'Content Type' | translate }}">
                 <div class="sd-check__wrapper" ng-repeat="type in contentProfileTypes track by type.value">

@@ -4,7 +4,7 @@
             <h2 class="sd-page__page-heading" translate>Dictionary management</h2>
         </div>
         <div class="sd-page__header">
-            <sd-search-handler ng-model="query" data-debounce="200"></sd-search-handler>
+            <sd-search-handler ng-model="query" data-debounce="200" data-label="{{:: 'Search' | translate}}"></sd-search-handler>
 
             <span class="sd-page__element-grow"></span>
             <div class="dropdown dropdown--align-right" dropdown style="margin-right: -20px;" data-sd-tooltip="{{ :: 'Add new' | translate }}" data-flow="left" data-test-id="add-dictionary">
