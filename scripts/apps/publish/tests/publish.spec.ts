@@ -166,6 +166,53 @@ describe('publish queue', () => {
         expect($scope.showCancelBtn).toBe(false);
     }));
 
+    describe('requests', () => {
+        let pending;
+
+        beforeEach(inject(($q, api) => {
+            pending = [];
+            api.publish_queue.query.and.callFake((criteria) => {
+                const deferred = $q.defer();
+
+                pending.push({criteria, deferred});
+                return deferred.promise;
+            });
+        }));
+
+        it('queries the publish queue once on load', inject(($rootScope) => {
+            $rootScope.$digest();
+            expect(pending.length).toBe(1);
+            pending[0].deferred.resolve(publishQueue);
+            $rootScope.$digest();
+            expect($scope.publish_queue.length).toBe(3);
+        }));
+
+        it('queries the first page once when filtering from another page', inject(($rootScope) => {
+            $rootScope.$digest();
+            $scope.pagination.page = 3;
+            $rootScope.$digest();
+            pending.length = 0;
+
+            $scope.filterPublishQueue({_id: 'foo'}, 'subscriber');
+            $rootScope.$digest();
+            expect(pending.length).toBe(1);
+            expect(pending[0].criteria.page).toBe(1);
+            expect(JSON.parse(pending[0].criteria.where)).toEqual({$and: [{subscriber_id: 'foo'}]});
+        }));
+
+        it('queries the first page once when searching from another page', inject(($rootScope) => {
+            $rootScope.$digest();
+            $scope.pagination.page = 3;
+            $rootScope.$digest();
+            pending.length = 0;
+
+            $scope.search('foo');
+            $rootScope.$digest();
+            expect(pending.length).toBe(1);
+            expect(pending[0].criteria.page).toBe(1);
+        }));
+    });
+
     it('can select multiple queue items', inject(($rootScope) => {
         $rootScope.$digest();
         expect($scope.publish_queue.length).toBe(3);

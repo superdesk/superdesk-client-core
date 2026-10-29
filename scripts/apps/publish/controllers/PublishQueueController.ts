@@ -85,6 +85,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             $scope.loading = false;
         });
     }
+    let pendingQuery: {key: string, promise: Promise<any>} | null = null;
+
     /*
     * Fetch the publish queue on the basis of built criteria.
     */
@@ -137,7 +139,22 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
                 $and: andTerms,
             });
         }
-        return api.publish_queue.query(criteria);
+
+        const key = JSON.stringify(criteria);
+
+        // initial load, page watcher, filters and search can all ask for the same page at once,
+        // reuse the pending request as counting the queue on the server can be expensive
+        if (pendingQuery == null || pendingQuery.key !== key) {
+            const promise = api.publish_queue.query(criteria).finally(() => {
+                if (pendingQuery != null && pendingQuery.promise === promise) {
+                    pendingQuery = null;
+                }
+            });
+
+            pendingQuery = {key, promise};
+        }
+
+        return pendingQuery.promise;
     }
 
     $scope.reload = function() {
@@ -226,10 +243,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
                 $scope.selectedFilterStatus = null;
                 $scope.selectedFilterContentType = null;
         }
+        $scope.pagination.page = 1;
         populatePublishQueue();
         $scope.multiSelectCount = 0;
         $scope.selectedQueueItems = [];
-        $scope.pagination.page = 1;
     };
 
     $scope.selectQueuedItem = function(queuedItem) {
