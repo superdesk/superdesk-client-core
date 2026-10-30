@@ -107,7 +107,7 @@ cryptography==46.0.2
     # via
     #   authlib
     #   jwcrypto
-dnspython==2.8.0
+dnspython==2.9.0
     # via pymongo
 draftjs-exporter[lxml]==5.1.0
     # via superdesk-core
