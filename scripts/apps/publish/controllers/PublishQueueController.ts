@@ -69,7 +69,16 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     * Populates the publish queue and update the flags after fetch operation.
     */
     function populatePublishQueue() {
-        return fetchPublishQueue().then((queue) => {
+        const query = fetchPublishQueue();
+
+        latestQuery = query;
+
+        return query.then((queue) => {
+            if (query !== latestQuery) {
+                // a newer request was sent meanwhile (other page, filter or after a resend), keep its result
+                return;
+            }
+
             var queuedItems = queue._items;
 
             _.forEach(queuedItems, (item) => {
@@ -82,10 +91,13 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             $scope.showCancelSelectionBtn = false;
             $scope.maxPage = Math.ceil(queue._meta.total / $scope.pageSize);
         }).finally(() => {
-            $scope.loading = false;
+            if (query === latestQuery) {
+                $scope.loading = false;
+            }
         });
     }
     let pendingQuery: {key: string, promise: Promise<any>} | null = null;
+    let latestQuery: Promise<any> | null = null;
 
     /*
     * Fetch the publish queue on the basis of built criteria.
@@ -188,6 +200,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         api.publish_queue.save([], queueItems).then(
             (response) => {
+                // a request still pending from before the save would miss the resent items
+                pendingQuery = null;
                 $scope.reload();
                 $scope.cancelSelection();
             },

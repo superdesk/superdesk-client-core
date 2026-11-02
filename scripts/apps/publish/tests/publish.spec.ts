@@ -211,6 +211,50 @@ describe('publish queue', () => {
             expect(pending.length).toBe(1);
             expect(pending[0].criteria.page).toBe(1);
         }));
+
+        it('queries again after a resend instead of reusing a pending request', inject(($rootScope, api, $q) => {
+            $rootScope.$digest();
+            pending[0].deferred.resolve(publishQueue);
+            $rootScope.$digest();
+            pending.length = 0;
+
+            $scope.reload();
+            $rootScope.$digest();
+            expect(pending.length).toBe(1);
+
+            spyOn(api.publish_queue, 'save').and.returnValue($q.when());
+            $scope.scheduleToSend($scope.publish_queue[0]);
+            $rootScope.$digest();
+            expect(pending.length).toBe(2);
+
+            pending[1].deferred.resolve({
+                _meta: {total: 4},
+                _items: publishQueue._items.concat([{_id: 'resent'}]),
+            });
+            $rootScope.$digest();
+            pending[0].deferred.resolve(publishQueue);
+            $rootScope.$digest();
+            expect($scope.publish_queue.length).toBe(4);
+            expect($scope.loading).toBe(false);
+        }));
+
+        it('keeps the newest page when an older response arrives later', inject(($rootScope) => {
+            $rootScope.$digest();
+            pending[0].deferred.resolve(publishQueue);
+            $rootScope.$digest();
+
+            $scope.pagination.page = 2;
+            $rootScope.$digest();
+            $scope.pagination.page = 3;
+            $rootScope.$digest();
+            expect(pending.length).toBe(3);
+
+            pending[2].deferred.resolve({_meta: {total: 51}, _items: [{_id: 'page-3'}]});
+            $rootScope.$digest();
+            pending[1].deferred.resolve({_meta: {total: 51}, _items: [{_id: 'page-2'}]});
+            $rootScope.$digest();
+            expect($scope.publish_queue.map((item) => item._id)).toEqual(['page-3']);
+        }));
     });
 
     it('can select multiple queue items', inject(($rootScope) => {
