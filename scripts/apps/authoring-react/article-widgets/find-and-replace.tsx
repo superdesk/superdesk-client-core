@@ -169,6 +169,7 @@ export function getFindAndReplaceWidget() {
         order: 2,
         icon: 'find-replace',
         component: FindAndReplaceWidget,
+        isAllowed: (article) => article.type !== 'composite', // a package has no body to search
     };
 
     return metadataWidget;

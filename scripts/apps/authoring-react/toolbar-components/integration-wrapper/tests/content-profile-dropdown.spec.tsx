@@ -67,11 +67,11 @@ describe('authoring-react content profile dropdown', () => {
         });
     });
 
-    // Like "Package Highlight 1" in the e2e `main` snapshot.
-    it('preselects the profile of a composite item that is on a text profile', () => {
+    // like "Package Highlight 1" in the e2e `main` snapshot
+    it('renders nothing for a composite item that is on a text profile', () => {
         const wrapper = renderWith({type: 'composite', profile: 'story'}, textProfiles);
 
-        expect(wrapper.find('[data-test-id="content-profile-select"]').prop('data-test-value')).toBe('story');
+        expect(wrapper.find('[data-test-id="content-profile-select"]').exists()).toBe(false);
     });
 
     it('preselects the profile of a preformatted item, which is text bearing', () => {

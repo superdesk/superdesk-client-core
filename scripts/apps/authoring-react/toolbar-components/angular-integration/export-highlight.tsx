@@ -17,6 +17,7 @@ export const ExportHighlightComponent: React.ComponentType<{entity: IArticle}> =
             )}
             text={gettext('Export')}
             style="filled"
+            data-test-id="export-highlight"
         />
     );
 };
