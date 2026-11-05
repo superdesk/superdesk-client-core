@@ -10,6 +10,7 @@ import {Map} from 'immutable';
 import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 import {IGetFieldContainerOptions} from './get-field-container';
+import {IEditorTheme} from 'apps/authoring/authoring/editor-theme';
 
 export interface IPropsAuthoringSection<T> {
     fieldRefs: {[fieldId: string]: RefObject<HTMLDivElement>};
@@ -28,6 +29,9 @@ export interface IPropsAuthoringSection<T> {
     validationErrors: IAuthoringValidationErrors;
     padding?: string | number;
     uiTheme?: IAuthoringSectionTheme;
+
+    // the keys `uiTheme` was built from, exposed on the section for e2e tests
+    editorTheme?: IEditorTheme;
     item: T;
     computeLatestEntity(options?: {preferIncomplete?: boolean}): any;
     fieldTemplate: IGetFieldContainerOptions['fieldTemplate'];
@@ -105,10 +109,17 @@ export class AuthoringSection<T> extends React.PureComponent<IPropsAuthoringSect
         const themeApplies: boolean
             = this.props.fields.find((field) => this.props.uiTheme?.fieldTheme[field.id] != null) != null;
         const grouped = groupItemsToRows(this.props.fields.toArray(), getFieldWidth);
+        const {editorTheme} = this.props;
 
         return (
             <div
                 className="authoring-section"
+                data-test-id={editorTheme == null ? undefined : 'authoring-theme-container'}
+                data-editor-theme={editorTheme?.theme}
+                data-editor-font={editorTheme?.font}
+                data-editor-headline={editorTheme?.headline}
+                data-editor-abstract={editorTheme?.abstract}
+                data-editor-body={editorTheme?.body}
                 style={{
                     backgroundColor: themeApplies ? this.props.uiTheme.backgroundColor : undefined,
                     display: 'flex',

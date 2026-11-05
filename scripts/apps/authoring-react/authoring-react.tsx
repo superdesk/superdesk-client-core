@@ -50,7 +50,8 @@ import {preferences} from 'api/preferences';
 import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
 import {previewAuthoringEntity} from './preview-article-modal';
 import {WithKeyBindings} from './with-keybindings';
-import {IFontSizeOption, ITheme, ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {ProofreadingThemeModal} from './toolbar/proofreading-theme-modal';
+import {getEditorThemeStyle, IEditorTheme, IFontSizeOption} from 'apps/authoring/authoring/editor-theme';
 import {showModal} from '@sourcefabric/common';
 import {notify} from 'core/notify/notify';
 import {isHttpApiError} from 'core/helpers/network';
@@ -151,8 +152,8 @@ function getInitialState<T extends IBaseRestApiResponse>(
     storageAdapter: IStorageAdapter<T>,
     language: string,
     validationErrors: IAuthoringValidationErrors,
-    defaultTheme: ITheme,
-    proofReadingTheme: ITheme,
+    defaultTheme: IEditorTheme,
+    proofReadingTheme: IEditorTheme,
 ): IStateLoaded<T> {
     const allFields = profile.header.merge(profile.content);
 
@@ -308,7 +309,7 @@ interface IStateLoaded<T> {
      * Prevents changes to state while async operation is in progress(e.g. saving).
      */
     loading: boolean;
-    allThemes: {default: ITheme, proofreading: ITheme};
+    allThemes: {default: IEditorTheme, proofreading: IEditorTheme};
     proofreadingEnabled: boolean;
 }
 
@@ -1408,6 +1409,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                     proofreadingEnabled: !state.proofreadingEnabled,
                 });
             },
+            proofreadingEnabled: state.proofreadingEnabled,
             printPreview: () => {
                 previewAuthoringEntity(
                     state.itemWithChanges,
@@ -1530,10 +1532,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
         const activeTheme = state.proofreadingEnabled ? state.allThemes.proofreading : state.allThemes.default;
 
         const uiTheme: IAuthoringSectionTheme = {
-            backgroundColor: activeTheme.theme,
-            backgroundColorSecondary: activeTheme.themeColorSecondary,
-            textColor: activeTheme.textColor,
-            fontFamily: activeTheme.fontFamily,
+            ...getEditorThemeStyle(activeTheme),
             fieldTheme: {
                 headline: {
                     fontSize: getUiThemeFontSizeHeading(activeTheme.headline),
@@ -1570,6 +1569,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                 <ToolbarContextProvider
                     exposed={toolbarContextValue.exposed}
                     authoringStorage={toolbarContextValue.authoringStorage}
+                    readOnly={readOnly === true}
                 >
                     <div style={{display: 'contents'}} ref={this.setRef}>
                         {state.loading && (<Loader overlay />)}
@@ -1591,7 +1591,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                         headerCollapsed={this.props.headerCollapsed}
                                         toolbarCustom
                                         toolBar={secondaryToolbarWidgets.length === 0 ? null : (
-                                            <SubNav className="px-2">
+                                            <SubNav
+                                                className="authoring-secondary-toolbar"
+                                                data-test-id="authoring-secondary-toolbar"
+                                            >
                                                 <AuthoringToolbar
                                                     entity={state.itemWithChanges}
                                                     widgets={secondaryToolbarWidgets}
@@ -1644,6 +1647,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse>
                                             <AuthoringSection
                                                 fieldRefs={this.fieldRefs}
                                                 uiTheme={uiTheme}
+                                                editorTheme={activeTheme}
                                                 padding="3.2rem 4rem 5.2rem 4rem"
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}
