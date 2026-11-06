@@ -257,7 +257,7 @@ export function cutoffPreviousRenditions(update, origItem) {
             // walk through all renditions
             Object.keys(origRenditions).forEach((_key) => {
                 // ignore default renditions, because all images have default renditions
-                if (!(_key in defaultRenditions) &&
+                if (!defaultRenditions.includes(_key) &&
                     _key in updateRenditions &&
                     origRenditions[_key] !== null &&
                     // image was changed, but rendition(s) still equal
