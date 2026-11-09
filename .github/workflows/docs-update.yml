@@ -18,6 +18,8 @@ jobs:
   fire:
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged && contains(github.event.pull_request.labels.*.name, 'docs') && github.event.pull_request.user.login != 'dependabot[bot]')
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - name: Fire the docs-update routine
         env:
