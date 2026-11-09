@@ -528,6 +528,10 @@ snapshots"); both run from `e2e/server` in a Python venv:
 This alters shared fixtures, so treat it like a product-source change: call it
 out in your hand-off for review.
 
+### Seeding through the API
+
+When the state a test needs varies from test to test (a user preference, a content list), and a snapshot per combination would be worse, a test may set it through the REST API after `restoreDatabaseSnapshot()` and before navigating. Use `withApiContext` and `assertOk` from `playwright/utils/api.ts`, which call the API as the `storageState` user, and keep each resource's calls in its own `utils/<resource>-api.ts` (see `preferences-api.ts`, `content-lists-api.ts`). This is for setting up preconditions only, never for driving the behaviour under test.
+
 ## Page Objects
 
 Reuse the classes in `playwright/page-object-models/`. They take a `Page` in the

@@ -17,8 +17,9 @@
                         </div>
 
                         <div class="authoring-sticky__theme-controls ">
-                            <div class="preview-modal-control" ng-if="$root.config.features.preview">
+                            <div class="preview-modal-control">
                                 <button class="preview-toggle icn-btn"
+                                    data-test-id="authoring-print-preview"
                                     ng-if="canPrintPreview(item)"
                                     title="{{:: 'Preview' | translate}}"
                                     ng-click="openFullPreview($event)"
@@ -28,12 +29,14 @@
                             </div>
 
                             <button class="proofread-toggle icn-btn"
+                                data-test-id="authoring-toggle-theme"
                                 ng-class="{active: proofread}"
                                 ng-click="proofread = !proofread"
                                 title="{{:: 'Toggle theme' | translate}}">
                                 <i class="icon-adjust"></i>
                             </button>
                             <button class="spellchecker-toggle icn-btn"
+                                data-test-id="authoring-spellchecker-toggle"
                                 ng-if="isSpellcheckerAvailable()"
                                 ng-class="{active: spellcheck.isAutoSpellchecker}"
                                 ng-click="toggleSpellchecker()"
@@ -53,7 +56,7 @@
                 <div style="overflow-y: scroll; flex: 1" class="page-content-container--scrollable">
                     <header sd-authoring-header></header>
 
-                    <article class="main-article theme-container " ng-class="{preview: !_editable}">
+                    <article class="main-article theme-container " ng-class="{preview: !_editable}" data-test-id="authoring-theme-container">
                         <div ng-if="item.type !== 'composite'" class="fieldset main-article__fieldset" sd-article-edit></div>
                         <div ng-if="item.type === 'composite'" sd-package-edit></div>
                     </article>

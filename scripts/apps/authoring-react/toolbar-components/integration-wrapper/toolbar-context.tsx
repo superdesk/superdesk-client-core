@@ -11,11 +11,13 @@ import {IAuthoringStorage, IExposedFromAuthoring} from 'superdesk-api';
 export interface IToolbarContext<T> {
     exposed: IExposedFromAuthoring<T> | null;
     authoringStorage: IAuthoringStorage<T> | null;
+    readOnly: boolean;
 }
 
 const defaultContextValue: IToolbarContext<unknown> = {
     exposed: null,
     authoringStorage: null,
+    readOnly: false,
 };
 
 // Using `unknown` as the default type parameter since context consumers will cast as needed
@@ -32,6 +34,7 @@ export function useToolbarContext<T>(): IToolbarContext<T> {
 interface IToolbarContextProviderProps<T> {
     exposed: IExposedFromAuthoring<T> | null;
     authoringStorage: IAuthoringStorage<T> | null;
+    readOnly?: boolean;
     children: React.ReactNode;
 }
 
@@ -41,11 +44,13 @@ interface IToolbarContextProviderProps<T> {
 export function ToolbarContextProvider<T>({
     exposed,
     authoringStorage,
+    readOnly,
     children,
 }: IToolbarContextProviderProps<T>): React.ReactElement {
     const value: IToolbarContext<T> = {
         exposed,
         authoringStorage,
+        readOnly: readOnly === true,
     };
 
     return (
