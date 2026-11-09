@@ -28,9 +28,12 @@ jobs:
           PR: ${{ github.event.inputs.pr || github.event.pull_request.number }}
         run: |
           read -r url title < <(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq '"\(.html_url) \(.title)"')
-          jq -n --arg text "Pull request merged: $url ($title)" '{text: $text}' | curl --silent --show-error --fail-with-body -X POST \
+          response=$(jq -n --arg text "Pull request merged: $url ($title)" '{text: $text}' | curl --silent --show-error --fail-with-body -X POST \
             "https://api.anthropic.com/v1/claude_code/routines/trig_013vDQ2xnZLUuyaLy4qX9c4u/fire" \
             -H "Authorization: Bearer $ROUTINE_FIRE_TOKEN" \
             -H "anthropic-version: 2026-10-21" \
             -H "Content-Type: application/json" \
-            -d @-
+            -d @-)
+          echo "$response"
+          session=$(jq -r '.claude_code_session_url // empty' <<<"$response")
+          printf '## Docs update fired for PR #%s\n\n%s\n\n%s\n\nRoutine session: %s\n' "$PR" "$title" "$url" "$session" >> "$GITHUB_STEP_SUMMARY"
