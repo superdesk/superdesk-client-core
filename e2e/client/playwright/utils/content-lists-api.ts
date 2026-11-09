@@ -1,12 +1,4 @@
-import {request, APIRequestContext} from '@playwright/test';
-import storageState from '../.auth/user.json';
-
-// Ensure exactly one trailing slash. Playwright's APIRequestContext resolves
-// request paths against baseURL using WHATWG URL semantics, where a
-// leading-slash path (e.g. '/content_lists') replaces the base path entirely
-// and drops '/api'. Keeping the trailing slash here + relative request paths
-// below makes resolution preserve the '/api' segment.
-const SUPERDESK_API_URL = (process.env.SUPERDESK_URL || 'http://localhost:5002/api').replace(/\/?$/, '/');
+import {assertOk, withApiContext} from './api';
 
 /**
  * Article ids baked into the "main" database snapshot
@@ -30,38 +22,6 @@ export const FIXTURE_ARTICLES = {
         headline: 'Story 3',
     },
 };
-
-function getToken(): string {
-    const entry = storageState.origins[0].localStorage.find(({name}) => name === 'sess:token');
-
-    if (entry == null) {
-        throw new Error('sess:token not found in .auth/user.json');
-    }
-
-    return entry.value;
-}
-
-async function withApiContext<T>(callback: (api: APIRequestContext) => Promise<T>): Promise<T> {
-    const api = await request.newContext({
-        baseURL: SUPERDESK_API_URL,
-        extraHTTPHeaders: {
-            'Authorization': getToken(),
-            'Content-Type': 'application/json',
-        },
-    });
-
-    try {
-        return await callback(api);
-    } finally {
-        await api.dispose();
-    }
-}
-
-async function assertOk(response: {ok(): boolean; status(): number; text(): Promise<string>}, action: string) {
-    if (!response.ok()) {
-        throw new Error(`${action} failed: ${response.status()} ${await response.text()}`);
-    }
-}
 
 export function createContentList(
     name: string,

@@ -1,6 +1,10 @@
 import _ from 'lodash';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {gettext} from 'core/utils';
+import {authoringReactViewEnabled} from 'appConfig';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {getOpenPackageGroups} from 'apps/authoring-react/fields/package-items/open-packages';
+import {isInPackage} from 'apps/authoring-react/fields/package-items/package-groups';
 
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
@@ -102,6 +106,12 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.isAdded = function(pkg, item) {
+        const groupsInAuthoringReact = authoringReactViewEnabled ? getOpenPackageGroups(pkg._id) : null;
+
+        if (groupsInAuthoringReact != null) {
+            return isInPackage(groupsInAuthoringReact, item);
+        }
+
         var added = pkg.groups ?
             pkg.groups.some((group) => group.refs.some((ref) => ref.guid === item._id || ref.residRef === item._id))
             : false;
@@ -147,7 +157,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.setItemLabel = function(item, label) {
         var pkg = authoringWorkspace.getItem();
 
-        if (pkg._autosaved) {
+        if (authoringReactViewEnabled) {
+            dispatchInternalEvent('setPackageItemLabelInAuthoringReact', {
+                packageId: pkg._id,
+                itemId: item._id,
+                label: label ? label.qcode : null,
+            });
+        } else if (pkg._autosaved) {
             autosave.get(pkg).then((autosavedPkg) => {
                 setItemLabel(autosavedPkg._autosave, item, label);
             });
@@ -160,6 +176,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         var qcode = label ? label.qcode : null;
         var pkg = authoringWorkspace.getItem();
         var isSet = false;
+        const groupsInAuthoringReact = authoringReactViewEnabled ? getOpenPackageGroups(pkg._id) : null;
+
+        if (groupsInAuthoringReact != null) {
+            return groupsInAuthoringReact.some(
+                (group) => group.refs.some((ref) => ref.residRef === item._id && (ref.label ?? null) === qcode),
+            );
+        }
 
         _.forEach(pkg.groups, (group) => {
             var ref: any = _.find(group.refs, {guid: item._id});
@@ -182,7 +205,15 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             this.packageGroupItems[pkgId].unshift(item._id);
         }
         if (typeof broadcast === 'undefined') {
-            $rootScope.$broadcast('package:addItems', {items: [item], group: group});
+            if (authoringReactViewEnabled) {
+                dispatchInternalEvent('addItemsToPackageInAuthoringReact', {
+                    packageId: pkgId,
+                    groupId: group,
+                    items: [item],
+                });
+            } else {
+                $rootScope.$broadcast('package:addItems', {items: [item], group: group});
+            }
         }
     };
 
