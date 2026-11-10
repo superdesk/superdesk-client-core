@@ -98,5 +98,5 @@ test('can reset password', {
     await page.locator('form[name="loginForm"]').getByPlaceholder('password').fill('admin123.');
     await page.getByRole('button', {name: 'Log in'}).click();
 
-    await expect(page).toHaveURL('http://localhost:9000/#/workspace');
+    await expect(page).toHaveURL(/\/#\/workspace$/);
 });
