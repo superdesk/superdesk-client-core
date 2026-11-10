@@ -119,15 +119,6 @@ export class MediaUpload {
     }
 
     /**
-     * Upload progress circles, one per item. An item draws its circle only once its
-     * own progress is above zero, which happens when its upload request is answered
-     * (see `holdArchiveRequests`), and keeps it until the screen closes.
-     */
-    getProgressIndicators(): Locator {
-        return this.getModal().getByTestId('upload-progress-circle');
-    }
-
-    /**
      * Adds a file from `test-files` to the upload by dropping it on the drop area.
      */
     async dropFile(filename: string, mimeType: string = 'image/jpeg'): Promise<void> {
@@ -188,56 +179,6 @@ export class MediaUpload {
     }
 
     /**
-     * Parks the response of the next `count` archive requests of `method` until the
-     * release callback handed back for each of them is called. The request is sent
-     * for real and only its answer is withheld, so the screen stays in the state
-     * that request produced for as long as the assertions need, with nothing
-     * depending on a fixed delay.
-     *
-     * This is what makes the per-file progress circles assertable. An item's
-     * progress is only moved off zero by ng-file-upload's `xhr.upload` events and
-     * by `item.progress = 100` when its upload answers; Playwright answers an
-     * intercepted request from outside the page, so no upload event ever fires and
-     * a circle appears exactly when that file's response lands. Files are posted one
-     * after another and the screen closes once every item has also been patched with
-     * its metadata, so releasing the posts one by one brings the circles up one by
-     * one, and holding the patches keeps them all on screen.
-     *
-     * `POST` goes to `/api/archive` and `PATCH` to `/api/archive/<id>`, which is why
-     * the two need different URL patterns. Unmatched requests, and any past `count`,
-     * are let through untouched. Call `stopHoldingArchiveRequests` when done.
-     */
-    async holdArchiveRequests(method: 'POST' | 'PATCH', count: number): Promise<Array<() => void>> {
-        const releases: Array<() => void> = [];
-        const gates = Array.from(
-            {length: count},
-            () => new Promise<void>((resolve) => releases.push(resolve)),
-        );
-        let matched = 0;
-
-        await this.page.route(archiveUrlPattern(method), async (route) => {
-            const gate = route.request().method() === method ? gates[matched++] : undefined;
-
-            if (gate == null) {
-                await route.continue();
-
-                return;
-            }
-
-            const response = await route.fetch();
-
-            await gate;
-            await route.fulfill({response});
-        });
-
-        return releases;
-    }
-
-    async stopHoldingArchiveRequests(method: 'POST' | 'PATCH'): Promise<void> {
-        await this.page.unroute(archiveUrlPattern(method));
-    }
-
-    /**
      * Picks the desk the uploaded media will be sent to.
      */
     async selectDesk(deskName: string): Promise<void> {
@@ -250,8 +191,4 @@ export class MediaUpload {
 
         await expect(this.getSelectedDesk()).toContainText(deskName);
     }
-}
-
-function archiveUrlPattern(method: 'POST' | 'PATCH'): string {
-    return method === 'POST' ? '**/api/archive*' : '**/api/archive/*';
 }

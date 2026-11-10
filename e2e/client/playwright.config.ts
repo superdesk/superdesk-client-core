@@ -59,6 +59,9 @@ export default defineConfig({
     expect: {
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.05,
+
+            // applied only while a screenshot is taken, so the app itself runs with its real fonts
+            stylePath: path.join(__dirname, './playwright/screenshot.css'),
         },
 
         timeout: 15000,
