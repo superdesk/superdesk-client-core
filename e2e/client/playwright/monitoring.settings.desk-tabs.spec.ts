@@ -133,8 +133,7 @@ test('desk actions offer Monitoring settings and the wizard opens on the Desks t
     await expect(actions.getByTestId('desk-actions--remove')).toBeVisible();
     await expect(actions.getByRole('button')).toHaveCount(3);
 
-    await actions.getByTestId('desk-actions--monitoring-settings').click();
-    await expect(settings.modal).toBeVisible();
+    await settings.openFromDeskActions(DESK);
 
     await expect(settings.tabs).toHaveText(['Desks', 'Saved Searches', 'Reorder Sections', 'Items Count']);
     await settings.expectActiveTab('Desks');

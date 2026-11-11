@@ -61,7 +61,11 @@ export class MonitoringSettings {
      */
     async openForDesk(deskName: string): Promise<void> {
         await this.page.goto('/#/settings/desks');
+        await this.openFromDeskActions(deskName);
+    }
 
+    /** The retried click described on `openForDesk`, for a test already on `/#/settings/desks`. */
+    async openFromDeskActions(deskName: string): Promise<void> {
         const actions = this.deskCard(deskName).getByTestId('desk-actions--options');
 
         await expect(async () => {
