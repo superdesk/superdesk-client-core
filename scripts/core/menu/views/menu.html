@@ -70,6 +70,13 @@
                 <li class="sd-text-align--center  sd-padding-x--2 sd-padding-t--1 sd-padding-b--1" >
                     <div class="button-group button-group--vertical">
                         <a href="#/profile/" class="btn btn--hollow btn--expanded" translate>Manage profile</a>
+                        <button
+                            ng-if="mobilePairingEnabled && privileges.mobile_pairing"
+                            class="btn btn--hollow btn--expanded"
+                            ng-click="connectMobileApp()"
+                            data-test-id="connect-mobile-app"
+                            translate
+                        >Connect mobile app</button>
                         <button class="btn btn--hollow btn--expanded" ng-click="logout()" translate>Sign out</button>
                     </div>
                 </li>

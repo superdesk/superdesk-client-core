@@ -5,6 +5,7 @@ import {addInternalEventListener} from 'core/internal-events';
 import {IFullWidthPageCapabilityConfiguration} from 'superdesk-api';
 import {setupAuthoringReact} from './authoring-switch';
 import {AuthoringSwitch} from 'apps/authoring-react/authoring-swtich';
+import {showMobilePairingModal} from 'core/mobile-pairing/MobilePairingModal';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -264,6 +265,11 @@ angular.module('superdesk.core.menu', [
                     }
 
                     scope.feedback_url = appConfig.feedback_url;
+                    scope.mobilePairingEnabled = appConfig.mobile_pairing === true;
+
+                    scope.connectMobileApp = function() {
+                        showMobilePairingModal();
+                    };
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
                         .then(filterSettingsIfEmpty)

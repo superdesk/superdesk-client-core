@@ -3784,6 +3784,9 @@ declare module 'superdesk-api' {
 
         allow_updating_scheduled_items: boolean;
 
+        /** allow signing in to the Superdesk Reporter mobile app by scanning a QR code */
+        mobile_pairing?: boolean;
+
         corrections_workflow: boolean;
 
         default_timezone: string;
