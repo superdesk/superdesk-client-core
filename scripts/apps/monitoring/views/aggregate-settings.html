@@ -117,9 +117,9 @@
         <div class="content">
             <p class="legend" translate>Reorder stages and saved searches for monitoring view</p>
             <p translate>You are changing you personal preferences. If you would like to set the default order for the desk, you can do so from the settings page.</p>
-            <ul class="groups draggable-list" sd-sort-groups>
+            <ul class="groups draggable-list" sd-sort-groups data-test-id="reorder-sections">
                 <li class="sort-item draggable-list__item draggable-list__item--small" ng-class="{'active': item.order < columnsLimit}"
-                 ng-repeat="item in getValues() track by item.order">
+                 ng-repeat="item in getValues() track by item.order" data-test-id="reorder-section">
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{labelForStage(stageLookup[item._id])}}</span>
                     </div>
@@ -139,8 +139,8 @@
          data-hide="shouldHideStep('maxitems')">
         <div class="content">
             <div class="legend" translate>Set maximum items per stages and saved searches for view</div>
-            <div class="groups">
-                <div ng-repeat="max in getValues()" class="desk desk--item-count" >
+            <div class="groups" data-test-id="items-count-sections">
+                <div ng-repeat="max in getValues()" class="desk desk--item-count" data-test-id="items-count-section">
                     <div class="desk-title" ng-if="max.type === 'stage'">
                         {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{labelForStage(stageLookup[max._id])}}</span>
                     </div>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="desk-title" ng-if="max.type === 'personal'" translate>Personal</div>
                     <div class="box-items-count sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed">
-                        <input class="sd-line-input__input" type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" required>
+                        <input class="sd-line-input__input" type="number" id="maxItems" ng-model="max.max_items" min="1" max="25" data-test-id="max-items-input" required>
                     </div>
                 </div>
             </div>
