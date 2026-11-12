@@ -180,6 +180,47 @@ test('Switching between desks', {
     await expect(page.locator(s('monitoring-view', 'article-item=Story 4'))).not.toBeVisible();
 });
 
+test('content expiry can not exceed 99999 days on a desk or a stage', async ({page}) => {
+    await restoreDatabaseSnapshot();
+    await page.goto('/#/settings/desks');
+
+    const deskRow = page.locator(s('desk--Education'));
+
+    await deskRow.locator(s('desk-actions')).click();
+    await deskRow.locator(s('desk-actions--options')).getByRole('button', {name: 'Edit'}).click();
+
+    const modal = page.locator(s('desk-config-modal'));
+    const deskExpiry = modal.locator('[sd-content-expiry][data-item="desk.edit"]');
+    const deskSave = modal.locator(s('save-and-continue')).first();
+
+    await deskExpiry.locator(s('content-expiry--days')).fill('100000');
+    await expect(deskExpiry.locator(s('content-expiry--max-days-error'))).toBeVisible();
+    await expect(deskExpiry.locator(s('content-expiry--default-label'))).not.toBeVisible();
+    await expect(deskSave).toBeDisabled();
+
+    await deskExpiry.locator(s('content-expiry--days')).fill('99999');
+    await expect(deskExpiry.locator(s('content-expiry--max-days-error'))).not.toBeVisible();
+    await expect(deskSave).toBeEnabled();
+    await deskSave.click();
+
+    // The wizard only moves on to Stages once the save succeeds.
+    const stageRow = modal.locator(s('stage--Working Stage'));
+
+    await expect(stageRow).toBeVisible();
+    await stageRow.click();
+    await stageRow.locator(s('stage-actions--edit')).click();
+
+    const stageExpiry = modal.locator('[sd-content-expiry][data-item="editStage"]');
+
+    await stageExpiry.locator(s('content-expiry--days')).fill('100000');
+    await expect(stageExpiry.locator(s('content-expiry--max-days-error'))).toBeVisible();
+    await expect(modal.locator(s('save-edited-stage'))).toBeDisabled();
+
+    await stageExpiry.locator(s('content-expiry--days')).fill('99999');
+    await expect(stageExpiry.locator(s('content-expiry--max-days-error'))).not.toBeVisible();
+    await expect(modal.locator(s('save-edited-stage'))).toBeEnabled();
+});
+
 // The remaining scenarios use the `legacy` snapshot (which has `Politic Desk`,
 // the `testing` content template / profile, and the `populate_abstract` /
 // `Validate for Publish` macros). The Playwright storageState targets the
