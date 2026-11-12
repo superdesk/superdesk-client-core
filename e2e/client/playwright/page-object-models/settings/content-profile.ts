@@ -50,6 +50,45 @@ export class ContentProfileSettings {
         await expect(this.page.locator(s('content-profile-edit-view'))).not.toBeVisible();
     }
 
+    /**
+     * Adds an existing custom text field to a content profile and sets its
+     * character-length limits (Minimum / Maximum length). getByTestId-based
+     * (current convention), unlike the sibling s()-based helpers above.
+     */
+    async addTextFieldWithLengthLimits(options: {
+        profileName: string;
+        tabName: string;
+        fieldName: string;
+        minLength: number;
+        maxLength: number;
+    }): Promise<void> {
+        const {page} = this;
+        const card = page.getByTestId('content-profile')
+            .and(page.locator(`[data-test-value="${options.profileName}"]`));
+
+        await page.goto('/#/settings/content-profiles');
+        await card.getByTestId('content-profile-actions').click();
+        await page.getByTestId('content-profile-actions--options').getByRole('button', {name: 'Edit'}).click();
+
+        const editModal = page.getByTestId('content-profile-editing-modal');
+
+        await editModal.getByTestId('content-profile-tabs')
+            .getByRole('tab', {name: `${options.tabName} fields`}).click();
+        await editModal.getByRole('button', {name: 'Add new field'}).first().click();
+        await page.getByTestId('tree-menu-popover')
+            .getByRole('treeitem', {name: `${options.fieldName} (text)`, exact: true}).click();
+
+        const fieldEdit = page.getByTestId('item-view-edit');
+
+        await fieldEdit.getByTestId('gform-input--minlength').fill(String(options.minLength));
+        await fieldEdit.getByTestId('gform-input--maxlength').fill(String(options.maxLength));
+        await fieldEdit.getByTestId('gform-input--sdWidth').selectOption('full');
+        await fieldEdit.getByRole('button', {name: 'apply'}).click();
+
+        await editModal.getByRole('button', {name: 'Save'}).click();
+        await expect(editModal).not.toBeVisible();
+    }
+
     async addFieldsToContentProfile(
         contentProfile: string,
         fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
