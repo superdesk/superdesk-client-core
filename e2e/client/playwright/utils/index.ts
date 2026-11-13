@@ -58,8 +58,16 @@ export async function login(page: Page): Promise<void> {
  *
  * Only the users documented in `e2e/WRITING_TESTS.md` have a known password;
  * the snapshot stores bcrypt hashes and there is no API to set one.
+ *
+ * `landsOn` is the test id of the landing page. Users without the `dashboard`
+ * privilege never reach the default `dashboard` and must name what they land on.
  */
-export async function loginAs(page: Page, username: string, password: string): Promise<void> {
+export async function loginAs(
+    page: Page,
+    username: string,
+    password: string,
+    options?: {landsOn?: string},
+): Promise<void> {
     await page.goto('/');
 
     const loginPage = page.getByTestId('login-page');
@@ -68,7 +76,7 @@ export async function loginAs(page: Page, username: string, password: string): P
     await loginPage.getByTestId('password').fill(password);
     await loginPage.getByTestId('submit').click();
 
-    await expect(page.getByTestId('dashboard')).toBeVisible();
+    await expect(page.getByTestId(options?.landsOn ?? 'dashboard')).toBeVisible();
 }
 
 /**
