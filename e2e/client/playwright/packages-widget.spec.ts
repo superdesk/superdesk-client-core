@@ -4,16 +4,12 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Packages info" (Authoring widgets, 1310294130).
+ * QA case "Packages info" (1310294130): the Packages tab names the package the open article
+ * belongs to. The second test is a negative variant the case does not describe, so it has no
+ * case annotation.
  *
- * The case documents a single expected result: with an article open for editing, the Packages
- * tab names the package that article belongs to. The first test asserts exactly that, so it
- * covers the case in full; the second is a negative variant the case does not describe and
- * therefore carries no case annotation of its own.
- *
- * The case illustrates it with a package headlined "GET YOUR PACKAGE HERE"; the `main` snapshot
- * carries the same shape under different names ("Story 3" is referenced by the composite item
- * "Package Highlight 1"), and the fixture names are what the assertions use.
+ * The case uses a package headlined "GET YOUR PACKAGE HERE"; the `main` snapshot has the same
+ * shape under other names ("Story 3" is in "Package Highlight 1").
  */
 
 const ARTICLE_IN_PACKAGE = 'Story 3';
@@ -62,13 +58,11 @@ test.describe('packages widget', () => {
 
         const widget = await openPackagesWidget(page, ARTICLE_WITHOUT_PACKAGE);
 
-        // The widget body is the anchor for the empty assertion below: without it, "no entries"
-        // would also be true of a panel that never rendered.
+        // Visible first, so "no entries" is not also true of a panel that never rendered.
         await expect(widget).toBeVisible();
 
-        // Nothing can arrive late here. PackagesCtrl only queries the search endpoint when the
-        // article carries `linked_in_packages` (scripts/apps/authoring/packages/packages.ts), and
-        // this one does not, so the list stays empty for as long as the widget is open.
+        // Nothing can arrive late: PackagesCtrl only queries when the article has
+        // `linked_in_packages` (scripts/apps/authoring/packages/packages.ts).
         await expect(widget.getByTestId('packages-list-item')).toHaveCount(0);
     });
 });
