@@ -93,10 +93,6 @@ export class Authoring {
         return panel;
     }
 
-    /**
-     * Opens the send/publish pane and returns it. Which tabs it offers depends on
-     * the article, so the caller decides what to assert or click.
-     */
     async openSendPublishPane(): Promise<Locator> {
         const {page} = this;
 

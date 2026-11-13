@@ -4,41 +4,21 @@ import {Authoring} from './page-object-models/authoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Info button" (Authoring widgets, Confluence 1310294120).
- *
- * The Info side widget of an article: the Not For Publication and Legal flags,
- * the editable Usage terms / Language / Unique name fields, and the read-only
- * Pubstatus, State and GUID lines.
- *
- * Documented expected results that are NOT covered here, each with its blocker:
- *
- * - Keywords. The widget renders keywords read-only (and under a "Word Count"
- *   label, which is a product-side labelling bug), there is no keywords input in
- *   it, and no article in the `main` snapshot carries keywords.
- * - Expiry. Only the spiked articles in the `main` snapshot carry an `expiry`,
- *   and no desk in it has content auto-expiry configured, so the Expiry line
- *   never renders for an editable article.
- * - Target Subscribers / Target types. Not part of the Info widget in the
- *   current UI; the targeting controls live in the publish pane and in the
- *   template editor.
- *
- * The QA page contradicts itself on Not For Publication: the field description
- * says a publish attempt fails while the flag is on, a note at the end says the
- * flag only tags the item. The client implements the first one (the Publish tab
- * is not offered for a flagged item, see sdApi.article.canPublish), and that is
- * what is asserted below.
+ * QA case "Info button" (Confluence 1310294120). Not covered:
+ * - Keywords: shown read-only (under a "Word Count" label, a product bug) and no snapshot article has any.
+ * - Expiry: no desk in the `main` snapshot has auto-expiry, so the line never renders for an editable article.
+ * - Target Subscribers / Target types: not in the Info widget in the current UI.
+ * The QA page contradicts itself on Not For Publication (publish fails vs. only tags the item). The client
+ * hides the Publish tab for a flagged item (sdApi.article.canPublish); that is what is asserted.
  */
-// Both tests open the article twice and the first one also waits for the edited
-// unique name to become searchable, which does not fit the 30s default.
+// Two article opens plus waiting for the unique name to be searchable exceed the 30s default.
 test.setTimeout(90000);
 
 test.describe('Info widget in authoring', () => {
     const ARTICLE = 'test sports story';
     const WORKING_STAGE = 'Sports / Working Stage';
 
-    // Lower-case single token so the Advanced Search `term` filter on
-    // `unique_name` matches regardless of whether the field is mapped as a
-    // keyword or as an analysed string.
+    // Lower-case single token so the `term` filter on `unique_name` matches whether mapped as keyword or analysed.
     const UNIQUE_NAME = 'infowidgetstory';
     const USAGE_TERMS = 'internal briefing only';
 
@@ -60,8 +40,7 @@ test.describe('Info widget in authoring', () => {
         return authoring.openWidget('Info');
     }
 
-    // The panel toggle, the parameters tab and the submit button have no test
-    // ids, so they are located the way `search.spec.ts` does it.
+    // No test ids on the panel toggle, parameters tab or submit button; located as in `search.spec.ts`.
     async function searchByUniqueName(page: Page, uniqueName: string): Promise<void> {
         await page.goto('/#/search');
 
@@ -74,9 +53,7 @@ test.describe('Info widget in authoring', () => {
         await page.locator('#parameters-tab').click();
         await page.locator('#search-storyname').fill(uniqueName);
 
-        // The just-saved unique name has to be indexed before the term filter can
-        // match it, and there is no client-side signal for that, so re-submit the
-        // search until the result shows up.
+        // No client-side signal for the new unique name being indexed, so re-submit until it matches.
         await expect(async () => {
             await page.locator('#advanced_search_filters button.search:visible').first().click();
             await expect(page.getByTestId('article-item')).toHaveCount(1);
@@ -95,15 +72,11 @@ test.describe('Info widget in authoring', () => {
         const authoring = new Authoring(page);
         const infoWidget = await openArticleInfoWidget(page);
 
-        // The GUID is documented as not editable.
         await expect(infoWidget.getByTestId('guid')).toHaveText(/^urn:newsml:/);
         await expect(
             infoWidget.getByTestId('guid').locator('input, select, textarea, [contenteditable="true"]'),
         ).toHaveCount(0);
-        // The documented values are "usable" and "unusable", so a substring match
-        // on "usable" would accept both. The test id sits on the whole list item,
-        // whose text is the label glued to the value ("Pubstatususable"), hence
-        // the label in the pattern.
+        // "unusable" contains "usable", so match the whole text, which is the label glued to the value.
         await expect(infoWidget.getByTestId('pubstatus')).toHaveText(/^Pubstatus\s*usable$/);
         await expect(infoWidget.getByTestId('state')).toContainText(/in progress/i);
 
@@ -139,7 +112,7 @@ test.describe('Info widget in authoring', () => {
         const notForPublication = infoWidget.getByTestId('not-for-publication');
         const legal = infoWidget.getByTestId('legal');
 
-        // sd-switch renders a span that carries its on/off state as a class.
+        // sd-switch exposes its on/off state as a class.
         await expect(notForPublication).not.toHaveClass(/checked/);
         await expect(legal).not.toHaveClass(/checked/);
 
