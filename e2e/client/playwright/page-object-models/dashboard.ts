@@ -1,14 +1,9 @@
 import {Locator, Page, Response, expect} from '@playwright/test';
 
-/**
- * The dashboard widget grid is driven by gridster.js. A widget's placement and
- * size are the `data-col` / `data-row` / `data-sizex` / `data-sizey` attributes
- * gridster writes on the grid item, not inline styles. Assert on the
- * attributes: they are the state the dashboard persists.
- */
+// Placement and size live in gridster's `data-col` / `data-row` / `data-sizex` / `data-sizey`
+// attributes, not inline styles.
 export class Dashboard {
-    // One grid step in pixels: gridster's widget_base_dimensions [320, 250] plus
-    // a [20, 20] margin on each side (scripts/apps/dashboard/grid/grid.ts).
+    // Grid step in px: widget_base_dimensions [320, 250] plus a [20, 20] margin (dashboard/grid/grid.ts).
     static readonly COLUMN_STEP = 360;
     static readonly ROW_STEP = 290;
 
@@ -25,18 +20,10 @@ export class Dashboard {
             .and(this.page.locator(`[data-test-value="${widgetId}"]`));
     }
 
-    /**
-     * Adding a widget and accepting a rearrange both persist the dashboard with
-     * a background `PATCH /workspaces/<id>` fired after the click. Every action
-     * that triggers one has to wait for the response, otherwise a following
-     * reload aborts the request and the change silently reverts, and a second
-     * PATCH sent while the first is in flight carries a stale `If-Match` etag
-     * and is rejected with 412.
-     *
-     * The predicate matches on URL and method only: filtering on status would
-     * leave a failed save unmatched and hang until the timeout. The status is
-     * checked in `expectLayoutPersisted`.
-     */
+    // Adding a widget and accepting a rearrange save via a background `PATCH /workspaces/<id>`.
+    // Wait for it: a reload aborts it and the change silently reverts, and a second PATCH
+    // while the first is in flight carries a stale etag and gets 412. Status is not filtered
+    // here so a failed save fails fast in `expectLayoutPersisted` instead of timing out.
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
             (response) => /\/workspaces\/[^/]+$/.test(response.url())
@@ -78,12 +65,9 @@ export class Dashboard {
         await this.expectLayoutPersisted(layoutPersisted);
     }
 
-    /**
-     * Drags a widget by whole grid steps. The drop target is an empty grid cell,
-     * which `locator.dragTo()` has no element to aim at, so the mouse is driven
-     * by hand. The first mousemove past gridster's drag threshold only starts
-     * the drag; the drop cell is recomputed on the moves after it, hence `steps`.
-     */
+    // The drop target is an empty cell, so `dragTo()` has nothing to aim at. The first move
+    // past gridster's threshold only starts the drag; the drop cell updates on later moves,
+    // hence `steps`.
     async dragWidget(widgetId: string, steps: {columns: number; rows: number}): Promise<void> {
         const widget = this.getWidget(widgetId);
         const box = await widget.boundingBox();
@@ -92,9 +76,7 @@ export class Dashboard {
             throw new Error(`widget "${widgetId}" is not rendered`);
         }
 
-        // Grab the widget header: the remove and resize controls sit on the
-        // edges and corners, and pressing one would fire its click handler
-        // instead of moving the widget.
+        // Grab the header: remove and resize controls sit on the edges and corners.
         const fromX = box.x + box.width / 2;
         const fromY = box.y + 30;
 
