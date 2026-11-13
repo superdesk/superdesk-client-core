@@ -148,14 +148,7 @@ export class Monitoring {
         await this.page.getByTestId('content-create-dropdown').getByTestId('default-desk-template').click();
     }
 
-    /**
-     * Creates an article with the Ctrl+M shortcut and waits for it to open for editing.
-     *
-     * The binding is a window-level keydown listener registered once at startup
-     * (`registerGlobalKeybindings` in core/keyboard/keyboard.ts). It builds the item
-     * from the active desk's default content template and only acts while the route
-     * is under `workspace` or `search`, so the caller must already be on one of them.
-     */
+    // The shortcut only acts while the route is under `workspace` or `search`.
     async createArticleWithKeyboardShortcut(): Promise<void> {
         await this.page.keyboard.press('Control+m');
 

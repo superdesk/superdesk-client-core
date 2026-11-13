@@ -7,16 +7,10 @@ import {setEditor3FieldValue} from './utils/editor3';
 /**
  * QA case "Create new article with a keyboard shortcut" (1310851155).
  *
- * Ctrl+M on the monitoring view creates an article from the active desk's default
- * content template and opens it for editing. The case is split by what happens to
- * that article: it is either thrown away (and then must exist nowhere) or kept.
- *
- * The shortcut persists the article to `archive` before anything is typed into it,
- * at version 0, and the typing that follows only reaches `archive_autosave`. Every
- * monitoring and search query filters version-0 drafts out, so the article is
- * missing from all lists whether or not the discard removed it. "Not created" is
- * therefore checked against the `archive` resource, which is the only place a
- * surviving stub would show.
+ * The shortcut persists the article to `archive` at version 0 before anything is typed,
+ * and typing only reaches `archive_autosave`. Every monitoring and search query filters
+ * version-0 drafts out, so "not created" is checked against the `archive` resource,
+ * the only place a surviving stub would show.
  */
 
 interface IArticleFields {
@@ -42,14 +36,12 @@ const SAVED: IArticleFields = {
 
 const UPDATED_ABSTRACT = 'saved shortcut abstract, edited';
 
-/** Main-snapshot article of the Sports desk, used as the "list has loaded" anchor. */
+// Snapshot article of the Sports desk, the "list has loaded" anchor.
 const ANCHOR_ARTICLE = 'test sports story';
 
-/** Matches SAVED.headline, and snapshot articles besides, so the filtered list is never empty. */
 const SEARCH_TERM = 'story';
 
-// The label is the item's headline (`getArticleLabel` in core/utils), exposed as the
-// `data-test-value` attribute, so `filter({hasText})` cannot match it.
+// The label is exposed as `data-test-value` only, so `filter({hasText})` cannot match it.
 function withLabel(items: Locator, label: string): Locator {
     return items.and(items.page().locator(`[data-test-value="${label}"]`));
 }
@@ -58,10 +50,7 @@ function monitoringItems(page: Page): Locator {
     return page.getByTestId('monitoring-view').getByTestId('article-item');
 }
 
-/**
- * Opens the Sports monitoring view and waits for its list to carry ANCHOR_ARTICLE,
- * so that a later absence assertion cannot pass against a list that never loaded.
- */
+// Waits for ANCHOR_ARTICLE so a later absence assertion cannot pass on a list that never loaded.
 async function openSportsMonitoring(page: Page, monitoring: Monitoring): Promise<void> {
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
@@ -69,7 +58,6 @@ async function openSportsMonitoring(page: Page, monitoring: Monitoring): Promise
     await expect(withLabel(monitoringItems(page), ANCHOR_ARTICLE)).toBeVisible();
 }
 
-// Waits for the unfiltered list, like `openSportsMonitoring`.
 async function openGlobalSearch(page: Page): Promise<Locator> {
     await page.goto('/#/search');
 
@@ -84,7 +72,6 @@ function sluglineField(page: Page): Locator {
     return page.getByTestId('authoring').getByTestId('field-slugline');
 }
 
-// Read from the `item` URL parameter that opening an article writes.
 function openArticleId(page: Page): string {
     const match = page.url().match(/[?&]item=([^&]+)/);
 
@@ -95,11 +82,6 @@ function openArticleId(page: Page): string {
     return decodeURIComponent(match[1]);
 }
 
-/**
- * Response status of `<resource>/<articleId>`: 200 means the record exists, 404 that it is
- * gone. The session token in localStorage is already in the form the Authorization header
- * expects.
- */
 async function recordStatus(page: Page, resource: string, articleId: string): Promise<number> {
     const token = await page.evaluate(() => window.localStorage.getItem('sess:token'));
 
@@ -150,7 +132,6 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         // Without this, the absence check after Ignore would prove nothing.
         expect(await recordStatus(page, 'archive', articleId)).toBe(200);
 
-        // an article straight from the template has no edits of its own to persist
         await expect(topbar.getByTestId('save')).toBeDisabled();
 
         await fillArticleFields(authoring, page, DISCARDED);
@@ -176,12 +157,11 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await expect(page.getByTestId('authoring')).toBeHidden();
         await expect(withLabel(monitoringItems(page), ANCHOR_ARTICLE)).toBeVisible();
 
-        // Polled because the delete is still in flight while the view closes.
+        // The delete is still in flight while the view closes.
         await expect.poll(() => recordStatus(page, 'archive', articleId)).toBe(404);
     });
 
     test('a saved article is listed, searchable, and reopens with its data', async ({page}) => {
-        // the global-search retry below can outlast the 30s default on its own
         test.setTimeout(90000);
 
         const monitoring = new Monitoring(page);
@@ -208,17 +188,11 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
 
         await setEditor3FieldValue(authoring.field('authoring-field=abstract'), UPDATED_ABSTRACT);
 
-        // Save re-enabling is the signal that the edit reached the article model,
-        // which is what makes the "Save changes?" prompt appear on close
+        // Save re-enabling means the edit reached the article model, so closing prompts.
         await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
 
-        /*
-         * The edit also autosaves on a debounce. Waiting for that to fire before
-         * closing leaves nothing pending that could write a fresh autosave record
-         * after the prompt's Save has cleared the old one; such a record would make
-         * the article dirty the moment it is reopened, and the clean close at the
-         * end of this test is exactly what the case expects there.
-         */
+        // Wait out the debounced autosave: a late one would write a new autosave record
+        // after the prompt's Save cleared the old one, and the reopened article would be dirty.
         await abstractAutosaved;
 
         await authoring.closeAndSave();
@@ -232,12 +206,8 @@ test.describe('creating a new article with the Ctrl+M shortcut', {
         await page.locator('#search-input').fill(SEARCH_TERM);
         await page.locator('#search-button').click();
 
-        /*
-         * The article reaches the search index asynchronously and the results list
-         * refetches only when the search parameters change, so clicking the button
-         * again with the same query would do nothing. Reloading re-runs the query
-         * that is now in the URL, which is what lets the retry see the new item.
-         */
+        // The index updates asynchronously and the list refetches only when the search
+        // parameters change, so re-clicking does nothing. Reload re-runs the URL's query.
         await expect(async () => {
             await page.reload();
             await expect(withLabel(results, SAVED.headline)).toBeVisible({timeout: 5000});
