@@ -4,25 +4,11 @@ import {restoreDatabaseSnapshot} from './utils';
 import {getStorageState} from './utils/storage-state';
 
 /**
- * QA case "Translations" (1344444573). Its only linked test case is "Translate item" (5707530482,
- * space SDFIL), which carries the steps and the expected results.
- *
- * Not covered, with the blocker for each:
- * - Steps 1-2 of the case: build an Edition package on a Creation desk, send it to a Circulation
- *   desk, publish it, and translate from that desk's Output. Blocker: Creation/Circulation desks
- *   and Editions are Superdesk Fidelity configuration that the e2e instance does not have, which
- *   is also why the parent page says translation workflows are customer specific. The translate
- *   action itself is the same one, reached from the same three-dot menu.
- * - "duplicated in the same desk and stage as the original" as a general claim. Blocker: the
- *   product never reads the original's stage. The client posts the *current* desk (`translate` in
- *   scripts/api/article.ts) and the server files the copy in that desk's `working_stage`
- *   (apps/duplication/archive_translate.py in superdesk-core). Original and copy share a stage
- *   here only because "test sports story" already sits in the Sports working stage.
- *
- * The case words the second expected result as a list label ("as an original English item is
- * marked by EN"). The default list config renders no language field (`DEFAULT_LIST_CONFIG` in
- * scripts/apps/search/constants.ts), so the language code is asserted where this product does
- * show it without customer config: the translations side widget.
+ * QA case "Translations" (1344444573), test case "Translate item" (5707530482).
+ * Not covered: steps 1-2 (Edition package, Creation/Circulation desks) are Superdesk Fidelity config the e2e
+ * instance lacks, so translation starts from the Sports desk. The copy goes to the current desk's working stage
+ * (`translate` in scripts/api/article.ts), never the original's stage. The language is asserted in the
+ * translations widget because the default list config renders no language field.
  */
 
 const ARTICLE = 'test sports story';
@@ -44,8 +30,7 @@ test.describe('translate article', () => {
         await page.goto('/#/workspace/monitoring');
         await monitoring.selectDeskOrWorkspace('Sports');
 
-        // the copy keeps the original's headline, so counting this locator is what shows the
-        // translation landed in the same desk and stage rather than somewhere else
+        // the copy keeps the original's headline, so the count shows where it landed
         const copiesInWorkingStage = page
             .getByTestId('monitoring-group')
             .and(page.locator('[data-test-value="Sports / Working Stage"]'))
@@ -63,8 +48,7 @@ test.describe('translate article', () => {
 
         expect(response.status()).toBe(201);
 
-        // TranslationService.set opens the new item in authoring once the POST resolves, so the
-        // header below belongs to the translation, not to the article the menu was opened on
+        // TranslationService.set opens the new item once the POST resolves, so this header is the copy's
         await expect(page.getByTestId('authoring-header-translated-from'))
             .toHaveAttribute('data-test-value', 'en');
 
