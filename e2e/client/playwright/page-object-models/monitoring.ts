@@ -48,10 +48,6 @@ export class Monitoring {
         }
     }
 
-    /**
-     * Opens an article's 3-dot menu and returns the menu, for specs that assert on
-     * which actions the menu offers rather than running one of them.
-     */
     async openActionsMenu(item: Locator): Promise<Locator> {
         await item.hover();
         await item.getByTestId('context-menu-button').click();
@@ -63,10 +59,7 @@ export class Monitoring {
         return menu;
     }
 
-    /**
-     * Closes an open 3-dot menu. MenuItems handles Escape on the menu element itself,
-     * which it focuses on mount, so the key has to be sent to the menu and not to the page.
-     */
+    // MenuItems handles Escape on the menu element (focused on mount), not on the page.
     async closeActionsMenu(): Promise<void> {
         const menu = this.page.getByTestId('context-menu');
 

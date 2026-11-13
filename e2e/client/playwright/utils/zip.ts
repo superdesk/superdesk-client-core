@@ -10,14 +10,9 @@ const COMPRESSION_STORED = 0;
 const COMPRESSION_DEFLATED = 8;
 
 /**
- * Reads a ZIP archive into a `filename -> UTF-8 contents` map.
- *
- * Node ships no ZIP reader and `e2e/client` carries no ZIP dependency, so the
- * archive is walked by hand. Only the two compression methods a Python
- * `zipfile.ZipFile` produces are handled: stored and deflate.
- *
- * Intended for small text payloads (an exported article); every entry is read
- * into memory and decoded as UTF-8.
+ * Reads a ZIP into a `filename -> UTF-8 contents` map. Hand-rolled because `e2e/client`
+ * has no ZIP dependency; handles only stored and deflate, which is what Python's
+ * `zipfile` produces. For small text payloads only.
  */
 export function readZipEntries(archive: Buffer): Map<string, string> {
     const endOfCentralDirectory = findEndOfCentralDirectory(archive);
@@ -48,11 +43,7 @@ export function readZipEntries(archive: Buffer): Map<string, string> {
     return entries;
 }
 
-/**
- * The end-of-central-directory record sits at the end of the archive, but an
- * archive comment can follow it, so its offset has to be scanned for rather
- * than computed from the length.
- */
+// An archive comment can follow this record, so scan for it instead of using the length.
 function findEndOfCentralDirectory(archive: Buffer): number {
     for (let offset = archive.length - END_OF_CENTRAL_DIRECTORY_LENGTH; offset >= 0; offset--) {
         if (archive.readUInt32LE(offset) === END_OF_CENTRAL_DIRECTORY_SIGNATURE) {
@@ -73,9 +64,7 @@ function readEntryContents(
         throw new Error('corrupt ZIP: entry carries no local file header signature');
     }
 
-    // The local header repeats the name and extra fields with lengths of their
-    // own, which are allowed to differ from the central directory's, so the
-    // data offset must be derived from the local header alone.
+    // Local name/extra lengths may differ from the central directory's; use these.
     const nameLength = archive.readUInt16LE(localHeaderOffset + 26);
     const extraLength = archive.readUInt16LE(localHeaderOffset + 28);
     const dataStart = localHeaderOffset + LOCAL_FILE_HEADER_LENGTH + nameLength + extraLength;

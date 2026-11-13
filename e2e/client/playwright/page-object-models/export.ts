@@ -1,9 +1,5 @@
 import {Download, Locator, Page, Response, expect} from '@playwright/test';
 
-/**
- * The Export dialog reached from an article's 3-dot menu
- * (`scripts/apps/archive/views/export.html`).
- */
 export class ExportDialog {
     private page: Page;
 
@@ -41,16 +37,10 @@ export class ExportDialog {
     }
 
     /**
-     * Clicks Export and returns both the export request's response and the archive the
-     * browser downloads.
-     *
-     * The download does not land on this page. The directive answers the export response
-     * by pointing a hidden anchor at the archive URL and clicking it, and that URL is on
-     * the API origin rather than the client's, so the global handler in
-     * `scripts/core/global-fixes/open-external-links-in-new-tab.ts` cancels the click and
-     * reopens the URL in a new tab, where the download happens instead. The popup
-     * navigates the moment it is created, so its download listener has to be attached
-     * before the Export click rather than after the popup event arrives.
+     * The download happens in a new tab, not on this page: the archive URL is on the API
+     * origin, so `scripts/core/global-fixes/open-external-links-in-new-tab.ts` reopens it
+     * there. The popup navigates as soon as it exists, so the download listener must be
+     * attached before the Export click.
      */
     async submit(): Promise<{response: Response; download: Download}> {
         const downloadFromPopup = new Promise<Download>((resolve) => {
