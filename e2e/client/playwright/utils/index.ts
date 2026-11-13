@@ -56,15 +56,11 @@ export async function login(page: Page): Promise<void> {
  * Logs a named user in through the login form, for specs that need a second
  * actor alongside the committed admin `storageState`.
  *
- * `login(page)` above fills `admin`/`admin` unconditionally, so it cannot be
- * reused here. Only the users documented in `e2e/WRITING_TESTS.md` have a known
- * password; the snapshot stores bcrypt hashes and there is no API to set one.
+ * Only the users documented in `e2e/WRITING_TESTS.md` have a known password;
+ * the snapshot stores bcrypt hashes and there is no API to set one.
  *
- * `landsOn` names the test id the landing page is recognised by. The default,
- * `dashboard`, is the container in scripts/apps/dashboard/views/workspace.html,
- * and the `/workspace` route it belongs to is declared with
- * `privileges: {dashboard: 1}`, so a user without that privilege never reaches it
- * and has to name what it does land on.
+ * `landsOn` is the test id of the landing page. Users without the `dashboard`
+ * privilege never reach the default `dashboard` and must name what they land on.
  */
 export async function loginAs(
     page: Page,

@@ -4,36 +4,18 @@ import {TemplateSettings} from './page-object-models/template-settings';
 import {loginAs, restoreDatabaseSnapshot} from './utils';
 
 /**
- * Personal (non-public) content templates: turning a public one personal, and what a
- * user without the `content_templates` privilege may do with templates.
+ * Case 1344443537 "Templates privilege" is a requirements page, split over the two
+ * `partial` tests. Not covered:
+ * - Hiding the "desk template" tick box when saving an article as a template: no `main`
+ *   snapshot user can open an editor without also holding `content_templates`
+ *   (`frodobaggins` has no privileges, so `POST /api/archive` is 403). Needs a user
+ *   with `archive` and without `content_templates`.
+ * - "Manage other users private templates": states no actor or expected result.
  *
- * Case 1311834132 "Change public template to personal template" is covered end to end
- * by the first test, including the Cancel step, so it is annotated `complete`.
- *
- * Case 1344443537 "Templates privilege" is a requirements page rather than a step
- * list. Its bullets are split over the two remaining tests, each annotated `partial`.
- * Two of them are not covered:
- *
- * - "from story editing (both in Personal space and Monitoring views) using the
- *   'save as template' action.... Users without the 'Templates' privilege will not see
- *   the 'desk template' tick box". Blocker: no `main` snapshot user can put an article
- *   in the editor without also holding `content_templates`, and there is no article to
- *   save as a template without one. `frodobaggins` holds no privileges at all, so
- *   `POST /api/archive` answers 403 (`apps/archive/archive.py` declares
- *   `privileges = {"POST": "archive", ...}` on the archive resource) and no editor ever
- *   opens; `samgamgee`'s `Sub Editor` role grants `archive` but also
- *   `content_templates`, so it is not a user without the privilege. Covering this needs
- *   a snapshot user holding `archive` and not `content_templates`.
- * - "Manage other users private templates", the trailing line of the page. It states no
- *   actor, no entry point and no expected result, so there is nothing to assert.
- *
- * Wording note: the case calls the toggle "Make public checkbox"; the product renders
- * an `sd-switch` labelled "Make Public", which is what the assertions read.
+ * The case calls the toggle a "Make public checkbox"; the product renders an `sd-switch`.
  */
 
-// Every test here restores the database, and two of them additionally authenticate
-// through the login form, the first inside a second browser context. None of that fits
-// the 30s default.
+// Database restore plus login-form logins do not fit the 30s default.
 test.setTimeout(90000);
 
 const PUBLIC_TEMPLATE = 'story 2';
@@ -42,10 +24,7 @@ const PUBLIC_TEMPLATE = 'story 2';
 const ANCHOR_TEMPLATE = 'story';
 
 const SECOND_ACTOR = {username: 'samgamgee', password: 'samgamgee'};
-/**
- * Holds no privileges at all, so it lands on the app shell rather than the dashboard:
- * `/workspace` is declared with `privileges: {dashboard: 1}`.
- */
+// No privileges, so it lands on the app shell instead of the dashboard.
 const NO_PRIVILEGE_ACTOR = {username: 'frodobaggins', password: 'frodobaggins', landsOn: 'top-menu'};
 
 test('turning a public template personal keeps it listed, marks it grey and hides it from other users', {
@@ -86,11 +65,8 @@ test('turning a public template personal keeps it listed, marks it grey and hide
 
     await expect(ownerDropdown.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toBeVisible();
 
-    // A second session, because the personal template must be absent for everyone
-    // except the user who made it personal. Playwright copies the project's context
-    // options onto a `browser.newContext()` call only for keys the call does not
-    // mention at all, so naming `storageState` here (even as undefined) is what keeps
-    // this context out of the committed admin session.
+    // Naming `storageState` (even as undefined) keeps this context out of the committed
+    // admin session; Playwright only inherits project options for keys not mentioned.
     const secondContext = await browser.newContext({storageState: undefined});
 
     try {
@@ -104,7 +80,7 @@ test('turning a public template personal keeps it listed, marks it grey and hide
 
         const otherDropdown = await secondMonitoring.openMoreTemplates();
 
-        // The public template anchors the list as loaded before the absence is read.
+        // Anchor: proves the list loaded before asserting the absence.
         await expect(otherDropdown.getByRole('button', {name: ANCHOR_TEMPLATE, exact: true})).toBeVisible();
         await expect(otherDropdown.getByRole('button', {name: PUBLIC_TEMPLATE, exact: true})).toHaveCount(0);
     } finally {
@@ -113,9 +89,7 @@ test('turning a public template personal keeps it listed, marks it grey and hide
 });
 
 test.describe('without the content_templates privilege', () => {
-    // The test below drives `frodobaggins` through the login form, so the context must
-    // not start in the committed admin session. An explicitly empty state is used
-    // rather than `undefined`, which Playwright reads as "inherit the project value".
+    // Empty state, not `undefined`: `undefined` inherits the committed admin session.
     test.use({storageState: {cookies: [], origins: []}});
 
     test('settings lists and edits only the user\'s own personal templates', {
@@ -145,8 +119,7 @@ test.describe('without the content_templates privilege', () => {
 
         await expect(templates.getCardHeader('frodo personal')).toHaveClass(/card-box__header--dark/);
 
-        // The snapshot's other five templates are all public and owned by admin, so a
-        // list of exactly one is the whole "only their Personal templates" claim.
+        // The snapshot's other templates are all public and admin's.
         await expect(page.getByTestId('content-template')).toHaveCount(1);
 
         await templates.openEditor('frodo personal');
@@ -170,8 +143,6 @@ test('the content_templates privilege still allows both desk and personal templa
 
     await templates.startNewTemplate();
 
-    // Public is the default for a privileged user: `$scope.edit` seeds the new template
-    // with `is_public: true` and only forces it false when the privilege is missing.
     await templates.expectMakePublic(true);
 
     await templates.setName('admin desk template');
