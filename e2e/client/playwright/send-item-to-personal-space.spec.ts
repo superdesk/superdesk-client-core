@@ -5,25 +5,12 @@ import {restoreDatabaseSnapshot} from './utils';
 import {getStorageState} from './utils/storage-state';
 
 /**
- * QA case "Send item to Personal space" (Confluence 1344443788), whose expected results
- * come from the tickets it links: SDANSA-424, SDANSA-466 and SDESK-5609.
+ * QA case "Send item to Personal space" (Confluence 1344443788); expected results come from
+ * SDANSA-424, SDANSA-466 and SDESK-5609.
  *
- * Covered:
- *  - the feature is off unless `features.sendToPersonal` is configured (SDANSA-424);
- *  - "Personal space" is offered as a destination in the Send to panel opened from the
- *    monitoring context menu, from authoring and from a multi selection (SDANSA-424, SDANSA-466);
- *  - sending removes the item from the desk and leaves it available only in the personal
- *    space (SDANSA-424);
- *  - the shortcut action "Send to Personal Space" in the item context menu (SDANSA-424);
- *  - items already in the personal space offer neither the shortcut action nor the
- *    "Personal space" destination (SDESK-5609).
- *
- * Not covered:
- *  - the `send_to_personal` user privilege gate (SDANSA-424: "I expect to have a user privilege
- *    for Send items to personal space"). Missing fixture: the `main` snapshot ships no
- *    roles and its only usable login is the administrator, who implicitly holds every privilege,
- *    so there is no way to log in as a user that has the ordinary authoring privileges but not
- *    `send_to_personal`.
+ * Not covered: the `send_to_personal` privilege gate (SDANSA-424). The `main` snapshot has no
+ * roles and its only usable login is the administrator, who holds every privilege, so there is
+ * no user with ordinary authoring privileges but without `send_to_personal`.
  */
 
 const PERSONAL_SPACE = 'Personal space';
