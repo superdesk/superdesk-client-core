@@ -3,15 +3,8 @@ import {Monitoring} from './page-object-models/monitoring';
 import {OpenedArticles} from './page-object-models/opened-articles';
 import {restoreDatabaseSnapshot} from './utils';
 
-/**
- * QA case "Open items icon" (1308524865).
- *
- * The main snapshot already ships two articles locked by the admin, so they sit
- * in the opened-articles bar from the start. Neither has a headline, and the
- * dashboard cards are labelled by headline alone, so the spec picks
- * "test sports story" in the dashboard and uses one of the snapshot articles
- * only as the one the editor is switched away from.
- */
+// The main snapshot ships two admin-locked articles without headlines. Dashboard cards are
+// labelled by headline only, so one of them is used just to switch the editor away from.
 test.describe('open items icon', () => {
     const SELECTED_ARTICLE = 'test sports story';
     const OTHER_ARTICLE = 'Finances Story';
@@ -37,7 +30,6 @@ test.describe('open items icon', () => {
         await expect(slugline).toHaveValue(SELECTED_ARTICLE);
         await expect(openedArticles.getBarItems()).toHaveCount(TOTAL_OPEN_ARTICLES);
 
-        // Switch the editor away first so that picking from the dashboard has an observable effect.
         await openedArticles.getBarItem(OTHER_ARTICLE).click();
         await expect(slugline).toHaveValue(OTHER_ARTICLE);
 

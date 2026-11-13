@@ -1,9 +1,5 @@
 import {Locator, Page, expect} from '@playwright/test';
 
-/**
- * The bar listing the articles the current user has open, and the fullscreen
- * "Currently working on" view opened by its Open Items icon.
- */
 export class OpenedArticles {
     private page: Page;
 
@@ -23,18 +19,11 @@ export class OpenedArticles {
         return this.getBar().getByTestId('item');
     }
 
-    /**
-     * Bar entries are labelled with the article's headline, falling back to its
-     * slugline and then to "Untitled".
-     */
     getBarItem(label: string): Locator {
         return this.getBarItems().filter({hasText: label});
     }
 
-    /**
-     * sd-modal moves the dialog to <body>, so it is not a descendant of the
-     * workqueue bar; locate it from the page root.
-     */
+    // sd-modal moves the dialog to <body>, so locate it from the page root.
     getDashboard(): Locator {
         return this.page.getByTestId('opened-articles-dashboard');
     }
@@ -43,11 +32,7 @@ export class OpenedArticles {
         return this.getDashboard().getByTestId('item');
     }
 
-    /**
-     * Dashboard cards are labelled with the article's headline only, and show
-     * "Untitled" when there is none, so only articles that have a headline can
-     * be picked out this way.
-     */
+    // Cards show the headline only ("Untitled" when missing), so headline-less articles cannot be matched.
     getDashboardItem(headline: string): Locator {
         return this.getDashboardItems().filter({hasText: headline});
     }
