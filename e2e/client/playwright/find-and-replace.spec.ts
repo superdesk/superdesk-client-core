@@ -4,29 +4,17 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 import {setEditor3FieldValue} from './utils/editor3';
 
-/**
- * QA case "Find and replace" (Authoring widgets, 1310294123).
- *
- * Every documented expected result is covered. Case sensitivity and the
- * previous/next match controls are not part of the documented scenario and are
- * left out on purpose.
- *
- * Runs against authoring-angular, the default implementation, which is what the
- * case describes: it selects the first match as soon as a search term is typed,
- * so Replace acts on it right away.
- */
+// QA case "Find and replace" (1310294123). Case sensitivity and previous/next match are not in
+// the documented scenario and are left out. Runs on authoring-angular, which selects the first
+// match as soon as a term is typed, so Replace acts on it right away.
 test.describe('find and replace widget', () => {
     const WIDGET = 'Find and Replace';
     const ORIGINAL_BODY = 'one apple two apple three apple four';
     const AFTER_SINGLE_REPLACE = 'one orange two apple three apple four';
     const AFTER_REPLACE_ALL = 'one orange two orange three orange four';
 
-    /**
-     * Matches are marked with editor3's HIGHLIGHT / HIGHLIGHT_STRONG styles, which
-     * draft-js applies as an inline background colour on the leaf span. Those spans
-     * carry no id of their own, so the colour is the only DOM signal that a match was
-     * found; the opaque variant marks the currently selected match.
-     */
+    // Match spans have no id; the draft-js inline background (HIGHLIGHT / HIGHLIGHT_STRONG) is the
+    // only DOM signal. The opaque variant marks the selected match.
     const MATCH_BACKGROUND = 'rgba(255, 235, 59';
     const SELECTED_MATCH_BACKGROUND = 'rgba(255, 235, 59, 0.8)';
 
@@ -59,8 +47,7 @@ test.describe('find and replace widget', () => {
 
         await widget.getByTestId('find-replace-find').fill('apple');
 
-        // The Find field is debounced by 500ms in ng-model-options, so the highlights
-        // only appear once that has elapsed; the retrying count assertion absorbs it.
+        // Find is debounced by 500ms, so highlights appear late; the retrying count absorbs it.
         await expect(matches).toHaveCount(3);
         await expect(selectedMatch).toHaveCount(1);
         await expect(selectedMatch).toHaveText('apple');
