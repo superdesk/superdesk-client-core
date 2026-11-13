@@ -3,16 +3,10 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Related items" (Authoring widgets, 1310294133).
- *
- * The widget only ever searches on slugline: the keyword typed into its search box is matched
- * against `slugline` (exact phrase by default), so "same slugline or keywords" from the case
- * description is a single behaviour in the product, covered here as one search round trip.
- *
- * The `authoring-header` snapshot is used because the widget also filters on
- * `versioncreated >= today`, and that snapshot is the only one carrying an item recent enough to
- * survive it: "Story 3 sibling", dated 2099 and sharing the slugline "Story 3". Under the `main`
- * snapshot every item predates the current day, so any search returns nothing.
+ * QA case "Related items" (1310294133). The widget searches on slugline only, so "same slugline or keywords"
+ * is a single search.
+ * Uses `authoring-header`: the widget also filters on `versioncreated >= today` and only that snapshot has a recent
+ * item ("Story 3 sibling", 2099). Under `main` every search is empty.
  */
 
 const ARTICLE = 'Story 3';
@@ -29,8 +23,7 @@ async function openFromSportsWorkingStage(page: Page, label: string): Promise<vo
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // matched on data-test-value rather than hasText: the fixture holds items whose labels are
-    // prefixes of one another ("Story 3" / "Story 3 rewrite")
+    // data-test-value, not hasText: some labels are prefixes of others ("Story 3" / "Story 3 rewrite")
     await monitoring.executeActionOnMonitoringItem(
         page
             .getByTestId('monitoring-group')
@@ -52,8 +45,7 @@ test.describe('related items widget', () => {
         await restoreDatabaseSnapshot({snapshotName: 'authoring-header'});
         await openFromSportsWorkingStage(page, ARTICLE);
 
-        // the tab label flips to "Relate an item" once the widget has loaded and found no
-        // existing relations, so it can only be selected by its initial label
+        // the label flips to "Relate an item" once loaded with no relations, so select by the initial label
         await expect(relatedItemsTab(page)).toBeVisible();
         await relatedItemsTab(page).click();
 
@@ -93,8 +85,7 @@ test.describe('related items widget', () => {
         await restoreDatabaseSnapshot();
         await openFromSportsWorkingStage(page, 'Package Highlight 1');
 
-        // an unrelated tab of the same bar, to tell "no Related Items tab" apart from
-        // "the widget bar has not rendered yet"
+        // another tab of the bar, to tell "no Related Items tab" from "bar not rendered yet"
         await expect(
             page.getByTestId('authoring-widget').and(page.locator('[data-test-value="Versions/History"]')),
         ).toBeVisible();
