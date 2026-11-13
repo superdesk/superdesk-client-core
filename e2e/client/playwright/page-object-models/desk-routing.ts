@@ -2,16 +2,8 @@ import {Locator, Page, Response, expect} from '@playwright/test';
 import {Dashboard} from './dashboard';
 import {Monitoring} from './monitoring';
 
-/**
- * The "Desk Router" dashboard widget (`close-desk`) and the top-menu indicator
- * that mirrors it.
- *
- * Both read the current desk's `is_closed` / `closed_destination` fields.
- * Every change goes through `PATCH /api/closed_desks/<desk id>`
- * (scripts/apps/dashboard/closed-desk/index.ts), so the mutating methods here
- * wait for that request before returning: the widget re-renders off the
- * response body, and a following reload would otherwise abort the request.
- */
+// Every change goes through `PATCH /api/closed_desks/<desk id>`, so the mutating methods wait for it:
+// the widget re-renders off the response, and a following reload would abort the request.
 export class DeskRouting {
     private page: Page;
     private dashboard: Dashboard;
@@ -53,7 +45,6 @@ export class DeskRouting {
             .filter({hasText: deskName});
     }
 
-    /** The top-menu indicator, rendered next to the global menu on every route. */
     get info(): Locator {
         return this.page.getByTestId('desk-routing-info');
     }
@@ -66,25 +57,14 @@ export class DeskRouting {
         return this.info.getByTestId('desk-routing-info--routed-from');
     }
 
-    /**
-     * Asserts that neither direction is reported. The indicator is always in
-     * the DOM and only toggles its visibility, so it is checked for being
-     * present first: an unrendered indicator would satisfy `toBeHidden` too.
-     */
+    // The indicator is always in the DOM and only toggles visibility, so an unrendered one would pass `toBeHidden`.
     async expectNoRoutingIndicated(): Promise<void> {
         await expect(this.info).toBeAttached();
         await expect(this.info).toBeHidden();
     }
 
-    /**
-     * Switches desks and waits for the preference write that records the
-     * choice, so that a reload comes back on the same desk. One request covers
-     * it: `preferencesService` batches every update made in a digest into a
-     * single `PATCH /preferences/<session>`.
-     *
-     * `selectDeskOrWorkspace` does nothing when the desk is already selected,
-     * and then there is no write to wait for, hence the check first.
-     */
+    // Waits for the preferences write so a reload comes back on the same desk. Skipped when the desk is
+    // already selected, because `selectDeskOrWorkspace` then sends nothing.
     private async selectDesk(deskName: string): Promise<void> {
         const deskSelector = this.page.getByTestId('monitoring--selected-desk');
 
@@ -105,22 +85,14 @@ export class DeskRouting {
         ]);
     }
 
-    /**
-     * Opens the dashboard of `deskName` with the Desk Router widget on it. Each
-     * desk has a dashboard of its own, so the widget has to be added per desk.
-     *
-     * The reload is what makes the widget lookup below trustworthy: on a desk
-     * switch `DashboardController.setupWorkspace` drops the dashboard and
-     * rebuilds it in a later digest, so between the two the previous desk's
-     * widgets are still on screen and would be read as this desk's.
-     */
+    // The reload is needed because `DashboardController.setupWorkspace` rebuilds the dashboard on a desk
+    // switch, and until then the previous desk's widgets are still on screen.
     async openOn(deskName: string): Promise<void> {
         await this.page.goto('/#/workspace');
         await this.selectDesk(deskName);
         await this.page.reload();
 
         await expect(this.page.getByTestId('dashboard')).toBeVisible();
-        // The grid has to be there before the widget count below can mean anything.
         await expect(this.page.getByTestId('widget-grid')).toBeAttached();
 
         if (await this.dashboard.getWidget('close-desk').count() === 0) {

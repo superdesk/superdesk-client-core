@@ -14,25 +14,10 @@ export class Dashboard {
             .and(this.page.locator(`[data-test-value="${widgetId}"]`));
     }
 
-    /**
-     * Adding a widget persists the dashboard through a background write to
-     * `/workspaces` fired after the click. Every action that triggers one has to
-     * wait for the response, otherwise a following reload aborts the request and
-     * the change silently reverts, and a second write sent while the first is in
-     * flight carries a stale `If-Match` etag and is rejected with 412.
-     *
-     * A desk whose dashboard has never been saved has no workspace document
-     * yet (`WorkspaceService.getDeskWorkspace` hands back an unsaved
-     * `{desk, widgets: []}`), so the first write on it is a POST to the
-     * collection and every later one a PATCH on the document. Both have to be
-     * matched: narrowed to a PATCH on a document id, this never matches that
-     * first POST and the caller hangs until the `waitForResponse` timeout.
-     *
-     * The predicate matches on URL and method only. Filtering on the status
-     * here would leave a failed save unmatched, so the helper would hang until
-     * the `waitForResponse` timeout instead of reporting the status; the status
-     * is checked in `expectLayoutPersisted` once the response has arrived.
-     */
+    // Adding a widget saves the dashboard in the background, so wait for it: a reload would abort the
+    // write, and a second one sent meanwhile gets a 412 on the stale etag. A desk never saved before
+    // has no workspace document yet, so its first write is a POST and later ones are PATCHes.
+    // Matches URL and method only, so a failed save is reported by `expectLayoutPersisted` and not a timeout.
     private waitForLayoutPersisted(): Promise<Response> {
         return this.page.waitForResponse(
             (response) => /\/workspaces(\/[^/]+)?$/.test(response.url())
