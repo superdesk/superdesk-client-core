@@ -93,6 +93,26 @@ export class Authoring {
         return panel;
     }
 
+    async openSendPublishPane(): Promise<Locator> {
+        const {page} = this;
+
+        await page.getByTestId('authoring-topbar').getByTestId('open-send-publish-pane').click();
+
+        const panel = page.getByTestId('interactive-actions-panel');
+
+        await expect(panel).toBeVisible();
+
+        return panel;
+    }
+
+    async closeSendPublishPane(): Promise<void> {
+        const panel = this.page.getByTestId('interactive-actions-panel');
+
+        await panel.getByTestId('close').click();
+
+        await expect(panel).toBeHidden();
+    }
+
     /**
      * Closes an open side widget. The panel is an overlay above the article body, so
      * anything that has to reach a body field needs it closed first.
