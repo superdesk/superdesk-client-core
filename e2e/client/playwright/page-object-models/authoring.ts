@@ -34,34 +34,65 @@ export class Authoring {
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
 
-        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
 
         if (options.subscribers.length > 0) {
             await new TreeSelectDriver(
                 page,
-                page.locator(s('target-subscribers')),
+                page.getByTestId('target-subscribers'),
             ).setValues(options.subscribers);
         }
 
-        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+        await page.getByTestId('authoring').getByTestId('interactive-actions-panel').getByTestId('publish').click();
+
+        // Publishing raises a "Save and send" confirm that persists pending changes
+        // before it publishes. Targeting subscribers always raises it; with no
+        // target it appears only when the item has unsaved changes, so probe first.
+        const saveAndSend = page.getByTestId('modal-confirm').getByRole('button', {name: 'save and send'});
 
         if (options.subscribers.length > 0) {
-            await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+            await saveAndSend.click();
+        } else if (await saveAndSend.isVisible().catch(() => false)) {
+            await saveAndSend.click();
         }
     }
 
     /**
-     * Publishes without explicitly targeting subscribers, so which subscribers
-     * receive the item is decided by their products' content filters. Confirms the
-     * "save and send" dialog that publishing raises when the item has pending
-     * changes (that confirmation also persists those changes).
+     * Sets a leaf Subject term on the open article. Only leaf terms are supported:
+     * a parent category opens a subtree instead of committing.
      */
-    async publishToMatchingSubscribers(): Promise<void> {
-        const {page} = this;
+    async setSubject(value: string): Promise<void> {
+        await this.selectMetaTerm(this.page.locator('#subjects'), value);
+    }
 
-        await page.locator(s('authoring', 'open-send-publish-pane')).click();
-        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
-        await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+    /**
+     * Picks a leaf value in an `sd-meta-terms` typeahead by opening it, typing to
+     * narrow the list, and clicking the matching option. Clicking the resolved
+     * option is deterministic where the keyboard-driven type+ArrowDown+Enter path
+     * is flaky. The widget exposes no `data-test-id`s, so its internals are reached
+     * structurally.
+     */
+    private async selectMetaTerm(container: Locator, value: string): Promise<void> {
+        const input = container.locator('.dropdown__menu input').first();
+
+        // Idempotent open: don't re-toggle (which would close) if already open on a retry.
+        if (!(await input.isVisible().catch(() => false))) {
+            await container.locator('.dropdown__toggle').first().click();
+        }
+
+        await expect(input).toBeVisible();
+        await input.fill(value);
+
+        // The matched term renders as a button; getByRole ignores the hidden
+        // duplicates the CV tree renders in collapsed branches.
+        const option = container.getByRole('button', {name: value}).first();
+
+        await expect(option).toBeVisible();
+        await option.click();
+
+        await expect(
+            container.locator('.terms-list').getByText(value, {exact: false}),
+        ).toBeVisible();
     }
 
     async sendTo(destination: {desk: string; stage: string}): Promise<void> {
