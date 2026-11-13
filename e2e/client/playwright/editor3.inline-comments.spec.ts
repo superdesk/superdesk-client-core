@@ -76,9 +76,8 @@ function getCommentPopup(page: Page): Locator {
  * `background-color: var(--sd-editor-colour__comment-bg)` (highlightsConfig.ts); the
  * token lives on the authoring `.theme-container`, not `:root`, and holds an `hsl()`
  * value the browser reports back as `rgb()`, so it's read through a probe mounted
- * inside the field instead of being hardcoded. An unresolved token would read as
- * NO_BACKGROUND and make every highlighted/not-highlighted check indistinguishable,
- * so that is rejected here.
+ * inside the field instead of being hardcoded. An unresolved token reads as
+ * NO_BACKGROUND, so that is rejected.
  */
 async function getCommentHighlightColor(body: Locator): Promise<string> {
     const color = await body.evaluate((element) => {
@@ -133,9 +132,9 @@ function getCommentDialog(page: Page): Locator {
 
 /**
  * Adds a comment on the trailing word of the field through the toolbar Comment flow.
- * Fill, check and Submit are retried as one unit: the entry popup can re-render right
- * after it opens and drop what was just typed, even after the check saw it (same
- * behaviour `addEditor3Embed` documents for `EmbedInput`), which leaves Submit disabled.
+ * Fill, check and Submit retry as one unit: the entry popup can re-render after it
+ * opens and drop the typed text even after the check saw it, leaving Submit disabled
+ * (same as `addEditor3Embed` documents for `EmbedInput`).
  */
 async function addComment(page: Page, body: Locator, message: string): Promise<void> {
     const dialog = getCommentDialog(page);
@@ -558,7 +557,6 @@ test('replying to an inline comment with and without a mention, and only the aut
         await expect(otherReplies).toHaveCount(1);
         await expect(otherReplies.getByTestId('comment-text')).toHaveText('Sam Gamgee see this');
 
-        // neither John Doe's comment nor his reply offers Sam Gamgee the Edit/Delete menu
         await expect(otherPopup.getByTestId('highlight-actions-toggle')).toHaveCount(0);
 
         await addReply(otherPopup, 'reply by Sam');
@@ -587,9 +585,8 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     const headline = 'Inline comment resolved';
     const abstractCommentText = 'first thoughts on the abstract';
 
-    // `editor3-comments` enables comments on the body only; the widget groups comments
-    // by field, which takes comments in a second field to show. The list replaces the
-    // abstract's options, so it repeats the ones the Story profile already has.
+    // `editor3-comments` enables comments on the body only, and the widget groups by field.
+    // The list replaces the abstract's options, so it repeats the ones the Story profile has.
     await page.goto('/#/settings/content-profiles');
     await new ContentProfileSettings(page).addFormattingOptionToContentProfile({
         profileName: 'Story',
@@ -631,7 +628,6 @@ test('listing inline comments in the widget grouped by field, and resolving one 
     await expect(bodyComment).toHaveCount(1);
     await expect(bodyComment).not.toContainText(abstractCommentText);
 
-    // the author's avatar shows John Doe's initials
     await expect(bodyComment.locator('sd-user-avatar').first()).toHaveText('JD');
     await expect(bodyComment.getByTestId('author').first()).toHaveText('John Doe:');
     await expect(bodyComment.getByTestId('date').first()).not.toBeEmpty();
@@ -670,7 +666,6 @@ test('listing inline comments in the widget grouped by field, and resolving one 
 
     await expectOnlyBodyCommentResolved();
 
-    // the abstract's comment was not resolved and stays alone on the Unresolved list
     await reopenedWidget.getByTestId('filter-unresolved').click();
     await expect(groups).toHaveCount(1);
     await expect(abstractGroup.getByTestId('inline-comment')).toHaveCount(1);

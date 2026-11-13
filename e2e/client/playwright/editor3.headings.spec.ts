@@ -52,7 +52,6 @@ test.describe('heading formatting in editor3 fields', () => {
         };
     }
 
-    /** The block tag every text of a level's cycle ends up with. */
     function expectedTagsFor(tag: HeadingTag): Array<[BlockTag, string]> {
         const texts = textsFor(tag);
 
@@ -66,10 +65,6 @@ test.describe('heading formatting in editor3 fields', () => {
         ];
     }
 
-    /**
-     * Steps 2-7 of the case for one heading level, starting with the caret in an empty
-     * regular block of `field` and leaving it in a new empty regular block.
-     */
     async function runHeadingCycle(page: Page, field: Locator, tag: HeadingTag): Promise<void> {
         const button = getEditor3FormattingOptionButton(field, tag);
         const texts = textsFor(tag);
@@ -103,8 +98,7 @@ test.describe('heading formatting in editor3 fields', () => {
         await expectBlockTag(field, tag, texts.regularTail);
         await expectBlockTag(field, tag, texts.regularHead);
 
-        // ArrowRight collapses the selection to its end, which is the end of the heading;
-        // Enter then starts a new block that keeps the heading level.
+        // Enter at the end of a heading starts a new block that keeps the heading level.
         await page.keyboard.press('ArrowRight');
         await page.keyboard.press('Enter');
         await expect(button).toHaveClass(EDITOR3_ACTIVE_BUTTON);
@@ -124,10 +118,6 @@ test.describe('heading formatting in editor3 fields', () => {
         await page.keyboard.press('Enter');
     }
 
-    /**
-     * Creates an article, runs the toggle cycle for every heading level in the editor3
-     * field `fieldId`, and checks every block's level again after a save/close/reopen.
-     */
     async function runHeadingsCase(page: Page, fieldId: string, headline: string): Promise<void> {
         await restoreDatabaseSnapshot(SNAPSHOT);
 

@@ -103,12 +103,8 @@ test.describe('image editing', () => {
         await saved;
     }
 
-    /**
-     * The stored image at `url`, scaled down to a 16 x 8 grid of RGBA values. The
-     * scaling averages away JPEG re-encoding noise, so two grids differ only where
-     * the image content does. The bytes are fetched outside the page because the
-     * media server sends no CORS headers, and decoded inside it.
-     */
+    // Downscaling averages away JPEG re-encoding noise. The bytes are fetched outside
+    // the page because the media server sends no CORS headers, and decoded inside it.
     async function thumbnailPixels(page: Page, url: string): Promise<Array<number>> {
         const response = await page.request.get(url);
 
@@ -131,7 +127,6 @@ test.describe('image editing', () => {
         }, {encoded: base64, width: THUMB_WIDTH, height: THUMB_HEIGHT});
     }
 
-    /** Mean per-channel difference between `after` and `before` read at `map(x, y)`. */
     function meanDifference(
         after: Array<number>,
         before: Array<number>,
@@ -155,7 +150,6 @@ test.describe('image editing', () => {
         return total / (THUMB_WIDTH * THUMB_HEIGHT * 3);
     }
 
-    /** Mean spread between the strongest and weakest colour channel; 0 for a grey image. */
     function meanChroma(pixels: Array<number>): number {
         let total = 0;
 
@@ -178,10 +172,6 @@ test.describe('image editing', () => {
         return total / (pixels.length / 4);
     }
 
-    /**
-     * Where the point-of-interest cursor of the Edit crops preview sits, as a fraction
-     * of the previewed image, which is how the item stores it (`poi.x`, `poi.y`).
-     */
     async function pointOfInterest(mediaEditor: MediaEditor): Promise<{x: number; y: number}> {
         const preview = mediaEditor.pointOfInterestPreview;
         const cursor = await preview.locator('.image-point__poi__cursor').boundingBox();
@@ -375,9 +365,7 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        // Two horizontal flips cancel out, so what was applied is one vertical flip:
-        // the stored image matches the old one mirrored top to bottom, and not the
-        // old one as it was.
+        // Two horizontal flips cancel out, so only the vertical flip reaches the stored image.
         async function expectStoredFlippedVertically(): Promise<void> {
             await expect(picture.originalSizeLabel).toHaveText(ORIGINAL_SIZE);
             await expect(picture.previewImage).toBeVisible();
@@ -411,8 +399,6 @@ test.describe('image editing', () => {
         const sourceBefore = await sourceOf(picture.previewImage);
         const pixelsBefore = await thumbnailPixels(page, sourceBefore);
 
-        // the fixture is a colour photo, so a stored image without colour can only
-        // come from the saturation change below
         expect(meanChroma(pixelsBefore)).toBeGreaterThan(20);
 
         await picture.openImageEditor();
@@ -447,7 +433,6 @@ test.describe('image editing', () => {
 
         await applyMediaEdits(page, mediaEditor);
 
-        // Saturation at -100% leaves a grey image; the added brightness lifts it.
         async function expectStoredGreyAndBrighter(): Promise<void> {
             await expect(picture.previewImage).toBeVisible();
             await expect(picture.previewImage).not.toHaveAttribute('src', sourceBefore);
@@ -528,10 +513,8 @@ test.describe('image editing', () => {
         }).toPass();
 
         // The ratio buttons letterbox the 2100 x 1050 original: 16:9, 4:3 and 3:2 are
-        // all taller than it is, so each keeps the full height and narrows the width,
-        // centred. The Width field is bound to the crop's right edge, not its width,
-        // so it shows (2100 + width) / 2: 1983 for 16:9 (1867 wide), 1837 for 3:2
-        // (1575 wide) and 1750 for 4:3 (1400 wide, the size stored below).
+        // all taller than it is, so each keeps the full height and is centred. The Width
+        // field is bound to the crop's right edge, so it shows (2100 + width) / 2.
         await mediaEditor.ratioButton('Original').click();
         await expect(cropWidth).toHaveValue('2100');
         await expect(cropHeight).toHaveValue('1050');
@@ -563,8 +546,7 @@ test.describe('image editing', () => {
         await expect(mediaEditor.confirmCropToolbar).toBeHidden();
         await expect(mediaEditor.adjustColours).toBeVisible();
 
-        // A second crop of the result of the first: crop mode starts clean again, and
-        // 16:9 of the now 1400 x 1050 image keeps the width and narrows the height.
+        // A second crop of the first one's result: crop mode starts clean again.
         await mediaEditor.control('crop').click();
         await expect(mediaEditor.confirmCropToolbar.getByTestId('confirm-crop')).toHaveAttribute('disabled');
 
@@ -631,7 +613,6 @@ test.describe('image editing', () => {
         await mediaEditor.rendition('Original').click();
         await expect(mediaEditor.cropPreviewLabel).toHaveText(/Original\s+2100 x 1050/);
 
-        // the fixture has no point of interest of its own, so it sits in the centre
         await expect.poll(() => pointOfInterest(mediaEditor)).toEqual({x: 0.5, y: 0.5});
 
         await mediaEditor.setPointOfInterest(0.3, 0.3);

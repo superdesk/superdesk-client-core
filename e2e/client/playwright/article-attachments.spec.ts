@@ -53,9 +53,8 @@ import {dismissSessionExpiry, getCellValueByColumTitle, login, restoreDatabaseSn
  * - The internal marker's text is "internal", uppercased by the label style rather
  *   than written as "Internal"; the assertion is case-insensitive on the real text.
  * - "Download attachment" (1327759365, 1326285061) is `partial`. "Right click, Save as"
- *   is the browser's own context menu, which Playwright cannot open, so saving to disk
- *   is not driven. What is asserted instead is that the tab the Download icon opens
- *   serves the very bytes that were uploaded for that attachment.
+ *   is a browser context menu Playwright cannot open; the tab the Download icon opens
+ *   is asserted to serve the uploaded bytes instead.
  * - "Attachments in NINJS output" (1326285069) is asserted on the payload the
  *   subscriber is actually sent: `publishing`'s "Public API" subscriber's only
  *   destination ("NINJS Email") formats as `ninjs`. The payload is read back
@@ -348,8 +347,7 @@ test.describe('article attachments', () => {
         await expect(opened.field.description(INTERNAL_ATTACHMENT.title))
             .toHaveText(INTERNAL_ATTACHMENT.description);
 
-        // The row's actions only show while the row is hovered, and the field row does
-        // not always pick the hover up again right after the dialog closes.
+        // The field row does not always pick the hover up again right after the dialog closes.
         await expect(async () => {
             await page.mouse.move(0, 0);
             await opened.field.hoverItem(INTERNAL_ATTACHMENT.title);
