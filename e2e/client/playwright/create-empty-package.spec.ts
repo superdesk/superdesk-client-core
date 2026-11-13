@@ -3,23 +3,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Create new empty package" (1308524902).
+ * QA case "Create new empty package" (1308524902). Two expected results are not covered, both blocked on the product:
  *
- * An empty package is created from the "+" menu in Monitoring, its fields are
- * filled in, and the unsaved-changes dialog raised by Close is exercised in all
- * three directions (Cancel / Ignore / Save).
- *
- * Two documented expected results are not covered, both blocked on the product
- * rather than on the test:
- *
- * - "Packages can be created in Monitoring view and Personal space". Personal
- *   space has no package creation entry point: `InitialView` renders the
- *   "Create package" option behind `!sdApi.navigation.isPersonalSpace()`
- *   (scripts/core/ui/components/content-create-dropdown/initial-view.tsx).
- * - "Packages cannot be created in Custom Workspace". The option is offered in a
- *   custom workspace exactly as it is on a desk, and clicking it opens a package
- *   editor. The documented restriction does not exist in the product, and
- *   asserting the behaviour as it stands would encode the contradiction.
+ * - Personal space has no package creation entry point (`InitialView`, initial-view.tsx).
+ * - "Packages cannot be created in Custom Workspace": the option is offered there exactly as on a desk, so asserting
+ *   it would encode the contradiction.
  */
 test.setTimeout(90000);
 
@@ -31,8 +19,7 @@ test.describe('creating a new empty package', {
     const HEADLINE = 'empty package headline';
     const SLUGLINE = 'empty-package-slugline';
 
-    // Everything the Sports desk lists in Monitoring on the `main` snapshot: four
-    // items in the Working Stage plus the published one in the desk output group.
+    // Everything the Sports desk lists on the `main` snapshot.
     const SPORTS_MONITORING_ITEMS = [
         'test sports story',
         'story 2',
@@ -57,9 +44,7 @@ test.describe('creating a new empty package', {
         return page.getByTestId('authoring').getByTestId('field-slugline');
     }
 
-    // Waits for the whole listing, not just the first item: every
-    // `sd-monitoring-group` runs its own debounced query
-    // (scripts/apps/monitoring/directives/MonitoringGroup.ts) and a desk switch
+    // Waits for every group: each `sd-monitoring-group` runs its own debounced query, and a desk switch
     // leaves the previous desk's items in the DOM until the new groups answer.
     async function openSportsMonitoring(page: Page): Promise<void> {
         const monitoring = new Monitoring(page);
@@ -93,13 +78,11 @@ test.describe('creating a new empty package', {
     async function openGlobalSearch(page: Page): Promise<void> {
         await page.goto('/#/search');
 
-        // Without the unfiltered list, a search that never ran looks the same as
-        // one that returned nothing.
+        // Without the unfiltered list, a search that never ran looks like one with no results.
         await expect(globalSearchItems(page).first()).toBeVisible();
     }
 
-    // The global search bar has no test id; #search-input plus Enter is how
-    // search.spec.ts and monitoring.misc.spec.ts drive it.
+    // The search bar has no test id.
     async function runGlobalSearch(page: Page, query: string): Promise<void> {
         await openGlobalSearch(page);
 
@@ -137,15 +120,12 @@ test.describe('creating a new empty package', {
 
         await expect(page.getByTestId('authoring')).toBeHidden();
 
-        // `createEmptyPackage` posts the package with an empty headline, so a
-        // leftover could never be matched by a HEADLINE locator. The total is the
-        // guard: a discarded package stays at `version: 0`, which
-        // apps/archive/resource.py filters out of every archive query.
+        // `createEmptyPackage` posts an empty headline, so a leftover cannot be matched by HEADLINE.
+        // A discarded package stays at `version: 0`, which apps/archive/resource.py filters out.
         await expect(monitoringItems(page)).toHaveCount(SPORTS_MONITORING_ITEMS.length);
         await expect(monitoringItem(page, HEADLINE)).toHaveCount(0);
 
-        // The unfiltered total proves nothing was persisted. A HEADLINE query
-        // cannot: the headline only reached the autosave record that Ignore drops.
+        // A HEADLINE query cannot prove this: the headline only reached the autosave record that Ignore drops.
         await openGlobalSearch(page);
         await expect(globalSearchItems(page)).toHaveCount(searchItemsBefore);
 
@@ -178,9 +158,7 @@ test.describe('creating a new empty package', {
 
         await topbar.getByTestId('save').click();
 
-        // `saveTopbarLoading` disables Save on its own for the length of the
-        // request (authoring-topbar.html), so a disabled Save only means the
-        // package is clean once the spinner has gone.
+        // `saveTopbarLoading` disables Save while the request runs, so wait for the spinner to go first.
         await expect(topbar.getByTestId('save').getByTestId('loading-indicator')).toBeVisible();
         await expect(topbar.getByTestId('save').getByTestId('loading-indicator')).toBeHidden();
         await expect(topbar.getByTestId('save')).toBeDisabled();
@@ -195,14 +173,11 @@ test.describe('creating a new empty package', {
 
         const results = globalSearchItems(page);
 
-        // The unfiltered listing already holds the package, so only the whole
-        // result list being that single item proves the query was applied.
+        // The unfiltered listing already holds the package, so only a single result proves the query ran.
         await expect(results).toHaveCount(1);
         await expect(results).toHaveAttribute('data-test-value', HEADLINE);
 
-        // Reopening is the last step on purpose: a reopened package intermittently
-        // reports itself dirty with no edit made, so closing it again raises the
-        // unsaved-changes dialog.
+        // Reopening is last on purpose: a reopened package intermittently reports itself dirty.
         await page.goto('/#/workspace/monitoring');
         await monitoringItem(page, HEADLINE).dblclick();
 
