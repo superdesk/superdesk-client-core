@@ -8,39 +8,13 @@ import {dropArticle, dropFiles} from './utils/drag-and-drop';
 import {setEditor3FieldValue} from './utils/editor3';
 
 /**
- * QA case 1310851132, "Create article with image in Feature media field": adding an
- * image to the Feature media field of a new article, both by picking it from a
- * folder and by dropping it on the field, and what the field refuses.
- *
- * Product behaviour that diverges from the case's wording, asserted as the product
- * renders it:
- *
- * - The case has step 1 pick "article" from the "+" menu. The menu has no such
- *   entry; it offers the desk's default template, which on Sports is `story` and
- *   carries the Story profile the Feature media field is enabled on.
- * - Step 6 has the user click Save on the Edit crops screen and then Upload on the
- *   Upload media screen again. Neither click exists here: the Upload media screen
- *   closes itself as soon as the upload resolves, and the crop screen's Save toolbar
- *   is only rendered while a crop is pending, which it never is for a freshly
- *   uploaded image (see `uploadImageToFeatureMedia`). Done alone confirms the image.
- * - Expected result 7 ("Save button is active after an image was uploaded") carries
- *   a question mark in the case and contradicts result 8. Result 8 is what the
- *   product does: `AssociationController.updateItemAssociation` calls the article's
- *   own save for an unpublished item, so the article is saved and the topbar Save
- *   button is left disabled. Both are covered by asserting that.
- * - The case quotes none of the error messages. They are asserted as the product
- *   words them, which for the two "not a media file" refusals is two different
- *   messages, one per entry point: the field's own drop handler
- *   (`ItemAssociationDirective`) and the upload screen (`UploadController`).
- *
- * Step 5's "link to Edit crops test cases" delegates the crop screen's own
- * behaviour to other cases; here the screen is only taken as far as confirming the
- * image, which is what this case's own expected results are about.
- *
- * Expected result 4 names image, video and audio as the allowed types. Every step of
- * the case uses an image, so the allowed set is covered by refusing a file that is
- * none of the three and by the refusal naming all three, not by uploading one of
- * each into the field.
+ * QA case 1310851132, "Create article with image in Feature media field". Deviations from the case:
+ * - Step 1: the "+" menu has no "article" entry, so the desk's default template is used (`story` on Sports).
+ * - Step 6: no Save on the crop screen and no second Upload. The upload screen closes itself and the crop
+ *   Save toolbar only renders while a crop is pending; Done confirms the image.
+ * - Results 7 and 8 contradict: adding the association saves the article, so topbar Save stays disabled.
+ * - Result 4: allowed types are covered by refusing a non-media file, not by uploading each type.
+ * - Error messages are not in the case; the two "not media" refusals differ per entry point.
  */
 
 // Uploads run through a real POST plus the server-side rendition generation, and the
@@ -53,45 +27,26 @@ const CASE = [
 
 const SOURCE_DESK = 'Sports';
 
-/** An item that exists in the `main` snapshot, used to tell "empty" from "not loaded yet". */
 const SNAPSHOT_ITEM_HEADLINE = 'test sports story';
 
-/** The picture the `media-items` snapshot carries, dropped on the field as an existing item. */
 const SNAPSHOT_PICTURE_HEADLINE = 'Rivendell picture';
 
-/**
- * `samgamgee` holds the `Sub Editor` role, which is what lets it open an item for
- * editing and so take the lock the drop is expected to be refused over.
- * `frodobaggins` holds no privileges at all and cannot even reach monitoring.
- */
+// `frodobaggins` has no privileges; `samgamgee` (Sub Editor) can open an item for editing and so take its lock.
 const LOCK_OWNER = {username: 'samgamgee', password: 'samgamgee'};
 
-/**
- * `empty_metadata.jpg` carries no IPTC, so the upload screen's metadata pane starts
- * empty and the refusal of an empty required field is reachable. `metadata.jpg`
- * next to it in `fixtures/` would prefill headline and description.
- */
+// No IPTC, so the upload screen's metadata pane starts empty; `metadata.jpg` would prefill headline and description.
 const IMAGE_FILE = mediaFixture('empty_metadata.jpg', 'image/jpeg');
 
 const SECOND_IMAGE_FILE = testFile('image-red.jpg', 'image/jpeg');
 
 const NOT_MEDIA_FILE = testFile('not-a-media-file.txt', 'text/plain');
 
-/**
- * Clicking a notification that has already removed itself is an accepted outcome,
- * so the click is given just enough time to land rather than a full assertion budget.
- */
+// Clicking a notification that already removed itself is acceptable, so the click gets a short timeout.
 const NOTIFICATION_CLICK_TIMEOUT_MS = 2000;
 
 /**
- * Asserts an error notification came up, then waits for it to be gone.
- *
- * Only the first assertion states product behaviour. The rest is synchronisation:
- * notifications stack on top of the Upload media screen's header, where they swallow
- * clicks on Cancel and Upload, so the spec may not go on until this one has left.
- * The click is a shortcut to the product's own removal after 8 seconds
- * (`messageDisplayDurationsByType.error` in scripts/core/notify/notify.tsx); if that
- * removal wins the race the click has nothing to hit, which is the same outcome.
+ * Notifications stack over the Upload media header and swallow clicks on Cancel and Upload, so the spec
+ * waits for each to leave. The click shortcuts the product's own 8s removal (notify.tsx); losing that race is fine.
  */
 async function expectErrorNotification(page: Page, text: string | RegExp): Promise<void> {
     const notification = page.getByTestId('notifications').getByTestId('notification--error')
@@ -108,15 +63,10 @@ function featureMedia(page: Page): Locator {
     return new Authoring(page).associationField('feature_media');
 }
 
-/** The button the empty Feature media field is, and the field's drop target. */
 function featureMediaPlaceholder(page: Page): Locator {
     return featureMedia(page).getByTestId('upload-placeholder');
 }
 
-/**
- * Creates an article from the desk's default template and returns its id, which is how
- * the article's own writes are told apart from the uploaded image's further down.
- */
 async function createArticle(page: Page): Promise<string> {
     const monitoring = new Monitoring(page);
 
@@ -159,14 +109,6 @@ async function nameAndSaveArticle(page: Page, articleId: string, headline: strin
     await expect(saveButton).toBeDisabled();
 }
 
-/**
- * Drives the Upload media screen the Feature media field opened, from the file it
- * already holds to the image sitting in the field.
- *
- * The article write the crop screen triggers is awaited rather than assumed: the
- * association is stored by saving the article, and the callers go on to close it or
- * to read it back.
- */
 async function uploadImageToFeatureMedia(
     page: Page,
     articleId: string,
@@ -183,12 +125,7 @@ async function uploadImageToFeatureMedia(
     await expect(mediaEditor.header.getByRole('heading', {name: 'Edit Crops'})).toBeVisible();
     await expect(upload.getModal()).toBeHidden();
 
-    /*
-     * The crop screen opens with the crop already set: the backend generates the one
-     * rendition the `crop_sizes` vocabulary configures while the file is uploaded, so
-     * the crop widget's initial selection matches what the item already carries,
-     * `crops.isDirty` never goes up and Done is available straight away.
-     */
+    // The backend generates the configured rendition on upload, so the crop starts clean and Done is enabled.
     await expect(mediaEditor.doneButton).toBeEnabled();
 
     const [response] = await Promise.all([
@@ -209,20 +146,16 @@ async function expectImageInFeatureMedia(page: Page, description: string): Promi
     await expect(image).toBeVisible();
     await expect(image).toHaveAttribute('src', /.+/);
 
-    // the field renders one textarea, the caption, because `imageTitle` is off in the
-    // Story profile and the title textarea is `ng-if`-ed out with it
+    // `imageTitle` is off in the Story profile, so the only textarea is the caption
     await expect(featureMedia(page).locator('textarea')).toHaveValue(description);
 
     await expect(featureMediaPlaceholder(page)).toHaveCount(0);
 }
 
-/** The article list is read as it comes up, without querying by any search field. */
 async function expectInGlobalSearch(page: Page, headline: string): Promise<void> {
     await page.goto('/#/search');
 
-    // a hash-only navigation resolves before the route swaps, and the monitoring list
-    // still mounted behind it holds the very item counted below, so the search view
-    // has to be waited for on its own first
+    // A hash-only navigation resolves before the route swaps; the still-mounted monitoring list matches too
     await expect(page.getByTestId('view-select')).toBeVisible();
     await expect(page.getByTestId('monitoring-group')).toHaveCount(0);
 
@@ -230,14 +163,8 @@ async function expectInGlobalSearch(page: Page, headline: string): Promise<void>
 }
 
 /**
- * Logs the second actor in and opens the snapshot's picture for editing, which is
- * what takes the lock the drop under test is refused over. The context is handed
- * back for the caller to close.
- *
- * `browser.newContext()` inherits the committed storageState from the config, which
- * would put both pages in the same Superdesk session and so leave the item unlocked
- * for the admin one. `storageState: undefined` forces a clean context that
- * authenticates into a session of its own.
+ * `browser.newContext()` inherits the config's storageState, which would share the admin session and leave
+ * the item unlocked for it, hence `storageState: undefined`.
  */
 async function lockPictureAs(
     browser: Browser,
@@ -246,12 +173,7 @@ async function lockPictureAs(
 ): Promise<BrowserContext> {
     const context = await browser.newContext({storageState: undefined});
 
-    /*
-     * The caller can only close this context once it is handed back, so anything
-     * that throws before the return has to close it here. Contexts made from the
-     * `browser` fixture are not auto-closed until the worker ends, and a leaked one
-     * means a live second Superdesk session holding the lock for every later test.
-     */
+    // Contexts from the `browser` fixture live until the worker ends, so a leaked one keeps holding the lock.
     try {
         const page = await context.newPage();
         const monitoring = new Monitoring(page);
@@ -266,8 +188,6 @@ async function lockPictureAs(
 
         await expect(picture).toBeVisible();
 
-        // the lock is what the other session has to see, so the request that takes it
-        // is awaited rather than the editor it opens
         const [response] = await Promise.all([
             page.waitForResponse((r) =>
                 r.request().method() === 'POST'
@@ -311,28 +231,20 @@ test('adds an image picked from a folder to Feature media and keeps it across sa
 
     const filePicker = await upload.openFilePicker();
 
-    /*
-     * The file dialog is the only handle on how many files may be picked, and it has
-     * to be read before the file is handed over. Feature media is not a vocabulary
-     * field, so `AssociationController.uploadAndCropImages` allows exactly one file
-     * and opens the screen with `uniqueUpload`, under which upload.html renders the
-     * input without `multiple`.
-     */
+    // `multiple` must be read before the file is handed over; Feature media allows a single file (`uniqueUpload`)
     expect(filePicker.isMultiple()).toBe(false);
 
     await filePicker.setFiles([IMAGE_FILE]);
 
     await expect(upload.getItems()).toHaveCount(1);
 
-    // the thumbnail is rendered from the picked file's own bytes, so it only shows
-    // once the file was read, not merely once an item was added
+    // the thumbnail renders from the file's bytes, so it appears only once the file was read
     await expect(upload.getItems().locator('img')).toHaveCount(1);
 
     await uploadImageToFeatureMedia(page, articleId, metadata);
 
     await expectImageInFeatureMedia(page, metadata.description);
 
-    // adding the association saved the article on its own, so nothing is left to save
     await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeDisabled();
 
     await authoring.close();
@@ -364,8 +276,6 @@ test('adds an image dropped on Feature media', {
 
     await dropFiles(featureMediaPlaceholder(page), [IMAGE_FILE]);
 
-    // the field hands the dropped file straight to the upload screen, which comes up
-    // holding it rather than empty
     await expect(upload.getModal()).toBeVisible();
     await expect(upload.getItems()).toHaveCount(1);
     await expect(upload.getItems().locator('img')).toHaveCount(1);
@@ -387,7 +297,6 @@ test('refuses more than one file dropped on Feature media', {
 
     await expectErrorNotification(page, 'Select at most 1 file to upload.');
 
-    // the field is still the empty placeholder, and no upload was started for either file
     await expect(featureMediaPlaceholder(page)).toBeVisible();
     await expect(new MediaUpload(page).getModal()).toHaveCount(0);
 });
@@ -438,16 +347,8 @@ test('refuses the upload while a required metadata field is empty', {
 
     await expect(upload.getItems()).toHaveCount(1);
 
-    /*
-     * The red star is the `sd-line-input--required` class, put on a field's wrapper
-     * from `field.required` in media-metadata-editor-directive.html.
-     * `MediaFieldsController` builds those fields by merging the picture content
-     * profile's schema over its editor, and adds an entry from
-     * `appConfig.validator_media_metadata` only for fields the profile's editor does
-     * not already carry. `description_text` is one of those, and the validator
-     * (VALIDATOR_MEDIA_METADATA in e2e/server/settings.py, published to the client
-     * through /api/client_config) marks it required.
-     */
+    // `description_text` is required by `appConfig.validator_media_metadata` (VALIDATOR_MEDIA_METADATA in
+    // e2e/server/settings.py), not by the profile
     await expect(mediaEditor.fieldContainer('field--description_text'))
         .toHaveClass(/sd-line-input--required/);
 
@@ -457,8 +358,6 @@ test('refuses the upload while a required metadata field is empty', {
 
     await expectErrorNotification(page, /Required field .* is missing/);
 
-    // nothing was uploaded: the screen still holds the file, and the crop screen that
-    // a finished upload opens never came up
     await expect(upload.getModal()).toBeVisible();
     await expect(upload.getItems()).toHaveCount(1);
     await expect(mediaEditor.header).toHaveCount(0);
@@ -479,8 +378,7 @@ test('refuses a locked item dropped on Feature media', {
 
     await expect(picture).toBeVisible();
 
-    // the list item carries the article id, which is all the drop payload needs:
-    // `ContentService.dropItem` re-fetches the item from the API
+    // `ContentService.dropItem` re-fetches the item, so the list item's id is all the drop payload needs
     const pictureId = await picture.evaluate((element) => element.id);
     const lockOwner = await lockPictureAs(browser, LOCK_OWNER, pictureId);
 
