@@ -6,24 +6,14 @@ import {setEditor3FieldValue} from './utils/editor3';
 /**
  * QA case "Edit item in new window" (1311835229).
  *
- * The monitoring 3-dot menu offers "Edit in new Window", which opens the article
- * for editing in a second browser window. The item is locked while that window is
- * open, closing with unsaved changes raises the Ignore/Cancel/Save prompt, and the
- * saved values survive a reopen.
+ * Not covered: step 6 repeats the flow for image, audio and video items. The `main`
+ * snapshot has only text and composite items, so it needs a media fixture first.
  *
- * Not covered:
- * - Step 6 repeats the whole flow for image, audio and video items. The `main`
- *   snapshot's archive holds text and composite items only, so no media item is
- *   reachable; covering it needs a media fixture in the snapshot.
- *
- * Wording note: the case calls the action "Edit in new window"; the product label
- * is "Edit in new Window" (`edit.item.popup` in apps/authoring/authoring/index.ts),
- * which is what the assertions use.
+ * The case says "Edit in new window"; the product label is "Edit in new Window".
  */
 
-// Every test here restores the snapshot and then loads the whole client a second
-// time in the popup window. That takes about 10s on an idle machine but has been
-// measured past the 30s default with other e2e instances competing for the host.
+// Each test loads the whole client a second time in the popup, which has been
+// measured past the 30s default when other e2e instances compete for the host.
 test.setTimeout(60000);
 
 test.describe('editing an item in a new window', () => {
@@ -38,8 +28,6 @@ test.describe('editing an item in a new window', () => {
 
         const item = monitoring.getArticleLocator(ARTICLE);
 
-        // The list is filled asynchronously after the snapshot restore, so wait for
-        // the item before any caller hovers or double clicks it.
         await expect(item).toBeVisible();
 
         return monitoring;
@@ -59,9 +47,8 @@ test.describe('editing an item in a new window', () => {
         // The popup boots the client from scratch, which outlasts the 15s default.
         await expect(popup.getByTestId('authoring')).toBeVisible({timeout: 30000});
 
-        // The topbar Save button is rendered only when the action is 'edit' (or a
-        // correction) and only shown while the item is editable, so its presence is
-        // what separates an edit window from the read-only "Open in new Window" one.
+        // Save is shown only while the item is editable, which tells an edit window
+        // apart from the read-only "Open in new Window" one.
         await expect(popup.getByTestId('authoring-topbar').getByTestId('save')).toBeVisible();
 
         return popup;
@@ -77,18 +64,14 @@ test.describe('editing an item in a new window', () => {
             .and(authoringPage.locator('[data-test-value="body_html"]'));
     }
 
-    /**
-     * The popup closes itself through `window.close()` (AuthoringWorkspaceService.close
-     * does that whenever `$rootScope.popup` is set), and the close path only reaches it
-     * once its own requests have resolved: save or autosave-discard, then unlock.
-     * Waiting for the window to be gone is therefore the sync point for those writes.
-     */
+    // The popup calls `window.close()` only after its save/discard and unlock requests
+    // resolve (AuthoringWorkspaceService.close), so its closing is the sync point for them.
     async function expectWindowClosed(popup: Page): Promise<void> {
         await expect.poll(() => popup.isClosed(), {timeout: 30000}).toBe(true);
     }
 
-    // The lock indicator clearing shows this window has processed the popup's unlock, so
-    // the reopen reads the item after the close finished rather than mid-flight.
+    // The lock indicator clearing shows the popup's unlock has landed, so the reopen
+    // does not read the item mid-close.
     async function reopenInOpener(page: Page, monitoring: Monitoring): Promise<void> {
         const item = monitoring.getArticleLocator(ARTICLE);
 
@@ -174,8 +157,7 @@ test.describe('editing an item in a new window', () => {
         await reopenInOpener(page, monitoring);
         await expect(slugline(page)).toHaveValue('saved in new window');
 
-        // editor3 renders its content a beat after the topbar is up, so this needs a
-        // retrying assertion rather than a one-shot read of the field's paragraphs.
+        // editor3 renders its content after the topbar, so a one-shot read would race.
         await expect(body(page)).toContainText('body edited in the new window');
     });
 
