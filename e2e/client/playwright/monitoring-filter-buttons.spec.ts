@@ -2,13 +2,10 @@ import {test, expect} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot} from './utils';
 
-/**
- * The active toggle is only expressed as a CSS class; these anchors carry no
- * aria-pressed or other state attribute.
- */
+// the active toggle is only a CSS class, there is no aria-pressed
 const ACTIVE = /toggle-button--active/;
 
-/** Item type and button aria-label, in render order. */
+// [item type, aria-label], in render order
 const ITEM_TYPES: Array<[string, string]> = [
     ['all', 'all'],
     ['text', 'text'],
@@ -20,14 +17,9 @@ const ITEM_TYPES: Array<[string, string]> = [
     ['audio', 'audio'],
 ];
 
-/**
- * How many items each filter leaves in the Sports monitoring groups, given the `main` snapshot.
- * It holds four text items ("test sports story", "story 2", "Story 3" and the published
- * "Story 5") plus "Package Highlight 1", a package carrying a highlight, which the `composite`
- * filter deliberately excludes (`CardsService.setQueryFiltersForFileType` matches non-highlight
- * packages only). The snapshot has no picture, graphic, video or audio item, so those filters
- * can only be shown to empty the list, never to select items of their own type.
- */
+// Items left by each filter for the Sports groups in the `main` snapshot. "Package Highlight 1"
+// is a highlight package, which `composite` excludes. The snapshot has no picture, graphic,
+// video or audio item, so those filters can only be shown to empty the list.
 const LISTED: Record<string, number> = {
     'all': 5,
     'text': 4,
@@ -39,11 +31,7 @@ const LISTED: Record<string, number> = {
     'audio': 0,
 };
 
-/**
- * Well above the default 30s: opening monitoring can cost a reload (see
- * `Monitoring.openMonitoringForDesk`), and each of the 14 filter changes waits out the
- * group's 1s query debounce plus the round trip.
- */
+// opening monitoring can cost a reload, and each filter change waits out a 1s query debounce
 test.setTimeout(120000);
 
 test.describe('monitoring item type filter buttons', {
@@ -70,13 +58,8 @@ test.describe('monitoring item type filter buttons', {
         }
     });
 
-    /**
-     * Selecting a type does not re-render the list synchronously: the group schedules a debounced
-     * query (1s) and keeps the old items in the DOM until the response lands. Asserting that an
-     * already visible item is still visible would pass against the stale list, so each step waits
-     * on the item count (which only settles once the filtered query has landed) before checking
-     * which items survived.
-     */
+    // The group keeps the old items in the DOM until the debounced query lands, so a visibility
+    // check alone would pass against the stale list. Wait on the count first.
     test('the list is filtered by item type, with ALL selected by default', async ({page}) => {
         await restoreDatabaseSnapshot();
 

@@ -48,20 +48,9 @@ export class Monitoring {
         }
     }
 
-    /**
-     * Opens the monitoring view on a desk and waits for its groups to render.
-     *
-     * `AggregateCtrl.getDefaultGroups` reads `desks.getCurrentDesk()._id`, and the
-     * workspace watcher that calls it sometimes fires before the current desk is
-     * resolved. The resulting TypeError aborts the digest, leaving the view with a
-     * working subnav but no groups and no item query, and nothing re-runs that
-     * query later, so reloading is the only recovery.
-     *
-     * The retry budget has to stay well under the caller's test timeout: `toPass` cannot
-     * interrupt an attempt that is already running, so a budget equal to the test timeout would
-     * be spent inside the last attempt and surface as a bare test timeout instead of this
-     * assertion, with no time left for the test body.
-     */
+    // AggregateCtrl.getDefaultGroups can run before the current desk resolves, which leaves
+    // the view with no groups and no query; only a reload recovers. Keep the toPass budget well
+    // under the test timeout, since toPass cannot interrupt a running attempt.
     async openMonitoringForDesk(deskName: string): Promise<void> {
         let loaded = false;
 
@@ -187,9 +176,6 @@ export class Monitoring {
         return this.page.locator(s('article-item=' + headline));
     }
 
-    /**
-     * All article items currently listed in the monitoring groups.
-     */
     getListedArticles(): Locator {
         return this.page.getByTestId('monitoring-view').getByTestId('article-item');
     }
@@ -198,18 +184,10 @@ export class Monitoring {
         return this.getListedArticles().and(this.page.locator(`[data-test-value="${label}"]`));
     }
 
-    /**
-     * All item type toggles in the monitoring subnav, in render order.
-     */
     getFileTypeFilterButtons(): Locator {
         return this.page.getByTestId('monitoring-filter-buttons').getByTestId(/^file-type-filter--/);
     }
 
-    /**
-     * One of the item type toggles in the monitoring subnav.
-     * `fileType` is the internal type, not the label: all, text, picture,
-     * graphic, composite (package), highlight-pack, video, audio.
-     */
     getFileTypeFilterButton(fileType: string): Locator {
         return this.page.getByTestId('monitoring-filter-buttons').getByTestId(`file-type-filter--${fileType}`);
     }
