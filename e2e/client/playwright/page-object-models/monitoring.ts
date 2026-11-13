@@ -48,6 +48,25 @@ export class Monitoring {
         }
     }
 
+    // AggregateCtrl.getDefaultGroups can run before the current desk resolves, which leaves
+    // the view with no groups and no query; only a reload recovers. Keep the toPass budget well
+    // under the test timeout, since toPass cannot interrupt a running attempt.
+    async openMonitoringForDesk(deskName: string): Promise<void> {
+        let loaded = false;
+
+        await expect(async () => {
+            if (loaded) {
+                await this.page.reload();
+            } else {
+                await this.page.goto('/#/workspace/monitoring');
+                loaded = true;
+            }
+
+            await this.selectDeskOrWorkspace(deskName);
+            await expect(this.page.getByTestId('monitoring-group').first()).toBeVisible({timeout: 10000});
+        }).toPass({timeout: 45000});
+    }
+
     /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
@@ -155,6 +174,22 @@ export class Monitoring {
 
     getArticleLocator(headline: string): Locator {
         return this.page.locator(s('article-item=' + headline));
+    }
+
+    getListedArticles(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('article-item');
+    }
+
+    getListedArticle(label: string): Locator {
+        return this.getListedArticles().and(this.page.locator(`[data-test-value="${label}"]`));
+    }
+
+    getFileTypeFilterButtons(): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(/^file-type-filter--/);
+    }
+
+    getFileTypeFilterButton(fileType: string): Locator {
+        return this.page.getByTestId('monitoring-filter-buttons').getByTestId(`file-type-filter--${fileType}`);
     }
 
     /**
