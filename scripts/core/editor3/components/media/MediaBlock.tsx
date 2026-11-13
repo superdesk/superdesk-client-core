@@ -134,10 +134,19 @@ export class MediaBlockComponent extends React.Component<IProps> {
 
         return (
 
-            <div className="image-block" onClick={(e) => e.stopPropagation()}>
+            <div
+                className="image-block"
+                onClick={(e) => e.stopPropagation()}
+                data-test-id="media-block"
+                data-test-value={mediaType}
+            >
                 {
                     readOnly ? null : (
-                        <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
+                        <a
+                            className="icn-btn image-block__remove"
+                            onClick={this.onClickDelete}
+                            data-test-id="media-block-remove"
+                        >
                             <i className="icon-close-small" />
                         </a>
                     )
@@ -152,12 +161,13 @@ export class MediaBlockComponent extends React.Component<IProps> {
                             value={data.headline}
                             onChange={({target}) => this.onChange(target.value, 'headline')}
                             disabled={readOnly}
+                            data-test-id="media-block-title"
                         />
                     ) : null }
 
                     {mediaType === 'picture' && (
                         <div className="image-block__image">
-                            <div className="image-block__image-overlay">
+                            <div className="image-block__image-overlay" data-test-id="media-block-overlay">
                                 <div className="image-block__metadata image-block__metadata--top-overlay">
                                     <span>
                                         <em>{gettext('Title:')}{' '}</em>
@@ -170,6 +180,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                                             <a
                                                 className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit metadata')}
+                                                data-test-id="media-block-edit-metadata"
                                                 onClick={() => {
                                                     this.onClick('view');
                                                 }}
@@ -180,6 +191,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                                             <a
                                                 className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit image')}
+                                                data-test-id="media-block-edit-image"
                                                 onClick={() => {
                                                     this.onClick('image-edit');
                                                 }}
@@ -190,6 +202,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                                             <a
                                                 className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit crops')}
+                                                data-test-id="media-block-edit-crops"
                                                 onClick={() => {
                                                     this.onClick('crop');
                                                 }}
@@ -241,6 +254,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                                         value={data.headline}
                                         onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
+                                        data-test-id="media-block-title"
                                     />
                                 )
                             }
@@ -280,6 +294,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                                         value={data.headline}
                                         onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
+                                        data-test-id="media-block-title"
                                     />
                                 )
                             }
@@ -325,6 +340,7 @@ export class MediaBlockComponent extends React.Component<IProps> {
                         <div className="image-block__action-bar">
                             <a
                                 className="btn btn--hollow btn--small"
+                                data-test-id="media-block-edit-metadata"
                                 onClick={() => {
                                     this.onClick('view');
                                 }}
