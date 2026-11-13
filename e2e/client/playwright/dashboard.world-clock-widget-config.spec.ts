@@ -4,17 +4,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {restoreDatabaseSnapshot, waitForToastMessage} from './utils';
 
 /**
- * Documented expected results that are NOT covered here:
- *
- * - "When you select more than 3 clocks, you will have to adjust the size of your widget to display them all at
- *   the same time. This can be done on the Rearrange widgets settings page."
- *   Proving the fourth clock is clipped until the widget is resized needs a pixel-level layout check
- *   (no visual snapshots are allowed) and a flaky gridster drag-resize. The spec covers only the data half:
- *   a fourth clock is added to the widget.
- *
- * - Test steps 7-8: a second user who is a member of the same desk sees the saved configuration.
- *   Missing fixture: the `main` snapshot has admin as the only member of every desk, and the one other
- *   user (janedoe) is not a desk member and has no password recorded anywhere in the repo.
+ * Not covered from the QA cases:
+ * - Widget size with more than 3 clocks: needs a pixel-level layout check and a flaky gridster drag-resize,
+ *   so only the data half (a fourth clock is added) is asserted.
+ * - Steps 7-8 (second desk member sees the saved config): the `main` snapshot has admin as the only desk member,
+ *   and the other user (janedoe) is not a member and has no known password.
  */
 
 const DEFAULT_ZONES = ['Europe/London', 'Asia/Tokyo', 'Europe/Moscow'];
