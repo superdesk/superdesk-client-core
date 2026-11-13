@@ -248,7 +248,12 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
                 <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
-                <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
+                <select
+                    className="sd-line-input__select"
+                    onChange={this.onSelect}
+                    value={type}
+                    data-test-id="annotation-type-select"
+                >
                     {annotationTypes.map((annotationType) => (
                         <option key={annotationType.qcode} value={annotationType.qcode}>
                             {annotationType.name}
@@ -261,7 +266,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const annotationInputComponent = (
             <div style={{paddingBlockStart: 20}}>
                 {annotationTypeSelect}
-                <div className="sd-line-input">
+                <div className="sd-line-input" data-test-id="annotation-body-input">
                     <label className="sd-line-input__label">{gettext('Annotation Body')}</label>
                     <Editor3Standalone
                         onChange={this.onChange}
@@ -276,14 +281,20 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                         <button
                             className="btn btn--cancel"
                             onClick={this.deleteAnnotation}
+                            data-test-id="delete"
                         >
                             {gettext('Delete')}
                         </button>
                     )}
-                    <button className="btn btn--cancel" onClick={_hidePopups}>
+                    <button className="btn btn--cancel" onClick={_hidePopups} data-test-id="cancel">
                         {gettext('Cancel')}
                     </button>
-                    <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
+                    <button
+                        className="btn btn--primary"
+                        onClick={this.onSubmit}
+                        disabled={isEmpty}
+                        data-test-id="submit"
+                    >
                         {gettext('Submit')}
                     </button>
                 </div>
@@ -300,7 +311,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 }}
             >
                 <Card padding={10} background={'var(--color-modal-Bg)'}>
-                    <div className="annotation-input" style={{width: 460}}>
+                    <div className="annotation-input" style={{width: 460}} data-test-id="annotation-input">
                         {
                             this.annotationInputTabsFromExtensions.length > 0
                                 ? (
