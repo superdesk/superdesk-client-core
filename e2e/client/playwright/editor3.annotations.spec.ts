@@ -5,41 +5,26 @@ import {pressRepeatedly, restoreDatabaseSnapshot} from './utils';
 import {getEditor3Field, getEditor3FormattingOptions, getEditor3TextRun} from './utils/editor3';
 
 /**
- * Editor3 annotations on the body field: adding one, editing it from its preview and
- * deleting it, each carried through a save and a reopen.
+ * Editor3 annotations on the body field: add, edit from the preview, delete, each carried
+ * through a save and a reopen. No profile in `main` enables the `annotation` formatting
+ * option, so every test runs on the `editor3-annotations` record, which adds it to the Story
+ * profile's body.
  *
- * No content profile in `main` enables the `annotation` formatting option, so every test
- * runs against the `editor3-annotations` record, which adds it to the Story profile's
- * body_html field and so puts the Annotation button on the toolbar.
- *
- * Where the product's wording or behaviour differs from the QA cases, the assertions follow
- * the product:
- * - the cases call the popup the "Annotation preview". The product gives it no title of its
- *   own; the "Annotation" label the cases list is a label inside it.
- * - the type row is a single element reading "Annotation type: Regular"
- *   (`AnnotationPopup.tsx`), so it is asserted as that whole string.
- * - the edit dialog's Delete button takes the dialog down before the confirmation is
- *   answered: `AnnotationInput.deleteAnnotation` calls `hidePopups()` right after opening
- *   the confirmation, without waiting on it. Cancelling the confirmation therefore leaves
- *   the annotation in place but no dialog open.
- * - "Test the formatting and inserting link in the Annotation body" is a test step, not an
- *   expected result. The four options the edit case does list as an expected result (Bold,
- *   Italic, Underline, Link) are asserted present, and bold is applied to check one of them
- *   works; link insertion is not driven.
+ * Where the product differs from the QA cases the assertions follow the product: the popup
+ * has no "Annotation preview" title, the type row is one string ("Annotation type: Regular"),
+ * and the edit dialog's Delete button closes the dialog before the confirmation is answered
+ * (`AnnotationInput.deleteAnnotation` does not wait on it). Link insertion in the annotation
+ * body is not driven.
  */
 
-/**
- * Every test builds its own article, annotates it, saves and reopens it, which does not fit
- * the 30s default.
- */
+/** Each test creates, saves and reopens an article, which does not fit the 30s default. */
 test.describe.configure({timeout: 120000});
 
 const SNAPSHOT = 'editor3-annotations';
 
 /**
- * Body text of every article this spec creates, split so that "select the text to annotate"
- * is a fixed number of Shift+Arrow presses over the trailing word and each half stays
- * addressable as its own Draft.js leaf once the annotation splits the block.
+ * Split so the trailing word is selected with a fixed number of Shift+Arrow presses and each
+ * half stays its own Draft.js leaf once the annotation splits the block.
  */
 const PLAIN_TEXT = 'alpha';
 const ANNOTATED_TEXT = 'bravo';
@@ -48,20 +33,13 @@ const BODY_TEXT = `${PLAIN_TEXT} ${ANNOTATED_TEXT}`;
 const ANNOTATION_TEXT = 'first note on bravo';
 const EDITED_ANNOTATION_TEXT = 'second note on bravo';
 
-/**
- * Entries of the `annotation_types` vocabulary in the `main` snapshot, in the order it
- * lists them. `AnnotationInput` seeds a new annotation with the first one.
- */
+/** `annotation_types` entries in `main`, in its order; a new annotation starts on the first. */
 const FIRST_TYPE = {name: 'Regular', qcode: 'regular'};
 const SECOND_TYPE = {name: 'Remark', qcode: 'remark'};
 
 /**
- * The toolbar Annotation button, narrowed to the inner `span`.
- *
- * `SelectionButton` (`scripts/core/editor3/components/toolbar/SelectionButton.tsx`) carries
- * no test id: the accessible name comes from the tooltip on the outer element, while both
- * the click handler and the `inactive` class that marks "no selection, so nothing to
- * annotate" sit on the span inside it.
+ * `SelectionButton` has no test id: the accessible name comes from the outer tooltip, the
+ * click handler and the `inactive` class sit on the inner span.
  */
 function getAnnotationButton(body: Locator): Locator {
     return body.getByTestId('toolbar')
@@ -69,29 +47,18 @@ function getAnnotationButton(body: Locator): Locator {
         .locator('span');
 }
 
-/** The dialog opened by the toolbar Annotation button and by the preview's Edit action. */
 function getAnnotationDialog(page: Page): Locator {
     return page.getByTestId('annotation-input');
 }
 
-/**
- * The annotation preview popup. `HighlightsPopup` renders it into the global
- * `#react-placeholder` element rather than inside the editor, so it is looked up on the
- * page and not under the body field.
- */
+/** Rendered by `HighlightsPopup` into the global `#react-placeholder`, not inside the editor. */
 function getAnnotationPopup(page: Page): Locator {
     return page.getByTestId('annotation');
 }
 
 /**
- * Resolves the colour an annotated run is underlined in.
- *
- * The ANNOTATION highlight is applied as an inline
- * `border-bottom: 4px solid var(--sd-editor-colour__adding)`
- * (`scripts/core/editor3/highlightsConfig.ts`). That token is defined per editor theme
- * (`.sd-editor--theme-*` in superdesk-ui-framework), not on `:root`, and resolves through a
- * palette token to an `lch()` value, so it is read through a probe mounted inside the field
- * instead of being hardcoded here.
+ * The underline is `var(--sd-editor-colour__adding)` (`highlightsConfig.ts`), defined per
+ * editor theme and resolving to an `lch()` value, so it is read from a probe inside the field.
  */
 function getAnnotationUnderlineColor(body: Locator): Promise<string> {
     return body.evaluate((element) => {
@@ -132,36 +99,22 @@ async function typeBody(page: Page): Promise<Locator> {
     return body;
 }
 
-/**
- * Puts the caret at the end of the body and extends the selection back over the trailing
- * word, which is the state the Annotation button needs to leave its inactive state.
- *
- * The caret is walked to the end with counted ArrowRight presses (they stop at the end of
- * the last block) rather than End, which does not move the caret on macOS.
- */
+/** Selects the trailing word. The caret is walked with ArrowRight because End does not move it on macOS. */
 async function selectAnnotationTarget(page: Page, body: Locator): Promise<void> {
     await getEditor3TextRun(body, ANNOTATED_TEXT).click();
     await pressRepeatedly(page, 'ArrowRight', BODY_TEXT.length);
     await pressRepeatedly(page, 'Shift+ArrowLeft', ANNOTATED_TEXT.length);
 }
 
-/** The nested editor3 field the annotation body is written in, toolbar included. */
 function getAnnotationBodyField(dialog: Locator): Locator {
     return dialog.getByTestId('annotation-body-input');
 }
 
-/** The writable area of the nested editor3 field the annotation body is written in. */
 function getAnnotationBodyInput(dialog: Locator): Locator {
     return getAnnotationBodyField(dialog).getByRole('textbox');
 }
 
-/**
- * Replaces the annotation body with `message`.
- *
- * The nested editor is a `contenteditable`, so it is rewritten by selecting all of it and
- * typing over the selection; `fill` does not apply to Draft.js. Select-all is scoped by the
- * click that precedes it, which puts the caret inside the nested editor.
- */
+/** `fill` does not apply to Draft.js, so the body is selected and typed over. */
 async function writeAnnotationBody(dialog: Locator, message: string): Promise<void> {
     const input = getAnnotationBodyInput(dialog);
 
@@ -171,10 +124,7 @@ async function writeAnnotationBody(dialog: Locator, message: string): Promise<vo
     await expect(input).toHaveText(message);
 }
 
-/**
- * Adds an annotation on the trailing word of the body through the toolbar Annotation flow,
- * typed as `SECOND_TYPE` so that a type other than the seeded default is what gets stored.
- */
+/** Annotates the trailing word, typed as `SECOND_TYPE` so a non-default type gets stored. */
 async function addAnnotation(page: Page, body: Locator, message: string): Promise<void> {
     const dialog = getAnnotationDialog(page);
 
@@ -184,8 +134,7 @@ async function addAnnotation(page: Page, body: Locator, message: string): Promis
 
     await expect(getAnnotationBodyInput(dialog)).toBeVisible();
 
-    // The dialog can still reset the select to its seeded first type right after it
-    // opens, so the choice is repeated until it holds.
+    // the dialog can reset the select to the seeded type right after opening
     const typeSelect = dialog.getByTestId('annotation-type-select');
 
     await expect(async () => {
@@ -201,14 +150,8 @@ async function addAnnotation(page: Page, body: Locator, message: string): Promis
 }
 
 /**
- * Clicks the unannotated half of the body and then the annotated word, which is the pair
- * that brings the preview popup up.
- *
- * On an article that was just opened, clicking the annotated word does not bring the popup
- * up on its own, however many times it is clicked; the caret has to land elsewhere in the
- * field first, so that the click on the annotated word moves it onto the highlight. Placing
- * the caret on the unannotated half every time keeps the helper working in that state and
- * in an article whose body was just typed.
+ * On a freshly opened article a click on the annotated word only opens the popup once the
+ * caret moves onto the highlight from elsewhere, hence the click on the plain half first.
  */
 async function clickAnnotatedText(body: Locator): Promise<void> {
     await getEditor3TextRun(body, PLAIN_TEXT).click();
@@ -216,12 +159,8 @@ async function clickAnnotatedText(body: Locator): Promise<void> {
 }
 
 /**
- * Opens the preview popup of the annotation on the trailing word.
- *
- * The click pair is retried because the popup can be taken down again a moment after it
- * opens: `HighlightsPopup` unmounts it from `componentDidUpdate` whenever the caret it then
- * sees is not on a highlight, and the editor3 field re-renders on its own for a while after
- * an edit.
+ * Retried: `HighlightsPopup` unmounts the popup whenever a re-render finds the caret off a
+ * highlight, and the field keeps re-rendering for a while after an edit.
  */
 async function openAnnotationPopup(page: Page, body: Locator): Promise<Locator> {
     const popup = getAnnotationPopup(page);
@@ -235,14 +174,8 @@ async function openAnnotationPopup(page: Page, body: Locator): Promise<Locator> 
 }
 
 /**
- * Asserts the type and body of the annotation on the trailing word, and with `bold` that the
- * whole body is bold, reopening the popup until they match.
- *
- * For an article that was just reopened, where `openAnnotationPopup` alone is not enough:
- * editor3 resets its selection once more while it initializes, which drops the caret off the
- * highlight and unmounts a popup that had already come up. Retrying the open together with
- * the assertions survives that, and the short inner timeouts make a vanished popup cost a
- * retry rather than the whole budget.
+ * For a reopened article: editor3 resets its selection once more while initializing, which
+ * unmounts a popup that already came up, so the open is retried together with the assertions.
  */
 async function expectReopenedAnnotation(
     page: Page,
@@ -265,26 +198,15 @@ async function expectReopenedAnnotation(
 }
 
 /**
- * Clicks a control inside the preview popup.
- *
- * The popup does not hold still: `HighlightsPopup` re-renders it by unmounting and mounting
- * it again (`renderCustom`), and `HighlightsPopupPositioner` re-measures and moves it after
- * every document click and after every update. Playwright's actionability checks lose that
- * race, reporting the target as unstable and then as detached. Dispatching the event waits
- * only for the element to be attached; React 16 listens at the document, so its handler
- * still receives the event.
+ * The popup is remounted and repositioned after every document click, so Playwright's
+ * actionability checks report it unstable, then detached; a dispatched event only needs it
+ * attached.
  */
 function clickInPopup(target: Locator): Promise<void> {
     return target.dispatchEvent('click');
 }
 
-/**
- * An entry of the 3-dots action menu of the annotation preview.
- *
- * The entries are matched on their text and not on their accessible name: each one renders
- * an icon element before its label (`EditorHighlightsHeader.tsx` builds them that way), and
- * Chrome folds that icon's glyph into the name.
- */
+/** Matched on text: each entry renders an icon before its label and Chrome folds the glyph into the name. */
 function getAnnotationAction(menu: Locator, action: string): Locator {
     return menu.getByRole('button').filter({hasText: action});
 }
@@ -304,10 +226,7 @@ async function executeAnnotationAction(popup: Locator, action: string): Promise<
     await clickInPopup(getAnnotationAction(menu, action));
 }
 
-/**
- * Asserts everything the edit and delete cases list under "Annotation preview". Both cases
- * open the same popup on the same annotation, so the assertions live here once.
- */
+/** The "Annotation preview" expected results shared by the edit and delete cases. */
 async function expectAnnotationPreview(
     popup: Locator,
     expected: {type: string; message: string},
@@ -329,11 +248,8 @@ async function expectAnnotationPreview(
 }
 
 /**
- * Creates and saves an article whose body's trailing word is annotated. The edit and delete
- * cases start from this, and no snapshot ships an annotated article.
- *
- * The save is also the point at which the editor3 field is known to have handed its change
- * over to the authoring model, so what follows is not racing that hand-over.
+ * No snapshot ships an annotated article. The save is also where editor3 is known to have
+ * handed its change to the authoring model.
  */
 async function createArticleWithAnnotation(page: Page, headline: string): Promise<Locator> {
     const authoring = new Authoring(page);
@@ -409,8 +325,7 @@ test('adding an annotation to the body, and the annotation surviving a reopen', 
     await expect(popup.getByTestId('annotation-type')).toHaveText(`Annotation type: ${SECOND_TYPE.name}`);
     await expect(popup.getByTestId('annotation-body')).toHaveText(ANNOTATION_TEXT);
 
-    // clicking text that carries no annotation collapses the caret outside the highlight,
-    // which is what closes the popup
+    // a click outside the highlight closes the popup
     await getEditor3TextRun(body, PLAIN_TEXT).click();
     await expect(popup).toBeHidden();
 
@@ -452,8 +367,7 @@ test('editing an annotation from its preview, and the edit surviving a reopen', 
     expect(await getEditor3FormattingOptions(getAnnotationBodyField(dialog)))
         .toEqual(['bold', 'italic', 'underline']);
 
-    // Link is a SelectionButton, so it carries no formatting-option id; the shortcut is
-    // part of the tooltip the accessible name comes from
+    // Link is a SelectionButton without a formatting-option id; its name includes the shortcut
     await expect(getAnnotationBodyField(dialog)
         .getByRole('button', {name: 'Link (Ctrl+K)', exact: true})).toBeVisible();
 
@@ -545,8 +459,7 @@ test('deleting an annotation through its confirmation dialog', {
     // the annotated word is no longer a leaf of its own once the highlight is gone
     await expectPlainRun(getEditor3TextRun(body, BODY_TEXT));
 
-    // Closing before the deletion reaches the article model skips the "Save changes?"
-    // prompt that closeAndSave answers.
+    // closing before the deletion reaches the article model skips the "Save changes?" prompt
     await expect(page.getByTestId('authoring-topbar').getByTestId('save')).toBeEnabled();
 
     await authoring.closeAndSave();
@@ -557,7 +470,6 @@ test('deleting an annotation through its confirmation dialog', {
 
     await expect(headlineField).toHaveText(headline);
 
-    // the underline is the annotation's only mark in the field, and the whole body being
-    // one leaf again is what says no highlight splits it
+    // the whole body being one leaf again says no highlight splits it
     await expectPlainRun(getEditor3TextRun(body, BODY_TEXT));
 });
