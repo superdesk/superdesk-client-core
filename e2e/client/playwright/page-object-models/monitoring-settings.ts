@@ -6,6 +6,12 @@ export type IMonitoringSettingsTab = 'Desks' | 'Saved Searches' | 'Reorder Secti
 const MONITORING_PREFERENCE_KEY = 'agg:view';
 
 /**
+ * `sd-switch` and `sd-check` (superdesk-ui-framework) both reflect the ON state as a `checked`
+ * class, on the switch itself and on the check's inner `.sd-checkbox` respectively.
+ */
+const CHECKED = /(^|\s)checked(\s|$)/;
+
+/**
  * Drives the "Monitoring settings" wizard modal
  * (`scripts/apps/monitoring/views/aggregate-settings.html`).
  *
@@ -125,6 +131,39 @@ export class MonitoringSettings {
         return this.modal.getByTestId('footer').getByTestId('done');
     }
 
+    /** A desk's row on the Desks tab, not to be confused with `deskCard` on `/#/settings/desks`. */
+    deskEntry(deskName: string): Locator {
+        return this.modal.getByTestId(`desk--${deskName}`);
+    }
+
+    deskToggle(deskName: string): Locator {
+        return this.deskEntry(deskName).getByTestId('active-toggle');
+    }
+
+    async expectDeskActive(deskName: string, active: boolean): Promise<void> {
+        if (active) {
+            await expect(this.deskToggle(deskName)).toHaveClass(CHECKED);
+        } else {
+            await expect(this.deskToggle(deskName)).not.toHaveClass(CHECKED);
+        }
+    }
+
+    /**
+     * The stage and desk output buttons of a desk, rendered only while the desk is switched on.
+     * Stages are keyed by stage name (`Working Stage`), outputs by label (`Output/Published`).
+     */
+    stageButtons(deskName: string): Locator {
+        return this.deskEntry(deskName).getByTestId(/^monitoring-group--/);
+    }
+
+    stageButton(deskName: string, stageName: string): Locator {
+        return this.deskEntry(deskName).getByTestId(`monitoring-group--${stageName}`);
+    }
+
+    selectedStageButtons(deskName: string): Locator {
+        return this.stageButtons(deskName).filter({has: this.page.locator('.sd-checkbox.checked')});
+    }
+
     get globalSavedSearches(): Locator {
         return this.modal.getByTestId('global-saved-searches');
     }
@@ -161,12 +200,16 @@ export class MonitoringSettings {
      * disappears can therefore cancel the PATCH and drop the configuration, so wait for the write.
      */
     async closeWithDone(): Promise<void> {
-        await Promise.all([
-            this.page.waitForResponse((response) => response.url().includes('/preferences/')
-                && response.request().method() === 'PATCH'
-                && (response.request().postData() ?? '').includes(MONITORING_PREFERENCE_KEY)),
+        const [response] = await Promise.all([
+            this.page.waitForResponse((res) => res.url().includes('/preferences/')
+                && res.request().method() === 'PATCH'
+                && (res.request().postData() ?? '').includes(MONITORING_PREFERENCE_KEY)),
             this.doneButton.click(),
         ]);
+
+        if (!response.ok()) {
+            throw new Error(`saving the workspace monitoring settings failed with ${response.status()}`);
+        }
 
         await expect(this.modal).not.toBeVisible();
     }
@@ -192,7 +235,10 @@ export class MonitoringSettings {
             this.doneButton.click(),
         ]);
 
-        expect(response.ok(), `saving the desk monitoring settings failed with ${response.status()}`).toBe(true);
+        if (!response.ok()) {
+            throw new Error(`saving the desk monitoring settings failed with ${response.status()}`);
+        }
+
         await expect(this.modal).not.toBeVisible();
     }
 
