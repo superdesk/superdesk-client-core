@@ -1,4 +1,4 @@
-import {test, expect, Locator, Page} from '@playwright/test';
+import {test, expect, Page} from '@playwright/test';
 import {Monitoring} from './page-object-models/monitoring';
 import {MonitoringSettings} from './page-object-models/monitoring-settings';
 import {restoreDatabaseSnapshot} from './utils';
@@ -63,26 +63,6 @@ const ITEM_HEIGHT = 57;
 
 /** `defaultMaxItems` in `scripts/apps/monitoring/controllers/AggregateCtrl.ts`. */
 const DEFAULT_MAX_ITEMS = 10;
-
-function monitoringGroup(page: Page, testValue: string): Locator {
-    return page
-        .getByTestId('monitoring-view')
-        .getByTestId('monitoring-group')
-        .and(page.locator(`[data-test-value="${testValue}"]`));
-}
-
-function monitoringGroups(page: Page): Locator {
-    return page.getByTestId('monitoring-view').getByTestId('monitoring-group');
-}
-
-async function expectMonitoringGroupOrder(page: Page, testValues: Array<string>): Promise<void> {
-    const groups = monitoringGroups(page);
-
-    await expect(groups).toHaveCount(testValues.length);
-    await expect
-        .poll(() => groups.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-test-value'))))
-        .toEqual(testValues);
-}
 
 /**
  * Enables a global saved search so the Reorder sections and Items count tabs list a saved search
@@ -220,7 +200,7 @@ test('Reorder sections tab lists the active sections and drag and drop reorders 
     await settings.closeWithDoneOnDesk();
 
     await openMonitoringView(page);
-    await expectMonitoringGroupOrder(page, [
+    await new Monitoring(page).expectGroups([
         SAVED_SEARCH,
         WORKING_STAGE_GROUP,
         INCOMING_STAGE_GROUP,
@@ -233,14 +213,15 @@ test('Items count tab sets how many items a monitoring group shows before it scr
         {type: 'confluence', description: '1315934719 partial'},
     ],
 }, async ({page}) => {
+    const monitoring = new Monitoring(page);
     const settings = new MonitoringSettings(page);
 
     await restoreDatabaseSnapshot();
 
     await openMonitoringView(page);
 
-    const workingStageItems = monitoringGroup(page, WORKING_STAGE_GROUP).getByTestId('article-item');
-    const workingStageViewport = monitoringGroup(page, WORKING_STAGE_GROUP).getByTestId('item-list-viewport');
+    const workingStageItems = monitoring.getGroupLocator(WORKING_STAGE_GROUP).getByTestId('article-item');
+    const workingStageViewport = monitoring.getGroupLocator(WORKING_STAGE_GROUP).getByTestId('item-list-viewport');
 
     await expect(workingStageItems).toHaveCount(WORKING_STAGE_ITEMS);
     await expect(workingStageViewport).toHaveCSS('max-height', `${DEFAULT_MAX_ITEMS * ITEM_HEIGHT}px`);
@@ -274,7 +255,7 @@ test('Items count tab sets how many items a monitoring group shows before it scr
 
     await openMonitoringView(page);
     await expect(workingStageViewport).toHaveCSS('max-height', `${2 * ITEM_HEIGHT}px`);
-    await expect(monitoringGroup(page, SAVED_SEARCH).getByTestId('item-list-viewport'))
+    await expect(monitoring.getGroupLocator(SAVED_SEARCH).getByTestId('item-list-viewport'))
         .toHaveCSS('max-height', `${3 * ITEM_HEIGHT}px`);
 
     // the setting sizes the group, it does not shrink the result set the group scrolls through

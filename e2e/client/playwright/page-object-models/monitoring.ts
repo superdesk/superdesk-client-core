@@ -169,6 +169,22 @@ export class Monitoring {
             .and(this.page.locator(`[data-test-value="${articleLabel}"]`));
     }
 
+    getGroupLocator(groupName: string): Locator {
+        return this.getGroupLocators().and(this.page.locator(`[data-test-value="${groupName}"]`));
+    }
+
+    getGroupLocators(): Locator {
+        return this.page.getByTestId('monitoring-view').getByTestId('monitoring-group');
+    }
+
+    /** The groups of the open view, in order, by their `data-test-value`. */
+    async expectGroups(groupNames: Array<string>): Promise<void> {
+        await expect
+            .poll(() => this.getGroupLocators()
+                .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-test-value'))))
+            .toEqual(groupNames);
+    }
+
     getPreviewPane(): Locator {
         return this.page.getByTestId('authoring-preview');
     }
@@ -197,35 +213,5 @@ export class Monitoring {
 
     getCreateItemButton(): Locator {
         return this.getToolbarActions().getByTestId('content-create');
-    }
-
-    /**
-     * One template backs both entry points into the monitoring settings, so the
-     * dialog carries the desk-flavoured test id even in a custom workspace.
-     */
-    getMonitoringSettingsDialog(): Locator {
-        return this.page.getByTestId('desk--monitoring-settings');
-    }
-
-    async openMonitoringSettings(): Promise<void> {
-        await this.getMonitoringSettingsButton().click();
-        await expect(this.getMonitoringSettingsDialog()).toBeVisible();
-    }
-
-    /**
-     * Tab titles come from the wizard step titles, e.g. `Desks`, `Saved Searches`,
-     * `Reorder Sections`, `Items Count`.
-     */
-    getMonitoringSettingsTabs(): Locator {
-        return this.getMonitoringSettingsDialog().getByTestId(/^wizard--/);
-    }
-
-    async openMonitoringSettingsTab(title: string): Promise<void> {
-        await this.getMonitoringSettingsDialog().getByTestId(`wizard--${title}`).click();
-    }
-
-    async closeMonitoringSettings(): Promise<void> {
-        await this.getMonitoringSettingsDialog().getByRole('button', {name: 'Cancel'}).click();
-        await expect(this.getMonitoringSettingsDialog()).toBeHidden();
     }
 }
