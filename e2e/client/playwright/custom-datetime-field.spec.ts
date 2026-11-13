@@ -5,49 +5,23 @@ import {ContentProfileSettings} from './page-object-models/settings/content-prof
 import {Monitoring} from './page-object-models/monitoring';
 
 /*
- * Lifecycle of a custom datetime field: created, edited and removed under
- * Settings -> Metadata -> Other fields, then used on an article.
+ * Lifecycle of a custom datetime field under Settings -> Metadata -> Other fields, then used on an article.
  *
- * Custom field types are contributed by the authoring-react field registry, which
- * `setupAuthoringReact` (scripts/core/menu/authoring-switch.ts) registers only while the
- * localStorage flag `auth-react` is set. Without it the create dialog's "Field type" select has
- * no options at all and no custom field can be created, so every test here opts in. The flag is
- * set with `addInitScript` rather than `getStorageState({}, {authoringReact: true})` because that
- * helper rebuilds the state from the committed playwright/.auth/user.json, whose localStorage is
- * keyed to http://localhost:9000; on a slot the client is served from another port, so the
- * rebuilt state carries no session for that origin and the app stays logged out.
+ * Every test sets the `auth-react` localStorage flag with `addInitScript`: without it no field types
+ * are registered and the create dialog's "Field type" select is empty. Not `getStorageState`, which
+ * rebuilds state keyed to localhost:9000 and leaves the session missing on slots using another port.
  *
- * Where the cases and the product disagree, the product is asserted:
- * - The cases call the field type "Datetime". The registered generic type is labelled
- *   "Datetime (authoring-react)" (id `datetime-v2`, scripts/apps/authoring-react/fields/datetime).
- * - The cases' "Close button" is the footer's "Cancel"; the close icon sits in the dialog header.
- * - The delete confirmation the cases describe ("Confirm" / "Please confirm you want to delete
- *   the vocabulary." / Cancel + OK) has been redesigned: the dialog is headed "Delete
- *   vocabulary?" and its buttons are Cancel and Delete (VocabularyDeletionModal.tsx).
- * - The in-use message the cases quote ("The vocabulary is used in the following content types:")
- *   is now a separate "Cannot delete vocabulary" dialog that lists the content profiles.
- * - The cases call Label a multiselect; the control takes a single label (`data-max-items="1"`
- *   in vocabulary-config-modal.html) and its own hint says so.
- * - The cases expect the per-item Edit and Remove icons to appear on hover. They are laid out
- *   unconditionally, so they are already visible before the cursor reaches the row.
- * - The cases say a custom datetime field "can be used in both header and content". Both sections
- *   do offer it, but only one at a time: the field picker hides any field already configured in
- *   any section (`existsInFields` in ContentProfileFieldsConfig.tsx).
+ * Deviations from the QA cases (the product is asserted):
+ * - The type is labelled "Datetime (authoring-react)" (`datetime-v2`), not "Datetime".
+ * - "Close button" is the footer's Cancel. The delete dialogs were redesigned (VocabularyDeletionModal.tsx).
+ * - Label is single-select, per-item Edit/Remove icons are always visible, and a field can sit in only
+ *   one profile section at a time (`existsInFields` in ContentProfileFieldsConfig.tsx).
  *
- * Expected results left uncovered:
- * - 1335328976 and 1335328978: the "Initial time offset" number field and the "Time increment
- *   steps" list (Add step button, per-step Remove icon and minutes spinner). Those controls are
- *   the config component of the `datetime` field type in scripts/extensions/datetimeField, and
- *   e2e/client/index.js starts the app with the availability-manager extension only, so that type
- *   is never registered. The type that is registered, `datetime-v2`, declares
- *   `configComponent: null`, so CustomFieldConfigs renders no configuration block whatsoever.
- * - 1344443801: "the date is set to current day and the time is current time + 5 min", blocked by
- *   the same missing Initial time offset configuration.
- * - 1344443801 step 5, re-opening the saved article to see the value again. The value is asserted
- *   on the archive save response instead: after a reload the authoring workspace restores the
- *   article's route but not its editor, so there is nothing stable to re-read the field from.
- * - 1344443801's explicit date entry. The date half of the field only takes input from the
- *   calendar popup, so the test sets the time and asserts the date the component derives.
+ * Not covered: 1335328976, 1335328978 and 1344443801 (initial time offset, time increment steps): that
+ * config lives in the `datetime` type, which the e2e app never registers, and `datetime-v2` has
+ * `configComponent: null`. 1344443801 step 5 (re-open to re-read the value) asserts the save response
+ * instead, since a reload does not restore the editor. Date entry is not typed: the calendar input is
+ * popup-only, so the test sets the time and asserts the derived date.
  */
 
 const FIELD_ID = 'New_other_datetime_Item_1';
@@ -55,12 +29,10 @@ const FIELD_NAME = 'New other datetime Item 1';
 const FIELD_TYPE_LABEL = 'Datetime (authoring-react)';
 const FIELD_TYPE_ID = 'datetime-v2';
 
-/** How the content profile field picker labels the field: display name plus its type. */
 const FIELD_PICKER_OPTION = `${FIELD_NAME} (custom vocabulary)`;
 
 const FIELD_TIME = '14:30';
 
-/** What the field picker offers in the Story profile's Header section, minus any custom field. */
 const STOCK_HEADER_FIELD_OPTIONS = ['Company Codes', 'Keywords', 'Language', 'Take Key'];
 
 const NEW_FIELD_VALUES = {
@@ -71,7 +43,6 @@ const NEW_FIELD_VALUES = {
     helperText: 'Pick a date and a time',
 };
 
-/** Renders a date the way the field's date input does; this instance formats dates as dd/mm/yyyy. */
 function formatAsDateInput(date: Date): string {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -171,12 +142,7 @@ test('a saved custom datetime field is available to both content profile section
 
     const contentProfileSettings = new ContentProfileSettings(page);
 
-    /*
-     * `existsInFields` in ContentProfileFieldsConfig.tsx looks across every section, so once the
-     * field is configured anywhere the picker stops offering it. Both sections therefore have to
-     * be checked while it is still unconfigured, and the editor is reopened from a fresh load
-     * between the two because the open field picker swallows clicks on the section tabs.
-     */
+    // Check both sections while the field is unconfigured. Reload between them: an open picker swallows tab clicks.
     for (const section of ['Header', 'Content']) {
         await page.goto('/#/settings/content-profiles');
         await page.reload();
@@ -296,8 +262,7 @@ test('an unused custom datetime field is removed only after confirming', {
 
     const picker = await contentProfileSettings.openFieldPicker();
 
-    // Gate on the full stock option set: the removed field must be absent from a loaded list,
-    // not from a list that has not rendered yet.
+    // Gate on the full stock set so absence is checked against a rendered list.
     await expect(picker.getByRole('treeitem')).toHaveText(STOCK_HEADER_FIELD_OPTIONS);
 });
 
@@ -316,13 +281,8 @@ test('a custom datetime field used in a content profile cannot be removed', {
         {tabName: 'Header', fieldId: FIELD_NAME, fieldType: 'custom vocabulary'},
     ]);
 
-    /*
-     * The deletion modal decides which variant to show from `sdApi.contentProfiles.getAll()`,
-     * which reads the in-memory dataStore seeded at boot and refreshed only by websocket resource
-     * messages. Reload so it sees the profile that now uses the field. The reload has to happen
-     * on the destination route: reloading first and navigating by hash straight after leaves the
-     * settings view half built.
-     */
+    // The deletion modal reads `sdApi.contentProfiles.getAll()` (dataStore seeded at boot), so reload to see
+    // the new profile. Reload on the destination route: reload-then-hash-navigate leaves settings half built.
     await page.goto('/#/settings/vocabularies');
     await page.reload();
 
@@ -364,10 +324,7 @@ test('a custom datetime field on the content profile is editable and saved with 
         {tabName: 'Header', fieldId: FIELD_NAME, fieldType: 'custom vocabulary'},
     ]);
 
-    /*
-     * The content profile a new article is built from comes from the dataStore seeded at boot, so
-     * without a reload the article would be built from the profile as it was before the add.
-     */
+    // New articles use the boot-time dataStore profile, so reload to pick up the added field.
     const monitoring = new Monitoring(page);
 
     await page.goto('/#/workspace/monitoring');
@@ -384,11 +341,7 @@ test('a custom datetime field on the content profile is editable and saved with 
     await expect(field.getByTestId('date-input')).toBeVisible();
     await expect(field.getByTestId('time-input')).toBeVisible();
 
-    /*
-     * Only the time is typed. The date half is a PrimeReact calendar whose input is
-     * `inputmode="none"` and ignores typed text, and DateTimePicker.handleTimeChange seeds the
-     * date from `new Date()` when the field is still empty, so entering a time alone sets today.
-     */
+    // The date input is `inputmode="none"`; DateTimePicker.handleTimeChange seeds today when empty.
     await field.getByTestId('time-input').fill(FIELD_TIME);
     await expect(field.getByTestId('date-input')).toHaveValue(formatAsDateInput(new Date()));
 
@@ -404,11 +357,7 @@ test('a custom datetime field on the content profile is editable and saved with 
 
     expect(saveResponse.status()).toBeLessThan(400);
 
-    /*
-     * The field is stored as a UTC instant. Compare the parsed value in local time, and only down
-     * to the minute: handleTimeChange sets hours and minutes on `new Date()` and leaves the
-     * seconds it started with.
-     */
+    // Stored as a UTC instant. Compare in local time to the minute: seconds come from `new Date()`.
     const saved = new Date((await saveResponse.json()).extra[FIELD_ID]);
 
     expect(formatAsDateInput(saved)).toEqual(formatAsDateInput(new Date()));

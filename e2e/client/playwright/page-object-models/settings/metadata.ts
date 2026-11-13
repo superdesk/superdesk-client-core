@@ -8,10 +8,6 @@ export interface ICustomFieldValues {
     helperText?: string;
 }
 
-/**
- * Settings -> Metadata (`#/settings/vocabularies`): the tab strip and the vocabulary
- * create/edit dialog shared by every metadata tab, including "Other fields".
- */
 export class MetadataSettings {
     private page: Page;
 
@@ -97,10 +93,7 @@ export class MetadataSettings {
         };
     }
 
-    /**
-     * Waits for the vocabularies write the Save click triggers, so a caller that navigates or
-     * reloads straight after cannot race it.
-     */
+    // Waits for the vocabularies write so a following reload cannot race it.
     async save(): Promise<void> {
         await Promise.all([
             this.page.waitForResponse(
@@ -122,12 +115,7 @@ export class MetadataSettings {
         await expect(this.getDialog()).toHaveCount(0);
     }
 
-    /**
-     * Creates a custom field through the create dialog. The `main` snapshot carries no entry on
-     * the "Other fields" tab, and there is no per-test fixture API, so every test that needs one
-     * builds it here first (one dialog, one save - the atomic-precondition exception in
-     * e2e/WRITING_TESTS.md).
-     */
+    // The `main` snapshot has no "Other fields" entry and no fixture API, so tests create one here.
     async createCustomField(values: ICustomFieldValues & {id: string; name: string}): Promise<void> {
         await this.openCreateDialog();
         await this.fillDialog(values);

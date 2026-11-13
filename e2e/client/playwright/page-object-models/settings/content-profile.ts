@@ -16,11 +16,7 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
-    /**
-     * Sets the formatting options an editor3 field of a content profile offers. The list
-     * replaces whatever the field had, it is not merged into it, so pass every option the
-     * test needs on the field.
-     */
+    // The list replaces the field's existing options, it is not merged.
     public async addFormattingOptionToContentProfile(options: IOptions) {
         await this.page.locator(s(`content-profile=${options.profileName}`))
             .getByRole('button', {name: 'Actions'})
@@ -30,9 +26,7 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
         await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
-        // Spread, not passed as one array: an array argument is a nested path for
-        // TreeSelectDriver, and the tree-select popover closes after every pick, so all
-        // options but the first would be clicked against a popover that is no longer open.
+        // Spread: an array argument is a nested path for TreeSelectDriver, and the popover closes after each pick.
         await new TreeSelectDriver(
             this.page,
             this.page.locator(s('formatting-options-input')),
@@ -83,11 +77,7 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
     }
 
-    /**
-     * `addFieldsToContentProfile` returns as soon as Save is clicked, so a caller that re-reads
-     * the profile straight after can race the PATCH that click triggers. This variant waits for
-     * that write and for the editor to close.
-     */
+    // `addFieldsToContentProfile` returns on Save click, before the PATCH lands.
     async addFieldsToContentProfileAndWait(
         contentProfile: string,
         fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
@@ -104,11 +94,6 @@ export class ContentProfileSettings {
         await expect(this.page.getByTestId('content-profile-editing-modal')).toBeHidden();
     }
 
-    /**
-     * Opens a content profile's field editor from the profile list. `addFieldsToContentProfile`
-     * does the same inline; this exists for tests that only need to read the configured fields
-     * back, or to open the field picker without adding anything.
-     */
     async openEditor(contentProfile: string): Promise<void> {
         await this.page
             .getByTestId('content-profile')
@@ -122,7 +107,7 @@ export class ContentProfileSettings {
         await expect(this.page.getByTestId('content-profile-editing-modal')).toBeVisible();
     }
 
-    /** `sectionName` is the tab label without the " fields" suffix, e.g. 'Header' or 'Content'. */
+    // `sectionName` is the tab label without the " fields" suffix.
     async openSection(sectionName: string): Promise<void> {
         await this.page
             .getByTestId('content-profile-editing-modal')
@@ -138,11 +123,6 @@ export class ContentProfileSettings {
             .and(this.page.locator(`[data-test-value="${fieldName}"]`));
     }
 
-    /**
-     * Opens the "Add new field" picker and returns its popover. The picker only lists fields that
-     * are allowed in the open section and not configured on it yet, so it is also how a test
-     * checks that a field is no longer available at all.
-     */
     async openFieldPicker(): Promise<Locator> {
         await this.page
             .getByTestId('content-profile-editing-modal')
@@ -150,11 +130,7 @@ export class ContentProfileSettings {
             .first()
             .click();
 
-        /*
-         * The popover is a zero-size portal wrapper (WithPortal in superdesk-ui-framework's
-         * TreeMenu) that only positions its content, so it never satisfies toBeVisible itself.
-         * Wait on the options it renders instead.
-         */
+        // The popover is a zero-size portal wrapper (WithPortal in TreeMenu), never "visible". Wait on its options.
         const popover = this.page.getByTestId('tree-menu-popover');
 
         await expect(popover.getByRole('treeitem').first()).toBeVisible();
