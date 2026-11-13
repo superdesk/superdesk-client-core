@@ -2,35 +2,15 @@ import {test, expect} from '@playwright/test';
 import {restoreDatabaseSnapshot} from './utils';
 import {UserRolesSettings} from './page-object-models/settings/user-roles';
 
-/**
- * QA case "User roles" (Confluence 1311834342).
- *
- * A new role is granted every privilege except a documented restricted set, and
- * a user assigned that role inherits exactly that split: the granted privileges
- * come from the role and cannot be edited per user, the restricted ones are not
- * granted.
- *
- * Documented expectations not covered here:
- *
- * - Four of the eleven restricted privileges the case names are contributed by
- *   superdesk-planning (featured stories, global filters, planning item
- *   management, planning - manage locations). That app is not installed in the
- *   client-core e2e stack, so /api/privileges does not return them and the rows
- *   do not exist in the table.
- * - That the restrictions actually block the actions (no unlock / spike /
- *   publish / unpublish control for a user holding the role). A user created
- *   through the UI has no password, client-core has no per-test fixture API,
- *   and the `main` snapshot carries no non-admin user with known credentials,
- *   so there is no way to log in as the restricted user.
- */
+// QA case "User roles" (Confluence 1311834342). Partial, deviations:
+// - 4 of the 11 restricted privileges (featured stories, global filters, planning item
+//   management, manage locations) come from superdesk-planning, which is not in this stack.
+// - Not checked that the restrictions block actions: a UI-created user has no password and
+//   the snapshot has no non-admin user with known credentials, so we cannot log in as one.
 
 const ROLE_NAME = 'Editor';
 
-/**
- * The privileges the case withholds from the role that exist in this backend,
- * by their `/api/privileges` name. UI labels, in the same order: Unlock content,
- * Spike, Publish, Unpublish, Roles Management, Mark items for users, Master Desk.
- */
+// Restricted privileges that exist in this backend, by `/api/privileges` name.
 const RESTRICTED_PRIVILEGES = [
     'unlock',
     'spike',
