@@ -93,14 +93,7 @@ export class Authoring {
         return panel;
     }
 
-    /**
-     * Runs a macro from the already open Macros widget and resolves with the server's reply.
-     *
-     * Macros execute on the backend (`POST /api/macros`) and the widget reports the outcome
-     * only once that request settled, so waiting for the response is what makes a following
-     * assertion about the outcome meaningful. The status is deliberately not checked here:
-     * a macro that reports errors answers with an error status, which is a normal result.
-     */
+    // Resolves once `POST /api/macros` settles. Status unchecked: macros that report errors answer with one.
     async runMacro(macroLabel: string): Promise<Response> {
         const {page} = this;
         const macro = page.getByTestId('authoring-widget-panel')
