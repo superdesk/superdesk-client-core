@@ -48,6 +48,25 @@ export class Monitoring {
         }
     }
 
+    async openActionsMenu(item: Locator): Promise<Locator> {
+        await item.hover();
+        await item.getByTestId('context-menu-button').click();
+
+        const menu = this.page.getByTestId('context-menu');
+
+        await expect(menu).toBeVisible();
+
+        return menu;
+    }
+
+    // MenuItems handles Escape on the menu element (focused on mount), not on the page.
+    async closeActionsMenu(): Promise<void> {
+        const menu = this.page.getByTestId('context-menu');
+
+        await menu.press('Escape');
+        await expect(menu).toBeHidden();
+    }
+
     /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
