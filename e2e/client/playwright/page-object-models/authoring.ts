@@ -50,6 +50,20 @@ export class Authoring {
         }
     }
 
+    /**
+     * Publishes without explicitly targeting subscribers, so which subscribers
+     * receive the item is decided by their products' content filters. Confirms the
+     * "save and send" dialog that publishing raises when the item has pending
+     * changes (that confirmation also persists those changes).
+     */
+    async publishToMatchingSubscribers(): Promise<void> {
+        const {page} = this;
+
+        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+        await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+    }
+
     async sendTo(destination: {desk: string; stage: string}): Promise<void> {
         const {page} = this;
 
