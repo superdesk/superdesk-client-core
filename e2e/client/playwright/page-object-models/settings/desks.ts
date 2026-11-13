@@ -1,9 +1,6 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {ContentExpiryField} from '../content-expiry';
 
-/**
- * Desk settings (`#/settings/desks`) and the desk configuration modal.
- */
 export class DeskSettings {
     private page: Page;
 
@@ -15,10 +12,7 @@ export class DeskSettings {
         return this.page.getByTestId('desk-config-modal');
     }
 
-    /**
-     * `sd-wizard` keeps every step in the DOM and only shows the current one,
-     * so anything the steps have in common has to be looked up per step.
-     */
+    // `sd-wizard` keeps every step in the DOM, so shared elements must be looked up per step.
     get generalStep(): Locator {
         return this.modal.locator('[sd-deskedit-basic]');
     }
@@ -49,10 +43,7 @@ export class DeskSettings {
         await expect(this.modal).toBeVisible();
     }
 
-    /**
-     * Saves the General step and closes the modal. The modal hiding does not
-     * mean the PATCH landed, so wait for the response too.
-     */
+    // The modal hiding does not mean the PATCH landed, so wait for the response too.
     async saveAndClose(): Promise<void> {
         const [response] = await Promise.all([
             this.page.waitForResponse(
@@ -108,10 +99,7 @@ export class DeskSettings {
         await expect(this.stagesStep.getByTestId('save-edited-stage')).toHaveCount(0);
     }
 
-    /**
-     * The read-only "Content expiry" line of the selected stage: the stage's
-     * own value when it has one, the inherited desk or system default otherwise.
-     */
+    // Shows the stage's own value, or the inherited desk or system default.
     get stageExpirySummary(): Locator {
         return this.stagesStep.getByTestId('content-expiry-summary');
     }

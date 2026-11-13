@@ -6,10 +6,7 @@ export interface IContentExpiry {
     minutes: number;
 }
 
-/**
- * Driver for the `sd-content-expiry` directive, which renders the Content
- * Expiry control identically for desks, stages and ingest sources.
- */
+// Driver for the `sd-content-expiry` directive, shared by desks, stages and ingest sources.
 export class ContentExpiryField {
     private root: Locator;
 
@@ -21,15 +18,11 @@ export class ContentExpiryField {
         return this.root.getByTestId('content-expiry');
     }
 
-    /**
-     * The "Using <Desk|System> default" / "OFF" badge. It only renders while
-     * this level has no expiry of its own, so it shows what the level inherits.
-     */
+    // Only renders while this level has no expiry of its own, so it shows what the level inherits.
     get effective(): Locator {
         return this.row.getByTestId('content-expiry--effective');
     }
 
-    /** The days / hours / minutes inputs only render while the toggle is on. */
     async set(expiry: IContentExpiry): Promise<void> {
         const days = this.row.getByTestId('content-expiry--days');
 
@@ -44,7 +37,7 @@ export class ContentExpiryField {
         await this.row.getByTestId('content-expiry--minutes').fill(String(expiry.minutes));
     }
 
-    /** Switching the toggle off stores `-1`, the directive's "no expiry here". */
+    // Switching the toggle off stores `-1`, the directive's "no expiry here".
     async turnOff(): Promise<void> {
         await expect(this.row).toBeVisible();
 

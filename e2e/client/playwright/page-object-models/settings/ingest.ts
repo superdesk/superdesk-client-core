@@ -1,9 +1,6 @@
 import {Locator, Page, expect} from '@playwright/test';
 import {ContentExpiryField} from '../content-expiry';
 
-/**
- * Ingest settings (`#/settings/ingest`), Sources tab.
- */
 export class IngestSettings {
     private page: Page;
 
@@ -24,10 +21,7 @@ export class IngestSettings {
         await expect(this.page.getByTestId('ingest-sources-status-filter')).toBeVisible();
     }
 
-    /**
-     * The Add New button only opens the modal once the feeding services have
-     * loaded, and nothing on the page reflects that, so retry the click.
-     */
+    // Add New only opens the modal once the feeding services have loaded, with no visible signal, so retry the click.
     async addNewSource(): Promise<void> {
         await expect(async () => {
             await this.page.getByRole('button', {name: 'Add New'}).click();
@@ -35,7 +29,6 @@ export class IngestSettings {
         }).toPass({timeout: 30000});
     }
 
-    /** The source list is filtered by status; closed sources need the filter. */
     async filterByStatus(status: 'Active' | 'All' | 'Closed'): Promise<void> {
         await this.page.getByTestId('ingest-sources-status-filter').click();
         await this.page.getByTestId('ingest-sources-status-filter--option')
