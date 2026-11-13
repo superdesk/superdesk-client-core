@@ -8,80 +8,14 @@ import {getStorageState} from './utils/storage-state';
 test.setTimeout(90000);
 
 /*
- * Publishing family: scheduling a publish, publishing a package, the desk-type gate on
- * the Publish tab, unpublishing, and what an update carries in the NINJS output.
- *
- * Expected results of the covered cases that are NOT asserted here, and why:
- *
- * 1308524953 Schedule publishing
- * - Every calendar-popup result (calendar opens on the icon, today highlighted, browsing
- *   with < and >, Cancel/Confirm in its footer). The case describes the AngularJS picker;
- *   the publish panel is React and renders superdesk-ui-framework's `DatePicker`, a
- *   primereact calendar with month/year navigators and no Cancel/Confirm buttons, so
- *   these results have no counterpart to assert.
- * - Every clock-popup result (hours one by one, minutes in 5 minute steps, current time
- *   highlighted, "In 30 min" / "In 1 hour" / "In 2 hours" shortcuts, Cancel/Confirm).
- *   `TimePickerPopover` takes its header and footer as templates and
- *   `publishing-date-options.tsx` passes neither, so the shortcut and confirm controls
- *   the case expects are not rendered at all.
- * - "At the time that was scheduled for publishing, the article label is changed from
- *   Scheduled to Published": needs real time to pass, so it is out of reach for a spec.
- * - "When a scheduled article is reopened, all data that were filled in the fields are
- *   preserved": `scheduled` is in READONLY_STATES, so the item opens read-only and the
- *   publish panel that held the values cannot be reopened. That the entered schedule was
- *   persisted is asserted through the date the list row shows instead. The hour is not
- *   compared: the row shows it in the browser's time zone, while the panel's time is read in
- *   the server's default time zone (Europe/London), so it shifts with the machine.
- * - "Clear schedule button is shown when data is filled": the Clear button is rendered
- *   whether or not a schedule is filled in, so only its presence with a schedule and what it
- *   does are asserted.
- * - "publishing does not go through with required fields empty" is asserted by
- *   publishing.validation.spec.ts and not repeated here.
- * - "Scheduled or published article can be found in Global search" is not asserted.
- * - The unsaved-changes dialog is driven, Cancel first and then the save button, but its
- *   wording differs from the case: publishing from the panel goes through `beforeSend`,
- *   which raises `confirmSendTo` ("Save and send"), not the "Save and publish" dialog the
- *   case describes.
- *
- * 1308524959 Publish package
- * - `hightlights.spec.ts` ("publishing a highlights package") overlaps in part: it publishes
- *   the same package, but asserts only the package row reaching the desk output, not the
- *   item the package contains.
- * - The package used is "Package Highlight 1", the only package in a committed snapshot
- *   that can be published as it stands: it carries the Story profile, which declares no
- *   required field, while `media-items`' "Shire package" carries the Package profile, which
- *   requires a headline, a slugline and a subject. That it also belongs to a highlight has
- *   no bearing on the publish itself.
- * - "Click on Publish package and items": no such button exists. The publish panel offers
- *   only Publish and Publish from (`publish-action.tsx`); publishing a package publishes
- *   the items it contains from the plain Publish button, which is what is asserted.
- * - "When a published package is reopened, all items contained in the package are
- *   preserved": the read-only package view (`sd-package-ref.html` via `sd-package`) is a
- *   different template from the editable one and carries no test ids, so there is nothing
- *   to address the contained items by once the package is published.
- * - "When an article of a published package is opened, all data are preserved" and
- *   "Published package can be found in Global search" are not asserted.
- * - the empty-required-fields result: see above, publishing.validation.spec.ts.
- *
- * 1310851134 Publishing depending on desk type
- * - The authoring-desk half only holds when `features.noPublishOnAuthoringDesk` is on:
- *   `canPublish` (scripts/api/article.ts) withholds publishing on an authoring desk only
- *   under that flag, and the e2e client config does not set it. The test turns it on.
- *
- * 1344444004 Unpublishing
- * - "the image stays as Published with an extra (red) label 'used'": no item in any
- *   committed snapshot carries `associations`, so an item with an image in its body would
- *   have to be built first, which this batch does not do.
- *
- * 1335328782 Handling publish updates for Talpa (blocker)
- * - The custom Talpa NINJS format is not registered in the e2e backend. Its formatters are
- *   superdesk-core's stock set and none of them emits an `original` field, so none of the
- *   case's expected results can hold: not for updates of the root item (Case1) and not for
- *   the duplicate branch (Case2), which is not driven at all. The case is declared by a
- *   `test.fixme` at the end of this file.
- * - A related test asserts what the stock NINJS formatter does emit for an update:
- *   `evolvedfrom`, set to `rewrite_of`, which points at the immediate parent rather than at
- *   the root of the chain.
+ * Publishing family: scheduling, publishing a package, the desk-type gate on the Publish tab,
+ * unpublishing, and the NINJS an update carries. Deviations from the QA cases:
+ * - Calendar and clock popup results are not asserted: the panel renders the React `DatePicker`,
+ *   not the AngularJS picker, and has no Cancel/Confirm or "In 30 min" shortcuts.
+ * - Scheduled items open read-only, so persistence is asserted via the date on the list row.
+ * - Publishing from the panel raises "Save and send", not "Save and publish".
+ * - There is no "Publish package and items" button; plain Publish publishes the contents.
+ * - The Talpa `original` field is not emitted by any e2e formatter (see the `test.fixme`).
  */
 
 function inTwoDaysAtTen(): Date {
@@ -101,17 +35,8 @@ function pad(value: number): string {
     return value.toString().padStart(2, '0');
 }
 
-/**
- * Opens the publish panel of the open article and publishes without targeting a
- * subscriber, so every subscriber whose products match receives the item.
- *
- * Setting a publish schedule writes it onto the article through `on-data-change="autosave"`
- * and so leaves the article dirty, which is why that branch also has to answer the
- * unsaved-changes prompt `beforeSend` raises for a dirty article.
- *
- * The toast is waited out rather than only waited for, because `notify` drops a message
- * that is already on screen, so a following publish would raise no toast of its own.
- */
+// The toast is waited out because `notify` drops a message already on screen, so a later publish would raise none.
+// A schedule leaves the article dirty, so `beforeSend` raises the unsaved-changes prompt.
 async function publishOpenArticle(page: Page, options: {publishSchedule?: Date}): Promise<void> {
     await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
 
@@ -128,10 +53,7 @@ async function publishOpenArticle(page: Page, options: {publishSchedule?: Date})
     await waitForToastMessage(page, 'success', 'Item published.');
 }
 
-/**
- * The Save button is disabled both while the request is in flight and once the article is
- * clean again, so waiting for the PATCH is what separates the two.
- */
+// Save is disabled both in flight and once clean, so the PATCH is what tells them apart.
 async function saveOpenArticle(page: Page): Promise<void> {
     const saveButton = page.getByTestId('authoring-topbar').getByTestId('save');
 
@@ -144,26 +66,10 @@ async function saveOpenArticle(page: Page): Promise<void> {
     await expect(saveButton).toBeDisabled();
 }
 
-/**
- * The date field is a primereact calendar input that parses free text against
- * `view.dateformat`. The only runtime handle on that format is the input's placeholder,
- * which `DatePicker` derives from the configured format by lowercasing its tokens, so the
- * value is built from the placeholder rather than pinned to one configuration.
- *
- * The date has to be typed key by key: primereact's Calendar ignores an `input` event that
- * was not preceded by a `keydown` (`onUserInput` returns early unless `isKeydown` is set),
- * so `fill()` would only change what the field shows, leave the model on its old value and
- * have the display snap back on blur. Escape then closes the overlay that focusing the
- * field opened, which otherwise covers the rest of the panel.
- *
- * The date goes in before the time because `DateTimePicker` keeps one Date for both fields
- * and defaults the missing half to "now": setting the time first would schedule the item
- * for today, which is in the past for most of the day.
- *
- * Typing and checking are retried as a unit because a keystroke can be dropped while the
- * picker re-renders, which leaves a string the calendar cannot parse and so no date on the
- * model at all: the field then shows today, the date the time falls back onto.
- */
+// The date format is only available as the input placeholder.
+// Typed key by key because primereact's Calendar ignores `input` events without a preceding `keydown`.
+// Date before time because `DateTimePicker` defaults the missing half to "now".
+// Retried as a unit because a keystroke can be dropped while the picker re-renders.
 async function fillPublishSchedule(page: Page, when: Date): Promise<void> {
     const section = page.getByTestId('publish-schedule');
     const dateInput = section.getByTestId('date-input');
@@ -191,10 +97,7 @@ async function fillPublishSchedule(page: Page, when: Date): Promise<void> {
     }).toPass({timeout: 30000});
 }
 
-/**
- * The modal closes on click regardless of the request, and the caller reloads to pick the
- * new desk type up, so without waiting for the PATCH the reload can read the old value.
- */
+// The modal closes before the request finishes, so wait for the PATCH or the reload can read the old type.
 async function setDeskType(page: Page, deskName: string, deskType: 'authoring' | 'production'): Promise<void> {
     await page.goto('/#/settings/desks');
 
@@ -218,18 +121,8 @@ async function setDeskType(page: Page, deskName: string, deskType: 'authoring' |
     await expect(modal).toBeHidden();
 }
 
-/**
- * Reads the payload one subscriber was sent for a published item, through the item
- * history's transmission details, which render the queue entry's `formatted_item`
- * verbatim.
- *
- * Both subscribers of the `publishing` snapshot receive every untargeted publish, so the
- * entry is picked by destination rather than by position.
- *
- * The payload opens in a modal that would cover the item list and whose only dismiss
- * control is an unnamed icon link, so the page is reloaded to clear it. The desk is
- * re-selected afterwards so callers get the monitoring view back as they left it.
- */
+// Both `publishing` snapshot subscribers receive every untargeted publish, so the entry is picked by destination.
+// The payload modal's only dismiss control is an unnamed icon link, so the page is reloaded to clear it.
 async function readTransmittedPayload(
     monitoring: Monitoring,
     page: Page,
@@ -251,8 +144,7 @@ async function readTransmittedPayload(
     await expect(queueEntry).toHaveCount(1);
     await queueEntry.click();
 
-    // the payload is rendered into a modal that is appended to the body rather than into
-    // the preview, so it is addressed from the page
+    // the modal is appended to the body, not the preview
     const transmitted = page.getByTestId('transmitted-item');
 
     await expect(transmitted).toBeVisible();
@@ -361,8 +253,7 @@ test.describe('scheduled publishing', () => {
             workingStage.getByTestId('article-item').and(page.locator('[data-test-value="test sports story"]')),
         ).toBeVisible();
 
-        // the group is asserted first so that the row being gone is read off a rendered
-        // list rather than off a monitoring view that has not come back yet
+        // assert the group first so "row gone" is read off a rendered list
         await expect(deskOutput).toBeVisible();
         await expect(scheduled).toBeHidden();
     });
@@ -406,11 +297,7 @@ test('publishing a package publishes the items it contains', {
 });
 
 test.describe('publishing depending on desk type', () => {
-    /*
-     * `canPublish` only withholds the Publish tab on an authoring desk when this flag is
-     * on (scripts/api/article.ts). The e2e client config leaves it unset, so without the
-     * override an authoring desk would offer the tab like any other.
-     */
+    // `canPublish` (scripts/api/article.ts) only withholds the Publish tab on an authoring desk under this flag.
     test.use({storageState: getStorageState({features: {noPublishOnAuthoringDesk: true}})});
 
     test('the publish tab is offered on a production desk and withheld on an authoring one', {
@@ -448,8 +335,7 @@ test.describe('publishing depending on desk type', () => {
 
         await setDeskType(page, 'Sports', 'authoring');
 
-        // the desks store is populated once per application load, so the new desk type
-        // only reaches `canPublish` after a full reload
+        // the desks store loads once per application load, so a reload is needed
         await page.goto('/#/workspace/monitoring');
         await page.reload();
         await monitoring.selectDeskOrWorkspace('Sports');
@@ -505,12 +391,11 @@ test('unpublishing returns a published item to the working stage', {
     await expect(unpublished).toBeVisible();
     await expect(unpublished.getByText('Unpublished')).toBeVisible();
 
-    // the working stage picks the item up on its own, but the desk output group keeps
-    // rendering the row it no longer holds until the view is loaded again
+    // the desk output group keeps rendering the unpublished row until the view reloads
     await page.reload();
     await monitoring.selectDeskOrWorkspace('Sports');
 
-    // the group is asserted first so that the row being gone is read off a rendered list
+    // assert the group first so "row gone" is read off a rendered list
     await expect(deskOutput).toBeVisible();
     await expect(published).toBeHidden();
 });
@@ -562,16 +447,12 @@ test('the ninjs sent for an update points at the item the update was created fro
     expect(originalNinjs.evolvedfrom).toBeUndefined();
     expect(firstUpdateNinjs.evolvedfrom).toBe(originalNinjs.guid);
 
-    // the link moves on with every update: nothing in the payload keeps pointing at the
-    // root of the chain, which is the `original` field the case asks for
+    // `evolvedfrom` follows the immediate parent, not the chain root the case expects as `original`
     expect(secondUpdateNinjs.evolvedfrom).toBe(firstUpdateNinjs.guid);
     expect(secondUpdateNinjs.evolvedfrom).not.toBe(originalNinjs.guid);
 });
 
-/*
- * Placeholder so the uncovered case is machine-readable next to the covered ones. See the
- * file docstring for the reason.
- */
+// Placeholder so the uncovered case stays visible next to the covered ones.
 test.fixme('the ninjs sent for an update carries the guid of the root item as original', {
     annotation: [
         // Handling publish updates for Talpa (custom NINJS format with original ID)
