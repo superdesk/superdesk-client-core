@@ -9,6 +9,7 @@
 #   ./e2e/scripts/e2e-up.sh                  # bring up the default stack (api :5002, client :9000)
 #   ./e2e/scripts/e2e-up.sh --reinstall      # force `npm ci` in every dependency root
 #   ./e2e/scripts/e2e-up.sh --rebuild        # force a client rebuild
+#   ./e2e/scripts/e2e-up.sh --rebuild-server # rebuild and recreate the server image
 #   ./e2e/scripts/e2e-up.sh --slot auto      # claim a numbered slot for a parallel instance
 #   ./e2e/scripts/e2e-up.sh --slot 3         # bring up slot 3 specifically
 #
@@ -38,12 +39,14 @@ set -euo pipefail
 
 REINSTALL=false
 REBUILD=false
+REBUILD_SERVER=false
 SLOT="${E2E_SLOT:-}"
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --reinstall) REINSTALL=true ;;
         --rebuild) REBUILD=true ;;
+        --rebuild-server) REBUILD_SERVER=true ;;
         --slot)
             shift
             [ $# -gt 0 ] || { echo "--slot needs a value: 1-5 or auto" >&2; exit 2; }
@@ -217,11 +220,12 @@ ensure_deps() {
 }
 
 # The server image has no build: section in either compose file (CI builds and
-# saves it), so build it here when it is missing. Rebuilding after changes to
-# e2e/server (requirements.txt, Dockerfile) is manual:
-#   docker build -t superdesk-client-core-e2e-server:ci e2e/server
+# saves it), so build it here when it is missing or explicitly requested.
 ensure_server_image() {
-    if ! docker image inspect "$SERVER_IMAGE" > /dev/null 2>&1; then
+    if [ "$REBUILD_SERVER" = true ]; then
+        log "rebuilding server image $SERVER_IMAGE"
+        docker build -t "$SERVER_IMAGE" "$E2E_SERVER"
+    elif ! docker image inspect "$SERVER_IMAGE" > /dev/null 2>&1; then
         log "server image $SERVER_IMAGE not found; building it (one-time, slow)"
         docker build -t "$SERVER_IMAGE" "$E2E_SERVER"
     fi
@@ -275,8 +279,12 @@ if [ -n "$SLOT" ]; then
     log "ensuring shared docker services are up ($INFRA_SERVICES)"
     (cd "$E2E_SERVER" && docker compose up -d --no-recreate $INFRA_SERVICES)
 
-    if reachable "$SERVER_URL"; then
+    if reachable "$SERVER_URL" && [ "$REBUILD_SERVER" != true ]; then
         log "slot $SLOT server already reachable; skipping docker bring-up"
+    elif reachable "$SERVER_URL"; then
+        log "recreating slot $SLOT server with the rebuilt image"
+        (cd "$E2E_SERVER" && docker compose -f docker-compose.slot.yml -p "$SLOT_PROJECT" up -d --force-recreate server)
+        wait_until_reachable "$SERVER_URL" "server (slot $SLOT)" 240
     else
         preflight_check_port "$PORT" "superdesk server (slot $SLOT)" "$SLOT_PROJECT" || true
         preflight_check_port "$WSPORT" "websocket server (slot $SLOT)" "$SLOT_PROJECT" || true
@@ -286,15 +294,19 @@ if [ -n "$SLOT" ]; then
         wait_until_reachable "$SERVER_URL" "server (slot $SLOT)" 240
     fi
 else
-    if reachable "$SERVER_URL"; then
+    ensure_server_image
+    if reachable "$SERVER_URL" && [ "$REBUILD_SERVER" != true ]; then
         log "server already reachable; skipping docker bring-up"
+    elif reachable "$SERVER_URL"; then
+        log "recreating server with the rebuilt image"
+        (cd "$E2E_SERVER" && docker compose up -d --force-recreate server)
+        wait_until_reachable "$SERVER_URL" "server" 240
     else
         preflight_check_port 27017 mongo || true
         preflight_check_port 6379 redis || true
         preflight_check_port 9200 elasticsearch || true
         preflight_check_port "$PORT" "superdesk server" || true
 
-        ensure_server_image
         log "bringing up server via docker compose"
         (cd "$E2E_SERVER" && docker compose up -d)
         wait_until_reachable "$SERVER_URL" "server" 240
