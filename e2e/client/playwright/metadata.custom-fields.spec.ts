@@ -4,52 +4,27 @@ import {MetadataSettings} from './page-object-models/settings/metadata';
 import {ContentProfileSettings} from './page-object-models/settings/content-profile';
 
 /*
- * Removing a custom field of every type Settings -> Metadata offers a tab for, and editing a
- * custom URL field. Creating those fields is covered by authoring.custom-fields.spec.ts.
+ * Removal of a custom field of every type Settings -> Metadata has a tab for, and editing a custom
+ * URL field. Creating the fields is covered by authoring.custom-fields.spec.ts.
  *
- * Where the cases and the product disagree, the product is asserted:
- * - The delete confirmation the cases describe ("Confirm" / "Please confirm you want to delete
- *   the vocabulary." / Cancel + OK) has been redesigned: the dialog is headed "Delete
- *   vocabulary?" and its buttons are Cancel and Delete (VocabularyDeletionModal.tsx).
- * - The in-use message the cases quote ("The vocabulary is used in the following content types:")
- *   is now a separate "Cannot delete vocabulary" dialog that lists the content profiles.
- * - 1311835081 calls Label a multiselect; the control takes a single label (`data-max-items="1"`
- *   in vocabulary-config-modal.html) and its own hint says so.
- * - 1311835081's "Close button" is the footer's "Cancel"; the close icon sits in the dialog
- *   header. Its expected results are also copied from the related content case ("Edit dialog for
- *   a custom related content field"); the controls asserted here are the ones the URL dialog
- *   renders.
- *
- * Expected results left uncovered:
- * - The two content profile consequences every removal case documents ("cannot be used in Content
- *   profiles configuration anymore", and the refusal to delete a field a profile uses) are
- *   asserted once, on a custom text field. Neither VocabularyConfigController.remove nor
- *   VocabularyDeletionModal branches on the field type, and the content profile field picker
- *   lists fields by vocabulary id, so both are the same code path for every type on this page.
- * - That first consequence is asserted on the Header section of the field picker only. Both
- *   sections offer the field ids of the content type response, and after a deletion the client
- *   can still be served a copy of that response carrying the deleted id, even across a reload - a
- *   direct API read no longer returns it, but deleting a vocabulary does not change the content
- *   type document itself. The field then stays on offer in the Content section, with its type
- *   label gone. Header options are filtered further, through the vocabulary list
- *   (`getAllCustomVocabulariesForArticleHeader` in apps/authoring/metadata/metadata.ts), which a
- *   fresh page rebuilds from the API.
- * - 1311835081's "ID text field (required) ... spaces are not allowed". The ID input is read-only
- *   once the field exists (`ng-readonly="!!vocabulary._links"`), so the Edit dialog cannot
- *   exercise it.
+ * Deviations from the QA cases (the product is asserted):
+ * - The delete dialog is now "Delete vocabulary?" with Cancel/Delete, and the in-use message is a
+ *   separate "Cannot delete vocabulary" dialog listing the content profiles.
+ * - 1311835081: Label takes a single value, not a multiselect; its "Close button" is the footer
+ *   Cancel (the header icon is asserted too); its expected results come from the related content case.
+ * - Not covered: the content profile consequences of a removal are asserted once, on a text field
+ *   (same code path for every type), and only in the Header section picker, because the Content
+ *   section can keep offering a deleted id from a cached content type response. The "ID ... spaces
+ *   are not allowed" check is impossible: the ID input is read-only once the field exists.
  */
 
 interface ICustomFieldType {
-    /** Confluence case id of the "Remove ..." case for this type. */
     caseId: string;
     tabName: string;
-    /** Reads inside the test title, after "a custom" and before "field". */
     label: string;
     id: string;
     name: string;
-    /** How the content profile field picker labels the type, where a test needs it. */
     pickerTypeLabel?: string;
-    /** Input the type needs in the create dialog on top of an id and a name. */
     configureDialog?: (metadata: MetadataSettings) => Promise<void>;
 }
 
@@ -107,13 +82,10 @@ const URL_FIELD_VALUES = {
 
 const URL_FIELD_LABEL = 'Web links';
 
-/** How the content profile field picker labels the URL field: display name plus its type. */
 const URL_FIELD_PICKER_OPTION = `${URL_FIELD_NAME} (custom vocabulary)`;
 
-/** What the field picker offers in the Story profile's Header section, minus any custom field. */
 const STOCK_HEADER_FIELD_OPTIONS = ['Company Codes', 'Keywords', 'Language', 'Take Key'];
 
-/** Every removal case documents the same content profile consequences. */
 const REMOVAL_CASE_ANNOTATIONS = REMOVABLE_FIELD_TYPES.map((fieldType) => ({
     type: 'confluence',
     description: `${fieldType.caseId} partial`,
@@ -121,11 +93,8 @@ const REMOVAL_CASE_ANNOTATIONS = REMOVABLE_FIELD_TYPES.map((fieldType) => ({
 
 test.describe.configure({timeout: 120000});
 
-/**
- * The Edit and Remove buttons are always in the DOM, so `toBeVisible` alone does not show the
- * hover. The menu wrapping them stays fully transparent until the list item is hovered
- * (`.sd-list-item__action-menu` in superdesk-ui-framework, which has no test id).
- */
+// The actions are always in the DOM; only the wrapping menu's opacity (class only, no test id)
+// changes on hover, so `toBeVisible` alone would prove nothing.
 async function expectActionsShownOnHover(page: Page, item: Locator): Promise<void> {
     const actions = item.locator('.sd-list-item__action-menu');
 
@@ -138,7 +107,7 @@ async function expectActionsShownOnHover(page: Page, item: Locator): Promise<voi
     await expect(item.getByTestId('vocabulary-item--start-removing')).toBeVisible();
 }
 
-// The chips of the Label tag input (ngTagsInput, reachable by class only).
+// ngTagsInput chips, reachable by class only.
 function labelTags(dialog: Locator): Locator {
     return dialog.locator('tags-input .tags-input__tag-item');
 }
@@ -209,8 +178,7 @@ test('a removed custom field is no longer offered by the content profile header 
 
     const pickerBeforeRemoval = await contentProfileSettings.openFieldPicker();
 
-    // Both option sets are asserted whole: the field must go missing from a loaded list, not
-    // from a list that has not rendered yet.
+    // Assert the whole list so a missing field cannot mean the list has not rendered yet.
     await expect(pickerBeforeRemoval.getByRole('treeitem')).toHaveText([
         'Company Codes',
         'Keywords',
@@ -225,12 +193,8 @@ test('a removed custom field is no longer offered by the content profile header 
     await metadata.openDeletionModal(TEXT_FIELD.name);
     await metadata.confirmDeletion(TEXT_FIELD.id);
 
-    /*
-     * The reload is load-bearing. What the Header section offers is filtered through the
-     * vocabulary list `getAllActiveVocabularies` (VocabularyService.ts) caches for the lifetime of
-     * the page, and a deletion refreshes only the separate list the metadata page renders, so
-     * without a fresh page the picker keeps offering the deleted field.
-     */
+    // The reload is required: the picker filters through `getAllActiveVocabularies`
+    // (VocabularyService.ts), cached per page load and not refreshed by a deletion.
     await page.goto('/#/settings/content-profiles');
     await page.reload();
     await contentProfileSettings.openEditor('Story');
@@ -254,13 +218,9 @@ test('a custom field used in a content profile cannot be removed', {
         {tabName: 'Content', fieldId: TEXT_FIELD.name, fieldType: TEXT_FIELD.pickerTypeLabel},
     ]);
 
-    /*
-     * The deletion modal decides which variant to show from `sdApi.contentProfiles.getAll()`,
-     * which reads the in-memory dataStore, refreshed only by websocket resource messages. Reload
-     * so it is guaranteed to see the profile that now uses the field. The reload has to happen on
-     * the destination route: reloading first and navigating by hash straight after leaves the
-     * settings view half built.
-     */
+    // The deletion modal reads `sdApi.contentProfiles.getAll()` from the dataStore, refreshed only
+    // by websocket messages, so reload. Reload on the destination route: navigating by hash right
+    // after a reload leaves the settings view half built.
     await page.goto('/#/settings/vocabularies');
     await page.reload();
 
@@ -374,14 +334,10 @@ test('a saved custom URL field is offered to the content profile content section
 
     const headerPicker = await contentProfileSettings.openFieldPicker();
 
-    // Gate on the full stock option set: the URL field must be absent from a loaded list, not
-    // from a list that has not rendered yet.
+    // Assert the whole list so absence cannot mean the list has not rendered yet.
     await expect(headerPicker.getByRole('treeitem')).toHaveText(STOCK_HEADER_FIELD_OPTIONS);
 
-    /*
-     * The editor is reopened from a fresh load rather than switching tabs in place, because the
-     * open field picker swallows clicks on the section tabs.
-     */
+    // Reload instead of switching tabs: the open field picker swallows clicks on the section tabs.
     await page.goto('/#/settings/content-profiles');
     await page.reload();
     await contentProfileSettings.openEditor('Story');

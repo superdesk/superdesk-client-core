@@ -8,10 +8,6 @@ export interface ICustomFieldValues {
     helperText?: string;
 }
 
-/**
- * Settings -> Metadata (`#/settings/vocabularies`): the tab strip and the vocabulary
- * create/edit dialog shared by every metadata tab, including "Other fields".
- */
 export class MetadataSettings {
     private page: Page;
 
@@ -85,10 +81,7 @@ export class MetadataSettings {
         }
     }
 
-    /**
-     * Reads the inputs every metadata tab renders. `readDialogValues` also reads the "Field type"
-     * select, which only the "Other fields" tab has.
-     */
+    // Only the inputs every tab has; "Field type" exists on "Other fields" only.
     async readSharedDialogValues(): Promise<Required<Omit<ICustomFieldValues, 'fieldTypeLabel'>>> {
         const dialog = this.getDialog();
 
@@ -107,10 +100,7 @@ export class MetadataSettings {
         };
     }
 
-    /**
-     * Waits for the vocabularies write the Save click triggers, so a caller that navigates or
-     * reloads straight after cannot race it.
-     */
+    // Waits for the write Save triggers, so a following reload cannot race it.
     async save(): Promise<void> {
         await Promise.all([
             this.page.waitForResponse(
@@ -132,12 +122,8 @@ export class MetadataSettings {
         await expect(this.getDialog()).toHaveCount(0);
     }
 
-    /**
-     * Creates a custom field through the create dialog. No vocabulary in the `main` snapshot has
-     * a field type, so every custom field tab starts empty and there is no per-test fixture API;
-     * every test that needs a custom field builds it here first (one dialog, one save - the
-     * atomic-precondition exception in e2e/WRITING_TESTS.md).
-     */
+    // The `main` snapshot has no custom fields and there is no fixture API, so tests build theirs
+    // here (the atomic-precondition exception in e2e/WRITING_TESTS.md).
     async createCustomField(
         values: ICustomFieldValues & {id: string; name: string},
         configureDialog?: () => Promise<void>,
@@ -149,34 +135,23 @@ export class MetadataSettings {
         await expect(this.getListItem(values.name)).toBeVisible();
     }
 
-    /**
-     * Ticks content types on the "Related content" dialog. At least one is required there:
-     * `requireAllowedTypesSelection` in VocabularyEditController.tsx keeps Save disabled while
-     * none is ticked.
-     *
-     * The controls are `sd-check` spans carrying the label, not checkbox inputs, so they are
-     * clicked rather than checked.
-     */
+    // Save stays disabled until one type is ticked (`requireAllowedTypesSelection`). The controls
+    // are `sd-check` spans, not checkbox inputs, so click rather than check.
     async setAllowedContentTypes(typeLabels: Array<string>): Promise<void> {
         for (const typeLabel of typeLabels) {
             await this.getDialog().getByLabel(typeLabel).click();
         }
     }
 
-    /** The deletion confirmation for a field no content profile uses. */
     getDeletionModal(): Locator {
         return this.page.getByTestId('vocabulary-deletion-modal--can-delete');
     }
 
-    /** The variant shown instead when at least one content profile uses the field. */
     getDeletionRefusal(): Locator {
         return this.page.getByTestId('vocabulary-deletion-modal--cannot-delete');
     }
 
-    /**
-     * Confirms the open deletion modal and waits for the DELETE it triggers, so a caller that
-     * re-reads the list or navigates straight after cannot race it.
-     */
+    // Waits for the DELETE the confirmation triggers.
     async confirmDeletion(fieldId: string): Promise<void> {
         await Promise.all([
             this.page.waitForResponse(
