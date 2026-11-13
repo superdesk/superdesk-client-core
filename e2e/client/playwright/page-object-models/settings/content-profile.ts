@@ -1,4 +1,4 @@
-import {Page, expect} from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 import {s} from '../../utils';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
@@ -16,11 +16,7 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
-    /**
-     * Sets the formatting options an editor3 field of a content profile offers. The list
-     * replaces whatever the field had, it is not merged into it, so pass every option the
-     * test needs on the field.
-     */
+    // The list replaces the field's existing formatting options, it is not merged.
     public async addFormattingOptionToContentProfile(options: IOptions) {
         await this.page.locator(s(`content-profile=${options.profileName}`))
             .getByRole('button', {name: 'Actions'})
@@ -81,5 +77,67 @@ export class ContentProfileSettings {
         }
 
         await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
+    }
+
+    // Unlike `addFieldsToContentProfile`, waits for the PATCH Save triggers.
+    async addFieldsToContentProfileAndWait(
+        contentProfile: string,
+        fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
+    ): Promise<void> {
+        await Promise.all([
+            this.page.waitForResponse(
+                (response) => response.url().includes('/api/content_types/')
+                    && response.request().method() === 'PATCH',
+            ),
+            this.addFieldsToContentProfile(contentProfile, fields),
+        ]);
+
+        // sd-modal keeps its element in the DOM once opened, so closure shows as hidden, not absent.
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeHidden();
+    }
+
+    async openEditor(contentProfile: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile')
+            .and(this.page.locator(`[data-test-value="${contentProfile}"]`))
+            .getByTestId('content-profile-actions')
+            .click();
+        await this.page
+            .getByTestId('content-profile-actions--options')
+            .getByRole('button', {name: 'Edit'})
+            .click();
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeVisible();
+    }
+
+    // `sectionName` is the tab label without the " fields" suffix.
+    async openSection(sectionName: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-tabs')
+            .getByRole('tab', {name: `${sectionName} fields`})
+            .click();
+    }
+
+    getConfiguredField(fieldName: string): Locator {
+        return this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-item')
+            .and(this.page.locator(`[data-test-value="${fieldName}"]`));
+    }
+
+    async openFieldPicker(): Promise<Locator> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByRole('button', {name: 'Add new field'})
+            .first()
+            .click();
+
+        // The popover is a zero-size portal wrapper (TreeMenu in superdesk-ui-framework), never
+        // visible itself; wait on its options.
+        const popover = this.page.getByTestId('tree-menu-popover');
+
+        await expect(popover.getByRole('treeitem').first()).toBeVisible();
+
+        return popover;
     }
 }
