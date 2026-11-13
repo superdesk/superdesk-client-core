@@ -3,25 +3,11 @@ import {Monitoring} from './page-object-models/monitoring';
 import {login, restoreDatabaseSnapshot} from './utils';
 
 /**
- * QA case "Lock item".
- *
- * While an article is open for editing, every other session sees it locked: a red
- * stripe in the monitoring list, a 3-dot menu that offers "Open"/"Open in new Window"
- * but no "Edit", and a read-only authoring view carrying the lock owner and an
- * Unlock button but no Save.
- *
- * The documented case reaches that state with a second *user*. The `main` snapshot
- * has only one user assigned to a desk, and the client gates all of this on the
- * *session* rather than the user (`LockService.isLocked` compares the item's
- * `lock_session` against the current session id), so a second logged-in session of
- * the same user reproduces the case. What that workaround cannot reach is the
- * documented "Unlock button shown/hidden with the unlock privilege" branch:
- * `LockService.can_unlock` returns true immediately when `isLockedByMe(item)` is
- * true, and `isLockedByMe` compares the item's `lock_user` against the current
- * *user* id, so while both sessions belong to the same user the observer always
- * sees Unlock, whatever privileges it holds. Covering either side of that branch
- * needs a second desk-member user in the snapshot; logging the observing session
- * in as a lower-privileged user would not help on its own.
+ * QA case "Lock item", observed from a second session of the same user (the `main`
+ * snapshot has only one desk member). The client gates locking on the session id, so
+ * this reproduces the read-only view. It cannot cover the "Unlock shown/hidden by
+ * privilege" branch: `LockService.can_unlock` short-circuits on `isLockedByMe`, which
+ * compares user ids, so the observer always sees Unlock. That needs a second desk-member user.
  */
 test.describe('locking an item that is open for editing', {
     annotation: [
@@ -33,12 +19,8 @@ test.describe('locking an item that is open for editing', {
     test('another session gets it read-only, without an Edit action and without Save', async ({page, browser}) => {
         await restoreDatabaseSnapshot();
 
-        /*
-         * browser.newContext() inherits the committed storageState from the config,
-         * which would put both pages in the same Superdesk session and so leave the
-         * item unlocked for the observer. `storageState: undefined` forces a clean
-         * context that authenticates into a session of its own.
-         */
+        // newContext() inherits the config's storageState, which would share one Superdesk
+        // session and leave the item unlocked for the observer; undefined forces a new session.
         const lockOwnerContext = await browser.newContext({storageState: undefined});
 
         try {
@@ -53,16 +35,13 @@ test.describe('locking an item that is open for editing', {
 
             const lockOwnerItem = lockOwnerMonitoring.getArticleLocator(ARTICLE);
 
-            // Wait for the list to populate (the post-restore reindex empties it briefly)
-            // so the double click does not race the rebuild.
+            // The post-restore reindex briefly empties the list; wait so dblclick does not race it.
             await expect(lockOwnerItem).toBeVisible();
 
             await lockOwnerItem.dblclick();
 
-            // Save is only offered when the item opened for editing, not read-only.
             await expect(lockOwnerPage.getByTestId('authoring-topbar').getByTestId('save')).toBeVisible();
 
-            // `article-item-locked` marks the red-striped list item, in the lock owner's list too.
             await expect(lockOwnerItem.getByTestId('article-item-locked')).toHaveCount(1);
 
             const monitoring = new Monitoring(page);
@@ -92,8 +71,6 @@ test.describe('locking an item that is open for editing', {
             const body = authoring.getByTestId('authoring-field').and(page.locator('[data-test-value="body_html"]'));
             const slugline = authoring.getByTestId('field-slugline');
 
-            // Every editable surface is inert: editor3 fields get contenteditable="false",
-            // plain inputs are disabled.
             await expect(headline).toContainText(ARTICLE);
             await expect(headline.getByTestId('editor3').locator('[contenteditable]'))
                 .toHaveAttribute('contenteditable', 'false');
@@ -113,24 +90,19 @@ test.describe('locking an item that is open for editing', {
             await expect(lockedInfo).toBeVisible();
             await expect(lockedInfo.getByTestId('user-avatar')).toBeVisible();
             await expect(lockedInfo).toContainText('Locked by John Doe');
-            // Unlock is offered because the lock owner is the same user, not because of the
-            // unlock privilege, so this asserts presence only (see the note at the top).
+            // Presence only: Unlock shows because the owner is the same user (see header).
             await expect(lockedInfo.getByTestId('unlock')).toBeVisible();
 
             await topbar.getByTestId('close').click();
             await expect(authoring).toHaveCount(0);
 
-            // A locked item reopens read-only on double click.
             await item.dblclick();
             await expect(authoring).toBeVisible();
             await expect(topbar.getByTestId('locked-info')).toBeVisible();
             await expect(topbar.getByTestId('save')).toHaveCount(0);
         } finally {
-            /*
-             * A failed assertion must not leave a second live Superdesk session behind:
-             * its open authoring page keeps autosaving into the database that the next
-             * spec's restoreDatabaseSnapshot() has just rewritten.
-             */
+            // Close even on failure: the open authoring page would keep autosaving into the
+            // database the next spec restores.
             await lockOwnerContext.close();
         }
     });
