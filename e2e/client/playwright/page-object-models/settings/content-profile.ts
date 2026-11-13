@@ -1,4 +1,4 @@
-import {Page, expect} from '@playwright/test';
+import {Page, Locator, expect} from '@playwright/test';
 import {s} from '../../utils';
 import {TreeSelectDriver} from '../../utils/tree-select-driver';
 
@@ -16,11 +16,7 @@ export class ContentProfileSettings {
         this.page = page;
     }
 
-    /**
-     * Sets the formatting options an editor3 field of a content profile offers. The list
-     * replaces whatever the field had, it is not merged into it, so pass every option the
-     * test needs on the field.
-     */
+    // The list replaces the field's existing options, it is not merged.
     public async addFormattingOptionToContentProfile(options: IOptions) {
         await this.page.locator(s(`content-profile=${options.profileName}`))
             .getByRole('button', {name: 'Actions'})
@@ -30,9 +26,7 @@ export class ContentProfileSettings {
         await this.page.locator(s('content-profile-edit-view')).getByRole('tab', {name: options.sectionName}).click();
         await this.page.locator(s('content-profile-edit-view', `field=${options.fieldName}`)).click();
 
-        // Spread, not passed as one array: an array argument is a nested path for
-        // TreeSelectDriver, and the tree-select popover closes after every pick, so all
-        // options but the first would be clicked against a popover that is no longer open.
+        // Spread: an array argument is a nested path for TreeSelectDriver, and the popover closes after each pick.
         await new TreeSelectDriver(
             this.page,
             this.page.locator(s('formatting-options-input')),
@@ -81,5 +75,66 @@ export class ContentProfileSettings {
         }
 
         await this.page.locator(s('content-profile-editing-modal')).getByRole('button', {name: 'Save'}).click();
+    }
+
+    // `addFieldsToContentProfile` returns on Save click, before the PATCH lands.
+    async addFieldsToContentProfileAndWait(
+        contentProfile: string,
+        fields: Array<{tabName: string; fieldId: string, fieldType?: string}>,
+    ): Promise<void> {
+        await Promise.all([
+            this.page.waitForResponse(
+                (response) => response.url().includes('/api/content_types/')
+                    && response.request().method() === 'PATCH',
+            ),
+            this.addFieldsToContentProfile(contentProfile, fields),
+        ]);
+
+        // sd-modal keeps its element in the DOM once opened, so closure shows as hidden, not absent.
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeHidden();
+    }
+
+    async openEditor(contentProfile: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile')
+            .and(this.page.locator(`[data-test-value="${contentProfile}"]`))
+            .getByTestId('content-profile-actions')
+            .click();
+        await this.page
+            .getByTestId('content-profile-actions--options')
+            .getByRole('button', {name: 'Edit'})
+            .click();
+        await expect(this.page.getByTestId('content-profile-editing-modal')).toBeVisible();
+    }
+
+    // `sectionName` is the tab label without the " fields" suffix.
+    async openSection(sectionName: string): Promise<void> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-tabs')
+            .getByRole('tab', {name: `${sectionName} fields`})
+            .click();
+    }
+
+    getConfiguredField(fieldName: string): Locator {
+        return this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByTestId('content-profile-item')
+            .and(this.page.locator(`[data-test-value="${fieldName}"]`));
+    }
+
+    async openFieldPicker(): Promise<Locator> {
+        await this.page
+            .getByTestId('content-profile-editing-modal')
+            .getByRole('button', {name: 'Add new field'})
+            .first()
+            .click();
+
+        // The popover is a zero-size portal wrapper (WithPortal in TreeMenu), never "visible". Wait on its options.
+        const popover = this.page.getByTestId('tree-menu-popover');
+
+        await expect(popover.getByRole('treeitem').first()).toBeVisible();
+
+        return popover;
     }
 }
