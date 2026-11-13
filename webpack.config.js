@@ -396,7 +396,6 @@ module.exports = function makeConfig(grunt) {
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
                 'shallow-equal': 'shallow-equal/dist/index',
-                '@uswriting/exiftool/cjs': require.resolve('@uswriting/exiftool/cjs'),
 
                 /**
                  * Ensure that react is loaded only once.
@@ -487,16 +486,6 @@ module.exports = function makeConfig(grunt) {
                 },
                 {
                     test: /\.(png|gif|jpeg|jpg|woff|woff2|eot|ttf|svg|mov)(\?.*$|$)/,
-                    type: 'asset/resource',
-                },
-                {
-                    // Required for @uswriting/exiftool which contains embedded Perl code in a .cjs file
-                    // Without this, webpack 5 tries to parse it as an ES module and fails
-                    test: /\.cjs$/,
-                    type: 'javascript/auto',
-                },
-                {
-                    test: /\.wasm$/,
                     type: 'asset/resource',
                 },
             ],

@@ -1,0 +1,16 @@
+/*
+ * Roboto renders differently between machines (e.g. the VS Code extension vs a headless run), so
+ * `toHaveScreenshot` captures use Arial with smoothing, ligatures and kerning off.
+ * Icon fonts are excluded: superdesk's `icon-*`, `big-icon--*`, `filetype-icon-*` and prime react's `.pi`.
+ */
+*:not([class^="icon-"], [class*="big-icon--"], [class*="filetype-icon-"], .pi) {
+    font-family: Arial !important;
+}
+
+* {
+    -webkit-font-smoothing: none !important;
+    font-variant-ligatures: none !important;
+    font-feature-settings: 'liga' 0 !important;
+    font-kerning: none !important;
+    text-rendering: optimizespeed !important;
+}
