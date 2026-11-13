@@ -3,18 +3,10 @@ import {restoreDatabaseSnapshot, setPasswordThroughResetEmail} from './utils';
 import {Users} from './page-object-models/users';
 
 /**
- * QA case "Edit user profile" (Confluence 1311834348, User management).
+ * QA case "Edit user profile" (Confluence 1311834348).
  *
- * An administrator edits another user's profile from the users list, and revokes
- * that user's administrator status so both the application and the user
- * themselves stop treating them as one.
- *
- * Documented expected results not covered here, and why:
- *
- * - Downgrading through the Role field ("Administrator" role to an "Editor"
- *   role). The `main` snapshot ships an empty `roles` collection, so the Role
- *   select renders no options and no role tag is ever shown. Blocked on a
- *   fixture with roles.
+ * Not covered: downgrading through the Role field. The `main` snapshot has an
+ * empty `roles` collection, so the Role select has no options.
  */
 test.describe('editing another user profile', {
     annotation: [
@@ -50,8 +42,7 @@ test.describe('editing another user profile', {
         await expect(form.getByTestId('field--sign_off')).toHaveValue('JR');
         await expect(form.getByTestId('field--byline')).toHaveValue('Janet Roe');
 
-        // The username is not editable here, so it stays the handle the row is
-        // still identified by after the rename.
+        // The username is not editable, so it stays the row's handle after the rename.
         await expect(form.getByTestId('field--username')).toHaveValue('janedoe');
         await expect(page.getByTestId('page-nav-title')).toContainText('Janet Roe');
 
@@ -70,9 +61,7 @@ test.describe('editing another user profile', {
         const users = new Users(page);
         const administratorTag = users.detailsForm.getByTestId('administrator-label');
         const administratorCheckbox = users.detailsForm.getByTestId('field--user_type');
-        // The indicator superdesk-ui-framework's AvatarWrapper overlays on the
-        // avatar of an administrator: a cog glyph with no test id of its own,
-        // only title="Administrator".
+        // superdesk-ui-framework's AvatarWrapper cog overlay has no test id, only a title.
         const administratorIndicator = () => users.getListItem('Jane Doe').getByTitle('Administrator');
 
         await users.openList();
@@ -80,8 +69,7 @@ test.describe('editing another user profile', {
 
         await expect(administratorTag).toBeHidden();
 
-        // The logged-in admin is the only administrator in the snapshot and
-        // cannot demote itself, so Jane is promoted first.
+        // The snapshot's only administrator is the logged-in admin, so Jane is promoted first.
         await administratorCheckbox.click();
         await users.saveProfile();
         await expect(administratorTag).toBeVisible();
@@ -96,16 +84,13 @@ test.describe('editing another user profile', {
 
         await page.reload();
 
-        // `reload()` resolves before Angular renders the form, and `toBeHidden`
-        // passes on a locator with no nodes, so wait for the form first.
+        // `toBeHidden` passes on no nodes, and reload() resolves before Angular renders the form.
         await expect(users.detailsForm).toBeVisible();
         await expect(administratorTag).toBeHidden();
 
         await users.openList();
 
-        // UserAvatar.tsx renders the avatar through react-lazyload, so the row
-        // exists before the indicator can; wait for the avatar or `toBeHidden`
-        // passes on nothing.
+        // UserAvatar.tsx lazy-loads the avatar, so wait for it or `toBeHidden` passes on nothing.
         await expect(users.getListItem('Jane Doe').getByTestId('user-avatar')).toBeVisible();
         await expect(administratorIndicator()).toBeHidden();
     });
@@ -116,8 +101,7 @@ test.describe('editing another user profile', {
         const users = new Users(page);
         const profileSections = page.getByTestId('page-sections');
 
-        // Jane has no password anyone knows, so the test gives her one. It lives
-        // only until the next snapshot restore.
+        // Jane's snapshot password is unknown, so the test sets one.
         const janePassword = 'janedoe123.';
 
         await toggleAdministrator(users);
@@ -126,10 +110,8 @@ test.describe('editing another user profile', {
         await setPasswordThroughResetEmail(page, {email: 'janedoe@example.com', password: janePassword});
         await signIn(page, {username: 'janedoe', password: janePassword});
 
-        // The Privileges tab of a profile is only offered to someone holding the
-        // `users` privilege, which nothing but the administrator flag grants in
-        // this snapshot (no roles, no per-user privileges), so it stands for
-        // "what this user may do" as the user themselves sees it.
+        // The Privileges tab needs the `users` privilege, which only the administrator
+        // flag grants in this snapshot.
         await openOwnProfile(page, 'Jane Doe');
         await expect(profileSections).toContainText('Privileges');
 
@@ -170,8 +152,7 @@ async function signIn(page: Page, {username, password}: {username: string; passw
     await expect(page.getByTestId('top-menu')).toBeVisible();
 }
 
-// Waits for the section tabs to render, otherwise asserting a tab is absent
-// would pass for the wrong reason.
+// Waits for the tabs, otherwise asserting a tab is absent passes vacuously.
 async function openOwnProfile(page: Page, displayName: string): Promise<void> {
     await page.goto('/#/profile');
 

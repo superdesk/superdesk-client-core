@@ -71,9 +71,7 @@ export async function loginAs(page: Page, username: string, password: string): P
     await expect(page.getByTestId('dashboard')).toBeVisible();
 }
 
-// One MailCrab instance serves every e2e slot on the machine, so unlike the
-// backend and client URLs it is not per slot; the env var is only an escape
-// hatch for a machine that publishes it on another port.
+// One MailCrab serves every e2e slot, so the URL is not per slot.
 const MAILCRAB_URL = (process.env.MAILCRAB_URL || 'http://localhost:1080').replace(/\/$/, '');
 
 interface IMailcrabMessage {
@@ -84,20 +82,12 @@ interface IMailcrabMessage {
 }
 
 /**
- * Gives the account owning `email` a password by driving the "Forgot password?"
- * flow and reading the token out of MailCrab. Must be called while signed out;
- * it leaves the browser on the login form.
+ * Sets a password for the account owning `email` through the "Forgot password?"
+ * flow and MailCrab. Call while signed out. The `main` snapshot documents a
+ * plaintext password for the admin only and no API sets one directly.
  *
- * The `main` snapshot stores only bcrypt hashes and documents a plaintext
- * password for the admin alone, so this is the only way to get a session as any
- * other user. There is no API to set a password directly: the admin UI can only
- * trigger this same email. It doubles as the "reset password" flow itself, so
- * keep it as the single encoding of the MailCrab contract rather than inlining
- * a second copy in a spec.
- *
- * MailCrab is shared by every e2e slot on the machine, so a message only counts
- * when it is addressed to `email`, was absent from the inbox before the request,
- * and links back to the client origin this run is driving.
+ * MailCrab is shared by every e2e slot, so a message only counts when it is
+ * addressed to `email`, is new since the request, and links to this run's client origin.
  */
 export async function setPasswordThroughResetEmail(
     page: Page,
@@ -114,9 +104,8 @@ export async function setPasswordThroughResetEmail(
 
     const knownMessageIds = new Set((await readInbox()).map((message) => message.id));
 
-    // The click posts to /api/reset_user_password. A page.request call issued
-    // while that is in flight cancels it and no email is ever sent, so the
-    // polling below must not start before the response lands.
+    // A page.request call issued while this POST is in flight cancels it and no
+    // email is sent, so polling must wait for the response.
     const tokenRequest = page.waitForResponse(
         (response) => response.url().includes('/api/reset_user_password')
             && response.request().method() === 'POST',
@@ -153,8 +142,7 @@ export async function setPasswordThroughResetEmail(
 
     const newPassword = resetPage.getByTestId('password');
 
-    // The controller only reveals this form (flowStep 3) once it has validated
-    // the token against the server, which is an extra round trip after load.
+    // The form stays hidden until the controller has validated the token.
     await expect(newPassword).toBeVisible();
     await newPassword.fill(password);
     await resetPage.getByTestId('password-confirm').fill(password);
