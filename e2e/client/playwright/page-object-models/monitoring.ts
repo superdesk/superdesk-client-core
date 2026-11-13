@@ -48,6 +48,17 @@ export class Monitoring {
         }
     }
 
+    async openArticleActionsMenu(item: Locator): Promise<Locator> {
+        await item.hover();
+        await item.getByTestId('context-menu-button').click();
+
+        const menu = this.page.getByTestId('context-menu');
+
+        await expect(menu).toBeVisible();
+
+        return menu;
+    }
+
     /**
      * opens 3-dot menu for an article and clicks on an action(supports nested actions)
      */
