@@ -8,14 +8,11 @@ import {ContentProfileSettings} from './page-object-models/settings/content-prof
  * URL field. Creating the fields is covered by authoring.custom-fields.spec.ts.
  *
  * Deviations from the QA cases (the product is asserted):
- * - The delete dialog is now "Delete vocabulary?" with Cancel/Delete, and the in-use message is a
+ * - The delete dialog is "Delete vocabulary?" with Cancel/Delete, and the in-use message is a
  *   separate "Cannot delete vocabulary" dialog listing the content profiles.
- * - 1311835081: Label takes a single value, not a multiselect; its "Close button" is the footer
- *   Cancel (the header icon is asserted too); its expected results come from the related content case.
- * - Not covered: the content profile consequences of a removal are asserted once, on a text field
- *   (same code path for every type), and only in the Header section picker, because the Content
- *   section can keep offering a deleted id from a cached content type response. The "ID ... spaces
- *   are not allowed" check is impossible: the ID input is read-only once the field exists.
+ * - 1311835081: Label takes a single value, not a multiselect. The ID input is read-only once the
+ *   field exists, so "spaces are not allowed" cannot be tried. Its "Close button" is the footer
+ *   Cancel (the header icon is asserted too). Its expected results come from the related content case.
  */
 
 interface ICustomFieldType {
@@ -24,27 +21,29 @@ interface ICustomFieldType {
     label: string;
     id: string;
     name: string;
-    pickerTypeLabel?: string;
+    pickerTypeLabel: string;
+    offeredInHeader: boolean;
     configureDialog?: (metadata: MetadataSettings) => Promise<void>;
 }
 
-const TEXT_FIELD: ICustomFieldType = {
-    caseId: '1311835048', // Remove custom text field (AUTOMATED)
-    tabName: 'Custom text fields',
-    label: 'text',
-    id: 'removable_text_field',
-    name: 'Removable text field',
-    pickerTypeLabel: 'text',
-};
-
 const REMOVABLE_FIELD_TYPES: Array<ICustomFieldType> = [
-    TEXT_FIELD,
+    {
+        caseId: '1311835048', // Remove custom text field (AUTOMATED)
+        tabName: 'Custom text fields',
+        label: 'text',
+        id: 'removable_text_field',
+        name: 'Removable text field',
+        pickerTypeLabel: 'text',
+        offeredInHeader: true,
+    },
     {
         caseId: '1311835058', // Remove custom date field (AUTOMATED)
         tabName: 'Custom date fields',
         label: 'date',
         id: 'removable_date_field',
         name: 'Removable date field',
+        pickerTypeLabel: 'date',
+        offeredInHeader: true,
     },
     {
         caseId: '1311835066', // Remove custom embed field (AUTOMATED)
@@ -52,6 +51,8 @@ const REMOVABLE_FIELD_TYPES: Array<ICustomFieldType> = [
         label: 'embed',
         id: 'removable_embed_field',
         name: 'Removable embed field',
+        pickerTypeLabel: 'embed',
+        offeredInHeader: false,
     },
     {
         caseId: '1311835074', // Remove related content field (AUTOMATED)
@@ -59,6 +60,8 @@ const REMOVABLE_FIELD_TYPES: Array<ICustomFieldType> = [
         label: 'related content',
         id: 'removable_related_content_field',
         name: 'Removable related content field',
+        pickerTypeLabel: 'related content',
+        offeredInHeader: false,
         configureDialog: (metadata) => metadata.setAllowedContentTypes(['Image']),
     },
     {
@@ -67,6 +70,8 @@ const REMOVABLE_FIELD_TYPES: Array<ICustomFieldType> = [
         label: 'URL',
         id: 'removable_url_field',
         name: 'Removable URL field',
+        pickerTypeLabel: 'custom vocabulary',
+        offeredInHeader: false,
     },
 ];
 
@@ -86,10 +91,11 @@ const URL_FIELD_PICKER_OPTION = `${URL_FIELD_NAME} (custom vocabulary)`;
 
 const STOCK_HEADER_FIELD_OPTIONS = ['Company Codes', 'Keywords', 'Language', 'Take Key'];
 
-const REMOVAL_CASE_ANNOTATIONS = REMOVABLE_FIELD_TYPES.map((fieldType) => ({
-    type: 'confluence',
-    description: `${fieldType.caseId} partial`,
-}));
+const STOCK_CONTENT_FIELD_OPTIONS = ['Attachments', 'Body footer', 'Footer', 'SMS', 'Terms of use'];
+
+function withOption(options: Array<string>, option: string): Array<string> {
+    return [...options, option].sort((a, b) => a.localeCompare(b));
+}
 
 test.describe.configure({timeout: 120000});
 
@@ -124,10 +130,24 @@ async function createCustomField(page: Page, fieldType: ICustomFieldType): Promi
     );
 }
 
+// Asserts the whole list so a missing option cannot mean the list has not rendered yet.
+async function expectFieldPickerOptions(
+    contentProfileSettings: ContentProfileSettings,
+    sectionName: string,
+    options: Array<string>,
+): Promise<void> {
+    await contentProfileSettings.openSection(sectionName);
+
+    const picker = await contentProfileSettings.openFieldPicker();
+
+    await expect(picker.getByRole('treeitem')).toHaveText(options);
+    await contentProfileSettings.closeFieldPicker();
+}
+
 for (const fieldType of REMOVABLE_FIELD_TYPES) {
     test(`a custom ${fieldType.label} field is removed only after confirming`, {
         annotation: [
-            {type: 'confluence', description: `${fieldType.caseId} partial`},
+            {type: 'confluence', description: `${fieldType.caseId} complete`},
         ],
     }, async ({page}) => {
         await restoreDatabaseSnapshot();
@@ -164,92 +184,104 @@ for (const fieldType of REMOVABLE_FIELD_TYPES) {
     });
 }
 
-test('a removed custom field is no longer offered by the content profile header section', {
-    annotation: REMOVAL_CASE_ANNOTATIONS,
-}, async ({page}) => {
-    await restoreDatabaseSnapshot();
-    await createCustomField(page, TEXT_FIELD);
+for (const fieldType of REMOVABLE_FIELD_TYPES) {
+    test(`a removed custom ${fieldType.label} field is no longer offered by the content profile pickers`, {
+        annotation: [
+            {type: 'confluence', description: `${fieldType.caseId} complete`},
+        ],
+    }, async ({page, browser}) => {
+        await restoreDatabaseSnapshot();
+        await createCustomField(page, fieldType);
 
-    const contentProfileSettings = new ContentProfileSettings(page);
+        const pickerOption = `${fieldType.name} (${fieldType.pickerTypeLabel})`;
+        const contentProfileSettings = new ContentProfileSettings(page);
 
-    await page.goto('/#/settings/content-profiles');
-    await contentProfileSettings.openEditor('Story');
-    await contentProfileSettings.openSection('Header');
+        await page.goto('/#/settings/content-profiles');
+        await contentProfileSettings.openEditor('Story');
+        await expectFieldPickerOptions(
+            contentProfileSettings,
+            'Content',
+            withOption(STOCK_CONTENT_FIELD_OPTIONS, pickerOption),
+        );
+        await expectFieldPickerOptions(
+            contentProfileSettings,
+            'Header',
+            fieldType.offeredInHeader
+                ? withOption(STOCK_HEADER_FIELD_OPTIONS, pickerOption)
+                : STOCK_HEADER_FIELD_OPTIONS,
+        );
 
-    const pickerBeforeRemoval = await contentProfileSettings.openFieldPicker();
+        const metadata = new MetadataSettings(page);
 
-    // Assert the whole list so a missing field cannot mean the list has not rendered yet.
-    await expect(pickerBeforeRemoval.getByRole('treeitem')).toHaveText([
-        'Company Codes',
-        'Keywords',
-        'Language',
-        `${TEXT_FIELD.name} (${TEXT_FIELD.pickerTypeLabel})`,
-        'Take Key',
-    ]);
+        await metadata.openTab(fieldType.tabName);
+        await metadata.openDeletionModal(fieldType.name);
+        await metadata.confirmDeletion(fieldType.id);
 
-    const metadata = new MetadataSettings(page);
+        // A new context, not a reload: the reloaded page revalidates its cached
+        // `content_types/<id>?edit=true` response and gets a 304, because the ETag is the stored
+        // profile's and a vocabulary deletion does not change it, so the Content picker keeps the field.
+        const freshContext = await browser.newContext();
+        const freshPage = await freshContext.newPage();
+        const freshContentProfileSettings = new ContentProfileSettings(freshPage);
 
-    await metadata.openTab(TEXT_FIELD.tabName);
-    await metadata.openDeletionModal(TEXT_FIELD.name);
-    await metadata.confirmDeletion(TEXT_FIELD.id);
+        await freshPage.goto('/#/settings/content-profiles');
+        await freshContentProfileSettings.openEditor('Story');
+        await expectFieldPickerOptions(freshContentProfileSettings, 'Content', STOCK_CONTENT_FIELD_OPTIONS);
+        await expectFieldPickerOptions(freshContentProfileSettings, 'Header', STOCK_HEADER_FIELD_OPTIONS);
 
-    // The reload is required: the picker filters through `getAllActiveVocabularies`
-    // (VocabularyService.ts), cached per page load and not refreshed by a deletion.
-    await page.goto('/#/settings/content-profiles');
-    await page.reload();
-    await contentProfileSettings.openEditor('Story');
-    await contentProfileSettings.openSection('Header');
+        await freshContext.close();
+    });
+}
 
-    const pickerAfterRemoval = await contentProfileSettings.openFieldPicker();
+for (const fieldType of REMOVABLE_FIELD_TYPES) {
+    test(`a custom ${fieldType.label} field used in a content profile cannot be removed`, {
+        annotation: [
+            {type: 'confluence', description: `${fieldType.caseId} complete`},
+        ],
+    }, async ({page}) => {
+        await restoreDatabaseSnapshot();
+        await createCustomField(page, fieldType);
 
-    await expect(pickerAfterRemoval.getByRole('treeitem')).toHaveText(STOCK_HEADER_FIELD_OPTIONS);
-});
+        const contentProfileSettings = new ContentProfileSettings(page);
 
-test('a custom field used in a content profile cannot be removed', {
-    annotation: REMOVAL_CASE_ANNOTATIONS,
-}, async ({page}) => {
-    await restoreDatabaseSnapshot();
-    await createCustomField(page, TEXT_FIELD);
+        await page.goto('/#/settings/content-profiles');
+        await contentProfileSettings.addFieldsToContentProfileAndWait('Story', [
+            {tabName: 'Content', fieldId: fieldType.name, fieldType: fieldType.pickerTypeLabel},
+        ]);
 
-    const contentProfileSettings = new ContentProfileSettings(page);
+        // The deletion modal reads `sdApi.contentProfiles.getAll()` from the dataStore, refreshed only
+        // by websocket messages, so reload. Reload on the destination route: navigating by hash right
+        // after a reload leaves the settings view half built.
+        await page.goto('/#/settings/vocabularies');
+        await page.reload();
 
-    await page.goto('/#/settings/content-profiles');
-    await contentProfileSettings.addFieldsToContentProfileAndWait('Story', [
-        {tabName: 'Content', fieldId: TEXT_FIELD.name, fieldType: TEXT_FIELD.pickerTypeLabel},
-    ]);
+        const metadata = new MetadataSettings(page);
 
-    // The deletion modal reads `sdApi.contentProfiles.getAll()` from the dataStore, refreshed only
-    // by websocket messages, so reload. Reload on the destination route: navigating by hash right
-    // after a reload leaves the settings view half built.
-    await page.goto('/#/settings/vocabularies');
-    await page.reload();
+        await metadata.openTab(fieldType.tabName);
+        await metadata.openDeletionModal(fieldType.name);
 
-    const metadata = new MetadataSettings(page);
+        const refusal = metadata.getDeletionRefusal();
 
-    await metadata.openTab(TEXT_FIELD.tabName);
-    await metadata.openDeletionModal(TEXT_FIELD.name);
+        await expect(refusal).toBeVisible();
+        await expect(refusal).toContainText('Cannot delete vocabulary');
+        await expect(refusal).toContainText(
+            `The vocabulary ${fieldType.name} can't be deleted because it is currently used `
+            + 'in the following Content Profile:',
+        );
+        await expect(refusal.getByRole('listitem')).toHaveText(['Story']);
+        await expect(refusal).toContainText(
+            'To delete this vocabulary, you must first remove it from all Content Profiles listed above.',
+        );
 
-    const refusal = metadata.getDeletionRefusal();
-
-    await expect(refusal).toBeVisible();
-    await expect(refusal).toContainText('Cannot delete vocabulary');
-    await expect(refusal).toContainText(
-        `The vocabulary ${TEXT_FIELD.name} can't be deleted because it is currently used `
-        + 'in the following Content Profile:',
-    );
-    await expect(refusal.getByRole('listitem')).toHaveText(['Story']);
-    await expect(refusal).toContainText(
-        'To delete this vocabulary, you must first remove it from all Content Profiles listed above.',
-    );
-
-    await refusal.getByRole('button', {name: 'Go back'}).click();
-    await expect(refusal).toHaveCount(0);
-    await expect(metadata.getListItem(TEXT_FIELD.name)).toBeVisible();
-});
+        await refusal.getByRole('button', {name: 'Go back'}).click();
+        await expect(refusal).toHaveCount(0);
+        await expect(metadata.getListItem(fieldType.name)).toBeVisible();
+    });
+}
 
 test('the edit dialog only persists changes to a custom URL field from its Save button', {
     annotation: [
-        {type: 'confluence', description: '1311835081 partial'}, // Edit URL field (AUTOMATED)
+        {type: 'confluence', description: '1311835081 complete'}, // Edit URL field (AUTOMATED)
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -316,7 +348,7 @@ test('the edit dialog only persists changes to a custom URL field from its Save 
 
 test('a saved custom URL field is offered to the content profile content section only', {
     annotation: [
-        {type: 'confluence', description: '1311835081 partial'}, // Edit URL field (AUTOMATED)
+        {type: 'confluence', description: '1311835081 complete'}, // Edit URL field (AUTOMATED)
     ],
 }, async ({page}) => {
     await restoreDatabaseSnapshot();
@@ -330,22 +362,12 @@ test('a saved custom URL field is offered to the content profile content section
 
     await page.goto('/#/settings/content-profiles');
     await contentProfileSettings.openEditor('Story');
-    await contentProfileSettings.openSection('Header');
-
-    const headerPicker = await contentProfileSettings.openFieldPicker();
-
-    // Assert the whole list so absence cannot mean the list has not rendered yet.
-    await expect(headerPicker.getByRole('treeitem')).toHaveText(STOCK_HEADER_FIELD_OPTIONS);
-
-    // Reload instead of switching tabs: the open field picker swallows clicks on the section tabs.
-    await page.goto('/#/settings/content-profiles');
-    await page.reload();
-    await contentProfileSettings.openEditor('Story');
-    await contentProfileSettings.openSection('Content');
-
-    const contentPicker = await contentProfileSettings.openFieldPicker();
-
-    await expect(contentPicker.getByRole('treeitem', {name: URL_FIELD_PICKER_OPTION, exact: true})).toBeVisible();
+    await expectFieldPickerOptions(contentProfileSettings, 'Header', STOCK_HEADER_FIELD_OPTIONS);
+    await expectFieldPickerOptions(
+        contentProfileSettings,
+        'Content',
+        withOption(STOCK_CONTENT_FIELD_OPTIONS, URL_FIELD_PICKER_OPTION),
+    );
 
     await page.goto('/#/settings/content-profiles');
     await page.reload();

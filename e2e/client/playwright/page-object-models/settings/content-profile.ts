@@ -140,4 +140,10 @@ export class ContentProfileSettings {
 
         return popover;
     }
+
+    // While the picker is open it swallows clicks on the section tabs.
+    async closeFieldPicker(): Promise<void> {
+        await this.page.keyboard.press('Escape');
+        await expect(this.page.getByTestId('tree-menu-popover').getByRole('treeitem')).toHaveCount(0);
+    }
 }
