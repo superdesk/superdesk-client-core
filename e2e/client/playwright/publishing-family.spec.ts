@@ -24,7 +24,6 @@ test.setTimeout(90000);
  *   and today is marked only by a primereact class.
  * - The picture left published after unpublishing an item that embeds it (SDESK-5916): no snapshot has an
  *   item with associations.
- * - The Talpa `original` field (see the `test.fixme`).
  */
 
 function inTwoDaysAtTen(): Date {
@@ -550,17 +549,7 @@ test('the ninjs sent for an update points at the item the update was created fro
     expect(originalNinjs.evolvedfrom).toBeUndefined();
     expect(firstUpdateNinjs.evolvedfrom).toBe(originalNinjs.guid);
 
-    // `evolvedfrom` follows the immediate parent, not the chain root the case expects as `original`
+    // `evolvedfrom` follows the immediate parent, not the chain root
     expect(secondUpdateNinjs.evolvedfrom).toBe(firstUpdateNinjs.guid);
     expect(secondUpdateNinjs.evolvedfrom).not.toBe(originalNinjs.guid);
-});
-
-// Placeholder so the uncovered case stays visible next to the covered ones.
-test.fixme('the ninjs sent for an update carries the guid of the root item as original', {
-    annotation: [
-        // Handling publish updates for Talpa (custom NINJS format with original ID)
-        {type: 'confluence', description: '1335328782 blocker'},
-    ],
-}, async () => {
-    // No formatter in the e2e backend emits `original`; the Talpa NINJS format is not registered.
 });
