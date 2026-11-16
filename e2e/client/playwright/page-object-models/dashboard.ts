@@ -35,7 +35,10 @@ export class Dashboard {
         const modal = this.page.getByTestId('widget-modal');
 
         await this.page.getByRole('button', {name: 'Add widget'}).click();
-        await modal.getByTestId('widget-item').and(this.page.locator(`[data-test-value="${widgetId}"]`)).click();
+        await modal
+            .getByTestId('widget-item')
+            .and(this.page.locator(`[data-test-value="${widgetId}"]`))
+            .click();
 
         const layoutPersisted = this.waitForLayoutPersisted();
 
@@ -45,5 +48,20 @@ export class Dashboard {
         await expect(modal).not.toBeVisible();
         await expect(this.getWidget(widgetId)).toBeVisible();
         await this.expectLayoutPersisted(layoutPersisted);
+    }
+
+    async openWidgetConfiguration(widgetId: string): Promise<void> {
+        await this.getWidget(widgetId).getByRole('button', {name: 'Widget settings'}).click();
+        await expect(this.page.getByTestId('widget-config-body')).toBeVisible();
+    }
+
+    async saveWidgetConfiguration(): Promise<void> {
+        await this.page.getByTestId('widget-config-save').click();
+        await expect(this.page.getByTestId('widget-config-body')).toBeHidden();
+    }
+
+    async closeWidgetConfiguration(): Promise<void> {
+        await this.page.getByTestId('widget-config-close').click();
+        await expect(this.page.getByTestId('widget-config-body')).toBeHidden();
     }
 }
