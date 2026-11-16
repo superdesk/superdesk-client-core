@@ -135,8 +135,8 @@
                     <div ng-hide="hideMonitoringToolbar2 === true" sd-media-query min-width="700" class="subnav">
 
                         <!-- filtering by file type not implemented for usage with custom data source -->
-                        <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
-                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileFilter(fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}">
+                        <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded" data-test-id="monitoring-filter-buttons">
+                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileFilter(fileType.type)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType.type)}" title="{{ fileType.label }}" aria-label="{{ fileType.label }}" data-test-id="{{'file-type-filter--' + fileType.type}}">
                                 <span ng-if="fileType.type === 'all'" class="toggle-button__text toggle-button__text--all">{{ fileType.label }}</span>
                                 <i ng-if="fileType.type !== 'all'" class="toggle-button__icon filetype-icon-{{fileType.type}}" aria-hidden="true"></i>
                             </a>

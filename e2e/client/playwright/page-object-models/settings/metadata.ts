@@ -8,6 +8,11 @@ export interface ICustomFieldValues {
     helperText?: string;
 }
 
+export interface IDatetimeFieldConfig {
+    initialOffsetMinutes: number;
+    incrementSteps: Array<number>;
+}
+
 export class MetadataSettings {
     private page: Page;
 
@@ -97,6 +102,57 @@ export class MetadataSettings {
         return {
             ...await this.readSharedDialogValues(),
             fieldType: await this.getDialog().getByLabel('Field type').inputValue(),
+        };
+    }
+
+    // The `datetime` type's config (scripts/extensions/datetimeField/src/config.tsx) has no test ids
+    // and its number inputs have no accessible names. The offset input shares a wrapper with its
+    // label; the step inputs are the number inputs after it, one per Remove button, in list order.
+    getInitialTimeOffsetInput(): Locator {
+        return this.getDialog()
+            .getByText('Initial time offset', {exact: true})
+            .locator('..')
+            .getByRole('spinbutton');
+    }
+
+    getIncrementStepRemoveButtons(): Locator {
+        return this.getDialog().getByRole('button', {name: 'Remove', exact: true});
+    }
+
+    getIncrementStepInput(index: number): Locator {
+        return this.getDialog().getByRole('spinbutton').nth(index + 1);
+    }
+
+    getAddStepButton(): Locator {
+        return this.getDialog().getByRole('button', {name: 'Add step', exact: true});
+    }
+
+    // Replaces only the steps already listed and appends the rest; it never removes any.
+    async fillDatetimeConfig(config: IDatetimeFieldConfig): Promise<void> {
+        await this.getInitialTimeOffsetInput().fill(String(config.initialOffsetMinutes));
+
+        const existingSteps = await this.getIncrementStepRemoveButtons().count();
+
+        for (const [index, step] of config.incrementSteps.entries()) {
+            if (index >= existingSteps) {
+                await this.getAddStepButton().click();
+            }
+
+            await this.getIncrementStepInput(index).fill(String(step));
+        }
+    }
+
+    async readDatetimeConfig(): Promise<IDatetimeFieldConfig> {
+        const stepCount = await this.getIncrementStepRemoveButtons().count();
+        const incrementSteps: Array<number> = [];
+
+        for (let index = 0; index < stepCount; index++) {
+            incrementSteps.push(Number(await this.getIncrementStepInput(index).inputValue()));
+        }
+
+        return {
+            initialOffsetMinutes: Number(await this.getInitialTimeOffsetInput().inputValue()),
+            incrementSteps,
         };
     }
 

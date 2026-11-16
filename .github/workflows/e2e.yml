@@ -75,6 +75,9 @@ jobs:
     - name: Install content-lists extension dependencies
       run: npm ci
       working-directory: scripts/extensions/content-lists
+    - name: Install datetimeField extension dependencies
+      run: npm ci
+      working-directory: scripts/extensions/datetimeField
     - name: Install build-tools dependencies
       run: npm ci
       working-directory: build-tools
