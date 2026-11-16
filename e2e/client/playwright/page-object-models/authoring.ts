@@ -33,6 +33,7 @@ export class Authoring {
 
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
+        const panel = page.getByTestId('authoring').getByTestId('interactive-actions-panel');
 
         await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
 
@@ -43,7 +44,7 @@ export class Authoring {
             ).setValues(options.subscribers);
         }
 
-        await page.getByTestId('authoring').getByTestId('interactive-actions-panel').getByTestId('publish').click();
+        await panel.getByTestId('publish').click();
 
         // Publishing raises a "Save and send" confirm that persists pending changes
         // before it publishes. Targeting subscribers always raises it; with no
@@ -55,43 +56,30 @@ export class Authoring {
         } else if (await saveAndSend.isVisible().catch(() => false)) {
             await saveAndSend.click();
         }
+
+        // The panel closes asynchronously once the publish lands; wait for it so a
+        // following interaction (e.g. publishing a second item) is not intercepted
+        // by the closing overlay.
+        await expect(panel).toBeHidden();
     }
 
     /**
-     * Sets a leaf Subject term on the open article. Only leaf terms are supported:
+     * Sets a leaf Subject term on the open article: opens the typeahead, narrows
+     * by typing, and clicks the matching option. Only leaf terms are supported;
      * a parent category opens a subtree instead of committing.
      */
     async setSubject(value: string): Promise<void> {
-        await this.selectMetaTerm(this.page.locator('#subjects'), value);
-    }
+        const field = this.page.locator('#subjects');
 
-    /**
-     * Picks a leaf value in an `sd-meta-terms` typeahead by opening it, typing to
-     * narrow the list, and clicking the matching option. Clicking the resolved
-     * option is deterministic where the keyboard-driven type+ArrowDown+Enter path
-     * is flaky. The widget exposes no `data-test-id`s, so its internals are reached
-     * structurally.
-     */
-    private async selectMetaTerm(container: Locator, value: string): Promise<void> {
-        const input = container.locator('.dropdown__menu input').first();
-
-        // Idempotent open: don't re-toggle (which would close) if already open on a retry.
-        if (!(await input.isVisible().catch(() => false))) {
-            await container.locator('.dropdown__toggle').first().click();
-        }
-
-        await expect(input).toBeVisible();
-        await input.fill(value);
+        await field.getByTestId('meta-terms-toggle').click();
+        await field.getByTestId('typeahead-input').fill(value);
 
         // The matched term renders as a button; getByRole ignores the hidden
         // duplicates the CV tree renders in collapsed branches.
-        const option = container.getByRole('button', {name: value}).first();
-
-        await expect(option).toBeVisible();
-        await option.click();
+        await field.getByRole('button', {name: value}).first().click();
 
         await expect(
-            container.locator('.terms-list').getByText(value, {exact: false}),
+            field.getByTestId('meta-terms-selected').getByText(value, {exact: false}),
         ).toBeVisible();
     }
 
