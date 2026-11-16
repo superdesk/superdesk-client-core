@@ -33,21 +33,60 @@ export class Authoring {
 
     async publish(options: {subscribers: Array<string>}): Promise<void> {
         const {page} = this;
+        const panel = page.getByTestId('authoring').getByTestId('interactive-actions-panel');
 
-        await page.locator(s('authoring', 'open-send-publish-pane')).click();
+        await page.getByTestId('authoring').getByTestId('open-send-publish-pane').click();
 
         if (options.subscribers.length > 0) {
             await new TreeSelectDriver(
                 page,
-                page.locator(s('target-subscribers')),
+                page.getByTestId('target-subscribers'),
             ).setValues(options.subscribers);
         }
 
-        await page.locator(s('authoring', 'interactive-actions-panel', 'publish')).click();
+        await panel.getByTestId('publish').click();
+
+        // The "Save and send" confirm appears only when the item has unsaved changes
+        // (targeting subscribers always counts); otherwise the publish goes straight
+        // through and the panel closes. Wait for whichever happens, so the confirm is
+        // never missed by a too-early visibility probe.
+        const saveAndSend = page.getByTestId('modal-confirm').getByRole('button', {name: 'save and send'});
 
         if (options.subscribers.length > 0) {
-            await page.locator(s('modal-confirm')).getByRole('button', {name: 'save and send'}).click();
+            await saveAndSend.click();
+        } else {
+            const confirmAppeared = await Promise.race([
+                saveAndSend.waitFor({state: 'visible'}).then(() => true),
+                panel.waitFor({state: 'hidden'}).then(() => false),
+            ]);
+
+            if (confirmAppeared) {
+                await saveAndSend.click();
+            }
         }
+
+        // Wait for the panel to finish closing, so a following interaction (e.g. a
+        // second publish) is not intercepted by the closing overlay.
+        await expect(panel).toBeHidden();
+    }
+
+    /**
+     * Sets a leaf Subject term on the open article. Only leaf terms work: a parent
+     * category opens a subtree instead of committing.
+     */
+    async setSubject(value: string): Promise<void> {
+        const field = this.page.locator('#subjects');
+
+        await field.getByTestId('meta-terms-toggle').click();
+        await field.getByTestId('typeahead-input').fill(value);
+
+        // The matched term renders as a button; getByRole ignores the hidden
+        // duplicates the CV tree renders in collapsed branches.
+        await field.getByRole('button', {name: value}).first().click();
+
+        await expect(
+            field.getByTestId('meta-terms-selected').getByText(value, {exact: false}),
+        ).toBeVisible();
     }
 
     async sendTo(destination: {desk: string; stage: string}): Promise<void> {
