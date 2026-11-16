@@ -9,13 +9,22 @@ test.setTimeout(90000);
 
 /*
  * Publishing family: scheduling, publishing a package, the desk-type gate on the Publish tab,
- * unpublishing, and the NINJS an update carries. Deviations from the QA cases:
- * - Calendar and clock popup results are not asserted: the panel renders the React `DatePicker`,
- *   not the AngularJS picker, and has no Cancel/Confirm or "In 30 min" shortcuts.
- * - Scheduled items open read-only, so persistence is asserted via the date on the list row.
- * - Publishing from the panel raises "Save and send", not "Save and publish".
- * - There is no "Publish package and items" button; plain Publish publishes the contents.
- * - The Talpa `original` field is not emitted by any e2e formatter (see the `test.fixme`).
+ * unpublishing, and the NINJS an update carries.
+ *
+ * Where the product differs from the QA cases:
+ * - The schedule fields are the React `DateTimePicker`, with no Cancel/Confirm or "In 30 min" shortcuts.
+ * - Publishing with unsaved changes offers "Save and send", not "Save and publish".
+ * - There is no "Publish package and items" button; plain Publish publishes the package and its items.
+ * - Scheduled items open read-only, so the saved schedule is read off the list row.
+ *
+ * Not covered:
+ * - A scheduled item turning Published at its time: the stack runs no celery beat or worker
+ *   (`e2e/server/Procfile`), so nothing runs `publish:enqueue` and the item stays Scheduled.
+ * - The calendar and clock popups: their trigger and arrow buttons are unnamed, nothing in them has a test id,
+ *   and today is marked only by a primereact class.
+ * - The picture left published after unpublishing an item that embeds it (SDESK-5916): no snapshot has an
+ *   item with associations.
+ * - The Talpa `original` field (see the `test.fixme`).
  */
 
 function inTwoDaysAtTen(): Date {
@@ -95,6 +104,14 @@ async function fillPublishSchedule(page: Page, when: Date): Promise<void> {
         await expect(dateInput).toHaveValue(date, {timeout: 2000});
         await expect(timeInput).toHaveValue(time, {timeout: 2000});
     }).toPass({timeout: 30000});
+}
+
+// The search bar input has no test id.
+async function searchFor(page: Page, text: string): Promise<void> {
+    const input = page.locator('#search-input');
+
+    await input.fill(text);
+    await input.press('Enter');
 }
 
 // The modal closes before the request finishes, so wait for the PATCH or the reload can read the old type.
@@ -192,6 +209,47 @@ test.describe('scheduled publishing', () => {
         await expect(section.getByTestId('time-input')).toHaveValue('');
     });
 
+    // `required-headline` requires a headline, which "story 2" lacks.
+    test('a scheduled publish is refused while a required field is empty', {
+        annotation: [
+            {type: 'confluence', description: '1308524953 partial'}, // Schedule publishing (Nareg)
+        ],
+    }, async ({page}) => {
+        const monitoring = new Monitoring(page);
+
+        await restoreDatabaseSnapshot({snapshotName: 'required-headline'});
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
+
+        await monitoring.executeActionOnMonitoringItem(monitoring.getArticleLocator('story 2'), 'Edit');
+
+        const authoring = page.getByTestId('authoring');
+        const prompt = page.getByTestId('modal-confirm');
+
+        await authoring.getByTestId('open-send-publish-pane').click();
+        await fillPublishSchedule(page, inTwoDaysAtTen());
+        await publishPanel(page).getByTestId('publish').click();
+        await prompt.getByRole('button', {name: 'save and send'}).click();
+        await waitForToastMessage(page, 'error', 'HEADLINE empty values not allowed');
+
+        const deskOutput = page.getByTestId('monitoring-group')
+            .and(page.locator('[data-test-value="Sports desk output"]'));
+        const outputItem = (label: string) => deskOutput.getByTestId('article-item')
+            .and(page.locator(`[data-test-value="${label}"]`));
+
+        await expect(deskOutput).toBeVisible();
+        await expect(outputItem('story 2')).toBeHidden();
+
+        // after a refused publish, Publish no longer raises the unsaved-changes prompt, so the fix is saved first
+        await publishPanel(page).getByTestId('close').click();
+        await setEditor3FieldValue(authoring.getByTestId('field--headline').getByRole('textbox'), 'Edoras at dawn');
+        await saveOpenArticle(page);
+        await publishOpenArticle(page, {});
+
+        await expect(outputItem('Edoras at dawn')).toBeVisible();
+        await expect(outputItem('Edoras at dawn').getByText('Scheduled')).toBeVisible();
+    });
+
     test('publishing with a schedule leaves the item scheduled until it is descheduled', {
         annotation: [
             {type: 'confluence', description: '1308524953 partial'}, // Schedule publishing (Nareg)
@@ -239,6 +297,16 @@ test.describe('scheduled publishing', () => {
         await expect(scheduled.getByTitle(/^Article is scheduled for /)).toBeVisible();
         await expect(scheduled.getByTitle(/^Article is scheduled for /)).toContainText(enteredDate);
 
+        await page.goto('/#/search?repo=published');
+        await searchFor(page, 'test sports story');
+
+        const found = page.getByTestId('article-item').and(page.locator('[data-test-value="test sports story"]'));
+
+        await expect(found).toBeVisible();
+        await expect(found.getByText('Scheduled')).toBeVisible();
+
+        await page.goto('/#/workspace/monitoring');
+        await monitoring.selectDeskOrWorkspace('Sports');
         await scheduled.dblclick();
 
         const topbar = page.getByTestId('authoring-topbar');
@@ -259,14 +327,21 @@ test.describe('scheduled publishing', () => {
     });
 });
 
-test('publishing a package publishes the items it contains', {
+// `required-headline` makes Story 3, the package's only item, fail validation: its headline is empty.
+test('a package is published with its items once they pass validation, and stays intact', {
     annotation: [
-        {type: 'confluence', description: '1308524959 partial'}, // Publish package (Nareg)
+        {type: 'confluence', description: '1308524959 complete'}, // Publish package (Nareg)
     ],
 }, async ({page}) => {
     const monitoring = new Monitoring(page);
+    const authoring = page.getByTestId('authoring');
+    const topbar = page.getByTestId('authoring-topbar');
+    const deskOutput = page.getByTestId('monitoring-group')
+        .and(page.locator('[data-test-value="Sports desk output"]'));
+    const outputItem = (label: string) => deskOutput.getByTestId('article-item')
+        .and(page.locator(`[data-test-value="${label}"]`));
 
-    await restoreDatabaseSnapshot();
+    await restoreDatabaseSnapshot({snapshotName: 'required-headline'});
     await page.goto('/#/workspace/monitoring');
     await monitoring.selectDeskOrWorkspace('Sports');
 
@@ -275,24 +350,52 @@ test('publishing a package publishes the items it contains', {
         'Edit',
     );
 
-    const authoring = page.getByTestId('authoring');
     const mainGroup = authoring.getByTestId('package-group').and(page.locator('[data-test-value="main"]'));
 
     await expect(mainGroup.getByTestId('package-items')).toHaveCount(1);
-    await expect(
-        authoring.getByTestId('package-items').and(page.locator('[data-test-value="Story 3"]')),
-    ).toBeVisible();
+    await expect(mainGroup.getByTestId('package-items').and(page.locator('[data-test-value="Story 3"]'))).toBeVisible();
 
+    await authoring.getByTestId('open-send-publish-pane').click();
+    await publishPanel(page).getByTestId('publish').click();
+    await waitForToastMessage(page, 'error', 'Associated item Story 3 : HEADLINE empty values not allowed');
+
+    await expect(deskOutput).toBeVisible();
+    await expect(outputItem('Package Highlight 1')).toBeHidden();
+
+    await publishPanel(page).getByTestId('close').click();
+    await topbar.getByTestId('close').click();
+    await monitoring.executeActionOnMonitoringItem(monitoring.getArticleLocator('Story 3'), 'Edit');
+    await setEditor3FieldValue(authoring.getByTestId('field--headline').getByRole('textbox'), 'Rohan musters');
+    await saveOpenArticle(page);
+    await topbar.getByTestId('close').click();
+
+    await monitoring.executeActionOnMonitoringItem(
+        monitoring.getArticleLocator('Package Highlight 1'),
+        'Edit',
+    );
+    await authoring.getByTestId('field-slugline').fill('Rohan highlights');
+    await saveOpenArticle(page);
     await publishOpenArticle(page, {});
 
-    const output = page.getByTestId('monitoring-group')
-        .and(page.locator('[data-test-value="Sports desk output"]'));
+    await expect(outputItem('Package Highlight 1')).toBeVisible();
+    await expect(outputItem('Rohan musters')).toBeVisible();
+
+    // a published package opens read-only, where neither the headline nor the items carry a test id
+    await outputItem('Package Highlight 1').dblclick();
+    await expect(authoring.getByTestId('field-slugline')).toHaveValue('Rohan highlights');
+    await expect(authoring.getByText('Package Highlight 1', {exact: true})).toBeVisible();
+    await expect(authoring.getByText('Rohan musters', {exact: true})).toBeVisible();
+    await topbar.getByTestId('close').click();
+
+    await outputItem('Rohan musters').dblclick();
+    await expect(authoring.getByTestId('field-slugline')).toHaveValue('Story 3');
+    await expect(authoring.getByTestId('field--headline')).toContainText('Rohan musters');
+
+    await page.goto('/#/search?repo=published');
+    await searchFor(page, 'Package Highlight 1');
 
     await expect(
-        output.getByTestId('article-item').and(page.locator('[data-test-value="Package Highlight 1"]')),
-    ).toBeVisible();
-    await expect(
-        output.getByTestId('article-item').and(page.locator('[data-test-value="Story 3"]')),
+        page.getByTestId('article-item').and(page.locator('[data-test-value="Package Highlight 1"]')),
     ).toBeVisible();
 });
 
