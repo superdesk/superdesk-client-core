@@ -7,22 +7,14 @@ import {loginAs, restoreDatabaseSnapshot} from './utils';
 import {getLoggedOutStorageState} from './utils/storage-state';
 import {TreeSelectDriver} from './utils/tree-select-driver';
 
-// QA case "Desk routing" (1311834332). Covers closing a desk onto another, chaining, several
-// sources on one target, reopening, the top-menu indicator, that a user without `desk_routing` can
-// neither start nor stop routing, and, on the `desk-routing` snapshot, what routing does to content:
-// an item sent or fetched into a closed desk is marked for the end of the routing chain and found
-// from there by a Marked Desks search, items already on the desk are not marked, and reopening the
-// desk removes the marks (SDANSA-153 AC 1, 3, 4 b-c, 5, 6 and "routing disabled").
+// QA case "Desk routing" (1311834332), SDANSA-153 AC 1, 3, 4 b-c, 5, 6 and "routing disabled".
 // Not covered:
-// - AC 4 a, automated ingest routing: no ingest provider in the e2e stack polls a feed, so nothing
-//   can arrive through a routing scheme.
-// - AC 7, publishing from the target desk publishes "as from" the closed desk: routing only adds a
-//   mark and never moves the item, so the item still belongs to the closed desk and publishing it
-//   is ordinary publishing of that desk's item, with nothing routing-specific left to assert.
+// - AC 4 a (ingest routing): no ingest provider in the e2e stack polls a feed.
+// - AC 7 (publishing from the target desk): routing only adds a mark and never moves the item, so
+//   this is ordinary publishing with nothing routing-specific to assert.
 
-// `samgamgee` rather than the privilege-free `frodobaggins`: the router is a dashboard widget and
-// the dashboard needs the `dashboard` privilege, so without it the controls would be missing for the
-// wrong reason. The `Sub Editor` role holds `dashboard` but not `desk_routing` (nor `desks`).
+// `samgamgee` rather than `frodobaggins`: the router is a dashboard widget, so the user needs the
+// `dashboard` privilege (held by `Sub Editor`, which has no `desk_routing`).
 async function asUserWithoutDeskRouting(browser: Browser, run: (page: Page) => Promise<void>): Promise<void> {
     const context = await browser.newContext({storageState: getLoggedOutStorageState()});
 
