@@ -9,21 +9,13 @@ test.setTimeout(90000);
 
 /*
  * Publishing family: scheduling, publishing a package, the desk-type gate on the Publish tab,
- * unpublishing, and the NINJS an update carries.
- *
- * Where the product differs from the QA cases:
- * - The schedule fields are the React `DateTimePicker`, with no Cancel/Confirm or "In 30 min" shortcuts.
- * - Publishing with unsaved changes offers "Save and send", not "Save and publish".
- * - There is no "Publish package and items" button; plain Publish publishes the package and its items.
- * - Scheduled items open read-only, so the saved schedule is read off the list row.
- *
- * Not covered:
- * - A scheduled item turning Published at its time: the stack runs no celery beat or worker
- *   (`e2e/server/Procfile`), so nothing runs `publish:enqueue` and the item stays Scheduled.
- * - The calendar and clock popups: their trigger and arrow buttons are unnamed, nothing in them has a test id,
- *   and today is marked only by a primereact class.
- * - The picture left published after unpublishing an item that embeds it (SDESK-5916): no snapshot has an
- *   item with associations.
+ * unpublishing, and the NINJS an update carries. The product differs from the QA cases: the schedule
+ * fields are the React `DateTimePicker` (no Cancel/Confirm or "In 30 min" shortcuts), publishing with
+ * unsaved changes offers "Save and send", plain Publish publishes a package with its items, and
+ * scheduled items open read-only, so the saved schedule is read off the list row.
+ * Not covered: a scheduled item turning Published at its time (the stack runs no celery worker, see
+ * `e2e/server/Procfile`), the calendar and clock popups (no names or test ids inside them), and the
+ * picture left published after unpublishing an item that embeds it (SDESK-5916, no such item in any snapshot).
  */
 
 function inTwoDaysAtTen(): Date {
