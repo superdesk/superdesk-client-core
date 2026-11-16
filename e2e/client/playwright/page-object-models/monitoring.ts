@@ -214,4 +214,20 @@ export class Monitoring {
     getCreateItemButton(): Locator {
         return this.getToolbarActions().getByTestId('content-create');
     }
+
+    /** The bell an item shows while it is marked for at least one desk. */
+    getMarkedDesksIndicator(item: Locator): Locator {
+        return item.getByTestId('mark-for-desk--bell');
+    }
+
+    /** Opens the "Marked For" list of an item and returns it. It is rendered outside the item. */
+    async openMarkedDesks(item: Locator): Promise<Locator> {
+        await this.getMarkedDesksIndicator(item).click();
+
+        const list = this.page.getByTestId('marked-desk-list');
+
+        await expect(list).toBeVisible();
+
+        return list;
+    }
 }
